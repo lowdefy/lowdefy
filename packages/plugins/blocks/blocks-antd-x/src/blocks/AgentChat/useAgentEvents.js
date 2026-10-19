@@ -16,7 +16,46 @@
 
 import { useRef, useEffect } from 'react';
 
-function useAgentEvents({ messages, status, methods, finishMetaRef, conversationId }) {
+// Collect the event-dedup ids present in a set of messages. Used to seed the
+// suppression sets when messages are loaded externally (restored history):
+// restored messages must not replay onToolCall / onToolResult / onUserMessage /
+// onTitleGenerated side effects.
+function collectExternalEventIds(msgs) {
+  const ids = {
+    toolCallIds: new Set(),
+    toolResultIds: new Set(),
+    userMessageIds: new Set(),
+    titleKeys: new Set(),
+  };
+  for (const message of msgs ?? []) {
+    if (message.role === 'user') {
+      if (message.id) ids.userMessageIds.add(message.id);
+      continue;
+    }
+    if (message.role !== 'assistant') continue;
+    for (const part of message.parts ?? []) {
+      if ((part.type?.startsWith?.('tool-') || part.type === 'dynamic-tool') && part.toolCallId) {
+        ids.toolCallIds.add(part.toolCallId);
+        if (part.state === 'output-available' || part.state === 'output-error') {
+          ids.toolResultIds.add(part.toolCallId);
+        }
+      }
+      if (part.type === 'data-chat-title' && part.data?.title) {
+        ids.titleKeys.add(`${message.id}-${part.data.title}`);
+      }
+    }
+  }
+  return ids;
+}
+
+function useAgentEvents({
+  messages,
+  status,
+  methods,
+  finishMetaRef,
+  conversationId,
+  externalIdsRef,
+}) {
   const prevStatusRef = useRef(status);
   const firedToolCallIds = useRef(new Set());
   const firedToolResultIds = useRef(new Set());
@@ -67,6 +106,8 @@ function useAgentEvents({ messages, status, methods, finishMetaRef, conversation
       !firedUserMessageIds.current.has(lastMessage.id)
     ) {
       firedUserMessageIds.current.add(lastMessage.id);
+      // Externally loaded (restored) messages are history, not new input.
+      if (externalIdsRef?.current?.userMessageIds?.has(lastMessage.id)) return;
       // Announce the conversation once, on its first user message, with the
       // effective (possibly auto-minted) conversationId so apps can persist or
       // track with a guaranteed id.
@@ -107,18 +148,24 @@ function useAgentEvents({ messages, status, methods, finishMetaRef, conversation
           const toolCallId = part.toolCallId;
           if (!toolCallId) continue;
 
+          // The input JSON streams incrementally — fire onToolCall only once
+          // the input is complete, or the event carries a truncated input.
+          if (part.state === 'input-streaming') continue;
+
           const toolName = part.toolName ?? part.type?.replace('tool-', '');
 
           if (!firedToolCallIds.current.has(toolCallId)) {
             firedToolCallIds.current.add(toolCallId);
-            methods.triggerEvent({
-              name: 'onToolCall',
-              event: {
-                toolName,
-                toolCallId,
-                input: part.input,
-              },
-            });
+            if (!externalIdsRef?.current?.toolCallIds?.has(toolCallId)) {
+              methods.triggerEvent({
+                name: 'onToolCall',
+                event: {
+                  toolName,
+                  toolCallId,
+                  input: part.input,
+                },
+              });
+            }
           }
 
           if (
@@ -126,15 +173,17 @@ function useAgentEvents({ messages, status, methods, finishMetaRef, conversation
             !firedToolResultIds.current.has(toolCallId)
           ) {
             firedToolResultIds.current.add(toolCallId);
-            methods.triggerEvent({
-              name: 'onToolResult',
-              event: {
-                toolName,
-                toolCallId,
-                output: part.output,
-                error: part.state === 'output-error',
-              },
-            });
+            if (!externalIdsRef?.current?.toolResultIds?.has(toolCallId)) {
+              methods.triggerEvent({
+                name: 'onToolResult',
+                event: {
+                  toolName,
+                  toolCallId,
+                  output: part.output,
+                  error: part.state === 'output-error',
+                },
+              });
+            }
           }
         }
       }
@@ -150,10 +199,12 @@ function useAgentEvents({ messages, status, methods, finishMetaRef, conversation
           const titleKey = `${message.id}-${part.data.title}`;
           if (!firedTitleIds.current.has(titleKey)) {
             firedTitleIds.current.add(titleKey);
-            methods.triggerEvent({
-              name: 'onTitleGenerated',
-              event: { title: part.data.title },
-            });
+            if (!externalIdsRef?.current?.titleKeys?.has(titleKey)) {
+              methods.triggerEvent({
+                name: 'onTitleGenerated',
+                event: { title: part.data.title },
+              });
+            }
           }
         }
       }
@@ -173,4 +224,5 @@ function useAgentEvents({ messages, status, methods, finishMetaRef, conversation
   }, [messages.length]);
 }
 
+export { collectExternalEventIds };
 export default useAgentEvents;

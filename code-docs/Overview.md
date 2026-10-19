@@ -1,6 +1,6 @@
 # Lowdefy Monorepo Overview
 
-> A configuration-driven web framework built on Next.js. Write YAML, get React apps.
+> A configuration-driven web framework built on Hono and Vite. Write YAML, get React apps.
 
 ## What Lowdefy Is
 
@@ -12,7 +12,7 @@ Lowdefy lets developers build web applications using YAML/JSON configuration ins
 - **Actions** triggered by user events
 - **Operators** for dynamic logic within config
 
-The framework compiles this config into a Next.js application at build time.
+At build time the framework compiles this config into a complete runnable server — a [Hono](https://hono.dev) app serving a [Vite](https://vite.dev)-built React client.
 
 ## Architecture at a Glance
 
@@ -34,7 +34,7 @@ The framework compiles this config into a Next.js application at build time.
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                     Next.js Server (runtime)                         │
+│              Hono Server (runtime) + Vite-built client               │
 │  ┌─────────────────────┐    ┌────────────────────────────────────┐  │
 │  │   @lowdefy/api      │    │         @lowdefy/client            │  │
 │  │  - API routes       │    │  - React rendering                 │  │
@@ -74,15 +74,16 @@ Lowdefy is extensible via npm packages. Everything the user sees or interacts wi
 | **Operators**      | Logic functions     | `_if`, `_get`, `_sum`, `_date`        |
 | **Actions**        | Event handlers      | SetState, Request, Navigate           |
 | **Agents**         | AI chat providers   | Anthropic, OpenAI, Google, AI Gateway |
-| **Auth Providers** | Authentication      | Google, Auth0, Credentials            |
+| **Auth Providers** | Authentication      | Google, Auth0, Okta                   |
 
 ### Default Plugins
 
 These ship with Lowdefy and don't need explicit installation:
 
 - `@lowdefy/blocks-antd` - Primary UI components (Ant Design based)
-- `@lowdefy/blocks-antd-x` - AI chat components (AgentChat, AgentConversations)
+- `@lowdefy/blocks-antd-x` - AI components (AgentChat, AgentConversations, IntentInput)
 - `@lowdefy/blocks-basic` - HTML primitives
+- `@lowdefy/blocks-table` - Table and TableInput data tables (see [plugins/blocks/table.md](./plugins/blocks/table.md))
 - `@lowdefy/operators-js` - Core JavaScript operators
 - `@lowdefy/actions-core` - Standard actions
 - `@lowdefy/connection-anthropic` - Anthropic Claude models
@@ -90,6 +91,7 @@ These ship with Lowdefy and don't need explicit installation:
 - `@lowdefy/connection-google` - Google Gemini models
 - `@lowdefy/connection-ai-gateway` - Vercel AI Gateway (multi-provider routing)
 - `@lowdefy/connection-mcp` - MCP server connections
+- `@lowdefy/connection-treg` - treg API catalog (paid external endpoints, enrichment providers)
 
 See [Plugin System Architecture](./architecture/plugin-system.md) for internals.
 
@@ -156,10 +158,11 @@ Requests are server-side data operations:
 
 ## Server Variants
 
-| Server       | Use Case                                  |
-| ------------ | ----------------------------------------- |
-| `server`     | Production Next.js server for deployments |
-| `server-dev` | Local development server with hot reload  |
+| Server       | Use Case                                                                                       |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| `server`     | Production — Hono app serving the Vite-built client                                            |
+| `server-dev` | Local development — Vite owns HTTP with the Hono app mounted via `@hono/vite-dev-server`       |
+| `server-e2e` | Playwright e2e testing — production server minus auth/Sentry, with a cookie-based session mock |
 
 ## File Structure
 
@@ -190,12 +193,15 @@ lowdefy/
 ### Architecture Deep Dives
 
 - [Agent System](./architecture/agent-system.md) - AI agent orchestration, tools, and streaming
-- [Build Pipeline](./architecture/build-pipeline.md) - How YAML becomes a Next.js app
+- [Build Pipeline](./architecture/build-pipeline.md) - How YAML becomes a runnable server
 - [Request Lifecycle](./architecture/request-lifecycle.md) - Data flow from action to database
+- [How Pages Load Data](./architecture/page-data-loading.md) - Parallel requests, page instances, websocket subscriptions and their costs
+- [Journeys](./architecture/journeys.md) - Config tests: grammar, runner, data sets, traces, evidence, hardening
 - [State Management](./architecture/state-management.md) - Page state and reactivity
 - [Plugin System](./architecture/plugin-system.md) - How plugins are loaded and registered
 - [Auth System](./architecture/auth-system.md) - Authentication integration
 - [Operator System](./architecture/operator-system.md) - Operator evaluation at build/runtime
+- [Notification Rendering](./architecture/notifications.md) - The render primitive and the composed send pipeline
 
 ### Plugin Documentation
 
@@ -203,11 +209,11 @@ lowdefy/
 - [Connections](./plugins/connections/overview.md) - Data sources (MongoDB, SQL, REST)
 - [Operators](./plugins/operators/overview.md) - Logic functions (JS, MQL, Moment)
 - [Actions](./plugins/actions/overview.md) - Event handlers (Core, PDF)
-- [Plugins](./plugins/plugins/overview.md) - Auth and utilities (NextAuth, AWS, CSV)
+- [Plugins](./plugins/plugins/overview.md) - Auth and utilities (Auth.js providers, AWS, CSV)
 
 ### Servers
 
-- [Servers Overview](./servers/overview.md) - Next.js server architecture
+- [Servers Overview](./servers/overview.md) - Hono server architecture
 - [Production Server](./servers/server.md) - Deployment server
 - [Development Server](./servers/server-dev.md) - Hot reload and file watching
 

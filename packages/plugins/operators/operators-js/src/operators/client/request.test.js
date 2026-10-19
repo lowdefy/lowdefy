@@ -92,6 +92,13 @@ const context = {
         error: [],
       },
     ],
+    reserved: [
+      {
+        response: { constructor: 'from the api', safe: 'ok' },
+        loading: false,
+        error: [],
+      },
+    ],
   },
   state: { state: true },
 };
@@ -190,4 +197,32 @@ test('_request returns null when loading and holdValue is not set', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toEqual([]);
+});
+
+test('_request returns null and does not throw when the response holds a reserved key', () => {
+  const input = { _request: 'reserved.constructor' };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toBe(null);
+  expect(res.errors).toEqual([]);
+});
+
+test('_request still resolves a non-reserved key on a response that holds a reserved key', () => {
+  const input = { _request: 'reserved.safe' };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toBe('ok');
+  expect(res.errors).toEqual([]);
+});
+
+test('_request propagates an error that is not a ReservedKeyError', () => {
+  const response = {};
+  Object.defineProperty(response, 'boom', {
+    enumerable: true,
+    get: () => {
+      throw new Error('read failed');
+    },
+  });
+  const requests = { throws: [{ response, loading: false, error: [] }] };
+  expect(() => _request({ arrayIndices, params: 'throws.boom', requests })).toThrow('read failed');
 });

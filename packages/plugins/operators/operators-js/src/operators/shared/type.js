@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { ReservedKeyError, get, type } from '@lowdefy/helpers';
 
 function _type({ location, params, state }) {
   const typeName = type.isObject(params) ? params.type : params;
@@ -22,9 +22,19 @@ function _type({ location, params, state }) {
     throw new Error(`_type.type must be a string.`);
   }
 
-  const on = Object.prototype.hasOwnProperty.call(params, 'on')
-    ? params.on
-    : get(state, get(params, 'key', { default: location }));
+  let on;
+  if (Object.prototype.hasOwnProperty.call(params, 'on')) {
+    on = params.on;
+  } else {
+    try {
+      on = get(state, get(params, 'key', { default: location }));
+    } catch (error) {
+      // A runtime read: the key comes from app data or an author keypath evaluated at render time,
+      // and there is no config location to attach in the browser. The reserved rule's job — refusing
+      // the read — is already done, so degrade to the miss value rather than crashing the page.
+      if (!(error instanceof ReservedKeyError)) throw error;
+    }
+  }
 
   switch (typeName) {
     case 'string':
@@ -47,6 +57,10 @@ function _type({ location, params, state }) {
       return type.isUndefined(on);
     case 'none':
       return type.isNone(on);
+    // `empty` is what a form author means by "no value" - null, undefined, '' and [];
+    // 0, false and {} are values.
+    case 'empty':
+      return type.isNone(on) || on === '' || (type.isArray(on) && on.length === 0);
     case 'primitive':
       return type.isPrimitive(on);
     default:
@@ -55,5 +69,15 @@ function _type({ location, params, state }) {
 }
 
 _type.dynamic = true;
+// With no `on`, _type reads state at `key`, or at its own location: the engine's required check
+// is a _type on the input's own value.
+_type.tracking = ({ location, params }) => {
+  const typeName = type.isObject(params) ? params.type : params;
+  if (!type.isString(typeName) || Object.prototype.hasOwnProperty.call(params, 'on')) {
+    return { kind: 'pure' };
+  }
+  const key = get(params, 'key', { default: location });
+  return { kind: 'read', keys: [type.isString(key) ? `state:${key}` : 'state:*'] };
+};
 
 export default _type;

@@ -15,10 +15,11 @@
 */
 
 import React from 'react';
-import { Button, ConfigProvider } from 'antd';
+import { Button, ConfigProvider, Tooltip } from 'antd';
 import { get, type } from '@lowdefy/helpers';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { getSafeHref, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
+import getDisabled from '../../getDisabled.js';
 import withTheme from '../withTheme.js';
 
 const ANTD_COLOR_PRESETS = new Set([
@@ -68,12 +69,26 @@ const ButtonBlock = ({
   styles = {},
 }) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
+  const actionLoading = get(events, `${onClickActionName}.loading`);
   const { color: buttonColor, variant, type: buttonType } = getButtonProps(properties);
+
+  const href = getSafeHref(properties.href);
 
   const isPresetColor = ANTD_COLOR_PRESETS.has(properties.color);
   const resolvedColor = isPresetColor ? buttonColor : properties.color ? 'primary' : buttonColor;
 
-  const button = (
+  // An icon-only button still has to say what it does: with hideTitle the
+  // title becomes the hover text unless `tooltip` names its own. A button that
+  // shows its title gets a tooltip only when asked.
+  const titleHidden =
+    properties.hideTitle || (properties.shape === 'circle' && type.isNone(properties.title));
+  const tooltip = type.isString(properties.tooltip)
+    ? properties.tooltip
+    : titleHidden && !type.isNone(properties.title)
+      ? properties.title
+      : null;
+
+  const rawButton = (
     <Button
       block={properties.block}
       className={classNames.element}
@@ -83,14 +98,17 @@ const ButtonBlock = ({
       color={resolvedColor}
       variant={variant}
       type={buttonType}
-      disabled={properties.disabled || get(events, `${onClickActionName}.loading`) || loading}
+      disabled={getDisabled({ loading: actionLoading || loading, properties })}
       ghost={properties.ghost}
       danger={properties.danger}
-      href={properties.href}
+      href={href}
+      iconPlacement={properties.iconPlacement}
       id={blockId}
-      loading={get(events, `${onClickActionName}.loading`)}
+      loading={actionLoading}
       shape={properties.shape}
       size={properties.size}
+      // Only a link has a target; without href antd renders a <button>.
+      target={type.isNone(href) ? undefined : properties.target}
       icon={
         properties.icon && (
           <Icon
@@ -115,6 +133,13 @@ const ButtonBlock = ({
           </>
         )}
     </Button>
+  );
+  const button = tooltip ? (
+    <Tooltip title={tooltip} mouseEnterDelay={0.3}>
+      {rawButton}
+    </Tooltip>
+  ) : (
+    rawButton
   );
 
   if (properties.color && !isPresetColor) {

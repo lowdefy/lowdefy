@@ -1,0 +1,704 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { jest } from '@jest/globals';
+import { operatorsServer } from '@lowdefy/operators-js';
+
+import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import runRoutine from './runRoutine.js';
+import testContext from '../../test/testContext.js';
+
+const operators = { ...operatorsServer };
+
+const logger = {
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+};
+
+const mockRenderEmail = jest.fn();
+const mockInterpolateProperties = jest.fn();
+
+function createNotificationConfig(overrides = {}) {
+  return {
+    id: 'notification:task-assigned',
+    notificationId: 'task-assigned',
+    type: 'NotificationEmail',
+    properties: {
+      subject: 'New Task',
+      title: 'Task assigned to you',
+      message: 'A task was assigned.',
+    },
+    ...overrides,
+  };
+}
+
+const routes = [
+  { pageId: 'task-view', path: 'task-view', auth: {} },
+  { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}', auth: {} },
+  { pageId: 'notifications-link', path: 'notifications-link', auth: {} },
+];
+
+function createMockReadConfigFile({ notificationConfig, app = {} }) {
+  return jest.fn((path) => {
+    if (path === 'routes.json') {
+      return routes;
+    }
+    if (notificationConfig && path === `notifications/${notificationConfig.notificationId}.json`) {
+      return notificationConfig;
+    }
+    if (path === 'app.json') {
+      return app;
+    }
+    return null;
+  });
+}
+
+function createTestContext({ notificationConfig, app, config } = {}) {
+  const context = testContext({
+    appMeta: { name: 'test-app' },
+    config: config ?? { basePath: '' },
+    operators,
+    logger,
+    readConfigFile: createMockReadConfigFile({ notificationConfig, app }),
+  });
+  context.notifications = {
+    NotificationEmail: Object.assign(jest.fn(), {
+      markdownProperties: ['message'],
+      dataKeys: ['actions'],
+    }),
+  };
+  context.renderEmail = mockRenderEmail;
+  context.interpolateProperties = mockInterpolateProperties;
+  context.evaluateOperators = createEvaluateOperators(context);
+  return context;
+}
+
+function createRoutineContext(overrides = {}) {
+  return {
+    steps: {},
+    payload: {},
+    arrayIndices: [],
+    items: {},
+    state: {},
+    endpointDepth: 0,
+    ...overrides,
+  };
+}
+
+function createStep({ data, serverUrl, landingPage, recordId, properties }) {
+  return {
+    id: 'notification:test_endpoint:render',
+    type: 'RenderNotification',
+    stepId: 'render',
+    endpointId: 'test_endpoint',
+    properties: properties ?? {
+      notificationId: 'task-assigned',
+      data,
+      serverUrl,
+      landingPage,
+      recordId,
+    },
+  };
+}
+
+const contact = { _id: 'UC-1', email: 'Jane@Example.com', profile: { name: 'Jane' } };
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockRenderEmail.mockResolvedValue({ html: '<html>body</html>', text: 'plain body' });
+  mockInterpolateProperties.mockImplementation(({ properties }) => properties);
+});
+
+test('RenderNotification returns subject, title, preview, html, text and the resolved data', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, task: { title: 'Review' } } }),
+  });
+
+  expect(res.status).toBe('continue');
+  expect(routineContext.steps.render).toEqual({
+    subject: 'New Task',
+    title: 'Task assigned to you',
+    preview: 'A task was assigned.',
+    html: '<html>body</html>',
+    text: 'plain body',
+    data: { contact, task: { title: 'Review' } },
+  });
+});
+
+test('RenderNotification title falls back to subject and preview derives from message markdown', async () => {
+  mockInterpolateProperties.mockImplementation(() => ({
+    subject: 'Weekly digest',
+    message: '**Bold** start of the message body',
+  }));
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact } }),
+  });
+
+  expect(routineContext.steps.render.title).toBe('Weekly digest');
+  expect(routineContext.steps.render.preview).toBe('Bold start of the message body');
+});
+
+test('RenderNotification errors when data is an array', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: [{ contact }] }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('iterate with a ":for" control and render one item per step');
+});
+
+test('RenderNotification errors when data is not an object', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: 'not-an-object' }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('properties.data must evaluate to an object.');
+});
+
+test('RenderNotification errors when notificationId is not a string', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ properties: { notificationId: 7, data: { contact } } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('properties.notificationId must evaluate to a string.');
+});
+
+test('RenderNotification resolves pageId links to landing URLs when landingPage and recordId are set', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const data = {
+    contact,
+    links: {
+      button: { pageId: 'task-view', urlQuery: { _id: 'T-1' } },
+      external: 'https://other.example/page',
+    },
+    actions: [{ title: 'Open', link: { pageId: 'task-edit' } }],
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({
+      data,
+      serverUrl: 'https://myapp.com',
+      landingPage: 'notifications-link',
+      recordId: 'rec-1',
+    }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toContain('https://myapp.com/notifications-link?');
+  expect(renderArgs.links.button).toContain('_id=rec-1');
+  expect(renderArgs.links.button).toContain('option=links.button');
+  const query = new URLSearchParams(renderArgs.links.button.split('?')[1]);
+  expect([...query.keys()].sort()).toEqual(['_id', 'option']);
+  expect(renderArgs.links.external).toBe('https://other.example/page');
+  expect(renderArgs.data.actions[0].link).toContain('option=actions.0.link');
+
+  // The result carries the resolved copy; the input item is not mutated, so
+  // callers can store the original link objects on their record.
+  expect(routineContext.steps.render.data.links.button).toContain('option=links.button');
+  expect(data.links.button).toEqual({ pageId: 'task-view', urlQuery: { _id: 'T-1' } });
+});
+
+test('RenderNotification resolves pageId links directly when landingPage is unset', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const data = {
+    contact,
+    links: {
+      button: { pageId: 'task-view', urlQuery: { _id: 'T-1' } },
+      plain: { pageId: 'home' },
+      external: 'https://other.example/page',
+    },
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data, serverUrl: 'https://myapp.com' }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('https://myapp.com/task-view?_id=T-1');
+  expect(renderArgs.links.plain).toBe('https://myapp.com/home');
+  expect(renderArgs.links.external).toBe('https://other.example/page');
+});
+
+test('RenderNotification builds patterned page links from pathParams', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const data = {
+    contact,
+    links: {
+      button: {
+        pageId: 'ticket',
+        pathParams: { space: 's', ticket_id: '1' },
+        urlQuery: { tab: 'a' },
+      },
+    },
+  };
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data, serverUrl: 'https://myapp.com' }),
+  });
+  expect(mockRenderEmail.mock.calls[0][0].links.button).toBe('https://myapp.com/tickets/s/1?tab=a');
+
+  jest.clearAllMocks();
+  await runRoutine(context, routineContext, {
+    routine: createStep({
+      data,
+      serverUrl: 'https://myapp.com',
+      landingPage: 'notifications-link',
+      recordId: 'rec-1',
+    }),
+  });
+  expect(mockRenderEmail.mock.calls[0][0].links.button).toContain(
+    'https://myapp.com/notifications-link?'
+  );
+  expect(data.links.button.pathParams).toEqual({ space: 's', ticket_id: '1' });
+});
+
+test('RenderNotification fails for a link missing a path value', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+  const data = {
+    contact,
+    links: { button: { pageId: 'ticket', pathParams: { space: 's' } } },
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data, serverUrl: 'https://myapp.com' }),
+  });
+  expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    'Link to page "ticket" is missing a value for path placeholder "ticket_id".'
+  );
+});
+
+test('RenderNotification resolves array link fields for the data keys the template declares', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  // Custom template declaring its own data key — link resolution must follow it
+  context.notifications.NotificationEmail.dataKeys = ['rows'];
+  const routineContext = createRoutineContext();
+
+  const data = {
+    contact,
+    rows: [{ title: 'Row', link: { pageId: 'row-view' } }],
+    actions: [{ title: 'Ignored', link: { pageId: 'action-view' } }],
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({
+      data,
+      serverUrl: 'https://myapp.com',
+      landingPage: 'notifications-link',
+      recordId: 'rec-2',
+    }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.data.rows[0].link).toContain('option=rows.0.link');
+  // 'actions' is not one of this template's dataKeys — left untouched
+  expect(renderArgs.data.actions[0].link).toEqual({ pageId: 'action-view' });
+  context.notifications.NotificationEmail.dataKeys = ['actions'];
+});
+
+test('RenderNotification normalizes a trailing slash on serverUrl', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({
+      data: { contact, links: { button: { pageId: 'home' } } },
+      serverUrl: 'https://myapp.com/',
+    }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('https://myapp.com/home');
+});
+
+test('RenderNotification defaults serverUrl to the current environment url', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    config: {
+      basePath: '',
+      environment: 'staging',
+      environments: {
+        prod: { url: 'https://myapp.com' },
+        staging: { url: 'https://staging.myapp.com/' },
+      },
+    },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, links: { button: { pageId: 'home' } } } }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('https://staging.myapp.com/home');
+});
+
+test('RenderNotification prefers the serverUrl step property over the environment url', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    config: {
+      basePath: '',
+      environment: 'staging',
+      environments: { staging: { url: 'https://staging.myapp.com' } },
+    },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({
+      data: { contact, links: { button: { pageId: 'home' } } },
+      serverUrl: 'https://myapp.com',
+    }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('https://myapp.com/home');
+});
+
+test('RenderNotification falls back to the request origin on the dev server', async () => {
+  const context = {
+    ...createTestContext({ notificationConfig: createNotificationConfig() }),
+    dev: true,
+    origin: 'http://localhost:3001',
+  };
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, links: { button: { pageId: 'home' } } } }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('http://localhost:3001/home');
+});
+
+test('RenderNotification never uses the request origin outside the dev server', async () => {
+  const context = {
+    ...createTestContext({ notificationConfig: createNotificationConfig() }),
+    origin: 'https://attacker.example.com',
+  };
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, links: { button: { pageId: 'home' } } } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(mockRenderEmail).not.toHaveBeenCalled();
+});
+
+test('RenderNotification errors when links are present and no serverUrl is set', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, links: { button: { pageId: 'home' } } } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain(
+    'Set the serverUrl step property, or the url of the current environment in config.environments.'
+  );
+  expect(mockRenderEmail).not.toHaveBeenCalled();
+});
+
+test('RenderNotification errors when landingPage is set without recordId and links are present', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({
+      data: { contact, links: { button: { pageId: 'home' } } },
+      serverUrl: 'https://myapp.com',
+      landingPage: 'notifications-link',
+    }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain(
+    'properties.landingPage requires properties.recordId to compose landing URLs.'
+  );
+});
+
+test('RenderNotification errors when serverUrl is not a non-empty string', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: '' }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('properties.serverUrl must evaluate to a non-empty string.');
+});
+
+test('RenderNotification interpolates properties with the resolved data item and markdownProperties', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, task: { title: 'Review' } } }),
+  });
+
+  const args = mockInterpolateProperties.mock.calls[0][0];
+  expect(args.properties).toEqual(createNotificationConfig().properties);
+  expect(args.data.task).toEqual({ title: 'Review' });
+  expect(args.markdownProperties).toEqual(['message']);
+});
+
+test('RenderNotification errors when interpolation fails', async () => {
+  mockInterpolateProperties.mockImplementation(() => {
+    throw new Error('unexpected token');
+  });
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain(
+    'Notification "task-assigned" template interpolation failed: unexpected token'
+  );
+});
+
+test('RenderNotification errors when properties do not match the template schema', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  context.notifications.NotificationEmail.schema = {
+    type: 'object',
+    properties: { subject: { type: 'string' } },
+    required: ['subject', 'button'],
+  };
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain(
+    'properties do not match template "NotificationEmail" schema'
+  );
+  delete context.notifications.NotificationEmail.schema;
+});
+
+test('RenderNotification errors when the template type is not registered', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig({ type: 'MissingEmail' }),
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain(
+    'Notification template type "MissingEmail" can not be found.'
+  );
+});
+
+test('RenderNotification errors when email rendering is not available', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  context.renderEmail = undefined;
+  context.interpolateProperties = undefined;
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('Email rendering is not available.');
+});
+
+test('RenderNotification errors when the notification does not exist', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ properties: { notificationId: 'missing', data: { contact } } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('Notification "missing" does not exist.');
+});
+
+test('RenderNotification merges notification theme over app.email', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig({ theme: { logo: 'https://cdn/x.png' } }),
+    app: { email: { companyName: 'MyApp', logo: 'https://cdn/default.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact } }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme).toEqual({
+    companyName: 'MyApp',
+    logo: 'https://cdn/x.png',
+  });
+});
+
+test('RenderNotification resolves a relative app.email logo against serverUrl', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { email: { companyName: 'MyApp', logo: '/logo-light.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: 'https://myapp.com' }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme).toEqual({
+    companyName: 'MyApp',
+    logo: 'https://myapp.com/logo-light.png',
+  });
+});
+
+test('RenderNotification resolves a relative logo including basePath', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { email: { logo: '/logo-light.png' } },
+    config: { basePath: '/base' },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: 'https://myapp.com' }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme.logo).toBe('https://myapp.com/base/logo-light.png');
+});
+
+test('RenderNotification drops a relative logo when no serverUrl is available', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { email: { companyName: 'MyApp', logo: '/logo-light.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact } }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme).toEqual({ companyName: 'MyApp' });
+});
+
+test('RenderNotification resolves a relative per-notification theme logo override', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig({ theme: { logo: '/sub-brand.png' } }),
+    app: { email: { logo: 'https://cdn/default.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: 'https://myapp.com' }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme.logo).toBe('https://myapp.com/sub-brand.png');
+});
+
+test('RenderNotification trims trailing serverUrl slash before resolving a relative logo', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { email: { logo: '/logo-light.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: 'https://myapp.com/' }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme.logo).toBe('https://myapp.com/logo-light.png');
+});
+
+test('RenderNotification builds the landing URL from a landing page with a path', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const routineContext = createRoutineContext();
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({
+      data: { contact, links: { button: { pageId: 'task-view' } } },
+      serverUrl: 'https://myapp.com',
+      landingPage: { pageId: 'ticket', pathParams: { space: 's', ticket_id: '9' } },
+      recordId: 'rec-1',
+    }),
+  });
+  expect(res.status).toBe('continue');
+  expect(mockRenderEmail.mock.calls[0][0].links.button).toBe(
+    'https://myapp.com/tickets/s/9?_id=rec-1&option=links.button'
+  );
+});
+
+test('RenderNotification errors when landingPage is not a page id', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const res = await runRoutine(context, createRoutineContext(), {
+    routine: createStep({
+      data: { contact },
+      serverUrl: 'https://myapp.com',
+      landingPage: { pathParams: {} },
+    }),
+  });
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('properties.landingPage must evaluate to a page id');
+});
+
+test('RenderNotification errors when landingPage is a URL path rather than a page id', async () => {
+  const context = createTestContext({ notificationConfig: createNotificationConfig() });
+  const res = await runRoutine(context, createRoutineContext(), {
+    routine: createStep({
+      data: { contact, links: { button: { pageId: 'task-view' } } },
+      serverUrl: 'https://myapp.com',
+      landingPage: '/notifications-link',
+      recordId: 'rec-1',
+    }),
+  });
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain(
+    'properties.landingPage "/notifications-link" is not a page id. Pass the landing page\'s id, not its URL path.'
+  );
+  expect(mockRenderEmail).not.toHaveBeenCalled();
+});

@@ -13,7 +13,16 @@
 
 import useSWR from 'swr';
 
-import { getReloadVersion } from './useMutateCache.js';
+import { serializer, type } from '@lowdefy/helpers';
+import recordCallerStamp from '@lowdefy/client/recordCallerStamp.js';
+import shouldReloadForCaller from '@lowdefy/client/shouldReloadForCaller.js';
+
+import { getNavVersion, getReloadVersion } from './useMutateCache.js';
+
+// Page config URLs (without the query string) of pages whose config is
+// server-resolved per request, mapped to the navigation version of the fetch
+// that found them dynamic. Learned from the fetched config's dynamic flag.
+const dynamicPages = new Map();
 
 function parseJsModule(text) {
   const fn = new Function('exports', text.replace('export default', 'exports.default ='));
@@ -22,32 +31,44 @@ function parseJsModule(text) {
   return mod.default ?? {};
 }
 
-async function fetchJsEntries(basePath) {
+// user is the caller the page renders: a page config the server answered as
+// another caller, or with other roles, reloads the tab (shouldReloadForCaller).
+// Otherwise its caller stamp is kept on lowdefy (recordCallerStamp).
+export async function fetchPageConfig(url, { lowdefy, user }) {
+  const basePath = url.replace(/\/api\/page\/.*$/, '');
+  // A stalled request (server restart mid-request, exhausted sockets) must
+  // become a visible error, never an eternal Suspense fallback — the reload
+  // recovery path cannot fire while the page tree is suspended.
+  let res;
   try {
-    const res = await fetch(`${basePath}/api/js/client`);
-    if (!res.ok) return {};
-    return parseJsModule(await res.text());
-  } catch {
-    return {};
+    res = await fetch(url, {
+      headers: { 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(30_000),
+    });
+  } catch (error) {
+    if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+      throw new Error(
+        `Page config request "${url}" timed out - the dev server may be restarting. Reload the page.`
+      );
+    }
+    throw error;
   }
-}
-
-async function fetchDynamicIcons(basePath) {
-  try {
-    const res = await fetch(`${basePath}/api/icons/dynamic`);
-    if (!res.ok) return {};
-    return parseJsModule(await res.text());
-  } catch {
-    return {};
-  }
-}
-
-async function fetchPageConfig(url) {
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
-  });
   if (res.status === 404) {
     return null;
+  }
+  if (res.status === 401 || res.status === 403) {
+    // 401: logged-out navigation to a protected page. 403: authorised but second
+    // factor not yet enrolled. Page renders a redirect screen and full-loads to
+    // the destination so it can return here afterwards. Returning a settled value
+    // (never a parked promise) keeps the SWR key healthy: if the navigation is
+    // dropped, the tab still recovers on the next reload event or via the manual
+    // link on the redirect screen.
+    const { redirect } = await res.json();
+    const authRedirect = redirect ?? `${basePath}/404`;
+    console.warn(
+      `Lowdefy dev: "${url}" returned ${res.status} - redirecting to "${authRedirect}".`
+    );
+    return { authRedirect };
   }
   const data = await res.json();
   if (data?.buildError) {
@@ -57,37 +78,82 @@ async function fetchPageConfig(url) {
     return data;
   }
   if (!res.ok) {
+    // A Lowdefy error envelope is revived rather than flattened to its message,
+    // so the class, configKey and source survive to the error handler.
+    if (data?.['~e']) {
+      throw serializer.deserialize(data);
+    }
     throw new Error(data.message || 'Request error');
   }
-
-  // Fetch jsMap and dynamic icons after page build completes
-  // (JIT build may have added new entries).
-  // Extract basePath from the URL to construct the endpoints.
-  const basePath = url.replace(/\/api\/page\/.*$/, '');
-  const [jsEntries, dynamicIcons] = await Promise.all([
-    fetchJsEntries(basePath),
-    fetchDynamicIcons(basePath),
-  ]);
-  data._jsEntries = jsEntries;
-  data._dynamicIcons = dynamicIcons;
-
-  // Bust CSS cache so the browser picks up newly compiled Tailwind classes
-  const cssLink = document.getElementById('tailwind-jit-css');
-  if (cssLink) {
-    cssLink.href = `${basePath}/tailwind-jit.css?v=${Date.now()}`;
+  const serverCaller = res.headers.get('x-lowdefy-caller');
+  if (shouldReloadForCaller({ serverCaller, user, window })) {
+    // The page unloads; settling would render the other caller's config.
+    window.location.reload();
+    return new Promise(() => {});
   }
+  recordCallerStamp({ lowdefy, serverCaller });
+
+  // A page response is { pageId, pathParams, matchedPath, pageConfig }: the page
+  // the server matched the path to, the values it carries and the path it was
+  // matched on. The JIT build folds this page's _js entries and dynamic icons
+  // into pageConfig, so first paint needs no secondary fetch. _jsEntries arrives
+  // as module text — compile it to the { hash: fn } object Page expects.
+  // _dynamicIcons is already plain data — leave it for Page to inject.
+  const { pageConfig } = data;
+  if (pageConfig._jsEntries) pageConfig._jsEntries = parseJsModule(pageConfig._jsEntries);
 
   return data;
 }
 
-function usePageConfig(pageId, basePath) {
-  const url = `${basePath}/api/page/${pageId}`;
-  // Include reloadVersion in the SWR key so that after a config reload,
-  // previously cached page data is not reused. The fetcher receives
-  // [url, version] but only uses url — the version just busts the cache.
-  const { data } = useSWR([url, getReloadVersion()], ([fetchUrl]) => fetchPageConfig(fetchUrl), {
-    suspense: true,
-  });
+export function recordDynamicPage({ data, pageUrl }) {
+  if (data?.pageConfig?.dynamic !== true) {
+    dynamicPages.delete(pageUrl);
+    return;
+  }
+  // Keep the first navigation version: later fetches of a known dynamic page
+  // must not move it, or their key would fall back to the static key.
+  if (!dynamicPages.has(pageUrl)) {
+    dynamicPages.set(pageUrl, getNavVersion());
+  }
+}
+
+// The query string only changes the config of a dynamic page (server-side
+// Dynamic block resolution reads urlQuery), so a static page keys on its URL
+// alone and a Link that only changes the query reuses the cached config instead
+// of suspending behind the Building page fallback. A dynamic page keys on the
+// query and the navigation version, so it re-resolves on every navigation.
+// reloadVersion orphans every cached entry after a config reload. The fetch
+// that first finds a page dynamic was made under the static key, so for the
+// rest of that navigation the page keeps the static key and uses that result
+// rather than fetching it again.
+export function getPageConfigKey({ pageUrl, search }) {
+  const foundAtNavVersion = dynamicPages.get(pageUrl);
+  const navVersion = getNavVersion();
+  if (type.isUndefined(foundAtNavVersion) || foundAtNavVersion === navVersion) {
+    return [pageUrl, getReloadVersion()];
+  }
+  return [pageUrl, getReloadVersion(), search, navVersion];
+}
+
+// path is the page's URL path without basePath and the leading "/", still
+// encoded; the server matches it to a page.
+// user is the caller the page renders; lowdefy keeps the last caller stamp.
+function usePageConfig(path, basePath, user, lowdefy) {
+  const pageUrl = `${basePath}/api/page/${path}`;
+  const search = window.location.search;
+  // The fetch always forwards the current query string, so server-side Dynamic
+  // block resolution sees the same urlQuery as an initial HTML load.
+  const { data } = useSWR(
+    getPageConfigKey({ pageUrl, search }),
+    async () => {
+      const data = await fetchPageConfig(`${pageUrl}${search}`, { lowdefy, user });
+      recordDynamicPage({ data, pageUrl });
+      return data;
+    },
+    {
+      suspense: true,
+    }
+  );
   return { data };
 }
 

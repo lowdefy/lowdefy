@@ -148,6 +148,22 @@ test('request id contains invalid characters', () => {
   );
 });
 
+test('request id is a reserved name', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'constructor', type: 'Request' }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request id "constructor" at page "page_1" is a reserved name and cannot be used as an id.'
+  );
+});
+
 test('request type is not a string', () => {
   const components = {
     pages: [
@@ -201,10 +217,12 @@ test('give request an id', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
+        subscriptions: [],
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -247,10 +265,12 @@ test('request on a sub-block', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         blockId: 'page_1',
         pageId: 'page_1',
         type: 'Container',
+        subscriptions: [],
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -302,10 +322,12 @@ test('multiple requests', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
+        subscriptions: [],
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -361,10 +383,12 @@ test('set auth to request', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
+        subscriptions: [],
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -378,10 +402,12 @@ test('set auth to request', () => {
       },
       {
         id: 'page:page_2',
+        linkPaths: {},
         auth: { public: false },
         pageId: 'page_2',
         blockId: 'page_2',
         type: 'Container',
+        subscriptions: [],
         requests: [
           {
             id: 'request:page_2:request_2',
@@ -427,6 +453,352 @@ test('request references non-existent connection', () => {
   expect(() => buildPages({ components, context })).toThrow(
     'Request "my_request" at page "page_1" references non-existent connection "nonExistentConnection".'
   );
+});
+
+test('request tenant none is accepted', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        requests: [
+          {
+            id: 'request_1',
+            type: 'Request',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(res.pages[0].requests[0].tenant).toBe('none');
+});
+
+test('request tenant authored is accepted', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        requests: [
+          {
+            id: 'request_1',
+            type: 'Request',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(res.pages[0].requests[0].tenant).toBe('authored');
+});
+
+test('request tenant true throws', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', tenant: true }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request tenant with another string throws', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', tenant: 'off' }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request tenant shared throws naming the connection position', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', tenant: 'shared' }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request tenant with a field object throws naming the connection position', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', tenant: { field: 'organization_id' } }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('a literal $out from a shared connection into a walled collection throws at build', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('orders_all');
+  contextWithTenant.walledTargets.set(JSON.stringify(['MongoDBCollection', ['uri'], 'totals']), {
+    connectionId: 'totals',
+    field: 'organization_id',
+  });
+  contextWithTenant.sharedTargets.set('orders_all', {
+    connection: { type: 'MongoDBCollection', properties: { databaseUri: 'uri' } },
+    tenantTarget: { database: ['databaseUri'], collection: 'collection' },
+  });
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'orders_all',
+            properties: { pipeline: [{ $out: 'totals' }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithTenant })).toThrow(
+    'Request "my_request" at page "page_1" writes into collection "totals" with "$out" on tenant: shared connection "orders_all"'
+  );
+});
+
+function tenantNoneContext() {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.connectionIds.add('open');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  contextWithTenant.typesMap = {
+    requestMetas: {
+      MongoDBFind: { checkRead: true, checkWrite: false },
+      MongoDBInsertOne: { checkRead: false, checkWrite: true },
+    },
+  };
+  return contextWithTenant;
+}
+
+function tenantNonePage(request) {
+  return { pages: [{ id: 'page_1', auth, type: 'Container', requests: [request] }] };
+}
+
+test('a write request with tenant none on a walled connection throws at build', () => {
+  const components = tenantNonePage({
+    id: 'my_request',
+    type: 'MongoDBInsertOne',
+    connectionId: 'walled',
+    tenant: 'none',
+  });
+  expect(() => buildPages({ components, context: tenantNoneContext() })).toThrow(
+    'Request "my_request" at page "page_1" is a MongoDBInsertOne request on tenant connection "walled" with tenant: none, but tenant: none may only read. To write rows of one organization from a system run, call an endpoint with a CallApi step that names the "organization"'
+  );
+});
+
+test.each([
+  ['a read request with tenant none on a walled connection', 'MongoDBFind', 'walled', 'none'],
+  [
+    'a write request on a walled connection without tenant none',
+    'MongoDBInsertOne',
+    'walled',
+    null,
+  ],
+  [
+    'a write request with tenant none on an unwalled connection',
+    'MongoDBInsertOne',
+    'open',
+    'none',
+  ],
+  ['a request type with no request metas with tenant none', 'CustomWrite', 'walled', 'none'],
+])('%s builds', (_, requestType, connectionId, tenant) => {
+  const request = { id: 'my_request', type: requestType, connectionId };
+  if (tenant) request.tenant = tenant;
+  const components = tenantNonePage(request);
+  const res = buildPages({ components, context: tenantNoneContext() });
+  expect(res.pages[0].requests[0].type).toBe(requestType);
+});
+
+test('a literal $out stage in a tenant none request on a walled connection throws at build', () => {
+  const components = tenantNonePage({
+    id: 'my_request',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+    properties: { pipeline: [{ $match: {} }, { $out: 'archive' }] },
+  });
+  expect(() => buildPages({ components, context: tenantNoneContext() })).toThrow(
+    'Request "my_request" at page "page_1" writes into collection "archive" with "$out" on tenant connection "walled" with tenant: none, but tenant: none may only read.'
+  );
+});
+
+test('an operator-named $out stage in a tenant none request on a walled connection builds', () => {
+  const components = tenantNonePage({
+    id: 'my_request',
+    type: 'MongoDBAggregation',
+    connectionId: 'walled',
+    tenant: 'none',
+    properties: { pipeline: [{ $out: { _state: 'target' } }] },
+  });
+  const res = buildPages({ components, context: tenantNoneContext() });
+  expect(res.pages[0].requests[0].type).toBe('MongoDBAggregation');
+});
+
+test('a literal $search pipeline on a walled connection without tenant authored throws at build', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'walled',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithTenant })).toThrow(
+    'Request "my_request" at page "page_1" contains "$search" on tenant connection "walled", which the tenant wall does not scope mechanically.'
+  );
+});
+
+test('a literal $graphLookup on a walled connection without tenant authored throws at build', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'walled',
+            properties: {
+              pipeline: [{ $match: { a: 1 } }, { $graphLookup: { from: 'walled' } }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithTenant })).toThrow(
+    'Request "my_request" at page "page_1" contains "$graphLookup" on tenant connection "walled"'
+  );
+});
+
+test('a $search pipeline with tenant authored passes the build check', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'walled',
+            tenant: 'authored',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithTenant });
+  expect(res.pages[0].requests[0].tenant).toBe('authored');
+});
+
+test('a $search pipeline on an unwalled connection passes the build check', () => {
+  const contextWithConn = testContext({ logger });
+  contextWithConn.connectionIds.add('open');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'open',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithConn });
+  expect(res.pages[0].requests[0].id).toBe('request:page_1:my_request');
+});
+
+test('an operator-composed pipeline on a walled connection passes the build check silently', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'walled',
+            properties: { pipeline: { '_array.concat': [[], []] } },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithTenant });
+  expect(res.pages[0].requests[0].id).toBe('request:page_1:my_request');
 });
 
 test('request with valid connectionId', () => {

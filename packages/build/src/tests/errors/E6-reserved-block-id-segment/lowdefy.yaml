@@ -1,0 +1,34 @@
+# E6: Reserved Block ID Segment
+# ===============================
+# Tests that a block id whose path segment is a reserved name (a prototype-
+# pollution vector like "constructor") fails the build with a located
+# ConfigError, instead of building clean and throwing mid-render when
+# get/set later walk that segment as a plain object key.
+#
+# Also pins the escaped-dot acceptance case through a full build: the first
+# block's id, `a\.constructor`, is a single literal segment "a.constructor"
+# (not the reserved name "constructor"), so it must build clean. It is listed
+# before the offending block so its own build step still runs before the
+# page build aborts on the error below.
+#
+# Expected error:
+#   [Config Error] Block id "a.constructor.b" uses reserved name "constructor"
+#   as a path segment, at page "home".
+#
+# The error points to the line where the block with the reserved id segment
+# is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: a\.constructor
+        type: Button
+        properties:
+          title: Escaped dot literal segment
+      - id: a.constructor.b
+        type: Button
+        properties:
+          title: Invalid ID segment

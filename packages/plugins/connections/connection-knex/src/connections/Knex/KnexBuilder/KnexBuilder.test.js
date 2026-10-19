@@ -20,14 +20,22 @@ import { validate } from '@lowdefy/ajv';
 const mockKnexClient = jest.fn(() => mockKnexClient);
 const mockKnex = jest.fn(() => mockKnexClient);
 
+mockKnexClient.client = { connectionSettings: {} };
 mockKnexClient.select = jest.fn(() => mockKnexClient);
 mockKnexClient.from = jest.fn(() => mockKnexClient);
 mockKnexClient.where = jest.fn(() => mockKnexClient);
+mockKnexClient.destroy = jest.fn(() => Promise.resolve());
 
 jest.unstable_mockModule('knex', () => {
   return {
     default: mockKnex,
   };
+});
+
+// Knex instances are cached per connection config; clear the cache so each test creates its own.
+afterEach(async () => {
+  const { destroyKnexClients } = await import('../getKnex.js');
+  await destroyKnexClients();
 });
 
 const connection = {

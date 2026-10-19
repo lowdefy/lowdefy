@@ -78,7 +78,9 @@ test('createNodeLogger does not crash on error with class instance property', ()
   expect(lines).toHaveLength(1);
   expect(lines[0].err.message).toBe('connection failed');
   expect(lines[0].err.code).toBe('ECONNREFUSED');
-  expect(lines[0].err.agent).toBeUndefined();
+  // The instance is never expanded, but the key must not vanish: an absent key is
+  // indistinguishable from "no such field".
+  expect(lines[0].err.agent).toBe('[Object: FakeAgent]');
 });
 
 test('createNodeLogger falls back to raw value when err is not an Error instance', () => {
@@ -99,4 +101,21 @@ test('createNodeLogger child includes child bindings', () => {
   expect(lines).toHaveLength(1);
   expect(lines[0].msg).toBe('from child');
   expect(lines[0].requestId).toBe('req-123');
+});
+
+test('createNodeLogger passes each finished line through hooks.streamWrite before the destination', () => {
+  const { lines, destination } = createSink();
+  const received = [];
+  const streamWrite = (line) => {
+    received.push(line);
+    return line.replace('planted-value', 'replaced-value');
+  };
+  const logger = createNodeLogger({ destination, hooks: { streamWrite } });
+  logger.info({ detail: 'planted-value' }, 'first');
+  logger.info('second');
+  expect(received).toHaveLength(2);
+  expect(JSON.parse(received[0]).detail).toBe('planted-value');
+  expect(JSON.parse(received[1]).msg).toBe('second');
+  expect(lines[0].detail).toBe('replaced-value');
+  expect(lines[1].msg).toBe('second');
 });

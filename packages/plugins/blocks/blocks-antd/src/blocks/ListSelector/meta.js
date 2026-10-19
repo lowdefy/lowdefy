@@ -16,7 +16,7 @@
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['clear'],
   valueType: 'any',
   cssKeys: {
     element: 'The list container.',

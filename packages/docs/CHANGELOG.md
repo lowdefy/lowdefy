@@ -1,5 +1,181 @@
 # Change Log
 
+## 6.1.0
+
+### Minor Changes
+
+- ea69869: feat(blocks-basic): add the `ClickableHtml` block. It renders sanitised HTML like `Html`, and additionally fires a named event when an element carrying a `data-event` attribute inside the markup is clicked: `data-event="onEditClick"` fires the block's `onEditClick` event, so a single block of markup can carry many clickable targets, each with its own action chain, without a block per button. The event object holds the element's other `data-*` attributes with snake_case keys (`data-record-id` → `record_id`). `HtmlComponent` in `@lowdefy/block-utils` now accepts an `onClick` prop.
+
+### Patch Changes
+
+- 6d6f8fa: feat: add the `_error` operator, which reads the error being handled.
+
+  - **Inside a server `:catch`**, `_error` returns the error that sent the routine there: its `name`, real `message`, `code`, `statusCode` and `cause` chain. Values of the app's secrets in the message are replaced with `[REDACTED]`. It resolves to the innermost `:catch`, a `:finally` reads the error of the `:catch` around its `:try`, and each `:parallel` branch reads its own. A routine can now branch on the failure:
+
+    ```yaml
+    - :try:
+        - id: get_customer
+          type: AxiosHttp
+          connectionId: crm
+          properties:
+            url: /customers
+      :catch:
+        - :if:
+            _eq: [{ _error: statusCode }, 404]
+          :then:
+            - :reject: Customer not found
+        - :throw: Customer lookup failed
+    ```
+
+  - **Inside a client `catch` action list**, `_error` returns the error that sent the event there. An error from the server keeps its `code` and `statusCode`, so a page can branch on a failed `Request` without an endpoint.
+  - **Outside a catch**, `_error` returns `null`.
+  - **`:throw` and `:reject` accept an Error as their message.** `:throw: { _error: true }` rethrows the caught error, keeping its class, `code` and `statusCode`; `:reject: { _error: true }` rejects with its message as the user would see it. Use `{ _error: message }` to send the real message to the user.
+  - `code` and `statusCode` are read the same way for every connection: `code` is the error's own `code`, and `statusCode` the first number among its `statusCode`, `status` and `response.status`. A request error now carries both from the error its connection threw, and AxiosHttp sets both on a non-2xx response.
+
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/helpers@6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+- 082acec: chore: Bump `yaml` to 2.9.0, clearing vite's `yaml@^2.4.2` peer warning.
+- 51c3008: feat: Endpoint execution controls for serverless deployments.
+
+  - `config.vercel { maxDuration, memory }` in `lowdefy.yaml` flows into the generated Vercel function config (default stays 60s).
+  - `async: true` on Api/InternalApi endpoints responds `{ accepted: true }` immediately and runs the routine in the background (kept alive via the platform request context; outcome observable through logs).
+  - `detached: true` on CallApi steps fire-and-forgets the target through the new `POST /api/detached/<endpointId>` route (CRON_SECRET transport auth), running it in its own invocation with a fresh duration budget.
+  - `webhook: true` on endpoints turns them into third-party webhook receivers on the standard `/api/endpoints` route: raw `{ body, query, headers }` payload, verbatim response body, system context — caller auth is the routine's first step. Non-webhook endpoints are unchanged.
+
+- 596212a: feat: `lowdefy init-vercel` instruments an app for Vercel, plus a configurable request timeout.
+
+  **`init-vercel`** now scaffolds a complete Vercel setup into `<config-directory>/deploy/`, so a v6
+  Lowdefy app (Hono server + Vite client) deploys to Vercel as static assets on the CDN plus one
+  Serverless Function:
+
+  - `vercel.json` — serves the built client (`dist/client`, which includes the app's `public/` files
+    via Vite's `publicDir`) from the CDN, sets the build command (`pnpm run build:client`) and output
+    directory, rewrites all other requests to the function, bundles the runtime-read build artifacts
+    via `includeFiles`, and caps the function with `maxDuration`.
+  - `api/index.js` — a Node Serverless Function that `chdir`s to the deploy directory, builds a Web
+    `Request` from the buffered Node request body, and runs the Hono app. (Vercel's Node runtime does
+    not drain a lazily-read body stream, so a streaming adapter hangs on every request with a body.)
+  - `vercel.install.sh` + `README.md`.
+
+  **Request timeout.** `@lowdefy/server`'s `createApp` now bounds request duration with a `timeout`
+  middleware, configured by a new **`config.requestTimeout`** (milliseconds) in `lowdefy.yaml`
+  (default `30000`, `0` disables). This protects against requests that hang on an upstream call
+  (database, SMTP, external API) running to the host's function limit — important on serverless
+  platforms billed by duration. Agent streaming routes are exempt. `@lowdefy/build` adds
+  `config.requestTimeout` to the schema.
+
+  `createApp` also gains a `{ serveStaticAssets }` option (default `true`); the Vercel function passes
+  `false` so the CDN owns static files and the function only handles dynamic routes. Docs updated
+  (deployment/Vercel and the config reference).
+
+- 16fdeb8: fix(client): Make the `Link` action honour `href`.
+
+  `createLink` routes `href` to `newOriginLink`, but the action's `newOriginLink` in
+  `setupLink.js` only ever read `url` — so `{ type: Link, params: { href: '/some/path' } }`
+  navigated to the literal string `"undefined"`. The anchor renderer used for `Link` blocks
+  (`createLinkComponent.js`) already prefers `href` over `url`; this brings the action to the
+  same precedence, and `href` is used verbatim: no protocol added, no `urlQuery` appended.
+
+  That verbatim handling is the point of having the parameter at all. `url` means an external
+  address and gains an `https://` prefix when the value has no scheme, which turns a
+  root-relative `/reports?id=1` into a request for a host named `reports`. `href` is how you
+  link to a same-origin path, a fragment, or any address that must be passed through as
+  written — so the fix removes the need to work around `url`'s prefixing.
+
+  `href` was also missing from the `Link` action docs, which is presumably how the gap went
+  unnoticed. Documented alongside the fix.
+
+- 53a36ed: feat(actions): Link action accepts `replace` and `scroll`.
+
+  A same-page `Link` that only reflects state into the `urlQuery` no longer has to jump the page to
+  the top or push a history entry per click: `scroll: false` keeps the current scroll position and
+  `replace: true` swaps the current history entry instead of pushing one. The router and the `<Link>`
+  block component already supported both; the Link action's same-origin path now forwards them too.
+
+- Updated dependencies [6446ae6]
+  - @lowdefy/helpers@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+- 8306262: feat(blocks-aggrid): Add `AgGridLowdefy`, upgrade to AG Grid v33, and theme every grid through the Theming API.
+
+  **Two new blocks.** `AgGridLowdefy` (display) and `AgGridLowdefyInput` (input) are grids themed from the app's antd design tokens — primary colour, surfaces, fonts and radius — so they look like they belong in a Lowdefy app and follow light/dark mode automatically, with no configuration and no separate dark block. They take a `size` property (`small | middle | large`, default `middle`) mirroring antd Table's densities, which sets row and header height to 36 / 44 / 54 pixels. Everything else — properties, events, methods, cell renderers — is identical to the existing grids.
+
+  To adopt, change `type: AgGridBalham` to `type: AgGridLowdefy` (or `type: AgGridInputBalham` to `type: AgGridLowdefyInput`). Every property carries over unchanged and the grid will deliberately look different afterwards. It is a visual opt-in, so there is no codemod.
+
+  Note that `size` loses to an explicit height: `rowHeight` and `headerHeight` are AG Grid grid options, and a grid option beats the theme parameter `size` sets. Setting `size: large` alongside `rowHeight: 30` gives 30 pixel rows under a 54 pixel header — use one or the other.
+
+  **AG Grid v33.** The package moves from `@ag-grid-community/*@32` to `ag-grid-community` + `ag-grid-react@33.3.2`, with `AllCommunityModule` registered explicitly. The Theming API is v33's default and class-based file themes are gone, so no block imports AG Grid CSS any more.
+
+  **The Balham, Alpine and Material blocks change appearance slightly.** They are kept indefinitely with the same API and the same names, but they now render AG Grid's prebuilt Theming API equivalents of those themes, with the antd colour mapping carried across as theme parameters. No config change is needed. What shifts:
+
+  - Spacing and header weight move a little — Balham rows go 28px to 29px, cell horizontal padding tightens on Balham and Alpine, the wrapper corner radius now comes from each theme (Balham 2px, Alpine 3px, Material 0) rather than a uniform 6px, and Balham's header weight goes from 600 to bold. Icons come from each theme's own SVG set, so glyph shapes differ from the old icon font.
+  - Row height now tracks the app's antd font size on Balham and Material, because v33 derives it from the data font size. It was font-size-independent before. The height only moves once the font size passes the theme's icon size (16px on Balham, 18px on Material), so at antd's default 14px nothing changes — you will see it at 18px or 20px. Alpine is unaffected at any font size.
+  - Four colours are re-pointed: row hover is a neutral fill rather than a primary tint, borders are lighter, the checkbox outline tone changes, and popup shadows are softer.
+  - Zebra striping, fonts and overall row density are preserved.
+
+  **A new `themeParams` property, on all eight blocks.** `themeParams` takes AG Grid Theming API parameter names and merges them onto the block's theme — the recommended way to retint a single grid:
+
+  ```yaml
+  - id: my_table
+    type: AgGridLowdefy
+    properties:
+      themeParams:
+        headerBackgroundColor: '#1a1a2e'
+        headerTextColor: '#e0e0ff'
+        borderColor: var(--ant-color-primary)
+  ```
+
+  Values are CSS strings and may reference antd tokens. Neither Lowdefy nor AG Grid validates parameter names, so a misspelled key is a silent no-op — check spelling against AG Grid's theming parameter reference.
+
+  Overriding `--ag-*` variables through a block's `style` — the documented `custom_theme` technique — **still works**; the Theming API honours an ancestor's declaration by design. The one caveat is that v33 renamed or folded away a number of the v32 `--ag-*` variables, and an override naming one of those is now a silent no-op. `--ag-header-foreground-color`, which appears in the documented example, is the case to watch: it is now `headerTextColor` (`--ag-header-text-color`). The AgGrid docs page carries the mapping table.
+
+  **One deprecation warning existing apps may see.** `rowSelection: multiple` / `single` is deprecated in v33 in favour of `rowSelection: { mode: multiRow }` / `{ mode: singleRow }`. The string form still works. If you migrate it, three things must move together:
+
+  - **Set `enableClickSelection: true`.** The string form defaults click-to-select on; the object form defaults it **off**. A bare `{ mode: singleRow }` silently stops clicking a row from selecting it, and `onRowSelected` / `onSelectionChanged` stop firing. The object form is not equivalent without this.
+  - **Move the colDef flags in the same edit.** `checkboxSelection` and `headerCheckboxSelection` on a column become `rowSelection.checkboxes` and `rowSelection.headerCheckbox`. v33 only supports `headerCheckboxSelection` alongside the _string_ form, so migrating one without the other breaks the header checkbox.
+  - **Six sibling options are read only in the string branch and are silently lost on migration:** `suppressRowClickSelection`, `suppressRowDeselection`, `rowMultiSelectWithClick`, `groupSelectsChildren`, `groupSelectsFiltered` and `isRowSelectable`. All six are deprecated in favour of `rowSelection.*` — move any you use across.
+
+  **Dark-mode apps now get dark browser chrome throughout (`@lowdefy/client`, `@lowdefy/server`, `@lowdefy/server-dev`, `@lowdefy/server-e2e`).** `color-scheme` is now set on `<html>` from the resolved dark-mode state — in the client's dark-mode effect and in each server's pre-hydration inline script, so first paint matches too. Native scrollbars, `<select>` dropdowns, date pickers and autofill backgrounds render dark in a dark app, inside grids and everywhere else. This is an app-wide behaviour change, well beyond AgGrid, and it is what lets the grid's own scrollbars follow dark mode. Apps pinned to light with `theme.darkMode: light` are unaffected, including on a dark OS. Apps that leave `theme.darkMode` unset get the default, `system`, so on a dark OS they resolve to dark and do pick up `color-scheme: dark` — set `theme.darkMode: light` if that is not wanted.
+
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/helpers@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/helpers@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+- Updated dependencies [25225ab]
+- Updated dependencies [f11addd]
+- Updated dependencies [0108f38]
+  - @lowdefy/helpers@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes

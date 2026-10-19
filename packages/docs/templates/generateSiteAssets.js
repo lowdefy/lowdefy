@@ -14,6 +14,12 @@
   limitations under the License.
 */
 
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+import extractAgentDocs from '@lowdefy/docs-content/scripts/extractAgentDocs.js';
+
+import generateLlmsTxt from './generateLlmsTxt.js';
 import generateSitemap from './generateSitemap.js';
 import buildSearchIndex from './buildSearchIndex.js';
 import checkOrphans from './checkOrphans.js';
@@ -21,7 +27,8 @@ import walkMenus from './walkMenus.js';
 
 /*
   Full-build site assets, run as the `_ref` transformer on pages.yaml:
-  sitemap, search index (with per-hit section trails), and the orphan check.
+  sitemap, search index (with per-hit section trails), the orphan check,
+  agent docs extraction and llms.txt.
 
   Per-page navigation state (sidebar menuId, breadcrumb, prev/next, active
   tab) is NOT written here — the dev server's JIT build resolves pages
@@ -34,6 +41,16 @@ function transformer(pages, vars) {
   checkOrphans({ pages, membershipCounts });
   generateSitemap(pages);
   buildSearchIndex(pages, records);
+  if (process.env.LOWDEFY_EXTRACT_AGENT_DOCS === 'true') {
+    extractAgentDocs({
+      pages,
+      menus: vars.menus,
+      outputDir: path.resolve(dirname(fileURLToPath(import.meta.url)), '../../docs-content'),
+    });
+  }
+  // Runs after extractAgentDocs so a `docs:content` run picks up the freshly
+  // extracted markdown; otherwise it reads the installed docs-content package.
+  generateLlmsTxt();
   return pages;
 }
 

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { projectCaughtError } from '@lowdefy/helpers';
+
 import runRoutine from '../runRoutine.js';
 
 async function controlTry(context, routineContext, { control }) {
@@ -21,15 +23,25 @@ async function controlTry(context, routineContext, { control }) {
     event: 'debug_control_try',
   });
 
-  let res = await runRoutine(context, routineContext, { routine: control[':try'] });
+  // With a :catch, an error in :try is handled here: `caught` makes runRoutine log an expected
+  // error (RequestError, ServiceError, UserError) at debug instead of as an error (nested
+  // controls and endpoint calls inherit it). Config, operator and internal errors are still
+  // reported through handleError. :catch and :finally run outside it, so their own errors are
+  // logged as usual.
+  const tryContext = control[':catch'] ? { ...routineContext, caught: true } : routineContext;
+  let res = await runRoutine(context, tryContext, { routine: control[':try'] });
 
-  if (res.status === 'error') {
-    if (control[':catch']) {
-      context.logger.debug({
-        event: 'debug_control_catch',
-      });
-      res = await runRoutine(context, routineContext, { routine: control[':catch'] });
-    }
+  if (res.status === 'error' && control[':catch']) {
+    context.logger.debug({
+      event: 'debug_control_catch',
+    });
+    // A child context rather than a field set on routineContext: the same object is handed to
+    // :try, :finally and every :parallel branch, so writing to it would let an inner :try clobber
+    // the outer catch's error and parallel branches read each other's. steps and state are still
+    // shared because routines mutate them in place. The projection is built once here, never the
+    // raw error, so no operator in the catch can read its received value or source.
+    const error = projectCaughtError(res.error, { scrub: context.scrubSecrets });
+    res = await runRoutine(context, { ...routineContext, error }, { routine: control[':catch'] });
   }
   if (control[':finally']) {
     context.logger.debug({

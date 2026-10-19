@@ -22,6 +22,7 @@ import BooleanCell from './BooleanCell.js';
 import ProgressCell from './ProgressCell.js';
 import NumberCell from './NumberCell.js';
 import ButtonsCell from './ButtonsCell.js';
+import MenuCell from './MenuCell.js';
 import SelectorCell from './SelectorCell.js';
 import SwitchCell from './SwitchCell.js';
 import TextInputCell from './TextInputCell.js';
@@ -36,6 +37,7 @@ const CELL_RENDERERS = {
   progress: ProgressCell,
   number: NumberCell,
   buttons: ButtonsCell,
+  menu: MenuCell,
   selector: SelectorCell,
   multipleSelector: SelectorCell,
   switch: SwitchCell,

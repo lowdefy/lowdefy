@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from '@sentry/browser';
 
 function captureSentryError({ error, pageId, blockId, configLocation }) {
   const tags = {};

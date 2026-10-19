@@ -1,0 +1,108 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import buildGenerateCallOptions from './buildGenerateCallOptions.js';
+
+test('buildGenerateCallOptions throws when neither prompt nor messages is provided', () => {
+  expect(() => buildGenerateCallOptions({ request: { model: 'test-model' } })).toThrow(
+    'Either "prompt" or "messages" must be provided.'
+  );
+});
+
+test('buildGenerateCallOptions throws when both prompt and messages are provided', () => {
+  expect(() =>
+    buildGenerateCallOptions({
+      request: { prompt: 'Hello', messages: [{ role: 'user', content: 'Hello' }] },
+    })
+  ).toThrow('Only one of "prompt" or "messages" may be provided, not both.');
+});
+
+test('buildGenerateCallOptions maps a prompt-only request', () => {
+  expect(buildGenerateCallOptions({ request: { prompt: 'Hello' } })).toEqual({
+    prompt: 'Hello',
+  });
+});
+
+test('buildGenerateCallOptions maps a messages-only request', () => {
+  const messages = [{ role: 'user', content: 'Hello' }];
+  expect(buildGenerateCallOptions({ request: { messages } })).toEqual({
+    messages,
+    experimental_download: expect.any(Function),
+  });
+});
+
+test('buildGenerateCallOptions bounds the file downloads of a messages request', () => {
+  const options = buildGenerateCallOptions({
+    request: { messages: [{ role: 'user', content: 'Hello' }] },
+  });
+  expect(typeof options.experimental_download).toBe('function');
+});
+
+test('buildGenerateCallOptions sets no download function for a prompt request', () => {
+  const options = buildGenerateCallOptions({ request: { prompt: 'Hello' } });
+  expect(options).not.toHaveProperty('experimental_download');
+});
+
+test('buildGenerateCallOptions copies all defined call settings and omits undefined ones', () => {
+  const request = {
+    prompt: 'Hello',
+    system: 'You are helpful.',
+    temperature: 0.5,
+    topP: 0.9,
+    topK: 40,
+    frequencyPenalty: 0.1,
+    presencePenalty: 0.2,
+    seed: 42,
+    stopSequences: ['END'],
+    maxRetries: 3,
+    providerOptions: { anthropic: { thinking: { type: 'enabled' } } },
+  };
+  // `system` is the request's public name; ai v7 takes it as `instructions`.
+  const { system, ...rest } = request;
+  expect(buildGenerateCallOptions({ request })).toEqual({ ...rest, instructions: system });
+});
+
+const systemMessages = [
+  { role: 'system', content: 'Answer in French.' },
+  { role: 'user', content: 'Hello' },
+];
+
+test('buildGenerateCallOptions passes system messages when the request allows them', () => {
+  expect(
+    buildGenerateCallOptions({ request: { messages: systemMessages, allowSystemInMessages: true } })
+  ).toEqual({
+    messages: systemMessages,
+    allowSystemInMessages: true,
+    experimental_download: expect.any(Function),
+  });
+});
+
+test.each([undefined, false])(
+  'buildGenerateCallOptions rejects a system message when allowSystemInMessages is %s',
+  (allowSystemInMessages) => {
+    expect(() =>
+      buildGenerateCallOptions({ request: { messages: systemMessages, allowSystemInMessages } })
+    ).toThrow('"messages" includes a system message.');
+  }
+);
+
+test('buildGenerateCallOptions ignores unrelated request properties', () => {
+  expect(
+    buildGenerateCallOptions({
+      request: { prompt: 'Hello', model: 'test-model', schema: { type: 'object' } },
+    })
+  ).toEqual({ prompt: 'Hello' });
+});

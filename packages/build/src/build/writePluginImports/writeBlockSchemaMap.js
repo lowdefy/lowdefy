@@ -14,13 +14,11 @@
   limitations under the License.
 */
 
-import { buildBlockSchema } from '@lowdefy/block-utils';
+import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
   const allMetas = {};
-
-  const typesMapSchemas = context.typesMap.schemas?.blocks ?? {};
 
   const blocksByPackage = {};
   for (const block of components.imports.blocks) {
@@ -30,23 +28,11 @@ async function writeBlockSchemaMap({ components, context }) {
     blocksByPackage[block.package].push(block);
   }
 
-  for (const [packageName, blocks] of Object.entries(blocksByPackage)) {
-    let packageMetas;
-    try {
-      packageMetas = await import(/* webpackIgnore: true */ `${packageName}/metas`);
-    } catch {
-      try {
-        packageMetas = await import(/* webpackIgnore: true */ `${packageName}/schemas`);
-      } catch {
-        // Package not resolvable from build context (custom plugins) — skip
-      }
-    }
+  for (const blocks of Object.values(blocksByPackage)) {
     for (const block of blocks) {
-      const meta = packageMetas?.[block.originalTypeName];
-      if (typesMapSchemas[block.typeName]) {
-        schemas[block.typeName] = typesMapSchemas[block.typeName];
-      } else if (meta) {
-        schemas[block.typeName] = buildBlockSchema(meta);
+      const { schema, meta } = await loadPluginTypeSchema({ context, kind: 'blocks', type: block });
+      if (schema) {
+        schemas[block.typeName] = schema;
       }
       if (meta) {
         allMetas[block.typeName] = meta;
@@ -60,16 +46,21 @@ async function writeBlockSchemaMap({ components, context }) {
     const typesMapMeta = typesMapBlockMetas[block.typeName];
     const meta = allMetas[block.typeName];
     if (typesMapMeta) {
+      // typesMap block metas come from extractBlockTypes (block-utils), which
+      // keeps only what the client needs — hazards are read from the plugin's
+      // own meta module, the same source as the schema.
       blockMetas[block.typeName] = {
         category: typesMapMeta.category,
         ...(typesMapMeta.valueType != null && { valueType: typesMapMeta.valueType }),
         ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
+        hazards: typesMapMeta.hazards ?? meta?.hazards ?? [],
       };
     } else if (meta) {
       blockMetas[block.typeName] = {
         category: meta.category,
         ...(meta.valueType != null && { valueType: meta.valueType }),
         ...(meta.initValue !== undefined && { initValue: meta.initValue }),
+        hazards: meta.hazards ?? [],
       };
     }
   }

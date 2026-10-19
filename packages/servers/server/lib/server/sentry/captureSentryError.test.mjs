@@ -1,0 +1,128 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { jest } from '@jest/globals';
+import { RequestError, TenantIntegrityError } from '@lowdefy/errors';
+
+const captureException = jest.fn();
+
+const { default: sentrySdk } = await import('./sentrySdk.js');
+const { default: captureSentryError } = await import('./captureSentryError.js');
+
+beforeEach(() => {
+  sentrySdk.current = { captureException };
+});
+
+function createAxiosError() {
+  const error = new Error('Request failed with status code 401');
+  error.name = 'AxiosError';
+  error.code = 'ERR_BAD_REQUEST';
+  error.config = {
+    auth: { username: 'svc-user', password: 'planted-config-password' },
+    params: { api_key: 'planted-config-param' },
+    headers: { Authorization: 'Bearer planted-config-header' },
+    baseURL: 'https://api.example.com',
+  };
+  error.response = { status: 401, data: { detail: 'planted-response-body' } };
+  return error;
+}
+
+function createRequestError() {
+  return new RequestError(undefined, {
+    cause: createAxiosError(),
+    typeName: 'AxiosHttp',
+    configKey: 'key-1',
+    received: {
+      url: 'https://api.example.com/items',
+      headers: { Authorization: 'Bearer runtime-token', Accept: 'application/json' },
+    },
+  });
+}
+
+test('captureSentryError sends the log projection as extra.error, without axios config and with received credential keys masked', () => {
+  const error = createRequestError();
+  captureSentryError({ error, context: { rid: 'req-1', pageId: 'orders' } });
+  expect(captureException).toHaveBeenCalledTimes(1);
+  const [captured, { extra }] = captureException.mock.calls[0];
+  expect(captured).toBe(error);
+  expect(extra.error.typeName).toEqual('AxiosHttp');
+  expect(extra.error.statusCode).toEqual(401);
+  expect(extra.error.received).toEqual({
+    url: 'https://api.example.com/items',
+    headers: { Authorization: '[REDACTED]', Accept: 'application/json' },
+  });
+  expect(extra.error.cause).toEqual({
+    name: 'AxiosError',
+    message: 'Request failed with status code 401',
+    stack: expect.any(String),
+    code: 'ERR_BAD_REQUEST',
+    statusCode: 401,
+  });
+  expect(JSON.stringify(extra)).not.toMatch(/planted|runtime-token/);
+});
+
+test('captureSentryError tags the request id and keeps configKey and configLocation in extra', () => {
+  const configLocation = { source: 'pages/orders.yaml:12', config: 'root.pages[0]' };
+  captureSentryError({
+    error: createRequestError(),
+    context: { rid: 'req-1', pageId: 'orders' },
+    configLocation,
+  });
+  const [, { tags, extra }] = captureException.mock.calls[0];
+  expect(tags).toEqual({ pageId: 'orders', requestId: 'req-1' });
+  expect(extra.configKey).toEqual('key-1');
+  expect(extra.configLocation).toEqual(configLocation);
+});
+
+test('captureSentryError leaves out the requestId tag when the context has no request id', () => {
+  captureSentryError({ error: new Error('Failed.'), context: {} });
+  const [, { tags }] = captureException.mock.calls[0];
+  expect(Object.keys(tags)).not.toContain('requestId');
+});
+
+test('captureSentryError does nothing when Sentry was not started', () => {
+  sentrySdk.current = null;
+  captureSentryError({ error: new Error('Failed.'), context: { rid: 'req-1' } });
+  expect(captureException).not.toHaveBeenCalled();
+});
+
+test('captureSentryError tags integrity fields and fingerprints a TenantIntegrityError by collection', () => {
+  captureException.mockClear();
+  const error = new TenantIntegrityError('bad row', {
+    collection: 'contacts',
+    connectionId: 'contacts_conn',
+    organizationId: 'org_a',
+    endpointId: 'save',
+  });
+  captureSentryError({ error, context: { rid: 'req-2' } });
+  const [, options] = captureException.mock.calls[0];
+  expect(options.tags).toMatchObject({
+    collection: 'contacts',
+    connectionId: 'contacts_conn',
+    organizationId: 'org_a',
+    endpointId: 'save',
+    errorName: 'TenantIntegrityError',
+  });
+  expect(options.fingerprint).toEqual(['TenantIntegrityError', 'contacts']);
+});
+
+test('captureSentryError sets no fingerprint or integrity tags on an ordinary error', () => {
+  captureException.mockClear();
+  captureSentryError({ error: new Error('x'), context: { rid: 'req-3' } });
+  const [, options] = captureException.mock.calls[0];
+  expect(options.fingerprint).toBeUndefined();
+  expect(options.tags.errorName).toBeUndefined();
+});

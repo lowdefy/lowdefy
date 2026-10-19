@@ -25,7 +25,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            A running Lowdefy app in five minutes. You need [Node.js](https://nodejs.org) v18 or newer and [pnpm](https://pnpm.io) installed.
+            A running Lowdefy app in five minutes. You need [Node.js](https://nodejs.org) v24 or newer and [pnpm](https://pnpm.io) installed.
 
             ## 1. Create an app
 

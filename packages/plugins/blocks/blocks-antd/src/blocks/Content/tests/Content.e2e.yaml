@@ -36,8 +36,8 @@ blocks:
 
   - id: content_with_style
     type: Content
-    properties:
-      style:
+    style:
+      .element:
         backgroundColor: '#fff'
         padding: 24px
         minHeight: 280px

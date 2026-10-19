@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "description": "Two build steps report the reserved page id at the same source line with the same message, and logCollectedErrors collapses the pair, so it is reported once. A distinct error on another page is still reported alongside it.",
+      "errorCount": 2,
+      "errors": ["is a reserved name", "Buton"],
+      "errorContains": [
+        "lowdefy.yaml:18\n[ConfigError] Page id \"__proto__\" is a reserved name and cannot be used as an id.",
+        "lowdefy.yaml:20\n[ConfigError] Block type \"Buton\" was used but is not defined. Did you mean \"Button\"?"
+      ]
+    }
+  ]
+}

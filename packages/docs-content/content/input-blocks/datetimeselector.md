@@ -1,0 +1,970 @@
+# DateTimeSelector
+
+Combined date and time picker.
+
+```yaml
+- id: dts_size_small
+  type: DateTimeSelector
+  properties:
+    title: Small
+    size: small
+- id: dts_size_default
+  type: DateTimeSelector
+  properties:
+    title: Default
+- id: dts_size_large
+  type: DateTimeSelector
+  properties:
+    title: Large
+    size: large
+```
+
+```yaml
+- id: dts_variant_outlined
+  type: DateTimeSelector
+  properties:
+    title: Outlined (default)
+    variant: outlined
+    label:
+      disabled: true
+- id: dts_variant_filled
+  type: DateTimeSelector
+  properties:
+    title: Filled
+    variant: filled
+    label:
+      disabled: true
+- id: dts_variant_borderless
+  type: DateTimeSelector
+  properties:
+    title: Borderless
+    variant: borderless
+    label:
+      disabled: true
+- id: dts_variant_underlined
+  type: DateTimeSelector
+  properties:
+    title: Underlined
+    variant: underlined
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_tf_hours_minutes
+  type: DateTimeSelector
+  properties:
+    title: Hours & Minutes (HH:mm)
+    timeFormat: HH:mm
+    format: YYYY-MM-DD HH:mm
+    label:
+      disabled: true
+- id: dts_tf_with_seconds
+  type: DateTimeSelector
+  properties:
+    title: With Seconds (HH:mm:ss)
+    timeFormat: HH:mm:ss
+    format: YYYY-MM-DD HH:mm:ss
+    label:
+      disabled: true
+- id: dts_tf_hours_only
+  type: DateTimeSelector
+  properties:
+    title: Hours Only (HH)
+    timeFormat: HH
+    format: YYYY-MM-DD HH
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_step_hour_2
+  type: DateTimeSelector
+  properties:
+    title: 2-Hour Steps
+    hourStep: 2
+    label:
+      disabled: true
+- id: dts_step_minute_10
+  type: DateTimeSelector
+  properties:
+    title: 10-Minute Steps
+    minuteStep: 10
+    label:
+      disabled: true
+- id: dts_step_minute_15
+  type: DateTimeSelector
+  properties:
+    title: 15-Minute Steps
+    minuteStep: 15
+    label:
+      disabled: true
+- id: dts_step_minute_30
+  type: DateTimeSelector
+  properties:
+    title: 30-Minute Steps
+    minuteStep: 30
+    label:
+      disabled: true
+- id: dts_step_second_10
+  type: DateTimeSelector
+  properties:
+    title: 10-Second Steps
+    timeFormat: HH:mm:ss
+    format: YYYY-MM-DD HH:mm:ss
+    secondStep: 10
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_fmt_iso
+  type: DateTimeSelector
+  properties:
+    title: YYYY-MM-DD HH:mm (ISO)
+    format: YYYY-MM-DD HH:mm
+    label:
+      disabled: true
+- id: dts_fmt_slash
+  type: DateTimeSelector
+  properties:
+    title: DD/MM/YYYY HH:mm
+    format: DD/MM/YYYY HH:mm
+    label:
+      disabled: true
+- id: dts_fmt_us
+  type: DateTimeSelector
+  properties:
+    title: MM/DD/YYYY HH:mm (US)
+    format: MM/DD/YYYY HH:mm
+    label:
+      disabled: true
+- id: dts_fmt_long
+  type: DateTimeSelector
+  properties:
+    title: DD MMMM YYYY HH:mm
+    format: DD MMMM YYYY HH:mm
+    label:
+      disabled: true
+- id: dts_fmt_dot
+  type: DateTimeSelector
+  properties:
+    title: DD.MM.YYYY HH:mm
+    format: DD.MM.YYYY HH:mm
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_ph_default
+  type: DateTimeSelector
+  properties:
+    title: Default Placeholder
+    label:
+      disabled: true
+- id: dts_ph_custom
+  type: DateTimeSelector
+  properties:
+    title: Custom Placeholder
+    placeholder: Choose date and time...
+    label:
+      disabled: true
+- id: dts_ph_descriptive
+  type: DateTimeSelector
+  properties:
+    title: Descriptive Placeholder
+    placeholder: When did this event occur?
+    label:
+      disabled: true
+- id: dts_ph_appointment
+  type: DateTimeSelector
+  properties:
+    title: Appointment Placeholder
+    placeholder: Select appointment date & time
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_clear_enabled
+  type: DateTimeSelector
+  properties:
+    title: Allow Clear (default)
+    allowClear: true
+    label:
+      disabled: true
+- id: dts_clear_disabled
+  type: DateTimeSelector
+  properties:
+    title: No Clear Button
+    allowClear: false
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_today_enabled
+  type: DateTimeSelector
+  properties:
+    title: Show Today (default)
+    showToday: true
+    label:
+      disabled: true
+- id: dts_today_disabled
+  type: DateTimeSelector
+  properties:
+    title: No Today Button
+    showToday: false
+    label:
+      disabled: true
+- id: dts_now_enabled
+  type: DateTimeSelector
+  properties:
+    title: Show Now (default)
+    showNow: true
+    label:
+      disabled: true
+- id: dts_now_disabled
+  type: DateTimeSelector
+  properties:
+    title: No Now Button
+    showNow: false
+    label:
+      disabled: true
+- id: dts_both_disabled
+  type: DateTimeSelector
+  properties:
+    title: No Today & No Now
+    showToday: false
+    showNow: false
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_utc_off
+  type: DateTimeSelector
+  properties:
+    title: Local Time (default)
+    selectUTC: false
+    label:
+      disabled: true
+- id: dts_utc_on
+  type: DateTimeSelector
+  properties:
+    title: UTC Mode
+    selectUTC: true
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_prefix_icon
+  type: DateTimeSelector
+  properties:
+    title: Prefix Icon
+    prefixIcon: clock
+    suffixIcon:
+      name: calendar
+      color: "#8c8c8c"
+- id: dts_prefix_text
+  type: DateTimeSelector
+  properties:
+    title: Prefix Text
+    prefix: "From:"
+- id: dts_placement
+  type: DateTimeSelector
+  properties:
+    title: Popup Opens Top Right
+    placement: topRight
+- id: dts_read_only
+  type: DateTimeSelector
+  properties:
+    title: Pick From Calendar Only
+    inputReadOnly: true
+    label:
+      extra: The input is read-only, so touch devices do not open the keyboard.
+```
+
+```yaml
+- id: dts_no_confirm
+  type: DateTimeSelector
+  properties:
+    title: No OK Button
+    needConfirm: false
+    label:
+      extra: No OK button, the selection is saved when the popup closes.
+- id: dts_twelve_hour
+  type: DateTimeSelector
+  properties:
+    title: 12 Hour Clock
+    format: YYYY-MM-DD hh:mm a
+    timeFormat: hh:mm a
+- id: dts_show_week
+  type: DateTimeSelector
+  properties:
+    title: Show Week Numbers
+    showWeek: true
+```
+
+```yaml
+- id: dts_dis_outlined
+  type: DateTimeSelector
+  properties:
+    title: Disabled Outlined
+    disabled: true
+    variant: outlined
+    label:
+      disabled: true
+- id: dts_dis_filled
+  type: DateTimeSelector
+  properties:
+    title: Disabled Filled
+    disabled: true
+    variant: filled
+    label:
+      disabled: true
+- id: dts_dis_borderless
+  type: DateTimeSelector
+  properties:
+    title: Disabled Borderless
+    disabled: true
+    variant: borderless
+    label:
+      disabled: true
+- id: dts_dis_with_label
+  type: DateTimeSelector
+  properties:
+    title: Disabled with Label
+    disabled: true
+```
+
+```yaml
+- id: dts_icon_default
+  type: DateTimeSelector
+  properties:
+    title: Default Calendar Icon
+    label:
+      disabled: true
+- id: dts_icon_clock
+  type: DateTimeSelector
+  properties:
+    title: Clock Icon
+    suffixIcon: clock
+    label:
+      disabled: true
+- id: dts_icon_schedule
+  type: DateTimeSelector
+  properties:
+    title: Schedule Icon
+    suffixIcon: CalendarDays
+    label:
+      disabled: true
+- id: dts_icon_custom_color
+  type: DateTimeSelector
+  properties:
+    title: Custom Color Icon
+    suffixIcon:
+      name: calendar
+      color: "#1677ff"
+    label:
+      disabled: true
+- id: dts_icon_heart
+  type: DateTimeSelector
+  properties:
+    title: Heart Icon
+    suffixIcon:
+      name: heart
+      color: "#ff4d4f"
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_dd_min
+  type: DateTimeSelector
+  properties:
+    title: Min Date (2024-01-01)
+    disabledDates:
+      min: 2024-01-01
+    label:
+      disabled: true
+- id: dts_dd_range
+  type: DateTimeSelector
+  properties:
+    title: Min & Max (2024 only)
+    disabledDates:
+      min: 2024-01-01
+      max: 2024-12-31
+    label:
+      disabled: true
+- id: dts_dd_specific
+  type: DateTimeSelector
+  properties:
+    title: Specific Dates Disabled
+    disabledDates:
+      dates:
+        - 2026-03-15
+        - 2026-03-20
+        - 2026-03-25
+    label:
+      disabled: true
+- id: dts_dd_ranges
+  type: DateTimeSelector
+  properties:
+    title: Date Ranges Disabled
+    disabledDates:
+      ranges:
+        - - 2026-03-10
+          - 2026-03-14
+        - - 2026-03-20
+          - 2026-03-24
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_presets_relative
+  type: DateTimeSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Now
+        value:
+          _date: now
+      - label: An hour ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - hour
+      - label: Yesterday
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - day
+- id: dts_presets_start_of_day
+  type: DateTimeSelector
+  properties:
+    title: Start of Day
+    label:
+      disabled: true
+    presets:
+      - label: Today 09:00
+        value:
+          _dayjs:
+            - now
+            - startOf: day
+            - add:
+                - 9
+                - hours
+      - label: Today 17:00
+        value:
+          _dayjs:
+            - now
+            - startOf: day
+            - add:
+                - 17
+                - hours
+- id: dts_presets_utc
+  type: DateTimeSelector
+  properties:
+    title: UTC Presets
+    selectUTC: true
+    label:
+      extra: With selectUTC, preset dates are read as UTC.
+    presets:
+      - label: Now (UTC)
+        value:
+          _date: now
+      - label: Midnight UTC
+        value:
+          _dayjs:
+            - now
+            - utc
+            - startOf: day
+```
+
+```yaml
+- id: dts_lbl_default
+  type: DateTimeSelector
+  properties:
+    title: Default Label
+- id: dts_lbl_colon_off
+  type: DateTimeSelector
+  properties:
+    title: No Colon
+    label:
+      colon: false
+- id: dts_lbl_right
+  type: DateTimeSelector
+  properties:
+    title: Align Right
+    label:
+      align: right
+- id: dts_lbl_inline
+  type: DateTimeSelector
+  properties:
+    title: Inline Label
+    label:
+      inline: true
+      span: 8
+- id: dts_lbl_extra
+  type: DateTimeSelector
+  properties:
+    title: Appointment Time
+    label:
+      extra: Select the date and time for your appointment.
+    placeholder: Select date & time
+- id: dts_lbl_hidden
+  type: DateTimeSelector
+  properties:
+    title: Hidden Label
+    label:
+      disabled: true
+    placeholder: No label shown
+```
+
+```yaml
+- id: dts_lbl_span_4
+  type: DateTimeSelector
+  properties:
+    title: Span 4
+    label:
+      inline: true
+      span: 4
+- id: dts_lbl_span_8
+  type: DateTimeSelector
+  properties:
+    title: Span 8
+    label:
+      inline: true
+      span: 8
+- id: dts_lbl_span_12
+  type: DateTimeSelector
+  properties:
+    title: Span 12
+    label:
+      inline: true
+      span: 12
+```
+
+```yaml
+- id: dts_style_width
+  type: DateTimeSelector
+  style:
+    width: 400
+  properties:
+    title: Fixed Width (400px)
+    label:
+      disabled: true
+- id: dts_style_element
+  type: DateTimeSelector
+  style:
+    .element:
+      backgroundColor: var(--ant-color-primary-bg)
+  properties:
+    title: Custom Background
+    label:
+      disabled: true
+- id: dts_style_label
+  type: DateTimeSelector
+  style:
+    .label:
+      color: "#531dab"
+      fontWeight: bold
+  properties:
+    title: Styled Label
+```
+
+```yaml
+- id: dts_class_rounded
+  type: DateTimeSelector
+  class: rounded-lg shadow-sm
+  properties:
+    title: Rounded with Shadow
+    label:
+      disabled: true
+- id: dts_class_border
+  type: DateTimeSelector
+  class: border-2 border-border
+  properties:
+    title: Blue Border
+    label:
+      disabled: true
+```
+
+```yaml
+- id: dts_theme_primary
+  type: DateTimeSelector
+  properties:
+    title: Custom Primary Color
+    label:
+      disabled: true
+    theme:
+      colorPrimary: "#722ed1"
+- id: dts_theme_radius
+  type: DateTimeSelector
+  properties:
+    title: Large Border Radius
+    label:
+      disabled: true
+    theme:
+      borderRadius: 16
+- id: dts_theme_bg
+  type: DateTimeSelector
+  properties:
+    title: Custom Background
+    variant: filled
+    label:
+      disabled: true
+- id: dts_theme_tall
+  type: DateTimeSelector
+  properties:
+    title: Tall Input
+    label:
+      disabled: true
+    theme:
+      controlHeight: 48
+      fontSize: 18
+      borderRadius: 12
+- id: dts_theme_active_border
+  type: DateTimeSelector
+  properties:
+    title: Custom Active Border
+    label:
+      disabled: true
+    theme:
+      activeBorderColor: "#fa8c16"
+      hoverBorderColor: "#ffc069"
+```
+
+```yaml
+- id: dts_combo_appointment
+  type: DateTimeSelector
+  properties:
+    title: Appointment Date & Time
+    placeholder: Select appointment date & time
+    format: DD MMMM YYYY HH:mm
+    size: large
+    suffixIcon: CalendarDays
+    showToday: true
+    showNow: true
+    allowClear: true
+    minuteStep: 15
+    label:
+      extra: Choose your preferred appointment date and time.
+      colon: false
+- id: dts_combo_minimal
+  type: DateTimeSelector
+  properties:
+    title: Date & Time
+    variant: borderless
+    size: small
+    allowClear: false
+    showToday: false
+    showNow: false
+    format: DD/MM/YYYY HH:mm
+    placeholder: dd/mm/yyyy hh:mm
+    label:
+      disabled: true
+- id: dts_combo_restricted
+  type: DateTimeSelector
+  properties:
+    title: Event Registration
+    placeholder: Select event date & time
+    format: DD MMM YYYY HH:mm
+    minuteStep: 30
+    hourStep: 1
+    suffixIcon:
+      name: calendar
+      color: "#1677ff"
+    disabledDates:
+      min: 2026-01-01
+      max: 2026-12-31
+    label:
+      extra: Only dates in 2026 are available. Times in 30-minute slots.
+- id: dts_combo_utc_large
+  type: DateTimeSelector
+  properties:
+    title: UTC Timestamp
+    format: YYYY-MM-DD HH:mm
+    selectUTC: true
+    size: large
+    variant: filled
+    suffixIcon: clock
+    label:
+      extra: Time is recorded in UTC.
+- id: dts_combo_themed
+  type: DateTimeSelector
+  properties:
+    title: Themed Picker
+    variant: filled
+    size: large
+    format: DD MMMM YYYY HH:mm
+    placeholder: Choose a special date & time...
+    minuteStep: 15
+    suffixIcon:
+      name: heart
+      color: "#eb2f96"
+    label:
+      disabled: true
+    theme:
+      colorPrimary: "#eb2f96"
+      borderRadius: 20
+      controlHeightLG: 48
+      fontSize: 16
+```
+
+```yaml
+- id: applied2_appt_card
+  type: Card
+  properties:
+    title: Book an Appointment
+  blocks:
+    - id: applied2_appt_datetime
+      type: DateTimeSelector
+      properties:
+        title: Appointment Date & Time
+        placeholder: Select date and time
+        format: DD MMMM YYYY HH:mm
+        minuteStep: 15
+        size: large
+        suffixIcon: CalendarDays
+        label:
+          extra: Appointments are available in 15-minute slots.
+        disabledDates:
+          min: 2026-03-15
+    - id: applied2_appt_service
+      type: Selector
+      properties:
+        title: Service
+        placeholder: Select a service...
+        options:
+          - label: General Consultation
+            value: general
+          - label: Follow-Up Visit
+            value: followup
+          - label: Specialist Referral
+            value: specialist
+          - label: Annual Check-Up
+            value: annual
+    - id: applied2_appt_notes
+      type: TextArea
+      properties:
+        title: Additional Notes
+        placeholder: Any details the provider should know...
+        label:
+          extra: Optional. Share symptoms or questions in advance.
+    - id: applied2_appt_book_btn
+      type: Button
+      properties:
+        title: Book Appointment
+        icon: calendar
+        type: primary
+        size: large
+        block: true
+      events:
+        onClick:
+          - id: book_appt_action
+            type: DisplayMessage
+            params:
+              content: Appointment booked successfully! A confirmation email has been sent.
+              duration: 3
+```
+
+```yaml
+- id: applied3_meeting_card
+  type: Card
+  properties:
+    title: Schedule a Meeting
+  blocks:
+    - id: applied3_meeting_title
+      type: TextInput
+      properties:
+        title: Meeting Title
+        placeholder: Enter meeting subject...
+    - id: applied3_meeting_datetime
+      type: DateTimeSelector
+      properties:
+        title: Meeting Date & Time
+        placeholder: Select meeting date and time
+        format: DD MMMM YYYY HH:mm
+        minuteStep: 15
+        suffixIcon: clock
+        label:
+          extra: Meetings are scheduled in 15-minute increments.
+        disabledDates:
+          min: 2026-03-13
+      events:
+        onChange:
+          - id: meeting_datetime_change
+            type: SetState
+            params:
+              meetingDateSelected: true
+    - id: applied3_meeting_schedule_btn
+      type: Button
+      properties:
+        title: Schedule Meeting
+        icon: CalendarDays
+        type: primary
+        size: large
+        block: true
+      events:
+        onClick:
+          - id: schedule_meeting_action
+            type: DisplayMessage
+            params:
+              content: Meeting scheduled! Calendar invites will be sent to all participants.
+              duration: 3
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `allowClear` | boolean | `true` | Allow the user to clear their input. |
+| `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
+| `bordered` | boolean | `true` | Deprecated - use variant: 'borderless'. Whether or not the input has a border style. |
+| `disabled` | boolean | `false` | Disable the block if true. |
+| `variant` | string | `"outlined"` | Variant style of the input. Use 'borderless' instead of bordered: false. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
+| `disabledDates` | object | - | Disable specific dates so that they can not be chosen. |
+| `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
+| `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
+| `disabledDates.dates` | array | - | Array of specific dates to disable. |
+| `disabledDates.ranges` | array | - | Array of date ranges to disable. A range is an object with a from and a to date, or an array of the two dates. |
+| `disabledDates.ranges.$.from` | string \| object | - | Start of the disabled range. |
+| `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
+| `format` | string | - | Format in which to parse the date value, eg. "DD MMMM YYYY HH:mm" will parse a date value of 1999-12-31T15:30 as "31 December 1999 15:30". The format has to conform to dayjs formats. Defaults to the active locale's date-time format, or "YYYY-MM-DD HH:mm" when no locale is configured. |
+| `hourStep` | integer | `1` | Hour intervals to show in the time selector. |
+| `inputReadOnly` | boolean | `false` | Make the text input read-only, so a date can only be chosen from the calendar. This also stops the on-screen keyboard opening on touch devices. |
+| `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
+| `label.colon` | boolean | `true` | Append label with colon. |
+| `label.extra` | string | - | Extra text to display beneath the content - supports html. |
+| `label.title` | string | - | Label title - supports html. |
+| `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
+| `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
+| `label.tooltip.color` | string | - | Color of the tooltip icon. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
+| `label.disabled` | boolean | `false` | Hide input label. |
+| `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
+| `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
+| `minuteStep` | integer | `5` | Minute intervals to show in the time selector. |
+| `needConfirm` | boolean | `true` | Require the OK button to confirm the selection. When false, the popup has no OK button and the selection is saved when the popup closes, eg. when the user clicks outside it or presses Enter. |
+| `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `placement` | string | `"bottomLeft"` | Position of the calendar popup relative to the input. Enum: `bottomLeft`, `bottomRight`, `topLeft`, `topRight`. |
+| `prefix` | string | - | Prefix text shown before the date in the input, priority over prefixIcon. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on the left-hand side of the date picker. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date and time. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a shortcut with nothing it may select is listed as disabled. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. The date is used as the instant it names, so "_date: now" and _dayjs chains need no special handling. With selectUTC the instant is shown on the UTC clock, so a chain that snaps to a calendar boundary needs a utc step to snap to the UTC day, eg. "_dayjs: [now, utc, {startOf: day}]". Without selectUTC the instant is shown on the local clock, so a chain resolves in local time, eg. "_dayjs: [now, {startOf: day}]". |
+| `secondStep` | integer | `30` | Second intervals to show in the time selector. |
+| `selectUTC` | boolean | `false` | Shows the user's selection as UTC time, not time-zone based. |
+| `showToday` | boolean | `true` | Deprecated - use showNow. Used for showNow when showNow is not set. |
+| `showNow` | boolean | `true` | Shows a 'Now' button to set current time. |
+| `showWeek` | boolean | `false` | Show the week number of each row in the calendar. |
+| `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
+| `suffixIcon` | string \| object | `"calendar"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `timeFormat` | string | `"HH:mm"` | Time format to show in the time selector. HH:mm:ss will show hours, minutes and seconds, HH:mm only hours and minutes and HH only hours. A 12 hour format like "hh:mm a" adds an AM/PM column; use a matching format, eg. "YYYY-MM-DD hh:mm a", to show the time in the input. |
+| `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design date-picker tokens](https://ant.design/components/date-picker#design-token). |
+| `theme.activeBg` | string | `"#ffffff"` | Background color of the input when the picker is active/focused. |
+| `theme.activeBorderColor` | string | - | Border color when the picker is active/focused. |
+| `theme.activeShadow` | string | `"0 0 0 2px rgba(5,145,255,0.1)"` | Shadow effect when the picker is active/focused. |
+| `theme.borderRadius` | number | `6` | Border radius of the picker input. |
+| `theme.borderRadiusLG` | number | `8` | Border radius for the large picker and popup panel. |
+| `theme.borderRadiusSM` | number | `4` | Border radius for the small picker. |
+| `theme.cellActiveWithRangeBg` | string | `"#e6f4ff"` | Background color of cells within the selected range. |
+| `theme.cellBgDisabled` | string | `"rgba(0,0,0,0.04)"` | Background color of disabled cells. |
+| `theme.cellHeight` | number | `24` | Height of a calendar cell. |
+| `theme.cellHoverBg` | string | `"rgba(0, 0, 0, 0.04)"` | Background color of a calendar cell on hover. |
+| `theme.cellHoverWithRangeBg` | string | `"#cbe0fd"` | Background color of cells within range on hover. |
+| `theme.cellRangeBorderColor` | string | `"#82b4f9"` | Border color of range selection cells. |
+| `theme.cellWidth` | number | `36` | Width of a calendar cell. |
+| `theme.colorBgContainer` | string | - | Background color of the picker input. |
+| `theme.colorBorder` | string | - | Border color of the picker input. |
+| `theme.colorPrimary` | string | - | Primary color used for the selected date and active states. |
+| `theme.colorText` | string | - | Text color of the picker input and calendar cells. |
+| `theme.colorTextPlaceholder` | string | - | Color of the placeholder text. |
+| `theme.controlHeight` | number | `32` | Height of the picker input. |
+| `theme.controlHeightLG` | number | `40` | Height of the large picker input. |
+| `theme.controlHeightSM` | number | `24` | Height of the small picker input. |
+| `theme.errorActiveShadow` | string | `"0 0 0 2px rgba(255,38,5,0.06)"` | Shadow effect when the picker has error status and is focused. |
+| `theme.fontSize` | number | `14` | Font size of the picker input. |
+| `theme.fontSizeLG` | number | `16` | Font size for the large picker. |
+| `theme.fontSizeSM` | number | `14` | Font size for the small picker. |
+| `theme.hoverBg` | string | `"#ffffff"` | Background color of the input when hovering over the picker. |
+| `theme.hoverBorderColor` | string | - | Border color when hovering over the picker. |
+| `theme.lineWidth` | number | `1` | Border width of the picker input. |
+| `theme.paddingBlock` | number | `4` | Vertical padding for the default size picker. |
+| `theme.paddingBlockLG` | number | `7` | Vertical padding for the large size picker. |
+| `theme.paddingBlockSM` | number | `0` | Vertical padding for the small size picker. |
+| `theme.paddingInline` | number | `11` | Horizontal padding for the default size picker. |
+| `theme.paddingInlineLG` | number | `11` | Horizontal padding for the large size picker. |
+| `theme.paddingInlineSM` | number | `7` | Horizontal padding for the small size picker. |
+| `theme.presetsMaxWidth` | number | `200` | Maximum width of the presets list next to the calendar. |
+| `theme.presetsWidth` | number | `120` | Width of the presets list next to the calendar. |
+| `theme.timeCellHeight` | number | `28` | Height of a time cell in the time panel. |
+| `theme.timeColumnHeight` | number | `224` | Height of the time panel column. |
+| `theme.timeColumnWidth` | number | `56` | Width of the time panel column. |
+| `theme.warningActiveShadow` | string | `"0 0 0 2px rgba(255,215,5,0.1)"` | Shadow effect when the picker has warning status and is focused. |
+| `theme.withoutTimeCellHeight` | number | `66` | Height of the cells of the month, week, quarter, year and decade panels. |
+| `theme.zIndexPopup` | number | `1050` | Z-index of the picker popup layer. |
+
+| Event | Event Data | Description |
+| --- | --- | --- |
+| `onBlur` | \- | Trigger actions when the picker loses focus. |
+| `onClear` | \- | Trigger actions when the clear button is clicked. |
+| `onFocus` | \- | Trigger actions when the picker gets focus. |
+| `onOpenChange` | `{ open }` | Trigger actions when the calendar popup opens or closes. |
+| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The DateTimeSelector element. |
+| `/label` | The DateTimeSelector label. |
+| `/extra` | The DateTimeSelector extra content. |
+| `/feedback` | The DateTimeSelector validation feedback. |
+| `/popup` | The DateTimeSelector popup. |
+| `/prefixIcon` | The prefix icon in the DateTimeSelector. |
+| `/suffixIcon` | The suffix icon in the DateTimeSelector. |
+
+No slots defined.

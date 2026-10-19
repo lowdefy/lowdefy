@@ -32,27 +32,27 @@ import os from 'os';
 import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 
-process.env.NEXTAUTH_SECRET = 'test-secret-for-integration-test';
-
 // Mock the steps that touch the real server filesystem / git so shallowBuild can
 // run against a throwaway temp directory. Everything that matters for CallAPI
 // validation (buildRefs/walker, buildModules, buildApi, writeApi, buildShallowPages,
 // writeMaps, buildPageJit, validateCallApiRefs) runs for real.
+const mockComputeAppMeta = (source = {}) => ({
+  slug: source.slug ?? null,
+  name: source.name ?? null,
+  version: source.version ?? null,
+  description: source.description ?? null,
+  license: source.license ?? null,
+  lowdefyVersion: source.lowdefy ?? null,
+  gitSha: 'test-git-sha',
+});
 jest.unstable_mockModule('../buildApp.js', () => ({
-  default: ({ components }) => {
+  computeAppMeta: mockComputeAppMeta,
+  default: ({ components, context }) => {
     components.app = components.app ?? {};
     components.app.html = components.app.html ?? {};
     components.app.html.appendBody = components.app.html.appendBody ?? '';
     components.app.html.appendHead = components.app.html.appendHead ?? '';
-    components.appMeta = {
-      slug: components.slug ?? null,
-      name: components.name ?? null,
-      version: components.version ?? null,
-      description: components.description ?? null,
-      license: components.license ?? null,
-      lowdefyVersion: components.lowdefy ?? null,
-      gitSha: 'test-git-sha',
-    };
+    components.appMeta = context?.appMeta ?? mockComputeAppMeta(components);
     return components;
   },
 }));
@@ -78,6 +78,10 @@ const typesMap = {
   actions: {
     ...snapshotTypesMap.actions,
     CallAPI: { package: '@lowdefy/actions-core' },
+  },
+  notifications: {
+    ...snapshotTypesMap.notifications,
+    NotificationEmail: { package: '@lowdefy/email-templates' },
   },
 };
 
@@ -141,8 +145,16 @@ modules:
   - id: inviter
     source: 'file:modules/inviter'
 
+notifications:
+  - id: hello
+    type: NotificationEmail
+    properties:
+      subject: Hello
+      message: Hi there
+
 api:
   - _ref: api/top-endpoint.yaml
+  - _ref: api/render-endpoint.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -151,6 +163,20 @@ pages:
   );
 
   write('api/top-endpoint.yaml', returnEndpoint('top_endpoint'));
+  write(
+    'api/render-endpoint.yaml',
+    `id: render-test
+type: Api
+routine:
+  - id: render
+    type: RenderNotification
+    properties:
+      notificationId: hello
+      data:
+        contact:
+          email: test@example.com
+`
+  );
   write('pages/home.yaml', callApiPage('home', 'top_endpoint'));
   write('pages/missing.yaml', callApiPage('missing', 'does_not_exist'));
 
@@ -171,7 +197,9 @@ api:
 
 function readArtifact(buildDir, fileName) {
   try {
-    return serializer.deserialize(JSON.parse(fs.readFileSync(path.join(buildDir, fileName), 'utf8')));
+    return serializer.deserialize(
+      JSON.parse(fs.readFileSync(path.join(buildDir, fileName), 'utf8'))
+    );
   } catch {
     return null;
   }
@@ -229,11 +257,11 @@ function hydrateContext({ buildDir, configDir }) {
 
   context.installedPluginPackages = installedPluginPackages;
   context.components = { api: readBuildApiArtifacts(buildDir) };
-  context.iconImports = readArtifact(buildDir, 'iconImports.json') ?? [];
+  context.bundledIcons = new Set(readArtifact(buildDir, 'iconImports.json') ?? []);
   context.dynamicIconData = {};
 
   const idCounter = readArtifact(buildDir, 'idCounter.json');
-  if (idCounter != null) makeId.setCounter(idCounter);
+  makeId.continueFrom(idCounter);
 
   return context;
 }
@@ -270,14 +298,26 @@ beforeAll(async () => {
 async function buildAndCollectWarnings(pageId) {
   const context = hydrateContext({ buildDir, configDir });
   const result = await buildPageJit({ pageId, pageRegistry, context });
-  const warnings = (result?._warnings ?? []).filter((w) => w.message.includes('non-existent endpoint'));
+  const warnings = (result?._warnings ?? []).filter((w) =>
+    w.message.includes('non-existent endpoint')
+  );
   return { result, warnings };
 }
 
 test('shallowBuild writes scoped api endpoint artifacts to build/api', () => {
   const endpointIds = apiArtifacts.map((c) => c.endpointId).sort();
   // Top-level keeps its id; module endpoint is scoped with the module entry id.
-  expect(endpointIds).toEqual(['inviter/send-invite', 'top_endpoint']);
+  expect(endpointIds).toEqual(['inviter/send-invite', 'render-test', 'top_endpoint']);
+});
+
+test('shallowBuild writes the notifications config artifact to build/notifications', () => {
+  // Regression: the dev shallow build previously dropped the notifications: section,
+  // so RenderNotification threw "Notification does not exist" under lowdefy dev.
+  const notification = readArtifact(buildDir, 'notifications/hello.json');
+  expect(notification).not.toBeNull();
+  expect(notification.notificationId).toBe('hello');
+  expect(notification.type).toBe('NotificationEmail');
+  expect(notification.properties.subject).toBe('Hello');
 });
 
 test('JIT build of a page calling a top-level endpoint emits no false non-existent warning', async () => {
@@ -296,6 +336,30 @@ test('JIT build still warns when a CallAPI targets a genuinely missing endpoint'
   const { warnings } = await buildAndCollectWarnings('missing');
   expect(warnings).toHaveLength(1);
   expect(warnings[0].message).toBe(
-    'CallAPI action on page "missing" references non-existent endpoint "does_not_exist".'
+    'CallAPI action on page "missing" references non-existent endpoint "does_not_exist". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "does_not_exist".'
   );
+});
+
+test('JIT builds sharing one dev context collect and check only the built page references', async () => {
+  // The dev server keeps one context across page builds until the next
+  // skeleton rebuild, and rebuilds a page that failed on every request.
+  const context = hydrateContext({ buildDir, configDir });
+  const endpointWarnings = (result) =>
+    (result?._warnings ?? []).filter((w) => w.message.includes('non-existent endpoint'));
+  expect(
+    endpointWarnings(await buildPageJit({ pageId: 'missing', pageRegistry, context }))
+  ).toHaveLength(1);
+  expect(endpointWarnings(await buildPageJit({ pageId: 'home', pageRegistry, context }))).toEqual(
+    []
+  );
+  await buildPageJit({ pageId: 'missing', pageRegistry, context });
+  // A page built again lists its warning again: the terminal dedupe is shared
+  // by the context's page builds, each build's own warning list is not.
+  expect(
+    endpointWarnings(await buildPageJit({ pageId: 'missing', pageRegistry, context }))
+  ).toHaveLength(1);
+  // Action references live on each build's own context, never the kept one.
+  expect(Object.hasOwn(context, 'callApiActionRefs')).toBe(false);
+  expect(Object.hasOwn(context, 'linkActionRefs')).toBe(false);
 });

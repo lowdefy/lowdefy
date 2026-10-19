@@ -29,6 +29,30 @@ _ref:
 
             Auth.js supports a large number of OAuth identity providers. During the OAuth flow, a user is redirected to a webpage hosted by the provider, where they usually authenticate using their credentials if not already signed in. They are then redirected back to the Lowdefy application, and the Lowdefy application interacts with the providers's API to verify the login and get the user details like name and email address.
 
+            ### Trusting a GenericOAuth provider's email
+
+            A `GenericOAuth` provider marks a user's email as verified only when the issuer sends the `email_verified` claim as `true`. Some issuers never send the claim, so every user they sign in stays unverified and cannot accept an organization invitation. Set `trustEmail: true` on the provider to mark every user it signs in as verified, whatever the issuer sends (also when it sends `email_verified: false`). Users it signed in before are marked verified on their next sign-in:
+
+            ```yaml
+            auth:
+              providers:
+                - id: company-sso
+                  type: GenericOAuth
+                  properties:
+                    discoveryUrl:
+                      _secret: SSO_DISCOVERY_URL
+                    clientId:
+                      _secret: SSO_CLIENT_ID
+                    clientSecret:
+                      _secret: SSO_CLIENT_SECRET
+                    scopes: [openid, profile, email]
+                    trustEmail: true
+            ```
+
+            Only set `trustEmail` for an issuer that controls the emails it hands out. A verified email lets a sign-in through the provider link to an existing user with the same verified email, as it would for a provider listed in `auth.account.accountLinking.trustedProviders`. That is safe when the issuer controls its emails, since the issuer's user then owns the address. To stop all linking, set `auth.account.accountLinking.enabled: false`. That applies to every provider: a user who already has an account with the same email, through another provider or email and password, can then no longer sign in through this one.
+
+            With `session.cookieCache.enabled: true`, the session from the sign-in that marks an existing user verified still reads unverified until the cache expires (`session.cookieCache.maxAge`), so accepting an invitation straight after that sign-in can still be refused.
+
             ## Email Provider
 
             Auth.js supports email login, where a link with a token is sent to the user's email address and the user can click on the link to log in (often called "magic links"). To use email authentication an Adapter must be configured, since the verification tokens need to be stored in a database.
@@ -36,4 +60,3 @@ _ref:
             ## Credentials Provider
 
             Auth.js provides a credentials provider, which can be used to sign in using any other credentials, such as username and password or Web3. Lowdefy does not provide any credential providers, but a credentials provider can be written as a [plugin](/plugins-dev).
-

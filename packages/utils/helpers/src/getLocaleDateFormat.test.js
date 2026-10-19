@@ -41,9 +41,9 @@ test('en-US datetime format uses 24-hour by request', () => {
 });
 
 test('de-DE month format uses ICU month-year skeleton', () => {
-  // ICU de-DE renders short month-only with "/" rather than the "." that full
-  // dates use. We trust the locale data rather than synthesizing our own.
-  expect(getLocaleDateFormat('de-DE', 'month')).toBe('MM/YYYY');
+  // The de-DE month-year separator differs by ICU/CLDR version ("/" pre-CLDR 44,
+  // "." after). We trust the locale data, so only assert ordering and tokens.
+  expect(getLocaleDateFormat('de-DE', 'month')).toMatch(/^MM[./]YYYY$/);
 });
 
 test('en-US month format', () => {

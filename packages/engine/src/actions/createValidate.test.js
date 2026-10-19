@@ -1111,3 +1111,57 @@ test('Validate on nested objects using params.regex array and blockIds', async (
     warnings: [],
   });
 });
+
+test('Validate in a list row resolves $ in params to the row index', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ name: null }, { name: null }] },
+        },
+      ],
+    },
+    blocks: [
+      {
+        id: 'list',
+        type: 'List',
+        blocks: [
+          {
+            id: 'list.$.name',
+            type: 'TextInput',
+            required: true,
+          },
+          {
+            id: 'list.$.button',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'validate',
+                  type: 'Validate',
+                  params: 'list.$.name',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+    operators: lowdefy._internal.operators,
+  });
+  const button1 = context._internal.RootSlots.map['list.1.button'];
+  const name0 = context._internal.RootSlots.map['list.0.name'];
+  const name1 = context._internal.RootSlots.map['list.1.name'];
+  const res = await button1.triggerEvent({ name: 'onClick' });
+  expect(res.success).toBe(false);
+  expect(name1.showValidation).toBe(true);
+  expect(name0.showValidation).toBe(false);
+});

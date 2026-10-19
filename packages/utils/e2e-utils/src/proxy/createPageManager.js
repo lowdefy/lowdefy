@@ -15,12 +15,12 @@
 */
 
 import { getBlock } from '../core/locators.js';
-import { waitForReady, waitForPage } from '../core/navigation.js';
-import { getState, getBlockState, setState, expectState } from '../core/state.js';
-import { getRequestState, getRequestResponse, expectRequest } from '../core/requests.js';
-import { getApiState, getApiResponse, expectApi } from '../core/api.js';
+import { createPageUrl, waitForReady, waitForPage } from '../core/navigation.js';
+import { getState, getBlockState, setState } from '../core/state.js';
+import { getRequestState, getRequestResponse } from '../core/requests.js';
+import { getApiState, getApiResponse } from '../core/api.js';
 import { getValidation } from '../core/validation.js';
-import { expectUrl, expectUrlQuery, setUrlQuery } from '../core/url.js';
+import { setUrlQuery } from '../core/url.js';
 import { setUserCookie, clearUserCookie } from '../core/userCookie.js';
 
 import { get, type } from '@lowdefy/helpers';
@@ -28,9 +28,34 @@ import { get, type } from '@lowdefy/helpers';
 import createBlockMethodProxy from './createBlockMethodProxy.js';
 import resolveTemplateId from './resolveTemplateId.js';
 
-function createPageManager({ page, manifest, helperRegistry, mockManager }) {
+// createPageManager itself stays free of @playwright/test (it is exported from the
+// "./runtime" subpath). The Playwright-backed `expect*` functions are injected via
+// `assertions` by the caller - the "./fixtures" ldf fixture wires these automatically.
+function requireAssertion(fn, name) {
+  if (type.isUndefined(fn)) {
+    throw new Error(
+      `createPageManager: "${name}" assertion is not available on this instance. ` +
+        `Import { ${name} } from "@lowdefy/e2e-utils" and pass it as assertions.${name}, ` +
+        `or use the "@lowdefy/e2e-utils/fixtures" ldf fixture, which wires assertions automatically.`
+    );
+  }
+  return fn;
+}
+
+function createPageManager({ page, manifest, helperRegistry, mockManager, assertions = {} }) {
+  const { expectState, expectRequest, expectApi, expectUrl, expectUrlQuery } = assertions;
+
   let currentBlockMap = null;
   let currentPageId = null;
+
+  // A { pageId, pathParams, urlQuery } target gets the app's basePath and the page's path
+  // pattern from the manifest.
+  function withPagePath(target) {
+    if (type.isString(target)) {
+      return target;
+    }
+    return { basePath: manifest.basePath, path: manifest.paths?.[target.pageId], ...target };
+  }
 
   function ensurePageLoaded() {
     if (!currentBlockMap) {
@@ -133,8 +158,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
     },
 
     // Navigation (control flow)
-    async goto(path) {
-      await page.goto(path);
+    async goto(target) {
+      await page.goto(createPageUrl(withPagePath(target)));
       await waitForReady(page);
       currentPageId = await page.evaluate(() => window.lowdefy?.pageId);
       currentBlockMap = manifest.pages[currentPageId];
@@ -146,8 +171,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       }
     },
 
-    async waitForPage(path) {
-      await waitForPage(page, path);
+    async waitForPage(target) {
+      await waitForPage(page, withPagePath(target));
       currentPageId = await page.evaluate(() => window.lowdefy?.pageId);
       currentBlockMap = manifest.pages[currentPageId];
     },
@@ -164,9 +189,20 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
     request(requestId) {
       return {
         expect: {
-          toFinish: (opts) => expectRequest(page, { requestId, loading: false, ...opts }),
-          toHaveResponse: (response, opts) => expectRequest(page, { requestId, response, ...opts }),
-          toHavePayload: (payload, opts) => expectRequest(page, { requestId, payload, ...opts }),
+          toFinish: (opts) =>
+            requireAssertion(expectRequest, 'expectRequest')(page, {
+              requestId,
+              loading: false,
+              ...opts,
+            }),
+          toHaveResponse: (response, opts) =>
+            requireAssertion(expectRequest, 'expectRequest')(page, {
+              requestId,
+              response,
+              ...opts,
+            }),
+          toHavePayload: (payload, opts) =>
+            requireAssertion(expectRequest, 'expectRequest')(page, { requestId, payload, ...opts }),
         },
         response: () => getRequestResponse(page, { requestId }),
         state: () => getRequestState(page, requestId),
@@ -177,9 +213,12 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
     api(endpointId) {
       return {
         expect: {
-          toFinish: (opts) => expectApi(page, { endpointId, loading: false, ...opts }),
-          toHaveResponse: (response, opts) => expectApi(page, { endpointId, response, ...opts }),
-          toHavePayload: (payload, opts) => expectApi(page, { endpointId, payload, ...opts }),
+          toFinish: (opts) =>
+            requireAssertion(expectApi, 'expectApi')(page, { endpointId, loading: false, ...opts }),
+          toHaveResponse: (response, opts) =>
+            requireAssertion(expectApi, 'expectApi')(page, { endpointId, response, ...opts }),
+          toHavePayload: (payload, opts) =>
+            requireAssertion(expectApi, 'expectApi')(page, { endpointId, payload, ...opts }),
         },
         response: () => getApiResponse(page, { endpointId }),
         state: () => getApiState(page, endpointId),
@@ -199,7 +238,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
           set: (value) => setState(page, { key, value }),
         },
         expect: {
-          toBe: (value, opts) => expectState(page, { key, value, ...opts }),
+          toBe: (value, opts) =>
+            requireAssertion(expectState, 'expectState')(page, { key, value, ...opts }),
         },
         value: () => getState(page).then((s) => get(s, key)),
       };
@@ -209,8 +249,10 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
     url() {
       return {
         expect: {
-          toBe: (path, opts) => expectUrl(page, { url: path, ...opts }),
-          toMatch: (pattern, opts) => expectUrl(page, { url: pattern, ...opts }),
+          toBe: (path, opts) =>
+            requireAssertion(expectUrl, 'expectUrl')(page, { url: path, ...opts }),
+          toMatch: (pattern, opts) =>
+            requireAssertion(expectUrl, 'expectUrl')(page, { url: pattern, ...opts }),
         },
         value: () => page.url(),
       };
@@ -223,7 +265,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
           set: (value) => setUrlQuery(page, { key, value }),
         },
         expect: {
-          toBe: (value, opts) => expectUrlQuery(page, { key, value, ...opts }),
+          toBe: (value, opts) =>
+            requireAssertion(expectUrlQuery, 'expectUrlQuery')(page, { key, value, ...opts }),
         },
         value: () => new URL(page.url()).searchParams.get(key),
       };

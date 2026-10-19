@@ -24,9 +24,13 @@ import {
   RequestError,
   loadAndResolveErrorLocation,
   ServiceError,
+  TenantIntegrityError,
 } from '@lowdefy/errors';
 
 import captureSentryError from '../sentry/captureSentryError.js';
+import redactUrlQuery from './redactUrlQuery.js';
+import scrubSecrets from '../scrubSecrets.js';
+import serializeErrorForLog from './serializeErrorForLog.js';
 
 function getEventType(error) {
   if (error instanceof ServiceError) {
@@ -50,6 +54,9 @@ function getEventType(error) {
   if (error instanceof ConfigError) {
     return 'config_error';
   }
+  if (error instanceof TenantIntegrityError) {
+    return 'tenant_integrity_error';
+  }
   if (error instanceof LowdefyInternalError) {
     return 'lowdefy_error';
   }
@@ -59,7 +66,20 @@ function getEventType(error) {
 function createHandleError({ context }) {
   return async function handleError(error) {
     try {
-      const { headers = {}, user = {} } = context;
+      // Set first, not after the log call: this function is the server's error
+      // sink, so reaching it is what makes the error already-logged, and the catch
+      // below guarantees something is written even when the steps here fail. The
+      // client reads `handled` to decide whether to POST the error to
+      // /api/client-error, so a later throw skipping this assignment would have it
+      // logged a second time. Not keyed on `source`, which a LowdefyInternalError
+      // never gets - location resolution is skipped for it below.
+      error.handled = true;
+
+      // `?? {}` rather than a destructuring default: context.user is null (not
+      // undefined) for an anonymous caller and for every system context, so a
+      // default would not fire and reading user.id below would throw.
+      const headers = context.headers ?? {};
+      const user = context.user ?? {};
       const eventType = getEventType(error);
       const isServiceError = error instanceof ServiceError;
       const isLowdefyInternalError = error instanceof LowdefyInternalError;
@@ -79,7 +99,7 @@ function createHandleError({ context }) {
         error.config = location.config;
       }
 
-      // Single structured log call — pino serializes error via extractErrorProps,
+      // Single structured log call — pino serializes the error via serializeErrorForLog,
       // message string gives human-readable display via CLI logger
       const errorName = error?.name || 'Error';
       context.logger.error(
@@ -91,6 +111,8 @@ function createHandleError({ context }) {
           errorMessage: error.message,
           isServiceError,
           pageId: context.pageId || null,
+          endpointId: error.endpointId ?? context.endpointId ?? null,
+          organization_id: error.organizationId ?? context.user?.organization_id ?? null,
           timestamp: new Date().toISOString(),
           source: error.source || null,
           config: error.config || null,
@@ -105,6 +127,7 @@ function createHandleError({ context }) {
           method: context.req.method,
           resolvedUrl: context.nextContext?.resolvedUrl,
           hostname: context.req.hostname,
+          client_address: context.clientAddress,
           headers: {
             'accept-language': headers['accept-language'],
             'sec-ch-ua-mobile': headers['sec-ch-ua-mobile'],
@@ -112,9 +135,9 @@ function createHandleError({ context }) {
             'sec-ch-ua': headers['sec-ch-ua'],
             'user-agent': headers['user-agent'],
             host: headers.host,
-            referer: headers.referer,
+            referer: redactUrlQuery(headers.referer),
             // Non localhost headers
-            'x-forward-for': headers['x-forward-for'],
+            'x-forwarded-for': headers['x-forwarded-for'],
             // Vercel headers
             'x-vercel-id': headers['x-vercel-id'],
             'x-real-ip': headers['x-real-ip'],
@@ -141,9 +164,11 @@ function createHandleError({ context }) {
         configLocation: location,
       });
     } catch (e) {
-      console.error(error);
+      // console.error writes to stderr past pino and its line scrub, and would print the raw
+      // error - an axios error's config.auth included - so it gets both layers by hand.
+      console.error(scrubSecrets(JSON.stringify(serializeErrorForLog(error))));
       console.error('An error occurred while logging the error.');
-      console.error(e);
+      console.error(scrubSecrets(JSON.stringify(serializeErrorForLog(e))));
     }
   };
 }

@@ -35,6 +35,35 @@ function walkRefIds(obj, refIds) {
   }
 }
 
+// The refs of the files that hold a pages list: the app's pages (when
+// lowdefy.yaml has pages: { _ref: pages.yaml }) and each module's pages.
+function collectPagesListRefIds({ components, context }) {
+  const pagesLists = [
+    components.pages,
+    ...Object.values(context.modules ?? {}).map((moduleEntry) => moduleEntry.manifest?.pages),
+  ];
+  const listRefIds = new Set();
+  for (const pagesList of pagesLists) {
+    if (pagesList?.['~r'] !== undefined) {
+      listRefIds.add(pagesList['~r']);
+    }
+  }
+  return listRefIds;
+}
+
+// The refs between a page and the list that holds it: the page file and any
+// template it refs (a page file whose content is a _ref to a template with
+// vars carries no ~r marker of its own).
+function collectPageFileRefIds({ page, listRefIds, refMap, pageRefIds }) {
+  let current = page['~r'];
+  while (current != null && !listRefIds.has(current)) {
+    const entry = refMap[current];
+    if (!entry || entry.parent == null) return;
+    pageRefIds.add(current);
+    current = entry.parent;
+  }
+}
+
 // Collect file paths that contribute to skeleton (non-page) config.
 // Walks ~r markers on non-page components, traces each through the
 // refMap parent chain, and scans for scalar-resolving descendants.
@@ -53,6 +82,48 @@ function collectSkeletonSourceFiles({ components, context }) {
   // vars files trigger a skeleton rebuild.
   for (const moduleEntry of Object.values(context.modules ?? {})) {
     walkRefIds(moduleEntry.consumerVars, refIds);
+  }
+
+  // Var values the skeleton build resolved are cached in modules.json, so page
+  // builds read the cached value and never the files a var default refs.
+  // Those files are skeleton sources. A var value copied into a page carries
+  // its ~r marker there too, which would otherwise make it a page ref below.
+  for (const moduleEntry of Object.values(context.modules ?? {})) {
+    walkRefIds(moduleEntry.resolvedVarCache, refIds);
+  }
+
+  // A file that holds a pages list decides which pages exist, so it shapes the
+  // page registry: adding a page to it needs a skeleton rebuild. The page
+  // files it references stay page content.
+  const listRefIds = collectPagesListRefIds({ components, context });
+  for (const listRefId of listRefIds) {
+    refIds.add(listRefId);
+  }
+
+  // The walker only ~r-tags resolved _ref content, never the root file's own
+  // objects — so a scalar ref parented directly on the root (e.g.
+  // app.html.appendHead: {_ref: head.html}) has no collected ancestor and
+  // would be missed by the descendant scan. Add the root ref id explicitly.
+  if (context.rootRefDef?.id != null) {
+    refIds.add(context.rootRefDef.id);
+  }
+
+  // The same holds for each module manifest: a var default that refs a file
+  // resolving to a scalar has no marker in the var cache, and its ref's parent
+  // is the manifest's ref.
+  for (const moduleEntry of Object.values(context.modules ?? {})) {
+    if (moduleEntry.refDef?.id != null) {
+      refIds.add(moduleEntry.refDef.id);
+    }
+  }
+
+  // Page refs are stop boundaries for the descendant scan: with the root id
+  // collected, a scalar ref'd inside a page file would otherwise reach the
+  // root through its page ref and wrongly become a skeleton source.
+  const pageRefIds = new Set();
+  for (const page of components.pages ?? []) {
+    walkRefIds(page, pageRefIds);
+    collectPageFileRefIds({ page, listRefIds, refMap: context.refMap, pageRefIds });
   }
 
   const sourceFiles = new Set();
@@ -75,6 +146,7 @@ function collectSkeletonSourceFiles({ components, context }) {
   // their paths if any ancestor in their parent chain is a collected ref ID.
   for (const [id, entry] of Object.entries(context.refMap)) {
     if (refIds.has(id)) continue;
+    if (pageRefIds.has(id)) continue;
     let current = entry.parent;
     while (current != null) {
       if (refIds.has(current)) {
@@ -83,6 +155,7 @@ function collectSkeletonSourceFiles({ components, context }) {
         }
         break;
       }
+      if (pageRefIds.has(current)) break;
       const parentEntry = context.refMap[current];
       if (!parentEntry) break;
       current = parentEntry.parent;

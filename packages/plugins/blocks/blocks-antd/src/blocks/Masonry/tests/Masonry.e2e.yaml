@@ -126,3 +126,27 @@ blocks:
             type: Paragraph
             properties:
               content: Fourth card in two column layout.
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: masonry_item_styled
+    type: Masonry
+    properties:
+      columns: 2
+      gutter:
+        xs: 4
+        md: 20
+    style:
+      .item:
+        outline: 2px solid rgb(255, 0, 0)
+    blocks:
+      - id: masonry_item_styled_1
+        type: Paragraph
+        properties:
+          content: Styled item one.
+      - id: masonry_item_styled_2
+        type: Paragraph
+        properties:
+          content: Styled item two.

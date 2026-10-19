@@ -1,0 +1,182 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import path from 'node:path';
+
+import { callRequest } from '@lowdefy/api';
+import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
+
+import buildPageIfNeeded, { syncBuildSignals } from '../server/jitPageBuilder.js';
+import fitResponse from './fitResponse.js';
+import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
+import mapPageBuildErrors from './mapPageBuildErrors.js';
+import readBuildArtifact from './readBuildArtifact.js';
+import resolveToolCaller from './resolveToolCaller.js';
+import reviewPage from './reviewPage.js';
+import withDataSession from './withDataSession.js';
+
+function getRequestType({ pageId, requestId }) {
+  // The request's `type` is stripped from build/pages/<pageId>.json by the
+  // build (packages/build/src/build/full/writeRequests.js deletes
+  // type/connectionId/properties/auth after writing the per-request file),
+  // so it must be read from the dedicated per-request artifact instead —
+  // the same file @lowdefy/api's getRequestConfig reads via readConfigFile.
+  const requestConfig = readBuildArtifact({
+    name: `pages/${pageId}/requests/${requestId}.json`,
+    deserialize: true,
+  });
+  return requestConfig?.type ?? null;
+}
+
+// Executes a page request the same way POST /api/request/<pageId>/<requestId>
+// does (src/routes/request.js), but gated for agent use: requests whose type
+// is not declared read-only (checkWrite: false in requestSchemas.json meta)
+// are refused unless the app opts in via lowdefy.yaml's
+// cli.agentTools.allowWriteRequests. Never throws — errors and refusals are
+// returned as data so an agent can reason about them. `user` and `data` name
+// the caller as a journey's do (see resolveToolCaller); a data set runs the
+// request on that data set's own database.
+async function runRequest({
+  pageId,
+  requestId,
+  payload = {},
+  user,
+  data,
+  saveResponse = false,
+  honoContext,
+}) {
+  if (type.isUndefined(pageId) || !type.isString(pageId)) {
+    throw new ConfigError(
+      `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
+    );
+  }
+  if (type.isUndefined(requestId) || !type.isString(requestId)) {
+    throw new ConfigError(
+      `run_request requires a "requestId" string. Received ${JSON.stringify(requestId)}.`
+    );
+  }
+
+  const caller = await resolveToolCaller({ user, data });
+  if (!type.isUndefined(caller.error)) {
+    throw new ConfigError(`run_request: ${caller.error}`);
+  }
+
+  if (!type.isBoolean(saveResponse)) {
+    throw new ConfigError(
+      `run_request "saveResponse" must be a boolean. Received ${JSON.stringify(saveResponse)}.`
+    );
+  }
+
+  // Page content, including the per-request artifacts, is built JIT, and a
+  // page edit only marks pages for rebuilding: the previous build's artifacts
+  // stay on disk until something requests the page. Run the build the page
+  // route runs (a no-op while the page is current) so the request that runs is
+  // the one in the config now.
+  const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
+  const buildDirectory = path.join(process.cwd(), 'build');
+  try {
+    await buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
+  } catch (error) {
+    return {
+      refused: true,
+      reason: `Page "${pageId}" fails to build, so its requests cannot run until the errors are fixed.`,
+      buildErrors: mapPageBuildErrors(error),
+    };
+  }
+
+  const requestType = getRequestType({ pageId, requestId });
+  if (type.isNone(requestType)) {
+    return {
+      refused: true,
+      reason:
+        `Request "${requestId}" was not found on page "${pageId}". ` +
+        `See GET /lowdefy-docs/app-map for the pages and requests that exist.`,
+    };
+  }
+
+  const requestSchemas = readBuildArtifact({ name: 'plugins/requestSchemas.json' }) ?? {};
+  const meta = requestSchemas[requestType]?.meta ?? {};
+
+  if (meta.checkWrite !== false) {
+    const allowed = await isWriteRequestsAllowed();
+    if (!allowed) {
+      return {
+        refused: true,
+        reason:
+          meta.checkWrite === true
+            ? `Request type "${requestType}" performs writes (checkWrite: true) and agent write access is disabled.`
+            : `Request type "${requestType}" has no declared read/write meta, so it is treated as a write for safety.`,
+        howToEnable: 'Set cli.agentTools.allowWriteRequests: true in lowdefy.yaml (dev only).',
+      };
+    }
+  }
+
+  // Deferred import: createLowdefyContext statically imports build/plugins/*
+  // artifacts, which only exist in a running server directory — importing it
+  // at module load would break every consumer of this module (e.g. the MCP
+  // server) in environments without a full build.
+  const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
+  const ran = await withDataSession({
+    dataSet: caller.dataSet,
+    task: async ({ dataSession }) => {
+      // "none" injects no caller: the app's own auth resolves this call, which
+      // carries no session, so it runs signed out.
+      const context = await createLowdefyContext({
+        c: honoContext,
+        user: caller.user === 'none' ? undefined : caller.user,
+        dataSession,
+      });
+      context.logger.info({ event: 'agent_run_request', pageId, requestId, user, data });
+      try {
+        const result = await callRequest(context, {
+          blockId: undefined,
+          pageId,
+          payload,
+          requestId,
+        });
+        return {
+          refused: false,
+          ...fitResponse({ result, name: `${pageId}.${requestId}`, saveResponse }),
+        };
+      } catch (error) {
+        return {
+          refused: false,
+          error: {
+            name: error.name,
+            message: error.message,
+          },
+        };
+      }
+    },
+  });
+  if (!type.isUndefined(ran.error) && type.isString(ran.error)) {
+    return { refused: true, reason: ran.error };
+  }
+  const signals = syncBuildSignals({ buildDirectory, configDirectory });
+  const review = await reviewPage({
+    pageId,
+    entry: signals.registry?.[pageId],
+    configDirectory,
+    signals,
+  });
+  if (review === 'edited') {
+    ran.staleConfig = `Page "${pageId}" changed on disk after its last build, but the dev server has not rebuilt it yet, so this ran the previous config. Call lowdefy_build_status with wait: true, then run the request again.`;
+  }
+  return ran;
+}
+
+export default runRequest;

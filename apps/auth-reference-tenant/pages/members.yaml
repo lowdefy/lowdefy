@@ -1,0 +1,287 @@
+# Admin surface driving the organization plugin's own APIs from an
+# owner/admin session (the phase-6 admin steps land later). inviteMember and
+# updateMemberRole run the plugin's access-control check against the
+# caller's member role - a caller holding only empty-statement catalog roles
+# is refused (the recorded limitation); owner/admin passes.
+id: members
+type: Box
+properties:
+  style:
+    maxWidth: 720
+    margin: 60px auto
+events:
+  onInit:
+    - id: load_members
+      type: Fetch
+      params:
+        url: /api/auth/organization/list-members
+        responseFunction: json
+    - id: set_members
+      type: SetState
+      params:
+        members:
+          _actions: load_members.response
+    - _ref: pages/members/load-invitations.yaml
+    - _ref: pages/members/set-invitations.yaml
+blocks:
+  - id: members_title
+    type: Title
+    properties:
+      content: Members (admin)
+      level: 2
+  - id: members_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for member in members.members %}
+              <li><b>{{ member.user.email }}</b> ({{ member.role }}) - member id:
+              {{ member.id }}</li>
+            {% endfor %}
+            </ul>
+          on:
+            members:
+              _state: members
+  - id: invite_title
+    type: Title
+    properties:
+      content: Invite a member
+      level: 4
+  - id: invite_email
+    type: TextInput
+    properties:
+      title: Email
+  - id: invite_role
+    type: TextInput
+    properties:
+      title: Role (e.g. member, or admin,auditor)
+  - id: invite_contact_id
+    type: TextInput
+    properties:
+      title: Contact id (optional - set on the user's contact_id on accept)
+  - id: invite_button
+    type: Button
+    properties:
+      title: Send invitation
+      block: true
+    events:
+      onClick:
+        - id: invite
+          type: Fetch
+          params:
+            url: /api/auth/organization/invite-member
+            responseFunction: json
+            options:
+              method: POST
+              headers:
+                Content-Type: application/json
+              body:
+                _json.stringify:
+                  - _object.assign:
+                      - email:
+                          _state: invite_email
+                        role:
+                          _state: invite_role
+                      # contactId is a first-class invitation field, declared
+                      # without input: false so this client-side body may
+                      # carry it at the top level - not a key inside profile.
+                      - _if:
+                          test:
+                            _type:
+                              type: string
+                              on:
+                                _state: invite_contact_id
+                          then:
+                            contactId:
+                              _state: invite_contact_id
+                          else: {}
+        - id: show_invite_response
+          type: SetState
+          params:
+            invite_response:
+              _actions: invite.response
+        - _ref: pages/members/load-invitations.yaml
+        - _ref: pages/members/set-invitations.yaml
+  - id: invite_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: invite_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: invite_response
+  - id: invitations_title
+    type: Title
+    properties:
+      content: Invitations
+      level: 4
+  - id: invitations_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for invitation in invitations %}
+              <li>{{ invitation.email }} ({{ invitation.state }})</li>
+            {% endfor %}
+            </ul>
+          on:
+            invitations:
+              _state: invitations
+  - id: cancel_invitation_id
+    type: Selector
+    properties:
+      title: Invitation to cancel
+      options:
+        _array.map:
+          on:
+            _state: invitations
+          callback:
+            _function:
+              label:
+                __args: 0.email
+              value:
+                __args: 0.id
+  - id: cancel_invitation_button
+    type: Button
+    properties:
+      title: Cancel invitation
+      block: true
+    events:
+      onClick:
+        - id: cancel_invitation
+          type: Fetch
+          params:
+            url: /api/auth/organization/cancel-invitation
+            responseFunction: json
+            options:
+              method: POST
+              headers:
+                Content-Type: application/json
+              body:
+                _json.stringify:
+                  - invitationId:
+                      _state: cancel_invitation_id
+        - _ref: pages/members/load-invitations.yaml
+        - _ref: pages/members/set-invitations.yaml
+  - id: update_role_title
+    type: Title
+    properties:
+      content: Update a member's roles
+      level: 4
+  - id: update_member_id
+    type: Selector
+    properties:
+      title: Member
+      options:
+        _array.map:
+          on:
+            _if_none:
+              - _state: members.members
+              - []
+          callback:
+            _function:
+              label:
+                __args: 0.user.email
+              value:
+                __args: 0.id
+  - id: update_roles
+    type: TextInput
+    properties:
+      title: Roles (comma-separated, e.g. admin,auditor)
+  - id: update_role_button
+    type: Button
+    properties:
+      title: Update member role
+      block: true
+    events:
+      onClick:
+        # The plugin accepts an array and stores it as one comma-separated
+        # string on member.role; resolveAuthentication splits it back.
+        - id: update_role
+          type: Fetch
+          params:
+            url: /api/auth/organization/update-member-role
+            responseFunction: json
+            options:
+              method: POST
+              headers:
+                Content-Type: application/json
+              body:
+                _json.stringify:
+                  - memberId:
+                      _state: update_member_id
+                    role:
+                      _string.split:
+                        - _state: update_roles
+                        - ','
+        - id: show_update_response
+          type: SetState
+          params:
+            update_response:
+              _actions: update_role.response
+  - id: update_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: update_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: update_response
+  - id: remove_title
+    type: Title
+    properties:
+      content: Remove a member
+      level: 4
+  # The member loses access on their next request: with no member row in the
+  # session's active organization, every protected page treats them as
+  # logged out, even though their session row survives.
+  - id: remove_member_email
+    type: TextInput
+    properties:
+      title: Member email
+  - id: remove_member_button
+    type: Button
+    properties:
+      title: Remove member
+      block: true
+    events:
+      onClick:
+        - id: remove_member
+          type: Fetch
+          params:
+            url: /api/auth/organization/remove-member
+            responseFunction: json
+            options:
+              method: POST
+              headers:
+                Content-Type: application/json
+              body:
+                _json.stringify:
+                  - memberIdOrEmail:
+                      _state: remove_member_email
+        - id: reload_members
+          type: Fetch
+          params:
+            url: /api/auth/organization/list-members
+            responseFunction: json
+        - id: set_members_after_remove
+          type: SetState
+          params:
+            members:
+              _actions: reload_members.response

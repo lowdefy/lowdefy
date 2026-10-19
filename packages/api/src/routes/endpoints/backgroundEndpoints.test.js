@@ -1,0 +1,1190 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { jest } from '@jest/globals';
+import { ConfigError, UserError } from '@lowdefy/errors';
+import { operatorsServer } from '@lowdefy/operators-js';
+import { serializer } from '@lowdefy/helpers';
+
+import acceptDetachedEndpoint from './acceptDetachedEndpoint.js';
+import callEndpoint from './callEndpoint.js';
+import runDetachedEndpoint from './runDetachedEndpoint.js';
+import runScheduledEndpoint from './runScheduledEndpoint.js';
+import runWebhookEndpoint from './runWebhookEndpoint.js';
+import scheduleBackground from './scheduleBackground.js';
+import testContext from '../../test/testContext.js';
+
+const logger = {
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+};
+
+const flush = () => new Promise((resolve) => setImmediate(resolve));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+test('scheduleBackground logs completion and failure, never rejects', async () => {
+  const context = { logger };
+  await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => ({
+    status: 'success',
+  }));
+  expect(logger.info).toHaveBeenCalledWith({
+    event: 'bg_done',
+    endpointId: 'ep',
+    status: 'success',
+  });
+
+  await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => {
+    throw new Error('boom');
+  });
+  expect(logger.error).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'bg_failed', endpointId: 'ep' }),
+    'boom'
+  );
+});
+
+test('scheduleBackground logs a UserError at warn level, not error', async () => {
+  const context = { logger };
+  await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => {
+    throw new UserError('Bad payload.');
+  });
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'bg_failed', endpointId: 'ep' }),
+    'Bad payload.'
+  );
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('acceptDetachedEndpoint logs a payload refused by the payloadSchema at error level: the dispatching step built it', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_child.json') {
+      return {
+        endpointId: 'typed_child',
+        type: 'Api',
+        auth: { public: false },
+        payloadSchema: { type: 'object', properties: { count: { type: 'number' } } },
+        routine: { ':return': 'ran' },
+      };
+    }
+    return null;
+  });
+  const waitUntil = jest.fn();
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  context.waitUntil = waitUntil;
+  acceptDetachedEndpoint(context, {
+    endpointId: 'typed_child',
+    payload: serializer.serialize({ count: 'three' }),
+    principal: { user: serializer.serialize(null), system: true },
+  });
+  await waitUntil.mock.calls[0][0];
+  expect(logger.error).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'detached_run_failed', endpointId: 'typed_child' }),
+    'Payload for endpoint "typed_child" does not match its payloadSchema at /count: must be number.'
+  );
+  expect(logger.warn).not.toHaveBeenCalled();
+});
+
+test('scheduleBackground hands the promise to context.waitUntil when the server injects it', async () => {
+  const waitUntil = jest.fn();
+  const context = { logger, waitUntil };
+  await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => ({}));
+  expect(waitUntil).toHaveBeenCalledTimes(1);
+});
+
+test('async: true returns immediately and runs the routine in the background', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/bg_ep.json') {
+      return {
+        endpointId: 'bg_ep',
+        type: 'Api',
+        auth: { public: true },
+        async: true,
+        routine: { ':return': 'done' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  const result = await callEndpoint(context, {
+    blockId: 'b',
+    endpointId: 'bg_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result).toEqual({
+    error: null,
+    response: { accepted: true },
+    status: 'accepted',
+    success: true,
+  });
+  await flush();
+  expect(logger.info).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'background_endpoint_done', endpointId: 'bg_ep' })
+  );
+});
+
+// A background run outlives the request that started it: the request's signal (client
+// gone, request timeout) must not cancel the requests the run makes.
+test.each([
+  ['an async endpoint', (context) => callEndpoint(context, { endpointId: 'bg_ep', payload: {} })],
+  [
+    'an async scheduled endpoint',
+    (context) => runScheduledEndpoint(context, { endpointId: 'bg_ep', cron: '0 6 * * *' }),
+  ],
+  [
+    'a detached run',
+    (context) =>
+      acceptDetachedEndpoint(context, {
+        endpointId: 'bg_ep',
+        payload: {},
+        principal: { user: serializer.serialize(null), system: true },
+      }),
+  ],
+])('%s runs without the request signal', async (_, start) => {
+  const readConfigFile = jest.fn((path) =>
+    path === 'api/bg_ep.json'
+      ? {
+          endpointId: 'bg_ep',
+          type: 'Api',
+          auth: { public: true },
+          async: true,
+          schedules: [{ cron: '0 6 * * *' }],
+          routine: { ':return': 'done' },
+        }
+      : null
+  );
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const request = new AbortController();
+  context.signal = request.signal;
+  await start(context);
+  expect(context.signal).toBeUndefined();
+});
+
+test('detached: true dispatches to /api/detached with CRON_SECRET and continues', async () => {
+  process.env.CRON_SECRET = 'shhh';
+  const fetchMock = jest.fn(async () => ({ status: 200 }));
+  global.fetch = fetchMock;
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/parent_ep.json') {
+      return {
+        endpointId: 'parent_ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: [
+          {
+            id: 'endpoint:parent_ep:spawn',
+            stepId: 'spawn',
+            type: 'CallApi',
+            properties: { endpointId: 'child_ep', detached: true, payload: { a: 1 } },
+          },
+          { ':return': { spawned: { _step: 'spawn.detached' } } },
+        ],
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1', roles: ['admin'] },
+  });
+  context.origin = 'https://app.test';
+  const result = await callEndpoint(context, {
+    blockId: 'b',
+    endpointId: 'parent_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result.success).toBe(true);
+  await flush();
+  expect(fetchMock).toHaveBeenCalledWith(
+    'https://app.test/api/detached/child_ep',
+    expect.objectContaining({
+      method: 'POST',
+      headers: expect.objectContaining({ authorization: 'Bearer shhh' }),
+    })
+  );
+  // The dispatcher's resolved identity is serialized into the loopback body.
+  const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+  expect(body.principal.system).toBe(false);
+  expect(serializer.deserialize(body.principal.user)).toEqual({ id: 'user_1', roles: ['admin'] });
+  delete process.env.CRON_SECRET;
+});
+
+function detachedParentReadConfigFile(path) {
+  if (path === 'api/parent_ep.json') {
+    return {
+      endpointId: 'parent_ep',
+      type: 'Api',
+      auth: { public: true },
+      routine: [
+        {
+          id: 'endpoint:parent_ep:spawn',
+          stepId: 'spawn',
+          type: 'CallApi',
+          properties: { endpointId: 'child_ep', detached: true },
+        },
+      ],
+    };
+  }
+  return null;
+}
+
+async function dispatchDetached({ loopbackHeaders }) {
+  process.env.CRON_SECRET = 'shhh';
+  const fetchMock = jest.fn(async () => ({ status: 200 }));
+  global.fetch = fetchMock;
+  const context = testContext({ logger, readConfigFile: jest.fn(detachedParentReadConfigFile) });
+  context.origin = 'https://app.test';
+  if (loopbackHeaders !== undefined) {
+    context.loopbackHeaders = loopbackHeaders;
+  }
+  await callEndpoint(context, { blockId: 'b', endpointId: 'parent_ep', pageId: 'p', payload: {} });
+  await flush();
+  delete process.env.CRON_SECRET;
+  return fetchMock.mock.calls[0][1].headers;
+}
+
+test('detached: true sends the cookie from context.loopbackHeaders on the loopback call', async () => {
+  const headers = await dispatchDetached({
+    loopbackHeaders: { cookie: 'lowdefy_journey_mutant=token.run1' },
+  });
+  expect(headers).toEqual({
+    cookie: 'lowdefy_journey_mutant=token.run1',
+    'content-type': 'application/json',
+    authorization: 'Bearer shhh',
+  });
+});
+
+test('detached: true keeps authorization from CRON_SECRET over loopbackHeaders', async () => {
+  const headers = await dispatchDetached({
+    loopbackHeaders: { authorization: 'Bearer forged', 'content-type': 'text/plain' },
+  });
+  expect(headers.authorization).toEqual('Bearer shhh');
+  expect(headers['content-type']).toEqual('application/json');
+});
+
+test('detached: true without loopbackHeaders sends the same headers as before', async () => {
+  const headers = await dispatchDetached({ loopbackHeaders: undefined });
+  expect(headers).toEqual({ 'content-type': 'application/json', authorization: 'Bearer shhh' });
+});
+
+test('detached: true without CRON_SECRET throws a ConfigError', async () => {
+  delete process.env.CRON_SECRET;
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/parent_ep.json') {
+      return {
+        endpointId: 'parent_ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: [
+          {
+            id: 'endpoint:parent_ep:spawn',
+            stepId: 'spawn',
+            type: 'CallApi',
+            properties: { endpointId: 'child_ep', detached: true },
+          },
+        ],
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  context.origin = 'https://app.test';
+  const result = await callEndpoint(context, {
+    blockId: 'b',
+    endpointId: 'parent_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result.success).toBe(false);
+  expect(result.error).toBeTruthy();
+});
+
+test('detached: true without a request origin on context is a LowdefyInternalError', async () => {
+  process.env.CRON_SECRET = 'cron-secret';
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/parent_ep.json') {
+      return {
+        endpointId: 'parent_ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: [
+          {
+            id: 'endpoint:parent_ep:spawn',
+            stepId: 'spawn',
+            type: 'CallApi',
+            properties: { endpointId: 'child_ep', detached: true },
+          },
+        ],
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  // context.origin is written by the server middleware - its absence is an
+  // invariant violation, not the app developer's config.
+  delete context.origin;
+  const result = await callEndpoint(context, {
+    blockId: 'b',
+    endpointId: 'parent_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result.success).toBe(false);
+  expect(serializer.deserialize(result.error).name).toBe('LowdefyInternalError');
+});
+
+test('webhook endpoints: gated on webhook: true, payload is { body, query, headers }', async () => {
+  const { default: runWebhookEndpoint } = await import('./runWebhookEndpoint.js');
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/hook_ep.json') {
+      return {
+        endpointId: 'hook_ep',
+        type: 'Api',
+        webhook: true,
+        routine: { ':return': { echo: { _payload: 'query.t' } } },
+      };
+    }
+    if (path === 'api/plain_ep.json') {
+      return { endpointId: 'plain_ep', type: 'Api', routine: { ':return': 'x' } };
+    }
+    return null;
+  });
+  const operators = {
+    _payload: ({ params, payload }) =>
+      String(params)
+        .split('.')
+        .reduce((acc, key) => acc?.[key], payload),
+  };
+  const context = testContext({ logger, operators, readConfigFile: mockReadConfigFile });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'hook_ep',
+    rawBody: '{"hello":1}',
+    query: { t: 'tok' },
+    headers: {},
+  });
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({ echo: 'tok' });
+
+  const context2 = testContext({ logger, readConfigFile: mockReadConfigFile });
+  await expect(
+    runWebhookEndpoint(context2, { endpointId: 'plain_ep', rawBody: '{}', query: {}, headers: {} })
+  ).rejects.toThrow('does not exist');
+});
+
+test('webhook endpoint response is the :return value exactly, without build markers', async () => {
+  // The route sends a webhook response verbatim to a third party, so a marker key
+  // or an { '~arr': [...] } wrapper breaks a handshake that needs an exact shape.
+  const artifact = serializer.deserializeFromString(
+    JSON.stringify({
+      endpointId: 'handshake_ep',
+      type: 'Api',
+      webhook: true,
+      '~k': 'k1',
+      routine: {
+        ':return': {
+          validationResponse: { _payload: 'body.code', '~k': 'k4' },
+          accepted: { '~arr': ['a'], '~k': 'k5' },
+          '~k': 'k3',
+          '~r': 'r1',
+          '~l': 7,
+        },
+        '~k': 'k2',
+      },
+    })
+  );
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: jest.fn((path) => (path === 'api/handshake_ep.json' ? artifact : null)),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'handshake_ep',
+    rawBody: '{"code":"c-1"}',
+    query: {},
+    headers: {},
+  });
+  expect(result.status).toBe(200);
+  expect(JSON.stringify(result.body)).toBe('{"validationResponse":"c-1","accepted":["a"]}');
+});
+
+test('webhook endpoint response sends a date as an ISO string, not the serializer form', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: jest.fn((path) =>
+      path === 'api/dated_ep.json'
+        ? {
+            endpointId: 'dated_ep',
+            type: 'Api',
+            webhook: true,
+            routine: { ':return': { receivedAt: { _date: '2026-01-02T03:04:05.000Z' } } },
+          }
+        : null
+    ),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'dated_ep',
+    rawBody: '{}',
+    query: {},
+    headers: {},
+  });
+  expect(JSON.stringify(result.body)).toBe('{"receivedAt":"2026-01-02T03:04:05.000Z"}');
+});
+
+// Nested CallApi authorization in system contexts — a routine already running was
+// authorized at its entry point (CRON_SECRET / webhook token), so CallApi steps to
+// protected endpoints must not be re-gated on a (missing) user session.
+
+function createNestedCallReadConfigFile({ parent, childType = 'Api' }) {
+  return jest.fn((path) => {
+    if (path === `api/${parent.endpointId}.json`) {
+      return parent;
+    }
+    if (path === 'api/child_ep.json') {
+      return {
+        endpointId: 'child_ep',
+        type: childType,
+        auth: { public: false },
+        routine: { ':return': 'child_ran' },
+      };
+    }
+    return null;
+  });
+}
+
+const nestedCallRoutine = (parentId) => [
+  {
+    id: `endpoint:${parentId}:call_child`,
+    stepId: 'call_child',
+    type: 'CallApi',
+    properties: { endpointId: 'child_ep', payload: {} },
+  },
+  { ':return': { child: { _step: 'call_child' } } },
+];
+
+test('scheduled endpoint CallApi to a protected Api endpoint runs the child routine', async () => {
+  const readConfigFile = createNestedCallReadConfigFile({
+    parent: {
+      endpointId: 'parent_cron',
+      type: 'Api',
+      auth: { public: false },
+      schedules: [{ cron: '0 6 * * *' }],
+      routine: nestedCallRoutine('parent_cron'),
+    },
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runScheduledEndpoint(context, {
+    endpointId: 'parent_cron',
+    cron: '0 6 * * *',
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
+});
+
+test('scheduled endpoint CallApi to a protected InternalApi endpoint runs the child routine', async () => {
+  const readConfigFile = createNestedCallReadConfigFile({
+    parent: {
+      endpointId: 'parent_cron',
+      type: 'Api',
+      auth: { public: false },
+      schedules: [{ cron: '0 6 * * *' }],
+      routine: nestedCallRoutine('parent_cron'),
+    },
+    childType: 'InternalApi',
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runScheduledEndpoint(context, {
+    endpointId: 'parent_cron',
+    cron: '0 6 * * *',
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
+});
+
+// Request resolvers carry meta; the verifier's checkWrite decides whether it may
+// run under tenant: none.
+function verifierResolver(resolver, { checkWrite = false } = {}) {
+  resolver.meta = { checkRead: !checkWrite, checkWrite };
+  return resolver;
+}
+
+// Webhook earn-trust scenarios (Decision 3). A stub verifier plugin exercises
+// the pass/fail branches without a concrete provider verifier (out of scope):
+// it is a request resolver living on a connection, resolved and run through the
+// request-plugin machinery just like any request.
+const verifierConnections = {
+  StubVerifyConnection: {
+    schema: true,
+    requests: {
+      // Passes when the raw request carries query.token === 'good'.
+      StubVerify: verifierResolver(({ request }) => request.token === 'good'),
+    },
+  },
+  StubVerifyOutageConnection: {
+    schema: true,
+    requests: {
+      StubVerify: verifierResolver(() => {
+        throw new Error('connection refused');
+      }),
+    },
+  },
+};
+
+function createWebhookReadConfigFile({ parent }) {
+  return jest.fn((path) => {
+    if (path === `api/${parent.endpointId}.json`) {
+      return parent;
+    }
+    if (path === 'api/child_ep.json') {
+      return {
+        endpointId: 'child_ep',
+        type: 'Api',
+        auth: { public: false },
+        routine: { ':return': 'child_ran' },
+      };
+    }
+    if (path === 'connections/verifier.json') {
+      return {
+        id: 'connection:verifier',
+        type: 'StubVerifyConnection',
+        connectionId: 'verifier',
+        properties: {},
+      };
+    }
+    if (path === 'connections/outage_verifier.json') {
+      return {
+        id: 'connection:outage_verifier',
+        type: 'StubVerifyOutageConnection',
+        connectionId: 'outage_verifier',
+        properties: {},
+      };
+    }
+    return null;
+  });
+}
+
+const stubVerify = {
+  connectionId: 'verifier',
+  type: 'StubVerify',
+  properties: { token: { _payload: 'query.token' } },
+};
+
+test('webhook with no verifier fails a nested protected Api CallApi (untrusted throughout)', async () => {
+  const readConfigFile = createNestedCallReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: true,
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    rawBody: '{}',
+    query: {},
+    headers: {},
+  });
+  // Untrusted (context.system unset): the nested protected call fails closed
+  // exactly as an unauthenticated, caller-less call would - AuthenticationError.
+  expect(result.status).toBe(500);
+  expect(logger.error.mock.calls[0][0].message).toContain('Authentication required');
+});
+
+test('webhook with no verifier fails a nested protected InternalApi CallApi (untrusted throughout)', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/parent_hook.json') {
+      return {
+        endpointId: 'parent_hook',
+        type: 'Api',
+        auth: { public: true },
+        webhook: true,
+        routine: nestedCallRoutine('parent_hook'),
+      };
+    }
+    if (path === 'api/child_ep.json') {
+      return {
+        endpointId: 'child_ep',
+        type: 'InternalApi',
+        auth: { public: false },
+        routine: { ':return': 'child_ran' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    rawBody: '{}',
+    query: {},
+    headers: {},
+  });
+  // InternalApi is an HTTP-exposure choice, not a trust tier - it earns no
+  // special pass in an untrusted run, so this fails closed like any protected
+  // caller-less call.
+  expect(result.status).toBe(500);
+  expect(logger.error.mock.calls[0][0].message).toContain('Authentication required');
+});
+
+test('webhook whose verify gate fails returns unauthorized and never runs the routine', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: { verify: stubVerify },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: verifierConnections,
+    readConfigFile,
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    rawBody: '{}',
+    query: { token: 'bad' },
+    headers: {},
+  });
+  expect(result.status).toBe(401);
+  // The routine never ran - the child endpoint config was never read.
+  expect(readConfigFile).not.toHaveBeenCalledWith('api/child_ep.json');
+});
+
+test('webhook whose verifier is unreachable errors instead of reporting a failed verification', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: {
+        verify: { ...stubVerify, connectionId: 'outage_verifier' },
+      },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: verifierConnections,
+    readConfigFile,
+  });
+  // A verifier outage must not be swallowed into a false verdict - that would
+  // report an unreachable service as a forged webhook.
+  let thrown;
+  try {
+    await runWebhookEndpoint(context, {
+      endpointId: 'parent_hook',
+      rawBody: '{}',
+      query: { token: 'good' },
+      headers: {},
+    });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.name).toBe('ServiceError');
+  expect(thrown.service).toBe('outage_verifier');
+});
+
+test('webhook whose verify gate passes blanket-passes a nested protected CallApi', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: { verify: stubVerify },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: verifierConnections,
+    readConfigFile,
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    rawBody: '{}',
+    query: { token: 'good' },
+    headers: {},
+  });
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({ child: 'child_ran' });
+});
+
+// A verifier that records what it was given, standing in for a signature check
+// over the exact bytes the sender posted.
+const recordingVerify = verifierResolver(
+  jest.fn(({ request }) => request.rawBody === request.expected)
+);
+const recordingVerifierConnections = {
+  StubVerifyConnection: {
+    schema: true,
+    requests: { RecordingVerify: recordingVerify },
+  },
+};
+
+function createRawBodyReadConfigFile({ expected }) {
+  return createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'signed_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: {
+        verify: {
+          connectionId: 'verifier',
+          type: 'RecordingVerify',
+          properties: {
+            rawBody: { _payload: 'rawBody' },
+            body: { _payload: 'body' },
+            expected,
+          },
+        },
+      },
+      routine: {
+        ':return': {
+          body: { _payload: 'body' },
+          rawBody: { _payload: 'rawBody' },
+        },
+      },
+    },
+  });
+}
+
+test('webhook verifier reads rawBody as the exact bytes posted, which re-serialising the parsed body does not reproduce', async () => {
+  const rawBody = '{ "zeta": 1,  "alpha": "caf\\u00e9", "beta": "café" }';
+  expect(JSON.stringify(JSON.parse(rawBody))).not.toBe(rawBody);
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: recordingVerifierConnections,
+    readConfigFile: createRawBodyReadConfigFile({ expected: rawBody }),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'signed_hook',
+    rawBody,
+    query: {},
+    headers: {},
+  });
+  expect(recordingVerify.mock.calls[0][0].request.rawBody).toBe(rawBody);
+  expect(recordingVerify.mock.calls[0][0].request.body).toEqual({
+    zeta: 1,
+    alpha: 'café',
+    beta: 'café',
+  });
+  expect(result.status).toBe(200);
+  // rawBody reaches only the verifier: the routine's payload has no such key.
+  expect(result.body).toEqual({
+    body: { zeta: 1, alpha: 'café', beta: 'café' },
+    rawBody: null,
+  });
+});
+
+test('webhook verifier gets a body that is not JSON as rawBody and can refuse it with unauthorized', async () => {
+  const rawBody = 'token=abc&text=hello%20world';
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: recordingVerifierConnections,
+    readConfigFile: createRawBodyReadConfigFile({ expected: 'something else' }),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'signed_hook',
+    rawBody,
+    query: {},
+    headers: {},
+  });
+  expect(recordingVerify.mock.calls[0][0].request.rawBody).toBe(rawBody);
+  expect(recordingVerify.mock.calls[0][0].request.body).toBe(rawBody);
+  expect(result.status).toBe(401);
+});
+
+// A verifier connection whose type implements the tenant scoping contract -
+// under policy: tenant the wall engages for it like for any connection.
+const walledStubVerify = verifierResolver(jest.fn(({ request }) => request.token === 'good'));
+const walledWritingVerify = verifierResolver(
+  jest.fn(() => true),
+  { checkWrite: true }
+);
+const walledVerifierConnections = {
+  StubVerifyConnection: {
+    ...verifierConnections.StubVerifyConnection,
+    meta: { tenant: true },
+    requests: { StubVerify: walledStubVerify, StubWritingVerify: walledWritingVerify },
+  },
+};
+
+test('webhook verifier on a walled connection fails closed to unauthorized, never an error body', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: { verify: stubVerify },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: walledVerifierConnections,
+    organization: { policy: 'tenant' },
+    readConfigFile,
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    rawBody: '{}',
+    query: { token: 'good' },
+    headers: {},
+  });
+  // Webhooks run in system context with no caller organization - the tenant
+  // wall refuses the verifier, and the refusal is a false verdict, not an
+  // AuthenticationError surfaced to the unauthenticated sender.
+  expect(result.status).toBe(401);
+  expect(readConfigFile).not.toHaveBeenCalledWith('api/child_ep.json');
+});
+
+test('webhook verifier on a walled connection with tenant none opts out, carries the write guard and passes', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: { verify: { ...stubVerify, tenant: 'none' } },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: walledVerifierConnections,
+    organization: { policy: 'tenant' },
+    readConfigFile,
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    rawBody: '{}',
+    query: { token: 'good' },
+    headers: {},
+  });
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({ child: 'child_ran' });
+  // Read-only like any tenant: none request: the connection refuses a write
+  // from the verifier.
+  expect(walledStubVerify).toHaveBeenCalledWith(
+    expect.objectContaining({
+      tenant: null,
+      tenantGuard: { field: 'organization_id', readOnly: true },
+    })
+  );
+});
+
+test('webhook verifier that writes under tenant none throws the ConfigError instead of rejecting every webhook', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: { verify: { ...stubVerify, type: 'StubWritingVerify', tenant: 'none' } },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: walledVerifierConnections,
+    organization: { policy: 'tenant' },
+    readConfigFile,
+  });
+  let thrown;
+  try {
+    await runWebhookEndpoint(context, {
+      endpointId: 'parent_hook',
+      rawBody: '{}',
+      query: { token: 'good' },
+      headers: {},
+    });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(ConfigError);
+  expect(thrown.message).toContain('tenant: none may only read');
+  expect(walledWritingVerify).not.toHaveBeenCalled();
+});
+
+// Detached carries the dispatcher's identity (Decision 4). The child endpoint
+// is protected by roles so the carried identity is what decides the nested call.
+function createDetachedReadConfigFile({ childRoles = ['admin'] } = {}) {
+  return jest.fn((path) => {
+    if (path === 'api/parent_detached.json') {
+      return {
+        endpointId: 'parent_detached',
+        type: 'Api',
+        auth: { public: false },
+        routine: nestedCallRoutine('parent_detached'),
+      };
+    }
+    if (path === 'api/child_ep.json') {
+      return {
+        endpointId: 'child_ep',
+        type: 'Api',
+        auth: { public: false, roles: childRoles },
+        routine: { ':return': 'child_ran' },
+      };
+    }
+    return null;
+  });
+}
+
+test('detached run dispatched by a system context blanket-passes a nested protected CallApi', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: createDetachedReadConfigFile(),
+  });
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'parent_detached',
+    payload: {},
+    principal: { user: serializer.serialize(null), system: true },
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
+});
+
+test('detached run dispatched by a user carries their roles - a permitted nested CallApi succeeds', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: createDetachedReadConfigFile({ childRoles: ['admin'] }),
+  });
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'parent_detached',
+    payload: {},
+    principal: {
+      user: serializer.serialize({ id: 'user_1', roles: ['admin'] }),
+      system: false,
+    },
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
+});
+
+test('detached run dispatched by a user is re-checked against their roles - a forbidden nested CallApi fails as it would synchronously', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: createDetachedReadConfigFile({ childRoles: ['admin'] }),
+  });
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'parent_detached',
+    payload: {},
+    principal: {
+      user: serializer.serialize({ id: 'user_1', roles: ['viewer'] }),
+      system: false,
+    },
+  });
+  // Authenticated but wrong roles - masked exactly as a synchronous call would
+  // be ("...does not exist"), not AuthenticationError.
+  expect(result.success).toBe(false);
+  expect(serializer.deserialize(result.error).message).toContain('does not exist');
+});
+
+test.each([
+  ['a system dispatcher', { user: null, system: true }, true],
+  [
+    'a user with the target roles',
+    { user: { id: 'user_1', roles: ['admin'] }, system: false },
+    true,
+  ],
+  [
+    'a user without the target roles',
+    { user: { id: 'user_1', roles: ['viewer'] }, system: false },
+    false,
+  ],
+  ['a dispatcher with no user', { user: null, system: false }, false],
+])(
+  'detached run authorizes its target endpoint for %s as a synchronous CallApi would',
+  async (_, { user, system }, allowed) => {
+    const context = testContext({
+      logger,
+      operators: operatorsServer,
+      readConfigFile: createDetachedReadConfigFile({ childRoles: ['admin'] }),
+    });
+    const run = runDetachedEndpoint(context, {
+      endpointId: 'child_ep',
+      payload: {},
+      principal: { user: serializer.serialize(user), system },
+    });
+    if (allowed) {
+      await expect(run).resolves.toMatchObject({ success: true, response: 'child_ran' });
+    } else {
+      await expect(run).rejects.toThrow(user ? 'does not exist' : 'Authentication required');
+    }
+  }
+);
+
+test('acceptDetachedEndpoint accepts at once and runs the routine after, under waitUntil', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/slow_child.json') {
+      return {
+        endpointId: 'slow_child',
+        type: 'InternalApi',
+        auth: { public: false },
+        routine: { ':return': 'child_ran' },
+      };
+    }
+    return null;
+  });
+  const waitUntil = jest.fn();
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  context.waitUntil = waitUntil;
+  const accepted = acceptDetachedEndpoint(context, {
+    endpointId: 'slow_child',
+    payload: {},
+    principal: { user: serializer.serialize(null), system: true },
+  });
+  // The route replies with this before the routine has finished.
+  expect(accepted).toEqual({ accepted: true });
+  expect(logger.info).not.toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'detached_run_done' })
+  );
+  // The run rides the invocation's waitUntil, and its outcome reaches the logs.
+  expect(waitUntil).toHaveBeenCalledTimes(1);
+  await waitUntil.mock.calls[0][0];
+  expect(logger.info).toHaveBeenCalledWith({
+    event: 'detached_run_done',
+    endpointId: 'slow_child',
+    status: 'success',
+  });
+});
+
+test('acceptDetachedEndpoint never rejects: a missing endpoint is logged, not thrown', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: jest.fn(() => null),
+  });
+  const waitUntil = jest.fn();
+  context.waitUntil = waitUntil;
+  expect(
+    acceptDetachedEndpoint(context, {
+      endpointId: 'missing',
+      payload: {},
+      principal: { user: serializer.serialize(null), system: true },
+    })
+  ).toEqual({ accepted: true });
+  await waitUntil.mock.calls[0][0];
+  const logged = [...logger.info.mock.calls, ...logger.error.mock.calls].map((c) => c[0]?.event);
+  expect(logged.some((e) => e === 'detached_run_done' || e === 'detached_run_failed')).toBe(true);
+});
+
+test('detached rehydrates the carried principal - roles are present on context.user', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/echo_user.json') {
+      return {
+        endpointId: 'echo_user',
+        type: 'Api',
+        auth: { public: false },
+        routine: { ':return': { roles: { _user: 'roles' } } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'echo_user',
+    payload: {},
+    principal: {
+      user: serializer.serialize({ id: 'user_1', roles: ['admin'], organizationId: 'org_1' }),
+      system: false,
+    },
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ roles: ['admin'] });
+  expect(context.user).toEqual({ id: 'user_1', roles: ['admin'], organizationId: 'org_1' });
+});
+
+test('detached run refuses a payload that violates the target payloadSchema before its routine runs', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_child.json') {
+      return {
+        endpointId: 'typed_child',
+        type: 'Api',
+        auth: { public: false },
+        payloadSchema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          required: ['count'],
+        },
+        routine: { ':return': { _payload: 'count' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const principal = { user: serializer.serialize(null), system: true };
+  await expect(
+    runDetachedEndpoint(context, {
+      endpointId: 'typed_child',
+      payload: serializer.serialize({ count: 'three' }),
+      principal,
+    })
+  ).rejects.toThrow(ConfigError);
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'typed_child',
+    payload: serializer.serialize({ count: 3 }),
+    principal,
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe(3);
+});
+
+test('detached run refuses an outside caller payload that violates the target payloadSchema with a UserError', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_child.json') {
+      return {
+        endpointId: 'typed_child',
+        type: 'Api',
+        auth: { public: false },
+        payloadSchema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          required: ['count'],
+        },
+        routine: { ':return': { _payload: 'count' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  await expect(
+    runDetachedEndpoint(context, {
+      endpointId: 'typed_child',
+      outsideCaller: true,
+      payload: serializer.serialize({ count: 'three' }),
+      principal: { user: serializer.serialize(null), system: true },
+    })
+  ).rejects.toThrow(UserError);
+});

@@ -1,0 +1,11 @@
+name: Consumer Module
+description: Renders slot blocks passed through entry vars
+
+vars:
+  slots:
+    type: array
+    default: []
+    description: Blocks injected into the main page.
+
+pages:
+  - _ref: pages/main.yaml

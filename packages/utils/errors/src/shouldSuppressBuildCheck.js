@@ -26,21 +26,45 @@ export const VALID_CHECK_SLUGS = {
   'link-refs': 'Invalid Link action page reference warnings',
   'request-refs': 'Invalid Request action reference warnings',
   'connection-refs': 'Nonexistent connection ID references',
+  'callapi-refs': 'Invalid CallAPI action endpoint reference warnings',
+  'callapi-internal-refs': 'CallAPI actions targeting InternalApi endpoints',
+  'dynamic-endpoint-refs': 'Invalid Dynamic block endpoint reference warnings',
+  'websocket-refs': 'Invalid websocket action reference warnings',
+  'callmethod-refs': 'CallMethod actions targeting blocks not defined on the page',
+  icons: 'Unresolvable icon name warnings',
   types: 'All type validation (blocks, operators, actions, requests, connections)',
   schema: 'JSON schema validation errors',
+  secrets: 'Environment variable names that are not set in the build environment',
+  'plugin-schema':
+    'Block properties, action params and operator params that break their plugin schema',
 };
+
+/**
+ * Group slug for every plugin build check rule. Errors raised by plugin rules
+ * carry it as checkGroup beside the rule's own checkSlug.
+ */
+export const PLUGIN_CHECKS_SLUG = 'plugin-checks';
+
+/**
+ * Slug of the plugin schema check. Its findings also carry PLUGIN_CHECKS_SLUG
+ * as checkGroup, so `plugin-checks` silences them with the plugin rules.
+ */
+export const PLUGIN_SCHEMA_SLUG = 'plugin-schema';
 
 /**
  * Checks if a build check should be suppressed based on ~ignoreBuildChecks.
  * Walks up the parent chain looking for suppressions that cover this check.
  * This walk happens ONLY when an error/warning is about to be logged.
  *
- * @param {Object} error - Error/warning object with configKey and optional checkSlug
+ * A listed slug matches the error's checkSlug or its checkGroup, so
+ * `plugin-checks` silences every plugin rule.
+ *
+ * @param {Object} error - Error/warning object with configKey and optional checkSlug and checkGroup
  * @param {Object} keyMap - The keyMap from build context
  * @returns {boolean} True if the check should be suppressed
  */
 function shouldSuppressBuildCheck(error, keyMap) {
-  const { configKey, checkSlug } = error;
+  const { configKey, checkSlug, checkGroup } = error;
   if (!configKey || !keyMap) return false;
 
   let currentKey = configKey;
@@ -57,8 +81,9 @@ function shouldSuppressBuildCheck(error, keyMap) {
       return true;
     }
 
-    if (Array.isArray(ignoredChecks) && checkSlug && ignoredChecks.includes(checkSlug)) {
-      return true;
+    if (Array.isArray(ignoredChecks)) {
+      if (checkSlug && ignoredChecks.includes(checkSlug)) return true;
+      if (checkGroup && ignoredChecks.includes(checkGroup)) return true;
     }
 
     currentKey = entry['~k_parent'];

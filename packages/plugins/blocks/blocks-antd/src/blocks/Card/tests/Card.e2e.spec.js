@@ -98,4 +98,39 @@ test.describe('Card Block', () => {
     const display = getBlock(page, 'onclick_display');
     await expect(display).toHaveText('Card clicked!');
   });
+
+  test('renders size default as the medium card', async ({ page }) => {
+    const card = getCard(page, 'card_default_size');
+    await expect(card).toBeVisible();
+    await expect(card).not.toHaveClass(/ant-card-small/);
+  });
+
+  test('renders the borderless variant', async ({ page }) => {
+    const card = getCard(page, 'card_variant_borderless');
+    await expect(card).not.toHaveClass(/ant-card-bordered/);
+  });
+
+  test('renders a loading skeleton instead of the content', async ({ page }) => {
+    const card = getCard(page, 'card_loading');
+    await expect(card).toHaveClass(/ant-card-loading/);
+    await expect(card.locator('.ant-skeleton')).toBeVisible();
+    await expect(card.locator('.ant-card-body')).not.toContainText('Hidden while loading');
+  });
+
+  test('renders the actions slot in the card actions bar', async ({ page }) => {
+    const card = getCard(page, 'card_actions');
+    const actions = card.locator('.ant-card-actions');
+    await expect(actions).toBeVisible();
+    await expect(actions.locator('li')).toHaveCount(1);
+    await expect(actions).toContainText('Save');
+  });
+
+  test('applies class and style to the semantic parts', async ({ page }) => {
+    const card = getCard(page, 'card_css_keys');
+    const title = card.locator('.ant-card-head-title');
+    await expect(title).toHaveClass(/card-title-class/);
+    await expect(title).toHaveCSS('color', 'rgb(255, 0, 0)');
+    await expect(card.locator('.ant-card-extra')).toHaveCSS('color', 'rgb(0, 0, 255)');
+    await expect(card.locator('.ant-card-actions')).toHaveClass(/card-actions-class/);
+  });
 });

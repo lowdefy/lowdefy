@@ -1,0 +1,49 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# UpdateUserProfile targeting another user requires user:update authority in
+# the target organization on top of this endpoint's role gate - only
+# self-targeting is exempt (see update-my-profile.yaml), and the target must
+# be a member of that organization too. The profile update
+# is a shallow merge per top-level key onto the user's existing bag; a key
+# set to null is removed. name and image are the display copies; the step
+# writes nothing else.
+id: admin-update-user-profile
+type: Api
+routine:
+  - id: update_user_profile
+    type: UpdateUserProfile
+    properties:
+      _object.assign:
+        - userId:
+            _payload: userId
+        - _if:
+            test:
+              _type:
+                type: object
+                on:
+                  _payload: profile
+            then:
+              profile:
+                _payload: profile
+            else: {}
+        - _if:
+            test:
+              _type:
+                type: string
+                on:
+                  _payload: name
+            then:
+              name:
+                _payload: name
+            else: {}
+        - _if:
+            test:
+              _type:
+                type: string
+                on:
+                  _payload: image
+            then:
+              image:
+                _payload: image
+            else: {}
+  - ':return':
+      _step: update_user_profile

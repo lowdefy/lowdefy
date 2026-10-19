@@ -21,6 +21,7 @@ import { jest } from '@jest/globals';
 import operators from '@lowdefy/operators-js/operators/build';
 import testContext from '../../test-utils/testContext.js';
 import { resolve, WalkContext } from './walker.js';
+import { getRecord } from './deferredRegistry.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
@@ -67,11 +68,10 @@ function createModuleEntry(consumerVars = {}, varDefs = {}, overrides = {}) {
     varDefs,
     resolvedVarCache: {},
     moduleDependencies: overrides.moduleDependencies ?? {},
-    refDef:
-      overrides.refDef ?? {
-        id: 'test:module.lowdefy.yaml:0',
-        path: '/modules/test/module.lowdefy.yaml',
-      },
+    refDef: overrides.refDef ?? {
+      id: 'test:module.lowdefy.yaml:0',
+      path: '/modules/test/module.lowdefy.yaml',
+    },
     connections: overrides.connections ?? {},
   };
 }
@@ -300,10 +300,7 @@ describe('_module.pageId resolution', () => {
       moduleEntry: testModuleEntry,
       buildContext: createModuleBuildContext(),
     });
-    const result = await resolve(
-      { '_module.pageId': { id: 'event-log', module: 'events' } },
-      ctx
-    );
+    const result = await resolve({ '_module.pageId': { id: 'event-log', module: 'events' } }, ctx);
     expect(result).toBe('events-entry/event-log');
   });
 
@@ -312,10 +309,7 @@ describe('_module.pageId resolution', () => {
       moduleEntry: testModuleEntry,
       buildContext: createModuleBuildContext(),
     });
-    const result = await resolve(
-      { '_module.pageId': { id: 'any-id', module: 'events' } },
-      ctx
-    );
+    const result = await resolve({ '_module.pageId': { id: 'any-id', module: 'events' } }, ctx);
     expect(result).toBe('events-entry/any-id');
   });
 
@@ -429,6 +423,94 @@ describe('_module.endpointId resolution', () => {
   });
 });
 
+describe('_module.notificationId resolution', () => {
+  test('string form resolves to scoped notification id', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve({ '_module.notificationId': 'invite-user' }, ctx);
+    expect(result).toBe('entry-id/invite-user');
+  });
+
+  test('object form resolves cross-module notification', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.notificationId': { id: 'event-digest', module: 'events' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/event-digest');
+  });
+
+  test('throws for invalid argument type', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.notificationId': 7 }, ctx)).rejects.toThrow(
+      '_module.notificationId requires a string or object { id, module }.'
+    );
+  });
+});
+
+describe('_module.websocketId resolution', () => {
+  test('string form resolves to scoped websocket id', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve({ '_module.websocketId': 'thread-messages' }, ctx);
+    expect(result).toBe('entry-id/thread-messages');
+  });
+
+  test('object form resolves cross-module websocket', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.websocketId': { id: 'event-feed', module: 'events' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/event-feed');
+  });
+
+  test('throws for invalid argument type', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.websocketId': 7 }, ctx)).rejects.toThrow(
+      '_module.websocketId requires a string or object { id, module }.'
+    );
+  });
+
+  test('string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.websocketId': 'thread-messages' }, ctx)).rejects.toThrow(
+      '_module.websocketId string form is ambiguous at the app level'
+    );
+  });
+
+  test('object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.websocketId': { id: 'thread-messages', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/thread-messages');
+  });
+});
+
 describe('_module.id resolution', () => {
   test('non-object form returns own module id', async () => {
     const ctx = createWalkContext({
@@ -487,6 +569,16 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
     });
     await expect(resolve({ '_module.endpointId': 'invite-user' }, ctx)).rejects.toThrow(
       '_module.endpointId string form is ambiguous at the app level'
+    );
+  });
+
+  test('_module.notificationId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.notificationId': 'invite-user' }, ctx)).rejects.toThrow(
+      '_module.notificationId string form is ambiguous at the app level'
     );
   });
 
@@ -550,15 +642,24 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
     expect(result).toBe('events-entry/send-event');
   });
 
-  test('_module.id object form resolves at app level', async () => {
+  test('_module.notificationId object form resolves at app level', async () => {
     const ctx = createWalkContext({
       moduleEntry: null,
       buildContext: createModuleBuildContext(),
     });
     const result = await resolve(
-      { '_module.id': { module: 'events-entry' } },
+      { '_module.notificationId': { id: 'invite-user', module: 'events-entry' } },
       ctx
     );
+    expect(result).toBe('events-entry/invite-user');
+  });
+
+  test('_module.id object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve({ '_module.id': { module: 'events-entry' } }, ctx);
     expect(result).toBe('events-entry');
   });
 
@@ -579,9 +680,7 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
       moduleEntry: null,
       buildContext: createModuleBuildContext(),
     });
-    await expect(
-      resolve({ '_module.id': { module: 'nonexistent' } }, ctx)
-    ).rejects.toThrow(
+    await expect(resolve({ '_module.id': { module: 'nonexistent' } }, ctx)).rejects.toThrow(
       '_module.id { module: "nonexistent" } references module "nonexistent" but no module with that entry id was registered.'
     );
   });
@@ -739,14 +838,44 @@ describe('_var object form with operator in default (bottom-up)', () => {
   });
 });
 
+describe('_var reserved key handling', () => {
+  test('{ _var: "constructor" } (string form) throws a ConfigError naming the key', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: 'constructor' }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].name).toBe('ConfigError');
+    expect(ctx.buildContext.errors[0].message).toBe('_var key "constructor" is a reserved name.');
+  });
+
+  test('{ _var: { key: "__proto__", default: 1 } } (object form) throws a ConfigError naming the key, not the default', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: { key: '__proto__', default: 1 } }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].message).toBe('_var key "__proto__" is a reserved name.');
+  });
+
+  test('regression: { _var: { key: "missing", default: 1 } } still returns the default', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: { key: 'missing', default: 1 } }, ctx);
+    expect(result).toBe(1);
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('regression: { _var: { key: "provided", default: "fallback" } } with a null value returns null, not the default', async () => {
+    const ctx = createWalkContext({ vars: { provided: null } });
+    const result = await resolve({ _var: { key: 'provided', default: 'fallback' } }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+});
+
 describe('_module.var with computed name (bottom-up)', () => {
   test('_build.string.concat computes module variable name', async () => {
     const entry = createModuleEntry({ theme: 'dark' });
     const ctx = createWalkContext({ moduleEntry: entry });
-    const result = await resolve(
-      { '_module.var': { '_build.string.concat': ['the', 'me'] } },
-      ctx
-    );
+    const result = await resolve({ '_module.var': { '_build.string.concat': ['the', 'me'] } }, ctx);
     expect(result).toBe('dark');
   });
 
@@ -823,9 +952,81 @@ describe('_module.var lazy resolution', () => {
     expect(result).toEqual({ show_header: true });
   });
 
-  test('preserves _module.var when moduleRoot set but no moduleEntry (Phase 1a)', async () => {
+  test('namespace var leaves out properties the consumer never set and that have no default', async () => {
+    const entry = createModuleEntry(
+      { sider: { theme: 'dark' } },
+      {
+        sider: {
+          type: 'object',
+          properties: {
+            width: { type: 'number', default: 232 },
+            collapsedWidth: { type: 'number' },
+            theme: { type: 'string' },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'sider' }, ctx);
+    expect(result).toEqual({ width: 232, theme: 'dark' });
+    expect(Object.hasOwn(result, 'collapsedWidth')).toBe(false);
+  });
+
+  test('namespace var keeps a property the consumer explicitly set to null', async () => {
+    const entry = createModuleEntry(
+      { sider: { collapsedWidth: null } },
+      {
+        sider: {
+          type: 'object',
+          properties: {
+            width: { type: 'number', default: 232 },
+            collapsedWidth: { type: 'number' },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'sider' }, ctx);
+    expect(result).toEqual({ width: 232, collapsedWidth: null });
+  });
+
+  test('namespace var leaves out unset properties of a nested namespace', async () => {
+    const entry = createModuleEntry(
+      {},
+      {
+        theme: {
+          type: 'object',
+          properties: {
+            colors: {
+              type: 'object',
+              properties: {
+                primary: { type: 'string', default: '#1890ff' },
+                background: { type: 'string' },
+              },
+            },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'theme' }, ctx);
+    expect(result).toEqual({ colors: { primary: '#1890ff' } });
+  });
+
+  test('_module.var of an unset namespace property with no default returns null', async () => {
+    const entry = createModuleEntry(
+      {},
+      { sider: { type: 'object', properties: { collapsedWidth: { type: 'number' } } } }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'sider.collapsedWidth' }, ctx);
+    expect(result).toBeNull();
+  });
+
+  test('errors on _module.var in module scope without an entry (module-static positions)', async () => {
+    const buildContext = createBuildContext();
     const ctx = new WalkContext({
-      buildContext: createBuildContext(),
+      buildContext,
       refId: 'test:module.yaml:0',
       sourceRefId: null,
       vars: {},
@@ -839,19 +1040,19 @@ describe('_module.var lazy resolution', () => {
       dynamicIdentifiers,
       shouldStop: null,
     });
+    // Manifest headers and export ids walk without a module entry — they are
+    // module-static, so _module.var there is a ConfigError, not a pass-through.
     const node = { '_module.var': 'theme' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.var': 'theme' });
+    await expect(resolve(node, ctx)).rejects.toThrow(
+      '_module.var cannot be used in manifest headers or component/menu ids'
+    );
   });
 });
 
 describe('regression — existing compositions still work', () => {
   test('_build.string.concat with _var argument', async () => {
     const ctx = createWalkContext({ vars: { prefix: 'admin' } });
-    const result = await resolve(
-      { '_build.string.concat': [{ _var: 'prefix' }, '-page'] },
-      ctx
-    );
+    const result = await resolve({ '_build.string.concat': [{ _var: 'prefix' }, '-page'] }, ctx);
     expect(result).toBe('admin-page');
   });
 
@@ -961,7 +1162,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     const moduleRoot = '/modules/dashboard';
 
     mockReadConfigFile.mockImplementation((filePath) => {
-      if (filePath === '/modules/dashboard/pages/overview.yaml') {
+      if (filePath === path.resolve('/modules/dashboard/pages/overview.yaml')) {
         return { id: 'overview', type: 'Box' };
       }
       return null;
@@ -988,7 +1189,7 @@ describe('module path resolution stores absolute path in refMap', () => {
 
     // Find the refMap entry for the resolved _ref
     const refEntry = Object.values(buildContext.refMap).find(
-      (entry) => entry.path === '/modules/dashboard/pages/overview.yaml'
+      (entry) => entry.path === path.resolve('/modules/dashboard/pages/overview.yaml')
     );
     expect(refEntry).toBeDefined();
   });
@@ -998,7 +1199,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     buildContext.modules = {};
 
     mockReadConfigFile.mockImplementation((filePath) => {
-      if (filePath === '/modules/dashboard/shared/stat-card.yaml') {
+      if (filePath === path.resolve('/modules/dashboard/shared/stat-card.yaml')) {
         return { id: 'stat', type: 'Box' };
       }
       return null;
@@ -1028,7 +1229,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     // Should resolve from moduleRoot: /modules/dashboard/shared/stat-card.yaml
     // NOT from currentFile dir: /modules/dashboard/pages/shared/stat-card.yaml
     const refEntry = Object.values(buildContext.refMap).find(
-      (entry) => entry.path === '/modules/dashboard/shared/stat-card.yaml'
+      (entry) => entry.path === path.resolve('/modules/dashboard/shared/stat-card.yaml')
     );
     expect(refEntry).toBeDefined();
   });
@@ -1038,7 +1239,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     buildContext.modules = {};
 
     mockReadConfigFile.mockImplementation((filePath) => {
-      if (filePath === '/modules/app/components/button.yaml') {
+      if (filePath === path.resolve('/modules/app/components/button.yaml')) {
         return { id: 'btn', type: 'Button' };
       }
       return null;
@@ -1064,7 +1265,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     await resolve(node, ctx);
 
     const refEntry = Object.values(buildContext.refMap).find(
-      (entry) => entry.path === '/modules/app/components/button.yaml'
+      (entry) => entry.path === path.resolve('/modules/app/components/button.yaml')
     );
     expect(refEntry).toBeDefined();
   });
@@ -1517,7 +1718,226 @@ describe('module ref JS path resolution (resolver / transformer / .js content)',
 
     const node = { _ref: '../escape.yaml' };
     await expect(resolve(node, ctx)).rejects.toThrow(
-      'Module ref path "/modules/escape.yaml" escapes the package root.'
+      `Module ref path "${path.resolve('/modules/escape.yaml')}" escapes the package root.`
     );
+  });
+});
+
+describe('deferModuleRefs record deferral', () => {
+  test('resolving a cross-module _ref with deferModuleRefs true returns an entryRef record placeholder', async () => {
+    const buildContext = createBuildContext();
+    // Give the refMap an entry for the ref id that will be created
+    buildContext.refMap = {};
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'entry:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      moduleEntry: null,
+      moduleRoot: null,
+      packageRoot: null,
+      path: '',
+      currentFile: 'lowdefy.yaml',
+      refChain: new Set(['lowdefy.yaml']),
+      deferModuleRefs: true,
+      entryId: 'consumer-entry',
+      entrySection: 'consumerVars',
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { slot: { _ref: { module: 'my-module', component: 'MyComponent' } } };
+
+    const resolved = await resolve(node, ctx);
+
+    // The tree holds an enumerable placeholder; the prepared refDef is the
+    // record body and the env replaces ~deferredFrom with explicit provenance.
+    const id = 'consumer-entry:consumerVars.slot';
+    expect(resolved.slot).toEqual({ '~deferred': id });
+    const record = getRecord(buildContext, id);
+    expect(record.kind).toBe('entryRef');
+    expect(record.body.module).toBe('my-module');
+    expect(record.body.component).toBe('MyComponent');
+    expect(record.env.file).toBe('lowdefy.yaml');
+    expect(record.env.entryId).toBeNull();
+    expect(record.slot).toEqual({
+      entryId: 'consumer-entry',
+      section: 'consumerVars',
+      path: 'slot',
+    });
+  });
+
+  test('resolving a file _ref with deferModuleRefs true does not produce a placeholder', async () => {
+    // A file _ref (no module key) must not be deferred — the refDef.module guard
+    // in resolveRef ensures only module refs become records.
+    // (The actual file resolution may fail due to missing test fixtures; we only
+    //  care about the deferral branch not activating.)
+    const buildContext = createBuildContext();
+    buildContext.refMap = {};
+
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'entry:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      moduleEntry: null,
+      moduleRoot: null,
+      packageRoot: null,
+      path: '',
+      currentFile: '/app/lowdefy.yaml',
+      refChain: new Set(['/app/lowdefy.yaml']),
+      deferModuleRefs: true,
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: '/app/some-file.yaml' };
+    const result = await resolve(node, ctx);
+    // Result must NOT be a placeholder — either resolved content or null
+    // (null when getRefContent fails due to missing file in tests).
+    expect(result === null || result['~deferred'] === undefined).toBe(true);
+  });
+
+  test('cloneWithMarkers carries placeholders through unchanged', async () => {
+    const { default: cloneWithMarkers } = await import('./cloneWithMarkers.js');
+
+    const placeholder = { '~deferred': 'consumer-entry:consumerVars.slot' };
+    const cloned = cloneWithMarkers({ wrapper: placeholder });
+
+    // Plain enumerable data — the whole point of the record placeholder.
+    expect(cloned.wrapper).toEqual({ '~deferred': 'consumer-entry:consumerVars.slot' });
+  });
+});
+
+describe('_build.authConfig deferral before the projection exists', () => {
+  function createDeferAuthConfigContext({
+    authConfigProjection,
+    deferAuthConfig = true,
+    vars,
+  } = {}) {
+    const buildContext = createBuildContext();
+    if (authConfigProjection !== undefined) {
+      buildContext.authConfigProjection = authConfigProjection;
+    }
+    return new WalkContext({
+      buildContext,
+      refId: 'test:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: vars ?? {},
+      path: '',
+      currentFile: 'lowdefy.yaml',
+      refChain: new Set(['lowdefy.yaml']),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+      deferAuthConfig,
+    });
+  }
+
+  const policyFold = () => ({
+    '_build.if': {
+      test: {
+        '_build.eq': [{ '_build.authConfig': 'organizations.policy' }, 'tenant'],
+      },
+      then: [{ clause: true }],
+      else: [],
+    },
+  });
+
+  test('fold over _build.authConfig defers when the projection is absent', async () => {
+    const ctx = createDeferAuthConfigContext();
+    const result = await resolve(policyFold(), ctx);
+    expect(result).toEqual(policyFold());
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('bare _build.authConfig defers when the projection is absent', async () => {
+    const ctx = createDeferAuthConfigContext();
+    const node = { '_build.authConfig': 'organizations.policy' };
+    const result = await resolve(node, ctx);
+    expect(result).toEqual({ '_build.authConfig': 'organizations.policy' });
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('deferred fold keeps its resolved children', async () => {
+    const ctx = createDeferAuthConfigContext({ vars: { shape: 'search_filter' } });
+    const node = {
+      '_build.if': {
+        test: {
+          '_build.eq': [{ '_build.authConfig': 'organizations.policy' }, 'tenant'],
+        },
+        then: [{ _var: 'shape' }],
+        else: [],
+      },
+    };
+    const result = await resolve(node, ctx);
+    // _var substituted bottom-up; only the _build.* folds stay deferred.
+    expect(result['_build.if'].then).toEqual(['search_filter']);
+    expect(result['_build.if'].test).toEqual({
+      '_build.eq': [{ '_build.authConfig': 'organizations.policy' }, 'tenant'],
+    });
+  });
+
+  test('fold evaluates when the projection is present', async () => {
+    const ctx = createDeferAuthConfigContext({
+      authConfigProjection: { organizations: { policy: 'tenant', signup: 'open' } },
+    });
+    const result = await resolve(policyFold(), ctx);
+    expect(result).toEqual([{ clause: true }]);
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('fold evaluates the pinned branch when the projection is present', async () => {
+    const ctx = createDeferAuthConfigContext({
+      authConfigProjection: { organizations: { policy: 'pinned', signup: 'invite-only' } },
+    });
+    const result = await resolve(policyFold(), ctx);
+    expect(result).toEqual([]);
+  });
+
+  test('without deferAuthConfig an absent projection is still a collected error', async () => {
+    const ctx = createDeferAuthConfigContext({ deferAuthConfig: false });
+    await resolve(policyFold(), ctx);
+    expect(ctx.buildContext.errors.length).toBeGreaterThan(0);
+    expect(ctx.buildContext.errors[0].message).toContain(
+      '_build.authConfig is not available here.'
+    );
+  });
+
+  test('deferAuthConfig does not defer folds that read no authConfig', async () => {
+    const ctx = createDeferAuthConfigContext();
+    const node = { '_build.eq': ['a', 'a'] };
+    const result = await resolve(node, ctx);
+    expect(result).toBe(true);
+  });
+
+  test('deferAuthConfig propagates through child contexts', async () => {
+    const ctx = createDeferAuthConfigContext();
+    const node = { outer: { inner: policyFold() } };
+    const result = await resolve(node, ctx);
+    expect(result.outer.inner).toEqual(policyFold());
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+});
+
+describe('unexpected errors while resolving a _ref', () => {
+  test('carry the innermost file being resolved as filePath', async () => {
+    mockReadConfigFile.mockImplementation((filePath) => {
+      if (filePath === 'pages/home.yaml') {
+        return 'id: home\nrequests:\n  - _ref: requests/get_rows.yaml\n';
+      }
+      throw new TypeError('Cannot read properties of undefined');
+    });
+    const ctx = createWalkContext();
+
+    await expect(resolve({ _ref: 'pages/home.yaml' }, ctx)).rejects.toMatchObject({
+      name: 'TypeError',
+      filePath: 'requests/get_rows.yaml',
+    });
   });
 });

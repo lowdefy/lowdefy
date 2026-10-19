@@ -1,5 +1,74 @@
 # Change Log
 
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [5657441]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/operators@6.1.0
+  - @lowdefy/helpers@6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+- 59190b5: Refresh dependencies and require Node.js 22 or newer.
+
+  Updated a range of libraries across the project to current versions (including the MongoDB driver, the
+  MQL/aggregation engine, and various build and CLI tooling) and set the minimum supported Node.js version
+  to 22, matching what is tested in CI. Most changes are internal with no effect on your app. One small
+  behaviour note: in `_mql` expressions, adding to a missing or null field now returns `null` (matching
+  MongoDB) instead of `NaN`.
+
+- Updated dependencies [60401aa]
+- Updated dependencies [efd1967]
+- Updated dependencies [6446ae6]
+- Updated dependencies [982a3db]
+  - @lowdefy/operators@6.0.0
+  - @lowdefy/helpers@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/operators@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.1
+- @lowdefy/helpers@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.0
+- @lowdefy/helpers@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+- Updated dependencies [60401aa]
+- Updated dependencies [25225ab]
+- Updated dependencies [f11addd]
+- Updated dependencies [0108f38]
+- Updated dependencies [302e330]
+  - @lowdefy/operators@5.4.0
+  - @lowdefy/helpers@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes

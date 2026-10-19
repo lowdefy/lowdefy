@@ -18,6 +18,8 @@ import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
+import dateRangeSelector from '../e2e.js';
+
 // Helper to get the range picker wrapper (use framework wrapper ID bl-{blockId})
 const getPicker = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-picker`);
 
@@ -229,5 +231,192 @@ test.describe('DateRangeSelector Block', () => {
     await page.keyboard.press('Escape');
     // After Escape, dropdown may close or become hidden
     await expect(dropdown).toHaveCount(0);
+  });
+});
+
+// Pinned to a negative UTC offset: preset dates are read as UTC wall clocks, and a naive
+// conversion of a _date object would land a day early in timezones behind UTC.
+test.describe('DateRangeSelector Block presets', () => {
+  test.use({ timezoneId: 'America/New_York' });
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  test('lists presets next to the calendar', async ({ page }) => {
+    await dateRangeSelector.do.open(page, 'drs_presets');
+
+    await dateRangeSelector.expect.presetLabels(page, 'drs_presets', [
+      'Q1 2024',
+      'Q2 2024',
+      'Html label',
+    ]);
+  });
+
+  test('does not render the presets panel when no presets are set', async ({ page }) => {
+    await dateRangeSelector.do.open(page, 'drs_no_presets');
+
+    await dateRangeSelector.expect.noPresets(page, 'drs_no_presets');
+  });
+
+  test('selects the range of a preset given as date strings', async ({ page }) => {
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets', 'Q1 2024');
+
+    await dateRangeSelector.expect.closed(page, 'drs_presets');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets', '2024-01-01');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets', '2024-03-31');
+  });
+
+  test('selects the range of a preset given as _date objects', async ({ page }) => {
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets', 'Q2 2024');
+
+    await dateRangeSelector.expect.closed(page, 'drs_presets');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets', '2024-04-01');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets', '2024-06-30');
+  });
+
+  test('renders html in preset labels', async ({ page }) => {
+    await dateRangeSelector.do.open(page, 'drs_presets');
+
+    await dateRangeSelector.expect.presetLabelHtml(page, 'drs_presets', {
+      selector: 'b',
+      text: 'Html label',
+    });
+
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets', 'Html label');
+
+    await dateRangeSelector.expect.closed(page, 'drs_presets');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets', '2024-07-01');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets', '2024-09-30');
+  });
+});
+
+// Pinned to a fixed clock so "now" based presets and disabledDates resolve to known dates, in a
+// timezone where the local and UTC calendar dates agree so the test is only about disabledDates.
+test.describe('DateRangeSelector Block presets and disabledDates', () => {
+  test.use({ timezoneId: 'America/New_York' });
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-07-15T12:00:00.000Z'));
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  test('narrows the start of a preset to the first date it may select', async ({ page }) => {
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets_min_now', 'Last 7 Days');
+
+    await dateRangeSelector.expect.closed(page, 'drs_presets_min_now');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets_min_now', '2026-07-15');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets_min_now', '2026-07-15');
+  });
+
+  test('narrows the end of a preset to the last date it may select', async ({ page }) => {
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets_max_now', 'Next 7 Days');
+
+    await dateRangeSelector.expect.closed(page, 'drs_presets_max_now');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets_max_now', '2026-07-15');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets_max_now', '2026-07-15');
+  });
+
+  test('disables a preset with no date it may select', async ({ page }) => {
+    await dateRangeSelector.do.open(page, 'drs_presets_min_now');
+
+    await dateRangeSelector.expect.presetDisabled(page, 'drs_presets_min_now', 'Last Year');
+  });
+
+  test('leaves a preset inside the allowed dates selectable', async ({ page }) => {
+    await dateRangeSelector.do.open(page, 'drs_presets_min_now');
+    await dateRangeSelector.expect.presetEnabled(page, 'drs_presets_min_now', 'Next 7 Days');
+
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets_min_now', 'Next 7 Days');
+    await dateRangeSelector.expect.closed(page, 'drs_presets_min_now');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets_min_now', '2026-07-15');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets_min_now', '2026-07-22');
+  });
+});
+
+test.describe('DateRangeSelector antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  const dropdown = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
+
+  test('renders the underlined variant', async ({ page }) => {
+    await expect(getPicker(page, 'drs_underlined')).toHaveClass(/ant-picker-underlined/);
+  });
+
+  test('renders prefix text', async ({ page }) => {
+    await expect(getPicker(page, 'drs_prefix_text').locator('.ant-picker-prefix')).toHaveText(
+      'From'
+    );
+  });
+
+  test('renders a prefix icon', async ({ page }) => {
+    await expect(
+      getPicker(page, 'drs_prefix_icon').locator('.ant-picker-prefix svg')
+    ).toBeAttached();
+  });
+
+  test('inputReadOnly makes the text input read-only', async ({ page }) => {
+    await expect(getStartInput(page, 'drs_readonly')).toHaveAttribute('readonly', '');
+  });
+
+  test('placement and the popup cssKey apply to the calendar popup', async ({ page }) => {
+    await getPicker(page, 'drs_placement').click();
+    const popup = dropdown(page, 'drs_placement');
+    await expect(popup).toBeVisible();
+    // The popup flips to the top when there is no room below, but keeps the right alignment.
+    await expect(popup).toHaveClass(/ant-picker-dropdown-placement-(bottom|top)Right/);
+    await expect(popup).toHaveClass(/drs-custom-popup/);
+  });
+
+  test('fires onFocus, onOpenChange and onBlur', async ({ page }) => {
+    await getStartInput(page, 'drs_events').click();
+    await expect(getBlock(page, 'drs_focus_display')).toHaveText('Focus: "start"');
+    await expect(getBlock(page, 'drs_open_display')).toHaveText('Open: true');
+
+    await page.keyboard.press('Escape');
+    await expect(getBlock(page, 'drs_open_display')).toHaveText('Open: false');
+
+    await getBlock(page, 'drs_underlined').click();
+    await expect(getBlock(page, 'drs_blur_display')).toHaveText('Blur: "start"');
+  });
+
+  test('fires onClear when the clear button is clicked', async ({ page }) => {
+    const picker = getPicker(page, 'drs_onclear');
+    await expect(getStartInput(page, 'drs_onclear')).not.toHaveValue('');
+    await picker.hover();
+    await picker.locator('.ant-picker-clear').click();
+    await expect(getStartInput(page, 'drs_onclear')).toHaveValue('');
+    await expect(getBlock(page, 'drs_onclear_display')).toHaveText('Clear fired');
+  });
+
+  test('showWeek adds week numbers to the calendar', async ({ page }) => {
+    await getPicker(page, 'drs_show_week').click();
+    const popup = dropdown(page, 'drs_show_week');
+    await expect(popup.locator('.ant-picker-date-panel-show-week').first()).toBeVisible();
+    await expect(popup.locator('.ant-picker-cell-week').first()).toBeVisible();
+  });
+});
+
+test.describe('DateRangeSelector open and fixed ends', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  test('allowEmpty lets the end date be left empty', async ({ page }) => {
+    await getStartInput(page, 'drs_allow_empty').click();
+    await page.keyboard.type('2024-06-10');
+    await page.keyboard.press('Enter');
+    await getBlock(page, 'drs_basic').click();
+
+    await expect(getStartInput(page, 'drs_allow_empty')).toHaveValue('2024-06-10');
+    await expect(getEndInput(page, 'drs_allow_empty')).toHaveValue('');
+    await expect(getBlock(page, 'drs_allow_empty_display')).toHaveText('Open end');
+  });
+
+  test('an array of disabled flags disables only the start input', async ({ page }) => {
+    await expect(getStartInput(page, 'drs_disabled_start')).toBeDisabled();
+    await expect(getEndInput(page, 'drs_disabled_start')).toBeEnabled();
   });
 });

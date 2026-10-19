@@ -1,6 +1,6 @@
 ---
 title: '@lowdefy/ai-utils'
-updated: 2026-05-05
+updated: 2026-10-03
 package: '@lowdefy/ai-utils'
 ---
 
@@ -17,6 +17,7 @@ This package provides the core orchestration for Lowdefy's agent system:
 - Step preparation — Dynamic per-step config overrides
 - Message pruning — Context optimization by stripping old reasoning/tool calls
 - Reserved tool name guard — Rejects user tools that collide with built-ins (e.g. `update-page-state`)
+- Typed decisions — `decide()` and the `Decide` request resolver built on it (`createDecide`)
 
 ## Key Exports
 
@@ -26,6 +27,8 @@ import {
   AISDKAgent, // Base agent wrapper
   AISDKAgentSchema, // JSON Schema for agent properties
   buildAgentTools, // Tool merging function
+  createDecide, // Builds a connection's Decide request resolver
+  decide, // Typed decisions on a model the caller holds, outside a request
 } from '@lowdefy/ai-utils';
 ```
 
@@ -45,7 +48,7 @@ The main entry point called by all agent resolvers (ClaudeAgent, OpenAIAgent, Ge
     messages            // UIMessage[] from client
   },
   context: {
-    agentContext,        // { pageId, userId, conversationId, urlQuery, sharedState }
+    agentContext,        // { pageId, userId, conversationId, urlQuery, sharedState, sharedStateReadOnly }
     callEndpoint,        // Execute API endpoint as tool
     evaluateOperators,
     getEndpointConfig,
@@ -118,13 +121,26 @@ Factory that constructs the `update-page-state` tool from the active `sharedStat
 
 Exports `RESERVED_PLATFORM_TOOL_NAMES` and a guard used by `buildAgentTools` to reject user tools that collide with platform built-ins. Currently reserved: `update-page-state`. Collisions throw at build/runtime — they're never silently shadowed.
 
+### decide.js and createDecide.js
+
+`decide({ model, backend, state, questions, options })` asks typed questions (`choice`, `yesno`, `score`) about a state and returns `{ answers, usage, providerMetadata }`. Each answer carries its value and a confidence (see `decideQuestions.js` for the answer fields per kind). `backend` picks how:
+
+| Backend             | Function                     | Model                                                                                                       |
+| ------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `evaluation`        | `decideWithEvaluation`       | an evaluation model (`provider.evaluationModel(id)`), via `experimental_evaluate`; probabilities per option |
+| `structured-output` | `decideWithStructuredOutput` | any language model (`provider(id)`), via `generateText` with an `Output.object` schema                      |
+
+`providerMetadata` is the AI SDK result's; on the AI Gateway it carries `gateway.cost`, which a caller that caps spend reads. `options` are AI SDK call options (`maxOutputTokens`, `timeout`, `abortSignal`, `maxRetries`, `providerOptions`); the evaluation backend folds `timeout` into the abort signal and drops `maxOutputTokens`.
+
+`decide` does not validate its questions. `createDecide({ createProvider, backends })` builds the `Decide` request resolver an AI connection offers: the request is validated by `DecideSchema` in the request layer, then the resolver resolves the model from the connection's provider, builds call limits, calls `decide` and returns `{ ...answers, usage }`. `decide` exists for callers with no connection or request, which build their own model and questions.
+
 ## Page state integration (`sharedState`)
 
 Agents can read and write a slice of page state declared by the AgentChat block:
 
 - The block exposes a `sharedState` object (formerly `pageState`) — operator-evaluated each render and shipped with each chat request.
-- `callAgent` forwards `sharedState` into the runtime's `agentContext.sharedState`.
-- `handleAgentChat` builds the `update-page-state` tool for that snapshot and includes the state as a `pageContext`-style block in instructions so the agent sees current values.
+- `callAgent` forwards `sharedState` into the runtime's `agentContext.sharedState`, and the block's `sharedStateReadOnly` into `agentContext.sharedStateReadOnly`.
+- `createToolLoopAgent` builds the `update-page-state` tool for that snapshot (skipped when `sharedStateReadOnly` is true) and includes the state as a `pageContext`-style block in instructions so the agent sees current values.
 - When the agent calls `update-page-state`, the streamed result is delivered back to the AgentChat block, which writes the patch to page state via the `update-page-state` event (allowlisted to the originally-declared keys).
 
 Sharp edges:
@@ -165,3 +181,5 @@ Sharp edges:
 | `src/AISDKAgent.js`               | Base agent class                                         |
 | `src/AISDKAgentSchema.js`         | Agent properties schema                                  |
 | `src/fileSystem/resolvePath.js`   | Path safety validation                                   |
+| `src/decide.js`                   | Typed decisions on a model, outside a request            |
+| `src/createDecide.js`             | The `Decide` request resolver, built on `decide`         |

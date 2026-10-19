@@ -46,6 +46,16 @@ test('Link with string pageId as params', () => {
   expect(mockLink.mock.calls).toEqual([[{ pageId: 'page-id' }]]);
 });
 
+test('Link passes pathParams and urlQuery through to the link method', () => {
+  Link({
+    methods,
+    params: { pageId: 'ticket', pathParams: { ticket_id: '1234' }, urlQuery: { tab: 'notes' } },
+  });
+  expect(mockLink.mock.calls).toEqual([
+    [{ pageId: 'ticket', pathParams: { ticket_id: '1234' }, urlQuery: { tab: 'notes' } }],
+  ]);
+});
+
 test('link method throws', () => {
   mockLink.mockImplementationOnce(() => {
     throw new Error('Test error');

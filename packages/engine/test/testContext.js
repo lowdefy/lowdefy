@@ -21,10 +21,14 @@ import getContext from '../src/getContext.js';
 import testOperators from './testOperators.js';
 import testActions from './testActions.js';
 
-const testContext = async ({ lowdefy, pageConfig }) => {
+const testContext = async ({ lowdefy, pageConfig, path, pathParams }) => {
   const testLowdefy = {
     contexts: {},
     inputs: {},
+    linkPaths: {},
+    pageInstances: {},
+    pagePaths: {},
+    pathMemory: new Map(),
     urlQuery: {},
     lowdefyGlobal: {},
     home: {},
@@ -34,7 +38,6 @@ const testContext = async ({ lowdefy, pageConfig }) => {
     _internal: {
       callRequest: () => {},
       displayMessage: () => () => {},
-      updateBlock: () => {},
       logger: { error: () => {}, warn: () => {}, log: () => {}, debug: () => {} },
       handleError: () => {},
       translate: (key, values) => translate({ key, values, i18n: lowdefy?.i18n }),
@@ -66,9 +69,11 @@ const testContext = async ({ lowdefy, pageConfig }) => {
     },
   };
   const buildConfig = buildTestPage({ pageConfig });
+  buildConfig.path = path;
   const ctx = getContext({
     lowdefy: testLowdefy,
     config: buildConfig,
+    pathParams,
     resetContext: { reset: true, setReset: () => {} },
   });
   await ctx._internal.runOnInit(() => {});

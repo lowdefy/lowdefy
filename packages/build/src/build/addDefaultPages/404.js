@@ -24,7 +24,7 @@ export default {
   properties: {
     status: 'info',
     icon: {
-      name: 'AiOutlineFileSearch',
+      name: 'FileSearch',
       size: 80,
       color: 'var(--ant-color-primary)',
     },

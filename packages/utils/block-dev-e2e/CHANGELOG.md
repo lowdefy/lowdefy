@@ -1,5 +1,64 @@
 # @lowdefy/block-dev-e2e
 
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [1d3a0b8]
+  - @lowdefy/e2e-utils@6.1.0
+
+## 6.0.0
+
+### Minor Changes
+
+- 519163c: Add `getShortcutModifier` for testing `mod` keyboard shortcuts.
+
+  A `mod` shortcut resolves to Cmd or Ctrl from the platform the browser reports, and Playwright emulates that platform per project — a Desktop Chrome project reports Windows even when the test runner is on macOS. A test that derives the key from `process.platform` therefore presses a key the app is not listening for, and only on some host operating systems.
+
+  `getShortcutModifier(page)` reads the platform from the page instead, so the key a test presses is always the key the app is listening for:
+
+  ```javascript
+  import { getShortcutModifier } from '@lowdefy/e2e-utils';
+
+  const mod = await getShortcutModifier(page);
+  await page.keyboard.press(`${mod}+k`);
+  ```
+
+### Patch Changes
+
+- Updated dependencies [ea4de26]
+- Updated dependencies [519163c]
+- Updated dependencies [8a82fb0]
+- Updated dependencies [a783370]
+  - @lowdefy/e2e-utils@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [b09ad62]
+  - @lowdefy/e2e-utils@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/e2e-utils@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/e2e-utils@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+- Updated dependencies [f0fea51]
+- Updated dependencies [134792b]
+  - @lowdefy/e2e-utils@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes

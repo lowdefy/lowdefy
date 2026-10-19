@@ -16,7 +16,7 @@
 
 // Map validation.status → wrapper class. Matches the visual behavior of
 // passing status="error" | "warning" to an antd <Input />, but rendered
-// with our own CSS (see utils/style.module.css) because antd v6 uses
+// with our own CSS (see utils/style.css) because antd v6 uses
 // CSS-in-JS, so the .ant-input-status-* classes are not global.
 function statusClass(status) {
   if (status === 'error') return 'tiptap-wrapper-error';

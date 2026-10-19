@@ -17,13 +17,13 @@
 import React from 'react';
 import { Bubble, FileCard } from '@ant-design/x';
 import { Avatar } from 'antd';
-import { RobotOutlined, UserOutlined } from '@ant-design/icons';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import { hasVisibleContent } from './messageParts.js';
 import MessageBubble from './MessageBubble.js';
 import ThinkingIndicator from './ThinkingIndicator.js';
 import useThinkingMessage from './useThinkingMessage.js';
+import WelcomeScreen from './WelcomeScreen.js';
 
 function roleAvatar(roleConfig, fallbackIcon) {
   if (roleConfig?.avatar) {
@@ -54,11 +54,17 @@ function ThinkingBubbleContent({ bubbleId, config }) {
 
 const MessageList = React.forwardRef(function MessageList(
   {
+    Icon,
     messages,
     isStreaming,
     config,
+    welcome,
+    onWelcomePromptFill,
     addToolApprovalResponse,
     onFeedback,
+    onLinkClick,
+    Link,
+    feedbackValues,
     onRegenerate,
     onDelete,
     onEditMessage,
@@ -97,8 +103,7 @@ const MessageList = React.forwardRef(function MessageList(
     // Show loading dots while the agent is working on the last assistant bubble and
     // nothing visible has rendered yet. `hasVisibleContent` mirrors what MessageBubble
     // paints, so tool-only messages with showThoughtChain: false also keep dots.
-    const showLoading =
-      isStreaming && isLastAssistant && !hasVisibleContent(msg, config);
+    const showLoading = isStreaming && isLastAssistant && !hasVisibleContent(msg, config);
 
     items.push({
       key: msg.id,
@@ -133,16 +138,37 @@ const MessageList = React.forwardRef(function MessageList(
     });
   }
 
+  // The welcome renders as a leading item so it scrolls up with the transcript
+  // and stays reachable by scrolling back, rather than being swapped out on the
+  // first send. With no messages yet it is simply the only item in the list.
+  if (welcome?.tracks) {
+    items.unshift({ key: '__welcome__', role: 'welcome' });
+  }
+
   return (
     <Bubble.List
       ref={ref}
       items={items}
       role={{
+        welcome: {
+          placement: 'start',
+          variant: 'borderless',
+          style: { maxWidth: '100%' },
+          styles: { content: { width: '100%' } },
+          contentRender: () => (
+            <WelcomeScreen config={welcome} onFill={onWelcomePromptFill} inFlow />
+          ),
+        },
         user: {
           placement: 'end',
           variant: config?.roles?.user?.variant ?? 'filled',
           shape: config?.roles?.user?.shape ?? 'round',
-          avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
+          styles: config?.roles?.user?.styles,
+          classNames: config?.roles?.user?.classNames,
+          avatar: roleAvatar(
+            config?.roles?.user,
+            <Icon blockId="agent_chat_user_avatar" properties={{ name: 'user', title: '' }} />
+          ),
           header: roleHeader(config?.roles?.user, 'agent.message.userHeader', translate),
           editable:
             config?.editableMessages !== false
@@ -196,7 +222,12 @@ const MessageList = React.forwardRef(function MessageList(
           variant: config?.roles?.assistant?.variant ?? 'outlined',
           shape: config?.roles?.assistant?.shape ?? 'default',
           style: { maxWidth: '100%' },
-          avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
+          styles: config?.roles?.assistant?.styles,
+          classNames: config?.roles?.assistant?.classNames,
+          avatar: roleAvatar(
+            config?.roles?.assistant,
+            <Icon blockId="agent_chat_assistant_avatar" properties={{ name: 'bot', title: '' }} />
+          ),
           header: roleHeader(config?.roles?.assistant, 'agent.message.assistantHeader', translate),
           typing: config?.roles?.assistant?.typing
             ? config.roles.assistant.typing
@@ -205,6 +236,7 @@ const MessageList = React.forwardRef(function MessageList(
             const parts = partsMap.get(info.key);
             return (
               <MessageBubble
+                Icon={Icon}
                 content={content}
                 isStreaming={isStreaming}
                 parts={parts}
@@ -213,6 +245,9 @@ const MessageList = React.forwardRef(function MessageList(
                 actions={config?.actions}
                 messageId={info.key}
                 onFeedback={onFeedback}
+                onLinkClick={onLinkClick}
+                Link={Link}
+                feedbackValue={feedbackValues?.[info.key]}
                 onRegenerate={onRegenerate}
                 onDelete={onDelete}
                 translate={translate}

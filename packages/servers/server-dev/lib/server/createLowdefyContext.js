@@ -1,0 +1,255 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import path from 'node:path';
+import {
+  createApiContext,
+  createRequestSignal,
+  normalizeInjectedCaller,
+  ensureMcpOauthResource,
+  resolveAuthentication,
+  resolvePinnedOrganization,
+  resolveTenantPreflight,
+} from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
+import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import { v4 as uuid } from 'uuid';
+
+import agents from '../../build/plugins/agents.js';
+import appMeta from '../build/appMeta.js';
+import applyDataSetRedirect from './applyDataSetRedirect.js';
+import authJson from '../build/auth.js';
+import config from '../build/config.js';
+import connections from '../../build/plugins/connections.js';
+import createDataSessionEndedError from './createDataSessionEndedError.js';
+import createHandleError from './log/createHandleError.js';
+import createLogger from './log/createLogger.js';
+import createMutantReadConfigFile from './mutants/createMutantReadConfigFile.js';
+import fileCache from './fileCache.js';
+import getAuth from './auth/getAuth.js';
+import getHeadlessUser from './auth/getHeadlessUser.js';
+import getMockUser from './auth/getMockUser.js';
+import getStrategies from './auth/getStrategies.js';
+import { forwardJourneyCookies } from './journeyCookies.js';
+import i18nConfig from '../build/i18n.js';
+import loadDynamicJsMap from './loadDynamicJsMap.js';
+import logRequest from './log/logRequest.js';
+import { readMutantRun } from './mutants/mutantRuns.js';
+import readDataSession from '../docs/dataSets/readDataSession.js';
+import readMergedMaps from './readMergedMaps.js';
+import readRecordingCookie from './recording/readRecordingCookie.js';
+import scrubSecrets from './scrubSecrets.js';
+import sinkExternalConnections from './sinkExternalConnections.js';
+import notifications, {
+  interpolateProperties,
+  renderEmail,
+} from '../../build/plugins/notifications.js';
+import operators from '../../build/plugins/operators/server.js';
+import resolveHeadlessUser from './auth/resolveHeadlessUser.js';
+import steps from '../../build/plugins/steps.js';
+import trackSessionWork from './trackSessionWork.js';
+import websockets from '../../build/plugins/websockets.js';
+
+const secrets = getSecretsFromEnv();
+
+// The MCP route authenticates by access token alone - the mcp option switches
+// resolveAuthentication onto its bearer branch, so it is set only for the MCP
+// path. Every other path leaves it false and authentication behaves as before.
+function isMcpPath(path) {
+  return path.endsWith('/api/mcp');
+}
+
+// Builds the per-request lowdefy API context (connections, secrets,
+// operators, logger, resolved user, etc.). Factored out of the /api/*
+// middleware (src/middleware/apiContext.js) so run_request
+// (lib/docs/runRequest.js) can build an identical context outside the Hono
+// middleware chain, to call callRequest directly for agent-driven request
+// execution. A `user` option injects a per-call caller (agent tools that run
+// outside a browser, e.g. run_request), resolved the same way the headless
+// renderer's cookie user is. A `dataSession` option runs a call the dev
+// server makes itself (run_request, run_endpoint on a data set) on that data
+// session's database, as a journey's cookie does for its browser requests.
+async function createLowdefyContext({ c, user, dataSession: callDataSession }) {
+  // A journey on a data set: this request, and only this one, reads the session's database. Read
+  // before anything else, so a request that outlived its session never reaches either database.
+  const dataSession = callDataSession ?? readDataSession(c.req.header('cookie'));
+  if (!type.isNone(dataSession?.ended)) {
+    throw createDataSessionEndedError({ id: dataSession.ended });
+  }
+  const buildDirectory = path.join(process.cwd(), 'build');
+  const jsMap = loadDynamicJsMap(buildDirectory);
+
+  const rid = uuid();
+  const context = {
+    rid,
+    agents,
+    appMeta,
+    buildDirectory,
+    configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
+    config,
+    connections,
+    // The dev server: environment-specific fallbacks that would be unsafe in
+    // production (a request-derived notification link origin) are allowed.
+    dev: true,
+    fileCache,
+    headers: c.req.header(),
+    // The deployment's own origin — detached endpoint calls loop back
+    // through it so the target runs in its own function invocation.
+    origin: new URL(c.req.url).origin,
+    i18n: i18nConfig,
+    interpolateProperties,
+    jsMap,
+    logger: createLogger({ rid }),
+    mode: 'dev',
+    notifications,
+    operators,
+    renderEmail,
+    req: {
+      url: c.req.path,
+      method: c.req.method,
+      hostname: c.req.header('host'),
+    },
+    scrubSecrets,
+    secrets,
+    // Error locations resolve through it (handleError, logClientError): JIT
+    // page builds write their keys to jitMaps/, not keyMap.json.
+    readMaps: () => readMergedMaps({ buildDirectory }),
+    // Aborts when the client disconnects before the response is sent, or when the
+    // request timeout (src/middleware/requestTimeout.js) answers first.
+    signal: createRequestSignal({
+      clientSignal: c.req.raw.signal,
+      timeoutSignal: c.get('requestTimeoutSignal'),
+    }),
+    steps,
+    websockets,
+  };
+  // The one writer of loopbackHeaders: a detached CallApi carries these on its
+  // loopback fetch, so the target runs with the journey's data set and mutant.
+  // With no journey cookie to forward it carries no Cookie header at all.
+  const journeyCookies = forwardJourneyCookies({
+    cookieHeader: c.req.header('cookie'),
+    dataSessionId: callDataSession?.id,
+  });
+  context.loopbackHeaders = journeyCookies === '' ? {} : { cookie: journeyCookies };
+  // Which browser context sent the request: errors it causes are stamped with
+  // it, so a journey run claims only its own (see createHandleError).
+  context.recording = readRecordingCookie(c.req.header('cookie'));
+  context.handleError = createHandleError({ context });
+  const mockUser = getMockUser();
+  const headlessCaller = getHeadlessUser(c);
+  if (!type.isNone(user)) {
+    // An explicit per-call user wins over the ambient auth.dev.mockUser: the
+    // caller named an identity for this call, so honour it. Merged over the
+    // roleless headless default by resolveHeadlessUser, exactly as the
+    // headless page tools' `user` param is.
+    context.auth = null;
+    context.user = normalizeInjectedCaller(resolveHeadlessUser({ user }));
+  } else if (headlessCaller?.explicit === true) {
+    // A headless context whose tool call or journey named its user (getBrowser.js)
+    // wins over the mock user for the same reason: a journey with
+    // user: { roles: [admin] } must act as that user, not as the mock user.
+    context.auth = null;
+    context.user = normalizeInjectedCaller(headlessCaller.user);
+  } else if (mockUser) {
+    // The mock user is a pre-resolved caller - it substitutes for the
+    // whole resolveAuthentication step and its roles are authoritative.
+    // No auth engine runs while dev.mockUser is active (see src/app.js),
+    // so mock mode never touches the auth database. normalizeInjectedCaller
+    // floors it to the resolved-caller shape.
+    context.auth = null;
+    context.user = normalizeInjectedCaller(mockUser);
+  } else if (headlessCaller !== null) {
+    // The headless renderer (docs/MCP screenshot and state tools) injects a
+    // user cookie on its own browser context (getBrowser.js), so its /api/*
+    // fetches carry a pre-resolved caller and auth-protected pages render.
+    // The developer's real browser has no cookie and resolves through the
+    // auth engine below, so it is unaffected. The roleless default it injects
+    // when no user was named yields to the mock user above.
+    context.auth = null;
+    context.user = normalizeInjectedCaller(headlessCaller.user);
+  } else if (!type.isNone(dataSession)) {
+    // A data-session request never builds the auth engine: it is bound to the real auth database.
+    // This is the detached hop (data cookie, no headless cookie); runDetachedEndpoint sets
+    // context.user from the principal the dispatcher carried. Auth steps fail, as for any injected
+    // caller.
+    context.auth = null;
+    context.user = null;
+  } else {
+    // Hoisted once per request - resolveAuthentication also needs it, and
+    // getBetterAuth memoizes the instance, but this keeps the auth engine
+    // construction to a single call site per request.
+    context.auth = getAuth({ logger: context.logger });
+    // The engine is constructed lazily on the first request, which would
+    // otherwise race the startup pinned-org ensure - await the memoized
+    // resolve so createApiContext reads a retained binding.
+    await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
+    // The one oauthResource row the MCP token audience validates against -
+    // ensured once per process, memoized like the pinned resolve above; a
+    // failure retries on the next request. No-op when the app is not an
+    // authorization server.
+    await ensureMcpOauthResource({ auth: context.auth, logger: context.logger });
+    if (!c.req.path.includes('/api/auth')) {
+      // resolveAuthentication is the single writer of context.user.
+      await resolveAuthentication(context, {
+        auth: context.auth,
+        headers: c.req.raw.headers,
+        strategies: getStrategies({ logger: context.logger }),
+        mcp: isMcpPath(c.req.path),
+      });
+    }
+  }
+  createApiContext(context);
+  // A journey's browser contexts carry a mutant cookie while `lowdefy journeys
+  // harden` runs a mutant through them: their requests, and only theirs, read
+  // the mutated artifact. The developer's own tabs carry none.
+  const mutantRun = readMutantRun(c.req.header('cookie'));
+  if (mutantRun !== null) {
+    context.readConfigFile = createMutantReadConfigFile({
+      readConfigFile: context.readConfigFile,
+      run: mutantRun,
+    });
+  }
+  if (!type.isNone(dataSession)) {
+    applyDataSetRedirect({ context, session: dataSession, connections });
+    // Requests of connections that reach an outside service are recorded, never sent.
+    context.connections = sinkExternalConnections({
+      context,
+      connections,
+      session: dataSession,
+    });
+    context.dataSet = dataSession.name;
+    context.waitUntil = trackSessionWork({ session: dataSession });
+  }
+  if (!context.auth && authJson.organizations) {
+    // Mock and headless callers run no auth engine, so createApiContext
+    // retains no organization binding. Derive the policy from the built auth
+    // config so the tenant wall's policy gate still engages under
+    // policy: tenant (a mock caller there must carry organizationId, or the
+    // wall fails closed - loudly, as it should).
+    context.organization = { policy: authJson.organizations.policy, pinned: null };
+  }
+  // Under policy: tenant, report walled collections that hold unstamped rows
+  // (lazily-run-once, logged once per offending collection). It never blocks or
+  // fails a request. No-op under pinned. Skipped under a data session: the report runs once per
+  // process, so it would describe the data set's database and never the developer's.
+  if (type.isNone(dataSession)) {
+    void resolveTenantPreflight(context);
+  }
+  logRequest({ context });
+  return context;
+}
+
+export default createLowdefyContext;

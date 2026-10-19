@@ -14,179 +14,54 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
-
+import collectChatFiles from './collectChatFiles.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
-import authorizeApiEndpoint from '../endpoints/authorizeApiEndpoint.js';
-import getEndpointConfig from '../endpoints/getEndpointConfig.js';
-import runRoutine from '../endpoints/runRoutine.js';
-import getAgentConfig from './getAgentConfig.js';
-import getAgentResolver from './getAgentResolver.js';
-import getConnectionConfig from '../connections/getConnectionConfig.js';
-import getConnection from '../connections/getConnection.js';
+import prepareAgent from './prepareAgent.js';
 
 async function callAgent(
   context,
-  { agentId, pageId, messages, conversationId, urlQuery, sharedState }
+  {
+    agentId,
+    pageId,
+    messages,
+    conversationId,
+    pathParams,
+    urlQuery,
+    sharedState,
+    sharedStateReadOnly,
+  }
 ) {
   const { logger } = context;
 
   context.pageId = pageId;
   context.evaluateOperators = createEvaluateOperators(context);
+  // A chat run is not cancelled when the client disconnects: it runs to its end so the
+  // onFinish hooks still persist the whole conversation, bounded by the agent's timeout
+  // and maxSteps. Its tool endpoints' requests are not cancelled either.
+  context.signal = undefined;
 
   logger.debug({ event: 'debug_agent', agentId, pageId });
-  const agentConfig = await getAgentConfig(context, { agentId });
 
   const agentContext = {
     conversationId: conversationId ?? undefined,
     pageId,
+    pathParams: pathParams ?? {},
     sharedState: sharedState ?? {},
+    sharedStateReadOnly: sharedStateReadOnly ?? false,
     urlQuery: urlQuery ?? {},
     userId: context.user?.sub ?? context.user?.id ?? null,
   };
 
-  // Evaluate operators in agent properties (e.g. _user, _secret, _payload)
-  agentConfig.properties = context.evaluateOperators({
-    input: agentConfig.properties ?? {},
-    location: agentConfig.agentId,
-    payload: agentContext,
-    state: {},
-    steps: {},
-  });
-
-  // Load connection config from build artifacts using agent's connectionId
-  const connectionConfig = await getConnectionConfig(context, {
-    connectionId: agentConfig.connectionId,
-    configKey: agentConfig['~k'],
-  });
-
-  // Get connection plugin from registry
-  const connection = getConnection(context, { connectionConfig });
-
-  // Evaluate operators in connection properties
-  const connectionProperties = context.evaluateOperators({
-    input: connectionConfig.properties || {},
-    location: connectionConfig.connectionId,
-    payload: {},
-    state: {},
-    steps: {},
-  });
-
-  // Create connection instance (e.g., Anthropic provider)
-  const connectionInstance = connection.create({ connection: connectionProperties });
-
-  // Get agent type from plugin registry
-  const agentType = getAgentResolver(context, { agentConfig });
-
-  // Build resolver context with callEndpoint that allows InternalApi endpoints
-  const resolverContext = {
-    agentContext,
-    i18n: context.i18n,
-    evaluateOperators: (input) =>
-      context.evaluateOperators({
-        input,
-        location: agentConfig.agentId,
-        payload: agentContext,
-        state: {},
-        steps: {},
-      }),
-    callEndpoint: async (endpointId, { payload, abortSignal }) => {
-      const endpointConfig = await getEndpointConfig(context, { endpointId });
-      authorizeApiEndpoint(context, { endpointConfig });
-      const routineContext = {
-        steps: {},
-        payload: payload ?? {},
-        arrayIndices: [],
-        items: {},
-        state: {},
-        endpointDepth: 0,
-      };
-      const { error, response, status } = await runRoutine(context, routineContext, {
-        routine: endpointConfig.routine,
-      });
-      const success = !['error', 'reject'].includes(status);
-      return {
-        error: serializer.serialize(error),
-        response: serializer.serialize(response),
-        status: success ? 'success' : status,
-        success,
-      };
-    },
-    getEndpointConfig: async ({ endpointId }) => {
-      return getEndpointConfig(context, { endpointId });
-    },
-    getAgentConfig: async ({ agentId }) => {
-      return getAgentConfig(context, { agentId });
-    },
-    getConnectionForAgent: async ({ agentConfig: subAgentConfig }) => {
-      const subConnectionConfig = await getConnectionConfig(context, {
-        connectionId: subAgentConfig.connectionId,
-        configKey: subAgentConfig['~k'],
-      });
-      const subConnection = getConnection(context, { connectionConfig: subConnectionConfig });
-      const subConnectionProperties = context.evaluateOperators({
-        input: subConnectionConfig.properties || {},
-        location: subConnectionConfig.connectionId,
-        payload: {},
-        state: {},
-        steps: {},
-      });
-      return subConnection.create({ connection: subConnectionProperties });
-    },
-    resolveMcpSources: async ({ agentConfig: subAgentConfig }) => {
-      const resolvedMcp = [];
-      for (const mcpSource of subAgentConfig.mcp ?? []) {
-        if (!type.isNone(mcpSource.connectionId)) {
-          const mcpConnConfig = await getConnectionConfig(context, {
-            connectionId: mcpSource.connectionId,
-            configKey: subAgentConfig['~k'],
-          });
-          const mcpConnection = getConnection(context, { connectionConfig: mcpConnConfig });
-          const mcpConnProps = context.evaluateOperators({
-            input: mcpConnConfig.properties || {},
-            location: mcpConnConfig.connectionId,
-            payload: {},
-            state: {},
-            steps: {},
-          });
-          const mcpConfig = mcpConnection.create({ connection: mcpConnProps });
-          const { connectionId: _, ...overrides } = mcpSource;
-          resolvedMcp.push({ ...mcpConfig, ...overrides });
-        } else {
-          resolvedMcp.push(mcpSource);
-        }
-      }
-      return resolvedMcp;
-    },
-  };
-
-  // Resolve MCP connection references to inline config.
-  // Agent-level overrides (like confirm) may still contain operators —
-  // handleAgentChat evaluates those via its existing evaluateOperators call.
-  const resolvedMcp = [];
-  for (const mcpSource of agentConfig.mcp ?? []) {
-    if (!type.isNone(mcpSource.connectionId)) {
-      const mcpConnConfig = await getConnectionConfig(context, {
-        connectionId: mcpSource.connectionId,
-        configKey: agentConfig['~k'],
-      });
-      const mcpConnection = getConnection(context, { connectionConfig: mcpConnConfig });
-      const mcpConnProps = context.evaluateOperators({
-        input: mcpConnConfig.properties || {},
-        location: mcpConnConfig.connectionId,
-        payload: {},
-        state: {},
-        steps: {},
-      });
-      const mcpConfig = mcpConnection.create({ connection: mcpConnProps });
-      // Merge: connection properties as base, agent-level overrides on top
-      const { connectionId: _, ...overrides } = mcpSource;
-      resolvedMcp.push({ ...mcpConfig, ...overrides });
-    } else {
-      resolvedMcp.push(mcpSource);
+  const { agentConfig, connectionInstance, agentType, resolverContext } = await prepareAgent(
+    context,
+    {
+      agentId,
+      agentContext,
+      endpointDepth: 0,
+      files: collectChatFiles({ messages }),
+      mode: 'chat',
     }
-  }
-  agentConfig.mcp = resolvedMcp;
+  );
 
   // Call the agent resolver
   const { response } = await agentType.resolver({

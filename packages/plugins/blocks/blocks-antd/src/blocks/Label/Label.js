@@ -25,7 +25,7 @@ import classNames from 'classnames';
 import CSSMotion from '@rc-component/motion';
 
 import labelLogic from './labelLogic.js';
-import './style.module.css';
+import './style.css';
 
 const validationKeyMap = {
   error: 'errors',
@@ -42,6 +42,8 @@ const Label = ({
   methods,
   properties,
   required,
+  rowClassName: blockRowClassName,
+  rowStyle: blockRowStyle,
   styles = {},
   validation,
 }) => {
@@ -51,6 +53,7 @@ const Label = ({
     feedbackClassName,
     feedbackStyle,
     iconClassName,
+    iconStyle,
     label,
     labelClassName,
     labelCol,
@@ -61,23 +64,33 @@ const Label = ({
     rowStyle,
     showExtra,
     showFeedback,
+    showFeedbackIcon,
     wrapperCol,
-  } = labelLogic({ blockId, blockClassNames, content, properties, required, styles, validation });
+  } = labelLogic({
+    blockId,
+    blockClassNames,
+    content,
+    properties,
+    required,
+    rowClassName: blockRowClassName,
+    rowStyle: blockRowStyle,
+    styles,
+    validation,
+  });
   if (!iconMap) {
     iconMap = {
-      error: () => <Icon properties="AiFillCloseCircle" />,
-      success: () => <Icon properties="AiFillCheckCircle" />,
-      validating: () => <Icon properties="AiOutlineLoading" />,
-      warning: () => <Icon properties="AiFillExclamationCircle" />,
+      error: () => <Icon properties={{ name: 'error', title: '' }} />,
+      success: () => <Icon properties={{ name: 'success', title: '' }} />,
+      validating: () => <Icon properties={{ name: 'loading', spin: true, title: '' }} />,
+      warning: () => <Icon properties={{ name: 'warning', title: '' }} />,
     };
   }
-  const IconNode = validation.status && iconMap[validation.status];
-  const icon =
-    validation.status && IconNode ? (
-      <span className={iconClassName}>
-        <IconNode />
-      </span>
-    ) : null;
+  const IconNode = showFeedbackIcon && iconMap[validation.status];
+  const icon = IconNode ? (
+    <span className={iconClassName} style={iconStyle}>
+      <IconNode />
+    </span>
+  ) : null;
 
   // tooltip is either a string (the tooltip text) or an object that also
   // customizes the icon and color. The onClick is exposed as the block's
@@ -102,7 +115,7 @@ const Label = ({
                     methods?.triggerEvent({ name: 'onTooltipClick' });
                   }}
                 >
-                  <Icon properties={tooltip.icon ?? 'AiOutlineQuestionCircle'} />
+                  <Icon properties={tooltip.icon ?? { name: 'help', title: '' }} />
                 </span>
               </Tooltip>
             )}

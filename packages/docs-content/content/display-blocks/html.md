@@ -1,0 +1,371 @@
+# Html
+
+Render raw HTML content safely.
+
+```yaml
+- id: basic_paragraph
+  type: Html
+  properties:
+    html: <p>This is a paragraph rendered safely with the Html block.</p>
+- id: basic_heading
+  type: Html
+  properties:
+    html: <h3>Safe Heading</h3><p>The Html block sanitizes content to prevent XSS
+      attacks.</p>
+- id: basic_headings_all
+  type: Html
+  properties:
+    html: <h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6>
+- id: basic_line_break
+  type: Html
+  properties:
+    html: <p>First line<br />Second line<br />Third line</p>
+- id: basic_hr
+  type: Html
+  properties:
+    html: <p>Content above</p><hr /><p>Content below the horizontal rule</p>
+```
+
+```yaml
+- id: text_bold
+  type: Html
+  properties:
+    html: <p>Text with <strong>bold</strong> and <b>also bold</b> formatting.</p>
+- id: text_italic
+  type: Html
+  properties:
+    html: <p>Text with <em>italic</em> and <i>also italic</i> formatting.</p>
+- id: text_underline
+  type: Html
+  properties:
+    html: <p>Text with <u>underline</u> formatting.</p>
+- id: text_strikethrough
+  type: Html
+  properties:
+    html: <p>Text with <s>strikethrough</s> and <del>deleted</del> formatting.</p>
+- id: text_combined
+  type: Html
+  properties:
+    html: <p>Text with <strong><em>bold italic</em></strong>, <strong><u>bold
+      underline</u></strong>, and <em><u>italic underline</u></em>.</p>
+- id: text_small
+  type: Html
+  properties:
+    html: <p>Normal text and <small>small text</small> together.</p>
+- id: text_sub_sup
+  type: Html
+  properties:
+    html: <p>H<sub>2</sub>O is water. E=mc<sup>2</sup> is relativity.</p>
+- id: text_mark
+  type: Html
+  properties:
+    html: <p>This sentence has <mark>highlighted text</mark> using the mark tag.</p>
+```
+
+```yaml
+- id: list_unordered
+  type: Html
+  properties:
+    html: <ul><li>First item</li><li>Second item</li><li>Third item</li></ul>
+- id: list_ordered
+  type: Html
+  properties:
+    html: <ol><li>Step one</li><li>Step two</li><li>Step three</li></ol>
+- id: list_nested
+  type: Html
+  properties:
+    html: <ul><li>Parent item<ul><li>Child item 1</li><li>Child item
+      2</li></ul></li><li>Another parent item<ul><li>Another
+      child</li></ul></li></ul>
+- id: list_ordered_nested
+  type: Html
+  properties:
+    html: <ol><li>First item<ol><li>Sub-item A</li><li>Sub-item
+      B</li></ol></li><li>Second item</li><li>Third item</li></ol>
+```
+
+```yaml
+- id: styled_colored_text
+  type: Html
+  properties:
+    html: '<p><span style="color: var(--ant-color-primary);">Primary text</span>,
+      <span style="color: var(--ant-color-success);">success text</span>, <span
+      style="color: var(--ant-color-error);">error text</span>, and <span
+      style="color: var(--ant-color-warning);">warning text</span>.</p>'
+- id: styled_background
+  type: Html
+  properties:
+    html: '<p><span style="background: var(--ant-color-primary-bg); padding: 2px
+      6px; border-radius: 3px;">Primary highlight</span> and <span
+      style="background: var(--ant-color-success-bg); padding: 2px 6px;
+      border-radius: 3px;">Success highlight</span>.</p>'
+- id: styled_sizes
+  type: Html
+  properties:
+    html: '<p><span style="font-size: 12px;">Small text</span>, <span
+      style="font-size: 16px;">Normal text</span>, <span style="font-size:
+      20px;">Large text</span>, <span style="font-size: 24px;">Extra
+      large</span>.</p>'
+```
+
+```yaml
+- id: blockquote_simple
+  type: Html
+  properties:
+    html: <blockquote>A simple blockquote with default styling.</blockquote>
+- id: blockquote_styled
+  type: Html
+  properties:
+    html: '<blockquote style="border-left: 4px solid var(--ant-color-primary);
+      padding-left: 16px; margin: 0; color:
+      var(--ant-color-text-secondary);">This is a styled blockquote with a
+      primary color left border accent and subdued text color.</blockquote>'
+- id: blockquote_attribution
+  type: Html
+  properties:
+    html: '<blockquote style="border-left: 4px solid var(--ant-color-border);
+      padding-left: 16px; margin: 0;"><p style="margin: 0 0 4px 0; font-style:
+      italic; color: var(--ant-color-text-secondary);">"The best way to predict
+      the future is to invent it."</p><footer style="color:
+      var(--ant-color-text-tertiary); font-size: 13px;">-- Alan
+      Kay</footer></blockquote>'
+```
+
+```yaml
+- id: code_inline
+  type: Html
+  properties:
+    html: '<p>Use the <code style="background: var(--ant-color-fill-tertiary);
+      padding: 2px 6px; border-radius: 4px; font-family: monospace;">Html</code>
+      block for safe HTML rendering.</p>'
+- id: code_block
+  type: Html
+  properties:
+    html: >
+      <pre style="background: var(--ant-color-bg-elevated); color:
+      var(--ant-color-text); padding: 16px; border-radius: 6px; overflow-x:
+      auto; font-family: monospace; font-size: 14px; border: 1px solid
+      var(--ant-color-border);"><code>function greet(name) {
+        return "Hello, " + name + "!";
+      }</code></pre>
+- id: code_multi_inline
+  type: Html
+  properties:
+    html: '<p>Set <code style="background: var(--ant-color-fill-tertiary); padding:
+      2px 6px; border-radius: 4px; font-family: monospace;">type</code> to <code
+      style="background: var(--ant-color-fill-tertiary); padding: 2px 6px;
+      border-radius: 4px; font-family: monospace;">Html</code> and provide the
+      <code style="background: var(--ant-color-fill-tertiary); padding: 2px 6px;
+      border-radius: 4px; font-family: monospace;">html</code> property.</p>'
+```
+
+```yaml
+- id: link_basic
+  type: Html
+  properties:
+    html: <p>Visit <a href="https://lowdefy.com">Lowdefy</a> for more
+      information.</p>
+- id: link_styled
+  type: Html
+  properties:
+    html: '<p><a href="https://lowdefy.com" style="color: var(--ant-color-primary);
+      text-decoration: none; font-weight: bold;">Primary styled link</a> within
+      a paragraph.</p>'
+- id: link_multiple
+  type: Html
+  properties:
+    html: '<p>Resources: <a href="https://lowdefy.com">Home</a> | <a
+      href="https://docs.lowdefy.com">Docs</a> | <a
+      href="https://github.com/lowdefy/lowdefy">GitHub</a></p>'
+```
+
+```yaml
+- id: nested_section
+  type: Html
+  properties:
+    html: <div><h4>Section Title</h4><p>A paragraph with a <a
+      href="https://lowdefy.com">safe link</a> inside it.</p><hr /><p>Content
+      below the horizontal rule.</p></div>
+- id: nested_formatted_list
+  type: Html
+  properties:
+    html: <div><h4>Features</h4><ul><li><strong>Fast:</strong> Optimized
+      rendering</li><li><strong>Safe:</strong> XSS protection
+      built-in</li><li><strong>Flexible:</strong> Supports many HTML
+      tags</li></ul></div>
+- id: nested_mixed
+  type: Html
+  properties:
+    html: '<div><p>This block mixes <strong>bold</strong>, <em>italic</em>, and
+      <code style="background: var(--ant-color-fill-tertiary); padding: 2px 4px;
+      border-radius: 3px;">code</code> formatting.</p><blockquote
+      style="border-left: 3px solid var(--ant-color-border); padding-left: 12px;
+      margin: 12px 0; color: var(--ant-color-text-secondary);">It also includes
+      a blockquote with <strong>bold text</strong>.</blockquote><ol><li>And a
+      numbered list</li><li>With multiple items</li></ol></div>'
+```
+
+```yaml
+- id: table_simple
+  type: Html
+  properties:
+    html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th
+      style="border: 1px solid var(--ant-color-border); padding: 8px;
+      background: var(--ant-color-fill-quaternary); text-align:
+      left;">Feature</th><th style="border: 1px solid var(--ant-color-border);
+      padding: 8px; background: var(--ant-color-fill-quaternary); text-align:
+      left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid
+      var(--ant-color-border); padding: 8px;">Html block</td><td style="border:
+      1px solid var(--ant-color-border); padding: 8px;">Safe</td></tr><tr><td
+      style="border: 1px solid var(--ant-color-border); padding:
+      8px;">DangerousHtml</td><td style="border: 1px solid
+      var(--ant-color-border); padding:
+      8px;">Powerful</td></tr></tbody></table>'
+```
+
+```yaml
+- id: style_padded
+  type: Html
+  style:
+    .element:
+      padding: 20
+      background: var(--ant-color-primary-bg)
+      borderRadius: 8
+  properties:
+    html: '<p style="margin: 0;">Content inside a styled Html container with primary
+      background.</p>'
+- id: style_bordered
+  type: Html
+  style:
+    .element:
+      border: 2px solid var(--ant-color-primary)
+      padding: 16
+      borderRadius: 8
+  properties:
+    html: '<p style="margin: 0;">Content with a primary color border applied via
+      style override.</p>'
+- id: style_shadow
+  type: Html
+  style:
+    .element:
+      padding: 20
+      borderRadius: 12
+      boxShadow: var(--ant-box-shadow)
+      background: var(--ant-color-bg-container)
+  properties:
+    html: '<h4 style="margin: 0 0 8px 0;">Elevated Html Block</h4><p style="margin:
+      0; color: var(--ant-color-text-secondary);">An Html block styled with
+      box-shadow for an elevated card look.</p>'
+- id: style_max_width
+  type: Html
+  style:
+    .element:
+      maxWidth: 350
+      margin: 0 auto
+      textAlign: center
+      padding: 16
+      background: var(--ant-color-success-bg)
+      borderRadius: 8
+  properties:
+    html: '<p style="margin: 0; color: var(--ant-color-success); font-weight:
+      bold;">Centered and constrained width.</p>'
+- id: style_left_accent
+  type: Html
+  style:
+    .element:
+      borderLeft: 4px solid var(--ant-color-warning)
+      paddingLeft: 16
+      paddingTop: 8
+      paddingBottom: 8
+  properties:
+    html: '<p style="margin: 0; color: var(--ant-color-warning); font-weight:
+      500;">Warning accent border on the left side.</p>'
+- id: style_elevated
+  type: Html
+  style:
+    .element:
+      background: var(--ant-color-bg-elevated)
+      color: var(--ant-color-text)
+      padding: 20
+      borderRadius: 8
+      border: 1px solid var(--ant-color-border)
+  properties:
+    html: '<h4 style="margin: 0 0 8px 0;">Elevated Block</h4><p style="margin:
+      0;">Uses bg-elevated token for a surface that adapts to light and dark
+      mode.</p>'
+```
+
+```yaml
+- id: html_icons
+  type: Html
+  properties:
+    html: '<p><i data-icon="success" style="color: var(--ant-color-success)"></i>
+      Saved <span data-tooltip="Saved to the cloud 2 minutes ago"
+      style="text-decoration: underline dotted">just now</span></p><p><i
+      data-icon="warning" style="color: var(--ant-color-warning)"></i> 3 fields
+      need attention. <span data-popover="fields" style="color:
+      var(--ant-color-primary); cursor: pointer">Which? <i
+      data-icon="chevron-down"></i></span></p><div data-popover-content="fields"
+      hidden><ul style="margin: 0; padding-left:
+      16px"><li>Email</li><li>Phone</li><li>Address</li></ul></div>'
+```
+
+```yaml
+- id: html_links_tags
+  type: Html
+  properties:
+    html: <p><a data-page-id="Button">Button</a> moved to <span
+      data-tag="success">Released</span> · <a data-page-id="theming"
+      data-url-query="section=icons">Theming</a> is <span data-tag="warning">In
+      review</span> · <a href="https://ant.design" data-new-tab>Ant Design</a>
+      <i data-icon="external-link"></i></p><p><span
+      data-status="success">Online</span> &nbsp; <span
+      data-status="processing">Syncing</span> &nbsp; <span
+      data-status="error">Offline</span></p><p><span data-tag>Design</span>
+      <span data-tag>Engineering</span> <span data-tag>Support</span> <span
+      data-tag="purple">Beta</span> <span data-tag="#0f766e">Custom
+      colour</span></p>
+```
+
+```yaml
+- id: html_time_format
+  type: Html
+  properties:
+    html: '<p><span data-avatar="Jane Doe"></span> Jane Doe updated the invoice
+      <time datetime="2026-01-05T09:30:00Z" data-time="relative"></time> (<time
+      datetime="2026-01-05T09:30:00Z" data-time="D MMM YYYY"></time>) · <span
+      data-format="currency" data-currency="USD">1234.5</span> · <span
+      data-format="percent" data-decimals="1">0.123</span> of target · <span
+      data-format="bytes">1536000</span> attached</p><p>Invoice number <code
+      data-copy>INV-2026-0042</code> · owner <img data-avatar="Sam Smith" src=""
+      style="--lf-avatar-size: 32px"></p>'
+```
+
+```yaml
+- id: html_truncate_tone
+  type: Html
+  properties:
+    html: '<div style="max-width: 320px"><div data-truncate><b>Quarterly report for
+      the northern region, including every branch and its targets</b></div><div
+      data-truncate="2" data-tone="secondary">The report covers revenue, costs
+      and headcount for each branch, compares them with the same quarter last
+      year, and lists the actions each branch manager agreed for the next
+      quarter.</div><div><span data-tone="tertiary">Updated 3 days ago</span> ·
+      <span data-tone="success">On track</span> · <span
+      data-tone="quaternary">—</span></div></div>'
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `html` | string | - | Content to be rendered as Html. It understands these attributes: data-icon="edit" renders an icon (a semantic name like edit, delete or warning, or a Lucide icon name like Pencil); data-tooltip="Text" shows a tooltip on hover and focus; data-popover="id" toggles a popover showing the element with data-popover-content="id" (mark it hidden); &lt;a data-page-id="page-id" data-url-query="key=value"> links to an app page without reloading (never hard-code href="/page"), with data-path-params='{"name":"value"}' (a JSON object) for a page whose path has placeholders; data-link opts an existing app-relative &lt;a href="/path"> into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag="success" renders a tinted status tag and data-status="success" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour); &lt;time datetime="ISO" data-time="relative"> renders a date as relative, date, datetime, time or a dayjs format; data-format="currency" data-currency="USD" formats the element's number as number, currency, percent, compact or bytes; data-avatar="Jane Doe" renders initials (on an &lt;img>, a fallback for a broken image; never use an avatar image service); data-copy adds a copy button for the element's text or the attribute's value; data-truncate="2" clamps block text to 1–6 lines with the full text in a tooltip when cut off; data-tone="secondary" colours text with a theme tone (secondary, tertiary, quaternary, success, warning, error, info). See the HTML attributes docs page. |
+
+| Event | Event Data | Description |
+| --- | --- | --- |
+| `onTextSelection` | \- | Trigger action when text is selected and pass selected text to the event object. |
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Html element. |
+
+No slots defined.

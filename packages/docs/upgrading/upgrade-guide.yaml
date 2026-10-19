@@ -28,6 +28,8 @@ _ref:
             This guide explains how the Lowdefy upgrade system works — independent of any specific version.
 
             For version-specific migration details, see:
+            - [Version 6 to Version 7](/v6-to-v7)
+            - [Version 5 to Version 6](/v5-to-v6)
             - [Version 4 to Version 5](/v4-to-v5)
             - [Version 3 to Version 4](/v3-to-v4)
 
@@ -122,10 +124,9 @@ _ref:
 
             If you prefer to upgrade without the command:
 
-            1. Read the version-specific migration guide (e.g. [V4 to V5](/v4-to-v5)).
+            1. Read the version-specific migration guide (e.g. [V5 to V6](/v5-to-v6)).
             2. Apply each breaking change manually using the before/after examples.
             3. Update the `lowdefy:` version in `lowdefy.yaml`.
             4. Run `lowdefy dev` and fix any remaining issues.
 
             The upgrade command automates this process, but every change is documented in the migration guides for manual reference.
-

@@ -14,162 +14,56 @@
   limitations under the License.
 */
 
+import createIconContext from '../icons/createIconContext.js';
 import detectMissingIcons from './detectMissingIcons.js';
 
-test('detectMissingIcons returns empty array when all icons are already imported', () => {
+const icons = await createIconContext({ context: { typesMap: { iconSets: {} } } });
+
+function detect({ page, bundledIcons = [], dynamicIconData = {} }) {
+  return detectMissingIcons({
+    page,
+    bundledIcons: new Set(bundledIcons),
+    dynamicIconData,
+    icons,
+  });
+}
+
+test('detectMissingIcons returns names the bundle and earlier pages lack', () => {
   const page = {
-    id: 'home',
-    type: 'Box',
     blocks: [
-      {
-        id: 'btn',
-        type: 'Button',
-        properties: { icon: 'AiFillHome' },
-      },
+      { id: 'a', type: 'Button', properties: { icon: 'edit' } },
+      { id: 'b', type: 'Button', properties: { icon: 'CirclePlus' } },
+      { id: 'c', type: 'Button', properties: { icon: 'lucide:Clock' } },
+      { id: 'd', type: 'Button', properties: { icon: 'check' } },
     ],
   };
-  const iconImports = [
-    { icons: ['AiFillHome'], package: 'react-icons/ai' },
-    { icons: [], package: 'react-icons/io5' },
-  ];
-
-  const result = detectMissingIcons({ page, iconImports });
-  expect(result).toEqual([]);
+  expect(detect({ page, bundledIcons: ['check'] })).toEqual(['CirclePlus', 'edit', 'lucide:Clock']);
+  expect(detect({ page, bundledIcons: ['check'], dynamicIconData: { edit: {} } })).toEqual([
+    'CirclePlus',
+    'lucide:Clock',
+  ]);
 });
 
-test('detectMissingIcons detects icon not in current imports', () => {
+test('detectMissingIcons skips names that do not resolve and type values', () => {
   const page = {
-    id: 'home',
     type: 'Box',
-    blocks: [
-      {
-        id: 'btn',
-        type: 'Button',
-        properties: { icon: 'IoAddCircle' },
-      },
-    ],
+    blocks: [{ id: 'a', type: 'Menu', properties: { icon: 'AiOutlineUser', title: 'nope-nope' } }],
   };
-  const iconImports = [
-    { icons: [], package: 'react-icons/ai' },
-    { icons: [], package: 'react-icons/io5' },
-  ];
-
-  const result = detectMissingIcons({ page, iconImports });
-  expect(result).toContainEqual({ icon: 'IoAddCircle', package: 'react-icons/io5' });
+  expect(detect({ page })).toEqual([]);
 });
 
-test('detectMissingIcons detects multiple icons across packages', () => {
+test('detectMissingIcons finds names in _js code and data-icon HTML', () => {
   const page = {
-    id: 'home',
-    type: 'Box',
     blocks: [
       {
-        id: 'btn1',
-        type: 'Button',
-        properties: { icon: 'IoAddCircle' },
-      },
-      {
-        id: 'btn2',
-        type: 'Button',
-        properties: { icon: 'MdDelete', suffixIcon: 'AiFillWarning' },
-      },
-    ],
-  };
-  const iconImports = [
-    { icons: [], package: 'react-icons/ai' },
-    { icons: [], package: 'react-icons/io5' },
-    { icons: [], package: 'react-icons/md' },
-  ];
-
-  const result = detectMissingIcons({ page, iconImports });
-  expect(result).toContainEqual({ icon: 'IoAddCircle', package: 'react-icons/io5' });
-  expect(result).toContainEqual({ icon: 'MdDelete', package: 'react-icons/md' });
-  expect(result).toContainEqual({ icon: 'AiFillWarning', package: 'react-icons/ai' });
-});
-
-test('detectMissingIcons returns empty array when page has no icon references', () => {
-  const page = {
-    id: 'home',
-    type: 'Box',
-    blocks: [
-      {
-        id: 'text',
-        type: 'TextInput',
-        properties: { label: 'Name' },
-      },
-    ],
-  };
-  const iconImports = [{ icons: [], package: 'react-icons/ai' }];
-
-  const result = detectMissingIcons({ page, iconImports });
-  expect(result).toEqual([]);
-});
-
-test('detectMissingIcons detects icon in nested block property', () => {
-  const page = {
-    id: 'home',
-    type: 'Box',
-    blocks: [
-      {
-        id: 'card',
-        type: 'Card',
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'btn',
-                type: 'Button',
-                properties: { icon: 'FaRocket' },
-              },
-            ],
-          },
+        id: 'a',
+        type: 'Html',
+        properties: {
+          html: '<i data-icon="delete"></i>',
+          content: { _js: 'return done ? \'Check\' : "X";' },
         },
       },
     ],
   };
-  const iconImports = [{ icons: [], package: 'react-icons/fa' }];
-
-  const result = detectMissingIcons({ page, iconImports });
-  expect(result).toEqual([{ icon: 'FaRocket', package: 'react-icons/fa' }]);
-});
-
-test('detectMissingIcons detects icons when iconImports is empty', () => {
-  const page = {
-    id: 'home',
-    type: 'Box',
-    blocks: [
-      {
-        id: 'btn',
-        type: 'Button',
-        properties: { icon: 'IoAddCircle' },
-      },
-    ],
-  };
-
-  const result = detectMissingIcons({ page, iconImports: [] });
-  expect(result).toContainEqual({ icon: 'IoAddCircle', package: 'react-icons/io5' });
-});
-
-test('detectMissingIcons does not return duplicate icons when same icon appears multiple times', () => {
-  const page = {
-    id: 'home',
-    type: 'Box',
-    blocks: [
-      {
-        id: 'btn1',
-        type: 'Button',
-        properties: { icon: 'IoAddCircle' },
-      },
-      {
-        id: 'btn2',
-        type: 'Button',
-        properties: { icon: 'IoAddCircle' },
-      },
-    ],
-  };
-  const iconImports = [{ icons: [], package: 'react-icons/io5' }];
-
-  const result = detectMissingIcons({ page, iconImports });
-  const io5Icons = result.filter((r) => r.icon === 'IoAddCircle');
-  expect(io5Icons).toHaveLength(1);
+  expect(detect({ page })).toEqual(['Check', 'X', 'delete']);
 });

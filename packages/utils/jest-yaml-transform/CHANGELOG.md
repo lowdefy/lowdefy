@@ -1,5 +1,21 @@
 # Change Log
 
+## 6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+- 082acec: chore: Bump `yaml` to 2.9.0, clearing vite's `yaml@^2.4.2` peer warning.
+
+## 5.6.0
+
+## 5.5.1
+
+## 5.5.0
+
+## 5.4.0
+
 ## 5.3.0
 
 ## 5.2.0

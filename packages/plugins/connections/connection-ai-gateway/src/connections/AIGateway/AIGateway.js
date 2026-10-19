@@ -14,13 +14,29 @@
   limitations under the License.
 */
 
-import { createGateway } from '@ai-sdk/gateway';
+import { createDecide, createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
+
+import createProvider from './createProvider.js';
 import schema from './schema.js';
 
+// maxOutputTokens and timeout are defaults for the agents on this connection; the
+// request resolvers read them from the connection properties.
 function create({ connection }) {
-  const { apiKey, baseURL, headers } = connection ?? {};
-  return { provider: createGateway({ apiKey, baseURL, headers }) };
+  const { maxOutputTokens, timeout } = connection ?? {};
+  return { provider: createProvider({ connection }), maxOutputTokens, timeout };
 }
 
-const AIGateway = { schema, create };
+const AIGateway = {
+  schema,
+  // An outside service, not app data: a journey on a data set keeps its real target.
+  meta: { dataSet: 'external' },
+  create,
+  requests: {
+    // Evaluation models (TypeSafe's Jev) answer by default; any language model
+    // on the gateway can with backend: structured-output.
+    Decide: createDecide({ createProvider, backends: ['evaluation', 'structured-output'] }),
+    GenerateObject: createGenerateObject({ createProvider }),
+    GenerateText: createGenerateText({ createProvider }),
+  },
+};
 export default AIGateway;

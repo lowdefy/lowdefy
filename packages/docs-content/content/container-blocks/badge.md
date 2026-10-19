@@ -1,0 +1,1298 @@
+# Badge
+
+Badge with count, dot, status, color, and overflow.
+
+U
+
+U
+
+U
+
+```yaml
+- id: basic_count_5
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 5
+  blocks:
+    - id: basic_count_5_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: basic_count_25
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 25
+  blocks:
+    - id: basic_count_25_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: basic_count_100
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 100
+  blocks:
+    - id: basic_count_100_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+```
+
+U
+
+U
+
+```yaml
+- id: zero_hidden
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 0
+  blocks:
+    - id: zero_hidden_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: zero_shown
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 0
+    showZero: true
+  blocks:
+    - id: zero_shown_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+```
+
+U
+
+```yaml
+- id: dot_on_avatar
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    dot: true
+  blocks:
+    - id: dot_on_avatar_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: dot_on_icon_avatar
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    dot: true
+  blocks:
+    - id: dot_on_icon_avatar_child
+      type: Avatar
+      properties:
+        icon: bell
+        shape: square
+- id: dot_on_button
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    dot: true
+  blocks:
+    - id: dot_on_button_child
+      type: Button
+      properties:
+        title: Notifications
+        color: primary
+        variant: outlined
+```
+
+```yaml
+- id: standalone_count
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 25
+- id: standalone_dot
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    dot: true
+- id: standalone_text
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: New
+```
+
+U
+
+U
+
+U
+
+U
+
+```yaml
+- id: size_def
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 11
+    size: default
+  blocks:
+    - id: size_def_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: size_sm
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 11
+    size: small
+  blocks:
+    - id: size_sm_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: size_def_large_count
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 999
+    overflowCount: 999
+    size: default
+  blocks:
+    - id: size_def_large_count_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: size_sm_large_count
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 999
+    overflowCount: 999
+    size: small
+  blocks:
+    - id: size_sm_large_count_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+```
+
+U
+
+U
+
+U
+
+```yaml
+- id: overflow_default
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 150
+  blocks:
+    - id: overflow_default_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: overflow_10
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 150
+    overflowCount: 10
+  blocks:
+    - id: overflow_10_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: overflow_999
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 2000
+    overflowCount: 999
+  blocks:
+    - id: overflow_999_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+```
+
+A
+
+B
+
+C
+
+D
+
+```yaml
+- id: preset_blue
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    color: blue
+    count: 5
+  blocks:
+    - id: preset_blue_child
+      type: Avatar
+      properties:
+        shape: square
+        content: A
+- id: preset_green
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    color: green
+    count: 5
+  blocks:
+    - id: preset_green_child
+      type: Avatar
+      properties:
+        shape: square
+        content: B
+- id: preset_purple
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    color: purple
+    count: 5
+  blocks:
+    - id: preset_purple_child
+      type: Avatar
+      properties:
+        shape: square
+        content: C
+- id: preset_gold
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    color: gold
+    count: 5
+  blocks:
+    - id: preset_gold_child
+      type: Avatar
+      properties:
+        shape: square
+        content: D
+```
+
+A
+
+B
+
+C
+
+```yaml
+- id: hex_coral
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    color: "#ff6b6b"
+    count: 3
+  blocks:
+    - id: hex_coral_child
+      type: Avatar
+      properties:
+        shape: square
+        content: A
+- id: hex_teal
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    color: "#20c997"
+    count: 7
+  blocks:
+    - id: hex_teal_child
+      type: Avatar
+      properties:
+        shape: square
+        content: B
+- id: hex_indigo
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    color: "#4c6ef5"
+    count: 12
+  blocks:
+    - id: hex_indigo_child
+      type: Avatar
+      properties:
+        shape: square
+        content: C
+```
+
+U
+
+U
+
+U
+
+```yaml
+- id: text_new
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: New
+  blocks:
+    - id: text_new_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: text_hot
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: Hot
+    color: red
+  blocks:
+    - id: text_hot_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: text_beta
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: Beta
+    color: blue
+  blocks:
+    - id: text_beta_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+```
+
+```yaml
+- id: status_success
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: success
+    text: Success
+- id: status_processing
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: processing
+    text: Processing
+- id: status_default
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: default
+    text: Default
+- id: status_error
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: error
+    text: Error
+- id: status_warning
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: warning
+    text: Warning
+```
+
+```yaml
+- id: status_dot_success
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: success
+- id: status_dot_processing
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: processing
+- id: status_dot_error
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: error
+```
+
+U
+
+U
+
+U
+
+```yaml
+- id: icon_bell
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    icon: bell
+  blocks:
+    - id: icon_bell_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: icon_clock
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    icon:
+      name: clock
+      color: "#1677ff"
+  blocks:
+    - id: icon_clock_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: icon_exclamation
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    icon:
+      name: CircleAlert
+      color: "#faad14"
+  blocks:
+    - id: icon_exclamation_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+```
+
+U
+
+U
+
+U
+
+```yaml
+- id: offset_none
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 5
+  blocks:
+    - id: offset_none_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: offset_right
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 5
+    offset:
+      - 10
+      - 0
+  blocks:
+    - id: offset_right_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: offset_both
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 5
+    offset:
+      - -5
+      - 10
+  blocks:
+    - id: offset_both_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+```
+
+U
+
+N
+
+```yaml
+- id: title_tooltip
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 5
+    title: You have 5 unread messages
+  blocks:
+    - id: title_tooltip_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: title_tooltip_custom
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 99
+    title: 99 pending tasks
+  blocks:
+    - id: title_tooltip_custom_child
+      type: Avatar
+      properties:
+        shape: square
+        icon: user
+- id: title_tooltip_off
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 3
+    title: false
+  blocks:
+    - id: title_tooltip_off_child
+      type: Avatar
+      properties:
+        shape: square
+        content: N
+```
+
+JD
+
+```yaml
+- id: wrap_avatar_circle
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 3
+  blocks:
+    - id: wrap_avatar_circle_child
+      type: Avatar
+      properties:
+        content: JD
+        color: "#1677ff"
+- id: wrap_button_solid
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 5
+  blocks:
+    - id: wrap_button_solid_child
+      type: Button
+      properties:
+        title: Messages
+        color: primary
+        variant: solid
+- id: wrap_icon_bell
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 12
+  blocks:
+    - id: wrap_icon_bell_child
+      type: Icon
+      properties:
+        name: bell
+        size: 24
+- id: wrap_icon_mail
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    dot: true
+  blocks:
+    - id: wrap_icon_mail_child
+      type: Icon
+      properties:
+        name: mail
+        size: 24
+```
+
+Up to 20 members, shared workspaces and priority support.
+
+Pay yearly and save on every seat.
+
+```yaml
+- id: ribbon_row
+  type: Box
+  layout:
+    gap: 24
+  blocks:
+    - id: ribbon_recommended
+      type: Badge
+      layout:
+        span: 12
+      properties:
+        ribbon:
+          text: Recommended
+      blocks:
+        - id: ribbon_recommended_card
+          type: Card
+          properties:
+            title: Team plan
+          blocks:
+            - id: ribbon_recommended_text
+              type: Paragraph
+              properties:
+                content: Up to 20 members, shared workspaces and priority support.
+    - id: ribbon_sale
+      type: Badge
+      layout:
+        span: 12
+      properties:
+        ribbon:
+          text: 20% off
+          color: volcano
+          placement: start
+      blocks:
+        - id: ribbon_sale_card
+          type: Card
+          properties:
+            title: Annual billing
+          blocks:
+            - id: ribbon_sale_text
+              type: Paragraph
+              properties:
+                content: Pay yearly and save on every seat.
+```
+
+U
+
+U
+
+U
+
+```yaml
+- id: css_indicator_shadow
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 5
+  style:
+    .indicator:
+      boxShadow: "0 0 0 2px #1677ff"
+  blocks:
+    - id: css_indicator_shadow_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: css_indicator_green
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 5
+  style:
+    .indicator:
+      backgroundColor: "#52c41a"
+  blocks:
+    - id: css_indicator_green_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: css_indicator_bold
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 42
+  style:
+    .indicator:
+      fontWeight: bold
+      fontSize: 14px
+  blocks:
+    - id: css_indicator_bold_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+        size: large
+```
+
+A
+
+B
+
+Inbox
+
+```yaml
+- id: tw_element_margin
+  type: Badge
+  class:
+    .element: mr-8
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 3
+  blocks:
+    - id: tw_element_margin_child
+      type: Avatar
+      properties:
+        shape: square
+        content: A
+- id: tw_indicator_animate
+  type: Badge
+  class:
+    .indicator: animate-bounce
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 7
+  blocks:
+    - id: tw_indicator_animate_child
+      type: Avatar
+      properties:
+        shape: square
+        content: B
+- id: tw_badge_in_box
+  type: Badge
+  class:
+    .element: p-1
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 3
+  blocks:
+    - id: tw_badge_in_box_child
+      type: Box
+      class: bg-bg-layout rounded-lg p-4
+      blocks:
+        - id: tw_badge_in_box_text
+          type: Paragraph
+          properties:
+            content: Inbox
+```
+
+U
+
+U
+
+U
+
+U
+
+U
+
+```yaml
+- id: theme_large_indicator
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 8
+    theme:
+      indicatorHeight: 28
+      textFontSize: 16
+      textFontWeight: bold
+  blocks:
+    - id: theme_large_indicator_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+        size: large
+- id: theme_small_indicator
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 3
+    size: small
+    theme:
+      indicatorHeightSM: 18
+      textFontSizeSM: 10
+  blocks:
+    - id: theme_small_indicator_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: theme_large_dot
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    dot: true
+    theme:
+      dotSize: 12
+  blocks:
+    - id: theme_large_dot_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: theme_blue_badge
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 15
+    theme:
+      colorError: "#1677ff"
+      colorErrorHover: "#4096ff"
+  blocks:
+    - id: theme_blue_badge_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+- id: theme_large_status
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    status: processing
+    text: Processing
+    theme:
+      statusSize: 10
+- id: theme_combined
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 42
+    theme:
+      indicatorHeight: 26
+      textFontSize: 14
+      textFontWeight: bold
+      textLineHeight: 26
+      colorError: "#722ed1"
+      colorErrorHover: "#9254de"
+      indicatorZIndex: 10
+  blocks:
+    - id: theme_combined_child
+      type: Avatar
+      properties:
+        shape: square
+        content: U
+        size: large
+```
+
+JD
+
+```yaml
+- id: rw_notif_header
+  type: Box
+  layout:
+    gap: 24
+    align: center
+    justify: end
+  class: bg-bg-container p-4 rounded-lg shadow-sm border border-border
+  blocks:
+    - id: rw_notif_search
+      type: TextInput
+      layout:
+        flex: 1 1 0
+      properties:
+        placeholder: Search...
+        prefixIcon: search
+    - id: rw_notif_badge_mail
+      type: Badge
+      layout:
+        flex: 0 0 auto
+      properties:
+        count: 4
+        size: small
+      blocks:
+        - id: rw_notif_mail_btn
+          type: Button
+          properties:
+            icon: mail
+            color: default
+            variant: text
+            hideTitle: true
+          events:
+            onClick:
+              - id: rw_notif_mail_action
+                type: DisplayMessage
+                params:
+                  content: You have 4 unread messages.
+                  status: info
+    - id: rw_notif_badge_bell
+      type: Badge
+      layout:
+        flex: 0 0 auto
+      properties:
+        dot: true
+      blocks:
+        - id: rw_notif_bell_btn
+          type: Button
+          properties:
+            icon: bell
+            color: default
+            variant: text
+            hideTitle: true
+          events:
+            onClick:
+              - id: rw_notif_bell_action
+                type: DisplayMessage
+                params:
+                  content: You have new notifications.
+                  status: info
+    - id: rw_notif_avatar
+      type: Avatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        content: JD
+        color: "#1677ff"
+```
+
+#ORD-1042
+
+Sarah Johnson
+
+#ORD-1043
+
+Michael Chen
+
+#ORD-1044
+
+Emily Davis
+
+#ORD-1045
+
+James Wilson
+
+```yaml
+- id: rw_orders_card
+  type: Card
+  properties:
+    title: Recent Orders
+  slots:
+    extra:
+      blocks:
+        - id: rw_orders_extra_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: View All
+            color: primary
+            variant: link
+            size: small
+          events:
+            onClick:
+              - id: rw_orders_link_action
+                type: DisplayMessage
+                params:
+                  content: Navigating to full orders list.
+                  status: info
+  blocks:
+    - id: rw_order_row1
+      type: Box
+      layout:
+        gap: 16
+        align: center
+      class: py-3 border-b border-border
+      blocks:
+        - id: rw_order1_id
+          type: Paragraph
+          layout:
+            flex: 0 0 120px
+          properties:
+            content: "#ORD-1042"
+        - id: rw_order1_customer
+          type: Paragraph
+          layout:
+            flex: 1 1 0
+          properties:
+            content: Sarah Johnson
+        - id: rw_order1_status
+          type: Badge
+          layout:
+            flex: 0 0 auto
+          properties:
+            status: success
+            text: Delivered
+    - id: rw_order_row2
+      type: Box
+      layout:
+        gap: 16
+        align: center
+      class: py-3 border-b border-border
+      blocks:
+        - id: rw_order2_id
+          type: Paragraph
+          layout:
+            flex: 0 0 120px
+          properties:
+            content: "#ORD-1043"
+        - id: rw_order2_customer
+          type: Paragraph
+          layout:
+            flex: 1 1 0
+          properties:
+            content: Michael Chen
+        - id: rw_order2_status
+          type: Badge
+          layout:
+            flex: 0 0 auto
+          properties:
+            status: processing
+            text: Shipping
+    - id: rw_order_row3
+      type: Box
+      layout:
+        gap: 16
+        align: center
+      class: py-3 border-b border-border
+      blocks:
+        - id: rw_order3_id
+          type: Paragraph
+          layout:
+            flex: 0 0 120px
+          properties:
+            content: "#ORD-1044"
+        - id: rw_order3_customer
+          type: Paragraph
+          layout:
+            flex: 1 1 0
+          properties:
+            content: Emily Davis
+        - id: rw_order3_status
+          type: Badge
+          layout:
+            flex: 0 0 auto
+          properties:
+            status: warning
+            text: Pending Payment
+    - id: rw_order_row4
+      type: Box
+      layout:
+        gap: 16
+        align: center
+      class: py-3
+      blocks:
+        - id: rw_order4_id
+          type: Paragraph
+          layout:
+            flex: 0 0 120px
+          properties:
+            content: "#ORD-1045"
+        - id: rw_order4_customer
+          type: Paragraph
+          layout:
+            flex: 1 1 0
+          properties:
+            content: James Wilson
+        - id: rw_order4_status
+          type: Badge
+          layout:
+            flex: 0 0 auto
+          properties:
+            status: error
+            text: Cancelled
+```
+
+```yaml
+- id: rw_sidebar
+  type: Box
+  layout:
+    direction: column
+    gap: 0
+  class: bg-bg-container rounded-lg shadow-sm border border-border p-2 max-w-xs
+  blocks:
+    - id: rw_nav_inbox_btn
+      type: Button
+      class: justify-start w-full
+      properties:
+        title: Inbox
+        icon: Inbox
+        color: primary
+        variant: text
+      events:
+        onClick:
+          - id: rw_nav_inbox_action
+            type: SetState
+            params:
+              selectedNav: inbox
+      blocks:
+        - id: rw_nav_inbox_badge
+          type: Badge
+          layout:
+            flex: 0 0 auto
+          properties:
+            count: 12
+            size: small
+            theme:
+              colorError: "#1677ff"
+    - id: rw_nav_alerts_btn
+      type: Button
+      class: justify-start w-full
+      properties:
+        title: Alerts
+        icon: Siren
+        color: default
+        variant: text
+      events:
+        onClick:
+          - id: rw_nav_alerts_action
+            type: SetState
+            params:
+              selectedNav: alerts
+      blocks:
+        - id: rw_nav_alerts_badge
+          type: Badge
+          layout:
+            flex: 0 0 auto
+          properties:
+            count: 3
+            size: small
+            color: orange
+    - id: rw_nav_tasks_btn
+      type: Button
+      class: justify-start w-full
+      properties:
+        title: Tasks
+        icon: SquareCheck
+        color: default
+        variant: text
+      events:
+        onClick:
+          - id: rw_nav_tasks_action
+            type: SetState
+            params:
+              selectedNav: tasks
+      blocks:
+        - id: rw_nav_tasks_badge
+          type: Badge
+          layout:
+            flex: 0 0 auto
+          properties:
+            dot: true
+    - id: rw_nav_settings_btn
+      type: Button
+      class: justify-start w-full
+      properties:
+        title: Settings
+        icon: settings
+        color: default
+        variant: text
+      events:
+        onClick:
+          - id: rw_nav_settings_action
+            type: SetState
+            params:
+              selectedNav: settings
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `color` | string | - | Customize Badge dot color. |
+| `count` | number \| string | - | Text to show in badge. |
+| `dot` | boolean | `false` | Whether to display a red dot instead of count. |
+| `size` | string | `"default"` | Sets the size of badge if count is set. Enum: `default`, `small`. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in badge. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `offset` | array | - | Set offset of the badge dot, array of numbers for x and y offset ([x,y]). |
+| `overflowCount` | number | `99` | Max count to show |
+| `showZero` | boolean | `false` | Whether to show badge when count is zero. |
+| `status` | string | `null` | Set Badge as a status dot. Enum: `success`, `processing`, `default`, `error`, `warning`. |
+| `text` | string | - | If status is set, text sets the display text of the status dot. |
+| `ribbon` | object | - | Render a ribbon on the corner of the content area instead of a count badge. Count, dot and status properties are ignored when ribbon is set. |
+| `ribbon.text` | string | - | Text inside the ribbon. |
+| `ribbon.color` | string | - | Ribbon color. A preset color name or any css color. |
+| `ribbon.placement` | string | `"end"` | Corner of the content the ribbon is placed on. `start` and `end` follow the text direction. Enum: `start`, `end`. |
+| `title` | string \| boolean | - | Text to show when hovering over the badge. Set to false to remove the native tooltip. |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design badge tokens](https://ant.design/components/badge#design-token). |
+| `theme.indicatorHeight` | number | `20` | Height of the badge indicator. |
+| `theme.indicatorHeightSM` | number | `14` | Height of the badge indicator in small size. |
+| `theme.dotSize` | number | `6` | Size of the dot badge. |
+| `theme.textFontSize` | number | `12` | Font size for badge count text. |
+| `theme.textFontSizeSM` | number | `12` | Font size for badge count text in small size. |
+| `theme.textFontWeight` | string | `"normal"` | Font weight for badge count text. |
+| `theme.paddingInline` | number \| string | `8` | Inline padding of a badge count with several characters. |
+| `theme.textLineHeight` | number | - | Line height for badge count text. |
+| `theme.statusSize` | number | `6` | Size of the status dot. |
+| `theme.indicatorZIndex` | number \| string | `"auto"` | Z-index of the badge indicator. |
+| `theme.colorBorderBg` | string | - | Background color of the badge border (gap between badge and wrapped element). |
+| `theme.colorError` | string | - | Color of the badge indicator (default red). |
+| `theme.colorErrorHover` | string | - | Hover color of the badge indicator. |
+
+No events defined.
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Badge element, or the ribbon wrapper when ribbon is set. |
+| `/icon` | The icon in the Badge. |
+| `/indicator` | The Badge count or dot indicator, or the ribbon when ribbon is set. |
+
+| Slot | Description |
+| --- | --- |
+| `content` | Child blocks wrapped by the Badge. |

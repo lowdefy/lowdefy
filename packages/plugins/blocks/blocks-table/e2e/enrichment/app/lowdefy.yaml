@@ -1,0 +1,72 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# The enrichment tables reference app: a leads table whose columns compute per row from other
+# columns, through providers (API endpoints of this app) run by a server-side worker over a
+# MongoDB run queue. See code-docs/plans/enrichment-tables.md and the "Enrichment run queue"
+# section of the MongoDB connection docs.
+#
+#   leads/        the table: declared columns, MongoDBTableQuery fields, provider catalogue,
+#                 queue settings, and the shared routine that loads the merged columns
+#   api/enrichment/  enrichment_run (queue cells, start a worker) and enrichment_worker
+#   api/providers/   one endpoint per provider: enrich_<provider id>
+#   api/columns/     add, update and delete user-defined columns
+#   api/leads/       add, import and update rows
+#   api/test/        E2E ONLY, DO NOT COPY: endpoints that delete, overwrite and dump the
+#                    database for the e2e suite. They refuse every call unless the
+#                    ENRICHMENT_E2E_SECRET secret is set and sent (api/test/e2e_guard.yaml).
+#   websockets.yaml  live cell updates from a change stream on the rows
+#   pages/           the enrichment page
+#
+# Secrets (LOWDEFY_SECRET_<name>): ENRICHMENT_MONGODB_URI (a replica set, for change streams),
+# ENRICHMENT_API_URL (the enrichment services), TREG_TOKEN, ANTHROPIC_API_KEY and
+# ANTHROPIC_BASE_URL. The CRON_SECRET environment variable secures the cron route and detached
+# endpoint calls. The e2e run points all services at local mocks
+# (e2e/enrichment/mocks/mockServices.mjs).
+#
+# The app has no auth, so every Api endpoint is public. A real app protects enrichment_run and
+# the columns and leads endpoints under auth.api, and scopes every request by tenant (see the
+# commented `org_id` lines).
+
+lowdefy: local
+name: Enrichment tables reference
+
+connections:
+  _ref: connections.yaml
+
+api:
+  - _ref: api/enrichment/enrichment_run.yaml
+  - _ref: api/enrichment/enrichment_worker.yaml
+  - _ref: api/providers/enrich_company_lookup.yaml
+  - _ref: api/providers/enrich_email_finder.yaml
+  - _ref: api/providers/enrich_find_work_email_treg.yaml
+  - _ref: api/providers/enrich_ai.yaml
+  - _ref: api/columns/columns_add.yaml
+  - _ref: api/columns/columns_update.yaml
+  - _ref: api/columns/columns_delete.yaml
+  - _ref: api/leads/leads_add.yaml
+  - _ref: api/leads/leads_import.yaml
+  - _ref: api/leads/leads_update.yaml
+  # E2E ONLY, DO NOT COPY: guarded by the e2e secret (api/test/e2e_guard.yaml).
+  - _ref: api/test/test_reset.yaml
+  - _ref: api/test/test_leads.yaml
+  - _ref: api/test/test_columns.yaml
+  - _ref: api/test/test_set_cell.yaml
+  - _ref: api/test/test_start_workers.yaml
+
+websockets:
+  _ref: websockets.yaml
+
+pages:
+  - _ref: pages/enrichment.yaml

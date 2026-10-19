@@ -15,6 +15,7 @@
 - _ref: concepts/advanced/modules.yaml
 - _ref: concepts/advanced/module-authoring.yaml
 - _ref: concepts/core/page-and-app-state.yaml
+- _ref: concepts/page-paths.yaml
 - _ref: concepts/advanced/selectors.yaml
 - _ref: concepts/core/blocks.yaml
 - _ref: concepts/advanced/layout-overview.yaml
@@ -30,8 +31,12 @@
 - _ref: concepts/advanced/custom-html.yaml
 - _ref: concepts/advanced/custom-styling.yaml
 - _ref: concepts/core/theming.yaml
+- _ref: concepts/html-attributes.yaml
 - _ref: concepts/advanced/cli.yaml
 - _ref: concepts/advanced/api.yaml
+- _ref: concepts/notifications.yaml
+- _ref: concepts/dynamic-page-content.yaml
+- _ref: concepts/ai-agent-docs.yaml
 
 - _ref: agents/introduction.yaml
 - _ref: agents/agent-properties.yaml
@@ -41,30 +46,45 @@
 - _ref: agents/server-hooks.yaml
 - _ref: agents/AgentChat.yaml
 - _ref: agents/AgentConversations.yaml
+- _ref: websockets/introduction.yaml
+- _ref: websockets/subscriptions.yaml
+- _ref: websockets/publish.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
 - _ref: deployment/vercel.yaml
+- _ref: deployment/environments.yaml
 
 - _ref: plugins/plugins-introduction.yaml
 - _ref: plugins/plugins-dev.yaml
 - _ref: plugins/plugins-actions.yaml
 - _ref: plugins/plugins-connections.yaml
 - _ref: plugins/plugins-operators.yaml
+- _ref: plugins/plugins-icon-sets.yaml
+- _ref: plugins/PostHog.yaml
 
 - _ref: users/users-introduction.yaml
 - _ref: users/auth-providers.yaml
 - _ref: users/login-and-logout.yaml
+- _ref: users/two-factor.yaml
 - _ref: users/protected-pages-apis.yaml
 - _ref: users/roles.yaml
+- _ref: users/organizations.yaml
+- _ref: users/auth-steps.yaml
+- _ref: users/mcp-oauth.yaml
 - _ref: users/user-object.yaml
 - _ref: users/auth-configuration.yaml
 
-- _ref: users/reference/next-auth-providers.yaml
+- _ref: users/reference/auth-js-providers.yaml
+- _ref: users/reference/next-auth-providers-redirect.yaml
 - _ref: users/reference/OpenIDConnectProvider.yaml
+- _ref: users/reference/MongoDBAuthAdapter.yaml
 - _ref: users/reference/MongoDBAdapter.yaml
 - _ref: users/reference/Auth0LogoutCallback.yaml
 
+- _ref: testing/config-tests.yaml
+- _ref: testing/journey-data-sets.yaml
+- _ref: testing/explore-pull-request.yaml
 - _ref: testing/e2e-introduction.yaml
 - _ref: testing/e2e-getting-started.yaml
 - _ref: testing/e2e-writing-tests.yaml
@@ -75,12 +95,14 @@
 - _ref: blocks/input/InputGallery.yaml
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
+- _ref: blocks/input/Captcha.yaml
 - _ref: blocks/input/CheckboxSelector.yaml
 - _ref: blocks/input/CheckboxSwitch.yaml
 - _ref: blocks/input/ColorSelector.yaml
 - _ref: blocks/input/DateRangeSelector.yaml
 - _ref: blocks/input/DateSelector.yaml
 - _ref: blocks/input/DateTimeSelector.yaml
+- _ref: blocks/input/IntentInput.yaml
 - _ref: blocks/input/MonthSelector.yaml
 - _ref: blocks/input/MultipleSelector.yaml
 - _ref: blocks/input/NumberInput.yaml
@@ -88,14 +110,21 @@
 - _ref: blocks/input/ParagraphInput.yaml
 - _ref: blocks/input/PasswordInput.yaml
 - _ref: blocks/input/PhoneNumberInput.yaml
+- _ref: blocks/input/PlacesAutocomplete.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/SegmentedSelector.yaml
 - _ref: blocks/input/S3UploadButton.yaml
+- _ref: blocks/input/Upload.yaml
+- _ref: blocks/input/UploadDragger.yaml
+- _ref: blocks/input/UploadPhoto.yaml
 - _ref: blocks/input/S3UploadDragger.yaml
 - _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
+- _ref: blocks/input/TableInput.yaml
+- _ref: blocks/input/TagMultipleSelector.yaml
+- _ref: blocks/input/TagSelector.yaml
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml
 - _ref: blocks/input/TiptapInput.yaml
@@ -112,6 +141,7 @@
 - _ref: blocks/display/Breadcrumb.yaml
 - _ref: blocks/display/Button.yaml
 - _ref: blocks/display/Calendar.yaml
+- _ref: blocks/display/ClickableHtml.yaml
 - _ref: blocks/display/DangerousHtml.yaml
 - _ref: blocks/display/DangerousMarkdown.yaml
 - _ref: blocks/display/DiffGit.yaml
@@ -120,6 +150,7 @@
 - _ref: blocks/display/DiffTimeline.yaml
 - _ref: blocks/display/Divider.yaml
 - _ref: blocks/display/DropdownButton.yaml
+- _ref: blocks/display/EventLog.yaml
 - _ref: blocks/display/EChart.yaml
 - _ref: blocks/display/FloatButton.yaml
 - _ref: blocks/display/Html.yaml
@@ -131,9 +162,11 @@
 - _ref: blocks/display/Message.yaml
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
+- _ref: blocks/display/PollingTimer.yaml
 - _ref: blocks/display/Progress.yaml
 - _ref: blocks/display/QRCode.yaml
 - _ref: blocks/display/S3Download.yaml
+- _ref: blocks/display/Download.yaml
 - _ref: blocks/display/Search.yaml
 - _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/SkeletonAvatar.yaml
@@ -142,6 +175,8 @@
 - _ref: blocks/display/SkeletonParagraph.yaml
 - _ref: blocks/display/Statistic.yaml
 - _ref: blocks/display/Steps.yaml
+- _ref: blocks/display/Table.yaml
+- _ref: blocks/display/TableLight.yaml
 - _ref: blocks/display/Tag.yaml
 - _ref: blocks/display/Title.yaml
 - _ref: blocks/display/Tour.yaml
@@ -189,6 +224,7 @@
 - _ref: blocks/list/MasonryList.yaml
 # - _ref: blocks/list/TimelineList.yaml # TODO:
 
+- _ref: connections/AIGateway.yaml
 - _ref: connections/Anthropic.yaml
 - _ref: connections/Google.yaml
 - _ref: connections/Mcp.yaml
@@ -196,6 +232,8 @@
 
 - _ref: connections/AmazonRedshift.yaml
 - _ref: connections/AWSS3.yaml
+- _ref: connections/AzureBlobStorage.yaml
+- _ref: connections/GoogleCloudStorage.yaml
 - _ref: connections/AxiosHttp.yaml
 - _ref: connections/Elasticsearch.yaml
 - _ref: connections/GoogleSheet.yaml
@@ -207,21 +245,41 @@
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/Redis.yaml
 - _ref: connections/SendGridMail.yaml
+- _ref: connections/SMTP.yaml
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
+- _ref: connections/Treg.yaml
 
 - _ref: actions/CallAPI.yaml
 - _ref: actions/CallMethod.yaml
 - _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/DownloadCsv.yaml
+- _ref: actions/GetLocalStorage.yaml
+- _ref: actions/EmailOtpSend.yaml
+- _ref: actions/EmailOtpVerify.yaml
 - _ref: actions/Fetch.yaml
 - _ref: actions/GeolocationCurrentPosition.yaml
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
+- _ref: actions/MagicLinkVerify.yaml
 - _ref: actions/PdfMake.yaml
+- _ref: actions/PostHogAlias.yaml
+- _ref: actions/PostHogCapture.yaml
+- _ref: actions/PostHogCapturePageLeave.yaml
+- _ref: actions/PostHogFeatureFlag.yaml
+- _ref: actions/PostHogGroup.yaml
+- _ref: actions/PostHogIdentify.yaml
+- _ref: actions/PostHogInit.yaml
+- _ref: actions/PostHogOptIn.yaml
+- _ref: actions/PostHogOptOut.yaml
+- _ref: actions/PostHogPageview.yaml
+- _ref: actions/PostHogReloadFeatureFlags.yaml
+- _ref: actions/PostHogReset.yaml
+- _ref: actions/PostHogSetPersonProperties.yaml
 - _ref: actions/Request.yaml
+- _ref: actions/RemoveLocalStorage.yaml
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
@@ -229,6 +287,7 @@
 - _ref: actions/SetFocus.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetLocale.yaml
+- _ref: actions/SetLocalStorage.yaml
 - _ref: actions/SetState.yaml
 - _ref: actions/Throw.yaml
 - _ref: actions/UpdateSession.yaml
@@ -236,6 +295,7 @@
 - _ref: actions/Wait.yaml
 
 - _ref: operators/_actions.yaml
+- _ref: operators/_agent.yaml
 - _ref: operators/_and.yaml
 - _ref: operators/_api.yaml
 - _ref: operators/_app.yaml
@@ -245,10 +305,13 @@
 - _ref: operators/_boolean.yaml
 - _ref: operators/_build.yaml
 - _ref: operators/_change_case.yaml
+- _ref: operators/_credential.yaml
+- _ref: operators/_cron.yaml
 - _ref: operators/_date.yaml
 - _ref: operators/_diff.yaml
 - _ref: operators/_divide.yaml
 - _ref: operators/_eq.yaml
+- _ref: operators/_error.yaml
 - _ref: operators/_event.yaml
 - _ref: operators/_function.yaml
 - _ref: operators/_get.yaml
@@ -256,6 +319,7 @@
 - _ref: operators/_gt.yaml
 - _ref: operators/_gte.yaml
 - _ref: operators/_hash.yaml
+- _ref: operators/_hmac.yaml
 - _ref: operators/_if.yaml
 - _ref: operators/_if_none.yaml
 - _ref: operators/_index.yaml
@@ -283,6 +347,7 @@
 - _ref: operators/_object.yaml
 - _ref: operators/_operator.yaml
 - _ref: operators/_or.yaml
+- _ref: operators/_path_params.yaml
 - _ref: operators/_product.yaml
 - _ref: operators/_random.yaml
 - _ref: operators/_ref.yaml
@@ -317,10 +382,13 @@
 - _ref: controls/switch.yaml
 - _ref: controls/throw.yaml
 - _ref: controls/try.yaml
-# - _ref: controls/while.yaml # TODO: Add back when while control implemented
+- _ref: controls/while.yaml
 
 - _ref: upgrading/upgrade-guide.yaml
+- _ref: upgrading/auth-upgrade.yaml
+- _ref: upgrading/v6-to-v7.yaml
 - _ref: upgrading/v3-to-v4.yaml
+- _ref: upgrading/v5-to-v6.yaml
 - _ref: upgrading/v4-to-v5.yaml
 
 - _ref: reference.yaml

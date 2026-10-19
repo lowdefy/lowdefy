@@ -497,27 +497,19 @@ test('can toggle password visibility', async ({ page }) => {
 
 ### Typography Editable (TitleInput, ParagraphInput)
 
-The editable typography components replace the element with an edit wrapper when clicking the edit button:
+TitleInput and ParagraphInput edit in place: clicking the text puts a textarea inside the same heading or paragraph element. No edit icon is rendered unless `editable.icon` is set.
 
 ```javascript
-test('can edit title and onChange fires', async ({ page }) => {
+test('can edit title by clicking the text and onChange fires', async ({ page }) => {
   const block = getBlock(page, 'titleinput_onchange');
+  await block.getByText('Change me').click();
 
-  // Click the edit button - use role-based selector with .first()
-  // (Ant Design has nested button elements)
-  const editBtn = block.getByRole('button', { name: 'Edit' }).first();
-  await editBtn.click();
-
-  // After clicking, the element is replaced with an editable wrapper
-  // Use page.locator to find the textarea (not block.locator)
-  const textarea = page.locator('.ant-typography-edit-content textarea');
-  await expect(textarea).toBeVisible();
+  // The textarea is inside the block, so block.locator finds it
+  const textarea = block.locator('textarea');
+  await expect(textarea).toBeFocused();
   await textarea.fill('New Title Value');
-
-  // Press Enter to confirm
   await textarea.press('Enter');
 
-  // Verify the onChange event fired
   const display = getBlock(page, 'onchange_display');
   await expect(display).toHaveText('Value: New Title Value');
 });
@@ -536,9 +528,11 @@ test('onCopy event fires when copy button is clicked', async ({ page }) => {
 
 **Key insights:**
 
-- When Typography enters edit mode, the heading/paragraph is replaced with a `div.ant-typography-edit-content` containing a textarea
-- Use `page.locator('.ant-typography-edit-content textarea')` instead of `block.locator('textarea')`
-- For `onCopy` to fire, `copyable` must be an object (e.g., `copyable: { text: 'Copy text' }`), not just `true`
+- Click the text (`block.getByText(...)`) to start editing; Enter saves, Escape cancels, blur saves
+- The textarea is inside the block, so use `block.locator('textarea')`
+- `onChange` only fires when the value actually changed
+- An edit icon button (`getByRole('button', { name: 'Edit' })`) exists only when `editable.icon` is set
+- `onCopy` fires for `copyable: true` as well as the object form
 
 ### TextArea maxLength
 

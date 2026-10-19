@@ -1,6 +1,8 @@
 # S4: Invalid Check Slug in ~ignoreBuildChecks
 # =============================================
-# Tests that an invalid check slug in ~ignoreBuildChecks throws an error.
+# Tests that a check slug that is not kebab-case in ~ignoreBuildChecks throws
+# an error. Any kebab-case slug may be a plugin rule id, so only the form is
+# checked here.
 #
 # Expected: ConfigError with "Invalid check slug(s)"
 
@@ -10,7 +12,7 @@ pages:
   - id: home
     type: Box
     ~ignoreBuildChecks:
-      - invalid-slug
+      - Invalid_Slug
     blocks:
       - id: test
         type: Paragraph

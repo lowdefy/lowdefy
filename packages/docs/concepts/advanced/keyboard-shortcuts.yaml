@@ -162,7 +162,7 @@ _ref:
               type: Button
               properties:
                 title: Search
-                icon: AiOutlineSearch
+                icon: search
               events:
                 onClick:
                   shortcut: mod+K
@@ -180,7 +180,7 @@ _ref:
               type: Button
               properties:
                 title: Save
-                icon: AiOutlineSave
+                icon: save
               events:
                 onClick:
                   shortcut: mod+S

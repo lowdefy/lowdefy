@@ -16,8 +16,9 @@
 
 import { jest } from '@jest/globals';
 import { operatorsServer } from '@lowdefy/operators-js';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 
+import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import invokeEndpoint from './invokeEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -43,12 +44,12 @@ function createMockReadConfigFile(endpointConfigs = {}) {
   });
 }
 
-function createTestContext({ endpointConfigs = {}, session } = {}) {
+function createTestContext({ endpointConfigs = {}, user } = {}) {
   const context = testContext({
     operators,
     logger,
     readConfigFile: createMockReadConfigFile(endpointConfigs),
-    session: session ?? { user: { id: 'user_1' } },
+    user: user ?? { id: 'user_1' },
   });
   context.evaluateOperators = createEvaluateOperators(context);
   return context;
@@ -140,11 +141,50 @@ test('throws ConfigError on authorization failure', async () => {
         auth: { roles: ['admin'] },
       },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   await expect(
     invokeEndpoint(context, { endpointId: 'target', payload: {}, endpointDepth: 0 })
   ).rejects.toBeInstanceOf(ConfigError);
+});
+
+test('system context authorizes nested call to a protected endpoint', async () => {
+  const context = createTestContext({
+    endpointConfigs: {
+      target: {
+        endpointId: 'target',
+        type: 'Api',
+        routine: { ':return': 'ran' },
+        auth: { public: false, roles: ['admin'] },
+      },
+    },
+  });
+  context.user = undefined;
+  context.authorizeOutcome = createAuthorizeOutcome({ user: null, system: true });
+  const result = await invokeEndpoint(context, {
+    endpointId: 'target',
+    payload: {},
+    endpointDepth: 0,
+  });
+  expect(result.status).toBe('return');
+  expect(result.response).toBe('ran');
+});
+
+test('user session with insufficient roles gets masked does-not-exist error on nested call', async () => {
+  const context = createTestContext({
+    endpointConfigs: {
+      target: {
+        endpointId: 'target',
+        type: 'Api',
+        routine: { ':return': true },
+        auth: { public: false, roles: ['admin'] },
+      },
+    },
+    user: { id: 'user_1', roles: ['viewer'] },
+  });
+  await expect(
+    invokeEndpoint(context, { endpointId: 'target', payload: {}, endpointDepth: 0 })
+  ).rejects.toThrow('API Endpoint "target" does not exist.');
 });
 
 test('propagates :throw status envelope from runRoutine', async () => {
@@ -191,10 +231,7 @@ test('child routine sees fresh state — caller state not visible', async () => 
       target: {
         endpointId: 'target',
         type: 'Api',
-        routine: [
-          { ':set_state': { x: 1 } },
-          { ':return': { _state: 'x' } },
-        ],
+        routine: [{ ':set_state': { x: 1 } }, { ':return': { _state: 'x' } }],
       },
     },
   });
@@ -204,4 +241,42 @@ test('child routine sees fresh state — caller state not visible', async () => 
     endpointDepth: 0,
   });
   expect(result.response).toBe(1);
+});
+
+test('invokeEndpoint rejects a payload the calling config built that violates the target payloadSchema with a ConfigError', async () => {
+  const context = createTestContext({
+    endpointConfigs: {
+      target: {
+        endpointId: 'target',
+        type: 'Api',
+        payloadSchema: {
+          type: 'object',
+          properties: { key: { type: 'string' } },
+          required: ['key'],
+        },
+        routine: { ':return': { _payload: 'key' } },
+      },
+    },
+  });
+  await expect(
+    invokeEndpoint(context, { endpointId: 'target', payload: { key: 1 }, endpointDepth: 0 })
+  ).rejects.toThrow(ConfigError);
+  await expect(
+    invokeEndpoint(context, {
+      endpointId: 'target',
+      payload: { key: 1 },
+      endpointDepth: 0,
+      outsideCaller: true,
+    })
+  ).rejects.toThrow(UserError);
+  // A missing payload is validated as {}, the value the routine would receive.
+  await expect(invokeEndpoint(context, { endpointId: 'target', endpointDepth: 0 })).rejects.toThrow(
+    'Payload for endpoint "target" does not match its payloadSchema at (root): must have required property \'key\'.'
+  );
+  const result = await invokeEndpoint(context, {
+    endpointId: 'target',
+    payload: { key: 'hi' },
+    endpointDepth: 0,
+  });
+  expect(result.response).toBe('hi');
 });

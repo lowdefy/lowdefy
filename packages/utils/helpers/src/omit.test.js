@@ -15,6 +15,7 @@
 */
 
 import omit from './omit.js';
+import { ReservedKeyError } from './ReservedKeyError.js';
 
 test('omit flat keys', () => {
   const obj = { a: 1, b: 2, c: 3, d: 4 };
@@ -33,4 +34,25 @@ test('omit array keys', () => {
   const obj = { a: [1, 2, 3, 4], b: 1, d: 4 };
   omit(obj, ['d', 'a.2']);
   expect(obj).toEqual({ a: [1, 2, undefined, 4], b: 1 });
+});
+
+test('omit returns the object with the listed keys removed', () => {
+  expect(omit({ a: 1, b: 2 }, ['a'])).toEqual({ b: 2 });
+});
+
+test('omit inherits the reserved key guard from unset', () => {
+  expect(() => omit({ a: 1 }, ['__proto__'])).toThrow(ReservedKeyError);
+});
+
+test('omit throws ReservedKeyError for a reserved segment in a nested key', () => {
+  expect(() => omit({ a: 1 }, ['x.constructor.y'])).toThrow(ReservedKeyError);
+});
+
+test('omit inherits the dotted key rejoin from unset', () => {
+  expect(omit({ 'a.b': 1, c: 2 }, ['a.b'])).toEqual({ c: 2 });
+});
+
+test('omit returns true for missing keys without throwing', () => {
+  const obj = { a: 1 };
+  expect(omit(obj, ['x.y.z'])).toEqual({ a: 1 });
 });

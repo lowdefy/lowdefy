@@ -128,6 +128,17 @@ test('try catch with unsuccessful try', async () => {
       },
       'Try and fail at test/try_fail.',
     ],
+    // Handled by the :catch, so logged at debug, not as an error.
+    [
+      {
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
+        event: 'debug_routine_caught_error',
+      },
+      'Try and fail at test/try_fail.',
+    ],
     [
       {
         event: 'debug_control_catch',
@@ -573,6 +584,17 @@ test('try catch finally, try fail', async () => {
       },
       'Try and fail at test/try_fail.',
     ],
+    // Handled by the :catch, so logged at debug, not as an error.
+    [
+      {
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
+        event: 'debug_routine_caught_error',
+      },
+      'Try and fail at test/try_fail.',
+    ],
     [
       {
         event: 'debug_control_catch',
@@ -691,6 +713,17 @@ test('try catch finally, try and catch fail', async () => {
           id: 'try_fail',
           type: 'TestRequestError',
         },
+      },
+      'Try and fail at test/try_fail.',
+    ],
+    // Handled by the :catch, so logged at debug, not as an error.
+    [
+      {
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
+        event: 'debug_routine_caught_error',
       },
       'Try and fail at test/try_fail.',
     ],
@@ -834,4 +867,40 @@ test('try catch with reject in try', async () => {
     ],
   ]);
   expect(res.error).toEqual(new Error('Rejected'));
+});
+
+const failingTry = {
+  id: 'request:test_endpoint:try_fail',
+  type: 'TestRequestError',
+  stepId: 'try_fail',
+  connectionId: 'test',
+  properties: {
+    message: 'Try and fail',
+  },
+};
+
+test('try catch runs :catch with the caught error and :finally without it', async () => {
+  const routine = {
+    ':try': failingTry,
+    ':catch': { ':set_state': { caught: { _error: true } } },
+    ':finally': { ':set_state': { inFinally: { _error: true } } },
+  };
+  const { res, routineContext } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(routineContext.state.caught).toBeInstanceOf(RequestError);
+  expect(routineContext.state.caught.message).toEqual('Try and fail at test/try_fail.');
+  expect(routineContext.state.inFinally).toBeNull();
+  expect(routineContext.error).toBeNull();
+});
+
+test('try catch gives :catch the projected error, not the raw one', async () => {
+  const routine = {
+    ':try': failingTry,
+    ':catch': { ':set_state': { caught: { _error: true } } },
+  };
+  const { routineContext } = await runTest({ routine });
+  const { caught } = routineContext.state;
+  expect(Object.hasOwn(caught, 'location')).toBe(false);
+  expect(Object.hasOwn(caught, 'received')).toBe(false);
+  expect(Object.hasOwn(caught, 'stack')).toBe(false);
 });

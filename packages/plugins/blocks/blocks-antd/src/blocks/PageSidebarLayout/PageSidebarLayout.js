@@ -15,7 +15,6 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { ConfigProvider } from 'antd';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
@@ -34,9 +33,15 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import getPageSpacing from '../getPageSpacing.js';
+import withPageTheme from '../withPageTheme.js';
 
-function getInitialSiderState({ properties }) {
-  const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
+function getSiderStorageKey({ methods, properties }) {
+  return methods.getAppStorageKey(`lf-${properties.siderStorageKey ?? 'sider'}-open`);
+}
+
+function getInitialSiderState({ methods, properties }) {
+  const storageKey = getSiderStorageKey({ methods, properties });
   try {
     const stored = localStorage.getItem(storageKey);
     if (stored === 'true') return true;
@@ -47,8 +52,8 @@ function getInitialSiderState({ properties }) {
   return !properties.sider?.initialCollapsed;
 }
 
-function writeSiderState({ properties, open }) {
-  const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
+function writeSiderState({ methods, properties, open }) {
+  const storageKey = getSiderStorageKey({ methods, properties });
   try {
     localStorage.setItem(storageKey, String(open));
   } catch {
@@ -69,7 +74,10 @@ const PageSidebarLayout = ({
   properties,
   styles = {},
 }) => {
-  const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
+  const spacing = getPageSpacing({ padding: properties.padding });
+  const [openSiderState, setSiderOpen] = useState(() =>
+    getInitialSiderState({ methods, properties })
+  );
   // Re-read localStorage on mount: during SSR localStorage is unavailable, so
   // the lazy initializer falls back to properties.sider.initialCollapsed. Once
   // hydrated we pick up the stored value so a reload restores the state the
@@ -77,7 +85,7 @@ const PageSidebarLayout = ({
   // also push the restored value through the registered sync method once it's
   // available.
   useEffect(() => {
-    setSiderOpen(getInitialSiderState({ properties }));
+    setSiderOpen(getInitialSiderState({ methods, properties }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -87,14 +95,15 @@ const PageSidebarLayout = ({
       const next = !openSiderState;
       methods._toggleSiderOpen({ open: next });
       setSiderOpen(next);
-      writeSiderState({ properties, open: next });
+      writeSiderState({ methods, properties, open: next });
     });
     methods.registerMethod('setSiderOpen', ({ open }) => {
       methods._toggleSiderOpen({ open });
       setSiderOpen(open);
-      writeSiderState({ properties, open });
+      writeSiderState({ methods, properties, open });
     });
   });
+  const siderHeader = openSiderState ? content.siderHeader : content.siderHeaderClosed;
   const layout = (
     <Layout
       blockId={blockId}
@@ -120,6 +129,7 @@ const PageSidebarLayout = ({
               ])}
               classNames={{
                 element: `${classNames.sider ?? 'hidden lg:block'} hide-on-print`,
+                body: classNames.siderBody,
               }}
               styles={{
                 element: mergeObjects([
@@ -132,6 +142,11 @@ const PageSidebarLayout = ({
                   },
                   styles.sider,
                 ]),
+                body: styles.siderBody,
+              }}
+              onCollapse={() => {
+                methods.toggleSiderOpen();
+                methods.triggerEvent({ name: 'onToggleSider' });
               }}
               rename={{
                 methods: {
@@ -159,7 +174,7 @@ const PageSidebarLayout = ({
                           type: 'link',
                           block: true,
                           icon: {
-                            name: openSiderState ? 'AiOutlineMenuFold' : 'AiOutlineMenuUnfold',
+                            name: openSiderState ? 'sidebar-collapse' : 'sidebar-expand',
                           },
                           ...(properties.toggleSiderButton ?? {}),
                         }}
@@ -179,46 +194,55 @@ const PageSidebarLayout = ({
                         }}
                       />
                     )}
-                    <Menu
-                      blockId={`${blockId}_menu`}
-                      components={{ Icon, Link, ShortcutBadge }}
-                      basePath={basePath}
-                      classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
-                      events={events}
-                      methods={methods}
-                      menus={menus}
-                      pageId={pageId}
-                      properties={mergeObjects([
-                        {
-                          mode: 'inline',
-                          collapsed: !openSiderState,
-                        },
-                        properties.menu,
-                        properties.menuLg,
-                      ])}
-                      styles={{ element: styles.menu }}
-                      rename={{
-                        events: {
-                          onClick: 'onMenuItemClick',
-                          onSelect: 'onMenuItemSelect',
-                          onToggleMenuGroup: 'onToggleMenuGroup',
-                        },
-                      }}
-                    />
-                    {openSiderState && content.siderOpen && (
-                      <div style={{ flex: '0 0 auto' }}>{content.siderOpen()}</div>
+                    {siderHeader && (
+                      <div
+                        className={classNames.siderHeader}
+                        style={mergeObjects([{ flex: '0 0 auto' }, styles.siderHeader])}
+                      >
+                        {siderHeader()}
+                      </div>
                     )}
-                    {!openSiderState && content.siderClosed && (
-                      <div style={{ flex: '0 0 auto' }}>{content.siderClosed()}</div>
-                    )}
-                    <div style={{ flex: '1 0 auto' }} />
+                    {/* Menu scrolls here between the fixed toggle and footer so the last item
+                        can't hide behind the footer; min-height:0 lets it shrink to scroll. */}
+                    <div style={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto' }}>
+                      <Menu
+                        blockId={`${blockId}_menu`}
+                        components={{ Icon, Link, ShortcutBadge }}
+                        basePath={basePath}
+                        classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
+                        events={events}
+                        methods={methods}
+                        menus={menus}
+                        pageId={pageId}
+                        properties={mergeObjects([
+                          {
+                            mode: 'inline',
+                            collapsed: !openSiderState,
+                          },
+                          properties.menu,
+                          properties.menuLg,
+                        ])}
+                        styles={{ element: styles.menu }}
+                        rename={{
+                          events: {
+                            onClick: 'onMenuItemClick',
+                            onSelect: 'onMenuItemSelect',
+                            onToggleMenuGroup: 'onToggleMenuGroup',
+                          },
+                        }}
+                      />
+                      {openSiderState && content.siderOpen && (
+                        <div style={{ flex: '0 0 auto' }}>{content.siderOpen()}</div>
+                      )}
+                      {!openSiderState && content.siderClosed && (
+                        <div style={{ flex: '0 0 auto' }}>{content.siderClosed()}</div>
+                      )}
+                    </div>
                     <div
                       style={{
-                        position: 'sticky',
-                        bottom: 0,
-                        background:
-                          'linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--ant-color-bg-container) 85%, transparent) 32px, color-mix(in srgb, var(--ant-color-bg-container) 95%, transparent) 100%)',
-                        padding: '40px 8px 8px',
+                        flex: '0 0 auto',
+                        background: 'var(--ant-color-bg-container)',
+                        padding: '8px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -273,6 +297,7 @@ const PageSidebarLayout = ({
               blockId={`${blockId}_content_layout`}
               components={{ Icon, Link, ShortcutBadge }}
               events={events}
+              properties={{}}
               content={{
                 content: () => (
                   <>
@@ -354,6 +379,7 @@ const PageSidebarLayout = ({
                                   properties.menuMd,
                                 ])}
                                 content={{
+                                  drawerHeader: content.mobileDrawerHeader,
                                   drawerContent: content.mobileDrawerContent,
                                   drawerFooter: content.mobileDrawerFooter,
                                 }}
@@ -403,7 +429,18 @@ const PageSidebarLayout = ({
                                 properties.header?.contentStyle,
                               ])}
                             >
-                              {content.header()}
+                              {content.header(
+                                mergeObjects([
+                                  {
+                                    display: 'flex',
+                                    flex: '1 1 auto',
+                                    width: '100%',
+                                    minWidth: 0,
+                                    alignItems: 'center',
+                                  },
+                                  styles.headerContent,
+                                ])
+                              )}
                             </div>
                           ),
                         }}
@@ -418,7 +455,7 @@ const PageSidebarLayout = ({
                       styles={{
                         element: mergeObjects([
                           {
-                            padding: '0 40px 40px 40px',
+                            padding: spacing.content,
                             minWidth: 0,
                           },
                           styles.content,
@@ -437,7 +474,7 @@ const PageSidebarLayout = ({
                                 methods={methods}
                                 properties={properties.breadcrumb}
                                 styles={{
-                                  element: mergeObjects([{ margin: '16px 0' }, styles.breadcrumb]),
+                                  element: mergeObjects([spacing.breadcrumb, styles.breadcrumb]),
                                 }}
                                 rename={{
                                   events: {
@@ -446,7 +483,7 @@ const PageSidebarLayout = ({
                                 }}
                               />
                             ) : (
-                              <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
+                              spacing.spacerClassName && <div className={spacing.spacerClassName} />
                             )}
                             {content.content && content.content()}
                           </>
@@ -480,16 +517,4 @@ const PageSidebarLayout = ({
   return layout;
 };
 
-function PageSidebarLayoutWithTheme(props) {
-  const { theme, ...restProperties } = props.properties;
-  if (!type.isObject(theme)) {
-    return <PageSidebarLayout {...props} />;
-  }
-  return (
-    <ConfigProvider theme={{ token: theme }}>
-      <PageSidebarLayout {...props} properties={restProperties} />
-    </ConfigProvider>
-  );
-}
-
-export default withBlockDefaults(PageSidebarLayoutWithTheme);
+export default withBlockDefaults(withPageTheme(PageSidebarLayout));

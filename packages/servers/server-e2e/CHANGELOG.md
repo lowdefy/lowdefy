@@ -1,5 +1,532 @@
 # @lowdefy/server-e2e
 
+## 6.1.0
+
+### Patch Changes
+
+- 1d3a0b8: Update dependencies to releases with published security fixes.
+
+  - `hono` 4.13.5 and `@hono/node-server` 2.0.10 in the servers.
+  - `ws` 8.21.0 in the servers; `postcss` 8.5.23 in the dev server.
+  - The servers drop leftover Next.js-era dependencies they no longer use: `@sentry/nextjs` from `@lowdefy/server`, and the `webpack` and `@next/eslint-plugin-next` devDependencies.
+  - `axios` 1.18.0 in the CLI and AxiosHttp.
+  - `dompurify` 3.4.13 in `block-utils`, `blocks-basic` and `blocks-markdown`.
+  - `echarts` 6.1.0, `mysql2` 3.23.1, `nodemailer` 9.1.1, `uuid` 13.0.1 and `@auth/mongodb-adapter` 3.11.3 in their plugins.
+  - `tar` 7.5.21 and `picomatch` 4.0.4 in the build, `js-yaml` 4.3.2 in `e2e-utils`, and `@babel/core` 7.29.6 in `block-utils`.
+  - `@auth/core` 0.41.3 in the servers and `plugin-next-auth`, whose peer range is now `>=0.41.3`. `@auth/mongodb-adapter` 3.11.3 depends on the same release.
+
+  Two of these change output an app can see:
+
+  - **`echarts` 6.1.0** changes chart defaults. Bar, pictorialBar, candlestick and boxplot series no longer draw past the grid edge; set `containShape: false` on the axis to restore the previous look. `axis.startValue` no longer sets `min`. The second argument of a `tooltip.valueFormatter` function is now `rawDataIndex`.
+  - **`dompurify` 3.4.13** keeps a few attributes and elements that earlier releases removed: `command` / `commandfor`, `<selectedcontent>`, and some SVG attributes. HTML rendered by `Html`, `ClickableHtml`, `DangerousHtml`, `DangerousMarkdown` and other `renderHtml` properties may keep them.
+
+- 6d6f8fa: Improved error handling: each reader of a server error now gets its own view of it.
+
+  - **Users and app config see the author's message or one generic message.** A server error the app author did not write now reaches the browser as "Something went wrong.", with its `name`, `code`, `statusCode`, `configKey` and a `requestId`. Messages written with `:throw` or `:reject`, failed `ValidateSchema` steps, a plugin's `UserError`, and authentication refusals, are shown as before. This applies to the error toast, `_actions`, `_request_details`, websocket errors, MCP tool results and the AgentChat stream, the same way in development and production. An action whose error toast showed a connection's own message now shows the generic one.
+    - The generic message is the built-in `server.genericError` i18n string. Override it per locale under `config.i18n.messages`, for example `server.genericError: 'Etwas ist schiefgelaufen.'`.
+    - To show different text for one action, set `messages.error` on the action.
+    - To show the real message, read it with the new `_error` operator in the endpoint's `:catch` and send it on, for example `:throw: { _error: message }`.
+  - **The dev server shows the full error.** In `lowdefy dev`, the error bar, the browser console and the dev MCP tools show the full server error, with its config location, while app config sees the same generic error as in production. Different failures of the same action are now each shown, instead of only the first.
+  - **The browser console prints the request id** under a server error, to find the matching server log line and Sentry event.
+  - **Production logs and Sentry keep a fixed set of error fields.** Each logged error keeps its name, message, stack, `code`, `statusCode` and cause, plus Lowdefy's own fields (`configKey`, `source`, `received`, ...) on Lowdefy errors. Fields a library attaches, such as an HTTP client's request config and response, are no longer logged. Values of the app's secrets (`LOWDEFY_SECRET_*`, `CRON_SECRET`, `AUTH_SECRET`) are replaced with `[REDACTED]` in production log lines and Sentry events, and credential-named keys in `received` are masked. Sentry events now carry the error's fields under `extra.error` and a `requestId` tag, and no longer attach incoming request bodies.
+  - **An AxiosHttp request that gets a 5xx response now fails with a `ServiceError`**, where it used to fail with a `RequestError`. AxiosHttp now sets `statusCode` on its error, and a 5xx status marks an error as a service failure, like a network error or timeout. Config that checks `name` for `RequestError` on these failures, for example `_eq: [{ _error: name }, 'RequestError']`, should also accept `ServiceError`, or check `statusCode` instead. The server log event for these failures is now `service_error`.
+
+- Updated dependencies [f92aa11]
+- Updated dependencies [ae9803e]
+- Updated dependencies [10bbe47]
+- Updated dependencies [ea69869]
+- Updated dependencies [08e05f9]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [9592255]
+- Updated dependencies [d1bd356]
+- Updated dependencies [5ad2b62]
+- Updated dependencies [08cbf21]
+- Updated dependencies [1bbaab7]
+- Updated dependencies [5657441]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [2b2b27a]
+  - @lowdefy/blocks-antd-x@6.1.0
+  - @lowdefy/blocks-aggrid@6.1.0
+  - @lowdefy/blocks-antd@6.1.0
+  - @lowdefy/connection-mongodb@6.1.0
+  - @lowdefy/blocks-basic@6.1.0
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/blocks-tiptap@6.1.0
+  - @lowdefy/operators-js@6.1.0
+  - @lowdefy/helpers@6.1.0
+  - @lowdefy/api@6.1.0
+  - @lowdefy/blocks-echarts@6.1.0
+  - @lowdefy/blocks-markdown@6.1.0
+  - @lowdefy/connection-axios-http@6.1.0
+  - @lowdefy/node-utils@6.1.0
+  - @lowdefy/client@6.1.0
+  - @lowdefy/errors@6.1.0
+  - @lowdefy/logger@6.1.0
+  - @lowdefy/layout@6.1.0
+  - @lowdefy/blocks-loaders@6.1.0
+  - @lowdefy/operators-nunjucks@6.1.0
+  - @lowdefy/operators-uuid@6.1.0
+  - @lowdefy/actions-core@6.1.0
+  - @lowdefy/websockets-core@6.1.0
+
+## 6.0.0
+
+### Major Changes
+
+- 8a82fb0: feat!: Replace Next.js with Vite + Hono.
+
+  Lowdefy servers no longer run on Next.js. The production server is a
+  [Hono](https://hono.dev) app serving a [Vite](https://vite.dev)-built React
+  client; the dev server runs Vite with the Hono app mounted as middleware,
+  giving instant hot module replacement for plugin changes (~700ms instead of
+  the previous 20–40s rebuild-and-restart cycle). Authentication moves from
+  NextAuth v4 to the Auth.js v5 engine (`@auth/core` via `@hono/auth-js`) with
+  the `auth:` YAML schema unchanged.
+
+  **Your YAML config does not change.** `lowdefy build`, `lowdefy dev` and
+  `lowdefy start` work as before.
+
+  Breaking changes:
+
+  - **Auth sessions invalidate once on upgrade.** The session cookie prefix
+    changes from `next-auth.*` to `authjs.*` — users sign in again after the
+    upgrade. Provider, adapter, callback and event configuration is unchanged.
+  - **`NEXTAUTH_SECRET` is removed — rename it to `AUTH_SECRET`.** The build
+    fails with a config error when auth providers are configured and
+    `AUTH_SECRET` is not set. `NEXTAUTH_URL` still works as an Auth.js
+    fallback, but `AUTH_URL` is the preferred name.
+  - **Custom `next.config.js` files no longer apply.** Customize the client
+    build with a `vite.config.js` in the server directory instead.
+  - **`LOWDEFY_BUILD_OUTPUT_STANDALONE` is removed.** `lowdefy build` writes a
+    complete runnable server to `.lowdefy/server` — copy that folder (or build
+    in Docker) and run `node src/index.js`. See the updated Docker and node
+    server deployment docs.
+  - **`NEXT_PUBLIC_SENTRY_DSN` is removed.** Set `SENTRY_DSN` on the server —
+    it is passed to the browser client at runtime, so rotating it no longer
+    requires a rebuild. Source maps upload via `@sentry/vite-plugin` when
+    `SENTRY_AUTH_TOKEN` is set.
+  - **Page navigation is now client-side (SPA).** The first page load embeds
+    config in the HTML; navigating fetches page config from `/api/page/*`
+    without a full browser reload.
+
+### Minor Changes
+
+- efd1967: feat: Add websockets — a first-class realtime primitive.
+
+  Define channels under a new top-level `websockets:` key and subscribe pages to them with `subscriptions:` — live dashboards, notifications, and chat without polling or an external socket service. The same Lowdefy server that serves your pages pushes messages over a single multiplexed WebSocket connection, locally and on Vercel (native WebSocket support on Fluid compute). Authentication uses your existing session, with per-channel `auth.websockets` roles.
+
+  **Channels (`websockets:`)**
+
+  - Websocket types are plugins: `Channel` (client pub/sub relay) and `Interval` (timed ticks) ship in the new `@lowdefy/websockets-core` package; `MongoDBChangeStream` in `@lowdefy/connection-mongodb` pushes MongoDB change events to subscribed pages.
+  - Channel `properties` are evaluated server-side per subscription — `_payload` and `_user` make channels user-specific. Subscribers with identical evaluated properties share one running source.
+
+  **Page subscriptions (`subscriptions:`)**
+
+  - Pages subscribe on mount and unsubscribe on navigation — no wiring needed.
+  - React to messages with `onMessage`, `onSubscribe` and `onError` events, or read channel state anywhere with the new `_websocket` operator (`connected`, `messages`, `lastMessage`, `messageCount`, `error`).
+  - Renders are throttled (`client.throttleRender`) and message history is bounded (`client.maxMessages`).
+
+  **Actions**
+
+  - New `Publish`, `Subscribe` and `Unsubscribe` actions in `@lowdefy/actions-core` — publish messages to a channel or control subscriptions dynamically.
+
+  The client reconnects with backoff and resubscribes automatically, so serverless connection limits (e.g. Vercel function `maxDuration`) are invisible to users. See the new WebSockets section in the docs for a quick start.
+
+### Patch Changes
+
+- 082acec: chore: Bump `yaml` to 2.9.0, clearing vite's `yaml@^2.4.2` peer warning.
+- 59190b5: Refresh dependencies and require Node.js 22 or newer.
+
+  Updated a range of libraries across the project to current versions (including the MongoDB driver, the
+  MQL/aggregation engine, and various build and CLI tooling) and set the minimum supported Node.js version
+  to 22, matching what is tested in CI. Most changes are internal with no effect on your app. One small
+  behaviour note: in `_mql` expressions, adding to a missing or null field now returns `null` (matching
+  MongoDB) instead of `NaN`.
+
+- da0c62c: chore: Update pino from 8.16.2 to 10.3.1.
+
+  No behavior change — the log output format, levels, and configuration are unchanged. The pino 9 and 10 majors only drop support for Node.js versions below 20, and Lowdefy already requires Node.js 22 or newer.
+
+- 9c53936: fix: Pass urlQuery to getPageConfig in the e2e server.
+
+  Dynamic pages built with `lowdefy build --server e2e` received an empty `urlQuery` object, so endpoints reading `_payload: urlQuery.*` resolved no URL parameters. Pages that work in development and production failed only under e2e tests.
+
+  The e2e server now resolves dynamic content with the request query string on both paths, matching `@lowdefy/server`:
+
+  - The initial HTML render passes `urlQuery` to `getPageConfig`.
+  - Client-side navigation forwards the current query string on its `/api/page/*` fetch, and the route reads it.
+
+- Updated dependencies [11662bc]
+- Updated dependencies [0201358]
+- Updated dependencies [59190b5]
+- Updated dependencies [da0c62c]
+- Updated dependencies [2da4907]
+- Updated dependencies [e7a9270]
+- Updated dependencies [c188656]
+- Updated dependencies [b496a77]
+- Updated dependencies [60401aa]
+- Updated dependencies [37c8c14]
+- Updated dependencies [ef707bd]
+- Updated dependencies [7ce6e36]
+- Updated dependencies [46029df]
+- Updated dependencies [28cb944]
+- Updated dependencies [082acec]
+- Updated dependencies [e0a06a2]
+- Updated dependencies [58ae85e]
+- Updated dependencies [742a900]
+- Updated dependencies [51c3008]
+- Updated dependencies [6730996]
+- Updated dependencies [a858f8f]
+- Updated dependencies [c97b1da]
+- Updated dependencies [660bbfc]
+- Updated dependencies [8a82fb0]
+- Updated dependencies [efd1967]
+- Updated dependencies [1cc1521]
+- Updated dependencies [6d38790]
+- Updated dependencies [0f9487d]
+- Updated dependencies [8398345]
+- Updated dependencies [ae5f618]
+- Updated dependencies [01d7552]
+- Updated dependencies [01d7552]
+- Updated dependencies [629837d]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+- Updated dependencies [ae5f618]
+- Updated dependencies [16fdeb8]
+- Updated dependencies [fb80e0a]
+- Updated dependencies [0e71ebd]
+- Updated dependencies [c2e0823]
+- Updated dependencies [6d7cd8e]
+- Updated dependencies [53a36ed]
+  - @lowdefy/blocks-antd-x@6.0.0
+  - @lowdefy/connection-mongodb@6.0.0
+  - @lowdefy/logger@6.0.0
+  - @lowdefy/blocks-aggrid@6.0.0
+  - @lowdefy/api@6.0.0
+  - @lowdefy/client@6.0.0
+  - @lowdefy/operators-js@6.0.0
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/blocks-antd@6.0.0
+  - @lowdefy/blocks-basic@6.0.0
+  - @lowdefy/blocks-echarts@6.0.0
+  - @lowdefy/blocks-loaders@6.0.0
+  - @lowdefy/blocks-markdown@6.0.0
+  - @lowdefy/blocks-tiptap@6.0.0
+  - @lowdefy/node-utils@6.0.0
+  - @lowdefy/actions-core@6.0.0
+  - @lowdefy/websockets-core@6.0.0
+  - @lowdefy/helpers@6.0.0
+  - @lowdefy/layout@6.0.0
+  - @lowdefy/operators-nunjucks@6.0.0
+  - @lowdefy/operators-uuid@6.0.0
+  - @lowdefy/block-utils@6.0.0
+  - @lowdefy/connection-axios-http@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+- 8306262: feat(blocks-aggrid): Add `AgGridLowdefy`, upgrade to AG Grid v33, and theme every grid through the Theming API.
+
+  **Two new blocks.** `AgGridLowdefy` (display) and `AgGridLowdefyInput` (input) are grids themed from the app's antd design tokens — primary colour, surfaces, fonts and radius — so they look like they belong in a Lowdefy app and follow light/dark mode automatically, with no configuration and no separate dark block. They take a `size` property (`small | middle | large`, default `middle`) mirroring antd Table's densities, which sets row and header height to 36 / 44 / 54 pixels. Everything else — properties, events, methods, cell renderers — is identical to the existing grids.
+
+  To adopt, change `type: AgGridBalham` to `type: AgGridLowdefy` (or `type: AgGridInputBalham` to `type: AgGridLowdefyInput`). Every property carries over unchanged and the grid will deliberately look different afterwards. It is a visual opt-in, so there is no codemod.
+
+  Note that `size` loses to an explicit height: `rowHeight` and `headerHeight` are AG Grid grid options, and a grid option beats the theme parameter `size` sets. Setting `size: large` alongside `rowHeight: 30` gives 30 pixel rows under a 54 pixel header — use one or the other.
+
+  **AG Grid v33.** The package moves from `@ag-grid-community/*@32` to `ag-grid-community` + `ag-grid-react@33.3.2`, with `AllCommunityModule` registered explicitly. The Theming API is v33's default and class-based file themes are gone, so no block imports AG Grid CSS any more.
+
+  **The Balham, Alpine and Material blocks change appearance slightly.** They are kept indefinitely with the same API and the same names, but they now render AG Grid's prebuilt Theming API equivalents of those themes, with the antd colour mapping carried across as theme parameters. No config change is needed. What shifts:
+
+  - Spacing and header weight move a little — Balham rows go 28px to 29px, cell horizontal padding tightens on Balham and Alpine, the wrapper corner radius now comes from each theme (Balham 2px, Alpine 3px, Material 0) rather than a uniform 6px, and Balham's header weight goes from 600 to bold. Icons come from each theme's own SVG set, so glyph shapes differ from the old icon font.
+  - Row height now tracks the app's antd font size on Balham and Material, because v33 derives it from the data font size. It was font-size-independent before. The height only moves once the font size passes the theme's icon size (16px on Balham, 18px on Material), so at antd's default 14px nothing changes — you will see it at 18px or 20px. Alpine is unaffected at any font size.
+  - Four colours are re-pointed: row hover is a neutral fill rather than a primary tint, borders are lighter, the checkbox outline tone changes, and popup shadows are softer.
+  - Zebra striping, fonts and overall row density are preserved.
+
+  **A new `themeParams` property, on all eight blocks.** `themeParams` takes AG Grid Theming API parameter names and merges them onto the block's theme — the recommended way to retint a single grid:
+
+  ```yaml
+  - id: my_table
+    type: AgGridLowdefy
+    properties:
+      themeParams:
+        headerBackgroundColor: '#1a1a2e'
+        headerTextColor: '#e0e0ff'
+        borderColor: var(--ant-color-primary)
+  ```
+
+  Values are CSS strings and may reference antd tokens. Neither Lowdefy nor AG Grid validates parameter names, so a misspelled key is a silent no-op — check spelling against AG Grid's theming parameter reference.
+
+  Overriding `--ag-*` variables through a block's `style` — the documented `custom_theme` technique — **still works**; the Theming API honours an ancestor's declaration by design. The one caveat is that v33 renamed or folded away a number of the v32 `--ag-*` variables, and an override naming one of those is now a silent no-op. `--ag-header-foreground-color`, which appears in the documented example, is the case to watch: it is now `headerTextColor` (`--ag-header-text-color`). The AgGrid docs page carries the mapping table.
+
+  **One deprecation warning existing apps may see.** `rowSelection: multiple` / `single` is deprecated in v33 in favour of `rowSelection: { mode: multiRow }` / `{ mode: singleRow }`. The string form still works. If you migrate it, three things must move together:
+
+  - **Set `enableClickSelection: true`.** The string form defaults click-to-select on; the object form defaults it **off**. A bare `{ mode: singleRow }` silently stops clicking a row from selecting it, and `onRowSelected` / `onSelectionChanged` stop firing. The object form is not equivalent without this.
+  - **Move the colDef flags in the same edit.** `checkboxSelection` and `headerCheckboxSelection` on a column become `rowSelection.checkboxes` and `rowSelection.headerCheckbox`. v33 only supports `headerCheckboxSelection` alongside the _string_ form, so migrating one without the other breaks the header checkbox.
+  - **Six sibling options are read only in the string branch and are silently lost on migration:** `suppressRowClickSelection`, `suppressRowDeselection`, `rowMultiSelectWithClick`, `groupSelectsChildren`, `groupSelectsFiltered` and `isRowSelectable`. All six are deprecated in favour of `rowSelection.*` — move any you use across.
+
+  **Dark-mode apps now get dark browser chrome throughout (`@lowdefy/client`, `@lowdefy/server`, `@lowdefy/server-dev`, `@lowdefy/server-e2e`).** `color-scheme` is now set on `<html>` from the resolved dark-mode state — in the client's dark-mode effect and in each server's pre-hydration inline script, so first paint matches too. Native scrollbars, `<select>` dropdowns, date pickers and autofill backgrounds render dark in a dark app, inside grids and everywhere else. This is an app-wide behaviour change, well beyond AgGrid, and it is what lets the grid's own scrollbars follow dark mode. Apps pinned to light with `theme.darkMode: light` are unaffected, including on a dark OS. Apps that leave `theme.darkMode` unset get the default, `system`, so on a dark OS they resolve to dark and do pick up `color-scheme: dark` — set `theme.darkMode: light` if that is not wanted.
+
+- 3ead269: feat(helpers): Reject prototype-pollution key names in dot paths and key maps.
+
+  `__proto__`, `constructor`, `prototype`, `__defineGetter__`, `__defineSetter__`,
+  `__lookupGetter__` and `__lookupSetter__` are no longer accepted as path segments or as keys
+  in maps built from user-supplied values.
+
+  Previously these names were silently _filtered_ on write, which was worse than rejecting
+  them: `SetState: { 'a.__proto__.b': 1 }` quietly wrote to `a.b` instead — a different
+  location than the one you asked for. Reads could also walk up the prototype chain.
+
+  What you will see now:
+
+  - `:set_state` and the `SetState` action raise a config error naming the offending key and
+    pointing at the line in your YAML.
+  - Data-reading operators (`_state`, `_get`, `_user`, `_payload`, ...) return their default
+    instead of a value.
+  - A module entry id, an agent or endpoint id, or a `LOWDEFY_SECRET_*` environment variable
+    using one of these names now fails at build or boot with a message naming it, instead of
+    silently vanishing.
+
+  Apps that do not use these names are unaffected. If you have a form field, state key, or API
+  response property named `constructor`, rename it.
+
+  Deep merges of configuration are hardened the same way, but skip reserved keys rather than
+  raising — a reserved name arriving inside a merged _value_ is dropped so a single poisoned
+  field can't abort an otherwise valid merge.
+
+  `@lowdefy/helpers` also now exports `isReserved(key)`, so plugin and connection authors can
+  test a key against this policy directly instead of catching a `ReservedKeyError`.
+
+- 79bbd84: fix(api): Redact server internals from every client-bound error, not just the 500 response.
+
+  Errors sent to a browser or an API caller now have `received` and `stack` stripped at
+  **every** level of the error, and a non-`Error` `cause` dropped unless the error is a
+  `UserError`. Two live leaks are closed:
+
+  - The 500 handlers stripped fields from the outermost error only, so `cause.stack` — and
+    the absolute server paths in its frames — reached production browsers.
+  - An endpoint result body (`callEndpoint` and the agent route) and a request response body
+    (`callRequest`) were not redacted at all. They carried `received`, which on the request
+    path holds the **evaluated** request properties, so a `_secret` resolved into a request
+    header crossed the wire at HTTP 200.
+
+  `source` is now guaranteed config-relative (`pages/home.yaml:5`, never `/var/task/...`),
+  and `configKey` is kept again: the browser deduplicates errors on `message:configKey`, so
+  stripping it collapsed two different errors that happened to share a message and silently
+  dropped the second.
+
+  **Breaking for app config that reads `error.received`.** Server-originated errors no longer
+  carry it, so `_actions` and `_request_details` expose `received` as `undefined`, and the
+  browser console no longer prints the `Received: <json>` line for them. This is deliberate —
+  the field can contain your own resolved secrets. The error `message` is unchanged, and
+  server logs still record `received` and `stack` in full in every environment, including dev.
+
+  Also fixes internal errors being logged twice. A `LowdefyInternalError` never gets a
+  `source`, and the browser used `source` to decide whether the server had already logged an
+  error, so it POSTed every internal error back to `/api/client-error` for a second log. The
+  browser now reads the `handled` flag the server sets when it logs.
+
+- b09ad62: fix: Allow dependency build scripts via pnpm-workspace.yaml so installs succeed on pnpm 11.
+
+  `lowdefy dev` and `lowdefy build` failed with `Dependency installation failed.` on pnpm 11 (`ERR_PNPM_IGNORED_BUILDS`), because dependency build scripts (sharp, better-sqlite3) were only allowed via the `pnpm.onlyBuiltDependencies` field in the server package.json — a field pnpm no longer reads (and strips at publish), while pnpm 11 turns ignored build scripts into a hard install error. The CLI now writes a `pnpm-workspace.yaml` with the build allowlist into the server directory before installing, covering pnpm 9 (`packages`), pnpm 10 (`onlyBuiltDependencies`), and pnpm 10.29+/11 (`allowBuilds`). An existing file is never overwritten, so users can extend the allowlist for their own plugins' native dependencies. When the app lives inside a pnpm workspace (e.g. `apps/*/.lowdefy/*` in the workspace globs, plugins pinned as `workspace:*`), the CLI writes nothing — the server installs as part of the parent workspace, where isolating it would break `workspace:*` plugin resolution and the root's `overrides`/`packageExtensions`, and build allowlists belong in the workspace root's `pnpm-workspace.yaml`. `lowdefy-e2e init` used the same dead mechanism for mongodb-memory-server and now writes the same allowlist to `pnpm-workspace.yaml` (the workspace root's if the app is inside a workspace, otherwise a new file in the app directory). The dead `pnpm` fields were removed from the server packages. Fixes #2191.
+
+- Updated dependencies [3d59f5f]
+- Updated dependencies [3d59f5f]
+- Updated dependencies [5b590c7]
+- Updated dependencies [8306262]
+- Updated dependencies [3ead269]
+- Updated dependencies [9399e4e]
+- Updated dependencies [9e19a21]
+- Updated dependencies [7d97d03]
+- Updated dependencies [79bbd84]
+- Updated dependencies [508708d]
+- Updated dependencies [bb02f06]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [4ae3fb9]
+- Updated dependencies [3ead269]
+- Updated dependencies [5b4c305]
+  - @lowdefy/blocks-antd-x@5.6.0
+  - @lowdefy/client@5.6.0
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/api@5.6.0
+  - @lowdefy/node-utils@5.6.0
+  - @lowdefy/blocks-antd@5.6.0
+  - @lowdefy/layout@5.6.0
+  - @lowdefy/operators-js@5.6.0
+  - @lowdefy/logger@5.6.0
+  - @lowdefy/connection-axios-http@5.6.0
+  - @lowdefy/blocks-markdown@5.6.0
+  - @lowdefy/blocks-tiptap@5.6.0
+  - @lowdefy/actions-core@5.6.0
+  - @lowdefy/blocks-basic@5.6.0
+  - @lowdefy/blocks-loaders@5.6.0
+  - @lowdefy/connection-mongodb@5.6.0
+  - @lowdefy/operators-nunjucks@5.6.0
+  - @lowdefy/operators-uuid@5.6.0
+  - @lowdefy/block-utils@5.6.0
+  - @lowdefy/errors@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- Updated dependencies [59cae71]
+  - @lowdefy/blocks-antd@5.5.1
+  - @lowdefy/blocks-tiptap@5.5.1
+  - @lowdefy/api@5.5.1
+  - @lowdefy/client@5.5.1
+  - @lowdefy/layout@5.5.1
+  - @lowdefy/actions-core@5.5.1
+  - @lowdefy/blocks-antd-x@5.5.1
+  - @lowdefy/blocks-basic@5.5.1
+  - @lowdefy/blocks-loaders@5.5.1
+  - @lowdefy/blocks-markdown@5.5.1
+  - @lowdefy/connection-axios-http@5.5.1
+  - @lowdefy/connection-mongodb@5.5.1
+  - @lowdefy/operators-js@5.5.1
+  - @lowdefy/operators-nunjucks@5.5.1
+  - @lowdefy/operators-uuid@5.5.1
+  - @lowdefy/block-utils@5.5.1
+  - @lowdefy/errors@5.5.1
+  - @lowdefy/helpers@5.5.1
+  - @lowdefy/logger@5.5.1
+  - @lowdefy/node-utils@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- Updated dependencies [9c93ab2]
+- Updated dependencies [6dcdb6a]
+- Updated dependencies [b368e15]
+- Updated dependencies [4c9227b]
+- Updated dependencies [f88fe33]
+- Updated dependencies [7ab09d6]
+  - @lowdefy/connection-mongodb@5.5.0
+  - @lowdefy/blocks-tiptap@5.5.0
+  - @lowdefy/blocks-antd-x@5.5.0
+  - @lowdefy/api@5.5.0
+  - @lowdefy/client@5.5.0
+  - @lowdefy/layout@5.5.0
+  - @lowdefy/actions-core@5.5.0
+  - @lowdefy/blocks-antd@5.5.0
+  - @lowdefy/blocks-basic@5.5.0
+  - @lowdefy/blocks-loaders@5.5.0
+  - @lowdefy/blocks-markdown@5.5.0
+  - @lowdefy/connection-axios-http@5.5.0
+  - @lowdefy/operators-js@5.5.0
+  - @lowdefy/operators-nunjucks@5.5.0
+  - @lowdefy/operators-uuid@5.5.0
+  - @lowdefy/block-utils@5.5.0
+  - @lowdefy/errors@5.5.0
+  - @lowdefy/helpers@5.5.0
+  - @lowdefy/logger@5.5.0
+  - @lowdefy/node-utils@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+- d1fb1d7: feat: Plugin-driven `serverExternalPackages` for Next.js.
+
+  Plugins can now declare which of their dependencies need to be passed
+  through to Next.js's `serverExternalPackages` config — used for CJS
+  packages whose runtime `require()` chains Turbopack can't resolve
+  through pnpm's isolated symlink layout (e.g. `turndown` →
+  `@mixmark-io/domino`, `@aws-sdk/client-s3` → `fast-xml-parser` →
+  `strnum`).
+
+  Declare in the plugin's `package.json`:
+
+  ```json
+  {
+    "lowdefy": {
+      "serverExternalPackages": ["turndown"]
+    }
+  }
+  ```
+
+  Build aggregates declarations from every plugin the app actually uses
+  (across blocks, connections, operators, actions, agents, auth, icons,
+  requests) and writes a per-app `serverExternalPackages.json` artifact,
+  read by `server`, `server-dev`, and `server-e2e` Next.js configs.
+
+  Replaces a hardcoded list in the three server configs. Apps not using
+  `blocks-tiptap` or `plugin-aws` no longer carry their externals.
+
+  Initial declarations:
+
+  - `@lowdefy/blocks-tiptap` → `turndown`
+  - `@lowdefy/plugin-aws` → `@aws-sdk/client-s3`
+
+- 134792b: fix: Unblock Playwright e2e for v5+ Lowdefy apps.
+
+  **`@lowdefy/server-e2e`**
+
+  - `next.config.js` now declares `turbopack: {}` and drops the legacy `webpack` polyfill block, so Next 16 (Turbopack-by-default) no longer errors with `This build is using Turbopack, with a webpack config and no turbopack config`. The `transpilePackages` list is now built from the same `build/blockPackages.json` artifact used by `@lowdefy/server`.
+  - Plugin `types` modules are now correctly unwrapped from their ESM default export, so apps using custom plugins (blocks, actions, operators, connections, requests, etc.) no longer fail with `Action/Block/... type "Foo" was used but is not defined`.
+  - Plugin `blockMetas` are now collected on the e2e server, matching the behaviour of `@lowdefy/server` and `@lowdefy/server-dev`.
+  - `lowdefy build --server e2e` no longer crashes when the project has no `lowdefy.yaml` or `lowdefy.yml` (returns an empty plugin set instead of `YAML.parse(undefined)`).
+  - Page and API routes now use catch-all segments (`pages/[[...pageId]].js`, `pages/api/endpoints/[...endpointId].js`, `pages/api/request/[...path].js`), so apps with nested page paths (e.g. `pages: [{ id: 'foo/bar' }]`) render correctly under `--server e2e` instead of returning 404.
+  - `_app.js` and `_document.js` now mirror `@lowdefy/server`'s dark-mode handling — `useDarkMode` from `@lowdefy/client`, a `ThemeTokenResolver` that exposes the resolved antd token on `lowdefy.theme._resolvedAntdToken`, and a pre-hydration background-colour script that prevents the light/dark flash on page navigation.
+  - `pages/api/client-error.js` now enforces the same-origin host check and strips `~e.received` from incoming payloads, matching `@lowdefy/server`.
+  - `lowdefy/build.mjs` now uses `instanceof BuildError` for the formatted-error shortcut (matches `@lowdefy/server`) and drops the obsolete `mixin` logger config.
+  - Runtime dependency set now includes `@lowdefy/blocks-antd-x`, and `tailwindcss` / `@tailwindcss/postcss` are declared in `dependencies` (not just `devDependencies`). The unused `process` browser polyfill has been removed.
+
+  **`@lowdefy/e2e-utils`**
+
+  - `extractBlockMap` now traverses `slots.<name>.blocks` alongside `areas.<name>.blocks` and `blocks`. Compiled page artifacts under `.lowdefy/server/build/pages/<pageId>.json` use the `slots` container shape, which `extractBlockMap` was not walking — so `generateManifest` produced a `blockMap` containing only the page root and `ldf.block('<any-nested-id>')` threw `Block "<id>" not found on page. Available blocks: <pageId>` for every non-root block, reducing the e2e framework to root-block assertions and raw `ldf.page.locator(...)` fallbacks.
+
+  **`lowdefy` CLI**
+
+  - `lowdefy build --server <name>` now re-fetches the server package when the version matches but the name differs. Both `lowdefy build` and `lowdefy build --server e2e` write to the same `.lowdefy/server/` directory, so the previous version-only cache check meant flipping between them (in either order) would silently reuse whichever server package was fetched first.
+
+- Updated dependencies [ff7ed66]
+- Updated dependencies [5e498dd]
+- Updated dependencies [60401aa]
+- Updated dependencies [c2c3a7f]
+- Updated dependencies [25225ab]
+- Updated dependencies [2aaf365]
+- Updated dependencies [ba1d3bd]
+- Updated dependencies [f11addd]
+- Updated dependencies [0108f38]
+- Updated dependencies [5f00be7]
+- Updated dependencies [302e330]
+- Updated dependencies [d1fb1d7]
+- Updated dependencies [27659ef]
+- Updated dependencies [4e189a0]
+- Updated dependencies [0027a41]
+- Updated dependencies [27659ef]
+- Updated dependencies [e324c72]
+- Updated dependencies [b6e555f]
+- Updated dependencies [f8a5d80]
+- Updated dependencies [60c193c]
+- Updated dependencies [86919df]
+  - @lowdefy/blocks-antd-x@5.4.0
+  - @lowdefy/api@5.4.0
+  - @lowdefy/client@5.4.0
+  - @lowdefy/operators-js@5.4.0
+  - @lowdefy/blocks-antd@5.4.0
+  - @lowdefy/helpers@5.4.0
+  - @lowdefy/actions-core@5.4.0
+  - @lowdefy/block-utils@5.4.0
+  - @lowdefy/errors@5.4.0
+  - @lowdefy/blocks-tiptap@5.4.0
+  - @lowdefy/connection-axios-http@5.4.0
+  - @lowdefy/connection-mongodb@5.4.0
+  - @lowdefy/operators-nunjucks@5.4.0
+  - @lowdefy/operators-uuid@5.4.0
+  - @lowdefy/layout@5.4.0
+  - @lowdefy/blocks-basic@5.4.0
+  - @lowdefy/blocks-loaders@5.4.0
+  - @lowdefy/logger@5.4.0
+  - @lowdefy/node-utils@5.4.0
+  - @lowdefy/blocks-markdown@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes

@@ -16,18 +16,29 @@
 
 function shutdownServer(context) {
   return () => {
-    if (context.nextServer) {
+    if (context.devServer) {
       context.logger.debug(
-        `Existing next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
+        `Existing dev server with pid ${context.devServer.pid}, killed: ${context.devServer.killed}`
       );
-      if (!context.nextServer.killed) {
+      const child = context.devServer;
+      // A signalled child keeps answering on the internal port until it
+      // exits; the proxy waits for this before probing for its replacement,
+      // or the probe would reach the old child and confirm the new one.
+      context.devServerExited =
+        child.exitCode !== null || child.signalCode !== null
+          ? Promise.resolve()
+          : new Promise((resolve) => child.once('exit', resolve));
+      // Kept so a restart can wait for this child to free the internal port,
+      // and SIGKILL it if it does not.
+      context.stoppedDevServer = child;
+      if (!context.devServer.killed) {
         context.logger.info({ spin: 'start' }, 'Shutting down server...');
-        context.nextServer.kill();
+        context.devServer.kill();
         context.logger.debug(
-          `Killed next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
+          `Killed dev server with pid ${context.devServer.pid}, killed: ${context.devServer.killed}`
         );
       }
-      context.nextServer = null;
+      context.devServer = null;
     }
   };
 }

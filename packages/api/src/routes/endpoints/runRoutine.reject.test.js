@@ -43,7 +43,11 @@ test('runRoutine catch returns status:reject and skips handleError when caught e
 
 test('runRoutine catch still routes non-reject errors through handleError', async () => {
   const { default: runRoutine } = await import('./runRoutine.js');
-  const handleError = jest.fn();
+  // The real sink (servers' createHandleError) marks the error handled once it
+  // has logged it; runRoutine's guard reads that flag rather than setting it.
+  const handleError = jest.fn(async (error) => {
+    error.handled = true;
+  });
   const context = { handleError };
   // Null routine triggers `throw new Error('Invalid routine.')` in runRoutine's
   // try block — a plain Error without isReject. Catch should call handleError

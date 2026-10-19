@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Button, Space } from 'antd';
+import { Button, Space, Tooltip } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { renderHtml } from '@lowdefy/block-utils';
 import NullCell from './NullCell.js';
@@ -40,7 +40,10 @@ function ButtonsCell(params) {
 
         const title = resolveField('title', 'titleField', btn, data);
         const iconConfig = resolveField('icon', 'iconField', btn, data);
-        const disabled = resolveField('disabled', 'disabledField', btn, data) === true;
+        // Row data can hold any value, so only a boolean counts. Anything else stays undefined so a
+        // ConfigProvider with componentDisabled still disables the button.
+        const disabledValue = resolveField('disabled', 'disabledField', btn, data);
+        const disabled = type.isBoolean(disabledValue) ? disabledValue : undefined;
 
         function onClick(e) {
           e.stopPropagation();
@@ -61,8 +64,16 @@ function ButtonsCell(params) {
           ) : undefined;
 
         const showTitle = btn.hideTitle !== true && !type.isNone(title);
+        // An icon-only button still needs to say what it does: its title becomes
+        // the tooltip unless the config names one. A visible-title button gets a
+        // tooltip only when asked.
+        const tooltip = type.isString(btn.tooltip)
+          ? btn.tooltip
+          : !showTitle && !type.isNone(title)
+            ? String(title)
+            : null;
 
-        return (
+        const button = (
           <Button
             key={idx}
             size={btn.size ?? 'small'}
@@ -74,10 +85,17 @@ function ButtonsCell(params) {
             ghost={btn.ghost === true}
             disabled={disabled}
             icon={iconNode}
+            iconPlacement={btn.iconPlacement}
             onClick={onClick}
           >
             {showTitle && renderHtml({ html: String(title), methods })}
           </Button>
+        );
+        if (!tooltip) return button;
+        return (
+          <Tooltip key={idx} title={tooltip} mouseEnterDelay={0.3}>
+            {button}
+          </Tooltip>
         );
       })}
     </Space>

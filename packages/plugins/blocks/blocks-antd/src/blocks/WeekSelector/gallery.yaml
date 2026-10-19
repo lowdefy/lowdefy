@@ -60,6 +60,13 @@
       properties:
         title: Borderless
         variant: borderless
+    - id: ws_variant_underlined
+      type: WeekSelector
+      properties:
+        title: Underlined
+        variant: underlined
+        label:
+          disabled: true
 
 - title: Format Variations
   blocks:
@@ -132,22 +139,33 @@
         label:
           disabled: true
 
-- title: Show Today Button
+- title: Prefix, Placement and Read-only Input
   blocks:
-    - id: ws_today_enabled
+    - id: ws_prefix_icon
       type: WeekSelector
       properties:
-        title: Show Today (default)
-        showToday: true
-        label:
-          disabled: true
-    - id: ws_today_disabled
+        title: Prefix Icon
+        prefixIcon: clock
+        suffixIcon:
+          name: calendar
+          color: '#8c8c8c'
+    - id: ws_prefix_text
       type: WeekSelector
       properties:
-        title: No Today Button
-        showToday: false
+        title: Prefix Text
+        prefix: 'From:'
+    - id: ws_placement
+      type: WeekSelector
+      properties:
+        title: Popup Opens Top Right
+        placement: topRight
+    - id: ws_read_only
+      type: WeekSelector
+      properties:
+        title: Pick From Calendar Only
+        inputReadOnly: true
         label:
-          disabled: true
+          extra: The input is read-only, so touch devices do not open the keyboard.
 
 - title: Suffix Icon
   blocks:
@@ -161,14 +179,14 @@
       type: WeekSelector
       properties:
         title: Clock Icon
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           disabled: true
     - id: ws_icon_schedule
       type: WeekSelector
       properties:
         title: Schedule Icon
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           disabled: true
     - id: ws_icon_custom_color
@@ -176,7 +194,7 @@
       properties:
         title: Custom Color Icon
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         label:
           disabled: true
@@ -240,6 +258,45 @@
         label:
           disabled: true
 
+- title: Presets
+  blocks:
+    - id: ws_presets_relative
+      type: WeekSelector
+      properties:
+        title: Relative Presets
+        label:
+          extra: Shortcuts are listed to the left of the calendar.
+        presets:
+          - label: This week
+            value:
+              _dayjs:
+                - now
+                - startOf: week
+                - format: YYYY-MM-DD
+          - label: Last week
+            value:
+              _dayjs:
+                - now
+                - subtract: [1, week]
+                - format: YYYY-MM-DD
+          - label: 4 weeks ago
+            value:
+              _dayjs:
+                - now
+                - subtract: [4, weeks]
+                - format: YYYY-MM-DD
+    - id: ws_presets_fixed
+      type: WeekSelector
+      properties:
+        title: Fixed Presets
+        label:
+          disabled: true
+        presets:
+          - label: First week of 2026
+            value: '2026-01-01'
+          - label: Week of 1 July 2026
+            value: '2026-07-01'
+
 - title: Label Options
   blocks:
     - id: ws_lbl_default
@@ -301,6 +358,7 @@
       type: WeekSelector
       style:
         .element:
+          backgroundColor: var(--ant-color-primary-bg)
       properties:
         title: Custom Background
         label:
@@ -387,7 +445,7 @@
         placeholder: Select sprint week
         format: YYYY [Week] wo
         size: large
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         showToday: true
         allowClear: true
         label:
@@ -412,7 +470,7 @@
         placeholder: Select fiscal week
         format: YYYY [W]ww
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         disabledDates:
           min: '2026-01-01'
@@ -434,7 +492,7 @@
             placeholder: Select sprint week
             format: YYYY [Week] wo
             size: large
-            suffixIcon: AiOutlineSchedule
+            suffixIcon: CalendarDays
             label:
               extra: Choose the week this sprint begins.
         - id: applied_sprint_team
@@ -462,7 +520,7 @@
           type: Button
           properties:
             title: Start Sprint
-            icon: AiOutlineThunderbolt
+            icon: Zap
             type: primary
             block: true
           events:
@@ -533,7 +591,7 @@
           type: Button
           properties:
             title: Submit Timesheet
-            icon: AiOutlineCheck
+            icon: check
             type: primary
             block: true
           events:

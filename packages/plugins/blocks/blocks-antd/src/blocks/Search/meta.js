@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['search', 'history', 'document', 'clear'],
   valueType: null,
   cssKeys: {
     element: 'The search trigger button and modal root.',
@@ -33,6 +35,7 @@ export default {
     itemDescription: 'The description/snippet in a result item.',
     highlight: 'Highlighted match text (<mark> elements).',
     empty: 'The empty state message.',
+    loading: 'The loading spinner container.',
   },
   methods: {
     toggleOpen: 'Toggle the search modal open or closed.',
@@ -57,6 +60,7 @@ export default {
     properties: {
       indexUrl: {
         type: ['string', 'array'],
+        urlKind: 'src',
         description: 'URL or array of URLs to pre-built search index JSON files.',
         docs: {
           displayType: 'yaml',
@@ -120,11 +124,10 @@ export default {
         default: 'Search',
       },
       icon: {
-        type: ['string', 'object'],
-        description: 'Trigger button icon name or Icon block properties.',
-        docs: {
-          displayType: 'icon',
-        },
+        ...icon,
+        default: 'search',
+        description:
+          'Trigger button icon: a semantic name like `search`, a Lucide icon name like `Search`, or a set-qualified name like `tabler:Search`, or properties of an Icon block.',
       },
       showShortcut: {
         type: 'boolean',
@@ -182,6 +185,7 @@ export default {
           },
           url: {
             type: 'string',
+            urlKind: false,
             description: 'Field name for external URL navigation.',
           },
         },
@@ -227,7 +231,8 @@ export default {
       },
       recentSearchesKey: {
         type: 'string',
-        description: 'localStorage key prefix for recent searches.',
+        description:
+          'localStorage key prefix for recent searches. Recent searches are kept per app and per signed-in user, and cleared at sign-out.',
         default: 'search',
       },
       recentSearchesCount: {
@@ -238,7 +243,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Antd design token overrides for the trigger Button, the search Modal and its Input, e.g. `borderRadius`, `colorPrimary`, `colorBgElevated` or `fontSize`. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
         },

@@ -16,37 +16,11 @@
   limitations under the License.
 */
 
-import {
-  ActionError,
-  BlockError,
-  BuildError,
-  ConfigError,
-  ConfigWarning,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  UserError,
-} from '@lowdefy/errors';
+import { lowdefyErrorTypes } from '@lowdefy/errors';
 
 import extractErrorProps from './extractErrorProps.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
-
-const lowdefyErrorTypes = {
-  ActionError,
-  BlockError,
-  BuildError,
-  ConfigError,
-  ConfigWarning,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  UserError,
-};
 
 function propsToError(data) {
   const ErrorClass = lowdefyErrorTypes[data.name] || Error;
@@ -61,86 +35,90 @@ function propsToError(data) {
   return error;
 }
 
-const makeReplacer = (customReplacer, isoStringDates, skipMarkers) => (key, value) => {
-  let dateReplacer = (date) => ({ '~d': date.valueOf() });
-  if (isoStringDates) {
-    dateReplacer = (date) => ({ '~d': date.toISOString() });
-  }
-  let newValue = value;
-  if (customReplacer) {
-    newValue = customReplacer(key, value);
-  }
-  if (type.isError(newValue)) {
-    return { '~e': extractErrorProps(newValue) };
-  }
-  if (type.isObject(newValue)) {
-    Object.keys(newValue).forEach((k) => {
-      if (type.isDate(newValue[k])) {
-        // shallow copy original value before reassigning a value in order not to mutate original value
-        newValue = { ...newValue };
-        newValue[k] = dateReplacer(newValue[k]);
-      }
-    });
-    if (!skipMarkers) {
-      // Capture marker values before shallow copy (spread doesn't copy non-enumerable props)
-      const markerR = newValue['~r'];
-      const markerK = newValue['~k'];
-      const markerL = newValue['~l'];
-      if (markerR || markerK || markerL) {
-        // Shallow copy to avoid mutating the original object's property descriptors
-        if (newValue === value) {
+const makeReplacer =
+  ({ replacer, isoStringDates, skipMarkers, projectError } = {}) =>
+  (key, value) => {
+    let dateReplacer = (date) => ({ '~d': date.valueOf() });
+    if (isoStringDates) {
+      dateReplacer = (date) => ({ '~d': date.toISOString() });
+    }
+    let newValue = value;
+    if (replacer) {
+      newValue = replacer(key, value);
+    }
+    if (type.isError(newValue)) {
+      return { '~e': extractErrorProps(newValue, { project: projectError }) };
+    }
+    if (type.isObject(newValue)) {
+      Object.keys(newValue).forEach((k) => {
+        if (type.isDate(newValue[k])) {
+          // shallow copy original value before reassigning a value in order not to mutate original value
           newValue = { ...newValue };
+          newValue[k] = dateReplacer(newValue[k]);
         }
-        if (markerR) {
-          Object.defineProperty(newValue, '~r', {
-            value: markerR,
-            enumerable: true,
-            writable: true,
-            configurable: true,
-          });
-        }
-        if (markerK) {
-          Object.defineProperty(newValue, '~k', {
-            value: markerK,
-            enumerable: true,
-            writable: true,
-            configurable: true,
-          });
-        }
-        if (markerL) {
-          Object.defineProperty(newValue, '~l', {
-            value: markerL,
-            enumerable: true,
-            writable: true,
-            configurable: true,
-          });
+      });
+      if (!skipMarkers) {
+        // Capture marker values before shallow copy (spread doesn't copy non-enumerable props)
+        const markerR = newValue['~r'];
+        const markerK = newValue['~k'];
+        const markerL = newValue['~l'];
+        if (markerR || markerK || markerL) {
+          // Shallow copy to avoid mutating the original object's property descriptors
+          if (newValue === value) {
+            newValue = { ...newValue };
+          }
+          if (markerR) {
+            Object.defineProperty(newValue, '~r', {
+              value: markerR,
+              enumerable: true,
+              writable: true,
+              configurable: true,
+            });
+          }
+          if (markerK) {
+            Object.defineProperty(newValue, '~k', {
+              value: markerK,
+              enumerable: true,
+              writable: true,
+              configurable: true,
+            });
+          }
+          if (markerL) {
+            Object.defineProperty(newValue, '~l', {
+              value: markerL,
+              enumerable: true,
+              writable: true,
+              configurable: true,
+            });
+          }
         }
       }
+      return newValue;
+    }
+    if (type.isArray(newValue)) {
+      const mappedArray = newValue.map((item) => {
+        if (type.isDate(item)) {
+          return dateReplacer(item);
+        }
+        return item;
+      });
+      // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
+      if (
+        !skipMarkers &&
+        (newValue['~l'] !== undefined ||
+          newValue['~k'] !== undefined ||
+          newValue['~r'] !== undefined)
+      ) {
+        const wrapper = { '~arr': mappedArray };
+        if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
+        if (newValue['~k'] !== undefined) wrapper['~k'] = newValue['~k'];
+        if (newValue['~l'] !== undefined) wrapper['~l'] = newValue['~l'];
+        return wrapper;
+      }
+      return mappedArray;
     }
     return newValue;
-  }
-  if (type.isArray(newValue)) {
-    const mappedArray = newValue.map((item) => {
-      if (type.isDate(item)) {
-        return dateReplacer(item);
-      }
-      return item;
-    });
-    // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
-    if (
-      !skipMarkers &&
-      (newValue['~l'] !== undefined || newValue['~k'] !== undefined || newValue['~r'] !== undefined)
-    ) {
-      const wrapper = { '~arr': mappedArray };
-      if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
-      if (newValue['~k'] !== undefined) wrapper['~k'] = newValue['~k'];
-      if (newValue['~l'] !== undefined) wrapper['~l'] = newValue['~l'];
-      return wrapper;
-    }
-    return mappedArray;
-  }
-  return newValue;
-};
+  };
 
 const makeReviver = (customReviver) => (key, value) => {
   let newValue = value;
@@ -226,7 +204,19 @@ const serialize = (json, options = {}) => {
     }
     return { '~d': json.valueOf() };
   }
-  return JSON.parse(JSON.stringify(json, makeReplacer(options.replacer, options.isoStringDates)));
+  // Markers survive unless the caller passes skipMarkers: config sent to the
+  // client needs them to resolve error locations, data does not.
+  return JSON.parse(
+    JSON.stringify(
+      json,
+      makeReplacer({
+        replacer: options.replacer,
+        isoStringDates: options.isoStringDates,
+        skipMarkers: options.skipMarkers,
+        projectError: options.projectError,
+      })
+    )
+  );
 };
 
 const serializeToString = (json, options = {}) => {
@@ -240,13 +230,22 @@ const serializeToString = (json, options = {}) => {
   }
   if (options.stable) {
     return stableStringify(json, {
-      replacer: makeReplacer(options.replacer, undefined, options.skipMarkers),
+      replacer: makeReplacer({
+        replacer: options.replacer,
+        skipMarkers: options.skipMarkers,
+        projectError: options.projectError,
+      }),
       space: options.space,
     });
   }
   return JSON.stringify(
     json,
-    makeReplacer(options.replacer, options.isoStringDates, options.skipMarkers),
+    makeReplacer({
+      replacer: options.replacer,
+      isoStringDates: options.isoStringDates,
+      skipMarkers: options.skipMarkers,
+      projectError: options.projectError,
+    }),
     options.space
   );
 };
@@ -266,10 +265,14 @@ const copy = (json, options = {}) => {
   if (type.isDate(json)) return new Date(json.valueOf());
 
   return JSON.parse(
-    JSON.stringify(json, makeReplacer(options.replacer)),
+    JSON.stringify(
+      json,
+      makeReplacer({ replacer: options.replacer, projectError: options.projectError })
+    ),
     makeReviver(options.reviver)
   );
 };
 
 const serializer = { copy, serialize, serializeToString, deserialize, deserializeFromString };
+
 export default serializer;

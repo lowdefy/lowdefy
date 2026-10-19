@@ -1,0 +1,53 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { publish } from './devEventBus.js';
+import getBuildId from './getBuildId.js';
+import isRunErrorEntry from './isRunErrorEntry.js';
+import { recordRunError } from './runErrorBuffers.js';
+
+// Module-level ring buffer of recent client-reported errors — feeds the
+// getBuildStatus feedback endpoint so agents can see browser errors without
+// tailing server logs. Deliberately in-memory only: entries are lost on
+// server restart, which is fine since this is a live-session debugging aid.
+const MAX_ENTRIES = 50;
+
+const entries = [];
+
+// Each entry is stamped with the build it happened under (see getBuildId).
+// An entry a journey run caused goes to that run's own
+// buffer only (see runErrorBuffers), or is dropped when the run has ended:
+// kept out of this ring and the event bus, it never reaches build-status or
+// an agent's event stream, and a run that trips many errors cannot evict the
+// developer's own. The run reports its errors in its own result.
+function push(entry) {
+  const stamped = { ...entry, buildId: getBuildId() };
+  if (isRunErrorEntry(stamped)) {
+    recordRunError({ ...stamped, store: 'client' });
+    return;
+  }
+  entries.push(stamped);
+  if (entries.length > MAX_ENTRIES) {
+    entries.shift();
+  }
+  publish({ type: 'client_error', ...stamped });
+}
+
+function list() {
+  return [...entries];
+}
+
+export default { push, list };

@@ -16,25 +16,18 @@
   limitations under the License.
 */
 
-import { execSync } from 'child_process';
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
-
-function computeGitSha() {
-  const fromEnv = process.env.LOWDEFY_GIT_SHA?.trim();
-  if (fromEnv) return fromEnv;
-  try {
-    return execSync('git rev-parse HEAD').toString().trim();
-  } catch (_) {
-    return null;
-  }
-}
 
 function buildApp({ components }) {
   if (type.isNone(components.app)) {
     components.app = {};
   }
   if (!type.isObject(components.app)) {
-    throw new Error('lowdefy.app is not an object.');
+    throw new ConfigError('lowdefy.app is not an object.', {
+      received: components.app,
+      configKey: components['~k'],
+    });
   }
   if (type.isNone(components.app.html)) {
     components.app.html = {};
@@ -45,15 +38,18 @@ function buildApp({ components }) {
   if (type.isNone(components.app.html.appendHead)) {
     components.app.html.appendHead = '';
   }
-  components.appMeta = {
-    slug: components.slug ?? null,
-    name: components.name ?? null,
-    version: components.version ?? null,
-    description: components.description ?? null,
-    license: components.license ?? null,
-    lowdefyVersion: components.lowdefy ?? null,
-    gitSha: computeGitSha(),
-  };
+  if (type.isNone(components.app.email)) {
+    components.app.email = {};
+  }
+  // Email branding defaults from existing app config — baked into app.json at
+  // build so the runtime theme merge stays a plain shallow spread.
+  if (type.isNone(components.app.email.companyName) && type.isString(components.name)) {
+    components.app.email.companyName = components.name;
+  }
+  const colorPrimary = components.theme?.antd?.token?.colorPrimary;
+  if (type.isNone(components.app.email.primaryColor) && type.isString(colorPrimary)) {
+    components.app.email.primaryColor = colorPrimary;
+  }
   return components;
 }
 

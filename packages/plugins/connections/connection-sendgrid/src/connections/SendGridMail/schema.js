@@ -91,11 +91,54 @@ export default {
         type: 'SendGridMail connection property "apiKey" should be a string.',
       },
     },
+    replyTo: {
+      $ref: '#/definitions/emails',
+      description: 'Default email address to reply to.',
+    },
     templateId: {
       type: 'string',
       description: 'SendGrid email template ID to render email when sending.',
       errorMessage: {
         type: 'SendGridMail connection property "templateId" should be a string.',
+      },
+    },
+    filter: {
+      type: ['object', 'null', 'boolean'],
+      not: { const: true },
+      description:
+        "Filter to restrict or redirect the recipients of outgoing mail. Unset falls back to the current environment's email filter (config.environments); false turns filtering off, the environment's too. Recipients on the reserved .invalid domain are always dropped.",
+      additionalProperties: false,
+      properties: {
+        replaceAddress: {
+          type: ['string', 'null'],
+          description: 'Replace all "to" recipients with this address and drop cc and bcc.',
+          errorMessage: {
+            type: 'SendGridMail connection property "filter.replaceAddress" should be a string.',
+          },
+        },
+        allowlist: {
+          type: ['array', 'null'],
+          description: 'List of domains allowed to receive mail.',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'SendGridMail connection property "filter.allowlist" should be a list of domain strings.',
+            },
+          },
+          errorMessage: {
+            type: 'SendGridMail connection property "filter.allowlist" should be an array.',
+          },
+        },
+        regex: {
+          type: ['string', 'null'],
+          description: 'Regular expression an email address must match to receive mail.',
+          errorMessage: {
+            type: 'SendGridMail connection property "filter.regex" should be a string.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'SendGridMail connection property "filter" should be an object.',
       },
     },
     mailSettings: {

@@ -1,0 +1,16 @@
+name: Invites
+description: Module that ships its own notification templates
+
+vars:
+  company_name:
+    type: string
+    default: Lowdefy
+
+api:
+  - _ref: api/dispatch-invite.yaml
+
+notifications:
+  - _ref: notifications/invite-user.yaml
+
+pages:
+  - _ref: pages/invite.yaml

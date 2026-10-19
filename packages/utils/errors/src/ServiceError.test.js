@@ -116,6 +116,37 @@ describe('ServiceError.isServiceError', () => {
     expect(ServiceError.isServiceError(new Error('service unavailable'))).toBe(true);
   });
 
+  // The AI SDK retries 5xx and 429 responses, then throws a RetryError whose
+  // own message and fields carry no status; the attempt it gave up on does.
+  test.each([
+    [500, true],
+    [502, true],
+    [400, false],
+  ])('classifies a retry wrapper by its last error: status %i', (statusCode, expected) => {
+    const lastError = new Error('Internal Server Error');
+    lastError.statusCode = statusCode;
+    const error = new Error('Failed after 3 attempts. Last error: Internal Server Error');
+    error.lastError = lastError;
+    expect(ServiceError.isServiceError(error)).toBe(expected);
+  });
+
+  test('classifies a retry wrapper by the network failure under its last error', () => {
+    const refused = new Error('connect ECONNREFUSED 127.0.0.1:443');
+    refused.code = 'ECONNREFUSED';
+    const apiCallError = new Error('Cannot connect to API: fetch failed', {
+      cause: new TypeError('fetch failed', { cause: refused }),
+    });
+    const error = new Error('Failed after 3 attempts. Last error: Cannot connect to API');
+    error.lastError = apiCallError;
+    expect(ServiceError.isServiceError(error)).toBe(true);
+  });
+
+  test('returns false for a cyclic cause chain without a service failure', () => {
+    const error = new Error('Invalid parameter');
+    error.cause = error;
+    expect(ServiceError.isServiceError(error)).toBe(false);
+  });
+
   test('returns false for regular errors', () => {
     expect(ServiceError.isServiceError(new Error('Invalid parameter'))).toBe(false);
     expect(ServiceError.isServiceError(new Error('undefined is not a function'))).toBe(false);
@@ -135,6 +166,14 @@ describe('ServiceError constructor with cause parameter', () => {
     expect(serviceError.cause).toBe(original);
     expect(serviceError.message).toContain('MongoDB:');
     expect(serviceError.message).toContain('Connection refused');
+  });
+
+  test('takes the status of a retry wrapper from its last error', () => {
+    const lastError = new Error('Service Unavailable');
+    lastError.statusCode = 503;
+    const retryError = new Error('Failed after 3 attempts. Last error: Service Unavailable');
+    retryError.lastError = lastError;
+    expect(new ServiceError(undefined, { cause: retryError }).statusCode).toBe(503);
   });
 
   test('creates ServiceError without service name', () => {
@@ -242,5 +281,155 @@ describe('ServiceError.enhanceMessage', () => {
     const error = new Error('Unknown error');
     const enhanced = ServiceError.enhanceMessage(error);
     expect(enhanced).toBe('Unknown error');
+  });
+});
+
+test('ServiceError takes configKey from the cause when none is given', () => {
+  const cause = new Error('boom');
+  cause.configKey = 'key-from-cause';
+  const error = new ServiceError(undefined, { cause });
+  expect(error.configKey).toBe('key-from-cause');
+  const explicit = new ServiceError(undefined, { cause, configKey: 'explicit' });
+  expect(explicit.configKey).toBe('explicit');
+});
+
+test('isServiceError reads the AWS SDK v3 $metadata.httpStatusCode', () => {
+  const error = new Error('Service Unavailable');
+  error.$metadata = { httpStatusCode: 503 };
+  expect(ServiceError.isServiceError(error)).toBe(true);
+  const denied = new Error('Access Denied');
+  denied.$metadata = { httpStatusCode: 403 };
+  expect(ServiceError.isServiceError(denied)).toBe(false);
+});
+
+test('isServiceError treats a numeric 5xx code as an HTTP status', () => {
+  const error = new Error('Backend Error');
+  error.code = 503;
+  expect(ServiceError.isServiceError(error)).toBe(true);
+  error.code = 404;
+  expect(ServiceError.isServiceError(error)).toBe(false);
+});
+
+test('ServiceError stores a hint', () => {
+  const error = new ServiceError('Duplicate key.', { hint: 'Insert with upsert: true.' });
+  expect(error.hint).toBe('Insert with upsert: true.');
+});
+
+test('ServiceError hint is enumerable so it survives serialization to the client', () => {
+  const error = new ServiceError('Duplicate key.', { hint: 'Insert with upsert: true.' });
+  expect(Object.keys(error)).toContain('hint');
+});
+
+test('ServiceError takes the hint from the cause when none is given', () => {
+  const cause = new Error('inner');
+  cause.hint = 'Check the index.';
+  expect(new ServiceError('Failed', { cause }).hint).toBe('Check the index.');
+});
+
+test('ServiceError hint defaults to null', () => {
+  expect(new ServiceError('Failed').hint).toBe(null);
+});
+
+describe('rate limits are service errors', () => {
+  function withStatus(shape) {
+    return Object.assign(new Error('Request failed'), shape);
+  }
+
+  // One row per client convention: the AI SDK and most HTTP clients (statusCode),
+  // axios (response.status), AWS SDK v3 ($metadata), SendGrid and @google-cloud
+  // (numeric code), and a fetch Response-like status.
+  test.each([
+    ['statusCode', { statusCode: 429 }],
+    ['response.status', { response: { status: 429 } }],
+    ['$metadata.httpStatusCode', { $metadata: { httpStatusCode: 429 } }],
+    ['numeric code', { code: 429 }],
+    ['status', { status: 429 }],
+  ])('isServiceError classifies HTTP 429 on %s', (_, shape) => {
+    expect(ServiceError.isServiceError(withStatus(shape))).toBe(true);
+  });
+
+  test('isServiceError classifies a 429 the AI SDK gave up retrying', () => {
+    const lastError = withStatus({ statusCode: 429 });
+    const retryError = new Error('Failed after 3 attempts. Last error: Too Many Requests');
+    retryError.lastError = lastError;
+    expect(ServiceError.isServiceError(retryError)).toBe(true);
+  });
+
+  test('isServiceError classifies a 429 deeper in the cause chain', () => {
+    const throttled = new Error('Request failed', { cause: withStatus({ statusCode: 429 }) });
+    const wrapper = new Error('Send failed', { cause: throttled });
+    expect(ServiceError.isServiceError(wrapper)).toBe(true);
+  });
+
+  test('isServiceError classifies an AWS SDK throttling exception answered with 400', () => {
+    const error = new Error('Rate exceeded');
+    error.name = 'ThrottlingException';
+    error.$metadata = { httpStatusCode: 400 };
+    error.$retryable = { throttling: true };
+    expect(ServiceError.isServiceError(error)).toBe(true);
+  });
+
+  test('isServiceError still treats other 4xx statuses as request faults', () => {
+    const error = new Error('Request failed');
+    error.statusCode = 400;
+    expect(ServiceError.isServiceError(error)).toBe(false);
+    error.statusCode = 401;
+    expect(ServiceError.isServiceError(error)).toBe(false);
+  });
+
+  test('isServiceError classifies a call cancelled by a timeout', () => {
+    const error = new DOMException('The operation was aborted.', 'TimeoutError');
+    expect(ServiceError.isServiceError(error)).toBe(true);
+  });
+
+  test('isServiceError does not classify a call cancelled by its caller', () => {
+    const error = new DOMException('The operation was aborted.', 'AbortError');
+    expect(ServiceError.isServiceError(error)).toBe(false);
+  });
+
+  test('ServiceError keeps the Retry-After of a 429 the AI SDK gave up retrying', () => {
+    const lastError = new Error('Too Many Requests');
+    lastError.statusCode = 429;
+    lastError.responseHeaders = { 'retry-after': '30' };
+    const retryError = new Error('Failed after 3 attempts. Last error: Too Many Requests');
+    retryError.lastError = lastError;
+    const error = new ServiceError(undefined, { cause: retryError, service: 'claude' });
+    expect(error.statusCode).toBe(429);
+    expect(error.retryAfter).toBe('30');
+    expect(error.message).toBe(
+      'claude: Rate limited by the service (429 Too Many Requests). Retry after 30. Failed after 3 attempts. Last error: Too Many Requests'
+    );
+  });
+
+  test.each([
+    ['axios response headers', { response: { status: 429, headers: { 'retry-after': '5' } } }],
+    ['fetch Headers', { status: 429, headers: new Headers({ 'Retry-After': '5' }) }],
+    ['AWS SDK $response headers', { $response: { headers: { 'retry-after': '5' } } }],
+  ])('ServiceError reads Retry-After from %s', (_, shape) => {
+    const cause = Object.assign(new Error('Too Many Requests'), shape);
+    expect(new ServiceError(undefined, { cause }).retryAfter).toBe('5');
+  });
+
+  test.each([
+    ['a numeric code (SendGrid, @google-cloud)', { code: 429 }],
+    ['AWS SDK $metadata', { $metadata: { httpStatusCode: 429 } }],
+    ['the cause chain', { cause: Object.assign(new Error('inner'), { statusCode: 429 }) }],
+  ])('ServiceError takes the status of a 429 from %s', (_, shape) => {
+    const cause = Object.assign(new Error('Too Many Requests'), shape);
+    expect(new ServiceError(undefined, { cause }).statusCode).toBe(429);
+  });
+
+  test('ServiceError does not read a driver code outside the HTTP range as a status', () => {
+    const cause = Object.assign(new Error('Server selection timed out'), { code: 11000 });
+    expect(new ServiceError(undefined, { cause }).statusCode).toBeUndefined();
+  });
+
+  test('ServiceError retryAfter is null when the service sent none', () => {
+    const cause = Object.assign(new Error('Too Many Requests'), { statusCode: 429 });
+    const error = new ServiceError(undefined, { cause });
+    expect(error.retryAfter).toBe(null);
+    expect(error.message).toBe(
+      'Rate limited by the service (429 Too Many Requests). Too Many Requests'
+    );
   });
 });

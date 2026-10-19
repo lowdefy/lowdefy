@@ -17,17 +17,17 @@
 import React, { useEffect } from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { EditorContent } from '@tiptap/react';
 
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
 import PopoverMenu from '../utils/PopoverMenu.js';
-import buildExtensions from '../utils/buildExtensions.js';
 import computeHeightStyle from '../utils/computeHeightStyle.js';
 import statusClass from '../utils/statusClass.js';
+import useTiptapEditor from '../utils/useTiptapEditor.js';
 import useTiptapState from './useTiptapState.js';
 
-import './style.module.css';
+import './style.css';
 
 const TiptapInput = ({
   blockId,
@@ -40,96 +40,64 @@ const TiptapInput = ({
   validation,
   value,
 }) => {
-  const { emit, insertImage } = useTiptapState({ value, methods });
+  const uploadPolicyRequestId =
+    properties.uploadPolicyRequestId ?? properties.s3PostPolicyRequestId;
+  const downloadPolicyRequestId = properties.downloadPolicyRequestId;
+  const { emit, insertImage } = useTiptapState({
+    value,
+    methods,
+    hasDownloadRequest: !type.isNone(downloadPolicyRequestId),
+  });
 
   const disabled = properties.disabled === true || loading;
-  const uploadEnabled = !type.isNone(properties.s3PostPolicyRequestId);
-
-  const extensions = buildExtensions({
-    properties,
-    insertImage,
-    uploadEnabled,
-  });
+  const uploadEnabled = !type.isNone(uploadPolicyRequestId);
 
   const heightStyle = computeHeightStyle({
     rows: properties.rows,
     autoSize: properties.autoSize,
   });
 
-  const editor = useEditor({
-    extensions,
-    content: value?.html || '',
-    editable: () => !disabled,
-    onUpdate({ editor }) {
-      // User-driven change. Emit the full derived value to Lowdefy.
-      emit(editor);
-      methods.triggerEvent({ name: 'onChange' });
-    },
+  const editor = useTiptapEditor({
+    disabled,
+    emit,
+    insertImage,
+    methods,
+    properties,
+    uploadEnabled,
+    value,
   });
 
-  // Register upload-policy event once (if configured).
+  // Register upload-policy and download-policy events once (if configured).
   useEffect(() => {
     if (!uploadEnabled) return;
+    if (!type.isNone(properties.s3PostPolicyRequestId)) {
+      console.warn(
+        'TiptapInput property "s3PostPolicyRequestId" is deprecated. Use "uploadPolicyRequestId" instead.'
+      );
+    }
     methods.registerEvent({
-      name: '__getS3PostPolicy',
+      name: '__getUploadPolicy',
       actions: [
         {
-          id: '__getS3PostPolicy',
+          id: '__getUploadPolicy',
           type: 'Request',
-          params: [properties.s3PostPolicyRequestId],
+          params: [uploadPolicyRequestId],
         },
       ],
     });
+    if (!type.isNone(downloadPolicyRequestId)) {
+      methods.registerEvent({
+        name: '__getDownloadPolicy',
+        actions: [
+          {
+            id: '__getDownloadPolicy',
+            type: 'Request',
+            params: [downloadPolicyRequestId],
+          },
+        ],
+      });
+    }
   }, []);
-
-  // Register methods as soon as the editor is available.
-  useEffect(() => {
-    if (!editor) return;
-    methods.registerMethod('clear', () => {
-      editor.commands.clearContent();
-      emit(editor);
-    });
-    methods.registerMethod('setContent', (args) => {
-      editor.commands.setContent(args?.html ?? '');
-      emit(editor);
-    });
-    methods.registerMethod('focus', () => {
-      editor.commands.focus();
-    });
-  }, [editor]);
-
-  // External value.html → editor sync. One-way only: we read value.html and
-  // push it into the editor with setContent(..., false) so tiptap's onUpdate
-  // does not fire. No write-back via emit() — that would race with concurrent
-  // SetState calls (child effects fire before parent effects, so a sibling's
-  // onMount SetState could be overwritten by our derived emit). Derived
-  // fields (text/markdown/fileList) are populated on user interaction via
-  // onUpdate; downstream consumers of seeded content should read value.html
-  // directly, or include the fields they need in their SetState payload.
-  useEffect(() => {
-    if (!editor) return;
-    const next = value?.html ?? '';
-    const current = editor.getHTML();
-    if (next !== current) {
-      editor.commands.setContent(next, false);
-    }
-  }, [value?.html, editor]);
-
-  useEffect(() => {
-    if (!editor) return;
-    editor.setOptions({ editable: !disabled });
-  }, [editor, disabled]);
-
-  useEffect(() => {
-    if (!editor) return;
-    const placeholderExt = editor.extensionManager.extensions.find(
-      (extension) => extension.name === 'placeholder'
-    );
-    if (placeholderExt) {
-      placeholderExt.options.placeholder = properties.placeholder ?? '';
-      editor.view.dispatch(editor.state.tr);
-    }
-  }, [editor, properties.placeholder]);
 
   const wrapperClass = [
     'tiptap-wrapper',
@@ -168,7 +136,7 @@ const TiptapInput = ({
                 className={wrapperClass}
                 style={wrapperStyle}
               />
-              {!disabled && <PopoverMenu editor={editor} Icon={Icon} />}
+              {!disabled && <PopoverMenu blockId={blockId} editor={editor} Icon={Icon} />}
             </>
           );
         },

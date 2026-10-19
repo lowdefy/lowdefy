@@ -58,4 +58,11 @@ test.describe('Layout Block', () => {
     await expect(footer).toBeVisible();
     await expect(footer).toContainText('Footer');
   });
+
+  test('applies Layout design tokens from theme', async ({ page }) => {
+    const layout = getLayout(page, 'layout_theme').first();
+    await expect(layout).toHaveCSS('background-color', 'rgb(230, 244, 255)');
+    const header = getBlock(page, 'layout_theme_header').locator('.ant-layout-header');
+    await expect(header).toHaveCSS('height', '48px');
+  });
 });

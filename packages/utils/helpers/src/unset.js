@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -41,75 +39,72 @@
 // THE SOFTWARE.
 
 import type from './type.js';
-import get from './get.js';
+import splitPath from './splitPath.js';
+import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 
-const hasValues = (val) => {
-  switch (type.typeOf(val)) {
-    case 'boolean':
-    case 'date':
-    case 'function':
-    case 'null':
-    case 'number':
-      return true;
-    case 'undefined':
-      return false;
-    case 'regexp':
-      return val.source !== '(?:)' && val.source !== '';
-    case 'buffer':
-      return val.toString() !== '';
-    case 'error':
-      return val.message !== '';
-    case 'string':
-    case 'arguments':
-      return val.length !== 0;
-    case 'file':
-    case 'map':
-    case 'set':
-      return val.size !== 0;
-    case 'array':
-    case 'object':
-      // eslint-disable-next-line no-restricted-syntax
-      // CHANGED - we are assuming that an empty object and array is a value.
-      // for (const key of Object.keys(val)) {
-      //   if (hasValues(val[key])) {
-      //     return true;
-      //   }
-      // }
-      // return false;
-      return true;
-    // everything else
-    default: {
-      return true;
-    }
-  }
-};
-
-const hasValue = (obj, path, options) => {
-  if (type.isObject(obj) && (type.isString(path) || type.isArray(path))) {
-    return hasValues(get(obj, path, options));
-  }
-  return false;
-};
+// "May I step into this value to reach a child?" Kept local rather than shared with get/set -
+// a module imported by all three trips a Jest ESM module-cache bug in operators-js' mocked
+// re-imports.
+function isTraversable(value) {
+  return !type.isNone(value) && (typeof value === 'object' || typeof value === 'function');
+}
 
 const unset = (obj, prop) => {
-  // support array refence in the form a.0 , a.0.b or a[0] , a[0].b
+  // supports array references in the form a.0 or a.0.b
   if (!type.isObject(obj)) {
     throw new TypeError('expected an object.');
   }
-  if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-    delete obj[prop];
+  if (!type.isString(prop)) {
     return true;
   }
 
-  if (hasValue(obj, prop)) {
-    const segs = prop.split('.');
-    let last = segs.pop();
-    while (segs.length && segs[segs.length - 1].slice(-1) === '\\') {
-      last = `${segs.pop().slice(0, -1)}.${last}`;
-    }
-    while (segs.length) obj = obj[segs.shift()];
-    return delete obj[last];
+  const segs = splitPath(prop);
+  const reserved = segs.find(isReserved);
+  if (!type.isNone(reserved)) {
+    throw new ReservedKeyError(reserved);
   }
+
+  const len = segs.length;
+  let target = obj;
+  let idx = 0;
+
+  while (idx < len) {
+    let seg = segs[idx];
+    let next = idx + 1;
+
+    // The strict segment wins if present. On a miss, grow the candidate one segment at a time
+    // looking for a literal dotted key - shortest-first, no backtracking, matching get and set.
+    if (!Object.hasOwn(target, seg)) {
+      let candidate = seg;
+      let n = next;
+      while (n < len) {
+        candidate = `${candidate}.${segs[n]}`;
+        n += 1;
+        if (Object.hasOwn(target, candidate)) {
+          seg = candidate;
+          next = n;
+          break;
+        }
+      }
+    }
+
+    // Nothing matches at this level, so there is nothing to unset.
+    if (!Object.hasOwn(target, seg)) {
+      return true;
+    }
+
+    if (next === len) {
+      return delete target[seg];
+    }
+
+    target = target[seg];
+    // A missing or primitive intermediate means there is nothing to unset.
+    if (!isTraversable(target)) {
+      return true;
+    }
+    idx = next;
+  }
+
   return true;
 };
 

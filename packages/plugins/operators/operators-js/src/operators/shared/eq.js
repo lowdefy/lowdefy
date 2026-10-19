@@ -27,5 +27,6 @@ function _eq({ params }) {
 }
 
 _eq.dynamic = false;
+_eq.tracking = { kind: 'pure' };
 
 export default _eq;

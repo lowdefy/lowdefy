@@ -12,6 +12,7 @@ export default {
   coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   preset: '@shelf/jest-mongodb',
+  setupFilesAfterEnv: ['<rootDir>/test/closeClientsAfterAll.js'],
   testEnvironment: 'node',
   testPathIgnorePatterns: ['<rootDir>/dist/'],
   transform: {

@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/nextjs';
+import sentrySdk from './sentrySdk.js';
 
 function setSentryUser({ user, sentryConfig }) {
-  // No-op if Sentry not initialized (DSN not set)
-  if (!process.env.SENTRY_DSN) {
+  const Sentry = sentrySdk.current;
+  if (!Sentry) {
     return;
   }
 

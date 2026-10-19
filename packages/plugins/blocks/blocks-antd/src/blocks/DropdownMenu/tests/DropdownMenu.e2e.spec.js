@@ -15,7 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock, getShortcutModifier, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 test.describe('DropdownMenu Block', () => {
   test.beforeEach(async ({ page }) => {
@@ -133,7 +133,7 @@ test.describe('DropdownMenu Block', () => {
   });
 
   test('fires onClick when menu link shortcut is pressed', async ({ page }) => {
-    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const mod = await getShortcutModifier(page);
     const display = getBlock(page, 'dm_shortcut_display');
     await expect(display).not.toHaveText('clicked:dm_sc_home');
 
@@ -144,5 +144,46 @@ test.describe('DropdownMenu Block', () => {
     // Press mod+; to trigger Settings shortcut
     await page.keyboard.press(`${mod}+;`);
     await expect(display).toHaveText('clicked:dm_sc_settings');
+  });
+});
+
+test.describe('DropdownMenu css keys, placement and selection', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'dropdown_menu');
+  });
+
+  test('applies the element id, class and style to the trigger wrapper', async ({ page }) => {
+    const wrapper = page.locator('#dm_css');
+    await expect(wrapper).toHaveClass(/dm-css-element/);
+    await expect(wrapper).toHaveCSS('padding-top', '3px');
+    await expect(wrapper.locator('.ant-btn')).toHaveText('Styled Menu');
+  });
+
+  test('applies the menu class to the dropdown and honours placement', async ({ page }) => {
+    await getBlock(page, 'dm_css_trigger').locator('.ant-btn').click();
+    const dropdown = page.locator('.ant-dropdown.dm-css-menu');
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown).toContainText('Styled Item');
+    await expect(dropdown).toHaveClass(/ant-dropdown-placement-rightTop/);
+  });
+
+  test('applies the item class and style to menu items', async ({ page }) => {
+    await getBlock(page, 'dm_css_trigger').locator('.ant-btn').click();
+    const item = page.locator('.ant-dropdown.dm-css-menu .ant-dropdown-menu-item');
+    await expect(item).toHaveClass(/dm-css-item/);
+    await expect(item).toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
+
+  test('fires onSelect with the selected keys when selectable', async ({ page }) => {
+    await getBlock(page, 'dm_selectable_trigger').locator('.ant-btn').click();
+    await page.locator('.ant-dropdown-menu-item').filter({ hasText: 'Second Choice' }).click();
+    await expect(getBlock(page, 'dm_selectable_display')).toHaveText('selected:dm_sel_second');
+  });
+
+  test('null placement falls back to the antd default', async ({ page }) => {
+    await getBlock(page, 'dm_null_trigger').locator('.ant-btn').click();
+    const dropdown = page.locator('.ant-dropdown').filter({ hasText: 'Null Placement Item' });
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown).toHaveClass(/ant-dropdown-placement-bottomLeft/);
   });
 });

@@ -18,6 +18,7 @@ import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
+  getObjectReadKeys: jest.fn(),
 }));
 
 test('state calls getFromObject', async () => {

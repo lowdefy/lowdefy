@@ -80,11 +80,14 @@ function validateStateReferences({ page, context }) {
       `_state references "${topLevelKey}" on page "${page.pageId}", ` +
       `but no input block with id "${topLevelKey}" exists on this page. ` +
       `State keys are created from input block ids. ` +
-      `Check for typos, add an input block with this id, or initialize the state with SetState.`;
+      `Check for typos, add an input block with this id, or initialize the state with SetState. ` +
+      `If the state is set at runtime (for example by a custom action calling setState), ` +
+      `suppress this check with "~ignoreBuildChecks: [state-refs]" on the reference.`;
 
-    context.handleWarning(
-      new ConfigWarning(message, { configKey, prodError: true, checkSlug: 'state-refs' })
-    );
+    // This check is a heuristic: state written at runtime — custom actions
+    // calling setState, dynamic SetState wrappers — is statically invisible,
+    // so a miss here must never fail a production build (no prodError).
+    context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'state-refs' }));
   });
 }
 

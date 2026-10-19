@@ -14,30 +14,64 @@
   limitations under the License.
 */
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
-async function MongodbDeleteMany({ connection, request }) {
+async function MongodbDeleteMany({
+  blockId,
+  connection,
+  connectionId,
+  pageId,
+  payload,
+  request,
+  requestId,
+  tenant,
+  tenantGuard,
+}) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBDeleteMany' });
   const deserializedRequest = deserialize(request);
-  const { filter, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
+  const { options } = deserializedRequest;
+  let { filter } = deserializedRequest;
+  if (tenant) {
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+  }
+  const { collection, logCollection } = await getCollection({ connection });
   let response;
   try {
     response = await collection.deleteMany(filter, options);
+    if (logCollection) {
+      await logCollection.insertOne(
+        stampTenantOnLogRecord({
+          record: {
+            args: { filter, options },
+            blockId,
+            connectionId,
+            pageId,
+            payload,
+            requestId,
+            response,
+            timestamp: new Date(),
+            type: 'MongoDBDeleteMany',
+            meta: connection.changeLog?.meta,
+          },
+          tenant,
+        })
+      );
+    }
   } catch (error) {
-    await client.close();
-    throw error;
+    throw mapMongoError(error, { connection, requestType: 'MongoDBDeleteMany' });
   }
-  await client.close();
   const { acknowledged, deletedCount } = serialize(response);
   return { acknowledged, deletedCount };
 }
 
 MongodbDeleteMany.schema = schema;
-MongodbDeleteMany.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbDeleteMany.meta = requestMetas.MongoDBDeleteMany;
 
 export default MongodbDeleteMany;

@@ -16,42 +16,39 @@
 */
 
 import { createRequire } from 'node:module';
-import path from 'path';
-import { get } from '@lowdefy/helpers';
-import { readFile } from '@lowdefy/node-utils';
-import YAML from 'yaml';
+import importFresh from './importFresh.mjs';
+import readPluginDefinitions from './readPluginDefinitions.mjs';
 
 const require = createRequire(import.meta.url);
 
-async function getPluginDefinitions({ directories }) {
-  let lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yaml'));
-  if (!lowdefyYaml) {
-    lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yml'));
-  }
-  if (!lowdefyYaml) {
-    return [];
-  }
-  const lowdefy = YAML.parse(lowdefyYaml);
-  return get(lowdefy, 'plugins', { default: [] });
-}
+// The map is rebuilt on every config rebuild — warn once per plugin per
+// process instead of repeating the same skip message on each rebuild.
+const warnedMissingMessages = new Set();
 
 async function createCustomPluginMessagesMap({ directories, logger }) {
   const customMessagesMap = {};
-  const pluginDefinitions = await getPluginDefinitions({ directories });
+  const pluginDefinitions = await readPluginDefinitions({ directories });
 
-  for (const plugin of pluginDefinitions) {
-    let messagesModule;
-    try {
-      messagesModule = require(`${plugin.name}/messages`);
-    } catch (e) {
-      // Plugin does not ship a `./messages` export — silently skip.
-      logger?.debug?.(`Plugin "${plugin.name}" has no "./messages" export; skipping.`);
-      continue;
-    }
-    const messages = messagesModule.default ?? messagesModule;
-    if (!messages || typeof messages !== 'object') continue;
-    customMessagesMap[plugin.name] = messages;
-  }
+  // Each import starts a worker, so the plugins are imported in parallel.
+  await Promise.all(
+    pluginDefinitions.map(async (plugin) => {
+      let messagesPath;
+      try {
+        messagesPath = require.resolve(`${plugin.name}/messages`);
+      } catch (e) {
+        // Plugin does not ship a `./messages` export — silently skip.
+        if (!warnedMissingMessages.has(plugin.name)) {
+          warnedMissingMessages.add(plugin.name);
+          logger?.debug?.(`Plugin "${plugin.name}" has no "./messages" export; skipping.`);
+        }
+        return;
+      }
+      const messagesModule = await importFresh(messagesPath);
+      const messages = messagesModule.default ?? messagesModule;
+      if (!messages || typeof messages !== 'object') return;
+      customMessagesMap[plugin.name] = messages;
+    })
+  );
 
   return customMessagesMap;
 }

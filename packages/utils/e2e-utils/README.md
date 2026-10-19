@@ -151,6 +151,8 @@ await ldf.url().expect.toMatch(/\/tickets\/\d+/);
 
 // Query params
 await ldf.urlQuery('filter').expect.toBe('active');
+// do.set navigates through the app router, so a Dynamic page re-resolves its
+// content for the new query before this resolves.
 await ldf.urlQuery('page').do.set('2');
 
 // Get raw values
@@ -203,6 +205,20 @@ await expect(locator).toHaveAttribute('data-loading', 'true');
 // Block state and validation
 const blockState = await ldf.block('name_input').state();
 const validation = await ldf.block('email_input').validation();
+```
+
+### Keyboard Shortcuts
+
+A `mod` shortcut resolves to Cmd or Ctrl depending on the platform the **browser** reports, which
+Playwright emulates per project — a Desktop Chrome project reports Windows even on macOS. Derive the
+key from the page rather than from `process.platform`, or the test will press a key the app is not
+listening for:
+
+```javascript
+import { getShortcutModifier } from '@lowdefy/e2e-utils';
+
+const mod = await getShortcutModifier(ldf.page);
+await ldf.page.keyboard.press(`${mod}+k`);
 ```
 
 ## Complete Example
@@ -303,6 +319,30 @@ export default createConfig({
   testMatch: '**/*.spec.js',
   timeout: 180000, // WebServer timeout in ms (default: 180000)
 });
+```
+
+The server Playwright starts stops when the Playwright run stops, however the run ends, so a killed or timed-out run leaves no server behind.
+
+| Variable                        | Effect                                                                                                                                                                                      |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LOWDEFY_E2E_PORT`              | Runs on this port instead of the configured one, so two git worktrees can run the same suite at once.                                                                                       |
+| `LOWDEFY_E2E_REUSE_SERVER=true` | Reuses a server already running on the port (for example one started with `pnpm e2e:server`) instead of failing the run. The global setup still checks that it serves this app's e2e build. |
+
+## Starting a Server Outside Playwright
+
+`startServer` builds and starts an app's e2e server for other test runners (a vitest or Jest `globalSetup`) and scripts. The server stops when the process that called `startServer` exits, however it exits, so a killed or timed-out run leaves nothing behind.
+
+```javascript
+import startServer from '@lowdefy/e2e-utils/startServer';
+
+const server = await startServer({
+  appDir: './', // Where lowdefy.yaml is
+  port: 3191, // Fails at once if the port is already in use
+  env: { MY_SECRET: 'value' }, // Extra environment variables for the server
+  build: true, // Run `lowdefy build --server e2e` first (default: true)
+});
+// server.url === 'http://localhost:3191'
+await server.stop(); // SIGTERM, then SIGKILL after a grace period
 ```
 
 ## Adding E2E Support to a Block

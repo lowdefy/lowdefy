@@ -1,0 +1,36 @@
+# T8: Reserved Endpoint ID With No Auth Roles Configured
+# ======================================================
+# The second failure shape of the same ordering problem: with no roles
+# configured, getEntityRoles returns {} and buildEntityAuth's
+# entityRoles["constructor"] lookup still resolves through Object.prototype.
+# The endpoint was silently marked protected and given a roles value of
+# Object.prototype.constructor, with no role config anywhere - a wrong auth
+# artifact rather than a crash.
+#
+# Expected error:
+#   [Config Error] Endpoint id "constructor" is a reserved name and cannot be used as an id.
+#
+# The error points to line 28 where the endpoint is defined.
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+
+api:
+  - id: constructor
+    type: Api
+    routine:
+      - :return:
+          message: ok
+
+pages:
+  - id: home
+    type: Box

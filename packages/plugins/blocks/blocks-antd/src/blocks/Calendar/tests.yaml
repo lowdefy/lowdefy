@@ -48,3 +48,19 @@
       - date: '2026-03-20'
         content: Deadline
         status: error
+- id: 'properties.showWeek: true'
+  type: Calendar
+  properties:
+    fullscreen: false
+    showWeek: true
+- id: 'class and style semantic keys'
+  type: Calendar
+  class:
+    .header: border-b
+  style:
+    .itemContent:
+      height: 48
+  properties:
+    dateCellData:
+      - date: '2026-03-15'
+        content: Meeting

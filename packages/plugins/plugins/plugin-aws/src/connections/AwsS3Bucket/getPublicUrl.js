@@ -1,0 +1,34 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+// Stable, non-expiring URL for a public-read object. Public is author-declared,
+// never runtime-checked — a public URL to a private object 403s.
+function getPublicUrl({ connection, key }) {
+  const { bucket, endpoint, publicUrlBase, region } = connection;
+  const encodedKey = key.split('/').map(encodeURIComponent).join('/');
+  if (!type.isNone(publicUrlBase)) {
+    return `${publicUrlBase.replace(/\/+$/, '')}/${encodedKey}`;
+  }
+  if (!type.isNone(endpoint)) {
+    // Custom endpoints (R2, MinIO, Spaces) serve public objects path-style.
+    return `${endpoint.replace(/\/+$/, '')}/${bucket}/${encodedKey}`;
+  }
+  return `https://${bucket}.s3.${region}.amazonaws.com/${encodedKey}`;
+}
+
+export default getPublicUrl;

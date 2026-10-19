@@ -14,14 +14,20 @@
   limitations under the License.
 */
 
+import { getSafeHref } from '@lowdefy/helpers';
+
 import blockDefaultProps from './blockDefaultProps.js';
 import blockSchema from './blockSchema.js';
 import buildBlockSchema from './buildBlockSchema.js';
 import cn from './cn.js';
+import createLazyBlock from './createLazyBlock.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import ErrorPage from './ErrorPage.js';
 import extractBlockTypes from './extractBlockTypes.js';
+import getLazyBlockLoadsInFlight from './getLazyBlockLoadsInFlight.js';
 import HtmlComponent from './HtmlComponent.js';
+import isEventFromDomDescendant from './isEventFromDomDescendant.js';
+import registerHtmlEnhancements, { getHtmlEnhancements } from './registerHtmlEnhancements.js';
 import renderHtml from './renderHtml.js';
 import withBlockDefaults from './withBlockDefaults.js';
 
@@ -30,10 +36,16 @@ export {
   blockSchema,
   buildBlockSchema,
   cn,
+  createLazyBlock,
   ErrorBoundary,
   ErrorPage,
   extractBlockTypes,
+  getHtmlEnhancements,
+  getLazyBlockLoadsInFlight,
+  getSafeHref,
   HtmlComponent,
+  isEventFromDomDescendant,
+  registerHtmlEnhancements,
   renderHtml,
   withBlockDefaults,
 };

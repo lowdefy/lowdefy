@@ -14,21 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { getOperatorType, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 const breakpointKeys = new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl']);
 
-// Keys that look like operators (single key starting with _) but are not.
-const KNOWN_NON_OPERATORS = new Set(['_id']);
-
 function isOperator(value) {
-  const nonTildeKeys = Object.keys(value).filter((k) => !k.startsWith('~'));
-  if (nonTildeKeys.length !== 1) return false;
-  const key = nonTildeKeys[0];
-  const [op] = key.split('.');
-  const operator = op.replace(/^(_+)/gm, '_');
-  return operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator);
+  return getOperatorType(value) !== null;
 }
 
 function stripDotPrefix(key) {
@@ -99,6 +91,14 @@ function normalizeStyle(block, pageContext) {
 }
 
 function normalizeClass(block, pageContext) {
+  // An operator at the root of `class` computes the block's classes at runtime.
+  // Its result reaches cn() (clsx + twMerge), so a string, an array of strings,
+  // or a { className: boolean } object all work. Returning early skips the
+  // cssKeys check and the dot-prefix strip, which would corrupt the operator.
+  if (type.isObject(block.class) && isOperator(block.class)) {
+    block.class = { block: block.class };
+    return;
+  }
   if (type.isString(block.class) || type.isArray(block.class)) {
     block.class = { block: block.class };
     return;

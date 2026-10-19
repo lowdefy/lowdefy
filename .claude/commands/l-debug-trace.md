@@ -88,7 +88,7 @@ This is the critical phase. Most bugs live at boundaries — where data crosses 
    | Process boundary (spawn, IPC)       | Stdout parsing, buffering        | Line handling, JSON parse         |
    | Async boundary (Promise, callback)  | Timing, unhandled rejection      | await, error propagation          |
    | Error boundary (try/catch)          | Swallowed errors, wrong re-throw | Catch scope, error transformation |
-   | Framework boundary (Next.js, React) | SSR/CSR mismatch, lifecycle      | Rendering context, hydration      |
+   | Framework boundary (Hono, Vite, React) | Server/client mismatch, lifecycle | Rendering context, module graph   |
    | Library boundary (pino, express)    | Config behavior, version quirks  | Library docs, default options     |
 
 5. **Document the complete pipeline** with file paths and line numbers.
@@ -255,7 +255,7 @@ When tracing through Lowdefy, always check these boundaries:
 - [ ] **Process stdout/stderr** — stdout is line-buffered JSON, stderr is raw text. Manager parses stdout, passes stderr through.
 - [ ] **Pino log level** — pino only outputs if message level >= logger level. Check logger's configured level.
 - [ ] **Pino destination** — Async (sonic-boom default) vs sync destination. Async may buffer writes.
-- [ ] **Next.js compilation** — `.next/` may have stale code. Check compiled output matches source.
+- [ ] **Client build** — `dist/client/` and Vite's deps cache (`node_modules/.vite/`) may have stale code. Check compiled output matches source.
 - [ ] **Build artifacts** — `keyMap.json`, `refMap.json`, `config.json` — are they current? Do they contain expected data?
 
 ### Key Files Reference

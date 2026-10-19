@@ -1,0 +1,170 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { ToolLoopAgent, isStepCount, hasToolCall } from 'ai';
+
+import buildAgentTools from './buildAgentTools.js';
+import buildPrepareStep from './buildPrepareStep.js';
+import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
+import createFileDownload from './fileDownload/createFileDownload.js';
+import nameAttachedFiles from './nameAttachedFiles.js';
+
+// Strip non-serializable fields from agent-level hook events before sending as payload.
+// messages excluded here — the stream-level onFinish sends UIMessage[] directly.
+function cleanHookEvent(event) {
+  const clean = {};
+  for (const [key, value] of Object.entries(event)) {
+    if (key === 'abortSignal') continue;
+    if (key === 'messages') continue;
+    if (typeof value === 'function') continue;
+    clean[key] = value;
+  }
+  return clean;
+}
+
+// Maps YAML hook names to AI SDK callback names and creates fire-and-forget callbacks.
+// onFinish is intentionally excluded — it is handled by the callers (at the stream
+// level in handleAgentChat, after generate in handleAgentGenerate) so that hooks
+// are awaited.
+// The YAML names are Lowdefy's public hook API and stay as they are; ai v7
+// dropped the experimental_ prefixes and renamed tool-call/finish callbacks.
+const hookMapping = {
+  onStart: 'onStart',
+  onStepStart: 'onStepStart',
+  onToolCallStart: 'onToolExecutionStart',
+  onToolCallFinish: 'onToolExecutionEnd',
+  onStepFinish: 'onStepEnd',
+};
+
+function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
+  if (!hooks) return {};
+
+  const callbacks = {};
+  for (const [yamlKey, sdkKey] of Object.entries(hookMapping)) {
+    const endpointIds = hooks[yamlKey];
+    if (!endpointIds || endpointIds.length === 0) continue;
+
+    callbacks[sdkKey] = (event) => {
+      const payload = { ...cleanHookEvent(event), locale };
+      for (const endpointId of endpointIds) {
+        callEndpoint(endpointId, { payload }).catch((error) =>
+          logger.warn({ err: error, endpointId }, 'Agent hook endpoint failed.')
+        );
+      }
+    };
+  }
+  return callbacks;
+}
+
+// Shared agent assembly for the streaming chat path and the headless generate
+// path: tools, model, hook callbacks, instructions, stop conditions, and the
+// ToolLoopAgent instance.
+async function createToolLoopAgent({ connection, agent, context, autoApprove = false }) {
+  const { tools, mcpClients, toolApproval } = await buildAgentTools({ agent, context, autoApprove });
+
+  const { sharedState, sharedStateReadOnly } = context.agentContext ?? {};
+  if (!sharedStateReadOnly) {
+    const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
+    if (updatePageStateTool) {
+      tools['update-page-state'] = updatePageStateTool;
+    }
+  }
+
+  const model = connection.provider(agent.properties.model);
+
+  const locale = context.i18n?.active;
+  const hookCallbacks = createHookCallbacks({
+    callEndpoint: context.callEndpoint,
+    hooks: agent.hooks,
+    locale,
+    logger: context.logger,
+  });
+
+  // Prepend page context to instructions when pageContext is enabled
+  let instructions = agent.properties.instructions;
+  if (agent.properties.pageContext && context.agentContext) {
+    const ctx = context.agentContext;
+    const contextLines = ['<context>'];
+    if (ctx.pageId) contextLines.push(`  pageId: ${ctx.pageId}`);
+    if (ctx.userId) contextLines.push(`  userId: ${ctx.userId}`);
+    if (ctx.conversationId) contextLines.push(`  conversationId: ${ctx.conversationId}`);
+    if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
+      contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
+    }
+    if (ctx.pathParams && Object.keys(ctx.pathParams).length > 0) {
+      contextLines.push(`  pathParams: ${JSON.stringify(ctx.pathParams)}`);
+    }
+    if (ctx.sharedState && Object.keys(ctx.sharedState).length > 0) {
+      contextLines.push(`  sharedState: ${JSON.stringify(ctx.sharedState)}`);
+    }
+    contextLines.push('</context>');
+    instructions = `${contextLines.join('\n')}\n\n${instructions ?? ''}`;
+  }
+
+  // Build stop conditions
+  const stopConditions = [isStepCount(agent.properties.maxSteps ?? 10)];
+  const stopOnToolCall = agent.properties.stopOnToolCall;
+  if (stopOnToolCall) {
+    const toolNames = Array.isArray(stopOnToolCall) ? stopOnToolCall : [stopOnToolCall];
+    for (const name of toolNames) {
+      stopConditions.push(hasToolCall(name));
+    }
+  }
+
+  const agentInstance = new ToolLoopAgent({
+    model,
+    instructions,
+    tools,
+    toolApproval,
+    stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
+    maxOutputTokens: agent.properties.maxOutputTokens ?? connection.maxOutputTokens,
+    temperature: agent.properties.temperature,
+    toolChoice: agent.properties.toolChoice ?? 'auto',
+    providerOptions: agent.properties.providerOptions,
+    activeTools: agent.properties.activeTools,
+    topP: agent.properties.topP,
+    topK: agent.properties.topK,
+    frequencyPenalty: agent.properties.frequencyPenalty,
+    presencePenalty: agent.properties.presencePenalty,
+    seed: agent.properties.seed,
+    stopSequences: agent.properties.stopSequences,
+    maxRetries: agent.properties.maxRetries,
+    ...(agent.properties.prepareStep
+      ? { prepareStep: buildPrepareStep(agent.properties.prepareStep) }
+      : {}),
+    prepareCall: (callArgs) => ({ ...callArgs, prompt: nameAttachedFiles(callArgs.prompt) }),
+    experimental_download: createFileDownload({
+      ...agent.properties.fileDownload,
+      signal: context.signal,
+    }),
+    ...hookCallbacks,
+    ...(agent.properties.repairToolCall
+      ? {
+          repairToolCall: async ({ toolCall }) => {
+            return { ...toolCall };
+          },
+        }
+      : {}),
+  });
+
+  // The agent's own timeout, else the connection's default for every call on it.
+  const timeout = agent.properties.timeout ?? connection.timeout;
+  const timeoutConfig = timeout != null ? { timeout } : {};
+
+  return { agentInstance, mcpClients, model, timeoutConfig, locale };
+}
+
+export default createToolLoopAgent;

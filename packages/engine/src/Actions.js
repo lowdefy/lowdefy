@@ -14,9 +14,19 @@
   limitations under the License.
 */
 
-import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
-import { type } from '@lowdefy/helpers';
+import { ActionError, ConfigError } from '@lowdefy/errors';
+import { projectCaughtError, type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
+import { isDecodedServerError } from './decodeServerError.js';
+import { isStopChain } from './stopChain.js';
+import getTrace from './trace/getTrace.js';
+import trackActionMethods from './tracking/trackActionMethods.js';
+
+const CONTROL_KEYS = [':if', ':switch', ':return'];
+
+function isControl(item) {
+  return type.isObject(item) && CONTROL_KEYS.some((key) => key in item);
+}
 
 class Actions {
   constructor(context) {
@@ -24,6 +34,7 @@ class Actions {
     this.callAction = this.callAction.bind(this);
     this.callActionLoop = this.callActionLoop.bind(this);
     this.callActions = this.callActions.bind(this);
+    this.callControl = this.callControl.bind(this);
     this.displayMessage = this.displayMessage.bind(this);
     this.logActionError = this.logActionError.bind(this);
     this.actions = context._internal.lowdefy._internal.actions;
@@ -32,28 +43,29 @@ class Actions {
 
   logActionError({ error, action }) {
     const handleError = this.context._internal.lowdefy._internal.handleError;
-    const actionId = action?.id || '';
 
-    // Deduplicate by error message + action id
-    const errorKey = `${error?.message || ''}:${actionId}`;
-    if (this.loggedActionErrors.has(errorKey)) {
-      return;
-    }
-    this.loggedActionErrors.add(errorKey);
-
-    // User-facing errors log to browser console only, never to terminal
-    if (error instanceof UserError) {
+    // User-facing errors log to browser console only, never to terminal. This line
+    // bypasses handleError, so it dedups here. Matched by name, not instanceof:
+    // plugins bundle their own @lowdefy/errors copy.
+    if (error?.name === 'UserError') {
+      const errorKey = `${error.message}:${action?.id || ''}`;
+      if (this.loggedActionErrors.has(errorKey)) {
+        return;
+      }
+      this.loggedActionErrors.add(errorKey);
       this.context._internal.lowdefy._internal.logger.error(error);
       return;
     }
 
-    // Lowdefy errors - use handleError (-> terminal)
+    // Not deduped here: every server failure carries the same generic message, so a
+    // message + action key would hide each later failure of the action. handleError
+    // dedups on the message it displays plus the server's requestId.
     if (handleError) {
       handleError(error);
     }
   }
 
-  async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {
+  async callAsyncAction({ action, arrayIndices, block, event, index, parseScope, responses }) {
     try {
       const response = await this.callAction({
         action,
@@ -61,6 +73,7 @@ class Actions {
         block,
         event,
         index,
+        parseScope,
         responses,
       });
       responses[action.id] = response;
@@ -71,16 +84,52 @@ class Actions {
     }
   }
 
-  async callActionLoop({ actions, arrayIndices, block, event, progress, responses }) {
-    for (const [index, action] of actions.entries()) {
+  // Returns true when a ':return' control or an action ended the list, so callers can
+  // end the event.
+  async callActionLoop({
+    actions,
+    arrayIndices,
+    block,
+    controls,
+    counters,
+    event,
+    parseScope,
+    progress,
+    responses,
+  }) {
+    for (const [position, action] of actions.entries()) {
+      if (isControl(action)) {
+        const returned = await this.callControl({
+          arrayIndices,
+          block,
+          control: action,
+          controls,
+          counters,
+          event,
+          parseScope,
+          progress,
+          responses,
+        });
+        if (returned === true) {
+          this.recordSkippedActions({ actions: actions.slice(position + 1), counters, responses });
+          return true;
+        }
+        continue;
+      }
+      const index = counters.action;
+      counters.action += 1;
       try {
         if (action.async === true) {
+          // Fire and forget - the response is never awaited here, so an 'async: true'
+          // action cannot end the chain even if it returns a stopChain marker. The
+          // following steps have already run by the time it resolves.
           this.callAsyncAction({
             action,
             arrayIndices,
             block,
             event,
             index,
+            parseScope,
             progress,
             responses,
           });
@@ -91,10 +140,23 @@ class Actions {
             block,
             event,
             index,
+            parseScope,
             progress,
             responses,
           });
           responses[action.id] = response;
+          // An action that navigated the browser away ends the chain, reported as a
+          // success. Same halt the ':return' control uses above - remaining steps are
+          // recorded as skipped, and callActions is never entered through its catch,
+          // so 'catch:' actions do not run and no error message displays.
+          if (response.stoppedChain === true) {
+            this.recordSkippedActions({
+              actions: actions.slice(position + 1),
+              counters,
+              responses,
+            });
+            return true;
+          }
         }
       } catch (err) {
         // err is already {error, action, index} from callAction
@@ -102,21 +164,215 @@ class Actions {
         throw err;
       }
     }
+    return false;
+  }
+
+  async callControl({
+    arrayIndices,
+    block,
+    control,
+    controls,
+    counters,
+    event,
+    parseScope,
+    progress,
+    responses,
+  }) {
+    const index = counters.control;
+    counters.control += 1;
+    if (':return' in control) {
+      const value = this.evaluateControlValue({
+        arrayIndices,
+        block,
+        event,
+        input: control[':return'],
+        node: control,
+        parseScope,
+        responses,
+      });
+      controls.push({ index, type: ':return', taken: value });
+      return true;
+    }
+    if (':if' in control) {
+      const condition = this.evaluateControlValue({
+        arrayIndices,
+        block,
+        event,
+        input: control[':if'],
+        node: control,
+        parseScope,
+        responses,
+      });
+      // JS truthiness, matching the routine ':if' - not skip's strict === true.
+      if (condition) {
+        controls.push({ index, type: ':if', taken: 'then' });
+        const returned = await this.callActionLoop({
+          actions: control[':then'],
+          arrayIndices,
+          block,
+          controls,
+          counters,
+          event,
+          parseScope,
+          progress,
+          responses,
+        });
+        this.recordSkippedActions({ actions: control[':else'] ?? [], counters, responses });
+        return returned;
+      }
+      controls.push({ index, type: ':if', taken: 'else' });
+      this.recordSkippedActions({ actions: control[':then'], counters, responses });
+      return this.callActionLoop({
+        actions: control[':else'] ?? [],
+        arrayIndices,
+        block,
+        controls,
+        counters,
+        event,
+        parseScope,
+        progress,
+        responses,
+      });
+    }
+    // ':switch' - cases are evaluated in order and lazily: the first truthy ':case' wins,
+    // later cases are never evaluated, matching the routine ':switch'.
+    let matched = false;
+    let returned = false;
+    for (const [casePosition, caseObject] of control[':switch'].entries()) {
+      if (!matched) {
+        const condition = this.evaluateControlValue({
+          arrayIndices,
+          block,
+          event,
+          input: caseObject[':case'],
+          node: caseObject,
+          parseScope,
+          responses,
+        });
+        if (condition) {
+          matched = true;
+          controls.push({ index, type: ':switch', taken: casePosition });
+          returned = await this.callActionLoop({
+            actions: caseObject[':then'],
+            arrayIndices,
+            block,
+            controls,
+            counters,
+            event,
+            parseScope,
+            progress,
+            responses,
+          });
+          continue;
+        }
+      }
+      this.recordSkippedActions({ actions: caseObject[':then'], counters, responses });
+    }
+    if (matched) {
+      this.recordSkippedActions({ actions: control[':default'] ?? [], counters, responses });
+      return returned;
+    }
+    controls.push({ index, type: ':switch', taken: 'default' });
+    return this.callActionLoop({
+      actions: control[':default'] ?? [],
+      arrayIndices,
+      block,
+      controls,
+      counters,
+      event,
+      parseScope,
+      progress,
+      responses,
+    });
+  }
+
+  evaluateControlValue({ arrayIndices, block, event, input, node, parseScope, responses }) {
+    const { output, errors: parserErrors } = this.context._internal.parser.parse({
+      ...parseScope,
+      actions: responses,
+      event,
+      arrayIndices,
+      input,
+      location: block.blockId,
+    });
+    if (parserErrors.length > 0) {
+      const error = parserErrors[0];
+      // Report against the nearest node's '~k' when the operator carries none.
+      if (type.isNone(error.configKey)) {
+        error.configKey = node['~k'];
+      }
+      // Controls are anonymous - no responses entry, so only {error} is thrown.
+      throw { error };
+    }
+    return output;
+  }
+
+  // Records actions the chain does not execute for a control-flow reason as skipped,
+  // without parsing their operators. Controls record no responses entry, but still
+  // consume a control index so reached controls keep their depth-first numbering.
+  recordSkippedActions({ actions, counters, responses }) {
+    for (const action of actions) {
+      if (isControl(action)) {
+        counters.control += 1;
+        if (':if' in action) {
+          this.recordSkippedActions({ actions: action[':then'], counters, responses });
+          this.recordSkippedActions({ actions: action[':else'] ?? [], counters, responses });
+        }
+        if (':switch' in action) {
+          action[':switch'].forEach((caseObject) => {
+            this.recordSkippedActions({ actions: caseObject[':then'], counters, responses });
+          });
+          this.recordSkippedActions({ actions: action[':default'] ?? [], counters, responses });
+        }
+        continue;
+      }
+      responses[action.id] = { type: action.type, skipped: true, index: counters.action };
+      counters.action += 1;
+    }
   }
 
   async callActions({ actions, arrayIndices, block, catchActions, event, eventName, progress }) {
     const startTimestamp = new Date();
     const responses = {};
+    // Only events with controls gain a 'controls' array - flat chains keep their result shape.
+    const hasControls = actions.some(isControl) || catchActions.some(isControl);
+    const controls = hasControls ? [] : undefined;
+    const counters = { action: 0, control: 0 };
     try {
-      await this.callActionLoop({ actions, arrayIndices, block, event, responses, progress });
+      await this.callActionLoop({
+        actions,
+        arrayIndices,
+        block,
+        controls,
+        counters,
+        event,
+        parseScope: { error: null },
+        responses,
+        progress,
+      });
     } catch (error) {
       this.logActionError(error);
+      // A server error is already the wire shape, generic unless the author wrote
+      // it. A client-side error was built in the browser from data it already
+      // holds, so it keeps its real message - only its fields are narrowed.
+      const thrown = error.error;
+      const caught = isDecodedServerError(thrown)
+        ? thrown
+        : Object.assign(projectCaughtError(thrown), {
+            actionId: error.action?.id,
+          });
+      // Catch actions restart action numbering, matching flat-chain history; the control
+      // counter continues so every control entry keeps a unique index within the event.
+      counters.action = 0;
       try {
         await this.callActionLoop({
           actions: catchActions,
           arrayIndices,
           block,
+          controls,
+          counters,
           event,
+          parseScope: { error: caught },
           responses,
           progress,
         });
@@ -125,6 +381,7 @@ class Actions {
         return {
           blockId: block.blockId,
           bounced: false,
+          ...(controls && { controls }),
           endTimestamp: new Date(),
           error,
           errorCatch,
@@ -138,6 +395,7 @@ class Actions {
       return {
         blockId: block.blockId,
         bounced: false,
+        ...(controls && { controls }),
         endTimestamp: new Date(),
         error,
         event,
@@ -150,6 +408,7 @@ class Actions {
     return {
       blockId: block.blockId,
       bounced: false,
+      ...(controls && { controls }),
       endTimestamp: new Date(),
       event,
       eventName,
@@ -159,7 +418,7 @@ class Actions {
     };
   }
 
-  async callAction({ action, arrayIndices, block, event, index, progress, responses }) {
+  async callAction({ action, arrayIndices, block, event, index, parseScope, progress, responses }) {
     if (!this.actions[action.type]) {
       const error = new ConfigError(`Invalid action type "${action.type}" at "${block.blockId}".`, {
         configKey: action['~k'],
@@ -167,6 +426,7 @@ class Actions {
       throw { error, action, index };
     }
     const { output: parsedAction, errors: parserErrors } = this.context._internal.parser.parse({
+      ...parseScope,
       actions: responses,
       event,
       arrayIndices,
@@ -192,32 +452,47 @@ class Actions {
     try {
       response = await this.actions[action.type]({
         globals: this.context._internal.lowdefy._internal.globals,
-        methods: getActionMethods({
-          actionId: action.id,
-          actions: responses,
-          arrayIndices,
-          blockId: block.blockId,
+        // Read-only app metadata (name, slug, version, gitSha, environment) — what _app reads.
+        lowdefyApp: this.context._internal.lowdefy.lowdefyApp,
+        methods: trackActionMethods({
           context: this.context,
-          event,
+          methods: getActionMethods({
+            actionId: action.id,
+            actions: responses,
+            arrayIndices,
+            blockId: block.blockId,
+            context: this.context,
+            event,
+          }),
         }),
         params: parsedAction.params,
+        trace: getTrace(this.context._internal.lowdefy).actionView,
       });
       if (progress) {
         progress();
       }
     } catch (err) {
-      const error = err.isLowdefyError
-        ? err
-        : new ActionError(err.message, {
-            cause: err,
-            typeName: action.type,
-            received: parsedAction.params,
-            location: block.blockId,
-            configKey: action['~k'],
-          });
+      let error;
+      if (err.isLowdefyError) {
+        error = err;
+        // Plugins may throw ConfigError or UserError without a location - the interface
+        // layer owns location resolution.
+        if (type.isNone(error.configKey)) {
+          error.configKey = action['~k'];
+        }
+      } else {
+        error = new ActionError(err.message, {
+          cause: err,
+          typeName: action.type,
+          received: parsedAction.params,
+          location: block.blockId,
+          configKey: action['~k'],
+        });
+      }
 
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({
+        ...parseScope,
         actions: responses,
         event,
         arrayIndices,
@@ -244,19 +519,40 @@ class Actions {
       message: messages.success,
       status: 'success',
     });
+    // Unwrap here, after the success message: an action that ends the chain is a
+    // success like any other. Only the inner value reaches '_actions.<id>.response',
+    // so the marker never becomes app-visible state.
+    if (isStopChain(response)) {
+      return { type: action.type, response: response.response, index, stoppedChain: true };
+    }
     return { type: action.type, response, index };
   }
 
+  // Returns a function that closes the message. The message is shown by the app's Message block, a
+  // plugin: a message it fails to show is reported on its own, since thrown from here it would
+  // replace the action's own result, and callActions would lose the { error, action } shape of a
+  // failed action.
   displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {
-    let close = () => undefined;
-    if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
-      close = this.context._internal.lowdefy._internal.displayMessage({
+    const noClose = () => undefined;
+    const shown =
+      (hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message));
+    if (!shown) {
+      return noClose;
+    }
+    const { displayMessage, handleError, logger } = this.context._internal.lowdefy._internal;
+    try {
+      const close = displayMessage({
         content: type.isString(message) ? message : defaultMessage,
         duration,
         status,
       });
+      return type.isFunction(close) ? close : noClose;
+    } catch (error) {
+      // handleError is async in the client; its own failure must not surface as an unhandled
+      // rejection either.
+      Promise.resolve(handleError?.(error)).catch((reportError) => logger?.error(reportError));
+      return noClose;
     }
-    return close;
   }
 }
 

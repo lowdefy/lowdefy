@@ -1,0 +1,38 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import type from './type.js';
+
+// Keys that look like operators (single key starting with _) but are not.
+const KNOWN_NON_OPERATORS = new Set(['_id']);
+
+// Returns the normalized operator name ('_get' for { '_get.key': ... },
+// '_state' for { __state: ... }) when the value is an operator object, else
+// null. An operator object has exactly one non-~-prefixed key starting with _
+// (~ keys like ~k configKeys may sit alongside the operator key).
+function getOperatorType(value) {
+  if (!type.isObject(value)) return null;
+  const nonTildeKeys = Object.keys(value).filter((key) => !key.startsWith('~'));
+  if (nonTildeKeys.length !== 1) return null;
+  const [op] = nonTildeKeys[0].split('.');
+  const operator = op.replace(/^_+/, '_');
+  if (operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator)) {
+    return operator;
+  }
+  return null;
+}
+
+export default getOperatorType;

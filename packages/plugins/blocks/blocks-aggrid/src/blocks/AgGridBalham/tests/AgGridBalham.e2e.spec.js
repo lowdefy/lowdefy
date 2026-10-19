@@ -168,11 +168,11 @@ test.describe('AgGridBalham Block', () => {
     const block = getBlock(page, 'aggridbalham_cell_tag');
     const firstCellSpan = block.locator('.ag-row[row-index="0"] .ag-cell span').first();
     await expect(firstCellSpan).toHaveText('Active');
-    // Uses inline style with color-mix pattern — assert the style contains the pattern.
     const style = await firstCellSpan.getAttribute('style');
     expect(style).toContain('color-mix');
-    expect(style).toContain('12%');
-    expect(style).toContain('30%');
+    // A preset colour draws as antd's preset tag: its -1 fill and -3 border.
+    expect(style).toMatch(/background: var\(--ant-[a-z]+-1,/);
+    expect(style).toMatch(/border: 1px solid var\(--ant-[a-z]+-3,/);
   });
 
   test('cell.type: tag renders em-dash for null values', async ({ page }) => {
@@ -198,8 +198,9 @@ test.describe('AgGridBalham Block', () => {
     await expect(tagSpans.nth(1)).toHaveText('editor');
     const firstStyle = await tagSpans.nth(0).getAttribute('style');
     expect(firstStyle).toContain('color-mix');
-    expect(firstStyle).toContain('12%');
-    expect(firstStyle).toContain('30%');
+    // A preset colour draws as antd's preset tag: its -1 fill and -3 border.
+    expect(firstStyle).toMatch(/background: var\(--ant-[a-z]+-1,/);
+    expect(firstStyle).toMatch(/border: 1px solid var\(--ant-[a-z]+-3,/);
   });
 
   test('cell.type: tag renders single tag for a one-element array', async ({ page }) => {
@@ -230,8 +231,9 @@ test.describe('AgGridBalham Block', () => {
     await expect(firstRowSpan).toHaveText('frontend');
     const style = await firstRowSpan.getAttribute('style');
     expect(style).toContain('color-mix');
-    expect(style).toContain('12%');
-    expect(style).toContain('30%');
+    // A preset colour draws as antd's preset tag: its -1 fill and -3 border.
+    expect(style).toMatch(/background: var\(--ant-[a-z]+-1,/);
+    expect(style).toMatch(/border: 1px solid var\(--ant-[a-z]+-3,/);
   });
 
   test('cell.type: tag seeded colour is consistent across rows for the same value', async ({
@@ -251,7 +253,7 @@ test.describe('AgGridBalham Block', () => {
   test('cell.type: avatar renders picture when srcField is present', async ({ page }) => {
     const block = getBlock(page, 'aggridbalham_cell_avatar');
     const firstRow = block.locator('.ag-row[row-index="0"]');
-    await expect(firstRow.locator('img')).toHaveAttribute('src', 'https://example.com/a.png');
+    await expect(firstRow.locator('img')).toHaveAttribute('src', /^data:image\/png/);
     await expect(firstRow).toContainText('Alice Johnson');
   });
 
@@ -393,19 +395,25 @@ test.describe('AgGridBalham Block', () => {
   test('ellipsis: N installs a line-clamp renderer', async ({ page }) => {
     const block = getBlock(page, 'aggridbalham_ellipsis');
     const longCell = block.locator('.ag-row[row-index="0"] .ag-cell').first();
-    const clampSpan = longCell.locator('span').first();
-    const style = await clampSpan.getAttribute('style');
-    expect(style).toContain('-webkit-line-clamp: 2');
-    expect(style).toContain('-webkit-box');
+    // ag-grid wraps cell content in its own spans (autoHeight/wrapText), so
+    // target the innermost span with the text. Chromium computes the legacy
+    // `display: -webkit-box` as `flow-root` since standardizing line-clamp,
+    // so assert the clamp properties and that the text actually truncates.
+    const clampSpan = longCell.locator('span', { hasText: 'Quite a long piece of text' }).last();
+    await expect(clampSpan).toHaveCSS('-webkit-line-clamp', '2');
+    await expect(clampSpan).toHaveCSS('overflow', 'hidden');
+    expect(await clampSpan.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
   });
 
   // ============================================
   // LOADING FLAG — runtime toggle
   // ============================================
 
-  test('loading flag toggles native overlay at runtime', async ({ page }) => {
+  test('loading flag toggles loading overlay at runtime', async ({ page }) => {
     const block = getBlock(page, 'aggridbalham_loading_grid');
-    const overlay = block.locator('.ag-overlay-loading-center');
+    // The block suppresses ag-grid's native loading overlay (WebKit race, see
+    // LoadingOverlay.js) and renders its own overlay div from the loading prop.
+    const overlay = block.getByText('Loading...');
 
     // Initial: loading is false → no visible loading overlay.
     await expect(overlay).toBeHidden();

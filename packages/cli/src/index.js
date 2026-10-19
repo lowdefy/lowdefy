@@ -16,10 +16,10 @@
 */
 
 const nodeMajorVersion = process.version.split(/^v(\d+)/)[1];
-if (Number(nodeMajorVersion) < 18) {
+if (Number(nodeMajorVersion) < 24) {
   // TODO: This error handled with telemetry.
   throw new Error(
-    `Nodejs versions below v18 are not supported. You are using ${process.version}. Update Nodejs to the latest LTS version to use Lowdefy.`
+    `Nodejs versions below v24 are not supported. You are using ${process.version}. Update Nodejs to the latest LTS version to use Lowdefy.`
   );
 }
 async function run() {

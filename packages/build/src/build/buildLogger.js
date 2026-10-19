@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+// serverTracing has no default here: it depends on where the server runs (on for the Node server,
+// off on Vercel), which initSentryServer knows and the build does not.
 const sentryDefaults = {
   client: true,
   server: true,
@@ -26,18 +28,34 @@ const sentryDefaults = {
   userFields: ['id', '_id'],
 };
 
+// Runs after validateConfig, so config.environment and config.environments are resolved.
 function buildLogger({ components }) {
   if (type.isNone(components.logger)) {
     components.logger = {};
   }
+  const current = components.config.environment;
 
-  // Only apply defaults if sentry is explicitly configured
-  if (!type.isNone(components.logger.sentry)) {
-    components.logger.sentry = {
-      ...sentryDefaults,
-      ...components.logger.sentry,
-    };
+  // Sentry is enabled by SENTRY_DSN, not by the config being present, so a current environment
+  // creates the Sentry config to carry its name. Without either, the runtime defaults apply.
+  if (type.isNone(components.logger.sentry) && type.isNone(current)) {
+    return components;
   }
+  const sentry = {
+    ...sentryDefaults,
+    ...(components.logger.sentry ?? {}),
+  };
+  if (!type.isNone(current)) {
+    // Sentry reports under the environment name unless the app names one itself, and is off on
+    // both sides when the environment switches it off.
+    if (type.isNone(sentry.environment)) {
+      sentry.environment = current;
+    }
+    if (components.config.environments?.[current]?.sentry?.enabled === false) {
+      sentry.client = false;
+      sentry.server = false;
+    }
+  }
+  components.logger.sentry = sentry;
 
   return components;
 }

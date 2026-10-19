@@ -52,6 +52,13 @@
         variant: borderless
         label:
           disabled: true
+    - id: dts_variant_underlined
+      type: DateTimeSelector
+      properties:
+        title: Underlined
+        variant: underlined
+        label:
+          disabled: true
 
 - title: Time Format Options
   blocks:
@@ -261,6 +268,55 @@
         label:
           disabled: true
 
+- title: Prefix, Placement and Read-only Input
+  blocks:
+    - id: dts_prefix_icon
+      type: DateTimeSelector
+      properties:
+        title: Prefix Icon
+        prefixIcon: clock
+        suffixIcon:
+          name: calendar
+          color: '#8c8c8c'
+    - id: dts_prefix_text
+      type: DateTimeSelector
+      properties:
+        title: Prefix Text
+        prefix: 'From:'
+    - id: dts_placement
+      type: DateTimeSelector
+      properties:
+        title: Popup Opens Top Right
+        placement: topRight
+    - id: dts_read_only
+      type: DateTimeSelector
+      properties:
+        title: Pick From Calendar Only
+        inputReadOnly: true
+        label:
+          extra: The input is read-only, so touch devices do not open the keyboard.
+
+- title: Confirm and 12 Hour Clock
+  blocks:
+    - id: dts_no_confirm
+      type: DateTimeSelector
+      properties:
+        title: No OK Button
+        needConfirm: false
+        label:
+          extra: No OK button, the selection is saved when the popup closes.
+    - id: dts_twelve_hour
+      type: DateTimeSelector
+      properties:
+        title: 12 Hour Clock
+        format: YYYY-MM-DD hh:mm a
+        timeFormat: hh:mm a
+    - id: dts_show_week
+      type: DateTimeSelector
+      properties:
+        title: Show Week Numbers
+        showWeek: true
+
 - title: Disabled State
   blocks:
     - id: dts_dis_outlined
@@ -305,14 +361,14 @@
       type: DateTimeSelector
       properties:
         title: Clock Icon
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           disabled: true
     - id: dts_icon_schedule
       type: DateTimeSelector
       properties:
         title: Schedule Icon
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           disabled: true
     - id: dts_icon_custom_color
@@ -320,7 +376,7 @@
       properties:
         title: Custom Color Icon
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         label:
           disabled: true
@@ -329,7 +385,7 @@
       properties:
         title: Heart Icon
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#ff4d4f'
         label:
           disabled: true
@@ -374,6 +430,67 @@
             - ['2026-03-20', '2026-03-24']
         label:
           disabled: true
+
+- title: Presets
+  # The popup is wider than a gallery column, and the card clips what overflows it.
+  overflowVisible: true
+  blocks:
+    - id: dts_presets_relative
+      type: DateTimeSelector
+      properties:
+        title: Relative Presets
+        label:
+          extra: Shortcuts are listed to the left of the calendar.
+        presets:
+          - label: Now
+            value:
+              _date: now
+          - label: An hour ago
+            value:
+              _dayjs:
+                - now
+                - subtract: [1, hour]
+          - label: Yesterday
+            value:
+              _dayjs:
+                - now
+                - subtract: [1, day]
+    - id: dts_presets_start_of_day
+      type: DateTimeSelector
+      properties:
+        title: Start of Day
+        label:
+          disabled: true
+        presets:
+          - label: Today 09:00
+            value:
+              _dayjs:
+                - now
+                - startOf: day
+                - add: [9, hours]
+          - label: Today 17:00
+            value:
+              _dayjs:
+                - now
+                - startOf: day
+                - add: [17, hours]
+    - id: dts_presets_utc
+      type: DateTimeSelector
+      properties:
+        title: UTC Presets
+        selectUTC: true
+        label:
+          extra: With selectUTC, preset dates are read as UTC.
+        presets:
+          - label: Now (UTC)
+            value:
+              _date: now
+          - label: Midnight UTC
+            value:
+              _dayjs:
+                - now
+                - utc
+                - startOf: day
 
 - title: Label Options
   blocks:
@@ -453,6 +570,7 @@
       type: DateTimeSelector
       style:
         .element:
+          backgroundColor: var(--ant-color-primary-bg)
       properties:
         title: Custom Background
         label:
@@ -537,7 +655,7 @@
         placeholder: Select appointment date & time
         format: DD MMMM YYYY HH:mm
         size: large
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         showToday: true
         showNow: true
         allowClear: true
@@ -567,7 +685,7 @@
         minuteStep: 30
         hourStep: 1
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         disabledDates:
           min: '2026-01-01'
@@ -582,7 +700,7 @@
         selectUTC: true
         size: large
         variant: filled
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           extra: Time is recorded in UTC.
     - id: dts_combo_themed
@@ -595,7 +713,7 @@
         placeholder: Choose a special date & time...
         minuteStep: 15
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#eb2f96'
         label:
           disabled: true
@@ -620,7 +738,7 @@
             format: DD MMMM YYYY HH:mm
             minuteStep: 15
             size: large
-            suffixIcon: AiOutlineSchedule
+            suffixIcon: CalendarDays
             label:
               extra: Appointments are available in 15-minute slots.
             disabledDates:
@@ -650,7 +768,7 @@
           type: Button
           properties:
             title: Book Appointment
-            icon: AiOutlineCalendar
+            icon: calendar
             type: primary
             size: large
             block: true
@@ -681,7 +799,7 @@
             placeholder: Select meeting date and time
             format: DD MMMM YYYY HH:mm
             minuteStep: 15
-            suffixIcon: AiOutlineClockCircle
+            suffixIcon: clock
             label:
               extra: Meetings are scheduled in 15-minute increments.
             disabledDates:
@@ -696,7 +814,7 @@
           type: Button
           properties:
             title: Schedule Meeting
-            icon: AiOutlineSchedule
+            icon: CalendarDays
             type: primary
             size: large
             block: true

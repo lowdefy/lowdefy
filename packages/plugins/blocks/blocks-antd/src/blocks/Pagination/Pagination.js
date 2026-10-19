@@ -19,16 +19,19 @@ import { Pagination } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import withTheme from '../withTheme.js';
+import './style.css';
 
 const createChangeHandler =
   ({ eventName, methods, setState }) =>
   (current, pageSize) => {
-    setState({ current, pageSize, skip: (current - 1) * pageSize });
-    methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
+    const skip = (current - 1) * pageSize;
+    setState({ current, pageSize, skip });
+    methods.setValue({ current, pageSize, skip });
     methods.triggerEvent({
       name: eventName,
-      event: { current, pageSize, skip: current * pageSize },
+      event: { current, pageSize, skip },
     });
   };
 
@@ -44,6 +47,7 @@ const calculateState = ({ defaultCurrent, defaultPageSize, value }) => {
 const PaginationBlock = ({
   blockId,
   classNames = {},
+  components: { Icon },
   loading,
   methods,
   properties,
@@ -68,34 +72,88 @@ const PaginationBlock = ({
       methods.setValue({ ...nextState });
     }
   }, [value]);
-  const showTotal = type.isFunction(properties.showTotal)
-    ? properties.showTotal
-    : (total, range) => {
-        if (type.isString(properties.showTotal)) {
-          return properties.showTotal;
-        }
-        if (total === 0) {
-          return 'No items';
-        }
-        return `${range[0]}-${range[1]} of ${total} items`;
-      };
+  function getShowTotal() {
+    if (properties.showTotal === false) {
+      return undefined;
+    }
+    if (type.isFunction(properties.showTotal)) {
+      return properties.showTotal;
+    }
+    return (total, range) => {
+      if (type.isString(properties.showTotal)) {
+        return properties.showTotal;
+      }
+      if (total === 0) {
+        return 'No items';
+      }
+      return `${range[0]}-${range[1]} of ${total} items`;
+    };
+  }
+  // antd builds these wrappers around its own arrows; the same markup keeps its styles.
+  function jumpIcon(name) {
+    return (
+      <a className="ant-pagination-item-link">
+        <div className="ant-pagination-item-container">
+          <Icon
+            blockId={`${blockId}_${name}_icon`}
+            className="ant-pagination-item-link-icon"
+            properties={{ name, title: '' }}
+          />
+          <span className="ant-pagination-item-ellipsis">{'\u2022\u2022\u2022'}</span>
+        </div>
+      </a>
+    );
+  }
+  function stepIcon(name) {
+    return (
+      <button className="ant-pagination-item-link" type="button" tabIndex={-1}>
+        <Icon blockId={`${blockId}_${name}_icon`} properties={{ name, title: '' }} />
+      </button>
+    );
+  }
+  // antd 6 has no `default` size; its middle size is `medium`.
+  const size = properties.size === 'default' ? 'medium' : properties.size;
+  const total = properties.total !== undefined ? properties.total : 100;
+  // antd shows the size changer by itself above 50 items when showSizeChanger
+  // is unset; resolving that here gives the automatic changer the app's arrow too.
+  const showSizeChanger = properties.showSizeChanger ?? total > 50;
   return (
     <Pagination
       id={blockId}
-      className={classNames.element}
-      disabled={properties.disabled || loading}
+      align={properties.align}
+      className={classNames.element ? `lf-pagination ${classNames.element}` : 'lf-pagination'}
+      classNames={{ item: classNames.item }}
+      disabled={getDisabled({ loading, properties })}
       hideOnSinglePage={properties.hideOnSinglePage}
       onChange={createChangeHandler({ eventName: 'onChange', methods, setState })}
       onShowSizeChange={createChangeHandler({ eventName: 'onSizeChange', methods, setState })}
       pageSize={state.pageSize}
       pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}
       showQuickJumper={properties.showQuickJumper}
-      showSizeChanger={properties.showSizeChanger}
-      showTotal={showTotal}
+      showSizeChanger={
+        showSizeChanger === true
+          ? {
+              suffixIcon: (
+                <Icon
+                  blockId={`${blockId}_sizeChanger_icon`}
+                  properties={{ name: 'chevron-down', title: '' }}
+                />
+              ),
+            }
+          : showSizeChanger
+      }
+      responsive={properties.responsive}
+      showLessItems={properties.showLessItems}
+      prevIcon={stepIcon('chevron-left')}
+      nextIcon={stepIcon('chevron-right')}
+      jumpPrevIcon={jumpIcon('chevrons-left')}
+      jumpNextIcon={jumpIcon('chevrons-right')}
+      showTotal={getShowTotal()}
       simple={!!properties.simple}
-      size={properties.size}
+      size={size}
       style={styles.element}
-      total={properties.total !== undefined ? properties.total : 100}
+      styles={{ item: styles.item }}
+      total={total}
       current={state.current}
     />
   );

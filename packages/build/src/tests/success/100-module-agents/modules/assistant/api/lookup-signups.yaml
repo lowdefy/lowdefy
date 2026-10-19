@@ -1,0 +1,11 @@
+id: lookup-signups
+type: InternalApi
+description: Look up signup counts for a date range.
+payloadSchema:
+  type: object
+  properties:
+    days:
+      type: number
+routine:
+  - ':return':
+      signups: 42

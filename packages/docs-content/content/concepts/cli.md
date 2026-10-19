@@ -1,0 +1,403 @@
+# The CLI
+
+The Lowdefy CLI is used to develop a Lowdefy app locally, and to build Lowdefy apps for deployment.
+
+We recommend running the CLI using `pnpx`, to always use the latest version:
+
+```
+pnpx lowdefy@5 <command>
+```
+
+or, to use a specific version:
+
+```
+pnpx lowdefy@version <command>
+```
+
+Alternative, you can install the CLI globally or to a Javascript project (with a `package.json` file) via pnpm.
+
+To install the CLI globally run:
+
+```
+pnpm add -g lowdefy
+```
+
+The CLI can then be run using `lowdefy` as the executable name:
+
+```
+lowdefy <command>
+```
+
+# CLI commands
+
+## build
+
+The `build` command runs a Lowdefy build. This builds a production Lowdefy app in the server directory, which can then be started using the `lowdefy start` command. The options are:
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--no-client-build`: Do not run the Vite client build, and only build the Lowdefy config. Used in some deployment scripts where the client build is done as a separate step. The previous `--no-next-build` flag still works as a deprecated alias.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+- `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+- `--skip-plugin-checks`: Skip every [plugin build check rule](/lowdefy-schema#plugin-check-rules) for this run. Each build logs a warning that they were skipped. Built-in build checks still run. Use it while a fix ships for a plugin rule that is wrong or too strict.
+
+
+## data list
+
+The `data list` command prints each [journey data set](/journey-data-sets) in `tests/data/` with the number of documents it loads and the users it names.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+
+## dev
+
+The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory. The `dev` command should not be used to serve a production app, the `build` and `start` commands should be used instead.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `--exit-with-pid <pid>`: Stop the server when the process with this id exits. For test runners and scripts that start the server. The `LOWDEFY_EXIT_WITH_PID` environment variable does the same, and passes through wrappers such as `pnpm exec` or a secrets manager.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--mock-user [user]`: Start the dev server authenticated as a mock user, bypassing the login flow. Pass a JSON user object to set the identity and roles (e.g. `--mock-user '{"sub":"dev","roles":["admin"]}'`), or use the bare flag for a default user with no roles. This is the same mechanism as `auth.dev.mockUser`. Dev server only. See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
+- `--no-open`: Do not open a new tab in the default browser.
+- `--port <port>`: Change the port the server is hosted at. The default is `3000`. A port you set (with this option, the `PORT` environment variable, or `cli.port`) is used or the command fails; only the default moves to the next free port when it is taken.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--watch <paths...>`: A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.
+- `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
+- `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+- `--skip-plugin-checks`: Skip every [plugin build check rule](/lowdefy-schema#plugin-check-rules) for this run. Each build logs a warning that they were skipped. Built-in build checks still run. Use it while a fix ships for a plugin rule that is wrong or too strict.
+
+The server stops when the `lowdefy dev` process stops, however it stops, including when it is killed outright.
+
+One app runs one dev server. The running server records itself in `.lowdefy/instance.json` (its pid, port, URL, state and whether a person or the [Lowdefy hub](#hub) started it), and a second `lowdefy dev` for the same app exits before touching anything, naming the server already running. A record copied from another checkout (for example into a git worktree) is ignored.
+
+## emails
+
+The `emails` command previews the [notification](/notifications) emails your app renders, using [React Email](https://react.email/)'s preview server. It builds the app, renders each notification from its `testData`, and opens the preview so you can iterate on templates without sending real mail. It warns when a template renders a data key your `testData` is missing (which would show as an empty section), and errors if the app has no `notifications:` section.
+
+The preview tooling (`react-email`) is installed just-in-time by this command — it is never a dependency of your app or its production server.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--port <port>`: Change the port the email preview server is hosted at. The default is `3001`.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
+## agent-setup
+
+The `agent-setup` command sets up a project for AI coding agents. Run it as `npx lowdefy@<app version> agent-setup`. At the project root it writes `.mcp.json` registering the [`lowdefy` MCP server](/ai-agent-docs) — `lowdefy mcp`, run over stdio through npx at the version of the CLI running `agent-setup` — Lowdefy's guidance as a block between `<!-- BEGIN:lowdefy-agent-rules version=<version> -->` and `<!-- END:lowdefy-agent-rules -->` markers in `AGENTS.md` (or in `CLAUDE.md` when the project has only that), a root `CLAUDE.md` importing `@AGENTS.md`, and Lowdefy's skills in both `.agents/skills/` and `.claude/skills/`. Existing files are merged, not overwritten: each run rewrites only the block, and refreshes a skill only while neither of its two copies was edited. Nothing it writes names an app, so every app in a repository writes the same files. When the CLI's version differs from the app's, it still writes, and warns with the `npx lowdefy@<app version> agent-setup` command that matches them. It refuses apps on `lowdefy: local`. When several `package.json` scripts run `lowdefy dev`, it asks you to set [`cli.devScript`](#configuration). Before writing `.mcp.json` it runs the pinned version's `lowdefy mcp` through npx, and refuses a version npm cannot serve (unpublished, or from before `lowdefy mcp`); the refusal prints the `claude mcp add --scope local` command that runs your own build of the CLI for you only. See [Setting up a project](/ai-agent-docs).
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--project-directory <project-directory>`: Change the directory where agent files are written. The default is the nearest ancestor directory containing `.git`.
+- `--user`: Instead of setting up this project, register `lowdefy mcp` as `lowdefy` for every Claude Code session of your user (`claude mcp add --scope user lowdefy -- npx ...`, or `cmd /c npx ...` on Windows), pinned to this CLI's version, replacing an earlier `lowdefy` or `lowdefy-docs` registration. Needs no app. The version must be published with `lowdefy mcp` (until Lowdefy 7 is released, `npx lowdefy@experimental agent-setup --user`). If the add fails, the existing registration stays and the error prints the commands to run. Without Claude Code on your `PATH`, it prints the entry to add to your agent client.
+
+## mcp
+
+The `mcp` command runs the Lowdefy MCP server for coding agents over stdio. Agent clients start it themselves from `.mcp.json` or their user configuration (see `agent-setup`), one per session — you do not run it by hand. It routes every tool call to the dev server of the app and git checkout the agent is working in, and starts that server through the [hub](#hub) when it is not running. See [AI agent docs](/ai-agent-docs).
+
+## hub
+
+The Lowdefy hub is a small per-user background process that runs dev servers for coding agents. `lowdefy mcp` starts it when an agent first needs a dev server, and it exits on its own after ten idle minutes. It gives each app its own port (from 4100 up, kept across restarts), runs the app's own dev script, and stops a server when no agent session has used it for 30 minutes and no browser tab has it open, or when its directory is removed. It only ever stops servers it started: a `lowdefy dev` you run in a terminal is used by agents but never stopped by them.
+
+- `lowdefy hub status`: List the dev servers the hub runs.
+- `lowdefy hub start [directory] [--restart] [--clean]`: Start (or return) an app's dev server through the hub. `--clean` deletes the build directory first.
+- `lowdefy hub stop [directory] [--all]`: Stop a dev server the hub runs, or all of them.
+- `lowdefy hub logs [directory] [--lines <n>] [--grep <text>]`: Print the recent output of a dev server the hub runs.
+- `lowdefy hub ps`: List the Lowdefy servers running on this machine (dev and production servers started with the CLI), the process that owns each, and whether that owner is gone.
+- `lowdefy hub prune [--kill]`: Stop Lowdefy servers whose owner is gone, such as a test server whose test run was killed. It only lists them unless `--kill` is passed. It also lists servers whose `lowdefy` CLI was left running after whatever started it was killed (for example a `pnpm exec` wrapper killed outright), and servers left running by an older Lowdefy version, in both cases only when nothing but package-manager wrappers is left above them, as well as a dev server's Vite process left running after an older dev server was killed. A server with a live owner (a terminal, a script still running, the hub) is never stopped. The hub prunes servers whose owner is gone each time it starts.
+- `lowdefy hub trust [directory]`: Let `lowdefy mcp` start and query the dev servers of the git repository `directory` is in from any agent session, not only sessions started in it. It covers all of the repository's git worktrees. Run it yourself, in an interactive terminal: it refuses without one, so an agent cannot trust a repository. It refuses a directory outside git.
+- `lowdefy hub untrust [directory]`: Undo `hub trust`. Also removes an entry whose directory is gone, given its old path.
+- `lowdefy hub trusted`: List the trusted repositories by their git directory (`.../repo/.git`), marking those that are missing.
+
+When a `package.json` in an app's checkout lists `lowdefy` but no `node_modules` up to the checkout root has it (a fresh git worktree, for example), `lowdefy hub start` and `lowdefy mcp` do not run its dev script; they answer with the install command to run, and where. See [AI agent docs](/ai-agent-docs).
+
+The hub keeps its state in `~/.lowdefy/hub`, and running servers record themselves in `~/.lowdefy/servers` (set `LOWDEFY_HOME` to move both). It starts servers with the script `cli.devScript` names, or the one `package.json` script that runs `lowdefy dev`, so wrappers such as a secrets manager apply to agent-started servers too.
+
+## init
+
+The `init` command initializes a Lowdefy application. It creates the `lowdefy.yaml` and `.gitignore` in the working directory.
+
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## init-docker
+
+The `init-docker` command initializes a Dockerfile in the config directory that can be used to build a Docker image of the Lowdefy app.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## docker-output
+
+The `docker-output` command assembles a minimal production runtime at `.lowdefy/docker` from an already-built app. It traces the server's runtime dependency graph and copies only the files the server actually imports, keeping the Docker image small. Run it after `lowdefy build`; the Dockerfile created by `init-docker` runs it for you.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--server-directory <server-directory>`: Change the server directory. The default is `.lowdefy/server` in the config directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## init-vercel
+
+The `init-vercel` command initializes the installation scripts needed to deploy an app on [Vercel](https://vercel.com). It creates a directory called deploy, and a script called vercel.install.sh. It also creates a README file with instructions on how to configure Vercel.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## test
+
+The `test` command runs the app's config tests — every journey in `tests/journeys/`, sub-folders included, except folders whose name starts with `_` (such as `_candidates/`). It starts the development server headless on a free port, runs every journey through the dev server's journey route, prints `PASS`/`FAIL` per journey with the failing step, stops the server, and exits with code `1` if any journey failed. A `PASS` line shows the journey's tier, rank, rate and failures over the usage window when it has production evidence. A journey with `deprecated: true` is skipped and listed as `SKIP deprecated`. See [Config Tests](/config-tests).
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `[paths...]`: Journey files, directories (read with their sub-folders) or quoted globs such as `'tests/journeys/review/**'` to run instead of the whole suite, anywhere under the config directory, candidates in `tests/journeys/_candidates/` included. A glob that matches nothing exits with code `1`.
+- `--tag <tag>`: Only run journeys whose `tags` include this tag. Repeat it to run the journeys carrying any of the tags. Exits with code `1` if no journey matches.
+- `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Repeat it to run the journeys matching any of the strings. Exits with code `1` if no journey matches.
+- `--tier <tier>`: Only run the journeys in this popularity tier of the selection, ranked by recent production use: `common` (p50, the happy paths), `wide` (p80), `edge` (p95) or `full` (every journey, the default). Journeys with no counts for their current steps run in every tier. A tiered run never records as the suite's run. Exits with code `1` when the selection has fewer than 100 journey matches in the usage window, or no evidence. See [Usage and tiers](/config-tests#usage-and-tiers).
+- `--usage-window <months>`: The calendar months recent use is ranked over, for `--tier` and the `PASS` line, such as `6m`. The default is `3m`.
+- `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 pointless `as`) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--repeat <n>`: Run each journey `n` times (1 to 10) and classify it `PASS`, `FLAKY` or `FAIL`. Exits with code `1` on any `FLAKY` or `FAIL`. See [Replaying candidates](/config-tests#replaying-candidates).
+- `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
+
+## journeys harden
+
+The `journeys harden` command measures whether journeys fail when the feature they walk breaks. It runs each journey once, lists the config mutants on what the runs exercised, runs each mutant against the journeys that reached it, only in their own browsers, and prints progress lines as it goes, reports every mutant no journey noticed with its source line, and a score per journey, in `.lowdefy/test/mutation.json`. It exits with code `0` even with survivors. See [Mutants](/config-tests#mutants-lowdefy-journeys-harden).
+
+- `[paths...]`: Journey files, directories or globs to harden instead of the whole suite, as for `test`.
+- `--filter <name>`: Only journeys whose `name` contains this string.
+- `--page <pageId...>`: Only mutants on these pages, and endpoint mutants a journey touching them called. Journeys whose last measured run touched none of the pages are left out of the baseline too (never when there is no record for them, the journey changed, or the record was measured on a different config; the log says which). Records match by a hash of the built config, not by server start, so run `lowdefy test` after your last config edit.
+- `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
+- `--max <n>`: Run at most `n` mutants. The default is `200`; `0` means no cap.
+- `--seed <n>`: The sample's seed; another seed draws another sample. The default is `0`.
+- `--workers <n>`: Journey runs at once, 1 to 16. The default is `4`.
+- `--mutant <id>`: Run only this mutant against the journeys on its path, without replacing the report.
+- `--list`: Print the sampled mutants and a time estimate, and run nothing.
+- `--json`: Print the report as JSON.
+- `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
+
+## journeys variants
+
+The `journeys variants` command writes edge-case candidates of one journey — other roles (`role`), another organization (`tenant`), empty and large data (`empty`, `volume`), bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/<source>/<journey>-<kind>.yaml`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
+
+- `<file>`: The journey file to vary.
+- `--name <journey>`: The journey to vary, when the file holds several.
+- `--kinds <list>`: Only these kinds, comma separated. The `role` and `tenant` kinds read the users and fixtures of the journey's data set.
+- `--empty-data <name>`: The data set the `empty` variant runs on: one with no rows, and a user with the journey user's name.
+- `--volume-data <name>`: The data set the `volume` variant runs on: one with many rows, and a user with the journey user's name.
+- `--no-run`: Write the variants without replaying them.
+- `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
+
+## journeys scope
+
+The `journeys scope` command prints what a change touched, for a coding agent exploring a pull request: each page the change reached, why (its own config, a request, an endpoint, a connection or a websocket it uses, an app-wide artifact; changes that travel through `_ref` show on every page that refs them), the blocks added, changed or removed, and who can open the page, with the data set users under `tests/data/` it admits. It builds the merge base and the working tree in full with the installed dev server's builder and needs no running dev server; when none is installed, it installs one first without starting it. See [Exploring a pull request](/explore-pull-request).
+
+- `--base <ref>`: Compare with the merge base of this branch or commit and `HEAD`, such as the pull request's base branch. Without it, every page of the head is listed.
+- `--json`: Print the scope as JSON instead of the summary.
+- `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
+- `--skip-plugin-checks`: Skip every plugin build check rule in both builds. As for `build`.
+
+## journeys session
+
+The `journeys session [<id>]` command reads the sessions the development server recorded in `.lowdefy/traces/dev/`, or, with `--source production`, the production cache [`journeys pull posthog`](#journeys-pull-posthog) writes. Without an id it lists them, newest first: the session id, its time span, the pages visited, and how many interactions it holds and how many failed. With an id it prints that session as a log, one line per interaction with what the app did in response, such as `click save → Validate failed [priority]`, to write journeys from. A production log never shows a typed value, and shows clicked text only when it is text from the app's config. An id not in the window exits with code `1`, naming the newest sessions. Agents connected to the development server read dev sessions with the `lowdefy_journey_session` tool. Set `LOWDEFY_DEV_RECORD=false` to turn dev recording off. See [Session logs](/config-tests#session-logs).
+
+- `--source <source>`: `dev` (the default) or `production`.
+- `--since <since>`: Dev: only sessions with records at or after this time, a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production: the window ending today, a number of days such as `30d` (the default) or a start date, at most 30 days.
+- `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
+- `--json`: Print the list or the log as JSON on stdout.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory, where the development server's build is read from. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## journeys pull posthog
+
+The `journeys pull posthog` command reads the app's production analytics from its PostHog project, one UTC day at a time, and writes them as interaction traces to `.lowdefy/traces/production/<YYYY-MM-DD>.jsonl`, with a `<YYYY-MM-DD>.manifest.json` beside each day. `journeys session`, `journeys evidence` and `journeys coverage` read that cache with `--source production`. See [Production journeys](/config-tests#production-journeys).
+
+It reads three environment variables (the app's `.env` file is loaded first):
+
+- `POSTHOG_PROJECT_ID`: The PostHog project the app sends its analytics to.
+- `POSTHOG_API_HOST`: The project's API host, an `https://` URL such as `https://eu.posthog.com`. There is no default, because the wrong region answers as if the key were wrong.
+- `POSTHOG_PERSONAL_API_KEY`: Your own PostHog personal API key, scoped to the project with the **Query Read** scope. Export it in your shell or put it in the app's `.env`; never commit it. It is sent only to `POSTHOG_API_HOST` and never logged or written to a manifest.
+
+A day older than yesterday is final: it is pulled once and skipped afterwards. Today and yesterday are pulled again on every run, because PostHog accepts late events. Day files older than 400 days are removed at the start of each pull. Person and organisation ids are hashed with a random salt kept in `.lowdefy/traces/production/salt`, which never leaves your machine. Only the pull creates the salt. `journeys session`, `journeys coverage` and `journeys evidence` read a day only when it was pulled under this salt: a day pulled under another one (the salt file deleted, or the cache copied from another machine) reads as missing, with the pull that fetches it again.
+
+Clicked text is never written. Each clicked element's text is stored as a token, a hash under the same salt, so clicks on the same text can be grouped and counted without it. `journeys session`, `journeys coverage` and `journeys evidence` turn a token back into text only when it is the hash of a string in the app's config: the built pages, menus, i18n messages, block plugins' default messages and antd's locale strings for the app's locales. They collect those strings with one full build of the app by the installed development server (run `lowdefy dev` once first), cached until the config changes. Any other text, such as a customer's name in a grid cell or a label built from values, stays a token.
+
+Pull, session and coverage read at most 30 UTC days at a time, and refuse a longer window; `journeys evidence` is not capped. The first pull or production read after upgrading from a version that stored clicked text deletes the day files pulled that way, any `tests/journeys/_candidates/production/` an earlier version wrote, and `.lowdefy/test/coverage.json`, which the next pull and coverage write again. Committed journeys are never changed.
+
+- `--since <since>`: The days to pull, ending today: a number of days such as `30d`, or a start date. The default is `30d`, and the longest window is 30 days.
+- `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: An explicit window of whole UTC days instead of `--since`, at most 30 days. Pass both.
+- `--environment <name>`: Only events whose `environment` super property is this, for a project that receives several environments. By default nothing is filtered.
+- `--include-test-accounts`: Include the events the project's test-account filter leaves out.
+- `--org-property <name>`: The person property holding the organisation id. The default is `org_id`.
+- `--roles-property <name>`: The person property holding the roles. The default is `roles`.
+- `--page-size <rows>`: Rows read per query, at most `50000`. The default is `10000`.
+- `--max-rows <rows>`: Stop before the pull would read more rows than this, and say to shorten `--since`. The default is `500000`.
+- `--refetch`: Pull final days again.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+When PostHog rate limits the pull for longer than a minute, or the project's hourly query budget for personal keys runs out, the pull stops, keeps the days it has written, and says when to run it again. The next run picks up where it stopped.
+
+## journeys evidence
+
+The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`, by calendar month: the sessions that did what the journey does, the people and organisations behind them, and how many of them failed. It reads every final day of the production cache (today and yesterday are not final until a later pull), not a window, and gaps in the cache are fine. A month already counted from at least as many final days is not read again, so a routine refresh reads the current month. Days pulled with different filters (project, environment, test accounts) are refused. See [Evidence](/config-tests#evidence).
+
+A journey's click text counts only when it is text from the app's config, as production text is read: a journey clicking a grid cell by a customer's name is backed exactly as one clicking it with no text, so no command confirms whether production showed a value.
+
+Without `--refresh` it prints what would change and writes nothing. With `--refresh` it rewrites the `evidence` key of each journey whose numbers changed, and nothing else in the file. It is the only command that writes `evidence`. When a journey's steps change what it matches in production, its counted months move to a deprecated flow that is still counted, and the new flow is counted from the cache. Afterwards it lists the journeys no production session backs over the last 3 months, beside their mutation numbers. It never removes a journey.
+
+- `--refresh`: Write the changed `evidence` keys.
+- `--source <source>`: Where use is read from. Only `production` for now, the default.
+- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys session`](#journeys-session).
+
+## journeys usage
+
+The `journeys usage` command reports which journeys real use leans on most. It ranks the journeys in `tests/journeys/` by their recent rate: their production sessions over the final days their months hold in the usage window, the last 3 calendar months ending at the newest month any selected journey has. Each journey shows its popularity tier, its sessions and failures over the window and all time, a line per month with that month's persons and organisations, and its deprecated flows with their recent use. Below that it lists the production flows no journey covers, from the report [`journeys coverage`](#journeys-coverage) writes, ranked by their sessions in coverage's window and not tiered, when coverage grouped them into flows; otherwise it says why it lists none. See [Usage and tiers](/config-tests#usage-and-tiers).
+
+A tier is a cut through the selected journeys, ranked by rate, most first: `common` holds the shortest run of journeys reaching 50% of the summed rates, `wide` 80% and `edge` 95%, and `full` holds every journey. Tiers nest and never split journeys with equal rates. A journey edited since the last refresh, or never refreshed, is `unranked` and in every tier. A journey with `deprecated: true` is in no tier. Fewer than 100 journey matches in the window refuses every tier but `full`.
+
+- `[paths...]`, `--filter <name>`, `--tag <tag>`: The journeys to report on, selected as [`test`](#test) selects them. Tiers are cut over this selection alone.
+- `--tier <tier>`: Only the journeys in `common`, `wide`, `edge` or `full` (the default, every journey).
+- `--usage-window <months>`: The calendar months recent use is ranked over, such as `3m`, the default.
+- `--json`: Print the report as JSON, for agents.
+- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys session`](#journeys-session).
+
+## journeys coverage
+
+The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. A journey's click text counts only when it is text from the app's config; any other text in a journey reads as no text, so the click matches that block and column's clicks. A journey with `deprecated: true` is never run, so it covers nothing and is left out. When the development server recorded a full test run, the interaction measure adds the share that run drove, and failure coverage counts only failures a passing journey produced. The flow measure groups sessions into flows only when the window holds 100,000 rows or more; below that it is left out, the summary says why and points to [`journeys session --source production`](#journeys-session), and the report's `flowGrouping` records it. See [Coverage](/config-tests#coverage).
+
+- `--group`: Group sessions into flows whatever the window holds.
+- `--no-group`: Never group sessions into flows.
+- `--json`: Print the report as JSON instead of the summary.
+- `--source <source>`: Where use is read from. Only `production` for now, the default.
+- `--since <since>`, `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: The production window, as for [`journeys pull posthog`](#journeys-pull-posthog), at most 30 days.
+- `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys session`](#journeys-session).
+
+## upgrade
+
+The `upgrade` command upgrades a Lowdefy app to a newer version by walking you through migration prompts that handle breaking changes.
+
+It fetches the latest `@lowdefy/codemods` package, resolves the version chain from your current version to the target, and presents migration prompts phase by phase.
+
+```
+pnpx lowdefy@5 upgrade
+pnpx lowdefy@5 upgrade --to 6.0.0
+```
+
+- `--to <version>`: Target version to upgrade to. Defaults to the latest stable release.
+- `--plan`: Show the upgrade plan without executing.
+- `--resume`: Resume a previously interrupted upgrade.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+### How it works
+
+1. Reads your current version from `lowdefy.yaml`.
+2. Queries npm for the latest stable Lowdefy version (or uses `--to`).
+3. Fetches `@lowdefy/codemods@latest` — the codemods package containing all migration prompts.
+4. Resolves the upgrade chain — which intermediate versions need codemods.
+5. Presents migration prompts phase by phase. Each prompt can be copied to clipboard for use with any AI coding tool, viewed as a manual guide, or skipped for later.
+6. Updates `lowdefy.yaml` after each phase and suggests a git commit.
+
+See the [Upgrade Guide](/upgrade-guide) for more detail on how the upgrade system works.
+
+## start
+
+The `start` command starts a Lowdefy production server. To start a Lowdefy server, tha app should first be built using the `build` command.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--exit-with-pid <pid>`: Stop the server when the process with this id exits. For test runners and scripts that start the server. The `LOWDEFY_EXIT_WITH_PID` environment variable does the same, and passes through wrappers such as `pnpm exec` or a secrets manager.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--port <port>`: Change the port the server is hosted at. The default is `3000`.
+- `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
+The server stops when the `lowdefy start` process stops, however it stops, including when it is killed outright. A server run directly with `node`, as in a Docker image, is not affected.
+
+
+#### Examples
+
+
+Run the dev server, watching a relative directory for file changes:
+```txt
+pnpx lowdefy@5 dev --watch ../other-project
+```
+
+Run the dev server, ignoring the public directory:
+```txt
+pnpx lowdefy@5 dev --watch-ignore public/**
+```
+
+
+
+# Module Fetching
+
+When your app uses [modules](/modules), the build automatically fetches module sources during the build phase. GitHub modules are downloaded as tarballs and cached in `.lowdefy/modules/`. Multiple module entries from the same monorepo share a single cache entry. Local `file:` sources are read directly from disk.
+
+For private GitHub repositories, set the `GITHUB_TOKEN` environment variable:
+
+```
+GITHUB_TOKEN=ghp_your_token_here
+```
+
+Without `GITHUB_TOKEN`, the CLI uses the token of the `gh` CLI when one is signed in.
+
+To read a private repository with an SSH key, such as a read-only deploy key, set `GITHUB_SSH_KEY` to the private key. When the GitHub API cannot find a repository or refuses the token, the build fetches it with `git` over SSH using that key. See [modules](/modules) for details.
+
+In development mode (`lowdefy dev`), local module sources (`file:` paths) are watched for changes and trigger rebuilds automatically.
+
+# Configuration
+
+All the CLI options can either be set as command line options, or the `cli` config object in your `lowdefy.yaml` file. Options set as command line options take precedence over options set in the `lowdefy.yaml` file. The config in the `lowdefy.yaml` cannot be referenced using the `_ref` operator, but need to be set in the file itself.
+
+Options set in the `lowdefy.yaml` should be defined in camelCase. The options that can be set are:
+- `devDirectory: string`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+- `devScript: string`: The `package.json` script the [hub](#hub) runs to start this app's dev server for coding agents. Required when several scripts run `lowdefy dev`.
+- `disableTelemetry: boolean`: Disable telemetry.
+- `logLevel: enum`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `noOpen`: Do not open a new tab in the default browser.
+- `port: number`: Change the port the server is hosted at. The default is `3000`.
+- `refResolver: string`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `serverDirectory: string`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+- `watch: string[]`: A list of paths to files or directories that should be watched for changes.
+- `watchIgnore: string[]`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.
+- `skipCodemodCheck: boolean`: Suppress warnings about pending codemod upgrades during build and dev.
+
+The `--config-directory` option cannot be set from the `lowdefy.yaml` file.
+
+# Telemetry
+
+The CLI collects usage and error information to help us fix bugs, prioritize features, and understand how Lowdefy is being used.
+
+All telemetry can be disabled by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file), or by using the `--disable-telemetry` command line flag.:
+
+###### `lowdefy.yaml`
+```yaml
+lowdefy: LOWDEFY_VERSION
+
+cli:
+  disableTelemetry: true
+```
+
+We collect the following information:
+
+- The CLI version.
+- The Lowdefy version of your app.
+- A random local app id (stored locally in your project folder at `.lowdefy/cli.json`).
+- The CLI command used.
+- Your IP address.
+- Error messages and stack traces for any errors.

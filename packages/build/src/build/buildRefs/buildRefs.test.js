@@ -694,6 +694,61 @@ content:
     });
   });
 
+  test('buildRefs resolves a ref at the root of vars', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+shorthand:
+  _ref:
+    path: template.yaml
+    vars:
+      _ref: config.yaml
+withKey:
+  _ref:
+    path: template.yaml
+    vars:
+      _ref:
+        path: nested_config.yaml
+        key: vars`,
+      },
+      {
+        path: 'template.yaml',
+        content: `
+title:
+  _var: title
+count:
+  _var: count`,
+      },
+      {
+        path: 'config.yaml',
+        content: `
+title: Config title
+count: 1`,
+      },
+      {
+        path: 'nested_config.yaml',
+        content: `
+vars:
+  title: Nested title
+  count: 2`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toEqual([]);
+    expect(res).toEqual({
+      shorthand: {
+        title: 'Config title',
+        count: 1,
+      },
+      withKey: {
+        title: 'Nested title',
+        count: 2,
+      },
+    });
+  });
+
   test('buildRefs use a ref in var, with a var from parent as a var', async () => {
     const files = [
       {
@@ -2745,4 +2800,105 @@ blocks:
       ],
     });
   });
+});
+
+describe('module entry config preservation', () => {
+  test('preserves modules.<i>.vars and connections without resolving their refs', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+modules:
+  - id: team-users
+    source: "file:../team-users"
+    vars:
+      slot:
+        _ref: shared-vars.yaml
+    connections:
+      users-db: my-app-mongodb
+pages:
+  - id: home
+    type: Box
+`,
+      },
+      {
+        path: 'shared-vars.yaml',
+        content: `title: Shared`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    // Raw blobs preserved — parseLowdefyYaml already resolved these onto
+    // context.modules; the app pass must not resolve them a second time.
+    expect(res.modules[0].vars).toEqual({ slot: { _ref: 'shared-vars.yaml' } });
+    expect(res.modules[0].connections).toEqual({ 'users-db': 'my-app-mongodb' });
+    // The var ref's file was never pulled by the app pass.
+    const pulledPaths = mockReadConfigFile.mock.calls.map(([filePath]) => filePath);
+    expect(pulledPaths).not.toContain('shared-vars.yaml');
+  });
+
+  test('refs outside module entry config still resolve in the app pass', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+modules:
+  - id: team-users
+    source: "file:../team-users"
+    vars:
+      title: My Title
+pages:
+  - _ref: page.yaml
+`,
+      },
+      {
+        path: 'page.yaml',
+        content: `
+id: home
+type: Box
+`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    expect(res.pages).toEqual([{ id: 'home', type: 'Box' }]);
+    expect(res.modules[0].vars).toEqual({ title: 'My Title' });
+  });
+});
+
+test('buildRefs warns at the inline site when _build.env names a variable the environment does not set', async () => {
+  delete process.env.LDF_TEST_UNSET_VAR;
+  context.warnings = [];
+  mockReadConfigFile.mockImplementation(
+    readConfigFileMockImplementation([
+      { path: 'lowdefy.yaml', content: `field:\n  _build.env: LDF_TEST_UNSET_VAR` },
+    ])
+  );
+  const res = await buildRefs({ context });
+  expect(res.field).toBeNull();
+  expect(context.warnings).toHaveLength(1);
+  expect(context.warnings[0].message).toContain(
+    'Environment variable "LDF_TEST_UNSET_VAR" is not set'
+  );
+  expect(context.warnings[0].checkSlug).toBe('secrets');
+  context.warnings = undefined;
+});
+
+test('buildRefs does not warn when an unset _build.env variable has a default', async () => {
+  delete process.env.LDF_TEST_UNSET_VAR;
+  context.warnings = [];
+  mockReadConfigFile.mockImplementation(
+    readConfigFileMockImplementation([
+      {
+        path: 'lowdefy.yaml',
+        content: `field:\n  _build.env:\n    key: LDF_TEST_UNSET_VAR\n    default: fallback`,
+      },
+    ])
+  );
+  const res = await buildRefs({ context });
+  expect(res.field).toBe('fallback');
+  expect(context.warnings).toEqual([]);
+  context.warnings = undefined;
 });

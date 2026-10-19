@@ -1,0 +1,22 @@
+# P1: App slug referenced but not declared
+# =========================================
+# Tests that referencing `_app: slug` (string form) fails the build when
+# `slug` is not declared in lowdefy.yaml. Each reference is reported with its
+# own location — the build collects every offending site, not just the first.
+#
+# Expected error (once per reference):
+#   [Config Error] `slug` is required on the app but is not set.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title:
+        _app: slug
+  - id: about
+    type: Box
+    properties:
+      title:
+        _app: slug

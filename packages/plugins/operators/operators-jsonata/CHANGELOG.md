@@ -1,5 +1,67 @@
 # @lowdefy/operators-jsonata
 
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [5657441]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/operators@6.1.0
+  - @lowdefy/helpers@6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+- Updated dependencies [60401aa]
+- Updated dependencies [efd1967]
+- Updated dependencies [6446ae6]
+- Updated dependencies [982a3db]
+  - @lowdefy/operators@6.0.0
+  - @lowdefy/helpers@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+- a1ca6d6: chore(operators-jsonata): Bump `jsonata` to 1.8.9 to clear four security advisories (GHSA-66mm-25pp-rfff, GHSA-2943-5xfg-gq5f, GHSA-8gq3-vp5j-2grp, GHSA-86vw-mfpg-wwv9).
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/operators@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.1
+- @lowdefy/helpers@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.0
+- @lowdefy/helpers@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+- Updated dependencies [60401aa]
+- Updated dependencies [25225ab]
+- Updated dependencies [f11addd]
+- Updated dependencies [0108f38]
+- Updated dependencies [302e330]
+  - @lowdefy/operators@5.4.0
+  - @lowdefy/helpers@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes

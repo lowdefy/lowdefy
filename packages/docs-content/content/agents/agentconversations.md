@@ -1,0 +1,182 @@
+# AgentConversations
+
+The `AgentConversations` block renders a conversation list sidebar. It displays a list of conversations that the user can select, create, and manage. Use it alongside [`AgentChat`](/AgentChat) to build a full chat interface with conversation history.
+
+> The `AgentConversations` block is provided by the `@lowdefy/blocks-antd-x` package, which is included by default.
+
+The block does not manage data — you load conversations from your database and handle events to persist changes. This gives you full control over storage and retrieval.
+
+###### Example with grouped conversations and a context menu:
+```yaml
+- id: conversations
+  type: AgentConversations
+  properties:
+    items:
+      - key: conv-1
+        label: How do I reset my password?
+        group: Today
+      - key: conv-2
+        label: Billing question about Pro plan
+        group: Today
+      - key: conv-3
+        label: API rate limits
+        group: Yesterday
+    activeKey:
+      _state: activeConversationId
+    creation:
+      label: New Chat
+      icon: add
+    menu:
+      - key: rename
+        label: Rename
+      - key: delete
+        label: Delete
+        icon: delete
+        danger: true
+    groupable:
+      collapsible: true
+      defaultExpandedKeys:
+        - Today
+  events:
+    onSelect:
+      - id: switch
+        type: SetState
+        params:
+          activeConversationId:
+            _event: key
+      - id: load
+        type: Request
+        params:
+          - load_messages
+    onNew:
+      - id: new_id
+        type: SetState
+        params:
+          activeConversationId:
+            _uuid: v4
+    onMenuClick:
+      - id: handle_delete
+        type: Request
+        skip:
+          _ne:
+            - _event: action
+            - delete
+        params:
+          - delete_conversation
+```
+
+## Properties
+
+### Items
+
+- `items: object[]`: Default: `[]` - List of conversations to display. Each item:
+  - `key: string`: Unique conversation identifier.
+  - `label: string`: Conversation title.
+  - `icon`: Optional icon.
+  - `disabled: boolean`: Whether the item is disabled.
+  - `loading: boolean`: Show a spinner in place of the item's icon, for example while a title is being generated.
+  - `timestamp: number`: Timestamp for sorting or display.
+  - `group: string`: Group key (e.g. `'Today'`, `'Yesterday'`, `'Last week'`).
+
+- `activeKey: string`: The `key` of the currently selected conversation. Highlights the active item.
+- `loadingKey: string`: The `key` of a conversation that is still loading. That row shows a spinner in place of its icon and is marked `aria-busy`. Set it on select while the transcript is read, and clear it when the read completes (see below).
+- `width: number`: Default: `250` - Sidebar width in pixels.
+
+### Creation Button
+
+- `creation: object`: Show a button for creating new conversations.
+  - `label: string`: Button label.
+  - `icon`: Button icon.
+  - `align: string`: `'start'`, `'center'`, or `'end'`.
+
+### Context Menu
+
+- `menu: object[]`: Right-click or overflow menu on each conversation. Each item:
+  - `key: string`: Unique key for the action.
+  - `label: string`: Menu item label.
+  - `icon`: Menu item icon.
+  - `danger: boolean`: Style as a danger action (red).
+
+### Grouping
+
+- `groupable: object`: Configure conversation grouping.
+  - `collapsible: boolean`: Default: `true` - Whether groups can be collapsed.
+  - `label: string`: Label for ungrouped items.
+  - `defaultExpandedKeys: string[]`: Groups expanded by default.
+
+###### Mark the selected conversation as loading while its transcript is read:
+```yaml
+- id: conversations
+  type: AgentConversations
+  properties:
+    items:
+      _request: list_conversations
+    activeKey:
+      _state: activeConversationId
+    loadingKey:
+      _state: loadingConversationId
+  events:
+    onSelect:
+      - id: switch
+        type: SetState
+        params:
+          activeConversationId:
+            _event: key
+          loadingConversationId:
+            _event: key
+      - id: load
+        type: Request
+        params:
+          - load_messages
+      - id: loaded
+        type: SetState
+        params:
+          loadingConversationId: null
+```
+
+Pair it with the [`AgentChat`](/AgentChat) `loading` property, driven from the same state, so the chat column shows a skeleton and disables the composer for the same window.
+
+## Events
+
+| Event | When | Event data |
+| --- | --- | --- |
+| `onSelect` | User clicks a conversation. | `key`, `previousKey` |
+| `onNew` | User clicks the creation button. | |
+| `onMenuClick` | User clicks a context menu item. | `action` (menu item key), `conversationKey`, `conversation` |
+
+###### Handle menu actions:
+```yaml
+events:
+  onMenuClick:
+    - id: handle_rename
+      type: CallMethod
+      skip:
+        _ne:
+          - _event: action
+          - rename
+      params:
+        blockId: rename_modal
+        method: toggleOpen
+        args:
+          - open: true
+    - id: handle_delete
+      type: Request
+      skip:
+        _ne:
+          - _event: action
+          - delete
+      params:
+        - delete_conversation
+    - id: refresh
+      type: Request
+      skip:
+        _ne:
+          - _event: action
+          - delete
+      params:
+        - list_conversations
+```
+
+## Usage with AgentChat
+
+See the [AgentChat conversation management](/AgentChat) section for a complete example showing `AgentConversations` and `AgentChat` wired together with database persistence.

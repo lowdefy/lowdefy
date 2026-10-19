@@ -48,7 +48,9 @@ async function build(options) {
   buildApp({ components, context });                     // Process app config
   validateConfig({ components, context });               // Business rule validation
   addDefaultPages({ components, context });              // Add 404, etc.
+  buildRoutes({ components, context });                  // Route table from page paths, tie checks
   buildAuth({ components, context });                    // Auth providers/adapters (wildcard matching)
+  validateAuthPagePaths({ components, context });        // Auth pages have no placeholders
   buildConnections({ components, context });             // Connection configs
   buildApi({ components, context });                     // API endpoints
   buildPages({ components, context });                   // Page definitions
@@ -99,7 +101,10 @@ async function build(options) {
 | `buildPages/` | Process page definitions, blocks, and areas |
 | `buildAuth/` | Process authentication providers and adapters (wildcard matching) |
 | `buildConnections.js` | Validate and process connection definitions |
-| `buildApi/` | Process API endpoint definitions |
+| `buildApi/` | Process API endpoint definitions (incl. the `RenderNotification` routine step) |
+| `buildNotifications.js` | Validate the `notifications:` section, namespace ids to `notification:<id>` |
+| `writeNotifications.js` | Write `notifications/<id>.json` artifacts |
+| `validateRenderNotificationSteps.js` | Validate `RenderNotification` steps reference existing notifications |
 | `buildMenu.js` | Generate navigation menus from page structure |
 | `buildJs/` | Compile custom JavaScript functions |
 | `buildTypes.js` | Resolve and validate block/operator types |
@@ -296,6 +301,8 @@ Block and operator types are resolved at build time:
 - Generates import map for code splitting
 - Catches typos early (build fails, not runtime)
 
+`notifications` is a plugin type category alongside blocks, connections, operators, actions, and agents. `writePluginImports/writeNotificationImports.js` writes `plugins/notifications.js` — the email template registry plus `renderEmail`/`interpolateProperties` re-exports (or `undefined` placeholders when the app has no notifications). See [Notification Rendering](../architecture/notifications.md).
+
 ### `writeGlobalsCss` (CSS Generation)
 
 Replaces the old `writeStyleImports`. Generates `globals.css` which is imported by the server's `_app.js`. The generated file includes:
@@ -418,7 +425,7 @@ const typesMap = createPluginTypesMap(plugins);
 ### Dev Build (JIT)
 
 ```javascript
-import { shallowBuild, buildPageJit, createContext } from '@lowdefy/build/dev';
+import { shallowBuild, buildPageJit, createContext, createJitMaps } from '@lowdefy/build/dev';
 
 // Phase 1: Skeleton build (resolves everything except page content)
 const { components, pageRegistry, context } = await shallowBuild({
@@ -434,6 +441,8 @@ const buildContext = createContext({ directories, logger, stage: 'dev' });
 Object.assign(buildContext.refMap, refMap);    // Restore from skeleton
 Object.assign(buildContext.keyMap, keyMap);
 buildContext.jsMap = jsMap;
+// Names the context's jitMaps/ files (the dev server uses <processId>-<generation>)
+buildContext.jitMaps = createJitMaps({ keyMap: buildContext.keyMap, refMap: buildContext.refMap, name });
 
 await buildPageJit({
   pageId: 'tasks',
@@ -451,7 +460,9 @@ await buildPageJit({
 | `createPageRegistry` | `jit/createPageRegistry.js` | Extract page metadata + raw content from shallow-built components |
 | `createFileDependencyMap` | `jit/createFileDependencyMap.js` | Map config files → page IDs for targeted invalidation |
 | `writePageRegistry` | `jit/writePageRegistry.js` | Serialize page registry to JSON |
-| `writePageJit` | `jit/writePageJit.js` | Write page/request JSONs + updated maps + JS files + per-page tailwind HTML |
+| `writePageJit` | `jit/writePageJit.js` | Write page/request JSONs + JS files + per-page tailwind HTML |
+| `createJitMaps` | `jit/createJitMaps.js` | Start a context's log of the key/ref ids JIT builds add (the skeleton's ids are its baseline) |
+| `writeJitMaps` | `jit/writeJitMaps.js` | Write the entries added during one page build to `jitMaps/<name>-<n>.json`, on success and on failure |
 | `collectPageContent` | `collectPageContent.js` | Extract all string content from page blocks for Tailwind scanning |
 | `collectSkeletonSourceFiles` | `jit/collectSkeletonSourceFiles.js` | Walk `~r` markers on non-page components to derive skeleton source files |
 | `isPageContentPath` | `jit/isPageContentPath.js` | Semantic segment matching for shallow build stop paths |

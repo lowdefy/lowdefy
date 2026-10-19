@@ -14,30 +14,19 @@
   limitations under the License.
 */
 
-import net from 'net';
+import { isPortAvailable } from '@lowdefy/node-utils';
 
-function checkPortAvailable({ port }) {
-  return new Promise((resolve, reject) => {
-    const server = net.createServer();
-    server.on('error', (error) => {
-      if (error.code === 'EADDRINUSE') {
-        reject(
-          new Error(`[Server Error] Port ${port} is already in use.
+async function checkPortAvailable({ port }) {
+  const available = await isPortAvailable({ port });
+  if (!available) {
+    throw new Error(`[Server Error] Port ${port} is already in use.
 
 To use a different port, either:
   - Run with the --port flag: pnpx lowdefy dev --port 3001
   - Set the port in your lowdefy.yaml:
     cli:
-      port: 3001`)
-        );
-      } else {
-        reject(error);
-      }
-    });
-    server.listen(port, () => {
-      server.close(() => resolve());
-    });
-  });
+      port: 3001`);
+  }
 }
 
 export default checkPortAvailable;

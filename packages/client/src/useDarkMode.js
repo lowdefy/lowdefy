@@ -17,6 +17,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { theme as antdTheme } from 'antd';
 
+import readStorageItem from './storage/readStorageItem.js';
+
 const algorithmMap = {
   default: antdTheme.defaultAlgorithm,
   dark: antdTheme.darkAlgorithm,
@@ -65,12 +67,19 @@ function mergeComponents(shared, mode) {
   return merged;
 }
 
-function useDarkMode({ antd, configDarkMode }) {
+// storageKey is the app key the preference is kept under (see @lowdefy/helpers appStorageKey).
+function useDarkMode({ antd, configDarkMode, storageKey }) {
   const baseAlgorithm = antd?.algorithm;
   const cleanAlgorithm = stripDarkFromAlgorithm(baseAlgorithm);
 
   const [userPreference, setUserPreference] = useState(() => {
-    return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+    return (
+      readStorageItem({
+        key: storageKey,
+        legacyKey: 'lowdefy_darkMode',
+        storage: window.localStorage,
+      }) ?? 'system'
+    );
   });
 
   const [systemIsDark, setSystemIsDark] = useState(() => {
@@ -86,12 +95,20 @@ function useDarkMode({ antd, configDarkMode }) {
     return () => mql.removeEventListener('change', handler);
   }, []);
 
-  const setPreference = useCallback((newPref) => {
-    window.localStorage?.setItem('lowdefy_darkMode', newPref);
-    setUserPreference(newPref);
-  }, []);
+  const setPreference = useCallback(
+    (newPref) => {
+      window.localStorage?.setItem(storageKey, newPref);
+      // Set now, not on the next render: SetDarkMode updates the engine straight after, and
+      // _media: darkModePreference reads it then.
+      window.__lowdefy_darkModePreference = newPref;
+      setUserPreference(newPref);
+    },
+    [storageKey]
+  );
 
   window.__lowdefy_setDarkMode = setPreference;
+  // SetDarkMode, _media and the header toggles read the preference here, not from storage.
+  window.__lowdefy_darkModePreference = userPreference;
 
   const isDark = resolveIsDark({ configDarkMode, userPreference, systemIsDark });
   window.__lowdefy_isDark = isDark;
@@ -114,12 +131,14 @@ function useDarkMode({ antd, configDarkMode }) {
     [isDark, sharedComponents, lightComponents, darkComponents]
   );
 
-  // Keep the <html> background in sync with the resolved mode. The _document.js
-  // inline script sets an initial background before hydration; this effect takes
-  // over once React is active and updates on every dark/light toggle.
+  // Keep the <html> background and color-scheme in sync with the resolved mode.
+  // The server templates' pre-hydration inline script sets initial values before
+  // hydration; this effect takes over once React is active and updates on every
+  // dark/light toggle.
   const darkBg = darkToken?.colorBgLayout;
   const lightBg = lightToken?.colorBgLayout;
   useEffect(() => {
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
     if (isDark) {
       document.documentElement.style.backgroundColor = darkBg ?? '#000';
     } else if (lightBg) {

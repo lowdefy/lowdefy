@@ -1,0 +1,110 @@
+# :try
+
+```
+({:try: routine, :catch: routine, :finally: routine}): void
+```
+
+If one control in the routine chain defined in the `:try` key fails by throwing an error, the steps in the list following the failed control will not be executed.
+To handle any errors thrown by a routine element, a routine can be provided using `catch` key.
+The routine defined using the `:finally` key will be run regardless of whether or not the routine throws an error.
+A [`:reject`](/:reject) inside the `:try` routine is __not__ caught. `:reject` is the routine's own reply — it stops the routine, returns a `"reject"` status to the caller, and flows past every enclosing `:catch`. `:finally` still runs. Use [`:throw`](/:throw) for failures a `:catch` should handle.
+An error a `:catch` handles is an outcome, not a fault, when it is a request or service error (a provider's 404, a timeout) or a [`:throw`](/:throw): it is logged at debug level only. A config, operator or internal error in the `:try` is still logged as an error, with its config location, and the `:catch` runs as well.
+Inside the `:catch` routine, the [`_error`](/_error) operator returns the error that was caught, so the routine can branch on its `statusCode` or `code`, or read its `message`. `_error` returns the error of the innermost `:catch` that encloses it, and `null` outside a `:catch`.
+
+#### Keys
+
+- `:try: routine`: __Required__ - The routine to be run.
+- `:catch: routine`: The routine to execute if any step in the routine defined errors. Runs on a thrown error only — a `:reject` is not caught.
+- `:finally: routine`: The routine to be run regardless of the out come of the initial routine. Runs on success, error and reject.
+
+#### Examples
+
+###### Branch on the caught error
+```yaml
+- :try:
+    - id: get_customer
+      type: AxiosHttp
+      connectionId: crm
+      properties:
+        url: /customers
+        params:
+          id:
+            _payload: id
+  :catch:
+    - :if:
+        _eq: [{ _error: statusCode }, 404]
+      :then:
+        - :reject: Customer not found
+    - :throw: Customer lookup failed
+```
+
+###### Try external API with fallback
+```yaml
+- :try:
+    - id: get_weather
+      type: AxiosHttp
+      connectionId: weather-api
+      properties:
+        url: /current
+        params:
+          city:
+            _payload: city
+  :catch:
+    - id: get_default_weather
+      type: MongoDBFindOne
+      connectionId: weather-cache
+      properties:
+        query:
+          city:
+            _payload: city
+- :return:
+    weather:
+      _if:
+        test:
+          _step: get_weather
+        then:
+          _step: get_weather.data
+        else:
+          _step: get_default_weather
+```
+
+###### Try database operation with fallback
+```yaml
+- :try:
+    - id: update_user
+      type: MongoDBUpdateOne
+      connectionId: database
+      properties:
+        filter:
+          _id:
+            _payload: user._id
+        update:
+          $set:
+            last_login:
+              _date: now
+  :catch:
+    - :log:
+        message: 'Database update failed, creating new user record'
+        user_id:
+          _payload: user._id
+      :level: warn
+    - id: create_user
+      type: MongoDBInsertOne
+      connectionId: database
+      properties:
+        doc:
+          _id:
+            _payload: user._id
+          last_login:
+            _date: now
+          created_at:
+            _date: now
+  :finally:
+    - :log:
+        message: 'User login process completed'
+      :level: info
+- :return:
+    success: true
+    user_id:
+      _payload: user._id
+```

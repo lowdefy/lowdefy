@@ -28,6 +28,8 @@ _ref:
       The control evaluates conditions from top to bottom, executing only the first matching case's `:then` block.
       If no cases match, the optional `:default` routine is executed.
       This control is ideal for handling multiple mutually exclusive conditions more elegantly than nested [`:if`](/:if) statements.
+
+      The `:switch` control also works in client [event action lists](/events-and-actions) — there each `:then` and `:default` is a list of actions, and the same syntax and semantics apply.
     controlKeys: |
       - `:switch: array`: __Required__
           - `:case: boolean`: __Required__ - The boolean result of a test.

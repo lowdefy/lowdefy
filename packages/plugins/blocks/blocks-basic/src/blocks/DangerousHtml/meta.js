@@ -21,13 +21,28 @@ export default {
   cssKeys: {
     element: 'The DangerousHtml element.',
   },
+  hazards: [
+    {
+      id: 'dangerous-html-unsanitised',
+      message:
+        'Content is rendered without sanitising, so never pass caller-supplied or database HTML through it. Use Html for anything a user could have written.',
+      see: 'display-blocks/dangeroushtml',
+    },
+    {
+      id: 'dompurify-options-first-render',
+      message:
+        'DOMPurifyOptions is read once when the block mounts, so a value that changes after the first render has no effect. Set it statically or remount the block.',
+      see: 'display-blocks/dangeroushtml',
+    },
+  ],
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
       html: {
         type: 'string',
-        description: 'Content to be rendered as Html.',
+        description:
+          'Content to be rendered as Html. The Html block attributes (data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate, data-tone) work here too, unless DOMPurifyOptions removes data attributes.',
         docs: {
           displayType: 'text-area',
         },

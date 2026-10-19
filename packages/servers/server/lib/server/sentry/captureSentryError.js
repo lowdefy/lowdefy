@@ -14,11 +14,14 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/nextjs';
+import { type } from '@lowdefy/helpers';
+
+import serializeErrorForLog from '../log/serializeErrorForLog.js';
+import sentrySdk from './sentrySdk.js';
 
 function captureSentryError({ error, context, configLocation }) {
-  // No-op if Sentry not initialized (DSN not set)
-  if (!process.env.SENTRY_DSN) {
+  const Sentry = sentrySdk.current;
+  if (!Sentry) {
     return;
   }
 
@@ -30,6 +33,10 @@ function captureSentryError({ error, context, configLocation }) {
     tags.pageId = context.pageId;
   }
 
+  if (!type.isNone(context?.rid)) {
+    tags.requestId = context.rid;
+  }
+
   if (error?.blockId) {
     tags.blockId = error.blockId;
   }
@@ -37,6 +44,19 @@ function captureSentryError({ error, context, configLocation }) {
   if (error?.isServiceError !== undefined) {
     tags.isServiceError = error.isServiceError;
   }
+
+  // Fields a data-integrity fault carries, so it can be filtered and grouped
+  // in Sentry by where it happened.
+  ['collection', 'connectionId', 'organizationId', 'endpointId'].forEach((field) => {
+    if (!type.isNone(error?.[field])) {
+      tags[field] = error[field];
+    }
+  });
+  if (tags.collection || tags.connectionId || tags.organizationId || tags.endpointId) {
+    tags.errorName = error.name;
+  }
+  const fingerprint =
+    error?.name === 'TenantIntegrityError' ? [error.name, error.collection ?? ''] : undefined;
 
   // Add config location context
   if (configLocation) {
@@ -48,9 +68,15 @@ function captureSentryError({ error, context, configLocation }) {
     extra.configKey = error.configKey;
   }
 
+  // Sentry's own serialization of the exception carries only names, messages and stacks, so
+  // the log's projection is what gives Sentry the error's other fields - the same ones the log
+  // keeps, with the library fields it drops left out.
+  extra.error = serializeErrorForLog(error);
+
   Sentry.captureException(error, {
     tags,
     extra,
+    ...(fingerprint ? { fingerprint } : {}),
   });
 }
 

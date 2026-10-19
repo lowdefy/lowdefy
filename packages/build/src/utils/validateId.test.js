@@ -20,12 +20,8 @@ test('validateId allows valid ids', () => {
   expect(() => validateId({ id: 'my-page', field: 'Page id', configKey: '1' })).not.toThrow();
   expect(() => validateId({ id: 'my_page', field: 'Page id', configKey: '1' })).not.toThrow();
   expect(() => validateId({ id: 'MyPage123', field: 'Page id', configKey: '1' })).not.toThrow();
-  expect(() =>
-    validateId({ id: 'folder/page', field: 'Page id', configKey: '1' })
-  ).not.toThrow();
-  expect(() =>
-    validateId({ id: ':reject', field: 'Page id', configKey: '1' })
-  ).not.toThrow();
+  expect(() => validateId({ id: 'folder/page', field: 'Page id', configKey: '1' })).not.toThrow();
+  expect(() => validateId({ id: ':reject', field: 'Page id', configKey: '1' })).not.toThrow();
 });
 
 test('validateId throws on period', () => {
@@ -65,3 +61,58 @@ test('validateId throws ConfigError', () => {
     expect(e.isLowdefyError).toBe(true);
   }
 });
+
+test.each([
+  '__proto__',
+  'constructor',
+  'prototype',
+  '__defineGetter__',
+  '__defineSetter__',
+  '__lookupGetter__',
+  '__lookupSetter__',
+])('validateId throws when id is the reserved name "%s"', (id) => {
+  expect(() => validateId({ id, field: 'Page id', configKey: '1' })).toThrow(
+    `Page id "${id}" is a reserved name and cannot be used as an id.`
+  );
+});
+
+test('validateId reserved name error carries the given configKey', () => {
+  try {
+    validateId({ id: '__proto__', field: 'Page id', configKey: 'configKey1' });
+    throw new Error('validateId did not throw');
+  } catch (e) {
+    expect(e.configKey).toBe('configKey1');
+  }
+});
+
+test('validateId reserved name error includes location when supplied', () => {
+  expect(() =>
+    validateId({
+      id: 'constructor',
+      field: 'Request id',
+      location: 'page "home"',
+      configKey: '1',
+    })
+  ).toThrow(
+    'Request id "constructor" at page "home" is a reserved name and cannot be used as an id.'
+  );
+});
+
+test('validateId reserved name error omits location when not supplied', () => {
+  expect(() => validateId({ id: 'constructor', field: 'Request id', configKey: '1' })).toThrow(
+    'Request id "constructor" is a reserved name and cannot be used as an id.'
+  );
+});
+
+test('validateId reports the shape error, not the reserved error, when an id fails both checks', () => {
+  expect(() => validateId({ id: '__proto__.x', field: 'Page id', configKey: '1' })).toThrow(
+    'Page id "__proto__.x" contains invalid characters'
+  );
+});
+
+test.each(['hasOwnProperty', 'toString', 'valueOf'])(
+  'validateId allows "%s", which lives on Object.prototype but is not a pollution vector',
+  (id) => {
+    expect(() => validateId({ id, field: 'Page id', configKey: '1' })).not.toThrow();
+  }
+);

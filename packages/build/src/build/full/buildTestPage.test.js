@@ -41,12 +41,14 @@ test('buildTestPage', () => {
   const res = buildTestPage({ pageConfig });
   expect(res).toEqual({
     id: 'page:page',
+    linkPaths: {},
     pageId: 'page',
     blockId: 'page',
     type: 'Box',
     auth: {
       public: true,
     },
+    subscriptions: [],
     requests: [
       {
         id: 'request:page:request',

@@ -16,29 +16,21 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlLog(context, routineContext, { control }) {
-  const { endpointId, logger, evaluateOperators } = context;
-  const { items } = routineContext;
+  const { endpointId, logger } = context;
   const location = control['~k'] ?? ':log';
 
   logger.debug({ event: 'debug_control_log' });
-  const log = evaluateOperators({
+  const log = evaluateRoutineOperators(context, routineContext, {
     input: control[':log'],
-    items,
     location,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
   const logLevel =
-    evaluateOperators({
+    evaluateRoutineOperators(context, routineContext, {
       input: control[':level'],
-      items,
       location,
-      payload: routineContext.payload,
-      state: routineContext.state,
-      steps: routineContext.steps,
     }) ?? 'info';
 
   if (!type.isString(logLevel)) {

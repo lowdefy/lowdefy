@@ -22,14 +22,18 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "scripts": {
-    "build": "pnpm -r --filter='!@lowdefy/website' build",
+    "build": "pnpm -r --filter=!@lowdefy/website build",
     "build:turbo": "turbo run build",
     "clean": "pnpm -r clean",
     "prettier": "prettier --config .prettierrc --write **/*.js",
-    "test": "pnpm -r --filter='!@lowdefy/plugin-aws' --filter='!@lowdefy/connection-mongodb' test",
+    "test": "pnpm test:dependencies && pnpm -r --filter=!@lowdefy/connection-mongodb test",
+    "test:dependencies": "node --test scripts/lib/findUndeclaredImports.test.mjs && node scripts/check-dependencies.mjs",
+    "test:mongodb": "pnpm --filter=@lowdefy/connection-mongodb test && pnpm --filter=@lowdefy/api test:mongodb && pnpm --filter=@lowdefy/server-dev test:mongodb",
+    "test:journeys:auth": "node scripts/test-journeys-auth.mjs",
     "test:build:u": "UPDATE_SNAPSHOTS=true pnpm --filter=@lowdefy/build test",
     "e2e": "pnpm -r --workspace-concurrency=1 e2e",
     "update-packages": "pnpm up -i -r --latest",
+    "worktree": "node scripts/worktree.mjs",
     "dev": "node scripts/dev.mjs",
     "app:dev": "node scripts/dev.mjs --config-directory app",
     "app:dev:log": "pnpm app:dev 2>&1 | tee log.txt",
@@ -38,6 +42,7 @@
     "docs:dev": "node scripts/dev.mjs --config-directory packages/docs",
     "docs:dev:log": "pnpm docs:dev 2>&1 | tee log.txt",
     "docs:build": "node scripts/build.mjs --config-directory packages/docs",
+    "docs:content": "LOWDEFY_EXTRACT_AGENT_DOCS=true node scripts/build.mjs --config-directory packages/docs && node packages/docs-content/scripts/recordSourceHashes.js --config-directory packages/docs --ref-map _server/prod/build/refMap.json",
     "docs:start": "node scripts/start.mjs",
     "cli": "pnpm build:turbo && pnpm -r --filter=lowdefy start",
     "web:build": "pnpm --filter=@lowdefy/website build",
@@ -47,7 +52,7 @@
     "release:publish": "changeset publish",
     "release:version-experimental": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm build",
     "release:publish-experimental": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks",
-    "release:experimental": "(npm whoami || npm login) && pnpm release:version-experimental && pnpm release:publish-experimental && git checkout -- ."
+    "release:experimental": "node scripts/pull-before-release.mjs && (npm whoami || npm login) && pnpm release:version-experimental && pnpm release:publish-experimental && git checkout -- . && git clean -f '**/CHANGELOG.md'"
   },
   "devDependencies": {
     "@changesets/cli": "2.30.0",
@@ -60,13 +65,12 @@
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "espree": "11.2.0",
+    "mongodb": "7.2.0",
+    "mongodb-memory-server": "9.2.0",
+    "node-gyp": "13.0.0",
     "prettier": "3.1.0",
-    "turbo": "2.8.19"
+    "turbo": "2.9.14"
   },
-  "packageManager": "pnpm@10.29.2",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ]
-  }
+  "packageManager": "pnpm@10.29.2"
 }

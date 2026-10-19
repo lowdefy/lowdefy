@@ -14,19 +14,24 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { jest } from '@jest/globals';
 
 const realNodeUtils = await import('@lowdefy/node-utils');
 const mockWriteFile = jest.fn();
+const mockWriteFileIfChanged = jest.fn();
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
   writeFile: mockWriteFile,
+  writeFileIfChanged: mockWriteFileIfChanged,
 }));
 
 const { default: testContext } = await import('../../test-utils/testContext.js');
 const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
 const { default: makeId } = await import('../../utils/makeId.js');
 const { default: buildPageJit } = await import('./buildPageJit.js');
+const { default: createIconContext } = await import('../icons/createIconContext.js');
+const { icons } = await import('lucide');
 
 const mockReadConfigFile = jest.fn();
 const mockWriteBuildArtifact = jest.fn();
@@ -56,6 +61,8 @@ beforeEach(() => {
   mockWriteBuildArtifact.mockResolvedValue(undefined);
   mockWriteFile.mockReset();
   mockWriteFile.mockResolvedValue(undefined);
+  mockWriteFileIfChanged.mockReset();
+  mockWriteFileIfChanged.mockResolvedValue(true);
 });
 
 test('buildPageJit returns null for unknown pageId', async () => {
@@ -103,6 +110,124 @@ type: PageHeaderMenu
   expect(result.id).toBe('page:home');
   expect(result.auth).toEqual(expect.objectContaining({ public: true }));
   expect(result.type).toBe('PageHeaderMenu');
+});
+
+test('buildPageJit writes the page without request internals, which stay in the request artifact', async () => {
+  const context = createTestContext();
+  context.connectionIds = new Set(['mongo']);
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+requests:
+  - id: get_items
+    type: MongoDBFind
+    connectionId: mongo
+    payload:
+      search:
+        _state: search
+    properties:
+      query:
+        name:
+          _payload: search
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  function readArtifact(filePath) {
+    const call = mockWriteBuildArtifact.mock.calls.find(([written]) => written === filePath);
+    expect(call).toBeDefined();
+    return JSON.parse(call[1]);
+  }
+
+  const page = readArtifact('pages/home.json');
+  expect(page.requests).toHaveLength(1);
+  const pageRequest = page.requests[0];
+  expect(pageRequest).toMatchObject({
+    id: 'request:home:get_items',
+    requestId: 'get_items',
+    pageId: 'home',
+    payload: { search: { _state: 'search' } },
+  });
+  expect(pageRequest).not.toHaveProperty('properties');
+  expect(pageRequest).not.toHaveProperty('type');
+  expect(pageRequest).not.toHaveProperty('connectionId');
+  expect(pageRequest).not.toHaveProperty('auth');
+
+  const requestArtifact = readArtifact('pages/home/requests/get_items.json');
+  expect(requestArtifact).toMatchObject({
+    type: 'MongoDBFind',
+    connectionId: 'mongo',
+    auth: { public: true },
+    properties: { query: { name: { _payload: 'search' } } },
+  });
+});
+
+test('buildPageJit writes tailwind candidate file with classes from _js source, not the extracted hash', async () => {
+  const context = createTestContext();
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: pill
+    type: Html
+    properties:
+      html:
+        _js: |
+          return '<span class="bg-warning text-[10px] px-1.5">pill</span>';
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+
+  const tailwindWrite = mockWriteFileIfChanged.mock.calls.find(([filePath]) =>
+    filePath.includes(path.join('lowdefy-build', 'tailwind', 'home.html'))
+  );
+  expect(tailwindWrite).toBeDefined();
+  expect(tailwindWrite[1]).toContain('bg-warning');
+  expect(tailwindWrite[1]).toContain('text-[10px]');
+  expect(tailwindWrite[1]).toContain('px-1.5');
+
+  // The built page itself only holds the extracted _js hash, not the source.
+  expect(JSON.stringify(result)).not.toContain('bg-warning');
 });
 
 test('buildPageJit resolves page template with simple vars', async () => {
@@ -529,6 +654,56 @@ type: PageHeaderMenu
   }
 });
 
+test('buildPageJit resolves a module page resolver relative to the module root, not the app config dir', async () => {
+  const context = createTestContext();
+  // The app config dir does NOT contain the resolver — only the module root
+  // does. A module authors its resolver path relative to itself
+  // (e.g. "resolvers/makeActionPages.js"); the JIT path must rebase it against
+  // the module root the same way walker.js step 4 does in the full build.
+  // Without rebasing, the relative path resolves against directories.config and
+  // the import fails.
+  context.directories.config = path.resolve('src/test-utils');
+  const moduleRoot = path.resolve('src/test-utils/buildRefs');
+  context.modules = {
+    mymod: {
+      id: 'mymod',
+      moduleRoot,
+      packageRoot: moduleRoot,
+      moduleDependencies: null,
+    },
+  };
+  mockFiles([]);
+
+  const pageRegistry = new Map([
+    [
+      'mymod/home',
+      {
+        pageId: 'mymod/home',
+        auth: { public: true },
+        refId: 'ref-resolver',
+        refPath: null,
+        unresolvedVars: null,
+        moduleEntryId: 'mymod',
+        // Authored relative to the module — must rebase against moduleRoot.
+        resolverOriginal: {
+          resolver: 'testJitPageResolver.js',
+          vars: { pageId: 'home', app_name: 'ModuleApp' },
+        },
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'mymod/home',
+    pageRegistry,
+    context,
+  });
+
+  expect(result.id).toBe('page:mymod/home');
+  expect(result.type).toBe('PageHeaderMenu');
+  expect(result.properties.title).toBe('ModuleApp');
+});
+
 test('buildPageJit resolver page traces errors back to resolver when inner _ref fails', async () => {
   const context = createTestContext();
   mockFiles([]);
@@ -570,7 +745,13 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
   }
 });
 
-test('buildPageJit writes keyMap/refMap so error handler resolves correct location', async () => {
+function jitMapsWrites() {
+  return mockWriteBuildArtifact.mock.calls
+    .filter(([filePath]) => filePath.startsWith('jitMaps/'))
+    .map(([filePath, content]) => ({ filePath, ...JSON.parse(content) }));
+}
+
+test("buildPageJit writes a failing build's keys to a jitMaps file so the error handler resolves its location", async () => {
   const context = createTestContext();
   mockFiles([
     {
@@ -607,20 +788,90 @@ blocks:
     message: expect.stringContaining('Action type "UndefinedAction" was used but is not defined'),
   });
 
-  // Verify keyMap.json and refMap.json were written to disk before the error
+  // The config build's maps are never rewritten by a page build.
   const writeArgs = mockWriteBuildArtifact.mock.calls.map((c) => c[0]);
-  expect(writeArgs).toContain('keyMap.json');
-  expect(writeArgs).toContain('refMap.json');
+  expect(writeArgs).not.toContain('keyMap.json');
+  expect(writeArgs).not.toContain('refMap.json');
 
-  // The written keyMap should contain the action's ~k with correct ~l
-  const keyMapCall = mockWriteBuildArtifact.mock.calls.find((c) => c[0] === 'keyMap.json');
-  const keyMap = JSON.parse(keyMapCall[1]);
+  const writes = jitMapsWrites();
+  expect(writes).toHaveLength(1);
+  expect(writes[0].filePath).toBe('jitMaps/jit-1.json');
   // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction")
-  const actionEntry = Object.values(keyMap).find(
+  const actionEntry = Object.values(writes[0].keyMap).find(
     (entry) => entry.key && entry.key.includes('UndefinedAction')
   );
   expect(actionEntry).toBeDefined();
   expect(actionEntry['~l']).toBe(8);
+  expect(writes[0].refMap[actionEntry['~r']].path).toBe('page-with-action.yaml');
+});
+
+test("buildPageJit writes only the entries its build added, not the config build's", async () => {
+  const context = createTestContext();
+  context.keyMap.skeleton_key = { key: 'root', '~r': 'skeleton_ref' };
+  context.refMap.skeleton_ref = { parent: null, path: 'lowdefy.yaml' };
+  mockFiles([{ path: 'home.yaml', content: 'id: home\ntype: PageHeaderMenu' }]);
+  const pageRegistry = new Map([
+    ['home', { pageId: 'home', auth: { public: true }, refId: 'r-home', refPath: 'home.yaml' }],
+  ]);
+
+  await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  const writes = jitMapsWrites();
+  expect(writes).toHaveLength(1);
+  expect(writes[0].keyMap.skeleton_key).toBeUndefined();
+  expect(writes[0].refMap.skeleton_ref).toBeUndefined();
+  expect(Object.keys(writes[0].keyMap).length).toBeGreaterThan(0);
+  expect(Object.values(writes[0].refMap).map((entry) => entry.path)).toContain('home.yaml');
+});
+
+test('concurrent page builds on one context write every entry, each ref with its path', async () => {
+  const context = createTestContext();
+  mockFiles([
+    { path: 'a.yaml', content: 'id: a\ntype: PageHeaderMenu\nblocks:\n  - _ref: block-a.yaml' },
+    { path: 'b.yaml', content: 'id: b\ntype: PageHeaderMenu\nblocks:\n  - _ref: block-b.yaml' },
+    { path: 'block-a.yaml', content: 'id: block_a\ntype: Button' },
+    { path: 'block-b.yaml', content: 'id: block_b\ntype: Button' },
+  ]);
+  const pageRegistry = new Map([
+    ['a', { pageId: 'a', auth: { public: true }, refId: 'r-a', refPath: 'a.yaml' }],
+    ['b', { pageId: 'b', auth: { public: true }, refId: 'r-b', refPath: 'b.yaml' }],
+  ]);
+
+  await Promise.all([
+    buildPageJit({ pageId: 'a', pageRegistry, context }),
+    buildPageJit({ pageId: 'b', pageRegistry, context }),
+  ]);
+
+  const writes = jitMapsWrites();
+  expect(writes).toHaveLength(2);
+  expect(new Set(writes.map((write) => write.filePath)).size).toBe(2);
+  // Applied in write order, as readers do.
+  const keyMap = Object.assign({}, ...writes.map((write) => write.keyMap));
+  const refMap = Object.assign({}, ...writes.map((write) => write.refMap));
+  expect(Object.keys(keyMap).sort()).toEqual(Object.keys(context.keyMap).sort());
+  expect(Object.keys(refMap).sort()).toEqual(Object.keys(context.refMap).sort());
+  expect(
+    Object.values(refMap)
+      .map((entry) => entry.path)
+      .sort()
+  ).toEqual(['a.yaml', 'b.yaml', 'block-a.yaml', 'block-b.yaml']);
+});
+
+test('JIT refs take counter ids, so two build contexts never reuse a ref id', async () => {
+  mockFiles([
+    { path: 'a.yaml', content: 'id: a\ntype: PageHeaderMenu\nblocks:\n  - _ref: block-a.yaml' },
+    { path: 'block-a.yaml', content: 'id: block_a\ntype: Button' },
+  ]);
+  const pageRegistry = new Map([
+    ['a', { pageId: 'a', auth: { public: true }, refId: 'r-a', refPath: 'a.yaml' }],
+  ]);
+
+  await buildPageJit({ pageId: 'a', pageRegistry, context: createTestContext() });
+  await buildPageJit({ pageId: 'a', pageRegistry, context: createTestContext() });
+
+  const [first, second] = jitMapsWrites();
+  const firstIds = Object.keys(first.refMap);
+  expect(firstIds.some((id) => Object.keys(second.refMap).includes(id))).toBe(false);
 });
 
 test('two JIT builds with object vars produce identical results and do not mutate unresolvedVars', async () => {
@@ -691,37 +942,25 @@ areas:
   expect(pageEntry.unresolvedVars.header).toEqual({ _ref: 'header.yaml' });
 });
 
-// Icon detection tests
-// Note: existing tests above implicitly cover the !iconImports guard path
-// since they do not set context.iconImports.
+// Icon delivery tests
+// Note: existing tests above implicitly cover the !bundledIcons guard path
+// since they do not set context.bundledIcons.
 
-test('buildPageJit detects missing icons and writes dynamic icon data', async () => {
+// Page ids and titles are plain words here: discovery bundles any whole string
+// value that is an icon name ("home", "Edit"), which these tests do not probe.
+async function createIconTestContext({ bundledIcons }) {
   const context = createTestContext();
-  // Set up iconImports with no IoAddCircle — simulating shallow build that missed it
-  context.iconImports = [
-    { icons: [], package: 'react-icons/ai' },
-    { icons: [], package: 'react-icons/io5' },
-  ];
+  context.bundledIcons = new Set(bundledIcons);
   context.dynamicIconData = {};
-  context.directories.server = '/test/server';
+  context.icons = await createIconContext({
+    context: { typesMap: { iconSets: {} } },
+    iconsConfig: {},
+  });
+  return context;
+}
 
-  mockFiles([
-    {
-      path: 'home.yaml',
-      content: `
-id: home
-type: PageHeaderMenu
-blocks:
-  - id: action_button
-    type: Button
-    properties:
-      title: Do Something
-      icon: IoAddCircle
-`,
-    },
-  ]);
-
-  const pageRegistry = new Map([
+function iconPageRegistry() {
+  return new Map([
     [
       'home',
       {
@@ -733,31 +972,51 @@ blocks:
       },
     ],
   ]);
+}
 
-  const result = await buildPageJit({
-    pageId: 'home',
-    pageRegistry,
-    context,
-  });
+test('buildPageJit delivers icon data for names the dev bundle lacks', async () => {
+  const context = await createIconTestContext({ bundledIcons: ['check', 'home'] });
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: add_button
+    type: Button
+    properties:
+      title: Add item
+      icon: CirclePlus
+  - id: edit_button
+    type: Button
+    properties:
+      title: Change item
+      icon:
+        name: edit
+  - id: done_button
+    type: Button
+    properties:
+      title: Mark done
+      icon: check
+`,
+    },
+  ]);
+
+  const result = await buildPageJit({ pageId: 'home', pageRegistry: iconPageRegistry(), context });
 
   expect(result.id).toBe('page:home');
-
-  // Icon imports should have been updated
-  const io5Entry = context.iconImports.find((e) => e.package === 'react-icons/io5');
-  expect(io5Entry.icons).toContain('IoAddCircle');
-
-  // plugins/iconsDynamic.js should have been written
-  const iconDynamicCall = mockWriteBuildArtifact.mock.calls.find(
-    (c) => c[0] === 'plugins/iconsDynamic.js'
+  expect(Object.keys(context.dynamicIconData).sort()).toEqual(['CirclePlus', 'edit']);
+  expect(context.dynamicIconData.edit.node).toEqual(icons.Pencil);
+  expect(context.dynamicIconData.CirclePlus).toEqual({ node: icons.CirclePlus });
+  // Data only: nothing is written for icons.
+  expect(mockWriteBuildArtifact.mock.calls.map(([name]) => name)).not.toContain(
+    'plugins/iconsDynamic.js'
   );
-  expect(iconDynamicCall).toBeDefined();
 });
 
-test('buildPageJit does not write dynamic icons when all icons already present', async () => {
-  const context = createTestContext();
-  context.iconImports = [{ icons: ['AiFillHome'], package: 'react-icons/ai' }];
-  context.dynamicIconData = {};
-
+test('buildPageJit delivers nothing when the dev bundle has every icon', async () => {
+  const context = await createIconTestContext({ bundledIcons: ['home'] });
   mockFiles([
     {
       path: 'home.yaml',
@@ -768,36 +1027,45 @@ blocks:
   - id: btn
     type: Button
     properties:
-      title: Home
-      icon: AiFillHome
+      title: Go to start
+      icon: home
 `,
     },
   ]);
 
-  const pageRegistry = new Map([
-    [
-      'home',
-      {
-        pageId: 'home',
-        auth: { public: true },
-        refId: 'ref-home',
-        refPath: 'home.yaml',
-        unresolvedVars: null,
-      },
-    ],
+  await buildPageJit({ pageId: 'home', pageRegistry: iconPageRegistry(), context });
+
+  expect(context.dynamicIconData).toEqual({});
+});
+
+test('buildPageJit fails the page for a react-icons name at an icon position', async () => {
+  const context = await createIconTestContext({ bundledIcons: [] });
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: btn
+    type: Button
+    properties:
+      title: Delete
+      icon: AiOutlineDelete
+`,
+    },
   ]);
 
-  await buildPageJit({
-    pageId: 'home',
-    pageRegistry,
-    context,
-  });
-
-  // plugins/iconsDynamic.js should NOT have been written
-  const iconDynamicCall = mockWriteBuildArtifact.mock.calls.find(
-    (c) => c[0] === 'plugins/iconsDynamic.js'
+  let error;
+  try {
+    await buildPageJit({ pageId: 'home', pageRegistry: iconPageRegistry(), context });
+  } catch (err) {
+    error = err;
+  }
+  expect(error.message).toBe('Page "home" build failed with 1 error(s).');
+  expect(error.buildErrors[0].message).toMatch(
+    /^Icon "AiOutlineDelete" is a react-icons name\. Lowdefy 7 uses Lucide icons\. Use "delete" \(or "Trash"\)\./
   );
-  expect(iconDynamicCall).toBeUndefined();
 });
 
 // CallAPI endpoint reference validation (validateCallApiRefs) in the JIT path.
@@ -850,7 +1118,8 @@ function callApiPageRegistry() {
 test('buildPageJit does not warn for a CallAPI action when the endpoint exists in components.api', async () => {
   const context = createTestContextWithApi([{ endpointId: 'my_endpoint', type: 'Api' }]);
   const warnings = [];
-  context.handleWarning = (warning) => warnings.push(warning);
+  // Each page build has its own warning handler, which logs to the context's logger.
+  context.logger.warn = (warning) => warnings.push(warning);
 
   mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
 
@@ -867,7 +1136,8 @@ test('buildPageJit does not warn for a CallAPI action when the endpoint exists i
 test('buildPageJit warns for a CallAPI action when the endpoint is missing from components.api', async () => {
   const context = createTestContextWithApi([]);
   const warnings = [];
-  context.handleWarning = (warning) => warnings.push(warning);
+  // Each page build has its own warning handler, which logs to the context's logger.
+  context.logger.warn = (warning) => warnings.push(warning);
 
   mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
 
@@ -880,6 +1150,314 @@ test('buildPageJit warns for a CallAPI action when the endpoint is missing from 
   const warning = warnings.find((w) => w.checkSlug === 'callapi-refs');
   expect(warning).toBeDefined();
   expect(warning.message).toBe(
-    'CallAPI action on page "home" references non-existent endpoint "my_endpoint".'
+    'CallAPI action on page "home" references non-existent endpoint "my_endpoint". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "my_endpoint".'
   );
+});
+
+test('buildPageJit attaches prodError to _warnings entries for prod-gated warnings', async () => {
+  const context = createTestContextWithApi([]);
+
+  mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: callApiPageRegistry(),
+    context,
+  });
+
+  const warning = result._warnings.find((w) => w.message.includes('non-existent endpoint'));
+  expect(warning).toMatchObject({ type: 'ConfigWarning', prodError: true });
+});
+
+test('buildPageJit warns on an unknown block key, as the full build does, and not on the attached auth', async () => {
+  const context = createTestContext();
+  const warnings = [];
+  // Each page build has its own warning handler, which logs to the context's logger.
+  context.logger.warn = (warning) => warnings.push(warning);
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: title
+    type: Title
+    propertys:
+      content: Hello
+`,
+    },
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: callApiPageRegistry(),
+    context,
+  });
+
+  expect(result.id).toBe('page:home');
+  const schemaWarnings = warnings.filter((warning) => warning.checkSlug === 'schema');
+  expect(schemaWarnings.map((warning) => warning.message)).toEqual([
+    'must NOT have additional properties - "propertys"',
+  ]);
+});
+
+test('buildPageJit honours ~ignoreBuildChecks schema on a block with an unknown key', async () => {
+  const context = createTestContext();
+  const warnings = [];
+  // Each page build has its own warning handler, which logs to the context's logger.
+  context.logger.warn = (warning) => warnings.push(warning);
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: title
+    type: Title
+    ~ignoreBuildChecks:
+      - schema
+    propertys:
+      content: Hello
+`,
+    },
+  ]);
+
+  await buildPageJit({ pageId: 'home', pageRegistry: callApiPageRegistry(), context });
+
+  expect(warnings.filter((warning) => warning.checkSlug === 'schema')).toEqual([]);
+});
+
+const authConfigPageYaml = `
+id: home
+type: PageHeaderMenu
+properties:
+  emailLoginEnabled:
+    _build.authConfig: emailAndPassword.enabled
+  providers:
+    _build.authConfig: providers
+`;
+
+function authConfigPageRegistry() {
+  return new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+}
+
+test('buildPageJit resolves _build.authConfig from the projection on the context', async () => {
+  const context = createTestContext();
+  context.authConfigProjection = {
+    emailAndPassword: { enabled: true },
+    magicLink: { enabled: false },
+    twoFactor: { enabled: false },
+    passkey: { enabled: false },
+    providers: [{ id: 'google', type: 'Google' }],
+    organizations: { signup: 'invite-only' },
+  };
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: authConfigPageRegistry(),
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.properties.emailLoginEnabled).toBe(true);
+  expect(result.properties.providers).toEqual([{ id: 'google', type: 'Google' }]);
+});
+
+test('buildPageJit restores the projection from the authConfigProjection.json artifact', async () => {
+  const fs = await import('fs');
+  const os = await import('os');
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-auth-'));
+  fs.writeFileSync(
+    path.join(buildDirectory, 'authConfigProjection.json'),
+    JSON.stringify({
+      emailAndPassword: { enabled: false },
+      magicLink: { enabled: true },
+      twoFactor: { enabled: false },
+      passkey: { enabled: false },
+      providers: [],
+      organizations: { signup: 'open' },
+    })
+  );
+
+  const context = createTestContext();
+  context.directories.build = buildDirectory;
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: authConfigPageRegistry(),
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.properties.emailLoginEnabled).toBe(false);
+  expect(context.authConfigProjection.magicLink.enabled).toBe(true);
+
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
+});
+
+test('buildPageJit collects the unavailable-projection error when no projection or artifact exists', async () => {
+  const context = createTestContext();
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  const error = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: authConfigPageRegistry(),
+    context,
+  }).catch((caught) => caught);
+  expect(error.message).toMatch('build failed with');
+  expect(
+    error.buildErrors.some((e) => e.message.includes('_build.authConfig is not available here.'))
+  ).toBe(true);
+});
+
+const moduleAuthConfigPageYaml = `
+id: panel
+type: PageHeaderMenu
+properties:
+  emailLoginEnabled:
+    _build.authConfig: emailAndPassword.enabled
+  roles:
+    _build.authConfig: roles
+`;
+
+test('buildPageJit resolves _build.authConfig in a module page from the restored projection artifact', async () => {
+  const fs = await import('fs');
+  const os = await import('os');
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-module-auth-'));
+  const rolesCatalog = [
+    { id: 'admin', label: 'Administrator', description: 'Full access' },
+    { id: 'editor', label: 'Editor', description: 'Can edit content' },
+    { id: 'viewer', label: 'Viewer', description: 'Read only access' },
+  ];
+  fs.writeFileSync(
+    path.join(buildDirectory, 'authConfigProjection.json'),
+    JSON.stringify({
+      emailAndPassword: { enabled: true },
+      magicLink: { enabled: false },
+      twoFactor: { enabled: false },
+      passkey: { enabled: false },
+      providers: [],
+      organizations: { signup: 'open' },
+      roles: rolesCatalog,
+    })
+  );
+
+  const context = createTestContext();
+  context.directories.build = buildDirectory;
+  context.modules = {
+    authmod: {
+      id: 'authmod',
+      moduleRoot: path.resolve('src/test-utils'),
+      packageRoot: path.resolve('src/test-utils'),
+      moduleDependencies: null,
+    },
+  };
+  mockFiles([
+    { path: path.resolve('src/test-utils/panel.yaml'), content: moduleAuthConfigPageYaml },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'authmod/panel',
+      {
+        pageId: 'authmod/panel',
+        auth: { public: true },
+        refId: 'ref-panel',
+        refPath: 'panel.yaml',
+        unresolvedVars: null,
+        moduleEntryId: 'authmod',
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'authmod/panel',
+    pageRegistry,
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.id).toBe('page:authmod/panel');
+  expect(result.properties.emailLoginEnabled).toBe(true);
+  expect(result.properties.roles).toEqual(rolesCatalog);
+  // The projection was restored from the artifact into the JIT context.
+  expect(context.authConfigProjection.emailAndPassword.enabled).toBe(true);
+
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
+});
+
+test('page builds on one dev context log an unset _build.env variable once per change event, each page listing its own reads', async () => {
+  delete process.env.LDF_JIT_UNSET_ENV;
+  const context = createTestContext();
+  // The dev server's kept context: shared by page builds, cleared on each change event.
+  context.seenSourceLines = new Set();
+  const logged = [];
+  context.logger.warn = (warning) => logged.push(warning);
+  const pageYaml = (pageId) => `
+id: ${pageId}
+type: PageHeaderMenu
+blocks:
+  - id: first
+    type: Title
+    properties:
+      content:
+        _build.env: LDF_JIT_UNSET_ENV
+  - id: second
+    type: Title
+    properties:
+      content:
+        _build.env: LDF_JIT_UNSET_ENV
+`;
+  mockFiles([
+    { path: 'one.yaml', content: pageYaml('one') },
+    { path: 'two.yaml', content: pageYaml('two') },
+  ]);
+  const pageRegistry = new Map(
+    ['one', 'two'].map((pageId) => [
+      pageId,
+      {
+        pageId,
+        auth: { public: true },
+        refId: `ref-${pageId}`,
+        refPath: `${pageId}.yaml`,
+        unresolvedVars: null,
+      },
+    ])
+  );
+  const envWarnings = (page) =>
+    (page._warnings ?? []).filter((warning) => warning.message.includes('LDF_JIT_UNSET_ENV'));
+
+  const one = await buildPageJit({ pageId: 'one', pageRegistry, context });
+  const two = await buildPageJit({ pageId: 'two', pageRegistry, context });
+
+  expect(envWarnings(one)).toHaveLength(1);
+  expect(envWarnings(one)[0].message).toContain('in 2 places (one.yaml:8, one.yaml:13)');
+  expect(envWarnings(one)[0].source).toBe('one.yaml:8');
+  expect(envWarnings(two)).toHaveLength(1);
+  expect(envWarnings(two)[0].message).toContain('in 2 places (two.yaml:8, two.yaml:13)');
+  expect(logged).toHaveLength(1);
+
+  // A change event clears the shared lines: the next page build logs it again, once.
+  context.seenSourceLines.clear();
+  await buildPageJit({ pageId: 'two', pageRegistry, context });
+  await buildPageJit({ pageId: 'one', pageRegistry, context });
+
+  expect(logged).toHaveLength(2);
+  expect(logged[1].source).toBe('two.yaml:8');
 });

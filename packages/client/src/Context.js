@@ -17,7 +17,9 @@
 import React, { useEffect } from 'react';
 import getContext from '@lowdefy/engine';
 
+import createPageLifecycleManager from './createPageLifecycleManager.js';
 import createShortcutManager from './createShortcutManager.js';
+import getContextKey from './getContextKey.js';
 import MountEvents from './MountEvents.js';
 
 const ShortcutEffect = ({ context }) => {
@@ -29,31 +31,53 @@ const ShortcutEffect = ({ context }) => {
   return null;
 };
 
-const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
-  const context = getContext({ config, jsMap, lowdefy, resetContext });
+const PageLifecycleEffect = ({ context }) => {
+  useEffect(() => {
+    const manager = createPageLifecycleManager();
+    manager.init(context);
+    return () => manager.destroy();
+  }, [context]);
+  return null;
+};
+
+const WebSocketsEffect = ({ context }) => {
+  useEffect(() => {
+    context._internal.WebSockets.subscribeAll();
+    return () => context._internal.WebSockets.unsubscribeAll();
+  }, [context]);
+  return null;
+};
+
+const Context = ({ appContext, children, config, jsMap, lowdefy, pathParams, resetContext }) => {
+  const context = getContext({ config, jsMap, lowdefy, pathParams, resetContext });
+  const progress = () => {
+    lowdefy._internal.progress.dispatch({
+      type: 'increment',
+    });
+  };
   return (
     <MountEvents
+      key={getContextKey(context)}
       context={context}
       triggerEvent={async () => {
-        await context._internal.runOnInit(() => {
-          lowdefy._internal.progress.dispatch({
-            type: 'increment',
-          });
-        });
+        // The app events run once per app load, when the first page mounts. The
+        // page onInit waits for the app onInit, but not for the app onInitAsync.
+        await appContext._internal.runOnInit(progress);
+        appContext._internal.runOnInitAsync(progress);
+        await context._internal.runOnInit(progress);
       }}
       triggerEventAsync={() => {
-        context._internal.runOnInitAsync(() => {
-          lowdefy._internal.progress.dispatch({
-            type: 'increment',
-          });
-        });
+        context._internal.runOnInitAsync(progress);
       }}
+      waitForMount={true}
     >
       {(loadingOnInit) => {
         if (loadingOnInit) return '';
         return (
           <>
             <ShortcutEffect context={context} />
+            <PageLifecycleEffect context={context} />
+            <WebSocketsEffect context={context} />
             {children(context)}
           </>
         );

@@ -17,12 +17,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu';
-import {
-  AiOutlineBold,
-  AiOutlineItalic,
-  AiOutlineStrikethrough,
-  AiOutlineHighlight,
-} from 'react-icons/ai';
 import { isTextSelection } from '@tiptap/core';
 
 const HIGHLIGHT_SWATCHES = [
@@ -32,27 +26,50 @@ const HIGHLIGHT_SWATCHES = [
   { color: 'rgba(170, 0, 255, 1)', fill: 'rgba(170, 0, 255, 0.5)' },
 ];
 
+// Placement of the TipTap v2 (tippy.js) bubble menu: 10px above the selection,
+// flipping below when that would leave less than 5px to the viewport edge, and
+// kept 5px from the sides. v3 positions the menu with Floating UI and applies
+// the offset after flip, so flip's padding includes the offset.
+const FLOATING_OPTIONS = {
+  placement: 'top',
+  offset: 10,
+  flip: { padding: 15 },
+  shift: { padding: 5 },
+};
+
 function hasExt(editor, name) {
   return editor.extensionManager.extensions.some((ext) => ext.name === name);
 }
 
+function createMenuElements() {
+  if (typeof document === 'undefined') return null;
+  // `root` is the element the plugin positions and mounts, like tippy's root
+  // in v2 (same z-index). `content` is the styled menu the buttons render into.
+  // The root is absolute from the start so the plugin measures its final size
+  // the first time it positions it.
+  const root = document.createElement('div');
+  root.style.position = 'absolute';
+  root.style.visibility = 'hidden';
+  root.style.zIndex = '9999';
+  const content = document.createElement('div');
+  content.className = 'tiptap-popover';
+  root.appendChild(content);
+  return { root, content };
+}
+
 // Custom bubble menu built on tiptap's BubbleMenuPlugin instead of the
-// `<BubbleMenu>` React wrapper. The wrapper renders its menu element with
-// React and then the plugin calls `element.remove()` on it (bubble-menu-plugin
-// detaches the menu from the DOM on construction). When the editor block later
-// unmounts — e.g. the surrounding page navigates away, or `disabled` flips and
-// unmounts this menu — React tries to removeChild an element that is no longer
-// where it rendered it, throwing "NotFoundError: Failed to execute
-// 'removeChild' on 'Node'".
+// `<BubbleMenu>` React wrapper. The plugin moves its menu element in and out of
+// the DOM itself. When the editor block later unmounts — e.g. the surrounding
+// page navigates away, or `disabled` flips and unmounts this menu — React
+// would try to removeChild an element that is no longer where it rendered it,
+// throwing "NotFoundError: Failed to execute 'removeChild' on 'Node'".
 //
-// Here we own the container element ourselves and render the buttons into it
-// with a portal. React only ever removes the buttons from our container (always
-// their parent), never the plugin-detached element, so the teardown race is
-// gone.
-const PopoverMenu = ({ editor }) => {
-  const [container] = useState(() =>
-    typeof document === 'undefined' ? null : document.createElement('div')
-  );
+// Here we own the menu elements ourselves and render the buttons into them
+// with a portal. React only ever removes the buttons from our content element
+// (always their parent), never the plugin-managed root, so the teardown race
+// is gone.
+const PopoverMenu = ({ blockId, editor, Icon }) => {
+  const [menu] = useState(createMenuElements);
 
   const showBold = hasExt(editor, 'bold');
   const showItalic = hasExt(editor, 'italic');
@@ -61,14 +78,16 @@ const PopoverMenu = ({ editor }) => {
   const hasTools = showBold || showItalic || showStrike || showHighlight;
 
   useEffect(() => {
-    if (!container || !editor || editor.isDestroyed || !hasTools) return undefined;
-
-    container.className = 'tiptap-popover';
+    if (!menu || !editor || editor.isDestroyed || !hasTools) return undefined;
 
     const plugin = BubbleMenuPlugin({
       pluginKey: 'bubbleMenu',
       editor,
-      element: container,
+      element: menu.root,
+      // v2 mounted the menu beside the editor wrapper; v3 defaults to inside it.
+      // `options.element` is the EditorContent wrapper once it has mounted.
+      appendTo: () => editor.options.element?.parentElement,
+      options: FLOATING_OPTIONS,
       shouldShow: ({ editor: menuEditor, view, state, from, to }) => {
         if (menuEditor.isActive('image')) return false;
         const { selection } = state;
@@ -85,48 +104,56 @@ const PopoverMenu = ({ editor }) => {
 
     editor.registerPlugin(plugin);
     return () => {
-      // Tear the plugin (and its tippy instance) down first. React then
-      // unmounts the portal, removing the buttons from our still-intact
-      // container.
+      // Tear the plugin down first (it removes the root from the DOM). React
+      // then unmounts the portal, removing the buttons from our still-intact
+      // content element.
       if (!editor.isDestroyed) {
         editor.unregisterPlugin('bubbleMenu');
       }
     };
-  }, [editor, container, hasTools]);
+  }, [editor, menu, hasTools]);
 
-  if (!container || !hasTools) return null;
+  if (!menu || !hasTools) return null;
 
   return createPortal(
     <>
       {showBold && (
-        <AiOutlineBold
-          className="tiptap-icon"
+        <Icon
+          blockId={`${blockId}_bold_icon`}
+          classNames={{ element: 'tiptap-icon' }}
           onClick={() => editor.chain().focus().toggleBold().run()}
+          properties="bold"
         />
       )}
       {showItalic && (
-        <AiOutlineItalic
-          className="tiptap-icon"
+        <Icon
+          blockId={`${blockId}_italic_icon`}
+          classNames={{ element: 'tiptap-icon' }}
           onClick={() => editor.chain().focus().toggleItalic().run()}
+          properties="italic"
         />
       )}
       {showStrike && (
-        <AiOutlineStrikethrough
-          className="tiptap-icon"
+        <Icon
+          blockId={`${blockId}_strikethrough_icon`}
+          classNames={{ element: 'tiptap-icon' }}
           onClick={() => editor.chain().focus().toggleStrike().run()}
+          properties="strikethrough"
         />
       )}
       {showHighlight &&
-        HIGHLIGHT_SWATCHES.map(({ color, fill }) => (
-          <AiOutlineHighlight
+        HIGHLIGHT_SWATCHES.map(({ color, fill }, i) => (
+          <Icon
             key={color}
-            className="tiptap-icon"
-            style={{ color }}
+            blockId={`${blockId}_highlight_${i}_icon`}
+            classNames={{ element: 'tiptap-icon' }}
+            styles={{ element: { color } }}
             onClick={() => editor.chain().focus().toggleHighlight({ color: fill }).run()}
+            properties="highlight"
           />
         ))}
     </>,
-    container
+    menu.content
   );
 };
 

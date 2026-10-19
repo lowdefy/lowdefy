@@ -15,19 +15,23 @@
 */
 
 import nunjucks from 'nunjucks';
-import { type } from '@lowdefy/helpers';
+import { LRUCache, type } from '@lowdefy/helpers';
 import dateFilter from './dateFilter.js';
 import uniqueFilter from './uniqueFilter.js';
 import urlQueryFilter from './urlQueryFilter.js';
 
+export const createEnvironment = ({ autoescape = true } = {}) => {
+  const environment = new nunjucks.Environment(null, { autoescape });
+  environment.addFilter('date', dateFilter);
+  environment.addFilter('unique', uniqueFilter);
+  environment.addFilter('urlQuery', urlQueryFilter);
+  return environment;
+};
+
 // dateFilter.setDefaultFormat('YYYY-MM-DD');
-export const nunjucksEnv = new nunjucks.Environment();
+export const nunjucksEnv = createEnvironment();
 
-nunjucksEnv.addFilter('date', dateFilter);
-nunjucksEnv.addFilter('unique', uniqueFilter);
-nunjucksEnv.addFilter('urlQuery', urlQueryFilter);
-
-const nunjucksTemplates = {};
+const nunjucksTemplates = new LRUCache({ maxSize: 500 });
 // slow
 export const nunjucksString = (templateString, value) => {
   if (type.isPrimitive(value)) {
@@ -49,26 +53,24 @@ export const validNunjucksString = (templateString, returnError = false) => {
 };
 
 // fast
-// test with memoization
-// this method compiles a nunjucks string only if the client has not compiled the same string before.
+// Compiles a nunjucks string only once per distinct source, bounded by an LRU cache.
 export const nunjucksFunction = (templateString) => {
-  // template was already compiled
-  if (type.isFunction(nunjucksTemplates[templateString])) {
-    return nunjucksTemplates[templateString];
-  }
-  if (type.isString(templateString)) {
-    const template = nunjucks.compile(templateString, nunjucksEnv);
-    // execute once to throw catch template errors
-    template.render({});
-    nunjucksTemplates[templateString] = (value) => {
-      if (type.isPrimitive(value)) {
-        return template.render({ value });
-      }
-      return template.render(value);
-    };
-  } else {
-    // for non string types like booleans or objects
-    nunjucksTemplates[templateString] = () => templateString;
-  }
-  return nunjucksTemplates[templateString];
+  // Non-string templates render as themselves. Nothing to compile, so nothing to cache - and
+  // caching them would key every object argument to the same "[object Object]" slot.
+  if (!type.isString(templateString)) return () => templateString;
+
+  const cached = nunjucksTemplates.get(templateString);
+  if (cached) return cached;
+
+  const template = nunjucks.compile(templateString, nunjucksEnv);
+  // Execute once to surface template errors at compile time.
+  template.render({});
+  const render = (value) => {
+    if (type.isPrimitive(value)) {
+      return template.render({ value });
+    }
+    return template.render(value);
+  };
+  nunjucksTemplates.set(templateString, render);
+  return render;
 };

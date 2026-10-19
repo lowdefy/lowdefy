@@ -14,18 +14,27 @@
   limitations under the License.
 */
 
+// Imported from the source module, not index.js, to avoid a circular import.
+import { isReserved } from './ReservedKeyError.js';
 import serializer from './serializer.js';
+import setKey from './setKey.js';
 import type from './type.js';
 
 const parse = (str) => {
   const parsed = new URLSearchParams(str);
   const deserialized = {};
   parsed.forEach((value, key) => {
-    try {
-      deserialized[key] = serializer.deserializeFromString(value);
-    } catch (error) {
-      deserialized[key] = value;
+    // URL keys are user-controlled: skip reserved-named keys (?__proto__=...) and keep parsing.
+    if (isReserved(key)) {
+      return;
     }
+    let resolved;
+    try {
+      resolved = serializer.deserializeFromString(value);
+    } catch (error) {
+      resolved = value;
+    }
+    setKey(deserialized, key, resolved);
   });
   return deserialized;
 };

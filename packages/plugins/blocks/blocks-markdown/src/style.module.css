@@ -116,6 +116,18 @@
     padding-left: 0;
   }
 
+  /* Restore top-level markers. The Tailwind preflight (base layer) resets
+     `list-style: none`; without an explicit type here the markers vanish, since
+     only the nested rules below set a type. (Indentation comes from the
+     `padding-left` rule lower in this file.) */
+  .markdown-body ol {
+    list-style-type: decimal;
+  }
+
+  .markdown-body ul {
+    list-style-type: disc;
+  }
+
   .markdown-body ol ol,
   .markdown-body ul ol {
     list-style-type: lower-roman;

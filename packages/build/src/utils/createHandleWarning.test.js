@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { ConfigWarning } from '@lowdefy/errors';
 
 import createHandleWarning from './createHandleWarning.js';
@@ -60,7 +62,7 @@ test('handleWarning resolves location from configKey', () => {
 
   handleWarning(new ConfigWarning('Bad block', { configKey: 'abc123' }));
 
-  expect(lines[0].err.source).toBe('/app/pages/home.yaml:42');
+  expect(lines[0].err.source).toBe(`${path.resolve('/app', 'pages/home.yaml')}:42`);
 });
 
 test('handleWarning sets received on warning', () => {
@@ -197,6 +199,21 @@ test('handleWarning does not deduplicate different sources', () => {
   handleWarning(new ConfigWarning('Same msg', { configKey: 'k2' }));
 
   expect(lines).toHaveLength(2);
+});
+
+test('handleWarning deduplicates by dedupKey when warnings at different sources share one', () => {
+  const { context, lines } = createContext();
+  const handleWarning = createHandleWarning({ context });
+
+  const first = new ConfigWarning('Variable unset', { filePath: 'pages/one.yaml', lineNumber: 7 });
+  first.dedupKey = '_build.env:SMTP_HOST';
+  const second = new ConfigWarning('Variable unset', { filePath: 'pages/two.yaml', lineNumber: 7 });
+  second.dedupKey = '_build.env:SMTP_HOST';
+  handleWarning(first);
+  handleWarning(second);
+
+  expect(lines).toHaveLength(1);
+  expect(lines[0].err.source).toBe(`${path.resolve('/app', 'pages/one.yaml')}:7`);
 });
 
 // --- Missing context.seenSourceLines ---

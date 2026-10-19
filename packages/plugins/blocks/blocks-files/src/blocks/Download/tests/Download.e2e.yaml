@@ -1,0 +1,77 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: download
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: download_basic
+    type: Download
+    properties:
+      downloadPolicyRequestId: download_policy_request
+      fileList:
+        - key: reports/report.pdf
+          name: report.pdf
+          size: 1024
+          type: application/pdf
+          status: done
+        - key: reports/summary.xlsx
+          name: summary.xlsx
+          size: 2048
+          status: done
+
+  - id: download_empty
+    type: Download
+    properties:
+      downloadPolicyRequestId: download_policy_request
+
+  # ============================================
+  # REMOVE ICON + EVENT
+  # ============================================
+
+  - id: download_remove
+    type: Download
+    properties:
+      downloadPolicyRequestId: download_policy_request
+      showRemoveIcon: true
+      fileList:
+        - key: reports/removable.pdf
+          name: removable.pdf
+          status: done
+    events:
+      onRemove:
+        - id: set_removed_file
+          type: SetState
+          params:
+            removed_file:
+              _event: file.name
+
+  - id: remove_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: removed_file
+              - null
+          then:
+            _string.concat:
+              - 'Removed: '
+              - _state: removed_file
+          else: ''

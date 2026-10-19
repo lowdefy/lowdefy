@@ -137,6 +137,14 @@
                 "shape": {
                   "type": "string",
                   "enum": ["default", "round", "corner"]
+                },
+                "styles": {
+                  "type": "object",
+                  "description": "Inline styles per bubble part: root, content, body, header, footer, avatar, extra. The way to recolour a bubble: the filled and outlined colours come from the theme's colorPrimary and are not reachable from a stylesheet."
+                },
+                "classNames": {
+                  "type": "object",
+                  "description": "Class names per bubble part, same keys as styles."
                 }
               }
             },
@@ -152,6 +160,14 @@
                 "shape": {
                   "type": "string",
                   "enum": ["default", "round", "corner"]
+                },
+                "styles": {
+                  "type": "object",
+                  "description": "Inline styles per bubble part: root, content, body, header, footer, avatar, extra."
+                },
+                "classNames": {
+                  "type": "object",
+                  "description": "Class names per bubble part, same keys as styles."
                 }
               }
             }
@@ -162,6 +178,10 @@
     "messages": {
       "type": "array"
     },
+    "feedbackValues": {
+      "type": "object",
+      "description": "Ratings already recorded, keyed by message id, each `like` or `dislike`. Restores the thumbs on a conversation the block did not rate this visit. A rating clicked this visit takes precedence."
+    },
     "conversationId": {
       "type": "string",
       "description": "Active conversation ID. When this value changes, messages are automatically cleared."
@@ -171,8 +191,13 @@
       "description": "URL query parameters to send with each agent request. Available server-side in onFinish hook payload and via _payload operator in agent properties."
     },
     "sharedState": {
-      "description": "When set to a non-empty object, the object is sent to the agent each turn as read context and the agent can write to any top-level key via the update-page-state tool. Typically set to `{ _state: true }` to expose the whole page state, or a curated shape like `{ legal: _state.legal_name }`.",
+      "description": "When set to a non-empty object, the object is sent to the agent each turn as read context and the agent can write to any top-level key via the update-page-state tool (unless `sharedStateReadOnly` is true). Typically set to `{ _state: true }` to expose the whole page state, or a curated shape like `{ legal: _state.legal_name }`.",
       "type": "object"
+    },
+    "sharedStateReadOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, `sharedState` is sent to the agent as read-only context: the update-page-state tool is not offered, so the agent cannot write page state."
     },
     "sender": {
       "type": "object",
@@ -184,15 +209,38 @@
           "default": "enter"
         },
         "allowSpeech": { "type": "boolean", "default": false },
+        "styles": {
+          "type": "object",
+          "description": "Inline styles per composer part: root, prefix, input, suffix, footer, switch, content. The way to recolour the composer border, which the theme sets with a precedence no page stylesheet beats."
+        },
+        "classNames": {
+          "type": "object",
+          "description": "Class names per composer part, same keys as styles."
+        },
         "attachments": {
           "type": "object",
+          "description": "File attachments on the composer. When enabled, files can be picked with the paperclip, pasted from the clipboard (e.g. a screenshot) or dragged onto the composer; accept and maxSize apply to all three.",
           "properties": {
             "enabled": { "type": "boolean" },
-            "accept": { "type": "string" },
-            "maxSize": { "type": "number" },
+            "accept": {
+              "type": "string",
+              "description": "Comma-separated accept list, as for an <input type=\"file\"> — e.g. \"image/*,.pdf\". Applied to picked, pasted and dropped files alike."
+            },
+            "maxSize": {
+              "type": "number",
+              "description": "Maximum file size in bytes. Larger files are silently skipped."
+            },
+            "uploadPolicyRequestId": {
+              "type": "string",
+              "description": "Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas). When set, files are uploaded to storage and their URLs are sent to the LLM instead of base64 data. Each uploaded file part keeps its storage key as providerMetadata.lowdefy.key, which a tool endpoint reads with _agent: files."
+            },
+            "downloadPolicyRequestId": {
+              "type": "string",
+              "description": "Id of a download request used to resolve the URL of an uploaded attachment. The URL is fetched by the model provider, so it should remain reachable — use public: true on the request for public buckets, or a long expiry. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated)."
+            },
             "s3PostPolicyRequestId": {
               "type": "string",
-              "description": "Request ID of type AwsS3PresignedPostPolicy. When set, files are uploaded to S3 and their URLs are sent to the LLM instead of base64 data."
+              "description": "Deprecated — use uploadPolicyRequestId instead."
             }
           }
         },
@@ -223,6 +271,11 @@
         "width": { "type": "number" },
         "title": { "type": "string" }
       }
+    },
+    "loading": {
+      "type": "boolean",
+      "default": false,
+      "description": "The app is still loading this conversation's transcript. While true, a skeleton replaces the message area, suggestions are hidden and the composer is disabled, so nothing can be sent into a conversation whose messages have not synced yet."
     },
     "suggestions": {
       "type": "array",

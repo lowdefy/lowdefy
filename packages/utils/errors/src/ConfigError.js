@@ -48,9 +48,13 @@ class ConfigError extends Error {
    * @param {string} [options.filePath] - Raw file path for pre-addKeys errors
    * @param {string|number} [options.lineNumber] - Line number for pre-addKeys errors
    * @param {string} [options.checkSlug] - The build check that triggered this error
+   * @param {string} [options.checkGroup] - A slug naming a group of checks, such as plugin-checks
    * @param {*} [options.received] - The input that caused the error
    */
-  constructor(message, { cause, configKey, filePath, lineNumber, checkSlug, received } = {}) {
+  constructor(
+    message,
+    { cause, configKey, filePath, lineNumber, checkSlug, checkGroup, received } = {}
+  ) {
     const resolvedMessage = message ?? cause?.message;
 
     super(resolvedMessage, { cause });
@@ -58,6 +62,7 @@ class ConfigError extends Error {
     this.isLowdefyError = true;
     this.configKey = configKey ?? cause?.configKey ?? null;
     this.checkSlug = checkSlug;
+    this.checkGroup = checkGroup;
 
     // For logger formatting
     this.received = received !== undefined ? received : cause?.received;

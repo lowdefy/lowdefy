@@ -13,8 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
-
 import testContext from '../../test/testContext.js';
 
 const lowdefy = {

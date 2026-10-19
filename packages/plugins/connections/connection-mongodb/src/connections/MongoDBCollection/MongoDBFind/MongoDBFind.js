@@ -14,30 +14,32 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
-async function MongodbFind({ request, connection }) {
+async function MongodbFind({ request, connection, tenant }) {
   const deserializedRequest = deserialize(request);
-  const { query, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
+  const { options } = deserializedRequest;
+  let { query } = deserializedRequest;
+  if (tenant) {
+    query = applyTenantToFilter({ filter: query, tenant, position: 'a query' });
+  }
+  const { collection } = await getCollection({ connection });
   let res;
   try {
     const cursor = await collection.find(query, options);
     res = await cursor.toArray();
   } catch (error) {
-    await client.close();
-    throw error;
+    throw mapMongoError(error, { connection, requestType: 'MongoDBFind' });
   }
-  await client.close();
   return serialize(res);
 }
 
 MongodbFind.schema = schema;
-MongodbFind.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
+MongodbFind.meta = requestMetas.MongoDBFind;
 
 export default MongodbFind;

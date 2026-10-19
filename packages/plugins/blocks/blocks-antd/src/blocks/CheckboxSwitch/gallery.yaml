@@ -29,6 +29,34 @@
         title: Remember Me
         description: Keep me signed in on this device
 
+- title: Indeterminate
+  blocks:
+    - id: select_all
+      type: CheckboxSwitch
+      properties:
+        title: Recipients
+        description: Select all
+        indeterminate:
+          _ne:
+            - _if_none:
+                - _state: recipient_alice
+                - false
+            - _if_none:
+                - _state: recipient_bob
+                - false
+    - id: recipient_alice
+      type: CheckboxSwitch
+      properties:
+        description: Alice
+        label:
+          disabled: true
+    - id: recipient_bob
+      type: CheckboxSwitch
+      properties:
+        description: Bob
+        label:
+          disabled: true
+
 - title: With Description Text
   blocks:
     - id: desc_terms
@@ -380,7 +408,7 @@
           properties:
             title: Create Account
             type: primary
-            icon: AiOutlineUserAdd
+            icon: UserPlus
             block: true
           events:
             onClick:
@@ -447,7 +475,7 @@
           properties:
             title: Save Preferences
             type: primary
-            icon: AiOutlineSave
+            icon: save
           events:
             onClick:
               - id: save_notif

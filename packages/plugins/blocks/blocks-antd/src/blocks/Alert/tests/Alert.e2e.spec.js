@@ -129,6 +129,49 @@ test.describe('Alert Block', () => {
     await expect(alert).toBeHidden();
   });
 
+  test('renders a custom close icon in the close button', async ({ page }) => {
+    const block = getAlert(page, 'alert_close_icon');
+    const closeBtn = block.locator('.ant-alert-close-icon');
+    await expect(closeBtn.locator('#alert_close_icon_closeIcon')).toBeAttached();
+    await closeBtn.click();
+    await expect(block.locator('.ant-alert')).toBeHidden();
+  });
+
+  test('closeText makes the alert closable without closable', async ({ page }) => {
+    const block = getAlert(page, 'alert_close_text_only');
+    await expect(block.locator('.ant-alert-close-icon')).toHaveText('Hide');
+  });
+
+  test('an empty close text does not make the alert closable', async ({ page }) => {
+    const block = getAlert(page, 'alert_close_text_empty');
+    await expect(block).toBeVisible();
+    await expect(block.locator('.ant-alert-close-icon')).toHaveCount(0);
+  });
+
+  // ============================================
+  // VARIANT AND SEMANTIC KEY TESTS
+  // ============================================
+
+  test('renders the default outlined variant', async ({ page }) => {
+    const alert = getAlert(page, 'alert_basic').locator('.ant-alert');
+    await expect(alert).toHaveClass(/ant-alert-outlined/);
+  });
+
+  test('renders the filled variant', async ({ page }) => {
+    const alert = getAlert(page, 'alert_filled').locator('.ant-alert');
+    await expect(alert).toHaveClass(/ant-alert-filled/);
+  });
+
+  test('applies class and style to the semantic parts', async ({ page }) => {
+    const block = getAlert(page, 'alert_css_keys');
+    const title = block.locator('.ant-alert-title');
+    await expect(title).toHaveClass(/alert-message-class/);
+    await expect(title).toHaveCSS('color', 'rgb(255, 0, 0)');
+    await expect(block.locator('.ant-alert-description')).toHaveClass(/alert-description-class/);
+    await expect(block.locator('.ant-alert-close-icon')).toHaveClass(/alert-close-class/);
+    await expect(block.locator('.ant-alert-actions')).toHaveClass(/alert-action-class/);
+  });
+
   // ============================================
   // BANNER TESTS
   // ============================================

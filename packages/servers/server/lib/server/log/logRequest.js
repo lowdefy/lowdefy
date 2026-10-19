@@ -14,53 +14,57 @@
   limitations under the License.
 */
 
-// TODO: Better name needed here maybe?
-function logRequest({ context }) {
-  const { headers = {}, user = {} } = context;
-  context.logger.info({
-    // TODO:
-    // app_name
-    // app_version
-    // lowdefy_version
-    // build_hash
-    // config_hash
-    user: {
-      id: user.id,
-      roles: user.roles,
-      sub: user.sub,
-      session_id: user.session_id, // TODO: Implement session id
+import redactUrlQuery from './redactUrlQuery.js';
+
+// Emits one access-log line per request, after the response is finalized.
+// `url` is the route path only (c.req.path). The referer keeps its query but
+// with credential parameters redacted, because the browser sends the page's
+// full URL there and that URL can carry a sign-in token or a signed OAuth
+// query (see redactUrlQuery).
+function logRequest({ context, status, durationMs }) {
+  const { headers = {} } = context;
+  const user = context.user ?? {};
+  context.logger.info(
+    {
+      user: {
+        id: user.id,
+        roles: user.roles,
+      },
+      url: context.req.url,
+      method: context.req.method,
+      hostname: context.req.hostname,
+      // The address the server resolved (see getClientAddress). The forwarding
+      // headers below are logged as the client sent them, and are not it.
+      client_address: context.clientAddress,
+      status,
+      duration_ms: durationMs,
+      headers: {
+        'accept-language': headers['accept-language'],
+        'sec-ch-ua-mobile': headers['sec-ch-ua-mobile'],
+        'sec-ch-ua-platform': headers['sec-ch-ua-platform'],
+        'sec-ch-ua': headers['sec-ch-ua'],
+        'user-agent': headers['user-agent'],
+        host: headers.host,
+        referer: redactUrlQuery(headers.referer),
+        'x-forwarded-for': headers['x-forwarded-for'],
+        // Vercel headers
+        'x-vercel-id': headers['x-vercel-id'],
+        'x-real-ip': headers['x-real-ip'],
+        'x-vercel-ip-country': headers['x-vercel-ip-country'],
+        'x-vercel-ip-country-region': headers['x-vercel-ip-country-region'],
+        'x-vercel-ip-city': headers['x-vercel-ip-city'],
+        'x-vercel-ip-latitude': headers['x-vercel-ip-latitude'],
+        'x-vercel-ip-longitude': headers['x-vercel-ip-longitude'],
+        'x-vercel-ip-timezone': headers['x-vercel-ip-timezone'],
+        // Cloudflare headers
+        'cf-connecting-ip': headers['cf-connecting-ip'],
+        'cf-ray': headers['cf-ray'],
+        'cf-ipcountry': headers['cf-ipcountry'],
+        'cf-visitor': headers['cf-visitor'],
+      },
     },
-    url: context.req.url,
-    method: context.req.method,
-    resolvedUrl: context.nextContext?.resolvedUrl,
-    hostname: context.req.hostname,
-    headers: {
-      'accept-language': headers['accept-language'],
-      'sec-ch-ua-mobile': headers['sec-ch-ua-mobile'],
-      'sec-ch-ua-platform': headers['sec-ch-ua-platform'],
-      'sec-ch-ua': headers['sec-ch-ua'],
-      'user-agent': headers['user-agent'],
-      host: headers.host,
-      referer: headers.referer,
-      'x-forward-for': headers['x-forward-for'],
-      // Vercel headers
-      'x-vercel-id': headers['x-vercel-id'],
-      'x-real-ip': headers['x-real-ip'],
-      'x-vercel-ip-country': headers['x-vercel-ip-country'],
-      'x-vercel-ip-country-region': headers['x-vercel-ip-country-region'],
-      'x-vercel-ip-city': headers['x-vercel-ip-city'],
-      'x-vercel-ip-latitude': headers['x-vercel-ip-latitude'],
-      'x-vercel-ip-longitude': headers['x-vercel-ip-longitude'],
-      'x-vercel-ip-timezone': headers['x-vercel-ip-timezone'],
-      // Cloudflare headers
-      'cf-connecting-ip': headers['cf-connecting-ip'],
-      'cf-ray': headers['cf-ray'],
-      'cf-ipcountry': headers['cf-ipcountry'],
-      'cf-visitor': headers['cf-visitor'],
-    },
-  });
-  // TODO:
-  // Next local? nextContext.locale, nextContext.locales, nextContext.defaultLocale
+    'request completed'
+  );
 }
 
 export default logRequest;

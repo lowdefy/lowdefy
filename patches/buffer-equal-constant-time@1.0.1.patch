@@ -1,0 +1,13 @@
+diff --git a/index.js b/index.js
+index 5462c1f830bdbe79bf2b1fcfd811cd9799b4dd11..d2290974b06c07d5c5beffc28e172c7faf0864aa 100644
+--- a/index.js
++++ b/index.js
+@@ -1,7 +1,7 @@
+ /*jshint node:true */
+ 'use strict';
+ var Buffer = require('buffer').Buffer; // browserify
+-var SlowBuffer = require('buffer').SlowBuffer;
++var SlowBuffer = require('buffer').SlowBuffer || Buffer; // SlowBuffer removed in Node 26; fall back to Buffer (only used by legacy install/restore)
+ 
+ module.exports = bufferEq;
+ 

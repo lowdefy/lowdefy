@@ -15,50 +15,26 @@
 */
 
 import React, { useEffect } from 'react';
-import { Upload } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { Download } from '@lowdefy/blocks-files/blocks';
 
-import withTheme from '../withTheme.js';
-
-const downloadFile = async ({ file, methods }) => {
-  const s3DownloadPolicy = await methods.triggerEvent({
-    name: '__getS3DownloadPolicy',
-    event: { file },
-  });
-  window.open(s3DownloadPolicy?.responses?.__getS3DownloadPolicy?.response?.[0]);
-};
-
-const S3Download = ({ blockId, classNames = {}, methods, properties, styles = {} }) => {
+// Deprecated alias for the generic Download block in @lowdefy/blocks-files.
+// Maps the legacy s3GetPolicyRequestId property onto downloadPolicyRequestId.
+const S3Download = (props) => {
   useEffect(() => {
-    methods.registerEvent({
-      name: '__getS3DownloadPolicy',
-      actions: [
-        {
-          id: '__getS3DownloadPolicy',
-          type: 'Request',
-          params: [properties.s3GetPolicyRequestId],
-        },
-      ],
-    });
+    console.warn(
+      'The S3Download block is deprecated. Use the Download block with "downloadPolicyRequestId" instead.'
+    );
   }, []);
-  const showRemoveIcon = properties.showRemoveIcon ?? false;
+  const { s3GetPolicyRequestId, ...properties } = props.properties ?? {};
   return (
-    <Upload
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
-      fileList={properties.fileList ?? []}
-      onPreview={async (file) => await downloadFile({ file, methods })}
-      onDownload={async (file) => await downloadFile({ file, methods })}
-      onRemove={(file) => {
-        methods.triggerEvent({ name: 'onRemove', event: { file } });
-        // Controlled fileList: the YAML handler decides whether to update state.
-        // Return false so antd doesn't fire onChange with a removed-file list.
-        return false;
+    <Download
+      {...props}
+      properties={{
+        downloadPolicyRequestId: s3GetPolicyRequestId,
+        ...properties,
       }}
-      showUploadList={{ showDownloadIcon: true, showRemoveIcon }}
     />
   );
 };
 
-export default withBlockDefaults(withTheme('Upload', S3Download));
+export default S3Download;

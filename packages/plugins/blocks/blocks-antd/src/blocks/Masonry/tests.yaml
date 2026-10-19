@@ -36,7 +36,17 @@
     gutter:
       - 16
       - 24
-- id: 'properties.sequential: true'
+- id: 'properties.gutter: responsive'
   type: Masonry
   properties:
-    sequential: true
+    columns:
+      xs: 1
+      md: 3
+    gutter:
+      xs: 8
+      md: 16
+- id: 'style: .item'
+  type: Masonry
+  style:
+    .item:
+      borderRadius: 8px

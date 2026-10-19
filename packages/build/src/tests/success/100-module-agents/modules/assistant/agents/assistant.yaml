@@ -1,0 +1,19 @@
+id: assistant
+type: ClaudeAgent
+connectionId:
+  _module.connectionId: ai
+properties:
+  model: claude-haiku-4-5
+  instructions: You answer questions about signups.
+  maxSteps: 5
+tools:
+  # Explicit LLM-safe name over a module-scoped endpoint id.
+  - name: lookup_signups
+    endpointId:
+      _module.endpointId: lookup-signups
+  # No name — defaults to the scoped endpoint id with '/' replaced by '__'.
+  - endpointId:
+      _module.endpointId: count-users
+hooks:
+  onFinish:
+    - _module.endpointId: save-log

@@ -1,0 +1,97 @@
+# SendGrid Email
+
+[SendGrid](https://sendgrid.com/) is a popular email API provider which allows you to easily setup a email service. The `SendGridMail` connection can be used to connect to an existing SendGrid API account.
+
+The `SendGridMail` connector uses the [@sendgrid/mail](https://github.com/@sendgrid/mail) library.
+
+In order to use the `SendGridMail` connector, you first need to create a [SendGrid](https://sendgrid.com/) account and setup an API key.
+
+> Secrets like API keys should be stored using the [`_secret`](operators/secret.md) operator.
+
+In order to send from your custom domain your will need to [authenticate your domain](https://app.sendgrid.com/settings/sender_auth) through SendGrid. See the [SendGrid Docs](https://sendgrid.com/docs) for help on getting started with SendGrid.
+
+## Connections
+
+Connection types:
+  - SendGridMail
+
+## Requests
+
+Request types:
+  - SendGridMailSend
+
+### Types
+
+- `email: string | object`:  SendGrid accepts emails as either a `string` or an `object`.
+  - `string`: Can be in the following format; `someone@example.org` or `Some One <someone@example.org>`.
+  - `object`: With `name' and `email` properties, for example: `{"name": "Some One", "email": "someone@example.org"}`.
+
+### SendGridMail
+
+#### Properties
+
+- `apiKey: string`: __Required__ - SendGrid API key.
+- `from: email`: __Required__ - Email address to send email from.
+- `replyTo: email`: Default email address replies should be sent to.
+- `mailSettings: object`: SendGrid mail settings. See [SendGrid API-Reference](https://sendgrid.com/docs/api-reference/)
+  - `sandboxMode: object`: SendGrid mail sandbox mode settings.
+    - `enable: boolean`: Sandbox mode enabled when `true`.
+- `templateId: string`: SendGrid email template ID to render email when sending.
+- `filter: object`: Environment-aware delivery filter, applied to every send. Filter values are usually supplied by [`_secret`](operators/secret.md); a field that resolves to `null` is ignored, so one config serves every environment (a dev catch-all, a sandbox allowlist, nothing in production).
+  - `replaceAddress: string`: Redirect all mail to this single address. When set, it takes precedence — every message goes to this address only, with `cc` and `bcc` dropped.
+  - `allowlist: string[]`: A list of domains. Only recipients whose domain is in the list are sent to.
+  - `regex: string`: A regular expression. Only recipient addresses matching the pattern are sent to.
+  When the connection sets no `filter`, or every field of it resolves to `null`, the current environment's `email.filter` from [`config.environments`](/lowdefy-schema) applies instead. A connection's own `filter` wins when it sets at least one field, and `filter: false` turns filtering off entirely, the environment's too. With `email.enabled: false` on the current environment, mail requests send nothing and report each message as `{ disabled: true }`.
+
+  Addresses on the reserved `.invalid` domain, which never resolves (RFC 6761), are always dropped from `to`, `cc` and `bcc` before the filter runs, in every environment, with no filter and with `filter: false` too. Case, surrounding spaces and a trailing dot are ignored. SendGrid reads a string recipient as one address, so a comma-separated string is dropped only when every address in it is on `.invalid`. Only those addresses are dropped: when every `to` recipient is on `.invalid`, the remaining `cc` and `bcc` recipients each get their own copy, addressed to them, since SendGrid needs a `to` recipient. When no recipient is left, the message is not sent and reports `{ messageId: null, to: null, filtered: true }`. So test users with addresses such as `user@audit.invalid` never reach a `replaceAddress` catch-all. Use `.invalid` for test users that must never receive mail, and `example.com` or `.test` for journey users whose mail a journey reads.
+
+### SendGridMailSend
+
+#### Properties
+
+##### object
+A `mail description`:
+- `to: email | email[]`: __Required__ - Email address or addresses to send to.
+- `cc: email | email[]`: Email address to cc in communication.
+- `bcc: email | email[]`: Email address to bcc in communication.
+- `replyTo: email | email[]`: Email address to reply to.
+- `subject: string`: Email subject.
+- `text: string`: Email message in plain text format.
+- `html: string`: Email message in html format.
+- `dynamicTemplateData: object`: SendGrid template data to render into email template.
+- `sendAt: integer`: A unix timestamp allowing you to specify when you want your email to be delivered. You can't schedule more than 72 hours in advance.
+- `attachments: object[]`: List of email attachments to include with email. See [SendGrid API-Reference](https://d2w67tjf43xwdp.cloudfront.net/Classroom/Build/Add_Content/attachments.html]).
+  - `content: string`: __Required__ - Base 64 encoded attachment content.
+  - `filename: string`: __Required__ - Name of the attachment file.
+  - `type: string`: The mime type of the content you are attaching. For example, `text/plain` or `text/html`.
+
+##### array
+An array of `mail description` objects can also be provided.
+
+### Examples
+
+###### Send a reminder email
+```yaml
+connections:
+  - id: my_sendgrid
+    type: SendGridMail
+    properties:
+      apiKey:
+        _secret: SENDGRID_API_KEY
+      from: reminders@example.org
+# ...
+requests:
+  - id: send_reminder
+    type: SendGridMailSend
+    connectionId: my_sendgrid
+    properties:
+      to: Harry Potter <harry@example.org>
+      subject: Reminder for Mr. Potter to water the 🌱
+      text: |
+        Hi Harry
+
+        Please remember to water the magic plants today :)
+
+        Thank you
+# ...
+```

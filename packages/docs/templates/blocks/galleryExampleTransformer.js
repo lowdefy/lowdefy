@@ -182,7 +182,7 @@ function buildCopyButton({ slug, configBlocks }) {
         id: `gallery_copy_${slug}`,
         type: 'Button',
         properties: {
-          icon: 'AiOutlineCopy',
+          icon: 'copy',
           type: 'text',
           size: 'small',
           shape: 'circle',
@@ -220,20 +220,20 @@ function buildCard({ section, slug, showState }) {
     panels.push({
       key: 'state',
       title: 'State',
-      icon: 'AiOutlineDatabase',
+      icon: 'Database',
     });
   }
   panels.push({
     key: 'config',
     title: 'Config',
-    icon: 'AiOutlineCode',
+    icon: 'CodeXml',
     extraKey: `config_extra_${slug}`,
   });
   if (sectionHasOperators) {
     panels.push({
       key: 'resolved',
       title: 'Resolved',
-      icon: 'AiOutlineEye',
+      icon: 'view',
     });
   }
 
@@ -258,6 +258,11 @@ function buildCard({ section, slug, showState }) {
   };
   if (section.fullWidth) {
     cardStyle.columnSpan = 'all';
+  }
+  // A block renders its popup inside itself, so a popup wider than a gallery column is cut off by
+  // the card. Sections of blocks with wide popups opt out of the clipping to show them whole.
+  if (section.overflowVisible) {
+    cardStyle.overflow = 'visible';
   }
 
   return {

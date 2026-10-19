@@ -29,11 +29,16 @@ export default {
       items: {
         type: 'array',
         description:
-          'Conversation list. Each item: { key, label, icon?, disabled?, timestamp?, group? }.',
+          'Conversation list. Each item: { key, label, icon?, disabled?, loading?, timestamp?, group? }.',
       },
       activeKey: {
         type: 'string',
         description: 'Currently selected conversation key.',
+      },
+      loadingKey: {
+        type: 'string',
+        description:
+          'Key of a conversation that is still loading. That row shows a spinner in place of its icon.',
       },
     },
   },

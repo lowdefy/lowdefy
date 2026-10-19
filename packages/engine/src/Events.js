@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
+
+import claimDomEvent from './claimDomEvent.js';
+import createTracePayload from './trace/createTracePayload.js';
+import getTrace from './trace/getTrace.js';
 
 class Events {
   constructor({ arrayIndices, block, context }) {
@@ -29,6 +33,7 @@ class Events {
     this.triggerEvent = this.triggerEvent.bind(this);
     this.registerEvent = this.registerEvent.bind(this);
     this.initEvent = this.initEvent.bind(this);
+    this.getDebounceMs = this.getDebounceMs.bind(this);
 
     this.init();
   }
@@ -37,11 +42,22 @@ class Events {
     return {
       actions: (type.isObject(actions) ? actions.try : actions) || [],
       catchActions: (type.isObject(actions) ? actions.catch : []) || [],
+      bubble: type.isObject(actions) ? actions.bubble === true : false,
       debounce: type.isObject(actions) ? actions.debounce : null,
       shortcut: type.isObject(actions) ? actions.shortcut ?? null : null,
       history: [],
       loading: false,
     };
+  }
+
+  getDebounceMs(eventDescription) {
+    if (type.isNone(eventDescription.debounce)) {
+      return 0;
+    }
+    if (type.isNone(eventDescription.debounce.ms)) {
+      return this.defaultDebounceMs;
+    }
+    return eventDescription.debounce.ms;
   }
 
   init() {
@@ -50,13 +66,17 @@ class Events {
     });
   }
 
+  // Events a block registers for its own machinery (Upload's policy request, a Table's row
+  // fetch). They are internal: see claimDomEvent.
   registerEvent({ name, actions }) {
-    this.events[name] = this.initEvent(actions);
+    this.events[name] = { ...this.initEvent(actions), internal: true };
   }
 
   triggerEvent({ name, event, progress }) {
     this.context._internal.lowdefy.eventCallback?.({ name, blockId: this.block.blockId });
-    const eventDescription = this.events[name];
+    // Own events only: a name like __proto__ from HTML data-event must not
+    // reach Object.prototype.
+    const eventDescription = Object.hasOwn(this.events, name) ? this.events[name] : undefined;
     const result = {
       blockId: this.block.blockId,
       event,
@@ -67,15 +87,29 @@ class Events {
       success: true,
       bounced: false,
     };
+    const handledBy = claimDomEvent({
+      blockId: this.block.blockId,
+      bubble: eventDescription?.bubble === true,
+      hasActions: !type.isUndefined(eventDescription),
+      internal: eventDescription?.internal === true,
+    });
+    if (!type.isNull(handledBy)) {
+      result.handledBy = handledBy;
+      return result;
+    }
     // no event
     if (type.isUndefined(eventDescription)) {
       return result;
     }
     eventDescription.loading = true;
     this.block.update = true;
-    this.context._internal.update();
+    // Only render flags changed, which no operator reads.
+    this.context._internal.update({ changes: [] });
 
+    const trace = getTrace(this.context._internal.lowdefy);
     const actionHandle = async () => {
+      // Copied only while a subscriber asked for state, so production pays no copy per event.
+      const stateBefore = trace.wantsState() ? serializer.copy(this.context.state) : undefined;
       const res = await this.context._internal.Actions.callActions({
         actions: eventDescription.actions,
         arrayIndices: this.arrayIndices,
@@ -87,9 +121,25 @@ class Events {
       });
       eventDescription.history.unshift(res);
       this.context.eventLog.unshift(res);
+      // Only completed events reach here: bounced events, handledBy returns and events with
+      // no actions never emit, so subscribers need not filter them. An app with no analytics
+      // and no dev recorder has no subscribers, so it builds no payload for a successful event;
+      // a failure is built only while the registry still holds early failures for PostHog.
+      if (trace.wantsPayload({ success: res.success })) {
+        trace.emit(
+          createTracePayload({
+            actions: [...eventDescription.actions, ...eventDescription.catchActions],
+            block: this.block,
+            context: this.context,
+            debounceMs: this.getDebounceMs(eventDescription),
+            record: res,
+            stateBefore,
+          })
+        );
+      }
       eventDescription.loading = false;
       this.block.update = true;
-      this.context._internal.update();
+      this.context._internal.update({ changes: ['eventLog'] });
       return res;
     };
 
@@ -97,14 +147,13 @@ class Events {
     if (type.isNone(eventDescription.debounce)) {
       return actionHandle();
     }
-    const delay = !type.isNone(eventDescription.debounce.ms)
-      ? eventDescription.debounce.ms
-      : this.defaultDebounceMs;
+    const delay = this.getDebounceMs(eventDescription);
     // leading edge: bounce
     if (this.timeouts[name] && eventDescription.debounce.immediate === true) {
       result.bounced = true;
       eventDescription.history.unshift(result);
       this.context.eventLog.unshift(result);
+      this.context._internal.DependencyTracker.reportChange('eventLog');
       return result;
     }
     // leading edge: trigger
@@ -131,6 +180,7 @@ class Events {
         result.bounced = true;
         eventDescription.history.unshift(result);
         this.context.eventLog.unshift(result);
+        this.context._internal.DependencyTracker.reportChange('eventLog');
         resolve(result);
       };
     });

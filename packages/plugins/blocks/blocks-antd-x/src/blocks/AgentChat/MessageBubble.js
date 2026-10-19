@@ -14,39 +14,15 @@
   limitations under the License.
 */
 
-import React, { useMemo } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import {
-  Actions,
-  CodeHighlighter,
-  FileCard,
-  Mermaid,
-  Sources,
-  ThoughtChain,
-  Think,
-} from '@ant-design/x';
-import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons';
+import { Actions, FileCard, Sources, ThoughtChain, Think } from '@ant-design/x';
+import { getSafeHref } from '@lowdefy/block-utils';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
 import { getToolInfo, partCategory } from './messageParts.js';
 import ToolApproval from './ToolApproval.js';
-
-// Module-level singleton for the LaTeX marked extension.
-// Loaded once on first use — the Latex plugin from @ant-design/x-markdown
-// includes KaTeX CSS import and handles $...$ inline and $$...$$ display math.
-let latexConfig = null;
-function getLatexConfig() {
-  if (latexConfig) return latexConfig;
-  try {
-    // eslint-disable-next-line global-require
-    const Latex = require('@ant-design/x-markdown/plugins/Latex').default;
-    latexConfig = { extensions: Latex() };
-  } catch {
-    latexConfig = {};
-  }
-  return latexConfig;
-}
 
 // Renders a code block as plain text without syntax highlighting or mermaid rendering.
 function PlainCodeBlock({ children, block, lang }) {
@@ -60,33 +36,105 @@ function PlainCodeBlock({ children, block, lang }) {
   );
 }
 
+// Mermaid and the Prism highlighter are most of AgentChat's weight, and a plain reply
+// uses neither. Deep paths keep them out of the chunk that imports the @ant-design/x
+// barrel; they load the first time a message renders a fence that needs them. A chunk
+// that fails to load (a deploy replaced it) degrades to plain code, not a broken chat.
+function lazyCodeRenderer(load, name) {
+  return lazy(() =>
+    load().catch((error) => {
+      console.warn(`AgentChat could not load ${name}; showing plain code.`, error);
+      return {
+        default: function PlainCode({ children, lang }) {
+          return (
+            <PlainCodeBlock block lang={lang}>
+              {children}
+            </PlainCodeBlock>
+          );
+        },
+      };
+    })
+  );
+}
+const Mermaid = lazyCodeRenderer(() => import('@ant-design/x/es/mermaid/index.js'), 'Mermaid');
+const CodeHighlighter = lazyCodeRenderer(
+  () => import('@ant-design/x/es/code-highlighter/index.js'),
+  'CodeHighlighter'
+);
+
 // Renders code blocks with syntax highlighting via CodeHighlighter and
 // mermaid diagrams via the Mermaid component from @ant-design/x.
+// Each lazy renderer sits in its own Suspense, so a first load shows the plain code in
+// place rather than suspending the whole chat.
 function RichCodeBlock({ renderMermaid, codeHighlighter }) {
   return function CodeBlock({ children, block, lang }) {
     if (!block) {
       return <code>{children}</code>;
     }
+    const plain = (
+      <PlainCodeBlock block lang={lang}>
+        {children}
+      </PlainCodeBlock>
+    );
     if (renderMermaid && lang === 'mermaid') {
       return (
         <div style={{ width: '100%' }}>
-          <Mermaid>{children}</Mermaid>
+          <Suspense fallback={plain}>
+            <Mermaid>{children}</Mermaid>
+          </Suspense>
         </div>
       );
     }
     if (codeHighlighter) {
       return (
-        <CodeHighlighter lang={lang} prismLightMode={false}>
-          {children}
-        </CodeHighlighter>
+        <Suspense fallback={plain}>
+          <CodeHighlighter lang={lang} prismLightMode={false}>
+            {children}
+          </CodeHighlighter>
+        </Suspense>
       );
     }
-    return (
-      <pre>
-        <code className={lang ? `language-${lang}` : undefined}>{children}</code>
-      </pre>
-    );
+    return plain;
   };
+}
+
+// The LaTeX marked extension (KaTeX and its CSS) loads only for chats that set
+// messageDisplay.renderLatex. Markdown renders without it until it arrives, then re-renders
+// with it. One config object is shared so every bubble passes Markdown the same reference.
+let latexConfig = null;
+let latexConfigPromise = null;
+function loadLatexConfig() {
+  if (!latexConfigPromise) {
+    latexConfigPromise = import('@ant-design/x-markdown/plugins/Latex/index.js').then(
+      ({ default: Latex }) => {
+        latexConfig = { extensions: Latex() };
+        return latexConfig;
+      },
+      (error) => {
+        // Cleared so a later chat mount tries again.
+        latexConfigPromise = null;
+        console.warn('AgentChat could not load LaTeX rendering; showing the source.', error);
+        return null;
+      }
+    );
+  }
+  return latexConfigPromise;
+}
+
+function useLatexConfig(renderLatex) {
+  const [loadedConfig, setLoadedConfig] = useState(latexConfig);
+  useEffect(() => {
+    if (!renderLatex || loadedConfig) return undefined;
+    let mounted = true;
+    loadLatexConfig().then((config) => {
+      if (mounted && config) setLoadedConfig(config);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [renderLatex, loadedConfig]);
+  if (!renderLatex) return undefined;
+  return loadedConfig ?? undefined;
 }
 
 function summarizeToolOutput(output, translate) {
@@ -115,6 +163,50 @@ function resolveToolResultMode(toolResultDisplay, toolName) {
   return 'summary';
 }
 
+// Plain link text arrives as a string, but any inline formatting makes it an element tree —
+// so it is flattened rather than reported as absent.
+function linkText(children) {
+  if (typeof children === 'string') return children;
+  if (typeof children === 'number') return String(children);
+  if (Array.isArray(children)) return children.map(linkText).join('');
+  if (React.isValidElement(children)) return linkText(children.props?.children);
+  return '';
+}
+
+// An in-app path renders through the app's Link, so following a citation is a client-side
+// route rather than a reload that drops the conversation. Anything with a scheme opens in a
+// new tab for the same reason. Both still report the click, so an app that handles
+// onLinkClick can show the target in place instead.
+function MarkdownLink({ Link, onLinkClick }) {
+  return function MarkdownAnchor({ href: rawHref, children, ...props }) {
+    const href = getSafeHref(rawHref);
+    if (!href) return <span {...props}>{children}</span>;
+    const text = linkText(children);
+    const handleClick = (domEvent) => onLinkClick?.({ href, text, domEvent });
+    const external = /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//');
+    // A fragment moves within the document, which the router cannot do, so it keeps the anchor.
+    const inApp = !external && href.startsWith('/') && !href.includes('#');
+    if (!inApp || !Link) {
+      return (
+        <a
+          {...props}
+          href={href}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener noreferrer' : undefined}
+          onClick={handleClick}
+        >
+          {children}
+        </a>
+      );
+    }
+    return (
+      <Link {...props} url={href} onClick={handleClick}>
+        {children}
+      </Link>
+    );
+  };
+}
+
 function normalizeActions(actions) {
   if (Array.isArray(actions)) {
     const obj = {};
@@ -127,10 +219,12 @@ function normalizeActions(actions) {
 }
 
 function BubbleActions({
+  Icon,
   actions,
   textContent,
   messageId,
   onFeedback,
+  feedbackValue,
   onRegenerate,
   onDelete,
   translate,
@@ -150,14 +244,22 @@ function BubbleActions({
       key: 'feedback',
       label: translate('agent.message.feedback'),
       actionRender: () => (
-        <Actions.Feedback onChange={(rating) => onFeedback?.({ messageId, rating })} />
+        <Actions.Feedback
+          value={feedbackValue ?? 'default'}
+          onChange={(rating) => onFeedback?.({ messageId, rating })}
+        />
       ),
     });
   }
   if (normalized.regenerate) {
     items.push({
       key: 'regenerate',
-      icon: <ReloadOutlined />,
+      icon: (
+        <Icon
+          blockId={`${messageId}_regenerate_icon`}
+          properties={{ name: 'refresh', title: '' }}
+        />
+      ),
       label: translate('agent.message.regenerate'),
       onItemClick: () => onRegenerate?.({ messageId }),
     });
@@ -165,7 +267,9 @@ function BubbleActions({
   if (normalized.delete) {
     items.push({
       key: 'delete',
-      icon: <DeleteOutlined />,
+      icon: (
+        <Icon blockId={`${messageId}_delete_icon`} properties={{ name: 'delete', title: '' }} />
+      ),
       label: translate('agent.message.delete'),
       danger: true,
       onItemClick: () => onDelete?.({ messageId }),
@@ -195,6 +299,7 @@ function SourcesDisplay({ sourceParts, config, translate }) {
 }
 
 function MessageBubble({
+  Icon,
   content,
   isStreaming,
   parts,
@@ -203,6 +308,9 @@ function MessageBubble({
   actions,
   messageId,
   onFeedback,
+  feedbackValue,
+  onLinkClick,
+  Link,
   onRegenerate,
   onDelete,
   translate,
@@ -214,12 +322,15 @@ function MessageBubble({
   const renderMermaid = config?.renderMermaid !== false;
   const codeHighlighter = config?.codeHighlighter !== false;
   const renderLatex = config?.renderLatex ?? false;
-  const markdownConfig = renderLatex ? getLatexConfig() : undefined;
+  const markdownConfig = useLatexConfig(renderLatex);
 
   const markdownComponents = useMemo(() => {
-    if (!renderMermaid && !codeHighlighter) return { code: PlainCodeBlock };
-    return { code: RichCodeBlock({ renderMermaid, codeHighlighter }) };
-  }, [renderMermaid, codeHighlighter]);
+    const code =
+      !renderMermaid && !codeHighlighter
+        ? PlainCodeBlock
+        : RichCodeBlock({ renderMermaid, codeHighlighter });
+    return { code, a: MarkdownLink({ Link, onLinkClick }) };
+  }, [renderMermaid, codeHighlighter, Link, onLinkClick]);
 
   const normalizedActions = normalizeActions(actions);
   const showActions = Object.values(normalizedActions).some(Boolean) && !isStreaming;
@@ -242,10 +353,12 @@ function MessageBubble({
         <SourcesDisplay sourceParts={sourceParts} config={config} translate={translate} />
         {showActions && (
           <BubbleActions
+            Icon={Icon}
             actions={normalizedActions}
             textContent={content}
             messageId={messageId}
             onFeedback={onFeedback}
+            feedbackValue={feedbackValue}
             onRegenerate={onRegenerate}
             onDelete={onDelete}
             translate={translate}
@@ -429,7 +542,16 @@ function MessageBubble({
               description,
               ...(content != null ? { content } : {}),
               ...(collapsible ? { collapsible: true } : {}),
-              ...(isSubAgent ? { icon: <RobotOutlined /> } : {}),
+              ...(isSubAgent
+                ? {
+                    icon: (
+                      <Icon
+                        blockId={`${tool.toolCallId}_icon`}
+                        properties={{ name: 'bot', title: '' }}
+                      />
+                    ),
+                  }
+                : {}),
               ...(status === 'loading' ? { blink: true } : {}),
               status,
             };
@@ -497,10 +619,12 @@ function MessageBubble({
       <SourcesDisplay sourceParts={sourceParts} config={config} translate={translate} />
       {showActions && (
         <BubbleActions
+          Icon={Icon}
           actions={normalizedActions}
           textContent={allTextContent}
           messageId={messageId}
           onFeedback={onFeedback}
+          feedbackValue={feedbackValue}
           onRegenerate={onRegenerate}
           onDelete={onDelete}
           translate={translate}

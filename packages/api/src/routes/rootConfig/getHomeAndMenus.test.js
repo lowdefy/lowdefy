@@ -49,7 +49,7 @@ test('getHomeAndMenus, menu with configured home page id', async () => {
   ];
   mockGetMenu.mockImplementation(() => menus);
   const res = await getHomeAndMenus(context);
-  expect(res).toEqual({ home: { configured: true, pageId: 'homePageId' }, menus });
+  expect(res).toEqual({ home: { configured: true, pageId: 'homePageId', pathParams: {} }, menus });
 });
 
 test('getHome, get homePageId at first level', async () => {
@@ -71,7 +71,7 @@ test('getHome, get homePageId at first level', async () => {
   ];
   mockGetMenu.mockImplementation(() => menus);
   const res = await getHomeAndMenus(context);
-  expect(res).toEqual({ home: { configured: false, pageId: 'page' }, menus });
+  expect(res).toEqual({ home: { configured: false, pageId: 'page', pathParams: {} }, menus });
 });
 
 test('getHome, get homePageId at second level', async () => {
@@ -101,7 +101,7 @@ test('getHome, get homePageId at second level', async () => {
   ];
   mockGetMenu.mockImplementation(() => menus);
   const res = await getHomeAndMenus(context);
-  expect(res).toEqual({ home: { configured: false, pageId: 'page' }, menus });
+  expect(res).toEqual({ home: { configured: false, pageId: 'page', pathParams: {} }, menus });
 });
 
 test('getHome, get homePageId at third level', async () => {
@@ -139,7 +139,7 @@ test('getHome, get homePageId at third level', async () => {
   ];
   mockGetMenu.mockImplementation(() => menus);
   const res = await getHomeAndMenus(context);
-  expect(res).toEqual({ home: { configured: false, pageId: 'page' }, menus });
+  expect(res).toEqual({ home: { configured: false, pageId: 'page', pathParams: {} }, menus });
 });
 
 test('getHome, no default menu, no configured homepage', async () => {
@@ -161,7 +161,7 @@ test('getHome, no default menu, no configured homepage', async () => {
   ];
   mockGetMenu.mockImplementation(() => menus);
   const res = await getHomeAndMenus(context);
-  expect(res).toEqual({ home: { configured: false, pageId: 'page' }, menus });
+  expect(res).toEqual({ home: { configured: false, pageId: 'page', pathParams: {} }, menus });
 });
 
 test('getHome, more than 1 menu, no configured homepage', async () => {
@@ -195,7 +195,10 @@ test('getHome, more than 1 menu, no configured homepage', async () => {
   ];
   mockGetMenu.mockImplementation(() => menus);
   const res = await getHomeAndMenus(context, { menus });
-  expect(res).toEqual({ home: { configured: false, pageId: 'default-page' }, menus });
+  expect(res).toEqual({
+    home: { configured: false, pageId: 'default-page', pathParams: {} },
+    menus,
+  });
 });
 
 test('getHome, default menu has no links', async () => {
@@ -209,5 +212,31 @@ test('getHome, default menu has no links', async () => {
   ];
   mockGetMenu.mockImplementation(() => menus);
   const res = await getHomeAndMenus(context, { menus });
-  expect(res).toEqual({ home: { configured: false, pageId: null }, menus });
+  expect(res).toEqual({ home: { configured: false, pageId: null, pathParams: {} }, menus });
+});
+
+test('getHome returns the path params of a first menu link to a page with placeholders', async () => {
+  const getHomeAndMenus = (await import('./getHomeAndMenus.js')).default;
+  const context = testContext();
+  const menus = [
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:0',
+          menuItemId: '0',
+          type: 'MenuLink',
+          pageId: 'ticket',
+          pathParams: { space: 'support', ticket_id: '1' },
+          auth: { public: true },
+        },
+      ],
+    },
+  ];
+  mockGetMenu.mockImplementation(() => menus);
+  const res = await getHomeAndMenus(context);
+  expect(res).toEqual({
+    home: { configured: false, pageId: 'ticket', pathParams: { space: 'support', ticket_id: '1' } },
+    menus,
+  });
 });

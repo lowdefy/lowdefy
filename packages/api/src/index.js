@@ -14,26 +14,98 @@
   limitations under the License.
 */
 
+import addNonceToElements from './csp/addNonceToElements.js';
+import buildEndpointResult from './response/buildEndpointResult.js';
 import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
+import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
-import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
+import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
+import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
+import createContentSecurityPolicy from './csp/createContentSecurityPolicy.js';
+import createMcpServer from './routes/mcp/createMcpServer.js';
+import createRequestSignal from './context/createRequestSignal.js';
+import createSystemContext from './context/createSystemContext.js';
+import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
+import createWireProjection from './response/createWireProjection.js';
+import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
+import getBetterAuth from './routes/auth/getBetterAuth.js';
+import { MCP_OAUTH_SCOPES } from './routes/auth/getBetterAuthConfig.js';
+import handleAuthRequest from './routes/auth/handleAuthRequest.js';
+import {
+  getAsIssuer,
+  getMcpResourceMetadataUri,
+  getMcpResourceUri,
+} from './routes/mcp/getMcpUri.js';
+import getMcpResourceBinding, {
+  registerMcpResourceBinding,
+} from './routes/mcp/getMcpResourceBinding.js';
+import { ensureMcpOauthResource } from './routes/mcp/oauthResourceLifecycle.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
-import getNextAuthConfig from './routes/auth/getNextAuthConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
+import isSameOriginRequest from './context/isSameOriginRequest.js';
+import isWebSocketOriginAllowed from './context/isWebSocketOriginAllowed.js';
 import logClientError from './routes/log/logClientError.js';
+import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
+import parseRequestBody from './context/parseRequestBody.js';
+import redactErrorResponse from './response/redactErrorResponse.js';
+import redactResponse from './response/redactResponse.js';
+import resolveAuthentication from './context/resolveAuthentication.js';
+import resolvePinnedOrganization from './routes/auth/organizations/resolvePinnedOrganization.js';
+import resolveTenantPreflight, {
+  getTenantIntegrityStatus,
+} from './routes/connections/resolveTenantPreflight.js';
+import forwardScheduledEndpoint from './routes/endpoints/forwardScheduledEndpoint.js';
+import acceptDetachedEndpoint from './routes/endpoints/acceptDetachedEndpoint.js';
+import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
+import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
+import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
 export {
+  addNonceToElements,
+  buildEndpointResult,
   callAgent,
   callEndpoint,
+  getEndpointConfig,
   callRequest,
   createApiContext,
-  createSessionCallback,
+  createAsMetadataHandler,
+  createChannelRegistry,
+  createContentSecurityPolicy,
+  createMcpServer,
+  createRequestSignal,
+  createSystemContext,
+  createWebSocketConnection,
+  createWireProjection,
+  ensureMcpOauthResource,
+  getAsIssuer,
+  getAuthStrategies,
+  getBetterAuth,
+  MCP_OAUTH_SCOPES,
   getHomeAndMenus,
-  getNextAuthConfig,
+  handleAuthRequest,
+  getMcpResourceBinding,
+  getMcpResourceMetadataUri,
+  getMcpResourceUri,
+  registerMcpResourceBinding,
   getPageConfig,
   getRootConfig,
+  isSameOriginRequest,
+  isWebSocketOriginAllowed,
   logClientError,
+  normalizeInjectedCaller,
+  parseRequestBody,
+  redactErrorResponse,
+  redactResponse,
+  resolveAuthentication,
+  resolvePinnedOrganization,
+  getTenantIntegrityStatus,
+  resolveTenantPreflight,
+  forwardScheduledEndpoint,
+  acceptDetachedEndpoint,
+  runDetachedEndpoint,
+  runWebhookEndpoint,
+  runScheduledEndpoint,
 };

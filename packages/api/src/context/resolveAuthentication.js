@@ -1,0 +1,687 @@
+/* eslint-disable no-param-reassign */
+
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { createHash } from 'node:crypto';
+
+import { decodeJwt, jwtVerify } from 'jose';
+import { normalizeCaller, type } from '@lowdefy/helpers';
+
+import findPendingInvitation from '../routes/auth/organizations/findPendingInvitation.js';
+import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
+import { getAsIssuer, getMcpResourceUri } from '../routes/mcp/getMcpUri.js';
+import getMcpJwks from '../routes/mcp/getMcpJwks.js';
+import readMemberships from './readMemberships.js';
+import resolveStrategyCaller from './resolveStrategyCaller.js';
+
+// resolveAuthentication is the single writer of context.user - nothing
+// downstream rewrites it. The session and strategy branches are disjoint
+// ways to become a caller: a resolved session is terminal - it never falls
+// through to strategies, so a walled-out member cannot be silently
+// re-admitted by an apiKey/jwt strategy carrying config-granted roles. API
+// strategies are tried, in config order, only when no session resolves.
+//
+// The third branch is the MCP bearer branch, gated on the mcp option only
+// the /api/mcp route passes - see resolveMcpCaller below. It is disjoint the
+// same way: an MCP request never resolves a session or a strategy caller, and
+// the general path refuses any bearer whose audience is the MCP resource URI
+// before the strategies run.
+//
+// The active member row is the hard membership wall and the role source in
+// one indexed read on the { userId, organizationId } member index, live on
+// every request so membership removal and role changes take effect
+// immediately - roles are deliberately not stamped onto the session. For a
+// session the read returns every member row the person holds (readMemberships),
+// so the same round trip names every organization they belong to, recorded on
+// context.authSession with the session id for the response's caller stamp
+// (callerStamp). A session whose user holds no member row in the active org
+// resolves to unauthenticated: a stale cookie from another app's deployment
+// and a member removed mid-session are treated as logged out, not logged-in
+// with no roles.
+// Under policy: pinned, a session whose active organization is not this app's
+// organization is treated the same way, member row there or not.
+//
+// A session carrying no active organization at all differs by policy. Under
+// pinned it resolves to unauthenticated on the same reasoning. Under tenant it
+// resolves to a caller carrying identity, no membership and no roles, marked
+// awaitingOrganization - the invited user before they accept.
+// createAuthorizeOutcome refuses that caller wherever auth.public is false, so
+// the marker widens no access; it exists so the always-public accept page can
+// tell an invited user from a stranger.
+//
+// The resolved caller is a record, so its keys are snake_case like every other
+// column an app reads - normalizeCaller applies that once over the whole
+// assembled object. The transform is not the adapter's: BetterAuth hands back
+// camelCase JS keys (emailVerified, twoFactorEnabled) whatever the columns are
+// named, so without it session.user would reintroduce camelCase beside the
+// Lowdefy-resolved keys on the same object.
+//
+// The member row carries two unrelated authorities and they stay apart.
+// context.user.roles is member.appRoles - the app's own role strings, and the
+// only source createAuthorizeOutcome matches against auth.roles page and endpoint
+// gates. context.user.org_roles is the split of member.role - BetterAuth's
+// owner/admin/member tier, an administrative fact about this organization that
+// no gate reads. context.user.attributes is
+// the one merged bag of authorization inputs: user.attributes (global) and
+// the active member's attributes (per-org), shallow per-key merge where the
+// member value wins - nested objects replace, never deep-merge.
+//
+// user.profile - the opaque display-and-app-data bag - rides the
+// session.user spread onto the resolved caller (denormalization, not a join:
+// no extra lookup). A user with no profile writes carries no profile key, so
+// _user.profile is undefined - never a synthesized {}. Strategy callers lack
+// profile exactly as they lack name and image.
+//
+// user.contactId - the link to the app's canonical record for this person -
+// rides the same spread on the same argument, and is absent the same way for a
+// user with no link (never synthesized to null). The platform projects it and
+// stops there: nothing here reads it, and nothing resolves what it points at.
+// It needs no special casing handling: normalizeCaller's all-keys rule snakes
+// it to _user.contact_id like every other field, and the adapter's schema-wide
+// derive stores it as the contact_id column.
+//
+// context.user.two_factor_enrolled is the one caller fact no session field
+// carries: whether this person holds a factor that satisfies
+// auth.twoFactor.required. It is set only on session callers - strategy,
+// injected and system callers omit the key entirely, so the enrolment gate,
+// which tests === false, lets every non-session caller through untouched.
+// The passkey plugin is configured iff it is registered on the instance -
+// getBetterAuthConfig only pushes it when auth.passkey.enabled is true.
+function passkeyConfigured({ auth }) {
+  return (auth.options?.plugins ?? []).some((plugin) => plugin?.id === 'passkey');
+}
+
+// The membership wall and the caller assembly, shared verbatim by the session
+// and MCP bearer branches so the two ways to become a member caller cannot
+// drift - one role source, one caller shape. member is the caller's row in the
+// active organization, or null when they hold none. The session branch reads it
+// with every other row the person holds (readMemberships), since its response
+// is stamped with their memberships; the bearer branches read the one row.
+//
+// memberId is passed only by the member token branch: a token works for the
+// member row it was made for, so a member who left and rejoined - a new row -
+// holds no old tokens.
+async function resolveMemberCaller(
+  context,
+  { adapter, auth, member, memberId, organizationId, user }
+) {
+  if (type.isNone(member)) {
+    context.logger.debug(
+      `User "${user.id}" has no member row in organization "${organizationId}" - resolved unauthenticated.`
+    );
+    return null;
+  }
+  if (!type.isUndefined(memberId) && member.id !== memberId) {
+    context.logger.debug(
+      `User "${user.id}" holds member row "${member.id}" in organization "${organizationId}", not the row "${memberId}" the token was made for - resolved unauthenticated.`
+    );
+    return null;
+  }
+  // member.role is a CSV BetterAuth writes over a closed three-name set the
+  // platform itself writes, so no comma can appear inside a name.
+  const orgRoles = (member.role ?? '')
+    .split(',')
+    .map((role) => role.trim())
+    .filter(Boolean);
+  // twoFactorEnrolled - holds a factor that satisfies auth.twoFactor.required
+  // (Decision 4). Short-circuits on twoFactorEnabled, which rides the user
+  // record both branches hand in (session.user projects it - the plugin
+  // declares input: false but not returned: false), so only an UNENROLLED
+  // caller costs the passkey read - and once required is on, that is the
+  // shrinking minority by design.
+  //
+  // The passkey read is gated on the plugin being CONFIGURED, not on
+  // required === true: gating on required would make this field mean "has
+  // enrolled" in one deployment and "has enrolled TOTP" in another, a value that
+  // lies depending on config. A passkey counts because it is a phishing-resistant
+  // possession factor with user verification bound to it - the reason Entra and
+  // Okta accept one outright. (It is not the ONLY route a passwordless user has:
+  // Lowdefy sets allowPasswordless: true, so TOTP is reachable by them too -
+  // Decision 4. The passkey still counts here on its own merit.)
+  //
+  // Needs the platform-owned user-passkeys { userId: 1 } index - without it this
+  // is a collection scan on every request from an unenrolled caller.
+  let twoFactorEnrolled = user.twoFactorEnabled === true;
+  if (!twoFactorEnrolled && passkeyConfigured({ auth })) {
+    const passkeyCount = await adapter.count({
+      model: 'passkey',
+      where: [{ field: 'userId', value: user.id }],
+    });
+    twoFactorEnrolled = passkeyCount > 0;
+  }
+  // normalizeCaller is shallow, so the attributes bag it carries through is the
+  // merge below verbatim - app-owned keys inside it are never renamed.
+  return normalizeCaller({
+    ...user,
+    // Per-organization display copies, denormalized onto the member row by
+    // UpdateUserProfile. The user row's name/image are deployment-global and
+    // last-edit-wins across workspaces, so a caller acting in organization A
+    // would otherwise be stamped and rendered with the identity last saved in
+    // organization B (T18). Nullish-coalesced: a member who has never saved a
+    // profile in this organization falls back to the global copies.
+    name: member.name ?? user.name,
+    image: member.image ?? user.image,
+    // Absent on a member row minted with no app roles - never falls back to
+    // member.role, which would make the two fields one dual-storage scheme.
+    roles: member.appRoles ?? [],
+    orgRoles,
+    attributes: {
+      ...(user.attributes ?? {}),
+      ...(member.attributes ?? {}),
+    },
+    activeOrganizationId: organizationId,
+    twoFactorEnrolled,
+    // organization_id is the caller's active org in its serialized string form -
+    // the value the tenant wall stamps onto and filters walled collections with,
+    // and the one operators read as _user: organization_id. It resolves under
+    // both organizations policies (under pinned it always equals the pinned
+    // org, since set-active-organization is disabled there).
+    organizationId,
+  });
+}
+
+// The HTTP call sites hand over Fetch Headers; direct callers pass plain
+// objects - read both so neither shape silently reads as "no bearer".
+function readBearerToken({ headers }) {
+  const authorization =
+    typeof headers?.get === 'function' ? headers.get('authorization') : headers?.authorization;
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return null;
+  }
+  return authorization.slice('Bearer '.length).trim();
+}
+
+// The closed MCP scope vocabulary - the AS grants nothing outside it, and
+// grantedScopes never carries a foreign scope string downstream.
+const MCP_SCOPES = ['mcp:read', 'mcp:write'];
+
+// An access token minted for the MCP resource must never re-enter the general
+// /api/* surface as a strategy caller - even a jwt strategy misconfigured to
+// point at the app's own JWKS would otherwise accept it with the strategy's
+// config-granted roles. Tested on the decoded aud alone, unverified:
+// rejection needs no key material, and a forged aud only denies its forger.
+// A non-JWT bearer or a decode failure is not this check's concern - opaque
+// strategy credentials fall through to the strategies unchanged.
+function hasMcpAudienceBearer({ context, headers }) {
+  const token = readBearerToken({ headers });
+  if (token === null) {
+    return false;
+  }
+  const resourceUri = getMcpResourceUri({ config: context.config });
+  if (resourceUri === null) {
+    return false;
+  }
+  let aud;
+  try {
+    ({ aud } = decodeJwt(token));
+  } catch (error) {
+    return false;
+  }
+  const audiences = type.isArray(aud) ? aud : [aud];
+  const rejected = audiences.some((value) => value === resourceUri);
+  if (rejected) {
+    context.logger.debug(
+      { event: 'auth_mcp_audience_bearer_rejected' },
+      'Bearer token carrying the MCP resource audience rejected on the general API surface - resolved unauthenticated.'
+    );
+  }
+  return rejected;
+}
+
+// A banned user is refused on every MCP bearer, OAuth or member token: a ban
+// deletes the user's sessions, but nothing else on the bearer path would read
+// it. A ban with an expiry in the past no longer applies.
+function isBanned({ user }) {
+  if (user.banned !== true) {
+    return false;
+  }
+  return type.isNone(user.banExpires) || new Date(user.banExpires) > new Date();
+}
+
+// The user read, ban check and membership wall both MCP bearers share once
+// each has settled which user and organization it acts for. Returns the
+// resolved caller, or null when the user is gone, banned or not a member.
+async function resolveBearerMember(context, { adapter, auth, memberId, organizationId, userId }) {
+  // The bearer carries only the user id - the caller's user fields are read live.
+  const user = await adapter.findOne({
+    model: 'user',
+    where: [{ field: 'id', value: userId }],
+  });
+  if (type.isNone(user)) {
+    context.logger.debug(
+      { event: 'auth_mcp_no_user', organizationId },
+      `MCP bearer rejected: user "${userId}" has no user row.`
+    );
+    return null;
+  }
+  if (isBanned({ user })) {
+    context.logger.debug(
+      { event: 'auth_mcp_user_banned', organizationId },
+      `MCP bearer rejected: user "${userId}" is banned.`
+    );
+    return null;
+  }
+  const memberRow = await adapter.findOne({
+    model: 'member',
+    where: [
+      { field: 'userId', value: user.id },
+      { field: 'organizationId', value: organizationId },
+    ],
+  });
+  const member = await resolveMemberCaller(context, {
+    adapter,
+    auth,
+    member: memberRow,
+    memberId,
+    organizationId,
+    user,
+  });
+  if (type.isNone(member)) {
+    context.logger.debug(
+      { event: 'auth_mcp_no_membership', organizationId },
+      `MCP bearer rejected: user "${userId}" is not a member of organization "${organizationId}".`
+    );
+    return null;
+  }
+  return member;
+}
+
+// Member tokens are the long-lived bearer a script sends in place of an OAuth
+// access token. The prefix tells them apart from a JWT without parsing, and
+// lets secret scanners and people recognise a leaked one.
+const MEMBER_TOKEN_PREFIX = 'ldf_mcp_';
+
+// lastUsedAt is display data, not an audit trail: written at most once an hour
+// per token so a script calling several times a minute costs no write per call.
+const LAST_USED_INTERVAL_MS = 60 * 60 * 1000;
+
+function refuseMemberToken(context, { description }) {
+  context.user = null;
+  context.mcpAuth = { tokenStatus: 'invalid', memberToken: true, description };
+}
+
+const MEMBER_GONE = "This token's member can no longer use it.";
+
+async function touchMemberToken(context, { adapter, row }) {
+  const lastUsedAt = type.isNone(row.lastUsedAt) ? 0 : new Date(row.lastUsedAt).getTime();
+  if (Date.now() - lastUsedAt < LAST_USED_INTERVAL_MS) {
+    return;
+  }
+  try {
+    await adapter.update({
+      model: 'mcpToken',
+      where: [{ field: 'id', value: row.id }],
+      update: { lastUsedAt: new Date() },
+    });
+  } catch (error) {
+    context.logger.warn(
+      { event: 'auth_mcp_token_last_used_failed', err: error, tokenId: row.id },
+      `Could not record when member token "${row.id}" was last used: ${error.message}`
+    );
+  }
+}
+
+// The member token branch. The token is looked up by its SHA-256 - the token
+// itself is never stored - and acts as the member row it was made for, in the
+// organization it was made in. Every refusal carries a description the route
+// returns in the challenge, since a script cannot sign in and needs to know
+// why: switched off, expired, or its member can no longer use it.
+async function resolveMemberTokenCaller(context, { auth, token }) {
+  const { adapter } = await auth.$context;
+  const row = await adapter.findOne({
+    model: 'mcpToken',
+    where: [{ field: 'hash', value: createHash('sha256').update(token).digest('hex') }],
+  });
+  if (type.isNone(row)) {
+    context.logger.debug(
+      { event: 'auth_mcp_member_token_rejected' },
+      'MCP member token rejected: no token matches.'
+    );
+    refuseMemberToken(context, { description: 'This token was switched off or does not exist.' });
+    return;
+  }
+  if (!type.isNone(row.expiresAt) && new Date(row.expiresAt) <= new Date()) {
+    context.logger.debug(
+      { event: 'auth_mcp_member_token_rejected', tokenId: row.id },
+      `MCP member token "${row.id}" rejected: it expired at ${new Date(
+        row.expiresAt
+      ).toISOString()}.`
+    );
+    refuseMemberToken(context, { description: 'This token has expired.' });
+    return;
+  }
+  const registered = getRegisteredOrganization({ auth });
+  if (registered?.policy === 'pinned' && row.organizationId !== registered.slug) {
+    context.logger.debug(
+      { event: 'auth_mcp_member_token_rejected', tokenId: row.id },
+      `MCP member token "${row.id}" rejected: its organization "${row.organizationId}" is not this app's pinned organization "${registered.slug}".`
+    );
+    refuseMemberToken(context, { description: MEMBER_GONE });
+    return;
+  }
+  const member = await resolveBearerMember(context, {
+    adapter,
+    auth,
+    memberId: row.memberId,
+    organizationId: row.organizationId,
+    userId: row.userId,
+  });
+  if (type.isNone(member)) {
+    refuseMemberToken(context, { description: MEMBER_GONE });
+    return;
+  }
+  await touchMemberToken(context, { adapter, row });
+  context.mcpAuth = {
+    tokenStatus: 'valid',
+    tokenId: row.id,
+    organizationId: row.organizationId,
+    // Every MCP scope: the token acts as the member who made it, and the
+    // member's roles still gate every tool.
+    grantedScopes: MCP_SCOPES,
+  };
+  context.user = { ...member, auth_method: 'mcp' };
+}
+
+// The MCP bearer branch. The route accepts two credential kinds: an access
+// token this app's authorization server minted for the MCP resource, and a
+// member token (see resolveMemberTokenCaller) - a session cookie or a strategy
+// credential never authenticates here. The access token is verified in-process
+// with jose against the AS's own signing keys.
+// The organization the token acts in is its organization_id claim - the
+// consent referenceId the member chose at authorization, stamped by the AS
+// (buildOauthPostLogin) - never a path segment or a request parameter. The
+// claim alone is not enough: the consent row for (client, user, organization)
+// must still exist, so a grant the member gave up (RevokeMcpGrant, a consent
+// deleted in the app) stops working at once instead of at the token's expiry.
+// context.mcpAuth records the token outcome for the route layer's challenge
+// decisions; context.user stays the only caller surface.
+async function resolveMcpCaller(context, { auth, headers }) {
+  const token = readBearerToken({ headers });
+  if (token === null) {
+    // The anonymous caller - public tools only, never a challenge here.
+    context.user = null;
+    context.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
+    return;
+  }
+  if (token.startsWith(MEMBER_TOKEN_PREFIX)) {
+    await resolveMemberTokenCaller(context, { auth, token });
+    return;
+  }
+  let payload;
+  try {
+    ({ payload } = await jwtVerify(token, getMcpJwks({ auth }), {
+      issuer: getAsIssuer({ config: context.config }),
+      // jose matches an array aud containing the value, so RFC 8707
+      // multi-resource grants verify against the canonical resource URI.
+      audience: getMcpResourceUri({ config: context.config }),
+      // A token without a subject cannot source a caller, and one without an
+      // organization has nothing to be a member of - both are rejected as
+      // invalid rather than half-resolved.
+      requiredClaims: ['sub', 'organization_id'],
+    }));
+  } catch (error) {
+    let parseableJwt = true;
+    try {
+      decodeJwt(token);
+    } catch (decodeError) {
+      parseableJwt = false;
+    }
+    context.logger.debug(
+      { event: 'auth_mcp_token_rejected', err: error },
+      `MCP bearer token rejected: ${error.message}`
+    );
+    context.user = null;
+    context.mcpAuth = { tokenStatus: 'invalid', parseableJwt };
+    return;
+  }
+  const organizationId = payload.organization_id;
+  // client_id and azp are both stamped by the AS on every access token it
+  // mints; azp is the fallback for a token minted before client_id was.
+  const clientId = payload.client_id ?? payload.azp;
+  if (!type.isString(organizationId) || !type.isString(clientId)) {
+    context.logger.debug(
+      { event: 'auth_mcp_token_rejected' },
+      'MCP bearer token rejected: organization_id or client_id claim is not a string.'
+    );
+    context.user = null;
+    context.mcpAuth = { tokenStatus: 'invalid', parseableJwt: true };
+    return;
+  }
+  const { adapter } = await auth.$context;
+  // The live grant. The AS keys consent per (client, user, organization) -
+  // the referenceId - so this one indexed read answers whether the grant the
+  // token was minted under still stands.
+  const consent = await adapter.findOne({
+    model: 'oauthConsent',
+    where: [
+      { field: 'clientId', value: clientId },
+      { field: 'userId', value: payload.sub },
+      { field: 'referenceId', value: organizationId },
+    ],
+  });
+  if (type.isNone(consent)) {
+    context.logger.debug(
+      { event: 'auth_mcp_grant_revoked', clientId, organizationId },
+      `MCP bearer token rejected: no consent stands for client "${clientId}" in organization "${organizationId}" - the grant was revoked.`
+    );
+    context.user = null;
+    context.mcpAuth = {
+      clientId,
+      organizationId,
+      tokenStatus: 'invalid',
+      parseableJwt: true,
+      revoked: true,
+    };
+    return;
+  }
+  // The scope claim reduced to the closed MCP vocabulary.
+  const grantedScopes = (type.isString(payload.scope) ? payload.scope : '')
+    .split(' ')
+    .filter((scope) => MCP_SCOPES.includes(scope));
+  const validMcpAuth = {
+    clientId,
+    organizationId,
+    tokenStatus: 'valid',
+    parseableJwt: true,
+    grantedScopes,
+  };
+  // The same pinned wall the session branch applies: a pinned app serves one
+  // organization, so a token referencing any other - verifiable or not -
+  // never reaches the member read.
+  const registered = getRegisteredOrganization({ auth });
+  if (registered?.policy === 'pinned' && organizationId !== registered.slug) {
+    context.logger.debug(
+      `MCP token for organization "${organizationId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
+    );
+    context.user = null;
+    context.mcpAuth = validMcpAuth;
+    return;
+  }
+  const member = await resolveBearerMember(context, {
+    adapter,
+    auth,
+    organizationId,
+    userId: payload.sub,
+  });
+  if (type.isNone(member)) {
+    // A token whose subject is no longer a member of its organization -
+    // removed, left, banned, or the user deleted - resolves invalid, not to the
+    // anonymous caller: the route answers invalid with the sign-in challenge,
+    // so the client re-runs authorization and its organization choice instead
+    // of holding a token that works for nothing.
+    context.user = null;
+    context.mcpAuth = {
+      clientId,
+      organizationId,
+      tokenStatus: 'invalid',
+      parseableJwt: true,
+      noMembership: true,
+    };
+    return;
+  }
+  context.mcpAuth = validMcpAuth;
+  // auth_method names the surface the caller arrived on, symmetric with
+  // strategy callers - app config reads it to label MCP-authored writes.
+  context.user = { ...member, auth_method: 'mcp' };
+}
+
+// context.authSession is the session the caller was resolved from, for the
+// response's caller stamp: { id, memberOrganizationIds }. memberOrganizationIds
+// is every organization the person belongs to under tenant, this app's
+// organization alone under pinned, and null when the member rows were not read
+// (a session with no active organization) or did not fit one read. null for
+// every caller that is not a session caller.
+async function resolveAuthentication(context, { auth, headers, strategies, mcp }) {
+  context.authSession = null;
+  if (type.isNone(auth)) {
+    context.user = null;
+    return;
+  }
+  // Only the /api/mcp route passes mcp - its callers authenticate by access
+  // token alone, so the session and strategy branches are skipped outright
+  // rather than tried and out-prioritized.
+  if (mcp === true) {
+    await resolveMcpCaller(context, { auth, headers });
+    return;
+  }
+  const session = await auth.api.getSession({ headers });
+  if (type.isNone(session)) {
+    if (hasMcpAudienceBearer({ context, headers })) {
+      context.user = null;
+      return;
+    }
+    context.user = await resolveStrategyCaller({
+      headers,
+      logger: context.logger,
+      strategies,
+    });
+    return;
+  }
+  const activeOrganizationId = session.session.activeOrganizationId;
+  if (type.isNone(activeOrganizationId)) {
+    // A session with no active organization differs by policy. Under tenant it
+    // is the invited user before they accept - their pre-accept session carries
+    // no organization by design, because they are about to join someone else's.
+    // Resolving them to null leaves the always-public accept page unable to
+    // tell them from a stranger, and that page is the one page they can reach.
+    // They become a caller carrying identity, no membership and no roles,
+    // marked awaitingOrganization - createAuthorizeOutcome refuses that caller
+    // wherever auth.public is false, so the marker widens no access. Under
+    // pinned the state has no meaning: one organization exists, and someone
+    // outside it has no reason to be known to the app.
+    if (getRegisteredOrganization({ auth })?.policy !== 'tenant') {
+      context.logger.debug(
+        `Session for user "${session.user.id}" has no active organization - resolved unauthenticated.`
+      );
+      context.user = null;
+      return;
+    }
+    context.logger.debug(
+      `Session for user "${session.user.id}" has no active organization under tenant - resolved awaiting organization.`
+    );
+    // Why they are awaiting matters to the app: an invited user who signed up
+    // directly (instead of via the invitation link) holds a pending invitation
+    // and no member row, and without a marker the public pages cannot tell
+    // them from a caller awaiting operator provisioning - the invited user is
+    // stranded the moment they lose the invitation email. The pending
+    // invitation is read here (only for this rare caller, one indexed read) so
+    // the app can route them to the accept page and hand it the invitation id.
+    // Diagnosis only - accepting stays the caller's own, explicit act.
+    const pendingInvitation = type.isString(session.user.email)
+      ? await findPendingInvitation({
+          adapter: (await auth.$context).adapter,
+          email: session.user.email,
+        })
+      : null;
+    // No member row, so no per-organization attributes and no roles of either
+    // kind - the global attributes ride alone.
+    context.authSession = { id: session.session.id, memberOrganizationIds: null };
+    context.user = normalizeCaller({
+      ...session.user,
+      roles: [],
+      orgRoles: [],
+      attributes: session.user.attributes ?? {},
+      awaitingOrganization: true,
+      // Always present on the awaiting caller (true or false) so app config
+      // can branch on it without an absent-key case. The invitation id rides
+      // only when one exists - never synthesized to null - and is safe to hand
+      // to its own invitee: the accept route re-verifies that the session's
+      // email matches the invitation before minting anything.
+      hasPendingInvitation: !type.isNone(pendingInvitation),
+      ...(type.isNone(pendingInvitation) ? {} : { pendingInvitationId: pendingInvitation.id }),
+    });
+    return;
+  }
+  // Under pinned, the active organization must be this app's organization.
+  // Without this, a session pinned elsewhere - accept-time drift from an
+  // invitation another app sent, a stale cookie, a session shared between two
+  // pinned apps on one host - resolves as an authenticated caller here
+  // carrying the other organization's roles, so every role name the two
+  // catalogs share becomes a page they can open. Ahead of the member read: a
+  // foreign session costs no database round trip.
+  //
+  // The comparison target is the configured slug, not getOrganizationBinding's
+  // pinned.id, because pinned can legitimately be absent on a live request -
+  // resolvePinnedOrganization swallows a failed ensure so the _organization
+  // operator and step organizationId defaulting fail with their own clear
+  // errors instead of every request failing in the middleware. Comparing
+  // against an unresolved binding would either log the whole deployment out on
+  // a transient database error or skip the check exactly when the database is
+  // unhealthy. Under pinned the organization's id is its slug, so the check
+  // needs no database read and an unhealthy ensure cannot defeat it.
+  //
+  // Recovery is one re-login at this app: applyPinnedPolicy runs at every
+  // session.create and re-pins the session whenever the caller holds a member
+  // row here. Never send the person to the other app - the production cookie
+  // prefix is shared across apps on one host, so signing in there flips the
+  // shared session the other way and breaks the app they came from.
+  //
+  // Under tenant there is no pinned organization and the check does not apply.
+  const registered = getRegisteredOrganization({ auth });
+  if (registered?.policy === 'pinned' && activeOrganizationId !== registered.slug) {
+    context.logger.debug(
+      `Session for user "${session.user.id}" has active organization "${activeOrganizationId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
+    );
+    context.user = null;
+    return;
+  }
+  const { adapter } = await auth.$context;
+  const { member, organizationIds } = await readMemberships({
+    adapter,
+    organizationId: activeOrganizationId,
+    userId: session.user.id,
+  });
+  context.user = await resolveMemberCaller(context, {
+    adapter,
+    auth,
+    member,
+    organizationId: activeOrganizationId,
+    user: session.user,
+  });
+  if (type.isNone(context.user)) {
+    return;
+  }
+  // A pinned app serves one organization, and this caller reached here as a
+  // member of it, so that is the one membership its stamp names: rows the same
+  // auth database holds for other apps' organizations never change this app's
+  // stamp. Under tenant every organization the person belongs to counts.
+  const memberOrganizationIds =
+    registered?.policy === 'pinned' ? [registered.slug] : organizationIds;
+  context.authSession = { id: session.session.id, memberOrganizationIds };
+}
+
+export default resolveAuthentication;

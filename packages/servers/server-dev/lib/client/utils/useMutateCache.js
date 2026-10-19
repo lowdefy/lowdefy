@@ -16,10 +16,23 @@
 
 import { useSWRConfig } from 'swr';
 
+// Module-level counters that bust usePageConfig SWR keys: reloadVersion moves
+// on config reloads (all pages), navVersion on client-side navigations
+// (dynamic pages only — server-resolved content must re-resolve per
+// navigation, never serve from the SWR cache).
 let reloadVersion = 0;
+let navVersion = 0;
 
 function getReloadVersion() {
   return reloadVersion;
+}
+
+function bumpNavVersion() {
+  navVersion += 1;
+}
+
+function getNavVersion() {
+  return navVersion;
 }
 
 function useMutateCache(basePath) {
@@ -34,5 +47,5 @@ function useMutateCache(basePath) {
   };
 }
 
-export { getReloadVersion };
+export { bumpNavVersion, getNavVersion, getReloadVersion };
 export default useMutateCache;

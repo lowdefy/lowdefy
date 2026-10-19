@@ -228,4 +228,3 @@ _ref:
                   path: pages/page1.yaml
                   transformer: transformers/addFooter.js
             ```
-

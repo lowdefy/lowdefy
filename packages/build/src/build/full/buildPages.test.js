@@ -76,8 +76,21 @@ test('page id is not a string', () => {
       },
     ],
   };
+  expect(() => buildPages({ components, context })).toThrow('Page id is not a string at page 0.');
+});
+
+test('page id is a reserved name', () => {
+  const components = {
+    pages: [
+      {
+        id: '__proto__',
+        type: 'Container',
+        auth,
+      },
+    ],
+  };
   expect(() => buildPages({ components, context })).toThrow(
-    'Page id is not a string at page 0.'
+    'Page id "__proto__" is a reserved name and cannot be used as an id.'
   );
 });
 
@@ -223,10 +236,12 @@ test('no blocks on page', () => {
     pages: [
       {
         id: 'page:1',
+        linkPaths: {},
         auth: { public: true },
         pageId: '1',
         blockId: '1',
         type: 'Container',
+        subscriptions: [],
         requests: [],
       },
     ],
@@ -290,10 +305,12 @@ test('nested blocks', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
+        subscriptions: [],
         requests: [],
         slots: {
           content: {
@@ -361,10 +378,12 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:page1',
+          linkPaths: {},
           auth: { public: true },
           blockId: 'page1',
           pageId: 'page1',
           type: 'Container',
+          subscriptions: [],
           requests: [],
           slots: {
             content: {
@@ -401,10 +420,12 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          linkPaths: {},
           auth: { public: true },
           blockId: '1',
           pageId: '1',
           type: 'Container',
+          subscriptions: [],
           requests: [],
           slots: {
             content: {
@@ -448,10 +469,12 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          linkPaths: {},
           auth: { public: true },
           pageId: '1',
           blockId: '1',
           type: 'Container',
+          subscriptions: [],
           requests: [],
           slots: {
             content: {
@@ -503,10 +526,12 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          linkPaths: {},
           auth: { public: true },
           pageId: '1',
           blockId: '1',
           type: 'Container',
+          subscriptions: [],
           requests: [],
           slots: {
             content: {
@@ -564,10 +589,12 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          linkPaths: {},
           auth: { public: true },
           pageId: '1',
           blockId: '1',
           type: 'Container',
+          subscriptions: [],
           requests: [],
           slots: {
             content: {
@@ -633,10 +660,12 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          linkPaths: {},
           auth: { public: true },
           pageId: '1',
           blockId: '1',
           type: 'Container',
+          subscriptions: [],
           requests: [],
           slots: {
             content: {
@@ -718,10 +747,12 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page:1',
+          linkPaths: {},
           auth: { public: true },
           pageId: '1',
           blockId: '1',
           type: 'Container',
+          subscriptions: [],
           requests: [],
           slots: {
             content: {
@@ -811,6 +842,7 @@ test('user defined skeleton', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
@@ -820,6 +852,7 @@ test('user defined skeleton', () => {
             custom: true,
           },
         ],
+        subscriptions: [],
         requests: [],
         slots: {
           content: {
@@ -871,10 +904,12 @@ test('create unique block ids', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
+        subscriptions: [],
         requests: [],
         slots: {
           content: {
@@ -963,10 +998,12 @@ test('different blockId counter for each page', () => {
     pages: [
       {
         id: 'page:page_1',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
+        subscriptions: [],
         requests: [],
         slots: {
           content: {
@@ -987,10 +1024,12 @@ test('different blockId counter for each page', () => {
       },
       {
         id: 'page:page_2',
+        linkPaths: {},
         auth: { public: true },
         pageId: 'page_2',
         blockId: 'page_2',
         type: 'Container',
+        subscriptions: [],
         requests: [],
         slots: {
           content: {

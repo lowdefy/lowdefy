@@ -121,6 +121,7 @@ function useSearchBlobs(data, fields, caseSensitive) {
 const ListSelector = ({
   blockId,
   classNames = {},
+  components: { Icon },
   events,
   loading,
   methods,
@@ -192,6 +193,8 @@ const ListSelector = ({
     [token.colorPrimary, styles.selected]
   );
 
+  // antd 6 renamed the `default` size to `medium` and warns on size="default".
+  const cardSize = properties.size === 'default' ? 'medium' : properties.size;
   const gap = properties.gap ?? 8;
   const useWindowScroll = type.isNone(properties.height);
   const overscan = properties.overscan ?? 400;
@@ -277,7 +280,7 @@ const ListSelector = ({
           template={template}
           bordered={properties.bordered}
           hoverable={properties.hoverable}
-          size={properties.size}
+          size={cardSize}
           gap={gap}
           cardClassName={classNames.card}
           bodyClassName={classNames.body}
@@ -300,7 +303,7 @@ const ListSelector = ({
       template,
       properties.bordered,
       properties.hoverable,
-      properties.size,
+      cardSize,
       gap,
       classNames.card,
       classNames.body,
@@ -349,7 +352,16 @@ const ListSelector = ({
         <Input.Search
           id={`${blockId}_search`}
           placeholder={searchPlaceholder}
-          allowClear={searchAllowClear}
+          allowClear={
+            searchAllowClear && {
+              clearIcon: (
+                <Icon
+                  blockId={`${blockId}_search_clearIcon`}
+                  properties={{ name: 'clear', title: '' }}
+                />
+              ),
+            }
+          }
           value={rawQuery}
           onChange={onSearchChange}
         />
@@ -364,7 +376,7 @@ const ListSelector = ({
           <div key={`${blockId}_skeleton_${i}`} style={{ paddingBottom: gap }}>
             <Card
               variant={properties.bordered === false ? 'borderless' : 'outlined'}
-              size={properties.size}
+              size={cardSize}
               className={classNames.card}
               styles={{ body: styles.body }}
             >

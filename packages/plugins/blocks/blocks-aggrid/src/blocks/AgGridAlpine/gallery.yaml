@@ -241,7 +241,11 @@
       type: AgGridAlpine
       properties:
         height: 300
-        rowSelection: multiple
+        rowSelection:
+          mode: multiRow
+          checkboxes: false
+          headerCheckbox: false
+          enableClickSelection: true
         defaultColDef:
           sortable: true
           flex: 1
@@ -274,7 +278,7 @@
             assignee: Diana
             priority: Low
             status: To Do
-          - task: Code review PR #42
+          - task: 'Code review PR #42'
             assignee: Erik
             priority: Medium
             status: In Progress
@@ -457,7 +461,11 @@
       type: AgGridAlpine
       properties:
         height: 300
-        rowSelection: multiple
+        rowSelection:
+          mode: multiRow
+          checkboxes: false
+          headerCheckbox: false
+          enableClickSelection: true
         defaultColDef:
           sortable: true
           flex: 1
@@ -1111,20 +1119,25 @@
                 Archived: default
           - headerName: Actions
             field: _id
-            width: 220
+            width: 300
             cell:
               type: buttons
               buttons:
                 - eventName: onEditClick
                   title: Edit
-                  icon: AiOutlineEdit
+                  icon: edit
                   type: primary
                 - eventName: onDeleteClick
                   title: Delete
-                  icon: AiOutlineDelete
+                  icon: delete
                   danger: true
                   disabledField: locked
                   hiddenField: archived
+                - eventName: onOpenClick
+                  title: Open
+                  icon: arrow-right
+                  iconPlacement: end
+                  type: link
         rowData:
           - _id: TSK-001
             name: Wire main switchboard
@@ -1152,6 +1165,100 @@
                   - _event: row._id
         onDeleteClick:
           - id: delete_msg
+            type: DisplayMessage
+            params:
+              status: warning
+              content:
+                _string.concat:
+                  - 'Delete '
+                  - _event: row.name
+        onOpenClick:
+          - id: open_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Open '
+                  - _event: row._id
+
+- title: Menu cell (row actions behind one trigger)
+  fullWidth: true
+  blocks:
+    - id: menu_cell_demo
+      type: AgGridAlpine
+      properties:
+        height: 260
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Report
+            field: name
+          - headerName: Visibility
+            field: visibility
+            width: 130
+            cell:
+              type: tag
+              colorMap:
+                private: default
+                shared: blue
+          # Every item fires its own block-level event, the same as the buttons cell.
+          # `hiddenField` drops an item for rows it does not apply to, so one column
+          # definition serves owners and readers: TSK-003 is someone else's report, so
+          # its menu is Duplicate alone.
+          - headerName: ''
+            colId: menu
+            width: 60
+            sortable: false
+            filter: false
+            resizable: false
+            cell:
+              type: menu
+              items:
+                - eventName: onMenuRename
+                  title: Rename
+                  icon: edit
+                  hiddenField: readOnly
+                - eventName: onMenuDuplicate
+                  title: Duplicate
+                  icon: copy
+                - eventName: onMenuDelete
+                  title: Delete
+                  icon: delete
+                  danger: true
+                  hiddenField: readOnly
+        rowData:
+          - _id: REP-001
+            name: Monthly spend by region
+            visibility: private
+            readOnly: false
+          - _id: REP-002
+            name: Open tickets by team
+            visibility: shared
+            readOnly: false
+          - _id: REP-003
+            name: Fleet utilisation (shared with you)
+            visibility: shared
+            readOnly: true
+      events:
+        onMenuRename:
+          - id: menu_rename_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Rename '
+                  - _event: row.name
+        onMenuDuplicate:
+          - id: menu_duplicate_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Duplicate '
+                  - _event: row.name
+        onMenuDelete:
+          - id: menu_delete_msg
             type: DisplayMessage
             params:
               status: warning

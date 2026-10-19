@@ -31,4 +31,3 @@ _ref:
                   _ref: version.yaml
               template:
                 _ref: concepts/advanced/api.md
-

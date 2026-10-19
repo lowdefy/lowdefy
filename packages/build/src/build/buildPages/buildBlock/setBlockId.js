@@ -16,7 +16,7 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-function setBlockId(block, { pageId, blockIdCounter }) {
+function setBlockId(block, { pageId, blockIdCounter, blockIdPrefix }) {
   block.blockId = block.id;
   if (block.blockId === pageId && blockIdCounter.getCount(block.blockId) > 0) {
     throw new ConfigError(
@@ -24,7 +24,10 @@ function setBlockId(block, { pageId, blockIdCounter }) {
       { configKey: block['~k'] }
     );
   }
-  block.id = `block:${pageId}:${block.blockId}:${blockIdCounter.getCount(block.blockId)}`;
+  // blockIdPrefix namespaces runtime-built dynamic content ids under the
+  // resolving Dynamic block's id so they can never collide with static ids.
+  const prefix = blockIdPrefix ?? `block:${pageId}`;
+  block.id = `${prefix}:${block.blockId}:${blockIdCounter.getCount(block.blockId)}`;
   blockIdCounter.increment(block.blockId);
 }
 

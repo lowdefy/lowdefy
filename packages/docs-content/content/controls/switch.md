@@ -1,0 +1,90 @@
+# :switch
+
+```
+({:switch: [{:case: boolean, :then: routine], :default: routine}): void
+```
+
+The `:switch` control evaluates multiple conditions sequentially and executes the routine for the first matching case.
+Each case in the `:switch` array contains a `:case` condition and a `:then` routine.
+The control evaluates conditions from top to bottom, executing only the first matching case's `:then` block.
+If no cases match, the optional `:default` routine is executed.
+This control is ideal for handling multiple mutually exclusive conditions more elegantly than nested [`:if`](/:if) statements.
+
+The `:switch` control also works in client [event action lists](/events-and-actions) — there each `:then` and `:default` is a list of actions, and the same syntax and semantics apply.
+
+#### Keys
+
+- `:switch: array`: __Required__
+    - `:case: boolean`: __Required__ - The boolean result of a test.
+    - `:then: routine`: __Required__ - The routine to execute if the test is `true`.
+- `:default: routine`:  The routine to execute if all the `:case` tests are `false`.
+
+#### Examples
+
+###### Validation
+```yaml
+- :switch:
+    - :case:
+        _not:
+          _payload: email
+      :then:
+        :reject: "Email is required"
+    - :case:
+        _not:
+          _regex:
+            on:
+              _payload: email
+            pattern: ^[^@]+@[^@]+\\.[^@]+$
+      :then:
+        :reject: "Invalid email format"
+    - :case:
+        _lt:
+          - _string.length:
+              _payload: password
+          - 8
+      :then:
+        :reject: "Password must be at least 8 characters"
+    - :case:
+        _not:
+          _eq:
+            - _payload: password
+            - _payload: confirm_password
+      :then:
+        :reject: "Passwords do not match"
+  :default: []
+```
+
+###### Switch with multiple returns
+
+```yaml
+- id: get_user_subscription
+  type: MongoDBFindOne
+  connectionId: subscriptions
+  properties:
+    filter:
+      user_id:
+        _user: id
+- :switch:
+    - :case:
+        _not:
+          _step: get_user_subscription
+      :then:
+        :return:
+          plan: "free"
+          features: ["basic_access"]
+          limit: 10
+    - :case:
+        _eq:
+          - _step: get_user_subscription.type
+          - "premium"
+      :then:
+        :return:
+          plan: "premium"
+          features: ["full_access", "priority_support", "api_access"]
+          limit: -1
+  :default:
+    :return:
+      plan: "standard"
+      features: ["standard_access", "email_support"]
+      limit: 100
+```

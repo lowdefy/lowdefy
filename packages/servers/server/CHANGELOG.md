@@ -1,5 +1,968 @@
 # @lowdefy/server-enterprise
 
+## 6.1.0
+
+### Minor Changes
+
+- d1bd356: feat: Deployment environments declared once under `config.environments`.
+
+  Everything that differs between an app's deployments — its URL, cron forwarding, the email delivery filter, the Sentry environment — is now declared in one place, and each deployment names the environment it is with the `LOWDEFY_ENVIRONMENT` variable (read at build time):
+
+  ```yaml
+  config:
+    environments:
+      prod:
+        url: https://app.example.com
+      staging:
+        url: https://staging.example.com
+        cron:
+          secret: STAGING_CRON_SECRET # staging's CRON_SECRET, set on prod
+        email:
+          filter:
+            replaceAddress: team+staging@example.com
+  ```
+
+  The current environment supplies the defaults:
+
+  - **`url`** — the `RenderNotification` `serverUrl` (email links and logos) and the auth base URL (`AUTH_URL`) default to it; an explicit value still wins. The dev server always uses the request origin, even with a `LOWDEFY_ENVIRONMENT` that names a deployed environment.
+  - **`cron`** — the current environment registers its own schedules. The environment Vercel fires crons on (one without a `cron.secret`) also registers the schedules of every environment with a `cron.secret` and forwards them to that environment's `url`. `cron.enabled: false` registers nothing for an environment. Endpoint `schedules` keyed by environment work as before; the dev server with no current environment runs the `default` schedules.
+  - **`email.filter`** — applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets a `filter` of its own with at least one field; an unset connection filter, or one whose fields all resolve to `null`, falls back to it, and the new `filter: false` turns filtering off for a connection, the environment's too (for mail such as invites that must reach the real recipient). Connection resolvers now receive the current environment as `environment`. Auth emails are not filtered.
+  - **Logs** — every server log line carries `environment`; the app metadata gains `environment` (`_app: environment`); `logger.sentry.environment` defaults to the environment name.
+  - **Switches** — `cron.enabled`, `email.enabled` and `sentry.enabled` set to `false` turn that feature off in one environment: no crons registered or forwarded, no email sent by `SMTPMailSend`/`SendGridMailSend` (each message reports `disabled: true`; auth emails still send), no Sentry on server or client. The switched-off features are listed in the app metadata as `disabled` (`_app: disabled`). Logging has no switch.
+  - **Guards** — `guards.secrets` (Lowdefy secret names) and `guards.env` (environment variable names) map to a regular expression the value must match in that environment; the build fails before deploy when a guarded value is unset or does not match, and the production server checks again at startup, so changing it (the prod database URI, say) also takes a config change. Unknown guard kinds fail the build. Values are never printed, and only the current environment's guards are kept, in the server-only `config.json`.
+
+  `cron.secret` is the **name** of a Lowdefy secret, a plain string — not a `_secret` operator.
+
+  - **Browser exposure** — environment settings stay on the server. The client learns only the current environment's name and switched-off features (`_app: environment`, `_app: disabled`); `build/config.json` is no longer bundled into the client (the auth client reads the base path from Vite's `BASE_URL`), and a test allowlists the build artifacts client code may import.
+
+  The new [Deployment environments](https://docs.lowdefy.com/deployment-environments) docs page covers every setting.
+
+  `config.environment` can name the current environment in config for a deployment that sets no `LOWDEFY_ENVIRONMENT`; the variable always wins. With environments declared, the current environment must be one of them, and a production build without one fails (the dev server warns). An `email.filter.regex` that is not a valid regular expression fails the build.
+
+  **Replaces `config.cron.environments` (6.0):** a build with `config.cron` fails with the migration — move the environments to `config.environments`, each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT` on each deployment.
+
+### Patch Changes
+
+- 1d3a0b8: Update dependencies to releases with published security fixes.
+
+  - `hono` 4.13.5 and `@hono/node-server` 2.0.10 in the servers.
+  - `ws` 8.21.0 in the servers; `postcss` 8.5.23 in the dev server.
+  - The servers drop leftover Next.js-era dependencies they no longer use: `@sentry/nextjs` from `@lowdefy/server`, and the `webpack` and `@next/eslint-plugin-next` devDependencies.
+  - `axios` 1.18.0 in the CLI and AxiosHttp.
+  - `dompurify` 3.4.13 in `block-utils`, `blocks-basic` and `blocks-markdown`.
+  - `echarts` 6.1.0, `mysql2` 3.23.1, `nodemailer` 9.1.1, `uuid` 13.0.1 and `@auth/mongodb-adapter` 3.11.3 in their plugins.
+  - `tar` 7.5.21 and `picomatch` 4.0.4 in the build, `js-yaml` 4.3.2 in `e2e-utils`, and `@babel/core` 7.29.6 in `block-utils`.
+  - `@auth/core` 0.41.3 in the servers and `plugin-next-auth`, whose peer range is now `>=0.41.3`. `@auth/mongodb-adapter` 3.11.3 depends on the same release.
+
+  Two of these change output an app can see:
+
+  - **`echarts` 6.1.0** changes chart defaults. Bar, pictorialBar, candlestick and boxplot series no longer draw past the grid edge; set `containShape: false` on the axis to restore the previous look. `axis.startValue` no longer sets `min`. The second argument of a `tooltip.valueFormatter` function is now `rawDataIndex`.
+  - **`dompurify` 3.4.13** keeps a few attributes and elements that earlier releases removed: `command` / `commandfor`, `<selectedcontent>`, and some SVG attributes. HTML rendered by `Html`, `ClickableHtml`, `DangerousHtml`, `DangerousMarkdown` and other `renderHtml` properties may keep them.
+
+- 6d6f8fa: Improved error handling: each reader of a server error now gets its own view of it.
+
+  - **Users and app config see the author's message or one generic message.** A server error the app author did not write now reaches the browser as "Something went wrong.", with its `name`, `code`, `statusCode`, `configKey` and a `requestId`. Messages written with `:throw` or `:reject`, failed `ValidateSchema` steps, a plugin's `UserError`, and authentication refusals, are shown as before. This applies to the error toast, `_actions`, `_request_details`, websocket errors, MCP tool results and the AgentChat stream, the same way in development and production. An action whose error toast showed a connection's own message now shows the generic one.
+    - The generic message is the built-in `server.genericError` i18n string. Override it per locale under `config.i18n.messages`, for example `server.genericError: 'Etwas ist schiefgelaufen.'`.
+    - To show different text for one action, set `messages.error` on the action.
+    - To show the real message, read it with the new `_error` operator in the endpoint's `:catch` and send it on, for example `:throw: { _error: message }`.
+  - **The dev server shows the full error.** In `lowdefy dev`, the error bar, the browser console and the dev MCP tools show the full server error, with its config location, while app config sees the same generic error as in production. Different failures of the same action are now each shown, instead of only the first.
+  - **The browser console prints the request id** under a server error, to find the matching server log line and Sentry event.
+  - **Production logs and Sentry keep a fixed set of error fields.** Each logged error keeps its name, message, stack, `code`, `statusCode` and cause, plus Lowdefy's own fields (`configKey`, `source`, `received`, ...) on Lowdefy errors. Fields a library attaches, such as an HTTP client's request config and response, are no longer logged. Values of the app's secrets (`LOWDEFY_SECRET_*`, `CRON_SECRET`, `AUTH_SECRET`) are replaced with `[REDACTED]` in production log lines and Sentry events, and credential-named keys in `received` are masked. Sentry events now carry the error's fields under `extra.error` and a `requestId` tag, and no longer attach incoming request bodies.
+  - **An AxiosHttp request that gets a 5xx response now fails with a `ServiceError`**, where it used to fail with a `RequestError`. AxiosHttp now sets `statusCode` on its error, and a 5xx status marks an error as a service failure, like a network error or timeout. Config that checks `name` for `RequestError` on these failures, for example `_eq: [{ _error: name }, 'RequestError']`, should also accept `ServiceError`, or check `statusCode` instead. The server log event for these failures is now `service_error`.
+
+- c0c3695: The server's `request completed` access log now redacts credential parameters in the `referer` header. A browser sends the page's full URL as the Referer of every request that page makes, so a page whose URL carried a magic-link sign-in token or a signed OAuth query (the consent and organisation-picker pages) was writing that value into the log store on each fetch. The query string is kept, since it often identifies the page view, but the value of any parameter named like a credential (`token`, `code`, `state`, `sig`, `otp`, `*_token`, `*secret*`, `*signature*`, `*credential*`, `*password*`, and similar) is replaced with `[redacted]`. The request `url` field was already path-only.
+- 2b2b27a: fix(build,server,operators-js): an open tab reloads once after a deploy instead of failing with "\_js function not found"
+
+  Every build now stamps a random `buildId` on the app metadata (readable as
+  `_app: buildId`). The production server sends it with each page config fetched
+  during in-app navigation, and the client bundle carries the id of the build it
+  was made from. When they differ, the tab has a bundle from an earlier deploy
+  whose `_js` map and plugin set no longer match the config the server is
+  serving, so the client does one full reload of the requested page to pick up
+  the current bundle. A tab reloads at most once per server build, so a rolling
+  deploy answering from mixed versions cannot loop. The `_js function not found`
+  error also now says that the page may be running an older bundle and should be
+  reloaded.
+
+- Updated dependencies [f92aa11]
+- Updated dependencies [ae9803e]
+- Updated dependencies [ea69869]
+- Updated dependencies [08e05f9]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [9592255]
+- Updated dependencies [d1bd356]
+- Updated dependencies [5ad2b62]
+- Updated dependencies [08cbf21]
+- Updated dependencies [1bbaab7]
+- Updated dependencies [5657441]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [2b2b27a]
+  - @lowdefy/blocks-antd-x@6.1.0
+  - @lowdefy/blocks-aggrid@6.1.0
+  - @lowdefy/blocks-antd@6.1.0
+  - @lowdefy/blocks-basic@6.1.0
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/blocks-tiptap@6.1.0
+  - @lowdefy/operators-js@6.1.0
+  - @lowdefy/helpers@6.1.0
+  - @lowdefy/api@6.1.0
+  - @lowdefy/blocks-echarts@6.1.0
+  - @lowdefy/blocks-markdown@6.1.0
+  - @lowdefy/plugin-next-auth@6.1.0
+  - @lowdefy/node-utils@6.1.0
+  - @lowdefy/client@6.1.0
+  - @lowdefy/errors@6.1.0
+  - @lowdefy/logger@6.1.0
+  - @lowdefy/blocks-files@6.1.0
+  - @lowdefy/layout@6.1.0
+  - @lowdefy/blocks-loaders@6.1.0
+  - @lowdefy/actions-core@6.1.0
+  - @lowdefy/websockets-core@6.1.0
+
+## 6.0.0
+
+### Major Changes
+
+- 8a82fb0: feat!: Replace Next.js with Vite + Hono.
+
+  Lowdefy servers no longer run on Next.js. The production server is a
+  [Hono](https://hono.dev) app serving a [Vite](https://vite.dev)-built React
+  client; the dev server runs Vite with the Hono app mounted as middleware,
+  giving instant hot module replacement for plugin changes (~700ms instead of
+  the previous 20–40s rebuild-and-restart cycle). Authentication moves from
+  NextAuth v4 to the Auth.js v5 engine (`@auth/core` via `@hono/auth-js`) with
+  the `auth:` YAML schema unchanged.
+
+  **Your YAML config does not change.** `lowdefy build`, `lowdefy dev` and
+  `lowdefy start` work as before.
+
+  Breaking changes:
+
+  - **Auth sessions invalidate once on upgrade.** The session cookie prefix
+    changes from `next-auth.*` to `authjs.*` — users sign in again after the
+    upgrade. Provider, adapter, callback and event configuration is unchanged.
+  - **`NEXTAUTH_SECRET` is removed — rename it to `AUTH_SECRET`.** The build
+    fails with a config error when auth providers are configured and
+    `AUTH_SECRET` is not set. `NEXTAUTH_URL` still works as an Auth.js
+    fallback, but `AUTH_URL` is the preferred name.
+  - **Custom `next.config.js` files no longer apply.** Customize the client
+    build with a `vite.config.js` in the server directory instead.
+  - **`LOWDEFY_BUILD_OUTPUT_STANDALONE` is removed.** `lowdefy build` writes a
+    complete runnable server to `.lowdefy/server` — copy that folder (or build
+    in Docker) and run `node src/index.js`. See the updated Docker and node
+    server deployment docs.
+  - **`NEXT_PUBLIC_SENTRY_DSN` is removed.** Set `SENTRY_DSN` on the server —
+    it is passed to the browser client at runtime, so rotating it no longer
+    requires a rebuild. Source maps upload via `@sentry/vite-plugin` when
+    `SENTRY_AUTH_TOKEN` is set.
+  - **Page navigation is now client-side (SPA).** The first page load embeds
+    config in the HTML; navigating fetches page config from `/api/page/*`
+    without a full browser reload.
+
+### Minor Changes
+
+- c188656: feat: Scheduled API endpoints (cron) on Vercel.
+
+  `Api` and `InternalApi` endpoints can now declare `schedules` to run their routine on a timer:
+
+  ```yaml
+  id: purge-stale-conversations
+  type: Api
+  schedules:
+    - cron: '0 6 * * *'
+      payload: { mode: full }
+    - cron: '*/15 * * * *'
+      payload: { mode: incremental }
+  routine:
+    - id: purge
+      type: MongoDBDeleteMany
+      connectionId: conversations
+      properties:
+        filter: { updatedAt: { $lt: { _payload: cutoff } } }
+  ```
+
+  - **build**: `schedules` is validated (Vercel cron syntax, unique crons per endpoint, object
+    payloads) and passed through to the endpoint artifact; a `build/schedules.json` manifest is
+    emitted for scheduled endpoints.
+  - **api/servers**: a new `/api/cron/*` route runs a scheduled endpoint's routine as a system context
+    (no user session — `_user` is `undefined`), resolving the payload from the firing schedule via the
+    `x-vercel-cron-schedule` header, and secured by the `CRON_SECRET` env var (fails closed).
+  - **cli**: the Vercel deployment now uses the Build Output API. `lowdefy init-vercel` scaffolds a
+    `vercel.build.sh` and a new `lowdefy vercel-output` command assembles `.vercel/output/`
+    (static + one `api.func` + `config.json`), generating the `crons` array from the declared schedules
+    on every deploy — nothing is committed by hand.
+
+  This migrates how all Lowdefy Vercel apps deploy; re-run `lowdefy init-vercel` (or update the
+  `deploy/` files by hand) after upgrading. Cron jobs run in UTC and are subject to Vercel plan limits
+  (Hobby: daily only; Pro: per-minute).
+
+- 60401aa: feat: Add `_app` operator and structured app metadata.
+
+  The `_app` operator reads the app's declared metadata — `slug`, `name`,
+  `version`, `description`, `license`, `lowdefyVersion`, `gitSha`. It
+  resolves both at build time and at runtime (client and server) with
+  identical values, including inside `modules-mongodb` request filters and
+  inside `_js` functions via a bound `lowdefyApp(p)` callable. For
+  build-time positions nested inside another `_build.*` operator (e.g. a
+  `_build.object.fromEntries` map key), use the `_build.app` form so it
+  resolves in time.
+
+  A referenced `slug` is mandatory: `_app: slug` (or `_build.app: slug`)
+  fails the build when `slug` is not declared, guarding against a `null`
+  slug silently scoping namespaced data. The object form with an explicit
+  `default` is the opt-out. Other fields return `null` when unset, and an
+  app that never references `slug` need not declare it.
+
+  The root `lowdefy.yaml` schema gains two new optional fields:
+
+  - `slug` — a kebab-case identifier (`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`),
+    validated at build time. Build fails with a clear error if invalid.
+  - `description` — a free-form string.
+
+  Root metadata fields (`slug`, `name`, `description`, `version`,
+  `license`, `lowdefy`) accept literals and `_build.*` operators only;
+  `_ref`, `_var`, and static `_` operators are no longer resolved in these
+  positions and fail the build with a clear error naming the field. Use
+  `_build.env` for a deploy-time slug or name.
+
+  `gitSha` resolves through a fallback chain: `LOWDEFY_GIT_SHA` env var
+  when set non-empty → `git rev-parse HEAD` → `null`. This lets apps
+  deployed without `.git` (Docker, Vercel, Netlify, Render, hermetic
+  PaaS sandboxes) pin the SHA explicitly by mapping their platform's
+  commit env var via shell expansion in the build command.
+
+  Build emits a new `appMeta.json` artifact alongside `app.json`. The
+  existing `app.git_sha` field is removed; consumers (internal telemetry)
+  read `gitSha` from `appMeta` instead.
+
+  See the `_app` operator reference for the full key set and examples.
+
+- 37c8c14: feat: `auth.strategies` — apiKey and JWT header authentication for API callers.
+
+  - New `auth.strategies` config block: apiKey (default `X-API-Key` header) and jwt strategies, each granting the caller the strategy's `roles`.
+  - MCP and service clients that cannot hold a session cookie authenticate per request; a matched strategy yields a caller (`apiKey:{strategyId}:{keyId}`) that flows through the existing authorization and `_user` machinery.
+  - Unauthenticated calls to role-gated endpoints now return 401 (`AuthenticationError`) instead of a masked error.
+
+- 7ce6e36: feat: Per-environment cron schedules, forwarded from the production deployment.
+
+  Vercel fires cron jobs only on the production deployment, so staging and other environments never
+  ran their schedules. Declare the deployment environments once and Lowdefy registers every
+  environment's schedules on production, forwarding the ones for other environments to that
+  environment's own `/api/cron/<endpointId>` as a fire-and-forget ping:
+
+  ```yaml
+  config:
+    cron:
+      environments:
+        production: {} # no url: the deployment Vercel fires crons on
+        staging:
+          url: https://staging.example.com
+          secret: STAGING_CRON_SECRET # Lowdefy secret holding staging's CRON_SECRET
+  ```
+
+  `schedules` can then be keyed by environment, with a `default` every other environment inherits and
+  `[]` turning crons off — including through module vars, so a module's
+  `schedules: { _module.var: tick_schedule }` needs no change:
+
+  ```yaml
+  schedules:
+    default:
+      - cron: '*/5 * * * *'
+    staging:
+      - cron: '0 * * * *'
+    develop: []
+  ```
+
+  - **build**: validates `config.cron` (exactly one environment without `url`; `url` + `secret` on the
+    others; `enabled: false` registers nothing), resolves keyed schedules onto every declared
+    environment, and emits `schedules.json` entries with `environment` and `forward`.
+  - **api/servers**: a new `/api/cron-forward/<environment>/<endpointId>` route (secured by
+    `CRON_SECRET`) pings the target environment with its own `CRON_SECRET` read from
+    `LOWDEFY_SECRET_<secret name>` on the production deployment (fails closed when unset) and answers
+    immediately; `/api/cron/*` honours the `x-lowdefy-cron-environment` header forwarded requests carry.
+  - **cli**: `lowdefy vercel-output` registers forwarded schedules as `/api/cron-forward/...` cron jobs.
+
+  Existing apps without `config.cron` are unaffected.
+
+- 15956e0: feat: Production-grade Docker deployment.
+
+  **Health endpoint (`@lowdefy/server`)**
+
+  - The server now serves `GET /api/lowdefy-health` for container health checks and orchestrator probes. The endpoint skips auth, session lookup, request logging, and Sentry, so frequent probes stay out of logs.
+
+  **Container-friendly startup and shutdown (`@lowdefy/server`)**
+
+  - Startup and Sentry-enabled messages now log as structured JSON through pino instead of plain text, keeping stdout a uniform NDJSON stream for log collectors.
+  - On SIGTERM/SIGINT the server closes websocket clients (code 1001, clients reconnect automatically), finishes in-flight requests, flushes pending Sentry events, and exits well within Docker's 10 second stop grace period.
+
+  **New `docker-output` CLI command (`lowdefy` CLI)**
+
+  - Assembles a minimal production runtime at `.lowdefy/docker` from a built app by tracing the server's runtime dependency graph (via `@vercel/nft`) and copying only the files the server imports. This drops the client-side block packages (already compiled into `dist/client`) and other unused dependencies from the image, cutting the shipped runtime to a fraction of the installed `node_modules`. Preserves pnpm workspace links so it works in monorepos.
+
+  **Rewritten `init-docker` Dockerfile (`lowdefy` CLI)**
+
+  - Pins the Lowdefy CLI to the app's `lowdefy:` version from `lowdefy.yaml`, so image builds are reproducible.
+  - Runs `docker-output` after the build and copies the traced runtime into the image, so build tooling (Vite, `@lowdefy/build`, webpack) and unused runtime dependencies no longer ship in production.
+  - Uses a BuildKit cache mount for the pnpm store, installs pnpm without corepack (removed from Node.js 25+), runs as the built-in non-root `node` user on `node:22-slim`, and adds a `HEALTHCHECK` against `/api/lowdefy-health`.
+  - Fixed `init-docker` failing to write `.dockerignore` from the published package.
+
+- e0a06a2: feat: Dynamic page content — server-resolved blocks at page load.
+
+  Pages can now include a `Dynamic` block whose content is resolved on the server at page load by an api endpoint routine. The routine returns block config; the server builds and validates it, splices it into the page, and the client renders the result like any other page.
+
+  **`Dynamic` block (`@lowdefy/blocks-basic`)**
+
+  - New container block configured with `properties.endpointId`, static `params`, an optional `fallback` slot rendered when resolution fails, and `required: true` to fail the page load instead.
+  - `properties.types` declares extra block, action and operator types the endpoint may return, so build includes them in the client bundle.
+
+  **Server resolution (`@lowdefy/api`, `@lowdefy/server`, `@lowdefy/server-dev`)**
+
+  - The endpoint is called in-process during page get with a payload of `{ params, pageId, blockId, urlQuery }` — the page request's query string is forwarded on both initial loads and SPA navigations.
+  - Returned blocks are validated before reaching the client: types must be in the client bundle, block properties are checked against plugin schemas (operator values are exempt), and `Request` and `CallAPI` action references are verified.
+  - Nested `Dynamic` blocks resolve recursively up to 5 levels; endpoint auth is enforced per resolution.
+  - Client-evaluated operators in returned config are escaped with one extra underscore (`__state` → `_state`), the same deferral convention as `_function` args — a plain `_state` evaluates against the routine's own state.
+
+  **Build (`@lowdefy/build`)**
+
+  - Validates `Dynamic` block config, flags dynamic pages in the page artifact, and bundles declared types.
+  - New `@lowdefy/build/dynamic` entry builds and validates runtime block config with the same pipeline as static pages.
+
+  **Engine (`@lowdefy/engine`)**
+
+  - Dynamic pages build a fresh context on every navigation, since the server may resolve different content per request.
+
+- 742a900: feat: Email notification rendering
+
+  Lowdefy apps can now define notifications in config: branded emails rendered from framework templates, delivered over any SMTP provider. The framework renders; storing and sending are composed in YAML routines — so any database works through its normal request types, and apps or modules own the notification record.
+
+  **`notifications:` config section (`@lowdefy/build`, `@lowdefy/api`)**
+
+  - New root section where the template is the type: `{ id, type, properties }` with per-notification `theme` overrides and `testData`
+  - Template properties are nunjucks data templates — `{{ task.title }}` interpolates against the pipeline's data with no operator syntax; interpolated values are inert (can never inject markup or links)
+  - New `RenderNotification` API routine step: renders one data item per call and returns `{ subject, title, preview, html, text, data }` where `data` is the link-resolved item — inserting the record, deduplicating, sending and updating send results are plain routine steps (`:for`, requests, `_uuid`)
+  - New `app.email` theme settings (logo, companyName, primaryColor, signature, footer)
+  - Link resolution is driven by the step's `serverUrl`, `landingPage` and `recordId` properties: `{ pageId, urlQuery }` links resolve to direct page URLs, or through a landing page (`?_id=<recordId>&option=<dotpath>`) that can mark the record read before redirecting (for example the modules-mongodb notifications module's link page)
+
+  **Email templates (`@lowdefy/email-templates`)**
+
+  - Three React Email templates: `NotificationEmail` (message, metadata table, quoted comment, CTA button, action list), `DigestEmail` (item roundups) and `AlertEmail` (status-toned notices)
+  - Sections render only when configured; markdown in `message` with raw HTML disabled
+  - Custom templates are plain React Email plugin packages under the new `notifications` type category
+
+  **SMTP connection (`@lowdefy/connection-smtp`)**
+
+  - New `SMTP` connection wrapping nodemailer — works with SES, Postmark, Mailgun, Resend and self-hosted servers; `SMTPMailSend` request type
+  - Environment-aware delivery `filter` (`replaceAddress` catch-all, domain `allowlist`, `regex`) applied to every send
+
+  **SendGrid (`@lowdefy/connection-sendgrid`)**
+
+  - Supports the same delivery `filter` and default `replyTo`; interchangeable with SMTP wherever a routine sends notification emails
+  - Array requests now send per message; request-level `templateId` is no longer overridden by an unset connection `templateId`
+
+  **Preview CLI (`lowdefy`)**
+
+  - New `lowdefy emails` command: builds the app, generates a preview per notification from its `testData`, and opens React Email's preview server; warns when a template data key is missing from `testData`
+
+  Builds also now validate that `CallAgent` steps reference existing agents — previously this check existed but never ran, so broken agent references that used to build will now fail with a config error.
+
+- 51c3008: feat: Endpoint execution controls for serverless deployments.
+
+  - `config.vercel { maxDuration, memory }` in `lowdefy.yaml` flows into the generated Vercel function config (default stays 60s).
+  - `async: true` on Api/InternalApi endpoints responds `{ accepted: true }` immediately and runs the routine in the background (kept alive via the platform request context; outcome observable through logs).
+  - `detached: true` on CallApi steps fire-and-forgets the target through the new `POST /api/detached/<endpointId>` route (CRON_SECRET transport auth), running it in its own invocation with a fresh duration budget.
+  - `webhook: true` on endpoints turns them into third-party webhook receivers on the standard `/api/endpoints` route: raw `{ body, query, headers }` payload, verbatim response body, system context — caller auth is the routine's first step. Non-webhook endpoints are unchanged.
+
+- 596212a: feat: `lowdefy init-vercel` instruments an app for Vercel, plus a configurable request timeout.
+
+  **`init-vercel`** now scaffolds a complete Vercel setup into `<config-directory>/deploy/`, so a v6
+  Lowdefy app (Hono server + Vite client) deploys to Vercel as static assets on the CDN plus one
+  Serverless Function:
+
+  - `vercel.json` — serves the built client (`dist/client`, which includes the app's `public/` files
+    via Vite's `publicDir`) from the CDN, sets the build command (`pnpm run build:client`) and output
+    directory, rewrites all other requests to the function, bundles the runtime-read build artifacts
+    via `includeFiles`, and caps the function with `maxDuration`.
+  - `api/index.js` — a Node Serverless Function that `chdir`s to the deploy directory, builds a Web
+    `Request` from the buffered Node request body, and runs the Hono app. (Vercel's Node runtime does
+    not drain a lazily-read body stream, so a streaming adapter hangs on every request with a body.)
+  - `vercel.install.sh` + `README.md`.
+
+  **Request timeout.** `@lowdefy/server`'s `createApp` now bounds request duration with a `timeout`
+  middleware, configured by a new **`config.requestTimeout`** (milliseconds) in `lowdefy.yaml`
+  (default `30000`, `0` disables). This protects against requests that hang on an upstream call
+  (database, SMTP, external API) running to the host's function limit — important on serverless
+  platforms billed by duration. Agent streaming routes are exempt. `@lowdefy/build` adds
+  `config.requestTimeout` to the schema.
+
+  `createApp` also gains a `{ serveStaticAssets }` option (default `true`); the Vercel function passes
+  `false` so the CDN owns static files and the function only handles dynamic routes. Docs updated
+  (deployment/Vercel and the config reference).
+
+- a858f8f: feat: MCP server exposing API endpoints as tools.
+
+  - New root `mcp` config block (`name`, `version`, `endpoints`) — listed `Api` endpoints are served as MCP tools at `POST /api/mcp` over streamable HTTP.
+  - Endpoint `description` and `payloadSchema` become the tool description and inputSchema; both are required for exposed endpoints, and `InternalApi` endpoints cannot be exposed.
+  - Tool listing and calls are authorized per request with the caller's session; the build always writes an `mcp.json` artifact (`configured: false` when no endpoints are listed).
+
+- 89a4c53: feat(server): Log response status and duration on every request.
+
+  The server's per-request log line now fires after the response is finalized and includes `status` and `duration_ms`, turning it into a standard access log for production observability. Errored requests log their final status alongside the existing error detail line.
+
+  Every log line now also carries the app's deploy identity — `app_name`, `app_version`, and `git_sha` (each omitted when not set) — so errors and access logs can be correlated to a specific build across replicas and rolling deploys. The Lowdefy version logs once on the startup line.
+
+  The request id (`rid`) now honors an `x-request-id` header set by an upstream proxy or load balancer (validated, falling back to a generated UUID) and is echoed on the response `x-request-id` header, so one id correlates client, proxy, and server logs. Also fixed the access and error logs reading the misspelled `x-forward-for` header — client IPs behind proxies are now captured under `x-forwarded-for`.
+
+- efd1967: feat: Add websockets — a first-class realtime primitive.
+
+  Define channels under a new top-level `websockets:` key and subscribe pages to them with `subscriptions:` — live dashboards, notifications, and chat without polling or an external socket service. The same Lowdefy server that serves your pages pushes messages over a single multiplexed WebSocket connection, locally and on Vercel (native WebSocket support on Fluid compute). Authentication uses your existing session, with per-channel `auth.websockets` roles.
+
+  **Channels (`websockets:`)**
+
+  - Websocket types are plugins: `Channel` (client pub/sub relay) and `Interval` (timed ticks) ship in the new `@lowdefy/websockets-core` package; `MongoDBChangeStream` in `@lowdefy/connection-mongodb` pushes MongoDB change events to subscribed pages.
+  - Channel `properties` are evaluated server-side per subscription — `_payload` and `_user` make channels user-specific. Subscribers with identical evaluated properties share one running source.
+
+  **Page subscriptions (`subscriptions:`)**
+
+  - Pages subscribe on mount and unsubscribe on navigation — no wiring needed.
+  - React to messages with `onMessage`, `onSubscribe` and `onError` events, or read channel state anywhere with the new `_websocket` operator (`connected`, `messages`, `lastMessage`, `messageCount`, `error`).
+  - Renders are throttled (`client.throttleRender`) and message history is bounded (`client.maxMessages`).
+
+  **Actions**
+
+  - New `Publish`, `Subscribe` and `Unsubscribe` actions in `@lowdefy/actions-core` — publish messages to a channel or control subscriptions dynamically.
+
+  The client reconnects with backoff and resubscribes automatically, so serverless connection limits (e.g. Vercel function `maxDuration`) are invisible to users. See the new WebSockets section in the docs for a quick start.
+
+### Patch Changes
+
+- 082acec: chore: Bump `yaml` to 2.9.0, clearing vite's `yaml@^2.4.2` peer warning.
+- 59190b5: Refresh dependencies and require Node.js 22 or newer.
+
+  Updated a range of libraries across the project to current versions (including the MongoDB driver, the
+  MQL/aggregation engine, and various build and CLI tooling) and set the minimum supported Node.js version
+  to 22, matching what is tested in CI. Most changes are internal with no effect on your app. One small
+  behaviour note: in `_mql` expressions, adding to a missing or null field now returns `null` (matching
+  MongoDB) instead of `NaN`.
+
+- da0c62c: chore: Update pino from 8.16.2 to 10.3.1.
+
+  No behavior change — the log output format, levels, and configuration are unchanged. The pino 9 and 10 majors only drop support for Node.js versions below 20, and Lowdefy already requires Node.js 22 or newer.
+
+- 6730996: feat: Provider-neutral file storage — upload and download files to S3-compatible providers, Google Cloud Storage, and Azure Blob Storage.
+
+  **Generic file blocks (`@lowdefy/blocks-files`, new)**
+
+  - New `Upload`, `UploadPhoto`, `UploadDragger`, and `Download` blocks that work with any storage provider. Upload blocks call an upload-policy request by id (`uploadPolicyRequestId`) and support both POST form uploads (S3, R2, MinIO, GCS) and PUT body uploads (Azure SAS), with upload progress on both.
+  - `emitFileContent: true` reads the file in the browser and emits `{ name, size, type, content }` (base64) as the block value and `onChange` event, for storing files through an API endpoint routine with a server-side write request.
+
+  **S3-compatible providers (`@lowdefy/plugin-aws`)**
+
+  - `AwsS3Bucket` connections accept `endpoint` and `forcePathStyle`, unlocking Cloudflare R2, MinIO, DigitalOcean Spaces, Backblaze B2, and Wasabi with a one-line config change.
+  - `AwsS3PresignedGetObject` returns a stable, non-expiring public URL when the request sets `public: true`; the connection-level `publicUrlBase` overrides the constructed URL for CDN domains.
+  - New `AwsS3PutObject` write and `AwsS3GetObject` read requests store and read base64 object content from endpoint routines or page requests, so routines can process file content in steps.
+  - The `S3UploadButton`, `S3UploadPhoto`, `S3UploadDragger`, and `S3Download` blocks are now deprecated aliases of the generic blocks — existing apps keep working unchanged.
+
+  **Google Cloud Storage (`@lowdefy/plugin-gcp`, new)**
+
+  - `GoogleCloudStorageBucket` connection with `GcsSignedPostPolicy`, `GcsSignedGetUrl`, `GcsGetObject`, and `GcsPutObject` requests.
+
+  **Azure Blob Storage (`@lowdefy/plugin-azure`, new)**
+
+  - `AzureBlobContainer` connection with `AzureBlobUploadSas`, `AzureBlobDownloadSas`, `AzureBlobGet`, and `AzureBlobPut` requests.
+
+  **Editor and chat uploads (`@lowdefy/blocks-tiptap`, `@lowdefy/blocks-antd-x`)**
+
+  - Tiptap editors and AgentChat attachments now upload through the shared provider-neutral flow. New `uploadPolicyRequestId` and `downloadPolicyRequestId` properties replace `s3PostPolicyRequestId` (kept as a deprecated alias). Inline image and attachment URLs resolve through the download request when configured.
+
+  **Servers (`@lowdefy/server`, `@lowdefy/server-dev`)**
+
+  - `/api/endpoints/*` request bodies are capped at 10 MiB (matching the agent route), bounding base64 file payloads sent via `CallAPI`.
+
+  **Codemod (`@lowdefy/codemods`)**
+
+  - Optional `s3-blocks-to-file-blocks` codemod renames the deprecated S3\* blocks and `s3PostPolicyRequestId`/`s3GetPolicyRequestId` properties to the provider-neutral names via `lowdefy upgrade`.
+
+- Updated dependencies [11662bc]
+- Updated dependencies [0201358]
+- Updated dependencies [da0c62c]
+- Updated dependencies [2da4907]
+- Updated dependencies [e7a9270]
+- Updated dependencies [c188656]
+- Updated dependencies [b496a77]
+- Updated dependencies [60401aa]
+- Updated dependencies [37c8c14]
+- Updated dependencies [ef707bd]
+- Updated dependencies [7ce6e36]
+- Updated dependencies [46029df]
+- Updated dependencies [28cb944]
+- Updated dependencies [082acec]
+- Updated dependencies [e0a06a2]
+- Updated dependencies [58ae85e]
+- Updated dependencies [742a900]
+- Updated dependencies [51c3008]
+- Updated dependencies [6730996]
+- Updated dependencies [a858f8f]
+- Updated dependencies [c97b1da]
+- Updated dependencies [660bbfc]
+- Updated dependencies [8a82fb0]
+- Updated dependencies [efd1967]
+- Updated dependencies [1cc1521]
+- Updated dependencies [6d38790]
+- Updated dependencies [0f9487d]
+- Updated dependencies [8398345]
+- Updated dependencies [ae5f618]
+- Updated dependencies [01d7552]
+- Updated dependencies [01d7552]
+- Updated dependencies [629837d]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+- Updated dependencies [ae5f618]
+- Updated dependencies [16fdeb8]
+- Updated dependencies [fb80e0a]
+- Updated dependencies [0e71ebd]
+- Updated dependencies [c2e0823]
+- Updated dependencies [6d7cd8e]
+- Updated dependencies [53a36ed]
+  - @lowdefy/blocks-antd-x@6.0.0
+  - @lowdefy/logger@6.0.0
+  - @lowdefy/blocks-aggrid@6.0.0
+  - @lowdefy/api@6.0.0
+  - @lowdefy/client@6.0.0
+  - @lowdefy/operators-js@6.0.0
+  - @lowdefy/plugin-next-auth@6.0.0
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/blocks-antd@6.0.0
+  - @lowdefy/blocks-basic@6.0.0
+  - @lowdefy/blocks-echarts@6.0.0
+  - @lowdefy/blocks-files@6.0.0
+  - @lowdefy/blocks-loaders@6.0.0
+  - @lowdefy/blocks-markdown@6.0.0
+  - @lowdefy/blocks-tiptap@6.0.0
+  - @lowdefy/node-utils@6.0.0
+  - @lowdefy/actions-core@6.0.0
+  - @lowdefy/websockets-core@6.0.0
+  - @lowdefy/helpers@6.0.0
+  - @lowdefy/layout@6.0.0
+  - @lowdefy/block-utils@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+- 8306262: feat(blocks-aggrid): Add `AgGridLowdefy`, upgrade to AG Grid v33, and theme every grid through the Theming API.
+
+  **Two new blocks.** `AgGridLowdefy` (display) and `AgGridLowdefyInput` (input) are grids themed from the app's antd design tokens — primary colour, surfaces, fonts and radius — so they look like they belong in a Lowdefy app and follow light/dark mode automatically, with no configuration and no separate dark block. They take a `size` property (`small | middle | large`, default `middle`) mirroring antd Table's densities, which sets row and header height to 36 / 44 / 54 pixels. Everything else — properties, events, methods, cell renderers — is identical to the existing grids.
+
+  To adopt, change `type: AgGridBalham` to `type: AgGridLowdefy` (or `type: AgGridInputBalham` to `type: AgGridLowdefyInput`). Every property carries over unchanged and the grid will deliberately look different afterwards. It is a visual opt-in, so there is no codemod.
+
+  Note that `size` loses to an explicit height: `rowHeight` and `headerHeight` are AG Grid grid options, and a grid option beats the theme parameter `size` sets. Setting `size: large` alongside `rowHeight: 30` gives 30 pixel rows under a 54 pixel header — use one or the other.
+
+  **AG Grid v33.** The package moves from `@ag-grid-community/*@32` to `ag-grid-community` + `ag-grid-react@33.3.2`, with `AllCommunityModule` registered explicitly. The Theming API is v33's default and class-based file themes are gone, so no block imports AG Grid CSS any more.
+
+  **The Balham, Alpine and Material blocks change appearance slightly.** They are kept indefinitely with the same API and the same names, but they now render AG Grid's prebuilt Theming API equivalents of those themes, with the antd colour mapping carried across as theme parameters. No config change is needed. What shifts:
+
+  - Spacing and header weight move a little — Balham rows go 28px to 29px, cell horizontal padding tightens on Balham and Alpine, the wrapper corner radius now comes from each theme (Balham 2px, Alpine 3px, Material 0) rather than a uniform 6px, and Balham's header weight goes from 600 to bold. Icons come from each theme's own SVG set, so glyph shapes differ from the old icon font.
+  - Row height now tracks the app's antd font size on Balham and Material, because v33 derives it from the data font size. It was font-size-independent before. The height only moves once the font size passes the theme's icon size (16px on Balham, 18px on Material), so at antd's default 14px nothing changes — you will see it at 18px or 20px. Alpine is unaffected at any font size.
+  - Four colours are re-pointed: row hover is a neutral fill rather than a primary tint, borders are lighter, the checkbox outline tone changes, and popup shadows are softer.
+  - Zebra striping, fonts and overall row density are preserved.
+
+  **A new `themeParams` property, on all eight blocks.** `themeParams` takes AG Grid Theming API parameter names and merges them onto the block's theme — the recommended way to retint a single grid:
+
+  ```yaml
+  - id: my_table
+    type: AgGridLowdefy
+    properties:
+      themeParams:
+        headerBackgroundColor: '#1a1a2e'
+        headerTextColor: '#e0e0ff'
+        borderColor: var(--ant-color-primary)
+  ```
+
+  Values are CSS strings and may reference antd tokens. Neither Lowdefy nor AG Grid validates parameter names, so a misspelled key is a silent no-op — check spelling against AG Grid's theming parameter reference.
+
+  Overriding `--ag-*` variables through a block's `style` — the documented `custom_theme` technique — **still works**; the Theming API honours an ancestor's declaration by design. The one caveat is that v33 renamed or folded away a number of the v32 `--ag-*` variables, and an override naming one of those is now a silent no-op. `--ag-header-foreground-color`, which appears in the documented example, is the case to watch: it is now `headerTextColor` (`--ag-header-text-color`). The AgGrid docs page carries the mapping table.
+
+  **One deprecation warning existing apps may see.** `rowSelection: multiple` / `single` is deprecated in v33 in favour of `rowSelection: { mode: multiRow }` / `{ mode: singleRow }`. The string form still works. If you migrate it, three things must move together:
+
+  - **Set `enableClickSelection: true`.** The string form defaults click-to-select on; the object form defaults it **off**. A bare `{ mode: singleRow }` silently stops clicking a row from selecting it, and `onRowSelected` / `onSelectionChanged` stop firing. The object form is not equivalent without this.
+  - **Move the colDef flags in the same edit.** `checkboxSelection` and `headerCheckboxSelection` on a column become `rowSelection.checkboxes` and `rowSelection.headerCheckbox`. v33 only supports `headerCheckboxSelection` alongside the _string_ form, so migrating one without the other breaks the header checkbox.
+  - **Six sibling options are read only in the string branch and are silently lost on migration:** `suppressRowClickSelection`, `suppressRowDeselection`, `rowMultiSelectWithClick`, `groupSelectsChildren`, `groupSelectsFiltered` and `isRowSelectable`. All six are deprecated in favour of `rowSelection.*` — move any you use across.
+
+  **Dark-mode apps now get dark browser chrome throughout (`@lowdefy/client`, `@lowdefy/server`, `@lowdefy/server-dev`, `@lowdefy/server-e2e`).** `color-scheme` is now set on `<html>` from the resolved dark-mode state — in the client's dark-mode effect and in each server's pre-hydration inline script, so first paint matches too. Native scrollbars, `<select>` dropdowns, date pickers and autofill backgrounds render dark in a dark app, inside grids and everywhere else. This is an app-wide behaviour change, well beyond AgGrid, and it is what lets the grid's own scrollbars follow dark mode. Apps pinned to light with `theme.darkMode: light` are unaffected, including on a dark OS. Apps that leave `theme.darkMode` unset get the default, `system`, so on a dark OS they resolve to dark and do pick up `color-scheme: dark` — set `theme.darkMode: light` if that is not wanted.
+
+- 79bbd84: fix(api): Redact server internals from every client-bound error, not just the 500 response.
+
+  Errors sent to a browser or an API caller now have `received` and `stack` stripped at
+  **every** level of the error, and a non-`Error` `cause` dropped unless the error is a
+  `UserError`. Two live leaks are closed:
+
+  - The 500 handlers stripped fields from the outermost error only, so `cause.stack` — and
+    the absolute server paths in its frames — reached production browsers.
+  - An endpoint result body (`callEndpoint` and the agent route) and a request response body
+    (`callRequest`) were not redacted at all. They carried `received`, which on the request
+    path holds the **evaluated** request properties, so a `_secret` resolved into a request
+    header crossed the wire at HTTP 200.
+
+  `source` is now guaranteed config-relative (`pages/home.yaml:5`, never `/var/task/...`),
+  and `configKey` is kept again: the browser deduplicates errors on `message:configKey`, so
+  stripping it collapsed two different errors that happened to share a message and silently
+  dropped the second.
+
+  **Breaking for app config that reads `error.received`.** Server-originated errors no longer
+  carry it, so `_actions` and `_request_details` expose `received` as `undefined`, and the
+  browser console no longer prints the `Received: <json>` line for them. This is deliberate —
+  the field can contain your own resolved secrets. The error `message` is unchanged, and
+  server logs still record `received` and `stack` in full in every environment, including dev.
+
+  Also fixes internal errors being logged twice. A `LowdefyInternalError` never gets a
+  `source`, and the browser used `source` to decide whether the server had already logged an
+  error, so it POSTed every internal error back to `/api/client-error` for a second log. The
+  browser now reads the `handled` flag the server sets when it logs.
+
+- Updated dependencies [3d59f5f]
+- Updated dependencies [3d59f5f]
+- Updated dependencies [5b590c7]
+- Updated dependencies [8306262]
+- Updated dependencies [3ead269]
+- Updated dependencies [9399e4e]
+- Updated dependencies [9e19a21]
+- Updated dependencies [7d97d03]
+- Updated dependencies [79bbd84]
+- Updated dependencies [508708d]
+- Updated dependencies [bb02f06]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+- Updated dependencies [5b4c305]
+  - @lowdefy/blocks-antd-x@5.6.0
+  - @lowdefy/client@5.6.0
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/api@5.6.0
+  - @lowdefy/node-utils@5.6.0
+  - @lowdefy/blocks-antd@5.6.0
+  - @lowdefy/layout@5.6.0
+  - @lowdefy/operators-js@5.6.0
+  - @lowdefy/logger@5.6.0
+  - @lowdefy/blocks-tiptap@5.6.0
+  - @lowdefy/actions-core@5.6.0
+  - @lowdefy/blocks-basic@5.6.0
+  - @lowdefy/blocks-loaders@5.6.0
+  - @lowdefy/block-utils@5.6.0
+  - @lowdefy/plugin-next-auth@5.6.0
+  - @lowdefy/errors@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- Updated dependencies [59cae71]
+  - @lowdefy/blocks-antd@5.5.1
+  - @lowdefy/blocks-tiptap@5.5.1
+  - @lowdefy/api@5.5.1
+  - @lowdefy/client@5.5.1
+  - @lowdefy/layout@5.5.1
+  - @lowdefy/actions-core@5.5.1
+  - @lowdefy/blocks-antd-x@5.5.1
+  - @lowdefy/blocks-basic@5.5.1
+  - @lowdefy/blocks-loaders@5.5.1
+  - @lowdefy/operators-js@5.5.1
+  - @lowdefy/plugin-next-auth@5.5.1
+  - @lowdefy/block-utils@5.5.1
+  - @lowdefy/errors@5.5.1
+  - @lowdefy/helpers@5.5.1
+  - @lowdefy/logger@5.5.1
+  - @lowdefy/node-utils@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- Updated dependencies [6dcdb6a]
+- Updated dependencies [b368e15]
+- Updated dependencies [f88fe33]
+- Updated dependencies [7ab09d6]
+  - @lowdefy/blocks-tiptap@5.5.0
+  - @lowdefy/blocks-antd-x@5.5.0
+  - @lowdefy/api@5.5.0
+  - @lowdefy/client@5.5.0
+  - @lowdefy/layout@5.5.0
+  - @lowdefy/actions-core@5.5.0
+  - @lowdefy/blocks-antd@5.5.0
+  - @lowdefy/blocks-basic@5.5.0
+  - @lowdefy/blocks-loaders@5.5.0
+  - @lowdefy/operators-js@5.5.0
+  - @lowdefy/plugin-next-auth@5.5.0
+  - @lowdefy/block-utils@5.5.0
+  - @lowdefy/errors@5.5.0
+  - @lowdefy/helpers@5.5.0
+  - @lowdefy/logger@5.5.0
+  - @lowdefy/node-utils@5.5.0
+
+## 5.4.0
+
+### Minor Changes
+
+- 60401aa: feat: Add `_app` operator and structured app metadata.
+
+  A new runtime operator `_app` reads the app's declared metadata —
+  `slug`, `name`, `version`, `description`, `license`, `lowdefyVersion`,
+  `gitSha`. It works on both client and server, including inside
+  `modules-mongodb` request filters, and inside `_js` functions via a
+  bound `lowdefyApp(p)` callable.
+
+  The root `lowdefy.yaml` schema gains two new optional fields:
+
+  - `slug` — a kebab-case identifier (`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`),
+    validated at build time. Build fails with a clear error if invalid.
+  - `description` — a free-form string.
+
+  `gitSha` resolves through a fallback chain: `LOWDEFY_GIT_SHA` env var
+  when set non-empty → `git rev-parse HEAD` → `null`. This lets apps
+  deployed without `.git` (Docker, Vercel, Netlify, Render, hermetic
+  PaaS sandboxes) pin the SHA explicitly by mapping their platform's
+  commit env var via shell expansion in the build command.
+
+  Build emits a new `appMeta.json` artifact alongside `app.json`. The
+  existing `app.git_sha` field is removed; consumers (internal telemetry)
+  read `gitSha` from `appMeta` instead.
+
+  See the `_app` operator reference for the full key set and examples.
+
+- f11addd: feat: Extend i18n coverage to Lowdefy agents.
+
+  Builds on the i18n / locale support from
+  `feat-i18n-locale-support.md`. End-user-visible strings in the agent
+  runtime and the `AgentChat` block now localize automatically when
+  `config.i18n` is configured.
+
+  **Agent runtime errors.** HTTP 4xx/5xx responses from the agent
+  endpoint (`Only POST requests are supported.`, `Invalid agent path`,
+  `Agent "X" does not exist.`, `Agent type "Y" can not be found.`,
+  `Endpoint execution failed`, etc.) translate per request via the
+  `Accept-Language` header against `agent.runtime.*` builtin keys.
+
+  **AgentChat block UI.** Framework-rendered strings in the chat UI go
+  through `methods.translate` against new `agent.*` builtin keys:
+
+  - `agent.sender.placeholder` — `'Type a message...'`
+  - `agent.toolApproval.{approve,reject}` — `'Approve'` / `'Reject'`
+  - `agent.message.{copy,feedback,regenerate,delete}` — message actions
+  - `agent.toolResult.{completed,completedNoData,empty,emptyList,showMore,showLess}` — tool result captions
+
+  Override per locale via `config.i18n.messages.{locale}` — same
+  mechanism as any other built-in message.
+
+  **antd X locale wiring.** The app shell now uses
+  `@ant-design/x@2.7.x`'s `XProvider` at the root (drop-in superset of
+  antd's `ConfigProvider`) with a merged antd + antd-X locale pack.
+  antd X ships only `en_US` and `zh_CN` packs; other locales fall back
+  to `en_US` for X-native strings (`'New chat'`, `'Stop loading'`,
+  `'Like'`/`'Dislike'`, bubble edit `'OK'`/`'Cancel'`). Apps can
+  override these in unsupported locales via the new `agent.antdx.*`
+  reference keys.
+
+  **Plugin-author surface.** Agent hook endpoints (`onStart`,
+  `onStepStart`, `onToolCallStart`, `onToolCallFinish`, `onStepFinish`,
+  `onFinish`) now receive `locale: <activeCode>` in their payload, so
+  hook routines can branch on the user's locale.
+
+  **System prompt translation.** `agent.properties.instructions` passes
+  through the operator parser at request time — `_t:` works there for
+  locale-aware system prompts.
+
+  ```yaml
+  agents:
+    - id: assistant
+      type: AISDKAgent
+      connectionId: anthropic
+      properties:
+        agent:
+          model: claude-sonnet-4
+          instructions:
+            _t: agent.systemPrompt
+  ```
+
+  **What stays English** (explicit choices):
+
+  - Built-in tool descriptions used in the model prompt (English-trained
+    models perform best with English tool descriptions).
+  - Build-time agent validation errors (developer diagnostics).
+  - Console warnings (ops diagnostics).
+  - The `[File truncated — showing first NKB...]` notice in the
+    `read-file` built-in tool (model-facing).
+  - Model-streamed natural-language output (owned by the model).
+
+- 0108f38: feat: First-class i18n / locale support for Lowdefy apps.
+
+  Apps can now declare supported locales and message catalogs under
+  `config.i18n`, switch language at runtime, and translate their own
+  strings with ICU MessageFormat. Ant Design's component strings (date
+  pickers, modal Ok/Cancel, pagination, form validation messages),
+  dayjs date formatting, and the engine's built-in framework strings
+  (loading toasts, validation summaries, popup blocker warnings, error
+  page) all localize automatically once `config.i18n` is set.
+
+  ```yaml
+  config:
+    i18n:
+      defaultLocale: en-US
+      locales:
+        - { code: en-US, label: English, antd: en_US, dayjs: en }
+        - { code: de-DE, label: Deutsch, antd: de_DE, dayjs: de }
+      messages:
+        en-US: { greeting: 'Hello, {name}!' }
+        de-DE: { greeting: 'Hallo, {name}!' }
+  ```
+
+  **New schema** — `config.i18n` with `defaultLocale`, `locales[]`, and
+  `messages`. Validated at build time; only declared locales are bundled
+  (antd and dayjs locale imports are codegen'd, no ~150KB unused). The
+  missing-key fallback is always `en-US`, so plugin and module authors
+  should ship `en-US` translations as a baseline.
+
+  **New operators**
+
+  - [`_t`](/_t) — translate operator with ICU MessageFormat. Resolution
+    order: active locale → fallback locale → built-in framework message
+    → key.
+
+    ```yaml
+    _t:
+      key: cart.items
+      values: { count: { _state: itemCount } }
+    ```
+
+  - [`_locale`](/_locale) — read `active` / `default` / `fallback`
+    (always `'en-US'`) / `supported` locale state. Use with `Selector`
+    to build a language picker.
+
+  **New action** — [`SetLocale`](/SetLocale) sets the user's preferred
+  locale (persisted to `localStorage`). Pass `'auto'` to clear the
+  preference and fall back to the browser language or default.
+
+  **Built-in framework strings.** Engine and client strings (`'Loading'`,
+  `'Success'`, `'This field is required'`, validation summaries, popup
+  blocker, error page) live in a built-in catalog and surface as English
+  by default. Authors override per-locale by adding the same key to
+  `config.i18n.messages`:
+
+  ```yaml
+  messages:
+    de-DE:
+      engine.action.loading: 'Laden'
+      engine.validation.fieldRequired: 'Pflichtfeld'
+  ```
+
+  See the [Internationalization concept page](/i18n) for the full list
+  of overridable keys.
+
+  **Ant Design block cleanup.** `Modal`/`ConfirmModal` `okText`/`cancelText`
+  and date picker placeholders (`DateSelector`, `DateRangeSelector`,
+  `DateTimeSelector`, `MonthSelector`, `WeekSelector`) no longer hardcode
+  English defaults — they fall through to antd's `ConfigProvider locale`,
+  so a German app gets `'OK'` / `'Abbrechen'` / `'Datum auswählen'`
+  without per-block configuration. The antd `ConfigProvider` block
+  itself now accepts a `locale` prop for subtree overrides.
+
+  **Server-side translation.** API requests resolve the user's active
+  locale from the `Accept-Language` header and thread it into the server
+  operator parser, so `_t` works the same in server-side actions and
+  requests as on the client.
+
+  **Translation engine.** A new `translate()` helper in `@lowdefy/helpers`
+  backs both the `_t` operator and the engine/client adapter (installed
+  on `lowdefy._internal.translate`). One source of truth for the lookup
+  chain; no duplication. Adds `intl-messageformat` as a foundational dep.
+
+  **Plugin-author surface.** Action and block plugins receive
+  `methods.translate(key, values)` and `methods.getLocale()` for runtime
+  translation in their JS code. Plugin packages can ship default
+  messages via a `./messages` export — the build merges them into the
+  app's i18n catalog (user app messages > plugin messages > framework
+  builtins > key).
+
+  **DatePicker and NumberInput auto-localization.** Date selector blocks
+  (`DateSelector`, `DateRangeSelector`, `DateTimeSelector`,
+  `MonthSelector`) and `NumberInput` derive their default `format` /
+  `decimalSeparator` from the active locale via `Intl.DateTimeFormat` /
+  `Intl.NumberFormat`. A German user sees `DD.MM.YYYY` and `1234,56`
+  automatically; an en-US user sees `MM/DD/YYYY` and `1234.56`.
+
+### Patch Changes
+
+- d1fb1d7: feat: Plugin-driven `serverExternalPackages` for Next.js.
+
+  Plugins can now declare which of their dependencies need to be passed
+  through to Next.js's `serverExternalPackages` config — used for CJS
+  packages whose runtime `require()` chains Turbopack can't resolve
+  through pnpm's isolated symlink layout (e.g. `turndown` →
+  `@mixmark-io/domino`, `@aws-sdk/client-s3` → `fast-xml-parser` →
+  `strnum`).
+
+  Declare in the plugin's `package.json`:
+
+  ```json
+  {
+    "lowdefy": {
+      "serverExternalPackages": ["turndown"]
+    }
+  }
+  ```
+
+  Build aggregates declarations from every plugin the app actually uses
+  (across blocks, connections, operators, actions, agents, auth, icons,
+  requests) and writes a per-app `serverExternalPackages.json` artifact,
+  read by `server`, `server-dev`, and `server-e2e` Next.js configs.
+
+  Replaces a hardcoded list in the three server configs. Apps not using
+  `blocks-tiptap` or `plugin-aws` no longer carry their externals.
+
+  Initial declarations:
+
+  - `@lowdefy/blocks-tiptap` → `turndown`
+  - `@lowdefy/plugin-aws` → `@aws-sdk/client-s3`
+
+- Updated dependencies [ff7ed66]
+- Updated dependencies [5e498dd]
+- Updated dependencies [60401aa]
+- Updated dependencies [c2c3a7f]
+- Updated dependencies [25225ab]
+- Updated dependencies [2aaf365]
+- Updated dependencies [ba1d3bd]
+- Updated dependencies [f11addd]
+- Updated dependencies [0108f38]
+- Updated dependencies [5f00be7]
+- Updated dependencies [302e330]
+- Updated dependencies [d1fb1d7]
+- Updated dependencies [27659ef]
+- Updated dependencies [4e189a0]
+- Updated dependencies [0027a41]
+- Updated dependencies [27659ef]
+- Updated dependencies [e324c72]
+- Updated dependencies [b6e555f]
+- Updated dependencies [f8a5d80]
+- Updated dependencies [60c193c]
+- Updated dependencies [86919df]
+  - @lowdefy/blocks-antd-x@5.4.0
+  - @lowdefy/api@5.4.0
+  - @lowdefy/client@5.4.0
+  - @lowdefy/operators-js@5.4.0
+  - @lowdefy/blocks-antd@5.4.0
+  - @lowdefy/helpers@5.4.0
+  - @lowdefy/actions-core@5.4.0
+  - @lowdefy/block-utils@5.4.0
+  - @lowdefy/errors@5.4.0
+  - @lowdefy/blocks-tiptap@5.4.0
+  - @lowdefy/layout@5.4.0
+  - @lowdefy/blocks-basic@5.4.0
+  - @lowdefy/blocks-loaders@5.4.0
+  - @lowdefy/logger@5.4.0
+  - @lowdefy/node-utils@5.4.0
+  - @lowdefy/plugin-next-auth@5.4.0
+
 ## 5.3.0
 
 ### Minor Changes

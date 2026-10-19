@@ -17,6 +17,8 @@
 import knex from 'knex';
 import { ConfigError } from '@lowdefy/errors';
 
+import normalizeConnectionPort from './normalizeConnectionPort.js';
+
 function createKnex(connection) {
   if (connection.client === 'sqlite3') {
     throw new ConfigError(
@@ -29,9 +31,9 @@ function createKnex(connection) {
     );
   }
   if (connection.client === 'sqlite') {
-    return knex({ ...connection, client: 'better-sqlite3' });
+    return normalizeConnectionPort(knex({ ...connection, client: 'better-sqlite3' }));
   }
-  return knex(connection);
+  return normalizeConnectionPort(knex(connection));
 }
 
 export default createKnex;

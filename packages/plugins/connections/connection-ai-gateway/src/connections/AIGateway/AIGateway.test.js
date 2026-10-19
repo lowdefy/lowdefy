@@ -23,6 +23,18 @@ jest.unstable_mockModule('@ai-sdk/gateway', () => ({
   createGateway: mockCreateGateway,
 }));
 
+// Prevent the real 'ai' package (imported via @lowdefy/ai-utils in the request
+// resolver factories) from loading — it imports more from '@ai-sdk/gateway'
+// than the mock above provides.
+// Tags each resolver with the factory's arguments, so a test can read them
+// after the module (imported once) built its requests.
+const mockCreateDecide = (args) => Object.assign(jest.fn(), { factoryArgs: args });
+jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
+  createDecide: mockCreateDecide,
+  createGenerateObject: jest.fn(() => jest.fn()),
+  createGenerateText: jest.fn(() => jest.fn()),
+}));
+
 test('AIGateway create returns provider with apiKey', async () => {
   const mockProvider = jest.fn();
   mockCreateGateway.mockReturnValue(mockProvider);
@@ -77,6 +89,31 @@ test('AIGateway create handles undefined connection (OIDC / env fallback)', asyn
   expect(result).toEqual({ provider: mockProvider });
 });
 
+test('AIGateway create returns the connection maxOutputTokens and timeout for its agents', async () => {
+  const mockProvider = jest.fn();
+  mockCreateGateway.mockReturnValue(mockProvider);
+
+  const { default: AIGateway } = await import('./AIGateway.js');
+
+  const result = AIGateway.create({
+    connection: { apiKey: 'test-api-key', maxOutputTokens: 1024, timeout: 30000 },
+  });
+
+  expect(result).toEqual({ provider: mockProvider, maxOutputTokens: 1024, timeout: 30000 });
+});
+
+test.each([
+  ['maxOutputTokens', 1.5, 'should be an integer.'],
+  ['maxOutputTokens', 0, 'should be at least 1.'],
+  ['timeout', '30s', 'should be an integer.'],
+  ['timeout', 0, 'should be at least 1.'],
+])('AIGateway connection schema rejects %s %p', async (property, value, message) => {
+  const { default: AIGateway } = await import('./AIGateway.js');
+  expect(() =>
+    validate({ schema: AIGateway.schema, data: { apiKey: 'k', [property]: value } })
+  ).toThrow(`AIGateway connection property "${property}" ${message}`);
+});
+
 test('AIGateway has schema', async () => {
   const { default: AIGateway } = await import('./AIGateway.js');
   expect(AIGateway.schema).toBeDefined();
@@ -105,6 +142,8 @@ test('valid connection schema with all properties', async () => {
     apiKey: 'vck-test',
     baseURL: 'https://custom.gateway.example',
     headers: { 'x-org': 'lowdefy' },
+    maxOutputTokens: 1024,
+    timeout: 30000,
   };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
@@ -143,4 +182,20 @@ test('headers is not an object', async () => {
   expect(() => validate({ schema, data: { headers: 'x-org: lowdefy' } })).toThrow(
     'AIGateway connection property "headers" should be an object of strings.'
   );
+});
+
+test('All requests are present', async () => {
+  const { default: AIGateway } = await import('./AIGateway.js');
+
+  expect(AIGateway.requests.Decide).toBeDefined();
+  expect(AIGateway.requests.GenerateObject).toBeDefined();
+  expect(AIGateway.requests.GenerateText).toBeDefined();
+});
+
+test('Decide on the gateway offers evaluation models first, then structured output', async () => {
+  const { default: AIGateway } = await import('./AIGateway.js');
+  expect(AIGateway.requests.Decide.factoryArgs).toEqual({
+    createProvider: expect.any(Function),
+    backends: ['evaluation', 'structured-output'],
+  });
 });

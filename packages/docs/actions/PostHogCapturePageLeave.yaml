@@ -1,0 +1,53 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: PostHogCapturePageLeave
+    pageTitle: PostHogCapturePageLeave
+    filePath: actions/PostHogCapturePageLeave.yaml
+    types: |
+      ```
+      (params: {
+        properties?: object,
+      }): Promise<null>
+      ```
+    description: |
+      The `PostHogCapturePageLeave` action captures a `$pageleave` event by hand, the counterpart to [`PostHogPageview`](/PostHogPageview). PostHog uses pageleaves to compute bounce rate and time on page.
+
+      `posthog-js` captures a pageleave itself when the tab is closed, as long as automatic pageviews are on, because `capture_pageleave` defaults to `if_capture_pageview`. With `capture_pageview: false`, set `capture_pageleave: true` in the [`PostHogInit`](/PostHogInit) options to keep them, or use this action, for example before a `Link` or `Logout` action. The page `onHidden` event is not a page leave: it also fires when the browser window loses focus.
+
+      When PostHog is disabled or `posthog-js` could not be loaded, the action does nothing. Invalid params always throw, even when PostHog is disabled.
+
+      The action is part of the [`@lowdefy/plugin-posthog`](/PostHog) plugin, which is included by default. See the [PostHog guide](/PostHog) for how the actions fit together.
+    params: |
+      ###### object
+        - `properties: object`: Properties to add to the `$pageleave` event.
+    examples: |
+      ###### Capture a pageleave before signing out:
+      ```yaml
+      - id: sign_out
+        type: Button
+        properties:
+          title: Sign out
+        events:
+          onClick:
+            - id: capture_pageleave
+              type: PostHogCapturePageLeave
+            - id: reset_posthog
+              type: PostHogReset
+            - id: logout
+              type: Logout
+      ```

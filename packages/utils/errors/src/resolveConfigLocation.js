@@ -38,6 +38,24 @@ import path from 'path';
  * //   config: 'root.pages[0:home].blocks[0:header]',
  * // }
  */
+// Not every ref is a file — a module invocation's ref has no path of its own
+// (its content came from the invoking file's vars, and ~l line numbers point
+// into that file). Walk the refMap parent chain to the nearest ref that is a
+// real file; the root ref with no parent is lowdefy.yaml itself.
+function resolveRefPath({ refId, refMap }) {
+  let currentId = refId;
+  const seen = new Set();
+  while (currentId && refMap?.[currentId] && !seen.has(currentId)) {
+    seen.add(currentId);
+    const refEntry = refMap[currentId];
+    if (refEntry.path) {
+      return refEntry.path;
+    }
+    currentId = refEntry.parent;
+  }
+  return 'lowdefy.yaml';
+}
+
 function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   if (!configKey || !keyMap || !keyMap[configKey]) {
     return null;
@@ -46,8 +64,7 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   const keyEntry = keyMap[configKey];
   const refId = keyEntry['~r'];
   const lineNumber = keyEntry['~l'];
-  const refEntry = refMap?.[refId];
-  const filePath = refEntry?.path || 'lowdefy.yaml';
+  const filePath = resolveRefPath({ refId, refMap });
 
   // config: the config path (e.g., "root.pages[0:home].blocks[0:header]")
   const config = keyEntry.key;

@@ -1,0 +1,65 @@
+# _args
+
+```
+(key: string): any
+(key: integer): any
+(all: boolean): any
+(arguments: {
+  all?: boolean,
+  key?: string | integer,
+  default?: any
+}): any
+```
+
+The `_args` operator gets a value from the `arguments` array passed to a function operator. The `arguments` array is an array of all the positional arguments passed to the function.
+
+> This operator can be used as a [`_build`](/_build) operator method.
+
+#### Arguments
+
+###### string
+If the `_args` operator is called with a string argument, the value of the key in the `arguments` array is returned. If the value is not found, `null` is returned. Dot notation and [block list indexes](/lists) are supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably.
+
+###### integer
+If the `_args` operator is called with a integer argument, the value at that index in the `arguments` array is returned. If the value is not found, `null` is returned. Dot notation and [block list indexes](/lists) are supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably.
+
+###### boolean
+If the `_args` operator is called with boolean argument `true`, the entire `arguments` array is returned.
+
+###### object
+  - `all: boolean`: If `all` is set to `true`, the entire `arguments` array is returned. One of `all` or `key` are required.
+  - `key: string | integer`: The value of the key or index in the `arguments` array is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably. One of `all` or `key` are required.
+  - `default: any`: A value to return if the `key` is not found in `arguments`. By default, `null` is returned if a value is not found.
+
+#### Examples
+
+###### Map over an array:
+
+```yaml
+_array.map:
+  on:
+    - firstName: Ted
+      lastName: Mosby
+    - firstName: Robin
+      lastName: Scherbatsky
+    - firstName: Marshall
+      lastName: Eriksen
+    - firstName: Lily
+      lastName: Aldrin
+    - firstName: Barney
+      lastName: Stinson
+  callback:
+    _function:
+      __string.concat:
+        - __args: 0.firstName
+        - ' '
+        - __args: 0.lastName
+```
+Returns:
+```yaml
+- Ted Mosby
+- Robin Scherbatsky
+- Marshall Eriksen
+- Lily Aldrin
+- Barney Stinson
+```

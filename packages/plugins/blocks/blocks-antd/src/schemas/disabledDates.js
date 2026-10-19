@@ -47,9 +47,11 @@ export default {
     },
     ranges: {
       type: 'array',
-      description: 'Array of date ranges to disable.',
+      description:
+        'Array of date ranges to disable. A range is an object with a from and a to date, or an array of the two dates.',
       items: {
-        type: 'object',
+        type: ['object', 'array'],
+        description: 'A range as { from, to }, or as an array of a from and a to date.',
         properties: {
           from: {
             type: ['string', 'object'],

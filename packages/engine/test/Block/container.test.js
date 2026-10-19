@@ -799,3 +799,96 @@ test('visibleParent. If container visible is null, child blocks should still be 
   expect(context._internal.RootSlots.map.container.eval.visible).toBe(null);
   expect(context._internal.RootSlots.map.text.eval.visible).toBe(true);
 });
+
+test('hidden display and container blocks do not delete state at their id', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { status: 'draft', section: { note: 'kept' }, show: true },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Button',
+        id: 'status',
+        visible: { _state: 'show' },
+      },
+      {
+        type: 'Box',
+        id: 'section',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'Paragraph',
+            id: 'heading',
+          },
+        ],
+      },
+      {
+        type: 'Switch',
+        id: 'show',
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { status, section, show } = context._internal.RootSlots.map;
+  show.setValue(false);
+  expect(status.visibleEval.output).toEqual(false);
+  expect(section.visibleEval.output).toEqual(false);
+  expect(context.state).toEqual({ status: 'draft', section: { note: 'kept' }, show: false });
+});
+
+test('hidden container still deletes the state of its nested inputs', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { text: 'a', show: true },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'Button',
+            id: 'button',
+          },
+          {
+            type: 'TextInput',
+            id: 'text',
+          },
+        ],
+      },
+      {
+        type: 'Switch',
+        id: 'show',
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { show } = context._internal.RootSlots.map;
+  show.setValue(false);
+  expect(context.state).toEqual({ show: false });
+  show.setValue(true);
+  expect(context.state).toEqual({ text: 'a', show: true });
+});

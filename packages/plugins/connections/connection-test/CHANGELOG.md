@@ -1,5 +1,45 @@
 # @lowdefy/connection-test
 
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/errors@6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+- Updated dependencies [37c8c14]
+- Updated dependencies [c9bea1c]
+  - @lowdefy/errors@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+- @lowdefy/errors@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/errors@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/errors@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+- Updated dependencies [302e330]
+  - @lowdefy/errors@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes

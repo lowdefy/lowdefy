@@ -14,10 +14,19 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
-import { registerTheme } from 'echarts';
-import ReactECharts from 'echarts-for-react';
+
+import createLazyReactECharts from './createLazyReactECharts.js';
+
+// EChart stays an eager block: it registers no methods, and its outer div owns
+// the size. Only the renderer inside that div is lazy, so the box is identical
+// before and after echarts loads.
+let LazyReactECharts = createLazyReactECharts({
+  onFailure: (retry) => {
+    LazyReactECharts = retry;
+  },
+});
 
 class EChart extends React.Component {
   constructor(props) {
@@ -65,15 +74,38 @@ class EChart extends React.Component {
       if (props.events[eventName]) acc[eventName] = this.allEvents[eventName];
       return acc;
     }, {});
-    if (props.properties.theme) {
-      registerTheme(`custom_theme_${props.blockId}`, props.properties.theme);
-    }
+    // The theme handed to echarts-for-react is fixed for the life of the block.
+    // It deep-compares that prop and disposes + re-inits the chart whenever it
+    // changes; swapping the theme on the live instance instead (see syncTheme)
+    // repaints without the teardown, so the chart re-inks with no visible flash.
+    this.initialTheme = props.properties.theme;
+    this.appliedTheme = JSON.stringify(props.properties.theme);
+    this.chart = undefined;
+    this.onChartReady = (chart) => {
+      this.chart = chart;
+      // The instance is created asynchronously, so the theme may already have
+      // changed by the time it exists.
+      this.syncTheme();
+    };
   }
   triggerEvent(name, event) {
     this.props.methods.triggerEvent({
       name,
       event,
     });
+  }
+  componentDidUpdate() {
+    this.syncTheme();
+  }
+  // Apply a theme that changed after mount — an app switching to dark mode, say.
+  // A theme is plain JSON, so serialising it is a sound and cheap equality check.
+  syncTheme() {
+    const { theme } = this.props.properties;
+    if (!this.chart || !theme) return;
+    const applied = JSON.stringify(theme);
+    if (applied === this.appliedTheme) return;
+    this.appliedTheme = applied;
+    this.chart.setTheme(theme);
   }
   render() {
     return (
@@ -86,25 +118,28 @@ class EChart extends React.Component {
           ...this.props.styles?.element,
         }}
       >
-        <ReactECharts
-          lazyUpdate={true}
-          notMerge={true}
-          onEvents={this.onEvents ?? {}}
-          option={{
-            ...(this.props.properties.option ?? {}),
-            dataset:
-              this.props.properties.option?.dataset &&
-              this.props.properties.option?.dataset?.source === null
-                ? {
-                    ...this.props.properties.option.dataset,
-                    source: [],
-                  }
-                : this.props.properties.option?.dataset,
-          }}
-          opts={this.props.properties.init}
-          style={{ width: '100%', height: '100%' }}
-          theme={this.props.properties.theme && `custom_theme_${this.props.blockId}`}
-        />
+        <Suspense fallback={null}>
+          <LazyReactECharts
+            lazyUpdate={true}
+            notMerge={true}
+            onEvents={this.onEvents ?? {}}
+            option={{
+              ...(this.props.properties.option ?? {}),
+              dataset:
+                this.props.properties.option?.dataset &&
+                this.props.properties.option?.dataset?.source === null
+                  ? {
+                      ...this.props.properties.option.dataset,
+                      source: [],
+                    }
+                  : this.props.properties.option?.dataset,
+            }}
+            opts={this.props.properties.init}
+            style={{ width: '100%', height: '100%' }}
+            theme={this.initialTheme}
+            onChartReady={this.onChartReady}
+          />
+        </Suspense>
       </div>
     );
   }

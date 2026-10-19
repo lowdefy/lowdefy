@@ -1,0 +1,155 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_default
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+    - id: basic_custom_title
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        button:
+          icon: upload
+          title: Choose File
+          type: default
+    - id: basic_custom_icon
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        button:
+          icon: CloudUpload
+          title: Upload to Cloud
+          type: default
+    - id: basic_icon_end
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        button:
+          icon: upload
+          iconPlacement: end
+          title: Attach
+          type: default
+
+- title: File Type Restrictions
+  blocks:
+    - id: accept_images
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        accept: 'image/*'
+        button:
+          icon: image
+          title: Upload Image
+          type: default
+    - id: accept_pdf
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        accept: '.pdf'
+        button:
+          icon: FileText
+          title: Upload PDF
+          type: default
+
+- title: Upload Limits
+  blocks:
+    - id: limit_single
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        singleFile: true
+        button:
+          icon: upload
+          title: Upload Single File
+          type: default
+    - id: limit_max_three
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        maxCount: 3
+        button:
+          icon: upload
+          title: Upload (Max 3)
+          type: default
+
+- title: Emit File Content
+  blocks:
+    - id: emit_file_content
+      type: Upload
+      properties:
+        emitFileContent: true
+        singleFile: true
+        button:
+          icon: upload
+          title: Attach File
+          type: default
+
+- title: Picture List and Folder Upload
+  blocks:
+    - id: list_picture
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        accept: 'image/*'
+        listType: picture
+        showUploadList:
+          showRemoveIcon: true
+          showDownloadIcon: false
+        button:
+          icon: image
+          title: Upload Images
+          type: default
+    - id: upload_directory
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        directory: true
+        pastable: true
+        button:
+          icon: folder
+          title: Upload Folder
+          type: default
+
+- title: Disabled State
+  blocks:
+    - id: disabled_default
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        disabled: true
+
+- title: Label Options
+  blocks:
+    - id: label_default
+      type: Label
+      properties:
+        title: Upload Attachment
+      blocks:
+        - id: label_default_upload
+          type: Upload
+          properties:
+            uploadPolicyRequestId: upload_policy_request
+    - id: label_extra
+      type: Label
+      properties:
+        title: Upload Document
+        extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+      blocks:
+        - id: label_extra_upload
+          type: Upload
+          properties:
+            uploadPolicyRequestId: upload_policy_request

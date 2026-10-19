@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { type } from '@lowdefy/helpers';
 import MiniSearch from 'minisearch';
 
 const indexCache = new Map();
@@ -22,6 +23,9 @@ const indexCache = new Map();
 function useSearchIndex({ indexUrl, documents, fields, storeFields, searchOptions }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  // Incremented whenever an index (re)builds, so an open modal can re-run its
+  // current query against the fresh index instead of waiting for a reopen.
+  const [version, setVersion] = useState(0);
   const indexMetaRef = useRef({
     searchDefaults: {},
     resultDefaults: {},
@@ -79,6 +83,7 @@ function useSearchIndex({ indexUrl, documents, fields, storeFields, searchOption
           groups: first.groups ?? [],
         };
         loadedRef.current = true;
+        setVersion((v) => v + 1);
       } catch (err) {
         setError(err);
       } finally {
@@ -97,7 +102,17 @@ function useSearchIndex({ indexUrl, documents, fields, storeFields, searchOption
     instance.addAll(documents);
     instancesRef.current = [instance];
     loadedRef.current = true;
+    setVersion((v) => v + 1);
   }, [documents, fields, storeFields]);
+
+  // Documents typically arrive async (e.g. bound to a request result). Rebuild
+  // whenever the array reference changes so an already-open modal picks up data
+  // that resolved after ensureLoaded ran.
+  useEffect(() => {
+    if (documents && documentsRef.current !== documents) {
+      buildFromDocuments();
+    }
+  }, [documents, buildFromDocuments]);
 
   const ensureLoaded = useCallback(async () => {
     if (loadedRef.current && !documents) return;
@@ -126,11 +141,17 @@ function useSearchIndex({ indexUrl, documents, fields, storeFields, searchOption
     [searchOptions]
   );
 
+  // Documents mode with the data still in flight (e.g. a request that has not
+  // resolved yet evaluates to null/undefined): report loading so the modal can
+  // show a spinner instead of a false "No results found."
+  const waitingForDocuments = type.isNone(indexUrl) && type.isNone(documents) && !loadedRef.current;
+
   return {
     search,
-    loading,
+    loading: loading || waitingForDocuments,
     error,
     ensureLoaded,
+    version,
     searchDefaults: indexMetaRef.current.searchDefaults,
     resultDefaults: indexMetaRef.current.resultDefaults,
     groups: indexMetaRef.current.groups,

@@ -15,14 +15,26 @@
   limitations under the License.
 */
 
+import { pluginChecksNeedRebuild } from '@lowdefy/node-utils';
+
 function initialBuild(context) {
   return async () => {
     context.readDotEnv();
     await context.lowdefyBuild();
     await context.checkMockUserWarning();
     await context.installPlugins();
-    await context.nextBuild();
-    await context.compileCss();
+    // The build lists the plugins it used but could not check, since they were
+    // not installed. The install above added them, so build once more when that
+    // checks something new, unless no checks run this time anyway.
+    if (
+      !context.options.skipPluginChecks &&
+      pluginChecksNeedRebuild({
+        buildDirectory: context.directories.build,
+        serverDirectory: context.directories.server,
+      })
+    ) {
+      await context.lowdefyBuild();
+    }
   };
 }
 

@@ -14,61 +14,70 @@
   limitations under the License.
 */
 
-import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
+import { getSafeHref, type } from '@lowdefy/helpers';
+
+import rememberTarget from './rememberTarget.js';
+import resolveTarget from './resolveTarget.js';
 
 function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink }) {
   function link(props) {
     if (props.disabled === true) {
       return disabledLink(props);
     }
-    if (
-      [!props.pageId, !props.back, !props.home, !props.href, !props.url].filter((v) => !v).length >
-      1
-    ) {
-      throw new Error(
-        `Invalid Link: To avoid ambiguity, only one of 'back', 'home', 'href', 'pageId' or 'url' can be defined.`
-      );
-    }
+    // back has no pathname to resolve and cannot carry input or urlQuery.
     if (props.back === true) {
-      // Cannot set input or urlQuery on back
       return backLink(props);
     }
-    const query = type.isNone(props.urlQuery) ? '' : `${urlQueryFn.stringify(props.urlQuery)}`;
-    if (props.home === true) {
-      const pathname = `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}`;
-      return sameOriginLink({
-        ...props,
-        pathname,
-        query,
-        setInput: () => {
-          lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input ?? {};
-        },
-      });
-    }
-    if (type.isString(props.pageId)) {
-      return sameOriginLink({
-        ...props,
-        pathname: `/${props.pageId}`,
-        query,
-        setInput: () => {
-          lowdefy.inputs[`page:${props.pageId}`] = props.input ?? {};
-        },
-      });
-    }
+    // href is an HTML-attribute passthrough the <Link> component reads, not a
+    // navigation target, so it never enters the grammar resolver. It is used only
+    // with a safe scheme; any other href resolves no link, and does not fall back
+    // to the link's pageId or url.
     if (type.isString(props.href)) {
+      if (type.isNone(getSafeHref(props.href))) {
+        return noLink(props);
+      }
       return newOriginLink(props);
     }
-    if (type.isString(props.url)) {
-      const protocol = props.url.includes(':') ? '' : 'https://';
-      return newOriginLink({
-        ...props,
-        url: `${protocol}${props.url}`,
-        query,
-      });
+    const target = resolveTarget({
+      lowdefy,
+      target: {
+        home: props.home,
+        pageId: props.pageId,
+        pathParams: props.pathParams,
+        url: props.url,
+        urlQuery: props.urlQuery,
+      },
+    });
+    if (type.isNone(target)) {
+      return noLink(props);
     }
-    return noLink(props);
+    if (target.kind === 'external') {
+      // The resolver's href is the whole URL with any query already folded in,
+      // so it is passed as the url prop the callback reads with an empty query.
+      return newOriginLink({ ...props, url: target.href, query: '' });
+    }
+    return sameOriginLink({
+      ...props,
+      pathname: target.pathname,
+      query: target.query,
+      setInput: getSetInput({ lowdefy, props, target }),
+    });
   }
   return link;
+}
+
+// Both callers run setInput only when the link is followed, before the router pushes it, so this is
+// where the path memory learns the path. A page-kind url names no page, so it seeds no input and
+// writes no memory - writing inputs['page:undefined'] is the bug family a no-op setInput avoids.
+// Home and pageId targets carry the instance key their values open.
+function getSetInput({ lowdefy, props, target }) {
+  if (type.isNone(target.instanceKey)) {
+    return () => {};
+  }
+  return () => {
+    rememberTarget({ lowdefy, target });
+    lowdefy.inputs[target.instanceKey] = props.input ?? {};
+  };
 }
 
 export default createLink;

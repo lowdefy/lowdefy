@@ -16,6 +16,8 @@ import v5WhatsNewRaw from '../../../content/articles/lowdefy-5-whats-new.md';
 import demoToProductionRaw from '../../../content/articles/demo-to-production-lowdefy.md';
 import dropInModulesRaw from '../../../content/articles/lowdefy-5-2-drop-in-modules.md';
 import lowdefyAgentsRaw from '../../../content/articles/lowdefy-agents.md';
+import wordleInYamlRaw from '../../../content/articles/wordle-in-yaml.md';
+import v6WhatsNewRaw from '../../../content/articles/lowdefy-6-whats-new.md';
 
 function extractToc(markdown) {
   const tree = unified().use(remarkParse).parse(markdown);
@@ -65,6 +67,8 @@ const articles = [
   parseArticle('demo-to-production-lowdefy', demoToProductionRaw),
   parseArticle('lowdefy-5-2-drop-in-modules', dropInModulesRaw),
   parseArticle('lowdefy-agents', lowdefyAgentsRaw),
+  parseArticle('wordle-in-yaml', wordleInYamlRaw),
+  parseArticle('lowdefy-6-whats-new', v6WhatsNewRaw),
 ]
   .filter((a) => !a.draft)
   .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());

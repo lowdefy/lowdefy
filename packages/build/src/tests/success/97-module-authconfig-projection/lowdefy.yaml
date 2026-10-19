@@ -1,0 +1,40 @@
+# 97: Module content reads the _build.authConfig projection
+# Reproduces the bug where module-contributed content (module pages, module
+# connections, and module request pipelines) resolved BEFORE the auth config
+# projection was computed. The fix full-resolves module manifests AFTER
+# resolveAuthConfigProjection, so the projection is available in module content.
+lowdefy: local
+name: Module AuthConfig Projection App
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: module_authconfig_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  roles:
+    - id: admin
+      label: Administrator
+      description: Full access
+    - id: editor
+      label: Editor
+      description: Can edit content
+    - id: viewer
+      label: Viewer
+      description: Read only access
+
+modules:
+  - id: authmod
+    source: 'file:modules/authmod'
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Home Page

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import resolveErrorLocation from './resolveErrorLocation.js';
 
 const keyMap = {
@@ -50,7 +52,7 @@ test('resolveErrorLocation resolves configKey via keyMap/refMap', () => {
     { keyMap, refMap, configDirectory: '/app' }
   );
   expect(result).toEqual({
-    source: '/app/pages/home.yaml:5',
+    source: `${path.resolve('/app/pages/home.yaml')}:5`,
     config: 'root.pages[0:home].blocks[0:header]',
   });
 });
@@ -68,7 +70,7 @@ test('resolveErrorLocation resolves filePath with lineNumber', () => {
     { filePath: 'pages/home.yaml', lineNumber: 12 },
     { keyMap, refMap, configDirectory: '/app' }
   );
-  expect(result).toEqual({ source: '/app/pages/home.yaml:12' });
+  expect(result).toEqual({ source: `${path.resolve('/app/pages/home.yaml')}:12` });
 });
 
 test('resolveErrorLocation resolves filePath without lineNumber', () => {
@@ -76,7 +78,7 @@ test('resolveErrorLocation resolves filePath without lineNumber', () => {
     { filePath: 'pages/home.yaml' },
     { keyMap, refMap, configDirectory: '/app' }
   );
-  expect(result).toEqual({ source: '/app/pages/home.yaml' });
+  expect(result).toEqual({ source: path.resolve('/app/pages/home.yaml') });
 });
 
 test('resolveErrorLocation uses relative filePath when no configDirectory', () => {
@@ -92,7 +94,7 @@ test('resolveErrorLocation uses absolute filePath as-is via path.resolve', () =>
     { filePath: '/absolute/path.yaml', lineNumber: 1 },
     { keyMap, refMap, configDirectory: '/app' }
   );
-  expect(result).toEqual({ source: '/absolute/path.yaml:1' });
+  expect(result).toEqual({ source: `${path.resolve('/absolute/path.yaml')}:1` });
 });
 
 // --- Path 1 takes precedence over Path 2 ---
@@ -103,7 +105,7 @@ test('resolveErrorLocation prefers configKey over filePath when both present', (
     { keyMap, refMap, configDirectory: '/app' }
   );
   expect(result).toEqual({
-    source: '/app/pages/home.yaml:5',
+    source: `${path.resolve('/app/pages/home.yaml')}:5`,
     config: 'root.pages[0:home].blocks[0:header]',
   });
 });
@@ -113,5 +115,5 @@ test('resolveErrorLocation falls back to filePath when configKey lookup fails', 
     { configKey: 'missing', filePath: 'fallback.yaml', lineNumber: 7 },
     { keyMap, refMap, configDirectory: '/app' }
   );
-  expect(result).toEqual({ source: '/app/fallback.yaml:7' });
+  expect(result).toEqual({ source: `${path.resolve('/app/fallback.yaml')}:7` });
 });

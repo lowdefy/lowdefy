@@ -1,3 +1,19 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 import { jest } from '@jest/globals';
 import { wait } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
@@ -10,7 +26,7 @@ import testContext from '../../../test/testContext.js';
 
 const operators = {
   ...operatorsServer,
-  _error: () => {
+  _throw_test: () => {
     throw new Error('Test error.');
   },
 };
@@ -41,10 +57,20 @@ const mockTestRequestError = jest.fn((request) => {
   throw new Error(request.request.message);
 });
 const mockTestRequestWait = jest.fn((request) => wait(request.request.ms));
+// Waits `ms` and records how many of these requests were in flight at once (inFlight.max).
+const inFlight = { current: 0, max: 0 };
+const mockTestRequestInFlight = jest.fn(async (request) => {
+  inFlight.current += 1;
+  inFlight.max = Math.max(inFlight.max, inFlight.current);
+  await wait(request.request.ms);
+  inFlight.current -= 1;
+  return request.request.response;
+});
 
 mockTestRequest.schema = {};
 mockTestRequestError.schema = {};
 mockTestRequestWait.schema = {};
+mockTestRequestInFlight.schema = {};
 
 mockTestRequest.meta = {
   checkRead: false,
@@ -58,6 +84,10 @@ mockTestRequestWait.meta = {
   checkRead: false,
   checkWrite: false,
 };
+mockTestRequestInFlight.meta = {
+  checkRead: false,
+  checkWrite: false,
+};
 
 const connections = {
   TestConnection: {
@@ -66,6 +96,7 @@ const connections = {
       TestRequest: mockTestRequest,
       TestRequestError: mockTestRequestError,
       TestRequestWait: mockTestRequestWait,
+      TestRequestInFlight: mockTestRequestInFlight,
     },
   },
 };
@@ -78,14 +109,14 @@ const logger = {
   error: jest.fn(),
 };
 
-function createTextContext() {
+function createTextContext({ user = { id: 'id', roles: [] } } = {}) {
   const context = testContext({
     connections,
     operators,
     logger,
     readConfigFile: mockReadConfigFile,
     secrets,
-    session: { user: { id: 'id' } },
+    user,
   });
   context.blockId = 'blockId';
   context.pageId = 'pageId';
@@ -94,11 +125,14 @@ function createTextContext() {
 
   return context;
 }
-async function runTest({ routine, payload = {} }) {
-  const context = createTextContext();
+async function runTest({ routine, payload = {}, user }) {
+  inFlight.current = 0;
+  inFlight.max = 0;
+  const context = createTextContext({ user });
   const routineContext = {
     steps: {},
     payload,
+    error: null,
     items: {},
     arrayIndices: [],
     state: {},
@@ -108,4 +142,5 @@ async function runTest({ routine, payload = {} }) {
   return { res, context, routineContext };
 }
 
+export { inFlight };
 export default runTest;

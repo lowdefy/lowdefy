@@ -14,12 +14,17 @@
   limitations under the License.
 */
 
+import path from 'path';
+
+import { pluginChecksNeedRebuild } from '@lowdefy/node-utils';
+
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
-import runNextBuild from '../../utils/runNextBuild.js';
+import runClientBuild from '../../utils/runClientBuild.js';
 
 const serverPackages = {
   e2e: '@lowdefy/server-e2e',
@@ -34,11 +39,25 @@ async function build({ context }) {
   await getServer({ context, packageName, directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
+  await ensurePnpmWorkspaceYaml({ context, directory });
   await installServer({ context, directory });
   await runLowdefyBuild({ context, directory });
   await installServer({ context, directory });
-  if (context.options.nextBuild !== false) {
-    await runNextBuild({ context, directory });
+  // The build lists the plugins it used but could not check, since they were
+  // not installed. The install above added them, so build once more when that
+  // checks something new, unless no checks run this time anyway.
+  if (
+    !context.options.skipPluginChecks &&
+    pluginChecksNeedRebuild({
+      buildDirectory: path.join(directory, 'build'),
+      serverDirectory: directory,
+    })
+  ) {
+    context.logger.info('Building again to run the checks of newly installed plugins.');
+    await runLowdefyBuild({ context, directory });
+  }
+  if (context.options.clientBuild !== false && context.options.nextBuild !== false) {
+    await runClientBuild({ context, directory });
   }
   await context.sendTelemetry({ sendTypes: true });
   context.logger.info({ spin: 'succeed' }, 'Build successful.');

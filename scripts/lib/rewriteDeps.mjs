@@ -16,54 +16,15 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { createRequire } from 'node:module';
 
 // Packages that use React context for cross-component coordination (e.g., antd's
-// CSS-in-JS StyleProvider/ConfigProvider). These MUST resolve to a single instance
-// across the isolated dev server and all linked @lowdefy/* packages. Without these
-// overrides, pnpm installs a separate npm copy for the dev server while linked
-// packages use the monorepo's copy — two instances = broken theming/dark mode
-// (every component falls back to antd's default tokens under `css-var-root`).
-const SINGLETON_PACKAGES = ['antd', '@ant-design/x', '@ant-design/cssinjs'];
+// CSS-in-JS StyleProvider/ConfigProvider, XProvider). These MUST resolve to a single
+// instance across the isolated server and all linked @lowdefy/* packages. Without these
+// overrides, pnpm installs a separate npm copy for the server while linked packages use
+// the monorepo's copy — two instances = broken theming/dark mode.
+const SINGLETON_PACKAGES = ['antd', '@ant-design/cssinjs', '@ant-design/x'];
 
-// The singletons are not dependencies of the workspace root, so
-// <repoRoot>/node_modules/<name> usually does not exist. Resolve them the way
-// the linked plugin packages do — via the workspace packages that import them —
-// so the server links to the exact instance the blocks use.
-const SINGLETON_CONSUMERS = [
-  'packages/plugins/blocks/blocks-antd',
-  'packages/plugins/blocks/blocks-antd-x',
-  'packages/client',
-];
-
-function resolveSingletonDirs(repoRoot) {
-  const resolved = {};
-  for (const name of SINGLETON_PACKAGES) {
-    const rootDir = path.join(repoRoot, 'node_modules', name);
-    if (fs.existsSync(rootDir)) {
-      resolved[name] = rootDir;
-      continue;
-    }
-    // Already-resolved singletons also act as consumers: @ant-design/cssinjs is
-    // nobody's direct workspace dependency, but it must be antd's own copy.
-    const consumerDirs = [
-      ...SINGLETON_CONSUMERS.map((consumer) => path.join(repoRoot, consumer)),
-      ...Object.values(resolved),
-    ];
-    for (const dir of consumerDirs) {
-      try {
-        const consumerRequire = createRequire(path.join(dir, 'package.json'));
-        resolved[name] = path.dirname(consumerRequire.resolve(`${name}/package.json`));
-        break;
-      } catch {
-        // not a dependency of this consumer — try the next one
-      }
-    }
-  }
-  return resolved;
-}
-
-function rewritePackageJson({ filePath, targetDir, packageMap, repoRoot }) {
+function rewritePackageJson({ filePath, targetDir, packageMap, sourceDir }) {
   const pkg = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   const overrides = {};
 
@@ -83,16 +44,15 @@ function rewritePackageJson({ filePath, targetDir, packageMap, repoRoot }) {
     overrides[name] = `link:${relPath}`;
   }
 
-  // Force singleton packages to resolve to the monorepo's instance.
-  const singletonDirs = resolveSingletonDirs(repoRoot);
+  // Link singletons to the source server's install in the monorepo: pnpm resolves the
+  // linked @lowdefy/* packages to that same instance. The monorepo root node_modules
+  // does not hoist them, so it can't be the source.
   for (const name of SINGLETON_PACKAGES) {
-    const pkgDir = singletonDirs[name];
-    if (pkgDir) {
-      const relPath = path.relative(targetDir, pkgDir);
-      overrides[name] = `link:${relPath}`;
-    } else {
-      console.warn(`rewriteDeps: could not resolve singleton package "${name}" — theming may break.`);
+    const pkgDir = path.join(sourceDir, 'node_modules', name);
+    if (!fs.existsSync(pkgDir)) {
+      throw new Error(`${name} is not installed in ${sourceDir}. Run pnpm install first.`);
     }
+    overrides[name] = `link:${path.relative(targetDir, pkgDir)}`;
   }
 
   pkg.pnpm = pkg.pnpm ?? {};
@@ -101,18 +61,18 @@ function rewritePackageJson({ filePath, targetDir, packageMap, repoRoot }) {
   fs.writeFileSync(filePath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
-function rewriteDeps({ targetDir, packageMap, repoRoot }) {
+function rewriteDeps({ sourceDir, targetDir, packageMap }) {
   rewritePackageJson({
     filePath: path.join(targetDir, 'package.json'),
     targetDir,
     packageMap,
-    repoRoot,
+    sourceDir,
   });
   rewritePackageJson({
     filePath: path.join(targetDir, 'package.original.json'),
     targetDir,
     packageMap,
-    repoRoot,
+    sourceDir,
   });
 }
 

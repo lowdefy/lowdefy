@@ -42,6 +42,17 @@ test('collectPageContent collects string from properties.content', () => {
   expect(result).toBe('# Title');
 });
 
+test('collectPageContent excludes build marker values so identical builds produce identical content', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Box',
+      properties: { title: 'Hello', '~k': '6xs', nested: { '~r': '12', '~l': 4, label: 'World' } },
+    },
+  ]);
+  expect(result).toBe('Hello\nWorld');
+});
+
 test('collectPageContent collects multiple string properties from one block', () => {
   const result = collectPageContent([
     {
@@ -190,4 +201,63 @@ test('collectPageContent collects class from nested operator object', () => {
   ]);
   expect(result).toContain('bg-gray-900');
   expect(result).toContain('bg-white');
+});
+
+test('collectPageContent collects tailwind classes from _js string source', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Html',
+      properties: {
+        html: {
+          _js: 'return `<span class="bg-warning text-white text-[10px] px-1.5">${label}</span>`;',
+        },
+      },
+    },
+  ]);
+  expect(result).toContain('bg-warning');
+  expect(result).toContain('text-[10px]');
+  expect(result).toContain('px-1.5');
+});
+
+test('collectPageContent collects classes from _js fn body source', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Html',
+      properties: {
+        html: {
+          _js: { fn: 'return `<div class="bg-success rounded-sm">${args[0]}</div>`;', args: [1] },
+        },
+      },
+    },
+  ]);
+  expect(result).toContain('bg-success');
+  expect(result).toContain('rounded-sm');
+});
+
+test('collectPageContent collects _js source in block.class', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Box',
+      class: { _js: 'return active ? "border-primary" : "border-transparent";' },
+    },
+  ]);
+  expect(result).toContain('border-primary');
+  expect(result).toContain('border-transparent');
+});
+
+// A root operator at `class` is normalized to the block slot by buildPages, and
+// collectPageContent runs after buildPages, so this is the shape it sees.
+test('collectPageContent collects class strings inside an operator under the block slot', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Box',
+      class: { block: { _if: [{ _state: 'x' }, 'bg-red-500', 'bg-blue-500'] } },
+    },
+  ]);
+  expect(result).toContain('bg-red-500');
+  expect(result).toContain('bg-blue-500');
 });

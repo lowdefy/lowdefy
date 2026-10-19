@@ -1,0 +1,18 @@
+# 95: Module-level agents — a module ships its agent; the agent id scopes per
+# entry, tools get LLM-safe names, and _module.agentId resolves in pages and
+# CallAgent steps.
+lowdefy: local
+name: Module Agents Test
+
+modules:
+  - id: helper
+    source: 'file:modules/assistant'
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Home

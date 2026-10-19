@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
+import { formatSchemaError } from '@lowdefy/ajv';
 import { ConfigError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
-import formatValidationError from './formatValidationError.js';
 import validatePluginSchema from './validatePluginSchema.js';
 
 const validationConfigs = {
@@ -71,7 +71,7 @@ async function logClientError(context, serializedError) {
                 : error.typeName;
 
             const messages = ajvErrors.map((ajvError) =>
-              formatValidationError({
+              formatSchemaError({
                 ajvError,
                 pluginLabel: validationConfig.pluginLabel,
                 typeName: displayName,
@@ -98,10 +98,13 @@ async function logClientError(context, serializedError) {
     }
   }
 
+  // The dev server's context reads its JIT page builds' maps as well; other
+  // servers have none and read keyMap.json and refMap.json.
   const location = await loadAndResolveErrorLocation({
     error,
     readConfigFile: context.readConfigFile,
     configDirectory: context.configDirectory,
+    readMaps: context.readMaps,
   });
 
   if (location) {

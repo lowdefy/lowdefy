@@ -15,19 +15,30 @@
   limitations under the License.
 */
 
-import { wait } from '@lowdefy/helpers';
 import opener from 'opener';
+import { registerServer, watchOwner } from '@lowdefy/node-utils';
+import checkAgentFiles from '../lib/docs/checkAgentFiles.js';
 import getContext from './getContext.mjs';
-import startServer from './processes/startServer.mjs';
+import getLowdefyVersion from './utils/getLowdefyVersion.mjs';
+import acquireDevInstance from './utils/acquireDevInstance.mjs';
+import createBuildActivity from './utils/createBuildActivity.mjs';
+import createIdleGc from './utils/createIdleGc.mjs';
+import createRequestActivity from './utils/createRequestActivity.mjs';
+import startMailSink from './processes/startMailSink.mjs';
+import startProxy from './processes/startProxy.mjs';
+import startFirstServer from './processes/startFirstServer.mjs';
+import startRecordingPruner from './utils/startRecordingPruner.mjs';
+import formatNoticeBox from './utils/formatNoticeBox.mjs';
+import resolvePorts from './utils/resolvePorts.mjs';
 
 /*
 The run script does the following:
-  - Run the initial Lowdefy build, install plugins, and next build and read .env
+  - Read .env, run the initial Lowdefy build and install plugins
   - Start file watchers to reload config and restart server if necessary
   - Start the server
   - Open a browser window.
 
-  Three watchers are started:
+  Watchers (see processes/startWatchers.mjs):
 
   ## Lowdefy build watcher
   Watches:
@@ -45,25 +56,14 @@ The run script does the following:
   If the .env file is changed, the new file is parsed, and the server restarted with the new env
   and the server hard reloads.
 
-  ## Next build watcher
+  ## Local plugin, restart request and server package.json watchers
 
-  The Next build watcher watches for any files where the app should be rebuilt and restarted.
-  It watches:
-  - <build-dir>/plugins/**
-  - <build-dir>/config.json
-  - <server-dir>/package.json
+  A local plugin change rebuilds (and restarts when the plugin has server-side types), a restart
+  requested by the dev tools rebuilds and restarts, and a plugin package a page build added to
+  the server's package.json is installed.
 
-  If app config changes:
-    - <build-dir>/config.json changes, rebuild and restart server.
-
-  If user styles change:
-    - <public-dir>/styles.css changes, rebuild and restart server.
-
-  If new plugin type in an existing plugin package is used:
-    - <build-dir>/plugins/** changes,  rebuild next and restart server.
-
-  If new plugin type in a new plugin package is used:
-    - <server-dir>/package.json changes,  run npm install, rebuild next and restart server.
+  After every build, syncServer restarts the server when a file it read at start changed (config,
+  auth, connections, server operators), installing new plugin packages first.
 
   # Reload mechanism
 
@@ -78,18 +78,153 @@ The run script does the following:
 
 const context = await getContext();
 
+const instance = acquireDevInstance({
+  configDirectory: context.directories.config,
+  owner: context.options.owner,
+  version: context.version,
+});
+if (instance.acquired === false) {
+  const { holder } = instance;
+  const where = holder.port ? `, http://localhost:${holder.port}` : '';
+  context.logger.error(
+    `A dev server for this app is already running (${holder.owner ?? 'terminal'}${where}, pid ${
+      holder.pid
+    }). ` +
+      'Two dev servers race writing the build directory. Use the running one, or stop it first.'
+  );
+  process.exit(1);
+}
+process.on('exit', () => instance.release());
+startRecordingPruner({ configDirectory: context.directories.config, logger: context.logger });
+
+// Requests through the proxy and finished builds are use of the server; the
+// hub stops a server nobody has used for its idle limit (see
+// createRequestActivity).
+context.requestActivity = createRequestActivity({
+  onChange: (fields) => instance.update(fields),
+});
+
+// `building` is true while a change is queued or being processed, restarts
+// included. lowdefy_build_status({ wait: true }) waits on it, so an agent
+// reads the build that includes its last edit instead of the one before.
+// One full GC shortly after each build, which is when the manager's heap grows.
+const idleGc = createIdleGc();
+
+context.buildActivity = createBuildActivity({
+  onChange: (building) => {
+    instance.update({ building });
+    idleGc.onBuildingChange(building);
+    if (!building) {
+      context.requestActivity.touch();
+    }
+  },
+});
+
+// Machine-wide record of this manager and its owner, for `lowdefy hub ps|prune`.
+// Written only when the CLI sets the registry directory.
+const registration = registerServer({
+  kind: 'dev',
+  port: context.options.port,
+  configDirectory: context.directories.config,
+  logger: context.logger,
+});
+
+function shutdown() {
+  context.shutdownServer();
+  process.exit(0);
+}
+
+// Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
+// signal forwarding) — terminal Ctrl+C signals the whole process group, but a
+// targeted SIGTERM would otherwise orphan the child.
+for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
+  process.on(signal, shutdown);
+}
+
+// A manager started by the CLI, a test runner or a script stops when that
+// owner stops, however it ends. Inert unless the spawner set its variables.
+watchOwner({
+  onExit: ({ reason }) => {
+    context.logger.info(`The process that started this dev server is gone (${reason}).`);
+    shutdown();
+  },
+});
+
 try {
   await context.initialBuild();
 
-  // We are not waiting for the startWatchers promise to resolve (all watchers have fired the ready event)
-  // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
+  // Not awaited: chokidar's ready event is unreliable. Started now so an edit
+  // made during the rest of the start-up is seen; a batch that syncs before
+  // the first child start waits for it (see syncServer).
   context.startWatchers();
 
-  startServer(context);
-  await wait(800);
-  if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
+  // The manager is the component that binds the port, so it checks here to
+  // cover every launch path (CLI, monorepo dev script, direct run.mjs) and any
+  // process that grabbed the port during the initial build.
+  const { port, internalPort } = await resolvePorts(context);
+  context.options.port = port;
+  context.internalPort = internalPort;
+  instance.update({ port, internalPort });
+  registration?.update({ port });
+  context.instance = instance;
+
+  // Called by waitForDevServer whenever a child answers: the first start's,
+  // one that answers after its wait, or a restart's after a first child that
+  // exited. The hub and the MCP shim wait on ready.
+  let ready = false;
+  context.markServerReady = () => {
+    if (ready) {
+      return;
+    }
+    ready = true;
+    // A slow first build must not make a fresh server look idle the moment it is ready.
+    context.requestActivity.touch();
+    instance.update({ state: 'ready' });
+  };
+
+  // The manager holds the public port for the whole session and proxies to the
+  // Vite child on an internal loopback port — restarting the child (js module
+  // or .env change) then never drops the listener, so long-lived clients (MCP
+  // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
+  // on ECONNREFUSED.
+  await startProxy(context);
+  context.mailSink = await startMailSink(context);
+
+  // Optimises dependencies, starts the child and waits for it to answer.
+  if (!(await startFirstServer(context))) {
+    context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
+  }
+  const docsUrl = `${context.url}/lowdefy-docs`;
+  context.logger.info(
+    { color: 'blue' },
+    formatNoticeBox({
+      title: 'Lowdefy coding agent tools',
+      lines: [
+        `Docs & MCP  ${docsUrl}`,
+        '            run `lowdefy agent-setup` to connect your agent',
+        '',
+        'Annotate    Press Cmd/Ctrl+/ in the browser to point, draw,',
+        '            and comment on the running app, then paste the',
+        '            copied feedback into your coding agent session.',
+        '',
+        'Open code   Cmd/Ctrl+click any element in the browser to open',
+        '            its yaml in VS Code at the defining line.',
+      ],
+    })
+  );
+  // Lowdefy's agent block: missing, from another version, or not imported by
+  // CLAUDE.md. Build status reports the same notices to agents on every read.
+  const agentFiles = checkAgentFiles({
+    configDirectory: context.directories.config,
+    lowdefyVersion: await getLowdefyVersion(context).catch(() => null),
+  });
+  for (const notice of agentFiles) {
+    context.logger.warn(notice.message);
+  }
+  // A hub-owned server was started for an agent, not for a person at a browser.
+  if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true' && context.options.owner !== 'hub') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen
-    opener(`http://localhost:${context.options.port}`);
+    opener(context.url);
   }
   await new Promise(() => {});
 } catch (error) {

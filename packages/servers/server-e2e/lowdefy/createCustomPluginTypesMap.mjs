@@ -42,19 +42,21 @@ async function createCustomPluginTypesMap({ directories }) {
     agents: {},
     auth: {
       adapters: {},
-      callbacks: {},
-      events: {},
       providers: {},
+      strategies: {},
     },
     blockMetas: {},
+    connectionMetas: {},
     blocks: {},
     connections: {},
     icons: {},
+    iconSets: {},
     operators: {
       client: {},
       server: {},
     },
     requests: {},
+    websockets: {},
   };
 
   const pluginDefinitions = await getPluginDefinitions({ directories });

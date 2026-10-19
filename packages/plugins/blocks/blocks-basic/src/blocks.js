@@ -16,10 +16,13 @@
 
 export { default as Anchor } from './blocks/Anchor/Anchor.js';
 export { default as Box } from './blocks/Box/Box.js';
+export { default as ClickableHtml } from './blocks/ClickableHtml/ClickableHtml.js';
 export { default as DangerousHtml } from './blocks/DangerousHtml/DangerousHtml.js';
+export { default as Dynamic } from './blocks/Dynamic/Dynamic.js';
 export { default as Html } from './blocks/Html/Html.js';
 export { default as Icon } from './blocks/Icon/Icon.js';
 export { default as Img } from './blocks/Img/Img.js';
 export { default as List } from './blocks/List/List.js';
+export { default as PollingTimer } from './blocks/PollingTimer/PollingTimer.js';
 export { default as Span } from './blocks/Span/Span.js';
 export { default as Throw } from './blocks/Throw/Throw.js';

@@ -186,3 +186,36 @@ blocks:
         - B
         - C
         - D
+
+  # ============================================
+  # LAYOUT AND OPTIONS CSS KEY
+  # ============================================
+
+  - id: bs_block
+    type: ButtonSelector
+    properties:
+      block: true
+      options:
+        - A
+        - B
+
+  - id: bs_vertical
+    type: ButtonSelector
+    properties:
+      direction: vertical
+      options:
+        - A
+        - B
+
+  - id: bs_options_css
+    type: ButtonSelector
+    class:
+      .options: bs-option-tailwind
+    style:
+      .options:
+        fontStyle: italic
+    properties:
+      options:
+        - A
+        - label: B
+          value: b

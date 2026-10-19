@@ -23,8 +23,9 @@ export default createBlockHelper({
   locator,
   do: {
     edit: async (page, blockId, val) => {
-      await locator(page, blockId).getByRole('button', { name: 'Edit' }).first().click();
-      const textarea = page.locator('.ant-typography-edit-content textarea');
+      // Clicking the text starts editing in place.
+      await locator(page, blockId).click();
+      const textarea = locator(page, blockId).locator('textarea');
       await textarea.fill(val);
       await textarea.press('Enter');
     },

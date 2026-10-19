@@ -15,19 +15,20 @@
 */
 
 import React, { useState } from 'react';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 import { Select } from 'antd';
 
-import useSelectorOptions from '../../useSelectorOptions.js';
-import getSelectedIndex from '../../getSelectedIndex.js';
+import filterSelectorOption from '../../filterSelectorOption.js';
 import getContrastTextColor from '../../getContrastTextColor.js';
+import getDisabled from '../../getDisabled.js';
 import getOptionColorStyle from '../../getOptionColorStyle.js';
+import getSelectedIndex from '../../getSelectedIndex.js';
+import getSelectOptions from '../../getSelectOptions.js';
+import useSelectorOptions from '../../useSelectorOptions.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import Tag from '../Tag/Tag.js';
-
-const Option = Select.Option;
 
 const tagRender = (props, option, methods, components, isOutline) => {
   const { label, closable, onClose } = props;
@@ -77,9 +78,43 @@ const MultipleSelector = ({
   // `outlined` → outlined colored tags; `solid` (or default) → filled colored tags.
   const isOutline = properties.variant === 'outlined';
   // `solid` is not a valid antd Select input variant — use outlined for the frame.
-  let antdVariant = properties.variant;
+  let antdVariant = properties.variant ?? undefined;
   if (properties.variant === 'solid') antdVariant = 'outlined';
   if (properties.bordered === false) antdVariant = 'borderless';
+  // antd only shows its loading indicator when no suffixIcon is passed, so swap ours for a spinner.
+  let suffixIcon = null;
+  if (loading) {
+    suffixIcon = (
+      <Icon
+        blockId={`${blockId}_loadingIcon`}
+        properties={{ name: 'loading', spin: true, title: '' }}
+      />
+    );
+  } else if (get(properties, 'showArrow', { default: true }) !== false) {
+    suffixIcon = (
+      <Icon
+        blockId={`${blockId}_suffixIcon`}
+        classNames={{ element: classNames.suffixIcon }}
+        events={events}
+        properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
+        styles={{ element: styles.suffixIcon }}
+      />
+    );
+  }
+  const showSearch = get(properties, 'showSearch', { default: true }) && {
+    autoClearSearchValue: properties.autoClearSearchValue,
+    filterOption: filterSelectorOption,
+    onSearch: async (searchValue) => {
+      setFetch(true);
+      const result = await methods.triggerEvent({
+        name: 'onSearch',
+        event: { value: searchValue },
+      });
+      if (!result.bounced) {
+        setFetch(false);
+      }
+    },
+  };
   return (
     <Label
       blockId={blockId}
@@ -96,16 +131,16 @@ const MultipleSelector = ({
             <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
-              allowClear={properties.allowClear !== false}
-              autoClearSearchValue={properties.autoClearSearchValue}
               autoFocus={properties.autoFocus}
               variant={antdVariant}
               className={classNames.element}
-              classNames={{ content: classNames.selector }}
+              classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
-              styles={{ content: styles.selector }}
-              disabled={properties.disabled || loading}
+              styles={{ content: styles.selector, popup: { root: styles.popup } }}
+              disabled={getDisabled({ loading, properties })}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
+              listHeight={properties.listHeight ?? undefined}
+              loading={loading}
               mode="multiple"
               tagRender={
                 (properties.renderTags || hasTagStyling) &&
@@ -118,6 +153,7 @@ const MultipleSelector = ({
                     isOutline
                   ))
               }
+              maxCount={properties.maxCount}
               maxTagCount={properties.maxTagCount}
               notFoundContent={
                 fetchState
@@ -127,47 +163,60 @@ const MultipleSelector = ({
               placeholder={
                 loading ? 'Loading...' : get(properties, 'placeholder', { default: 'Select items' })
               }
-              showArrow={get(properties, 'showArrow', { default: true })}
-              size={properties.size}
-              status={validation.status}
-              value={loading ? [] : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })}
-              suffixIcon={
-                properties.suffixIcon && (
+              placement={properties.placement}
+              popupMatchSelectWidth={properties.popupMatchSelectWidth}
+              prefix={
+                properties.prefix ??
+                (properties.prefixIcon && (
                   <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    classNames={{ element: classNames.suffixIcon }}
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
                     events={events}
-                    properties={properties.suffixIcon}
-                    styles={{ element: styles.suffixIcon }}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
                   />
-                )
+                ))
               }
-              clearIcon={
-                properties.clearIcon && (
-                  <Icon
-                    blockId={`${blockId}_clearIcon`}
-                    classNames={{ element: classNames.clearIcon }}
-                    events={events}
-                    properties={properties.clearIcon}
-                    styles={{ element: styles.clearIcon }}
-                  />
-                )
+              showSearch={showSearch}
+              // antd 6 names the default size `medium`; `default` is not an antd size.
+              size={properties.size === 'default' ? 'medium' : properties.size}
+              status={validation.status}
+              value={
+                loading
+                  ? []
+                  : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })
+              }
+              suffixIcon={suffixIcon}
+              allowClear={
+                properties.allowClear !== false && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      classNames={{ element: classNames.clearIcon }}
+                      events={events}
+                      properties={properties.clearIcon ?? { name: 'clear', title: '' }}
+                      styles={{ element: styles.clearIcon }}
+                    />
+                  ),
+                }
               }
               menuItemSelectedIcon={
-                properties.selectedIcon && (
-                  <Icon
-                    blockId={`${blockId}_selectedIcon`}
-                    classNames={{ element: classNames.selectedIcon }}
-                    events={events}
-                    properties={properties.selectedIcon}
-                    styles={{ element: styles.selectedIcon }}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_selectedIcon`}
+                  classNames={{ element: classNames.selectedIcon }}
+                  events={events}
+                  properties={properties.selectedIcon ?? { name: 'check', title: '' }}
+                  styles={{ element: styles.selectedIcon }}
+                />
               }
-              filterOption={(input, option) =>
-                (option.filterstring || option.children.props.html || '')
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
+              removeIcon={
+                <Icon
+                  blockId={`${blockId}_removeIcon`}
+                  classNames={{ element: classNames.removeIcon }}
+                  events={events}
+                  properties={properties.removeIcon ?? { name: 'close', title: '' }}
+                  styles={{ element: styles.removeIcon }}
+                />
               }
               onChange={(newVal) => {
                 const val = [];
@@ -179,7 +228,7 @@ const MultipleSelector = ({
                   );
                 });
                 methods.setValue(val);
-                methods.triggerEvent({ name: 'onChange' });
+                methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
               onBlur={() => {
                 methods.triggerEvent({ name: 'onBlur' });
@@ -190,46 +239,19 @@ const MultipleSelector = ({
               onClear={() => {
                 methods.triggerEvent({ name: 'onClear' });
               }}
-              onSearch={async (value) => {
-                setFetch(true);
-                const result = await methods.triggerEvent({ name: 'onSearch', event: { value } });
-                if (!result.bounced) {
-                  setFetch(false);
-                }
+              onOpenChange={(open) => {
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } });
               }}
-            >
-              {uniqueValueOptions.map((opt, i) =>
-                type.isPrimitive(opt) ? (
-                  <Option
-                    style={styles.options}
-                    className={classNames.options}
-                    id={`${blockId}_${i}`}
-                    key={i}
-                    value={`${i}`}
-                  >
-                    {renderHtml({ html: `${opt}`, methods })}
-                  </Option>
-                ) : (
-                  <Option
-                    style={{
-                      ...styles.options,
-                      ...opt.style,
-                      ...(opt.color ? { color: opt.color } : {}),
-                    }}
-                    className={classNames.options}
-                    disabled={opt.disabled}
-                    filterstring={opt.filterString}
-                    id={`${blockId}_${i}`}
-                    key={i}
-                    value={`${i}`}
-                  >
-                    {type.isNone(opt.label)
-                      ? renderHtml({ html: `${opt.value}`, methods })
-                      : renderHtml({ html: opt.label, methods })}
-                  </Option>
-                )
-              )}
-            </Select>
+              options={getSelectOptions({
+                blockId,
+                classNames,
+                entries: uniqueValueOptions,
+                methods,
+                styles,
+              })}
+              // antd lets even an undefined `virtual` prop override the ConfigProvider `virtual`.
+              {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
+            />
           </div>
         ),
       }}

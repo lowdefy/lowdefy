@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import { validate } from '@lowdefy/ajv';
+import { UserError } from '@lowdefy/errors';
 
 import addStepResult from './addStepResult.js';
+import evaluateRoutineOperators from './evaluateRoutineOperators.js';
+import getSchemaValidator from './getSchemaValidator.js';
 
 function buildErrorMessage(errors, stepId) {
   const first = errors?.[0];
@@ -26,24 +28,21 @@ function buildErrorMessage(errors, stepId) {
 }
 
 async function handleValidateSchema(context, routineContext, { step }) {
-  const { logger, evaluateOperators } = context;
+  const { logger } = context;
 
   logger.debug({
     event: 'debug_start_validate_schema',
     step,
   });
 
-  const evaluatedProperties = evaluateOperators({
+  const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
-    items: routineContext.items,
     location: step.stepId,
-    payload: routineContext.payload,
-    steps: routineContext.steps,
   });
 
   const { schema, data, throwOnInvalid = true } = evaluatedProperties;
-  const { valid, errors } = validate({ schema, data, returnErrors: true });
-  const result = { valid, errors: errors ?? [] };
+  const result = getSchemaValidator({ schema })(data);
+  const { valid } = result;
 
   addStepResult(context, routineContext, {
     result,
@@ -51,14 +50,22 @@ async function handleValidateSchema(context, routineContext, { step }) {
   });
 
   if (!valid && throwOnInvalid) {
-    const error = new Error(buildErrorMessage(result.errors, step.stepId), {
-      cause: result.errors,
-    });
-    logger.error({
-      event: 'error_validate_schema',
+    // Failed validation of caller-supplied data is an expected user outcome,
+    // not a config or system fault.
+    // No cause: a UserError's cause crosses the wire as author data, and the ajv errors carry
+    // server schema detail. They stay in the step result and the log.
+    const error = new UserError(buildErrorMessage(result.errors, step.stepId));
+    // A webhook answers an invalid request with 400 rather than 500 (createWebhookAnswer).
+    error.isInvalidRequest = true;
+    // Log under `err` — see controlThrow: only the `err` key runs the pino error
+    // serializer, so `error` would drop the message from the log line.
+    logger.warn({
+      event: 'warn_validate_schema',
       stepId: step.stepId,
-      error,
+      err: error,
+      errors: result.errors,
     });
+    error.handled = true;
     return { status: 'error', error };
   }
 

@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, UserError } from '@lowdefy/errors';
 
 import callEndpoint from './callEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -46,7 +46,7 @@ test('InternalApi endpoint throws ConfigError with "does not exist" message', as
   const context = testContext({
     logger,
     readConfigFile: mockReadConfigFile,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   await expect(
     callEndpoint(context, {
@@ -81,7 +81,7 @@ test('Api endpoint proceeds normally', async () => {
   const context = testContext({
     logger,
     readConfigFile: mockReadConfigFile,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   const result = await callEndpoint(context, {
     blockId: 'blockId',
@@ -91,6 +91,127 @@ test('Api endpoint proceeds normally', async () => {
   });
   expect(result.success).toBe(true);
   expect(result.status).toBe('success');
+});
+
+test('unauthenticated call to a protected endpoint throws an authentication-required error', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/protected_ep.json') {
+      return {
+        endpointId: 'protected_ep',
+        type: 'Api',
+        auth: { public: false },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'protected_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow('Authentication required for API endpoint "protected_ep".');
+});
+
+test('authenticated call with the wrong role throws a masked does-not-exist error', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/protected_ep.json') {
+      return {
+        endpointId: 'protected_ep',
+        type: 'Api',
+        auth: { public: false, roles: ['admin'] },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1', roles: ['viewer'] },
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'protected_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow('API Endpoint "protected_ep" does not exist.');
+});
+
+test('callEndpoint strips stack and the internal control config cause from the error it returns', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/failing_ep.json') {
+      return {
+        endpointId: 'failing_ep',
+        type: 'Api',
+        auth: { public: true },
+        // An unrecognised control makes handleControl throw with the control
+        // config as a non-Error cause - server-only config the client must not
+        // receive. This endpoint result body reaches a browser at HTTP 200.
+        routine: { ':unknown': { internalDetail: 'server-only-config' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1' },
+  });
+
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'failing_ep',
+    pageId: 'pageId',
+    payload: {},
+  });
+
+  expect(result.status).toBe('error');
+  expect(result.success).toBe(false);
+  expect(result.error['~e'].message).toBe('Something went wrong.');
+  expect(result.error['~e'].stack).toBeUndefined();
+  expect(result.error['~e'].received).toBeUndefined();
+  expect(result.error['~e'].cause).toBeUndefined();
+  expect(JSON.stringify(result)).not.toContain('server-only-config');
+});
+
+test('callEndpoint keeps an author-written UserError cause and metaData from a :throw control', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/throwing_ep.json') {
+      return {
+        endpointId: 'throwing_ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: { ':throw': 'Order rejected.', ':cause': { reason: 'out of stock' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1' },
+  });
+
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'throwing_ep',
+    pageId: 'pageId',
+    payload: {},
+  });
+
+  expect(result.status).toBe('error');
+  expect(result.error['~e'].name).toBe('UserError');
+  expect(result.error['~e'].message).toBe('Order rejected.');
+  // UserError is the one class whose non-Error cause the author wrote for the
+  // client, so it survives while its stack still does not.
+  expect(result.error['~e'].cause).toEqual({ reason: 'out of stock' });
+  expect(result.error['~e'].stack).toBeUndefined();
 });
 
 test('InternalApi error matches missing endpoint error message', async () => {
@@ -108,7 +229,7 @@ test('InternalApi error matches missing endpoint error message', async () => {
   const context = testContext({
     logger,
     readConfigFile: mockReadConfigFile,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
 
   // InternalApi should throw the exact same message as a missing endpoint
@@ -125,4 +246,245 @@ test('InternalApi error matches missing endpoint error message', async () => {
     expect(err.message).toBe(expectedMessage);
     expect(err).toBeInstanceOf(ConfigError);
   }
+});
+
+test("InternalApi endpoint throws AuthenticationError for an anonymous human on an auth'd app", async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/internal_ep.json') {
+      return {
+        endpointId: 'internal_ep',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    authEnforcement: { public: false },
+    user: null,
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'internal_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow(AuthenticationError);
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'internal_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow('Authentication required for API endpoint "internal_ep".');
+});
+
+test("InternalApi endpoint throws ConfigError for a resolved user on an auth'd app", async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/internal_ep.json') {
+      return {
+        endpointId: 'internal_ep',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    authEnforcement: { public: false },
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'internal_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow(ConfigError);
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'internal_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow('API Endpoint "internal_ep" does not exist.');
+});
+
+// An InternalApi endpoint must be indistinguishable from a nonexistent one on
+// both the unauthenticated and authenticated paths - otherwise the fork itself
+// becomes the oracle.
+test('InternalApi endpoint error is identical to a missing endpoint error for an anonymous human', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/internal_ep.json') {
+      return {
+        endpointId: 'internal_ep',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    authEnforcement: { public: false },
+    user: null,
+  });
+
+  const internalErr = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'internal_ep',
+    pageId: 'pageId',
+    payload: {},
+  }).catch((err) => err);
+  const missingErr = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'internal_ep_missing',
+    pageId: 'pageId',
+    payload: {},
+  }).catch((err) => err);
+
+  expect(internalErr).toBeInstanceOf(AuthenticationError);
+  expect(missingErr).toBeInstanceOf(AuthenticationError);
+  expect(internalErr.message).toBe('Authentication required for API endpoint "internal_ep".');
+  expect(missingErr.message).toBe(
+    'Authentication required for API endpoint "internal_ep_missing".'
+  );
+});
+
+function createOrderReadConfigFile({ async = false } = {}) {
+  return jest.fn((path) => {
+    if (path === 'api/create_order.json') {
+      return {
+        endpointId: 'create_order',
+        type: 'Api',
+        auth: { public: true },
+        async,
+        payloadSchema: {
+          type: 'object',
+          properties: { quantity: { type: 'number' } },
+          required: ['quantity'],
+        },
+        routine: { ':return': 'ran' },
+      };
+    }
+    return null;
+  });
+}
+
+test('callEndpoint rejects a page CallAPI payload that violates the payloadSchema with a ConfigError before the routine runs', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile: createOrderReadConfigFile(),
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'create_order',
+      pageId: 'pageId',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(
+    'Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.'
+  );
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'create_order',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow(ConfigError);
+
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'create_order',
+    pageId: 'pageId',
+    payload: { quantity: 2 },
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe('ran');
+});
+
+test('callEndpoint rejects a payload that violates the payloadSchema of an async endpoint before accepting it', async () => {
+  const waitUntil = jest.fn();
+  const context = testContext({
+    logger,
+    readConfigFile: createOrderReadConfigFile({ async: true }),
+    user: { id: 'user_1' },
+  });
+  context.waitUntil = waitUntil;
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'create_order',
+      pageId: 'pageId',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(ConfigError);
+  expect(waitUntil).not.toHaveBeenCalled();
+});
+
+test('callEndpoint rejects a payload from a call that names no page with a UserError: an API client sent it', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile: createOrderReadConfigFile(),
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      endpointId: 'create_order',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(UserError);
+});
+
+test('callEndpoint rejects an MCP tool call payload with a UserError though it names a placeholder page', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile: createOrderReadConfigFile(),
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: '_mcp',
+      endpointId: 'create_order',
+      outsideCaller: true,
+      pageId: '_mcp',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(UserError);
+});
+
+test('callEndpoint checks a call without a payload as an empty object, as every other caller does', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile: jest.fn(() => ({
+      endpointId: 'list_orders',
+      type: 'Api',
+      auth: { public: true },
+      payloadSchema: { type: 'object', properties: { status: { type: 'string' } } },
+      routine: { ':return': 'listed' },
+    })),
+    user: { id: 'user_1' },
+  });
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'list_orders',
+    pageId: 'pageId',
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe('listed');
 });

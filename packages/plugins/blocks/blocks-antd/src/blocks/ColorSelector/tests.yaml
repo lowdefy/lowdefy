@@ -82,3 +82,17 @@
   type: ColorSelector
   properties:
     open: true
+- id: 'properties.mode: [single, gradient]'
+  type: ColorSelector
+  properties:
+    mode:
+      - single
+      - gradient
+- id: 'properties.presets'
+  type: ColorSelector
+  properties:
+    presets:
+      - label: Brand
+        colors:
+          - '#1677ff'
+          - '#722ed1'

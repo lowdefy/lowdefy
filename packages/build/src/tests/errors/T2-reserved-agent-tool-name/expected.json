@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "is a reserved name"
+      ],
+      "errorContains": [
+        "Agent \"assistant\" tool name \"__proto__\" is a reserved name and cannot be used as a tool name.",
+        "lowdefy.yaml:21"
+      ]
+    }
+  ]
+}

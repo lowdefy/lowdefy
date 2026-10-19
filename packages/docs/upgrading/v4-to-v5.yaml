@@ -612,4 +612,3 @@ _ref:
             4. **`@primary-color` not working** — Use `theme.antd.token.colorPrimary` in `lowdefy.yaml`.
             5. **Button looks different** — Update `type` to `color`/`variant`. See the mapping table above.
             6. **`areas` deprecated warning** — Rename `areas` to `slots` in your config.
-

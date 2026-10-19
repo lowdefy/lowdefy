@@ -1,0 +1,841 @@
+# MonthSelector
+
+Month picker for selecting year and month.
+
+```yaml
+- id: month_size_small
+  type: MonthSelector
+  properties:
+    title: Small
+    size: small
+- id: month_size_default
+  type: MonthSelector
+  properties:
+    title: Default
+- id: month_size_large
+  type: MonthSelector
+  properties:
+    title: Large
+    size: large
+```
+
+```yaml
+- id: month_variant_outlined
+  type: MonthSelector
+  properties:
+    title: Outlined (default)
+    variant: outlined
+    label:
+      disabled: true
+- id: month_variant_filled
+  type: MonthSelector
+  properties:
+    title: Filled
+    variant: filled
+    label:
+      disabled: true
+- id: month_variant_borderless
+  type: MonthSelector
+  properties:
+    title: Borderless
+    variant: borderless
+    label:
+      disabled: true
+- id: month_variant_underlined
+  type: MonthSelector
+  properties:
+    title: Underlined
+    variant: underlined
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_format_default
+  type: MonthSelector
+  properties:
+    title: YYYY-MM (default)
+    format: YYYY-MM
+    label:
+      disabled: true
+- id: month_format_long
+  type: MonthSelector
+  properties:
+    title: MMMM YYYY
+    format: MMMM YYYY
+    label:
+      disabled: true
+- id: month_format_short
+  type: MonthSelector
+  properties:
+    title: MMM YYYY
+    format: MMM YYYY
+    label:
+      disabled: true
+- id: month_format_numeric
+  type: MonthSelector
+  properties:
+    title: MM/YYYY
+    format: MM/YYYY
+    label:
+      disabled: true
+- id: month_format_month_only
+  type: MonthSelector
+  properties:
+    title: MMMM (Month Name Only)
+    format: MMMM
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_placeholder_default
+  type: MonthSelector
+  properties:
+    title: Default Placeholder
+    label:
+      disabled: true
+- id: month_placeholder_custom
+  type: MonthSelector
+  properties:
+    title: Custom Placeholder
+    placeholder: Pick a month...
+    label:
+      disabled: true
+- id: month_placeholder_descriptive
+  type: MonthSelector
+  properties:
+    title: Descriptive Placeholder
+    placeholder: When did this start?
+    label:
+      disabled: true
+- id: month_placeholder_format_hint
+  type: MonthSelector
+  properties:
+    title: Format Hint Placeholder
+    placeholder: e.g. January 2026
+    format: MMMM YYYY
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_clear_enabled
+  type: MonthSelector
+  properties:
+    title: Allow Clear (default)
+    allowClear: true
+    label:
+      disabled: true
+- id: month_clear_disabled
+  type: MonthSelector
+  properties:
+    title: No Clear Button
+    allowClear: false
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_prefix_icon
+  type: MonthSelector
+  properties:
+    title: Prefix Icon
+    prefixIcon: clock
+    suffixIcon:
+      name: calendar
+      color: "#8c8c8c"
+- id: month_prefix_text
+  type: MonthSelector
+  properties:
+    title: Prefix Text
+    prefix: "From:"
+- id: month_placement
+  type: MonthSelector
+  properties:
+    title: Popup Opens Top Right
+    placement: topRight
+- id: month_read_only
+  type: MonthSelector
+  properties:
+    title: Pick From Calendar Only
+    inputReadOnly: true
+    label:
+      extra: The input is read-only, so touch devices do not open the keyboard.
+```
+
+```yaml
+- id: month_icon_default
+  type: MonthSelector
+  properties:
+    title: Default Calendar Icon
+    label:
+      disabled: true
+- id: month_icon_clock
+  type: MonthSelector
+  properties:
+    title: Clock Icon
+    suffixIcon: clock
+    label:
+      disabled: true
+- id: month_icon_schedule
+  type: MonthSelector
+  properties:
+    title: Schedule Icon
+    suffixIcon: CalendarDays
+    label:
+      disabled: true
+- id: month_icon_custom_color
+  type: MonthSelector
+  properties:
+    title: Custom Color Icon
+    suffixIcon:
+      name: calendar
+      color: "#1677ff"
+    label:
+      disabled: true
+- id: month_icon_heart
+  type: MonthSelector
+  properties:
+    title: Heart Icon
+    suffixIcon:
+      name: heart
+      color: "#ff4d4f"
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_disabled_default
+  type: MonthSelector
+  properties:
+    title: Disabled
+    disabled: true
+    label:
+      disabled: true
+- id: month_disabled_outlined
+  type: MonthSelector
+  properties:
+    title: Disabled Outlined
+    disabled: true
+    variant: outlined
+    label:
+      disabled: true
+- id: month_disabled_filled
+  type: MonthSelector
+  properties:
+    title: Disabled Filled
+    disabled: true
+    variant: filled
+    label:
+      disabled: true
+- id: month_disabled_borderless
+  type: MonthSelector
+  properties:
+    title: Disabled Borderless
+    disabled: true
+    variant: borderless
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_autofocus_off
+  type: MonthSelector
+  properties:
+    title: No Auto Focus (default)
+    autoFocus: false
+    label:
+      disabled: true
+- id: month_autofocus_on
+  type: MonthSelector
+  properties:
+    title: Auto Focus Enabled
+    autoFocus: true
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_disabled_dates_min
+  type: MonthSelector
+  properties:
+    title: Min Date (2024-01-01)
+    disabledDates:
+      min: 2024-01-01
+    label:
+      disabled: true
+- id: month_disabled_dates_max
+  type: MonthSelector
+  properties:
+    title: Max Date (2025-12-31)
+    disabledDates:
+      max: 2025-12-31
+    label:
+      disabled: true
+- id: month_disabled_dates_range
+  type: MonthSelector
+  properties:
+    title: Min & Max (2025 only)
+    disabledDates:
+      min: 2025-01-01
+      max: 2025-12-31
+    label:
+      disabled: true
+- id: month_disabled_specific
+  type: MonthSelector
+  properties:
+    title: Specific Months Disabled
+    disabledDates:
+      dates:
+        - 2026-03-01
+        - 2026-06-01
+        - 2026-12-01
+    label:
+      disabled: true
+- id: month_disabled_date_ranges
+  type: MonthSelector
+  properties:
+    title: Date Ranges Disabled
+    disabledDates:
+      ranges:
+        - - 2026-04-01
+          - 2026-06-30
+        - - 2026-10-01
+          - 2026-12-31
+    label:
+      disabled: true
+```
+
+```yaml
+- id: ms_presets_relative
+  type: MonthSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: This month
+        value:
+          _dayjs:
+            - now
+            - startOf: month
+            - format: YYYY-MM-DD
+      - label: Last month
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - month
+            - format: YYYY-MM-DD
+      - label: 3 months ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 3
+                - months
+            - format: YYYY-MM-DD
+      - label: A year ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - year
+            - format: YYYY-MM-DD
+- id: ms_presets_fixed
+  type: MonthSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: Start of 2026
+        value: 2026-01-01
+      - label: Mid 2026
+        value: 2026-07-01
+      - label: End of 2026
+        value: 2026-12-01
+```
+
+```yaml
+- id: month_label_default
+  type: MonthSelector
+  properties:
+    title: Default Label
+- id: month_label_extra
+  type: MonthSelector
+  properties:
+    title: Billing Month
+    label:
+      extra: Select the billing month for this invoice.
+    placeholder: Select billing month
+- id: month_label_inline_right
+  type: MonthSelector
+  properties:
+    title: Inline Right-Aligned
+    label:
+      inline: true
+      span: 8
+      align: right
+- id: month_label_hidden
+  type: MonthSelector
+  properties:
+    title: Hidden Label
+    label:
+      disabled: true
+    placeholder: No label shown
+- id: month_label_feedback_on
+  type: MonthSelector
+  properties:
+    title: With Feedback
+    label:
+      hasFeedback: true
+  required: true
+```
+
+```yaml
+- id: month_label_inline_4
+  type: MonthSelector
+  properties:
+    title: Span 4
+    label:
+      inline: true
+      span: 4
+- id: month_label_inline_8
+  type: MonthSelector
+  properties:
+    title: Span 8
+    label:
+      inline: true
+      span: 8
+- id: month_label_inline_12
+  type: MonthSelector
+  properties:
+    title: Span 12
+    label:
+      inline: true
+      span: 12
+```
+
+```yaml
+- id: month_html_title_bold
+  type: MonthSelector
+  properties:
+    title: <b>Bold</b> month selector
+    label:
+      disabled: true
+- id: month_html_title_color
+  type: MonthSelector
+  properties:
+    title: '<span style="color: #1677ff">Blue</span> month selector'
+    label:
+      disabled: true
+- id: month_html_title_italic
+  type: MonthSelector
+  properties:
+    title: <i>Italic</i> month selector
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_style_width
+  type: MonthSelector
+  style:
+    width: 300
+  properties:
+    title: Fixed Width (300px)
+    label:
+      disabled: true
+- id: month_style_element
+  type: MonthSelector
+  style:
+    .element:
+      backgroundColor: var(--ant-color-primary-bg)
+  properties:
+    title: Custom Background
+    label:
+      disabled: true
+- id: month_style_label
+  type: MonthSelector
+  style:
+    .label:
+      color: "#531dab"
+      fontWeight: bold
+  properties:
+    title: Styled Label
+```
+
+```yaml
+- id: month_class_rounded
+  type: MonthSelector
+  class: rounded-lg shadow-sm
+  properties:
+    title: Rounded with Shadow
+    label:
+      disabled: true
+- id: month_class_border
+  type: MonthSelector
+  class: border-2 border-border
+  properties:
+    title: Blue Border
+    label:
+      disabled: true
+```
+
+```yaml
+- id: month_theme_primary_color
+  type: MonthSelector
+  properties:
+    title: Custom Primary Color
+    label:
+      disabled: true
+    theme:
+      colorPrimary: "#722ed1"
+- id: month_theme_large_radius
+  type: MonthSelector
+  properties:
+    title: Large Border Radius
+    label:
+      disabled: true
+    theme:
+      borderRadius: 16
+- id: month_theme_custom_bg
+  type: MonthSelector
+  properties:
+    title: Custom Background
+    variant: filled
+    label:
+      disabled: true
+- id: month_theme_brand_color
+  type: MonthSelector
+  properties:
+    title: Brand Purple
+    label:
+      disabled: true
+    theme:
+      colorPrimary: "#722ed1"
+      colorBorder: "#d3adf7"
+- id: month_theme_tall
+  type: MonthSelector
+  properties:
+    title: Tall Input
+    label:
+      disabled: true
+    theme:
+      controlHeight: 48
+      fontSize: 18
+      borderRadius: 12
+```
+
+```yaml
+- id: month_combined_full
+  type: MonthSelector
+  properties:
+    title: Billing Period
+    placeholder: Select billing month
+    format: MMMM YYYY
+    size: large
+    suffixIcon: CalendarDays
+    showToday: true
+    allowClear: true
+    label:
+      extra: Choose the month for your billing cycle.
+      colon: false
+- id: month_combined_minimal
+  type: MonthSelector
+  properties:
+    title: Month
+    variant: borderless
+    size: small
+    allowClear: false
+    showToday: false
+    format: MM/YYYY
+    placeholder: mm/yyyy
+    label:
+      disabled: true
+- id: month_combined_restricted
+  type: MonthSelector
+  properties:
+    title: Fiscal Year Month
+    placeholder: Select fiscal month
+    format: MMM YYYY
+    suffixIcon:
+      name: calendar
+      color: "#1677ff"
+    disabledDates:
+      min: 2026-01-01
+      max: 2026-12-31
+    label:
+      extra: Only months in 2026 are available.
+- id: month_combined_themed
+  type: MonthSelector
+  properties:
+    title: Themed Picker
+    variant: filled
+    size: large
+    format: MMMM YYYY
+    placeholder: Choose a special month...
+    suffixIcon:
+      name: heart
+      color: "#eb2f96"
+    label:
+      disabled: true
+    theme:
+      colorPrimary: "#eb2f96"
+      borderRadius: 20
+      controlHeightLG: 48
+      fontSize: 16
+```
+
+```yaml
+- id: applied2_budget_card
+  type: Card
+  properties:
+    title: Monthly Budget Entry
+  blocks:
+    - id: applied2_budget_month
+      type: MonthSelector
+      properties:
+        title: Budget Month
+        placeholder: Select month
+        format: MMMM YYYY
+        size: large
+        suffixIcon: calendar
+        label:
+          extra: Choose the month for this budget entry.
+    - id: applied2_budget_category
+      type: Selector
+      properties:
+        title: Category
+        placeholder: Select budget category...
+        options:
+          - label: Rent & Utilities
+            value: rent
+          - label: Groceries
+            value: groceries
+          - label: Transportation
+            value: transport
+          - label: Entertainment
+            value: entertainment
+          - label: Savings
+            value: savings
+          - label: Healthcare
+            value: healthcare
+    - id: applied2_budget_amount
+      type: NumberInput
+      properties:
+        title: Amount
+        placeholder: Enter amount
+        prefixIcon: DollarSign
+        label:
+          extra: Enter the budgeted amount for this category.
+    - id: applied2_budget_save_btn
+      type: Button
+      properties:
+        title: Save Budget Entry
+        icon: save
+        type: primary
+        size: large
+        block: true
+      events:
+        onClick:
+          - id: save_budget_action
+            type: DisplayMessage
+            params:
+              content: Budget entry saved successfully.
+              duration: 3
+```
+
+```yaml
+- id: applied3_billing_card
+  type: Card
+  properties:
+    title: Subscription Billing Setup
+  blocks:
+    - id: applied3_billing_month
+      type: MonthSelector
+      properties:
+        title: Billing Start Month
+        placeholder: Select start month
+        format: MMMM YYYY
+        size: large
+        suffixIcon: calendar
+        label:
+          extra: Choose when the subscription billing begins.
+        disabledDates:
+          min: 2026-03-01
+      events:
+        onChange:
+          - id: billing_month_change
+            type: SetState
+            params:
+              billingMonthSelected: true
+    - id: applied3_billing_plan
+      type: Selector
+      properties:
+        title: Plan Type
+        placeholder: Select a plan...
+        options:
+          - label: Basic - $9/mo
+            value: basic
+          - label: Professional - $29/mo
+            value: professional
+          - label: Enterprise - $99/mo
+            value: enterprise
+    - id: applied3_billing_confirm_btn
+      type: Button
+      properties:
+        title: Confirm Subscription
+        icon: CreditCard
+        type: primary
+        size: large
+        block: true
+      events:
+        onClick:
+          - id: confirm_billing_action
+            type: DisplayMessage
+            params:
+              content: Subscription billing confirmed.
+              duration: 3
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `allowClear` | boolean | `true` | Allow the user to clear their input. |
+| `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
+| `bordered` | boolean | `true` | Deprecated - use variant: 'borderless'. Whether or not the input has a border style. |
+| `disabled` | boolean | `false` | Disable the block if true. |
+| `variant` | string | `"outlined"` | Variant style of the input. Use 'borderless' instead of bordered: false. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
+| `disabledDates` | object | - | Disable specific dates so that they can not be chosen. |
+| `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
+| `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
+| `disabledDates.dates` | array | - | Array of specific dates to disable. |
+| `disabledDates.ranges` | array | - | Array of date ranges to disable. A range is an object with a from and a to date, or an array of the two dates. |
+| `disabledDates.ranges.$.from` | string \| object | - | Start of the disabled range. |
+| `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
+| `format` | string | - | Format in which to format the date value, eg. "MMMM YYYY" will format a date value of 1999-12-31 as "December 1999". The format has to conform to dayjs formats. Defaults to the active locale's month format, or "YYYY-MM" when no locale is configured. |
+| `inputReadOnly` | boolean | `false` | Make the text input read-only, so a date can only be chosen from the calendar. This also stops the on-screen keyboard opening on touch devices. |
+| `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `placement` | string | `"bottomLeft"` | Position of the calendar popup relative to the input. Enum: `bottomLeft`, `bottomRight`, `topLeft`, `topRight`. |
+| `prefix` | string | - | Prefix text shown before the date in the input, priority over prefixIcon. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on the left-hand side of the date picker. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a month. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a shortcut with nothing it may select is listed as disabled. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same month in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {startOf: month}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the month before or after the current one, depending on the browser timezone and the time of day. |
+| `showToday` | boolean | `true` | Deprecated - has no effect. The month picker has no button to select the current date. |
+| `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
+| `suffixIcon` | string \| object | `"calendar"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
+| `label.colon` | boolean | `true` | Append label with colon. |
+| `label.extra` | string | - | Extra text to display beneath the content - supports html. |
+| `label.title` | string | - | Label title - supports html. |
+| `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
+| `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
+| `label.tooltip.color` | string | - | Color of the tooltip icon. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
+| `label.disabled` | boolean | `false` | Hide input label. |
+| `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
+| `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
+| `title` | string | - | Month selector label title - supports html. |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design date-picker tokens](https://ant.design/components/date-picker#design-token). |
+| `theme.activeBg` | string | `"#ffffff"` | Background color of the input when the picker is active/focused. |
+| `theme.activeBorderColor` | string | - | Border color when the picker is active/focused. |
+| `theme.activeShadow` | string | `"0 0 0 2px rgba(5,145,255,0.1)"` | Shadow effect when the picker is active/focused. |
+| `theme.borderRadius` | number | `6` | Border radius of the picker input. |
+| `theme.borderRadiusLG` | number | `8` | Border radius for the large picker and popup panel. |
+| `theme.borderRadiusSM` | number | `4` | Border radius for the small picker. |
+| `theme.cellActiveWithRangeBg` | string | `"#e6f4ff"` | Background color of cells within the selected range. |
+| `theme.cellBgDisabled` | string | `"rgba(0,0,0,0.04)"` | Background color of disabled cells. |
+| `theme.cellHeight` | number | `24` | Height of a calendar cell. |
+| `theme.cellHoverBg` | string | `"rgba(0, 0, 0, 0.04)"` | Background color of a calendar cell on hover. |
+| `theme.cellHoverWithRangeBg` | string | `"#cbe0fd"` | Background color of cells within range on hover. |
+| `theme.cellRangeBorderColor` | string | `"#82b4f9"` | Border color of range selection cells. |
+| `theme.cellWidth` | number | `36` | Width of a calendar cell. |
+| `theme.colorBgContainer` | string | - | Background color of the picker input. |
+| `theme.colorBorder` | string | - | Border color of the picker input. |
+| `theme.colorPrimary` | string | - | Primary color used for the selected date and active states. |
+| `theme.colorText` | string | - | Text color of the picker input and calendar cells. |
+| `theme.colorTextPlaceholder` | string | - | Color of the placeholder text. |
+| `theme.controlHeight` | number | `32` | Height of the picker input. |
+| `theme.controlHeightLG` | number | `40` | Height of the large picker input. |
+| `theme.controlHeightSM` | number | `24` | Height of the small picker input. |
+| `theme.errorActiveShadow` | string | `"0 0 0 2px rgba(255,38,5,0.06)"` | Shadow effect when the picker has error status and is focused. |
+| `theme.fontSize` | number | `14` | Font size of the picker input. |
+| `theme.fontSizeLG` | number | `16` | Font size for the large picker. |
+| `theme.fontSizeSM` | number | `14` | Font size for the small picker. |
+| `theme.hoverBg` | string | `"#ffffff"` | Background color of the input when hovering over the picker. |
+| `theme.hoverBorderColor` | string | - | Border color when hovering over the picker. |
+| `theme.lineWidth` | number | `1` | Border width of the picker input. |
+| `theme.paddingBlock` | number | `4` | Vertical padding for the default size picker. |
+| `theme.paddingBlockLG` | number | `7` | Vertical padding for the large size picker. |
+| `theme.paddingBlockSM` | number | `0` | Vertical padding for the small size picker. |
+| `theme.paddingInline` | number | `11` | Horizontal padding for the default size picker. |
+| `theme.paddingInlineLG` | number | `11` | Horizontal padding for the large size picker. |
+| `theme.paddingInlineSM` | number | `7` | Horizontal padding for the small size picker. |
+| `theme.presetsMaxWidth` | number | `200` | Maximum width of the presets list next to the calendar. |
+| `theme.presetsWidth` | number | `120` | Width of the presets list next to the calendar. |
+| `theme.timeCellHeight` | number | `28` | Height of a time cell in the time panel. |
+| `theme.timeColumnHeight` | number | `224` | Height of the time panel column. |
+| `theme.timeColumnWidth` | number | `56` | Width of the time panel column. |
+| `theme.warningActiveShadow` | string | `"0 0 0 2px rgba(255,215,5,0.1)"` | Shadow effect when the picker has warning status and is focused. |
+| `theme.withoutTimeCellHeight` | number | `66` | Height of the cells of the month, week, quarter, year and decade panels. |
+| `theme.zIndexPopup` | number | `1050` | Z-index of the picker popup layer. |
+
+| Event | Event Data | Description |
+| --- | --- | --- |
+| `onBlur` | \- | Trigger actions when the picker loses focus. |
+| `onClear` | \- | Trigger actions when the clear button is clicked. |
+| `onFocus` | \- | Trigger actions when the picker gets focus. |
+| `onOpenChange` | `{ open }` | Trigger actions when the calendar popup opens or closes. |
+| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The MonthSelector element. |
+| `/label` | The MonthSelector label. |
+| `/extra` | The MonthSelector extra content. |
+| `/feedback` | The MonthSelector validation feedback. |
+| `/popup` | The MonthSelector popup. |
+| `/prefixIcon` | The prefix icon in the MonthSelector. |
+| `/suffixIcon` | The suffix icon in the MonthSelector. |
+
+No slots defined.

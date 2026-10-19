@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import { shallowBuild } from '@lowdefy/build/dev';
+import { serializeBuildException, shallowBuild } from '@lowdefy/build/dev';
 import createCustomPluginMessagesMap from '../utils/createCustomPluginMessagesMap.mjs';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
+import publishBuildDirectory from '../utils/publishBuildDirectory.mjs';
+import writeBuildStatus from '../utils/writeBuildStatus.mjs';
 
 function formatDuration(ms) {
   if (ms < 1000) return `${ms}ms`;
@@ -24,25 +26,68 @@ function formatDuration(ms) {
 }
 
 function lowdefyBuild({ directories, logger, options }) {
-  return async () => {
+  async function build() {
     logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
-    const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
-    const customMessagesMap = await createCustomPluginMessagesMap({ directories, logger });
 
-    const result = await shallowBuild({
-      customMessagesMap,
-      customTypesMap,
+    // Reading the plugin maps parses lowdefy.yaml and imports each plugin's
+    // types, so a YAML syntax error or a broken plugin fails the build there,
+    // and the build status has to report it like any other build error. So
+    // does a publish that fails part way: the live build is then a mix of two
+    // builds, and the next change must rebuild and publish it whole.
+    let result;
+    try {
+      const [customTypesMap, customMessagesMap] = await Promise.all([
+        createCustomPluginTypesMap({ directories, logger }),
+        createCustomPluginMessagesMap({ directories, logger }),
+      ]);
+      result = await shallowBuild({
+        customMessagesMap,
+        customTypesMap,
+        directories: { ...directories, build: directories.buildStaging },
+        logger,
+        refResolver: options.refResolver,
+        skipPluginChecks: options.skipPluginChecks,
+        stage: 'dev',
+      });
+      await publishBuildDirectory({
+        buildDirectory: directories.build,
+        stagingDirectory: directories.buildStaging,
+      }).catch((error) => {
+        throw new Error(`Publishing the build to ${directories.build} failed: ${error.message}`, {
+          cause: error,
+        });
+      });
+    } catch (error) {
+      await writeBuildStatus({
+        directories,
+        status: 'error',
+        errors: error.errors ?? [{ message: error.message }],
+        warnings: error.warnings ?? [],
+      });
+      throw error;
+    }
+
+    await writeBuildStatus({
       directories,
-      logger,
-      refResolver: options.refResolver,
-      stage: 'dev',
+      status: 'ok',
+      errors: [],
+      warnings: (result.context.warnings ?? []).map(serializeBuildException),
     });
 
     // Return result so getContext can store registries
     const duration = Date.now() - startTime;
     logger.info({ spin: 'succeed' }, `Built config in ${formatDuration(duration)}.`);
     return result;
+  }
+
+  // Watchers, restarts and plugin installs each start builds, and every build
+  // writes the same staging directory, so a build waits for the one before it.
+  let previousBuild = Promise.resolve();
+  return () => {
+    const nextBuild = previousBuild.then(build);
+    previousBuild = nextBuild.catch(() => {});
+    return nextBuild;
   };
 }
 

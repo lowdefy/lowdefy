@@ -101,6 +101,57 @@ test('_type none', () => {
   expect(_type({ params: { type: 'none' }, location, state })).toEqual(true);
 });
 
+test("_type empty is true for null, undefined, '' and []", () => {
+  expect(_type({ params: { type: 'empty', on: null }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'empty', on: undefined }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'empty', on: '' }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'empty', on: [] }, location, state })).toEqual(true);
+});
+test("_type empty is false for 0, false, {}, ' ', [null] and a Date", () => {
+  expect(_type({ params: { type: 'empty', on: 0 }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: false }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: {} }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: ' ' }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: [null] }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: new Date(0) }, location, state })).toEqual(false);
+});
+test('_type empty reads the state value at the operator location when no key or on is given', () => {
+  expect(_type({ params: { type: 'empty' }, location: 'string', state })).toEqual(false);
+  expect(_type({ params: { type: 'empty' }, location: 'notThere', state })).toEqual(true);
+  expect(
+    _type({ params: { type: 'empty' }, location: 'emptyString', state: { emptyString: '' } })
+  ).toEqual(true);
+  expect(
+    _type({ params: { type: 'empty' }, location: 'emptyArray', state: { emptyArray: [] } })
+  ).toEqual(true);
+});
+test('_type empty with key', () => {
+  expect(_type({ params: { type: 'empty', key: 'arr.0.a' }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', key: 'notThere' }, location, state })).toEqual(true);
+});
+
+test('_type with a reserved key returns false and does not throw', () => {
+  expect(_type({ params: { type: 'string', key: '__proto__' }, location, state })).toEqual(false);
+});
+test('_type undefined with a reserved key returns true and does not throw', () => {
+  expect(_type({ params: { type: 'undefined', key: '__proto__' }, location, state })).toEqual(true);
+});
+test('_type with a reserved location returns false and does not throw', () => {
+  expect(_type({ params: { type: 'string' }, location: 'a.constructor.b', state })).toEqual(false);
+});
+test('_type propagates an error that is not a ReservedKeyError', () => {
+  const throwingState = {};
+  Object.defineProperty(throwingState, 'boom', {
+    enumerable: true,
+    get: () => {
+      throw new Error('read failed');
+    },
+  });
+  expect(() =>
+    _type({ params: { type: 'string', key: 'boom' }, location, state: throwingState })
+  ).toThrow('read failed');
+});
+
 test('_type date with on packed date pass and calls ServerParser', () => {
   const input = { _type: { type: 'date', on: { _date: Date.now() } } };
   const parser = new ServerParser({ operators, secrets: {}, user: {} });

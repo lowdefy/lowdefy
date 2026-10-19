@@ -1,0 +1,489 @@
+# Amazon S3
+
+AWS S3 is a file or data storage solution, provided by Amazon Web Services. S3 does not work like a traditional file system, data is stored as objects in a collection of objects called a bucket.
+Objects can be read from S3 and stored in S3 using web requests. These objects can be public or private. You can read more [here](https://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html).
+
+Lowdefy integrates with AWS S3 using presigned links. These are links that are authorized to give access to private objects, or that allow you to create new objects, and that expire after a certain amount of time. This allows you to upload or download directly from S3 from the browser.
+
+A guide to creating and connecting to an S3 bucket is given at the bottom of this page.
+
+## Connections
+
+Connection types:
+  - AwsS3Bucket
+
+### AwsS3Bucket
+
+The `AwsS3Bucket` connection is used to connect to a AWS S3 bucket. AWS S3 is the file storage solution provided by Amazon Web services.
+
+#### Properties
+- `accessKeyId: string`: __Required__ - AWS IAM access key id with s3 access.
+- `secretAccessKey: string`: __Required__ - AWS IAM secret access key with s3 access.
+- `region: string`: __Required__ - AWS region bucket is located in.
+- `bucket: string`: __Required__ - S3 bucket name.
+- `endpoint: string`: Custom S3 API endpoint for S3-compatible providers like Cloudflare R2, MinIO, DigitalOcean Spaces, Backblaze B2, and Wasabi.
+- `forcePathStyle: boolean`: Force path-style bucket addressing (`https://endpoint/bucket/key`). Required by MinIO and some self-hosted S3-compatible setups.
+- `publicUrlBase: string`: Base URL used to construct stable public object URLs (e.g. a CloudFront or CDN domain in front of the bucket). Used by download requests when the request sets `public: true`.
+- `read: boolean`: Default: `true` - Allow reads from the bucket.
+- `write: boolean`: Default: `false` - Allow writes to the bucket.
+
+#### Examples
+
+###### Read and writes on a bucket:
+```yaml
+connections:
+  - id: my_bucket
+    type: AwsS3Bucket
+    properties:
+      accessKeyId:
+        _secret: S3_ACCESS_KEY_ID
+      secretAccessKey:
+        _secret: S3_SECRET_ACCESS_KEY
+      region: eu-west-1
+      bucket: my-bucket-name
+      write: true
+```
+Environment variables:
+```
+LOWDEFY_SECRET_S3_ACCESS_KEY_ID = AKIAIOSFODNN7EXAMPLE
+LOWDEFY_SECRET_S3_SECRET_ACCESS_KEY = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+```
+
+###### S3-compatible provider (Cloudflare R2):
+```yaml
+connections:
+  - id: r2
+    type: AwsS3Bucket
+    properties:
+      endpoint: https://<account>.r2.cloudflarestorage.com
+      region: auto
+      bucket: my-bucket
+      accessKeyId:
+        _secret: R2_ACCESS_KEY_ID
+      secretAccessKey:
+        _secret: R2_SECRET_ACCESS_KEY
+      write: true
+```
+The same connection and requests work against any S3-compatible service — set `endpoint` (and `forcePathStyle: true` for MinIO and most self-hosted setups). Remember to configure CORS on the provider for direct browser uploads.
+
+## Requests
+
+Request types:
+  - AwsS3DeleteObject
+  - AwsS3GetObject
+  - AwsS3HeadObject
+  - AwsS3PresignedGetObject
+  - AwsS3PresignedPostPolicy
+  - AwsS3PutObject
+
+### AwsS3PresignedGetObject
+
+The `AwsS3PresignedGetObject` request is used to get a download link for an object in AWS S3. Reference the request id in the <a href="/Download">Download</a> block's `downloadPolicyRequestId` property, or open the returned URL with the `Link` action.
+
+#### Properties
+- `versionId: string`: VersionId used to reference a specific version of the object.
+- `expires: number`: Number of seconds for which the policy should be valid.
+- `key: string`: __Required__ - Key (or filename) under which object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
+- `responseContentType: string`: Sets the Content-Type header of the response.
+- `responseContentDisposition: string`: Sets the Content-Disposition header of the response.
+- `public: boolean`: Default: `false` - Return a stable, non-expiring public URL instead of a signed URL — virtual-hosted style by default, path-style on a custom `endpoint`, or `${publicUrlBase}/${key}` when the connection sets `publicUrlBase`. The object must be publicly readable (e.g. uploaded with acl `public-read`); this is author-declared and never checked at runtime. `versionId`, `responseContentType` and `responseContentDisposition` do not apply to public URLs (providers only honor them on signed requests).
+
+#### Examples
+
+###### Download a pdf and open in a new tab:
+```yaml
+requests:
+  - id: my_file_link
+    type: AwsS3PresignedGetObject
+    connectionId: my_bucket_connection
+    properties:
+      key: pdf-filename-as4dacd.pdf
+      responseContentType: application/pdf
+
+        ...
+        blocks:
+          - id: getFileButton
+            type: Button
+            events:
+              onClick:
+                - id: open_file
+                  type: Link
+                  params:
+                    url:
+                      _request: my_file_link
+                    newTab: true
+```
+
+### AwsS3PresignedPostPolicy
+
+The `AwsS3PresignedPostPolicy` request is used to create a policy that allows a file to be uploaded to AWS S3. It returns the standard upload-policy descriptor `{ method: 'POST', url, key, bucket, fields }` used by the <a href="/Upload">Upload</a>, <a href="/UploadPhoto">UploadPhoto</a> and <a href="/UploadDragger">UploadDragger</a> blocks — reference the request id in the block's `uploadPolicyRequestId` property.
+
+#### Properties
+- `acl: enum`: Access control lists used to grant read and write access.
+  - private
+  - public-read
+  - public-read-write
+  - aws-exec-read
+  - authenticated-read
+  - bucket-owner-read
+  - bucket-owner-full-control
+- `conditions: object[] | string[][]`: Conditions to be enforced on the request. An array of objects, or condition arrays. See [here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html).
+- `expires: number`: Number of seconds for which the policy should be valid.
+- `key: string`: __Required__ - Key (or filename) under which object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
+- `fields: object`: Fields to be included in the form. Useful for adding metadata to the object such as `Content-Type`. See [S3 POST policy](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html).
+
+#### Examples
+
+###### Upload a file with user filename and random id:
+```yaml
+- id: my_post_policy
+  type: AwsS3PresignedPostPolicy
+  connectionId: my_bucket_connection
+  payload:
+    filename:
+      _args: filename
+    uid:
+      _args: uid
+  properties:
+    key:
+      _nunjucks:
+        template: uploads/{{filename}}-{{uid}}
+        on:
+          filename:
+            _payload: filename
+          uid:
+            _payload: uid
+```
+
+### AwsS3GetObject
+
+The `AwsS3GetObject` request reads an object from the bucket on the server and returns its
+content as a base64 encoded string, so [API endpoint](/lowdefy-api) routine steps can process
+file content with operators and pass it to other steps (e.g. transform an uploaded file and
+store the result with `AwsS3PutObject`). The connection must allow reads (`read` is `true`
+by default). Content rides through the routine as base64, so this suits small and medium files.
+
+#### Properties
+- `key: string`: __Required__ - Key under which the object is stored.
+- `versionId: string`: VersionId used to reference a specific version of the object.
+
+Returns `{ bucket, key, content, contentType, size }` — `content` is the base64 encoded object.
+
+#### Examples
+
+###### Read a stored file and re-store a processed copy:
+```yaml
+api:
+  - id: copy_report
+    type: Api
+    routine:
+      - id: get_object
+        type: AwsS3GetObject
+        connectionId: my_bucket
+        properties:
+          key:
+            _payload: key
+      - id: put_copy
+        type: AwsS3PutObject
+        connectionId: my_bucket
+        properties:
+          key:
+            _string.concat: ['copies/', { _payload: key }]
+          content:
+            _step: get_object.content
+          contentType:
+            _step: get_object.contentType
+      - ':return':
+          key:
+            _step: put_copy.key
+```
+
+### AwsS3HeadObject
+
+The `AwsS3HeadObject` request checks on the server whether an object exists in the bucket and
+returns its metadata without reading its content. Use it in an [API endpoint](/lowdefy-api) routine
+to confirm a file uploaded from the browser with an `AwsS3PresignedPostPolicy` actually arrived, and
+to take its size and content type from S3 rather than from the caller. The connection must allow
+reads (`read` is `true` by default).
+
+#### Properties
+- `key: string`: __Required__ - Key under which the object is stored.
+- `versionId: string`: VersionId used to reference a specific version of the object.
+
+Returns `{ exists: true, bucket, key, size, contentType, etag, lastModified, versionId }` for an
+object that exists (`size` in bytes, `lastModified` a date, `contentType` and `versionId` only when
+S3 returns them), and `{ exists: false, bucket, key }` when S3 answers not found. Any other S3 error
+throws. S3 answers not found only when the credentials may list the bucket (`s3:ListBucket`);
+without that permission a missing object is a 403 error, which throws.
+
+#### Examples
+
+###### Record an upload only once it is in the bucket:
+```yaml
+api:
+  - id: record_upload
+    type: Api
+    routine:
+      - id: head_object
+        type: AwsS3HeadObject
+        connectionId: my_bucket
+        properties:
+          key:
+            _payload: key
+      - :if:
+          _not:
+            _step: head_object.exists
+        :then:
+          - :reject: The upload did not arrive.
+      - id: insert_file
+        type: MongoDBInsertOne
+        connectionId: files
+        properties:
+          doc:
+            key:
+              _step: head_object.key
+            size:
+              _step: head_object.size
+            contentType:
+              _step: head_object.contentType
+      - ':return':
+          size:
+            _step: head_object.size
+```
+
+### AwsS3PutObject
+
+The `AwsS3PutObject` request writes an object to the bucket from the server. It accepts base64 encoded
+content, which makes it the storage half of the server-side file handling pattern: an upload block with
+`emitFileContent: true` sends the file as a base64 payload to an [API endpoint](/lowdefy-api) with the
+`CallAPI` action, and a routine step stores it. The connection must set `write: true`.
+
+In place of `content`, it takes a `url` and streams what that https link answers into the bucket, so a
+routine can copy a file it is handed as a presigned link without the bytes passing through the routine.
+The copy is capped at `maxBytes`, can be limited to `contentTypes`, and must finish within `timeout`.
+
+#### Properties
+- `key: string`: __Required__ - Key under which the object will be stored.
+- `content: string`: Object content as a base64 encoded string. Give either `content` or `url`.
+- `url: string`: An `https:` link to a public address whose answer is streamed into the bucket. Give either `content` or `url`.
+- `maxBytes: integer`: __Required with `url`__ - The most bytes the link may answer with. A `Content-Length` over it is refused before the body is read, and a body that passes it is cut off and refused, so nothing larger is stored.
+- `contentTypes: string[]`: With `url`, the content types the link may answer with, such as `image/png`, `image/*` or `application/pdf`. Any other answer is refused.
+- `timeout: integer`: Default: `20000` - With `url`, the milliseconds the whole fetch and upload may take.
+- `contentType: string`: MIME type of the object (sets the Content-Type of the stored object). With `url`, the stored object takes the link's `Content-Type` unless this is given.
+- `acl: enum`: Access control lists used to grant read and write access (same values as AwsS3PresignedPostPolicy).
+
+Returns `{ bucket, key, size, contentType }`, with `size` in bytes and `contentType` the stored content type, or `null` when there is none.
+
+A refused copy from a `url` stores nothing and throws an error whose `code` names the reason, so a `:catch` can answer each its own way (`_error: code`):
+
+- `url_not_https`: the link, or a link it redirects to, is not `https:`. Refused before that link is requested.
+- `url_not_public`: the link, or a link it redirects to, leads to an address that is not public: loopback, private, link-local (such as a cloud metadata address), unique-local, carrier-grade NAT, unspecified or multicast. The address is checked as the connection is opened, so nothing is sent to it.
+- `too_large`: the answer is larger than `maxBytes`.
+- `content_type`: the answer's `Content-Type` is not one of `contentTypes`.
+- `fetch_failed`: the link answered with a status that is not 2xx (the error's `statusCode` holds it), could not be reached, or sent a body that does not match its `Content-Length`.
+- `timeout`: the fetch and upload took longer than `timeout`.
+
+#### Examples
+
+###### Store a file sent as an endpoint payload:
+```yaml
+api:
+  - id: store_report
+    type: Api
+    routine:
+      - id: put_object
+        type: AwsS3PutObject
+        connectionId: my_bucket
+        properties:
+          key:
+            _string.concat:
+              - 'reports/'
+              - _payload: name
+          content:
+            _payload: content
+          contentType:
+            _payload: type
+      - ':return':
+          key:
+            _step: put_object.key
+```
+
+###### Copy a screenshot handed over as a presigned link:
+```yaml
+api:
+  - id: copy_screenshot
+    type: InternalApi
+    routine:
+      - :try:
+          - id: copy
+            type: AwsS3PutObject
+            connectionId: my_bucket
+            properties:
+              key:
+                _string.concat:
+                  - 'screenshots/'
+                  - _payload: ticket_id
+              url:
+                _payload: screenshot_url
+              maxBytes: 10000000
+              contentTypes:
+                - image/*
+        :catch:
+          - :if:
+              _eq:
+                - _error: code
+                - too_large
+            :then:
+              :reject: The screenshot is larger than 10 MB.
+          - :throw:
+              _error: true
+      - ':return':
+          size:
+            _step: copy.size
+```
+
+### AwsS3DeleteObject
+
+The `AwsS3DeleteObject` request deletes one object, or up to 1000 objects in one call, from the
+connection's bucket. Use it in an [API endpoint](/lowdefy-api) routine to remove objects the routine
+stored and no longer wants, such as the files it copied before a later step refused the call. It
+deletes only from the bucket the connection names; the request takes no bucket. The connection must
+set `write: true`.
+
+#### Properties
+- `key: string`: Key of the object to delete. Give either `key` or `keys`.
+- `keys: string[]`: Keys of the objects to delete, 1 to 1000. Give either `key` or `keys`.
+
+Returns `{ bucket, deleted, errors }`: `deleted` lists the keys deleted, and `errors` lists each key
+S3 could not delete as `{ key, code, message }`, such as `AccessDenied`. A key with no object
+counts as deleted, as S3 reports it. A failure of the call itself, such as wrong credentials or a
+missing bucket, throws. With one `key`, a key S3 cannot delete throws too, so `errors` is always
+empty.
+
+#### Examples
+
+###### Remove both copies when either copy is refused:
+```yaml
+api:
+  - id: attach_files
+    type: Api
+    routine:
+      - :try:
+          - id: copy_screenshot
+            type: AwsS3PutObject
+            connectionId: my_bucket
+            properties:
+              key:
+                _string.concat:
+                  - 'tickets/'
+                  - _payload: ticket_id
+                  - '/screenshot'
+              url:
+                _payload: screenshot_url
+              maxBytes: 10000000
+          - id: copy_log
+            type: AwsS3PutObject
+            connectionId: my_bucket
+            properties:
+              key:
+                _string.concat:
+                  - 'tickets/'
+                  - _payload: ticket_id
+                  - '/log'
+              url:
+                _payload: log_url
+              maxBytes: 10000000
+        :catch:
+          - id: remove_copies
+            type: AwsS3DeleteObject
+            connectionId: my_bucket
+            properties:
+              keys:
+                - _string.concat:
+                    - 'tickets/'
+                    - _payload: ticket_id
+                    - '/screenshot'
+                - _string.concat:
+                    - 'tickets/'
+                    - _payload: ticket_id
+                    - '/log'
+          - :reject: The files could not be stored.
+```
+
+## Creating a bucket
+
+###### Step 1 - Create an AWS account
+
+Go to the [AWS homepage](https://aws.amazon.com/) and create an account if you don't already have one. you can find more information [here](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/).
+
+###### Step 2 - Create an S3 bucket
+
+1. Once logged in, search for S3 in the search box.
+2. Click 'Create Bucket'
+3. Choose a name and AWS region for your bucket
+4. Continue creating the bucket with any extra settings is needed.
+5. Make sure the 'Block all public access' box is ticked if you don't want to allow public access.
+6. Click 'Create Bucket'
+
+###### Step 3 - Set the CORS settings for your bucket
+
+CORS, or Cross-Origin Resource Sharing is a security feature that is used to restrict web applications from accessing resources from different origins, or domain names. To allow your Lowdefy app to access the contents of the bucket, you need to add a CORS rule on the bucket that authorizes your app
+
+1. Click on you bucket.
+2. Click on the 'Permissions' tab.
+3. Click on the 'CORS Configuration' tab.
+4. Paste this configuration and save (Fill in your own Lowdefy domain name).
+
+```json
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET", "PUT", "POST", "DELETE", "HEAD"
+        ],
+        "AllowedOrigins": [
+            "https://YOUR_LOWDEFY_DOMAIN_HERE"
+        ],
+        "ExposeHeaders": []
+    }
+]
+```
+
+###### Step 4 - Create an IAM user
+
+IAM is the AWS identity and access management system. This can be used to give very granular access permissions. We will create a programmatic user that has the rights to read and write objects in the Bucket.
+
+1. In the 'Services' dropdown in the header, search for 'IAM'.
+2. Click on 'Users' in the menu on the left.
+3. Click 'Add User'
+4. Choose a descriptive name for the user.
+5. Choose programmatic access and click next.
+6. Choose 'Attach existing policies directly'.
+7. Choose 'Create Policy'.
+8. Choose the JSON tab and paste the following (Fill in your own bucket name):
+```JSON
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ListObjectsInBucket",
+            "Effect": "Allow",
+            "Action": ["s3:ListBucket"],
+            "Resource": ["arn:aws:s3:::YOUR_BUCKET_NAME_HERE"]
+        },
+        {
+            "Sid": "AllObjectActions",
+            "Effect": "Allow",
+            "Action": "s3:*Object",
+            "Resource": ["arn:aws:s3:::YOUR_BUCKET_NAME_HERE/*"]
+        }
+    ]
+}
+```
+
+9. Choose review policy and save.
+10. In your previous tab, refresh and search for the policy you just created. Attach it to the user.
+11. Click next, review and create the user.
+12. Set the access key id and secret access key in your Lowdefy secrets store.

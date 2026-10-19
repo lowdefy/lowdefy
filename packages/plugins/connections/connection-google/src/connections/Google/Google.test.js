@@ -17,27 +17,27 @@
 import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
 
-const mockCreateGoogleGenerativeAI = jest.fn();
+const mockCreateGoogle = jest.fn();
 
 jest.unstable_mockModule('@ai-sdk/google', () => ({
-  createGoogleGenerativeAI: mockCreateGoogleGenerativeAI,
+  createGoogle: mockCreateGoogle,
 }));
 
 test('Google create returns provider with apiKey', async () => {
   const mockProvider = jest.fn();
-  mockCreateGoogleGenerativeAI.mockReturnValue(mockProvider);
+  mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
 
   const result = Google.create({ connection: { apiKey: 'test-api-key' } });
 
-  expect(mockCreateGoogleGenerativeAI).toHaveBeenCalledWith({ apiKey: 'test-api-key', baseURL: undefined });
+  expect(mockCreateGoogle).toHaveBeenCalledWith({ apiKey: 'test-api-key', baseURL: undefined });
   expect(result).toEqual({ provider: mockProvider });
 });
 
 test('Google create passes baseURL when provided', async () => {
   const mockProvider = jest.fn();
-  mockCreateGoogleGenerativeAI.mockReturnValue(mockProvider);
+  mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
 
@@ -45,7 +45,7 @@ test('Google create passes baseURL when provided', async () => {
     connection: { apiKey: 'test-api-key', baseURL: 'https://custom.google.com' },
   });
 
-  expect(mockCreateGoogleGenerativeAI).toHaveBeenCalledWith({
+  expect(mockCreateGoogle).toHaveBeenCalledWith({
     apiKey: 'test-api-key',
     baseURL: 'https://custom.google.com',
   });
@@ -54,14 +54,39 @@ test('Google create passes baseURL when provided', async () => {
 
 test('Google create handles undefined connection', async () => {
   const mockProvider = jest.fn();
-  mockCreateGoogleGenerativeAI.mockReturnValue(mockProvider);
+  mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
 
   const result = Google.create({ connection: undefined });
 
-  expect(mockCreateGoogleGenerativeAI).toHaveBeenCalledWith({ apiKey: undefined, baseURL: undefined });
+  expect(mockCreateGoogle).toHaveBeenCalledWith({ apiKey: undefined, baseURL: undefined });
   expect(result).toEqual({ provider: mockProvider });
+});
+
+test('Google create returns the connection maxOutputTokens and timeout for its agents', async () => {
+  const mockProvider = jest.fn();
+  mockCreateGoogle.mockReturnValue(mockProvider);
+
+  const { default: Google } = await import('./Google.js');
+
+  const result = Google.create({
+    connection: { apiKey: 'test-api-key', maxOutputTokens: 1024, timeout: 30000 },
+  });
+
+  expect(result).toEqual({ provider: mockProvider, maxOutputTokens: 1024, timeout: 30000 });
+});
+
+test.each([
+  ['maxOutputTokens', 1.5, 'should be an integer.'],
+  ['maxOutputTokens', 0, 'should be at least 1.'],
+  ['timeout', '30s', 'should be an integer.'],
+  ['timeout', 0, 'should be at least 1.'],
+])('Google connection schema rejects %s %p', async (property, value, message) => {
+  const { default: Google } = await import('./Google.js');
+  expect(() =>
+    validate({ schema: Google.schema, data: { apiKey: 'k', [property]: value } })
+  ).toThrow(`Google connection property "${property}" ${message}`);
 });
 
 test('Google has schema', async () => {
@@ -81,7 +106,12 @@ test('valid connection schema with all properties', async () => {
   const { default: Google } = await import('./Google.js');
   const schema = Google.schema;
 
-  const connection = { apiKey: 'AIza-test', baseURL: 'https://custom.google.com' };
+  const connection = {
+    apiKey: 'AIza-test',
+    baseURL: 'https://custom.google.com',
+    maxOutputTokens: 1024,
+    timeout: 30000,
+  };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
@@ -119,4 +149,12 @@ test('baseURL is not a string', async () => {
   expect(() => validate({ schema, data: { apiKey: 'AIza-test', baseURL: true } })).toThrow(
     'Google connection property "baseURL" should be a string.'
   );
+});
+
+test('All requests are present', async () => {
+  const { default: Google } = await import('./Google.js');
+
+  expect(Google.requests.Decide).toBeDefined();
+  expect(Google.requests.GenerateObject).toBeDefined();
+  expect(Google.requests.GenerateText).toBeDefined();
 });

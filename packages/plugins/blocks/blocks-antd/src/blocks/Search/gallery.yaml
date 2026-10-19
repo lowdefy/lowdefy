@@ -32,11 +32,11 @@
           - label: Concepts
             match:
               section: Concepts
-            icon: AiOutlineBulb
+            icon: Lightbulb
           - label: Blocks
             match:
               section: Blocks
-            icon: AiOutlineLayout
+            icon: PanelsTopLeft
       events:
         onSelect:
           - id: navigate
@@ -89,15 +89,15 @@
           - label: Admin
             match:
               category: Admin
-            icon: AiOutlineSetting
+            icon: settings
           - label: Finance
             match:
               category: Finance
-            icon: AiOutlineDollar
+            icon: DollarSign
           - label: Analytics
             match:
               category: Analytics
-            icon: AiOutlineBarChart
+            icon: chart
         placeholder: Search features...
         label: Find
         shortcut: mod+k

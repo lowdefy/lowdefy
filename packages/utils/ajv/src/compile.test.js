@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import ajv from './ajvInstance.js';
 import compile from './compile.js';
 
 test('compile returns a validator function that returns valid:true on success', () => {
@@ -194,4 +195,29 @@ test('compiled validator returns every failure below the cap', () => {
   const result = validator({ string: 7, number: '7', boolean: 7 });
   expect(result.valid).toBe(false);
   expect(result.errors).toHaveLength(3);
+});
+
+test('compile leaves no schema behind on the shared instance', () => {
+  const before = ajv._cache.size;
+  for (let i = 0; i < 3; i++) {
+    compile({ schema: { type: 'object', properties: { a: { type: 'string' } } } });
+  }
+  expect(ajv._cache.size).toBe(before);
+});
+
+test('compile accepts a fresh copy of a schema with an $id it compiled before', () => {
+  const schema = () => ({
+    $id: 'https://example.com/order.json',
+    type: 'object',
+    required: ['id'],
+  });
+  compile({ schema: schema() });
+  const validator = compile({ schema: schema() });
+  expect(validator({ id: 1 }).valid).toBe(true);
+  expect(validator({}).valid).toBe(false);
+});
+
+test('compile accepts a boolean schema', () => {
+  expect(compile({ schema: true })('anything').valid).toBe(true);
+  expect(compile({ schema: false })('anything').valid).toBe(false);
 });

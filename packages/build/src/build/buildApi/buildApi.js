@@ -27,17 +27,16 @@ function buildApi({ components, context }) {
   const checkDuplicateEndpointId = createCheckDuplicateId({
     message: 'Duplicate endpointId "{{ id }}".',
   });
+  // Validated by validateConfig, which runs before buildApi.
+  const environments = components.config?.environments;
 
   // Wrap each endpoint build to collect errors instead of stopping on first error
   api.forEach((endpoint, index) => {
     try {
-      buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId });
+      buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, environments });
     } catch (error) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
-      if (
-        error instanceof ConfigError &&
-        shouldSuppressBuildCheck(error, context.keyMap)
-      ) {
+      if (error instanceof ConfigError && shouldSuppressBuildCheck(error, context.keyMap)) {
         return;
       }
       // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)

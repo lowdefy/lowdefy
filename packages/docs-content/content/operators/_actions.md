@@ -1,0 +1,58 @@
+# _actions
+
+```
+(key: string): any
+(all: boolean): any
+(arguments: {
+  all?: boolean,
+  key?: string,
+  default?: any,
+}): any
+```
+
+The `_actions` operator returns the response value for a preceding action in the same event list.
+
+The action response object has the following structure:
+```yaml
+error: Error,
+index: number,
+response: any,
+skipped: boolean,
+type: string,
+```
+
+Actions the event does not execute for a control-flow reason — actions in an untaken [`:if`](/:if) branch, in an unmatched [`:switch`](/:switch) case, or after a [`:return`](/:return) — are recorded as `skipped: true`, the same as actions skipped by their own `skip` field. Their operators are not evaluated, and `_actions` lookups on them return the skipped response object. Skipped entries are recorded in config order: when a branch executes, untaken branches written above it (an untaken `:then` when `:else` runs, or already-unmatched earlier cases) are recorded and readable, while branches below it are only recorded once the control completes. Actions after the control can read all of them.
+
+#### Arguments
+
+###### string
+If the `_actions` operator is called with a string equal to a preceding action id in the same event list, the action response object returned. If a string is passed which does not match preceding action id in the same event list, `null` is returned. Dot notation is supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably.
+
+###### boolean
+If the `_actions` operator is called with boolean argument `true`, an object with all the preceding action id responses in the same event list is returned.
+
+#### Examples
+
+##### Using a action response:
+```yaml
+_actions: my_action.response
+```
+Returns: The response returned by the action.
+
+##### Setting a action response to `state`:
+```yaml
+id: refresh
+type: Button
+events:
+  onClick:
+    - id: get_fresh_data
+      type: Request
+      skip:
+        _state: should_not_fetch
+      params: get_data
+    - id: set_data
+      type: SetState
+      params:
+        did_not_fetch_data:
+          _actions: get_fresh_data.skipped
+```

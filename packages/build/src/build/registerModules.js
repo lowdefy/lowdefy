@@ -16,16 +16,18 @@
 
 import path from 'path';
 import semver from 'semver';
-import { type } from '@lowdefy/helpers';
+import { ReservedKeyError, setKey, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import operators from '@lowdefy/operators-js/operators/build';
 
 import { resolve, WalkContext } from './buildRefs/walker.js';
+import { assertNoPlaceholderLeaks } from './buildRefs/deferredRegistry.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
-import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
+import validateModuleAuthManifest from './validateModuleAuthManifest.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
+import { makeShouldStop } from './buildRefs/deferredRegions.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
@@ -46,7 +48,9 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
         if (!varDef.properties[key]) {
           throw new ConfigError(
             `Module "${entryId}" (${source}) var "${fullName}" has undeclared ` +
-              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(', ')}.`
+              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(
+                ', '
+              )}.`
           );
         }
       }
@@ -65,12 +69,83 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
   }
 }
 
+function getRuntimeOperatorKey(value) {
+  if (!type.isObject(value)) return null;
+  const nonTildeKeys = Object.keys(value).filter((k) => !k.startsWith('~'));
+  if (nonTildeKeys.length === 1 && nonTildeKeys[0].startsWith('_')) return nonTildeKeys[0];
+  return null;
+}
+
+function suggestBuildOperator(operatorKey) {
+  // '_string.concat' -> '_build.string.concat', '_sum' -> '_build.sum'
+  return `_build.${operatorKey.slice(1)}`;
+}
+
+// Component bodies are preserved by config path (components.<i>.component), so
+// bodies under an operator object at `components` itself or at an array element
+// escape preservation and resolve eagerly during the manifest walk. That is
+// harmless for static bodies (operator-composed component lists are supported —
+// pinned by fixture 81-cross-module-build-op-components), but a _var in such a
+// body resolves against the manifest walk's scope instead of the consumer's
+// per-ref vars — a silently wrong value. Error on that combination explicitly.
+// A _ref at either position is fully safe: it resolves top-down, so paths
+// inside the ref'd file still match the preserve regex. An operator at
+// components.<i>.component itself is inside the preserved body and is fine.
+function findVarNode(value) {
+  if (type.isArray(value)) {
+    for (const item of value) {
+      const found = findVarNode(item);
+      if (found) return found;
+    }
+    return null;
+  }
+  if (!type.isObject(value)) return null;
+  if (getRuntimeOperatorKey(value) === '_var') return value;
+  for (const key of Object.keys(value)) {
+    const found = findVarNode(value[key]);
+    if (found) return found;
+  }
+  return null;
+}
+
+function assertStaticComponentsList({ components, entryId, filePath }) {
+  if (!type.isObject(components) && !type.isArray(components)) return;
+  const check = (value, position) => {
+    const operatorKey = getRuntimeOperatorKey(value);
+    if (operatorKey && operatorKey !== '_ref' && findVarNode(value)) {
+      throw new ConfigError(
+        `Module "${entryId}": _var inside an operator-generated components section ` +
+          `cannot resolve per consumer. Found "${operatorKey}" at ${position} with a _var ` +
+          `in its content. Define components whose bodies use _var as static ` +
+          `{ id, component } list items so the bodies are preserved.`,
+        { filePath }
+      );
+    }
+  };
+  check(components, '"components"');
+  if (type.isArray(components)) {
+    components.forEach((item, i) => check(item, `"components.${i}"`));
+  }
+}
+
 function validateVarTypes(varDefs, resolvedVarCache, entryId, source, prefix = '') {
   for (const [varName, varDef] of Object.entries(varDefs)) {
     const fullName = prefix ? `${prefix}.${varName}` : varName;
     const value = resolvedVarCache[fullName];
 
     if (varDef.type && !type.isNone(value)) {
+      // A typed var must hold a concrete value — runtime operators are not allowed
+      // regardless of whether they are static-foldable or dynamic. Suggest the
+      // build-time equivalent so the user knows how to fix it.
+      const operatorKey = getRuntimeOperatorKey(value);
+      if (operatorKey) {
+        throw new ConfigError(
+          `Module "${entryId}" (${source}) var "${fullName}" is typed "${varDef.type}" ` +
+            `but received a runtime operator "${operatorKey}". ` +
+            `Use the build-time equivalent "${suggestBuildOperator(operatorKey)}" instead.` +
+            (varDef.description ? `\n  - ${varDef.description}` : '')
+        );
+      }
       if (type.typeOf(value) !== varDef.type) {
         throw new ConfigError(
           `Module "${entryId}" (${source}) var "${fullName}" must be type ` +
@@ -96,13 +171,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
         `Use a flat identifier like "team-users".`
     );
   }
-  if (entry.id === '__proto__' || entry.id === 'constructor' || entry.id === 'prototype') {
-    throw new ConfigError(`Module entry id "${entry.id}" is a reserved name.`);
-  }
   if (!entry.source || !type.isString(entry.source)) {
-    throw new ConfigError(
-      `Module entry "${entry.id}": 'source' is required and must be a string.`
-    );
+    throw new ConfigError(`Module entry "${entry.id}": 'source' is required and must be a string.`);
   }
 
   if (Object.hasOwn(context.modules, entry.id)) {
@@ -118,7 +188,18 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   const refDef = makeRefDefinition(moduleYamlPath, null, context.refMap);
   const content = await getRefContent({ context, refDef, referencedFrom: null });
 
-  // Run walker with shouldStop preserving content that may contain cross-module refs
+  if (type.isObject(content)) {
+    assertStaticComponentsList({
+      components: content.components,
+      entryId: entry.id,
+      filePath: moduleYamlPath,
+    });
+  }
+
+  // Phase A — header parse: walk only the static header keys (dependencies,
+  // plugins, secrets, vars definitions — defaults record-ified). Content
+  // sections stay raw parsed YAML; Phase C.5 record-ifies exportables and
+  // Phase D resolves the rest.
   const ctx = new WalkContext({
     buildContext: context,
     refId: refDef.id,
@@ -126,21 +207,17 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     vars: {},
     moduleRoot,
     packageRoot,
+    // The entry object is created after this walk; deferred-record coordinates
+    // still need the owning entry id.
+    entryId: entry.id,
     path: '',
     currentFile: moduleYamlPath,
     refChain: new Set(refDef.path ? [refDef.path] : []),
     operators,
     env: process.env,
+    lowdefyApp: context.appMeta,
     dynamicIdentifiers,
-    shouldStop: (childPath) => {
-      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
-      if (/^pages(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^api(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^connections(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^menus\.\d+\.links$/.test(childPath)) return 'preserve';
-      return false;
-    },
+    shouldStop: makeShouldStop('header'),
   });
 
   const manifest = await resolve(content, ctx);
@@ -150,7 +227,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   for (const dep of dependencies) {
     if (!type.isString(dep.id)) {
       throw new ConfigError(
-        `Module "${entry.id}": each item in "dependencies" must have a string "id".`
+        `Module "${entry.id}": each item in "dependencies" must have a string "id".`,
+        { filePath: moduleYamlPath }
       );
     }
   }
@@ -168,7 +246,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     if (!type.isString(plugin.version)) {
       throw new ConfigError(
         `Module "${entry.id}": plugin "${plugin.name}" must declare a "version" ` +
-          `(semver range) in module.lowdefy.yaml.`
+          `(semver range) in module.lowdefy.yaml.`,
+        { filePath: moduleYamlPath }
       );
     }
   }
@@ -187,7 +266,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
           `Add it to your app's plugins array in lowdefy.yaml:\n\n` +
           `  plugins:\n` +
           `    - name: "${plugin.name}"\n` +
-          `      version: "${semver.minVersion(plugin.version)}"`
+          `      version: "${semver.minVersion(plugin.version)}"`,
+        { filePath: moduleYamlPath }
       );
     }
     if (appVersion.startsWith('workspace:')) {
@@ -197,28 +277,81 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
       throw new ConfigError(
         `Module "${entry.id}" requires plugin "${plugin.name}" version "${plugin.version}" ` +
           `but the app has version "${appVersion}" installed. ` +
-          `Update the plugin to a compatible version.`
+          `Update the plugin to a compatible version.`,
+        { filePath: moduleYamlPath }
       );
     }
   }
 
-  context.modules[entry.id] = {
-    id: entry.id,
-    source: entry.source,
-    packageRoot,
-    moduleRoot,
-    isLocal,
-    consumerVars: entry.vars ?? {},
-    varDefs,
-    resolvedVarCache: {},
-    connections: entry.connections ?? {},
-    manifest,
-    dependencies,
-    moduleDependencies: entry.dependencies ?? {},
-    refDef,
-  };
+  try {
+    setKey(context.modules, entry.id, {
+      id: entry.id,
+      source: entry.source,
+      packageRoot,
+      moduleRoot,
+      isLocal,
+      consumerVars: entry.vars ?? {},
+      varDefs,
+      resolvedVarCache: {},
+      connections: entry.connections ?? {},
+      manifest,
+      dependencies,
+      moduleDependencies: entry.dependencies ?? {},
+      refDef,
+    });
+  } catch (error) {
+    if (error instanceof ReservedKeyError) {
+      throw new ConfigError(`Module entry id "${entry.id}" is a reserved name.`, { cause: error });
+    }
+    throw error;
+  }
 }
 
+// Phase C.5 — record-ify exportables: walk only the components and menus
+// sections in module-static scope (entry id known, but NO moduleEntry on the
+// context — a _module.var at a structural position errors, because export ids
+// must not vary per consumer). File refs are entered and static operators
+// resolve; component bodies and menu links become records before any phase can
+// consume them, so cross-entry consumption never races record creation.
+async function recordifyExportables({ entryId, context }) {
+  const moduleEntry = context.modules[entryId];
+  const { manifest, packageRoot, moduleRoot, refDef } = moduleEntry;
+  const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
+
+  if (type.isObject(manifest)) {
+    assertStaticComponentsList({
+      components: manifest.components,
+      entryId,
+      filePath: moduleYamlPath,
+    });
+  }
+
+  const ctx = new WalkContext({
+    buildContext: context,
+    refId: refDef.id,
+    sourceRefId: null,
+    vars: {},
+    moduleRoot,
+    packageRoot,
+    entryId,
+    path: '',
+    currentFile: moduleYamlPath,
+    refChain: new Set(refDef.path ? [refDef.path] : []),
+    operators,
+    env: process.env,
+    lowdefyApp: context.appMeta,
+    dynamicIdentifiers,
+    shouldStop: makeShouldStop('exportables'),
+  });
+
+  moduleEntry.manifest = await resolve(manifest, ctx);
+}
+
+// Phase D — manifest resolve: ONE full walk with the module entry in context.
+// Pages, api, and connections resolve completely; component/menuLinks
+// placeholders pass through the kind-aware dispatch untouched; varDefault
+// placeholders keep their rule so the dispatch cannot force demand-only
+// records.
 async function resolveFullManifest({ entryId, context }) {
   const moduleEntry = context.modules[entryId];
   const { manifest, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
@@ -239,26 +372,35 @@ async function resolveFullManifest({ entryId, context }) {
     refChain: new Set(refDef.path ? [refDef.path] : []),
     operators,
     env: process.env,
+    lowdefyApp: context.appMeta,
     dynamicIdentifiers,
-    shouldStop: (childPath) => {
-      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
-      return false;
-    },
+    shouldStop: makeShouldStop('manifest'),
   });
 
-  let resolved = await resolve(manifest, ctx);
+  const resolved = await resolve(manifest, ctx);
 
-  resolved = evaluateStaticOperators({ context, input: resolved, refDef });
-
-  // Filter null entries produced by _ref resolution failures
-  for (const key of ['pages', 'connections', 'api']) {
+  // Filter null entries produced by _ref resolution failures. The arrays are
+  // filtered in place so they keep their ~r ref marker: the dev server's
+  // skeleton source files find a module's pages list file through it.
+  for (const key of ['pages', 'connections', 'api', 'agents', 'notifications', 'websockets']) {
     if (type.isArray(resolved[key])) {
-      resolved[key] = resolved[key].filter((item) => !type.isNone(item));
+      const items = resolved[key].filter((item) => !type.isNone(item));
+      resolved[key].splice(0, resolved[key].length, ...items);
     }
   }
 
   moduleEntry.manifest = resolved;
+
+  // The auth section is fully resolved now - validate its shape before
+  // buildModules contributes it to the app's auth config.
+  validateModuleAuthManifest({
+    agents: resolved.agents,
+    api: resolved.api,
+    auth: resolved.auth,
+    entryId,
+    filePath: moduleYamlPath,
+    websockets: resolved.websockets,
+  });
 
   // Validate var types against lazily-resolved values
   const varDefs = moduleEntry.varDefs;
@@ -267,4 +409,24 @@ async function resolveFullManifest({ entryId, context }) {
   }
 }
 
-export { resolveLocalManifest, resolveFullManifest, validateRequiredVars };
+// Step 3 (orchestrator step): full-resolve every registered module's manifest —
+// cross-module refs, preserved content. Runs AFTER resolveAuthConfigProjection so
+// module page/api/connection operators (e.g. _build.authConfig) resolve against a
+// computed projection. Ends with the post-sweep placeholder-leak invariant.
+async function resolveModuleManifests({ context }) {
+  for (const entryId of Object.keys(context.modules)) {
+    await resolveFullManifest({ entryId, context });
+  }
+
+  // Post-sweep invariant: no deferred placeholder survives outside the
+  // per-consumer slots (manifest component/menu bodies, varDefs defaults).
+  assertNoPlaceholderLeaks(context);
+}
+
+export {
+  resolveLocalManifest,
+  recordifyExportables,
+  resolveFullManifest,
+  resolveModuleManifests,
+  validateRequiredVars,
+};

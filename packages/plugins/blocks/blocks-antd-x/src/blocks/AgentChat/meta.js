@@ -16,7 +16,9 @@
 
 export default {
   category: 'display',
-  icons: [],
+  actions: ['Request', 'SetState'],
+  operators: ['_event'],
+  icons: ['refresh', 'delete', 'bot', 'message', 'user', 'attach', 'close'],
   valueType: null,
   events: {
     onMessageComplete: 'Trigger when a message finishes streaming.',
@@ -26,7 +28,8 @@ export default {
     onConversationStart:
       'Trigger once when a conversation starts, on its first user message. Event contains the conversationId (auto-minted when no conversationId property is set).',
     onError: 'Trigger on stream error.',
-    onFeedback: 'Trigger when the user clicks thumbs up or down on a message.',
+    onFeedback:
+      'Trigger when the user clicks thumbs up or down on a message. Event contains messageId, messageContent and rating, where rating is `like`, `dislike`, or `default` when the user clicks the selected thumb again to clear the rating.',
     onRegenerate: 'Trigger when the user clicks regenerate on a message.',
     onDeleteMessage: 'Trigger when the user deletes a message.',
     onEditMessage: 'Trigger when the user edits and resubmits a message.',
@@ -37,12 +40,16 @@ export default {
     onSwitchChange: 'Trigger when the user toggles a sender switch.',
     onDataPart:
       'Trigger when the agent sends a custom data part. Event contains type, data, and id.',
+    onLinkClick:
+      'Trigger when the user clicks a link in a message. Event contains href and text. Wiring this event suppresses the default navigation for plain left clicks, so the app can open the target in place; modified clicks (new tab, middle click) always navigate.',
   },
   methods: {
     regenerate:
       'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',
     setMessages: 'Replace the message list. Accepts args.messages array.',
     sendMessage: 'Send a message programmatically. Accepts args.text string.',
+    setInput:
+      'Fill the composer without sending. Accepts args.text string; anything else empties it.',
     clearMessages: 'Clear all messages from the chat.',
     deleteMessage: 'Delete a specific message. Accepts args.messageId string.',
     stop: 'Stop the current streaming response.',

@@ -16,8 +16,25 @@
 
 export { default as buildModuleDefs } from './build/buildModuleDefs.js';
 export { default as buildModules } from './build/buildModules.js';
+export { default as generateClientJsModule } from './build/buildJs/generateClientJsModule.js';
+export { default as collectIconNames } from './build/buildImports/collectIconNames.js';
+export { default as defaultIconAliases } from './build/buildImports/defaultIconAliases.js';
+export { default as createIconContext } from './build/icons/createIconContext.js';
+export { default as getLucideIconNames } from './build/icons/getLucideIconNames.js';
+export { default as loadIconSets } from './build/icons/loadIconSets.js';
+export { default as resolveIconName } from './build/icons/resolveIconName.js';
 export { default as shallowBuild } from './build/jit/shallowBuild.js';
 export { default as buildPageJit } from './build/jit/buildPageJit.js';
+export { default as createJitMaps } from './build/jit/createJitMaps.js';
+export { default as createPageBuildContext } from './build/jit/createPageBuildContext.js';
+export { default as pageBuildOwnedFields } from './build/jit/pageBuildOwnedFields.js';
+export { default as prepareJitContext } from './build/jit/prepareJitContext.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
+export { default as resolvePagePath } from './build/jit/resolvePagePath.js';
+export { default as check } from './check.js';
 export { default as createContext } from './createContext.js';
+export { default as createReadConfigFile } from './utils/readConfigFile.js';
 export { default as makeId } from './utils/makeId.js';
+export { default as restoreTenantTargets } from './build/restoreTenantTargets.js';
+export { default as serializeBuildException } from './utils/serializeBuildException.js';
+export { hydrateDeferredRecords } from './build/buildRefs/deferredRegistry.js';

@@ -16,4 +16,4 @@
 
 import createAgGridInputHelper from '../../createAgGridInputHelper.js';
 
-export default createAgGridInputHelper('material');
+export default createAgGridInputHelper();

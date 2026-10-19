@@ -2,22 +2,17 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": [
-        "_state is not available in request properties"
-      ],
+      "warnings": ["_state is not available in request properties"],
       "warningContains": [
+        "[ConfigWarning \u00b7 fails in prod] _state is not available in request properties.",
         "Found _state in request \"insert_contact\" on page \"page_1\"",
         "then reference it in request properties using _payload"
       ]
     },
     {
       "mode": "prod",
-      "errors": [
-        "_state is not available in request properties"
-      ],
-      "errorContains": [
-        "Found _state in request \"insert_contact\" on page \"page_1\""
-      ],
+      "errors": ["_state is not available in request properties"],
+      "errorContains": ["Found _state in request \"insert_contact\" on page \"page_1\""],
       "expectThrow": true
     }
   ]

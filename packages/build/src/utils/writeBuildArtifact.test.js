@@ -11,24 +11,42 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
-    writeFile: jest.fn(),
+    writeFileAtomic: jest.fn(),
+    writeFileIfChanged: jest.fn(),
   };
 });
 const directories = { build: '/build' };
 
-test('Write build artifact.', async () => {
+test('writeBuildArtifact writes content through writeFileIfChanged at the build path', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
-  nodeUtils.writeFile.mockImplementation(() => Promise.resolve(null));
+  nodeUtils.writeFileIfChanged.mockImplementation(() => Promise.resolve(true));
   const createWriteBuildArtifact = (await import('./writeBuildArtifact.js')).default;
 
   const writeBuildArtifact = createWriteBuildArtifact({ directories });
 
   await writeBuildArtifact('artifact.txt', 'Test artifact content');
-  expect(nodeUtils.writeFile.mock.calls).toEqual([
-    ['/build/artifact.txt', 'Test artifact content'],
+  expect(nodeUtils.writeFileIfChanged.mock.calls).toEqual([
+    [path.join('/build', 'artifact.txt'), 'Test artifact content'],
   ]);
+});
+
+test('writeBuildArtifact writes through writeFileAtomic when atomic is set', async () => {
+  const nodeUtils = await import('@lowdefy/node-utils');
+  nodeUtils.writeFileAtomic.mockImplementation(() => Promise.resolve());
+  nodeUtils.writeFileIfChanged.mockClear();
+  const createWriteBuildArtifact = (await import('./writeBuildArtifact.js')).default;
+
+  const writeBuildArtifact = createWriteBuildArtifact({ directories });
+
+  await writeBuildArtifact('jitMaps/a-1-1.json', '{}', { atomic: true });
+  expect(nodeUtils.writeFileAtomic.mock.calls).toEqual([
+    [path.join('/build', 'jitMaps', 'a-1-1.json'), '{}'],
+  ]);
+  expect(nodeUtils.writeFileIfChanged).not.toHaveBeenCalled();
 });

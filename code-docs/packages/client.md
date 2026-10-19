@@ -24,7 +24,7 @@ import Client from '@lowdefy/client';
   config={pageConfig}
   jsMap={customJsFunctions}
   lowdefy={lowdefyContext}
-  router={nextRouter}
+  router={router}
   stage={buildStage}
   types={typeDefinitions}
   window={windowObject}
@@ -42,12 +42,9 @@ import Client from '@lowdefy/client';
 │  └─────────────────┘  └─────────────────┘  └────────┬────────┘  │
 │                                                      │          │
 │                                              ┌───────▼───────┐  │
-│                                              │     Head      │  │
-│                                              │ (meta tags)   │  │
-│                                              └───────────────┘  │
-│                                              ┌───────▼───────┐  │
 │                                              │     Block     │  │
-│                                              │ (root block)  │  │
+│                                              │ (root block,  │  │
+│                                              │  renders Head)│  │
 │                                              └───────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -64,6 +61,20 @@ import Client from '@lowdefy/client';
 | `DisplayMessage.js`        | Toast notifications and messages                  |
 | `ProgressBarController.js` | Loading progress indicator                        |
 | `useDarkMode.js`           | Dark mode hook (config → localStorage → OS pref)  |
+
+### Page Instances and Navigation
+
+The server shells (prod, e2e, dev) fetch pages by path and pass `Client` the server's match of the
+shown page: `matchedPath` (no basePath, no outer slashes, still encoded) and `pathParams`, next to
+`pageConfig`. `Client.js` keys the page tree by the instance key (`pageInstanceKey` from
+`@lowdefy/helpers`, `{instanceKey}:{build}` for a dynamic page), so a new set of path values
+remounts the tree, and `Context.js` hands `pathParams` to `getContext`. `initLowdefyContext` writes
+the shown page to the path memory (`rememberPath`) on every render, before the page context is
+built, so the first load's entry is there before any plugin runs; the memory itself lasts the
+session, across a dev config reload. The router's location (`createRouter`) is
+`{ path, pathname, search }` and names no page: the page comes from the server, and is read back
+from the path memory. The auth callbacks resolve their targets with `resolveTarget` (so they take
+`pathParams`) and write a page target to the path memory (`rememberTarget`) before the push.
 
 ### Block Rendering (`/block/`)
 
@@ -101,11 +112,36 @@ See [keyboard-shortcuts.md](../architecture/keyboard-shortcuts.md) for the full 
 | `createHandleError.js`   | Creates error handler with dedup, server round-trip, display |
 | `setupLink.js`           | Configures navigation links                                  |
 | `createLinkComponent.js` | Creates the Link component for navigation                    |
-| `createIcon.js`          | Creates icon rendering function                              |
+| `createIcon.js`          | Creates the `Icon` component that renders `IconData`         |
 
 ### Authentication (`/auth/`)
 
 Handles auth state and session management on the client.
+
+### Icons (`createIcon.js`)
+
+`createIcon({ icons, loadAllIcons })` returns the `Icon` component that blocks receive as `components.Icon`, and that HTML `data-icon` renders through `registerHtmlEnhancements`. `icons` is `types.icons`: a plain map from icon names (semantic `edit`, set `Pencil`, qualified `lucide:Pencil`) to `IconData`. In dev and e2e it is the build-generated `plugins/icons.js`, every icon the app uses. The production server fills it per page (each page's types module carries its own icons) and passes `loadAllIcons` to `Client`, which loads the app-wide `plugins/icons.js` into the same map:
+
+```javascript
+{ node: [['path', { d: 'M21.174 6.812…' }], ['path', { d: 'm15 5 4 4' }]], size: 24, attrs: { … } }
+```
+
+The build resolves names and bakes set `attrs` into the data, so the client does a plain `Icons[name]` lookup on every render (never at creation, so dev can add names to the same object later).
+
+**Rendering.** The data renders as children of lucide-react's generic `Icon`, with `icon={{ node: [], size, width, height }}` giving the viewBox. `renderNodes` walks the node tree recursively with index keys, because lucide-react's own `iconNode` renderer drops nested children. The `<svg>` sits inside `@ant-design/icons`' `Icon` through a stable `IconHost`, so the DOM stays `span.anticon > svg.lucide` and antd component CSS still spaces icons.
+
+**Props.**
+
+- `size`, `strokeWidth` and `nonScalingStroke` are per-icon props over the `LucideProvider` defaults. `Client.js` sets the provider from `lowdefy.theme.icons`, read at render because `createIcon` runs before the theme is set. The build writes the defaults into `theme.json`, so there are no client fallbacks.
+- `nonScalingStroke` is read with `useLucideContext()` and set as `vector-effect` on each shape, because children bypass lucide-react's handling.
+- `color` and `rotate` go through CSS (`color`, `transform`), so they work for stroke and fill sets alike.
+- An empty title sets `aria-hidden="true"`; a non-empty one renders a `<title>` child. The Icon block generates titles from names (`ArrowLeftRight` → "Arrow left right"); HTML icons pass `title: ''`.
+- `spin` swaps in the spinning `loading` icon. An unknown name renders `icon-missing` in red. Both are semantic names, so aliases and sets restyle them.
+- With `loadAllIcons`, the first miss of a name renders an empty `<svg>` with the icon's props (same box, no fallback flash) and calls it; every pending icon re-renders when it settles. After one successful load a missing name is unknown and renders `icon-missing` at once. A failed load renders `icon-missing`; the loader logs it and clears itself, so a later miss retries.
+
+**antd chrome.** `Client.js` also wraps the page in a nested `ConfigProvider` whose icon keys (`modal.closeIcon`, `alert.successIcon`, `collapse.expandIcon`, `button.loadingIcon`, …) are `<Icon>` elements with semantic names. Message, Notification and ConfirmModal render through `App.useApp()` holders above `Client`, so the message and notification helpers set `icon` and `closeIcon` on each call instead.
+
+See [plugin-system.md](../architecture/plugin-system.md#icon-sets) for how the build resolves names.
 
 ## The Lowdefy Context
 
@@ -117,7 +153,7 @@ lowdefy = {
   user: { id, email, roles, ... },
 
   // Navigation
-  router: nextRouter,
+  router: router,
   Link: LinkComponent,
 
   // Configuration
@@ -133,10 +169,22 @@ lowdefy = {
     callEndpoint: fn,            // Call API endpoints
     handleError: fn,             // Error handler with dedup, server round-trip, display
     logger: browserLogger,       // Shared browser logger (createBrowserLogger)
+    storage: { appKey, userKey, clearUserStorage, clearUserStorageOnOwnerChange },
     ...
   }
 }
 ```
+
+## Browser Storage
+
+Every key Lowdefy writes to `localStorage` is namespaced by app, because storage is shared by every app on an origin: `appStorageKey({ basePath, name, slug })` (`@lowdefy/helpers`) gives `lowdefy:<slug>:<basePath>:<name>`. The server templates use it for the pre-hydration dark mode script, `App.jsx` for the dark mode and locale preferences, and `src/storage/createStorage.js` for `lowdefy._internal.storage`.
+
+A person's data (Search recent searches, Table persisted views) goes under a user key: `lowdefy:<slug>:<basePath>:lowdefy_user:<encoded user id>:<name>`, with an empty id for an anonymous visitor. `lowdefy_` is a reserved prefix for `SetLocalStorage` keys, so no author key reads as a user key. User keys are removed:
+
+- by `Logout`, after the sign-out succeeds and before it navigates (`clearUserStorage({ keepUserId: null })`);
+- by `initLowdefyContext` on every render, when any user key belongs to someone other than the user now signed in (`clearUserStorageOnOwnerChange`). This covers a session that ended without `Logout` (the page reloads signed out) and another person signing in on the browser.
+
+Clearing also removes the `lowdefy_scroll` session storage entry; device preferences and the build reload markers stay. Blocks reach the keys through `methods.getAppStorageKey(name)` and `methods.getUserStorageKey(name)` (also on loading skeleton methods), actions through `methods.getAppStorageKey(name)` (engine `getActionMethods`). `useDarkMode` and `useLocale`, and `GetLocalStorage`, move a value found under the old bare key to the app key on first read. The dark mode preference is published as `window.__lowdefy_darkModePreference`, which `SetDarkMode`, `_media: darkModePreference` and the header toggles read instead of storage.
 
 ## Page Context
 
@@ -185,10 +233,9 @@ context = {
 6. Wait for onInitDone
          │
          ▼
-7. Render Head (meta tags)
-         │
-         ▼
-8. Render root Block
+7. Render root Block
+   - Renders Head (the page title) from the root block's properties, so the
+     title follows every update of the page block
    - Recursively renders block tree
    - Each block gets its component and props
 ```
@@ -239,7 +286,7 @@ Blocks receive it as a prop, not via React context, for performance.
 - **@lowdefy/layout**: Provides layout components. Container.js, InputContainer.js, etc. pass `classNames.block`/`styles.block` to BlockLayout, and layout components accept `className`/`style` props instead of the deprecated `makeCssClass`/`blockStyle`/`areaStyle` pattern.
 - **@lowdefy/block-utils**: Block helper utilities
 - **Block plugins**: Actual UI components
-- **Next.js**: Router and head management
+- **`@lowdefy/client/adapters`**: History-API router, Link and Head components the server packages pass in as `router` and `Components`
 
 ## Event Flow Example
 

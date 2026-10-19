@@ -14,15 +14,10 @@
   limitations under the License.
 */
 
-import { expect } from '@playwright/test';
-import { get } from '@lowdefy/helpers';
+import pageContextExpression from './instanceKey.js';
 
 async function getState(page) {
-  return page.evaluate(() => {
-    const lowdefy = window.lowdefy;
-    const pageId = lowdefy?.pageId;
-    return lowdefy?.contexts?.[`page:${pageId}`]?.state;
-  });
+  return page.evaluate(`${pageContextExpression}?.state`);
 }
 
 async function getBlockState(page, { blockId }) {
@@ -31,29 +26,17 @@ async function getBlockState(page, { blockId }) {
 }
 
 async function setState(page, { key, value }) {
+  // context.methods.setState does not exist on engine contexts - the engine's
+  // action layer (see createSetState.js) writes state via State.set() and then
+  // triggers a re-render via context._internal.update().
   await page.evaluate(
-    ({ k, v }) => {
-      const lowdefy = window.lowdefy;
-      const pageId = lowdefy?.pageId;
-      const context = lowdefy?.contexts?.[`page:${pageId}`];
-      if (context?.methods?.setState) {
-        context.methods.setState({ [k]: v });
-      }
+    ({ k, v, getContext }) => {
+      const context = new Function(`return ${getContext}`)();
+      context._internal.State.set(k, v);
+      context._internal.update();
     },
-    { k: key, v: value }
+    { k: key, v: value, getContext: pageContextExpression }
   );
 }
 
-async function expectState(page, { key, value, timeout = 5000 }) {
-  await expect
-    .poll(
-      async () => {
-        const state = await getState(page);
-        return get(state, key);
-      },
-      { timeout }
-    )
-    .toEqual(value);
-}
-
-export { getState, getBlockState, setState, expectState };
+export { getState, getBlockState, setState };

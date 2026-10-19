@@ -106,6 +106,36 @@ test('api endpoint id contains invalid characters', () => {
   );
 });
 
+test('api endpoint id is a reserved name', () => {
+  const components = {
+    api: [
+      {
+        id: '__proto__',
+        type: 'Api',
+        routine: [],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint id "__proto__" is a reserved name and cannot be used as an id.'
+  );
+});
+
+test('api step id is a reserved name', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: [{ id: 'constructor' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step id "constructor" at endpoint "api1" is a reserved name and cannot be used as an id.'
+  );
+});
+
 test('api type missing', () => {
   const components = {
     api: [
@@ -192,4 +222,279 @@ test('valid api endpoint', () => {
       },
     ],
   });
+});
+
+test('api endpoint schedules pass through to the artifact', () => {
+  const components = {
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: [
+          { cron: '0 6 * * *', payload: { mode: 'full' } },
+          { cron: '*/15 * * * *', payload: { mode: 'incremental' } },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].schedules).toEqual([
+    { cron: '0 6 * * *', payload: { mode: 'full' } },
+    { cron: '*/15 * * * *', payload: { mode: 'incremental' } },
+  ]);
+});
+
+test('api endpoint with invalid cron expression throws', () => {
+  const components = {
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: [{ cron: '0 6 * * MON' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedule 0 cron "0 6 * * MON" is invalid at "scheduled_api"'
+  );
+});
+
+test('api endpoint with duplicate cron expressions throws', () => {
+  const components = {
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: [{ cron: '0 6 * * *' }, { cron: '0 6 * * *' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedule 1 has duplicate cron "0 6 * * *" at "scheduled_api".'
+  );
+});
+
+test('api endpoint schedules is not an array throws', () => {
+  const components = {
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: '0 6 * * *',
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedules is not an array or an object keyed by environment at "scheduled_api".'
+  );
+});
+
+const environments = {
+  production: { url: 'https://example.com' },
+  staging: { url: 'https://staging.example.com', cron: { secret: 'STAGING_CRON_SECRET' } },
+};
+
+test('api endpoint schedules keyed by environment resolve every declared environment', () => {
+  const components = {
+    config: { environments },
+    api: [
+      {
+        id: 'override_api',
+        type: 'Api',
+        routine: [],
+        schedules: { default: [{ cron: '*/5 * * * *' }], staging: [{ cron: '0 * * * *' }] },
+      },
+      {
+        id: 'array_api',
+        type: 'Api',
+        routine: [],
+        schedules: [{ cron: '0 2 * * *' }],
+      },
+      {
+        id: 'off_api',
+        type: 'Api',
+        routine: [],
+        schedules: { default: [{ cron: '0 2 * * *' }], staging: [] },
+      },
+      {
+        id: 'no_default_api',
+        type: 'Api',
+        routine: [],
+        schedules: { staging: [{ cron: '0 2 * * *' }] },
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].schedules).toEqual({
+    default: [{ cron: '*/5 * * * *' }],
+    production: [{ cron: '*/5 * * * *' }],
+    staging: [{ cron: '0 * * * *' }],
+  });
+  expect(res.api[1].schedules).toEqual({
+    default: [{ cron: '0 2 * * *' }],
+    production: [{ cron: '0 2 * * *' }],
+    staging: [{ cron: '0 2 * * *' }],
+  });
+  expect(res.api[2].schedules).toEqual({
+    default: [{ cron: '0 2 * * *' }],
+    production: [{ cron: '0 2 * * *' }],
+    staging: [],
+  });
+  expect(res.api[3].schedules).toEqual({
+    default: [],
+    production: [],
+    staging: [{ cron: '0 2 * * *' }],
+  });
+});
+
+test('api endpoint without config.environments keeps its schedules array', () => {
+  const components = {
+    api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: [{ cron: '0 2 * * *' }] }],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].schedules).toEqual([{ cron: '0 2 * * *' }]);
+});
+
+test('api endpoint schedules keyed by environment throw when config.environments is not defined', () => {
+  const components = {
+    api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: { staging: [] } }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint "scheduled_api" keys schedules by environment but config.environments is not defined.'
+  );
+});
+
+test('api endpoint schedules throw for an undeclared environment name', () => {
+  const components = {
+    config: { environments },
+    api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: { stagng: [] } }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedules environment "stagng" at "scheduled_api" is not declared in config.environments. Declared environments: production, staging.'
+  );
+});
+
+test('api endpoint environment schedules are validated like an array of schedules', () => {
+  const components = {
+    config: { environments },
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: { staging: [{ cron: '0 6 * * *' }, { cron: '0 6 * * *' }] },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedule 1 for environment "staging" has duplicate cron "0 6 * * *" at "scheduled_api".'
+  );
+});
+
+test('api endpoint schedules throw when an environment entry is not an array', () => {
+  const components = {
+    config: { environments },
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: { staging: { cron: '0 6 * * *' } },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedules for environment "staging" is not an array at "scheduled_api".'
+  );
+});
+
+test('api endpoint declaring both webhook and payloadSchema throws', () => {
+  const message =
+    'Endpoint "hook" declares both "webhook" and "payloadSchema". A webhook routine receives { body, query, headers }, not the payloadSchema shape. Validate the body with a ValidateSchema step instead.';
+  const withFlag = {
+    api: [
+      { id: 'hook', type: 'Api', routine: [], webhook: true, payloadSchema: { type: 'object' } },
+    ],
+  };
+  expect(() => buildApi({ components: withFlag, context })).toThrow(message);
+  const withVerify = {
+    api: [
+      {
+        id: 'hook',
+        type: 'Api',
+        routine: [],
+        webhook: { verify: { type: 'StripeVerify' } },
+        payloadSchema: { type: 'object' },
+      },
+    ],
+  };
+  expect(() => buildApi({ components: withVerify, context })).toThrow(message);
+});
+
+test('api endpoint with webhook false and a payloadSchema is valid', () => {
+  const components = {
+    api: [
+      { id: 'plain', type: 'Api', routine: [], webhook: false, payloadSchema: { type: 'object' } },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+const reportSchema = {
+  type: 'object',
+  properties: { days: { type: 'number' } },
+  required: ['days'],
+};
+
+test('api endpoint with a payloadSchema ajv cannot compile throws', () => {
+  const components = {
+    api: [{ id: 'report', type: 'Api', routine: [], payloadSchema: { type: 'nope' } }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    /^Endpoint "report" payloadSchema is not a valid JSON Schema: schema is invalid: data\/type/
+  );
+});
+
+test.each([
+  [
+    'a schedule payload of the wrong type',
+    [{ cron: '0 6 * * *', payload: { days: 'seven' } }],
+    'Endpoint schedule 0 payload does not match the payloadSchema of "report" at /days: must be number.',
+  ],
+  [
+    'a schedule without a payload, checked as an empty object',
+    [{ cron: '0 6 * * *', payload: { days: 7 } }, { cron: '0 7 * * *' }],
+    'Endpoint schedule 1 payload does not match the payloadSchema of "report" at (root): must have required property \'days\'.',
+  ],
+  [
+    'an environment schedule payload',
+    { default: [{ cron: '0 6 * * *', payload: { days: 7 } }], staging: [{ cron: '0 6 * * *' }] },
+    'Endpoint schedule 0 for environment "staging" payload does not match the payloadSchema of "report" at (root): must have required property \'days\'.',
+  ],
+])('api endpoint throws for %s that misses the payloadSchema', (_, schedules, message) => {
+  const components = {
+    config: { environments },
+    api: [{ id: 'report', type: 'Api', routine: [], payloadSchema: reportSchema, schedules }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(message);
+});
+
+test('api endpoint schedule payloads that match the payloadSchema are valid', () => {
+  const components = {
+    config: { environments },
+    api: [
+      {
+        id: 'report',
+        type: 'Api',
+        routine: [],
+        payloadSchema: reportSchema,
+        schedules: { default: [{ cron: '0 6 * * *', payload: { days: 7 } }] },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
 });

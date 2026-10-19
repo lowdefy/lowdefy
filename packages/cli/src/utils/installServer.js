@@ -14,26 +14,37 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import { installIfPackageJsonChanged, spawnProcess } from '@lowdefy/node-utils';
+
+import installWorkspacePlugins from './installWorkspacePlugins.js';
 
 async function installServer({ context, directory }) {
-  context.logger.info({ spin: 'start' }, 'Installing dependencies.');
-  try {
-    await spawnProcess({
-      command: context.pnpmCmd,
-      args: ['install', '--no-frozen-lockfile'],
-      stdOutLineHandler: (line) => context.logger.debug(line),
-      processOptions: {
-        cwd: directory,
-        // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
-        shell: process.platform === 'win32',
-      },
-    });
-  } catch (error) {
-    context.logger.info({ spin: 'fail' }, 'Installing dependencies.');
-    throw new Error('Dependency installation failed.');
+  const installed = await installIfPackageJsonChanged({
+    directory,
+    install: async () => {
+      await installWorkspacePlugins({ context, directory });
+      context.logger.info({ spin: 'start' }, 'Installing dependencies.');
+      try {
+        await spawnProcess({
+          command: context.pnpmCmd,
+          args: ['install', '--no-frozen-lockfile'],
+          stdOutLineHandler: (line) => context.logger.debug(line),
+          processOptions: {
+            cwd: directory,
+            // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
+            shell: process.platform === 'win32',
+          },
+        });
+      } catch (error) {
+        context.logger.info({ spin: 'fail' }, 'Installing dependencies.');
+        throw new Error('Dependency installation failed.', { cause: error });
+      }
+      context.logger.info('Dependencies install successfully.');
+    },
+  });
+  if (!installed) {
+    context.logger.info('Dependencies unchanged.');
   }
-  context.logger.info('Dependencies install successfully.');
 }
 
 export default installServer;

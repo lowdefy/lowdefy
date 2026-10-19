@@ -1,0 +1,1027 @@
+# Sider
+
+Sidebar layout container for page navigation.
+
+The Sider block provides a sidebar within a Layout. It supports collapsing, themes, breakpoints, and custom widths. Place navigation menus or supplementary content inside the sider.
+
+```yaml
+- id: basic_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: basic_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 200
+      blocks:
+        - id: basic_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: basic_home
+                type: MenuLink
+                properties:
+                  title: Home
+                  icon: home
+              - id: basic_users
+                type: MenuLink
+                properties:
+                  title: Users
+                  icon: user
+              - id: basic_settings
+                type: MenuLink
+                properties:
+                  title: Settings
+                  icon: settings
+    - id: basic_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: basic_content_text
+          type: Paragraph
+          properties:
+            content: The Sider block provides a sidebar within a Layout. It supports
+              collapsing, themes, breakpoints, and custom widths. Place
+              navigation menus or supplementary content inside the sider.
+```
+
+Setting theme to "dark" gives the sider a dark background with light text. Match the Menu theme to the sider theme for a consistent appearance.
+
+```yaml
+- id: dark_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: dark_sider
+      type: Sider
+      properties:
+        theme: dark
+        width: 200
+      blocks:
+        - id: dark_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: dark
+            links:
+              - id: dark_dashboard
+                type: MenuLink
+                properties:
+                  title: Dashboard
+                  icon: Gauge
+              - id: dark_analytics
+                type: MenuLink
+                properties:
+                  title: Analytics
+                  icon: chart
+              - id: dark_files
+                type: MenuLink
+                properties:
+                  title: Files
+                  icon: file
+    - id: dark_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: dark_content_text
+          type: Paragraph
+          properties:
+            content: Setting theme to "dark" gives the sider a dark background with light
+              text. Match the Menu theme to the sider theme for a consistent
+              appearance.
+```
+
+With collapsible set to true a collapse trigger appears at the bottom. Toggle between expanded and collapsed states. Menu icons remain visible when collapsed.
+
+```yaml
+- id: collapsible_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: collapsible_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 220
+        collapsible: true
+        initialCollapsed: false
+      blocks:
+        - id: collapsible_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: col_inbox
+                type: MenuLink
+                properties:
+                  title: Inbox
+                  icon: Inbox
+              - id: col_starred
+                type: MenuLink
+                properties:
+                  title: Starred
+                  icon: star
+              - id: col_sent
+                type: MenuLink
+                properties:
+                  title: Sent
+                  icon: send
+    - id: collapsible_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: collapsible_content_text
+          type: Paragraph
+          properties:
+            content: With collapsible set to true a collapse trigger appears at the bottom.
+              Toggle between expanded and collapsed states. Menu icons remain
+              visible when collapsed.
+```
+
+This sider starts collapsed with initialCollapsed set to true. Click the collapse trigger to expand it.
+
+```yaml
+- id: init_collapsed_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: init_collapsed_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 200
+        collapsible: true
+        initialCollapsed: true
+      blocks:
+        - id: init_collapsed_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: ic_overview
+                type: MenuLink
+                properties:
+                  title: Overview
+                  icon: grid
+              - id: ic_reports
+                type: MenuLink
+                properties:
+                  title: Reports
+                  icon: document
+              - id: ic_config
+                type: MenuLink
+                properties:
+                  title: Configuration
+                  icon: Wrench
+    - id: init_collapsed_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: init_collapsed_content_text
+          type: Paragraph
+          properties:
+            content: This sider starts collapsed with initialCollapsed set to true. Click
+              the collapse trigger to expand it.
+```
+
+Setting collapsedWidth to 0 completely hides the sider when collapsed and shows a special floating trigger. Useful for mobile-friendly layouts where sidebar space needs to be fully reclaimed.
+
+```yaml
+- id: cw_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: cw_sider
+      type: Sider
+      properties:
+        theme: dark
+        width: 240
+        collapsedWidth: 0
+        collapsible: true
+        initialCollapsed: true
+      blocks:
+        - id: cw_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: dark
+            links:
+              - id: cw_projects
+                type: MenuLink
+                properties:
+                  title: Projects
+                  icon: SquareKanban
+              - id: cw_tasks
+                type: MenuLink
+                properties:
+                  title: Tasks
+                  icon: SquareCheck
+    - id: cw_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: cw_content_text
+          type: Paragraph
+          properties:
+            content: Setting collapsedWidth to 0 completely hides the sider when collapsed
+              and shows a special floating trigger. Useful for mobile-friendly
+              layouts where sidebar space needs to be fully reclaimed.
+```
+
+The Sider is placed on the right side of the layout with reverseArrow set to true. This flips the collapse arrow direction to match the right-side placement.
+
+```yaml
+- id: reverse_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: reverse_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: reverse_content_text
+          type: Paragraph
+          properties:
+            content: The Sider is placed on the right side of the layout with reverseArrow
+              set to true. This flips the collapse arrow direction to match the
+              right-side placement.
+    - id: reverse_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 200
+        collapsible: true
+        initialCollapsed: false
+        reverseArrow: true
+      style:
+        borderLeft: "1px solid #f0f0f0"
+      blocks:
+        - id: reverse_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: rev_details
+                type: MenuLink
+                properties:
+                  title: Details
+                  icon: info
+              - id: rev_history
+                type: MenuLink
+                properties:
+                  title: History
+                  icon: history
+```
+
+The onBreakpoint event fires when the viewport crosses the breakpoint, with `broken` true below it. Here it calls the sider's setOpen method, so the sider collapses below the large (lg) breakpoint. Supported values are xs, sm, md, lg, xl, xxl and xxxl.
+
+```yaml
+- id: bp_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: bp_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 200
+        collapsible: true
+        initialCollapsed: false
+        breakpoint: lg
+      events:
+        onBreakpoint:
+          - id: bp_sider_set_open
+            type: CallMethod
+            params:
+              blockId: bp_sider
+              method: setOpen
+              args:
+                - open:
+                    _not:
+                      _event: broken
+      blocks:
+        - id: bp_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: bp_home
+                type: MenuLink
+                properties:
+                  title: Home
+                  icon: home
+              - id: bp_search
+                type: MenuLink
+                properties:
+                  title: Search
+                  icon: search
+    - id: bp_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: bp_content_text
+          type: Paragraph
+          properties:
+            content: The onBreakpoint event fires when the viewport crosses the breakpoint,
+              with `broken` true below it. Here it calls the sider's setOpen
+              method, so the sider collapses below the large (lg) breakpoint.
+              Supported values are xs, sm, md, lg, xl, xxl and xxxl.
+```
+
+The width property accepts a number (pixels) or string value. Here the sider is set to 300px wide, providing more room for longer menu labels or nested navigation.
+
+```yaml
+- id: width_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: width_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 300
+        collapsible: false
+        initialCollapsed: false
+      blocks:
+        - id: width_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: width_nav1
+                type: MenuLink
+                properties:
+                  title: Getting Started
+                  icon: Rocket
+              - id: width_nav2
+                type: MenuLink
+                properties:
+                  title: Documentation
+                  icon: Book
+              - id: width_nav3
+                type: MenuLink
+                properties:
+                  title: API Reference
+                  icon: CodeXml
+    - id: width_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: width_content_text
+          type: Paragraph
+          properties:
+            content: The width property accepts a number (pixels) or string value. Here the
+              sider is set to 300px wide, providing more room for longer menu
+              labels or nested navigation.
+```
+
+The Sider fires onOpen and onClose events when it expands or collapses. Use these events with SetState or other actions to react to sider state changes. Toggle the sider to see the state update above.
+
+```yaml
+- id: events_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: events_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 200
+        collapsible: true
+        initialCollapsed: false
+      events:
+        onOpen:
+          - id: events_on_open_action
+            type: SetState
+            params:
+              siderState: open
+        onClose:
+          - id: events_on_close_action
+            type: SetState
+            params:
+              siderState: closed
+      blocks:
+        - id: events_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: events_nav_home
+                type: MenuLink
+                properties:
+                  title: Home
+                  icon: home
+              - id: events_nav_alerts
+                type: MenuLink
+                properties:
+                  title: Alerts
+                  icon: bell
+    - id: events_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: events_state_label
+          type: Paragraph
+          properties:
+            content:
+              _nunjucks:
+                template: "Sider state: {{ siderState }}"
+                on:
+                  _state: true
+        - id: events_content_text
+          type: Paragraph
+          properties:
+            content: The Sider fires onOpen and onClose events when it expands or collapses.
+              Use these events with SetState or other actions to react to sider
+              state changes. Toggle the sider to see the state update above.
+```
+
+The Sider theme takes antd Layout design tokens. Here lightTriggerBg, lightTriggerColor and triggerHeight style the collapse trigger, and the Menu theme styles the selected item.
+
+```yaml
+- id: token_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: token_sider
+      type: Sider
+      properties:
+        width: 220
+        collapsible: true
+        initialCollapsed: false
+        theme:
+          lightTriggerBg: "#f9f0ff"
+          lightTriggerColor: "#722ed1"
+          triggerHeight: 40
+      blocks:
+        - id: token_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme:
+              itemSelectedBg: "#f9f0ff"
+              itemSelectedColor: "#722ed1"
+            links:
+              - id: token_nav_explore
+                type: MenuLink
+                properties:
+                  title: Explore
+                  icon: Compass
+              - id: token_nav_favorites
+                type: MenuLink
+                properties:
+                  title: Favorites
+                  icon: heart
+              - id: token_nav_settings
+                type: MenuLink
+                properties:
+                  title: Settings
+                  icon: settings
+    - id: token_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: token_content_text
+          type: Paragraph
+          properties:
+            content: The Sider theme takes antd Layout design tokens. Here lightTriggerBg,
+              lightTriggerColor and triggerHeight style the collapse trigger,
+              and the Menu theme styles the selected item.
+```
+
+The Sider has a single CSS key called "element" which targets the entire sider container. Use it with Tailwind classes for gradients, borders, shadows, and other visual effects.
+
+A shadow-lg class on the element CSS key gives the sider an elevated appearance that visually separates it from the main content area.
+
+```yaml
+- id: css_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: css_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 220
+        collapsible: false
+        initialCollapsed: false
+      class:
+        .element: bg-gradient-to-b from-primary/10 to-bg-container border-r border-border
+      blocks:
+        - id: css_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: css_nav_workspace
+                type: MenuLink
+                properties:
+                  title: Workspace
+                  icon: grid
+              - id: css_nav_members
+                type: MenuLink
+                properties:
+                  title: Members
+                  icon: users
+              - id: css_nav_billing
+                type: MenuLink
+                properties:
+                  title: Billing
+                  icon: CreditCard
+    - id: css_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: css_content_text
+          type: Paragraph
+          properties:
+            content: The Sider has a single CSS key called "element" which targets the
+              entire sider container. Use it with Tailwind classes for
+              gradients, borders, shadows, and other visual effects.
+- id: css_shadow_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: css_shadow_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 200
+        collapsible: false
+        initialCollapsed: false
+      class:
+        .element: shadow-lg bg-bg-container
+      blocks:
+        - id: css_shadow_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: css_sh_dashboard
+                type: MenuLink
+                properties:
+                  title: Dashboard
+                  icon: Gauge
+              - id: css_sh_analytics
+                type: MenuLink
+                properties:
+                  title: Analytics
+                  icon: ChartLine
+    - id: css_shadow_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: css_shadow_content_text
+          type: Paragraph
+          properties:
+            content: A shadow-lg class on the element CSS key gives the sider an elevated
+              appearance that visually separates it from the main content area.
+```
+
+Admin
+
+Dashboard
+
+```yaml
+- id: admin_layout
+  type: Layout
+  style:
+    minHeight: 400px
+  blocks:
+    - id: admin_sider
+      type: Sider
+      properties:
+        theme: dark
+        width: 240
+        collapsible: true
+        initialCollapsed: false
+      events:
+        onClose:
+          - id: admin_on_close
+            type: SetState
+            params:
+              adminSiderOpen: false
+        onOpen:
+          - id: admin_on_open
+            type: SetState
+            params:
+              adminSiderOpen: true
+      blocks:
+        - id: admin_logo_box
+          type: Box
+          style:
+            padding: 16px
+            textAlign: center
+          blocks:
+            - id: admin_logo_title
+              type: Title
+              class: text-white
+              properties:
+                content: Admin
+                level: 4
+        - id: admin_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: dark
+            links:
+              - id: admin_nav_dashboard
+                type: MenuLink
+                properties:
+                  title: Dashboard
+                  icon: Gauge
+              - id: admin_nav_users
+                type: MenuGroup
+                properties:
+                  title: User Management
+                  icon: users
+                links:
+                  - id: admin_nav_all_users
+                    type: MenuLink
+                    properties:
+                      title: All Users
+                  - id: admin_nav_roles
+                    type: MenuLink
+                    properties:
+                      title: Roles
+              - id: admin_nav_content
+                type: MenuGroup
+                properties:
+                  title: Content
+                  icon: document
+                links:
+                  - id: admin_nav_pages
+                    type: MenuLink
+                    properties:
+                      title: Pages
+                  - id: admin_nav_media
+                    type: MenuLink
+                    properties:
+                      title: Media
+              - id: admin_nav_settings
+                type: MenuLink
+                properties:
+                  title: Settings
+                  icon: settings
+    - id: admin_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-layout)
+      blocks:
+        - id: admin_header_row
+          type: Box
+          layout:
+            gap: 16
+            justify: space-between
+            align: center
+          blocks:
+            - id: admin_page_title
+              type: Title
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: Dashboard
+                level: 3
+            - id: admin_header_actions
+              type: Box
+              layout:
+                flex: 0 0 auto
+                gap: 8
+              blocks:
+                - id: admin_notif_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: bell
+                    color: default
+                    variant: text
+                    hideTitle: true
+                - id: admin_profile_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: user
+                    color: default
+                    variant: text
+                    hideTitle: true
+        - id: admin_stats_row
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: admin_stat_users
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: admin_stat_users_val
+                  type: Statistic
+                  properties:
+                    title: Total Users
+                    value: 2847
+            - id: admin_stat_revenue
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: admin_stat_revenue_val
+                  type: Statistic
+                  properties:
+                    title: Revenue
+                    value: 48200
+                    prefix: $
+            - id: admin_stat_orders
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: admin_stat_orders_val
+                  type: Statistic
+                  properties:
+                    title: Orders
+                    value: 384
+```
+
+Settings
+
+Profile Settings
+
+Manage your personal information and preferences.
+
+```yaml
+- id: settings_layout
+  type: Layout
+  style:
+    minHeight: 400px
+  blocks:
+    - id: settings_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 220
+        collapsible: false
+        initialCollapsed: false
+      style:
+        borderRight: "1px solid #f0f0f0"
+      blocks:
+        - id: settings_heading
+          type: Title
+          style:
+            padding: 16px 16px 8px
+          properties:
+            content: Settings
+            level: 5
+        - id: settings_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: settings_nav_profile
+                type: MenuLink
+                properties:
+                  title: Profile
+                  icon: user
+              - id: settings_nav_account
+                type: MenuLink
+                properties:
+                  title: Account
+                  icon: Shield
+              - id: settings_nav_notifications
+                type: MenuLink
+                properties:
+                  title: Notifications
+                  icon: bell
+              - id: settings_nav_appearance
+                type: MenuLink
+                properties:
+                  title: Appearance
+                  icon: PaintBucket
+              - id: settings_nav_integrations
+                type: MenuLink
+                properties:
+                  title: Integrations
+                  icon: Plug
+    - id: settings_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: settings_content_title
+          type: Title
+          properties:
+            content: Profile Settings
+            level: 4
+        - id: settings_content_desc
+          type: Paragraph
+          properties:
+            content: Manage your personal information and preferences.
+        - id: settings_divider
+          type: Divider
+        - id: settings_form_name
+          type: TextInput
+          properties:
+            title: Display Name
+            placeholder: Enter your name
+        - id: settings_form_email
+          type: TextInput
+          properties:
+            title: Email Address
+            placeholder: you@example.com
+        - id: settings_form_bio
+          type: TextArea
+          properties:
+            title: Bio
+            placeholder: Tell us about yourself
+        - id: settings_form_save
+          type: Button
+          properties:
+            title: Save Changes
+            color: primary
+            variant: solid
+            icon: save
+```
+
+Introduction
+
+Welcome to the documentation. This page gives an overview of the framework and how to get started building your first application.
+
+Use the sidebar on the left to browse through different sections. On smaller screens the sidebar collapses automatically thanks to the breakpoint property set to "md".
+
+```yaml
+- id: docs_layout
+  type: Layout
+  style:
+    minHeight: 400px
+  blocks:
+    - id: docs_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 260
+        collapsible: true
+        initialCollapsed: false
+        breakpoint: md
+      class:
+        .element: border-r border-border
+      blocks:
+        - id: docs_search
+          type: TextInput
+          style:
+            padding: 12px 16px
+          properties:
+            placeholder: Search docs...
+            prefixIcon: search
+        - id: docs_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: docs_nav_getting_started
+                type: MenuGroup
+                properties:
+                  title: Getting Started
+                links:
+                  - id: docs_nav_intro
+                    type: MenuLink
+                    properties:
+                      title: Introduction
+                  - id: docs_nav_install
+                    type: MenuLink
+                    properties:
+                      title: Installation
+                  - id: docs_nav_quickstart
+                    type: MenuLink
+                    properties:
+                      title: Quick Start
+              - id: docs_nav_guides
+                type: MenuGroup
+                properties:
+                  title: Guides
+                links:
+                  - id: docs_nav_blocks
+                    type: MenuLink
+                    properties:
+                      title: Blocks
+                  - id: docs_nav_operators
+                    type: MenuLink
+                    properties:
+                      title: Operators
+                  - id: docs_nav_actions
+                    type: MenuLink
+                    properties:
+                      title: Actions
+    - id: docs_content
+      type: Content
+      style:
+        padding: 32px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: docs_content_title
+          type: Title
+          properties:
+            content: Introduction
+            level: 3
+        - id: docs_content_p1
+          type: Paragraph
+          properties:
+            content: Welcome to the documentation. This page gives an overview of the
+              framework and how to get started building your first application.
+        - id: docs_content_p2
+          type: Paragraph
+          properties:
+            content: Use the sidebar on the left to browse through different sections. On
+              smaller screens the sidebar collapses automatically thanks to the
+              breakpoint property set to "md".
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `breakpoint` | string | - | Breakpoint of the responsive layout. Crossing it fires onBreakpoint. Enum: `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`. |
+| `collapsedWidth` | integer | - | Width of the collapsed sidebar, by setting to 0 a special trigger will appear |
+| `collapsible` | boolean | `false` | Show a trigger at the bottom of the sider that collapses and expands it. |
+| `initialCollapsed` | boolean | `true` | Set the initial collapsed state |
+| `reverseArrow` | boolean | `false` | Direction of arrow, for a sider that expands from the right |
+| `width` | string \| number | - | width of the sidebar |
+| `theme` | string \| object | - | The Sider color theme, light or dark, or antd Layout design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design layout tokens](https://ant.design/components/layout#design-token). |
+| `theme.triggerHeight` | number | `48` | Height of the collapse trigger of a collapsible Sider. |
+| `theme.triggerBg` | string | `"#002140"` | Background color of the collapse trigger of a dark Sider. |
+| `theme.triggerColor` | string | `"#fff"` | Color of the collapse trigger of a dark Sider. |
+| `theme.lightTriggerBg` | string | `"#ffffff"` | Background color of the collapse trigger of a light Sider. |
+| `theme.lightTriggerColor` | string | `"rgba(0, 0, 0, 0.88)"` | Color of the collapse trigger of a light Sider. |
+| `theme.zeroTriggerWidth` | number | `40` | Width of the trigger shown when collapsedWidth is 0. |
+| `theme.zeroTriggerHeight` | number | `40` | Height of the trigger shown when collapsedWidth is 0. |
+
+| Event | Event Data | Description |
+| --- | --- | --- |
+| `onClose` | \- | Trigger actions when sider is closed. |
+| `onOpen` | \- | Trigger actions when sider is opened. |
+| `onBreakpoint` | `{ broken }` | Trigger actions when the screen width crosses the breakpoint. Use it with the setOpen method to collapse the sider on small screens. |
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Sider element. |
+| `/body` | The box inside the Sider that holds its child blocks. |
+
+| Slot | Description |
+| --- | --- |
+| `content` | Child blocks in the sider panel. |

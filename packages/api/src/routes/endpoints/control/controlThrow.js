@@ -15,34 +15,37 @@
 */
 
 import { UserError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
+
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlThrow(context, routineContext, { control }) {
-  const { evaluateOperators } = context;
-  const { items } = routineContext;
   const location = control['~k'] ?? ':throw';
 
-  const message = evaluateOperators({
+  const message = evaluateRoutineOperators(context, routineContext, {
     input: control[':throw'],
-    items,
     location,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
-  const cause = evaluateOperators({
-    input: control[':cause'],
-    items,
-    location,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
-  });
-  const error = new UserError(message, { cause });
+  // An Error, such as a rethrown `_error`, goes on unchanged. Wrapped in a UserError it would be
+  // stringified into the message, which the wire sends as author text; under its own class the
+  // wire makes it generic unless it was a UserError. It carries its own cause, so :cause is unused.
+  let error = message;
+  if (!type.isError(message)) {
+    const cause = evaluateRoutineOperators(context, routineContext, {
+      input: control[':cause'],
+      location,
+    });
+    error = new UserError(message, { cause });
+  }
 
-  context.logger.error({
-    event: 'error_control_throw',
-    error,
+  // Log under `err` — the pino error serializer (createNodeLogger) is registered
+  // for the `err` key only; an Error passed as `error` is JSON-dumped without its
+  // non-enumerable `message`/`stack`, producing a log line with no message.
+  context.logger.warn({
+    event: 'warn_control_throw',
+    err: error,
   });
+  error.handled = true;
 
   return {
     status: 'error',

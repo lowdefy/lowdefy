@@ -1,6 +1,6 @@
 # Request Lifecycle Architecture
 
-How data flows from user action to database and back in Lowdefy.
+How data flows from user action to database and back in Lowdefy. How a whole page loads and refreshes its data (parallel requests, no cache, page instances, websocket subscriptions, measured costs) is in [page-data-loading.md](./page-data-loading.md).
 
 ## Overview
 
@@ -246,15 +246,30 @@ async function callRequestResolver(
       payload,
       request: requestProperties,
       requestId: requestConfig.stepId ?? requestConfig.requestId,
+      signal: context.signal,
     });
   } catch (error) {
     if (!error.configKey) error.configKey = requestConfig['~k'];
     if (error.isLowdefyError) throw error; // pass-through — no redundant wrapping
+    if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') throw new UserError(...);
     if (ServiceError.isServiceError(error)) throw new ServiceError(...);
     throw new RequestError(error.message, { cause: error, ... });
   }
 }
 ```
+
+**The request signal.** `signal` is `context.signal`: an `AbortSignal` for "nobody is waiting for this work any more". The servers build it per request with `createRequestSignal({ clientSignal, timeoutSignal })` (`@lowdefy/api`): it aborts with an `AbortError` when the client closes the connection before the response is sent (the Node adapter's `c.req.raw.signal`, re-raised as a DOMException because the adapter aborts with a plain string), and with a `TimeoutError` when `requestTimeout` (`servers/server/src/middleware/requestTimeout.js`) answers 504 first. Connection types hand it to their upstream calls; the AI connections pass it to the AI SDK with the request's `maxOutputTokens` and `timeout` (defaults from the connection, `buildCallLimits` in `@lowdefy/ai-utils`). What "closed" means per caller:
+
+| Caller                                                                                 | Signal                                                                                                              |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Page request (`/api/request`), endpoint over HTTP, webhook, MCP tool call, cron (sync) | Client disconnect (Node server) + request timeout (not on `/api/agent`, `/api/mcp`, `/api/websocket`)               |
+| Routine step, nested `CallApi`, agent tool endpoint                                    | Inherited from the context of the run it belongs to                                                                 |
+| `async: true` endpoint, async scheduled endpoint, detached run                         | None: `context.signal` is cleared before the run is scheduled, since it outlives the request                        |
+| Agent chat turn (`callAgent`)                                                          | None: the turn runs to its end so `onFinish` persists the conversation; bounded by the agent's `timeout`/`maxSteps` |
+| `CallAgent` step                                                                       | The routine's signal, passed to `agent.generate({ abortSignal })`                                                   |
+| Auth hooks (`createSystemContext`), dev server                                         | Hooks: none. Dev server: client disconnect only (no request timeout)                                                |
+
+The Vercel entry builds its `Request` without a signal, so on Vercel only the request timeout cancels. The platform stops the function at `maxDuration`, so a request timeout that is not shorter never fires; the build warns about that (`build/src/build/validateRequestTimeout.js`, the build step after `validateConfig`) when the app sets `config.vercel` or the build runs on Vercel (`VERCEL` is set), against `config.vercel.maxDuration` or its 60-second default.
 
 `callApi` is constructed at this chokepoint so it picks up the caller's `endpointDepth` (`0` for page-level requests via `callRequest.js`, the routine frame's depth for routine `request:` steps via `handleRequest.js`). All Lowdefy errors (`isLowdefyError === true`) pass through the catch block unchanged — only raw errors wrap into `RequestError` / `ServiceError`.
 
@@ -430,11 +445,11 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   authorizeApiEndpoint(context, { endpointConfig });
 
   const routineContext = {
-    steps: {},                              // Per-invocation step results
+    steps: {}, // Per-invocation step results
     payload: serializer.deserialize(payload), // Per-invocation payload
     arrayIndices: [],
     items: {},
-    endpointDepth: 0,                       // Recursion depth counter
+    endpointDepth: 0, // Recursion depth counter
   };
 
   const { error, response, status } = await runRoutine(context, routineContext, {
@@ -513,6 +528,26 @@ Two surfaces wrap it:
 
 **Endpoint types:** `Api` endpoints are callable from both HTTP and other endpoints. `InternalApi` endpoints are server-only — `callEndpoint` blocks HTTP access, but both `invokeEndpoint` wrappers can reach them.
 
+### Organization binding (`organization` and `caller` on a `CallApi` step)
+
+**Files:** `packages/api/src/routes/endpoints/resolveCallBinding.js`, `context/createBoundSystemContext.js`, `context/applySystemTrust.js`, `routes/request/resolveTenancy.js`.
+
+A `CallApi` step naming `organization` (and optionally `caller: { id, name }`) runs its target as a system run bound to that organization. `resolveCallBinding` accepts it only when the calling run is already a system run (`context.system === true`: cron, hook, verified webhook, or a detached run from one) and refuses naming a different organization or caller inside a bound run. `createBoundSystemContext` copies the context and applies `applySystemTrust` with the binding, which sets `boundOrganizationId` and `user` (null, or the stand-in `{ id, name, organization_id, system: true }`), then rebuilds `evaluateOperators` so `_user` reads the stand-in. The copy holds for the target and its nested calls; the calling run keeps its own context. `resolveTenancy` takes a system run's organization from `boundOrganizationId` and every other run's from `user.organization_id`, so an unbound system run still fails closed. The build (`validateCallBinding`) refuses a `caller` without `organization` and static values of the wrong shape; trust is a runtime check, since one endpoint can run from a schedule and from a signed-in caller.
+
+### Background Execution
+
+**Files:** `packages/api/src/routes/endpoints/scheduleBackground.js`, `runDetachedEndpoint.js`, and `routes/detached.js` in both servers.
+
+Two additive controls decouple routine execution from the response:
+
+- **`async: true` on an endpoint** — `callEndpoint` (and `runScheduledEndpoint` for cron fires) responds `{ accepted: true }` immediately after authorization and hands the routine promise to `scheduleBackground`. The work runs in the _same_ invocation: on serverless it stays bounded by the function's `maxDuration`; the outcome exists only in logs (`background_endpoint_done` / `_failed` events) and whatever the routine writes.
+- **`detached: true` on a `CallApi` step** — `handleEndpointCall` short-circuits before `invokeEndpoint`: it fire-and-forgets a `POST` to the deployment's own `/api/detached/<endpointId>` route (via `context.origin`, captured in each server's `apiContext` middleware) and continues with `{ detached: true, endpointId }` as the step result. The dispatch carries the dispatcher's principal (its `user`, or `system: true` for cron, hook and verified-webhook runs, with the `organizationId` and stand-in `user` of an organization binding). The route authenticates with `CRON_SECRET` (fail closed, an origin proof rather than an identity) and runs the target through `runDetachedEndpoint`, which rehydrates that principal (`applySystemTrust` for a system dispatcher) and authorizes the target with `authorizeApiEndpoint` exactly as `invokeEndpoint` does, so nested calls and the target itself are checked against the carried identity. `InternalApi` is callable, and `endpointDepth` resets to 0, so the 10-level depth cap does not chain across detached hops. At-most-once, no retry.
+
+- **Deployment environments** — `config.environments` declares the app's environments (`url`, `cron.secret`/`cron.enabled`, `email.filter`) and the build step `buildEnvironments` (run from `validateConfig`) resolves the current one from `config.environment` or `LOWDEFY_ENVIRONMENT` into `config.environment` (and `appMeta.environment`), fails the build on the replaced 6.0 `config.cron`, and defaults `logger.sentry.environment`. Feature switches (`cron`/`email`/`sentry`/`posthog`.`enabled: false`) are resolved there too: `appMeta.disabled` lists them for the client (PostHogInit reads it), Sentry gets `client`/`server: false`, `writeApi` registers no crons for a disabled environment, and the mail senders return `{ disabled: true }` per message. Guards (`guards.secrets` / `guards.env` → regex) are validated for every environment and checked for the current one against `process.env` (`checkEnvironmentGuards`, value never echoed), then stripped. `config.json` is server-only: the client takes `basePath` from Vite's `import.meta.env.BASE_URL`, learns only `appMeta.environment` / `appMeta.disabled`, and `client/clientBuildImports.test.mjs` in each server package allowlists the build artifacts client code may import. At runtime `getCurrentEnvironment({ config })` returns `{ name, ...settings }` or null; it is passed to every connection resolver as `environment` (SMTP/SendGrid fall back to its `email.filter`), defaults the `RenderNotification` `serverUrl`, and `getCanonicalUrl` (BetterAuth base URL, MCP resource URIs) falls back to its `url` when `BETTER_AUTH_URL` is unset.
+- **Cron environments** — Vercel fires crons only on the production deployment. The build resolves every endpoint's `schedules` onto an object keyed by environment plus `default` (`resolveEndpointSchedules`: own entry → `default` → `[]`) and `writeApi` registers the current environment's schedules, plus — when the current environment has no `cron.secret` of its own, i.e. it is the one Vercel fires crons on — every enabled environment with a `cron.secret` as `forward: true`; without a current environment it registers the `default` schedules. `lowdefy vercel-output` registers forwarded entries as `/api/cron-forward/<environment>/<endpointId>` jobs. The route (`routes/cronForward.js`, same `CRON_SECRET` gate) calls `forwardScheduledEndpoint`, which checks the target environment (declared, not the current one, enabled, has a `cron.secret`), reads the secret from `context.secrets[<cron.secret>]` (fail closed), verifies the endpoint declares the firing cron for that environment, then fire-and-forgets `GET <url>/api/cron/<endpointId>` through `scheduleBackground` with `x-vercel-cron-schedule` and `x-lowdefy-cron-environment` headers and answers `{ accepted: true }`. On the receiving side `runScheduledEndpoint` resolves the environment (`resolveCronEnvironment`: the header, else `config.environment`, else none → `default`) and reads `schedules.<environment>` (`getEnvironmentSchedules`).
+
+**`scheduleBackground`** wraps the promise so failures log instead of surfacing as unhandled rejections, and passes it to `context.waitUntil` when present. `waitUntil` is a platform adapter hook: the production server's `apiContext` middleware injects one backed by Vercel's request context (`Symbol.for('@vercel/request-context')`, Fluid compute) so the invocation survives until background work settles; `packages/api` itself stays provider-agnostic. On long-lived hosts (dev server, Docker, node) there is no `waitUntil` and the promise simply runs on the live process.
+
 ## End-to-End Example
 
 **Scenario:** User searches for data
@@ -551,24 +586,24 @@ Two surfaces wrap it:
 
 ## Key Files
 
-| Component           | File                                                    |
-| ------------------- | ------------------------------------------------------- |
-| Event Trigger       | `packages/engine/src/Events.js`                         |
-| Action Runner       | `packages/engine/src/Actions.js`                        |
-| Request Manager     | `packages/engine/src/Requests.js`                       |
-| HTTP Client         | `packages/client/src/createCallRequest.js`              |
-| Server Handler      | `packages/api/src/routes/request/callRequest.js`        |
-| Connection Resolver | `packages/api/src/routes/request/getConnection.js`      |
-| Request Resolver    | `packages/api/src/routes/request/getRequestResolver.js` |
-| Operator Evaluator  | `packages/api/src/routes/request/evaluateOperators.js`  |
-| Authorization       | `packages/api/src/routes/request/authorizeRequest.js`   |
-| Validation          | `packages/api/src/routes/request/validateSchemas.js`    |
-| Endpoint Handler    | `packages/api/src/routes/endpoints/callEndpoint.js`     |
-| Endpoint Call (step)| `packages/api/src/routes/endpoints/handleEndpointCall.js`|
-| Endpoint Invoke     | `packages/api/src/routes/endpoints/invokeEndpoint.js`   |
-| Routine Dispatch    | `packages/api/src/routes/endpoints/runRoutine.js`       |
-| Step Result Storage | `packages/api/src/routes/endpoints/addStepResult.js`    |
-| State Manager       | `packages/engine/src/State.js`                          |
+| Component            | File                                                      |
+| -------------------- | --------------------------------------------------------- |
+| Event Trigger        | `packages/engine/src/Events.js`                           |
+| Action Runner        | `packages/engine/src/Actions.js`                          |
+| Request Manager      | `packages/engine/src/Requests.js`                         |
+| HTTP Client          | `packages/client/src/createCallRequest.js`                |
+| Server Handler       | `packages/api/src/routes/request/callRequest.js`          |
+| Connection Resolver  | `packages/api/src/routes/request/getConnection.js`        |
+| Request Resolver     | `packages/api/src/routes/request/getRequestResolver.js`   |
+| Operator Evaluator   | `packages/api/src/routes/request/evaluateOperators.js`    |
+| Authorization        | `packages/api/src/routes/request/authorizeRequest.js`     |
+| Validation           | `packages/api/src/routes/request/validateSchemas.js`      |
+| Endpoint Handler     | `packages/api/src/routes/endpoints/callEndpoint.js`       |
+| Endpoint Call (step) | `packages/api/src/routes/endpoints/handleEndpointCall.js` |
+| Endpoint Invoke      | `packages/api/src/routes/endpoints/invokeEndpoint.js`     |
+| Routine Dispatch     | `packages/api/src/routes/endpoints/runRoutine.js`         |
+| Step Result Storage  | `packages/api/src/routes/endpoints/addStepResult.js`      |
+| State Manager        | `packages/engine/src/State.js`                            |
 
 ## Architectural Patterns
 
@@ -580,3 +615,7 @@ Two surfaces wrap it:
 6. **Error Handling**: Try/catch with catch actions
 7. **Serialization**: Complex objects serialized for transport
 8. **Routine-frame isolation**: `steps`, `payload`, and `state` live on `routineContext`, not the request `context`. Each routine invocation (page request, top-level endpoint, `CallApi` step, resolver `callApi`) gets its own frame. Two frames in the same request never share these values — `:set_state` in one frame is invisible to a sibling.
+
+## Webhook endpoints (`webhook: true`)
+
+The `/api/endpoints` route checks the target's config first (cached file read): endpoints declaring `webhook: true` bypass the CallAPI envelope entirely — `runWebhookEndpoint` receives the request text as `rawBody` with `query` and `headers`, parses the body (as JSON regardless of content-type; raw string passthrough otherwise), gives the declared `webhook.verify` request `{ body, rawBody, query, headers }` (a sender's signature covers the exact bytes, which re-serialising the parsed body does not reproduce), gives the routine `{ body, query, headers }`, runs the routine as a system context, and the routine's return value is the literal response body, because webhook handshakes (e.g. Event Grid's `validationResponse`) require exact shapes. Caller authentication is the routine's own first step. Non-webhook endpoints follow the standard `callEndpoint` path unchanged.

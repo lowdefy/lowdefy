@@ -14,23 +14,18 @@
   limitations under the License.
 */
 
-import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
-import checkPortAvailable from '../../utils/checkPortAvailable.js';
-import installServer from '../../utils/installServer.js';
-import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
+import checkNoRunningInstance from './checkNoRunningInstance.js';
+import installDevServer from '../../utils/installDevServer.js';
+import resolveDevPort from './resolveDevPort.js';
 import runDevServer from './runDevServer.js';
-import getServer from '../../utils/getServer.js';
 
 async function dev({ context }) {
-  const directory = context.directories.dev;
   context.logger.info('Starting development server.');
-  await checkPortAvailable({ port: context.options.port });
-  await getServer({ context, packageName: '@lowdefy/server-dev', directory });
-  await resetServerPackageJson({ context, directory });
-  await addCustomPluginsAsDeps({ context, directory });
-  await installServer({ context, directory });
+  checkNoRunningInstance({ context });
+  await resolveDevPort({ context });
+  await installDevServer({ context });
   context.sendTelemetry();
-  await runDevServer({ context, directory });
+  await runDevServer({ context, directory: context.directories.dev });
 }
 
 export default dev;

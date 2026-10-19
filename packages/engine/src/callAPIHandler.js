@@ -16,7 +16,10 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-async function callAPIHandler(context, { blockId, params }) {
+import decodeServerError from './decodeServerError.js';
+import reportAppChange from './tracking/reportAppChange.js';
+
+async function callAPIHandler(context, { actionId, blockId, params }) {
   if (!context._internal.lowdefy.apiResponses[params.endpointId]) {
     context._internal.lowdefy.apiResponses[params.endpointId] = [];
   }
@@ -25,8 +28,11 @@ async function callAPIHandler(context, { blockId, params }) {
   const previousResponse =
     context._internal.lowdefy.apiResponses[params.endpointId][0]?.response ?? null;
 
+  // actionId ties the call to the event that made it, as a request's call does,
+  // so the dev recorder can say which endpoints an interaction called.
   const api = {
     ...params,
+    actionId,
     blockId,
     loading: true,
     success: null,
@@ -39,6 +45,7 @@ async function callAPIHandler(context, { blockId, params }) {
     api.response = previousResponse;
   }
   context._internal.lowdefy.apiResponses[api.endpointId].unshift(api);
+  reportAppChange({ context, key: `api:${api.endpointId}` });
 
   let apiResponse;
 
@@ -59,13 +66,17 @@ async function callAPIHandler(context, { blockId, params }) {
     api.success = false;
     api.endTimestamp = new Date();
     api.responseTime = api.endTimestamp - api.startTimestamp;
+    reportAppChange({ context, key: `api:${api.endpointId}` });
     context._internal.update();
     throw error;
   }
 
   const { error, response, status, success } = apiResponse;
+  // Decoded once so the stored and the thrown error are the same object: the
+  // dev error is keyed by that object.
+  const decodedError = decodeServerError(error);
 
-  api.error = serializer.deserialize(error);
+  api.error = decodedError;
   api.loading = false;
   api.response = serializer.deserialize(response);
   api.status = status;
@@ -73,10 +84,11 @@ async function callAPIHandler(context, { blockId, params }) {
   api.endTimestamp = new Date();
   api.responseTime = api.endTimestamp - api.startTimestamp;
 
+  reportAppChange({ context, key: `api:${api.endpointId}` });
   context._internal.update();
 
   if (!success) {
-    throw serializer.deserialize(error);
+    throw decodedError;
   }
 
   return api;

@@ -16,8 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 import classNames from 'classnames';
-import getWrapperCol from './getWrapperCol.js';
 import getLabelCol from './getLabelCol.js';
+import getLabelThemeStyle from './getLabelThemeStyle.js';
+import getWrapperCol from './getWrapperCol.js';
 
 const labelLogic = ({
   blockId,
@@ -25,6 +26,8 @@ const labelLogic = ({
   content,
   properties = {},
   required = false,
+  rowClassName: blockRowClassName,
+  rowStyle: blockRowStyle,
   styles = {},
   validation = {
     messages: [],
@@ -33,6 +36,7 @@ const labelLogic = ({
 }) => {
   const wrapperCol = getWrapperCol(properties, properties.inline);
   const labelCol = getLabelCol(properties, properties.inline);
+  const themeStyle = getLabelThemeStyle(properties.theme);
 
   // render label priority order: content.label area -> properties.title -> blockId and do not render an empty label
   let label = content.label
@@ -46,13 +50,18 @@ const labelLogic = ({
     label = label.replace(/[:|：]\s*$/u, '');
   }
 
-  const rowClassName = classNames('ant-form-item', {
-    'ant-form-item-has-error': validation.status === 'error',
-    'ant-form-item-has-warning': validation.status === 'warning',
-  });
+  const rowClassName = classNames(
+    'ant-form-item',
+    {
+      'ant-form-item-has-error': validation.status === 'error',
+      'ant-form-item-has-warning': validation.status === 'warning',
+    },
+    blockRowClassName
+  );
   const rowStyle = {
     flexWrap: properties.inline ? 'inherit' : undefined,
     marginBottom: 0,
+    ...blockRowStyle,
   };
 
   const labelColClassName = classNames({
@@ -61,8 +70,9 @@ const labelLogic = ({
   });
   const labelColStyle = {
     overflow: properties.inline ? 'inherit' : undefined,
-    whiteSpace: !properties.inline ? 'normal' : undefined,
+    whiteSpace: !properties.inline || properties.wrap ? 'normal' : undefined,
     marginBottom: properties.size === 'small' ? 0 : 8,
+    ...themeStyle,
   };
 
   const labelClassName = classNames(
@@ -91,6 +101,7 @@ const labelLogic = ({
   );
   const extraStyle = {
     marginTop: properties.size === 'small' ? -4 : 0,
+    ...themeStyle,
     ...styles.extra,
   };
 
@@ -117,14 +128,18 @@ const labelLogic = ({
     'ldf-feedback-icon': true,
   });
 
+  const hasFeedback = properties.hasFeedback !== false;
   const showExtra = !!properties.extra && (!validation.status || validation.status === 'success');
-  const showFeedback = validation.status === 'warning' || validation.status === 'error';
+  const showFeedback =
+    hasFeedback && (validation.status === 'warning' || validation.status === 'error');
+  const showFeedbackIcon = hasFeedback && !type.isNone(validation.status);
   return {
     extraClassName,
     extraStyle,
     feedbackClassName,
     feedbackStyle,
     iconClassName,
+    iconStyle: themeStyle,
     label: !properties.disabled && label,
     labelClassName,
     labelCol,
@@ -135,6 +150,7 @@ const labelLogic = ({
     rowStyle,
     showExtra,
     showFeedback,
+    showFeedbackIcon,
     wrapperCol,
   };
 };

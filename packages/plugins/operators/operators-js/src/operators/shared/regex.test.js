@@ -83,3 +83,45 @@ test('_regex invalid flags', () => {
     '_regex failed to execute RegExp.test.'
   );
 });
+test('_regex with a reserved key returns false and does not throw', () => {
+  expect(
+    _regex({
+      params: { key: 'a.__proto__.b', pattern: 'x' },
+      location,
+      state: { a: { b: 'Some String' } },
+    })
+  ).toEqual(false);
+});
+test('_regex with a reserved location returns false and does not throw', () => {
+  expect(
+    _regex({
+      params: { pattern: 'x' },
+      location: 'a.__proto__.b',
+      state: { a: { b: 'Some String' } },
+    })
+  ).toEqual(false);
+});
+test('_regex with a reserved key ignores a non-reserved on value', () => {
+  expect(
+    _regex({
+      params: { key: '__proto__', on: 'Some String', pattern: '^Some String$' },
+      location,
+      state: { string: 'Some String' },
+    })
+  ).toEqual(false);
+});
+test('_regex propagates an error that is not a ReservedKeyError', () => {
+  const state = {};
+  Object.defineProperty(state, 'boom', {
+    enumerable: true,
+    get: () => {
+      throw new Error('read failed');
+    },
+  });
+  expect(() => _regex({ params: { key: 'boom', pattern: 'x' }, location, state })).toThrow(
+    'read failed'
+  );
+  expect(() => _regex({ params: { pattern: 'x' }, location: 'boom', state })).toThrow(
+    'read failed'
+  );
+});

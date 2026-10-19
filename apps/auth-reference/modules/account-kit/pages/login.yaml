@@ -1,0 +1,25 @@
+# The module's sign-in page, claimed as the signIn authPages role in the
+# manifest. The app sets auth.authPages.signIn itself, and the app wins per
+# key - so this claim is ceded: /login stays the sign-in page and this page
+# is just an ordinary module page at /account-kit/login (protected, since it
+# holds no role and is on no public list).
+id: login
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+blocks:
+  - id: module_login_title
+    type: Title
+    properties:
+      content: account-kit sign-in (ceded)
+      level: 2
+  - id: module_login_text
+    type: Html
+    properties:
+      html: |
+        <p>If you can read this you are signed in - this page is protected.
+        The module claimed the <code>signIn</code> authPages role, but the
+        app's own <code>auth.authPages.signIn</code> entry won, so this page
+        never became the sign-in target (and never became public).</p>

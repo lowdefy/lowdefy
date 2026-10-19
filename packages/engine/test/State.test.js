@@ -14,21 +14,26 @@
   limitations under the License.
 */
 
+import { ReservedKeyError } from '@lowdefy/helpers';
+
 import State from '../src/State.js';
+import DependencyTracker from '../src/tracking/DependencyTracker.js';
+
+function createContext(state) {
+  const context = { state, _internal: { lowdefy: { _internal: {} } } };
+  context._internal.DependencyTracker = new DependencyTracker(context);
+  return context;
+}
 
 test('set', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   state.set('a', 1);
   expect(context.state).toEqual({ a: 1 });
 });
 
 test('resetState', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   state.freezeState();
   expect(context.state).toEqual({});
@@ -39,9 +44,7 @@ test('resetState', () => {
 });
 
 test('freezeState to only set when initialized is false and resetState restores frozenState', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   state.set('a', 1);
   expect(state.initialized).toEqual(false);
@@ -58,9 +61,7 @@ test('freezeState to only set when initialized is false and resetState restores 
 });
 
 test('set on array', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   context.state = { a: [1, 2] };
   state.set('a.2', 3);
@@ -68,9 +69,7 @@ test('set on array', () => {
 });
 
 test('set on array with nested arrays', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   context.state = { a: [1, 2] };
   state.set('a.2.2.a.2.c', 3);
@@ -80,9 +79,7 @@ test('set on array with nested arrays', () => {
 });
 
 test('del', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   context.state = { a: 1 };
   state.del('a');
@@ -90,9 +87,7 @@ test('del', () => {
 });
 
 test('del remove empty object', () => {
-  const context = {
-    state: { a: { b: 1 } },
-  };
+  const context = createContext({ a: { b: 1 } });
   const state = new State(context);
   context.state = { a: { b: 1 } };
   state.del('a.b');
@@ -100,9 +95,7 @@ test('del remove empty object', () => {
 });
 
 test('del remove nested empty object', () => {
-  const context = {
-    state: { a: { b: { c: { d: { e: 1 } } } } },
-  };
+  const context = createContext({ a: { b: { c: { d: { e: 1 } } } } });
   const state = new State(context);
   context.state = { a: { b: { c: { d: { e: 1 } } } } };
   state.del('a.b.c.d');
@@ -110,19 +103,64 @@ test('del remove nested empty object', () => {
 });
 
 test('del keep nested objects', () => {
-  const context = {
-    state: { a: { b: 1, c: 2 } },
-  };
+  const context = createContext({ a: { b: 1, c: 2 } });
   const state = new State(context);
   context.state = { a: { b: 1, c: 2 } };
   state.del('a.b');
   expect(context.state).toEqual({ a: { c: 2 } });
 });
 
+test('del walks to the correct parent when the last path segment contains an escaped dot', () => {
+  const context = createContext({ a: { b: { 'c.d': 1 } } });
+  const state = new State(context);
+  state.del('a.b.c\\.d');
+  expect(context.state).toEqual({});
+});
+
+test('del removes an escaped dot key without removing a non-empty parent', () => {
+  const context = createContext({ a: { b: { 'c.d': 1, e: 2 } } });
+  const state = new State(context);
+  state.del('a.b.c\\.d');
+  expect(context.state).toEqual({ a: { b: { e: 2 } } });
+});
+
+test('del removes all parents that become empty', () => {
+  const context = createContext({ a: { b: { c: 1 } } });
+  const state = new State(context);
+  state.del('a.b.c');
+  expect(context.state).toEqual({});
+});
+
+test('del does not walk past a parent that is still populated', () => {
+  const context = createContext({ a: { b: 1, c: 2 } });
+  const state = new State(context);
+  state.del('a.b');
+  expect(context.state).toEqual({ a: { c: 2 } });
+});
+
+test('del does not walk for a single segment field', () => {
+  const context = createContext({ a: 1, b: 2 });
+  const state = new State(context);
+  state.del('a');
+  expect(context.state).toEqual({ b: 2 });
+});
+
+test('del deletes a root level field name containing an escaped dot', () => {
+  const context = createContext({ 'a.b': 1, c: 2 });
+  const state = new State(context);
+  state.del('a\\.b');
+  expect(context.state).toEqual({ c: 2 });
+});
+
+test('del propagates ReservedKeyError for a reserved path segment', () => {
+  const context = createContext({ a: { b: 1 } });
+  const state = new State(context);
+  expect(() => state.del('a.__proto__')).toThrow(ReservedKeyError);
+  expect(() => state.del('a.__proto__')).toThrow('Reserved key "__proto__"');
+});
+
 test('swapItems', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   context.state = { arr: [0, 1, 2, 3, 4, 5] };
   state.swapItems('arr', 3, 4);
@@ -130,9 +168,7 @@ test('swapItems', () => {
 });
 
 test('removeItem', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   context.state = { arr: [0, 1, 2, 3, 4, 5] };
   state.removeItem('arr', 3);
@@ -140,9 +176,7 @@ test('removeItem', () => {
 });
 
 test('not an array', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   context.state = { arr: 'x' };
   state.removeItem('arr', 3);
@@ -152,9 +186,7 @@ test('not an array', () => {
 });
 
 test('out of array bounds', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   context.state = { arr: [0, 1, 2, 3, 4, 5] };
   state.removeItem('arr', 6);
@@ -168,9 +200,7 @@ test('out of array bounds', () => {
 });
 
 test('combinations', () => {
-  const context = {
-    state: {},
-  };
+  const context = createContext({});
   const state = new State(context);
   context.state = { arr: [0, 1, 2, 3, 4, 5], b: 'b' };
   state.removeItem('arr', 3);

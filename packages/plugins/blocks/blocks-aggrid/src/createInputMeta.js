@@ -15,19 +15,25 @@
 */
 
 // Shared meta for the input AgGrid theme blocks (AgGridInputAlpine / AgGridInputMaterial /
-// AgGridInputBalham). They are identical apart from the theme name in the css key description, so
-// each block's meta.js is a one-line call to this factory rather than a duplicated copy.
-function createInputMeta(blockName) {
+// AgGridInputBalham / AgGridLowdefyInput). They are identical apart from the theme name in the css
+// key description and whether they take a size property, so each block's meta.js is a one-line call
+// to this factory rather than a duplicated copy of the whole schema.
+function createInputMeta(blockName, { size = false } = {}) {
   return {
     category: 'input',
-    icons: [],
+    // The menu cell renders this icon when a column's menu has no icon of its own.
+    icons: ['more-vertical'],
     valueType: 'array',
     cssKeys: {
       element: `The ${blockName} element.`,
     },
+    // Editable cells declare their own eventName, so the event names this
+    // block fires are authored in its properties.
+    dynamicEvents: true,
     events: {
       onCellClick: {
-        description: 'Trigger event when a cell is clicked.',
+        description:
+          'Trigger event when a cell is clicked. Clicks on a button, link, menu, input or checkbox in the cell do not trigger it.',
         event: {
           cell: 'The clicked cell with column and value.',
           colId: 'The column id.',
@@ -41,7 +47,8 @@ function createInputMeta(blockName) {
         event: { rows: 'The displayed rows after filtering.', filter: 'The filter model.' },
       },
       onRowClick: {
-        description: 'Trigger event when a row is clicked.',
+        description:
+          'Trigger event when a row is clicked. Clicks on a button, link, menu, input or checkbox in a cell do not trigger it.',
         event: { row: 'The row data.', selected: 'All selected rows.', rowIndex: 'The row index.' },
       },
       onRowSelected: {
@@ -81,7 +88,7 @@ function createInputMeta(blockName) {
         description:
           'Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate.',
         event: {
-          link: 'The resolved link config (pageId/href/urlQuery/back/home/newTab).',
+          link: 'The resolved link config (pageId/href/urlQuery/pathParams/back/home/newTab).',
           row: 'The row data.',
           value: 'The cell value.',
         },
@@ -89,8 +96,25 @@ function createInputMeta(blockName) {
     },
     properties: {
       type: 'object',
-      additionalProperties: false,
+      // Undeclared properties are passed through to AgGrid as grid options.
+      additionalProperties: true,
       properties: {
+        ...(size
+          ? {
+              size: {
+                type: 'string',
+                enum: ['small', 'middle', 'large'],
+                default: 'middle',
+                description:
+                  "Row density, mirroring antd Table sizes. `small` is compact, `middle` (the Lowdefy default) matches antd Table's `middle`, `large` matches antd Table's default density. Changes spacing and row/header height only — colours and font size are identical across sizes.",
+              },
+            }
+          : {}),
+        themeParams: {
+          type: 'object',
+          description:
+            "AG Grid Theming API parameters merged onto this block's theme, for per-grid overrides. Keys are AG Grid param names, e.g. `headerBackgroundColor`, `rowHoverColor`, `borderColor`. Values are CSS strings and may reference antd tokens, e.g. `var(--ant-color-primary)`. An unrecognised param name has no effect — neither Lowdefy nor AG Grid validates the names — so check spelling against AG Grid's theming parameter reference.",
+        },
         height: {
           type: ['number', 'string'],
           default: 'auto',
@@ -99,6 +123,11 @@ function createInputMeta(blockName) {
         rowData: {
           type: 'array',
           description: 'The list of data to display on the table.',
+        },
+        quickFilterValue: {
+          type: 'string',
+          description:
+            'Show only rows with a cell containing this text. Bind it to state to drive a search box; the `setQuickFilter` method does the same imperatively.',
         },
         rowId: {
           type: 'string',
@@ -175,7 +204,7 @@ function createInputMeta(blockName) {
                 description: 'Initial width in pixels for the cell.',
               },
               cellStyle: {
-                type: 'number',
+                type: 'object',
                 description:
                   'An object of css values returning an object of css values for a particular cell.',
               },
@@ -212,11 +241,23 @@ function createInputMeta(blockName) {
               cell: {
                 type: 'object',
                 description:
-                  'Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`) are row-data paths.',
+                  'Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`, `pathParams.*`) are row-data paths.',
                 properties: {
                   type: {
                     type: 'string',
-                    enum: ['tag', 'avatar', 'link', 'date', 'boolean', 'progress', 'number'],
+                    enum: [
+                      'tag',
+                      'avatar',
+                      'link',
+                      'date',
+                      'boolean',
+                      'progress',
+                      'number',
+                      'textInput',
+                      'paragraphInput',
+                      'selector',
+                      'switch',
+                    ],
                     description: 'The built-in renderer to use.',
                   },
                   colorMap: {
@@ -253,16 +294,25 @@ function createInputMeta(blockName) {
                   link: {
                     type: 'object',
                     description:
-                      'Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` values are row-data paths.',
+                      'Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` and `pathParams` values are row-data paths.',
                   },
                   pageId: { type: 'string', description: 'Link: target page id (literal).' },
-                  href: { type: 'string', description: 'Link: literal href (overrides `pageId`).' },
+                  href: {
+                    type: 'string',
+                    urlKind: 'href',
+                    description: 'Link: literal href (overrides `pageId`).',
+                  },
                   back: { type: 'boolean', description: 'Link: navigate back.' },
                   home: { type: 'boolean', description: 'Link: navigate home.' },
                   newTab: { type: 'boolean', description: 'Link: open in a new tab.' },
                   urlQuery: {
                     type: 'object',
                     description: 'Link: query params. Each value is a row-data path.',
+                  },
+                  pathParams: {
+                    type: 'object',
+                    description:
+                      "Link: values for the page path's placeholders. Each value is a row-data path.",
                   },
                   labelField: {
                     type: 'string',
@@ -368,7 +418,8 @@ function createInputMeta(blockName) {
                   },
                   zeroColor: {
                     type: 'string',
-                    description: 'Number: CSS colour when value === 0 (requires `signColor: true`).',
+                    description:
+                      'Number: CSS colour when value === 0 (requires `signColor: true`).',
                   },
                   color: {
                     type: 'string',

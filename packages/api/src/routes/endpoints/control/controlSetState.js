@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-import { set } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
+import { ReservedKeyError, set } from '@lowdefy/helpers';
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 function controlSetState(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
-  const { items } = routineContext;
+  const { logger } = context;
 
-  const evaluatedSetState = evaluateOperators({
+  const evaluatedSetState = evaluateRoutineOperators(context, routineContext, {
     input: control[':set_state'],
-    items,
     location: control['~k'] ?? ':set_state',
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   logger.debug({
@@ -36,7 +33,17 @@ function controlSetState(context, routineContext, { control }) {
   });
 
   Object.entries(evaluatedSetState).forEach(([key, value]) => {
-    set(routineContext.state, key, value);
+    try {
+      set(routineContext.state, key, value);
+    } catch (error) {
+      if (error instanceof ReservedKeyError) {
+        throw new ConfigError(`Reserved key "${error.segment}" cannot be used in :set_state`, {
+          cause: error,
+          configKey: control['~k'],
+        });
+      }
+      throw error;
+    }
   });
 
   return { status: 'continue' };

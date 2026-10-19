@@ -21,9 +21,11 @@ import { getLocaleDateFormat, type } from '@lowdefy/helpers';
 import { DatePicker } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
+import getPresets from '../../getPresets.js';
 
 dayjs.extend(utc);
 
@@ -58,16 +60,51 @@ const DateSelector = ({
             <div id={`${blockId}_${elementId}_popup`} />
             <DatePicker
               id={`${blockId}_input`}
-              allowClear={properties.allowClear !== false}
+              allowClear={
+                properties.allowClear !== false && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
               autoFocus={properties.autoFocus}
-              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              variant={
+                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+              }
               className={classNames.element}
+              classNames={{ popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
-              disabled={properties.disabled || loading}
-              format={properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'}
+              styles={{ popup: { root: styles.popup } }}
+              disabled={getDisabled({ loading, properties })}
+              format={
+                properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'
+              }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
+              inputReadOnly={properties.inputReadOnly}
               placeholder={properties.placeholder}
-              showToday={properties.showToday}
+              placement={properties.placement}
+              prefix={
+                properties.prefix ||
+                (properties.prefixIcon && (
+                  <Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
+                    events={events}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
+                  />
+                ))
+              }
+              presets={getPresets({
+                disabledDates: properties.disabledDates,
+                methods,
+                presets: properties.presets,
+              })}
+              showNow={properties.showToday}
+              showWeek={properties.showWeek}
               size={properties.size}
               status={validation.status}
               suffixIcon={
@@ -75,11 +112,23 @@ const DateSelector = ({
                   blockId={`${blockId}_suffixIcon`}
                   classNames={{ element: classNames.suffixIcon }}
                   events={events}
-                  properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
+                  properties={properties.suffixIcon ?? { name: 'calendar', title: '' }}
                   styles={{ element: styles.suffixIcon }}
                 />
               }
               disabledDate={disabledDate(properties.disabledDates)}
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onOpenChange={(open) => {
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } });
+              }}
               onChange={(newVal) => {
                 // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
                 const d = newVal ? dayjs(newVal) : null;

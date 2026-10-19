@@ -14,10 +14,93 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { getOperatorType, type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
-// Keys that look like operators (single key starting with _) but are not.
-const KNOWN_NON_OPERATORS = new Set(['_id']);
+import getOperatorParams from './getOperatorParams.js';
+
+const OPERATOR_NAME = /^_[A-Za-z]\w*$/;
+
+// The names an _operator `name` can evaluate to, when config fixes them: a
+// literal, or the literal branches an _if or _switch returns (anything an _if
+// only compares in its `test` is not a name the call can take). A missing
+// branch or a value that is not a string names nothing; the operator refuses
+// it at runtime. null when a name is read at runtime (state, a request, a
+// payload).
+function getLiteralNames(name) {
+  if (type.isString(name)) {
+    return [name];
+  }
+  const operator = getOperatorType(name);
+  if (operator === null) {
+    return [];
+  }
+  let branches = null;
+  if (operator === '_if') {
+    const params = getOperatorParams(name);
+    branches = [params?.then, params?.else];
+  }
+  if (operator === '_switch') {
+    const params = getOperatorParams(name);
+    branches = [
+      ...(type.isArray(params?.branches) ? params.branches : []).map((branch) => branch?.then),
+      params?.default,
+    ];
+  }
+  if (branches === null) {
+    return null;
+  }
+  const names = branches.map(getLiteralNames);
+  if (names.some((branchNames) => branchNames === null)) {
+    return null;
+  }
+  return names.flat();
+}
+
+function countName(name, counter, configKey) {
+  if (!type.isString(name)) {
+    return;
+  }
+  const [operator] = name.split('.');
+  if (OPERATOR_NAME.test(operator)) {
+    counter.increment(operator, configKey);
+  }
+}
+
+// _operator calls the operator it names through the operator registry, so the
+// names it can take are counted like operators the config uses directly: the
+// names config fixes, and the operators listed in `operators`. A name read at
+// runtime must come with that list. The build then bundles exactly those, on
+// the page and on the server, and the operator refuses any name not listed.
+function countNamedOperators(value, counter, configKey) {
+  const params = getOperatorParams(value);
+  const names =
+    type.isObject(params) && getOperatorType(params) === null ? getLiteralNames(params.name) : null;
+  const listed = type.isObject(params) ? params.operators : undefined;
+  if (type.isNone(listed)) {
+    if (names === null) {
+      throw new ConfigError(
+        '_operator "name" is read at runtime, so the build cannot tell which operator it calls. List the operators it may call in "operators", for example operators: [_sum, _product].',
+        { configKey }
+      );
+    }
+    names.forEach((name) => countName(name, counter, configKey));
+    return;
+  }
+  if (
+    !type.isArray(listed) ||
+    !listed.every((name) => type.isString(name) && OPERATOR_NAME.test(name.split('.')[0]))
+  ) {
+    throw new ConfigError('_operator "operators" must be a list of operator names.', {
+      received: listed,
+      configKey,
+    });
+  }
+  if (listed.some((name) => name.split('.')[0] === '_operator')) {
+    throw new ConfigError('_operator "operators" cannot list "_operator".', { configKey });
+  }
+  [...(names ?? []), ...listed].forEach((name) => countName(name, counter, configKey));
+}
 
 function walkAndCount(value, counter, parentConfigKey) {
   if (type.isArray(value)) {
@@ -30,22 +113,17 @@ function walkAndCount(value, counter, parentConfigKey) {
   }
 
   const configKey = value['~k'] || parentConfigKey;
-  const keys = Object.keys(value);
 
-  // Check if this object is an operator (single key starting with _, ignoring ~ prefixed keys)
-  // This allows ~ignoreBuildCheck to be on the same object as an operator
-  const nonTildeKeys = keys.filter((k) => !k.startsWith('~'));
-  if (nonTildeKeys.length === 1) {
-    const key = nonTildeKeys[0];
-    const [op] = key.split('.');
-    const operator = op.replace(/^(_+)/gm, '_');
-    if (operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator)) {
-      counter.increment(operator, configKey);
-    }
+  const operator = getOperatorType(value);
+  if (operator) {
+    counter.increment(operator, configKey, value);
+  }
+  if (operator === '_operator') {
+    countNamedOperators(value, counter, configKey);
   }
 
   // Recurse into all values
-  keys.forEach((key) => {
+  Object.keys(value).forEach((key) => {
     walkAndCount(value[key], counter, configKey);
   });
 }

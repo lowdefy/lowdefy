@@ -18,7 +18,7 @@ import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
   category: 'input',
-  icons: ['AiOutlineLoading', 'AiOutlineCamera'],
+  icons: ['loading', 'camera'],
   valueType: 'object',
   cssKeys: {
     element: 'The outer block wrapper around the upload card and list.',
@@ -30,8 +30,7 @@ export default {
   },
   events: {
     onBeforeUpload: {
-      description:
-        'Triggered before upload starts. If any action throws, the upload is cancelled.',
+      description: 'Triggered before upload starts. If any action throws, the upload is cancelled.',
       event: { file: 'The raw File object selected by the user.' },
     },
     onChange: 'Triggered when the upload state is changing.',

@@ -1,0 +1,103 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+export default {
+  category: 'display',
+  icons: [],
+  valueType: null,
+  cssKeys: {
+    element: 'The Html element.',
+  },
+  hazards: [
+    {
+      id: 'html-style-stripped',
+      message:
+        'Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Clicks are wired through data-event attributes instead of inline handlers.',
+      see: 'display-blocks/clickablehtml',
+    },
+    {
+      id: 'clickable-html-data-events',
+      message:
+        'List every event the HTML fires in properties.dataEvents: a data-event whose name is not listed does nothing. HTML built from user or request data must escape that data, so the data cannot add data-event elements of its own: _nunjucks escapes {{ values }} unless they are marked safe, while _string.concat and _js do not escape.',
+      see: 'display-blocks/clickablehtml',
+    },
+    {
+      id: 'clickable-html-confirm-destructive',
+      message:
+        'Give an event that deletes or changes data confirm in dataEvents ({ name: onDelete, confirm: "Delete this row?" }), so every click on it asks first and only OK fires it. data-confirm="Delete this row?" on the element asks too, but only where the markup says so.',
+      see: 'concepts/html-attributes',
+    },
+  ],
+  // Each clickable element names its event in a data-event attribute, so the
+  // event names this block fires are authored in its html.
+  dynamicEvents: true,
+  events: {
+    onTextSelection:
+      'Trigger action when text is selected and pass selected text to the event object.',
+  },
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      dataEvents: {
+        type: 'array',
+        description:
+          'The events the HTML may fire. A data-event whose name is not listed does nothing, and a click on it logs a console warning; with no dataEvents the HTML fires no events. List an event by name, or as { name, confirm } to make every click on it ask first.',
+        items: {
+          oneOf: [
+            {
+              type: 'string',
+              description: 'An event name, as written in data-event.',
+            },
+            {
+              type: 'object',
+              additionalProperties: false,
+              required: ['name'],
+              properties: {
+                name: {
+                  type: 'string',
+                  description: 'An event name, as written in data-event.',
+                },
+                confirm: {
+                  oneOf: [
+                    {
+                      type: 'boolean',
+                      description:
+                        'Ask before the event fires, whatever the HTML says, with the element\'s data-confirm message or "Are you sure?".',
+                    },
+                    {
+                      type: 'string',
+                      minLength: 1,
+                      description:
+                        'Ask before the event fires, whatever the HTML says, with this message.',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      },
+      html: {
+        type: 'string',
+        description:
+          'Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event="onEditClick" fires events.onEditClick), if dataEvents lists it, and its default browser action is prevented. The event object holds the element\'s other data-* attributes with snake_case keys, so data-event="onEditClick" data-record-id="42" gives { record_id: "42" }. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A data-event inside popover content fires too, then closes the popover. A link with data-event fires the event and does not navigate. data-confirm="Delete this row?" on a data-event element asks first: only OK fires the event (bare data-confirm asks "Are you sure?"). Escape user and request data in the HTML, so it cannot add data-event elements of its own. All Html block attributes work too: data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate and data-tone. See the HTML attributes docs page.',
+        docs: {
+          displayType: 'text-area',
+        },
+      },
+    },
+  },
+};

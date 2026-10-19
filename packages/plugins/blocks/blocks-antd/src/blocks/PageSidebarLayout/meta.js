@@ -14,22 +14,29 @@
   limitations under the License.
 */
 
-import MobileMenuMeta from '../MobileMenu/meta.js';
 import icon from '../../schemas/icon.js';
 import menuLinks from '../../schemas/menuLinks.js';
 import breadcrumbList from '../../schemas/breadcrumbList.js';
 
 export default {
   category: 'container',
+  actions: ['SetDarkMode', 'SetLocale'],
+  operators: ['_event'],
   icons: [
-    'AiOutlineBell',
-    'AiOutlineLaptop',
-    'AiOutlineMenuFold',
-    'AiOutlineMenuUnfold',
-    'AiOutlineMoon',
-    'AiOutlineSun',
-    'AiOutlineUser',
-    ...MobileMenuMeta.icons,
+    'bell',
+    'user',
+    'theme-light',
+    'theme-dark',
+    'theme-system',
+    'globe',
+    'sidebar-collapse',
+    'sidebar-expand',
+    'menu',
+    'close',
+    'loading',
+    'chevron-down',
+    'chevron-right',
+    'more',
   ],
   valueType: null,
   slots: {
@@ -38,18 +45,26 @@ export default {
     header: 'Additional header content.',
     mobileDrawerContent: 'Content in the mobile menu drawer.',
     mobileDrawerFooter: 'Footer in the mobile menu drawer.',
+    mobileDrawerHeader: 'Content above the menu in the mobile menu drawer.',
     mobileExtra: 'Extra content in the mobile header bar.',
     siderClosed: 'Content shown in the sider when collapsed.',
+    siderHeader:
+      'Content above the sider menu when expanded. It stays in place while the menu scrolls.',
+    siderHeaderClosed: 'Content above the sider menu when collapsed.',
     siderOpen: 'Content shown in the sider when expanded.',
   },
   cssKeys: {
     element: 'The PageSidebarLayout element.',
     sider: 'The PageSidebarLayout sider.',
+    siderBody: 'The box inside the sider that holds the toggle button, menu and sider slots.',
+    siderHeader:
+      'The box above the sider menu that holds the siderHeader or siderHeaderClosed slot.',
     menu: 'The PageSidebarLayout menu.',
     mobileHeader: 'The PageSidebarLayout mobile header.',
     mobileMenu: 'The PageSidebarLayout mobile menu.',
     header: 'The PageSidebarLayout header.',
     headerActions: 'The header actions container (notifications, profile, dark mode toggle).',
+    headerContent: 'The PageSidebarLayout header content area (the header slot row).',
     logo: 'The PageSidebarLayout logo.',
     notifications: 'The notification bell button.',
     notificationsBadge: 'The notification badge wrapper.',
@@ -99,9 +114,10 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Antd global design token overrides, such as colorPrimary or borderRadius, applied to everything in the page layout. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/docs/react/customize-theme#seedtoken',
         },
       },
       logo: {
@@ -112,11 +128,13 @@ export default {
         properties: {
           src: {
             type: 'string',
+            urlKind: 'src',
             description:
               'Logo image URL for desktop. Defaults to logo-light-theme.png or logo-dark-theme.png from the public folder (~250x72px), auto-selected based on dark mode.',
           },
           srcMobile: {
             type: 'string',
+            urlKind: 'src',
             description:
               'Logo image URL for mobile. Defaults to logo-square-light-theme.png or logo-square-dark-theme.png from the public folder (~125x125px), auto-selected based on dark mode.',
           },
@@ -146,8 +164,9 @@ export default {
           },
           collapsible: {
             type: 'boolean',
-            default: true,
-            description: 'Whether can be collapsed.',
+            default: false,
+            description:
+              'Show a trigger at the bottom of the sider that collapses and expands it, like the toggle button.',
           },
           initialCollapsed: {
             type: 'boolean',
@@ -172,7 +191,7 @@ export default {
         type: 'string',
         default: 'sider',
         description:
-          "localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open'.",
+          "localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open', kept per app.",
       },
       header: {
         type: 'object',
@@ -208,6 +227,13 @@ export default {
             },
           },
         },
+      },
+      padding: {
+        type: 'string',
+        enum: ['default', 'compact', 'none'],
+        default: 'default',
+        description:
+          'Space around the page content. `compact` tightens it to 16px for dense, data-heavy pages. `none` removes it so content such as a table or grid runs edge to edge; the breadcrumb keeps its own inset.',
       },
       content: {
         type: 'object',
@@ -280,6 +306,7 @@ export default {
               },
               url: {
                 type: 'string',
+                urlKind: 'url',
                 description: 'External URL to link to.',
               },
               newTab: {
@@ -317,7 +344,7 @@ export default {
           },
           icon: {
             ...icon,
-            description: 'Icon for the notification button. Defaults to AiOutlineBell.',
+            description: 'Icon for the notification button. Defaults to `bell`.',
           },
           size: {
             type: 'string',
@@ -346,6 +373,7 @@ export default {
             properties: {
               src: {
                 type: 'string',
+                urlKind: 'src',
                 description: 'Image URL for the avatar. Typically bound to _user: image.',
               },
               content: {
@@ -356,7 +384,7 @@ export default {
               icon: {
                 ...icon,
                 description:
-                  'Icon to display in avatar when no src or content is set. Defaults to AiOutlineUser.',
+                  'Icon to display in avatar when no src or content is set. Defaults to `user`.',
               },
               color: {
                 type: 'string',
@@ -368,8 +396,7 @@ export default {
               size: {
                 type: ['string', 'number'],
                 default: 'small',
-                enum: ['default', 'small', 'large'],
-                description: 'Size of the avatar.',
+                description: 'Size of the avatar: default, small, large or a pixel number.',
                 docs: {
                   displayType: 'string',
                 },
@@ -406,6 +433,7 @@ export default {
                 },
                 url: {
                   type: 'string',
+                  urlKind: 'url',
                   description: 'External URL to link to.',
                 },
                 newTab: {

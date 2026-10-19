@@ -14,13 +14,27 @@
   limitations under the License.
 */
 
-import { createOpenAI } from '@ai-sdk/openai';
+import { createDecide, createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
+
+import createProvider from './createProvider.js';
 import schema from './schema.js';
 
+// maxOutputTokens and timeout are defaults for the agents on this connection; the
+// request resolvers read them from the connection properties.
 function create({ connection }) {
-  const { apiKey, baseURL } = connection ?? {};
-  return { provider: createOpenAI({ apiKey, baseURL }) };
+  const { maxOutputTokens, timeout } = connection ?? {};
+  return { provider: createProvider({ connection }), maxOutputTokens, timeout };
 }
 
-const OpenAI = { schema, create };
+const OpenAI = {
+  schema,
+  // An outside service, not app data: a journey on a data set keeps its real target.
+  meta: { dataSet: 'external' },
+  create,
+  requests: {
+    Decide: createDecide({ createProvider }),
+    GenerateObject: createGenerateObject({ createProvider }),
+    GenerateText: createGenerateText({ createProvider }),
+  },
+};
 export default OpenAI;

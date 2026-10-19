@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import importPluginModule from './importPluginModule.js';
+import loadPluginTypeSchema from './loadPluginTypeSchema.js';
+
 async function writeOperatorSchemaMap({ components, context }) {
   const schemas = {};
-
-  const typesMapSchemas = context.typesMap.schemas?.operators ?? {};
+  const metas = {};
 
   const allOperators = new Map();
   for (const op of components.imports.operators.client) {
@@ -36,22 +38,26 @@ async function writeOperatorSchemaMap({ components, context }) {
   }
 
   for (const [packageName, operators] of Object.entries(operatorsByPackage)) {
-    let packageSchemas;
-    try {
-      packageSchemas = await import(/* webpackIgnore: true */ `${packageName}/schemas`);
-    } catch {
-      // Package not resolvable from build context (custom plugins) — skip
-    }
+    // Operators have no meta beyond hazards, so `./metas` is optional for a
+    // package — most ship schemas only and contribute nothing here.
+    const packageMetas = await importPluginModule({
+      context,
+      specifier: `${packageName}/metas`,
+    });
     for (const op of operators) {
-      if (typesMapSchemas[op.typeName]) {
-        schemas[op.typeName] = typesMapSchemas[op.typeName];
-      } else if (packageSchemas?.[op.originalTypeName]) {
-        schemas[op.typeName] = packageSchemas[op.originalTypeName];
+      const { schema } = await loadPluginTypeSchema({ context, kind: 'operators', type: op });
+      if (schema) {
+        schemas[op.typeName] = schema;
+      }
+      const meta = packageMetas?.[op.originalTypeName];
+      if (meta) {
+        metas[op.typeName] = { hazards: meta.hazards ?? [] };
       }
     }
   }
 
-  return context.writeBuildArtifact('plugins/operatorSchemas.json', JSON.stringify(schemas));
+  await context.writeBuildArtifact('plugins/operatorSchemas.json', JSON.stringify(schemas));
+  await context.writeBuildArtifact('plugins/operatorMetas.json', JSON.stringify(metas));
 }
 
 export default writeOperatorSchemaMap;

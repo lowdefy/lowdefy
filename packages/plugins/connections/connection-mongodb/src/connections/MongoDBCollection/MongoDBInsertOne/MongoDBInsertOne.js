@@ -15,29 +15,79 @@
 */
 
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
+import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
+import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
-async function MongodbInsertOne({ connection, request }) {
+async function MongodbInsertOne({
+  endpointId,
+  blockId,
+  connection,
+  connectionId,
+  pageId,
+  payload,
+  request,
+  requestId,
+  tenant,
+  tenantGuard,
+}) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBInsertOne' });
   const deserializedRequest = deserialize(request);
-  const { doc, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
+  const { options } = deserializedRequest;
+  let { doc } = deserializedRequest;
+  if (tenant) {
+    doc = stampTenantOnDoc({ doc, tenant });
+  }
+  if (tenantGuard) {
+    assertUnscopedDoc({ doc, field: tenantGuard.field });
+  }
+  const { collection, logCollection } = await getCollection({ connection });
   let response;
   try {
     response = await collection.insertOne(doc, options);
+    if (logCollection) {
+      await logCollection.insertOne(
+        stampTenantOnLogRecord({
+          record: {
+            args: { doc, options },
+            blockId,
+            connectionId,
+            pageId,
+            payload,
+            requestId,
+            response,
+            timestamp: new Date(),
+            type: 'MongoDBInsertOne',
+            meta: connection.changeLog?.meta,
+          },
+          tenant,
+        })
+      );
+    }
   } catch (error) {
-    await client.close();
-    throw error;
+    throw mapMongoError(error, { connection, requestType: 'MongoDBInsertOne' });
   }
-  await client.close();
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: response.insertedId,
+    requestId,
+    requestType: 'MongoDBInsertOne',
+    tenant,
+    tenantGuard,
+  });
   const { acknowledged, insertedId } = serialize(response);
   return { acknowledged, insertedId };
 }
 
 MongodbInsertOne.schema = schema;
-MongodbInsertOne.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbInsertOne.meta = requestMetas.MongoDBInsertOne;
 
 export default MongodbInsertOne;

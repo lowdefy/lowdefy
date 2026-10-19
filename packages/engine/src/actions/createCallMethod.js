@@ -16,11 +16,20 @@
 
 import { applyArrayIndices, type } from '@lowdefy/helpers';
 
+import exemptFromDomEvent from '../exemptFromDomEvent.js';
+
 function createCallMethod({ arrayIndices, context }) {
   return function callMethod(params) {
     const { blockId, method, args = [] } = params;
-    const blockMethod =
-      context._internal.RootSlots.map[applyArrayIndices(arrayIndices, blockId)].methods[method];
+    // The build checks static blockIds; an operator or dynamic content can still name one that is
+    // not on the page.
+    const block = context._internal.RootSlots.map[applyArrayIndices(arrayIndices, blockId)];
+    if (type.isNone(block)) {
+      throw new Error(
+        `Failed to call method "${method}" on block "${blockId}": block "${blockId}" does not exist on this page.`
+      );
+    }
+    const blockMethod = block.methods[method];
     if (!type.isArray(args)) {
       throw new Error(
         `Failed to call method "${method}" on block "${blockId}": "args" should be an array.`
@@ -31,6 +40,7 @@ function createCallMethod({ arrayIndices, context }) {
         `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}".`
       );
     }
+    exemptFromDomEvent({ blockId: block.blockId });
     return blockMethod(...args);
   };
 }

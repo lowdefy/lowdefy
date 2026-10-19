@@ -22,16 +22,17 @@
     pnpm app:build                                                   # app/ with defaults
     pnpm app:build --config-directory /path/to/app --log-level debug # external app
     pnpm app:build --skip-build                                      # skip monorepo build
+    pnpm app:build --server-directory _server/prod-pelican           # a second copy beside _server/prod
 
   How it works:
     1. Builds the monorepo (pnpm build:turbo)
-    2. Copies server to _server/prod/, patches next.config.js
+    2. Copies server to _server/prod/ (or --server-directory)
     3. Scans monorepo packages, rewrites @lowdefy/* deps to link: paths
     4. Handles workspace:* plugins from external pnpm monorepos
     5. Runs pnpm install in the isolated copy
     6. Runs lowdefy build (generates build/ artifacts)
     7. Runs pnpm install again (build may add plugin deps)
-    8. Runs next build
+    8. Runs the Vite client build
 */
 
 import { execSync } from 'node:child_process';
@@ -39,7 +40,6 @@ import path from 'node:path';
 
 import parse, { REPO_ROOT } from './lib/parseArgs.mjs';
 import copyServer from './lib/copyServer.mjs';
-import patchNextConfig from './lib/patchNextConfig.mjs';
 import scanPackages from './lib/scanPackages.mjs';
 import rewriteDeps from './lib/rewriteDeps.mjs';
 import addPlugins from './lib/addPlugins.mjs';
@@ -49,12 +49,18 @@ const SERVER_DIR = path.join(REPO_ROOT, 'packages/servers/server');
 
 // -- Arg parsing --
 
-const { configDirectory, logLevel, skipBuild, values: args } = parse({
+const {
+  configDirectory,
+  logLevel,
+  skipBuild,
+  values: args,
+} = parse({
   'ref-resolver': { type: 'string' },
+  'server-directory': { type: 'string', default: '_server/prod' },
 });
 
 const refResolver = args['ref-resolver'];
-const prodDir = path.join(REPO_ROOT, '_server/prod');
+const prodDir = path.resolve(REPO_ROOT, args['server-directory']);
 
 console.log('Lowdefy build');
 console.log(`  Config directory: ${configDirectory}`);
@@ -79,7 +85,6 @@ const logger = createCliLogger({ logLevel });
 
 logger.info({ spin: 'start' }, 'Copying server to prod directory...');
 copyServer({ sourceDir: SERVER_DIR, targetDir: prodDir });
-patchNextConfig({ targetDir: prodDir });
 logger.info({ spin: 'succeed' }, 'Copied server to prod directory.');
 
 // -- Step 4: Build @lowdefy/* package map --
@@ -91,7 +96,7 @@ logger.info({ spin: 'succeed' }, `Found ${packageMap.size} @lowdefy/* packages.`
 // -- Step 5: Rewrite deps + add pnpm.overrides --
 
 logger.info({ spin: 'start' }, 'Rewriting package.json files with link: paths...');
-rewriteDeps({ targetDir: prodDir, packageMap, repoRoot: REPO_ROOT });
+rewriteDeps({ sourceDir: SERVER_DIR, targetDir: prodDir, packageMap });
 logger.info({ spin: 'succeed' }, 'Rewrote package.json files.');
 
 // -- Step 6: Handle custom plugins from lowdefy.yaml --
@@ -101,7 +106,7 @@ addPlugins({ configDirectory, targetDir: prodDir, logger });
 // -- Step 7: Create isolated workspace --
 
 logger.info({ spin: 'start' }, 'Creating isolated pnpm workspace...');
-createWorkspace({ targetDir: prodDir });
+createWorkspace({ targetDir: prodDir, configDirectory });
 logger.info({ spin: 'succeed' }, 'Created isolated pnpm workspace.');
 
 // -- Step 8: Install dependencies --
@@ -130,11 +135,16 @@ logger.info({ spin: 'start' }, 'Installing dependencies (post-build)...');
 execSync('pnpm install --no-lockfile', { cwd: prodDir, stdio: 'inherit' });
 logger.info({ spin: 'succeed' }, 'Dependencies installed.');
 
-// -- Step 11: Run next build --
+// -- Step 11: Run the Vite client build --
 
-logger.info({ spin: 'start' }, 'Running next build...');
-execSync('pnpm run build:next', { cwd: prodDir, stdio: 'inherit', env: buildEnv });
-logger.info({ spin: 'succeed' }, 'Next build complete.');
+logger.info({ spin: 'start' }, 'Running client build...');
+execSync('pnpm run build:client', { cwd: prodDir, stdio: 'inherit', env: buildEnv });
+logger.info({ spin: 'succeed' }, 'Client build complete.');
 
 console.log('');
-console.log('Build complete. Run `pnpm app:start` to start the production server.');
+console.log(
+  `Build complete. Run \`node scripts/start.mjs --server-directory ${path.relative(
+    REPO_ROOT,
+    prodDir
+  )}\` to start the production server.`
+);

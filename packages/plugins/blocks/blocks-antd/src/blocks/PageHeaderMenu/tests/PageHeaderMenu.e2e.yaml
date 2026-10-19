@@ -15,8 +15,8 @@
 id: pageheadermenu
 type: PageHeaderMenu
 properties:
-  header:
-    theme: dark
+  theme:
+    colorBgLayout: rgb(250, 240, 255)
   menu:
     links:
       - id: phm_link1

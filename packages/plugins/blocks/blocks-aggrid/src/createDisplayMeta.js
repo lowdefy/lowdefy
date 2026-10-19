@@ -14,20 +14,26 @@
   limitations under the License.
 */
 
-// Shared meta for the display AgGrid theme blocks (AgGridAlpine / AgGridMaterial / AgGridBalham).
-// They are identical apart from the theme name in the css key description, so each block's meta.js
-// is a one-line call to this factory rather than a duplicated copy of the whole schema.
-function createDisplayMeta(blockName) {
+// Shared meta for the display AgGrid theme blocks (AgGridAlpine / AgGridMaterial / AgGridBalham /
+// AgGridLowdefy). They are identical apart from the theme name in the css key description and
+// whether they take a size property, so each block's meta.js is a one-line call to this factory
+// rather than a duplicated copy of the whole schema.
+function createDisplayMeta(blockName, { size = false } = {}) {
   return {
     category: 'display',
-    icons: [],
+    // The menu cell renders this icon when a column's menu has no icon of its own.
+    icons: ['more-vertical'],
     valueType: null,
     cssKeys: {
       element: `The ${blockName} element.`,
     },
+    // Cell buttons and menu items declare their own eventName, so the event
+    // names this block fires are authored in its properties.
+    dynamicEvents: true,
     events: {
       onCellClick: {
-        description: 'Trigger event when a cell is clicked.',
+        description:
+          'Trigger event when a cell is clicked. Clicks on a button, link, menu, input or checkbox in the cell do not trigger it.',
         event: {
           cell: 'The clicked cell with column and value.',
           colId: 'The column id.',
@@ -41,7 +47,8 @@ function createDisplayMeta(blockName) {
         event: { rows: 'The displayed rows after filtering.', filter: 'The filter model.' },
       },
       onRowClick: {
-        description: 'Trigger event when a row is clicked.',
+        description:
+          'Trigger event when a row is clicked. Clicks on a button, link, menu, input or checkbox in a cell do not trigger it.',
         event: { row: 'The row data.', selected: 'All selected rows.', rowIndex: 'The row index.' },
       },
       onRowSelected: {
@@ -60,7 +67,7 @@ function createDisplayMeta(blockName) {
         description:
           'Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate.',
         event: {
-          link: 'The resolved link config (pageId/href/urlQuery/back/home/newTab).',
+          link: 'The resolved link config (pageId/href/urlQuery/pathParams/back/home/newTab).',
           row: 'The row data.',
           value: 'The cell value.',
         },
@@ -75,11 +82,38 @@ function createDisplayMeta(blockName) {
           buttonIndex: 'Zero-based index in the buttons array.',
         },
       },
+      onCellMenuItem: {
+        description:
+          'Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.items[]` entry of a `cell.type: menu` cell. Wire any number of named events on the block (e.g. `onRename`, `onDelete`).',
+        event: {
+          row: 'The row data.',
+          value: 'The cell value.',
+          item: 'The clicked item: { eventName, title }.',
+          itemIndex: 'Zero-based index in the authored items array (unshifted by hidden items).',
+        },
+      },
     },
     properties: {
       type: 'object',
-      additionalProperties: false,
+      // Undeclared properties are passed through to AgGrid as grid options.
+      additionalProperties: true,
       properties: {
+        ...(size
+          ? {
+              size: {
+                type: 'string',
+                enum: ['small', 'middle', 'large'],
+                default: 'middle',
+                description:
+                  "Row density, mirroring antd Table sizes. `small` is compact, `middle` (the Lowdefy default) matches antd Table's `middle`, `large` matches antd Table's default density. Changes spacing and row/header height only — colours and font size are identical across sizes.",
+              },
+            }
+          : {}),
+        themeParams: {
+          type: 'object',
+          description:
+            "AG Grid Theming API parameters merged onto this block's theme, for per-grid overrides. Keys are AG Grid param names, e.g. `headerBackgroundColor`, `rowHoverColor`, `borderColor`. Values are CSS strings and may reference antd tokens, e.g. `var(--ant-color-primary)`. An unrecognised param name has no effect — neither Lowdefy nor AG Grid validates the names — so check spelling against AG Grid's theming parameter reference.",
+        },
         height: {
           type: ['number', 'string'],
           default: 'auto',
@@ -88,6 +122,11 @@ function createDisplayMeta(blockName) {
         rowData: {
           type: 'array',
           description: 'The list of data to display on the table.',
+        },
+        quickFilterValue: {
+          type: 'string',
+          description:
+            'Show only rows with a cell containing this text. Bind it to state to drive a search box; the `setQuickFilter` method does the same imperatively.',
         },
         rowId: {
           type: 'string',
@@ -160,7 +199,7 @@ function createDisplayMeta(blockName) {
                 description: 'Initial width in pixels for the cell.',
               },
               cellStyle: {
-                type: 'number',
+                type: 'object',
                 description:
                   'An object of css values returning an object of css values for a particular cell.',
               },
@@ -197,7 +236,7 @@ function createDisplayMeta(blockName) {
               cell: {
                 type: 'object',
                 description:
-                  'Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`) are row-data paths.',
+                  'Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`, `pathParams.*`) are row-data paths.',
                 properties: {
                   type: {
                     type: 'string',
@@ -210,6 +249,7 @@ function createDisplayMeta(blockName) {
                       'progress',
                       'number',
                       'buttons',
+                      'menu',
                       'selector',
                       'multipleSelector',
                       'switch',
@@ -252,16 +292,25 @@ function createDisplayMeta(blockName) {
                   link: {
                     type: 'object',
                     description:
-                      'Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` values are row-data paths.',
+                      'Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` and `pathParams` values are row-data paths.',
                   },
                   pageId: { type: 'string', description: 'Link: target page id (literal).' },
-                  href: { type: 'string', description: 'Link: literal href (overrides `pageId`).' },
+                  href: {
+                    type: 'string',
+                    urlKind: 'href',
+                    description: 'Link: literal href (overrides `pageId`).',
+                  },
                   back: { type: 'boolean', description: 'Link: navigate back.' },
                   home: { type: 'boolean', description: 'Link: navigate home.' },
                   newTab: { type: 'boolean', description: 'Link: open in a new tab.' },
                   urlQuery: {
                     type: 'object',
                     description: 'Link: query params. Each value is a row-data path.',
+                  },
+                  pathParams: {
+                    type: 'object',
+                    description:
+                      "Link: values for the page path's placeholders. Each value is a row-data path.",
                   },
                   labelField: {
                     type: 'string',
@@ -367,7 +416,8 @@ function createDisplayMeta(blockName) {
                   },
                   zeroColor: {
                     type: 'string',
-                    description: 'Number: CSS colour when value === 0 (requires `signColor: true`).',
+                    description:
+                      'Number: CSS colour when value === 0 (requires `signColor: true`).',
                   },
                   color: {
                     type: 'string',
@@ -406,12 +456,19 @@ function createDisplayMeta(blockName) {
                         },
                         icon: {
                           type: ['string', 'object'],
-                          description: 'Name of a React-Icon or Icon block config.',
+                          description:
+                            'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config.',
                           docs: { displayType: 'icon' },
                         },
                         iconField: {
                           type: 'string',
                           description: 'Row-data path for the icon name or config.',
+                        },
+                        iconPlacement: {
+                          type: 'string',
+                          enum: ['start', 'end'],
+                          default: 'start',
+                          description: 'Place the icon before (start) or after (end) the title.',
                         },
                         type: {
                           type: 'string',
@@ -447,6 +504,11 @@ function createDisplayMeta(blockName) {
                           default: false,
                           description: "Hide the button's title (icon-only).",
                         },
+                        tooltip: {
+                          type: 'string',
+                          description:
+                            'Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set.',
+                        },
                         disabled: { type: 'boolean', default: false },
                         disabledField: {
                           type: 'string',
@@ -463,6 +525,85 @@ function createDisplayMeta(blockName) {
                         },
                       },
                     },
+                  },
+                  items: {
+                    type: 'array',
+                    description:
+                      'Menu cell: items in the row action menu, rendered in a dropdown behind a single trigger button. Each item triggers its own block-level event (declared in `events:`). `*Field` variants (`titleField`, `iconField`, `disabledField`, `hiddenField`) are row-data paths. A hidden item is dropped, not disabled — a row on which every item is hidden renders no trigger at all.',
+                    items: {
+                      type: 'object',
+                      required: ['eventName'],
+                      properties: {
+                        eventName: {
+                          type: 'string',
+                          description:
+                            'Block-level event name to trigger on click. Event payload is `{ row, value, item: { eventName, title }, itemIndex }`.',
+                        },
+                        title: {
+                          type: 'string',
+                          description: 'Item label - supports html.',
+                        },
+                        titleField: {
+                          type: 'string',
+                          description: 'Row-data path for the label.',
+                        },
+                        icon: {
+                          type: ['string', 'object'],
+                          description:
+                            'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config.',
+                          docs: { displayType: 'icon' },
+                        },
+                        iconField: {
+                          type: 'string',
+                          description: 'Row-data path for the icon name or config.',
+                        },
+                        danger: {
+                          type: 'boolean',
+                          default: false,
+                          description: 'Render the item in the danger colour.',
+                        },
+                        disabled: { type: 'boolean', default: false },
+                        disabledField: {
+                          type: 'string',
+                          description: 'Row-data path → boolean.',
+                        },
+                        hidden: {
+                          type: 'boolean',
+                          default: false,
+                          description: 'Hide the item entirely.',
+                        },
+                        hiddenField: {
+                          type: 'string',
+                          description: 'Row-data path → boolean.',
+                        },
+                      },
+                    },
+                  },
+                  icon: {
+                    type: ['string', 'object'],
+                    default: 'more-vertical',
+                    description:
+                      'Menu cell: the trigger icon. Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. The trigger is icon-only.',
+                    docs: { displayType: 'icon' },
+                  },
+                  placement: {
+                    type: 'string',
+                    enum: [
+                      'bottomLeft',
+                      'bottom',
+                      'bottomRight',
+                      'topLeft',
+                      'top',
+                      'topRight',
+                      'left',
+                      'leftTop',
+                      'leftBottom',
+                      'right',
+                      'rightTop',
+                      'rightBottom',
+                    ],
+                    default: 'bottomRight',
+                    description: 'Menu cell: where the dropdown opens relative to its trigger.',
                   },
                   options: {
                     type: 'array',
@@ -549,13 +690,14 @@ function createDisplayMeta(blockName) {
                   },
                   checkedIcon: {
                     type: ['string', 'object'],
-                    description: 'Switch: icon shown when on (React-Icon name or Icon block config).',
+                    description:
+                      'Switch: icon shown when on (icon name like `edit`, `Pencil` or `tabler:Pencil`, or Icon block config).',
                     docs: { displayType: 'icon' },
                   },
                   uncheckedIcon: {
                     type: ['string', 'object'],
                     description:
-                      'Switch: icon shown when off (React-Icon name or Icon block config).',
+                      'Switch: icon shown when off (icon name like `edit`, `Pencil` or `tabler:Pencil`, or Icon block config).',
                     docs: { displayType: 'icon' },
                   },
                   inputType: {

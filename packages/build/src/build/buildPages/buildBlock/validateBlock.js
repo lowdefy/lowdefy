@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, splitPath, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 function validateBlock(block, { pageId }, parentConfigKey) {
@@ -34,6 +34,17 @@ function validateBlock(block, { pageId }, parentConfigKey) {
       configKey,
     });
   }
+  // Block ids are dot-paths that nest state, so they bypass validateId's shape gate. Every segment
+  // still becomes an object key on the way through get/set, so check per segment: a block
+  // `id: a.constructor.b` would reach `get` with a reserved segment and throw mid-render, which
+  // ErrorBoundary cannot catch because the throw happens during the render that would mount it.
+  const reservedSegment = splitPath(block.id).find(isReserved);
+  if (!type.isNone(reservedSegment)) {
+    throw new ConfigError(
+      `Block id "${block.id}" uses reserved name "${reservedSegment}" as a path segment, at page "${pageId}".`,
+      { received: block.id, configKey }
+    );
+  }
   if (type.isNone(block.type)) {
     throw new ConfigError(`Block type is not defined at "${block.id}" on page "${pageId}".`, {
       configKey,
@@ -52,6 +63,21 @@ function validateBlock(block, { pageId }, parentConfigKey) {
         configKey,
       });
     }
+  }
+  // Page subscriptions are extracted before block building — any subscriptions
+  // key reaching here is defined on a nested block, where it has no effect.
+  if (!type.isNone(block.subscriptions)) {
+    throw new ConfigError(
+      `Subscriptions are only allowed on the page, not on block "${block.id}" on page "${pageId}".`,
+      { configKey }
+    );
+  }
+  // Page path is extracted before block building in the same way.
+  if (!type.isNone(block.path)) {
+    throw new ConfigError(
+      `Path is only allowed on the page, not on block "${block.id}" on page "${pageId}".`,
+      { configKey }
+    );
   }
 }
 

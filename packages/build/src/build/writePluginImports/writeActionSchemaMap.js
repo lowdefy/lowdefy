@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
+import loadPluginTypeSchema from './loadPluginTypeSchema.js';
+
 async function writeActionSchemaMap({ components, context }) {
   const schemas = {};
-
-  const typesMapSchemas = context.typesMap.schemas?.actions ?? {};
 
   const actionsByPackage = {};
   for (const action of components.imports.actions) {
@@ -27,18 +27,11 @@ async function writeActionSchemaMap({ components, context }) {
     actionsByPackage[action.package].push(action);
   }
 
-  for (const [packageName, actions] of Object.entries(actionsByPackage)) {
-    let packageSchemas;
-    try {
-      packageSchemas = await import(/* webpackIgnore: true */ `${packageName}/schemas`);
-    } catch {
-      // Package not resolvable from build context (custom plugins) — skip
-    }
+  for (const actions of Object.values(actionsByPackage)) {
     for (const action of actions) {
-      if (typesMapSchemas[action.typeName]) {
-        schemas[action.typeName] = typesMapSchemas[action.typeName];
-      } else if (packageSchemas?.[action.originalTypeName]) {
-        schemas[action.typeName] = packageSchemas[action.originalTypeName];
+      const { schema } = await loadPluginTypeSchema({ context, kind: 'actions', type: action });
+      if (schema) {
+        schemas[action.typeName] = schema;
       }
     }
   }

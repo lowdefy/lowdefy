@@ -15,14 +15,16 @@
 */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Empty, Input, Modal, Skeleton } from 'antd';
-import { ClockCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Empty, Input, Modal, Spin } from 'antd';
 import { cn } from '@lowdefy/block-utils';
+import { journeyTargetSelectors } from '@lowdefy/helpers';
 
 import SearchResults, { groupResults } from './SearchResults.js';
 import useListKeyboardNav from './useListKeyboardNav.js';
 
 function SearchModal({
+  blockId,
+  components: { Icon },
   open,
   onClose,
   properties,
@@ -116,6 +118,15 @@ function SearchModal({
     }
   }, [open]);
 
+  // When the index (re)builds while the modal is open — documents resolved
+  // after opening, or the bound request refreshed — re-run the current query
+  // so the spinner hands over to real results without a close/reopen.
+  useEffect(() => {
+    if (!open || !query) return;
+    setResults(searchIndex.search(query));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchIndex.version]);
+
   useEffect(() => {
     if (open && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -123,7 +134,10 @@ function SearchModal({
   }, [open]);
 
   const showRecent =
-    !query && properties.recentSearches !== false && recentSearches.recentSearches.length > 0;
+    !query &&
+    !searchIndex.loading &&
+    properties.recentSearches !== false &&
+    recentSearches.recentSearches.length > 0;
 
   return (
     <Modal
@@ -134,22 +148,32 @@ function SearchModal({
       onCancel={onClose}
       className={cn(classNames.modal)}
       style={styles.modal}
-      destroyOnClose
+      destroyOnHidden
+      rootClassName={journeyTargetSelectors.portalClass(blockId)}
     >
       <Input
         ref={inputRef}
         className={cn(classNames.input)}
         style={styles.input}
-        prefix={<SearchOutlined />}
+        prefix={
+          <Icon blockId={`${blockId}_input_icon`} properties={{ name: 'search', title: '' }} />
+        }
         placeholder={properties.placeholder ?? 'Search...'}
-        allowClear
+        allowClear={{
+          clearIcon: (
+            <Icon blockId={`${blockId}_clearIcon`} properties={{ name: 'clear', title: '' }} />
+          ),
+        }}
         value={query}
         onChange={handleInputChange}
         onKeyDown={onKeyDown}
       />
       {searchIndex.loading && (
-        <div style={{ padding: 16 }}>
-          <Skeleton active paragraph={{ rows: 3 }} />
+        <div
+          className={cn('lf-search-loading', classNames.loading)}
+          style={{ display: 'flex', justifyContent: 'center', padding: 32, ...styles.loading }}
+        >
+          <Spin />
         </div>
       )}
       {!searchIndex.loading && query && flatResults.length === 0 && (
@@ -161,6 +185,8 @@ function SearchModal({
       )}
       {!searchIndex.loading && flatResults.length > 0 && (
         <SearchResults
+          blockId={blockId}
+          components={{ Icon }}
           grouped={grouped}
           resultMapping={resultMapping}
           selectedIndex={selectedIndex}
@@ -179,11 +205,16 @@ function SearchModal({
           {recentSearches.recentSearches.map((item) => (
             <div
               key={item.query}
+              role="button"
               className={cn('lf-search-item', classNames.item)}
               style={styles.item}
               onClick={() => handleRecentClick(item.query)}
             >
-              <ClockCircleOutlined style={{ color: 'var(--ant-color-text-quaternary)' }} />
+              <Icon
+                blockId={`${blockId}_recent_icon`}
+                properties={{ name: 'history', title: '' }}
+                styles={{ element: { color: 'var(--ant-color-text-quaternary)' } }}
+              />
               <span>{item.query}</span>
             </div>
           ))}

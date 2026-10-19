@@ -1,0 +1,235 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { jest } from '@jest/globals';
+
+const mockPost = jest.fn();
+jest.unstable_mockModule('axios', () => ({
+  default: { post: mockPost },
+}));
+
+const journey = {
+  name: 'submits the form',
+  pageId: 'form',
+  user: { roles: ['admin'] },
+  urlQuery: { tab: 'new' },
+  timeout: 20000,
+  steps: [{ fill: { blockId: 'title', value: 'x' } }, { click: 'submit' }],
+};
+const item = { filePath: '/app/tests/journeys/form.yaml', journey };
+const url = 'http://localhost:3228';
+
+test('runJourney posts the journey to the REST route and reports a pass', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({
+    data: { pageId: 'form', passed: true, steps: [{}, {}], state: {} },
+  });
+  const result = await runJourney({ item, url });
+  expect(mockPost).toHaveBeenCalledWith('http://localhost:3228/lowdefy-docs/journey', {
+    pageId: 'form',
+    steps: journey.steps,
+    user: { roles: ['admin'] },
+    urlQuery: { tab: 'new' },
+    timeout: 20000,
+  });
+  expect(result).toMatchObject({
+    name: 'submits the form',
+    filePath: item.filePath,
+    passed: true,
+    stepCount: 2,
+  });
+  expect(result.durationMs).toEqual(expect.any(Number));
+});
+
+test('runJourney returns the failure from a failed journey response', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const failure = {
+    index: 1,
+    step: { click: 'submit' },
+    expected: 'block "submit" to be actionable',
+    actual: 'Timeout 5000ms exceeded.',
+    message: 'Step 1 failed.',
+  };
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: false, failure, steps: [] } });
+  const result = await runJourney({ item, url });
+  expect(result).toMatchObject({ passed: false, failure, message: 'Step 1 failed.' });
+});
+
+test('runJourney reports a response carrying error as a failure', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { error: 'Page "form" not found.' } });
+  const result = await runJourney({ item, url });
+  expect(result).toMatchObject({ passed: false, message: 'Page "form" not found.' });
+});
+
+test('runJourney reports a non-2xx response with its status and body', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const error = new Error('Request failed with status code 400');
+  error.response = { status: 400, data: { error: 'The "user" param must be an object.' } };
+  mockPost.mockRejectedValue(error);
+  const result = await runJourney({ item, url });
+  expect(result).toMatchObject({
+    passed: false,
+    message:
+      'POST /lowdefy-docs/journey responded 400: {"error":"The \\"user\\" param must be an object."}',
+  });
+});
+
+test('runJourney reports a transport failure with the error message', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockRejectedValue(new Error('connect ECONNREFUSED 127.0.0.1:3228'));
+  const result = await runJourney({ item, url });
+  expect(result).toMatchObject({
+    passed: false,
+    message: 'Could not reach the dev server: connect ECONNREFUSED 127.0.0.1:3228',
+  });
+});
+
+test('runJourney reports an invalid journey without calling the server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: { filePath: '/app/tests/journeys/bad.yaml', journey: { name: 'bad', pageId: 'p' } },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result).toMatchObject({
+    name: 'bad',
+    passed: false,
+    stepCount: 0,
+    message: 'Invalid journey file: Journey should have required property "steps".',
+  });
+});
+
+test('runJourney reports a malformed step as an invalid journey file without calling the server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: {
+      filePath: '/app/tests/journeys/bad-step.yaml',
+      journey: { name: 'bad step', pageId: 'p', steps: [{ fill: { blockId: 'title' } }] },
+    },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result).toMatchObject({
+    name: 'bad step',
+    filePath: '/app/tests/journeys/bad-step.yaml',
+    passed: false,
+    stepCount: 0,
+    message:
+      'Invalid journey file: Step 0: Step "fill" requires a "value". Received {"blockId":"title"}. Example: {"fill":{"blockId":"name_input","value":"Ada"}} or {"fill":{"blockId":"code_input","fromEmail":{"to":"ada@example.com","match":"\\\\d{6}"}}}.',
+  });
+});
+
+test('runJourney reports a journey holding a placeholder value as failed without calling the server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: {
+      filePath: '/app/tests/journeys/_candidates/dev/orders-1a2b3c4d.yaml',
+      journey: {
+        name: 'orders recorded 1a2b3c4d',
+        pageId: 'orders',
+        steps: [{ fill: { blockId: 'password', value: null, from: 'shape' } }],
+      },
+    },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result).toMatchObject({
+    name: 'orders recorded 1a2b3c4d',
+    passed: false,
+    stepCount: 1,
+    message:
+      'Step 0: fill on "password" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+  });
+});
+
+test('runJourney reports a file that failed to parse using its file path as the name', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: { filePath: '/app/tests/journeys/broken.yaml', error: 'Invalid YAML: boom' },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result).toMatchObject({
+    name: '/app/tests/journeys/broken.yaml',
+    passed: false,
+    message: 'Invalid YAML: boom',
+  });
+});
+
+test('runJourney puts the journey evidence on a pass and never sends it to the dev server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}, {}] } });
+  const evidence = { mutation: { killed: 1, total: 2 }, refreshed: '2026-10-03' };
+  const result = await runJourney({ item: { ...item, journey: { ...journey, evidence } }, url });
+  expect(result.evidence).toEqual(evidence);
+  const [, body] = mockPost.mock.calls[mockPost.mock.calls.length - 1];
+  expect(body).not.toHaveProperty('evidence');
+});
+
+test('runJourney leaves evidence off a pass for a journey without it', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}, {}] } });
+  const result = await runJourney({ item, url });
+  expect(result).not.toHaveProperty('evidence');
+});
+
+test('runJourney posts data and passes the data set and warnings through', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const data = { name: 'staging-sample', loadMs: 800, documents: 3 };
+  mockPost.mockResolvedValue({
+    data: { pageId: 'form', passed: true, steps: [{}], data, warnings: ['w'] },
+  });
+  const dataJourney = { ...journey, data: 'staging-sample', user: 'member' };
+  const result = await runJourney({ item: { ...item, journey: dataJourney }, url });
+  expect(mockPost.mock.calls.at(-1)[1]).toEqual({
+    pageId: 'form',
+    data: 'staging-sample',
+    steps: journey.steps,
+    user: 'member',
+    urlQuery: { tab: 'new' },
+    timeout: 20000,
+  });
+  expect(result).toMatchObject({ passed: true, data, warnings: ['w'] });
+});
+
+test('runJourney does not apply the name limit to a persona run name', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}], state: {} } });
+  const authored = { name: 'a'.repeat(92), pageId: 'form', data: 'base', steps: [{ click: 'go' }] };
+  const persona = { ...authored, name: `${authored.name} [control_owner]`, user: 'control_owner' };
+  const result = await runJourney({
+    item: {
+      filePath: '/app/j.yaml',
+      journey: persona,
+      persona: 'control_owner',
+      personaOf: authored,
+    },
+    url,
+  });
+  expect(result.refused).toBeUndefined();
+  expect(result.passed).toBe(true);
+  const tooLong = { ...authored, name: 'a'.repeat(101) };
+  const refused = await runJourney({
+    item: {
+      filePath: '/app/j.yaml',
+      journey: { ...tooLong, name: `${tooLong.name} [owner]` },
+      personaOf: tooLong,
+    },
+    url,
+  });
+  expect(refused.message).toContain('at most 100 characters');
+});

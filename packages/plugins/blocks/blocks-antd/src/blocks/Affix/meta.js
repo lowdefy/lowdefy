@@ -25,7 +25,10 @@ export default {
     element: 'The Affix element.',
   },
   events: {
-    onChange: 'Triggered when container affix status changes.',
+    onChange: {
+      description: 'Triggered when container affix status changes.',
+      event: { affixed: 'Whether the content is now fixed.' },
+    },
   },
   properties: {
     type: 'object',
@@ -37,7 +40,13 @@ export default {
       },
       offsetTop: {
         type: 'number',
+        default: 0,
         description: 'Offset from the top of the viewport (in pixels).',
+      },
+      target: {
+        type: 'string',
+        description:
+          'Id of the scrollable element the content sticks to, for example a scrolling panel. Defaults to the page window.',
       },
       theme: {
         type: 'object',

@@ -1,0 +1,153 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Edit cells
+  fullWidth: true
+  blocks:
+    - id: contacts_input
+      type: TableInput
+      properties:
+        columns:
+          - key: name
+            editable: true
+            required: true
+          - key: email
+            type: email
+            width: 220
+            editable: true
+          - key: role
+            type: tag
+            editable: true
+            options: [Buyer, Champion, Finance]
+          - key: active
+            type: boolean
+            width: 100
+            editable: true
+        data:
+          - _id: c1
+            name: Ada Lovelace
+            email: ada@example.com
+            role: Champion
+            active: true
+          - _id: c2
+            name: Grace Hopper
+            email: grace@example.com
+            role: Buyer
+            active: false
+
+- title: Invoice lines with add, delete and a total
+  fullWidth: true
+  blocks:
+    - id: invoice_lines
+      type: TableInput
+      properties:
+        addRow: true
+        addRowText: Add line
+        rowActions:
+          delete: true
+        columns:
+          - key: description
+            width: 260
+            editable: true
+            validate:
+              - pass:
+                  op: notEmpty
+                message: Describe the line.
+          - key: qty
+            type: number
+            width: 100
+            editable: true
+            default: 1
+            validate:
+              - pass:
+                  op: gt
+                  value: 0
+                message: The quantity must be more than 0.
+          - key: price
+            type: currency
+            width: 140
+            editable: true
+            default: 0
+            aggregate: sum
+        data:
+          - _id: l1
+            description: Design workshop
+            qty: 1
+            price: 1800
+          - _id: l2
+            description: Implementation days
+            qty: 5
+            price: 950
+
+- title: Ordered list with drag and positions
+  blocks:
+    - id: recipe_steps
+      type: TableInput
+      properties:
+        addRow: true
+        rowDrag:
+          positionField: position
+        defaultView:
+          sort:
+            - key: position
+        columns:
+          - key: step
+            width: 280
+            editable: true
+          - key: position
+            type: number
+            width: 110
+        data:
+          - _id: s1
+            step: Mix the flour and water
+            position: 1024
+          - _id: s2
+            step: Rest for an hour
+            position: 2048
+          - _id: s3
+            step: Bake at 250°C
+            position: 3072
+
+- title: Reset the changes after saving
+  blocks:
+    - id: ingredients_input
+      type: TableInput
+      properties:
+        rowKey: id
+        deleteRows: true
+        columns:
+          - key: ingredient
+            editable: true
+          - key: grams
+            type: number
+            editable: true
+        data:
+          - id: flour
+            ingredient: Flour
+            grams: 500
+          - id: salt
+            ingredient: Salt
+            grams: 10
+    - id: ingredients_reset
+      type: Button
+      properties:
+        title: Reset changes
+        size: small
+      events:
+        onClick:
+          - id: ingredients_reset_call
+            type: CallMethod
+            params:
+              blockId: ingredients_input
+              method: resetChanges

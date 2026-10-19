@@ -33,5 +33,7 @@ function _locale({ arrayIndices, location, params, i18n }) {
 }
 
 _locale.dynamic = true;
+// i18n changes reach the engine through the full render-time pass, which evaluates every block.
+_locale.tracking = { kind: 'read', keys: () => ['i18n'] };
 
 export default _locale;

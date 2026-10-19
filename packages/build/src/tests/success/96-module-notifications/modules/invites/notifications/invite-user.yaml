@@ -1,0 +1,21 @@
+id: invite-user
+type: NotificationEmail
+properties:
+  # _module.var must resolve in the manifest phase with the consumer's var —
+  # the built artifact pins "You are invited to Acme".
+  subject:
+    _build.string.concat:
+      - 'You are invited to '
+      - _module.var: company_name
+  title: You have been invited
+  # Nunjucks placeholders are render-time data templates — the build must
+  # leave them untouched.
+  message: |
+    Hi {{ contact.name }},
+
+    You have been invited to join.
+  button:
+    label: Accept invite
+testData:
+  contact:
+    name: Jane Doe

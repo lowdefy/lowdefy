@@ -1,0 +1,561 @@
+# Content
+
+Main content layout section.
+
+The Content block is the main content area within a Layout. It maps to Ant Design's Layout.Content component and holds the primary page content.
+
+Content without any special configuration. It fills the available space within its parent Layout.
+
+```yaml
+- id: content_basic_layout
+  type: Layout
+  blocks:
+    - id: content_basic
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+        minHeight: 200px
+      blocks:
+        - id: content_basic_text
+          type: Paragraph
+          properties:
+            content: >
+              The Content block is the main content area within a Layout. It
+              maps to Ant Design's Layout.Content component and holds the
+              primary page content.
+- id: content_empty_layout
+  type: Layout
+  blocks:
+    - id: content_empty
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-layout)
+        minHeight: 120px
+        display: flex
+        alignItems: center
+        justifyContent: center
+      blocks:
+        - id: content_empty_text
+          type: Paragraph
+          properties:
+            content: >
+              Content without any special configuration. It fills the available
+              space within its parent Layout.
+```
+
+My Application
+
+Welcome Back
+
+Content works within a Layout alongside Header and Footer blocks to form a complete page structure. It automatically fills the available vertical space between other layout sections.
+
+© 2026 My Application
+
+```yaml
+- id: content_full_page_layout
+  type: Layout
+  style:
+    minHeight: 350px
+  blocks:
+    - id: content_full_page_header
+      type: Header
+      style:
+        paddingInline: 24px
+        borderBottom: 1px solid var(--ant-color-border)
+      blocks:
+        - id: content_full_page_header_title
+          type: Title
+          properties:
+            content: My Application
+            level: 4
+          style:
+            .element:
+              margin: 0
+    - id: content_full_page_main
+      type: Content
+      style:
+        padding: 24px 48px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: content_full_page_title
+          type: Title
+          properties:
+            content: Welcome Back
+            level: 3
+        - id: content_full_page_desc
+          type: Paragraph
+          properties:
+            content: >
+              Content works within a Layout alongside Header and Footer blocks
+              to form a complete page structure. It automatically fills the
+              available vertical space between other layout sections.
+    - id: content_full_page_footer
+      type: Footer
+      style:
+        textAlign: center
+      blocks:
+        - id: content_full_page_footer_text
+          type: Paragraph
+          properties:
+            content: © 2026 My Application
+```
+
+App with Sidebar
+
+Dashboard
+
+When used alongside a Sider block, Content fills the remaining horizontal space. This is the standard layout pattern for admin dashboards and applications with navigation sidebars.
+
+```yaml
+- id: content_sider_outer
+  type: Layout
+  style:
+    minHeight: 350px
+  blocks:
+    - id: content_sider_header
+      type: Header
+      style:
+        paddingInline: 24px
+        borderBottom: 1px solid var(--ant-color-border)
+      blocks:
+        - id: content_sider_header_title
+          type: Title
+          properties:
+            content: App with Sidebar
+            level: 4
+          style:
+            .element:
+              margin: 0
+    - id: content_sider_inner
+      type: Layout
+      properties:
+        hasSider: true
+      blocks:
+        - id: content_sider_nav
+          type: Sider
+          layout:
+            flex: 0 0 auto
+          properties:
+            width: 200
+          style:
+            background: var(--ant-color-bg-container)
+            paddingTop: 16px
+          blocks:
+            - id: content_sider_menu
+              type: Menu
+              properties:
+                mode: inline
+                links:
+                  - id: cs_dashboard
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: Gauge
+                  - id: cs_users
+                    type: MenuLink
+                    properties:
+                      title: Users
+                      icon: user
+                  - id: cs_settings
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: settings
+        - id: content_sider_main
+          type: Content
+          layout:
+            flex: 1 1 auto
+          style:
+            padding: 24px
+            background: var(--ant-color-bg-container)
+            margin: 0 16px
+          blocks:
+            - id: content_sider_main_title
+              type: Title
+              properties:
+                content: Dashboard
+                level: 3
+            - id: content_sider_main_text
+              type: Paragraph
+              properties:
+                content: >
+                  When used alongside a Sider block, Content fills the remaining
+                  horizontal space. This is the standard layout pattern for
+                  admin dashboards and applications with navigation sidebars.
+```
+
+```yaml
+- id: content_theme_layout
+  type: Layout
+  properties:
+    theme:
+      bodyBg: "#e6f4ff"
+  blocks:
+    - id: content_theme_custom
+      type: Content
+      style:
+        padding: 24px
+        minHeight: 150px
+      blocks:
+        - id: content_theme_text
+          type: Html
+          properties:
+            html: The parent Layout theme sets the background behind the Content area with
+              the bodyBg token.
+- id: content_theme_warm_layout
+  type: Layout
+  properties:
+    theme:
+      bodyBg: "#fff7e6"
+  blocks:
+    - id: content_theme_warm
+      type: Content
+      style:
+        padding: 24px
+        minHeight: 150px
+      blocks:
+        - id: content_theme_warm_text
+          type: Html
+          properties:
+            html: A warm-toned content area from the same Layout token.
+```
+
+Rounded Content with Tailwind
+
+Use the element CSS key to apply Tailwind classes directly to the Content element. Content has one CSS key: element, which targets the Layout.Content wrapper.
+
+Gradient Background
+
+Tailwind gradient and shadow utilities applied via the element CSS key create a visually distinct content area without needing custom CSS.
+
+Accent Border Content
+
+A left accent border highlights the content area. Combine Tailwind border utilities with background colors for status-aware content regions.
+
+```yaml
+- id: content_css_rounded_layout
+  type: Layout
+  blocks:
+    - id: content_css_rounded
+      type: Content
+      class:
+        .element: bg-bg-layout rounded-xl p-6 m-4
+      style:
+        minHeight: 150px
+      blocks:
+        - id: content_css_rounded_title
+          type: Title
+          properties:
+            content: Rounded Content with Tailwind
+            level: 4
+        - id: content_css_rounded_text
+          type: Paragraph
+          properties:
+            content: "Use the element CSS key to apply Tailwind classes directly to the
+              Content element. Content has one CSS key: element, which targets
+              the Layout.Content wrapper."
+- id: content_css_gradient_layout
+  type: Layout
+  blocks:
+    - id: content_css_gradient
+      type: Content
+      class:
+        .element: bg-gradient-to-br from-primary/10 to-primary/5 p-8 m-4 rounded-lg
+          shadow-inner
+      style:
+        minHeight: 150px
+      blocks:
+        - id: content_css_gradient_title
+          type: Title
+          properties:
+            content: Gradient Background
+            level: 4
+        - id: content_css_gradient_text
+          type: Paragraph
+          properties:
+            content: >
+              Tailwind gradient and shadow utilities applied via the element CSS
+              key create a visually distinct content area without needing custom
+              CSS.
+- id: content_css_border_layout
+  type: Layout
+  blocks:
+    - id: content_css_border
+      type: Content
+      class:
+        .element: border-l-4 border-l-green-500 bg-bg-layout p-6 m-4
+      style:
+        minHeight: 150px
+      blocks:
+        - id: content_css_border_title
+          type: Title
+          properties:
+            content: Accent Border Content
+            level: 4
+        - id: content_css_border_text
+          type: Paragraph
+          properties:
+            content: >
+              A left accent border highlights the content area. Combine Tailwind
+              border utilities with background colors for status-aware content
+              regions.
+```
+
+Analytics Dashboard
+
+User John updated the project settings — 2 minutes ago
+
+Deployment to production completed — 15 minutes ago
+
+New team member Sarah joined — 1 hour ago
+
+```yaml
+- id: content_dashboard_outer
+  type: Layout
+  style:
+    minHeight: 450px
+  blocks:
+    - id: content_dashboard_header
+      type: Header
+      style:
+        justifyContent: space-between
+        borderBottom: 1px solid var(--ant-color-border)
+        paddingInline: 24px
+      blocks:
+        - id: content_dashboard_header_title
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Analytics Dashboard
+            level: 4
+          style:
+            .element:
+              margin: 0
+        - id: content_dashboard_header_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Export Report
+            icon: download
+            color: default
+            variant: outlined
+            size: small
+    - id: content_dashboard_inner
+      type: Layout
+      properties:
+        hasSider: true
+      blocks:
+        - id: content_dashboard_sider
+          type: Sider
+          layout:
+            flex: 0 0 auto
+          properties:
+            width: 200
+          style:
+            background: var(--ant-color-bg-container)
+            paddingTop: 16px
+          blocks:
+            - id: content_dashboard_menu
+              type: Menu
+              properties:
+                mode: inline
+                links:
+                  - id: cd_overview
+                    type: MenuLink
+                    properties:
+                      title: Overview
+                      icon: home
+                  - id: cd_analytics
+                    type: MenuLink
+                    properties:
+                      title: Analytics
+                      icon: chart
+                  - id: cd_reports
+                    type: MenuLink
+                    properties:
+                      title: Reports
+                      icon: document
+                  - id: cd_team
+                    type: MenuLink
+                    properties:
+                      title: Team
+                      icon: users
+        - id: content_dashboard_main
+          type: Content
+          layout:
+            flex: 1 1 auto
+          style:
+            padding: 24px
+            background: var(--ant-color-bg-layout)
+          blocks:
+            - id: content_dashboard_stats_row
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: content_dashboard_stat1
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: content_dashboard_stat1_val
+                      type: Statistic
+                      properties:
+                        title: Total Users
+                        value: 12480
+                - id: content_dashboard_stat2
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: content_dashboard_stat2_val
+                      type: Statistic
+                      properties:
+                        title: Revenue
+                        value: 48650
+                        prefix: $
+                - id: content_dashboard_stat3
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: content_dashboard_stat3_val
+                      type: Statistic
+                      properties:
+                        title: Conversion
+                        value: 3.2
+                        suffix: "%"
+            - id: content_dashboard_main_card
+              type: Card
+              properties:
+                title: Recent Activity
+              blocks:
+                - id: content_dashboard_activity_1
+                  type: Paragraph
+                  properties:
+                    content: User John updated the project settings — 2 minutes ago
+                - id: content_dashboard_activity_2
+                  type: Paragraph
+                  properties:
+                    content: Deployment to production completed — 15 minutes ago
+                - id: content_dashboard_activity_3
+                  type: Paragraph
+                  properties:
+                    content: New team member Sarah joined — 1 hour ago
+```
+
+Account Settings
+
+Profile Information
+
+Update your personal details and preferences below.
+
+```yaml
+- id: content_settings_outer
+  type: Layout
+  style:
+    minHeight: 400px
+  blocks:
+    - id: content_settings_header
+      type: Header
+      style:
+        paddingInline: 24px
+        borderBottom: 1px solid var(--ant-color-border)
+      blocks:
+        - id: content_settings_header_title
+          type: Title
+          properties:
+            content: Account Settings
+            level: 4
+          style:
+            .element:
+              margin: 0
+    - id: content_settings_main
+      type: Content
+      style:
+        padding: 32px 48px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: content_settings_title
+          type: Title
+          properties:
+            content: Profile Information
+            level: 3
+        - id: content_settings_desc
+          type: Paragraph
+          properties:
+            content: Update your personal details and preferences below.
+        - id: content_settings_form_name
+          type: TextInput
+          properties:
+            title: Display Name
+            placeholder: Enter your display name
+        - id: content_settings_form_email
+          type: TextInput
+          properties:
+            title: Email Address
+            placeholder: you@example.com
+        - id: content_settings_form_bio
+          type: TextArea
+          properties:
+            title: Bio
+            placeholder: Tell us about yourself
+            rows: 3
+        - id: content_settings_divider
+          type: Divider
+        - id: content_settings_actions
+          type: Box
+          layout:
+            gap: 12
+            justify: end
+          blocks:
+            - id: content_settings_cancel_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Cancel
+                color: default
+                variant: outlined
+            - id: content_settings_save_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Save Changes
+                color: primary
+                variant: solid
+                icon: save
+              events:
+                onClick:
+                  - id: content_settings_save_msg
+                    type: DisplayMessage
+                    params:
+                      content: Settings saved successfully!
+                      status: success
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `theme` | object | - | Not applied: antd scopes Layout design tokens to the Layout element, so set tokens such as headerHeight or footerBg on the parent Layout block theme. |
+
+No events defined.
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Content element. |
+
+| Slot | Description |
+| --- | --- |
+| `content` | Child blocks in the content area. |

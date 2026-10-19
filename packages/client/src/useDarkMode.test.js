@@ -46,6 +46,7 @@ beforeEach(() => {
   document.documentElement.removeAttribute('style');
   delete window.__lowdefy_setDarkMode;
   delete window.__lowdefy_isDark;
+  delete window.__lowdefy_darkModePreference;
   setupMatchMedia(false);
 });
 
@@ -138,7 +139,7 @@ test('merges lightComponents over shared components in light mode', () => {
   });
 });
 
-test('sets <html> background to darkToken.colorBgLayout in dark mode', () => {
+test('sets <html> background and color-scheme to darkToken.colorBgLayout in dark mode', () => {
   renderHook(() =>
     useDarkMode({
       antd: { darkToken: { colorBgLayout: '#0f1117' } },
@@ -146,6 +147,7 @@ test('sets <html> background to darkToken.colorBgLayout in dark mode', () => {
     })
   );
   expect(document.documentElement.style.backgroundColor).toBe('rgb(15, 17, 23)');
+  expect(document.documentElement.style.colorScheme).toBe('dark');
 });
 
 test('falls back to #000 in dark mode when no darkToken is set', () => {
@@ -153,7 +155,7 @@ test('falls back to #000 in dark mode when no darkToken is set', () => {
   expect(document.documentElement.style.backgroundColor).toBe('rgb(0, 0, 0)');
 });
 
-test('sets <html> background to lightToken.colorBgLayout in light mode', () => {
+test('sets <html> background and color-scheme to lightToken.colorBgLayout in light mode', () => {
   renderHook(() =>
     useDarkMode({
       antd: { lightToken: { colorBgLayout: '#fafafa' } },
@@ -161,6 +163,7 @@ test('sets <html> background to lightToken.colorBgLayout in light mode', () => {
     })
   );
   expect(document.documentElement.style.backgroundColor).toBe('rgb(250, 250, 250)');
+  expect(document.documentElement.style.colorScheme).toBe('light');
 });
 
 test('leaves <html> background unset when no lightToken.colorBgLayout is configured', () => {
@@ -168,7 +171,13 @@ test('leaves <html> background unset when no lightToken.colorBgLayout is configu
   expect(document.documentElement.style.backgroundColor).toBe('');
 });
 
-test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/background', () => {
+test('sets <html> color-scheme to light in a light app on a dark OS', () => {
+  setupMatchMedia(true);
+  renderHook(() => useDarkMode({ antd: {}, configDarkMode: 'light' }));
+  expect(document.documentElement.style.colorScheme).toBe('light');
+});
+
+test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/background/color-scheme', () => {
   const { result, rerender } = renderHook(() =>
     useDarkMode({
       antd: {
@@ -182,6 +191,7 @@ test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/bac
 
   // system + OS light → light mode
   expect(result.current.token.colorBgLayout).toBe('#fafafa');
+  expect(document.documentElement.style.colorScheme).toBe('light');
 
   act(() => {
     window.__lowdefy_setDarkMode('dark');
@@ -190,4 +200,38 @@ test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/bac
 
   expect(result.current.token.colorBgLayout).toBe('#0f1117');
   expect(document.documentElement.style.backgroundColor).toBe('rgb(15, 17, 23)');
+  expect(document.documentElement.style.colorScheme).toBe('dark');
+});
+
+const storageKey = 'lowdefy:app::lowdefy_darkMode';
+
+test('reads the dark mode preference from the app key', () => {
+  window.localStorage.setItem(storageKey, 'dark');
+  renderHook(() => useDarkMode({ antd: {}, storageKey }));
+  expect(window.__lowdefy_isDark).toBe(true);
+  expect(window.__lowdefy_darkModePreference).toBe('dark');
+});
+
+test('moves a dark mode preference stored before keys were kept per app to the app key', () => {
+  window.localStorage.setItem('lowdefy_darkMode', 'dark');
+  renderHook(() => useDarkMode({ antd: {}, storageKey }));
+  expect(window.__lowdefy_isDark).toBe(true);
+  expect(window.localStorage.getItem(storageKey)).toBe('dark');
+  expect(window.localStorage.getItem('lowdefy_darkMode')).toBeNull();
+});
+
+test('ignores the dark mode preference of another app', () => {
+  window.localStorage.setItem('lowdefy:other::lowdefy_darkMode', 'dark');
+  renderHook(() => useDarkMode({ antd: {}, storageKey }));
+  expect(window.__lowdefy_isDark).toBe(false);
+  expect(window.__lowdefy_darkModePreference).toBe('system');
+});
+
+test('setPreference writes the dark mode preference to the app key', () => {
+  renderHook(() => useDarkMode({ antd: {}, storageKey }));
+  act(() => {
+    window.__lowdefy_setDarkMode('light');
+  });
+  expect(window.localStorage.getItem(storageKey)).toBe('light');
+  expect(window.__lowdefy_darkModePreference).toBe('light');
 });

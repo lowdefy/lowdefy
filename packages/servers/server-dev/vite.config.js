@@ -1,0 +1,141 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import fs from 'node:fs';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import devServer from '@hono/vite-dev-server';
+import { WebSocketServer } from 'ws';
+import watchOwner from '@lowdefy/node-utils/watchOwner.js';
+
+import createDevServerExclude from './lib/vite/createDevServerExclude.js';
+
+const devServerEntry = './src/app.js';
+
+// The dev manager spawns this Vite process with a stdin pipe it holds and
+// LOWDEFY_EXIT_ON_STDIN_CLOSE set, so a manager killed outright (SIGKILL, out
+// of memory) does not leave Vite holding the internal port. process.exit runs
+// Playwright's exit handler, which closes any browser this process launched.
+watchOwner({ onExit: () => process.exit(0) });
+
+// basePath from the Lowdefy build — assets and routes are served under it.
+let basePath = '';
+try {
+  const config = JSON.parse(fs.readFileSync('./build/config.json', 'utf8'));
+  basePath = config.basePath ?? '';
+} catch (e) {
+  // No build yet — default base.
+}
+
+// Vite owns the HTTP server in dev, so /api/websocket upgrades are handled
+// here instead of @hono/node-server. The Hono app is loaded from the same
+// entry @hono/vite-dev-server serves, so the upgrade runs the app every other
+// request runs, and the upgrade handler module is loaded through Vite's SSR
+// graph so it shares the @lowdefy/api module instances with the dev server
+// routes. Vite's own HMR websocket uses a different path and is untouched.
+function lowdefyWebSocket() {
+  return {
+    name: 'lowdefy-websocket',
+    configureServer(server) {
+      const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
+      server.httpServer?.on('upgrade', async (request, socket, head) => {
+        const { pathname } = new URL(request.url ?? '/', 'http://localhost');
+        if (pathname !== `${basePath}/api/websocket`) {
+          return;
+        }
+        try {
+          const [{ default: app }, { handleWebSocketUpgrade }] = await Promise.all([
+            server.ssrLoadModule(devServerEntry),
+            server.ssrLoadModule('./src/websocket/devWebSocket.js'),
+          ]);
+          await handleWebSocketUpgrade({ app, request, socket, head, wss });
+        } catch (error) {
+          console.error('WebSocket upgrade failed:', error);
+          socket.destroy();
+        }
+      });
+    },
+  };
+}
+
+// The @lowdefy packages this server depends on. A linked plugin pinned to
+// another release brings its own copies, and the client would then mix
+// versions: the dev server pre-bundles one copy per package for every
+// importer (whichever its scan meets first, so the server's own code can get
+// a plugin's older @lowdefy/helpers without an export it imports), and a
+// production build bundles both, so blocks read module state the client never
+// filled (the HTML enhancements it registers in @lowdefy/block-utils). The
+// server's copies are the ones its client and blocks were released with.
+const lowdefyDependencies = Object.keys(
+  JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8')).dependencies ?? {}
+).filter((name) => name.startsWith('@lowdefy/'));
+
+export default defineConfig(({ mode }) => ({
+  base: `${basePath}/`,
+  plugins: [
+    react(),
+    lowdefyWebSocket(),
+    devServer({
+      entry: devServerEntry,
+      exclude: createDevServerExclude({ basePath }),
+    }),
+  ],
+  define: {
+    // Vite does not replace process.env.NODE_ENV inside dependencies —
+    // plugin and client code branch on it.
+    'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
+  },
+  optimizeDeps: {
+    // There is no index.html in the root (the Hono app renders HTML), so the
+    // dependency scanner has nothing to crawl and would discover client deps
+    // lazily at first request — ending in a mid-session "optimized
+    // dependencies changed" full reload. The client entry reaches every
+    // plugin import statically (main.jsx → App → Routing → build/plugins/*),
+    // so a startup crawl discovers the full set. Linked workspace plugins are
+    // intentionally not pre-bundled (Vite default) so local plugin edits stay
+    // live.
+    entries: ['client/main.jsx'],
+  },
+  resolve: {
+    // Linked plugin packages (pnpm link: / workspace) resolve their own copies of
+    // shared libraries. They must share one React, the antd/X/cssinjs copies
+    // whose context providers (App, ConfigProvider, StyleProvider) the client
+    // renders, the dayjs whose global locale the client sets, and the server's
+    // @lowdefy packages (see lowdefyDependencies).
+    dedupe: [
+      'react',
+      'react-dom',
+      'antd',
+      '@ant-design/x',
+      '@ant-design/cssinjs',
+      'dayjs',
+      ...lowdefyDependencies,
+    ],
+  },
+  server: {
+    watch: {
+      // Tailwind scan inputs are rewritten by JIT page builds, and Vite
+      // full-reloads the browser on any watched .html change — killing
+      // in-flight requests on every first page visit. CSS recompilation does
+      // not need these events: globals.css imports build/tailwind-candidates.css,
+      // which the JIT builder touches whenever tailwind content changes (the
+      // sole recompile trigger — see writeGlobalsCss in @lowdefy/build).
+      // The config build writes into build-staging and then moves each file
+      // into build, so only build is watched.
+      ignored: ['**/lowdefy-build/tailwind/**', '**/build-staging/**'],
+    },
+  },
+}));

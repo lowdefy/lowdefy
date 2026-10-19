@@ -15,7 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock, getShortcutModifier, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 // Button: use framework wrapper, then locate .ant-btn inside
 const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
@@ -83,6 +83,34 @@ test.describe('Button Block', () => {
     // Icon should be rendered as SVG within the button
     const svg = button.locator('svg');
     await expect(svg).toBeAttached();
+  });
+
+  test('renders the icon after the title with iconPlacement end', async ({ page }) => {
+    const button = getButton(page, 'button_icon_end');
+    await expect(button).toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+    const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').boundingBox();
+    expect(iconBox.x).toBeGreaterThan(titleBox.x);
+  });
+
+  test('renders the icon before the title with iconPlacement start', async ({ page }) => {
+    const button = getButton(page, 'button_icon_start');
+    await expect(button).not.toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+    const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').boundingBox();
+    expect(iconBox.x).toBeLessThan(titleBox.x);
+  });
+
+  test('passes target to a button with href', async ({ page }) => {
+    const button = getButton(page, 'button_href_target');
+    await expect(button).toHaveAttribute('href', 'https://lowdefy.com');
+    await expect(button).toHaveAttribute('target', '_blank');
+  });
+
+  test('does not put target on a button without href', async ({ page }) => {
+    const button = getButton(page, 'button_target_no_href');
+    await expect(button).toHaveText('Target without href');
+    await expect(button).not.toHaveAttribute('target', /.*/);
   });
 
   test('onClick event fires and updates state', async ({ page }) => {
@@ -174,7 +202,7 @@ test.describe('Button Block', () => {
   // ============================================
 
   test('fires onClick when keyboard shortcut is pressed', async ({ page }) => {
-    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const mod = await getShortcutModifier(page);
     const display = getBlock(page, 'button_shortcut_fired_display');
     await expect(display).not.toHaveText('shortcut:fired');
     await page.keyboard.press(`${mod}+j`);
@@ -182,7 +210,7 @@ test.describe('Button Block', () => {
   });
 
   test('does not fire shortcut on hidden block', async ({ page }) => {
-    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const mod = await getShortcutModifier(page);
     const display = getBlock(page, 'button_shortcut_hidden_display');
     await expect(display).not.toHaveText('hidden:fired');
     await page.keyboard.press(`${mod}+.`);

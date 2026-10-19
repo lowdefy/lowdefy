@@ -1,0 +1,34 @@
+# 96: Module-level notifications — a module ships its email templates. Ids
+# scope per entry ({entryId}/{id}), _module.notificationId resolves in module
+# endpoints and pages (string form) and at the app level (object form), the
+# template's _module.var resolves with the consumer's var, and the notification
+# artifact writes to a scoped path.
+lowdefy: local
+name: Module Notifications Test
+
+modules:
+  - id: invites
+    source: 'file:modules/invites'
+    vars:
+      company_name: Acme
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: resend-btn
+        type: Button
+        properties:
+          title: Resend Invite
+        events:
+          onClick:
+            - id: dispatch
+              type: Request
+              params:
+                endpointId:
+                  _module.endpointId: { id: dispatch-invite, module: invites }
+                payload:
+                  # App-level object form — the dispatch payload carries the
+                  # scoped notification id.
+                  notification_id:
+                    _module.notificationId: { id: invite-user, module: invites }

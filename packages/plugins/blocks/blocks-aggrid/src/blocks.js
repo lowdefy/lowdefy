@@ -19,4 +19,6 @@ export { default as AgGridBalham } from './blocks/AgGridBalham/AgGridBalham.js';
 export { default as AgGridInputAlpine } from './blocks/AgGridInputAlpine/AgGridInputAlpine.js';
 export { default as AgGridInputBalham } from './blocks/AgGridInputBalham/AgGridInputBalham.js';
 export { default as AgGridInputMaterial } from './blocks/AgGridInputMaterial/AgGridInputMaterial.js';
+export { default as AgGridLowdefy } from './blocks/AgGridLowdefy/AgGridLowdefy.js';
+export { default as AgGridLowdefyInput } from './blocks/AgGridLowdefyInput/AgGridLowdefyInput.js';
 export { default as AgGridMaterial } from './blocks/AgGridMaterial/AgGridMaterial.js';

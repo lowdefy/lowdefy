@@ -28,7 +28,11 @@ import readDotEnv from './readDotEnv.js';
 import validateVersion from './validateVersion.js';
 
 async function startUp({ context, options = {}, command }) {
-  context.command = command.name();
+  // A subcommand is named with its group (`data list`), so logs and telemetry tell it apart from a
+  // top-level command; a top-level command's parent is the program itself.
+  context.command = command.parent?.parent
+    ? `${command.parent.name()} ${command.name()}`
+    : command.name();
   context.commandLineOptions = options;
   context.configDirectory = path.resolve(options.configDirectory || process.cwd());
   readDotEnv(context);

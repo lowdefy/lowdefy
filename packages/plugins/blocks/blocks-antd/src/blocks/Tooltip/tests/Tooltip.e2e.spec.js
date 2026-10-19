@@ -115,4 +115,54 @@ test.describe('Tooltip Block', () => {
     await expect(tooltip.locator('strong')).toHaveText('Bold');
     await expect(tooltip.locator('em')).toHaveText('italic');
   });
+
+  test('arrow false hides the arrow', async ({ page }) => {
+    await getBlock(page, 'tooltip_no_arrow_trigger').hover();
+    const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'No arrow tooltip' });
+    await expect(tooltip).toBeVisible();
+    await expect(tooltip.locator('.ant-tooltip-arrow')).toHaveCount(0);
+  });
+
+  test('arrowPointAtCenter still renders the tooltip with an arrow', async ({ page }) => {
+    await getBlock(page, 'tooltip_point_center_trigger').hover();
+    const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Point at center tooltip' });
+    await expect(tooltip).toBeVisible();
+    await expect(tooltip.locator('.ant-tooltip-arrow')).toHaveCount(1);
+  });
+
+  test('inner cssKey styles the tooltip container', async ({ page }) => {
+    await getBlock(page, 'tooltip_inner_style_trigger').hover();
+    const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Inner styled tooltip' });
+    await expect(tooltip.locator('.ant-tooltip-container')).toHaveCSS(
+      'background-color',
+      'rgb(0, 128, 0)'
+    );
+  });
+
+  test('destroyTooltipOnHide removes the tooltip after it hides', async ({ page }) => {
+    await getBlock(page, 'tooltip_destroy_trigger').hover();
+    const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Destroyed tooltip' });
+    await expect(tooltip).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(tooltip).toHaveCount(0);
+  });
+
+  test('destroyOnHidden removes the tooltip after it hides', async ({ page }) => {
+    await getBlock(page, 'tooltip_destroy_on_hidden_trigger').hover();
+    const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Destroyed on hidden tooltip' });
+    await expect(tooltip).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(tooltip).toHaveCount(0);
+  });
+
+  test('trigger contextMenu opens the tooltip on right click', async ({ page }) => {
+    await getBlock(page, 'tooltip_context_menu_trigger').click({ button: 'right' });
+    const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Context menu tooltip' });
+    await expect(tooltip).toBeVisible();
+  });
+
+  test('onOpenChange passes the open state', async ({ page }) => {
+    await getBlock(page, 'tooltip_open_payload_trigger').click();
+    await expect(getBlock(page, 'tooltip_open_payload_display')).toHaveText('opened');
+  });
 });

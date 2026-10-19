@@ -23,36 +23,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const fixturesDir = path.join(__dirname, 'tests/success');
 
-// Set NEXTAUTH_SECRET for auth-related tests
-process.env.NEXTAUTH_SECRET = 'test-secret-for-snapshot-tests';
-
-// Mock buildApp to return constant gitSha
-jest.unstable_mockModule('./build/buildApp.js', () => ({
-  default: ({ components }) => {
-    if (!components.app) {
-      components.app = {};
-    }
-    if (!components.app.html) {
-      components.app.html = {};
-    }
-    if (!components.app.html.appendBody) {
-      components.app.html.appendBody = '';
-    }
-    if (!components.app.html.appendHead) {
-      components.app.html.appendHead = '';
-    }
-    components.appMeta = {
-      slug: components.slug ?? null,
-      name: components.name ?? null,
-      version: components.version ?? null,
-      description: components.description ?? null,
-      license: components.license ?? null,
-      lowdefyVersion: components.lowdefy ?? null,
-      gitSha: 'test-git-sha-for-snapshots',
-    };
-    return components;
-  },
-}));
+// Pin gitSha so buildAppMeta produces a deterministic appMeta in snapshots.
+process.env.LOWDEFY_GIT_SHA = 'test-git-sha-for-snapshots';
 
 // Mock writeBuildArtifact to capture artifacts instead of writing to disk
 const mockWriteBuildArtifact = jest.fn();
@@ -83,11 +55,39 @@ function discoverFixtures() {
   return entries
     .filter(
       (entry) =>
-        entry.isDirectory() &&
-        fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
+        entry.isDirectory() && fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
     )
     .map((entry) => entry.name)
     .sort();
+}
+
+/**
+ * Returns a function that replaces `directory`, and the rest of any path below
+ * it, with `placeholder` followed by '/'-separated segments.
+ */
+function createPathReplacer({ directory, placeholder }) {
+  const sep = escapeRegExp(path.sep);
+  const pattern = new RegExp(`${escapeRegExp(directory)}((?:${sep}[^${sep}"'\\s:]*)*)`, 'g');
+  return (value) =>
+    value.replace(pattern, (match, rest) => `${placeholder}${rest.split(path.sep).join('/')}`);
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Deep-maps every string (object keys included) in a JSON-like value.
+ */
+function mapStrings(value, fn) {
+  if (typeof value === 'string') return fn(value);
+  if (Array.isArray(value)) return value.map((item) => mapStrings(item, fn));
+  if (value !== null && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [fn(key), mapStrings(item, fn)])
+    );
+  }
+  return value;
 }
 
 /**
@@ -130,19 +130,8 @@ async function runBuildForFixture(fixtureDir) {
   }
 
   // Parse JSON artifacts for readable snapshots.
-  // Replace absolute fixture paths with stable placeholders so snapshots are
-  // portable across machines (module _ref paths are stored as absolute).
-  // configDir → <CONFIG_DIR> handles the active fixture's paths; fixturesDir →
-  // <FIXTURES_DIR> catches cross-fixture references (e.g. cross-module tests
-  // that resolve _ref into a sibling fixture directory).
-  const rawJson = JSON.stringify(artifacts);
-  const normalizedJson = rawJson
-    .replaceAll(configDir, '<CONFIG_DIR>')
-    .replaceAll(fixturesDir, '<FIXTURES_DIR>');
-  const normalizedArtifacts = JSON.parse(normalizedJson);
-
   const parsedArtifacts = {};
-  for (const [filePath, content] of Object.entries(normalizedArtifacts)) {
+  for (const [filePath, content] of Object.entries(artifacts)) {
     if (filePath.endsWith('.json')) {
       try {
         parsedArtifacts[filePath] = JSON.parse(content);
@@ -154,7 +143,28 @@ async function runBuildForFixture(fixtureDir) {
     }
   }
 
-  return { artifacts: parsedArtifacts, logger };
+  // Replace absolute fixture paths with stable placeholders so snapshots are
+  // portable across machines (module _ref paths are stored as absolute).
+  // configDir → <CONFIG_DIR> handles the active fixture's paths; fixturesDir →
+  // <FIXTURES_DIR> catches cross-fixture references (e.g. cross-module tests
+  // that resolve _ref into a sibling fixture directory). The rest of each path
+  // is written with '/' so Windows builds match the same snapshot.
+  // buildId is random per build, so it is replaced wherever it landed (the
+  // appMeta artifact and any config that read it through _build.app).
+  const { buildId } = parsedArtifacts['appMeta.json'];
+  const replaceConfigDir = createPathReplacer({
+    directory: configDir,
+    placeholder: '<CONFIG_DIR>',
+  });
+  const replaceFixturesDir = createPathReplacer({
+    directory: fixturesDir,
+    placeholder: '<FIXTURES_DIR>',
+  });
+  const normalizedArtifacts = mapStrings(parsedArtifacts, (value) =>
+    replaceFixturesDir(replaceConfigDir(value)).replaceAll(buildId, '<BUILD_ID>')
+  );
+
+  return { artifacts: normalizedArtifacts, logger };
 }
 
 /**

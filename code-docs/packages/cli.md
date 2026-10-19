@@ -39,7 +39,7 @@ lowdefy dev [options]
 |--------|-------------|---------|
 | `--config-directory` | Config directory path | Current directory |
 | `--dev-directory` | Dev server directory | `.lowdefy/dev` |
-| `--port` | Server port | 3000 |
+| `--port` | Server port; an explicit port (flag, `PORT`, `cli.port`) is strict, only the default moves | 3000 |
 | `--no-open` | Don't open browser | Opens browser |
 | `--watch` | Additional paths to watch | - |
 | `--watch-ignore` | Paths to ignore | - |
@@ -48,11 +48,17 @@ lowdefy dev [options]
 
 **What happens:**
 
-1. Downloads dev server package
-2. Runs `@lowdefy/build` on config
-3. Starts Next.js dev server
-4. Watches for config changes
-5. Rebuilds on change
+1. Refuses if `.lowdefy/instance.json` names a live dev server for this app (before touching `.lowdefy/dev`)
+2. Resolves the port (`LOWDEFY_DEV_PORT` from the hub outranks `--port`)
+3. Downloads dev server package
+4. Runs `@lowdefy/build` on config
+5. Starts the dev server manager (Vite + Hono child process), which writes `.lowdefy/instance.json`
+6. Watches for config changes
+7. Rebuilds on change
+
+### `lowdefy mcp` / `lowdefy hub`
+
+`lowdefy mcp` is the stdio MCP server agent clients spawn from `.mcp.json`; `lowdefy hub status|start|stop|logs` drive the per-user hub that runs dev servers for agents (`hub serve` is the hidden daemon entry). Both bypass `runCommand`/`startUp` (no lowdefy.yaml needed, nothing written to stdout) via `utils/runHubCommand.js`. See `code-docs/architecture/agent-dev-hub.md`.
 
 ### `lowdefy build`
 
@@ -67,7 +73,7 @@ lowdefy build [options]
 |--------|-------------|---------|
 | `--config-directory` | Config directory path | Current directory |
 | `--server-directory` | Server output directory | `.lowdefy/server` |
-| `--no-next-build` | Skip Next.js build | Builds Next.js |
+| `--no-client-build` | Skip the Vite client build | Builds the client (`--no-next-build` is a deprecated alias) |
 | `--ref-resolver` | Custom ref resolver path | - |
 | `--log-level` | Log level | info |
 
@@ -75,7 +81,7 @@ lowdefy build [options]
 
 1. Downloads production server package
 2. Runs `@lowdefy/build` on config
-3. Runs `next build` on the server
+3. Runs the Vite client build (`pnpm run build:client`) on the server
 4. Outputs ready-to-deploy app
 
 ### `lowdefy start`
@@ -242,7 +248,7 @@ All options can be set via environment variables:
                          │
                          ▼
          ┌──────────────────────────────────┐
-         │         Next.js Server           │
+         │       Hono + Vite Server          │
          │   (dev server or production)     │
          └──────────────────────────────────┘
 ```
@@ -296,10 +302,10 @@ The build package (`@lowdefy/build`) is also downloaded:
 
 ### Node.js Version Check
 
-The CLI enforces Node.js >= 18:
+The CLI enforces Node.js >= 24, matching `engines.node` in its `package.json`:
 
 ```javascript
-if (Number(nodeMajorVersion) < 18) {
+if (Number(nodeMajorVersion) < 24) {
   throw new Error('...');
 }
 ```
@@ -308,14 +314,14 @@ This ensures compatibility with:
 
 - ES modules
 - Modern JavaScript features
-- Next.js requirements
+- Hono + Vite server requirements
 
 ## Integration Points
 
 - **@lowdefy/build**: Called for config compilation
 - **@lowdefy/server**: Downloaded for production builds
 - **@lowdefy/server-dev**: Downloaded for development
-- **Next.js**: Underlying framework for both servers
+- **Hono + Vite**: Underlying server and client bundler for both servers
 
 ## Typical Workflow
 
@@ -347,5 +353,5 @@ The dev server watches:
 On change:
 
 1. Rebuild config via `@lowdefy/build`
-2. Hot reload the Next.js dev server
+2. Hot reload through Vite (client plugin code) or restart the server child process (server artifacts)
 3. Browser refreshes automatically

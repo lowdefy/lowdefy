@@ -14,18 +14,37 @@
   limitations under the License.
 */
 
+// The pages whose JIT build is on disk and may be served. Each carries the
+// generation of the build context it was built on and checkedAt, the change
+// event counter value up to which its inputs are known to be unchanged.
 class PageCache {
   constructor() {
-    this.compiledPages = new Set();
+    this.compiledPages = new Map();
     this.buildLocks = new Map();
+  }
+
+  get(pageId) {
+    return this.compiledPages.get(pageId) ?? null;
   }
 
   isCompiled(pageId) {
     return this.compiledPages.has(pageId);
   }
 
-  markCompiled(pageId) {
-    this.compiledPages.add(pageId);
+  markCompiled(pageId, { generation, checkedAt }) {
+    this.compiledPages.set(pageId, { generation, checkedAt });
+  }
+
+  // A check that started at checkedAt found the page's inputs unchanged. A
+  // page rebuilt meanwhile keeps its own, newer state.
+  markChecked(pageId, { generation, checkedAt }) {
+    const compiled = this.compiledPages.get(pageId);
+    if (compiled?.generation !== generation) return;
+    compiled.checkedAt = Math.max(compiled.checkedAt, checkedAt);
+  }
+
+  remove(pageId) {
+    this.compiledPages.delete(pageId);
   }
 
   async acquireBuildLock(pageId) {
@@ -51,10 +70,6 @@ class PageCache {
       lock.resolve();
       this.buildLocks.delete(pageId);
     }
-  }
-
-  invalidateAll() {
-    this.compiledPages.clear();
   }
 }
 

@@ -15,7 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock, getShortcutModifier, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
 // Tag uses id={blockId} directly on the tag element
@@ -158,10 +158,48 @@ test.describe('Tag Block', () => {
   // ============================================
 
   test('fires onClick when keyboard shortcut is pressed', async ({ page }) => {
-    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const mod = await getShortcutModifier(page);
     const display = getBlock(page, 'tag_shortcut_fired_display');
     await expect(display).not.toHaveText('shortcut:fired');
     await page.keyboard.press(`${mod}+j`);
     await expect(display).toHaveText('shortcut:fired');
+  });
+
+  // ============================================
+  // VARIANT, DISABLED, LINK AND CLOSE ICON
+  // ============================================
+
+  test('renders the default filled variant', async ({ page }) => {
+    await expect(getTag(page, 'tag_basic')).toHaveClass(/ant-tag-filled/);
+  });
+
+  test('renders the solid and outlined variants', async ({ page }) => {
+    await expect(getTag(page, 'tag_variant_solid')).toHaveClass(/ant-tag-solid/);
+    await expect(getTag(page, 'tag_variant_outlined')).toHaveClass(/ant-tag-outlined/);
+  });
+
+  test('disabled tag ignores clicks and cannot be closed', async ({ page }) => {
+    const tag = getTag(page, 'tag_disabled');
+    await expect(tag).toHaveClass(/ant-tag-disabled/);
+    await tag.click({ force: true });
+    await tag.locator('.ant-tag-close-icon').click({ force: true });
+    await expect(tag).toBeVisible();
+    await expect(getBlock(page, 'disabled_display')).toHaveText('Not clicked');
+  });
+
+  test('renders a link tag', async ({ page }) => {
+    const tag = getTag(page, 'tag_link');
+    await expect(tag).toHaveJSProperty('tagName', 'A');
+    await expect(tag).toHaveAttribute('href', 'https://docs.lowdefy.com');
+    await expect(tag).toHaveAttribute('target', '_blank');
+  });
+
+  test('renders a custom close icon with the closeIcon class', async ({ page }) => {
+    const tag = getTag(page, 'tag_close_icon');
+    const close = tag.locator('.ant-tag-close-icon');
+    await expect(close).toHaveClass(/tag-close-class/);
+    await expect(tag.locator('#tag_close_icon_closeIcon')).toBeAttached();
+    await close.click();
+    await expect(tag).toBeHidden();
   });
 });

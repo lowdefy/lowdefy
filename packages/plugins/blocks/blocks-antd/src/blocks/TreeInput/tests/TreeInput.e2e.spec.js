@@ -120,4 +120,34 @@ test.describe('TreeInput Block', () => {
     await expect(display).toContainText('Selected:');
     await expect(display).toContainText('"apple"');
   });
+
+  // ============================================
+  // ANTD 6.6 FEATURES
+  // ============================================
+
+  test('stretches nodes to the row width with blockNode', async ({ page }) => {
+    await expect(getTree(page, 'ts_block_node')).toHaveClass(/ant-tree-block-node/);
+  });
+
+  test('scrolls and virtualises the tree when height is set', async ({ page }) => {
+    const holder = page.locator('#bl-ts_height .ant-tree-list-holder');
+    await expect(holder).toHaveCSS('max-height', '120px');
+    await expect(getTreeNodeTitle(page, 'ts_height', 'Node 12')).toHaveCount(0);
+  });
+
+  test('class and style reach the node semantic parts', async ({ page }) => {
+    const node = getTreeNodeByText(page, 'ts_semantic_css', 'Parent');
+    await expect(node).toHaveClass(/ts-item-tailwind/);
+    await expect(node.locator('.ant-tree-switcher')).toHaveClass(/ts-item-switcher-tailwind/);
+    const title = node.locator('.ant-tree-title');
+    await expect(title).toHaveClass(/ts-item-title-tailwind/);
+    await expect(title).toHaveCSS('font-style', 'italic');
+  });
+
+  test('applies Tree design tokens from theme', async ({ page }) => {
+    const title = getTreeNodeTitle(page, 'ts_theme', 'Parent');
+    await expect(title).toHaveCSS('min-height', '32px');
+    const indent = getTreeNodeByText(page, 'ts_theme', 'Child').locator('.ant-tree-indent-unit');
+    await expect(indent).toHaveCSS('width', '40px');
+  });
 });

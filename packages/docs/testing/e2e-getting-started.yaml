@@ -68,7 +68,7 @@ _ref:
         properties:
           type: info
           showIcon: false
-          message: The first run will take longer because Playwright needs to build and start your Lowdefy app. Subsequent runs reuse the server if it is still running.
+          message: The first run will take longer because Playwright needs to build and start your Lowdefy app. To skip the build on later runs, keep the server running with `pnpm e2e:server` and run `LOWDEFY_E2E_REUSE_SERVER=true pnpm e2e`. Without that variable, or if another server holds the port, such as `lowdefy dev`, the run stops with an error that names the port.
 
       - id: md2
         type: MarkdownWithCode
@@ -122,7 +122,7 @@ _ref:
             When you run `pnpm e2e`:
 
             1. Playwright reads `playwright.config.js`, which uses `createConfig()` from `@lowdefy/e2e-utils/config`
-            2. The config starts a web server that builds your app with `NEXT_PUBLIC_LOWDEFY_E2E=true` and starts it
+            2. The config starts a web server that builds your app with the e2e server variant and starts it
             3. A manifest is generated from your build artifacts, mapping block IDs to their types and e2e helpers
             4. For each test, a fresh `ldf` object is created with a new browser page, and any static mocks from `mocks.yaml` are applied
             5. Your test code runs against the live app

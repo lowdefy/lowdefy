@@ -18,7 +18,11 @@
 
 import { type } from '@lowdefy/helpers';
 
-function validateConfig({ components }) {
+import buildDependencyTracking from './buildDependencyTracking.js';
+import buildEnvironments from './buildEnvironments.js';
+import validateTrustedProxies from './validateTrustedProxies.js';
+
+function validateConfig({ components, context }) {
   if (type.isNone(components.config)) {
     components.config = {};
   }
@@ -29,7 +33,14 @@ function validateConfig({ components }) {
     if (components.config.basePath[0] !== '/') {
       throw new Error('Base path must start with "/".');
     }
+    // Every consumer joins paths onto the base path (`${basePath}/api/...`, the
+    // dev server's Vite base and asset patterns, the dev instance url), so a
+    // trailing slash would double up and break them: "/app/" is "/app".
+    components.config.basePath = components.config.basePath.replace(/\/+$/, '');
   }
+  validateTrustedProxies({ components, context });
+  buildEnvironments({ components, context });
+  buildDependencyTracking({ components });
   return components;
 }
 

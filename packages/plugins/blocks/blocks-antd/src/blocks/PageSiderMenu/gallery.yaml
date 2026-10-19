@@ -27,22 +27,22 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psm_basic_orders
               type: MenuLink
               properties:
                 title: Orders
-                icon: AiOutlineShoppingCart
+                icon: ShoppingCart
             - id: psm_basic_products
               type: MenuLink
               properties:
                 title: Products
-                icon: AiOutlineAppstore
+                icon: grid
             - id: psm_basic_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
       blocks:
         - id: psm_basic_title
           type: Title
@@ -80,6 +80,43 @@
                     value: 4820
                     prefix: $
 
+- title: Compact Padding
+  fullWidth: true
+  blocks:
+    - id: psm_compact
+      type: PageSiderMenu
+      properties:
+        padding: compact
+        menu:
+          links:
+            - id: psm_compact_dashboard
+              type: MenuLink
+              properties:
+                title: Dashboard
+            - id: psm_compact_invoices
+              type: MenuLink
+              properties:
+                title: Invoices
+      blocks:
+        - id: psm_compact_text
+          type: Paragraph
+          properties:
+            content: 'padding: compact trims the content padding from 40px to 16px, so data-heavy pages show more.'
+        - id: psm_compact_card
+          type: Card
+          properties:
+            title: Recent invoices
+            padding: none
+          blocks:
+            - id: psm_compact_card_rows
+              type: Html
+              properties:
+                html: |
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+
 - title: Breadcrumb with Dark Mode Toggle
   fullWidth: true
   blocks:
@@ -93,7 +130,7 @@
         breadcrumb:
           list:
             - label: Home
-              icon: AiOutlineHome
+              icon: home
             - label: Projects
             - label: Website Redesign
         menu:
@@ -102,22 +139,22 @@
               type: MenuLink
               properties:
                 title: Overview
-                icon: AiOutlineProject
+                icon: SquareKanban
             - id: psm_light_tasks
               type: MenuLink
               properties:
                 title: Tasks
-                icon: AiOutlineCheckSquare
+                icon: SquareCheck
             - id: psm_light_files
               type: MenuLink
               properties:
                 title: Files
-                icon: AiOutlineFile
+                icon: file
             - id: psm_light_team
               type: MenuLink
               properties:
                 title: Team
-                icon: AiOutlineTeam
+                icon: users
       blocks:
         - id: psm_light_title
           type: Title
@@ -150,12 +187,12 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psm_grp_users_group
               type: MenuGroup
               properties:
                 title: User Management
-                icon: AiOutlineTeam
+                icon: users
               links:
                 - id: psm_grp_all_users
                   type: MenuLink
@@ -169,7 +206,7 @@
               type: MenuGroup
               properties:
                 title: Content
-                icon: AiOutlineEdit
+                icon: edit
               links:
                 - id: psm_grp_articles
                   type: MenuLink
@@ -183,7 +220,7 @@
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
       blocks:
         - id: psm_grp_title
           type: Title
@@ -210,16 +247,16 @@
                     flex: 0 0 auto
                   properties:
                     size: small
-                    color: '#fff'
-                    backgroundColor: '#1677ff'
-                    icon: AiOutlineUser
+                    color: '#1677ff'
+                    icon: user
                 - id: psm_grp_name_1
                   type: Paragraph
                   layout:
                     flex: 1 1 0
                   properties:
                     content: Jane Cooper
-                    style:
+                  style:
+                    .element:
                       margin: 0
                 - id: psm_grp_tag_1
                   type: Tag
@@ -242,16 +279,16 @@
                     flex: 0 0 auto
                   properties:
                     size: small
-                    color: '#fff'
-                    backgroundColor: '#52c41a'
-                    icon: AiOutlineUser
+                    color: '#52c41a'
+                    icon: user
                 - id: psm_grp_name_2
                   type: Paragraph
                   layout:
                     flex: 1 1 0
                   properties:
                     content: Tom Wilson
-                    style:
+                  style:
+                    .element:
                       margin: 0
                 - id: psm_grp_tag_2
                   type: Tag
@@ -282,19 +319,19 @@
               type: MenuLink
               properties:
                 title: My Profile
-                icon: AiOutlineUser
+                icon: user
             - id: psm_prof_settings
               type: MenuLink
               properties:
                 title: Account Settings
-                icon: AiOutlineSetting
+                icon: settings
             - id: psm_prof_divider
               type: MenuDivider
             - id: psm_prof_logout
               type: MenuLink
               properties:
                 title: Sign Out
-                icon: AiOutlineLogout
+                icon: logout
                 danger: true
         menu:
           links:
@@ -302,17 +339,17 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psm_prof_users
               type: MenuLink
               properties:
                 title: Users
-                icon: AiOutlineTeam
+                icon: users
             - id: psm_prof_reports
               type: MenuLink
               properties:
                 title: Reports
-                icon: AiOutlineBarChart
+                icon: chart
       blocks:
         - id: psm_prof_title
           type: Title
@@ -363,7 +400,7 @@
           dot: true
         profile:
           avatar:
-            icon: AiOutlineUser
+            icon: user
             color: '#1677ff'
         breadcrumb:
           separator: /
@@ -376,17 +413,17 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psm_full_analytics
               type: MenuLink
               properties:
                 title: Analytics
-                icon: AiOutlineBarChart
+                icon: chart
             - id: psm_full_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
       slots:
         sider:
           blocks:
@@ -399,7 +436,8 @@
                   type: Paragraph
                   properties:
                     content: Sprint Progress
-                    style:
+                  style:
+                    .element:
                       margin: 0 0 8px 0
                       fontSize: 12
                       color: '#999'
@@ -414,7 +452,8 @@
               type: Paragraph
               properties:
                 content: Admin Panel v2.4.1
-                style:
+              style:
+                .element:
                   textAlign: center
                   margin: 0
                   color: '#999'
@@ -442,7 +481,7 @@
                   properties:
                     title: Total Users
                     value: 2847
-                    prefixIcon: AiOutlineUser
+                    prefixIcon: user
             - id: psm_full_stat_revenue
               type: Card
               layout:
@@ -496,12 +535,12 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psm_mo_users
               type: MenuLink
               properties:
                 title: Users
-                icon: AiOutlineTeam
+                icon: users
       blocks:
         - id: psm_mo_title
           type: Title

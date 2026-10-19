@@ -16,6 +16,8 @@
 
 import path from 'path';
 
+import { errorToDisplayString } from '@lowdefy/errors';
+
 import createTestLogger from './createTestLogger.js';
 
 /**
@@ -37,13 +39,16 @@ const testTypesMap = {
     Anchor: { package: '@lowdefy/blocks-basic' },
     Box: { package: '@lowdefy/blocks-basic' },
     Button: { package: '@lowdefy/blocks-basic' },
+    ClickableHtml: { package: '@lowdefy/blocks-basic' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
+    Dynamic: { package: '@lowdefy/blocks-basic' },
     Html: { package: '@lowdefy/blocks-basic' },
     Icon: { package: '@lowdefy/blocks-basic' },
     Img: { package: '@lowdefy/blocks-basic' },
     List: { package: '@lowdefy/blocks-basic' },
     Message: { package: '@lowdefy/blocks-antd' },
     Paragraph: { package: '@lowdefy/blocks-basic' },
+    PollingTimer: { package: '@lowdefy/blocks-basic' },
     ProgressBar: { package: '@lowdefy/blocks-loaders' },
     Result: { package: '@lowdefy/blocks-antd' },
     Skeleton: { package: '@lowdefy/blocks-loaders' },
@@ -57,7 +62,11 @@ const testTypesMap = {
     Throw: { package: '@lowdefy/blocks-basic' },
     Title: { package: '@lowdefy/blocks-basic' },
   },
+  agents: {
+    ClaudeAgent: { package: '@lowdefy/connection-anthropic' },
+  },
   connections: {
+    Anthropic: { package: '@lowdefy/connection-anthropic' },
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
     MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
   },
@@ -66,11 +75,20 @@ const testTypesMap = {
     MongoDBInsertOne: { package: '@lowdefy/connection-mongodb' },
   },
   auth: {
-    adapters: {},
-    callbacks: {},
-    events: {},
+    adapters: {
+      MongoDBAuthAdapter: { package: '@lowdefy/connection-mongodb' },
+    },
     providers: {
-      GoogleProvider: { package: 'next-auth' },
+      Google: { package: '@lowdefy/plugin-better-auth' },
+      GenericOAuth: { package: '@lowdefy/plugin-better-auth' },
+    },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-better-auth' },
+      jwt: { package: '@lowdefy/plugin-better-auth' },
+    },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-next-auth' },
+      jwt: { package: '@lowdefy/plugin-next-auth' },
     },
   },
   operators: {
@@ -95,10 +113,17 @@ const testTypesMap = {
   },
 };
 
+// Mirrors the CLI logger's name segment (errorToDisplayString) so fixtures assert
+// what a developer actually reads in the terminal. `received` is left off - the
+// logged line carries the message, not the operator payload.
+// `source` is a native file path. Fixtures write paths with '/', so the source
+// is shown with '/' separators on every platform (a no-op on POSIX).
 function formatLine(line) {
-  const source = line.err?.source ?? null;
+  const source = line.err?.source?.split(path.sep).join('/') ?? null;
   const name = line.err?.name ?? null;
-  const message = name ? `[${name}] ${line.msg}` : line.msg;
+  const message = name
+    ? errorToDisplayString({ name, message: line.msg, prodError: line.err?.prodError })
+    : line.msg;
   return source ? `${source}\n${message}` : message;
 }
 

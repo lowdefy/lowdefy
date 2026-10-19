@@ -12,14 +12,13 @@
     },
     {
       "mode": "prod",
-      "errors": [
+      "warnings": [
         "undefinedKey"
       ],
-      "errorContains": [
+      "warningContains": [
         "_state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page.",
         "lowdefy.yaml:21"
-      ],
-      "expectThrow": true
+      ]
     }
   ]
 }

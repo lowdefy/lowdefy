@@ -1,0 +1,70 @@
+id: handoff
+type: Box
+# The cross-user fixture test (packages/servers/server-dev/test/journeyFixture/crossUser.test.mjs):
+# one person saves a note, a second person (`as:`) opens the page and reads it from the same
+# data set database. The page shows who it is open as, so the test also sees that nothing of the
+# first person's session reaches the second.
+requests:
+  - id: save_note
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    payload:
+      note:
+        _state: note_input
+    properties:
+      doc:
+        kind: handoff
+        note:
+          _payload: note
+        written_by:
+          _user: id
+  - id: get_notes
+    type: MongoDBFind
+    connectionId: fixture_db
+    properties:
+      query:
+        kind: handoff
+events:
+  onInit:
+    - id: load_notes
+      type: Request
+      params: get_notes
+blocks:
+  - id: handoff_whoami
+    type: Title
+    properties:
+      level: 4
+      content:
+        _string.concat:
+          - 'Open as '
+          - _user: id
+  - id: note_input
+    type: TextInput
+    properties:
+      title: Note
+  - id: save_note_button
+    type: Button
+    properties:
+      title: Save note
+    events:
+      onClick:
+        - id: save
+          type: Request
+          params: save_note
+  - id: latest_note
+    type: Title
+    visible:
+      _gt:
+        - _array.length:
+            _if_none:
+              - _request: get_notes
+              - []
+        - 0
+    properties:
+      level: 3
+      content:
+        _string.concat:
+          - 'Latest note: '
+          - _request: get_notes.0.note
+          - ' by '
+          - _request: get_notes.0.written_by

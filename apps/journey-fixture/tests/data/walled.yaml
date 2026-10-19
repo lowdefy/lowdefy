@@ -1,0 +1,7 @@
+# The data set the walled-client test runs on
+# (packages/servers/server-dev/test/journeyFixture/walled.test.mjs).
+fixtures:
+  fixture_db:
+    - { _id: walled-item, kind: item, page: walled, name: Walled item }
+users:
+  member: { id: u_walled_member, roles: [member] }

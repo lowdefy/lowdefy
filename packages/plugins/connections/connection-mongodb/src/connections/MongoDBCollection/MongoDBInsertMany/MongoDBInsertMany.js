@@ -15,29 +15,79 @@
 */
 
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
+import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
+import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
-async function MongodbInsertMany({ connection, request }) {
+async function MongodbInsertMany({
+  endpointId,
+  blockId,
+  connection,
+  connectionId,
+  pageId,
+  payload,
+  request,
+  requestId,
+  tenant,
+  tenantGuard,
+}) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBInsertMany' });
   const deserializedRequest = deserialize(request);
-  const { docs, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
+  const { options } = deserializedRequest;
+  let { docs } = deserializedRequest;
+  if (tenant) {
+    docs = docs.map((doc) => stampTenantOnDoc({ doc, tenant }));
+  }
+  if (tenantGuard) {
+    docs.forEach((doc) => assertUnscopedDoc({ doc, field: tenantGuard.field }));
+  }
+  const { collection, logCollection } = await getCollection({ connection });
   let response;
   try {
     response = await collection.insertMany(docs, options);
+    if (logCollection) {
+      await logCollection.insertOne(
+        stampTenantOnLogRecord({
+          record: {
+            args: { docs, options },
+            blockId,
+            connectionId,
+            pageId,
+            payload,
+            requestId,
+            response,
+            timestamp: new Date(),
+            type: 'MongoDBInsertMany',
+            meta: connection.changeLog?.meta,
+          },
+          tenant,
+        })
+      );
+    }
   } catch (error) {
-    await client.close();
-    throw error;
+    throw mapMongoError(error, { connection, requestType: 'MongoDBInsertMany' });
   }
-  await client.close();
-  const { acknowledged, insertedCount } = serialize(response);
-  return { acknowledged, insertedCount };
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: idsOfMap(response.insertedIds),
+    requestId,
+    requestType: 'MongoDBInsertMany',
+    tenant,
+    tenantGuard,
+  });
+  const { acknowledged, insertedCount, insertedIds } = serialize(response);
+  return { acknowledged, insertedCount, insertedIds };
 }
 
 MongodbInsertMany.schema = schema;
-MongodbInsertMany.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbInsertMany.meta = requestMetas.MongoDBInsertMany;
 
 export default MongodbInsertMany;

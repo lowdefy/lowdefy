@@ -21,9 +21,11 @@ import utc from 'dayjs/plugin/utc.js';
 import { getLocaleDateFormat, type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
+import getPresets from '../../getPresets.js';
 
 dayjs.extend(utc);
 
@@ -59,12 +61,25 @@ const MonthSelector = ({
             <DatePicker
               id={`${blockId}_input`}
               picker="month"
-              allowClear={properties.allowClear !== false}
+              allowClear={
+                properties.allowClear !== false && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
               autoFocus={properties.autoFocus}
-              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              variant={
+                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+              }
               className={classNames.element}
+              classNames={{ popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
-              disabled={properties.disabled || loading}
+              styles={{ popup: { root: styles.popup } }}
+              disabled={getDisabled({ loading, properties })}
               disabledDate={disabledDate(properties.disabledDates)}
               format={
                 properties.format ??
@@ -72,7 +87,26 @@ const MonthSelector = ({
                 'YYYY-MM'
               }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
+              inputReadOnly={properties.inputReadOnly}
               placeholder={properties.placeholder}
+              placement={properties.placement}
+              prefix={
+                properties.prefix ||
+                (properties.prefixIcon && (
+                  <Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
+                    events={events}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
+                  />
+                ))
+              }
+              presets={getPresets({
+                disabledDates: properties.disabledDates,
+                methods,
+                presets: properties.presets,
+              })}
               size={properties.size}
               status={validation.status}
               value={type.isDate(value) ? dayjs.utc(value).startOf('month') : null}
@@ -81,10 +115,22 @@ const MonthSelector = ({
                   blockId={`${blockId}_suffixIcon`}
                   classNames={{ element: classNames.suffixIcon }}
                   events={events}
-                  properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
+                  properties={properties.suffixIcon ?? { name: 'calendar', title: '' }}
                   styles={{ element: styles.suffixIcon }}
                 />
               }
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onOpenChange={(open) => {
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } });
+              }}
               onChange={(newVal) => {
                 // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
                 const d = newVal ? dayjs(newVal) : null;

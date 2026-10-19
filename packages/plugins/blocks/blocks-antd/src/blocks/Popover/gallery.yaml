@@ -630,7 +630,7 @@
             title: Click to toggle
             color: primary
             variant: solid
-            icon: AiOutlineBell
+            icon: bell
 
     - id: popover_event_state
       type: Popover
@@ -707,7 +707,7 @@
             title: View Profile
             color: primary
             variant: solid
-            icon: AiOutlineUser
+            icon: user
 
     - id: popover_rich_actions
       type: Popover
@@ -729,7 +729,7 @@
                   type: Button
                   properties:
                     title: Edit
-                    icon: AiOutlineEdit
+                    icon: edit
                     color: primary
                     variant: text
                     block: true
@@ -737,7 +737,7 @@
                   type: Button
                   properties:
                     title: Duplicate
-                    icon: AiOutlineCopy
+                    icon: copy
                     color: default
                     variant: text
                     block: true
@@ -745,7 +745,7 @@
                   type: Button
                   properties:
                     title: Delete
-                    icon: AiOutlineDelete
+                    icon: delete
                     color: danger
                     variant: text
                     block: true
@@ -756,7 +756,7 @@
             flex: 0 0 auto
           properties:
             title: More
-            icon: AiOutlineEllipsis
+            icon: more
             color: default
             variant: outlined
 
@@ -869,7 +869,7 @@
       properties:
         title: Title Border
         theme:
-          titleBorderBottom: 1px solid #d9d9d9
+          titleBorderBottom: '1px solid #d9d9d9'
           titleMarginBottom: 12
           innerContentPadding: '8px 0'
       slots:
@@ -921,7 +921,7 @@
       layout:
         flex: 0 0 auto
       class:
-        element: cursor-pointer
+        .element: cursor-pointer
       properties:
         title: Element CSS Key
         trigger: click
@@ -947,7 +947,7 @@
       layout:
         flex: 0 0 auto
       class:
-        inner: shadow-xl rounded-xl
+        .inner: shadow-xl rounded-xl
       properties:
         title: Inner CSS Key
       slots:
@@ -972,7 +972,7 @@
       layout:
         flex: 0 0 auto
       class:
-        title: font-bold text-blue-600 border-b border-border pb-2
+        .title: font-bold text-blue-600 border-b border-border pb-2
       properties:
         title: Title CSS Key
       slots:
@@ -997,7 +997,7 @@
       layout:
         flex: 0 0 auto
       class:
-        content: bg-bg-layout p-4 rounded-md
+        .content: bg-bg-layout p-4 rounded-md
       properties:
         title: Content CSS Key
       slots:
@@ -1043,10 +1043,9 @@
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineUser
+                    icon: user
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#1677ff'
+                    color: '#1677ff'
                 - id: popover_usercard_info
                   type: Box
                   layout:
@@ -1087,7 +1086,7 @@
                     flex: 1 1 0
                   properties:
                     title: Message
-                    icon: AiOutlineMail
+                    icon: mail
                     color: primary
                     variant: solid
                     size: small
@@ -1104,7 +1103,7 @@
                     flex: 1 1 0
                   properties:
                     title: View Profile
-                    icon: AiOutlineUser
+                    icon: user
                     color: default
                     variant: outlined
                     size: small
@@ -1128,8 +1127,7 @@
                 flex: 0 0 auto
               properties:
                 content: SC
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: popover_usercard_trigger_name
               type: Paragraph
               layout:
@@ -1168,7 +1166,7 @@
                   type: Button
                   properties:
                     title: New Document
-                    icon: AiOutlineFileAdd
+                    icon: FilePlus
                     color: primary
                     variant: text
                     block: true
@@ -1183,7 +1181,7 @@
                   type: Button
                   properties:
                     title: Upload File
-                    icon: AiOutlineUpload
+                    icon: upload
                     color: default
                     variant: text
                     block: true
@@ -1202,7 +1200,7 @@
                   type: Button
                   properties:
                     title: Import from URL
-                    icon: AiOutlineLink
+                    icon: link
                     color: default
                     variant: text
                     block: true
@@ -1217,7 +1215,7 @@
                   type: Button
                   properties:
                     title: Use Template
-                    icon: AiOutlineAppstore
+                    icon: grid
                     color: default
                     variant: text
                     block: true
@@ -1228,7 +1226,7 @@
             flex: 0 0 auto
           properties:
             title: Create New
-            icon: AiOutlinePlus
+            icon: add
             color: primary
             variant: solid
 
@@ -1288,7 +1286,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineQuestionCircle
+                name: help
                 color: '#8c8c8c'
                 size: 18
         - id: popover_help_input

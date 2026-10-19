@@ -1,0 +1,30 @@
+name: Archive
+
+secrets:
+  - name: MONGODB_URI
+    description: The app's database, the same stand-in the app's own connection reads.
+
+connections:
+  - id: archive_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: archived
+      write: true
+
+api:
+  - id: archive_ticket
+    type: Api
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId:
+          _module.connectionId: archive_db
+        properties:
+          doc:
+            _id:
+              _payload: id
+      - :return:
+          archived:
+            _payload: id

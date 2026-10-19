@@ -28,19 +28,24 @@ async function generateDefaultTypesMap() {
     agents: {},
     auth: {
       adapters: {},
-      callbacks: {},
-      events: {},
       providers: {},
+      strategies: {},
     },
     blockMetas: {},
+    connectionMetas: {},
     blocks: {},
     connections: {},
     icons: {},
+    iconSets: {},
+    notifications: {},
     operators: {
       client: {},
       server: {},
     },
+    requestMetas: {},
     requests: {},
+    steps: {},
+    websockets: {},
   };
 
   for (const packageName of defaultPackages) {

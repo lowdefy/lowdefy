@@ -279,6 +279,35 @@
               properties:
                 content: Free standard shipping (3-5 business days). Express shipping available for $9.99 (1-2 business days).
 
+- title: Centered with Short Indicator
+  blocks:
+    - id: centered_tabs
+      type: Tabs
+      properties:
+        centered: true
+        tabBarGutter: 40
+        indicator:
+          size: 24
+          align: center
+        tabs:
+          - key: centered_monthly
+            title: Monthly
+          - key: centered_yearly
+            title: Yearly
+      slots:
+        centered_monthly:
+          blocks:
+            - id: centered_monthly_content
+              type: Paragraph
+              properties:
+                content: Billed every month. Cancel any time.
+        centered_yearly:
+          blocks:
+            - id: centered_yearly_content
+              type: Paragraph
+              properties:
+                content: Billed once a year with two months free.
+
 - title: Sizes
   blocks:
     - id: size_small_label
@@ -500,16 +529,16 @@
         tabs:
           - key: icon_home
             title: Home
-            icon: AiOutlineHome
+            icon: home
           - key: icon_users
             title: Users
-            icon: AiOutlineTeam
+            icon: users
           - key: icon_settings
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
           - key: icon_chart
             title: Analytics
-            icon: AiOutlineBarChart
+            icon: chart
       slots:
         icon_home:
           blocks:
@@ -558,17 +587,17 @@
           - key: ci_success
             title: Passed
             icon:
-              name: AiOutlineCheckCircle
+              name: check-circle
               color: '#52c41a'
           - key: ci_warning
             title: Warnings
             icon:
-              name: AiOutlineWarning
+              name: warning
               color: '#faad14'
           - key: ci_error
             title: Failed
             icon:
-              name: AiOutlineCloseCircle
+              name: close-circle
               color: '#ff4d4f'
       slots:
         ci_success:
@@ -700,7 +729,7 @@
                 flex: 0 0 auto
               properties:
                 title: Upload
-                icon: AiOutlineUpload
+                icon: upload
                 color: primary
                 variant: solid
                 size: small
@@ -731,13 +760,13 @@
         tabs:
           - key: rich_dashboard
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
           - key: rich_team
             title: Team
-            icon: AiOutlineTeam
+            icon: users
           - key: rich_activity
             title: Activity
-            icon: AiOutlineHistory
+            icon: history
       slots:
         rich_dashboard:
           blocks:

@@ -34,6 +34,11 @@ function createBrowserLogger() {
           console.info('%c%s', 'color: #4a9eff', args[0].source);
         }
         console.error(errorToDisplayString(args[0]));
+        // The console, not the toast, carries the request id: it is what a user or
+        // support quotes to find the matching server log and Sentry event.
+        if (args[0].requestId) {
+          console.error(`  Request ID: ${args[0].requestId}`);
+        }
         logCauseChain(console.error, args[0]);
         return;
       }
@@ -45,6 +50,9 @@ function createBrowserLogger() {
           console.info('%c%s', 'color: #4a9eff', args[0].source);
         }
         console.warn(errorToDisplayString(args[0]));
+        if (args[0].requestId) {
+          console.warn(`  Request ID: ${args[0].requestId}`);
+        }
         logCauseChain(console.warn, args[0]);
         return;
       }

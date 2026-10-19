@@ -12,7 +12,10 @@ export default {
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
+  // Fixture tests run whole builds, which exceed jest's 5s default when several
+  // worktrees build and test at once.
+  testTimeout: 30000,
+  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/tests/'],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../.swcrc.test' }],
   },

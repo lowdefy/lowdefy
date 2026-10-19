@@ -14,21 +14,32 @@
   limitations under the License.
 */
 
-import { expect } from '@playwright/test';
+import { buildPagePath, type, urlQuery } from '@lowdefy/helpers';
+
+import pageContextExpression from './instanceKey.js';
 
 async function waitForReady(page) {
-  // Wait for Lowdefy client to initialize (context exists)
-  // Context key is "page:{pageId}" not just pageId
-  await page.waitForFunction(
-    () => {
-      const lowdefy = window.lowdefy;
-      return lowdefy && lowdefy.pageId && lowdefy.contexts[`page:${lowdefy.pageId}`];
-    },
-    { timeout: 30000 }
-  );
+  // Wait for the context of the page instance on screen to exist.
+  await page.waitForFunction(`Boolean(${pageContextExpression})`, undefined, { timeout: 30000 });
 }
 
-async function goto(page, path) {
+// A target is a URL path, or { basePath, pageId, path, pathParams, urlQuery } where `path` is
+// the page's path pattern (omit it for a page served at its id) and `basePath` the app's
+// config.basePath (omit it for an app served at the root). A string target is used as written,
+// so it carries its own basePath. The query is written as the app's links write it, so
+// `_url_query` reads back numbers, booleans and objects.
+function createPageUrl(target) {
+  if (type.isString(target)) {
+    return target;
+  }
+  const { basePath = '', pageId, path, pathParams, urlQuery: query } = target;
+  const pathname = `${basePath}/${buildPagePath({ pageId, path, pathParams })}`;
+  const search = urlQuery.stringify(query);
+  return search ? `${pathname}?${search}` : pathname;
+}
+
+async function goto(page, target) {
+  const path = createPageUrl(target);
   // domcontentloaded is sufficient — waitForReady gates on the Lowdefy client
   // context, which is a stronger readiness signal than the browser 'load' event.
   // Using 'load' can hang when pages have WebSocket connections or slow resources.
@@ -36,13 +47,9 @@ async function goto(page, path) {
   await waitForReady(page);
 }
 
-async function expectNavigation(page, urlPattern) {
-  await expect(page).toHaveURL(urlPattern);
-}
-
-async function waitForPage(page, path) {
-  await page.waitForURL(path, { waitUntil: 'domcontentloaded' });
+async function waitForPage(page, target) {
+  await page.waitForURL(createPageUrl(target), { waitUntil: 'domcontentloaded' });
   await waitForReady(page);
 }
 
-export { goto, waitForReady, expectNavigation, waitForPage };
+export { createPageUrl, goto, waitForReady, waitForPage };

@@ -47,21 +47,26 @@ function buildMenuItems({
         key: link.id ?? i,
         dashed: link.properties?.dashed,
         className: cn(classNames?.item, item.class.element) || undefined,
-        style: item.style.element,
+        style: { ...styles?.item, ...item.style.element },
       };
     }
 
     if (link.type === 'MenuGroup') {
       const labelText = getTitle(link);
       const groupLabel = wrapGroupLabel
-        ? wrapGroupLabel({ link, labelText, classNames: item.class.label, styles: item.style.label })
+        ? wrapGroupLabel({
+            link,
+            labelText,
+            classNames: item.class.label,
+            styles: item.style.label,
+          })
         : labelText;
       const renderAsGroup = !isTopLevel && nestedGroupAsGroup;
       const groupItem = {
         key: getKey(link),
         label: groupLabel,
         className: cn(classNames?.item, item.class.element) || undefined,
-        style: item.style.element,
+        style: { ...styles?.item, ...item.style.element },
         children: buildMenuItems({
           links: link.links,
           components: { Icon, Link, ShortcutBadge },
@@ -111,7 +116,7 @@ function buildMenuItems({
       disabled: link.properties?.disabled,
       title: link.properties?.tooltip,
       className: cn(classNames?.item, item.class.element) || undefined,
-      style: item.style.element,
+      style: { ...styles?.item, ...item.style.element },
       icon: link.properties?.icon ? (
         <Icon
           blockId={`${link.id}_icon`}

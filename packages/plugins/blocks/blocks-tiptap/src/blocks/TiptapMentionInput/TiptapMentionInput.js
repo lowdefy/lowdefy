@@ -15,27 +15,88 @@
 */
 
 import React, { useEffect } from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { getSafeHref, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { EditorContent } from '@tiptap/react';
 import { mergeAttributes } from '@tiptap/core';
 import Mention from '@tiptap/extension-mention';
 
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
 import PopoverMenu from '../utils/PopoverMenu.js';
-import buildExtensions from '../utils/buildExtensions.js';
 import computeHeightStyle from '../utils/computeHeightStyle.js';
 import statusClass from '../utils/statusClass.js';
+import useTiptapEditor from '../utils/useTiptapEditor.js';
 import suggestion from './suggestion.js';
 import useGroupMembersPopover from './useGroupMembersPopover.js';
 import useTiptapMentionState from './useTiptapMentionState.js';
 
-import './style.module.css';
+import './style.css';
 
+// A mention node's `id` attribute holds whatever option the user picked — a
+// plain string, or the option object ({ label, value, tag }) — so the label
+// and the DOM identifier are both derived from it. Content loaded back from
+// saved html arrives with a STRING id (tiptap's parseHTML reads data-id) and
+// the label in `data-label`, which is why both render paths take the node's
+// attributes rather than the id alone.
 function mentionLabel(id) {
   return id?.tag?.title ?? id?.label ?? id;
 }
+
+// The string that goes into the DOM as data-id. Option objects are commonly
+// { label, value } with the identity inside `value` (a string, or an object
+// with _id / id); fall back to the object's own _id / id. Anything without a
+// scalar identity yields undefined and data-id is omitted — never the
+// "[object Object]" tiptap's stock attribute renderer produces when it
+// stringifies the whole option.
+function scalarId(candidate) {
+  if (type.isString(candidate) || type.isNumber(candidate)) return String(candidate);
+  return undefined;
+}
+
+function mentionId(id) {
+  if (type.isNone(id)) return undefined;
+  if (type.isString(id) || type.isNumber(id)) return String(id);
+  if (!type.isObject(id)) return undefined;
+  const value = id.value;
+  if (type.isObject(value)) {
+    return scalarId(value._id) ?? scalarId(value.id) ?? scalarId(value.value);
+  }
+  return scalarId(value) ?? scalarId(id._id) ?? scalarId(id.id);
+}
+
+function nodeLabel(attrs) {
+  const label = type.isString(attrs.label) && attrs.label !== '' ? attrs.label : undefined;
+  const derived = mentionLabel(attrs.id);
+  return label ?? (type.isString(derived) || type.isNumber(derived) ? derived : undefined);
+}
+
+// Mention with its `id` and `label` attributes rendered through the helpers
+// above: data-id is always a scalar identifier (or absent), and data-label
+// always carries the display label so saved html round-trips with a readable
+// mention even though the id comes back as a string.
+const LowdefyMention = Mention.extend({
+  addAttributes() {
+    const parent = this.parent?.() ?? {};
+    return {
+      ...parent,
+      id: {
+        ...parent.id,
+        renderHTML: (attributes) => {
+          const id = mentionId(attributes.id);
+          return type.isNone(id) ? {} : { 'data-id': id };
+        },
+      },
+      label: {
+        ...parent.label,
+        renderHTML: (attributes) => {
+          const label = nodeLabel(attributes);
+          return type.isNone(label) ? {} : { 'data-label': label };
+        },
+      },
+    };
+  },
+});
 
 const TiptapMentionInput = ({
   blockId,
@@ -48,18 +109,25 @@ const TiptapMentionInput = ({
   validation,
   value,
 }) => {
-  const { emit, insertImage } = useTiptapMentionState({ value, methods });
+  const uploadPolicyRequestId =
+    properties.uploadPolicyRequestId ?? properties.s3PostPolicyRequestId;
+  const downloadPolicyRequestId = properties.downloadPolicyRequestId;
+  const { emit, insertImage } = useTiptapMentionState({
+    value,
+    methods,
+    hasDownloadRequest: !type.isNone(downloadPolicyRequestId),
+  });
   const disabled = properties.disabled === true || loading;
-  const uploadEnabled = !type.isNone(properties.s3PostPolicyRequestId);
+  const uploadEnabled = !type.isNone(uploadPolicyRequestId);
   const char = properties.mentions?.char ?? '@';
   const allowSpaces = properties.mentions?.allowSpaces !== false;
   const limit = properties.mentions?.limit ?? 5;
 
-  const mentionExtension = Mention.configure({
+  const mentionExtension = LowdefyMention.configure({
     HTMLAttributes: { class: 'tiptap-mention' },
     renderHTML({ options, node }) {
       const id = node.attrs.id;
-      const label = mentionLabel(id);
+      const label = nodeLabel(node.attrs) ?? '';
       const group = id?.tag?.group;
       const modifier = {};
       if (!type.isNone(group)) {
@@ -71,28 +139,21 @@ const TiptapMentionInput = ({
         modifier.style = `color: ${color}`;
       }
       const href = type.isFunction(properties.mentions?.getHref)
-        ? properties.mentions.getHref(id)
+        ? getSafeHref(properties.mentions.getHref(id))
         : undefined;
       if (!type.isNone(href)) {
         return [
           'a',
-          mergeAttributes({ href, 'data-id': id?._id }, options.HTMLAttributes, modifier),
+          mergeAttributes({ href }, options.HTMLAttributes, modifier),
           `${char}${label}`,
         ];
       }
       return ['span', mergeAttributes(options.HTMLAttributes, modifier), `${char}${label}`];
     },
     renderText({ node }) {
-      return `${char}${mentionLabel(node.attrs.id)}`;
+      return `${char}${nodeLabel(node.attrs) ?? ''}`;
     },
     suggestion: suggestion({ methods, char, allowSpaces, limit }),
-  });
-
-  const extensions = buildExtensions({
-    properties,
-    insertImage,
-    mentionExtension,
-    uploadEnabled,
   });
 
   const heightStyle = computeHeightStyle({
@@ -100,17 +161,18 @@ const TiptapMentionInput = ({
     autoSize: properties.autoSize,
   });
 
-  const editor = useEditor({
+  const editor = useTiptapEditor({
+    disabled,
     editorProps: {
       items: type.isArray(properties.mentions?.options) ? properties.mentions.options : [],
     },
-    extensions,
-    content: value?.html || '',
-    editable: () => !disabled,
-    onUpdate: ({ editor }) => {
-      emit(editor);
-      methods.triggerEvent({ name: 'onChange' });
-    },
+    emit,
+    insertImage,
+    mentionExtension,
+    methods,
+    properties,
+    uploadEnabled,
+    value,
   });
 
   useGroupMembersPopover({ editor, properties });
@@ -127,16 +189,33 @@ const TiptapMentionInput = ({
 
   useEffect(() => {
     if (uploadEnabled) {
+      if (!type.isNone(properties.s3PostPolicyRequestId)) {
+        console.warn(
+          'TiptapMentionInput property "s3PostPolicyRequestId" is deprecated. Use "uploadPolicyRequestId" instead.'
+        );
+      }
       methods.registerEvent({
-        name: '__getS3PostPolicy',
+        name: '__getUploadPolicy',
         actions: [
           {
-            id: '__getS3PostPolicy',
+            id: '__getUploadPolicy',
             type: 'Request',
-            params: [properties.s3PostPolicyRequestId],
+            params: [uploadPolicyRequestId],
           },
         ],
       });
+      if (!type.isNone(downloadPolicyRequestId)) {
+        methods.registerEvent({
+          name: '__getDownloadPolicy',
+          actions: [
+            {
+              id: '__getDownloadPolicy',
+              type: 'Request',
+              params: [downloadPolicyRequestId],
+            },
+          ],
+        });
+      }
     }
     if (!type.isNone(properties.mentionsRequestId)) {
       methods.registerEvent({
@@ -151,55 +230,6 @@ const TiptapMentionInput = ({
       });
     }
   }, []);
-
-  useEffect(() => {
-    if (!editor) return;
-    methods.registerMethod('clear', () => {
-      editor.commands.clearContent();
-      emit(editor);
-    });
-    methods.registerMethod('setContent', (args) => {
-      editor.commands.setContent(args?.html ?? '');
-      emit(editor);
-    });
-    methods.registerMethod('focus', () => {
-      editor.commands.focus();
-    });
-  }, [editor]);
-
-  // External value.html → editor sync. One-way only: we read value.html and
-  // push it into the editor with setContent(..., false) so tiptap's onUpdate
-  // does not fire. No write-back via emit() — that would race with concurrent
-  // SetState calls (child effects fire before parent effects, so a sibling's
-  // onMount SetState could be overwritten by our derived emit). Derived
-  // fields (text/markdown/fileList/mentions) are populated on user interaction
-  // via onUpdate; downstream consumers of seeded content should read
-  // value.html directly, or include the fields they need in their SetState
-  // payload.
-  useEffect(() => {
-    if (!editor) return;
-    const next = value?.html ?? '';
-    const current = editor.getHTML();
-    if (next !== current) {
-      editor.commands.setContent(next, false);
-    }
-  }, [value?.html, editor]);
-
-  useEffect(() => {
-    if (!editor) return;
-    editor.setOptions({ editable: !disabled });
-  }, [editor, disabled]);
-
-  useEffect(() => {
-    if (!editor) return;
-    const placeholderExt = editor.extensionManager.extensions.find(
-      (extension) => extension.name === 'placeholder'
-    );
-    if (placeholderExt) {
-      placeholderExt.options.placeholder = properties.placeholder ?? '';
-      editor.view.dispatch(editor.state.tr);
-    }
-  }, [editor, properties.placeholder]);
 
   const wrapperClass = [
     'tiptap-wrapper',
@@ -238,7 +268,7 @@ const TiptapMentionInput = ({
                 className={wrapperClass}
                 style={wrapperStyle}
               />
-              {!disabled && <PopoverMenu editor={editor} Icon={Icon} />}
+              {!disabled && <PopoverMenu blockId={blockId} editor={editor} Icon={Icon} />}
             </>
           );
         },

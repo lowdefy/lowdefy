@@ -14,25 +14,19 @@
   limitations under the License.
 */
 
-function evaluateOperators(
-  { evaluateOperators },
-  { connectionConfig, items, payload, requestConfig, state, steps }
-) {
-  const connectionProperties = evaluateOperators({
+import evaluateRoutineOperators from '../endpoints/evaluateRoutineOperators.js';
+
+// Connection and request properties evaluate against the same frame, so `_item` in a connection's
+// properties resolves inside a `:for` loop just like it does in the request's.
+function evaluateOperators(context, { connectionConfig, requestConfig, routineContext }) {
+  const connectionProperties = evaluateRoutineOperators(context, routineContext, {
     input: connectionConfig.properties || {},
     location: connectionConfig.connectionId,
-    payload,
-    state,
-    steps,
   });
 
-  const requestProperties = evaluateOperators({
+  const requestProperties = evaluateRoutineOperators(context, routineContext, {
     input: requestConfig.properties || {},
-    items,
     location: requestConfig.stepId ?? requestConfig.requestId,
-    payload,
-    state,
-    steps,
   });
 
   return {

@@ -1,0 +1,11 @@
+id: policy_badge
+type: Title
+properties:
+  content:
+    _build.if:
+      test:
+        _build.eq:
+          - _build.authConfig: organizations.policy
+          - tenant
+      then: Tenant deployment
+      else: Pinned deployment

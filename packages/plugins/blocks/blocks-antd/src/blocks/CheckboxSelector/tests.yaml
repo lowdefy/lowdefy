@@ -235,3 +235,91 @@
       - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
       - '<div style="color: green;">Option green</div>'
       - Option 3
+- id: 'properties.columns: 2'
+  type: CheckboxSelector
+  properties:
+    columns: 2
+    options:
+      - Option 1
+      - Option 2
+      - Option 3
+      - Option 4
+      - Option 5
+- id: 'properties.columns: 3'
+  type: CheckboxSelector
+  properties:
+    columns: 3
+    options:
+      - A much longer option label than the others
+      - Short
+      - Option 3
+      - Option 4
+      - Option 5
+      - Option 6
+- id: 'properties.columns: responsive'
+  type: CheckboxSelector
+  properties:
+    columns:
+      xs: 1
+      md: 3
+    options:
+      - Option 1
+      - Option 2
+      - Option 3
+      - Option 4
+      - Option 5
+      - Option 6
+- id: 'properties.columns: two short options'
+  type: CheckboxSelector
+  properties:
+    columns: 2
+    options:
+      - 'Yes'
+      - 'No'
+- id: 'properties.columns: unsupported count'
+  type: CheckboxSelector
+  properties:
+    columns: 5
+    options:
+      - Option 1
+      - Option 2
+      - Option 3
+      - Option 4
+      - Option 5
+- id: 'properties.gutter'
+  type: CheckboxSelector
+  properties:
+    columns: 2
+    gutter: [24, 12]
+    options:
+      - Option 1
+      - Option 2
+      - Option 3
+      - Option 4
+- id: 'properties.columns: per-option color'
+  type: CheckboxSelector
+  properties:
+    columns: 2
+    options:
+      - label: Low
+        value: low
+        color: '#16a34a'
+      - label: Medium
+        value: medium
+        color: '#d97706'
+      - label: High
+        value: high
+        color: '#dc2626'
+      - label: Critical
+        value: critical
+        color: '#7e22ce'
+- id: 'properties.columns: with direction vertical'
+  type: CheckboxSelector
+  properties:
+    columns: 2
+    direction: vertical
+    options:
+      - Option 1
+      - Option 2
+      - Option 3
+      - Option 4

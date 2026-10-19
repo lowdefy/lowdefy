@@ -234,7 +234,10 @@ test('_payload operator in request properties', async () => {
       response: { _payload: 'value' },
     },
   };
-  const { res, context, routineContext } = await runTest({ routine, payload: { value: 'from_payload' } });
+  const { res, context, routineContext } = await runTest({
+    routine,
+    payload: { value: 'from_payload' },
+  });
   expect(res.status).toEqual('continue');
   expect(routineContext.steps).toEqual({ test_request: 'from_payload' });
 });
@@ -280,7 +283,10 @@ test('_step operator accesses previous step result', async () => {
   ];
   const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(routineContext.steps).toEqual({ first_request: 'first_value', second_request: 'first_value' });
+  expect(routineContext.steps).toEqual({
+    first_request: 'first_value',
+    second_request: 'first_value',
+  });
 });
 
 test('_secret operator in request properties', async () => {
@@ -330,34 +336,75 @@ test('_sum operator computes sum of payload values', async () => {
   expect(routineContext.steps).toEqual({ test_request: 15 });
 });
 
-test('catch sets error.handled and calls handleError once for a single thrown error', async () => {
+test('catch routes a single thrown error through handleError once and it comes back handled', async () => {
   // ':unknown' triggers handleControl to throw synchronously, exercising the
-  // catch in runRoutine. The catch should set error.handled and call
-  // context.handleError exactly once.
+  // catch in runRoutine. The catch should call context.handleError exactly once,
+  // and handleError is what marks the error handled.
   const routine = { ':unknown': {} };
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('error');
   expect(res.error.handled).toBe(true);
   // handleError in testContext calls logger.error(error). Filter by direct
   // error arg so we count handleError invocations, not other logger.error calls.
-  const handleErrorCalls = context.logger.error.mock.calls.filter(
-    (call) => call[0] === res.error
-  );
+  const handleErrorCalls = context.logger.error.mock.calls.filter((call) => call[0] === res.error);
   expect(handleErrorCalls.length).toBe(1);
 });
 
 test('handleError skipped when error.handled is already true', async () => {
   const { default: runRoutine } = await import('./runRoutine.js');
-  const handleError = jest.fn();
+  // The real sink (servers' createHandleError) marks the error handled once it
+  // has logged it; runRoutine's guard reads that flag rather than setting it.
+  const handleError = jest.fn(async (error) => {
+    error.handled = true;
+  });
   const context = { handleError };
   // First pass: null routine triggers `throw new Error('Invalid routine.')`
-  // inside runRoutine's try block. The catch sets handled=true and calls
-  // handleError once.
+  // inside runRoutine's try block. The catch calls handleError once, which sets
+  // handled=true.
   const res1 = await runRoutine(context, {}, { routine: null });
   expect(res1.status).toBe('error');
   expect(res1.error.handled).toBe(true);
   expect(handleError).toHaveBeenCalledTimes(1);
 });
+
+test('an invalid routine throws a LowdefyInternalError', async () => {
+  const { default: runRoutine } = await import('./runRoutine.js');
+  const handleError = jest.fn();
+  const res = await runRoutine({ handleError }, {}, { routine: null });
+  expect(res.status).toBe('error');
+  expect(res.error.name).toBe('LowdefyInternalError');
+  expect(res.error.message).toBe('Invalid routine.');
+});
+
+test.each([
+  ['a thrown UserError nobody logged is logged here as a warning', false, 1],
+  ['a UserError already logged where it was raised is not logged again', true, 0],
+])(
+  '%s and returned as an error status, never through handleError',
+  async (_, handled, warnings) => {
+    const { default: runRoutine } = await import('./runRoutine.js');
+    const { UserError } = await import('@lowdefy/errors');
+    const handleError = jest.fn();
+    const error = new UserError('Nested payload refused.');
+    error.handled = handled || undefined;
+    const routine = {
+      id: 'endpoint:nested',
+      stepId: 'call_nested',
+    };
+    const context = {
+      handleError,
+      logger: { debug: jest.fn(), warn: jest.fn() },
+      evaluateOperators: () => {
+        throw error;
+      },
+    };
+    const res = await runRoutine(context, {}, { routine });
+    expect(res).toEqual({ status: 'error', error });
+    expect(handleError).not.toHaveBeenCalled();
+    expect(context.logger.warn).toHaveBeenCalledTimes(warnings);
+    expect(error.handled).toBe(true);
+  }
+);
 
 test('combined operators in request properties', async () => {
   const routine = {
@@ -373,7 +420,10 @@ test('combined operators in request properties', async () => {
       },
     },
   };
-  const { res, context, routineContext } = await runTest({ routine, payload: { input: 'test_input' } });
+  const { res, context, routineContext } = await runTest({
+    routine,
+    payload: { input: 'test_input' },
+  });
   expect(res.status).toEqual('continue');
   expect(routineContext.steps).toEqual({
     test_request: {

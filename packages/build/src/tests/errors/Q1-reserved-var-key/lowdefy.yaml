@@ -1,0 +1,24 @@
+# Q1: Reserved _var Key
+# ======================
+# Tests that a _var key with a reserved name (a prototype-pollution vector like
+# "constructor") fails the build with a located ConfigError instead of a bare
+# ReservedKeyError with no file and no line.
+#
+# Expected error:
+#   [ConfigError] _var key "constructor" is a reserved name.
+#
+# The error points to line 23, the "content" key that holds the _var. `~k` config
+# keys are not available here (addKeys runs after buildRefs), so the error locates by
+# the file being walked and the `~l` line addLineNumbers stamped at parse.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: varRef
+        type: Paragraph
+        properties:
+          content:
+            _var: constructor

@@ -1,0 +1,15 @@
+id: dispatch-invite
+type: Api
+routine:
+  - id: render
+    type: RenderNotification
+    properties:
+      # String form — resolves to the module's own scoped notification id.
+      notificationId:
+        _module.notificationId: invite-user
+      data:
+        contact:
+          _payload: contact
+  - ':return':
+      html:
+        _step: render.html

@@ -52,7 +52,7 @@ areas:
               span: 8
             properties:
               placeholder: Search customers...
-              prefix: AiOutlineSearch
+              prefix: search
             events:
               onChange:
                 debounce:
@@ -87,7 +87,7 @@ areas:
             properties:
               title: Add Customer
               type: primary
-              icon: AiOutlinePlus
+              icon: add
             events:
               onClick:
                 - id: goToAdd

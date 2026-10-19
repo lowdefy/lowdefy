@@ -16,6 +16,12 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
+import antdEnUS from 'antd/locale/en_US.js';
+
+import readStorageItem from './storage/readStorageItem.js';
+
+// antd shows its en_US strings until an app locale loads, and with none configured.
+const defaultAntdLocale = antdEnUS.default ?? antdEnUS;
 
 function pickBest(candidates, supported) {
   for (const candidate of candidates ?? []) {
@@ -47,14 +53,18 @@ async function loadAntdXLocale({ active, antdXLocaleLoaders }) {
   return mod?.default ?? mod;
 }
 
-function useLocale({ i18n, antdLocaleLoaders, antdXLocaleLoaders, dayjsLocaleMap }) {
-  const supportedCodes = useMemo(
-    () => (i18n?.locales ?? []).map((l) => l.code),
-    [i18n?.locales]
-  );
+// storageKey is the app key the preference is kept under (see @lowdefy/helpers appStorageKey).
+function useLocale({ i18n, antdLocaleLoaders, antdXLocaleLoaders, dayjsLocaleMap, storageKey }) {
+  const supportedCodes = useMemo(() => (i18n?.locales ?? []).map((l) => l.code), [i18n?.locales]);
 
   const [userPreference, setUserPreference] = useState(() => {
-    return window.localStorage?.getItem('lowdefy_locale') ?? 'auto';
+    return (
+      readStorageItem({
+        key: storageKey,
+        legacyKey: 'lowdefy_locale',
+        storage: window.localStorage,
+      }) ?? 'auto'
+    );
   });
 
   const browserLocale = useMemo(() => {
@@ -63,14 +73,17 @@ function useLocale({ i18n, antdLocaleLoaders, antdXLocaleLoaders, dayjsLocaleMap
     return pickBest(candidates, supportedCodes);
   }, [supportedCodes]);
 
-  const setPreference = useCallback((code) => {
-    if (code === 'auto') {
-      window.localStorage?.removeItem('lowdefy_locale');
-    } else {
-      window.localStorage?.setItem('lowdefy_locale', code);
-    }
-    setUserPreference(code ?? 'auto');
-  }, []);
+  const setPreference = useCallback(
+    (code) => {
+      if (code === 'auto') {
+        window.localStorage?.removeItem(storageKey);
+      } else {
+        window.localStorage?.setItem(storageKey, code);
+      }
+      setUserPreference(code ?? 'auto');
+    },
+    [storageKey]
+  );
 
   window.__lowdefy_setLocale = setPreference;
 
@@ -86,6 +99,9 @@ function useLocale({ i18n, antdLocaleLoaders, antdXLocaleLoaders, dayjsLocaleMap
 
   const [antdLocale, setAntdLocale] = useState(null);
   const [antdXLocale, setAntdXLocale] = useState(null);
+
+  // The engine trace reads the antd strings in use as config text; it has no antd dependency.
+  window.__lowdefy_antd_locale = antdLocale ?? defaultAntdLocale;
 
   useEffect(() => {
     let cancelled = false;

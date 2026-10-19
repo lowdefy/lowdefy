@@ -14,18 +14,17 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { Input, Select } from 'antd';
+import React, { useState } from 'react';
+import { Input, Select, Space } from 'antd';
 import regions from './regions.js';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
 import formatPhoneNumber from './formatPhoneNumber.js';
-
-const Option = Select.Option;
 
 function getAllowedRegions({ allowedRegions, regions }) {
   if (!allowedRegions || allowedRegions.length === 0) {
@@ -52,10 +51,13 @@ function getDefaultRegion({ allowedRegions, defaultRegion, uniqueValueOptions })
 function AddOnSelect({
   blockId,
   classNames = {},
+  components: { Icon },
   defaultValue,
   loading,
   methods,
+  popupContainerId,
   properties,
+  status,
   styles,
   uniqueValueOptions,
   value,
@@ -63,15 +65,12 @@ function AddOnSelect({
   return (
     <Select
       id={`${blockId}_select_input`}
-      variant={properties.bordered === false ? 'borderless' : properties.variant}
+      getPopupContainer={() => document.getElementById(popupContainerId)}
+      variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
       style={{ minWidth: 100, ...styles.select }}
       defaultValue={defaultValue}
-      disabled={properties.disabled || loading}
-      dropdownMatchSelectWidth={false}
-      filterOption={(input, option) =>
-        option.filterString.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
-      mode="single"
+      disabled={getDisabled({ loading, properties })}
+      popupMatchSelectWidth={false}
       notFoundContent={'Not found'}
       onChange={(newVal) => {
         const input = value?.input ?? '';
@@ -96,34 +95,40 @@ function AddOnSelect({
       onFocus={() => {
         methods.triggerEvent({ name: 'onFocus' });
       }}
-      optionFilterProp="filterString"
-      optionLabelProp="label"
-      placeholder={'Select item'}
-      showArrow={properties.showArrow}
-      showSearch={true}
-      size={properties.size}
-      value={getValueIndex(value?.region, uniqueValueOptions)}
-    >
-      {uniqueValueOptions.map((opt, i) => {
+      optionLabelProp="selectedLabel"
+      options={uniqueValueOptions.map((opt, i) => {
         const displayLabel =
           properties.showFlags === false
             ? `${opt.value.name} ${opt.value.dial_code}`
             : `${opt.value.flag} ${opt.value.name} ${opt.value.dial_code}`;
-        return (
-          <Option
-            style={styles.options}
-            className={classNames.options}
-            filterString={displayLabel}
-            id={`${blockId}_${i}`}
-            key={`${i}`}
-            value={`${i}`}
-            label={opt.label}
-          >
-            {displayLabel}
-          </Option>
-        );
+        return {
+          className: classNames.options,
+          filterString: displayLabel,
+          id: `${blockId}_${i}`,
+          key: `${i}`,
+          label: displayLabel,
+          selectedLabel: opt.label,
+          style: styles.options,
+          value: `${i}`,
+        };
       })}
-    </Select>
+      placeholder={'Select item'}
+      suffixIcon={
+        properties.showArrow === false ? null : (
+          <Icon
+            blockId={`${blockId}_select_suffixIcon`}
+            properties={{ name: 'chevron-down', title: '' }}
+          />
+        )
+      }
+      showSearch={{
+        filterOption: (input, option) =>
+          option.filterString.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+      }}
+      size={properties.size}
+      status={status}
+      value={getValueIndex(value?.region, uniqueValueOptions)}
+    />
   );
 }
 
@@ -140,6 +145,8 @@ const PhoneNumberInput = ({
   validation,
   value,
 }) => {
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
+  const popupContainerId = `${blockId}_${elementId}_popup`;
   const allowedRegions = getAllowedRegions({ allowedRegions: properties.allowedRegions, regions });
 
   const uniqueValueOptions = getUniqueValues(
@@ -181,99 +188,123 @@ const PhoneNumberInput = ({
       validation={validation}
       content={{
         content: () => {
+          // The country dropdown renders inside the block, like Selector's, so an option click
+          // has the block's wrapper on its path.
           return (
-            <Input
-              id={`${blockId}_input`}
-              addonBefore={
+            <div style={{ width: '100%' }}>
+              <div id={popupContainerId} />
+              <Space.Compact
+                block
+                className={`ldf-phone-number-input${
+                  classNames.element ? ` ${classNames.element}` : ''
+                }`}
+                style={styles.element}
+              >
                 <AddOnSelect
                   blockId={blockId}
                   classNames={classNames}
+                  components={{ Icon }}
                   defaultValue={defaultValue}
                   loading={loading}
                   methods={methods}
+                  popupContainerId={popupContainerId}
                   properties={properties}
+                  status={validation.status}
                   styles={styles}
                   uniqueValueOptions={uniqueValueOptions}
                   value={value}
                 />
-              }
-              allowClear={properties.allowClear}
-              autoFocus={properties.autoFocus}
-              variant={properties.bordered === false ? 'borderless' : properties.variant}
-              className={`ldf-phone-number-input${
-                classNames.element ? ` ${classNames.element}` : ''
-              }`}
-              style={styles.element}
-              disabled={properties.disabled || loading}
-              maxLength={properties.maxLength}
-              placeholder={properties.placeholder}
-              size={properties.size}
-              status={validation.status}
-              value={value?.input}
-              onChange={(event) => {
-                let input = event.target.value;
+                <Input
+                  id={`${blockId}_input`}
+                  allowClear={
+                    properties.allowClear && {
+                      clearIcon: (
+                        <Icon
+                          blockId={`${blockId}_clearIcon`}
+                          properties={{ name: 'clear', title: '' }}
+                        />
+                      ),
+                    }
+                  }
+                  autoFocus={properties.autoFocus}
+                  variant={
+                    properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+                  }
+                  disabled={getDisabled({ loading, properties })}
+                  maxLength={properties.maxLength}
+                  placeholder={properties.placeholder}
+                  size={properties.size}
+                  status={validation.status}
+                  value={value?.input}
+                  onChange={(event) => {
+                    let input = event.target.value;
 
-                if (properties.replaceInput) {
-                  const regex = new RegExp(
-                    properties.replaceInput.pattern,
-                    properties.replaceInput.flags ?? 'gm'
-                  );
-                  input = input.replace(regex, properties.replaceInput.replacement ?? '');
-                }
+                    if (properties.replaceInput) {
+                      const regex = new RegExp(
+                        properties.replaceInput.pattern,
+                        properties.replaceInput.flags ?? 'gm'
+                      );
+                      input = input.replace(regex, properties.replaceInput.replacement ?? '');
+                    }
 
-                const region = value?.region ?? {};
-                const phone_number = formatPhoneNumber(region?.dial_code, input);
+                    const region = value?.region ?? {};
+                    const phone_number = formatPhoneNumber(region?.dial_code, input);
 
-                methods.setValue({
-                  input,
-                  region,
-                  phone_number,
-                });
+                    methods.setValue({
+                      input,
+                      region,
+                      phone_number,
+                    });
 
-                methods.triggerEvent({ name: 'onInputChange' });
-                methods.triggerEvent({
-                  name: 'onChange',
-                  event: { value: { input, region, phone_number } },
-                });
-              }}
-              onPressEnter={() => {
-                methods.triggerEvent({ name: 'onPressEnter' });
-              }}
-              onBlur={() => {
-                methods.triggerEvent({ name: 'onBlur' });
-              }}
-              onFocus={() => {
-                methods.triggerEvent({ name: 'onFocus' });
-              }}
-              prefix={
-                properties.prefix ||
-                (properties.prefixIcon && (
-                  <Icon
-                    blockId={`${blockId}_prefixIcon`}
-                    classNames={{ element: classNames.prefixIcon }}
-                    events={events}
-                    properties={properties.prefixIcon}
-                    styles={{ element: styles.prefixIcon }}
-                  />
-                ))
-              }
-              suffix={
-                (properties.suffix || properties.suffixIcon) && (
-                  <>
-                    {properties.suffix && properties.suffix}
-                    {properties.suffixIcon && (
+                    methods.triggerEvent({ name: 'onInputChange' });
+                    methods.triggerEvent({
+                      name: 'onChange',
+                      event: { value: { input, region, phone_number } },
+                    });
+                  }}
+                  onPressEnter={() => {
+                    methods.triggerEvent({ name: 'onPressEnter' });
+                  }}
+                  onClear={() => {
+                    methods.triggerEvent({ name: 'onClear' });
+                  }}
+                  onBlur={() => {
+                    methods.triggerEvent({ name: 'onBlur' });
+                  }}
+                  onFocus={() => {
+                    methods.triggerEvent({ name: 'onFocus' });
+                  }}
+                  prefix={
+                    properties.prefix ||
+                    (properties.prefixIcon && (
                       <Icon
-                        blockId={`${blockId}_suffixIcon`}
-                        classNames={{ element: classNames.suffixIcon }}
+                        blockId={`${blockId}_prefixIcon`}
+                        classNames={{ element: classNames.prefixIcon }}
                         events={events}
-                        properties={properties.suffixIcon}
-                        styles={{ element: styles.suffixIcon }}
+                        properties={properties.prefixIcon}
+                        styles={{ element: styles.prefixIcon }}
                       />
-                    )}
-                  </>
-                )
-              }
-            />
+                    ))
+                  }
+                  suffix={
+                    (properties.suffix || properties.suffixIcon) && (
+                      <>
+                        {properties.suffix && properties.suffix}
+                        {properties.suffixIcon && (
+                          <Icon
+                            blockId={`${blockId}_suffixIcon`}
+                            classNames={{ element: classNames.suffixIcon }}
+                            events={events}
+                            properties={properties.suffixIcon}
+                            styles={{ element: styles.suffixIcon }}
+                          />
+                        )}
+                      </>
+                    )
+                  }
+                />
+              </Space.Compact>
+            </div>
           );
         },
       }}
@@ -281,4 +312,4 @@ const PhoneNumberInput = ({
   );
 };
 
-export default withTheme('Input', withBlockDefaults(PhoneNumberInput));
+export default withTheme(['Input', 'Select'], withBlockDefaults(PhoneNumberInput));

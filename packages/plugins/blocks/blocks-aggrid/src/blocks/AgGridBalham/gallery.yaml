@@ -179,7 +179,11 @@
       type: AgGridBalham
       properties:
         height: 300
-        rowSelection: multiple
+        rowSelection:
+          mode: multiRow
+          checkboxes: false
+          headerCheckbox: false
+          enableClickSelection: true
         defaultColDef:
           sortable: true
           flex: 1
@@ -212,7 +216,7 @@
             assignee: Diana
             priority: Low
             status: To Do
-          - task: Code review PR #42
+          - task: 'Code review PR #42'
             assignee: Erik
             priority: Medium
             status: In Progress

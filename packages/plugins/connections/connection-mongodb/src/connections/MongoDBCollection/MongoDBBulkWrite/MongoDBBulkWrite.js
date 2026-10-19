@@ -14,29 +14,56 @@
   limitations under the License.
 */
 
+import assertTenantWritable from '../tenant/assertTenantWritable.js';
+import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
+import { assertUnscopedBulkOperations } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
+import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
+import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
-async function MongodbBulkWrite({ connection, request }) {
+async function MongodbBulkWrite({
+  connection,
+  connectionId,
+  endpointId,
+  request,
+  requestId,
+  tenant,
+  tenantGuard,
+}) {
+  assertTenantWritable({ tenantGuard, requestType: 'MongoDBBulkWrite' });
   const deserializedRequest = deserialize(request);
-  const { operations, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
+  const { options } = deserializedRequest;
+  let { operations } = deserializedRequest;
+  if (tenant) {
+    operations = applyTenantToBulkOperations({ operations, tenant });
+  }
+  if (tenantGuard) {
+    assertUnscopedBulkOperations({ operations, field: tenantGuard.field });
+  }
+  const { collection } = await getCollection({ connection });
   let response;
   try {
     response = await collection.bulkWrite(operations, options);
   } catch (error) {
-    await client.close();
-    throw error;
+    throw mapMongoError(error, { connection, requestType: 'MongoDBBulkWrite' });
   }
-  await client.close();
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: [...idsOfMap(response.insertedIds), ...idsOfMap(response.upsertedIds)],
+    requestId,
+    requestType: 'MongoDBBulkWrite',
+    tenant,
+    tenantGuard,
+  });
   return serialize(response);
 }
 
 MongodbBulkWrite.schema = schema;
-MongodbBulkWrite.meta = {
-  checkRead: false,
-  checkWrite: true,
-};
+MongodbBulkWrite.meta = requestMetas.MongoDBBulkWrite;
 
 export default MongodbBulkWrite;

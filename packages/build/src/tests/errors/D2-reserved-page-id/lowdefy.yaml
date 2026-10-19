@@ -1,0 +1,16 @@
+# D2: Reserved Page ID
+# =====================
+# Tests that a page id which is a reserved name (a prototype-pollution vector
+# like "__proto__") fails the build with a located ConfigError, instead of
+# silently re-parenting the page registry at runtime.
+#
+# Expected error:
+#   [Config Error] Page id "__proto__" is a reserved name and cannot be used as an id.
+#
+# The error points to line 15 where the page is defined.
+
+lowdefy: local
+
+pages:
+  - id: __proto__
+    type: Box

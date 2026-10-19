@@ -1,0 +1,13 @@
+id: log_activity
+type: Api
+routine:
+  - id: insert_activity
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        kind: activity
+        source:
+          _payload: source
+  - ':return':
+      logged: true

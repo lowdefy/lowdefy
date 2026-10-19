@@ -334,4 +334,30 @@ test.describe('PageSiderMenu Block', () => {
     const display = getBlock(page, 'menuitem_display');
     await expect(display).toHaveText('Menu clicked: psm_link1');
   });
+
+  // ============================================
+  // THEME, SIDER BODY AND SIDER TRIGGER
+  // ============================================
+
+  test('applies theme tokens to the page layout', async ({ page }) => {
+    await expect(page.locator('.ant-layout').first()).toHaveCSS(
+      'background-color',
+      'rgb(250, 240, 255)'
+    );
+  });
+
+  test('applies the siderBody class to the sider body', async ({ page }) => {
+    const body = page.locator('.ant-layout-sider .ant-layout-sider-children');
+    await expect(body).toHaveClass(/psm-sider-body/);
+  });
+
+  test('sider trigger toggles the page sider state', async ({ page }) => {
+    const sider = page.locator('.ant-layout-sider');
+    await expect(sider).not.toHaveClass(/ant-layout-sider-collapsed/);
+    await sider.locator('.ant-layout-sider-trigger').click();
+    await expect(sider).toHaveClass(/ant-layout-sider-collapsed/);
+    // The page toggle now opens the sider again, so the trigger updated the page state.
+    await getBlock(page, 'toggle_sider_btn').locator('.ant-btn').click();
+    await expect(sider).not.toHaveClass(/ant-layout-sider-collapsed/);
+  });
 });

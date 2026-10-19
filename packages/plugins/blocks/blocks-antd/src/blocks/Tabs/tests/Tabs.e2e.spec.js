@@ -15,7 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock, getShortcutModifier, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 // Tabs renders with .ant-tabs class
 const getTabs = (page, blockId) => getBlock(page, blockId).locator('.ant-tabs');
@@ -144,7 +144,7 @@ test.describe('Tabs Block', () => {
   // ============================================
 
   test('switches to tab when shortcut is pressed', async ({ page }) => {
-    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const mod = await getShortcutModifier(page);
     const tabs = getTabs(page, 'tabs_shortcut_fires');
     await expect(tabs).toBeVisible();
     const tabItems = getTabItems(tabs);
@@ -161,5 +161,44 @@ test.describe('Tabs Block', () => {
     await page.keyboard.press(`${mod}+;`);
     await expect(display).toHaveText('active:sk_tab2');
     await expect(tabItems.nth(1)).toHaveClass(/ant-tabs-tab-active/);
+  });
+
+  // ============================================
+  // SEMANTIC CSS KEYS, CENTERED, GUTTER, INDICATOR, DESTROY
+  // ============================================
+
+  test('applies tabBar, tabPane, inkBar and item classes', async ({ page }) => {
+    const block = getBlock(page, 'tabs_semantic');
+    const bar = block.locator('.ant-tabs-nav.tabs-custom-bar');
+    await expect(bar).toBeVisible();
+    await expect(bar).toHaveCSS('background-color', 'rgb(240, 248, 255)');
+    await expect(block.locator('.ant-tabs-ink-bar.tabs-custom-ink')).toBeAttached();
+    await expect(block.locator('.ant-tabs-tab.tabs-custom-item')).toHaveCount(2);
+    // antd 6.6 renders each tab pane as .ant-tabs-content.
+    await expect(block.locator('.ant-tabs-content.tabs-custom-pane').first()).toContainText(
+      'Overview content'
+    );
+  });
+
+  test('centers the tabs and sizes the indicator', async ({ page }) => {
+    const block = getBlock(page, 'tabs_semantic');
+    await expect(block.locator('.ant-tabs')).toHaveClass(/ant-tabs-centered/);
+    await expect(block.locator('.ant-tabs-ink-bar')).toHaveCSS('width', '16px');
+  });
+
+  test('applies the tab bar gutter between tabs', async ({ page }) => {
+    const block = getBlock(page, 'tabs_semantic');
+    const tabs = block.locator('.ant-tabs-tab');
+    const first = await tabs.nth(0).boundingBox();
+    const second = await tabs.nth(1).boundingBox();
+    expect(Math.round(second.x - (first.x + first.width))).toBe(48);
+  });
+
+  test('unmounts inactive tab content with destroyOnHidden', async ({ page }) => {
+    const block = getBlock(page, 'tabs_destroy');
+    await expect(block).toContainText('First content');
+    await block.locator('.ant-tabs-tab').filter({ hasText: 'Second' }).click();
+    await expect(block).toContainText('Second content');
+    await expect(block.locator('.ant-tabs-content')).toHaveCount(1);
   });
 });

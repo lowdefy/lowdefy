@@ -1,0 +1,9 @@
+id: shared_alpha
+type: Box
+blocks:
+  - id: shared_alpha_title
+    type: Title
+    properties:
+      content: Shared alpha
+      level: 2
+  - _ref: pages/shared/notice.yaml

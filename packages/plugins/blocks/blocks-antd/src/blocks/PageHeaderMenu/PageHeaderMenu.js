@@ -31,6 +31,8 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import getPageSpacing from '../getPageSpacing.js';
+import withPageTheme from '../withPageTheme.js';
 
 const PageHeaderMenu = ({
   basePath,
@@ -45,6 +47,7 @@ const PageHeaderMenu = ({
   properties,
   styles = {},
 }) => {
+  const spacing = getPageSpacing({ padding: properties.padding });
   useEffect(() => {
     registerDarkModeMethod(methods);
     registerLocaleMethod(methods);
@@ -55,6 +58,7 @@ const PageHeaderMenu = ({
       blockId={blockId}
       events={events}
       components={{ Icon, Link, ShortcutBadge }}
+      properties={{}}
       styles={{
         element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
@@ -97,7 +101,7 @@ const PageHeaderMenu = ({
                           alt={properties.logo?.alt ?? 'Lowdefy'}
                           className={
                             classNames.logo ??
-                            'mx-1.5 sm:mx-2.5 md:mx-4 lg:mx-[30px] shrink w-10 sm:w-[130px]'
+                            'mx-1.5 sm:mx-2.5 md:mx-4 lg:mx-[30px] shrink w-10 min-[577px]:w-[130px]'
                           }
                           style={styles.logo}
                         />
@@ -206,7 +210,7 @@ const PageHeaderMenu = ({
               styles={{
                 element: mergeObjects([
                   {
-                    padding: '0 40px 40px 40px',
+                    padding: spacing.content,
                     minWidth: 0,
                   },
                   styles.content,
@@ -225,7 +229,7 @@ const PageHeaderMenu = ({
                         methods={methods}
                         properties={properties.breadcrumb}
                         styles={{
-                          element: mergeObjects([{ margin: '16px 0' }, styles.breadcrumb]),
+                          element: mergeObjects([spacing.breadcrumb, styles.breadcrumb]),
                         }}
                         rename={{
                           events: {
@@ -234,7 +238,7 @@ const PageHeaderMenu = ({
                         }}
                       />
                     ) : (
-                      <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
+                      spacing.spacerClassName && <div className={spacing.spacerClassName} />
                     )}
                     {content.content && content.content()}
                   </>
@@ -263,4 +267,4 @@ const PageHeaderMenu = ({
   );
 };
 
-export default withBlockDefaults(PageHeaderMenu);
+export default withBlockDefaults(withPageTheme(PageHeaderMenu));
