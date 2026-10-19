@@ -180,3 +180,44 @@ test('Illustration runs no animations while its screen is not the one shown', as
   expect(timing.mock.calls.filter(([, config]) => config.duration === 4000)).toHaveLength(0);
   timing.mockRestore();
 });
+
+test('Illustration draws a user-space fade as a bounding-box gradient in the cropped layer that uses it', async () => {
+  await renderPage({
+    pageConfig: page([
+      {
+        id: 'floor',
+        type: 'Illustration',
+        properties: {
+          colors: { tile: '#ECE6D9' },
+          svg: `<svg viewBox="0 0 240 126">
+            <defs><linearGradient id="fade" gradientUnits="userSpaceOnUse" x1="0" y1="60" x2="0" y2="120"><stop offset="0" stop-color="var(--tile)"/><stop offset="1" stop-color="var(--tile)" stop-opacity="0"/></linearGradient></defs>
+            <path fill="url(#fade)" d="M20 40h100v80h-100z"/>
+            <rect id="bird" x="200" y="10" width="10" height="10" fill="#000"/>
+          </svg>`,
+          animations: [
+            {
+              target: 'bird',
+              property: 'opacity',
+              duration: 1000,
+              keyframes: [
+                { at: 0, value: 1 },
+                { at: 1, value: 0 },
+              ],
+            },
+          ],
+        },
+      },
+    ]),
+  });
+  const box = await screen.findByTestId('floor_illustration', HIDDEN);
+  const [floorLayer] = findAllOfType(box, 'RNSVGSvgView');
+  // The floor's layer covers the floor only, with a unit of margin.
+  expect(styleOf(floorLayer)).toMatchObject({ height: 82, left: 19, top: 39, width: 102 });
+  const [floor] = findAllOfType(floorLayer, 'RNSVGPath');
+  expect(floor.props.fill).toEqual({ brushRef: 'fade-box-0', type: 1 });
+  const fade = findAllOfType(floorLayer, 'RNSVGLinearGradient').find(
+    (gradient) => gradient.props.name === 'fade-box-0'
+  );
+  expect(fade.props).toMatchObject({ gradientUnits: 0, x1: -0.2, x2: -0.2, y1: 0.25, y2: 1 });
+  expect(fade.props.gradient[3]).toBe(processColor('#ECE6D9') & 0x00ffffff);
+});

@@ -26,6 +26,7 @@ import getLayers from './getLayers.js';
 import IllustrationLayer from './IllustrationLayer.js';
 import meta from './meta.js';
 import parseIllustration from './parseIllustration.js';
+import toBoundingBoxGradients from './toBoundingBoxGradients.js';
 import useIllustrationMotion from './useIllustrationMotion.js';
 
 const NO_ANIMATIONS = [];
@@ -70,10 +71,10 @@ function Illustration({ blockId, properties, styles = {} }) {
       isDark,
       tokens,
     });
-    return {
+    return toBoundingBoxGradients({
       definitions: colorNodes({ colors, nodes: drawing.definitions }),
       nodes: colorNodes({ colors, nodes: drawing.nodes }),
-    };
+    });
     // colors and colorsDark are read when their key changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [colorsKey, drawing, isDark, tokens]);

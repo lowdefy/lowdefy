@@ -31,7 +31,7 @@ export default {
       svg: {
         type: 'string',
         description:
-          'The drawing as SVG markup: one `<svg>` element with a `viewBox`. Give an element an `id` to animate it. Colours may be `var(--name)` references to `colors` (or a theme token such as `var(--colorPrimary)`), with an optional fallback, `var(--name, #000)`. Presentation attributes are drawn; `<style>` sheets and CSS classes are not.',
+          'The drawing as SVG markup: one `<svg>` element with a `viewBox`. Give an element an `id` to animate it. Colours may be `var(--name)` references to `colors` (or a theme token such as `var(--colorPrimary)`), with an optional fallback, `var(--name, #000)`. Presentation attributes are drawn; `<style>` sheets and CSS classes are not. A `userSpaceOnUse` linear gradient along an axis, on shapes with straight edges, is redrawn in the bounding box of each shape, which iOS places reliably, so a fade lands where the drawing puts it.',
       },
       width: {
         type: 'number',
