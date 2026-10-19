@@ -24,6 +24,7 @@ const DATA_TYPES = {
   photos: 'Photos or videos',
   preciseLocation: 'Precise location',
   coarseLocation: 'Approximate location',
+  deviceId: 'Device ID',
 };
 
 const PURPOSES = {
@@ -105,10 +106,29 @@ function androidSigningKey({ shell }) {
   };
 }
 
-function privacy({ profile }) {
+// The profile's collected data with each shell plugin's joined in, each type
+// and purpose once.
+function getDataCollected({ profile, plugins }) {
+  const all = [
+    ...profile.dataCollected,
+    ...plugins.flatMap(({ entry }) => entry.dataCollected ?? []),
+  ];
+  const seen = new Set();
+  return all.filter(({ type: dataType, purpose }) => {
+    const key = `${dataType} ${purpose}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+}
+
+function privacy({ profile, plugins }) {
+  const pluginNote = plugins.length === 0 ? '' : ' and its shell plugins';
   const details = [
-    `App Store privacy labels and Google Play's data safety form, for profile ${profile.name}:`,
-    ...profile.dataCollected.map(describeData),
+    `App Store privacy labels and Google Play's data safety form, for profile ${profile.name}${pluginNote}:`,
+    ...getDataCollected({ profile, plugins }).map(describeData),
   ];
   if (profile.name === 'field-tracking') {
     details.push(
@@ -119,6 +139,38 @@ function privacy({ profile }) {
     id: 'privacy',
     title: "Answer the stores' privacy questions.",
     details,
+  };
+}
+
+function listOrNone(values) {
+  return values.length === 0 ? 'none' : values.join(', ');
+}
+
+function describePlugin({ name, version, entry }) {
+  const permissions = listOrNone(entry.permissions ?? []);
+  const privacyReasons = listOrNone(
+    (entry.privacyReasons ?? []).map(
+      ({ category, reasons }) => `${category} (${(reasons ?? []).join(', ')})`
+    )
+  );
+  const data = listOrNone(
+    (entry.dataCollected ?? []).map(
+      ({ type: dataType, purpose }) =>
+        `${DATA_TYPES[dataType] ?? dataType} for ${PURPOSES[purpose] ?? purpose}`
+    )
+  );
+  return `${name}@${version}: permissions ${permissions}; privacy reasons ${privacyReasons}; data ${data}.`;
+}
+
+function shellPlugins({ plugins }) {
+  return {
+    id: 'shell-plugins',
+    title: "Check what the shell's plugins declare.",
+    details: [
+      ...plugins.map(describePlugin),
+      "An SDK on Apple's list of commonly used SDKs needs its own signed privacy manifest inside the SDK. Check that each plugin's SDK carries one.",
+      'A plugin that adds background modes, Bluetooth or tracking needs its own App Review notes and Play Console declarations. Add them for each plugin that does.',
+    ],
   };
 }
 
@@ -137,13 +189,18 @@ function reviewAndPromote() {
 // The steps the stores force a person to do for one shell, in order, filled in
 // with its own values. Data, so lowdefy mobile checklist prints it and tests
 // read it.
-function createChecklist({ shell, profile, env }) {
+// plugins are the shell's resolved shell plugins, each { name, version, entry }
+// with its "./shell" entry.
+function createChecklist({ shell, profile, env, plugins = [] }) {
   const distribution = shell.distribution ?? 'private';
   const steps = [storeRecords({ shell }), firstBuild({ shell, env })];
   if (distribution === 'private') {
     steps.push(privateDistribution({ shell }));
   }
-  steps.push(androidSigningKey({ shell }), privacy({ profile }));
+  steps.push(androidSigningKey({ shell }), privacy({ profile, plugins }));
+  if (plugins.length > 0) {
+    steps.push(shellPlugins({ plugins }));
+  }
   if (distribution !== 'internal') {
     steps.push(reviewAndPromote());
   }

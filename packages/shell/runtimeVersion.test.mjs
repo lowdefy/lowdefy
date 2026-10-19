@@ -41,8 +41,8 @@ test('the module names getRuntimeVersion too', () => {
 
 test('shell plugins add a short hash that does not change with their order', () => {
   const plugins = [
-    { name: '@acme/blocks-map', version: '1.2.0' },
-    { name: '@acme/actions-scan', version: '2.0.1' },
+    { name: '@example/blocks-map', version: '1.2.0' },
+    { name: '@example/actions-scan', version: '2.0.1' },
   ];
   const runtimeVersion = getRuntimeVersion({ nativeVersion: 3, profile: 'field', plugins });
   assert.match(runtimeVersion, /^3-field-[0-9a-f]{8}$/);
@@ -57,6 +57,39 @@ test('shell plugins add a short hash that does not change with their order', () 
       plugins: [plugins[0], { ...plugins[1], version: '2.0.2' }],
     }),
     runtimeVersion
+  );
+});
+
+test('plugin options join the hash, whatever order their keys are in', () => {
+  const runtimeVersion = (options, version = '2.1.0') =>
+    getRuntimeVersion({
+      nativeVersion: 3,
+      profile: 'field',
+      plugins: [{ name: '@example/lowdefy-printer', version, options }],
+    });
+  const options = { tenant: 'field-team', printer: { model: 'zq', dpi: 203 }, copies: [1, 2] };
+  const reordered = { copies: [1, 2], printer: { dpi: 203, model: 'zq' }, tenant: 'field-team' };
+  assert.match(runtimeVersion(options), /^3-field-[0-9a-f]{8}$/);
+  assert.equal(runtimeVersion(reordered), runtimeVersion(options));
+  assert.notEqual(runtimeVersion({ ...options, tenant: 'site-team' }), runtimeVersion(options));
+  assert.notEqual(
+    runtimeVersion({ ...options, printer: { model: 'zq', dpi: 300 } }),
+    runtimeVersion(options)
+  );
+  assert.notEqual(runtimeVersion({ ...options, copies: [2, 1] }), runtimeVersion(options));
+  assert.notEqual(runtimeVersion(options, '2.1.1'), runtimeVersion(options));
+  assert.equal(runtimeVersion(undefined), runtimeVersion({}));
+});
+
+test('plugin options that are not an object are refused', () => {
+  assert.throws(
+    () =>
+      getRuntimeVersion({
+        nativeVersion: 1,
+        profile: 'field',
+        plugins: [{ name: '@example/lowdefy-printer', version: '2.1.0', options: 'zq' }],
+      }),
+    /^Error: Shell plugin "@example\/lowdefy-printer" options should be an object. Received "zq".$/
   );
 });
 
@@ -120,7 +153,9 @@ test('a store shell sets its runtime version, store version and EAS project', ()
   const config = readAppConfig(fieldShell);
   assert.equal(config.runtimeVersion, `${shellPackage.nativeVersion}-field`);
   assert.equal(config.version, '1.4.2');
-  assert.equal(config.extra.shell.version, shellPackage.version);
+  // The shell version travels in the JavaScript bundle (src/version/shellVersion.js), and the store
+  // version is not the shell's.
+  assert.equal(config.extra.shell.version, undefined);
   assert.equal(config.owner, 'example');
   assert.deepEqual(config.updates, {
     url: 'https://u.expo.dev/2b6f0000-0000-4000-8000-000000000000',

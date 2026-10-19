@@ -336,7 +336,11 @@ _ref:
 
             ### mobile config
 
-            Writes the shell's project and prints its runtime version, `<nativeVersion>-<profile>`. Over-the-air updates reach only binaries with the same runtime version, so it changes only when the shell's native code or capability profile does.
+            Writes the shell's project and prints its runtime version, `<nativeVersion>-<profile>`, or `<nativeVersion>-<profile>-<plugins hash>` for a shell with [plugins](#shell-plugins). Over-the-air updates reach only binaries with the same runtime version, so it changes only when the shell's native code, capability profile or plugins do.
+
+            For a shell with plugins, it first reads each plugin's published `package.json` (`pnpm view`, from the app's directory, so the registries in the app's `.npmrc` apply) and checks its peers. It then adds each plugin and its native peers to the project's dependencies, writes the plugins into `shell.json`, and, after the install, refuses plugins the shell's profile must not take and type names that clash. Removing a plugin from `lowdefy.yaml` removes it from the project on the next run.
+
+            - `--dry-run`: Read and check the plugins, print the dependencies it would add and the install, and run nothing.
 
             ### mobile build
 
@@ -379,7 +383,7 @@ _ref:
 
             ### mobile checklist
 
-            Prints, filled in with the shell's own ids, the steps the stores still need a person for: creating the store records, the first build and submission, making a `private` app private, copying the Play app signing key into `android.sha256`, the privacy questions for the shell's profile, and, for `private` and `store` shells, review and promotion of each native release. It runs no EAS command.
+            Prints, filled in with the shell's own ids, the steps the stores still need a person for: creating the store records, the first build and submission, making a `private` app private, copying the Play app signing key into `android.sha256`, the privacy questions for the shell's profile and plugins, what each shell plugin declares, and, for `private` and `store` shells, review and promotion of each native release. It runs no EAS command.
 
             ### Environment variables
 
@@ -388,7 +392,86 @@ _ref:
 
             Both pass through from your environment and are never written into the project.
 
-            Shell plugins, extra native modules an app adds to its shell, cannot be declared in `lowdefy.yaml` yet.
+            ### Shell plugins
+
+            A shell can carry native code its capability profile does not, such as a Bluetooth printer or a device-management SDK, by listing Lowdefy shell plugins under `mobile.shells[].plugins`. Each is an npm package that declares the native modules, config plugins, permissions, privacy reasons and collected data it brings.
+
+            ```yaml
+            plugins:
+              - name: '@example/lowdefy-printer'
+                version: 2.1.0
+            mobile:
+              shells:
+                - id: field
+                  profile: field
+                  plugins:
+                    - name: '@example/lowdefy-printer'
+                      version: 2.1.0
+                      typePrefix: Printer
+                    - name: '@example/lowdefy-mdm'
+                      version: 1.0.3
+                      options:
+                        tenant: field-team
+            ```
+
+            Each entry takes:
+
+            - `name: string`: __Required__ - The npm package name, from the public registry or one set in the app's `.npmrc`.
+            - `version: string`: __Required__ - An exact version, like `2.1.0` or `2.1.0-beta.1`. Ranges, dist-tags, git, `file:` and `workspace:` are refused, so one name and version is always the same native code.
+            - `typePrefix: string`: A prefix added to the plugin's type names, as for app [plugins](/lowdefy-schema).
+            - `options: object`: Passed to the plugin's config plugins. Options are baked into the binary and uploaded to EAS, so they never hold secrets.
+
+            The build checks that:
+
+            - A shell lists each plugin once.
+            - A package has one version across root `plugins` and every shell's `plugins`, since the app runs one version of a plugin.
+            - A mobile page uses a plugin's native blocks and actions only when every shell lists that plugin, since every shell opens every mobile page. The error names the page, the block or action and the shell that lacks the plugin.
+            - A plugin's native block or action type is not named like a built-in native type, such as `Box` or `SetState`. Set a `typePrefix`.
+
+            A shell with plugins gets its own runtime version, so it builds and updates on its own instead of sharing its profile's builds and updates. A change of a plugin's version or options needs a native build.
+
+            `mobile config` installs the plugins into the shell's project. It fails, naming the shell and plugin, when:
+
+            - The package or version is not on the registry.
+            - The plugin's `expo` peer range does not include the shell's Expo version.
+            - A native peer is not an exact version, or a peer (`expo` included) is not marked optional.
+            - The plugin links a native module the shell already carries in a capability profile, such as `expo-camera`. Pick the profile that carries it.
+            - The plugin asks for a permission the shell's profile leaves out, such as the camera on `basic`. The error names the profile to pick.
+            - A plugin type name clashes with a built-in native type or another plugin's. Set a `typePrefix`.
+
+            `mobile checklist` lists each plugin with the permissions, privacy reasons and data it declares, and joins its data to the privacy answers. It reads the plugins from the configured project, so run `mobile config` first.
+
+            #### Writing a shell plugin
+
+            A Lowdefy shell plugin is an npm package that exports:
+
+            - `./shell`: CommonJS, an object with the native code it brings: `capabilities`, `modules` (`{ [package]: nativeModuleName }`), `plugins` (Expo config plugin entries, or a function of the entry's `options` that returns them), `permissions` (iOS `Info.plist` keys and Android permissions), `privacyReasons` (`{ category, reasons }` for each required-reason API) and `dataCollected` (`{ type, purpose }`).
+            - `./native`: Optional. Its native block and action types, as named exports `blocks` and `actions`.
+            - `./types`: Optional. Its type names, with the native ones under `native: { blocks, actions, blockMetas, icons }`, so the build knows them. A native-only plugin, such as a wrapped device-management SDK, leaves it out and adds no types. A plugin in root `plugins` must export it.
+
+            Its native modules are `peerDependencies` at exact versions, beside an `expo` peer range, and every peer is marked optional in `peerDependenciesMeta`, so the web server's install leaves the native code out:
+
+            ```json
+            {
+              "name": "@example/lowdefy-printer",
+              "version": "2.1.0",
+              "exports": {
+                "./shell": "./shell.cjs",
+                "./native": "./native.js",
+                "./types": "./types.js"
+              },
+              "peerDependencies": {
+                "expo": ">=58.0.0 <59.0.0",
+                "react-native-ble-plx": "3.5.0"
+              },
+              "peerDependenciesMeta": {
+                "expo": { "optional": true },
+                "react-native-ble-plx": { "optional": true }
+              }
+            }
+            ```
+
+            `options` are written into `shell.json`, uploaded to EAS and baked into the binary, so they never hold secrets. A plugin that needs a secret reads an EAS environment variable in its config plugin. An SDK on Apple's list of commonly used SDKs also needs its own signed privacy manifest inside the SDK.
 
             ## upgrade
 

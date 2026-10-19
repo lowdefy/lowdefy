@@ -92,6 +92,15 @@ function buildShells({ shells, context }) {
             : shell.android.sha256,
         }
       : undefined,
+    // lowdefy mobile config installs these into the shell project.
+    plugins: type.isArray(shell.plugins)
+      ? shell.plugins.map((plugin) => ({
+          name: plugin.name,
+          version: plugin.version,
+          typePrefix: plugin.typePrefix,
+          options: plugin.options,
+        }))
+      : undefined,
   }));
 }
 

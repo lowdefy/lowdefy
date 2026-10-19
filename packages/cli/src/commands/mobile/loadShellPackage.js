@@ -19,9 +19,12 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 
 // The copied @lowdefy/shell is authoritative at its own version: its profile
-// table names the capabilities each profile carries, and its runtime version
-// function decides which binaries an update reaches. Both are plain CommonJS
-// with no dependencies, so they load before the project is installed.
+// table names the capabilities each profile carries, its runtime version
+// function decides which binaries an update reaches, and its shell plugin
+// functions load plugins and refuse those a profile must not take. All are
+// plain CommonJS with no dependencies, so they load before the project is
+// installed. `require` resolves from the project, where its shell plugins are
+// installed.
 function requireShellFile({ require, file, packageVersion }) {
   try {
     return require(`./${file}`);
@@ -34,6 +37,15 @@ function requireShellFile({ require, file, packageVersion }) {
     }
     throw error;
   }
+}
+
+// Shell plugin support came after capability profiles, so a shell without it
+// still serves a shell that lists no plugins.
+function requireOptionalShellFile({ require, file, projectDirectory }) {
+  if (!fs.existsSync(path.join(projectDirectory, file))) {
+    return null;
+  }
+  return require(`./${file}`);
 }
 
 function loadShellPackage({ projectDirectory }) {
@@ -51,9 +63,20 @@ function loadShellPackage({ projectDirectory }) {
     packageVersion: packageJson.version,
   });
   return {
+    checkShellPlugins: requireOptionalShellFile({
+      require,
+      file: 'checkShellPlugins.js',
+      projectDirectory,
+    }),
     getRuntimeVersion,
     nativeVersion: packageJson.nativeVersion,
+    require,
     resolveProfile,
+    resolveShellPlugins: requireOptionalShellFile({
+      require,
+      file: 'resolveShellPlugins.js',
+      projectDirectory,
+    }),
     version: packageJson.version,
   };
 }

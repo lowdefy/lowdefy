@@ -37,13 +37,14 @@ function lowdefyBuild({ directories, logger, options }) {
     // builds, and the next change must rebuild and publish it whole.
     let result;
     try {
-      const [customTypesMap, customMessagesMap] = await Promise.all([
+      const [{ customTypesMap, customTypesMapMobile }, customMessagesMap] = await Promise.all([
         createCustomPluginTypesMap({ directories, logger }),
         createCustomPluginMessagesMap({ directories, logger }),
       ]);
       result = await shallowBuild({
         customMessagesMap,
         customTypesMap,
+        customTypesMapMobile,
         directories: { ...directories, build: directories.buildStaging },
         logger,
         refResolver: options.refResolver,

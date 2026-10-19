@@ -1,0 +1,26 @@
+# MB10: Shell Plugin Type Missing From A Shell
+# A mobile page goes to every shell, so it may use a shell plugin's native
+# block only when every shell lists the plugin. The office shell does not.
+lowdefy: local
+
+plugins:
+  - name: '@example/lowdefy-printer'
+    version: 2.1.0
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  shells:
+    - id: field
+      plugins:
+        - name: '@example/lowdefy-printer'
+          version: 2.1.0
+    - id: office
+  pages:
+    - id: jobs
+      type: Box
+      blocks:
+        - id: label
+          type: PrinterLabel

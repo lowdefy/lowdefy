@@ -126,3 +126,65 @@ test('validateNativePageTypes does not compare metas on a mobile-only page', () 
   validateNativePageTypes({ page, pageCounters: createPageCounters(), context });
   expect(context.errors).toEqual([]);
 });
+
+function createPluginContext(shells) {
+  const context = createContext();
+  context.typesMapMobile.blocks.PrinterLabel = { package: '@example/lowdefy-printer' };
+  context.typesMapMobile.actions.PrinterPrint = { package: '@example/lowdefy-printer' };
+  context.mobileShells = shells;
+  return context;
+}
+
+const printerPage = () =>
+  createPage({
+    target: 'mobile',
+    blocks: [{ blockId: 'label', type: 'PrinterLabel', '~k': 'k3' }],
+  });
+
+test('validateNativePageTypes accepts a shell plugin type every shell carries', () => {
+  const context = createPluginContext([
+    { id: 'field', plugins: ['@example/lowdefy-printer'] },
+    { id: 'office', plugins: ['@example/lowdefy-mdm', '@example/lowdefy-printer'] },
+  ]);
+  validateNativePageTypes({
+    page: printerPage(),
+    pageCounters: createPageCounters(['SetState', 'PrinterPrint']),
+    context,
+  });
+  expect(context.errors).toEqual([]);
+});
+
+test('validateNativePageTypes reports a shell plugin block a shell does not carry', () => {
+  const context = createPluginContext([
+    { id: 'field', plugins: ['@example/lowdefy-printer'] },
+    { id: 'office', plugins: [] },
+  ]);
+  validateNativePageTypes({ page: printerPage(), pageCounters: createPageCounters(), context });
+  expect(context.errors.map((error) => error.message)).toEqual([
+    'Block type "PrinterLabel" on block "label" on page "jobs" comes from shell plugin "@example/lowdefy-printer", which mobile shell "office" does not list in its "plugins". A mobile page may use a shell plugin\'s types only when every shell carries the plugin.',
+  ]);
+  expect(context.errors[0].configKey).toEqual('k3');
+});
+
+test('validateNativePageTypes reports a shell plugin action a shell does not carry', () => {
+  const context = createPluginContext([{ id: 'field', plugins: [] }]);
+  validateNativePageTypes({
+    page: createPage({ target: 'mobile', blocks: [] }),
+    pageCounters: createPageCounters(['PrinterPrint']),
+    context,
+  });
+  expect(context.errors.map((error) => error.message)).toEqual([
+    'Action type "PrinterPrint" on page "jobs" comes from shell plugin "@example/lowdefy-printer", which mobile shell "field" does not list in its "plugins". A mobile page may use a shell plugin\'s types only when every shell carries the plugin.',
+  ]);
+  expect(context.errors[0].configKey).toEqual('k1');
+});
+
+test('validateNativePageTypes skips the shell plugin check for an app with no shells', () => {
+  const context = createPluginContext(undefined);
+  validateNativePageTypes({
+    page: printerPage(),
+    pageCounters: createPageCounters(['PrinterPrint']),
+    context,
+  });
+  expect(context.errors).toEqual([]);
+});

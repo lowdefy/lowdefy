@@ -39,7 +39,9 @@ async function run() {
     server: serverDirectory,
   };
 
-  const customTypesMap = await createCustomPluginTypesMap({ directories });
+  const { customTypesMap, customTypesMapMobile } = await createCustomPluginTypesMap({
+    directories,
+  });
   const customMessagesMap = await createCustomPluginMessagesMap({ directories });
 
   let logger;
@@ -52,6 +54,7 @@ async function run() {
   await build({
     customMessagesMap,
     customTypesMap,
+    customTypesMapMobile,
     directories,
     logger,
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,

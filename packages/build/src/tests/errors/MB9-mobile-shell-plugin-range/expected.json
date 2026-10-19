@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "App \"mobile.shells[0].plugins[0].version\" of shell plugin \"@example/lowdefy-printer\" should be an exact version, like \"2.1.0\" or \"2.1.0-beta.1\". Ranges, dist-tags, git, \"file:\" and \"workspace:\" are refused."
+      ],
+      "errorContains": ["{{fixturesDir}}/MB9-mobile-shell-plugin-range/lowdefy.yaml:14"]
+    }
+  ]
+}

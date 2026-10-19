@@ -21,6 +21,7 @@ import { BuildError, ConfigError } from '@lowdefy/errors';
 import createContext from './createContext.js';
 import createInternalBuildError from './utils/createInternalBuildError.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
+import createPluginTypesMapMobile from './utils/createPluginTypesMapMobile.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
 import serializeBuildException from './utils/serializeBuildException.js';
@@ -324,6 +325,6 @@ async function build(options) {
   }
 }
 
-export { createPluginTypesMap };
+export { createPluginTypesMap, createPluginTypesMapMobile };
 
 export default build;

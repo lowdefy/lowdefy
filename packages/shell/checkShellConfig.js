@@ -97,7 +97,49 @@ function checkShellConfig({ configPath, shell }) {
       );
     }
   }
+  // The shell plugins `lowdefy mobile config` installs into the shell project
+  // (resolveShellPlugins.js).
+  if (shell.plugins !== undefined) {
+    checkPlugins({ plugins: shell.plugins, where });
+  }
   return shell;
+}
+
+function checkPlugins({ plugins, where }) {
+  if (!Array.isArray(plugins)) {
+    throw new Error(
+      `${where} "plugins" should be an array of { name, version, typePrefix?, options? }. Received ${JSON.stringify(
+        plugins
+      )}.`
+    );
+  }
+  plugins.forEach((plugin, index) => {
+    const at = `${where} "plugins[${index}]"`;
+    if (!isObject(plugin)) {
+      throw new Error(
+        `${at} should be { name, version, typePrefix?, options? }. Received ${JSON.stringify(
+          plugin
+        )}.`
+      );
+    }
+    ['name', 'version'].forEach((key) => {
+      if (typeof plugin[key] !== 'string' || plugin[key].length === 0) {
+        throw new Error(
+          `${at} "${key}" should be a string. Received ${JSON.stringify(plugin[key])}.`
+        );
+      }
+    });
+    if (plugin.typePrefix !== undefined && typeof plugin.typePrefix !== 'string') {
+      throw new Error(
+        `${at} "typePrefix" should be a string. Received ${JSON.stringify(plugin.typePrefix)}.`
+      );
+    }
+    if (plugin.options !== undefined && !isObject(plugin.options)) {
+      throw new Error(
+        `${at} "options" should be an object. Received ${JSON.stringify(plugin.options)}.`
+      );
+    }
+  });
 }
 
 module.exports = checkShellConfig;

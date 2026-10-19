@@ -32,13 +32,14 @@ async function run() {
     server: serverDirectory,
   };
   const logger = createNodeLogger({ name: 'lowdefy_check', level: 'silent' });
-  const [customTypesMap, customMessagesMap] = await Promise.all([
+  const [{ customTypesMap, customTypesMapMobile }, customMessagesMap] = await Promise.all([
     createCustomPluginTypesMap({ directories, logger }),
     createCustomPluginMessagesMap({ directories, logger }),
   ]);
   const report = await check({
     customMessagesMap,
     customTypesMap,
+    customTypesMapMobile,
     directories,
     logger,
     refResolver: process.env.LOWDEFY_BUILD_REF_RESOLVER,

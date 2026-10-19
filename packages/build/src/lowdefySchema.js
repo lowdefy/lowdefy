@@ -3075,11 +3075,71 @@ export default {
             type: 'Mobile shell "android" should be an object.',
           },
         },
+        plugins: {
+          type: 'array',
+          description:
+            'Shell plugins: npm packages that add native code to this shell on top of its profile. A shell with plugins gets its own runtime version.',
+          items: {
+            $ref: '#/definitions/mobileShellPlugin',
+          },
+          errorMessage: {
+            type: 'Mobile shell "plugins" should be an array.',
+          },
+        },
       },
       errorMessage: {
         type: 'Mobile shell should be an object.',
         required: {
           id: 'Mobile shell should have required property "id".',
+        },
+      },
+    },
+    mobileShellPlugin: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['name', 'version'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          description: 'npm package name of the Lowdefy shell plugin.',
+          errorMessage: {
+            type: 'Mobile shell plugin "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          pattern: '^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$',
+          description:
+            'Exact version of the package, like "2.1.0" or "2.1.0-beta.1". Ranges, dist-tags, git, "file:" and "workspace:" are refused.',
+          errorMessage: {
+            type: 'Mobile shell plugin "version" should be a string.',
+            pattern:
+              'Mobile shell plugin "version" should be an exact version, like "2.1.0" or "2.1.0-beta.1".',
+          },
+        },
+        typePrefix: {
+          type: 'string',
+          description: "A prefix added to the plugin's type names, as for app plugins.",
+          errorMessage: {
+            type: 'Mobile shell plugin "typePrefix" should be a string.',
+          },
+        },
+        options: {
+          type: 'object',
+          description:
+            "Options passed to the plugin's config plugins. They are baked into the binary and change its runtime version, so they never hold secrets.",
+          errorMessage: {
+            type: 'Mobile shell plugin "options" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Mobile shell plugin should be an object.',
+        required: {
+          name: 'Mobile shell plugin should have required property "name".',
+          version: 'Mobile shell plugin should have required property "version".',
         },
       },
     },

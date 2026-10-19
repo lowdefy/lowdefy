@@ -23,6 +23,7 @@ const defaultTypesMapMobile = {
   operators: {
     client: {},
   },
+  plugins: [],
 };
 
 export default defaultTypesMapMobile;

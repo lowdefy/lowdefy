@@ -121,6 +121,10 @@ function readProjectJson(file) {
   return JSON.parse(fs.readFileSync(projectPath(file), 'utf8'));
 }
 
+function installCalls() {
+  return mockSpawnProcess.mock.calls.filter(([{ command }]) => command === 'pnpm');
+}
+
 const savedEnvironment = process.env.LOWDEFY_ENVIRONMENT;
 
 beforeEach(() => {
@@ -305,8 +309,8 @@ test('config installs the project as its own workspace inside an app pnpm worksp
   expect(npmrc).toContain('@example:registry=https://npm.example.com/');
   expect(npmrc).not.toContain('literal-secret');
   expect(context.logger.warn).toHaveBeenCalledTimes(1);
-  expect(mockSpawnProcess).toHaveBeenCalledTimes(1);
-  const [{ command, args, processOptions }] = mockSpawnProcess.mock.calls[0];
+  expect(installCalls()).toHaveLength(1);
+  const [{ command, args, processOptions }] = installCalls()[0];
   expect(command).toBe('pnpm');
   expect(args).toEqual(['install', '--no-frozen-lockfile']);
   expect(processOptions.cwd).toBe(projectPath());
@@ -321,7 +325,17 @@ test('config writes a standalone pnpm-workspace.yaml and no .npmrc outside a wor
 test('config skips an install whose package.json did not change', async () => {
   await config({ context: createContext() });
   await config({ context: createContext() });
-  expect(mockSpawnProcess).toHaveBeenCalledTimes(1);
+  expect(installCalls()).toHaveLength(1);
+});
+
+test('config writes the type manifest the shell bundle carries', async () => {
+  await config({ context: createContext() });
+  const calls = mockSpawnProcess.mock.calls.filter(([call]) => call.command === process.execPath);
+  expect(calls).toHaveLength(1);
+  const [[{ args, processOptions }]] = calls;
+  expect(args).toEqual([path.join('scripts', 'createTypeManifest.mjs'), '--write']);
+  expect(processOptions.cwd).toBe(projectPath());
+  expect(processOptions.env.LOWDEFY_SHELL_CONFIG).toBe(projectPath('shell.json'));
 });
 
 test('config --dry-run writes the project, prints the install and runs none', async () => {

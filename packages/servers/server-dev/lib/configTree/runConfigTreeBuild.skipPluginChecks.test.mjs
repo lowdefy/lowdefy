@@ -29,7 +29,7 @@ jest.unstable_mockModule('./prepareScratchServer.mjs', () => ({
   default: jest.fn().mockResolvedValue(),
 }));
 jest.unstable_mockModule('../../manager/utils/createCustomPluginTypesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({}),
+  default: jest.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 jest.unstable_mockModule('../../manager/utils/createCustomPluginMessagesMap.mjs', () => ({
   default: jest.fn().mockResolvedValue({}),
