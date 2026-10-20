@@ -373,15 +373,18 @@ test('injectDevice delivers a push to the simulator with simctl alone', async ()
   });
 });
 
-test('injectDevice refuses a simulator push without aps', async () => {
+test('injectDevice sends a push without aps to Lowdefy Dev, even on a simulator', async () => {
   phone = createFakePhoneTab({ id: 'phone-1', device: SIMULATOR, page: TICKET });
+  const { calls, run } = fakeRun();
   const result = await injectDevice({
     device: 'phone-1',
     inject: { kind: 'push', value: { title: 'Hi' } },
     devices,
-    run: fakeRun().run,
+    run,
   });
-  expect(result.error).toContain('needs an APNs payload with "aps"');
+  expect(result.error).toBeUndefined();
+  expect(phone.requests).toHaveLength(1);
+  expect(calls.some((call) => call.includes('push'))).toBe(false);
 });
 
 test('injectDevice grants a permission on the simulator after Lowdefy Dev answers it', async () => {
