@@ -41,7 +41,9 @@ async function build({ context }) {
   await addCustomPluginsAsDeps({ context, directory });
   await ensurePnpmWorkspaceYaml({ context, directory });
   await installServer({ context, directory });
-  await runLowdefyBuild({ context, directory });
+  // This build holds its warnings for plugins it could not check: the install
+  // below adds them, and the build after it warns for any still missing.
+  await runLowdefyBuild({ context, directory, pluginInstallFollows: true });
   await installServer({ context, directory });
   // The build lists the plugins it used but could not check, since they were
   // not installed. The install above added them, so build once more when that

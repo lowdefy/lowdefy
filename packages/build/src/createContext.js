@@ -31,6 +31,7 @@ function createContext({
   customTypesMap,
   directories,
   logger,
+  pluginInstallFollows = false,
   refResolver,
   skipPluginChecks = false,
   stage = 'prod',
@@ -57,6 +58,9 @@ function createContext({
     importAppCode: createImportAppCode({ directories }),
     keyMap: {},
     logger,
+    // Set by lowdefy build on the build before its plugin install: the build
+    // after the install reports the plugin checks that did not run.
+    pluginInstallFollows,
     // Null prototype prevents pollution via attacker-controlled entry.id.
     modules: Object.create(null),
     readConfigFile: createReadConfigFile({ directories }),
