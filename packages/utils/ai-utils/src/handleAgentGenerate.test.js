@@ -262,7 +262,14 @@ test('handleAgentGenerate warns and continues when an onFinish hook fails', asyn
   });
 
   expect(result.text).toBe('Final answer');
-  expect(warnSpy).toHaveBeenCalledWith('onFinish hook "save-run" failed: hook broke');
+  expect(warnSpy).toHaveBeenCalledWith(
+    expect.stringContaining('onFinish hook "save-run" failed: {"agentId":"test_agent"')
+  );
+  expect(warnSpy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      '"endpointId":"save-run","error":{"name":"Error","message":"hook broke"}}'
+    )
+  );
   warnSpy.mockRestore();
 });
 

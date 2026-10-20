@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import agentErrorForLog, { agentLogIds, agentLogLine } from './agentErrorForLog.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 
@@ -69,13 +70,15 @@ async function handleAgentGenerate({ connection, properties, context }) {
   if (onFinishEndpointIds && onFinishEndpointIds.length > 0) {
     const finishPayload = {
       messages: result.response.messages,
-      steps: result.steps.map(({ stepNumber, text, toolCalls: calls, toolResults: results, finishReason }) => ({
-        stepNumber,
-        text,
-        toolCalls: calls,
-        toolResults: results,
-        finishReason,
-      })),
+      steps: result.steps.map(
+        ({ stepNumber, text, toolCalls: calls, toolResults: results, finishReason }) => ({
+          stepNumber,
+          text,
+          toolCalls: calls,
+          toolResults: results,
+          finishReason,
+        })
+      ),
       toolResults,
       finishReason: result.finishReason,
       isAborted: false,
@@ -87,7 +90,13 @@ async function handleAgentGenerate({ connection, properties, context }) {
       try {
         await context.callEndpoint(endpointId, { payload: finishPayload });
       } catch (error) {
-        console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
+        console.warn(
+          agentLogLine(`onFinish hook "${endpointId}" failed:`, {
+            ...agentLogIds({ agent, context }),
+            endpointId,
+            error: agentErrorForLog(error),
+          })
+        );
       }
     }
   }

@@ -283,3 +283,40 @@ test('InternalApi endpoint answers an anonymous caller on an auth-configured app
   );
   await expect(call('internal_ep')).rejects.toBeInstanceOf(AuthenticationError);
 });
+
+test('the endpoint debug log names the call by ids and leaves the payload out', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/save_thread.json') {
+      return {
+        endpointId: 'save_thread',
+        type: 'Api',
+        auth: { public: true },
+        routine: { ':return': 'saved' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1' },
+  });
+  await callEndpoint(context, {
+    blockId: 'chat',
+    endpointId: 'save_thread',
+    pageId: 'support',
+    payload: {
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'My ID is 8001015009087' }] }],
+    },
+  });
+  expect(logger.debug).toHaveBeenCalledWith({
+    event: 'debug_endpoint',
+    blockId: 'chat',
+    endpointId: 'save_thread',
+    pageId: 'support',
+  });
+  const logged = JSON.stringify(
+    ['debug', 'info', 'warn', 'error'].flatMap((level) => logger[level].mock.calls)
+  );
+  expect(logged).not.toContain('8001015009087');
+});

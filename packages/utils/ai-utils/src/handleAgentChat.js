@@ -27,6 +27,7 @@ import {
 
 import { serializer } from '@lowdefy/helpers';
 
+import agentErrorForLog, { agentLogIds, agentLogLine } from './agentErrorForLog.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 import handleAgentGenerate from './handleAgentGenerate.js';
@@ -109,6 +110,8 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const clientErrorText = createClientErrorText(context);
 
+  const logIds = agentLogIds({ agent, context });
+
   // Every stream gets clientErrorText: the AI SDK's default onError writes a tool error or
   // an in-stream error to the client raw.
   const stream = createUIMessageStream({
@@ -158,7 +161,12 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             })
             .catch((error) => {
-              console.warn(`generateTitle failed: ${error.message}`);
+              console.warn(
+                agentLogLine('generateTitle failed:', {
+                  ...logIds,
+                  error: agentErrorForLog(error),
+                })
+              );
             });
         }
       }
@@ -232,8 +240,15 @@ async function handleAgentChat({ connection, properties, context }) {
         }
       } catch (error) {
         // The client only sees the (possibly redacted) error text, so the fault
-        // is logged server-side before it is written to the stream.
-        console.error(`Agent stream failed: ${error.message}`);
+        // is logged server-side before it is written to the stream - its summary,
+        // since the error itself can embed the whole conversation.
+        console.error(
+          agentLogLine('Agent stream failed:', {
+            ...logIds,
+            stepCount: steps.length,
+            error: agentErrorForLog(error),
+          })
+        );
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
       // Ensure the title (if any) is written before the stream closes.
@@ -264,7 +279,13 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             }
           } catch (error) {
-            console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
+            console.warn(
+              agentLogLine(`onFinish hook "${endpointId}" failed:`, {
+                ...logIds,
+                endpointId,
+                error: agentErrorForLog(error),
+              })
+            );
           }
         }
       }
