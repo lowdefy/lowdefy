@@ -14,9 +14,12 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import collectChatFiles from './collectChatFiles.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import prepareAgent from './prepareAgent.js';
+import redactMessages from './redactMessages.js';
 
 async function callAgent(
   context,
@@ -63,10 +66,23 @@ async function callAgent(
     }
   );
 
+  // Mask the user's text before the resolver hands it to the model, title generation, tools
+  // and hooks. prepareAgent reads only the file parts, which redact leaves alone.
+  let agentMessages = messages;
+  if (!type.isNone(agentConfig.redact)) {
+    const redacted = redactMessages({
+      messages,
+      redact: resolverContext.evaluateOperators(agentConfig.redact),
+      configKey: agentConfig['~k'],
+    });
+    agentMessages = redacted.messages;
+    logger.debug({ event: 'debug_agent_redact', agentId, replacements: redacted.counts });
+  }
+
   // Call the agent resolver
   const { response } = await agentType.resolver({
     connection: connectionInstance,
-    properties: { agent: agentConfig, messages },
+    properties: { agent: agentConfig, messages: agentMessages },
     context: resolverContext,
   });
 
