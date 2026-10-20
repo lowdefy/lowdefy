@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: SkeletonAvatar
     pageTitle: SkeletonAvatar
-    section: Display Blocks
     filePath: blocks/display/SkeletonAvatar.yaml
     block_type: SkeletonAvatar
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar

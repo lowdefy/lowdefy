@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Markdown
     pageTitle: Markdown
-    section: Display Blocks
     filePath: blocks/display/Markdown.yaml
     block_type: Markdown
     github_path: packages/plugins/blocks/blocks-markdown/src/blocks/Markdown

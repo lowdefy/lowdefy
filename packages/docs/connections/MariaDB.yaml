@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: MariaDB
     pageTitle: MariaDB
-    section: Connections
     filePath: connections/MariaDB.yaml
     content:
       - id: markdown_intro

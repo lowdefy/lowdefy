@@ -26,11 +26,107 @@ jest.unstable_mockModule('./serverErrorStore.js', () => ({ default: { list: mock
 jest.unstable_mockModule('./getBuildId.js', () => ({ default: () => 'build-2' }));
 const mockGetPageBuildStatus = jest.fn(() => ({ unbuilt: 0 }));
 jest.unstable_mockModule('./getPageBuildStatus.js', () => ({ default: mockGetPageBuildStatus }));
-jest.unstable_mockModule('./readBuildArtifact.js', () => ({
-  default: () => ({ status: 'ok', errors: [], warnings: ['a build warning'] }),
-}));
+const okBuild = () => ({ status: 'ok', errors: [], warnings: ['a build warning'] });
+const mockReadBuildArtifact = jest.fn(okBuild);
+jest.unstable_mockModule('./readBuildArtifact.js', () => ({ default: mockReadBuildArtifact }));
 
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
+
+describe('page failures in build.status', () => {
+  const failed = [
+    { pageId: 'orders', errors: [{ type: 'ConfigError', message: 'Bad.', source: null }] },
+    { pageId: 'invoices', errors: [{ type: 'ConfigError', message: 'Worse.', source: null }] },
+  ];
+
+  beforeEach(() => {
+    mockClientErrors.mockReturnValue([]);
+    mockServerErrors.mockReturnValue([]);
+  });
+
+  afterEach(() => {
+    mockReadBuildArtifact.mockImplementation(okBuild);
+    mockGetPageBuildStatus.mockImplementation(() => ({ unbuilt: 0 }));
+  });
+
+  test('reads pages_failed and names the pages when the config builds but a page fails', async () => {
+    mockGetPageBuildStatus.mockResolvedValue({ failed, unbuilt: 0 });
+
+    const status = await getBuildStatus();
+
+    expect(status.build).toEqual({
+      status: 'pages_failed',
+      configStatus: 'ok',
+      errors: [],
+      warnings: ['a build warning'],
+      failedPages: ['orders', 'invoices'],
+    });
+    expect(status.pages.failed).toEqual(failed);
+  });
+
+  test('keeps error and names no pages when the config build failed too', async () => {
+    mockReadBuildArtifact.mockReturnValue({
+      status: 'error',
+      errors: ['Bad config.'],
+      warnings: [],
+    });
+    mockGetPageBuildStatus.mockResolvedValue({ failed: failed.slice(0, 1), unbuilt: 0 });
+
+    const status = await getBuildStatus();
+
+    expect(status.build.status).toBe('error');
+    expect(status.build.configStatus).toBe('error');
+    expect(status.build).not.toHaveProperty('failedPages');
+    expect(status.pages.failed).toEqual(failed.slice(0, 1));
+  });
+
+  test('keeps unknown and names no pages before the first config build is written', async () => {
+    mockReadBuildArtifact.mockReturnValue(null);
+    mockGetPageBuildStatus.mockResolvedValue({ failed, unbuilt: 0 });
+
+    const { build } = await getBuildStatus();
+
+    expect(build.status).toBe('unknown');
+    expect(build.configStatus).toBe('unknown');
+    expect(build).not.toHaveProperty('failedPages');
+  });
+
+  test('leaves out a failed page changed since its last build, since its failure may be fixed', async () => {
+    mockGetPageBuildStatus.mockResolvedValue({
+      failed,
+      changedSinceBuild: ['orders'],
+      unbuilt: 0,
+    });
+
+    const { build } = await getBuildStatus();
+
+    expect(build.status).toBe('pages_failed');
+    expect(build.failedPages).toEqual(['invoices']);
+  });
+
+  test('stays ok when every failed page has changed since its last build', async () => {
+    mockGetPageBuildStatus.mockResolvedValue({
+      failed: failed.slice(0, 1),
+      changedSinceBuild: ['orders', 'home'],
+      unbuilt: 0,
+    });
+
+    const status = await getBuildStatus();
+
+    expect(status.build.status).toBe('ok');
+    expect(status.build).not.toHaveProperty('failedPages');
+    expect(status.pages.failed).toEqual(failed.slice(0, 1));
+  });
+
+  test('stays ok with no failedPages when every built page builds', async () => {
+    mockGetPageBuildStatus.mockResolvedValue({ checked: ['orders'], unbuilt: 2 });
+
+    const { build } = await getBuildStatus({ checked: ['orders'] });
+
+    expect(build.status).toBe('ok');
+    expect(build.configStatus).toBe('ok');
+    expect(build).not.toHaveProperty('failedPages');
+  });
+});
 
 test('getBuildStatus lists errors from earlier builds apart from the current ones', async () => {
   mockClientErrors.mockReturnValue([

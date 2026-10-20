@@ -8,11 +8,13 @@ name: CI
 #   every push while the label stays.
 # - `ci-full` label on a pull request: the complete path (test-complete.yml) once, when
 #   the label is added. Remove and add it again to re-run.
-# - Pull requests into main (the release branch): the complete path on every push.
+# - Pull requests into main (the release branch): the complete path on every push, except
+#   the "Publish new release" pull request (changeset-release/main). It only bumps versions
+#   and changelogs, and its merge runs the complete path before anything publishes.
 # - Actions tab, "Run workflow": the fast path on every package, or the complete path
 #   with `full` ticked.
 #
-# Pushes to main run the complete path through release.yaml. See code-docs/testing.md.
+# The publish push to main runs the complete path through release.yaml. See code-docs/testing.md.
 on:
   pull_request:
     types: [opened, reopened, synchronize, labeled]
@@ -47,7 +49,9 @@ jobs:
       (github.event_name == 'workflow_dispatch' && inputs.full) ||
       (github.event_name == 'pull_request' &&
       ((github.event.action == 'labeled' && github.event.label.name == 'ci-full') ||
-      (github.event.pull_request.base.ref == 'main' && github.event.action != 'labeled')))
+      (github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.head.ref != 'changeset-release/main' &&
+      github.event.action != 'labeled')))
     concurrency:
       group: ci-complete-${{ github.event.pull_request.number || github.ref }}
       cancel-in-progress: true

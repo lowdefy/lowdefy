@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Paragraph
     pageTitle: Paragraph
-    section: Display Blocks
     filePath: blocks/display/Paragraph.yaml
     block_type: Paragraph
     antd_component: Typography

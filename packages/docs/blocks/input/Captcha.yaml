@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Captcha
     pageTitle: Captcha
-    section: Input Blocks
     filePath: blocks/input/Captcha.yaml
     block_type: Captcha
     github_path: packages/plugins/blocks/blocks-captcha/src/blocks/Captcha

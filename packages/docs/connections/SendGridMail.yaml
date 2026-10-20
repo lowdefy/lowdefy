@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: SendGridMail
     pageTitle: SendGrid Email
-    section: Connections
     filePath: connections/SendGridMail.yaml
     content:
       - id: markdown

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: mcp-oauth
     pageTitle: MCP Server & OAuth
-    section: User Authentication
     filePath: users/mcp-oauth.yaml
     content:
       - id: content

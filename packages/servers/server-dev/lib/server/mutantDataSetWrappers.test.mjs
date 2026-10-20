@@ -33,7 +33,10 @@ const session = {
   name: 'shop',
   state: 'open',
   databaseUri: 'mongodb://127.0.0.1:27999/?replicaSet=rs',
-  databaseName: 'ld_0123456789ab',
+  prefix: 'ld_0123456789ab',
+  databaseName: 'ld_0123456789ab_0',
+  databases: new Map([[JSON.stringify(['secret:MONGODB_URI', null]), 'ld_0123456789ab_0']]),
+  databaseCount: 1,
 };
 
 function setup() {

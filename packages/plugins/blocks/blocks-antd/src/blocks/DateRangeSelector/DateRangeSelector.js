@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import utc from 'dayjs/plugin/utc.js';
 import { getLocaleDateFormat, type } from '@lowdefy/helpers';
 
@@ -27,6 +28,7 @@ import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
 import getPresets from '../../getPresets.js';
 
+dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 
 const RangePicker = DatePicker.RangePicker;
@@ -36,6 +38,17 @@ function toRangeDate(val, format) {
   if (type.isNone(val)) return null;
   if (format) return dayjs.utc(val, format).startOf('day');
   return dayjs.utc(val).startOf('day');
+}
+
+// The value holds each date as a UTC midnight of the calendar date the picker shows.
+function toValue(dates) {
+  if (type.isNone(dates)) return null;
+  return dates.map((date) => {
+    if (type.isNone(date)) return null;
+    // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
+    const d = dayjs(date);
+    return dayjs.utc(d.add(d.utcOffset(), 'minutes')).startOf('day').toDate();
+  });
 }
 
 function rangeValue(value, format) {
@@ -57,6 +70,50 @@ const DateRangeSelector = ({
   value,
 }) => {
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
+  // The picker puts its shown dates back to its value whenever the value is a new array, so the
+  // value only changes when the dates do. Otherwise any render of the block, like one for its
+  // onBlur actions, drops a typed date.
+  const valueKey = JSON.stringify(value ?? null);
+  const pickerValue = useMemo(() => rangeValue(value), [valueKey]);
+  // The dates the picker shows, typed or picked but not yet applied. They reset with the picker's
+  // value.
+  const calendarDates = useRef(null);
+  useEffect(() => {
+    calendarDates.current = null;
+  }, [pickerValue]);
+  const isDisabledDate = disabledDate(properties.disabledDates);
+  const disabled = getDisabled({ loading, properties });
+  const format = properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD';
+  const applyValue = (val) => {
+    // The picker's own Enter can apply the range before the block's runs in the same keydown.
+    calendarDates.current = null;
+    methods.setValue(val);
+    methods.triggerEvent({ name: 'onChange', event: { value: val } });
+  };
+  // The picker applies a range only once both dates are confirmed, so Enter on a typed date only
+  // moves focus to the other date, and Escape then drops the typed one. When the other date is set,
+  // Enter applies the range here, with the checks the picker makes on a range: the typed text is a
+  // whole date in the format, no date is disabled, and the dates are in order, swapped when both
+  // inputs are enabled and refused when one is fixed. The picker keeps its own focus and popup
+  // handling.
+  const onKeyDown = (event) => {
+    if (event.key !== 'Enter' || type.isNone(calendarDates.current)) return;
+    // A partly typed or cleared date leaves the last whole date in the calendar.
+    if (!dayjs(event.target.value, format, true).isValid()) return;
+    const [start, end] = calendarDates.current;
+    if (type.isNone(start) || type.isNone(end)) return;
+    if (isDisabledDate(start) || isDisabledDate(end)) return;
+    // Compared as the calendar dates shown: a typed date is a local midnight and a date from the
+    // value a UTC midnight.
+    let range = toValue([start, end]);
+    if (range[0] > range[1]) {
+      if (type.isArray(disabled) && disabled.some(Boolean)) return;
+      range = [range[1], range[0]];
+    }
+    const current = pickerValue ?? [];
+    const unchanged = range.every((date, index) => current[index]?.valueOf() === date.getTime());
+    if (!unchanged) applyValue(range);
+  };
   return (
     <Label
       blockId={blockId}
@@ -93,11 +150,9 @@ const DateRangeSelector = ({
               classNames={{ popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
               styles={{ popup: { root: styles.popup } }}
-              disabled={getDisabled({ loading, properties })}
-              disabledDate={disabledDate(properties.disabledDates)}
-              format={
-                properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'
-              }
+              disabled={disabled}
+              disabledDate={isDisabledDate}
+              format={format}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               inputReadOnly={properties.inputReadOnly}
               separator={properties.separator ?? '~'}
@@ -147,19 +202,12 @@ const DateRangeSelector = ({
               onOpenChange={(open) => {
                 methods.triggerEvent({ name: 'onOpenChange', event: { open } });
               }}
-              onChange={(newVal) => {
-                const val = !newVal
-                  ? null
-                  : newVal.map((v) => {
-                      if (type.isNone(v)) return null;
-                      // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
-                      const d = dayjs(v);
-                      return dayjs.utc(d.add(d.utcOffset(), 'minutes')).startOf('day').toDate();
-                    });
-                methods.setValue(val);
-                methods.triggerEvent({ name: 'onChange', event: { value: val } });
+              onCalendarChange={(dates) => {
+                calendarDates.current = dates;
               }}
-              value={rangeValue(value)}
+              onChange={(newVal) => applyValue(toValue(newVal))}
+              onKeyDown={onKeyDown}
+              value={pickerValue}
             />
           </div>
         ),

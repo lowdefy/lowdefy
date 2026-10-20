@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: explore-pull-request
     pageTitle: Exploring a Pull Request
-    section: Testing
     filePath: testing/explore-pull-request.yaml
     content:
       - id: md1

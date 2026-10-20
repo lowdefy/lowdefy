@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: MySQL
     pageTitle: MySQL
-    section: Connections
     filePath: connections/MySQL.yaml
     content:
       - id: markdown_intro

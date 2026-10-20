@@ -2,9 +2,10 @@ name: Complete Tests
 
 # The complete path, run before a release: the unit tests on ubuntu and windows with
 # Node 24 and 26, the MongoDB suites, the journey fixture suites and every block e2e
-# suite. Release (release.yaml) runs it on every push to main and versions or publishes
-# only when it passes. ci.yml runs it on pull requests into main, on pull requests with
-# the `ci-full` label and from the Actions tab. See code-docs/testing.md.
+# suite. Release (release.yaml) runs it on the push to main that publishes and publishes
+# only when it passes. ci.yml runs it on pull requests into main (not the "Publish new
+# release" pull request), on pull requests with the `ci-full` label and from the Actions
+# tab. See code-docs/testing.md.
 on:
   workflow_call:
 

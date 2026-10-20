@@ -20,38 +20,14 @@ import { fileURLToPath } from 'url';
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
+import isRedirectPage from './isRedirectPage.js';
+import resolvePageSections from './resolvePageSections.js';
+import sectionKind from './sectionKind.js';
+
 // Runs inside the docs app build (see packages/docs/templates/generateSiteAssets.js),
 // where pages are fully resolved: _refs inlined, template vars substituted.
 // Markdown content lives on Markdown/MarkdownWithCode block properties in
 // document order, so a plain block walk reconstructs each page as markdown.
-
-function sectionKind(section) {
-  if (section.endsWith('Blocks') || section === 'Controls') return 'block';
-  if (section === 'Operators') return 'operator';
-  if (section === 'Actions') return 'action';
-  if (section === 'Connections') return 'connection';
-  return undefined;
-}
-
-function resolvePageSections(pages, menus) {
-  const sectionMap = new Map();
-  function walkLinks(links, parentGroup) {
-    (links ?? []).forEach((link) => {
-      if (link.type === 'MenuGroup') {
-        const group = { label: link.properties?.title ?? link.id };
-        walkLinks(link.links, group);
-      } else if (link.type === 'MenuLink' && link.pageId) {
-        if (parentGroup) {
-          sectionMap.set(link.pageId, parentGroup);
-        }
-      }
-    });
-  }
-  (menus ?? []).forEach((menu) => {
-    walkLinks(menu.links, null);
-  });
-  return sectionMap;
-}
 
 function isPlainObject(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -121,7 +97,7 @@ function extractAgentDocs({ pages, menus, outputDir }) {
   const packageJson = JSON.parse(
     fs.readFileSync(path.join(dirname(fileURLToPath(import.meta.url)), '../package.json'), 'utf8')
   );
-  const sectionMap = resolvePageSections(pages, menus);
+  const sectionMap = resolvePageSections({ menus });
   const contentDir = path.join(outputDir, 'content');
   fs.rmSync(contentDir, { recursive: true, force: true });
 
@@ -131,8 +107,11 @@ function extractAgentDocs({ pages, menus, outputDir }) {
   // source files through the build's refMap.
   const sources = {};
   pages.filter(Boolean).forEach((page) => {
+    if (isRedirectPage({ page })) {
+      return;
+    }
     const title = page.properties?.title ?? page.id;
-    const section = sectionMap.get(page.id)?.label ?? 'Other';
+    const section = sectionMap.get(page.id) ?? 'Other';
     const markdown = extractPageMarkdown(page);
     if (markdown === '') {
       return;
@@ -144,7 +123,7 @@ function extractAgentDocs({ pages, menus, outputDir }) {
     fs.writeFileSync(absolutePath, `# ${title}\n\n${markdown}\n`);
 
     const doc = { slug, title, section, path: filePath };
-    const kind = sectionKind(section);
+    const kind = sectionKind({ section });
     if (kind) {
       doc.kind = kind;
       doc.typeName = title;

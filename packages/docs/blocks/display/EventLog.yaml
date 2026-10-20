@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: EventLog
     pageTitle: EventLog
-    section: Display Blocks
     filePath: blocks/display/EventLog.yaml
     block_type: EventLog
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/EventLog

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: TreeSelector
     pageTitle: TreeSelector
-    section: Input Blocks
     filePath: blocks/input/TreeSelector.yaml
     block_type: TreeSelector
     antd_component: TreeSelect

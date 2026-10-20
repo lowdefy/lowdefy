@@ -23,6 +23,9 @@
     "./hazards.json": "./hazards.json",
     "./scripts/extractAgentDocs.js": "./scripts/extractAgentDocs.js",
     "./scripts/hashDocSources.js": "./scripts/hashDocSources.js",
+    "./scripts/isRedirectPage.js": "./scripts/isRedirectPage.js",
+    "./scripts/resolvePageSections.js": "./scripts/resolvePageSections.js",
+    "./scripts/sectionKind.js": "./scripts/sectionKind.js",
     "./content/*": "./content/*"
   },
   "files": [

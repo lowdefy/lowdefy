@@ -66,6 +66,9 @@ test('initialBuild builds again after installing plugins when plugin checks are 
   });
   await initialBuild(context)();
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(2);
+  // The first build holds its pending warnings; the build after the install
+  // gives them.
+  expect(context.lowdefyBuild.mock.calls).toEqual([[{ pluginInstallFollows: true }], []]);
   expect(calls).toEqual([
     'readDotEnv',
     'lowdefyBuild',

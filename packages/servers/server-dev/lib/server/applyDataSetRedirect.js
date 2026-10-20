@@ -17,6 +17,8 @@
 import { mergeObjects, type } from '@lowdefy/helpers';
 
 import createDataSetRefusal from './createDataSetRefusal.js';
+import describeTargetKey from '../docs/dataSets/describeTargetKey.js';
+import sessionDatabaseName from '../docs/dataSets/sessionDatabaseName.js';
 
 // Module connections are written under their module's folder (connections/<module>/<id>.json), so
 // the pattern matches every depth.
@@ -29,13 +31,16 @@ function hasLiteralKeys(properties) {
 }
 
 // The one gate for connections under a data session, for this request only. It fails closed: a
-// connection is either verifiably pointed at the session's database or the read throws. A type
+// connection is either verifiably pointed at a session database or the read throws. A type
 // declares how it behaves through meta.dataSet on its plugin, in one of three modes:
-// - 'redirect' takes its database from databaseUri and databaseName, so the session's are merged
-//   over its properties whether or not the data set lists it.
+// - 'redirect' takes its database from databaseUri and databaseName, so the session's URI and the
+//   session database of its own target (its databaseUri secret or literal and databaseName) are
+//   merged over its properties whether or not the data set lists it. Connections on different
+//   targets read different databases, as they do outside the session; one whose target is computed
+//   per request reads the session's first database.
 // - 'walled' holds no database address and reaches MongoDB only through the walled client (the
 //   resolver's walled(connectionId) argument), so it passes unchanged: the walled connections it
-//   names are read through this same gate and take the session database as redirect connections.
+//   names are read through this same gate and take their session databases as redirect connections.
 // - 'external' reaches an outside service and keeps its target.
 // Anything else, including no declaration, refuses. The gate cannot verify a walled or external
 // declaration, since properties are evaluated later and may read secrets: it is the plugin
@@ -70,11 +75,15 @@ function applyDataSetRedirect({ context, session, connections }) {
         reason: 'its properties are an operator, so the redirect cannot be checked',
       });
     }
+    const target = describeTargetKey({ properties: artifact.properties });
     return {
       ...artifact,
       properties: mergeObjects([
         artifact.properties,
-        { databaseUri: session.databaseUri, databaseName: session.databaseName },
+        {
+          databaseUri: session.databaseUri,
+          databaseName: sessionDatabaseName({ session, target }),
+        },
       ]),
     };
   };

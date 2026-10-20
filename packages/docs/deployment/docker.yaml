@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: docker
     pageTitle: Deploy with Docker
-    section: Deployment
     filePath: deployment/docker.yaml
     content:
       - id: content

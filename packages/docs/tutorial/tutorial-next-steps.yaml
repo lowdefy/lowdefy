@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-next-steps
     pageTitle: Next steps
-    section: Tutorial
     prefetchPages:
       - overview
     filePath: tutorial/tutorial-next-steps.yaml
@@ -78,10 +77,3 @@ _ref:
             - [Example demo.](https://example-reporting.lowdefy.com)
             - [App source code.](https://github.com/lowdefy/lowdefy-example-reporting)
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Display Data
-            previous_page_id: tutorial-display-data-page
-            next_page_title: Lowdefy overview
-            next_page_id: overview

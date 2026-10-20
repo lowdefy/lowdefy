@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Popover
     pageTitle: Popover
-    section: Container Blocks
     filePath: blocks/container/Popover.yaml
     block_type: Popover
     antd_component: Popover

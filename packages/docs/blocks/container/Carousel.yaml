@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Carousel
     pageTitle: Carousel
-    section: Container Blocks
     filePath: blocks/container/Carousel.yaml
     block_type: Carousel
     antd_component: Carousel

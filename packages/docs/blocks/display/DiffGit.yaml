@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: DiffGit
     pageTitle: DiffGit
-    section: Display Blocks
     filePath: blocks/display/DiffGit.yaml
     block_type: DiffGit
     github_path: packages/plugins/blocks/blocks-diff/src/blocks/DiffGit

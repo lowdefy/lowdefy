@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: IntentInput
     pageTitle: IntentInput
-    section: Input Blocks
     filePath: blocks/input/IntentInput.yaml
     block_type: IntentInput
     fullWidthExamples: true

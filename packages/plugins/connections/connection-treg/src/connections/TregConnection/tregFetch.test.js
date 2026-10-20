@@ -143,4 +143,12 @@ describe('the URL the call reaches', () => {
     });
     expect(calls).toEqual(['https://treg.example/treg/call/a.b?q=x+y&list=1&list=2']);
   });
+
+  test('tregFetch drops every trailing slash of the base URL', async () => {
+    await tregFetch({
+      connection: { token: TOKEN, baseUrl: 'https://treg.example/treg///' },
+      path: '/call/a.b',
+    });
+    expect(calls).toEqual(['https://treg.example/treg/call/a.b']);
+  });
 });
