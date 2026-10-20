@@ -338,14 +338,22 @@ dependency check and every package's tests, not stopping at the first failing pa
 ubuntu and windows with Node 24 and 26, then the Windows time zone test in its own step;
 `pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
 `@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
-Chromium); and every block e2e suite (`test-block-e2e.yml`). `release.yaml` runs it on the push
-to `main` that publishes (the merge of the "Publish new release" pull request) and publishes
-only when it passes, so a release cannot skip it. The Release merge from `develop` skips it:
-the pull request into `main` already ran it on the same code, and that push only opens the
-version pull request. The "Publish new release" pull request (`changeset-release/main`) skips
-it too: it only bumps versions and changelogs, and its merge is the publish push. Before cutting
-a release, add `ci-full` to the pull request into `main`, or run it from the Actions tab.
-Codecov gets its ubuntu / Node 24 coverage only.
+Chromium); and every block e2e suite (`test-block-e2e.yml`). Codecov gets its ubuntu / Node 24
+coverage only.
+
+A release runs the complete path twice: on the Release pull request from `develop` into `main`
+(every push), and on the publish push. `release.yaml` decides from the pushed commit's
+`.changeset/` folder what a push to `main` does:
+
+- **Pending changesets** (the Release merge from `develop`): the `version` job opens or updates
+  the "Publish new release" pull request. No tests run; the Release pull request ran them on
+  the same code. That pull request (`changeset-release/main`) skips them too, since it only
+  bumps versions and changelogs.
+- **No pending changesets** (normally the merge of "Publish new release"): the `test` job runs
+  the complete path, and the `publish` job publishes to npm, tags and drafts the GitHub release
+  only when it passes. Any other push to `main` without changesets, such as a hotfix, takes this
+  path too; the idempotent publish steps find everything already released. Empty changesets
+  (`changeset --empty`) do not count as pending, matching the changesets action.
 
 ## Before pushing
 
