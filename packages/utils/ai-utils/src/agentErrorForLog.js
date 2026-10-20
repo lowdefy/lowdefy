@@ -36,7 +36,7 @@ function isAiSdkError(error) {
 
 function truncate(text) {
   if (text.length <= MESSAGE_LIMIT) return text;
-  return `${text.slice(0, MESSAGE_LIMIT)}…`;
+  return `${text.slice(0, MESSAGE_LIMIT - 1)}…`;
 }
 
 function agentErrorForLog(error, depth = 0) {

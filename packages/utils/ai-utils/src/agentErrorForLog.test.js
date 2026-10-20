@@ -103,7 +103,8 @@ test('any other error keeps its code and its message cut to 500 characters', () 
 
   expect(logged.name).toBe('Error');
   expect(logged.code).toBe('ECONNRESET');
-  expect(logged.message).toBe(`${'x'.repeat(500)}…`);
+  expect(logged.message).toBe(`${'x'.repeat(499)}…`);
+  expect(logged.message).toHaveLength(500);
 });
 
 test('a value thrown that is not an error is named by its type', () => {
