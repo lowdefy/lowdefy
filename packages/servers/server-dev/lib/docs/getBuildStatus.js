@@ -33,20 +33,27 @@ function splitByBuild({ entries, buildId }) {
 }
 
 // buildStatus.json covers the config build only; pages build later, on first
-// request. So that build.status alone answers "does the app build", a config
-// build that is ok while a page fails reads pages_failed, distinct from error
-// (the config build failed and the server serves the previous build). The
-// failed pages are named beside it; their errors stay under pages.failed.
+// request. So that build.status alone answers "does the app build", an ok
+// config build with a failed page reads pages_failed, and failedPages names
+// those pages. A failed page changed since that build is left out: its failure
+// may already be fixed, and pages.changedSinceBuild lists it until it is
+// rebuilt. A config build that is not ok keeps its status and names no pages,
+// since the config is what to fix first. The page errors stay under
+// pages.failed either way. configStatus keeps the config build's own status for
+// callers that wait on a published config build, whatever the pages do.
 function withFailedPages({ build, pages }) {
-  const failed = pages.failed ?? [];
-  if (failed.length === 0) {
-    return build;
+  const configBuild = { ...build, configStatus: build.status };
+  if (build.status !== 'ok') {
+    return configBuild;
   }
-  return {
-    ...build,
-    status: build.status === 'ok' ? 'pages_failed' : build.status,
-    failedPages: failed.map(({ pageId }) => pageId),
-  };
+  const changedSinceBuild = new Set(pages.changedSinceBuild ?? []);
+  const failedPages = (pages.failed ?? [])
+    .map(({ pageId }) => pageId)
+    .filter((pageId) => !changedSinceBuild.has(pageId));
+  if (failedPages.length === 0) {
+    return configBuild;
+  }
+  return { ...configBuild, status: 'pages_failed', failedPages };
 }
 
 // Notices about Lowdefy's agent block (see checkAgentFiles), checked on every

@@ -488,11 +488,15 @@ edited after any change event. The review is async, and so are `getPageBuildStat
 `getBuildStatus` and their callers.
 
 `build/buildStatus.json` covers the config build only, so `getBuildStatus` folds the page
-failures into the `build` it returns: an `ok` config build with any failed page reads
-`pages_failed`, and `build.failedPages` names those pages whatever the status. `error` stays
-reserved for a failed config build, which is what the stale flag, `getBuildId` and the `build`
-push event read straight from the file. `lowdefy journeys harden` waits for `ok` or
-`pages_failed`, since either means the config build was published.
+failures into the `build` it returns: an `ok` config build with a failed page reads
+`pages_failed`, and `build.failedPages` names those pages. A failed page that is also in
+`changedSinceBuild` is left out, since its failure was recorded before its latest edit (or
+the latest config build) and may already be fixed; it counts again once a rebuild fails. A
+config build that is `error` or `unknown` keeps its status and names no pages, so the reply
+points at the config first. `build.configStatus` is the config build's own status, which is
+what `lowdefy journeys harden` waits on (`waitForConfigBuild`): a published config build is
+enough for it, whatever the pages do. `error` stays reserved for a failed config build, which
+is what the stale flag, `getBuildId` and the `build` push event read straight from the file.
 
 ## Server Process and Logging
 

@@ -20,7 +20,7 @@ import requestMutants from './requestMutants.js';
 import runBaseline from './runBaseline.js';
 import runMutantPair from './runMutantPair.js';
 import runMutantWorkers from './runMutantWorkers.js';
-import waitForOkBuild from './waitForOkBuild.js';
+import waitForConfigBuild from './waitForConfigBuild.js';
 
 // Counts a mutant as run once every journey on its path has a verdict, and as
 // survived when none of those verdicts killed it.
@@ -94,7 +94,7 @@ async function runWithCarryOver({ context, options, items, url, baselines, listi
       return { ...current, buildId, verdicts, changed: [...changed], rebuilds, stopped: true };
     }
     context.logger.info('The config changed during the run. Carrying the verdicts over.');
-    await waitForOkBuild({ url });
+    await waitForConfigBuild({ url });
     const rerun = await runBaseline({
       items: items.filter((item) => current.baselines.some((baseline) => baseline.item === item)),
       url,

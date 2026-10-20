@@ -173,7 +173,7 @@ beforeEach(() => {
     steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
   });
   mockGet.mockImplementation(async () => ({
-    data: { buildId: currentBuildId, build: { status: 'ok' } },
+    data: { buildId: currentBuildId, build: { status: 'ok', configStatus: 'ok' } },
   }));
   mockPost.mockImplementation(async (target, body) => {
     if (target === `${url}/lowdefy-docs/mutants`) {
