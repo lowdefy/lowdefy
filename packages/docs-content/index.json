@@ -3410,19 +3410,33 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/AutoComplete/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/AutoComplete/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/selectProperties.js",
         "blocks/input/AutoComplete.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "2836e70f41d227f0f608dd5943c059df2941bc3f873c444ec63156e5f62c1121"
+      "hash": "48f0b900cfa3d1e55e1fe34ba9d5eddbe29e12dec9aa860462cb86971cff81cb"
     },
     "input-blocks/buttonselector": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/options.js",
         "blocks/input/ButtonSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "127d277a1476b5f83d70c437aa19d1f82f1eead0d6c65c1c812e616dd326107f"
+      "hash": "9aae3f4612bf16d75cfe2704c004edd86745ad3a7fe27b32c601e8d4c804a58f"
     },
     "input-blocks/captcha": {
       "files": [
@@ -3437,55 +3451,100 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/options.js",
         "blocks/input/CheckboxSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "34f16d5b246eceaf09837e0da3de089d184a1c34b75aa83ba9a2be4c7535518d"
+      "hash": "a201a9fbe4c24431a97262a003314b42c6b5de5bde0b8fdc9e154533c1ffbf53"
     },
     "input-blocks/checkboxswitch": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/CheckboxSwitch.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "03b97f01bfbd8db35c31a4e6938ae3bdacfaa5c05e0ced6634cd5b4f189026ac"
+      "hash": "b91f236b0d231b540d63a258e955572031b963ea8531be67e924ef6b75a677ee"
     },
     "input-blocks/colorselector": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/ColorSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/ColorSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/ColorSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "f767e11d21c902193ecc341a6f54beab4aa3e18e59e57673a492a679bf5283ef"
+      "hash": "b58f1517adc0d479b2673e8a0559c1bbcc020bd6e0f426b74c104fedff347417"
     },
     "input-blocks/daterangeselector": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/DateRangeSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/DateRangeSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/disabledDates.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerTheme.js",
+        "../plugins/blocks/blocks-antd/src/schemas/presets.js",
         "blocks/input/DateRangeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0956ae8df53d1f1d16763fd1954f0e5f4e84b240e951e5dc60e96a1bbd99dc04"
+      "hash": "38e3c700c0a684f1f08557a05a83fca3099a5c50212c53c7ea05b89d1851883e"
     },
     "input-blocks/dateselector": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/DateSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/DateSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/disabledDates.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerTheme.js",
+        "../plugins/blocks/blocks-antd/src/schemas/presets.js",
         "blocks/input/DateSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "605666ba0c5515884fc5d0cf0bb4b86641e45bcf984d22f76d1bd897b6e2a35d"
+      "hash": "c843c0092ad519c36ea47112628257525ae411249ab07e652eafb13bf05a7de0"
     },
     "input-blocks/datetimeselector": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/DateTimeSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/DateTimeSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/disabledDates.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerTheme.js",
+        "../plugins/blocks/blocks-antd/src/schemas/presets.js",
         "blocks/input/DateTimeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "d6f19f72ddc25855ad12d5f03b157c0c79a3da33d5311e5fddd3641f3a9ad9e5"
+      "hash": "88e14f8318c6f106333c5a818f825b9735836eecd191025f13d6c0d069d5fbaf"
     },
     "input-blocks/intentinput": {
       "files": [
@@ -3499,30 +3558,54 @@
     },
     "input-blocks/monthselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/MonthSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/MonthSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/disabledDates.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerTheme.js",
+        "../plugins/blocks/blocks-antd/src/schemas/presets.js",
         "blocks/input/MonthSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6882e201cb5c12224fea9262dfd7c35e768e2c95bc53af67035fd3ec8b358cff"
+      "hash": "6ac6688fa9293177a70395ee25e3c6f3f0b4a69d9e6632b496f151afc106490f"
     },
     "input-blocks/multipleselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/selectProperties.js",
         "blocks/input/MultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "3f3e654488ec98617655cd2bff8565cc0268e50dccfeaf244e078c0a20841a44"
+      "hash": "e2e92c56b21a0cf48df71fca5db07e417677aa428fcc487cae28466f28399ed9"
     },
     "input-blocks/numberinput": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/NumberInput/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/NumberInput/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/NumberInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "52ea11c5a681924dde33407ad6b9fafe624fb75d37b7bfb3ebb0e4dd24a60b1a"
+      "hash": "78362338894c9434609b791c05212b2f4e1343ed5bd840fa93255645e4f54a22"
     },
     "input-blocks/pagination": {
       "files": [
@@ -3538,28 +3621,41 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/ParagraphInput/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/ParagraphInput/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/input/ParagraphInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "5a96f6fbdb218ee54760fe1416ba3d91663071881d569115dc75b036ec80910c"
+      "hash": "32474538354f09c0b9663fb760a10b9ab40fcce1f73669fdc10da6482a785105"
     },
     "input-blocks/passwordinput": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/PasswordInput/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/PasswordInput/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/PasswordInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "d6055d8cc03d56bc6de51c03b55005553c42d4783de38d1033f89e5847de72f0"
+      "hash": "af037ce96af274ac7137c1cfe2e73241c0b5b8a83b991264e2ce85d5b3e251f0"
     },
     "input-blocks/phonenumberinput": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/PhoneNumberInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "ecdd4b893d8f99b80e6c5f6c7711030e39f50fcc48981a99099c681185e969b5"
+      "hash": "8e36678d2088ff8a72d97faa6591a445aec5c143e786c880e48cd40e64a08e3c"
     },
     "input-blocks/placesautocomplete": {
       "files": [
@@ -3572,148 +3668,213 @@
     },
     "input-blocks/radioselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/RadioSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/RadioSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/options.js",
         "blocks/input/RadioSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "67839d56dd07717b97d473c77041a51d978cada9e1acb5344d90e763f0422578"
+      "hash": "8debaada580e9c7a1fe0087add5b389724074a96ddf7327f9face1a3ed21cea3"
     },
     "input-blocks/ratingslider": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/RatingSlider/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/RatingSlider/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/RatingSlider.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "a0f9059ae0b0b6ec8ff64cf8b19fd973ea402cd272b6c59e3ce3caf76e1ca81d"
+      "hash": "0f7756abafbb3e0360be2870f5848de57a8094771044ee6bff3f7fe00e1e9082"
     },
     "input-blocks/segmentedselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/SegmentedSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/SegmentedSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/SegmentedSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9c1b5e86f53c8f9418d59eb81fc07edf0c6a017ccdd9255747bd28f15328147e"
+      "hash": "e600bd19da006bbfc7e6e6978126ce125301b41f9b5640a3591719718b95f8d2"
     },
     "input-blocks/s3uploadbutton": {
       "files": [
         "../plugins/plugins/plugin-aws/src/blocks/S3UploadButton/gallery.yaml",
         "../plugins/plugins/plugin-aws/src/blocks/S3UploadButton/meta.js",
+        "../plugins/plugins/plugin-aws/src/schemas/uploadTheme.js",
         "blocks/input/S3UploadButton.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "64ab780154b769fc51204bed339576547155e587300b27d28845170a53f03b55"
+      "hash": "06637a892726b452d811155fb34de18bd73e2944ce625578b507601339465d8e"
     },
     "input-blocks/upload": {
       "files": [
         "../plugins/blocks/blocks-files/src/blocks/Upload/gallery.yaml",
         "../plugins/blocks/blocks-files/src/blocks/Upload/meta.js",
+        "../plugins/blocks/blocks-files/src/schemas/showUploadList.js",
+        "../plugins/blocks/blocks-files/src/schemas/uploadTheme.js",
         "blocks/input/Upload.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6276931a16792391db71cf89c1f39813b8bc78b1daeb259884de48e776858094"
+      "hash": "c640d0b60a57aca811d5410d6ad7138ae82dfd4edc2e561b8949555df0baeedd"
     },
     "input-blocks/uploaddragger": {
       "files": [
         "../plugins/blocks/blocks-files/src/blocks/UploadDragger/gallery.yaml",
         "../plugins/blocks/blocks-files/src/blocks/UploadDragger/meta.js",
+        "../plugins/blocks/blocks-files/src/schemas/showUploadList.js",
+        "../plugins/blocks/blocks-files/src/schemas/uploadTheme.js",
         "blocks/input/UploadDragger.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "64e37b1d76dd966a515712b1e5763f7f789583ba421f62794f950b5891b63b78"
+      "hash": "9c6bbe219928425dc96e443a38f2a02c440a69f196736f6b2ebf0a22cb0b1a28"
     },
     "input-blocks/uploadphoto": {
       "files": [
         "../plugins/blocks/blocks-files/src/blocks/UploadPhoto/gallery.yaml",
         "../plugins/blocks/blocks-files/src/blocks/UploadPhoto/meta.js",
+        "../plugins/blocks/blocks-files/src/schemas/showUploadList.js",
+        "../plugins/blocks/blocks-files/src/schemas/uploadTheme.js",
         "blocks/input/UploadPhoto.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "5ad0bb961d5384d022b54fbfd11afb7eeb3e87f90f44af9426c05c55f9e99a48"
+      "hash": "a912183cec2c938193b6176dc1fd57421b5d1083194066a315212df9b378eceb"
     },
     "input-blocks/s3uploaddragger": {
       "files": [
         "../plugins/plugins/plugin-aws/src/blocks/S3UploadDragger/gallery.yaml",
         "../plugins/plugins/plugin-aws/src/blocks/S3UploadDragger/meta.js",
+        "../plugins/plugins/plugin-aws/src/schemas/uploadTheme.js",
         "blocks/input/S3UploadDragger.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "d02e919b9d99b2f2dbabdda890079271b5914f941921356a462795a77b66133e"
+      "hash": "c09f692191712e6e7987b584218df8a8accdca2442a652af14f6e54a3c100f84"
     },
     "input-blocks/s3uploadphoto": {
       "files": [
         "../plugins/plugins/plugin-aws/src/blocks/S3UploadPhoto/gallery.yaml",
         "../plugins/plugins/plugin-aws/src/blocks/S3UploadPhoto/meta.js",
+        "../plugins/plugins/plugin-aws/src/schemas/uploadTheme.js",
         "blocks/input/S3UploadPhoto.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6d3f8679fe588b0509d1cf9bad9b64f2f0a875c93c35d98d0dc001ede21d53c0"
+      "hash": "67c02490c0f819af9702c80e8b499c2d1ecfacdfc0a2ca92b031d943926bf96f"
     },
     "input-blocks/selector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/Selector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Selector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/selectProperties.js",
         "blocks/input/Selector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c41f7899536a4e0235bbfd00ef055f98a3a21e44149999e515854cda1874f20e"
+      "hash": "a142850df9eb29d5eb5a5d5ae2bcb5341c82f05cb9108ddf10000f80e373aa97"
     },
     "input-blocks/switch": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/Switch/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Switch/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/Switch.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "e6e6da3488023c0d85b76fa5f4bea7651202c4ca9b1e14fe4d2d28bca2859969"
+      "hash": "1000e42461624d5f343b85de3a6f9667b8699c3d6679a3c6812deb887e26140d"
     },
     "input-blocks/tableinput": {
       "files": [
+        "../plugins/blocks/blocks-table/src/blocks/Table/meta.js",
         "../plugins/blocks/blocks-table/src/blocks/TableInput/gallery.yaml",
         "../plugins/blocks/blocks-table/src/blocks/TableInput/meta.js",
         "blocks/input/TableInput.yaml",
         "blocks/input/TableInputGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "ba730a15b74bac855658f0f5fc817f800164e99caa529aa1c2daa967b42bb4c0"
+      "hash": "9ff543ce367f20ed4f7812a3a44b3a58183a6ab472e305b2353913135da9fa08"
     },
     "input-blocks/tagmultipleselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/TagMultipleSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TagMultipleSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/TagMultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "a573e78a340a6a3488e82e2b1b20f3806bfcb0ed45c880fce737f5db1afbafd1"
+      "hash": "afb3110dc398e01b062fd2adc184cf285d3045c39abcd611f7f2b127300eec3f"
     },
     "input-blocks/tagselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/TagSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TagSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/TagSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b18a6fb04ea8a0c6475a38c9653dbd29442cc4624983c56d337ab1aa2906fbef"
+      "hash": "f2a05eba9962e48c051f4bbdc3293fefe3172246bed1917b034031f74cbc765e"
     },
     "input-blocks/textarea": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/TextArea/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TextArea/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/TextArea.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "4365a7e2b81f01b685a5323a65dd3314fabb3741df2df5466e7547160731633f"
+      "hash": "e29c4433c5fda7b8f269e87fd60a3b8353574a2fa5c3b18a8126ff0df99a520c"
     },
     "input-blocks/textinput": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/TextInput/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TextInput/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/input/TextInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "158d4eea55b4888187f065f2d0f45814e1f93484503a1f9ae5933236dac9fa6e"
+      "hash": "eaf4908e4dbbf3093ab549de49f48d505e9956f03c720abb6b413de127a0fe9b"
     },
     "input-blocks/tiptapinput": {
       "files": [
@@ -3738,56 +3899,94 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/TitleInput/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TitleInput/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/input/TitleInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "7e98c1e83cec86681a4f577422dd45a799b76c68b25f18848eaa04df920a2a5e"
+      "hash": "353bd65abccf59d24531beb93523e6a82c73b88bcb4b2e0f64fa5aeb9affffa2"
     },
     "input-blocks/treeinput": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/TreeInput/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TreeInput/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/options.js",
+        "../plugins/blocks/blocks-antd/src/schemas/treeTheme.js",
         "blocks/input/TreeInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "fcb8b942f77591da4cd735f4efcd4ab5602116936a6618c4ff58b163f54c3e01"
+      "hash": "9db6b05448a51f957d1c02b997d1dbf87bb3bef9a0ee2ed0b0bead29d6013fdb"
     },
     "input-blocks/treemultipleselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/TreeMultipleSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TreeMultipleSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/options.js",
+        "../plugins/blocks/blocks-antd/src/schemas/selectProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/treeSelectTheme.js",
+        "../plugins/blocks/blocks-antd/src/schemas/treeTheme.js",
         "blocks/input/TreeMultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "5533b88a5b8a02847ffcb889d38a8929de61c4eebc0eb31efd9a566f0a1f2033"
+      "hash": "d7b6af4b41acac1c0f0d4dbf41aa84c6613f7c9f4dd84c16b51bd25f0a65101b"
     },
     "input-blocks/treeselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/TreeSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TreeSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/dataOptions.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/options.js",
+        "../plugins/blocks/blocks-antd/src/schemas/selectProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/treeSelectTheme.js",
+        "../plugins/blocks/blocks-antd/src/schemas/treeTheme.js",
         "blocks/input/TreeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b5d839abc237f368ef4110cfe7b26824190ec3f90c775a27c113ab085eaf4833"
+      "hash": "179da5c268e05a4c2d24795c823ef9337cd826e20d36edf706d8bc2db1f019e6"
     },
     "input-blocks/weekselector": {
       "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
         "../plugins/blocks/blocks-antd/src/blocks/WeekSelector/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/WeekSelector/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/disabledDates.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/inputProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/label.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerProperties.js",
+        "../plugins/blocks/blocks-antd/src/schemas/pickerTheme.js",
+        "../plugins/blocks/blocks-antd/src/schemas/presets.js",
         "blocks/input/WeekSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "66d1738b768c8284194be13b2329e55caa4c74bb926e56f9e2654404aa141876"
+      "hash": "484f767ebcb78497ac0abe07dda3ec59991f5de4c91819b6853b9967412b0864"
     },
     "display-blocks/aggrid": {
       "files": [
         "../plugins/blocks/blocks-aggrid/src/blocks/AgGridLowdefy/gallery.yaml",
         "../plugins/blocks/blocks-aggrid/src/blocks/AgGridLowdefy/meta.js",
+        "../plugins/blocks/blocks-aggrid/src/createDisplayMeta.js",
         "blocks/display/AgGrid.yaml",
         "blocks/display/AgGridGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "e2cf838de238d057365ee6eae7a29bf12c99fc020b612bdca9de59055f0baa2c"
+      "hash": "f963ee3a6a4d41b3dcd84cc0ae1243a6b5fba6421123526d85f67c511406fdf5"
     },
     "display-blocks/anchor": {
       "files": [
@@ -3802,37 +4001,42 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Avatar/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Avatar/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Avatar.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6402c239acf3223dce0e6197f22ad78ffabab41fb6e9bb8097bac59215a646ac"
+      "hash": "af03164336c5b76928dd5e98dc5e7a002b0f5ca46690dce0074675bcb2985a61"
     },
     "display-blocks/breadcrumb": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/breadcrumbList.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Breadcrumb.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c409176d1f944087b965b034078583406830eefb6faacb760599718438aa54af"
+      "hash": "f58f365d6f2bd056cc0eaed013421af36d629c890994ff4a7047771e02f79c28"
     },
     "display-blocks/button": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Button/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Button/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Button.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "ec470cb3c06a92422790b9721f339222bc795680631b6cd7c337da823d18272d"
+      "hash": "67e4d303cded086a2145387ca4aad9d9fb715cfc16df98bd1b273a9146ebb30a"
     },
     "display-blocks/calendar": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Calendar/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Calendar/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/disabledDates.js",
         "blocks/display/Calendar.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0e232392112bf2492a68f565a26a5fde670f1d65c18f34dffeb81ca765682e17"
+      "hash": "063cad1660020f5730ffef4fdd8078b7bbeb08294197d6139bf3ac929ef56e63"
     },
     "display-blocks/clickablehtml": {
       "files": [
@@ -3910,10 +4114,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/DropdownButton/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/DropdownButton/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/DropdownButton.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "7f5e027972021a5f98f5b07528eff751b3521dc666e09058c0534fae8b0e7dac"
+      "hash": "4c27d000fb5722a640ba6f9b6c4b031cb8d0ca47641b9405460e1f8ecdf1f325"
     },
     "display-blocks/eventlog": {
       "files": [
@@ -3937,10 +4142,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/FloatButton/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/FloatButton/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/FloatButton.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "f888be791364691997a44b75ba4e2d33f84eff6a3f52d3c597a4948004460ee3"
+      "hash": "1f2f2f48a9461b2752f88f949806a2b8f6a9775e7527480b97c0fdf60828f872"
     },
     "display-blocks/html": {
       "files": [
@@ -3992,28 +4198,31 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Menu/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Menu/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Menu.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "158d9ace971ea7d1fafb1dd255e5e8f42c53ab6aa489af78fa29125565ebd81a"
+      "hash": "92d44e2370815d47cedefea6c616a51741b175e2160a7635f3aa5e64a82e3d25"
     },
     "display-blocks/message": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Message/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Message/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Message.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b440f731dab64a1eb12c15ae97d2d15e0020c1c62149e8a624f92cae3782de63"
+      "hash": "3822cfd4eb15d5a9707738d3801726b65e14527e40ccd2d0f604a18c3fd9b67a"
     },
     "display-blocks/notification": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Notification/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Notification/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Notification.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "1369582292b6076a88b49624b2e72c475585ad805a4589f8b21de4c4730b046e"
+      "hash": "45171ce04c02142811e68e07dc79cd91583e089fc60b1ac883a16d4c87153794"
     },
     "display-blocks/paragraph": {
       "files": [
@@ -4055,29 +4264,32 @@
       "files": [
         "../plugins/plugins/plugin-aws/src/blocks/S3Download/gallery.yaml",
         "../plugins/plugins/plugin-aws/src/blocks/S3Download/meta.js",
+        "../plugins/plugins/plugin-aws/src/schemas/uploadTheme.js",
         "blocks/display/S3Download.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "d4e2cb9b4adeecad825a89779e49c64e5bc1627634d113d2dbfc7e1799b20078"
+      "hash": "0795dfd569dcc2af93995298bb9473a8d0165864a26bbea853ed45e59e238850"
     },
     "display-blocks/download": {
       "files": [
         "../plugins/blocks/blocks-files/src/blocks/Download/gallery.yaml",
         "../plugins/blocks/blocks-files/src/blocks/Download/meta.js",
+        "../plugins/blocks/blocks-files/src/schemas/uploadTheme.js",
         "blocks/display/Download.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "f11a5cc15fd4b3b6e1ae8a0e10eb8ad44d64c580110c8f49f0a0694c12890090"
+      "hash": "04d54878ffbce57bb171870edc583b30ad89d434e689537f193ecb5f6b30afc5"
     },
     "display-blocks/search": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Search/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Search/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Search.yaml",
         "blocks/display/SearchGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "5a7eefe95776bf5c924e2930ebaee5016341e61c0f1e0da03e497b8e6807dc32"
+      "hash": "25a5f09fa80ef195d1f66a7390d8d3715814d928fda926f3c141541cbc85bfc9"
     },
     "display-blocks/skeleton": {
       "files": [
@@ -4128,19 +4340,21 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Statistic/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Statistic/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Statistic.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "29eb07263072d375b362310ec5cf79b69abc0e0f3c5f998867b58d16952c07d8"
+      "hash": "f769eb469c83ebb827f4f921c54b7ec2d00a93f5b0417f14b3c972d259e2b6d1"
     },
     "display-blocks/steps": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Steps/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Steps/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Steps.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "596c0d7b7d92269b1718e21fc4d61a877c73a9ef146e9e15ef0193154333d4e2"
+      "hash": "724d3624dcced40935a2c630e0a7a2677fd849ef06d9340767cd1e518c94a739"
     },
     "display-blocks/table": {
       "files": [
@@ -4156,20 +4370,24 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/TableLight/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/TableLight/meta.js",
+        "../plugins/blocks/blocks-antd/src/blocks/TableLight/tableOnlyKeys.js",
+        "../plugins/blocks/blocks-antd/src/table/aggregateLabels.js",
+        "../plugins/blocks/blocks-antd/src/table/cellTypeFamilies.js",
         "blocks/display/TableLight.yaml",
         "blocks/display/TableLightGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "1a0c92b31f8f3188d0ec23ebe78199ecbb71505bb079b08482dea16b135c0996"
+      "hash": "9a8a5631b556d7d8797b6f23464fcbbf34ba1f47dbadcfa7f21757cef061474e"
     },
     "display-blocks/tag": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Tag/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Tag/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/display/Tag.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0dde57dda84ee39c52306f7c3bfda869aed4574d7f8a64634bdd5384eaf6dc92"
+      "hash": "8349d5319a3d83f3f1023fa5522e0c5701fe09d790f7f284fba5cdb5fab38b3c"
     },
     "display-blocks/title": {
       "files": [
@@ -4193,10 +4411,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Alert/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Alert/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/Alert.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "5f01366f16b6ac8f5291a0063487a20aa71cac0caedab35abbcc56789f530536"
+      "hash": "5146ed179d3a7a3d034a0eb27dd5109295b23b685d10bd1f9a6ff2ce2b036437"
     },
     "container-blocks/affix": {
       "files": [
@@ -4211,10 +4430,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Badge/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Badge/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/Badge.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "bb59cdf3eda97440a4901f2667edc63947d33133d6fbb18e8d540b7f631e43b2"
+      "hash": "a7dbc2cd5836faadc513997e0ca1672baa7f9284fac9aa3896856dbe7a50e283"
     },
     "container-blocks/box": {
       "files": [
@@ -4247,10 +4467,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Collapse/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Collapse/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/Collapse.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "2dd2561d160a237f86ff82b819d5e004e26ebe3f9d163dac8422b200fb4cb2f3"
+      "hash": "61e35ee81a4aca642b5e39c003502daa33160612e6d982c50fa6bc98e8ca44d0"
     },
     "container-blocks/configprovider": {
       "files": [
@@ -4265,10 +4486,13 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/ConfirmModal/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/ConfirmModal/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/focusable.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/mask.js",
         "blocks/container/ConfirmModal.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0cdd278c7fcee47584753a827de466a3a9528bee2bf95ce751f3727614a0f588"
+      "hash": "7e9a8c129310f600285381983c3844d97e58dfb41e4a027c2670e39a9fd21d91"
     },
     "container-blocks/content": {
       "files": [
@@ -4292,19 +4516,22 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Drawer/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Drawer/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/focusable.js",
+        "../plugins/blocks/blocks-antd/src/schemas/mask.js",
         "blocks/container/Drawer.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b456f520c5a059db51db4bc519acaad589f69982aaa89ff07eb0b0aea78ee49f"
+      "hash": "183e9df04ba41450e08ae432bc3c06f95c854f53dad49f11368cf4f9d25b60ab"
     },
     "container-blocks/dropdownmenu": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/DropdownMenu/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/DropdownMenu/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/DropdownMenu.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b9a752548ea578fb87552abae86ce027fd1b7d3b14c29f4e31513dc82f2a25b7"
+      "hash": "0549569d69d9007033b4ff32ad3f1e1b4d62ca00737956c56973e278851b6531"
     },
     "container-blocks/flex": {
       "files": [
@@ -4355,19 +4582,22 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Header/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Header/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/Header.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "70706b15cdc7ffac82c9ba2e9dbd0b0b5144827ee09a5176ff27521e859688e2"
+      "hash": "41b296c0f0245764b6997830daaebdde286e267788f38d5e9819d57b42f5d14a"
     },
     "container-blocks/label": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Label/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Label/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelBreakpoints.js",
+        "../plugins/blocks/blocks-antd/src/schemas/labelTooltip.js",
         "blocks/container/Label.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "cddabebdd8f2da9458818f815d1a5f97e3bb017161e43283a8c6725275f77122"
+      "hash": "6462dcd1e088f79476551e4da47fdeca856b5fba465af19e5316fb680d371d6e"
     },
     "container-blocks/layout": {
       "files": [
@@ -4391,46 +4621,58 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/MobileMenu/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/MobileMenu/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/MobileMenu.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c774591d3f0003638313c5033ae29cb3517526e87874a2a0f89fe319f44ddd5c"
+      "hash": "b153ef8b05c94b0523f0111658b47888c950bf96ec7e9133e09dabdf4f233cf3"
     },
     "container-blocks/modal": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Modal/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Modal/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/focusable.js",
+        "../plugins/blocks/blocks-antd/src/schemas/mask.js",
         "blocks/container/Modal.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "37e74f1701e41dae8e9428ccedd19be0a04e21446c7c0fbd6c39904bd4512bc1"
+      "hash": "0dd51238c54f831a092f6db2c3a505c08ed3ed5cda44d0343ed882cbefa1723b"
     },
     "container-blocks/pageheadermenu": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/breadcrumbList.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/menuLinks.js",
         "blocks/container/PageHeaderMenu.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "69bbfe2fa7d3d0388a815abc842f3bb7471f2dc37027caf61d5203cf8a7d8022"
+      "hash": "61210741fb8dcd08e9a4a8c22f2badd4c2ed841b58bf79dd2744814d62b28e1f"
     },
     "container-blocks/pagesidebarlayout": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/PageSidebarLayout/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/PageSidebarLayout/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/breadcrumbList.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/menuLinks.js",
         "blocks/container/PageSidebarLayout.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "ad847371666415e8ffb3248bb89bf683d6a25574433f5530bb75ecffdeb69811"
+      "hash": "9ae4f51e655f6978a52a7144aac4dc864959f9d34800e1b83db96de31b8e967f"
     },
     "container-blocks/pagesidermenu": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/breadcrumbList.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
+        "../plugins/blocks/blocks-antd/src/schemas/menuLinks.js",
         "blocks/container/PageSiderMenu.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "7b59dbea4b2c234712c8e3eba0f29386a2a49555a1924e38635ac68ac64b60d3"
+      "hash": "3a114048346f5ef515911e87a517787c58f98676bcf9bab23ea29d30cb950a80"
     },
     "container-blocks/popover": {
       "files": [
@@ -4445,10 +4687,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Result/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Result/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/Result.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "70db817676c9cf6e7fd2d93127a104a37480792858b65ffe35d17fbd898d0832"
+      "hash": "967e471f53551115c3c7a299a55a5b715fe22f21499c7c6ce0043bc30b1ee8a0"
     },
     "container-blocks/sider": {
       "files": [
@@ -4472,10 +4715,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Splitter/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Splitter/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/Splitter.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "448d2ac33112337c6ff98a56573dcadd3d908497b12362756b210b212cb9c0ab"
+      "hash": "6312a6225e9123b0d70ff1eb83e969ebc40b66b5278fb7104bb1bcf5a3f3f38a"
     },
     "container-blocks/spinner": {
       "files": [
@@ -4490,10 +4734,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Tabs/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/Tabs/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/container/Tabs.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "dffd6c60bf22a844e7678f60dc6308938ef5d786823b7b1a0c0f563270c1943e"
+      "hash": "bd241d19d9f1a583a1283ce63e55251b6c0516c887613253a24a1819ac772e4b"
     },
     "container-blocks/tooltip": {
       "files": [
@@ -4517,10 +4762,11 @@
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/ControlledList/gallery.yaml",
         "../plugins/blocks/blocks-antd/src/blocks/ControlledList/meta.js",
+        "../plugins/blocks/blocks-antd/src/schemas/icon.js",
         "blocks/list/ControlledList.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "ec4fa75105090f69ba41fea5157b96878cf1e0cffed7a368d07dd5b3f050c114"
+      "hash": "003fceb4ba1e81df91167aac3f7aaa5c9a811c41d667bfc8c23ef8ffbf1ff4bc"
     },
     "list-blocks/list": {
       "files": [
@@ -4927,7 +5173,7 @@
         "actions/ResetValidation.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "a9ed2ebef5ce24e9dd73168413af89a524a24156674ed00b6b195220202ca129"
+      "hash": "cb990d4068b04ae8bcd0f4bad98c2f361f2166d3a80d69dbb1cf30e8c451d068"
     },
     "actions/scrollto": {
       "files": [
@@ -4997,7 +5243,7 @@
         "actions/Validate.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "4c5b6aa798a9b9fb0a2205de33d085fbcb8ff603c85448e888043b1e44d9b520"
+      "hash": "c996bb63957c00d40ae1dc29cd3fa2a7becf37600de469d8d05c1102cfdd53ea"
     },
     "actions/wait": {
       "files": [

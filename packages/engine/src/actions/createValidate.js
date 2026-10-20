@@ -17,12 +17,14 @@
 import { UserError } from '@lowdefy/errors';
 
 import getBlockMatcher from '../getBlockMatcher.js';
+import warnUnmatchedBlockIds from '../warnUnmatchedBlockIds.js';
 
 function createValidate({ arrayIndices, context }) {
   return function validate(params) {
     const validationErrors = context._internal.RootSlots.validate(
       getBlockMatcher({ params, arrayIndices })
     );
+    warnUnmatchedBlockIds({ action: 'Validate', arrayIndices, context, params });
     if (validationErrors.length > 0) {
       throw new UserError(
         context._internal.lowdefy._internal.translate('engine.validation.summary', {

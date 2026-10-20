@@ -40,11 +40,5 @@
     "appliesTo": { "types": [":reject"] },
     "message": ":reject is the routine's reply, not an exception. A :catch never runs for it, :finally does, and :throw is the caught path.",
     "see": "controls/reject"
-  },
-  {
-    "id": "validate-no-cascade",
-    "appliesTo": { "types": ["Validate", "ResetValidation"] },
-    "message": "blockIds match exact block IDs and do not cascade to child blocks. A container's ID, or an ID that matches no block, validates nothing and succeeds. Match the inputs instead, for example regex: ^contact\\. for the inputs under contact.",
-    "see": "actions/validate"
   }
 ]

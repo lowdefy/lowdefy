@@ -642,9 +642,7 @@ class Block {
     this.context._internal.RootSlots.map[this.blockId] = this;
   };
 
-  getValidate = (match) => {
-    if (!match(this.blockId)) return null;
-
+  getValidate = () => {
     this.setShowValidation(true);
     this.update = true;
     if (
@@ -671,9 +669,7 @@ class Block {
     }
   };
 
-  resetValidation = (match) => {
-    if (!match(this.blockId)) return;
-
+  resetValidation = () => {
     this.setShowValidation(false);
     this.update = true;
   };
