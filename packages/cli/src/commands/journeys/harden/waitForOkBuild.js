@@ -29,14 +29,19 @@ async function readBuildStatus({ url }) {
   }
 }
 
-// Waits until the dev server reports an ok build after a config edit, and
-// returns its build id. A developer mid-edit may leave the build broken for a
-// while; past `timeoutMs` the run stops.
+// A config build that succeeded while some page fails to build reads
+// pages_failed. The config is published either way, and the baselines that
+// run next leave out any journey a broken page fails.
+const CONFIG_BUILT = new Set(['ok', 'pages_failed']);
+
+// Waits until the dev server reports an ok config build after a config edit,
+// and returns its build id. A developer mid-edit may leave the build broken
+// for a while; past `timeoutMs` the run stops.
 async function waitForOkBuild({ url, pollIntervalMs = 1000, timeoutMs = 300000 }) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const status = await readBuildStatus({ url });
-    if (status?.build?.status === 'ok') {
+    if (CONFIG_BUILT.has(status?.build?.status)) {
       return status.buildId;
     }
     await sleep(pollIntervalMs);

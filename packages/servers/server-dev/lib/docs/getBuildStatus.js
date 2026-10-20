@@ -32,6 +32,23 @@ function splitByBuild({ entries, buildId }) {
   };
 }
 
+// buildStatus.json covers the config build only; pages build later, on first
+// request. So that build.status alone answers "does the app build", a config
+// build that is ok while a page fails reads pages_failed, distinct from error
+// (the config build failed and the server serves the previous build). The
+// failed pages are named beside it; their errors stay under pages.failed.
+function withFailedPages({ build, pages }) {
+  const failed = pages.failed ?? [];
+  if (failed.length === 0) {
+    return build;
+  }
+  return {
+    ...build,
+    status: build.status === 'ok' ? 'pages_failed' : build.status,
+    failedPages: failed.map(({ pageId }) => pageId),
+  };
+}
+
 // Notices about Lowdefy's agent block (see checkAgentFiles), checked on every
 // read: the root files are not watched, so a stored result would outlive a fix.
 async function getAgentFiles() {
@@ -43,7 +60,8 @@ async function getAgentFiles() {
 }
 
 // Feedback loop for agents: build status (written by the build manager to
-// build/buildStatus.json), the page builds (see getPageBuildStatus), plus
+// build/buildStatus.json, with page failures folded in by withFailedPages),
+// the page builds (see getPageBuildStatus), plus
 // recent browser errors reported via POST /api/client-error, plus recent server
 // errors (request, endpoint, MCP and agent tool failures) collected by
 // createHandleError. Lets an agent check "did my last edit work?" without
@@ -61,10 +79,11 @@ async function getBuildStatus({ checked } = {}) {
   const buildId = getBuildId();
   const clientErrors = splitByBuild({ entries: clientErrorStore.list(), buildId });
   const serverErrors = splitByBuild({ entries: serverErrorStore.list(), buildId });
+  const pages = await getPageBuildStatus({ checked });
   const status = {
     buildId,
-    build,
-    pages: await getPageBuildStatus({ checked }),
+    build: withFailedPages({ build, pages }),
+    pages,
     clientErrors: clientErrors.current,
     serverErrors: serverErrors.current,
   };
