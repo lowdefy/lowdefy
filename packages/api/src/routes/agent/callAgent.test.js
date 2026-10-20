@@ -1214,6 +1214,21 @@ describe('redact', () => {
     expect(sent[0].parts[0].text).toEqual('pin [removed]');
   });
 
+  test('a sticky flag from an operator is a ConfigError', async () => {
+    const { context, mockResolver } = setup({
+      redact: { patterns: { _piiPatterns: true } },
+      operators: { _piiPatterns: () => [{ pattern: '\\d{4}', flags: 'y' }] },
+    });
+    await expect(
+      callAgent(context, {
+        agentId: 'my-agent',
+        pageId: 'p',
+        messages: [{ role: 'user', parts: [{ type: 'text', text: 'pin 1234 5678' }] }],
+      })
+    ).rejects.toThrow('Agent "redact.patterns[0].flags" should not include "y".');
+    expect(mockResolver).not.toHaveBeenCalled();
+  });
+
   test('a pattern that matches empty text is a ConfigError', async () => {
     const { context, mockResolver } = setup({ redact: { patterns: ['\\d*'] } });
     await expect(

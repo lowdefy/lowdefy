@@ -2084,6 +2084,13 @@ describe('buildAgents redact', () => {
     expect(error.message).toMatch(/is not a valid regular expression/);
   });
 
+  test('the sticky flag fails', () => {
+    const { error } = buildWithRedact({ patterns: [{ pattern: '\\d{4}', flags: 'y' }] });
+    expect(error.message).toEqual(
+      'Agent "agent1" "redact.patterns[0].flags" should not include "y".'
+    );
+  });
+
   test('a non-string replacement fails', () => {
     const { error } = buildWithRedact({ replacement: 1, patterns: ['a'] });
     expect(error.message).toEqual('Agent "agent1" "redact.replacement" should be a string.');

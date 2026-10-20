@@ -53,6 +53,13 @@ function buildPatterns({ redact, configKey }) {
         configKey,
       });
     }
+    // With the sticky flag a global replace stops at the first gap between matches.
+    if (type.isString(flags) && flags.includes('y')) {
+      throw new ConfigError(`Agent "${location}.flags" should not include "y".`, {
+        received: flags,
+        configKey,
+      });
+    }
     const allFlags = (flags ?? '').includes('g') ? flags : `${flags ?? ''}g`;
     let regex;
     try {
