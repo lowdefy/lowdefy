@@ -2850,6 +2850,14 @@ export default {
             type: 'Request "properties" should be an object.',
           },
         },
+        offline: {
+          enum: ['queue'],
+          description:
+            'On a mobile shell, keep the request while the phone has no signal and send it when it comes back (the request queue). The payload is evaluated once, when queued; the action resolves { queued: true, id }. Ignored on the web.',
+          errorMessage: {
+            enum: 'Request "offline" only accepts "queue".',
+          },
+        },
         tenant: {
           enum: ['none', 'authored'],
           errorMessage: {
@@ -3073,6 +3081,18 @@ export default {
           },
           errorMessage: {
             type: 'Mobile shell "android" should be an object.',
+          },
+        },
+        extensions: {
+          type: 'array',
+          description:
+            'Opt-in native extensions on top of the profile: share (receive shared items), widgets (Home Screen and Lock Screen widgets), contacts and calendar. Each is part of the runtime version.',
+          items: {
+            type: 'string',
+            enum: ['share', 'widgets', 'contacts', 'calendar'],
+          },
+          errorMessage: {
+            type: 'Mobile shell "extensions" should be an array.',
           },
         },
         plugins: {
@@ -3880,6 +3900,46 @@ export default {
           },
           errorMessage: {
             type: 'App "mobile.shells" should be an array.',
+          },
+        },
+        notifications: {
+          type: 'object',
+          description:
+            'Push and local notifications: the API endpoints push tokens are registered with ("register", "unregister"), how a notification shows while the app is open ("foreground": banner or silent), and "categories" of action buttons ({ id, actions: [{ id, title, endpointId?, input?, snooze?, destructive?, authenticationRequired? }] }). A button with endpointId calls it in the background; snooze shows the notification again after that many minutes; any other button opens the app and fires onNotificationAction.',
+          errorMessage: {
+            type: 'App "mobile.notifications" should be an object.',
+          },
+        },
+        share: {
+          type: 'object',
+          description:
+            'The page ({ pageId }) a shell with the share extension opens when text, links, images or files are shared into the app. The payload is in the onShare app event and the page query.',
+          errorMessage: {
+            type: 'App "mobile.share" should be an object.',
+          },
+        },
+        widgets: {
+          type: 'array',
+          description:
+            'Widget sources for shells with the widgets extension: [{ id, title, layout: count | list, endpointId, path? }]. The shell fetches each endpoint and shows its answer ({ count, label } or { items: [{ title, subtitle }] }) on the Home Screen and Lock Screen.',
+          errorMessage: {
+            type: 'App "mobile.widgets" should be an array.',
+          },
+        },
+        shortcuts: {
+          type: 'array',
+          description:
+            'Up to 4 app icon quick actions and App Shortcuts: [{ id, title, subtitle?, icon?, path? }]. Choosing one opens its path and fires onShortcut.',
+          errorMessage: {
+            type: 'App "mobile.shortcuts" should be an array.',
+          },
+        },
+        background: {
+          type: 'object',
+          description:
+            'Background fetch while the app is closed: { endpointId, interval } (minutes, at least 15). The endpoint answers { badge?, refreshWidgets? }; the shell also sends its offline queue and refreshes its cached pages.',
+          errorMessage: {
+            type: 'App "mobile.background" should be an object.',
           },
         },
         auth: {

@@ -19,7 +19,9 @@ import path from 'node:path';
 import { serializer, type } from '@lowdefy/helpers';
 
 import getMobileAuth from './buildMobile/getMobileAuth.js';
+import getMobileFeatureConfig from './buildMobile/getMobileFeatureConfig.js';
 import getMobileHomePageId from './buildMobile/getMobileHomePageId.js';
+import getMobileNotifications from './buildMobile/getMobileNotifications.js';
 import loadIconData from './icons/loadIconData.js';
 
 // The search tab draws the search icon unless it names its own.
@@ -92,6 +94,8 @@ function buildShells({ shells, context }) {
             : shell.android.sha256,
         }
       : undefined,
+    // The opt-in native extensions lowdefy mobile config writes into shell.json.
+    extensions: type.isArray(shell.extensions) ? shell.extensions : undefined,
     // lowdefy mobile config installs these into the shell project.
     plugins: type.isArray(shell.plugins)
       ? shell.plugins.map((plugin) => ({
@@ -112,6 +116,8 @@ async function buildMobileConfig({ components, context }) {
     menus: await buildMenus({ menus: mobile.menus, context }),
     shells: buildShells({ shells: mobile.shells, context }),
     auth: getMobileAuth({ mobile }),
+    notifications: getMobileNotifications({ mobile }),
+    ...getMobileFeatureConfig({ mobile }),
   };
 }
 

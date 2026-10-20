@@ -16,13 +16,14 @@
 
 // The packages a native shell carries for each per-target type class. Mobile
 // pages resolve blocks and actions against these alone: a web block package
-// renders with React DOM, and the shell registers native bodies only for the
-// actions-core actions, under the same names. Client operators are plain
+// renders with React DOM, and the shell registers native bodies for the
+// actions-core actions under the same names, and blocks-native's native-only
+// actions (Haptic, Share, PickFile, ...). Client operators are plain
 // JavaScript, so the operators of every default package (defaultPackages)
 // resolve on mobile too. Server-side types are not per-target: requests,
 // connections and server operators resolve against the web types map.
 const defaultPackagesMobile = {
-  actions: ['@lowdefy/actions-core'],
+  actions: ['@lowdefy/actions-core', '@lowdefy/blocks-native'],
   blocks: ['@lowdefy/blocks-native'],
 };
 

@@ -19,9 +19,27 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import validateMobileBackground from './validateMobileBackground.js';
+import validateMobileNotifications from './validateMobileNotifications.js';
+import validateMobileShare from './validateMobileShare.js';
+import validateMobileShortcuts from './validateMobileShortcuts.js';
+import validateMobileWidgets from './validateMobileWidgets.js';
 import validateShellIcon from './validateShellIcon.js';
 
-const MOBILE_KEYS = ['homePageId', 'minShellVersion', 'menus', 'pages', 'events', 'shells', 'auth'];
+const MOBILE_KEYS = [
+  'homePageId',
+  'minShellVersion',
+  'menus',
+  'pages',
+  'events',
+  'shells',
+  'auth',
+  'notifications',
+  'share',
+  'widgets',
+  'shortcuts',
+  'background',
+];
 const MENU_KEYS = ['tabs', 'drawer', 'stack'];
 const MENU_ITEM_KEYS = ['pageId', 'icon', 'sfSymbol', 'title', 'role'];
 // iOS 26's search tab: set apart at the right of the tab bar, with a magnifier.
@@ -39,7 +57,11 @@ const SHELL_KEYS = [
   'ios',
   'android',
   'plugins',
+  'extensions',
 ];
+// The opt-in shell extensions @lowdefy/shell defines (EXTENSIONS in profiles.js): native targets or
+// permission sets no profile carries.
+const SHELL_EXTENSIONS = ['share', 'widgets', 'contacts', 'calendar'];
 const SHELL_PLUGIN_KEYS = ['name', 'version', 'typePrefix', 'options'];
 const IOS_KEYS = ['bundleId', 'teamId'];
 const ANDROID_KEYS = ['package', 'sha256'];
@@ -404,7 +426,34 @@ function validateShell({ shell, path, configKey, context }) {
       configKey: shellConfigKey,
     });
   }
+  if (!type.isUndefined(shell.extensions)) {
+    validateShellExtensions({
+      extensions: shell.extensions,
+      path: `${path}.extensions`,
+      configKey: shellConfigKey,
+    });
+  }
   warnMissingSha256({ shell, path, configKey: shellConfigKey, context });
+}
+
+function validateShellExtensions({ extensions, path, configKey }) {
+  if (!type.isArray(extensions)) {
+    throw new ConfigError(`App "${path}" should be an array.`, { received: extensions, configKey });
+  }
+  extensions.forEach((extension, index) => {
+    if (!SHELL_EXTENSIONS.includes(extension)) {
+      throw new ConfigError(
+        `App "${path}[${index}]" should be one of ${SHELL_EXTENSIONS.join(', ')}.`,
+        { received: extension, configKey }
+      );
+    }
+  });
+  if (new Set(extensions).size !== extensions.length) {
+    throw new ConfigError(`App "${path}" lists an extension twice.`, {
+      received: extensions,
+      configKey,
+    });
+  }
 }
 
 // The server installs one copy of each plugin package, so a package has one
@@ -552,6 +601,21 @@ function validateMobileConfig({ mobile, context }) {
   }
   if (!type.isUndefined(mobile.auth)) {
     validateAuth({ auth: mobile.auth, configKey });
+  }
+  if (!type.isUndefined(mobile.notifications)) {
+    validateMobileNotifications({ notifications: mobile.notifications, configKey });
+  }
+  if (!type.isUndefined(mobile.share)) {
+    validateMobileShare({ share: mobile.share, configKey });
+  }
+  if (!type.isUndefined(mobile.widgets)) {
+    validateMobileWidgets({ widgets: mobile.widgets, configKey });
+  }
+  if (!type.isUndefined(mobile.shortcuts)) {
+    validateMobileShortcuts({ shortcuts: mobile.shortcuts, configKey });
+  }
+  if (!type.isUndefined(mobile.background)) {
+    validateMobileBackground({ background: mobile.background, configKey });
   }
 }
 

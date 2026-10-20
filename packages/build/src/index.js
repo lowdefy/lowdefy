@@ -52,6 +52,7 @@ import buildMobilePageIcons from './build/buildMobile/buildMobilePageIcons.js';
 import buildMobileTheme from './build/buildMobile/buildMobileTheme.js';
 import collectMobileClassCandidates from './build/buildMobile/collectMobileClassCandidates.js';
 import buildMobilePageIndex from './build/buildMobile/buildMobilePageIndex.js';
+import validateMobileEndpointRefs from './build/buildMobile/validateMobileEndpointRefs.js';
 import validateMobileMenuIcons from './build/buildMobile/validateMobileMenuIcons.js';
 import validateMobileStyles from './build/buildMobile/validateMobileStyles.js';
 import validateNativeIgnoredProperties from './build/buildMobile/validateNativeIgnoredProperties.js';
@@ -203,6 +204,10 @@ async function build(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildDynamicPolicies, 'buildDynamicPolicies', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    tryBuildStep(validateMobileEndpointRefs, 'validateMobileEndpointRefs', {
+      components,
+      context,
+    });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
