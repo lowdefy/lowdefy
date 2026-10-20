@@ -42,24 +42,24 @@ blocks-native also carries the native-only actions (`./actions`, schemas in `./s
 - `playFeedback(type)` plays a haptic where the shell installed haptics and is silent otherwise (Jest). Switch, Selector, MultipleSelector, ChipSelector and SegmentedControl play `selection` on a change; a full swipe plays `medium`; a QRScanner read and a FileInput add play `success`.
 - `uploadFiles` (shared by PickFile, PickImage, TakePhoto, ScanDocument, StopRecording and FileInput) posts each file with `upload: { endpointId, payload }` to the endpoint as `{ ...payload, file: { name, mimeType, size, base64 } }` and keeps the answer as `upload`.
 
-| Action | Feature (shell) | Returns |
-| --- | --- | --- |
-| `Haptic` | haptics (basic) | — |
-| `Share` | share (basic) | `{ shared }`; text, url, a file uri, an https file or base64 with a name |
-| `PickFile` | files (basic) | `[{ name, mimeType, size, uri, base64? }]` |
-| `PickImage` | photos (basic) | the PickFile shape with `width`, `height`, `duration` |
-| `TakePhoto`, `ScanCode` | camera (field) | files; `{ data, type }` or null |
-| `ScanDocument` | documentScanner (field) | JPEG pages as files |
-| `StartRecording`, `StopRecording` | audio (field) | the voice note as a file with `duration` |
-| `SetBrightness` | brightness (field) | — |
-| `ReadNfc`, `WriteNfc` | nfc (field-nfc) | `{ id, type, records }` |
-| `StartLocationTracking`, `StopLocationTracking`, `StartGeofencing`, `StopGeofencing` | tracking (field-tracking) | posts to endpoints in the background |
-| `ScheduleNotification`, `CancelNotification`, `SetBadgeCount`, `RequestNotificationPermission` | notifications (basic) | `{ id }`, `{ granted, status }` |
-| `GetRequestQueue`, `RetryRequestQueue`, `DiscardQueuedRequest` | requestQueue (basic) | `{ pending, failed, items }` |
-| `Speak`, `StopSpeaking`, `KeepAwake` | speech, keepAwake (basic) | — |
-| `PickContact`, `AddContact` | contacts (contacts extension) | the contact, `{ saved }` |
-| `AddCalendarEvent`, `GetCalendarEvents` | calendar (calendar extension) | `{ id }`, events |
-| `RefreshWidgets` | widgets (widgets extension) | `{ sources }` |
+| Action                                                                                         | Feature (shell)               | Returns                                                                  |
+| ---------------------------------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------ |
+| `Haptic`                                                                                       | haptics (basic)               | —                                                                        |
+| `Share`                                                                                        | share (basic)                 | `{ shared }`; text, url, a file uri, an https file or base64 with a name |
+| `PickFile`                                                                                     | files (basic)                 | `[{ name, mimeType, size, uri, base64? }]`                               |
+| `PickImage`                                                                                    | photos (basic)                | the PickFile shape with `width`, `height`, `duration`                    |
+| `TakePhoto`, `ScanCode`                                                                        | camera (field)                | files; `{ data, type }` or null                                          |
+| `ScanDocument`                                                                                 | documentScanner (field)       | JPEG pages as files                                                      |
+| `StartRecording`, `StopRecording`                                                              | audio (field)                 | the voice note as a file with `duration`                                 |
+| `SetBrightness`                                                                                | brightness (field)            | —                                                                        |
+| `ReadNfc`, `WriteNfc`                                                                          | nfc (field-nfc)               | `{ id, type, records }`                                                  |
+| `StartLocationTracking`, `StopLocationTracking`, `StartGeofencing`, `StopGeofencing`           | tracking (field-tracking)     | posts to endpoints in the background                                     |
+| `ScheduleNotification`, `CancelNotification`, `SetBadgeCount`, `RequestNotificationPermission` | notifications (basic)         | `{ id }`, `{ granted, status }`                                          |
+| `GetRequestQueue`, `RetryRequestQueue`, `DiscardQueuedRequest`                                 | requestQueue (basic)          | `{ pending, failed, items }`                                             |
+| `Speak`, `StopSpeaking`, `KeepAwake`                                                           | speech, keepAwake (basic)     | —                                                                        |
+| `PickContact`, `AddContact`                                                                    | contacts (contacts extension) | the contact, `{ saved }`                                                 |
+| `AddCalendarEvent`, `GetCalendarEvents`                                                        | calendar (calendar extension) | `{ id }`, events                                                         |
+| `RefreshWidgets`                                                                               | widgets (widgets extension)   | `{ sources }`                                                            |
 
 Blocks: `FileInput` (input, value a list of files: picks from Photos, the camera where the shell has it, and Files through a native menu; each row has a thumbnail or file glyph, its size and a remove button; `upload` sends each file as it is added), `SignaturePad` (input, value `{ svg, strokes, width, height }` from `toSignatureValue`; drawn with react-native-svg and the responder, so every shell has it), `QRScanner` (the web block's name and `onScan`; the camera feature's `ScannerView`, one event per code with `createScanFilter`, `reset` method), and `Map` (markers, polylines, the person's location; the maps feature's `MapView`, expo-maps). A device block in a shell without its feature draws `shared/MissingFeature`, naming the profile.
 
