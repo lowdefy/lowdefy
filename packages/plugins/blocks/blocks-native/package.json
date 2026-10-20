@@ -29,9 +29,12 @@
   },
   "type": "module",
   "exports": {
+    "./actions": "./dist/actions.js",
     "./blocks": "./dist/blocks.js",
+    "./device": "./dist/device.js",
     "./dictation": "./dist/dictation.js",
     "./metas": "./dist/metas.js",
+    "./schemas": "./dist/schemas.js",
     "./types": "./dist/types.js"
   },
   "files": [

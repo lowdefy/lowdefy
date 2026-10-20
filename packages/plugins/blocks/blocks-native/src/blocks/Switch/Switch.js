@@ -23,6 +23,7 @@ import getLabelProperties from '../Label/getLabelProperties.js';
 import Label from '../Label/Label.js';
 import meta from './meta.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
+import playFeedback from '../../device/playFeedback.js';
 
 function getStateText({ properties, value }) {
   const text = value === true ? properties.checkedText : properties.uncheckedText;
@@ -60,6 +61,7 @@ function Switch({ blockId, loading, methods, properties, required, styles, valid
             disabled={disabled}
             label={getStateText({ properties, value })}
             onValueChange={(checked) => {
+              playFeedback();
               methods.setValue(checked);
               methods.triggerEvent({ name: 'onChange', event: { value: checked } });
             }}

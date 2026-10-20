@@ -35,6 +35,7 @@ import SystemIcon from '../../shared/SystemIcon.js';
 import { isSameValues, toggleValue } from './toggleValue.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
 import ValueSummary from './ValueSummary.js';
+import playFeedback from '../../device/playFeedback.js';
 
 function getLabels({ options, values }) {
   return values.map((value) => {
@@ -92,6 +93,7 @@ function MultipleSelector({
   const full = type.isNumber(properties.maxCount) && current.length >= properties.maxCount;
 
   const setNext = (next) => {
+    playFeedback();
     methods.setValue(next);
     methods.triggerEvent({ name: 'onChange', event: { value: next } });
   };

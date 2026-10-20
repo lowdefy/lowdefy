@@ -23,6 +23,7 @@ import getOptionLabel from '../Selector/getOptionLabel.js';
 import getOptionValue from '../Selector/getOptionValue.js';
 import meta from './meta.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
+import playFeedback from '../../device/playFeedback.js';
 
 // No segment is selected while the value matches no option.
 const NO_SEGMENT = -1;
@@ -51,6 +52,7 @@ function SegmentedControl({ blockId, loading, methods, properties, styles = {}, 
             return;
           }
           const next = getOptionValue({ option: options[index] });
+          playFeedback();
           methods.setValue(next);
           methods.triggerEvent({ name: 'onChange', event: { value: next } });
         }}

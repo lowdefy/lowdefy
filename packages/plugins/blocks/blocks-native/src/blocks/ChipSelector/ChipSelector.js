@@ -29,6 +29,7 @@ import getSemanticColors from '../../shared/getSemanticColors.js';
 import meta from './meta.js';
 import SwipeContext from '../../shared/SwipeContext.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
+import playFeedback from '../../device/playFeedback.js';
 
 const INSET = 16;
 const GAP = 8;
@@ -162,6 +163,7 @@ function ChipSelector({ blockId, components, loading, methods, properties, style
 
   const select = (option) => {
     if (option.value === value) return;
+    playFeedback();
     methods.setValue(option.value);
     methods.triggerEvent({ name: 'onChange', event: { value: option.value } });
   };
