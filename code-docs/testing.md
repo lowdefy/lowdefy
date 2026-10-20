@@ -342,6 +342,7 @@ Chromium); and every block e2e suite (`test-block-e2e.yml`). `release.yaml` runs
 push to `main` and opens the version pull request or publishes only when it passes, so a
 release cannot skip it. Before cutting a release, add `ci-full` to the pull request into
 `main`, or run it from the Actions tab. Codecov gets its ubuntu / Node 24 coverage only.
+[Releasing](./releasing.md) covers what the release job does after the tests pass.
 
 ## Before pushing
 
