@@ -29,19 +29,17 @@ async function readBuildStatus({ url }) {
   }
 }
 
-// A config build that succeeded while some page fails to build reads
-// pages_failed. The config is published either way, and the baselines that
-// run next leave out any journey a broken page fails.
-const CONFIG_BUILT = new Set(['ok', 'pages_failed']);
-
-// Waits until the dev server reports an ok config build after a config edit,
-// and returns its build id. A developer mid-edit may leave the build broken
-// for a while; past `timeoutMs` the run stops.
-async function waitForOkBuild({ url, pollIntervalMs = 1000, timeoutMs = 300000 }) {
+// Waits until the dev server reports a successful config build after a config
+// edit, and returns its build id. It reads configStatus, the config build's own
+// status, not build.status, which also reads pages_failed when a page fails to
+// build: the config is published either way, and the baselines that run next
+// leave out any journey a broken page fails. A developer mid-edit may leave the
+// build broken for a while; past `timeoutMs` the run stops.
+async function waitForConfigBuild({ url, pollIntervalMs = 1000, timeoutMs = 300000 }) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const status = await readBuildStatus({ url });
-    if (CONFIG_BUILT.has(status?.build?.status)) {
+    if (status?.build?.configStatus === 'ok') {
       return status.buildId;
     }
     await sleep(pollIntervalMs);
@@ -53,4 +51,4 @@ async function waitForOkBuild({ url, pollIntervalMs = 1000, timeoutMs = 300000 }
   );
 }
 
-export default waitForOkBuild;
+export default waitForConfigBuild;

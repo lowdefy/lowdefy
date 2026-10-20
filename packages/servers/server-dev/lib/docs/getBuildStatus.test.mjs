@@ -55,6 +55,7 @@ describe('page failures in build.status', () => {
 
     expect(status.build).toEqual({
       status: 'pages_failed',
+      configStatus: 'ok',
       errors: [],
       warnings: ['a build warning'],
       failedPages: ['orders', 'invoices'],
@@ -62,7 +63,7 @@ describe('page failures in build.status', () => {
     expect(status.pages.failed).toEqual(failed);
   });
 
-  test('keeps error when the config build failed too, and still names the failed pages', async () => {
+  test('keeps error and names no pages when the config build failed too', async () => {
     mockReadBuildArtifact.mockReturnValue({
       status: 'error',
       errors: ['Bad config.'],
@@ -70,10 +71,50 @@ describe('page failures in build.status', () => {
     });
     mockGetPageBuildStatus.mockResolvedValue({ failed: failed.slice(0, 1), unbuilt: 0 });
 
+    const status = await getBuildStatus();
+
+    expect(status.build.status).toBe('error');
+    expect(status.build.configStatus).toBe('error');
+    expect(status.build).not.toHaveProperty('failedPages');
+    expect(status.pages.failed).toEqual(failed.slice(0, 1));
+  });
+
+  test('keeps unknown and names no pages before the first config build is written', async () => {
+    mockReadBuildArtifact.mockReturnValue(null);
+    mockGetPageBuildStatus.mockResolvedValue({ failed, unbuilt: 0 });
+
     const { build } = await getBuildStatus();
 
-    expect(build.status).toBe('error');
-    expect(build.failedPages).toEqual(['orders']);
+    expect(build.status).toBe('unknown');
+    expect(build.configStatus).toBe('unknown');
+    expect(build).not.toHaveProperty('failedPages');
+  });
+
+  test('leaves out a failed page changed since its last build, since its failure may be fixed', async () => {
+    mockGetPageBuildStatus.mockResolvedValue({
+      failed,
+      changedSinceBuild: ['orders'],
+      unbuilt: 0,
+    });
+
+    const { build } = await getBuildStatus();
+
+    expect(build.status).toBe('pages_failed');
+    expect(build.failedPages).toEqual(['invoices']);
+  });
+
+  test('stays ok when every failed page has changed since its last build', async () => {
+    mockGetPageBuildStatus.mockResolvedValue({
+      failed: failed.slice(0, 1),
+      changedSinceBuild: ['orders', 'home'],
+      unbuilt: 0,
+    });
+
+    const status = await getBuildStatus();
+
+    expect(status.build.status).toBe('ok');
+    expect(status.build).not.toHaveProperty('failedPages');
+    expect(status.pages.failed).toEqual(failed.slice(0, 1));
   });
 
   test('stays ok with no failedPages when every built page builds', async () => {
@@ -82,6 +123,7 @@ describe('page failures in build.status', () => {
     const { build } = await getBuildStatus({ checked: ['orders'] });
 
     expect(build.status).toBe('ok');
+    expect(build.configStatus).toBe('ok');
     expect(build).not.toHaveProperty('failedPages');
   });
 });

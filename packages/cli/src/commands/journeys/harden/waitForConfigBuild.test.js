@@ -16,7 +16,7 @@
 
 import http from 'http';
 
-import waitForOkBuild from './waitForOkBuild.js';
+import waitForConfigBuild from './waitForConfigBuild.js';
 
 // A dev server whose build-status answers come from `answers`, one per read,
 // the last repeated.
@@ -39,29 +39,34 @@ afterAll(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
-test('waitForOkBuild waits out a failed config build and returns the next build id', async () => {
+test('waitForConfigBuild waits out a failed config build and returns the next build id', async () => {
   answers = [
-    { buildId: 'build-1', build: { status: 'error' } },
-    { buildId: 'build-2', build: { status: 'ok' } },
+    { buildId: 'build-1', build: { status: 'error', configStatus: 'error' } },
+    { buildId: 'build-2', build: { status: 'ok', configStatus: 'ok' } },
   ];
 
-  await expect(waitForOkBuild({ url, pollIntervalMs: 10, timeoutMs: 5000 })).resolves.toBe(
+  await expect(waitForConfigBuild({ url, pollIntervalMs: 10, timeoutMs: 5000 })).resolves.toBe(
     'build-2'
   );
 });
 
-test('waitForOkBuild takes a config build with a failing page as built', async () => {
-  answers = [{ buildId: 'build-3', build: { status: 'pages_failed', failedPages: ['orders'] } }];
+test('waitForConfigBuild takes a config build with a failing page as built', async () => {
+  answers = [
+    {
+      buildId: 'build-3',
+      build: { status: 'pages_failed', configStatus: 'ok', failedPages: ['orders'] },
+    },
+  ];
 
-  await expect(waitForOkBuild({ url, pollIntervalMs: 10, timeoutMs: 5000 })).resolves.toBe(
+  await expect(waitForConfigBuild({ url, pollIntervalMs: 10, timeoutMs: 5000 })).resolves.toBe(
     'build-3'
   );
 });
 
-test('waitForOkBuild stops once the config build stays failed past the timeout', async () => {
-  answers = [{ buildId: 'build-1', build: { status: 'error' } }];
+test('waitForConfigBuild stops once the config build stays failed past the timeout', async () => {
+  answers = [{ buildId: 'build-1', build: { status: 'error', configStatus: 'error' } }];
 
-  await expect(waitForOkBuild({ url, pollIntervalMs: 10, timeoutMs: 50 })).rejects.toThrow(
+  await expect(waitForConfigBuild({ url, pollIntervalMs: 10, timeoutMs: 50 })).rejects.toThrow(
     'The config build did not succeed'
   );
 });

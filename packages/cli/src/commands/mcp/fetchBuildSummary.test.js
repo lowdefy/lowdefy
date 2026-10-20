@@ -55,3 +55,24 @@ test('fetchBuildSummary marks its read passive, so status polling never keeps an
     await new Promise((resolve) => answering.close(resolve));
   }
 });
+
+test('fetchBuildSummary counts the failed pages build status names as failedPageCount', async () => {
+  const answering = http.createServer((req, res) => {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(
+      JSON.stringify({
+        build: { status: 'pages_failed', errors: [], warnings: [], failedPages: ['orders'] },
+        pages: { failed: [{ pageId: 'orders' }, { pageId: 'invoices' }], unbuilt: 0 },
+      })
+    );
+  });
+  await new Promise((resolve) => answering.listen(0, '127.0.0.1', resolve));
+  try {
+    await expect(
+      fetchBuildSummary({ url: `http://127.0.0.1:${answering.address().port}` })
+    ).resolves.toMatchObject({ status: 'pages_failed', failedPageCount: 1 });
+  } finally {
+    answering.closeAllConnections();
+    await new Promise((resolve) => answering.close(resolve));
+  }
+});
