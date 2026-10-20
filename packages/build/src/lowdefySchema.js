@@ -333,6 +333,12 @@ export default {
             type: 'Agent "hooks" should be an object.',
           },
         },
+        redact: {
+          type: 'object',
+          errorMessage: {
+            type: 'Agent "redact" should be an object.',
+          },
+        },
         agents: {
           type: 'array',
           items: {

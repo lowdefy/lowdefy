@@ -94,6 +94,7 @@ _ref:
                 - `mcp: array`: MCP server tools. See [MCP Tools](/agent-mcp-tools).
                 - `agents: array`: Sub-agent tools. See [Multi-Agent](/agent-multi-agent).
                 - `hooks: object`: Server-side lifecycle hooks. See [Server Hooks](/agent-server-hooks).
+                - `redact: object`: Patterns the server masks in the user's messages. See Redacting User Messages below. __Operators are evaluated__.
 
                 ###### Agent with tools, sub-agents, and hooks:
                 ```yaml
@@ -120,6 +121,43 @@ _ref:
                       onFinish:
                         - save-conversation
                 ```
+
+                ## Redacting User Messages
+
+                `redact` masks text in the user's messages on the server before anything else sees it: the model, title generation, tools and the [server hooks](/agent-server-hooks) that save the conversation. Use it to keep personal information, like ID numbers or email addresses a user pastes into the chat, away from the AI provider and out of chat history, as data protection laws such as POPIA or GDPR require.
+
+                - `redact: object`:
+                  - `patterns: array`: __Required__ - The patterns to mask, at least one. Each is a regular expression string, or an object:
+                    - `pattern: string`: __Required__ - The regular expression.
+                    - `name: string`: A name for the pattern. The server's debug log counts replacements by name, never logging the matched text.
+                    - `flags: string`: Regular expression flags, such as `i`. `g` is always added, so every match is masked.
+                  - `replacement: string`: Default: `'[removed]'` - The text each match is replaced with.
+
+                The server masks the text of every user message, not only the newest: the browser sends the whole conversation with each turn. The model's replies, tool calls and results, and attached files are left as they are. `redact` applies to chat turns: a sub-agent's `redact` is not applied when another agent calls it, and the `CallAgent` routine step does not use it. The chat in the browser still shows what the user typed. A conversation the browser saves through its own endpoints is not masked by `redact`, so mask it in those endpoints too, for example with [`_string.replace`](/_string).
+
+                The patterns can come from a module var, resolved at build, or from a runtime operator such as `_secret`, evaluated with each request. The build checks a pattern written in the config; a pattern an operator returns is checked when the request runs, and an invalid one fails the turn with a config error. A pattern that matches empty text, such as `\d*`, is refused, since it would put the replacement between every character.
+
+                ###### Mask ID numbers, phone numbers and email addresses (POPIA):
+                ```yaml
+                agents:
+                  - id: support_agent
+                    type: ClaudeAgent
+                    connectionId: anthropic
+                    properties:
+                      model: claude-sonnet-4-20250514
+                    redact:
+                      replacement: '[removed]'
+                      patterns:
+                        - name: email
+                          pattern: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+                        - name: id_number
+                          pattern: '\d(?:[ -]?\d){8,}'
+                    hooks:
+                      onFinish:
+                        - save-conversation
+                ```
+
+                A user who types `My ID is 8001015009087, email me at jo@example.com` reaches the model, and the `save-conversation` hook, as `My ID is [removed], email me at [removed]`.
 
                 ## Beyond Chat
 
