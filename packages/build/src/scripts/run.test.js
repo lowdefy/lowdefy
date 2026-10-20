@@ -22,6 +22,7 @@ jest.unstable_mockModule('../index.js', () => ({ default: mockBuild }));
 
 const savedArgv = process.argv;
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
+const savedInstallFollows = process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS;
 let loadCount = 0;
 
 // run.js runs the build when imported, so each case loads a fresh module
@@ -35,6 +36,7 @@ async function runScript(args = []) {
 
 beforeEach(() => {
   delete process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
+  delete process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS;
   mockBuild.mockReset();
   mockBuild.mockResolvedValue();
 });
@@ -45,6 +47,11 @@ afterAll(() => {
     delete process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
   } else {
     process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS = savedSkip;
+  }
+  if (savedInstallFollows === undefined) {
+    delete process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS;
+  } else {
+    process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS = savedInstallFollows;
   }
 });
 
@@ -71,4 +78,15 @@ test('run passes skipPluginChecks false when LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS is
   process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS = 'false';
   await runScript();
   expect(mockBuild.mock.calls[0][0].skipPluginChecks).toBe(false);
+});
+
+test('run passes pluginInstallFollows true when LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS is true', async () => {
+  process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS = 'true';
+  await runScript();
+  expect(mockBuild.mock.calls[0][0].pluginInstallFollows).toBe(true);
+});
+
+test('run passes pluginInstallFollows false when LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS is not set', async () => {
+  await runScript();
+  expect(mockBuild.mock.calls[0][0].pluginInstallFollows).toBe(false);
 });

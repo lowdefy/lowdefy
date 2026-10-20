@@ -17,7 +17,7 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
-async function runLowdefyBuild({ context, directory }) {
+async function runLowdefyBuild({ context, directory, pluginInstallFollows = false }) {
   context.logger.info({ spin: 'start' }, 'Running Lowdefy build.');
   const env = {
     ...process.env,
@@ -26,6 +26,7 @@ async function runLowdefyBuild({ context, directory }) {
     LOWDEFY_LOG_LEVEL: context.options.logLevel,
   };
   if (context.options.skipPluginChecks) env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS = 'true';
+  if (pluginInstallFollows) env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS = 'true';
   try {
     await spawnProcess({
       args: ['run', 'build:lowdefy'],
