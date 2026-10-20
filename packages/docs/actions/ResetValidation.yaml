@@ -35,6 +35,8 @@ _ref:
 
       The `ResetValidation` action `blockIds` or `regex` params are used to limit which blocks validation errors and warnings should be reset.
 
+      A container's blockId matches the container and every block inside it, so `params: contact_card` lowers the validation flags of the inputs in the `contact_card` card. A blockId that matches no block logs a warning in the browser console.
+
       When the action runs in a list row, `$` in a blockId is replaced with the row index, as in `SetState` and `CallMethod`, so `list.$.name` matches the `name` input in the same row. `$` in a `regex` pattern keeps its regex meaning.
 
     params: |

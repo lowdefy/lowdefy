@@ -169,13 +169,18 @@ class Slots {
     );
   };
 
-  getValidateRec = (match, result) => {
+  // A matched block matches every block under it, so a container's id validates the inputs inside
+  // it. This follows the block tree, not id prefixes: an input id is a state path and need not start
+  // with its container's id.
+  getValidateRec = (match, result, parentMatched = false) => {
     this.loopBlocks((block) => {
-      const getValidate = block.getValidate(match);
-      if (!type.isNone(getValidate)) result.push(getValidate);
+      const matched = parentMatched || match(block.blockId);
+      if (matched) {
+        const validation = block.getValidate();
+        if (!type.isNone(validation)) result.push(validation);
+      }
+      block.loopSubSlots((subSlotsClass) => subSlotsClass.getValidateRec(match, result, matched));
     });
-
-    this.loopSubSlots((subSlotsClass) => subSlotsClass.getValidateRec(match, result));
     return result;
   };
 
@@ -199,9 +204,13 @@ class Slots {
     return validationErrors;
   };
 
-  resetValidationRec = (match) => {
-    this.loopBlocks((block) => block.resetValidation(match));
-    this.loopSubSlots((subSlotsClass) => subSlotsClass.resetValidationRec(match));
+  // Cascades like getValidateRec.
+  resetValidationRec = (match, parentMatched = false) => {
+    this.loopBlocks((block) => {
+      const matched = parentMatched || match(block.blockId);
+      if (matched) block.resetValidation();
+      block.loopSubSlots((subSlotsClass) => subSlotsClass.resetValidationRec(match, matched));
+    });
   };
 
   resetValidation = (match) => {

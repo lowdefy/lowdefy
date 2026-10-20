@@ -4927,7 +4927,7 @@
         "actions/ResetValidation.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "a9ed2ebef5ce24e9dd73168413af89a524a24156674ed00b6b195220202ca129"
+      "hash": "cb990d4068b04ae8bcd0f4bad98c2f361f2166d3a80d69dbb1cf30e8c451d068"
     },
     "actions/scrollto": {
       "files": [
@@ -4997,7 +4997,7 @@
         "actions/Validate.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "4c5b6aa798a9b9fb0a2205de33d085fbcb8ff603c85448e888043b1e44d9b520"
+      "hash": "c996bb63957c00d40ae1dc29cd3fa2a7becf37600de469d8d05c1102cfdd53ea"
     },
     "actions/wait": {
       "files": [
