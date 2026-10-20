@@ -68,6 +68,10 @@ collected data:
 | `field-nfc`      | NFC read and write (react-native-nfc-manager)                                                                                                                                              |
 | `field-tracking` | background location and geofences (expo-location, expo-task-manager)                                                                                                                       |
 
+Lowdefy Dev (`dev`, `development`) carries `field`, `field-nfc`, `field-tracking`, `contacts` and
+`calendar` (`includes` and `extensions` in its row), so any app's pages can be tried in it; it
+leaves out only the widget extension.
+
 `extensions` in `shell.json` (from `mobile.shells[].extensions`) adds opt-in rows on top of any
 profile (`EXTENSIONS` in `profiles.js`): `share` (receiving shared items, expo-sharing's share
 extension), `widgets` (iOS Home Screen and Lock Screen widgets, expo-widgets), `contacts` and

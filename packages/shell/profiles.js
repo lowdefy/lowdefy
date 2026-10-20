@@ -23,6 +23,8 @@ const path = require('node:path');
   for a feature its profile does not have.
 
   Each entry lists what the profile adds to the one it `extends`:
+  - includes, extensions: other profiles' own entries and shell extensions it carries too
+    (Lowdefy Dev carries every profile's modules).
   - capabilities: the device features it gives the app (shell.json `capabilities`).
   - modules: { [package]: nativeModuleName }, the native modules it links. The name is the one the
     module's JavaScript asks for, which scripts/checkReleaseBundle.mjs looks for in a bundle that
@@ -149,10 +151,15 @@ const PROFILES = {
       // Push in production builds (aps-environment), and background notifications so a button with
       // an endpoint runs without opening the app.
       ['expo-notifications', { enableBackgroundRemoteNotifications: true }],
-      // Library mode only: the system photo picker needs no permission. field adds the camera.
+      // Library mode only: the system photo picker needs no permission, and field adds the camera.
+      // Its microphone text is speech's: `false` would remove the key speech needs.
       [
         'expo-image-picker',
-        { photosPermission: false, cameraPermission: false, microphonePermission: false },
+        {
+          photosPermission: false,
+          cameraPermission: false,
+          microphonePermission: MICROPHONE_PERMISSION,
+        },
       ],
       'expo-background-task',
       // Share out only; the share extension adds receiving.
@@ -296,11 +303,15 @@ const PROFILES = {
     ],
     jsEntries: [TRACKING_ENTRY],
   },
-  // Lowdefy Dev: `field` and the developer features, which read the code `lowdefy dev` prints with
-  // the camera, open the dev menu on a shake (expo-sensors) and take screenshots for the dev tab
-  // (react-native-view-shot). expo-dev-client lets a development build load a local bundle.
+  // Lowdefy Dev: `field`, NFC, background location, contacts and calendar (so any app's pages can be
+  // tried in it), and the developer features, which read the code `lowdefy dev` prints with the
+  // camera, open the dev menu on a shake (expo-sensors) and take screenshots for the dev tab
+  // (react-native-view-shot). expo-dev-client lets a development build load a local bundle. It
+  // carries no share or widget extension: those are app extension targets of an app's own shell.
   dev: {
     extends: 'field',
+    includes: ['field-nfc', 'field-tracking'],
+    extensions: ['contacts', 'calendar'],
     capabilities: [],
     modules: {
       'expo-dev-client': null,
@@ -558,8 +569,12 @@ function resolveProfile(name) {
     );
   }
   const entry = PROFILES[name];
-  const base = entry.extends ? resolveProfile(entry.extends) : EMPTY_PROFILE;
-  return mergeProfiles(base, { ...entry, name });
+  const parent = entry.extends ? resolveProfile(entry.extends) : EMPTY_PROFILE;
+  const included = (entry.includes ?? []).reduce(
+    (merged, include) => mergeProfiles(merged, { ...PROFILES[include], name }),
+    parent
+  );
+  return mergeProfiles(applyExtensions(included, entry.extensions), { ...entry, name });
 }
 
 module.exports = {

@@ -208,9 +208,12 @@ test('basic, field and dev shells carry the speech purpose texts and RECORD_AUDI
       const configPath = path.join(directory, `${profile}.json`);
       fs.writeFileSync(configPath, JSON.stringify({ ...fieldShell, icon: undefined, profile }));
       const config = readAppConfig(configPath, 'introspect', { variant });
+      // field and dev record voice notes, so their microphone text says so.
       assert.equal(
         config.ios.infoPlist.NSMicrophoneUsageDescription,
-        '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text.',
+        profile === 'basic'
+          ? '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text.'
+          : '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text or to record a voice note.',
         profile
       );
       assert.equal(
@@ -272,13 +275,24 @@ test("a shell plugin's config plugins, permissions, privacy reasons and data joi
     // The profile's own config plugins and permissions stay.
     assert.equal(
       config.ios.infoPlist.NSCameraUsageDescription,
-      'Allow $(PRODUCT_NAME) to use the camera.'
+      'Allow $(PRODUCT_NAME) to use the camera to take photos, scan codes and scan documents.'
     );
     assert.deepEqual(config.extra.shell.capabilities, [
+      'background-fetch',
       'biometrics',
+      'files',
+      'haptics',
+      'notifications',
+      'photos',
+      'share',
+      'shortcuts',
       'sign-in',
       'speech',
+      'audio',
       'camera',
+      'document-scanner',
+      'location',
+      'maps',
       'printer',
     ]);
 
@@ -317,11 +331,15 @@ test("a shell plugin's config plugins, permissions, privacy reasons and data joi
       plugins: resolveShellPlugins({ shell: printerShell, require: shellRequire }),
     });
     assert.equal(profile.name, 'field');
+    // The plugin's deviceId is already basic's (the push token), so it is listed once.
     assert.deepEqual(profile.dataCollected, [
       { type: 'emailAddress', purpose: 'appFunctionality' },
       { type: 'userId', purpose: 'appFunctionality' },
-      { type: 'photos', purpose: 'appFunctionality' },
       { type: 'deviceId', purpose: 'appFunctionality' },
+      { type: 'photos', purpose: 'appFunctionality' },
+      { type: 'otherUserContent', purpose: 'appFunctionality' },
+      { type: 'audioData', purpose: 'appFunctionality' },
+      { type: 'preciseLocation', purpose: 'appFunctionality' },
     ]);
     assert.deepEqual(profile.modules['react-native-ble-plx'], 'BlePlx');
   }));

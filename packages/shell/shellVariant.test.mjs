@@ -21,7 +21,7 @@ import { createRequire } from 'node:module';
 import test from 'node:test';
 
 const require = createRequire(import.meta.url);
-const { DEV_ENTRY } = require('./profiles.js');
+const { DEV_ENTRY, WIDGETS_ENTRY } = require('./profiles.js');
 const {
   getExcludedModules,
   getExclusions,
@@ -30,36 +30,63 @@ const {
   getShellVariant,
 } = require('./shellVariant.js');
 
+// Lowdefy Dev carries every profile's modules; it leaves out only the widgets extension, an app
+// extension target of an app's own shell.
+const LOWDEFY_DEV_EXCLUDED = { 'expo-widgets': 'ExpoWidgets' };
+
+const FIELD_MODULES = [
+  'expo-audio',
+  'expo-brightness',
+  'expo-camera',
+  'expo-location',
+  'expo-maps',
+  'react-native-document-scanner-plugin',
+];
+const OPT_IN_MODULES = ['expo-calendar', 'expo-contacts', 'expo-widgets'];
+const DEV_MODULES = ['expo-dev-client', 'expo-sensors', 'react-native-view-shot'];
+
 test('Lowdefy Dev links every module it uses', () => {
-  assert.deepEqual(getExcludedModules({ shell: { profile: 'dev' }, variant: 'dev' }), {});
+  assert.deepEqual(
+    getExcludedModules({ shell: { profile: 'dev' }, variant: 'dev' }),
+    LOWDEFY_DEV_EXCLUDED
+  );
 });
 
 test('a development build links every module the dev variant uses', () => {
-  assert.deepEqual(getExcludedModules({ shell: { profile: 'development' }, variant: 'dev' }), {});
+  assert.deepEqual(
+    getExcludedModules({ shell: { profile: 'development' }, variant: 'dev' }),
+    LOWDEFY_DEV_EXCLUDED
+  );
 });
 
-test('a basic release shell leaves out the camera, the dev-only modules and the dev client', () => {
+test('a basic release shell leaves out the field, NFC, opt-in and dev-only modules', () => {
   assert.deepEqual(
     Object.keys(getExcludedModules({ shell: { profile: 'basic' }, variant: 'release' })).sort(),
-    ['expo-camera', 'expo-dev-client', 'expo-sensors', 'react-native-view-shot']
+    [...FIELD_MODULES, ...OPT_IN_MODULES, ...DEV_MODULES, 'react-native-nfc-manager'].sort()
   );
 });
 
-test('a field release shell keeps expo-camera', () => {
+test('a field release shell keeps the field modules', () => {
   assert.deepEqual(
     Object.keys(getExcludedModules({ shell: { profile: 'field' }, variant: 'release' })).sort(),
-    ['expo-dev-client', 'expo-sensors', 'react-native-view-shot']
+    [...OPT_IN_MODULES, ...DEV_MODULES, 'react-native-nfc-manager'].sort()
   );
+});
+
+test('a shell keeps the modules of the extensions it lists', () => {
+  const excluded = getExcludedModules({
+    shell: { profile: 'basic', extensions: ['widgets', 'contacts'] },
+    variant: 'release',
+  });
+  assert.equal('expo-widgets' in excluded, false);
+  assert.equal('expo-contacts' in excluded, false);
+  assert.equal('expo-calendar' in excluded, true);
 });
 
 test('a release build leaves out the developer features whatever its profile', () => {
   const exclusions = getExclusions({ shell: { profile: 'dev' }, variant: 'release' });
-  assert.deepEqual(Object.keys(exclusions.modules).sort(), [
-    'expo-dev-client',
-    'expo-sensors',
-    'react-native-view-shot',
-  ]);
-  assert.deepEqual(exclusions.jsEntries, [DEV_ENTRY]);
+  assert.deepEqual(Object.keys(exclusions.modules).sort(), ['expo-widgets', ...DEV_MODULES].sort());
+  assert.deepEqual(exclusions.jsEntries.sort(), [DEV_ENTRY, WIDGETS_ENTRY].sort());
   assert.deepEqual(exclusions.permissions, ['NSMotionUsageDescription']);
 });
 
@@ -68,7 +95,10 @@ test('the dev variant carries the developer features whatever its profile', () =
   assert.equal(profile.name, 'basic');
   assert.ok('expo-camera' in profile.modules);
   assert.ok('expo-sensors' in profile.modules);
-  assert.deepEqual(getExcludedModules({ shell: { profile: 'basic' }, variant: 'dev' }), {});
+  assert.deepEqual(
+    getExcludedModules({ shell: { profile: 'basic' }, variant: 'dev' }),
+    LOWDEFY_DEV_EXCLUDED
+  );
 });
 
 test('a basic release shell blocks the permissions only left-out modules ask for', () => {
@@ -76,12 +106,16 @@ test('a basic release shell blocks the permissions only left-out modules ask for
     shell: { profile: 'basic' },
     variant: 'release',
   });
-  assert.deepEqual(jsEntries, [DEV_ENTRY]);
-  assert.deepEqual(permissions, [
+  assert.ok(jsEntries.includes(DEV_ENTRY));
+  [
     'NSCameraUsageDescription',
     'android.permission.CAMERA',
     'NSMotionUsageDescription',
-  ]);
+    'NFCReaderUsageDescription',
+    'android.permission.ACCESS_BACKGROUND_LOCATION',
+    'NSContactsUsageDescription',
+  ].forEach((permission) => assert.ok(permissions.includes(permission), permission));
+  assert.equal(permissions.includes('android.permission.POST_NOTIFICATIONS'), false);
 });
 
 test('a shell config without a profile is basic for a release shell and dev for Lowdefy Dev', () => {
@@ -91,7 +125,7 @@ test('a shell config without a profile is basic for a release shell and dev for 
     getExcludedModules({ shell: {}, variant: 'release' }),
     getExcludedModules({ shell: { profile: 'basic' }, variant: 'release' })
   );
-  assert.deepEqual(getExcludedModules({ shell: {}, variant: 'dev' }), {});
+  assert.deepEqual(getExcludedModules({ shell: {}, variant: 'dev' }), LOWDEFY_DEV_EXCLUDED);
 });
 
 test("a release shell's plugins are its profile's, with the camera's only when it has one", () => {
