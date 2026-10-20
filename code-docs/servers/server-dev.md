@@ -487,6 +487,13 @@ builds exactly the pages the next requests would rebuild. A page built with app 
 edited after any change event. The review is async, and so are `getPageBuildStatus`,
 `getBuildStatus` and their callers.
 
+`build/buildStatus.json` covers the config build only, so `getBuildStatus` folds the page
+failures into the `build` it returns: an `ok` config build with any failed page reads
+`pages_failed`, and `build.failedPages` names those pages whatever the status. `error` stays
+reserved for a failed config build, which is what the stale flag, `getBuildId` and the `build`
+push event read straight from the file. `lowdefy journeys harden` waits for `ok` or
+`pages_failed`, since either means the config build was published.
+
 ## Server Process and Logging
 
 ### stdio: inherit
