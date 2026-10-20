@@ -103,7 +103,8 @@ test('any other error keeps its code and its message cut to 500 characters', () 
 
   expect(logged.name).toBe('Error');
   expect(logged.code).toBe('ECONNRESET');
-  expect(logged.message).toBe(`${'x'.repeat(500)}…`);
+  expect(logged.message).toBe(`${'x'.repeat(499)}…`);
+  expect(logged.message).toHaveLength(500);
 });
 
 test('a value thrown that is not an error is named by its type', () => {
@@ -134,6 +135,15 @@ test('stack frames leave out the opening lines that repeat the message', () => {
 
   expect(frames.length).toBeGreaterThan(0);
   expect(frames.every((frame) => frame.startsWith('at '))).toBe(true);
+  expect(JSON.stringify(frames)).not.toContain('8001015009087');
+});
+
+test('a message line that looks like a stack frame is left out', () => {
+  const error = new Error('JSON parsing failed: Text: {\n    at 8001015009087\n}.');
+
+  const frames = stackFramesForLog(error);
+
+  expect(frames.length).toBeGreaterThan(0);
   expect(JSON.stringify(frames)).not.toContain('8001015009087');
 });
 

@@ -36,7 +36,7 @@ function isAiSdkError(error) {
 
 function truncate(text) {
   if (text.length <= MESSAGE_LIMIT) return text;
-  return `${text.slice(0, MESSAGE_LIMIT)}…`;
+  return `${text.slice(0, MESSAGE_LIMIT - 1)}…`;
 }
 
 function agentErrorForLog(error, depth = 0) {
@@ -57,11 +57,14 @@ function agentErrorForLog(error, depth = 0) {
   return summary;
 }
 
-// The stack's frames without its opening lines, which repeat the message.
+// The stack's frames without its opening lines, which repeat the message. The lines are
+// dropped by count, not by shape: a message can hold a line that looks like a frame.
 function stackFramesForLog(error) {
   if (!(error instanceof Error) || typeof error.stack !== 'string') return [];
+  const headerLineCount = String(error).split('\n').length;
   return error.stack
     .split('\n')
+    .slice(headerLineCount)
     .filter((line) => /^\s+at /.test(line))
     .map((line) => line.trim());
 }
