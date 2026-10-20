@@ -67,6 +67,14 @@ function buildPatterns({ redact, configKey }) {
         }
       );
     }
+    // A pattern that matches empty text would put the replacement between every character.
+    if (regex.test('')) {
+      throw new ConfigError(`Agent "${location}" matches empty text.`, {
+        received: pattern,
+        configKey,
+      });
+    }
+    regex.lastIndex = 0;
     return { name: name ?? location, regex };
   });
 }

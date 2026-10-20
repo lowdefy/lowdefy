@@ -2099,6 +2099,11 @@ describe('buildAgents redact', () => {
     expect(error.configKey).toEqual('agent-key');
   });
 
+  test('a pattern that matches empty text fails', () => {
+    const { error } = buildWithRedact({ patterns: ['\\d*'] });
+    expect(error.message).toEqual('Agent "agent1" "redact.patterns[0]" matches empty text.');
+  });
+
   test('invalid literal flags fail', () => {
     const { error } = buildWithRedact({ patterns: [{ pattern: 'a', flags: 'q' }] });
     expect(error.message).toMatch(/is not a valid regular expression/);

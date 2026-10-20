@@ -132,9 +132,9 @@ _ref:
                     - `flags: string`: Regular expression flags, such as `i`. `g` is always added, so every match is masked.
                   - `replacement: string`: Default: `'[removed]'` - The text each match is replaced with.
 
-                The server masks the text of every user message, not only the newest: the browser sends the whole conversation with each turn. The model's replies, tool calls and results, and attached files are left as they are. The chat in the browser still shows what the user typed. A conversation the browser saves through its own endpoints is not masked by `redact`, so mask it in those endpoints too, for example with [`_string.replace`](/_string).
+                The server masks the text of every user message, not only the newest: the browser sends the whole conversation with each turn. The model's replies, tool calls and results, and attached files are left as they are. `redact` applies to chat turns: a sub-agent's `redact` is not applied when another agent calls it, and the `CallAgent` routine step does not use it. The chat in the browser still shows what the user typed. A conversation the browser saves through its own endpoints is not masked by `redact`, so mask it in those endpoints too, for example with [`_string.replace`](/_string).
 
-                Operators in `redact` are evaluated with each request, so the patterns can come from a module var or a secret. The build checks a pattern written in the config; a pattern an operator returns is checked when the request runs, and an invalid one fails the turn with a config error.
+                The patterns can come from a module var, resolved at build, or from a runtime operator such as `_secret`, evaluated with each request. The build checks a pattern written in the config; a pattern an operator returns is checked when the request runs, and an invalid one fails the turn with a config error. A pattern that matches empty text, such as `\d*`, is refused, since it would put the replacement between every character.
 
                 ###### Mask ID numbers, phone numbers and email addresses (POPIA):
                 ```yaml

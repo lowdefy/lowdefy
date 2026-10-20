@@ -1207,7 +1207,7 @@ describe('redact', () => {
       id: 'm3',
       role: 'user',
       parts: [
-        { type: 'text', text: 'Also call 082 555 1234 or ann@example.org' },
+        { type: 'text', text: 'Also call 08255512345 or ann@example.org' },
         {
           type: 'file',
           mediaType: 'image/png',
@@ -1226,6 +1226,7 @@ describe('redact', () => {
     expect(sent[0].parts[0].text).toEqual('My ID is [removed], mail me at [removed]');
     expect(sent[1]).toBe(messages[1]);
     expect(sent[2].parts[0].text).toEqual('Also call [removed] or [removed]');
+    expect(sent[2].parts[0].text).not.toContain('08255512345');
     expect(sent[2].parts[1]).toBe(messages[2].parts[1]);
     // The browser's messages are not changed in place.
     expect(messages[0].parts[0].text).toEqual('My ID is 8001015009087, mail me at jo@example.com');
@@ -1270,6 +1271,18 @@ describe('redact', () => {
     });
     const sent = mockResolver.mock.calls[0][0].properties.messages;
     expect(sent[0].parts[0].text).toEqual('pin [removed]');
+  });
+
+  test('a pattern that matches empty text is a ConfigError', async () => {
+    const { context, mockResolver } = setup({ redact: { patterns: ['\\d*'] } });
+    await expect(
+      callAgent(context, {
+        agentId: 'my-agent',
+        pageId: 'p',
+        messages: [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+      })
+    ).rejects.toThrow('Agent "redact.patterns[0]" matches empty text.');
+    expect(mockResolver).not.toHaveBeenCalled();
   });
 
   test('an invalid pattern from an operator is a ConfigError', async () => {

@@ -351,13 +351,18 @@ function validateRedact(agent, context) {
     }
     if (type.isString(pattern) && (type.isNone(flags) || type.isString(flags))) {
       const allFlags = (flags ?? '').includes('g') ? flags : `${flags ?? ''}g`;
+      let regex;
       try {
-        new RegExp(pattern, allFlags);
+        regex = new RegExp(pattern, allFlags);
       } catch (error) {
         return fail(
           `Agent "${agent.id}" "${location}" is not a valid regular expression: ${error.message}`,
           pattern
         );
+      }
+      // A pattern that matches empty text would put the replacement between every character.
+      if (regex.test('')) {
+        return fail(`Agent "${agent.id}" "${location}" matches empty text.`, pattern);
       }
     }
   }

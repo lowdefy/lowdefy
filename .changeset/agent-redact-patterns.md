@@ -21,4 +21,4 @@ agents:
         - '\d(?:[ -]?\d){8,}'
 ```
 
-Patterns are strings or `{ name, pattern, flags }` objects, and may be operators. The build rejects a missing or empty `patterns` list, a pattern that is not a string and an invalid regular expression; a pattern an operator returns is checked when the request runs. Assistant messages, tool calls and files are left as they are, and the debug log counts replacements by name without the matched text.
+Patterns are strings or `{ name, pattern, flags }` objects, and may be operators. The build rejects a missing or empty `patterns` list, a pattern that is not a string, an invalid regular expression and a pattern that matches empty text; a pattern an operator returns is checked when the request runs. It applies to chat turns, not to sub-agent calls or the `CallAgent` step. Assistant messages, tool calls and files are left as they are, and the debug log counts replacements by name without the matched text.
