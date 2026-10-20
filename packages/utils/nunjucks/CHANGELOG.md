@@ -1,5 +1,25 @@
 # Change Log
 
+## 7.0.0
+
+### Patch Changes
+
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [6144814]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [1766343]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [81bd4f0]
+  - @lowdefy/helpers@7.0.0
+
 ## 6.1.0
 
 ### Patch Changes
