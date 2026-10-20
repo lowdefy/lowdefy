@@ -180,9 +180,18 @@ function createDisplayMeta(blockName, { size = false } = {}) {
               },
               filter: {
                 type: ['boolean', 'string'],
+                // Only AG Grid's community filters: this block does not include
+                // Enterprise, and a misspelt name should fail the build check.
+                enum: [
+                  true,
+                  false,
+                  'agTextColumnFilter',
+                  'agNumberColumnFilter',
+                  'agDateColumnFilter',
+                ],
                 default: false,
                 description:
-                  'Filter to use for this column. Set to `true` to use the default filter, or name a provided filter: `agTextColumnFilter`, `agNumberColumnFilter`, `agDateColumnFilter`, or `agSetColumnFilter`, which needs AG Grid Enterprise (not included in this block).',
+                  'Filter to use for this column. Set to `true` to use the default filter, or name a provided filter: `agTextColumnFilter`, `agNumberColumnFilter` or `agDateColumnFilter`. `agSetColumnFilter` and `agMultiColumnFilter` need AG Grid Enterprise, which this block does not include.',
               },
               sortable: {
                 type: 'boolean',
@@ -226,7 +235,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
               tooltipComponent: {
                 type: ['object', 'string'],
                 description:
-                  'Provide a custom tooltip component, or the name of a component registered in `components`. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/).',
+                  'Provide a custom tooltip component, or the name of a component registered with the AG Grid `components` grid option. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/).',
               },
               ellipsis: {
                 type: 'number',

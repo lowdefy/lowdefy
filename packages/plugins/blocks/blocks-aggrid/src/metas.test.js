@@ -40,9 +40,30 @@ test.each(blocks)('%s columnDefs accept a boolean or a named filter', (name, met
 
 test.each(blocks)('%s columnDefs refuse a number filter', (name, meta) => {
   const errors = getErrors(meta, { columnDefs: [{ field: 'date', filter: 3 }] });
+  expect(errors).toContainEqual(
+    expect.objectContaining({ instancePath: '/columnDefs/0/filter', keyword: 'type' })
+  );
+});
+
+test.each(blocks)('%s columnDefs refuse a misspelt filter name', (name, meta) => {
+  const errors = getErrors(meta, { columnDefs: [{ field: 'date', filter: 'agDateFilter' }] });
   expect(errors).toEqual([
-    expect.objectContaining({ instancePath: '/columnDefs/0/filter', keyword: 'type' }),
+    expect.objectContaining({ instancePath: '/columnDefs/0/filter', keyword: 'enum' }),
   ]);
+});
+
+test.each(blocks)('%s columnDefs refuse an Enterprise filter', (name, meta) => {
+  const errors = getErrors(meta, { columnDefs: [{ field: 'tag', filter: 'agSetColumnFilter' }] });
+  expect(errors).toEqual([
+    expect.objectContaining({ instancePath: '/columnDefs/0/filter', keyword: 'enum' }),
+  ]);
+});
+
+test.each(blocks)('%s columnDefs accept a filter set by an operator', (name, meta) => {
+  const properties = {
+    columnDefs: [{ field: 'date', filter: { _if: { test: true, then: 'agDateColumnFilter' } } }],
+  };
+  expect(getErrors(meta, properties)).toEqual([]);
 });
 
 test.each(blocks)('%s columnDefs accept a named cell renderer and tooltip', (name, meta) => {
