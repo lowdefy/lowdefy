@@ -36,7 +36,7 @@ async function controlParallelFor(context, routineContext, { control }) {
 
   logger.debug({
     event: 'debug_control_parallel',
-    array,
+    itemCount: Array.isArray(array) ? array.length : null,
     itemName,
   });
 
@@ -56,9 +56,8 @@ async function controlParallelFor(context, routineContext, { control }) {
 
     logger.debug({
       event: 'debug_control_parallel_iteration',
-      itemName: itemName,
-      value: item,
-      items: updatedItems,
+      itemName,
+      index,
     });
 
     return runRoutine(

@@ -35,7 +35,7 @@ test('parallel_for iterates over array', async () => {
   expect(context.logger.debug.mock.calls).toContainEqual([
     {
       event: 'debug_control_parallel',
-      array: ['a', 'b', 'c'],
+      itemCount: 3,
       itemName: 'item',
     },
   ]);
@@ -60,7 +60,7 @@ test('parallel_for with empty array', async () => {
   expect(context.logger.debug.mock.calls).toContainEqual([
     {
       event: 'debug_control_parallel',
-      array: [],
+      itemCount: 0,
       itemName: 'item',
     },
   ]);
@@ -156,7 +156,9 @@ test('parallel_for logs iteration details', async () => {
   );
   expect(iterationLog).toBeDefined();
   expect(iterationLog[0].itemName).toEqual('item');
-  expect(iterationLog[0].value).toEqual('x');
+  expect(iterationLog[0].index).toEqual(0);
+  expect(iterationLog[0]).not.toHaveProperty('value');
+  expect(iterationLog[0]).not.toHaveProperty('items');
 });
 
 test('parallel_for handles error result', async () => {
