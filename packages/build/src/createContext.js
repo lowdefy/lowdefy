@@ -58,8 +58,9 @@ function createContext({
     importAppCode: createImportAppCode({ directories }),
     keyMap: {},
     logger,
-    // Set by lowdefy build on the build before its plugin install: the build
-    // after the install reports the plugin checks that did not run.
+    // Set on the build that a plugin install follows (lowdefy build, and the
+    // dev server's initial build): the build after the install reports the
+    // plugin checks that did not run.
     pluginInstallFollows,
     // Null prototype prevents pollution via attacker-controlled entry.id.
     modules: Object.create(null),

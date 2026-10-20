@@ -309,4 +309,17 @@ ${
     expect(second.warnings.some((warning) => warning.includes('titel'))).toBe(true);
     expect(fs.existsSync(pendingPath())).toBe(false);
   });
+
+  test('through lowdefy build the rebuild warns for a block package the install did not add', async () => {
+    writeConfig({ block: true });
+    const { first, second } = await lowdefyBuild({ install: installConnectionPackage });
+    expect(first.status).toBe(0);
+    expect(first.warnings).not.toContain(pendingWarning(blockPackage));
+    expect(second).not.toBe(null);
+    expect(second.status).toBe(0);
+    expect(
+      second.warnings.filter((warning) => warning === pendingWarning(blockPackage))
+    ).toHaveLength(1);
+    expect(second.warnings).not.toContain(pendingWarning(connectionPackage));
+  });
 });
