@@ -14,8 +14,29 @@
   limitations under the License.
 */
 
-// Unregisters this phone's push token for the app at sign-out, so no notification for the person
-// reaches it afterwards. Push arrives with its own design; until then there is nothing to remove.
-async function unregisterPushToken() {}
+import { Platform } from 'react-native';
+
+import callEndpoint from '../native/callEndpoint.js';
+
+/**
+ * Tells the app's mobile.notifications.unregister endpoint that this phone signs out, so no
+ * notification for the person reaches it afterwards: { platform, shellId }, with the session that
+ * is ending. Called before the token is removed, and never waited on: offline, the sign-out still
+ * ends on the phone, and the app drops the token when a push to it fails.
+ *
+ * @param {Object} params
+ * @param {Object} params.app { apiBase, fetch, session, shell, tokenStore }.
+ */
+async function unregisterPushToken({ app }) {
+  const endpointId = app.session?.getState().root?.notifications?.unregister;
+  if (typeof endpointId !== 'string' || app.tokenStore.get() === null) {
+    return;
+  }
+  await callEndpoint({
+    app,
+    endpointId,
+    payload: { platform: Platform.OS, shellId: app.shell.id },
+  });
+}
 
 export default unregisterPushToken;

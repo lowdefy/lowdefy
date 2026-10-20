@@ -52,11 +52,6 @@ export default {
       },
       label,
       maxCount: { type: 'number', description: 'The most files the input holds.' },
-      maxSize: {
-        type: 'number',
-        default: 1600,
-        description: 'Photos are scaled down so their longer side is at most this many pixels.',
-      },
       mediaTypes: {
         type: 'array',
         items: { type: 'string', enum: ['images', 'videos'] },

@@ -38,7 +38,15 @@ const clipboard = {
   setString: (text) => Clipboard.setStringAsync(text),
 };
 
-function createShellHost({ fetch, router, session, streamFetch, tokenStore, WebSocket }) {
+function createShellHost({
+  fetch,
+  requestQueue,
+  router,
+  session,
+  streamFetch,
+  tokenStore,
+  WebSocket,
+}) {
   const storage = createDeviceStore();
   return {
     authTransport: 'bearer',
@@ -59,6 +67,8 @@ function createShellHost({ fetch, router, session, streamFetch, tokenStore, WebS
     onCallerChanged: () => {
       session.handleCallerChanged();
     },
+    // `offline: queue` requests go through it (src/queue/createRequestQueue.js).
+    requestQueue,
     router,
     sessionStorage: createMemoryStore(),
     storage,

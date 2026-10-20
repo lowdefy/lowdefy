@@ -19,12 +19,21 @@
 //   signInWithSheet reads from the sheet's result; the router leaves it alone.
 // - A Lowdefy Dev link (lowdefy-dev://connect, lowdefy-dev://menu): Lowdefy Dev handles it
 //   (src/dev). A release shell has no developer features and routes every other link.
+// - A shortcut link (<scheme>://shortcut/<id>, from Siri and Spotlight) and the share extension's
+//   link (<scheme>://expo-sharing): the shell's shortcut and share-in services handle them
+//   (src/native).
+// - A link to the app's own site (a universal link or Android app link): opened as its page path.
 import { redirectDevLink } from '../src/dev/index.js';
+import getShellConfig from '../src/config/getShellConfig.js';
 import isSheetReturnLink from '../src/auth/isSheetReturnLink.js';
+import parseShellLink from '../src/native/parseShellLink.js';
+import toAppLinkPath from '../src/navigation/toAppLinkPath.js';
 
 export function redirectSystemPath({ initial, path }) {
-  if (isSheetReturnLink(path)) {
+  if (isSheetReturnLink(path) || parseShellLink(path) !== null) {
     return initial ? '/' : null;
   }
-  return redirectDevLink ? redirectDevLink({ initial, path }) : path;
+  const { app, environment } = getShellConfig();
+  const pagePath = toAppLinkPath({ appUrl: app.urls[environment], path });
+  return redirectDevLink ? redirectDevLink({ initial, path: pagePath }) : pagePath;
 }

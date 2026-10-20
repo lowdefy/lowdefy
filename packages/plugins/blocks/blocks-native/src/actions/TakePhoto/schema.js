@@ -32,11 +32,6 @@ export default {
         default: 0.7,
         description: 'JPEG quality of photos, 0 to 1.',
       },
-      maxSize: {
-        type: 'number',
-        default: 1600,
-        description: 'Photos are scaled down so their longer side is at most this many pixels.',
-      },
       base64: {
         type: 'boolean',
         default: false,

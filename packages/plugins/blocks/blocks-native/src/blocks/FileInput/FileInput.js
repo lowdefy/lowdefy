@@ -34,7 +34,6 @@ async function pickFrom({ source, properties, remaining }) {
   const multiple = remaining > 1;
   const imageOptions = {
     maxCount: remaining,
-    maxSize: properties.maxSize ?? 1600,
     mediaTypes: properties.mediaTypes ?? ['images', 'videos'],
     multiple,
     quality: properties.quality ?? 0.7,

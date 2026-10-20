@@ -16,8 +16,8 @@
 
 import getDeviceFeature from '../../device/getDeviceFeature.js';
 
-// Opens the new-contact form filled in, for the person to save. Returns { id } once saved, null
-// when cancelled. Shells with the contacts extension.
+// Opens the new-contact form filled in, for the person to save. Returns { saved: true } once
+// saved, null when cancelled. Shells with the contacts extension.
 async function AddContact({ params }) {
   return getDeviceFeature({ feature: 'contacts', action: 'AddContact' }).add(params ?? {});
 }

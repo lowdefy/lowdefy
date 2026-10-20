@@ -15,18 +15,23 @@
 */
 
 import { fetch as expoFetch } from 'expo/fetch';
+import * as Crypto from 'expo-crypto';
 import { openDatabaseSync } from 'expo-sqlite';
 
 import createAppAuth from './auth/createAppAuth.js';
+import createAppEventTrigger from './native/createAppEventTrigger.js';
 import createAppSession from './session/createAppSession.js';
 import createDeviceStore from './host/createDeviceStore.js';
 import createRouterAdapter from './host/createRouterAdapter.js';
 import createShellFetch from './host/createShellFetch.js';
 import createShellHost from './host/createShellHost.js';
+import createRequestQueue from './queue/createRequestQueue.js';
 import createShellLocale from './locale/createShellLocale.js';
 import createSqliteCacheStore from './cache/createSqliteCacheStore.js';
+import createSqliteQueueStore from './queue/createSqliteQueueStore.js';
 import getAppApiBase from './config/getAppApiBase.js';
 import getDeviceLocales from './locale/getDeviceLocales.js';
+import networkStatus from './host/networkStatus.js';
 import withoutCookies from './auth/withoutCookies.js';
 import withShellHeader from './host/withShellHeader.js';
 
@@ -39,13 +44,15 @@ function getDatabase() {
   return db;
 }
 
-// Everything the shell's one app (shell.app) needs: its auth, session, core host and locale.
+// Everything the shell's one app (shell.app) needs: its auth, session, core host, locale, request
+// queue and the trigger of its app events.
 // auth.start reads the session token and starts the session; onSignedOut is called once a sign-out
 // removed the person's data, to open the app afresh.
 async function createShellApp({ onSignedOut, shell }) {
   const { app } = shell;
   const apiBase = getAppApiBase({ app, environment: shell.environment });
   const cacheStore = createSqliteCacheStore({ db: getDatabase() });
+  const queueStore = createSqliteQueueStore({ db: getDatabase() });
   const kv = createDeviceStore();
   // Lowdefy Dev sends a paired dev server's token on every call (src/dev, shell.transport).
   const transport = shell.transport ?? {
@@ -73,6 +80,7 @@ async function createShellApp({ onSignedOut, shell }) {
     fetch,
     kv,
     onSignedOut,
+    queueStore,
     shell,
     streamFetch,
   });
@@ -85,8 +93,20 @@ async function createShellApp({ onSignedOut, shell }) {
     kv: auth.sessionStores.kv,
     tokenStore: auth.tokenStore,
   });
+  const shellFetch = createShellFetch({ fetch: auth.fetch, session });
+  const triggerAppEvent = createAppEventTrigger({ session });
+  const requestQueue = createRequestQueue({
+    appId: app.id,
+    fetch: shellFetch,
+    networkStatus,
+    newId: Crypto.randomUUID,
+    queueStore,
+    tokenStore: auth.tokenStore,
+    triggerAppEvent,
+  });
   const host = createShellHost({
-    fetch: createShellFetch({ fetch: auth.fetch, session }),
+    fetch: shellFetch,
+    requestQueue,
     router: createRouterAdapter({ session }),
     session,
     streamFetch: auth.streamFetch,
@@ -99,7 +119,7 @@ async function createShellApp({ onSignedOut, shell }) {
     session,
     storage: host.storage,
   });
-  return { auth, host, locale, session };
+  return { apiBase, auth, host, locale, requestQueue, session, triggerAppEvent };
 }
 
 export default createShellApp;

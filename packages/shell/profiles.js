@@ -45,34 +45,81 @@ const path = require('node:path');
 // Lowdefy Dev's developer features: connect, shake menu and dev-tab client (src/dev).
 const DEV_ENTRY = path.join(__dirname, 'src', 'dev', 'index.js');
 
+// The device features of profiles and extensions (src/device, src/widgets). A shell that does not
+// carry one resolves it to an empty module, so its native modules are never imported.
+const FIELD_ENTRY = path.join(__dirname, 'src', 'device', 'field', 'index.js');
+const NFC_ENTRY = path.join(__dirname, 'src', 'device', 'nfc', 'index.js');
+const TRACKING_ENTRY = path.join(__dirname, 'src', 'device', 'tracking', 'index.js');
+const CONTACTS_ENTRY = path.join(__dirname, 'src', 'device', 'contacts', 'index.js');
+const CALENDAR_ENTRY = path.join(__dirname, 'src', 'device', 'calendar', 'index.js');
+const WIDGETS_ENTRY = path.join(__dirname, 'src', 'widgets', 'index.js');
+
+// The config plugin that adds the App Shortcuts intent to the iOS app (native/withAppShortcuts.js).
+const APP_SHORTCUTS_PLUGIN = './native/withAppShortcuts.js';
+
 // One microphone purpose text for every plugin that writes NSMicrophoneUsageDescription: speech
 // (basic) and expo-camera (field, dev). expo-camera writes its own default when no earlier plugin
 // set the key, so it is given the same text and plugin order cannot change what a shell shows.
 const MICROPHONE_PERMISSION =
   '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text.';
+// `field` records voice notes too (expo-audio), so its shells claim more for the microphone. Every
+// plugin that writes NSMicrophoneUsageDescription in a field shell is given this text.
+const FIELD_MICROPHONE_PERMISSION =
+  '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text or to record a voice note.';
+const CAMERA_PERMISSION =
+  'Allow $(PRODUCT_NAME) to use the camera to take photos, scan codes and scan documents.';
+const LOCATION_PERMISSION =
+  'Allow $(PRODUCT_NAME) to use your location to show where you are and record where work is done.';
+const LOCATION_ALWAYS_PERMISSION =
+  'Allow $(PRODUCT_NAME) to use your location in the background to record trips and notice when you arrive at or leave a site.';
 const SPEECH_RECOGNITION_PERMISSION =
   '$(PRODUCT_NAME) turns what you say into text on this device. Your voice is not recorded or sent anywhere.';
 
 const PROFILES = {
-  // What every shell carries: the runtime, native blocks, sign-in, biometric unlock and on-device
-  // dictation (expo-speech-recognition, for the Composer and AgentChat mic).
+  // What every shell carries: the runtime, native blocks, sign-in, biometric unlock, on-device
+  // dictation (expo-speech-recognition, for the Composer and AgentChat mic), push and local
+  // notifications, haptics, share out, picking from Photos and Files, read aloud, keep awake, icon
+  // quick actions and App Shortcuts, and background fetch. None asks for a permission at install:
+  // Photos and Files use the system pickers, and notifications ask on first use.
   basic: {
-    capabilities: ['biometrics', 'sign-in', 'speech'],
+    capabilities: [
+      'background-fetch',
+      'biometrics',
+      'files',
+      'haptics',
+      'notifications',
+      'photos',
+      'share',
+      'shortcuts',
+      'sign-in',
+      'speech',
+    ],
     modules: {
       '@expo/ui': 'ExpoUI',
+      'expo-background-task': 'ExpoBackgroundTask',
       'expo-clipboard': 'ExpoClipboard',
       'expo-constants': 'ExponentConstants',
       'expo-crypto': 'ExpoCrypto',
+      'expo-document-picker': 'ExpoDocumentPicker',
+      'expo-file-system': 'FileSystem',
       'expo-font': 'ExpoFontLoader',
+      'expo-haptics': 'ExpoHaptics',
       'expo-image': 'ExpoImage',
+      'expo-image-picker': 'ExponentImagePicker',
+      'expo-keep-awake': 'ExpoKeepAwake',
       'expo-linking': 'ExpoLinking',
       'expo-local-authentication': 'ExpoLocalAuthentication',
       'expo-network': 'ExpoNetwork',
+      'expo-notifications': 'ExpoNotificationCategoriesModule',
+      'expo-quick-actions': 'ExpoQuickActions',
       'expo-router': null,
       'expo-secure-store': 'ExpoSecureStore',
+      'expo-sharing': 'ExpoSharing',
+      'expo-speech': 'ExpoSpeech',
       'expo-speech-recognition': 'ExpoSpeechRecognition',
       'expo-splash-screen': 'ExpoSplashScreen',
       'expo-sqlite': 'ExpoSQLite',
+      'expo-task-manager': 'ExpoTaskManager',
       'expo-updates': 'ExpoUpdates',
       'expo-web-browser': 'ExpoWebBrowser',
       'react-native-safe-area-context': 'RNCSafeAreaContext',
@@ -99,6 +146,18 @@ const PROFILES = {
       'expo-splash-screen',
       'expo-sqlite',
       'expo-web-browser',
+      // Push in production builds (aps-environment), and background notifications so a button with
+      // an endpoint runs without opening the app.
+      ['expo-notifications', { enableBackgroundRemoteNotifications: true }],
+      // Library mode only: the system photo picker needs no permission. field adds the camera.
+      [
+        'expo-image-picker',
+        { photosPermission: false, cameraPermission: false, microphonePermission: false },
+      ],
+      'expo-background-task',
+      // Share out only; the share extension adds receiving.
+      ['expo-sharing', { ios: { enabled: false }, android: { enabled: false } }],
+      APP_SHORTCUTS_PLUGIN,
     ],
     permissions: [
       'NSFaceIDUsageDescription',
@@ -106,6 +165,10 @@ const PROFILES = {
       'NSMicrophoneUsageDescription',
       'NSSpeechRecognitionUsageDescription',
       'android.permission.RECORD_AUDIO',
+      'android.permission.POST_NOTIFICATIONS',
+      'android.permission.VIBRATE',
+      'android.permission.RECEIVE_BOOT_COMPLETED',
+      'android.permission.WAKE_LOCK',
     ],
     jsEntries: [],
     // React Native's own (file timestamps, UserDefaults, boot time), and the free disk space
@@ -119,37 +182,119 @@ const PROFILES = {
     dataCollected: [
       { type: 'emailAddress', purpose: 'appFunctionality' },
       { type: 'userId', purpose: 'appFunctionality' },
+      // The push token the app's register endpoint stores, and the photos and files a person picks.
+      { type: 'deviceId', purpose: 'appFunctionality' },
+      { type: 'photos', purpose: 'appFunctionality' },
+      { type: 'otherUserContent', purpose: 'appFunctionality' },
     ],
   },
-  // Field work: the camera and scanning. Photos, location, maps and signatures join it as the
-  // shell gains them.
+  // Field work: the camera (photos, code and document scanning), location in use, maps, voice
+  // notes and screen brightness for scan screens. Its microphone text covers recording, for every
+  // plugin that writes it.
   field: {
     extends: 'basic',
-    capabilities: ['camera'],
-    modules: { 'expo-camera': 'ExpoCamera' },
-    // The camera does not add Android's microphone permission: the shell takes no video.
-    // RECORD_AUDIO comes from basic, for speech.
+    capabilities: ['audio', 'camera', 'document-scanner', 'location', 'maps'],
+    modules: {
+      'expo-audio': 'ExpoAudio',
+      'expo-brightness': 'ExpoBrightness',
+      'expo-camera': 'ExpoCamera',
+      'expo-location': 'ExpoLocation',
+      'expo-maps': 'ExpoMaps',
+      'react-native-document-scanner-plugin': 'DocumentScanner',
+    },
+    // The camera does not add Android's microphone permission: video capture records with the
+    // audio permission basic already has for speech.
     plugins: [
+      [
+        'expo-speech-recognition',
+        {
+          microphonePermission: FIELD_MICROPHONE_PERMISSION,
+          speechRecognitionPermission: SPEECH_RECOGNITION_PERMISSION,
+        },
+      ],
       [
         'expo-camera',
         {
-          cameraPermission: 'Allow $(PRODUCT_NAME) to use the camera.',
-          microphonePermission: MICROPHONE_PERMISSION,
+          cameraPermission: CAMERA_PERMISSION,
+          microphonePermission: FIELD_MICROPHONE_PERMISSION,
           recordAudioAndroid: false,
         },
       ],
+      [
+        'expo-image-picker',
+        {
+          photosPermission: false,
+          cameraPermission: CAMERA_PERMISSION,
+          microphonePermission: FIELD_MICROPHONE_PERMISSION,
+        },
+      ],
+      ['expo-audio', { microphonePermission: FIELD_MICROPHONE_PERMISSION }],
+      [
+        'expo-location',
+        {
+          locationWhenInUsePermission: LOCATION_PERMISSION,
+          isIosBackgroundLocationEnabled: false,
+          isAndroidBackgroundLocationEnabled: false,
+        },
+      ],
+      ['expo-maps', { requestLocationPermission: false }],
+      // react-native-document-scanner-plugin's config plugin only writes the camera purpose text,
+      // which expo-camera writes above, and requires @expo/config-plugins without depending on it,
+      // so the module is linked without it.
     ],
-    permissions: ['NSCameraUsageDescription', 'android.permission.CAMERA'],
-    dataCollected: [{ type: 'photos', purpose: 'appFunctionality' }],
+    permissions: [
+      'NSCameraUsageDescription',
+      'android.permission.CAMERA',
+      'NSLocationWhenInUseUsageDescription',
+      'android.permission.ACCESS_COARSE_LOCATION',
+      'android.permission.ACCESS_FINE_LOCATION',
+    ],
+    jsEntries: [FIELD_ENTRY],
+    dataCollected: [
+      { type: 'audioData', purpose: 'appFunctionality' },
+      { type: 'preciseLocation', purpose: 'appFunctionality' },
+    ],
   },
-  // `field` and NFC, which joins it as the shell gains it.
+  // `field` and NFC: reading and writing NDEF tags (react-native-nfc-manager).
   'field-nfc': {
     extends: 'field',
+    capabilities: ['nfc'],
+    modules: { 'react-native-nfc-manager': 'NfcManager' },
+    plugins: [
+      [
+        'react-native-nfc-manager',
+        { nfcPermission: 'Allow $(PRODUCT_NAME) to read and write NFC tags, such as asset tags.' },
+      ],
+    ],
+    permissions: ['NFCReaderUsageDescription', 'android.permission.NFC'],
+    jsEntries: [NFC_ENTRY],
   },
-  // `field` and background location and geofences, which join it as the shell gains them. Its
-  // session token stays readable while the phone is locked (src/auth/isBackgroundShell.js).
+  // `field` and background location and geofences (expo-location in the background, through
+  // expo-task-manager). Its session token stays readable while the phone is locked
+  // (src/auth/isBackgroundShell.js), so background points and region changes reach the app's
+  // endpoints.
   'field-tracking': {
     extends: 'field',
+    capabilities: ['background-location', 'geofencing'],
+    plugins: [
+      [
+        'expo-location',
+        {
+          locationWhenInUsePermission: LOCATION_PERMISSION,
+          locationAlwaysAndWhenInUsePermission: LOCATION_ALWAYS_PERMISSION,
+          isIosBackgroundLocationEnabled: true,
+          isAndroidBackgroundLocationEnabled: true,
+          isAndroidForegroundServiceEnabled: true,
+        },
+      ],
+    ],
+    permissions: [
+      'NSLocationAlwaysAndWhenInUseUsageDescription',
+      'android.permission.ACCESS_BACKGROUND_LOCATION',
+      'android.permission.FOREGROUND_SERVICE',
+      'android.permission.FOREGROUND_SERVICE_LOCATION',
+    ],
+    jsEntries: [TRACKING_ENTRY],
   },
   // Lowdefy Dev: `field` and the developer features, which read the code `lowdefy dev` prints with
   // the camera, open the dev menu on a shake (expo-sensors) and take screenshots for the dev tab
@@ -167,7 +312,7 @@ const PROFILES = {
         'expo-camera',
         {
           cameraPermission: 'Allow $(PRODUCT_NAME) to scan the code lowdefy dev prints.',
-          microphonePermission: MICROPHONE_PERMISSION,
+          microphonePermission: FIELD_MICROPHONE_PERMISSION,
           recordAudioAndroid: false,
         },
       ],
@@ -179,6 +324,141 @@ const PROFILES = {
   // Lowdefy Dev's features, for apps whose shell plugins Lowdefy Dev does not carry.
   development: {
     extends: 'dev',
+  },
+};
+
+/*
+  The opt-in shell extensions (shell.json `extensions`): rows shaped like a profile's, added on top
+  of any profile. Each brings a native target or a permission set a profile should not carry for
+  every shell: an app extension with its own bundle id and App Group (share, widgets), or one of
+  the permissions review scrutinises most (contacts, calendar). getShellProfile folds them in, and
+  the runtime version names them.
+*/
+// The widget's source picker. Its options are the app's mobile.widgets sources, set at run time
+// (setConfigurationParameterEnum); the static `default` stands for "the first source" until then.
+const WIDGET_SOURCE_PARAMETER = {
+  title: 'Show',
+  type: 'enum',
+  dynamic: true,
+  values: [{ name: 'First', value: 'default' }],
+  default: 'default',
+};
+
+const EXTENSIONS = {
+  // Receiving text, links, images, videos and files from other apps (expo-sharing's share
+  // extension on iOS, intent filters on Android). The app opens mobile.share.pageId.
+  share: {
+    capabilities: ['share-in'],
+    plugins: [
+      [
+        'expo-sharing',
+        {
+          ios: {
+            enabled: true,
+            activationRule: {
+              supportsText: true,
+              supportsWebUrlWithMaxCount: 1,
+              supportsImageWithMaxCount: 10,
+              supportsMovieWithMaxCount: 5,
+              supportsFileWithMaxCount: 10,
+            },
+          },
+          android: {
+            enabled: true,
+            singleShareMimeTypes: ['text/*', 'image/*', 'video/*', 'application/*'],
+            multipleShareMimeTypes: ['image/*', 'video/*', 'application/*'],
+          },
+        },
+      ],
+    ],
+  },
+  // Home Screen and Lock Screen widgets on iOS (expo-widgets): two fixed layouts fed with data the
+  // shell fetches from mobile.widgets endpoints. The widget never holds the session token. Android
+  // widgets need their own Compose layouts and come later.
+  widgets: {
+    capabilities: ['widgets'],
+    modules: { 'expo-widgets': 'ExpoWidgets' },
+    plugins: [
+      [
+        'expo-widgets',
+        {
+          enableAndroid: false,
+          widgets: [
+            {
+              name: 'LowdefyCount',
+              displayName: 'Count',
+              description: 'A number from the app, like open tasks.',
+              supportedFamilies: [
+                'systemSmall',
+                'accessoryCircular',
+                'accessoryRectangular',
+                'accessoryInline',
+              ],
+              configuration: {
+                title: 'Source',
+                parameters: {
+                  source: WIDGET_SOURCE_PARAMETER,
+                },
+              },
+            },
+            {
+              name: 'LowdefyList',
+              displayName: 'List',
+              description: 'A short list from the app, like the next jobs.',
+              supportedFamilies: ['systemMedium', 'systemLarge', 'accessoryRectangular'],
+              configuration: {
+                title: 'Source',
+                parameters: {
+                  source: WIDGET_SOURCE_PARAMETER,
+                },
+              },
+            },
+          ],
+        },
+      ],
+    ],
+    jsEntries: [WIDGETS_ENTRY],
+  },
+  // Picking and adding contacts (expo-contacts).
+  contacts: {
+    capabilities: ['contacts'],
+    modules: { 'expo-contacts': 'ExpoContacts' },
+    plugins: [
+      [
+        'expo-contacts',
+        { contactsPermission: 'Allow $(PRODUCT_NAME) to read and add the contacts you choose.' },
+      ],
+    ],
+    permissions: [
+      'NSContactsUsageDescription',
+      'android.permission.READ_CONTACTS',
+      'android.permission.WRITE_CONTACTS',
+    ],
+    jsEntries: [CONTACTS_ENTRY],
+    dataCollected: [{ type: 'contacts', purpose: 'appFunctionality' }],
+  },
+  // Reading and adding calendar events (expo-calendar).
+  calendar: {
+    capabilities: ['calendar'],
+    modules: { 'expo-calendar': 'ExpoCalendar' },
+    plugins: [
+      [
+        'expo-calendar',
+        {
+          calendarPermission:
+            'Allow $(PRODUCT_NAME) to read your calendar and add events you choose.',
+          remindersPermission: false,
+        },
+      ],
+    ],
+    permissions: [
+      'NSCalendarsFullAccessUsageDescription',
+      'NSCalendarsUsageDescription',
+      'android.permission.READ_CALENDAR',
+      'android.permission.WRITE_CALENDAR',
+    ],
+    jsEntries: [CALENDAR_ENTRY],
+    dataCollected: [{ type: 'otherUserContent', purpose: 'appFunctionality' }],
   },
 };
 
@@ -243,6 +523,26 @@ const EMPTY_PROFILE = {
 };
 
 /**
+ * A capability profile with the shell's extensions folded in (EXTENSIONS). The profile keeps its
+ * name.
+ *
+ * @param {Object} profile A resolved profile.
+ * @param {string[]} [extensions] shell.json `extensions`.
+ */
+function applyExtensions(profile, extensions = []) {
+  return extensions.reduce((merged, name) => {
+    if (!Object.prototype.hasOwnProperty.call(EXTENSIONS, name)) {
+      throw new Error(
+        `Shell extension ${JSON.stringify(name)} does not exist. Use one of ${Object.keys(
+          EXTENSIONS
+        ).join(', ')}.`
+      );
+    }
+    return mergeProfiles(merged, { ...EXTENSIONS[name], name: profile.name });
+  }, profile);
+}
+
+/**
  * Everything a capability profile carries, with the profiles it extends folded in.
  *
  * @param {string} name The profile's name (shell.json `profile`).
@@ -263,7 +563,10 @@ function resolveProfile(name) {
 }
 
 module.exports = {
+  applyExtensions,
   DEV_ENTRY,
+  EXTENSIONS,
+  FIELD_MICROPHONE_PERMISSION,
   MICROPHONE_PERMISSION,
   PROFILES,
   RELEASE_PROFILES,
@@ -271,4 +574,5 @@ module.exports = {
   pluginName,
   resolveProfile,
   SPEECH_RECOGNITION_PERMISSION,
+  WIDGETS_ENTRY,
 };

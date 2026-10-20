@@ -30,11 +30,12 @@
   - Autolinked native modules by package name and version (`nativeModuleSourceType: 'package'`),
     and config plugins from node_modules the same way (`configPluginSourceType: 'package'`), so the
     pnpm layout of one machine or another does not change it.
-  - The Expo config app.config.ts evaluates to, for every profile (Lowdefy Dev's shell.dev.json with
-    that profile), without what is not native or is per shell: versions and the string runtime
+  - The Expo config app.config.ts evaluates to, for every profile and for each shell extension on
+    basic (Lowdefy Dev's shell.dev.json with that profile and extension), without what is not native or is per shell: versions and the string runtime
     version, names, ids, schemes, icons, the EAS project and `extra` (the `relaxed` preset, and the
     ExpoConfigEASProject and ExpoConfigExtraSection skips).
-  - withExcludedNativeModules.js, the shell's one config plugin that edits native files. The files
+  - withExcludedNativeModules.js and native/withAppShortcuts.js (with its Swift template), the
+    shell's own config plugins that edit native files. The files
     app.config.ts only reads its config with (shell.json reading, profiles, exclusions, shell
     plugins) are left out: what they change shows in the evaluated config.
   - Not package.json scripts or .gitignore.
@@ -53,6 +54,7 @@ const RECORD_FILE = 'native-fingerprint.json';
 
 // The modules app.config.ts reads its config with. Their effect is in the evaluated config.
 const CONFIG_READERS = [
+  'appLinks.js',
   'applyShellPlugins.js',
   'authCallbackIntentFilters.js',
   'checkShellConfig.js',
@@ -69,6 +71,7 @@ function loadModules(shellRoot) {
   const require = createRequire(path.join(shellRoot, 'package.json'));
   return {
     fingerprint: require('@expo/fingerprint'),
+    EXTENSIONS: require(path.join(shellRoot, 'profiles.js')).EXTENSIONS,
     PROFILES: require(path.join(shellRoot, 'profiles.js')).PROFILES,
     RELEASE_PROFILES: require(path.join(shellRoot, 'profiles.js')).RELEASE_PROFILES,
   };
@@ -78,12 +81,22 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-// The fingerprint of the shell built on one profile, with the variant that profile is built as.
-async function createProfileFingerprint({ fingerprint, profile, shellRoot, variant }) {
+// The fingerprint of the shell built on one profile, with the variant that profile is built as,
+// and the shell extensions it carries.
+async function createProfileFingerprint({
+  extensions = [],
+  fingerprint,
+  profile,
+  shellRoot,
+  variant,
+}) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), `lowdefy-shell-fingerprint-${profile}-`));
   const configPath = path.join(directory, 'shell.json');
   const devShell = readJson(path.join(shellRoot, 'shell.dev.json'));
-  fs.writeFileSync(configPath, JSON.stringify({ ...devShell, profile }));
+  fs.writeFileSync(
+    configPath,
+    JSON.stringify({ ...devShell, profile, ...(extensions.length > 0 ? { extensions } : {}) })
+  );
   const previousEnv = {
     LOWDEFY_SHELL_CONFIG: process.env.LOWDEFY_SHELL_CONFIG,
     LOWDEFY_SHELL_VARIANT: process.env.LOWDEFY_SHELL_VARIANT,
@@ -136,12 +149,13 @@ async function createProfileFingerprint({ fingerprint, profile, shellRoot, varia
 }
 
 /**
- * Expo's fingerprint of the shell package's native inputs, for every capability profile.
+ * Expo's fingerprint of the shell package's native inputs, for every capability profile and for
+ * each shell extension on `basic` (as `basic+<extension>`).
  *
  * @returns {Promise<{ hash: string, profiles: Object<string, string> }>}
  */
 async function createNativeFingerprint({ shellRoot = defaultShellRoot } = {}) {
-  const { fingerprint, PROFILES, RELEASE_PROFILES } = loadModules(shellRoot);
+  const { EXTENSIONS, fingerprint, PROFILES, RELEASE_PROFILES } = loadModules(shellRoot);
   const profiles = {};
   // One at a time: each sets the environment its Expo config is evaluated with.
   for (const profile of Object.keys(PROFILES)) {
@@ -151,6 +165,15 @@ async function createNativeFingerprint({ shellRoot = defaultShellRoot } = {}) {
       profile,
       shellRoot,
       variant,
+    });
+  }
+  for (const extension of Object.keys(EXTENSIONS ?? {})) {
+    profiles[`basic+${extension}`] = await createProfileFingerprint({
+      extensions: [extension],
+      fingerprint,
+      profile: 'basic',
+      shellRoot,
+      variant: 'release',
     });
   }
   const hash = crypto

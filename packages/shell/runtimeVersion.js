@@ -64,8 +64,8 @@ function hashPlugins(plugins) {
 }
 
 /**
- * The runtime version of a shell build: `<nativeVersion>-<profile>`, and `-<plugins hash>` when the
- * shell carries shell plugins. An over-the-air update reaches only binaries with the same runtime
+ * The runtime version of a shell build: `<nativeVersion>-<profile>`, `+<extension>` for each
+ * extension it carries (in a fixed order), and `-<plugins hash>` when it carries shell plugins. An over-the-air update reaches only binaries with the same runtime
  * version, so it changes only with the shell's native code (`nativeVersion` in package.json, bumped
  * on purpose and kept honest by scripts/checkNativeVersion.mjs), its capability profile and its
  * plugins. Shell identity (name, ids, scheme, icon, colour, URLs) is not part of it, so every shell
@@ -79,9 +79,10 @@ function hashPlugins(plugins) {
  * @param {string} params.profile The shell's capability profile.
  * @param {{ name: string, version: string, options?: Object }[]} [params.plugins] The shell plugins
  *   it carries (shell.json `plugins`).
+ * @param {string[]} [params.extensions] The shell extensions it carries (shell.json `extensions`).
  * @returns {string}
  */
-function getRuntimeVersion({ nativeVersion, profile, plugins = [] }) {
+function getRuntimeVersion({ nativeVersion, profile, plugins = [], extensions = [] }) {
   if (!isPositiveInteger(nativeVersion)) {
     throw new Error(
       `nativeVersion should be a positive integer. Received ${JSON.stringify(nativeVersion)}.`
@@ -93,10 +94,16 @@ function getRuntimeVersion({ nativeVersion, profile, plugins = [] }) {
   if (!Array.isArray(plugins)) {
     throw new Error(`plugins should be an array. Received ${JSON.stringify(plugins)}.`);
   }
-  if (plugins.length === 0) {
-    return `${nativeVersion}-${profile}`;
+  if (!Array.isArray(extensions) || !extensions.every((name) => typeof name === 'string')) {
+    throw new Error(
+      `extensions should be an array of names. Received ${JSON.stringify(extensions)}.`
+    );
   }
-  return `${nativeVersion}-${profile}-${hashPlugins(plugins)}`;
+  const base = [`${nativeVersion}-${profile}`, ...[...extensions].sort()].join('+');
+  if (plugins.length === 0) {
+    return base;
+  }
+  return `${base}-${hashPlugins(plugins)}`;
 }
 
 // `require('./runtimeVersion.js')` is the function, and `.getRuntimeVersion` names it too, so

@@ -16,10 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
+import injectPush from './injectPush.js';
+import injectShare from './injectShare.js';
+
 const NEXT_READ_KINDS = ['scan', 'photo', 'nfc', 'transcript'];
 const PERMISSION_ANSWERS = ['granted', 'denied'];
 const NETWORK_STATES = ['online', 'offline'];
-const KINDS = [...NEXT_READ_KINDS, 'location', 'permission', 'network', 'push', 'clear'];
+const KINDS = [...NEXT_READ_KINDS, 'location', 'permission', 'network', 'push', 'share', 'clear'];
 
 function describe(value) {
   return JSON.stringify(value);
@@ -47,11 +50,6 @@ function isLocation(value) {
 function validateInjection({ kind, name, value }) {
   if (!KINDS.includes(kind)) {
     throw new Error(`An injection kind is one of ${KINDS.join(', ')}. Received ${describe(kind)}.`);
-  }
-  if (kind === 'push') {
-    throw new Error(
-      'Push injection needs expo-notifications to show a local notification, and Lowdefy Dev does not include it yet.'
-    );
   }
   if (kind === 'scan' && !(type.isObject(value) && type.isString(value.data))) {
     throw new Error(`A scan injection needs { data }. Received ${describe(value)}.`);
@@ -112,7 +110,8 @@ function validateInjection({ kind, name, value }) {
  *   takes the shell offline (networkStatus), which shows the NoConnection banner and fires the
  *   app's `offline` events, until `network: 'online'`.
  * - `clear` drops every injection and goes back online.
- * - `push` is refused: showing a payload as a local notification needs expo-notifications.
+ * - `push` shows a notification now, and can tap it or press a button (injectPush).
+ * - `share` shares text, a link or files into the app (injectShare).
  *
  * @param {Object} params
  * @param {{ setInjectedOffline: (offline: boolean) => void }} params.networkStatus The shell's
@@ -152,6 +151,10 @@ function createDeviceInjections({ networkStatus }) {
       case 'location':
         queue(kind).push(...(type.isArray(value) ? value : [value]));
         return { ok: true, kind, pending: queue(kind).length };
+      case 'push':
+        return injectPush(value);
+      case 'share':
+        return injectShare(value);
       default:
         queue(kind).push(value);
         return { ok: true, kind, pending: queue(kind).length };

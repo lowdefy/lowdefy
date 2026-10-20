@@ -36,6 +36,15 @@ function getPlugins(shell) {
   }));
 }
 
+// The opt-in native extensions (share, widgets, contacts, calendar). A shell
+// without any writes no `extensions`, so its runtime version is unchanged.
+function getExtensions(shell) {
+  if (!type.isArray(shell.extensions) || shell.extensions.length === 0) {
+    return undefined;
+  }
+  return [...shell.extensions];
+}
+
 // shell.json is what the copied @lowdefy/shell reads as LOWDEFY_SHELL_CONFIG.
 // The shell opens one app, at the URL of the environment it is built for.
 function createShellJson({ appMeta, capabilities, environment, profile, shell, url }) {
@@ -53,6 +62,7 @@ function createShellJson({ appMeta, capabilities, environment, profile, shell, u
     android: type.isObject(shell.android) ? { package: shell.android.package } : undefined,
     eas: shell.eas,
     plugins: getPlugins(shell),
+    extensions: getExtensions(shell),
     // An app without a slug is still opened by exactly one shell, so the shell
     // id is a stable key for its stored session and cache.
     app: {

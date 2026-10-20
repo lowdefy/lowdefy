@@ -231,6 +231,130 @@ const typeManifest = {
       package: '@lowdefy/actions-core',
       version: 6,
     },
+    AddCalendarEvent: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    AddContact: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    CancelNotification: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    DiscardQueuedRequest: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    GetCalendarEvents: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    GetRequestQueue: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Haptic: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    KeepAwake: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    PickContact: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    PickFile: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    PickImage: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    ReadNfc: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    RefreshWidgets: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    RequestNotificationPermission: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    RetryRequestQueue: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    ScanCode: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    ScanDocument: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    ScheduleNotification: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    SetBadgeCount: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    SetBrightness: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Share: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Speak: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StartGeofencing: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StartLocationTracking: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StartRecording: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StopGeofencing: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StopLocationTracking: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StopRecording: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    StopSpeaking: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    TakePhoto: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    WriteNfc: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
   },
   blocks: {
     ActivityTimeline: {
@@ -281,6 +405,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    FileInput: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Icon: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -294,6 +422,10 @@ const typeManifest = {
       version: 6,
     },
     ListItem: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    Map: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
@@ -321,6 +453,10 @@ const typeManifest = {
       package: '@lowdefy/blocks-native',
       version: 6,
     },
+    QRScanner: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
     Screen: {
       package: '@lowdefy/blocks-native',
       version: 6,
@@ -334,6 +470,10 @@ const typeManifest = {
       version: 6,
     },
     Sheet: {
+      package: '@lowdefy/blocks-native',
+      version: 6,
+    },
+    SignaturePad: {
       package: '@lowdefy/blocks-native',
       version: 6,
     },

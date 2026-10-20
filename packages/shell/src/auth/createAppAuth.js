@@ -52,6 +52,7 @@ import watchSession from './watchSession.js';
  * @param {Function} params.fetch The shell's fetch (shell header, no cookies).
  * @param {{ get, set, remove, keys }} params.kv The device store.
  * @param {Function} params.onSignedOut Called once the person's data is gone.
+ * @param {Object} params.queueStore The offline request queue, cleared with the rest.
  * @param {{ id, scheme, profile }} params.shell The shell config.
  * @param {Function} params.streamFetch The shell's streaming fetch (expo/fetch, sent as fetch is),
  *   watched the same way: a chat stream answered 401 ends the session too.
@@ -66,6 +67,7 @@ function createAppAuth({
   localAuthentication = LocalAuthentication,
   now = Date.now,
   onSignedOut,
+  queueStore,
   shell,
   streamFetch,
 }) {
@@ -142,11 +144,20 @@ function createAppAuth({
     dispose();
     const token = tokenStore.get();
     if (callServer && token !== null) {
-      // Never waited on: offline, the session still ends on the phone.
-      authApi.signOut({ token }).catch(() => {});
+      // Never waited on: offline, the session still ends on the phone. The push token goes first,
+      // while the session can still name whose it is.
+      unregisterPushToken({ app: { apiBase, fetch, session, shell, tokenStore } })
+        .catch(() => {})
+        .finally(() => authApi.signOut({ token }).catch(() => {}));
     }
-    await purgeAppData({ appId: app.id, cacheStore, kv, slug: state.slug, tokenStore });
-    await unregisterPushToken();
+    await purgeAppData({
+      appId: app.id,
+      cacheStore,
+      kv,
+      queueStore,
+      slug: state.slug,
+      tokenStore,
+    });
     onSignedOut();
   }
 

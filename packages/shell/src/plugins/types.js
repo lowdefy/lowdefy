@@ -16,6 +16,7 @@
 
 import * as actions from '@lowdefy/actions-core/actions';
 import * as blocks from '@lowdefy/blocks-native/blocks';
+import * as deviceActions from '@lowdefy/blocks-native/actions';
 import * as changeCaseOperators from '@lowdefy/operators-change-case/operators/client';
 import * as cronOperators from '@lowdefy/operators-cron/operators/client';
 import * as dayjsOperators from '@lowdefy/operators-dayjs/operators/client';
@@ -36,12 +37,14 @@ import appTypes from './appTypes.js';
 // scripts/createTypeManifest.mjs writes the type manifest pages are checked against
 // (typeManifest.js); a test keeps the two the same. The blocks are the whole native block set,
 // with the Screen page type from the native renderer (blocks-native carries only its meta). The
-// actions-core actions that reach the DOM on the web run native bodies under the same names. The client operators are those of every default operator package,
+// actions-core actions that reach the DOM on the web run native bodies under the same names, and
+// blocks-native's native-only actions (Haptic, Share, PickFile, ...) reach the phone through the
+// device the shell installs (src/device). The client operators are those of every default operator package,
 // as the build's mobile type map allows. icons is the icon data the native Icon renderer draws
 // from (client-native installs it as components.Icon over this map): each page carries the data
 // of its own icons (_icons) and PageScreen adds them here before the page renders.
 const types = {
-  actions: { ...actions, ...nativeActions, ...appTypes.actions },
+  actions: { ...actions, ...deviceActions, ...nativeActions, ...appTypes.actions },
   blocks: { ...blocks, Screen, ...appTypes.blocks },
   icons: {},
   operators: {

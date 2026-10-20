@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { getDeviceFeature, hasDeviceFeature } from '@lowdefy/blocks-native/device';
 
 import injected from '../device/injected.js';
 
@@ -25,17 +26,22 @@ function numberOrNull(value) {
 /**
  * The native body of actions-core's GeolocationCurrentPosition, answering as the web body does:
  * `{ coords, timestamp }`, or `{ code: 1, error: 'PERMISSION_DENIED', message }` when location is
- * refused. Until the shell carries device location (the device actions), it answers only with a
- * location Lowdefy Dev injected (src/device/injected.js), and throws otherwise.
+ * refused. A location Lowdefy Dev injected (src/device/injected.js) answers first; otherwise the
+ * shell's location feature reads the phone (profile field and up), and a shell without it throws.
  */
-async function GeolocationCurrentPosition() {
+async function GeolocationCurrentPosition({ params }) {
   if (injected('permission:location') === 'denied') {
     return { code: 1, error: 'PERMISSION_DENIED', message: 'Location permission was denied.' };
   }
   const location = injected('location');
   if (type.isUndefined(location)) {
-    throw new Error(
-      'GeolocationCurrentPosition is not available on this phone yet: the shell has no device location. In Lowdefy Dev, inject a location.'
+    if (!hasDeviceFeature('location')) {
+      throw new Error(
+        'GeolocationCurrentPosition needs a shell that carries location (profile field). In Lowdefy Dev, inject a location.'
+      );
+    }
+    return getDeviceFeature({ feature: 'location', action: 'GeolocationCurrentPosition' }).current(
+      params ?? {}
     );
   }
   return {
