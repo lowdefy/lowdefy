@@ -593,7 +593,7 @@ name, version and directory, so database drivers never load into the manager.
 function initialBuild(context) {
   return async () => {
     context.readDotEnv();
-    await context.lowdefyBuild();
+    await context.lowdefyBuild({ pluginInstallFollows: true });
     await context.checkMockUserWarning();
     await context.installPlugins();
     if (
@@ -609,7 +609,7 @@ function initialBuild(context) {
 }
 ```
 
-The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)).
+The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)). The first build passes `pluginInstallFollows`, so it holds its `did not run: package not installed` warnings; the build after the install warns for any plugin still missing.
 
 A plugin's `./checks` and schemas are imported once per dev server process. Rules are functions, so they can't come back from `importFresh`'s worker, which copies its result by structured clone. An edit to a local plugin's rules or schemas takes effect when the dev server restarts.
 

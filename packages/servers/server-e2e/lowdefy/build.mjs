@@ -50,6 +50,7 @@ async function run() {
     customTypesMap,
     directories,
     logger,
+    pluginInstallFollows: process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS === 'true',
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
     skipPluginChecks: process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS === 'true',
   });
