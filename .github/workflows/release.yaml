@@ -13,19 +13,85 @@ permissions:
   id-token: write
 
 jobs:
+  # Pending changesets (a Release merge from develop) mean this push opens or updates the
+  # "Publish new release" PR. No pending changesets mean this push publishes: normally the
+  # merge of that PR, but any other push to main without changesets publishes too, and the
+  # idempotent publish steps then find everything already released. Decided here, on the
+  # pushed commit, because the changesets action checks out the version branch, where the
+  # changesets are already consumed.
+  mode:
+    name: Detect publish mode
+    runs-on: ubuntu-latest
+    if: github.repository == 'lowdefy/lowdefy'
+    outputs:
+      publish: ${{ steps.mode.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: .changeset
+      # Count only changesets that release a package: the changesets action ignores empty
+      # ones (`changeset --empty`) and opens no PR for them.
+      - id: mode
+        run: |
+          count=0
+          for file in .changeset/*.md; do
+            [ -e "$file" ] || continue
+            [ "$(basename "$file")" = 'README.md' ] && continue
+            if awk '/^---/ { fences++; next } fences == 1 && NF { found = 1 } END { exit !found }' "$file"; then
+              count=$((count + 1))
+            fi
+          done
+          if [ "$count" -eq 0 ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  # Versioning only: opens or updates the "Publish new release" PR. Publishing runs in the
+  # publish job on the merge of that PR.
+  version:
+    name: Open release pull request
+    needs: mode
+    if: needs.mode.outputs.publish == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm i --frozen-lockfile
+
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        with:
+          version: pnpm release:version
+          createGithubReleases: false
+          commit: 'chore: Publish new release'
+          title: 'Publish new release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # The complete path (test-complete.yml): the full OS and Node matrix and the slow
-  # suites. Nothing below versions or publishes unless it passes.
+  # suites. Runs only on a publish push; the Release PR from develop into main runs it
+  # before that merge.
   test:
     name: Complete tests
-    if: github.repository == 'lowdefy/lowdefy'
+    needs: mode
+    if: needs.mode.outputs.publish == 'true'
     uses: ./.github/workflows/test-complete.yml
 
-  release:
-    name: Release
-    needs: test
+  # Needs test, and has no status check in its `if`, so it runs only when test passed.
+  # Each step is idempotent so a re-run recovers cleanly from a config or network error
+  # part-way through.
+  publish:
+    name: Publish
+    needs: [mode, test]
+    if: needs.mode.outputs.publish == 'true'
     runs-on: ubuntu-latest
     environment: publish
-    if: github.repository == 'lowdefy/lowdefy'
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v5
@@ -40,37 +106,10 @@ jobs:
       - name: Upgrade npm for OIDC trusted publishing
         run: npm install -g npm@latest
 
-      # Versioning only: when changesets exist, this opens/updates the "Publish new
-      # release" PR. Publishing is handled explicitly below so we control its exit
-      # semantics and can recover from a partial publish by re-running.
-      - name: Create Release Pull Request
-        uses: changesets/action@v1
-        with:
-          version: pnpm release:version
-          createGithubReleases: false
-          commit: 'chore: Publish new release'
-          title: 'Publish new release'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # No pending changesets means the version PR has been merged: this is a publish
-      # commit. Everything below runs only in that case, and each step is idempotent so
-      # a re-run recovers cleanly from a config or network error part-way through.
-      - name: Detect publish mode
-        id: mode
-        run: |
-          count=$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')
-          if [ "$count" -eq 0 ]; then
-            echo "publish=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "publish=false" >> "$GITHUB_OUTPUT"
-          fi
-
       # Attempt the publish, but do not trust its exit code: `changeset publish` fails on
       # versions that already exist, which is a success condition on a re-run. The verify
       # step below is the real gate.
       - name: Publish to npm
-        if: steps.mode.outputs.publish == 'true'
         run: pnpm release:publish || true
         env:
           NPM_CONFIG_PROVENANCE: 'true'
@@ -78,21 +117,17 @@ jobs:
       # Source of truth: every publishable package must be live on npm at its release
       # version. Missing anything fails the job (a real failure — re-run after fixing).
       - name: Verify all packages published
-        if: steps.mode.outputs.publish == 'true'
         run: node scripts/verify-published.mjs
 
       - name: Resolve release version
-        if: steps.mode.outputs.publish == 'true'
         id: version
         run: echo "version=v$(node -p "require('./packages/cli/package.json').version")" >> "$GITHUB_OUTPUT"
 
       - name: Generate release notes
-        if: steps.mode.outputs.publish == 'true'
         run: node scripts/release-notes.mjs --output-file=/tmp/release-notes.md
 
       # Idempotent: query origin so a re-run on a fresh checkout still sees an existing tag.
       - name: Tag release commit
-        if: steps.mode.outputs.publish == 'true'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           if git ls-remote --tags origin "refs/tags/$VERSION" | grep -q .; then
@@ -104,7 +139,6 @@ jobs:
 
       # Idempotent: only create the release if one does not already exist for this version.
       - name: Create Github Release
-        if: steps.mode.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

@@ -5,20 +5,23 @@ and the npm trusted publisher that links the two.
 
 ## Release from CI
 
-`.github/workflows/release.yaml` runs on every push to `main`, and from the Actions tab, after
-the complete test path (see [CI](./testing.md#ci)).
+`.github/workflows/release.yaml` runs on every push to `main`, and from the Actions tab. Its
+`mode` job reads the pushed commit's `.changeset/` folder and picks one of two paths (see
+[CI](./testing.md#ci) for where the complete test path runs):
 
-1. With changesets pending, `changesets/action` opens or updates the "Publish new release"
-   pull request (`pnpm release:version`).
-2. Once that pull request is merged there are no changesets left, and the job publishes
+1. With changesets pending (the Release merge from `develop`), the `version` job runs
+   `changesets/action`, which opens or updates the "Publish new release" pull request
+   (`pnpm release:version`). Nothing is tested, built or published.
+2. Once that pull request is merged there are no changesets left. The `test` job runs the
+   complete path, and only when it passes the `publish` job publishes
    (`pnpm release:publish`, which is `changeset publish`). Its exit code is ignored, since it
    fails on versions that already exist, which is what a re-run sees.
 3. `scripts/verify-published.mjs` is the real gate: every publishable package (every
    non-private workspace package, minus the `ignore` list in `.changeset/config.json`) must be
    on npm at its local version. A missing one fails the job; fix the cause and re-run it.
-4. The job tags the commit and creates a draft GitHub release.
+4. The `publish` job tags the commit and creates a draft GitHub release.
 
-The job publishes through npm's OIDC trusted publishing only. There is no npm token, so npm
+The `publish` job publishes through npm's OIDC trusted publishing only. There is no npm token, so npm
 accepts a package from CI only when that package has this trusted publisher:
 
 ```
@@ -85,4 +88,4 @@ node scripts/ensure-trusted-publishers.mjs
 ```
 
 If a release already failed on a package with `E404 Not Found - PUT`, run the script, then
-re-run the release job. `scripts/verify-published.mjs` passes once every package is live.
+re-run the `publish` job. `scripts/verify-published.mjs` passes once every package is live.
