@@ -349,6 +349,10 @@ function validateRedact(agent, context) {
     if (!type.isNone(flags) && literal(flags) && !type.isString(flags)) {
       return fail(`Agent "${agent.id}" "${location}.flags" should be a string.`, flags);
     }
+    // With the sticky flag a global replace stops at the first gap between matches.
+    if (type.isString(flags) && flags.includes('y')) {
+      return fail(`Agent "${agent.id}" "${location}.flags" should not include "y".`, flags);
+    }
     if (type.isString(pattern) && (type.isNone(flags) || type.isString(flags))) {
       const allFlags = (flags ?? '').includes('g') ? flags : `${flags ?? ''}g`;
       let regex;

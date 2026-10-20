@@ -129,12 +129,14 @@ _ref:
                   - `patterns: array`: __Required__ - The patterns to mask, at least one. Each is a regular expression string, or an object:
                     - `pattern: string`: __Required__ - The regular expression.
                     - `name: string`: A name for the pattern. The server's debug log counts replacements by name, never logging the matched text.
-                    - `flags: string`: Regular expression flags, such as `i`. `g` is always added, so every match is masked.
+                    - `flags: string`: Regular expression flags, such as `i`. `g` is always added, so every match is masked. The sticky flag `y` is refused.
                   - `replacement: string`: Default: `'[removed]'` - The text each match is replaced with.
 
                 The server masks the text of every user message, not only the newest: the browser sends the whole conversation with each turn. The model's replies, tool calls and results, and attached files are left as they are. `redact` applies to chat turns: a sub-agent's `redact` is not applied when another agent calls it, and the `CallAgent` routine step does not use it. The chat in the browser still shows what the user typed. A conversation the browser saves through its own endpoints is not masked by `redact`, so mask it in those endpoints too, for example with [`_string.replace`](/_string).
 
                 The patterns can come from a module var, resolved at build, or from a runtime operator such as `_secret`, evaluated with each request. The build checks a pattern written in the config; a pattern an operator returns is checked when the request runs, and an invalid one fails the turn with a config error. A pattern that matches empty text, such as `\d*`, is refused, since it would put the replacement between every character.
+
+                Patterns run in the order they are listed, each on the text the ones before it left. Put the longer patterns first: listed before an ID number pattern, a short pattern such as `\d{4}` would split the number into blocks and leave its last digits. Avoid patterns that can match the replacement text itself, like `\w+`.
 
                 ###### Mask ID numbers, phone numbers and email addresses (POPIA):
                 ```yaml
