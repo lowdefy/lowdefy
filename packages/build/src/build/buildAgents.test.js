@@ -528,7 +528,9 @@ test('buildAgents validates multiple tools all referencing existing endpoints', 
 test('buildAgents throws when model is not defined', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agent1',
@@ -545,7 +547,9 @@ test('buildAgents throws when model is not defined', () => {
 test('buildAgents throws when model is not defined with empty properties', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agent1',
@@ -563,7 +567,9 @@ test('buildAgents throws when model is not defined with empty properties', () =>
 test('buildAgents throws when tool endpoint is missing description', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     api: [
       {
         id: 'endpoint:tool1',
@@ -591,7 +597,9 @@ test('buildAgents throws when tool endpoint is missing description', () => {
 test('buildAgents throws when tool endpoint is missing payloadSchema', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     api: [
       {
         id: 'endpoint:tool1',
@@ -619,7 +627,9 @@ test('buildAgents throws when tool endpoint is missing payloadSchema', () => {
 test('buildAgents with valid hook endpoint IDs passes', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     api: [
       {
         id: 'endpoint:save-data',
@@ -648,7 +658,9 @@ test('buildAgents with valid hook endpoint IDs passes', () => {
 test('buildAgents throws when hook references non-existent endpoint', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agent1',
@@ -669,7 +681,9 @@ test('buildAgents throws when hook references non-existent endpoint', () => {
 test('buildAgents with no hooks passes', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agent1',
@@ -685,7 +699,9 @@ test('buildAgents with no hooks passes', () => {
 test('buildAgents with empty hooks arrays passes', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agent1',
@@ -981,7 +997,9 @@ test('buildAgents passes through mcp object with connectionId', () => {
 test('buildAgents throws when mcp connectionId does not exist', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agent1',
@@ -1047,7 +1065,9 @@ test('buildAgents with no mcp array works fine', () => {
 test('buildAgents normalizes string agents to objects with agentId', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'researcher',
@@ -1071,7 +1091,9 @@ test('buildAgents normalizes string agents to objects with agentId', () => {
 test('buildAgents passes through object agents with agentId', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'researcher',
@@ -1097,7 +1119,9 @@ test('buildAgents passes through object agents with agentId', () => {
 test('buildAgents normalizes mixed agents array', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'researcher',
@@ -1130,7 +1154,9 @@ test('buildAgents normalizes mixed agents array', () => {
 test('buildAgents throws when agents references non-existent agent', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'orchestrator',
@@ -1149,7 +1175,9 @@ test('buildAgents throws when agents references non-existent agent', () => {
 test('buildAgents throws when agents object references non-existent agent', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'orchestrator',
@@ -1168,7 +1196,9 @@ test('buildAgents throws when agents object references non-existent agent', () =
 test('buildAgents with no agents property works fine', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agent1',
@@ -1185,7 +1215,9 @@ test('buildAgents with no agents property works fine', () => {
 test('buildAgents throws when sub-agent tool name collides with endpoint tool', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     api: [
       {
         id: 'endpoint:researcher',
@@ -1221,7 +1253,9 @@ test('buildAgents throws when sub-agent tool name collides with endpoint tool', 
 test('buildAgents throws on direct circular reference (A -> B -> A)', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agentA',
@@ -1247,7 +1281,9 @@ test('buildAgents throws on direct circular reference (A -> B -> A)', () => {
 test('buildAgents throws on self-referencing agent', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agentA',
@@ -1266,7 +1302,9 @@ test('buildAgents throws on self-referencing agent', () => {
 test('buildAgents throws on transitive circular reference (A -> B -> C -> A)', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'agentA',
@@ -1297,7 +1335,9 @@ test('buildAgents throws on transitive circular reference (A -> B -> C -> A)', (
 test('buildAgents allows valid non-circular sub-agent chains', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'worker',
@@ -1327,7 +1367,9 @@ test('buildAgents allows valid non-circular sub-agent chains', () => {
 test('buildAgents allows diamond-shaped sub-agent graphs (not a cycle)', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     agents: [
       {
         id: 'worker',
@@ -1367,7 +1409,9 @@ test('buildAgents warns when sub-agent has tools with confirm: true', () => {
     logger: { warn: (msg) => warnings.push(msg) },
   });
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     api: [
       {
         id: 'endpoint:dangerous-tool',
@@ -1406,7 +1450,9 @@ test('buildAgents does not warn when sub-agent has no confirm tools', () => {
     logger: { warn: (msg) => warnings.push(msg) },
   });
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
     api: [
       {
         id: 'endpoint:safe-tool',
@@ -1614,7 +1660,9 @@ test('buildAgents keeps explicit tool name', () => {
     ],
   };
   const res = buildAgents({ components, context });
-  expect(res.agents[0].tools).toEqual([{ endpointId: 'reporting/query-data', name: 'query_data' }]);
+  expect(res.agents[0].tools).toEqual([
+    { endpointId: 'reporting/query-data', name: 'query_data' },
+  ]);
 });
 
 test('buildAgents throws on invalid explicit tool name', () => {
@@ -1641,7 +1689,9 @@ test('buildAgents throws on invalid explicit tool name', () => {
       },
     ],
   };
-  expect(() => buildAgents({ components, context })).toThrow(/tool name "has space" is invalid/);
+  expect(() => buildAgents({ components, context })).toThrow(
+    /tool name "has space" is invalid/
+  );
 });
 
 test('buildAgents throws when explicit tool name is reserved', () => {
@@ -1708,7 +1758,9 @@ test('buildAgents throws on duplicate tool names', () => {
       },
     ],
   };
-  expect(() => buildAgents({ components, context })).toThrow(/duplicate tool name "the_tool"/);
+  expect(() => buildAgents({ components, context })).toThrow(
+    /duplicate tool name "the_tool"/
+  );
 });
 
 test('buildAgents defaults sub-agent tool name from scoped agent id', () => {
