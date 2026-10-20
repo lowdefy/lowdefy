@@ -487,6 +487,17 @@ builds exactly the pages the next requests would rebuild. A page built with app 
 edited after any change event. The review is async, and so are `getPageBuildStatus`,
 `getBuildStatus` and their callers.
 
+`build/buildStatus.json` covers the config build only, so `getBuildStatus` folds the page
+failures into the `build` it returns: an `ok` config build with a failed page reads
+`pages_failed`, and `build.failedPages` names those pages. A failed page that is also in
+`changedSinceBuild` is left out, since its failure was recorded before its latest edit (or
+the latest config build) and may already be fixed; it counts again once a rebuild fails. A
+config build that is `error` or `unknown` keeps its status and names no pages, so the reply
+points at the config first. `build.configStatus` is the config build's own status, which is
+what `lowdefy journeys harden` waits on (`waitForConfigBuild`): a published config build is
+enough for it, whatever the pages do. `error` stays reserved for a failed config build, which
+is what the stale flag, `getBuildId` and the `build` push event read straight from the file.
+
 ## Server Process and Logging
 
 ### stdio: inherit
@@ -593,7 +604,7 @@ name, version and directory, so database drivers never load into the manager.
 function initialBuild(context) {
   return async () => {
     context.readDotEnv();
-    await context.lowdefyBuild();
+    await context.lowdefyBuild({ pluginInstallFollows: true });
     await context.checkMockUserWarning();
     await context.installPlugins();
     if (
@@ -609,7 +620,7 @@ function initialBuild(context) {
 }
 ```
 
-The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)).
+The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)). The first build passes `pluginInstallFollows`, so it holds its `did not run: package not installed` warnings; the build after the install warns for any plugin still missing.
 
 A plugin's `./checks` and schemas are imported once per dev server process. Rules are functions, so they can't come back from `importFresh`'s worker, which copies its result by structured clone. An edit to a local plugin's rules or schemas takes effect when the dev server restarts.
 

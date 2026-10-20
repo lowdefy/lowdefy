@@ -124,11 +124,7 @@ jobs:
         run: echo "version=v$(node -p "require('./packages/cli/package.json').version")" >> "$GITHUB_OUTPUT"
 
       - name: Generate release notes
-        run: |
-          npm install -g @anthropic-ai/claude-code
-          node scripts/release-notes.mjs --output-file=/tmp/release-notes.md
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/release-notes.mjs --output-file=/tmp/release-notes.md
 
       # Idempotent: query origin so a re-run on a fresh checkout still sees an existing tag.
       - name: Tag release commit

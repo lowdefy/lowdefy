@@ -355,6 +355,8 @@ A release runs the complete path twice: on the Release pull request from `develo
   path too; the idempotent publish steps find everything already released. Empty changesets
   (`changeset --empty`) do not count as pending, matching the changesets action.
 
+[Releasing](./releasing.md) covers the version and publish jobs step by step.
+
 ## Before pushing
 
 CI does not run on its own, so run what the change needs before you push, and list the

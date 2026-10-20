@@ -252,7 +252,10 @@ describe('data sessions', () => {
       name: 'staging-sample',
       state,
       databaseUri: 'mongodb://memory/',
-      databaseName: 'ld_aaaaaaaaaaaa',
+      prefix: 'ld_aaaaaaaaaaaa',
+      databaseName: 'ld_aaaaaaaaaaaa_0',
+      databases: new Map([[JSON.stringify(['secret:MONGODB_URI', null]), 'ld_aaaaaaaaaaaa_0']]),
+      databaseCount: 1,
       work: new Set(),
     };
     dataSessionRegistry.set(session.id, session);
@@ -279,7 +282,7 @@ describe('data sessions', () => {
     const context = await createLowdefyContext({ c: createHonoContext({ headers: { cookie } }) });
     expect((await context.readConfigFile('connections/tickets.json')).properties).toEqual({
       databaseUri: 'mongodb://memory/',
-      databaseName: 'ld_aaaaaaaaaaaa',
+      databaseName: 'ld_aaaaaaaaaaaa_0',
       collection: 'tickets',
     });
     expect(context.dataSet).toEqual('staging-sample');
@@ -322,7 +325,7 @@ describe('data sessions', () => {
     const context = await createLowdefyContext({ c: createHonoContext(), dataSession: session });
     expect((await context.readConfigFile('connections/tickets.json')).properties).toEqual({
       databaseUri: 'mongodb://memory/',
-      databaseName: 'ld_aaaaaaaaaaaa',
+      databaseName: 'ld_aaaaaaaaaaaa_0',
       collection: 'tickets',
     });
     expect(context.dataSet).toEqual('staging-sample');

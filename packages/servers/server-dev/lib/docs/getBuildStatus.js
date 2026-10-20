@@ -32,6 +32,30 @@ function splitByBuild({ entries, buildId }) {
   };
 }
 
+// buildStatus.json covers the config build only; pages build later, on first
+// request. So that build.status alone answers "does the app build", an ok
+// config build with a failed page reads pages_failed, and failedPages names
+// those pages. A failed page changed since that build is left out: its failure
+// may already be fixed, and pages.changedSinceBuild lists it until it is
+// rebuilt. A config build that is not ok keeps its status and names no pages,
+// since the config is what to fix first. The page errors stay under
+// pages.failed either way. configStatus keeps the config build's own status for
+// callers that wait on a published config build, whatever the pages do.
+function withFailedPages({ build, pages }) {
+  const configBuild = { ...build, configStatus: build.status };
+  if (build.status !== 'ok') {
+    return configBuild;
+  }
+  const changedSinceBuild = new Set(pages.changedSinceBuild ?? []);
+  const failedPages = (pages.failed ?? [])
+    .map(({ pageId }) => pageId)
+    .filter((pageId) => !changedSinceBuild.has(pageId));
+  if (failedPages.length === 0) {
+    return configBuild;
+  }
+  return { ...configBuild, status: 'pages_failed', failedPages };
+}
+
 // Notices about Lowdefy's agent block (see checkAgentFiles), checked on every
 // read: the root files are not watched, so a stored result would outlive a fix.
 async function getAgentFiles() {
@@ -43,7 +67,8 @@ async function getAgentFiles() {
 }
 
 // Feedback loop for agents: build status (written by the build manager to
-// build/buildStatus.json), the page builds (see getPageBuildStatus), plus
+// build/buildStatus.json, with page failures folded in by withFailedPages),
+// the page builds (see getPageBuildStatus), plus
 // recent browser errors reported via POST /api/client-error, plus recent server
 // errors (request, endpoint, MCP and agent tool failures) collected by
 // createHandleError. Lets an agent check "did my last edit work?" without
@@ -61,10 +86,11 @@ async function getBuildStatus({ checked } = {}) {
   const buildId = getBuildId();
   const clientErrors = splitByBuild({ entries: clientErrorStore.list(), buildId });
   const serverErrors = splitByBuild({ entries: serverErrorStore.list(), buildId });
+  const pages = await getPageBuildStatus({ checked });
   const status = {
     buildId,
-    build,
-    pages: await getPageBuildStatus({ checked }),
+    build: withFailedPages({ build, pages }),
+    pages,
     clientErrors: clientErrors.current,
     serverErrors: serverErrors.current,
   };

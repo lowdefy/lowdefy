@@ -49,8 +49,13 @@ const standInDatabase = 'data_set_journeys';
 const standInUrl = new URL(process.env.MONGO_URL);
 standInUrl.pathname = `/${standInDatabase}`;
 const standInUri = standInUrl.toString();
+// The CRM_MONGODB_URI secret's stand-in: another database with a tickets collection of its own.
+const crmStandInDatabase = 'data_set_journeys_crm';
+const crmStandInUrl = new URL(process.env.MONGO_URL);
+crmStandInUrl.pathname = `/${crmStandInDatabase}`;
 
 process.env.LOWDEFY_SECRET_MONGODB_URI = standInUri;
+process.env.LOWDEFY_SECRET_CRM_MONGODB_URI = crmStandInUrl.toString();
 process.env.LOWDEFY_DIRECTORY_CONFIG = appDirectory;
 process.env.LOWDEFY_LOG_LEVEL = 'error';
 process.env.CRON_SECRET = 'data-set-journeys-cron-secret';
@@ -144,6 +149,7 @@ function pageHtml() {
 <div id="bl-create"><button onclick="callEndpoint('create_ticket', { id: 'new-1', title: 'Made' }, 'created')">Create</button></div>
 <div id="bl-create_later"><button onclick="callEndpoint('create_ticket_later', { id: 'later-1' }, 'dispatched')">Later</button></div>
 <div id="bl-list"><button onclick="callEndpoint('list_tickets', {}, 'listed')">List</button></div>
+<div id="bl-list_crm"><button onclick="callEndpoint('list_crm_tickets', {}, 'listedCrm')">List CRM</button></div>
 <div id="bl-watch"><button onclick="watch()">Watch</button></div>
 <div id="bl-archive"><button onclick="callEndpoint('archive/archive_ticket', { id: 'arch-1' }, 'archived')">Archive</button></div>
 <div id="bl-create_later_auth"><button onclick="callEndpoint('create_ticket_later_auth', {}, 'dispatchedAuth')">Later with auth</button></div>
@@ -301,6 +307,11 @@ beforeAll(async () => {
     .db(standInDatabase)
     .collection('tickets')
     .insertOne({ _id: 'real-1', organization_id: 'org_a', title: 'The developer’s own' });
+  await standIn.db(crmStandInDatabase).dropDatabase();
+  await standIn
+    .db(crmStandInDatabase)
+    .collection('tickets')
+    .insertOne({ _id: 'crm-real-1', organization_id: 'org_a' });
 
   store = await getDataStore();
   // Every write on the data store, in order, so a test can tell which session database a detached
@@ -346,6 +357,7 @@ afterAll(async () => {
   await closeClients();
   await store?.stop();
   await standIn?.db(standInDatabase).dropDatabase();
+  await standIn?.db(crmStandInDatabase).dropDatabase();
   await standIn?.close();
   process.chdir(originalCwd);
   fs.rmSync(serverDirectory, { recursive: true, force: true });
@@ -396,7 +408,7 @@ chromiumTest(
     });
     expect(first.status).toBe(200);
     expect(first.result.passed).toBe(true);
-    expect(first.result.data).toEqual({ name: 'shop', loadMs: expect.any(Number), documents: 3 });
+    expect(first.result.data).toEqual({ name: 'shop', loadMs: expect.any(Number), documents: 5 });
 
     const second = await runJourney({
       data: 'shop',
@@ -466,7 +478,7 @@ chromiumTest(
       (event) => event.operationType === 'insert' && event.id === 'later-1'
     );
     expect(insert).toBeDefined();
-    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
     const insertIndex = storeEvents.indexOf(insert);
     const dropIndex = storeEvents.findIndex(
       (event) => event.operationType === 'dropDatabase' && event.db === insert.db
@@ -523,7 +535,7 @@ chromiumTest(
       (event) => event.operationType === 'insert' && event.id === 'arch-1'
     );
     expect(insert).toBeDefined();
-    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
     expect(insert.coll).toEqual('archived');
   }
 );
@@ -568,7 +580,7 @@ chromiumTest(
       (event) => event.operationType === 'insert' && event.id === 'later-auth-before'
     );
     expect(before).toBeDefined();
-    expect(before.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(before.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
     expect(storeEvents.some((event) => event.id === 'later-auth-after')).toBe(false);
   }
 );
@@ -636,7 +648,7 @@ chromiumTest(
       (event) => event.operationType === 'insert' && event.id === 'later-logged'
     );
     expect(insert).toBeDefined();
-    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
     expect(storeEvents.some((event) => event.id === 'log-detached')).toBe(false);
     expect(await standInIds()).toEqual(['real-1']);
   }
@@ -673,7 +685,43 @@ chromiumTest(
 
 // Last, after every journey above: the stand-in, auth collections included, is exactly as the
 // snapshot found it, and no session database ever landed on it.
+chromiumTest(
+  'two connections that name tickets in different databases each read their own fixtures',
+  async () => {
+    storeEvents.length = 0;
+    const { result } = await runJourney({
+      data: 'shop',
+      user: 'owner',
+      steps: [
+        { click: 'list' },
+        { expect: { state: { path: 'listed.ids', equals: ['t-a1', 't-a2'] } } },
+        { click: 'list_crm' },
+        { expect: { state: { path: 'listedCrm.ids', equals: ['crm-a2', 't-a1'] } } },
+        { click: 'create' },
+        { expect: { state: { path: 'created.success', equals: true } } },
+        { click: 'list_crm' },
+        { expect: { state: { path: 'listedCrm.ids', equals: ['crm-a2', 't-a1'] } } },
+      ],
+    });
+    expect(result.passed).toBe(true);
+    // Each target's fixtures loaded into a database of its own, and both dropped with the session.
+    const fixtureDatabases = new Set(
+      storeEvents
+        .filter((event) => event.operationType === 'insert' && event.id === 't-a1')
+        .map((event) => event.db)
+    );
+    expect(fixtureDatabases.size).toBe(2);
+    fixtureDatabases.forEach((name) => {
+      expect(
+        storeEvents.some((event) => event.operationType === 'dropDatabase' && event.db === name)
+      ).toBe(true);
+    });
+  }
+);
+
 chromiumTest('the data set journeys left the stand-in database unchanged', async () => {
   expect(await snapshotStandIn()).toEqual(standInBefore);
+  const crmIds = await standIn.db(crmStandInDatabase).collection('tickets').distinct('_id');
+  expect(crmIds).toEqual(['crm-real-1']);
   expect(await standInSessionDatabases()).toEqual([]);
 });

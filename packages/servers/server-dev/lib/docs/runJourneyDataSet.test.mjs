@@ -59,7 +59,7 @@ const dataSet = {
   fixtures: { tickets: [{ _id: 't1' }, { _id: 't2' }], companies: [{ _id: 'c1' }] },
   generated: { invoices: [{ _id: 'i1' }] },
   users: { outsider: { id: 'u_9', roles: ['admin'], organizationId: 'org_b' } },
-  warnings: ['Connections "a" and "b" both name collection "events" in different databases.'],
+  warnings: ['Data set "sample" loads 1,200 documents for connection "tickets".'],
 };
 
 let order;

@@ -2846,12 +2846,6 @@
       "path": "content/concepts/four-primitives.md"
     },
     {
-      "slug": "learn/showcase",
-      "title": "Showcase",
-      "section": "Learn",
-      "path": "content/learn/showcase.md"
-    },
-    {
       "slug": "recipes/recipes",
       "title": "Recipes",
       "section": "Recipes",
@@ -2870,7 +2864,7 @@
         "introduction.yaml",
         "templates/cli_command.yaml.njk"
       ],
-      "hash": "55cffa0cffcb6d883ef248e9f375ece523f23b649fa15ee70eb79d9dd517f585"
+      "hash": "55bebeb9e8fda899c046a6a963aae571322d6378b2c2bfd8adf889b0d8413350"
     },
     "tutorial/tutorial-start": {
       "files": [
@@ -2878,7 +2872,7 @@
         "tutorial/tutorial-start.yaml",
         "version.yaml"
       ],
-      "hash": "ae370d27acba638ef40d718b72a0562f03bb9b15d73cc497c03c252477db9710"
+      "hash": "a4ffc605afc787cff891893917620d83d8a129d35814496ccc512f29ea1d2067"
     },
     "tutorial/tutorial-create-page": {
       "files": [
@@ -3112,7 +3106,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "cd9cb028a1af51a7eb8e8f06c9039621aef91e178dec264a7a1e14813985fd02"
+      "hash": "788ce9f3a31b6cf157023a9f72dab04264a3a79e81b66b8ad84706759c6a0097"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3353,14 +3347,14 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "d53dcce64aaa51408419e83048a160cb1224077cea3c06a74e230157dd55819b"
+      "hash": "9cd08e3eda9c4b78c12cd0d8af7c15c032166cf303bca6923645abe5670e373e"
     },
     "testing/journey-data-sets": {
       "files": [
         "testing/journey-data-sets.md",
         "testing/journey-data-sets.yaml"
       ],
-      "hash": "8a8c12049a8aedbd5f09e84c25d685c504830478c81a966113eb3dfcad2a2b95"
+      "hash": "b88281aa53a6a388dff04045c3be230aec6e959d2455f13dd8338cf040963c75"
     },
     "testing/explore-pull-request": {
       "files": [
@@ -5708,20 +5702,13 @@
         "quickstart.yaml",
         "templates/cli_command.yaml.njk"
       ],
-      "hash": "42ade4cf7a9fbae5b9105fd3ffccdf5fc9f9d67c55048a656e85cf62e54ca1bb"
+      "hash": "75884dce50ef713a2c23a50ebbf33315135f5f15145a7c8185c36eae2b872f54"
     },
     "concepts/four-primitives": {
       "files": [
         "concepts/core/four-primitives.yaml"
       ],
       "hash": "1b9b39655fa0da0a1ef33879538264438bdf7c1ba419122c2e35ab9ca4da72e2"
-    },
-    "learn/showcase": {
-      "files": [
-        "showcase.yaml",
-        "templates/built_with_lowdefy.yaml"
-      ],
-      "hash": "71ca0dcd436aec33986b5887b7c5d5593e1f1a72756cde1ddc85692c0f05af75"
     },
     "recipes/recipes": {
       "files": [
@@ -5733,7 +5720,7 @@
       "files": [
         "plugins/index.yaml"
       ],
-      "hash": "884b1ad0a6dc40ba1c1556508c673aff7794c4fbd9fb32486d1137fcaa1440f9"
+      "hash": "1a2c7ef1e45d3bafe036c4d60b25675cc49567f8e499164421d3e517393d2e8e"
     }
   }
 }

@@ -420,3 +420,157 @@ test.describe('DateRangeSelector open and fixed ends', () => {
     await expect(getEndInput(page, 'drs_disabled_start')).toBeEnabled();
   });
 });
+
+// The range's dates are UTC midnights, so the display formats them in UTC to read the same dates.
+test.describe('DateRangeSelector typed dates', () => {
+  test.use({ timezoneId: 'UTC' });
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  const typeDate = async (input, date) => {
+    await input.click();
+    await input.press('ControlOrMeta+a');
+    await input.press('Backspace');
+    await input.pressSequentially(date);
+  };
+
+  test('Enter on a typed start date applies the range and Escape keeps it', async ({ page }) => {
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-05-01');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+    await expect(getEndInput(page, 'drs_typed')).toBeFocused();
+    await expect(getBlock(page, 'drs_typed_count_display')).toHaveText('Changes: 1');
+
+    await page.keyboard.press('Escape');
+    await dateRangeSelector.expect.closed(page, 'drs_typed');
+    await expect(getStartInput(page, 'drs_typed')).toHaveValue('2024-05-01');
+    await expect(getEndInput(page, 'drs_typed')).toHaveValue('2024-06-30');
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+  });
+
+  test('Enter on a typed end date applies the range and Escape keeps it', async ({ page }) => {
+    await typeDate(getEndInput(page, 'drs_typed'), '2024-07-15');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-06-01 ~ 2024-07-15');
+
+    await page.keyboard.press('Escape');
+    await expect(getStartInput(page, 'drs_typed')).toHaveValue('2024-06-01');
+    await expect(getEndInput(page, 'drs_typed')).toHaveValue('2024-07-15');
+  });
+
+  test('Enter on the start date and then the end date closes the popup', async ({ page }) => {
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-05-01');
+    await page.keyboard.press('Enter');
+    await expect(getEndInput(page, 'drs_typed')).toBeFocused();
+    await page.keyboard.press('Enter');
+
+    await dateRangeSelector.expect.closed(page, 'drs_typed');
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+    await expect(getBlock(page, 'drs_typed_count_display')).toHaveText('Changes: 1');
+  });
+
+  test('Enter on a start date typed after visiting the end date fires onChange once', async ({
+    page,
+  }) => {
+    await getEndInput(page, 'drs_typed').click();
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-05-01');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+    await expect(getBlock(page, 'drs_typed_count_display')).toHaveText('Changes: 1');
+  });
+
+  test('Enter on an end date before a fixed start date does not apply it', async ({ page }) => {
+    await typeDate(getEndInput(page, 'drs_disabled_start'), '2024-05-15');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Escape');
+
+    await expect(getStartInput(page, 'drs_disabled_start')).toHaveValue('2024-06-01');
+    await expect(getEndInput(page, 'drs_disabled_start')).toHaveValue('2024-06-30');
+    await expect(getBlock(page, 'drs_disabled_start_count_display')).toHaveText('Changes: 0');
+  });
+
+  test('Enter on a typed end date with a fixed start date applies it once', async ({ page }) => {
+    await typeDate(getEndInput(page, 'drs_disabled_start'), '2024-07-15');
+    await page.keyboard.press('Enter');
+
+    await expect(getEndInput(page, 'drs_disabled_start')).toHaveValue('2024-07-15');
+    await expect(getBlock(page, 'drs_disabled_start_count_display')).toHaveText('Changes: 1');
+  });
+
+  test('Enter on a typed start date after the end date applies the range in order', async ({
+    page,
+  }) => {
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-07-20');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-06-30 ~ 2024-07-20');
+  });
+
+  test('Enter on a partly typed date does not apply the last whole date', async ({ page }) => {
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-05-01');
+    await page.keyboard.press('Backspace');
+    await page.keyboard.press('Enter');
+
+    await expect(getStartInput(page, 'drs_typed')).toHaveValue('2024-05-0');
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('');
+    await expect(getBlock(page, 'drs_typed_count_display')).toHaveText('Changes: 0');
+  });
+
+  test('Enter on a cleared date does not apply the date typed before', async ({ page }) => {
+    await typeDate(getStartInput(page, 'drs_typed'), '2024-05-01');
+    await page.keyboard.press('ControlOrMeta+a');
+    await page.keyboard.press('Backspace');
+    await page.keyboard.press('Enter');
+
+    await expect(getStartInput(page, 'drs_typed')).toHaveValue('');
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('');
+    await expect(getBlock(page, 'drs_typed_count_display')).toHaveText('Changes: 0');
+  });
+
+  test('a typed date stays when the block renders again, and Enter applies it', async ({
+    page,
+  }) => {
+    await typeDate(getStartInput(page, 'drs_typed_blur'), '2024-05-01');
+    await getEndInput(page, 'drs_typed_blur').click();
+    await expect(getBlock(page, 'drs_typed_blur_blurs_display')).toHaveText('Blurs: 1');
+    await expect(getStartInput(page, 'drs_typed_blur')).toHaveValue('2024-05-01');
+    await page.keyboard.press('Enter');
+
+    await expect(getBlock(page, 'drs_typed_blur_display')).toHaveText('2024-05-01 ~ 2024-06-30');
+  });
+
+  test('Enter on a typed date the block disables does not apply it', async ({ page }) => {
+    await typeDate(getStartInput(page, 'drs_typed_min'), '2024-05-01');
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Escape');
+
+    await expect(getStartInput(page, 'drs_typed_min')).toHaveValue('2024-06-01');
+    await expect(getBlock(page, 'drs_typed_min_display')).toHaveText('');
+  });
+
+  test('Enter on the start date of an empty range moves on to the end date', async ({ page }) => {
+    await getStartInput(page, 'drs_typed_empty').click();
+    await page.keyboard.type('2024-06-10');
+    await page.keyboard.press('Enter');
+    await expect(getEndInput(page, 'drs_typed_empty')).toBeFocused();
+    await page.keyboard.type('2024-06-20');
+    await page.keyboard.press('Enter');
+
+    await expect(getStartInput(page, 'drs_typed_empty')).toHaveValue('2024-06-10');
+    await expect(getEndInput(page, 'drs_typed_empty')).toHaveValue('2024-06-20');
+    await expect(getBlock(page, 'drs_typed_empty_display')).toHaveText('Range set');
+    await expect(getBlock(page, 'drs_typed_empty_count_display')).toHaveText('Changes: 1');
+  });
+
+  test('picking a range with the mouse applies it', async ({ page }) => {
+    await dateRangeSelector.do.select(page, 'drs_typed', '2024-06-03', '2024-06-12');
+
+    await expect(getBlock(page, 'drs_typed_display')).toHaveText('2024-06-03 ~ 2024-06-12');
+    await dateRangeSelector.expect.closed(page, 'drs_typed');
+  });
+});

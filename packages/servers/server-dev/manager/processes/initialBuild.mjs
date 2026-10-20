@@ -20,7 +20,9 @@ import { pluginChecksNeedRebuild } from '@lowdefy/node-utils';
 function initialBuild(context) {
   return async () => {
     context.readDotEnv();
-    await context.lowdefyBuild();
+    // This build holds its warnings for plugins it could not check: the install
+    // below adds them, and the build after it warns for any still missing.
+    await context.lowdefyBuild({ pluginInstallFollows: true });
     await context.checkMockUserWarning();
     await context.installPlugins();
     // The build lists the plugins it used but could not check, since they were
