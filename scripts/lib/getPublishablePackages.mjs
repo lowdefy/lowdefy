@@ -16,14 +16,14 @@
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
 // Mirrors what `changeset publish` targets: every non-private workspace package, minus the
-// `ignore` list in .changeset/config.json.
+// `ignore` list in .changeset/config.json. `path` is relative to the repository root.
 function getPublishablePackages() {
   const { ignore = [] } = readJson('.changeset/config.json');
   const ignored = new Set(ignore);
@@ -33,9 +33,12 @@ function getPublishablePackages() {
   );
 
   return workspaces
-    .map((workspace) => readJson(join(workspace.path, 'package.json')))
-    .filter((pkg) => pkg.name && pkg.version && pkg.private !== true && !ignored.has(pkg.name))
-    .map((pkg) => ({ name: pkg.name, version: pkg.version }));
+    .map((workspace) => ({
+      path: relative(process.cwd(), workspace.path),
+      pkg: readJson(join(workspace.path, 'package.json')),
+    }))
+    .filter(({ pkg }) => pkg.name && pkg.version && pkg.private !== true && !ignored.has(pkg.name))
+    .map(({ path, pkg }) => ({ name: pkg.name, version: pkg.version, path }));
 }
 
 export default getPublishablePackages;

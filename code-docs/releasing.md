@@ -44,8 +44,11 @@ missing.
    `0.0.0-experimental-<timestamp>` and builds.
 4. `pnpm release:publish-experimental` publishes them with the person's npm login.
 5. `git checkout -- .` and `git clean` drop the snapshot versions.
-6. `scripts/ensure-trusted-publishers.mjs` gives every publishable package without one the
-   trusted publisher above.
+6. `scripts/ensure-trusted-publishers.mjs` gives every new package the trusted publisher
+   above.
+
+Steps 5 and 6 run even when step 4 fails partway, so a package that did get published still
+gets its trusted publisher. The command then exits with step 4's failure.
 
 ## New packages and trusted publishers
 
@@ -57,19 +60,24 @@ publish it.
 `scripts/ensure-trusted-publishers.mjs`:
 
 - Takes the same publishable set as `scripts/verify-published.mjs`.
-- Skips packages with a `latest` dist-tag: CI has released them, so they have the trusted
-  publisher. Only the rest get an `npm trust list` call.
-- Runs `npm trust github <package> --repo lowdefy/lowdefy --file release.yaml --env publish --allow-publish --allow-stage-publish --yes`
-  on each package with no trusted publisher, 2 seconds apart (npm's advice for bulk changes).
+- Skips every package that is in the latest `v*` release tag, read from git: CI published it,
+  which only works through its trusted publisher, and the release workflow tags a commit only
+  once every package is live. Only packages added (or renamed) since then are checked, so a
+  run with no new packages makes no npm calls at all. Local tags that are behind only mean
+  more packages are checked.
+- Runs `npm trust list` on each new package, and
+  `npm trust github <package> --repo lowdefy/lowdefy --file release.yaml --env publish --allow-publish --allow-stage-publish --yes`
+  on each one with no trusted publisher, 2 seconds apart (npm's advice for bulk changes).
+- Reports a package that already has a different trusted publisher (another workflow file,
+  repository or environment) and leaves it alone: revoke it with
+  `npm trust revoke <package> --id <id>` and run the script again.
 - Prints what it set and what already had one. A second run changes nothing.
-- Counts any existing trust configuration as set. It doesn't check that an existing one
-  matches the entry above.
-- Needs npm 11.15 or later and a login with 2FA. Tick "skip 2FA for 5 minutes" on the first
-  prompt to cover the batch.
+- Needs npm 11.15 or later and a login with 2FA when there are new packages. Tick "skip 2FA
+  for 5 minutes" on the first prompt to cover the batch.
 
-A package first published some other way (an `npm publish` by hand, a failed experimental
-run) has no trusted publisher. Run the script by hand from the repository root before the
-next release:
+A package first published some other way (an `npm publish` by hand, a run that stopped
+before step 6) has no trusted publisher. It is still new until the next release tag, so run
+the script by hand from the repository root before the next release:
 
 ```bash
 npm login
