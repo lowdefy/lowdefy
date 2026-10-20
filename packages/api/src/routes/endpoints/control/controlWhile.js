@@ -40,7 +40,7 @@ async function controlWhile(context, routineContext, { control }) {
       event: 'debug_control_while',
       condition: {
         input: control[':while'],
-        evaluated,
+        result: Boolean(evaluated),
       },
       iteration,
     });

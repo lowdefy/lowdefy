@@ -85,10 +85,11 @@ async function handleRequest(context, routineContext, { request }) {
 
   addStepResult(context, routineContext, { result, stepId: request.stepId });
 
+  // No evaluated values: they can carry chat text or other personal information,
+  // which no log level may hold.
   context.logger.debug({
     event: 'debug_end_request',
     id: requestConfig.id,
-    result,
   });
   return { status: 'continue' };
 }
