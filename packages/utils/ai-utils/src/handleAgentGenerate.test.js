@@ -412,3 +412,62 @@ test('handleAgentGenerate never generates a conversation title', async () => {
 
   expect(mockGenerateText).not.toHaveBeenCalled();
 });
+
+// An AI SDK error as the real TypeValidationError is: the marker AISDKError.isInstance reads,
+// its name, and a message that embeds the value it rejected (here the conversation).
+function chatTextError() {
+  const error = new Error(
+    `Type validation failed: Value: [{"role":"user","content":"My ID is 8001015009087"}].`
+  );
+  error.name = 'AI_TypeValidationError';
+  error[Symbol.for('vercel.ai.error')] = true;
+  return error;
+}
+
+test('a generate error that embeds the messages is thrown without them', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerate.mockRejectedValue(chatTextError());
+
+  const thrown = await handleAgentGenerate({
+    connection,
+    properties: { agent: createAgent(), prompt: 'My ID is 8001015009087', files: [] },
+    context: createTestContext(),
+  }).catch((error) => error);
+
+  expect(thrown.name).toBe('AI_TypeValidationError');
+  expect(JSON.stringify({ message: thrown.message, stack: thrown.stack })).not.toContain(
+    '8001015009087'
+  );
+});
+
+test('a generate error without an AI SDK error in its chain is thrown as it is', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  const error = new Error('model exploded');
+  mockGenerate.mockRejectedValue(error);
+
+  await expect(
+    handleAgentGenerate({
+      connection,
+      properties: { agent: createAgent(), prompt: 'Go.', files: [] },
+      context: createTestContext(),
+    })
+  ).rejects.toBe(error);
+});
+
+test('the agent logs a stream error by its summary, not the error', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerateSteps();
+  await handleAgentGenerate({
+    connection,
+    properties: { agent: createAgent(), prompt: 'Go.', files: [] },
+    context: createTestContext(),
+  });
+
+  lastAgentConfig.onError({ error: chatTextError() });
+
+  expect(testLogger.error).toHaveBeenCalledWith(
+    expect.objectContaining({ error: { name: 'AI_TypeValidationError' } }),
+    'Agent stream error.'
+  );
+  expect(JSON.stringify(testLogger.error.mock.calls)).not.toContain('8001015009087');
+});

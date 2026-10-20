@@ -160,6 +160,15 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
       signal: context.signal,
     }),
     ...hookCallbacks,
+    // streamText's default onError writes the whole error to the console, and an AI SDK error
+    // can carry the request body (instructions, page context, messages) or the provider's
+    // reply. A mid-stream error reaches the client as an error chunk without throwing, so this
+    // is the only log of it: its summary and ids.
+    onError: ({ error }) =>
+      context.logger.error(
+        { ...agentLogIds({ agent, context }), error: agentErrorForLog(error) },
+        'Agent stream error.'
+      ),
     ...(agent.properties.repairToolCall
       ? {
           repairToolCall: async ({ toolCall }) => {
