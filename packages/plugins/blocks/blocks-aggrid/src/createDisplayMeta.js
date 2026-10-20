@@ -182,7 +182,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                 type: ['boolean', 'string'],
                 default: false,
                 description:
-                  'Filter to use for this column. Set to `true` to use the default filter, or name a provided filter: `agTextColumnFilter`, `agNumberColumnFilter`, `agDateColumnFilter` or `agSetColumnFilter` (AG Grid Enterprise).',
+                  'Filter to use for this column. Set to `true` to use the default filter, or name a provided filter: `agTextColumnFilter`, `agNumberColumnFilter`, `agDateColumnFilter`, or `agSetColumnFilter`, which needs AG Grid Enterprise (not included in this block).',
               },
               sortable: {
                 type: 'boolean',
@@ -226,7 +226,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
               tooltipComponent: {
                 type: ['object', 'string'],
                 description:
-                  'Provide a custom tooltip component, or name a registered one such as `agTooltipComponent`. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/).',
+                  'Provide a custom tooltip component, or the name of a component registered in `components`. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/).',
               },
               ellipsis: {
                 type: 'number',
