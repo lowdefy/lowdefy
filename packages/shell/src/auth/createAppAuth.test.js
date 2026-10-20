@@ -113,6 +113,7 @@ async function until(check) {
 async function setup({
   cacheStore = createMemoryCacheStore(),
   kv = createMemoryStore(),
+  queueStore = { removeApp: jest.fn(async () => undefined) },
   server = createServer().server,
   shell = standardShell,
   streamFetch = jest.fn(),
@@ -131,6 +132,7 @@ async function setup({
     localAuthentication,
     now: () => clock.now,
     onSignedOut,
+    queueStore,
     shell,
     streamFetch,
   });

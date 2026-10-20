@@ -32,15 +32,23 @@ const ACCURACY = {
   navigation: Location.Accuracy.BestForNavigation,
 };
 
-const kv = createDeviceStore();
-const backlog = createBacklog({ key: 'lowdefy-shell:tracking-backlog', kv });
+// The device store and the backlog of posts, opened on first use: loading the module, which every
+// field-tracking shell does at launch, touches no storage.
+let stores = null;
+function getStores() {
+  if (stores === null) {
+    const kv = createDeviceStore();
+    stores = { kv, backlog: createBacklog({ key: 'lowdefy-shell:tracking-backlog', kv }) };
+  }
+  return stores;
+}
 
 function readConfig() {
-  return JSON.parse(kv.get(CONFIG_KEY) ?? '{}');
+  return JSON.parse(getStores().kv.get(CONFIG_KEY) ?? '{}');
 }
 
 function writeConfig(update) {
-  kv.set(CONFIG_KEY, JSON.stringify({ ...readConfig(), ...update }));
+  getStores().kv.set(CONFIG_KEY, JSON.stringify({ ...readConfig(), ...update }));
 }
 
 // Posts to an endpoint with the open app's session; on failure the post waits in the backlog for

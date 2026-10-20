@@ -23,13 +23,15 @@ import shellVersion from '../version/shellVersion.js';
  * The shell's config: shell.json as app.config.ts built it into the app (`id`, `name`,
  * `profile`, `scheme`, `environment`, `store` and the one app it opens,
  * `app: { id, name, urls: { <env>: url } }`, checked by checkShellConfig.js), with the `version`
- * and `typeManifest` of the JavaScript that is running. An embedded launch reads the Expo config
+ * and `typeManifest` of the JavaScript that is running, and `easProjectId`. An embedded launch reads the Expo config
  * the native build embedded, so both come from the bundle instead: a type added to the plugin maps
  * reaches the shell from Metro or by an over-the-air update, and a shell whose new JavaScript
  * meets an app's `minShellVersion` opens its pages.
  */
 function getShellConfig() {
-  return { ...Constants.expoConfig.extra.shell, typeManifest, version: shellVersion };
+  const { eas, shell } = Constants.expoConfig.extra;
+  // The EAS project, for an Expo push token; null for a shell without one (Lowdefy Dev).
+  return { ...shell, easProjectId: eas?.projectId ?? null, typeManifest, version: shellVersion };
 }
 
 export default getShellConfig;

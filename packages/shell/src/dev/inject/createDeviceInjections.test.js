@@ -141,17 +141,33 @@ test('clear drops every injection and goes back online', () => {
   expect(injections.isOffline()).toBe(false);
 });
 
-test('a push injection is refused until the shell carries expo-notifications', () => {
+test('a push injection without a title or body is refused with its shape', async () => {
   const injections = createInjections();
-  expect(() => injections.inject({ kind: 'push', value: { title: 'New job' } })).toThrow(
-    'Push injection needs expo-notifications to show a local notification, and Lowdefy Dev does not include it yet.'
+  await expect(injections.inject({ kind: 'push', value: { data: {} } })).rejects.toThrow(
+    'A push injection needs { title, body, data?, categoryId?, open?, actionId?, text? }.'
+  );
+});
+
+test('a push injection shows the notification now', async () => {
+  const injections = createInjections();
+  await expect(injections.inject({ kind: 'push', value: { title: 'New job' } })).resolves.toEqual({
+    ok: true,
+    kind: 'push',
+    id: 'notification-id',
+  });
+});
+
+test('a share injection without text, a url or files is refused', async () => {
+  const injections = createInjections();
+  await expect(injections.inject({ kind: 'share', value: {} })).rejects.toThrow(
+    'A share injection needs { text?, url?, files? }.'
   );
 });
 
 test.each([
   [
     { kind: 'beep' },
-    'An injection kind is one of scan, photo, nfc, transcript, location, permission, network, push, clear. Received "beep".',
+    'An injection kind is one of scan, photo, nfc, transcript, location, permission, network, push, share, clear. Received "beep".',
   ],
   [{ kind: 'scan', value: 'JOB-1' }, 'A scan injection needs { data }. Received "JOB-1".'],
   [{ kind: 'photo', value: {} }, 'A photo injection needs { base64 }. Received {}.'],

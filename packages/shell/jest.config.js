@@ -37,6 +37,11 @@ module.exports = {
     '^expo-image$': '<rootDir>/src/test/expoImage.js',
     '^expo-speech-recognition$': '<rootDir>/src/test/expoSpeechRecognition.js',
     '^expo-web-browser$': '<rootDir>/src/test/expoWebBrowser.js',
+    '^expo-notifications$': '<rootDir>/src/test/expoNotifications.js',
+    '^expo-quick-actions$': '<rootDir>/src/test/expoQuickActions.js',
+    '^expo-(task-manager|background-task)$': '<rootDir>/src/test/expoTaskManager.js',
+    '^(expo-(audio|brightness|calendar|calendar/legacy|contacts|document-picker|file-system|haptics|image-picker|keep-awake|location|maps|sharing|speech|widgets)|react-native-nfc-manager|react-native-document-scanner-plugin)$':
+      '<rootDir>/src/test/nativeModule.js',
   },
   // The preset's pattern assumes a flat node_modules; pnpm nests each package under .pnpm. The
   // native Markdown block's react-native-marked ships TypeScript source and marked ES modules, and

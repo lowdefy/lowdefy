@@ -84,6 +84,11 @@ test('writeMobile defaults to a stack frame and the first mobile page as home', 
         sharedDevice: false,
         sessionExpiresIn: null,
       },
+      notifications: { register: null, unregister: null, foreground: 'banner', categories: [] },
+      share: null,
+      widgets: [],
+      shortcuts: [],
+      background: null,
     },
     'mobile/events.json': {},
     'mobile/pageIndex.json': [{ path: 'today', pageId: 'today', hash: 'h1', typesKey: 't1' }],
@@ -137,7 +142,68 @@ test('writeMobile takes the home page from the first menu item', async () => {
       sharedDevice: false,
       sessionExpiresIn: null,
     },
+    notifications: { register: null, unregister: null, foreground: 'banner', categories: [] },
+    share: null,
+    widgets: [],
+    shortcuts: [],
+    background: null,
   });
+});
+
+test('writeMobile writes the native features with their defaults', async () => {
+  const context = createContext();
+  await writeMobile({
+    components: {
+      mobile: {
+        events: {},
+        homePageId: 'today',
+        notifications: {
+          register: 'register-device',
+          categories: [
+            {
+              id: 'approval',
+              actions: [{ id: 'approve', title: 'Approve', endpointId: 'approve' }],
+            },
+          ],
+        },
+        share: { pageId: 'inbox' },
+        widgets: [{ id: 'open', title: 'Open', endpointId: 'open-count' }],
+        shortcuts: [{ id: 'new', title: 'New job', path: '/jobs/new' }],
+        background: { endpointId: 'refresh' },
+      },
+    },
+    context,
+  });
+  const config = getArtifacts()['mobile/config.json'];
+  expect(config.notifications).toEqual({
+    register: 'register-device',
+    unregister: null,
+    foreground: 'banner',
+    categories: [
+      {
+        id: 'approval',
+        actions: [
+          {
+            id: 'approve',
+            title: 'Approve',
+            endpointId: 'approve',
+            input: null,
+            snooze: null,
+            destructive: false,
+            authenticationRequired: false,
+          },
+        ],
+      },
+    ],
+  });
+  expect(config.share).toEqual({ pageId: 'inbox' });
+  expect(config.widgets).toEqual([
+    { id: 'open', title: 'Open', layout: 'count', endpointId: 'open-count', path: null },
+  ]);
+  expect(config.shortcuts).toEqual([
+    { id: 'new', title: 'New job', subtitle: null, icon: null, path: '/jobs/new' },
+  ]);
+  expect(config.background).toEqual({ endpointId: 'refresh', interval: 15 });
 });
 
 test('writeMobile writes shells with sha256 as a list', async () => {

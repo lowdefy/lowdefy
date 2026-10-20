@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+import { installDevice } from '@lowdefy/blocks-native/device';
+
 import createDeviceInjections from '../dev/inject/createDeviceInjections.js';
 import createFakeNetwork from '../test/createFakeNetwork.js';
 import createNetworkStatus from '../host/createNetworkStatus.js';
@@ -59,8 +62,18 @@ test('GeolocationCurrentPosition answers as the web does when location is refuse
   });
 });
 
-test('GeolocationCurrentPosition throws when the shell has no location to give', async () => {
+test('GeolocationCurrentPosition throws when the shell carries no location and none was injected', async () => {
   await expect(GeolocationCurrentPosition({ params: {} })).rejects.toThrow(
-    'GeolocationCurrentPosition is not available on this phone yet: the shell has no device location. In Lowdefy Dev, inject a location.'
+    'GeolocationCurrentPosition needs a shell that carries location (profile field). In Lowdefy Dev, inject a location.'
   );
+});
+
+test('GeolocationCurrentPosition reads the location feature when nothing was injected', async () => {
+  const current = jest.fn(async () => ({ coords: { latitude: 1, longitude: 2 }, timestamp: 5 }));
+  const removeDevice = installDevice({ location: { current } });
+  await expect(
+    GeolocationCurrentPosition({ params: { enableHighAccuracy: true } })
+  ).resolves.toEqual({ coords: { latitude: 1, longitude: 2 }, timestamp: 5 });
+  expect(current).toHaveBeenCalledWith({ enableHighAccuracy: true });
+  removeDevice();
 });

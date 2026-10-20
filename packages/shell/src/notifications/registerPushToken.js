@@ -15,15 +15,13 @@
 */
 
 import { Platform } from 'react-native';
-import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 
 import callEndpoint from '../native/callEndpoint.js';
 
 // The Expo push token, for an app that sends through Expo's push service. A shell without an EAS
 // project has none.
-async function getExpoToken() {
-  const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+async function getExpoToken(projectId) {
   if (typeof projectId !== 'string') {
     return null;
   }
@@ -57,7 +55,7 @@ async function registerPushToken({ app, token }) {
   const nativeToken = token ?? (await Notifications.getDevicePushTokenAsync()).data;
   const registration = {
     token: nativeToken,
-    expoToken: await getExpoToken(),
+    expoToken: await getExpoToken(app.shell.easProjectId),
     platform: Platform.OS,
     provider: Platform.OS === 'ios' ? 'apns' : 'fcm',
     shellId: app.shell.id,
