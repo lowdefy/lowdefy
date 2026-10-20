@@ -5,8 +5,8 @@ and the npm trusted publisher that links the two.
 
 ## Release from CI
 
-`.github/workflows/release.yaml` runs on every push to `main`, after the complete test path
-(see [CI](./testing.md#ci)).
+`.github/workflows/release.yaml` runs on every push to `main`, and from the Actions tab, after
+the complete test path (see [CI](./testing.md#ci)).
 
 1. With changesets pending, `changesets/action` opens or updates the "Publish new release"
    pull request (`pnpm release:version`).
@@ -62,6 +62,8 @@ publish it.
 - Runs `npm trust github <package> --repo lowdefy/lowdefy --file release.yaml --env publish --allow-publish --allow-stage-publish --yes`
   on each package with no trusted publisher, 2 seconds apart (npm's advice for bulk changes).
 - Prints what it set and what already had one. A second run changes nothing.
+- Counts any existing trust configuration as set. It doesn't check that an existing one
+  matches the entry above.
 - Needs npm 11.15 or later and a login with 2FA. Tick "skip 2FA for 5 minutes" on the first
   prompt to cover the batch.
 
@@ -76,6 +78,3 @@ node scripts/ensure-trusted-publishers.mjs
 
 If a release already failed on a package with `E404 Not Found - PUT`, run the script, then
 re-run the release job. `scripts/verify-published.mjs` passes once every package is live.
-
-A check in CI before publishing can't catch this: `npm trust list` needs a person's login,
-not the OIDC token.

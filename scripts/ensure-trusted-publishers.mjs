@@ -141,6 +141,11 @@ async function hasTrustedPublisher({ name }) {
     );
     await npmTrust(['list', name], { stdio: 'inherit' });
     result = await list();
+    if (readNpmErrorCode(result.stdout) === 'EOTP') {
+      throw new Error(
+        'npm still needs 2FA for every call. Run the script again and tick "skip 2FA for 5 minutes" when npm asks.'
+      );
+    }
   }
   if (result.status !== 0) {
     throw new Error(`\`npm trust list ${name}\` failed:\n${result.stdout}`);
@@ -162,24 +167,34 @@ const set = [];
 const notOnNpm = [];
 const failed = [];
 
-for (const pkg of getPublishablePackages()) {
+async function ensureTrustedPublisher(pkg) {
   const distTags = await getDistTags(pkg);
   if (distTags === null) {
     notOnNpm.push(pkg);
-    continue;
+    return;
   }
   if (distTags.latest) {
     released.push(pkg);
-    continue;
+    return;
   }
   if (await hasTrustedPublisher(pkg)) {
     alreadySet.push(pkg);
-    continue;
+    return;
   }
   console.log(`\nSetting trusted publisher on ${pkg.name}...`);
   if (await setTrustedPublisher(pkg)) {
     set.push(pkg);
   } else {
+    failed.push(pkg);
+  }
+}
+
+for (const pkg of getPublishablePackages()) {
+  // A registry or npm failure on one package should not hide what the rest of the batch did.
+  try {
+    await ensureTrustedPublisher(pkg);
+  } catch (error) {
+    console.error(`\n${pkg.name}: ${error.message}`);
     failed.push(pkg);
   }
 }
@@ -200,7 +215,7 @@ if (notOnNpm.length > 0) {
   notOnNpm.forEach((pkg) => console.error(`  ${pkg.name}`));
 }
 if (failed.length > 0) {
-  console.error('Failed to set a trusted publisher (see the npm output above):');
+  console.error('Failed (see the output above):');
   failed.forEach((pkg) => console.error(`  ${pkg.name}`));
 }
 if (notOnNpm.length > 0 || failed.length > 0) {
