@@ -307,7 +307,10 @@ test('handleAgentGenerate logs an error and continues when an onFinish hook fail
 
   expect(result.text).toBe('Final answer');
   expect(testLogger.error).toHaveBeenCalledWith(
-    expect.objectContaining({ err: expect.any(Error) }),
+    expect.objectContaining({
+      endpointId: 'save-run',
+      error: { name: 'Error', message: 'hook broke' },
+    }),
     'onFinish hook "save-run" failed.'
   );
 });
