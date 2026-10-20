@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
-import agentErrorForLog, { agentLogIds, agentLogLine } from './agentErrorForLog.js';
+import agentErrorForLog, {
+  agentErrorForThrow,
+  agentLogIds,
+  agentLogLine,
+} from './agentErrorForLog.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 
@@ -41,6 +45,10 @@ async function handleAgentGenerate({ connection, properties, context }) {
       ...timeoutConfig,
       onStepFinish: (stepResult) => usageAccumulator.add(stepResult),
     });
+  } catch (error) {
+    // The routine logs what is thrown whole, and an AI SDK error can embed the prompt or
+    // the messages.
+    throw agentErrorForThrow(error);
   } finally {
     await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
   }

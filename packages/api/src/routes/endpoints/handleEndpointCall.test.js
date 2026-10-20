@@ -421,3 +421,42 @@ test('endpoint call increments depth for child', async () => {
     call_b: { from_b: true, c_result: 'from_c' },
   });
 });
+
+test('the endpoint call logs leave the payload and the response out', async () => {
+  const chatText = 'My ID is 8001015009087';
+  const context = createTestContext({
+    endpointConfigs: {
+      save_thread: {
+        endpointId: 'save_thread',
+        type: 'Api',
+        routine: { ':return': { thread: { _payload: 'messages' } } },
+      },
+    },
+  });
+  const routineContext = {
+    steps: {},
+    payload: { messages: [{ role: 'user', content: chatText }] },
+    arrayIndices: [],
+    items: {},
+    endpointDepth: 0,
+  };
+  const step = {
+    id: 'endpoint:caller:save',
+    stepId: 'save',
+    type: 'CallApi',
+    properties: { endpointId: 'save_thread', payload: { messages: { _payload: 'messages' } } },
+  };
+
+  const res = await runRoutine(context, routineContext, { routine: step });
+  expect(res.status).toBe('continue');
+  expect(routineContext.steps.save.thread[0].content).toBe(chatText);
+  expect(logger.debug).toHaveBeenCalledWith({
+    event: 'debug_end_endpoint_call',
+    stepId: 'save',
+    targetEndpointId: 'save_thread',
+  });
+  const logged = JSON.stringify(
+    ['debug', 'info', 'warn', 'error'].flatMap((level) => logger[level].mock.calls)
+  );
+  expect(logged).not.toContain(chatText);
+});

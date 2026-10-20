@@ -16,6 +16,7 @@
 
 import { ToolLoopAgent, stepCountIs, hasToolCall } from 'ai';
 
+import agentErrorForLog, { agentLogIds, agentLogLine } from './agentErrorForLog.js';
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
 import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
@@ -133,6 +134,17 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
       ? { prepareStep: buildPrepareStep(agent.properties.prepareStep) }
       : {}),
     ...hookCallbacks,
+    // streamText's default onError writes the whole error to the console, and an AI SDK error
+    // can carry the request body (instructions, page context, messages) or the provider's
+    // reply. A mid-stream error reaches the client as an error chunk without throwing, so this
+    // is the only log of it: its summary and ids.
+    onError: ({ error }) =>
+      console.error(
+        agentLogLine('Agent stream error:', {
+          ...agentLogIds({ agent, context }),
+          error: agentErrorForLog(error),
+        })
+      ),
     ...(agent.properties.repairToolCall
       ? {
           experimental_repairToolCall: async ({ toolCall }) => {

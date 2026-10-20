@@ -57,6 +57,27 @@ function agentErrorForLog(error, depth = 0) {
   return summary;
 }
 
+function carriesAiSdkError(error, depth = 0) {
+  if (!(error instanceof Error)) return false;
+  if (isAiSdkError(error)) return true;
+  const cause = error.lastError ?? error.cause;
+  return depth < CAUSE_DEPTH && carriesAiSdkError(cause, depth + 1);
+}
+
+// What an agent run may throw on to the routine, which logs a thrown error whole (its message,
+// stack and causes). An error with an AI SDK error in its chain is replaced by one that says
+// only what agentErrorForLog would: its name, code, statusCode and, for an APICallError, the
+// message. Any other error is thrown as it is.
+function agentErrorForThrow(error) {
+  if (!carriesAiSdkError(error)) return error;
+  const summary = agentErrorForLog(error);
+  const safe = new Error(summary.message ?? `${summary.name} (message withheld from logs).`);
+  safe.name = summary.name;
+  if (summary.code !== undefined) safe.code = summary.code;
+  if (summary.statusCode !== undefined) safe.statusCode = summary.statusCode;
+  return safe;
+}
+
 // What every agent log names its run by: ids, never the conversation's content.
 function agentLogIds({ agent, context }) {
   return {
@@ -71,5 +92,5 @@ function agentLogLine(text, fields) {
   return `${text} ${JSON.stringify(fields)}`;
 }
 
-export { agentLogIds, agentLogLine };
+export { agentErrorForThrow, agentLogIds, agentLogLine };
 export default agentErrorForLog;
