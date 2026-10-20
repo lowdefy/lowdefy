@@ -5,7 +5,7 @@
   "fixed": [["@lowdefy/*", "lowdefy", "lowdefy-vscode"]],
   "linked": [],
   "access": "restricted",
-  "baseBranch": "main",
+  "baseBranch": "v6",
   "updateInternalDependencies": "patch",
   "ignore": []
 }
