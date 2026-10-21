@@ -57,6 +57,7 @@ test('buildTestPage', () => {
         type: 'AxiosHttp',
         connectionId: 'axios',
         payload: {},
+        readOnly: false,
         auth: {
           public: true,
         },
