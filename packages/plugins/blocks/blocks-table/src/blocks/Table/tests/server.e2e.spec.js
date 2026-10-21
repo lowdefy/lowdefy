@@ -107,6 +107,19 @@ async function mockServer(page, { delayFor = () => 20 } = {}) {
   };
 }
 
+// The same dataset behind the `table-rows` API endpoint (data.endpoint): CallAPI posts the fetch
+// event as the payload, and the endpoint answers with the routine's response. `respond` replaces
+// the routine's response, for a refusal.
+async function mockEndpoint(page, { respond = query } = {}) {
+  const calls = [];
+  await page.route('**/api/endpoints/table-rows', async (route) => {
+    const payload = revive(route.request().postDataJSON().payload);
+    calls.push(payload);
+    await route.fulfill({ json: { success: true, status: 'success', response: respond(payload) } });
+  });
+  return calls;
+}
+
 // Button blocks render the button inside a full-width column; click the button itself.
 const clickButton = (page, blockId) => page.locator(`#${blockId}`).click();
 const grid = (page, blockId) => getBlock(page, blockId).locator('[role="grid"]');
@@ -413,5 +426,61 @@ test.describe('Table server mode', () => {
     await expect(getBlock(page, 'transactions_click_value')).toHaveText(
       'click={"rowKey":2,"index":1}'
     );
+  });
+});
+
+test.describe('Table server mode through an API endpoint', () => {
+  test('loads and scrolls through the endpoint with the fetch event as its payload', async ({
+    page,
+  }) => {
+    const calls = await mockEndpoint(page);
+    await openTablePage(page, 'table-server');
+    await expect(cell(page, 'table_server_endpoint', '0', 'name')).toHaveText('Person 00000');
+    await expect(grid(page, 'table_server_endpoint')).toHaveAttribute(
+      'aria-rowcount',
+      String(TOTAL + 1)
+    );
+    expect(calls[0]).toEqual({
+      startRow: 0,
+      endRow: 100,
+      view: { sort: [], filter: null, search: null, group: [], aggregates: {} },
+      groupPath: [],
+      selected: [],
+    });
+    await scrollTo(page, 'table_server_endpoint', 500 * 40);
+    await expect(cell(page, 'table_server_endpoint', '500', 'name')).toHaveText('Person 00500');
+    expect(calls.map((call) => call.startRow)).toContain(500);
+  });
+
+  test('sorts, filters and searches through the endpoint', async ({ page }) => {
+    const calls = await mockEndpoint(page);
+    await openTablePage(page, 'table-server');
+    await expect(cell(page, 'table_server_endpoint', '0', 'name')).toHaveText('Person 00000');
+
+    await getBlock(page, 'table_server_endpoint')
+      .locator('[data-lf-header][data-col-key="amount"]')
+      .click();
+    await expect.poll(() => calls.at(-1).view.sort).toEqual([{ key: 'amount' }]);
+    expect(calls.at(-1).startRow).toBe(0);
+
+    await clickButton(page, 'server_endpoint_filter');
+    await expect(grid(page, 'table_server_endpoint')).toHaveAttribute(
+      'aria-rowcount',
+      String(TOTAL / 4 + 1)
+    );
+    expect(calls.at(-1).view.filter).toMatchObject({ key: 'stage', op: 'eq', value: 'won' });
+
+    await getBlock(page, 'table_server_endpoint')
+      .locator('[data-lf-toolbar-search] input')
+      .fill('Person 0001');
+    await expect.poll(() => calls.at(-1).view.search).toBe('Person 0001');
+  });
+
+  test('a routine response without rows shows the error row', async ({ page }) => {
+    await mockEndpoint(page, { respond: () => ({ refused: true }) });
+    await openTablePage(page, 'table-server');
+    await expect(
+      getBlock(page, 'table_server_endpoint').locator('[data-lf-error-row]')
+    ).toContainText("Couldn't load rows");
   });
 });

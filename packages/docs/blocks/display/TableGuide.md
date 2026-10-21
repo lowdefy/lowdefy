@@ -29,7 +29,7 @@ expanded: [] # the expanded tree rows or detail rows
 
 - `_state: deals.selected` is always the selection and `_state: deals.view` always the current view, with no `onChange` wiring.
 - Setting them sets the table: `SetState: { deals.selected: [] }` clears the selection, `SetState: { deals.view.filter: { key: stage, op: eq, value: won } }` filters it, and `Reset` returns to `defaultView`.
-- Rows come from `data`: a list of rows (client mode), or `{ mode: server, request }` (server mode, below).
+- Rows come from `data`: a list of rows (client mode), or `{ mode: server, request }` or `{ mode: server, endpoint }` (server mode, below).
 - `rowKey` names the field that identifies a row: `_id` by default, then `id`. Selection, expansion, events and edits all use it, so give rows a key. Rows with neither field get a key per row object, which does not survive a refetch.
 
 The table loads its code (TanStack Table and Virtual, about 47 kB gzipped) the first time a `Table` or `TableInput` mounts, showing its loading skeleton until then (see [Loading states](#loading-states)). A page without one does not load it.
@@ -1287,6 +1287,45 @@ In server mode the browser sends the view, and the view is user input. `MongoDBT
 - **Saves.** `MongoDBTableChanges` writes only the `fields` listed, at their paths, with coerced values, scoped by its base `filter`; row keys and values that are operator objects are refused. Fields that overlap a `filter` or `insertDefaults` field are refused, so a save can not move a row out of scope, and new rows are stamped with the `filter`'s equalities.
 
 Every column the user can sort or filter must be in `fields`, or the request fails when they try. Set `sortable: false` and `filterable: false` on columns the request does not allow, and give `toolbar.search` only to tables whose request has `search: true` fields. Server search matches the raw field values, not the display labels a client-side search reads.
+
+**Rows from an API endpoint.** When the rows may only be read behind an endpoint's own checks, give `data.endpoint` in place of `data.request`. The table calls the endpoint with `CallAPI`, with the fetch event `{ startRow, endRow, view, groupPath, selected }` as its payload, and reads the routine's response as it reads the request's, `{ rows, total, groups?, aggregates? }`. Give exactly one of `request` and `endpoint`. A response without `rows` and `total` shows the table's own error row.
+
+```yaml
+# The table
+data:
+  mode: server
+  endpoint: deals-rows
+
+# api/deals-rows.yaml
+id: deals-rows
+type: Api
+routine:
+  # The endpoint's own checks run first, for example a :reject for a caller without access.
+  - id: deals_page
+    type: MongoDBTableQuery
+    connectionId: deals
+    properties:
+      pipeline:
+        - $match:
+            org_id:
+              _user: organization.id
+      fields:
+        _ref: deals/table_fields.yaml
+      user:
+        _user: true
+      view:
+        _payload: view
+      startRow:
+        _payload: startRow
+      endRow:
+        _payload: endRow
+      groupPath:
+        _payload: groupPath
+  - :return:
+      _step: deals_page
+```
+
+The fetch event carries no time zone, so a routine that filters dates by the user's days sets `timezone` itself, for example from the user's profile.
 
 **Time zones and indexes.** The browser compares date filters by the user's local days, the server by the days of the request's `timezone` (UTC by default): pass the user's time zone, as `deals_page` does. The request sorts before it pages, so an index on the base match, filter and sort fields (for example `{ org_id: 1, updated: -1, _id: 1 }`) serves each block; without one, MongoDB sorts every matching document for every block. Add indexes for the sorts a large table offers.
 
