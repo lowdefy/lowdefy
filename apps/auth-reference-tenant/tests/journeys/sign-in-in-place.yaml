@@ -1,0 +1,30 @@
+- name: a sign-in that stays on the page renders the new caller before its next request
+  pageId: signup
+  user: none
+  timeout: 30000
+  steps:
+    - fill: { blockId: name, value: Inplace Owner }
+    - fill: { blockId: email, value: inplace-owner@example.test }
+    - fill: { blockId: password, value: inplace-owner-password }
+    - click: signup_button
+    - email: { to: inplace-owner@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - expect: { visible: verify_email_result }
+    - goto: caller
+    - expect: { text: { blockId: server_caller_html, contains: 'Server answers: null' } }
+    # callbackUrl: false signs in without navigating, and the same chain then
+    # makes a stamped request: the server answers it as the new caller, so
+    # the page must render that caller by the time the request is made, or it
+    # reloads and the answer, held only in this page's state, is lost.
+    - fill: { blockId: email, value: inplace-owner@example.test }
+    - fill: { blockId: password, value: inplace-owner-password }
+    - click: login_in_place_button
+    - expect:
+        text:
+          blockId: login_caller_html
+          contains: 'Server answers the sign-in''s request: "inplace-owner@example.test"'
+    - expect:
+        text:
+          blockId: rendered_user_html
+          contains: 'Page renders: "inplace-owner@example.test"'
+    - expect: { url: { contains: /caller } }
