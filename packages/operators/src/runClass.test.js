@@ -15,6 +15,7 @@
 */
 
 import runClass from './runClass.js';
+import { expect, test } from 'vitest';
 
 const location = 'locationId';
 const operator = '_op';
@@ -131,7 +132,7 @@ test('nameAndSpread - spread args must be an array', () => {
       params: { x: 1, y: 2, z: 'x' },
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op.nameAndSpread takes an array as input argument for z."`
+    `[Error: _op.nameAndSpread takes an array as input argument for z.]`
   );
 });
 
@@ -168,7 +169,7 @@ test('noArgsError', () => {
       methodName: 'noArgsError',
       params: null,
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"No Args function error."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: No Args function error.]`);
 });
 
 test('property', () => {
@@ -204,7 +205,7 @@ test('error', () => {
       methodName: 'error',
       params: [],
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Function error."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Function error.]`);
 });
 
 test('typeCheck', () => {
@@ -238,7 +239,7 @@ test('typeCheck', () => {
       params: 'x',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op.typeCheck accepts one of the following types: array, object."`
+    `[Error: _op.typeCheck accepts one of the following types: array, object.]`
   );
 });
 
@@ -273,7 +274,7 @@ test('combination', () => {
       params: 'x',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op.combination accepts one of the following types: array, object."`
+    `[Error: _op.combination accepts one of the following types: array, object.]`
   );
 });
 
@@ -288,6 +289,6 @@ test('calling an undefined function', () => {
       params: [],
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, noArgs, noArgsError, property, typeCheck, combination, error."`
+    `[Error: _op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, noArgs, noArgsError, property, typeCheck, combination, error.]`
   );
 });

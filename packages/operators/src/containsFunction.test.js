@@ -15,6 +15,7 @@
 */
 
 import containsFunction from './containsFunction.js';
+import { expect, test } from 'vitest';
 
 test('containsFunction finds a function at the root or nested in objects and arrays', () => {
   expect(containsFunction(() => 1)).toBe(true);

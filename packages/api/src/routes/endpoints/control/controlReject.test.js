@@ -17,6 +17,7 @@
 import { UserError } from '@lowdefy/errors';
 
 import runTest from '../test/runTest.js';
+import { expect, test } from 'vitest';
 
 test('single reject', async () => {
   const routine = {

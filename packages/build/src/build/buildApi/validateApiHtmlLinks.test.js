@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import validateApiHtmlLinks from './validateApiHtmlLinks.js';
 
 function createContext() {
-  return { handleWarning: jest.fn() };
+  return { handleWarning: vi.fn() };
 }
 
 test('validateApiHtmlLinks warns for a data-page-id in an endpoint that names no page', () => {

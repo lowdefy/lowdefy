@@ -15,6 +15,7 @@
 */
 
 import runTest, { inFlight } from '../test/runTest.js';
+import { expect, test } from 'vitest';
 
 test('parallel_for iterates over array', async () => {
   const routine = {

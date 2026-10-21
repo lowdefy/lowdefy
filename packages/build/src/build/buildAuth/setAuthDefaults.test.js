@@ -15,6 +15,7 @@
 */
 
 import setAuthDefaults from './setAuthDefaults.js';
+import { expect, test } from 'vitest';
 
 test('setAuthDefaults sets only authorization defaults when auth is not configured', () => {
   const components = {

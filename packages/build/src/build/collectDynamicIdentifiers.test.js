@@ -15,6 +15,7 @@
 */
 
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
+import { expect, test } from 'vitest';
 
 test('collectDynamicIdentifiers returns empty Set for all static operators', () => {
   const staticOp1 = () => {};

@@ -15,6 +15,7 @@
 */
 
 import buildAuthHooks from './buildAuthHooks.js';
+import { expect, test } from 'vitest';
 
 test('buildAuthHooks returns components unchanged when hooks is undefined', () => {
   const components = {

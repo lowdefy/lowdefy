@@ -17,6 +17,7 @@
 import buildAuth from './buildAuth.js';
 import getEntityRoles from './getEntityRoles.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 test('No roles', () => {
   const components = {
@@ -78,11 +79,7 @@ test('Wildcard pattern matches multiple pages', () => {
         },
       },
     },
-    pages: [
-      { id: 'team-users/users-list' },
-      { id: 'team-users/user-edit' },
-      { id: 'home' },
-    ],
+    pages: [{ id: 'team-users/users-list' }, { id: 'team-users/user-edit' }, { id: 'home' }],
   };
   const res = getEntityRoles({ components, entity: 'pages' });
   expect(res).toEqual({
@@ -101,11 +98,7 @@ test('Mixed exact and wildcard patterns in roles', () => {
         },
       },
     },
-    pages: [
-      { id: 'team-users/users-list' },
-      { id: 'settings' },
-      { id: 'home' },
-    ],
+    pages: [{ id: 'team-users/users-list' }, { id: 'settings' }, { id: 'home' }],
   };
   const res = getEntityRoles({ components, entity: 'pages' });
   expect(res).toEqual({

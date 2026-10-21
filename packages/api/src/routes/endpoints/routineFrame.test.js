@@ -19,14 +19,14 @@
 // the real server operators through runRoutine, so a step handler or parser that drops part of the
 // frame fails here even when the unit tests of each piece still pass.
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import runRoutine from './runRoutine.js';
 import testContext from '../../test/testContext.js';
 
-const mockEcho = jest.fn(({ connection, request }) => ({ connection, request }));
+const mockEcho = vi.fn(({ connection, request }) => ({ connection, request }));
 mockEcho.schema = {};
 mockEcho.meta = { checkRead: false, checkWrite: false };
 
@@ -41,7 +41,7 @@ function createContext({ connectionProperties = {}, operators = operatorsServer 
   const context = testContext({
     connections,
     operators,
-    readConfigFile: jest.fn(async (path) => {
+    readConfigFile: vi.fn(async (path) => {
       if (path === 'connections/echo.json') {
         return {
           id: 'connection:echo',
@@ -82,7 +82,7 @@ function echoStep({ stepId, properties }) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('_function in :set_state reads routine state', async () => {

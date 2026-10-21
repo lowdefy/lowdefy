@@ -15,6 +15,7 @@
 */
 
 import createRequestSignal from './createRequestSignal.js';
+import { expect, test } from 'vitest';
 
 test('createRequestSignal aborts with an AbortError when the client closes the connection', () => {
   const client = new AbortController();

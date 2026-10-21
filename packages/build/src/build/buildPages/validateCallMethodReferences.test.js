@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import validateCallMethodReferences from './validateCallMethodReferences.js';
 
 function createContext() {
-  return { handleWarning: jest.fn() };
+  return { handleWarning: vi.fn() };
 }
 
 function callMethodRef(targetBlockId, action = {}) {

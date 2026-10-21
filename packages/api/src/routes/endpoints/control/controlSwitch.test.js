@@ -15,6 +15,7 @@
 */
 
 import runTest from '../test/runTest.js';
+import { expect, test } from 'vitest';
 
 test('single switch case', async () => {
   const routine = {

@@ -15,6 +15,7 @@
 */
 
 import buildRoleCatalog from './buildRoleCatalog.js';
+import { expect, test } from 'vitest';
 
 test('buildRoleCatalog normalizes an empty catalog to an empty array', () => {
   const components = {

@@ -14,25 +14,25 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { AuthenticationError, ConfigError, UserError } from '@lowdefy/errors';
 
 import callEndpoint from './callEndpoint.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('InternalApi endpoint throws ConfigError with "does not exist" message', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/internal_ep.json') {
       return {
         endpointId: 'internal_ep',
@@ -67,7 +67,7 @@ test('InternalApi endpoint throws ConfigError with "does not exist" message', as
 });
 
 test('Api endpoint proceeds normally', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/public_ep.json') {
       return {
         endpointId: 'public_ep',
@@ -94,7 +94,7 @@ test('Api endpoint proceeds normally', async () => {
 });
 
 test('unauthenticated call to a protected endpoint throws an authentication-required error', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/protected_ep.json') {
       return {
         endpointId: 'protected_ep',
@@ -117,7 +117,7 @@ test('unauthenticated call to a protected endpoint throws an authentication-requ
 });
 
 test('authenticated call with the wrong role throws a masked does-not-exist error', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/protected_ep.json') {
       return {
         endpointId: 'protected_ep',
@@ -144,7 +144,7 @@ test('authenticated call with the wrong role throws a masked does-not-exist erro
 });
 
 test('callEndpoint strips stack and the internal control config cause from the error it returns', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/failing_ep.json') {
       return {
         endpointId: 'failing_ep',
@@ -181,7 +181,7 @@ test('callEndpoint strips stack and the internal control config cause from the e
 });
 
 test('callEndpoint keeps an author-written UserError cause and metaData from a :throw control', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/throwing_ep.json') {
       return {
         endpointId: 'throwing_ep',
@@ -215,7 +215,7 @@ test('callEndpoint keeps an author-written UserError cause and metaData from a :
 });
 
 test('InternalApi error matches missing endpoint error message', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/internal_ep.json') {
       return {
         endpointId: 'internal_ep',
@@ -249,7 +249,7 @@ test('InternalApi error matches missing endpoint error message', async () => {
 });
 
 test("InternalApi endpoint throws AuthenticationError for an anonymous human on an auth'd app", async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/internal_ep.json') {
       return {
         endpointId: 'internal_ep',
@@ -285,7 +285,7 @@ test("InternalApi endpoint throws AuthenticationError for an anonymous human on 
 });
 
 test("InternalApi endpoint throws ConfigError for a resolved user on an auth'd app", async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/internal_ep.json') {
       return {
         endpointId: 'internal_ep',
@@ -324,7 +324,7 @@ test("InternalApi endpoint throws ConfigError for a resolved user on an auth'd a
 // both the unauthenticated and authenticated paths - otherwise the fork itself
 // becomes the oracle.
 test('InternalApi endpoint error is identical to a missing endpoint error for an anonymous human', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/internal_ep.json') {
       return {
         endpointId: 'internal_ep',
@@ -364,7 +364,7 @@ test('InternalApi endpoint error is identical to a missing endpoint error for an
 });
 
 function createOrderReadConfigFile({ async = false } = {}) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     if (path === 'api/create_order.json') {
       return {
         endpointId: 'create_order',
@@ -419,7 +419,7 @@ test('callEndpoint rejects a page CallAPI payload that violates the payloadSchem
 });
 
 test('callEndpoint rejects a payload that violates the payloadSchema of an async endpoint before accepting it', async () => {
-  const waitUntil = jest.fn();
+  const waitUntil = vi.fn();
   const context = testContext({
     logger,
     readConfigFile: createOrderReadConfigFile({ async: true }),
@@ -471,7 +471,7 @@ test('callEndpoint rejects an MCP tool call payload with a UserError though it n
 test('callEndpoint checks a call without a payload as an empty object, as every other caller does', async () => {
   const context = testContext({
     logger,
-    readConfigFile: jest.fn(() => ({
+    readConfigFile: vi.fn(() => ({
       endpointId: 'list_orders',
       type: 'Api',
       auth: { public: true },

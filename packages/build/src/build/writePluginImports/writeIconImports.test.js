@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { icons as lucideIcons } from 'lucide';
 
 import createIconContext from '../icons/createIconContext.js';
@@ -26,7 +26,7 @@ import writeIconImports from './writeIconImports.js';
 async function write({ names, icons }) {
   const context = {
     icons: icons ?? (await createIconContext({ context: { typesMap: { iconSets: {} } } })),
-    writeBuildArtifact: jest.fn(),
+    writeBuildArtifact: vi.fn(),
   };
   await writeIconImports({ components: { imports: { icons: names } }, context });
   return context.writeBuildArtifact;

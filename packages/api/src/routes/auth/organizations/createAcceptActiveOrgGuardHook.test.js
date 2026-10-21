@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createAcceptActiveOrgGuardHook from './createAcceptActiveOrgGuardHook.js';
 
 function mockLogger() {
-  return { debug: jest.fn(), warn: jest.fn(), error: jest.fn() };
+  return { debug: vi.fn(), warn: vi.fn(), error: vi.fn() };
 }
 
 function acceptCtx({ activeOrganizationId } = {}) {

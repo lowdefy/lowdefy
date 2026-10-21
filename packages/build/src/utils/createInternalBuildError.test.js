@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { BuildError, ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import createInternalBuildError from './createInternalBuildError.js';
@@ -24,7 +24,7 @@ test('createInternalBuildError carries a plain error as a located internal error
   error.filePath = 'requests/get_rows.yaml';
   const context = {
     warnings: [new ConfigWarning('Deprecated property.')],
-    handleError: jest.fn((err) => {
+    handleError: vi.fn((err) => {
       err.source = `/app/${err.filePath}`;
     }),
   };
@@ -51,7 +51,7 @@ test('createInternalBuildError carries a plain error as a located internal error
 
 test('createInternalBuildError keeps a Lowdefy error as it is', () => {
   const error = new ConfigError('Bad config', { configKey: 'abc' });
-  const context = { warnings: [], handleError: jest.fn() };
+  const context = { warnings: [], handleError: vi.fn() };
 
   const buildError = createInternalBuildError({ error, context });
 
@@ -65,7 +65,7 @@ test('createInternalBuildError keeps a Lowdefy error as it is', () => {
 
 test('createInternalBuildError logs through the logger when there is no build context', () => {
   const error = new Error('Context failed');
-  const logger = { error: jest.fn() };
+  const logger = { error: vi.fn() };
 
   const buildError = createInternalBuildError({ error, context: undefined, logger });
 

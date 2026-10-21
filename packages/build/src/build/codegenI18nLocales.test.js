@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import codegenI18nLocales from './codegenI18nLocales.js';
 import testContext from '../test-utils/testContext.js';
 
-const mockWriteBuildArtifact = jest.fn();
+const mockWriteBuildArtifact = vi.fn();
 const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
 beforeEach(() => {
@@ -48,12 +48,8 @@ test('codegenI18nLocales emits dynamic antd imports for declared locales', async
   };
   await codegenI18nLocales({ components, context });
   const calls = Object.fromEntries(mockWriteBuildArtifact.mock.calls);
-  expect(calls['i18n/antdLocales.js']).toContain(
-    "'en-US': () => import('antd/locale/en_US.js')"
-  );
-  expect(calls['i18n/antdLocales.js']).toContain(
-    "'de-DE': () => import('antd/locale/de_DE.js')"
-  );
+  expect(calls['i18n/antdLocales.js']).toContain("'en-US': () => import('antd/locale/en_US.js')");
+  expect(calls['i18n/antdLocales.js']).toContain("'de-DE': () => import('antd/locale/de_DE.js')");
 });
 
 test('codegenI18nLocales emits antd-X locale loaders for supported locales', async () => {
@@ -123,10 +119,7 @@ test('codegenI18nLocales skips locales without antd or dayjs fields', async () =
   const components = {
     config: {
       i18n: {
-        locales: [
-          { code: 'en-US', antd: 'en_US' },
-          { code: 'xx-YY' },
-        ],
+        locales: [{ code: 'en-US', antd: 'en_US' }, { code: 'xx-YY' }],
       },
     },
   };
@@ -150,7 +143,8 @@ test('codegenI18nLocales dedupes dayjs imports', async () => {
   };
   await codegenI18nLocales({ components, context });
   const calls = Object.fromEntries(mockWriteBuildArtifact.mock.calls);
-  const importCount = (calls['i18n/dayjsLocales.js'].match(/import 'dayjs\/locale\/en\.js';/g) ?? [])
-    .length;
+  const importCount = (
+    calls['i18n/dayjsLocales.js'].match(/import 'dayjs\/locale\/en\.js';/g) ?? []
+  ).length;
   expect(importCount).toBe(1);
 });

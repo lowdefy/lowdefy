@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError, UserError } from '@lowdefy/errors';
 
@@ -26,14 +26,14 @@ import testContext from '../../test/testContext.js';
 const operators = { ...operatorsServer };
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 function createMockReadConfigFile(endpointConfigs = {}) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     const match = path.match(/^api\/(.+)\.json$/);
     if (match && endpointConfigs[match[1]]) {
       const config = endpointConfigs[match[1]];
@@ -56,7 +56,7 @@ function createTestContext({ endpointConfigs = {}, user } = {}) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('returns the routine result envelope on return', async () => {

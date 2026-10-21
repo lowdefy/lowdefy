@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createAutoJoinHook from './createAutoJoinHook.js';
 
 function createMockAuth({ member = null } = {}) {
-  const addMember = jest.fn(async () => ({ id: 'member_1' }));
+  const addMember = vi.fn(async () => ({ id: 'member_1' }));
   const auth = {
     $context: Promise.resolve({
       adapter: {
-        findOne: jest.fn(async ({ model }) => {
+        findOne: vi.fn(async ({ model }) => {
           if (model === 'organization') {
             return { id: 'default', slug: 'default' };
           }
@@ -32,7 +32,7 @@ function createMockAuth({ member = null } = {}) {
           }
           throw new Error(`Unexpected findOne model ${model}.`);
         }),
-        create: jest.fn(),
+        create: vi.fn(),
       },
     }),
     api: { addMember },

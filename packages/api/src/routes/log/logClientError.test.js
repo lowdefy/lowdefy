@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 
 import { ActionError, BlockError, ConfigError, OperatorError, ServiceError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
@@ -38,12 +38,12 @@ const refMap = {
 describe('logClientError', () => {
   test('logs ConfigError without configKey', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn(),
+      readConfigFile: vi.fn(),
     };
 
     const data = serializer.serialize(new ConfigError('Test error'));
@@ -63,12 +63,12 @@ describe('logClientError', () => {
 
   test('logs ConfigError with configKey and resolves location', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn((file) => {
+      readConfigFile: vi.fn((file) => {
         if (file === 'keyMap.json') return Promise.resolve(keyMap);
         if (file === 'refMap.json') return Promise.resolve(refMap);
       }),
@@ -90,9 +90,9 @@ describe('logClientError', () => {
 
   test('resolves the location through the context readMaps when it has one', async () => {
     const context = {
-      logger: { error: jest.fn(), warn: jest.fn() },
-      readConfigFile: jest.fn(),
-      readMaps: jest.fn(async () => ({
+      logger: { error: vi.fn(), warn: vi.fn() },
+      readConfigFile: vi.fn(),
+      readMaps: vi.fn(async () => ({
         keyMap: { 'jit-key': { key: 'root.blocks[0:button]', '~r': 'jit-ref', '~l': 4 } },
         refMap: { 'jit-ref': { path: 'pages/about.yaml' } },
       })),
@@ -112,12 +112,12 @@ describe('logClientError', () => {
 
   test('logs OperatorError with configKey and resolves location', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn((file) => {
+      readConfigFile: vi.fn((file) => {
         if (file === 'keyMap.json') return Promise.resolve(keyMap);
         if (file === 'refMap.json') return Promise.resolve(refMap);
       }),
@@ -144,12 +144,12 @@ describe('logClientError', () => {
 
   test('logs ServiceError', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn(),
+      readConfigFile: vi.fn(),
     };
 
     const data = serializer.serialize(
@@ -170,12 +170,12 @@ describe('logClientError', () => {
 
   test('handles missing configKey in keyMap', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn((file) => {
+      readConfigFile: vi.fn((file) => {
         if (file === 'keyMap.json') return Promise.resolve({});
         if (file === 'refMap.json') return Promise.resolve({});
       }),
@@ -199,12 +199,12 @@ describe('logClientError', () => {
 
   test('strips received property from serialized data', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn(),
+      readConfigFile: vi.fn(),
     };
 
     const operatorError = new OperatorError('Operator failed', {
@@ -225,8 +225,8 @@ describe('logClientError', () => {
 describe('logClientError schema validation', () => {
   test('ActionError with received that fails schema returns single ConfigError', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const actionSchemas = {
       SetState: {
@@ -241,7 +241,7 @@ describe('logClientError schema validation', () => {
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn((file) => {
+      readConfigFile: vi.fn((file) => {
         if (file === 'plugins/actionSchemas.json') return Promise.resolve(actionSchemas);
         if (file === 'keyMap.json') return Promise.resolve(keyMap);
         if (file === 'refMap.json') return Promise.resolve(refMap);
@@ -273,8 +273,8 @@ describe('logClientError schema validation', () => {
 
   test('OperatorError with method-style received extracts params correctly', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const operatorSchemas = {
       _yaml: {
@@ -289,7 +289,7 @@ describe('logClientError schema validation', () => {
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn((file) => {
+      readConfigFile: vi.fn((file) => {
         if (file === 'plugins/operatorSchemas.json') return Promise.resolve(operatorSchemas);
         if (file === 'keyMap.json') return Promise.resolve({});
         if (file === 'refMap.json') return Promise.resolve({});
@@ -317,8 +317,8 @@ describe('logClientError schema validation', () => {
 
   test('BlockError with received that passes schema keeps original error', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const blockSchemas = {
       Button: {
@@ -332,7 +332,7 @@ describe('logClientError schema validation', () => {
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn((file) => {
+      readConfigFile: vi.fn((file) => {
         if (file === 'plugins/blockSchemas.json') return Promise.resolve(blockSchemas);
         if (file === 'keyMap.json') return Promise.resolve({});
         if (file === 'refMap.json') return Promise.resolve({});
@@ -357,12 +357,12 @@ describe('logClientError schema validation', () => {
 
   test('missing schema file keeps original error', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn((file) => {
+      readConfigFile: vi.fn((file) => {
         if (file === 'plugins/actionSchemas.json') throw new Error('File not found');
         if (file === 'keyMap.json') return Promise.resolve({});
         if (file === 'refMap.json') return Promise.resolve({});
@@ -386,12 +386,12 @@ describe('logClientError schema validation', () => {
 
   test('no received on error skips validation', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn(),
+      readConfigFile: vi.fn(),
     };
 
     const data = serializer.serialize(
@@ -410,12 +410,12 @@ describe('logClientError schema validation', () => {
 
   test('ConfigError skips validation', async () => {
     const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
+      error: vi.fn(),
+      warn: vi.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn(),
+      readConfigFile: vi.fn(),
     };
 
     const data = serializer.serialize(new ConfigError('Already a config error'));

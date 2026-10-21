@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import { wait } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -49,17 +49,17 @@ const defaultReadConfigImp =
     return null;
   };
 
-const mockReadConfigFile = jest.fn().mockImplementation(defaultReadConfigImp());
-const mockTestRequest = jest.fn((request) => {
+const mockReadConfigFile = vi.fn().mockImplementation(defaultReadConfigImp());
+const mockTestRequest = vi.fn((request) => {
   return request.request.response;
 });
-const mockTestRequestError = jest.fn((request) => {
+const mockTestRequestError = vi.fn((request) => {
   throw new Error(request.request.message);
 });
-const mockTestRequestWait = jest.fn((request) => wait(request.request.ms));
+const mockTestRequestWait = vi.fn((request) => wait(request.request.ms));
 // Waits `ms` and records how many of these requests were in flight at once (inFlight.max).
 const inFlight = { current: 0, max: 0 };
-const mockTestRequestInFlight = jest.fn(async (request) => {
+const mockTestRequestInFlight = vi.fn(async (request) => {
   inFlight.current += 1;
   inFlight.max = Math.max(inFlight.max, inFlight.current);
   await wait(request.request.ms);
@@ -102,11 +102,11 @@ const connections = {
 };
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
   // error: console.error,
-  error: jest.fn(),
+  error: vi.fn(),
 };
 
 function createTextContext({ user = { id: 'id', roles: [] } } = {}) {

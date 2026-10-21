@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import writeI18n from './writeI18n.js';
 import testContext from '../test-utils/testContext.js';
 
-const mockWriteBuildArtifact = jest.fn();
-const mockWarn = jest.fn();
+const mockWriteBuildArtifact = vi.fn();
+const mockWarn = vi.fn();
 
 const context = testContext({
   writeBuildArtifact: mockWriteBuildArtifact,

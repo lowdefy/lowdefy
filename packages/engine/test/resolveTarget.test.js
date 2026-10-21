@@ -15,6 +15,7 @@
 */
 
 import resolveTarget from '../src/resolveTarget.js';
+import { expect, test } from 'vitest';
 
 function createLowdefy({
   basePath,

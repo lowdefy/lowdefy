@@ -15,6 +15,7 @@
 */
 
 import defaultPackages from './defaultPackages.js';
+import { expect, test } from 'vitest';
 
 // Under a journey data set the dev server lets a connection run only when its type declares
 // meta.dataSet: 'redirect' (it takes the session's databaseUri and databaseName) or 'external' (an

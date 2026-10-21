@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
@@ -30,7 +30,7 @@ function makeContext(appMeta) {
   return {
     appMeta,
     typesMap: {},
-    logger: { warn: jest.fn() },
+    logger: { warn: vi.fn() },
     errors: [],
     keyMap: {},
     refMap: {},

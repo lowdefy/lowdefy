@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { RequestError, UserError } from '@lowdefy/errors';
@@ -33,8 +33,8 @@ import testContext from '../test/testContext.js';
 // shape, so one realistic shape per library is what pins it. Every planted value
 // contains PLANTED_, so a single scan of the output finds any that crossed.
 
-const mockPrepareChannel = jest.fn();
-jest.unstable_mockModule('../routes/websocket/prepareChannel.js', () => ({
+const mockPrepareChannel = vi.fn();
+vi.doMock('../routes/websocket/prepareChannel.js', () => ({
   default: mockPrepareChannel,
 }));
 
@@ -533,8 +533,8 @@ function createWebsocketContext() {
   return {
     rid: 'r',
     mode: 'prod',
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
-    handleError: jest.fn(),
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn() },
+    handleError: vi.fn(),
   };
 }
 
@@ -558,7 +558,7 @@ const mcpJson = {
 };
 
 function createMcpContext({ thrown }) {
-  const failingRequest = jest.fn(async () => {
+  const failingRequest = vi.fn(async () => {
     throw thrown();
   });
   failingRequest.schema = {};
@@ -589,9 +589,9 @@ function createMcpContext({ thrown }) {
     connections: {
       TestConnection: { schema: {}, requests: { FailingRequest: failingRequest } },
     },
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
     mode: 'prod',
-    readConfigFile: jest.fn((path) => files[path] ?? null),
+    readConfigFile: vi.fn((path) => files[path] ?? null),
   });
   context.mcpAuth = { orgId: 'org_1', tokenStatus: 'none', parseableJwt: true };
   return { context, failingRequest };
@@ -607,17 +607,17 @@ async function callMcpTool(context) {
 
 describe.each(transportCases)('$name error over a transport', ({ thrown }) => {
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test('a websocket publish reply carries only the generic wire error', async () => {
-    const resolver = jest.fn(() => new Promise(() => {}));
+    const resolver = vi.fn(() => new Promise(() => {}));
     resolver.meta = { publish: true };
-    resolver.onPublish = jest.fn(async () => {
+    resolver.onPublish = vi.fn(async () => {
       throw thrown();
     });
     mockChannel({ resolver });
-    const send = jest.fn();
+    const send = vi.fn();
     const connection = createWebSocketConnection(createWebsocketContext(), {
       registry: createChannelRegistry(),
       send,
@@ -637,11 +637,27 @@ describe.each(transportCases)('$name error over a transport', ({ thrown }) => {
   });
 
   test('a websocket broadcast carries only the generic message', async () => {
-    jest.useFakeTimers({ doNotFake: ['performance'] });
-    const resolver = jest.fn().mockRejectedValueOnce(thrown());
+    vi.useFakeTimers({
+      toFake: [
+        'Date',
+        'hrtime',
+        'queueMicrotask',
+        'requestAnimationFrame',
+        'cancelAnimationFrame',
+        'requestIdleCallback',
+        'cancelIdleCallback',
+        'setImmediate',
+        'clearImmediate',
+        'setInterval',
+        'clearInterval',
+        'setTimeout',
+        'clearTimeout',
+      ],
+    });
+    const resolver = vi.fn().mockRejectedValueOnce(thrown());
     mockChannel({ resolver });
     const registry = createChannelRegistry();
-    const subscriber = { id: 'a', subscriptions: new Map(), send: jest.fn() };
+    const subscriber = { id: 'a', subscriptions: new Map(), send: vi.fn() };
 
     await registry.subscribe(createWebsocketContext(), {
       websocketId: 'ticker',

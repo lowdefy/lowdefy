@@ -16,6 +16,7 @@
 
 import setBlockId from './setBlockId.js';
 import createCounter from '../../../utils/createCounter.js';
+import { expect, test } from 'vitest';
 
 test('page block gets correct blockId and id', () => {
   const block = { id: 'page1' };

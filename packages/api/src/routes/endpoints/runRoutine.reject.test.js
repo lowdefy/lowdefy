@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { UserError } from '@lowdefy/errors';
 
 // Mocked at module top so the dynamic runRoutine import below picks up the
 // thrown UserError. Isolated to this file to avoid affecting runRoutine.test.js.
-jest.unstable_mockModule('./control/handleControl.js', () => ({
+vi.doMock('./control/handleControl.js', () => ({
   default: async () => {
     throw new UserError('thrown reject', { isReject: true });
   },
@@ -32,7 +32,7 @@ test('runRoutine catch returns status:reject and skips handleError when caught e
   // bypass context.handleError entirely (rejects are expected control flow,
   // not faults).
   const { default: runRoutine } = await import('./runRoutine.js');
-  const handleError = jest.fn();
+  const handleError = vi.fn();
   const context = { handleError };
   const res = await runRoutine(context, {}, { routine: { ':noop': true } });
   expect(res.status).toBe('reject');
@@ -45,7 +45,7 @@ test('runRoutine catch still routes non-reject errors through handleError', asyn
   const { default: runRoutine } = await import('./runRoutine.js');
   // The real sink (servers' createHandleError) marks the error handled once it
   // has logged it; runRoutine's guard reads that flag rather than setting it.
-  const handleError = jest.fn(async (error) => {
+  const handleError = vi.fn(async (error) => {
     error.handled = true;
   });
   const context = { handleError };

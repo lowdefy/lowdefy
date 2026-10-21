@@ -17,6 +17,7 @@
 */
 
 import testContext from '../testContext.js';
+import { expect, test } from 'vitest';
 
 const pageId = 'one';
 const lowdefy = { pageId };

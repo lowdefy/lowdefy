@@ -15,6 +15,7 @@
 */
 
 import buildTestPage from './buildTestPage.js';
+import { expect, test } from 'vitest';
 
 test('buildTestPage', () => {
   const pageConfig = {

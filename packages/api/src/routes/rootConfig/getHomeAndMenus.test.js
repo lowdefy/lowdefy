@@ -13,12 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import testContext from '../../test/testContext.js';
 
-const mockGetMenu = jest.fn();
-jest.unstable_mockModule('./menus/getMenus.js', () => ({
+const mockGetMenu = vi.fn();
+vi.doMock('./menus/getMenus.js', () => ({
   default: mockGetMenu,
 }));
 

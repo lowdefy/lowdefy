@@ -17,7 +17,7 @@
 // A value a routine marks with _credential reaches its caller but no log line. The logger here
 // writes each call as one JSON line through scrubCredentials, as the servers' streamWrite hooks do.
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { runInCredentialScope, scrubCredentials } from '@lowdefy/node-utils';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { CreateMcpToken } from '@lowdefy/plugin-better-auth/steps';
@@ -33,7 +33,7 @@ const newKey = 'runtime-made-app-key-0001';
 const makeKey = { '_string.concat': ['runtime-made-', 'app-key-0001'] };
 const rootSecret = 'support-root-secret-value';
 
-const mockEcho = jest.fn(({ request }) => request);
+const mockEcho = vi.fn(({ request }) => request);
 mockEcho.schema = {};
 mockEcho.meta = { checkRead: false, checkWrite: false };
 
@@ -94,7 +94,7 @@ function createContext(lines) {
     connections: { TestConnection: { schema: {}, requests: { Echo: mockEcho } } },
     logger: createLogger(lines),
     operators: operatorsServer,
-    readConfigFile: jest.fn(async (path) => {
+    readConfigFile: vi.fn(async (path) => {
       if (path === 'connections/test.json') {
         return { id: 'connection:test', type: 'TestConnection', connectionId: 'test' };
       }
@@ -211,7 +211,7 @@ test('_credential outside a credential scope throws', async () => {
 
 test('A credential the dispatcher marked is redacted in a detached target that reads it from its payload', async () => {
   process.env.CRON_SECRET = 'detached-hop-secret';
-  const fetchMock = jest.fn(async () => ({ status: 202 }));
+  const fetchMock = vi.fn(async () => ({ status: 202 }));
   global.fetch = fetchMock;
   const dispatcher = await runInCredentialScope(async () => {
     const lines = [];
@@ -268,8 +268,8 @@ test('A credential the dispatcher marked is redacted in a detached target that r
 
 test('A member token CreateMcpToken makes is redacted in every log line and returned whole', async () => {
   const adapter = {
-    findOne: jest.fn(async () => ({ id: 'member_1' })),
-    create: jest.fn(async ({ data }) => ({ id: 'token_1', ...data })),
+    findOne: vi.fn(async () => ({ id: 'member_1' })),
+    create: vi.fn(async ({ data }) => ({ id: 'token_1', ...data })),
   };
   const { lines, res } = await runInCredentialScope(() => {
     const lines = [];

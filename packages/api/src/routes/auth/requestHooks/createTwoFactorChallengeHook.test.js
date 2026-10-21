@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockBeginTwoFactorChallenge = jest.fn(async () => 'challenged');
-jest.unstable_mockModule('./beginTwoFactorChallenge.js', () => ({
+const mockBeginTwoFactorChallenge = vi.fn(async () => 'challenged');
+vi.doMock('./beginTwoFactorChallenge.js', () => ({
   default: mockBeginTwoFactorChallenge,
 }));
 
@@ -28,7 +28,7 @@ const enrolledSession = {
   session: { token: 'session_token_1' },
 };
 
-function createHook({ exit = jest.fn(() => ({ challenged: true })) } = {}) {
+function createHook({ exit = vi.fn(() => ({ challenged: true })) } = {}) {
   return {
     exit,
     registration: createTwoFactorChallengeHook({

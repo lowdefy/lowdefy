@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import { get } from '@lowdefy/helpers';
 import buildPages from '../../full/buildPages.js';
 import testContext from '../../../test-utils/testContext.js';
 
-const mockLogWarn = jest.fn();
-const mockLog = jest.fn();
+const mockLogWarn = vi.fn();
+const mockLog = vi.fn();
 
 const logger = {
   warn: mockLogWarn,
@@ -185,9 +185,7 @@ test('block events actions try not an array', () => {
       components,
       context,
     })
-  ).toThrow(
-    'Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".'
-  );
+  ).toThrow('Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".');
 });
 
 test('block events actions not an array', () => {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import { OperatorError } from '@lowdefy/errors';
 
 import testContext from './testContext.js';
@@ -26,24 +26,26 @@ const timeout = (ms) => {
 const pageId = 'one';
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 const getActions = () => {
   return {
-    ActionSync: jest.fn(({ params }) => params),
-    ActionAsync: jest.fn(async ({ params }) => {
+    ActionSync: vi.fn(({ params }) => params),
+    ActionAsync: vi.fn(async ({ params }) => {
       await timeout(params.ms ?? 1);
       return params;
     }),
-    ActionError: jest.fn(() => {
+    ActionError: vi.fn(() => {
       throw new Error('Test error');
     }),
   };
 };
 
-const closeLoader = jest.fn();
-const displayMessage = jest.fn();
+const closeLoader = vi.fn();
+const displayMessage = vi.fn();
 const lowdefy = {
   _internal: {
     displayMessage,

@@ -15,6 +15,7 @@
 */
 
 import setAuthConfigured from './setAuthConfigured.js';
+import { expect, test } from 'vitest';
 
 test('setAuthConfigured sets configured to true when auth has a non-marker key', () => {
   const components = {
