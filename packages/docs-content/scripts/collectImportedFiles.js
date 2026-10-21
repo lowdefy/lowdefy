@@ -46,7 +46,8 @@ function readRelativeSpecifiers(filePath) {
 // content from the files it imports: AgGrid's meta.js calls createDisplayMeta.js,
 // where the property schema lives. Returns those imported files, followed
 // through JS files and relative to configDirectory like the refMap paths, so an
-// edit to any of them changes the page's source hash. Only relative imports are
+// edit to any of them changes the page's source hash. Paths use forward slashes
+// on every OS, as each path is part of the hash. Only relative imports are
 // followed: a package import is versioned with its package.
 function collectImportedFiles({ configDirectory, files }) {
   const imported = new Set();
@@ -67,7 +68,7 @@ function collectImportedFiles({ configDirectory, files }) {
       if (path.basename(importedPath) === 'package.json') {
         return;
       }
-      imported.add(path.relative(configDirectory, importedPath));
+      imported.add(path.relative(configDirectory, importedPath).split(path.sep).join('/'));
       if (isJsFile(importedPath)) {
         queue.push(importedPath);
       }
