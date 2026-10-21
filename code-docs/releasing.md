@@ -5,13 +5,17 @@ and the npm trusted publisher that links the two.
 
 ## Release from CI
 
-`.github/workflows/release.yaml` runs on every push to `main`, and from the Actions tab. Its
+`.github/workflows/release.yaml` ("Release 7.x" in the Actions tab) runs on every push to `main`,
+and from the Actions tab. The 6.x line has its own copy on the `v6` branch ("Release 6.x"). Each
+run's title says what the push was: "Publish 7.x (release pull request merged)", "Release 7.x:
+develop merged into main", "Release 7.x: other push to main" or "Release 7.x: run by hand". Its
 `mode` job reads the pushed commit's `.changeset/` folder and picks one of two paths (see
 [CI](./testing.md#ci) for where the complete test path runs):
 
 1. With changesets pending (the Release merge from `develop`), the `version` job runs
    `changesets/action`, which opens or updates the "Publish new release" pull request
-   (`pnpm release:version`). Nothing is tested, built or published.
+   (`pnpm release:version`). Nothing is tested, built or published, and the run summary links
+   the pull request.
 2. Once that pull request is merged there are no changesets left. The `test` job runs the
    complete path, and only when it passes the `publish` job publishes
    (`pnpm release:publish`, which is `changeset publish`). Its exit code is ignored, since it
@@ -20,6 +24,20 @@ and the npm trusted publisher that links the two.
    non-private workspace package, minus the `ignore` list in `.changeset/config.json`) must be
    on npm at its local version. A missing one fails the job; fix the cause and re-run it.
 4. The `publish` job tags the commit and creates a draft GitHub release.
+5. The `report` job runs last, whatever happened before it, and writes the outcome
+   (`scripts/report-release.mjs`) to the run summary and as one comment on the merged release
+   pull request: the version, the npm dist-tags and the draft GitHub release when it published;
+   the failed jobs and steps, with links and what to do, when it did not. A re-run edits the
+   same comment. **To see whether a release went out, read that comment.**
+
+`scripts/verify-published.mjs` waits up to about five minutes for npm to show every package,
+since a freshly published version can take a while to appear. If it still fails with every
+package sent, re-run the failed jobs once `npm view lowdefy@<version>` finds them.
+
+The "CI" run on the "Publish new release" pull request shows as failed with no jobs. The
+changesets action opens that pull request as `github-actions[bot]`, GitHub holds any run the bot
+triggers until someone approves it, and a held run counts as failed when the pull request
+merges. CI would run nothing on that pull request anyway, so ignore it.
 
 The `publish` job publishes through npm's OIDC trusted publishing only. There is no npm token, so npm
 accepts a package from CI only when that package has this trusted publisher:
