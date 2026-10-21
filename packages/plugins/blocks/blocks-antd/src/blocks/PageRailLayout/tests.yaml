@@ -1,0 +1,160 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: PageRailLayout
+- id: 'properties.menu'
+  type: PageRailLayout
+  properties:
+    menu:
+      links:
+        - id: controls
+          type: MenuLink
+          pageId: controls
+          properties:
+            icon: ShieldCheck
+            title: Controls
+            tip: Controls and their evidence
+        - id: documents
+          type: MenuLink
+          pageId: documents
+          properties:
+            icon: FileText
+            title: Documents
+- id: 'properties.badges'
+  type: PageRailLayout
+  properties:
+    menu:
+      links:
+        - id: controls
+          type: MenuLink
+          properties:
+            icon: ShieldCheck
+            title: Controls
+        - id: documents
+          type: MenuLink
+          properties:
+            icon: FileText
+            title: Documents
+    badges:
+      controls: 12
+      documents:
+        count: 3
+        tone: error
+- id: 'properties.footItems'
+  type: PageRailLayout
+  properties:
+    footItems:
+      - id: search
+        icon: Search
+        title: Search
+        tip: Search everything (Cmd+K)
+      - id: settings
+        icon: Settings
+        title: Settings
+        pageId: settings
+- id: 'properties.notifications'
+  type: PageRailLayout
+  properties:
+    notifications:
+      count: 4
+- id: 'properties.profile'
+  type: PageRailLayout
+  properties:
+    darkModeToggle: true
+    profile:
+      title: Account
+      avatar:
+        content: AB
+      links:
+        - id: sign_out
+          type: MenuLink
+          pageId: sign-out
+          properties:
+            title: Sign out
+- id: 'properties.panel'
+  type: PageRailLayout
+  properties:
+    panel:
+      minWidth: 200
+      maxWidth: 400
+      initialWidth: 260
+      storageKey: tests-panel-width
+      drawerBreakpoint: 1000
+  slots:
+    panelHeader:
+      blocks: []
+    panel:
+      blocks: []
+- id: 'properties.mobileBreakpoint'
+  type: PageRailLayout
+  properties:
+    mobileBreakpoint: 600
+    mobileTabs: 3
+  slots:
+    mobileHeader:
+      blocks: []
+- id: 'properties.aside'
+  type: PageRailLayout
+  properties:
+    aside:
+      open: true
+      width: 320
+  slots:
+    aside:
+      blocks: []
+- id: 'properties.breadcrumb.list'
+  type: PageRailLayout
+  properties:
+    breadcrumb:
+      list:
+        - Link one
+        - Link two
+  slots:
+    contentHeader:
+      blocks: []
+- id: 'properties.padding: compact'
+  type: PageRailLayout
+  properties:
+    padding: compact
+- id: 'properties.padding: none'
+  type: PageRailLayout
+  properties:
+    padding: none
+- id: 'style.element'
+  type: PageRailLayout
+  style:
+    .element:
+      border: 5px solid blue
+- id: 'style.rail'
+  type: PageRailLayout
+  style:
+    .rail:
+      border: 5px solid blue
+- id: 'style.panel'
+  type: PageRailLayout
+  style:
+    .panel:
+      border: 5px solid blue
+  slots:
+    panel:
+      blocks: []
+- id: 'style.content'
+  type: PageRailLayout
+  style:
+    .content:
+      border: 5px solid blue
+  slots:
+    content:
+      blocks: []

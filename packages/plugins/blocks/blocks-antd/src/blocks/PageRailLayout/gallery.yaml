@@ -1,0 +1,187 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: PageRailLayout with a panel
+  fullWidth: true
+  blocks:
+    - id: prl_basic
+      type: PageRailLayout
+      style:
+        .element:
+          height: 560px
+      properties:
+        panel:
+          storageKey: prl_basic_panel_width
+        menu:
+          selectedKeys:
+            - prl_basic_controls
+          links:
+            - id: prl_basic_controls
+              type: MenuLink
+              properties:
+                title: Controls
+                icon: ShieldCheck
+            - id: prl_basic_documents
+              type: MenuLink
+              properties:
+                title: Documents
+                icon: FileText
+            - id: prl_basic_people
+              type: MenuLink
+              properties:
+                title: People
+                icon: Users
+        badges:
+          prl_basic_controls: 12
+          prl_basic_documents:
+            count: 3
+            tone: error
+        footItems:
+          - id: search
+            icon: Search
+            title: Search
+            tip: Search everything
+          - id: settings
+            icon: Settings
+            title: Settings
+        notifications:
+          count: 4
+        profile:
+          title: Account
+          avatar:
+            content: AB
+          links:
+            - id: prl_basic_sign_out
+              type: MenuLink
+              properties:
+                title: Sign out
+        darkModeToggle: true
+        breadcrumb:
+          list:
+            - Controls
+            - Access control
+      slots:
+        panelHeader:
+          blocks:
+            - id: prl_basic_org
+              type: Title
+              properties:
+                content: Acme Ltd
+                level: 5
+                margin: false
+        panel:
+          blocks:
+            - id: prl_basic_menu
+              type: Menu
+              properties:
+                mode: inline
+                links:
+                  - id: prl_basic_menu_a
+                    type: MenuLink
+                    properties:
+                      title: Access control
+                  - id: prl_basic_menu_b
+                    type: MenuLink
+                    properties:
+                      title: Asset management
+                  - id: prl_basic_menu_c
+                    type: MenuLink
+                    properties:
+                      title: Incident response
+        content:
+          blocks:
+            - id: prl_basic_title
+              type: Title
+              properties:
+                content: Access control
+                level: 3
+            - id: prl_basic_text
+              type: Paragraph
+              properties:
+                content: Drag the panel edge to resize it. The width is remembered.
+- title: PageRailLayout with an aside
+  fullWidth: true
+  blocks:
+    - id: prl_aside
+      type: PageRailLayout
+      style:
+        .element:
+          height: 480px
+      properties:
+        panel:
+          storageKey: prl_aside_panel_width
+        aside:
+          open: true
+          width: 320
+        menu:
+          links:
+            - id: prl_aside_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: House
+            - id: prl_aside_work
+              type: MenuLink
+              properties:
+                title: Work
+                icon: Briefcase
+      slots:
+        panel:
+          blocks:
+            - id: prl_aside_panel_text
+              type: Paragraph
+              properties:
+                content: A page fills this slot with its own menu or list.
+        content:
+          blocks:
+            - id: prl_aside_title
+              type: Title
+              properties:
+                content: Work
+                level: 3
+        aside:
+          blocks:
+            - id: prl_aside_assistant
+              type: Paragraph
+              properties:
+                content: An assistant panel docks here.
+- title: PageRailLayout without a panel
+  fullWidth: true
+  blocks:
+    - id: prl_plain
+      type: PageRailLayout
+      style:
+        .element:
+          height: 360px
+      properties:
+        menu:
+          links:
+            - id: prl_plain_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: House
+            - id: prl_plain_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: Settings
+      slots:
+        content:
+          blocks:
+            - id: prl_plain_title
+              type: Title
+              properties:
+                content: A page with only a rail
+                level: 3

@@ -1,0 +1,390 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Every size and colour reads a --lf-rail-* variable and falls back to an antd token, so an app
+   themes the block by setting the variables on :root or on any parent of the block. The
+   fallbacks sit on each use because a default declared on the block would beat a value an app
+   sets higher up. The components layer is ordered after the antd layer. */
+@layer components {
+  .lf-rail-layout,
+  .lf-rail-portal {
+    box-sizing: border-box;
+    font-family: var(--ant-font-family);
+    font-size: var(--ant-font-size, 14px);
+    color: var(--ant-color-text);
+  }
+
+  .lf-rail-layout *,
+  .lf-rail-portal * {
+    box-sizing: border-box;
+  }
+
+  .lf-rail-layout {
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--lf-rail-content-bg, var(--ant-color-bg-layout));
+  }
+
+  .lf-rail-layout-phone {
+    flex-direction: column;
+  }
+
+  /* Rail */
+  .lf-rail {
+    display: flex;
+    flex: 0 0 var(--lf-rail-width, 72px);
+    flex-direction: column;
+    align-items: stretch;
+    width: var(--lf-rail-width, 72px);
+    padding: var(--lf-rail-padding, 8px 4px);
+    gap: var(--lf-rail-gap, 4px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: var(--lf-rail-bg, var(--ant-layout-sider-bg, #001529));
+    color: var(--lf-rail-fg, var(--ant-menu-dark-item-color, rgba(255, 255, 255, 0.65)));
+  }
+
+  .lf-rail-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--lf-rail-logo-height, 40px);
+    margin-bottom: var(--lf-rail-gap, 4px);
+  }
+
+  .lf-rail-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .lf-rail-places {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--lf-rail-gap, 4px);
+  }
+
+  .lf-rail-foot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lf-rail-gap, 4px);
+    padding-top: var(--lf-rail-gap, 4px);
+    border-top: 1px solid var(--lf-rail-divider, rgba(255, 255, 255, 0.12));
+  }
+
+  .lf-rail-item-wrap {
+    display: block;
+  }
+
+  .lf-rail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--lf-rail-item-gap, 2px);
+    width: 100%;
+    min-height: var(--lf-rail-item-height, 52px);
+    padding: var(--lf-rail-item-padding, 6px 2px);
+    border: 0;
+    border-radius: var(--lf-rail-item-radius, var(--ant-border-radius, 6px));
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+
+  .lf-rail-item:hover {
+    background: var(--lf-rail-item-hover-bg, rgba(255, 255, 255, 0.08));
+    color: var(--lf-rail-fg-active, var(--ant-menu-dark-item-selected-color, #fff));
+  }
+
+  .lf-rail-item:focus-visible,
+  .lf-rail-resize-handle:focus-visible,
+  .lf-rail-icon-button:focus-visible {
+    outline: 2px solid var(--lf-rail-focus-ring, var(--ant-color-primary));
+    outline-offset: -2px;
+  }
+
+  .lf-rail-item-active,
+  .lf-rail-item-active:hover {
+    background: var(
+      --lf-rail-item-active-bg,
+      var(--ant-menu-dark-item-selected-bg, var(--ant-color-primary))
+    );
+    color: var(--lf-rail-fg-active, var(--ant-menu-dark-item-selected-color, #fff));
+  }
+
+  .lf-rail-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--lf-rail-icon-size, 22px);
+    min-width: var(--lf-rail-icon-size, 22px);
+    font-size: var(--lf-rail-icon-size, 22px);
+    line-height: 1;
+  }
+
+  .lf-rail-label {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: var(--lf-rail-label-size, 11px);
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lf-rail-badge {
+    position: absolute;
+    top: -6px;
+    left: 100%;
+    min-width: 16px;
+    height: 16px;
+    margin-left: -8px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: var(--lf-rail-badge-bg, var(--ant-color-primary));
+    color: var(--lf-rail-badge-fg, var(--ant-color-text-light-solid, #fff));
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  .lf-rail-badge[data-tone='error'] {
+    background: var(--lf-rail-badge-error-bg, var(--ant-color-error));
+  }
+
+  .lf-rail-badge-dot {
+    top: -2px;
+    min-width: 8px;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    padding: 0;
+  }
+
+  .lf-rail-tip-title {
+    font-weight: 600;
+  }
+
+  /* Panel */
+  .lf-rail-panel {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    min-width: 0;
+    border-inline-end: 1px solid var(--lf-rail-panel-border, var(--ant-color-border-secondary));
+    background: var(--lf-rail-panel-bg, var(--ant-color-bg-container));
+  }
+
+  .lf-rail-panel-header,
+  .lf-rail-content-header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--lf-rail-header-gap, 12px);
+    height: var(--lf-rail-header-height, 52px);
+    padding: 0 var(--lf-rail-header-padding, 16px);
+    border-bottom: 1px solid var(--lf-rail-panel-border, var(--ant-color-border-secondary));
+  }
+
+  .lf-rail-panel-header {
+    background: var(--lf-rail-panel-bg, var(--ant-color-bg-container));
+  }
+
+  .lf-rail-panel-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .lf-rail-resize-handle {
+    position: absolute;
+    top: 0;
+    right: -3px;
+    bottom: 0;
+    z-index: 2;
+    width: 6px;
+    cursor: col-resize;
+    touch-action: none;
+  }
+
+  .lf-rail-resize-handle::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 2px;
+    width: 2px;
+    background: transparent;
+    content: '';
+    transition: background 0.15s;
+  }
+
+  .lf-rail-resize-handle:hover::after,
+  .lf-rail-resize-handle:focus-visible::after {
+    background: var(--lf-rail-handle-color, var(--ant-color-primary));
+  }
+
+  /* Content */
+  .lf-rail-main {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-width: 0;
+    overflow-y: auto;
+  }
+
+  .lf-rail-content-header {
+    background: var(--lf-rail-content-header-bg, var(--ant-color-bg-container));
+  }
+
+  .lf-rail-content {
+    flex: 1 0 auto;
+    min-width: 0;
+  }
+
+  .lf-rail-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ant-border-radius, 6px);
+    background: transparent;
+    color: inherit;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .lf-rail-icon-button:hover {
+    background: var(--ant-color-fill-tertiary);
+  }
+
+  /* Aside */
+  .lf-rail-aside {
+    flex: 0 0 auto;
+    max-width: 100%;
+    overflow-y: auto;
+    border-inline-start: 1px solid var(--lf-rail-panel-border, var(--ant-color-border-secondary));
+    background: var(--lf-rail-aside-bg, var(--ant-color-bg-container));
+  }
+
+  .lf-rail-layout-tablet .lf-rail-aside,
+  .lf-rail-layout-phone .lf-rail-aside {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    box-shadow: var(--ant-box-shadow-secondary);
+  }
+
+  /* Tablet: the panel is a drawer that leaves the rail showing */
+  .lf-rail-drawer.ant-drawer {
+    left: var(--lf-rail-width, 72px);
+  }
+
+  .lf-rail-drawer .ant-drawer-body {
+    padding: 0;
+  }
+
+  .lf-rail-drawer-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Phone: the panel is the top section of the page; the rail is a bottom tab bar */
+  .lf-rail-main-phone {
+    flex: 1 1 0;
+  }
+
+  .lf-rail-panel-phone {
+    flex: 0 0 auto;
+    border-bottom: 1px solid var(--lf-rail-panel-border, var(--ant-color-border-secondary));
+    background: var(--lf-rail-panel-bg, var(--ant-color-bg-container));
+  }
+
+  .lf-rail-panel-phone .lf-rail-panel-body {
+    max-height: 40vh;
+  }
+
+  .lf-rail-mobile-header {
+    flex: 0 0 auto;
+  }
+
+  .lf-rail-tab-bar {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: stretch;
+    justify-content: space-around;
+    height: var(--lf-rail-tab-bar-height, 56px);
+    padding: 0 4px env(safe-area-inset-bottom);
+    background: var(--lf-rail-bg, var(--ant-layout-sider-bg, #001529));
+    color: var(--lf-rail-fg, var(--ant-menu-dark-item-color, rgba(255, 255, 255, 0.65)));
+  }
+
+  .lf-rail-tab-bar .lf-rail-item-wrap {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .lf-rail-tab-bar .lf-rail-item {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .lf-rail-more {
+    padding: 8px;
+    background: var(--lf-rail-bg, var(--ant-layout-sider-bg, #001529));
+    color: var(--lf-rail-fg, var(--ant-menu-dark-item-color, rgba(255, 255, 255, 0.65)));
+  }
+
+  .lf-rail-portal .lf-rail-more .ant-drawer-body,
+  .lf-rail-more.ant-drawer-body {
+    padding: 8px;
+  }
+
+  .lf-rail-more-heading {
+    padding: 12px 12px 4px;
+    font-size: var(--lf-rail-label-size, 11px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .lf-rail-more-row {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+  }
+
+  .lf-rail-more-row .lf-rail-label {
+    font-size: var(--ant-font-size, 14px);
+  }
+}
