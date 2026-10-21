@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/node-utils",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,8 +41,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "7.0.0",
-    "@lowdefy/helpers": "7.0.0",
+    "@lowdefy/errors": "7.1.0",
+    "@lowdefy/helpers": "7.1.0",
     "fs-extra": "11.3.4",
     "undici": "7.30.0",
     "yaml": "2.9.0"

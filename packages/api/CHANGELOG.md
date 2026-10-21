@@ -1,5 +1,22 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- Updated dependencies [7274ca1]
+- Updated dependencies [3408010]
+  - @lowdefy/connection-smtp@7.1.0
+  - @lowdefy/build@7.1.0
+  - @lowdefy/operators@7.1.0
+  - @lowdefy/operators-js@7.1.0
+  - @lowdefy/ajv@7.1.0
+  - @lowdefy/email-templates@7.1.0
+  - @lowdefy/errors@7.1.0
+  - @lowdefy/helpers@7.1.0
+  - @lowdefy/node-utils@7.1.0
+  - @lowdefy/nunjucks@7.1.0
+
 ## 7.0.0
 
 ### Major Changes
