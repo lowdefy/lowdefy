@@ -1,6 +1,6 @@
 {
   "name": "journey-fixture-walled-plugin",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "license": "Apache-2.0",
   "description": "A walled-client connection type the journey fixture app runs under a data set.",
