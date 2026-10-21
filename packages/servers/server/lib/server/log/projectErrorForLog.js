@@ -37,6 +37,11 @@ const lowdefyErrorFields = [
   'blockId',
   'pageId',
   'isReject',
+  // A failed request step's ids (callRequestResolver), so its error log names the step
+  // rather than its inputs.
+  'endpointId',
+  'stepId',
+  'connectionId',
 ];
 
 function projectErrorForLog(err) {

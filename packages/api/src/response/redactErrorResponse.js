@@ -29,15 +29,19 @@ import normalizeErrorSources from './normalizeErrorSources.js';
 // the serializer's reviver replaces any object holding `~e` with its error, so a
 // plain deserialize of the payload drops `devError` and config never sees it.
 //
-// `received` is left out of devError at every node: on the request path it is
-// the evaluated request properties, resolved _secret values included, and the
-// dev server can be reached over a LAN or tunnel. The terminal still logs it.
+// `received` is left out of devError at every node: it holds evaluated values,
+// resolved _secret values included, and the dev server can be reached over a LAN
+// or tunnel.
+//
+// A failed request's error carries the connection's error only as a summary, so no log writes
+// the inputs a driver's error can hold; the dev tools get the connection's error itself, from
+// the error's non-enumerable `devCause`.
 function projectDevError(err) {
   const props = {
     message: err.message,
     name: err.name,
     stack: err.stack,
-    cause: err.cause,
+    cause: err.devCause ?? err.cause,
     ...err,
   };
   delete props.received;

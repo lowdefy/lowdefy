@@ -42,6 +42,9 @@ const allowedErrorKeys = new Set([
   'blockId',
   'pageId',
   'isReject',
+  'endpointId',
+  'stepId',
+  'connectionId',
 ]);
 
 // Every serialized error node carries `stack`; free-form values under
@@ -186,6 +189,33 @@ test('serializeErrorForLog projects an Error nested seven levels deep inside a c
     Object.keys(errorNode).forEach((key) => {
       expect(allowedErrorKeys.has(key)).toBe(true);
     });
+  });
+  expect(JSON.stringify(serialized)).not.toMatch(/planted/);
+});
+
+test("serializeErrorForLog keeps a failed request's ids and leaves out the connection's error it keeps for the dev tools", () => {
+  const driverError = new Error('Document failed validation');
+  driverError.name = 'MongoServerError';
+  driverError.errInfo = { details: { document: { message: 'planted-chat-text' } } };
+  const error = new RequestError('Document failed validation', {
+    cause: new Error('Document failed validation'),
+    typeName: 'MongoDBInsertOne',
+    location: 'threads/save_thread',
+  });
+  Object.assign(error, {
+    endpointId: 'save-thread',
+    stepId: 'save_thread',
+    connectionId: 'threads',
+  });
+  Object.defineProperty(error, 'devCause', { value: driverError });
+
+  const serialized = serializeErrorForLog(error);
+
+  expect(serialized).toMatchObject({
+    name: 'RequestError',
+    endpointId: 'save-thread',
+    stepId: 'save_thread',
+    connectionId: 'threads',
   });
   expect(JSON.stringify(serialized)).not.toMatch(/planted/);
 });
