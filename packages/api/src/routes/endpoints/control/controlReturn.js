@@ -32,9 +32,10 @@ async function controlReturn(context, routineContext, { control }) {
     checkLiteralContent({ blocks: response?.blocks, configKey: control['~k'], literalData });
   }
 
+  // No evaluated values: they can carry chat text or other personal information,
+  // which no log level may hold.
   context.logger.debug({
     event: 'debug_control_return',
-    response,
   });
   // :content_type sends a webhook's answer as text (createWebhookAnswer). The build allows it only
   // in a webhook endpoint, and only as text/plain.

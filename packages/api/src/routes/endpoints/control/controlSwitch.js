@@ -32,7 +32,7 @@ async function controlSwitch(context, routineContext, { control }) {
       event: 'debug_control_switch_case',
       case: {
         input: caseObj[':case'],
-        evaluated: evaluatedCase,
+        result: Boolean(evaluatedCase),
       },
     });
     if (evaluatedCase) {

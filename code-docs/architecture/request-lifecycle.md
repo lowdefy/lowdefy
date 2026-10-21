@@ -253,7 +253,9 @@ async function callRequestResolver(
     if (error.isLowdefyError) throw error; // pass-through — no redundant wrapping
     if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') throw new UserError(...);
     if (ServiceError.isServiceError(error)) throw new ServiceError(...);
-    throw new RequestError(error.message, { cause: error, ... });
+    // cause: the resolver's error summarised (summarisedError) — no request properties,
+    // no driver fields; the whole error is kept only as non-enumerable devCause
+    throw new RequestError(cause.message, { cause, ... });
   }
 }
 ```
