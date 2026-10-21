@@ -11,6 +11,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    # A hung job otherwise holds its runner for GitHub's six-hour limit.
+    timeout-minutes: 30
     strategy:
       matrix:
         node: [22, 24, 26]

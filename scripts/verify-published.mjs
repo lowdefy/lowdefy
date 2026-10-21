@@ -38,8 +38,9 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const RETRIES = 5;
-const RETRY_DELAY_MS = 5000;
+// About five minutes: npm took over 20 seconds to show 52 of 6.2.0's packages.
+const RETRIES = 20;
+const RETRY_DELAY_MS = 15000;
 const CONCURRENCY = 10;
 const REGISTRY = (process.env.npm_config_registry ?? 'https://registry.npmjs.org').replace(/\/$/, '');
 
