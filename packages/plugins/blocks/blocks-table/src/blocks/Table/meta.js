@@ -413,12 +413,19 @@ export default {
     },
     onViewSave: {
       description:
-        'Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view). The app stores views; update `views` (and `activeView`) with the result.',
+        'Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view), unless the block has `onViewSaveAs` actions. The app stores views; update `views` (and `activeView`) with the result.',
       event: {
         view: 'The current view.',
         id: 'The id of the view to overwrite. Missing for Save as.',
         title: 'The view title.',
         shared: 'Whether the view is shared.',
+      },
+    },
+    onViewSaveAs: {
+      description:
+        'Trigger when the user clicks Save as, in place of the built-in title and Shared popover, when the block has actions on it. Open your own dialog (for example a modal asking for a name and description), store the view, then update `views` and `activeView` as after `onViewSave`.',
+      event: {
+        view: 'The current view.',
       },
     },
     onViewDelete: {

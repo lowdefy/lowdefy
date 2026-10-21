@@ -109,6 +109,18 @@ test.describe('Table saved views', () => {
     await expect(events(page)).not.toContainText('"id"');
   });
 
+  test('with onViewSaveAs actions, Save as fires onViewSaveAs with the view and no popover', async ({
+    page,
+  }) => {
+    const table = getBlock(page, 'vw_save_as');
+    await density(page, 'vw_save_as', 'Comfortable').click();
+    await table.locator('[data-lf-view-actions] [data-lf-view-action="save-as"]').click();
+    await expect(getBlock(page, 'vw_save_as_events')).toContainText('save_as={"view":{');
+    await expect(getBlock(page, 'vw_save_as_events')).toContainText('"density":"comfortable"');
+    await expect(getBlock(page, 'vw_save_as_events')).toContainText('save=none');
+    await expect(page.locator('[data-lf-save-view]')).toHaveCount(0);
+  });
+
   test('a locked view hides Save but keeps Save as', async ({ page }) => {
     await tab(page, 'fixed').click();
     await expect(value(page)).toContainText('density=compact');

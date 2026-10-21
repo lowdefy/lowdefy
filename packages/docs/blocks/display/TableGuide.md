@@ -530,7 +530,7 @@ What each part does:
 
 - **Server mode.** The table fetches rows 0 to 200 on mount, then each block of `blockSize` rows (default 200) as it scrolls into view, keeping at most `maxBlocks` blocks (default 20). A sort, filter, search or grouping change fetches from the top, and the old rows stay on screen, dimmed, until the new ones land. See [MongoDBTableQuery](/MongoDB) for the request, and Security below.
 - **Row links.** A plain click opens the deal, Cmd/Ctrl+click or a middle click opens it in a new tab, and Enter on a focused row follows the link. Clicks on buttons, links, menus and editors in a cell never trigger the row. A click on a block in one of the table's slots, such as "Assign to me", runs that block's event and not the table's (the innermost block with actions handles a click, unless an event sets `bubble: true`), and the table still fires its own events for the methods that button calls, such as `onSelectionChange` after `clearSelection`.
-- **Saved views.** The tabs show `views`. A view `id` is a string, a number or a MongoDB ObjectId (`{ _oid }`, matched by its hex, so `id: $_id` works too); this example uses string ids so that Save as can pick one before the request runs. Selecting a tab loads its `view` (parts it leaves out come from `defaultView`) and fires `onViewSelect`. When the current view differs from the tab's, a strip offers Save, Save as and Discard; Save fires `onViewSave` with the tab's `id`, Save as asks for a title (and whether to share it) and fires `onViewSave` without an `id`. A tab's menu offers Delete, which fires `onViewDelete`. The table never stores views itself: update `views` and, for a new view, `activeView`. `locked: true` hides Save and Delete for that tab. Changing the search or collapsing groups never marks a view as changed.
+- **Saved views.** The tabs show `views`. A view `id` is a string, a number or a MongoDB ObjectId (`{ _oid }`, matched by its hex, so `id: $_id` works too); this example uses string ids so that Save as can pick one before the request runs. Selecting a tab loads its `view` (parts it leaves out come from `defaultView`) and fires `onViewSelect`. When the current view differs from the tab's, a strip offers Save, Save as and Discard; Save fires `onViewSave` with the tab's `id`, Save as asks for a title (and whether to share it) and fires `onViewSave` without an `id`; a table with `onViewSaveAs` actions fires that instead (see below). A tab's menu offers Delete, which fires `onViewDelete`. The table never stores views itself: update `views` and, for a new view, `activeView`. `locked: true` hides Save and Delete for that tab. Changing the search or collapsing groups never marks a view as changed.
 - **`persist`.** Keeps the user's current view and active tab in `localStorage` under `lowdefy-table:deals`, per app and per signed-in user, so a returning user sees what they left. The view is cleared when the user signs out. A persisted view wins over `activeView` when the page loads.
 - **Bulk actions.** While rows are selected, a bar below the table shows "N selected", "Select all M matching", Clear, and the `bulkActions` slot. Blocks in the toolbar and bulk action slots sit side by side at their content width, like the table's own buttons (set `gap` on the slot, or `layout.flex` on a block, to change that). The blocks in it read `_state: deals_table.selected`, and "Assign to me" sends it to `assign_deals`, one `updateMany` (see below).
 - **Hover buttons.** `showOn: hover` shows the buttons only on the hovered row, or the row focused with the keyboard. They mount only there, which keeps scrolling fast. The event carries `{ row, rowKey, value, button, buttonIndex }`. `applyTransaction` removes the archived row without a full refetch; in server mode a remove also refetches the visible rows.
@@ -541,6 +541,44 @@ What each part does:
 `fields` and `queryFields` are different key spaces: `queryFields` are the `MongoDBTableQuery` fields keyed by column key (`owner`, with `path: owner.name`), `fields` are keyed by the field path written (`owner.name`). Keep the query fields in one file and `_ref` it from both requests.
 
 To edit more columns, give each one its own request and pick it with the column key: `params: { _string.concat: [update_deal_, { _event: column.key }] }`. Do not build the `$set` field name from the event: the browser could then write any field. Alternatively, save the edit with [MongoDBTableChanges](/MongoDB), which checks the field against its `fields` allowlist and coerces the value to the field type.
+
+**Your own Save as dialog.** Give the table `onViewSaveAs` actions and Save as fires `onViewSaveAs { view }`, the current view, in place of its title and Shared popover, so saving a new view can ask for more: a unique name, a description, a preview of how many rows it matches. The table shows no popover; the app opens its dialog, stores the view and then updates `views` and `activeView`, as after `onViewSave`. Save (with an `id`) still fires `onViewSave`. Without `onViewSaveAs` actions, Save as works as above.
+
+```yaml
+- id: deals_table
+  type: Table
+  events:
+    onViewSaveAs:
+      - id: keep_view
+        type: SetState
+        params:
+          new_view:
+            view:
+              _event: view
+            title: ''
+            description: ''
+      - id: open_save_view
+        type: CallMethod
+        params:
+          blockId: save_view_modal
+          method: toggleOpen
+
+- id: save_view_modal
+  type: Modal
+  properties:
+    title: Save view
+  events:
+    onOk:
+      - id: insert_view
+        type: Request
+        params: insert_view # stores new_view, then refetches views and sets active_view
+  blocks:
+    - id: new_view.title
+      type: TextInput
+      required: true
+    - id: new_view.description
+      type: TextArea
+```
 
 ### Peek drawer
 
