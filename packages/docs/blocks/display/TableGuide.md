@@ -1188,6 +1188,8 @@ filter:
 - Records in a list (`people`, `relation`) compare by `_id`, then `id`, `value`, `name` or `label`, and text operators read their label.
 - `{ $user: path }` as a value reads the table's `user` property, which blocks need because they do not see the session: set `user: { _user: true }`. A shared saved view with `{ $user: id }` then means "mine" for every user. In server mode the filter goes to the request, which resolves `$user` on the server from its own `user` property.
 
+**The filter in words.** The toolbar's Filter button shows the filter as one sentence in its tooltip, built from the column titles and option labels, for example "Stage is any of Lead or Won and Name contains CX and (Amount greater than 1000 or Owner has me)". Groups past the first level go in brackets, relative dates read "before 3 months ago", `$user` values read "me", and a key that names no column reads "an unknown field, <key>,", so a view whose column was removed is still explained. Conditions still being built are left out. The sentence comes from `describeCondition({ condition, fields })` in `@lowdefy/helpers`, a plain function with no React; `MongoDBTableQuery` returns the same sentence as `sentence` when its `fields` carry the same `title` and `options`.
+
 ### Conditional formatting
 
 ```yaml

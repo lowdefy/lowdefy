@@ -1353,7 +1353,10 @@ _ref:
                 aggregates: { amount: 125000 }
             aggregates:           # only when view.aggregates is set, over the rows this request matches
               amount: 3400000
+            sentence: Stage is any of Lead or Won   # only when view.filter is set
             ```
+
+            `sentence` is the filter in words, from the field `title` and `options` (`describeCondition` in `@lowdefy/helpers`). It reads the same as the Table's Filter button tooltip when each field carries its column's plain-text `title` and its options as `[{ value, label }]`; a field without a `title` reads as its key, where the Table shows the key humanized. An agent or a server routine that runs the request with no browser can then say what a saved view matches.
 
             When `view.group` is set and `groupPath` is shorter than it, the request returns the groups of the next level, inside the groups in `groupPath`. When `groupPath` has a value for every level, it returns the leaf rows of that group.
 
@@ -1409,6 +1412,8 @@ _ref:
               - `sortable: boolean`: Default: `true` - Allow sorting by the field.
               - `filterable: boolean`: Default: `true` - Allow filtering by the field.
               - `groupable: boolean`: Default: `false` - Allow grouping by the field, and `countDistinct` on it. `tags` and `people` fields can not be grouped.
+              - `title: string`: Default: the field key - The field's name in the response `sentence`, as the Table column's title.
+              - `options: object[]`: The field's options as `[{ value, label }]`. The response `sentence` reads option values as their labels.
             - `pipeline: object[]`: Default: `[]` - Base aggregation stages that always run first, for example tenant scoping and a `$project`. `$out` and `$merge` are not allowed.
             - `view: object`: The Table view, `{ _payload: view }`. Only `sort`, `filter`, `search`, `group` and `aggregates` are read.
             - `startRow: integer`: Default: `0` - Index of the first row to return, `{ _payload: startRow }`.

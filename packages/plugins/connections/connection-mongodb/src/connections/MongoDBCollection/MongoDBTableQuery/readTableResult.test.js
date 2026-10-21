@@ -30,6 +30,13 @@ test('readTableResult returns rows and total', () => {
   });
 });
 
+test('readTableResult returns the filter sentence when there is one', () => {
+  const result = [{ rows: [{ _id: 1 }], total: [{ count: 1 }] }];
+  expect(
+    readTableResult({ result, grouped: false, specs: [], sentence: 'Name contains CX' })
+  ).toEqual({ rows: [{ _id: 1 }], total: 1, sentence: 'Name contains CX' });
+});
+
 test('readTableResult returns total 0 when nothing matched', () => {
   const result = [{ rows: [], total: [] }];
   expect(readTableResult({ result, grouped: false, specs: [] })).toEqual({ rows: [], total: 0 });

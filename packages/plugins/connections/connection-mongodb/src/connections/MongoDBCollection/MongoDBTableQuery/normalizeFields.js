@@ -46,6 +46,8 @@ function normalizeFields({ fields }) {
       sortable: field.sortable !== false,
       filterable: field.filterable !== false,
       groupable: field.groupable === true,
+      title: field.title,
+      options: field.options,
     });
   });
   return fieldsByKey;
