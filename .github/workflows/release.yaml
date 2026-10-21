@@ -1,6 +1,17 @@
-name: Release
 # The 6.x maintenance line. It publishes under the npm dist-tag `latest-6`, so `latest` stays on 7.x.
-# npm rejects a tag that reads as a version range, such as `v6` or `6.x`.
+# npm rejects a tag that reads as a version range, such as `v6` or `6.x`. Keep the file name:
+# npm's trusted publisher for every package names release.yaml.
+name: Release 6.x
+# Says what the push was. Whether it publishes is decided by the "Detect publish mode" step, and
+# the report job comments the outcome on the release pull request.
+run-name: >-
+  ${{
+  (github.event_name == 'workflow_dispatch' && 'Release 6.x: run by hand') ||
+  ((contains(github.event.head_commit.message, 'from lowdefy/changeset-release/v6') ||
+  startsWith(github.event.head_commit.message, 'Publish new 6.x release')) &&
+  'Publish 6.x (release pull request merged)') ||
+  'Release 6.x: push to v6'
+  }}
 on:
   push:
     branches:
@@ -20,8 +31,35 @@ jobs:
     runs-on: ubuntu-latest
     environment: publish
     if: github.repository == 'lowdefy/lowdefy'
+    outputs:
+      publish: ${{ steps.mode.outputs.publish }}
     steps:
       - uses: actions/checkout@v5
+
+      # Pending changesets (a fix merged into v6) mean this push opens or updates the "Publish
+      # new 6.x release" PR. No pending changesets mean this push publishes: normally the merge
+      # of that PR. Decided first, on the pushed commit: the changesets action checks out the
+      # version branch, where the changesets are already consumed and the versions bumped, so a
+      # check after it would publish the version branch before its pull request is merged.
+      # Count only changesets that release a package: the changesets action ignores empty ones
+      # (`changeset --empty`) and opens no PR for them.
+      - name: Detect publish mode
+        id: mode
+        run: |
+          count=0
+          for file in .changeset/*.md; do
+            [ -e "$file" ] || continue
+            [ "$(basename "$file")" = 'README.md' ] && continue
+            if awk '/^---/ { fences++; next } fences == 1 && NF { found = 1 } END { exit !found }' "$file"; then
+              count=$((count + 1))
+            fi
+          done
+          if [ "$count" -eq 0 ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
@@ -38,6 +76,8 @@ jobs:
       # release" PR. Publishing is handled explicitly below so we control its exit
       # semantics and can recover from a partial publish by re-running.
       - name: Create Release Pull Request
+        id: changesets
+        if: steps.mode.outputs.publish == 'false'
         uses: changesets/action@v1
         with:
           version: pnpm release:version
@@ -47,18 +87,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # No pending changesets means the version PR has been merged: this is a publish
-      # commit. Everything below runs only in that case, and each step is idempotent so
-      # a re-run recovers cleanly from a config or network error part-way through.
-      - name: Detect publish mode
-        id: mode
+      - name: Summary
+        if: steps.changesets.outputs.pullRequestNumber
         run: |
-          count=$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')
-          if [ "$count" -eq 0 ]; then
-            echo "publish=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "publish=false" >> "$GITHUB_OUTPUT"
-          fi
+          echo "Nothing was published. This push opened or updated the release pull request:" >> "$GITHUB_STEP_SUMMARY"
+          echo "${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.changesets.outputs.pullRequestNumber }}" >> "$GITHUB_STEP_SUMMARY"
+
+      # Everything below runs only on a publish push, and each step is idempotent so a re-run
+      # recovers cleanly from a config or network error part-way through.
 
       # Attempt the publish, but do not trust its exit code: `changeset publish` fails on
       # versions that already exist, which is a success condition on a re-run. The verify
@@ -117,3 +153,28 @@ jobs:
               --target ${{ github.sha }} \
               --notes-file /tmp/release-notes.md
           fi
+
+  # Whatever happened to the publish, say so on the merged release pull request and in the run
+  # summary, so nobody has to read the job to know whether the release went out.
+  report:
+    name: Report
+    needs: release
+    if: always() && needs.release.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      # GitHub lists draft releases only to a token that can write them.
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            scripts
+            packages/cli
+      - run: node scripts/report-release.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIST_TAG: latest-6
+          RELEASE_BRANCH: changeset-release/v6
+          PUBLISH_RESULT: ${{ needs.release.result }}
