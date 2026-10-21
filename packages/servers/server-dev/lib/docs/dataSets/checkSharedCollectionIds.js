@@ -16,12 +16,21 @@
 
 import { type } from '@lowdefy/helpers';
 
+// Where a connection loads: its collection in its database target. Two connections share a
+// collection only when both match.
+function describePlace({ dataSet, connectionId }) {
+  return JSON.stringify([
+    dataSet.targets?.[connectionId] ?? null,
+    dataSet.collections[connectionId],
+  ]);
+}
+
 // `label` names where a document comes from in a message: "fixture " or "generate.".
-function addIds({ held, connectionId, collection, documents, label }) {
-  held[collection] = held[collection] ?? new Map();
+function addIds({ held, connectionId, place, documents, label }) {
+  held[place] = held[place] ?? new Map();
   documents.forEach((document, index) => {
     if (type.isUndefined(document._id)) return;
-    held[collection].set(JSON.stringify(document._id), {
+    held[place].set(JSON.stringify(document._id), {
       connectionId,
       where: `${label}${connectionId}[${index}]`,
     });
@@ -29,23 +38,25 @@ function addIds({ held, connectionId, collection, documents, label }) {
 }
 
 // parseDataSet refuses a generated _id that is also a fixture's or generated twice, within one
-// connection. Two connections can name one collection, and the store loads them into it together,
-// where a fixture would silently replace a generated document with its _id. This refuses the same
-// collisions across connections, which only the dev build's collection map can see.
+// connection. Two connections can name one collection in one database target, and the store loads
+// them into it together, where a fixture would silently replace a generated document with its _id.
+// This refuses the same collisions across connections, which only the dev build's collection and
+// target maps can see.
 function checkSharedCollectionIds({ dataSetName, dataSet }) {
   const held = {};
   Object.entries(dataSet.fixtures).forEach(([connectionId, documents]) => {
     addIds({
       held,
       connectionId,
-      collection: dataSet.collections[connectionId],
+      place: describePlace({ dataSet, connectionId }),
       documents,
       label: 'fixture ',
     });
   });
   Object.entries(dataSet.generated).forEach(([connectionId, documents]) => {
     const collection = dataSet.collections[connectionId];
-    const ids = held[collection] ?? new Map();
+    const place = describePlace({ dataSet, connectionId });
+    const ids = held[place] ?? new Map();
     documents.forEach((document, index) => {
       const key = JSON.stringify(document._id);
       const holder = ids.get(key);
@@ -57,7 +68,7 @@ function checkSharedCollectionIds({ dataSetName, dataSet }) {
     addIds({
       held,
       connectionId,
-      collection,
+      place,
       documents,
       label: 'generate.',
     });

@@ -376,6 +376,35 @@ process.exit(1);`
   expect(survived).toBe(false);
 });
 
+test('a dev server whose leader reads as gone before its exit event reads as exited, not stopped', async () => {
+  // On Windows process.kill(pid, 0) fails as soon as the leader exits, before
+  // Node delivers its exit event. The mock reads the leader as gone while it
+  // still runs, so the hub is asked in that window on every platform.
+  fs.writeFileSync(
+    path.join(configDirectory, 'fake-dev.cjs'),
+    `setInterval(() => { if (require('fs').existsSync('die')) process.exit(1); }, 25);`
+  );
+  hub = createTestHub({ readyTimeoutMs: 1000 });
+  const started = await hub.start({ configDirectory });
+  expect(started.state).toEqual('starting');
+  const kill = process.kill.bind(process);
+  const killSpy = jest.spyOn(process, 'kill').mockImplementation((pid, signal) => {
+    if (signal === 0 && Math.abs(pid) === started.pid) {
+      throw Object.assign(new Error('kill ESRCH'), { code: 'ESRCH' });
+    }
+    return kill(pid, signal);
+  });
+  try {
+    const status = hub.status({ configDirectory });
+    fs.writeFileSync(path.join(configDirectory, 'die'), '');
+    expect(await status).toEqual(
+      expect.objectContaining({ state: 'exited', exit: expect.objectContaining({ code: 1 }) })
+    );
+  } finally {
+    killSpy.mockRestore();
+  }
+});
+
 onPosix(
   'hub reap stops a server whose worktree was removed on the second pass that finds it gone',
   async () => {

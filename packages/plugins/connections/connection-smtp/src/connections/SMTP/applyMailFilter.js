@@ -54,10 +54,20 @@ function getDomain(email) {
   return email.slice(email.lastIndexOf('@') + 1);
 }
 
+// A loop, not /\.+$/: that regex takes quadratic time on a long run of dots, and the domain comes
+// from the request.
+function trimTrailingDots(domain) {
+  let end = domain.length;
+  while (end > 0 && domain[end - 1] === '.') {
+    end -= 1;
+  }
+  return domain.slice(0, end);
+}
+
 // .invalid is reserved and never resolves (RFC 6761). A trailing dot is the fully qualified
 // form of the same domain.
 function isInvalid(entry) {
-  const domain = getDomain(getBareEmail(entry)).replace(/\.+$/, '');
+  const domain = trimTrailingDots(getDomain(getBareEmail(entry)));
   return domain === 'invalid' || domain.endsWith('.invalid');
 }
 

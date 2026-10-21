@@ -83,10 +83,13 @@ const RatingSlider = ({
 
   const sliderTheme = {};
   if (properties.color) {
-    sliderTheme.colorPrimary = properties.color;
+    // A global colorPrimary makes antd re-derive the colorPrimaryBorder* shades the Slider draws
+    // its track, handle and dots from, with the app theme's algorithm; a component-level
+    // colorPrimary does not. Slider tokens from the block's `theme` still win over these defaults.
+    sliderTheme.token = { colorPrimary: properties.color };
   }
   if (validationColor) {
-    sliderTheme.railBg = validationColor;
+    sliderTheme.components = { Slider: { railBg: validationColor } };
   }
   const hasSliderTheme = Object.keys(sliderTheme).length > 0;
   const disabled = getDisabled({ loading, properties });
@@ -200,9 +203,7 @@ const RatingSlider = ({
               />
             )}
             {hasSliderTheme ? (
-              <ConfigProvider theme={{ components: { Slider: sliderTheme } }}>
-                {slider}
-              </ConfigProvider>
+              <ConfigProvider theme={sliderTheme}>{slider}</ConfigProvider>
             ) : (
               slider
             )}

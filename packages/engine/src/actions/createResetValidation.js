@@ -15,10 +15,12 @@
 */
 
 import getBlockMatcher from '../getBlockMatcher.js';
+import warnUnmatchedBlockIds from '../warnUnmatchedBlockIds.js';
 
 function createResetValidation({ arrayIndices, context }) {
   return function resetValidation(params) {
     context._internal.RootSlots.resetValidation(getBlockMatcher({ params, arrayIndices }));
+    warnUnmatchedBlockIds({ action: 'ResetValidation', arrayIndices, context, params });
   };
 }
 

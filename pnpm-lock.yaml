@@ -857,6 +857,9 @@ importers:
         specifier: '>=18'
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@lowdefy/ajv':
+        specifier: 7.0.0
+        version: link:../../../utils/ajv
       '@lowdefy/block-dev-e2e':
         specifier: 7.0.0
         version: link:../../../utils/block-dev-e2e
@@ -872,9 +875,15 @@ importers:
       '@swc/core':
         specifier: 1.15.32
         version: 1.15.32
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.32)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.3)
 
   packages/plugins/blocks/blocks-antd:
     dependencies:

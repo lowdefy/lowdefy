@@ -18,7 +18,7 @@ _ref:
     pageId: introduction
     pageTitle: Introduction
     filePath: introduction.yaml
-    fullWidth: true
+    contentWidth: 1040px
     hidePageTitle: true
     prefetchPages:
       - quickstart
@@ -28,9 +28,7 @@ _ref:
       - id: hero
         type: Box
         style:
-          maxWidth: 1040px
-          margin: 0 auto
-          padding: 48px 16px 24px 16px
+          padding: 48px 0 24px 0
           textAlign: center
         blocks:
           - id: hero_title
@@ -89,6 +87,7 @@ _ref:
             type: Box
             style:
               maxWidth: 560px
+              textAlign: left
               margin: 24px auto 0 auto
             blocks:
               - _ref:
@@ -101,9 +100,7 @@ _ref:
       - id: primitives_section
         type: Box
         style:
-          maxWidth: 1040px
-          margin: 32px auto 0 auto
-          padding: 0 16px
+          marginTop: 32px
         blocks:
           - id: primitives_heading
             type: Title
@@ -120,7 +117,9 @@ _ref:
               - id: intro_prim_blocks
                 type: Card
                 layout:
-                  flex: 1 1 240px
+                  span: 12
+                  lg:
+                    span: 6
                 style:
                   cursor: pointer
                 properties:
@@ -141,7 +140,9 @@ _ref:
               - id: intro_prim_operators
                 type: Card
                 layout:
-                  flex: 1 1 240px
+                  span: 12
+                  lg:
+                    span: 6
                 style:
                   cursor: pointer
                 properties:
@@ -162,7 +163,9 @@ _ref:
               - id: intro_prim_actions
                 type: Card
                 layout:
-                  flex: 1 1 240px
+                  span: 12
+                  lg:
+                    span: 6
                 style:
                   cursor: pointer
                 properties:
@@ -183,7 +186,9 @@ _ref:
               - id: intro_prim_connections
                 type: Card
                 layout:
-                  flex: 1 1 240px
+                  span: 12
+                  lg:
+                    span: 6
                 style:
                   cursor: pointer
                 properties:
@@ -206,9 +211,7 @@ _ref:
       - id: build_section
         type: Box
         style:
-          maxWidth: 1040px
-          margin: 32px auto 0 auto
-          padding: 0 16px
+          marginTop: 32px
         blocks:
           - id: build_heading
             type: Title
@@ -225,7 +228,11 @@ _ref:
               - id: build_card_admin
                 type: Card
                 layout:
-                  flex: 1 1 160px
+                  span: 8
+                  sm:
+                    span: 12
+                  lg:
+                    span: 4
                 properties:
                   size: small
                 blocks:
@@ -236,7 +243,11 @@ _ref:
               - id: build_card_crud
                 type: Card
                 layout:
-                  flex: 1 1 160px
+                  span: 8
+                  sm:
+                    span: 12
+                  lg:
+                    span: 4
                 properties:
                   size: small
                 blocks:
@@ -247,7 +258,11 @@ _ref:
               - id: build_card_dashboards
                 type: Card
                 layout:
-                  flex: 1 1 160px
+                  span: 8
+                  sm:
+                    span: 12
+                  lg:
+                    span: 4
                 properties:
                   size: small
                 blocks:
@@ -258,7 +273,11 @@ _ref:
               - id: build_card_workflows
                 type: Card
                 layout:
-                  flex: 1 1 160px
+                  span: 8
+                  sm:
+                    span: 12
+                  lg:
+                    span: 4
                 properties:
                   size: small
                 blocks:
@@ -269,7 +288,11 @@ _ref:
               - id: build_card_webforms
                 type: Card
                 layout:
-                  flex: 1 1 160px
+                  span: 8
+                  sm:
+                    span: 12
+                  lg:
+                    span: 4
                 properties:
                   size: small
                 blocks:
@@ -280,7 +303,11 @@ _ref:
               - id: build_card_agents
                 type: Card
                 layout:
-                  flex: 1 1 160px
+                  span: 8
+                  sm:
+                    span: 12
+                  lg:
+                    span: 4
                 properties:
                   size: small
                 blocks:
@@ -293,9 +320,7 @@ _ref:
       - id: tracks_section
         type: Box
         style:
-          maxWidth: 1040px
-          margin: 32px auto 0 auto
-          padding: 0 16px
+          marginTop: 32px
         blocks:
           - id: tracks_heading
             type: Title
@@ -312,7 +337,7 @@ _ref:
               - id: track_quickstart
                 type: Card
                 layout:
-                  flex: 1 1 280px
+                  span: 8
                 style:
                   cursor: pointer
                 properties:
@@ -333,7 +358,7 @@ _ref:
               - id: track_tutorial
                 type: Card
                 layout:
-                  flex: 1 1 280px
+                  span: 8
                 style:
                   cursor: pointer
                 properties:
@@ -354,7 +379,7 @@ _ref:
               - id: track_concepts
                 type: Card
                 layout:
-                  flex: 1 1 280px
+                  span: 8
                 style:
                   cursor: pointer
                 properties:
@@ -377,9 +402,7 @@ _ref:
       - id: ecosystem_section
         type: Box
         style:
-          maxWidth: 1040px
-          margin: 32px auto 0 auto
-          padding: 0 16px
+          marginTop: 32px
         blocks:
           - id: ecosystem_heading
             type: Title
@@ -396,7 +419,9 @@ _ref:
               - id: eco_card_aggrid
                 type: Card
                 layout:
-                  flex: 1 1 200px
+                  span: 8
+                  sm:
+                    span: 12
                 style:
                   cursor: pointer
                 properties:
@@ -416,7 +441,9 @@ _ref:
               - id: eco_card_echart
                 type: Card
                 layout:
-                  flex: 1 1 200px
+                  span: 8
+                  sm:
+                    span: 12
                 style:
                   cursor: pointer
                 properties:
@@ -436,7 +463,9 @@ _ref:
               - id: eco_card_agentchat
                 type: Card
                 layout:
-                  flex: 1 1 200px
+                  span: 8
+                  sm:
+                    span: 12
                 style:
                   cursor: pointer
                 properties:
@@ -456,7 +485,9 @@ _ref:
               - id: eco_card_mongodb
                 type: Card
                 layout:
-                  flex: 1 1 200px
+                  span: 8
+                  sm:
+                    span: 12
                 style:
                   cursor: pointer
                 properties:
@@ -473,10 +504,34 @@ _ref:
                     type: Html
                     properties:
                       html: '<b>MongoDB</b><br/><span style="color: var(--ant-color-text-secondary)">And 18 more connections</span>'
+              - id: eco_card_auth
+                type: Card
+                layout:
+                  span: 8
+                  sm:
+                    span: 12
+                style:
+                  cursor: pointer
+                properties:
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: eco_link_auth
+                      type: Link
+                      params:
+                        pageId: users-introduction
+                blocks:
+                  - id: eco_card_auth_text
+                    type: Html
+                    properties:
+                      html: '<b>Auth.js</b><br/><span style="color: var(--ant-color-text-secondary)">Sign-in, roles and two-factor</span>'
               - id: eco_card_plugins
                 type: Card
                 layout:
-                  flex: 1 1 200px
+                  span: 8
+                  sm:
+                    span: 12
                 style:
                   cursor: pointer
                 properties:
@@ -498,16 +553,14 @@ _ref:
       - id: social_section
         type: Box
         style:
-          maxWidth: 1040px
-          margin: 40px auto 24px auto
-          padding: 0 16px
+          margin: 40px 0 24px 0
           textAlign: center
         blocks:
           - id: social_text
             type: Html
             properties:
               html: |
-                <p style="font-size: 1.05em; color: var(--ant-color-text-secondary);">
+                <p style="font-size: 1.05em; color: var(--ant-color-text-secondary); margin: 0 0 16px 0;">
                   More than <b>25 000 apps</b> built by the Lowdefy community.
                 </p>
           - id: social_buttons
@@ -532,16 +585,3 @@ _ref:
                   title: Join our Discord
                   icon: brands:Discord
                   href: https://discord.gg/WmcJgXt
-              - id: social_showcase_button
-                type: Button
-                layout:
-                  flex: 0 1 auto
-                properties:
-                  title: See the showcase
-                  icon: grid
-                events:
-                  onClick:
-                    - id: social_link_showcase
-                      type: Link
-                      params:
-                        pageId: showcase

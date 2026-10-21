@@ -17,7 +17,7 @@ The first time a `Validate` action is called, validation errors and warnings are
 
 The `Validate` action `blockIds` or `regex` params are used to limit which blocks are validated. Only the matched blocks will be validated, and validation results are shown for only those matched blocks.
 
-Matching does not cascade to child blocks. A container's blockId matches only the container, which has no validation of its own, so the action validates nothing and succeeds. A blockId that matches no block also succeeds. To validate the inputs inside a container, match their blockIds, for example with `regex: ^contact\.` for inputs under `contact`.
+A container's blockId matches the container and every block inside it, so `params: contact_card` validates the inputs in the `contact_card` card. Matching follows the blocks on the page, not id prefixes, so it reaches `contact.name` inside `contact_card`. A blockId that matches no block logs a warning in the browser console and the action succeeds.
 
 When the action runs in a list row, `$` in a blockId is replaced with the row index, as in `SetState` and `CallMethod`, so `list.$.name` matches the `name` input in the same row. `$` in a `regex` pattern keeps its regex meaning.
 

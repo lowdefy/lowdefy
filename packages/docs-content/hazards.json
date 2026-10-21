@@ -40,17 +40,5 @@
     "appliesTo": { "types": [":reject"] },
     "message": ":reject is the routine's reply, not an exception. A :catch never runs for it, :finally does, and :throw is the caught path.",
     "see": "controls/reject"
-  },
-  {
-    "id": "setstate-parent-keeps-hidden-inputs",
-    "appliesTo": { "types": ["SetState"] },
-    "message": "Setting a parent object to {} or null does not clear an input that is hidden at that moment: the input keeps its last value and writes it back to state when it shows again. Set each input's own key to null instead.",
-    "see": "actions/setstate"
-  },
-  {
-    "id": "validate-no-cascade",
-    "appliesTo": { "types": ["Validate", "ResetValidation"] },
-    "message": "blockIds match exact block IDs and do not cascade to child blocks. A container's ID, or an ID that matches no block, validates nothing and succeeds. Match the inputs instead, for example regex: ^contact\\. for the inputs under contact.",
-    "see": "actions/validate"
   }
 ]

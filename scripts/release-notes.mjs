@@ -20,7 +20,7 @@
  * Release Notes Generator for Lowdefy
  *
  * Collects per-package CHANGELOGs, merges them by the primary app version,
- * and generates developer-facing release notes via Claude CLI.
+ * and writes the release notes for the draft GitHub release.
  *
  * Usage:
  *   node scripts/release-notes.mjs                    # generate notes for latest version
@@ -43,6 +43,9 @@ const flags = new Set(process.argv.slice(2).filter((a) => !a.startsWith('--outpu
 const FLAG_ALL = flags.has('--all');
 const outputFileArg = process.argv.find((a) => a.startsWith('--output-file='));
 const OUTPUT_FILE = outputFileArg ? outputFileArg.split('=')[1] : '/tmp/release-notes.md';
+
+// GitHub refuses a release body over 125,000 characters; keep a margin under it.
+const RELEASE_BODY_LIMIT = 120000;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -248,41 +251,7 @@ function getVersionDate(version) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. Generate developer-facing notes via Claude CLI
-// ---------------------------------------------------------------------------
-
-function generateNotes(technicalNotes) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.log('  Skipping AI notes (no ANTHROPIC_API_KEY)');
-    return null;
-  }
-
-  const prompt =
-    'You are writing release notes for Lowdefy, an open-source config-driven web framework built on Next.js. ' +
-    'Convert these technical changelog entries into clear, developer-friendly bullet points. ' +
-    'Group related changes together. Focus on what changed and why it matters to developers using Lowdefy. ' +
-    'Skip internal dependency bumps and version-only changes. ' +
-    'Return only markdown bullet points, no headings or preamble. ' +
-    'If there are no meaningful changes, return "- Minor internal improvements and dependency updates."';
-
-  try {
-    const result = execSync(`claude -p --model claude-haiku-4-5-20251001 "${prompt}"`, {
-      input: technicalNotes,
-      encoding: 'utf-8',
-      cwd: ROOT,
-      timeout: 60000,
-      maxBuffer: 1024 * 1024,
-      stdio: ['pipe', 'pipe', 'pipe'],
-    });
-    return result.trim();
-  } catch (err) {
-    console.warn('  Claude CLI failed, skipping AI notes:', err.message);
-    return null;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// 7. Parse individual changeset entries from changelog content
+// 6. Parse individual changeset entries from changelog content
 // ---------------------------------------------------------------------------
 
 /**
@@ -347,12 +316,10 @@ function parseChangesetEntries(content) {
 }
 
 // ---------------------------------------------------------------------------
-// 8. Build markdown for a version (deduplicated by changeset hash)
+// 7. Build markdown for a version (deduplicated by changeset hash)
 // ---------------------------------------------------------------------------
 
 function buildVersionMarkdown(entry) {
-  const lines = [];
-
   // Collect all changeset entries across packages, deduplicated by hash
   const changesetMap = new Map(); // hash -> { firstLine, body, section, packages[] }
   // Track entries without hashes (plain text changes)
@@ -384,26 +351,6 @@ function buildVersionMarkdown(entry) {
     }
   }
 
-  // Build deduplicated technical content for Claude
-  const technicalParts = [];
-  for (const [hash, cs] of changesetMap) {
-    const pkgList = cs.packages.join(', ');
-    technicalParts.push(`- ${hash}: ${cs.firstLine}\n  Packages: ${pkgList}\n${cs.body}`);
-  }
-  for (const pe of plainEntries) {
-    technicalParts.push(`- ${pe.packageName}: ${pe.text}`);
-  }
-  const technicalContent = technicalParts.join('\n\n');
-
-  // AI-generated highlights
-  const highlights = generateNotes(technicalContent);
-  if (highlights) {
-    lines.push('## Highlights');
-    lines.push('');
-    lines.push(highlights);
-    lines.push('');
-  }
-
   // Group changesets by section type
   const minorChanges = [];
   const patchChanges = [];
@@ -415,11 +362,36 @@ function buildVersionMarkdown(entry) {
     target.push(cs);
   }
 
+  const changes = { minorChanges, patchChanges, plainEntries };
+  const full = renderChanges({ ...changes, titlesOnly: false });
+  if (full.length <= RELEASE_BODY_LIMIT) {
+    return full;
+  }
+
+  // A major release can carry hundreds of changesets with long bodies. List one line per
+  // changeset instead; the full text stays in each package's CHANGELOG.md.
+  console.log(`  Full notes are ${full.length} characters, over the limit; listing titles only`);
+  return [
+    renderChanges({ ...changes, titlesOnly: true }),
+    '',
+    "_Each change's full description is in the CHANGELOG.md of the packages listed with it._",
+  ]
+    .join('\n')
+    .trimEnd();
+}
+
+function renderChanges({ minorChanges, patchChanges, plainEntries, titlesOnly }) {
+  const lines = [];
+
   if (minorChanges.length > 0) {
     lines.push('## What\'s New');
     lines.push('');
     for (const cs of minorChanges) {
       const pkgList = cs.packages.map((p) => `\`${p}\``).join(', ');
+      if (titlesOnly) {
+        lines.push(`- **${cs.firstLine}** (${pkgList})`);
+        continue;
+      }
       lines.push(`### ${cs.firstLine}`);
       lines.push('');
       lines.push(`Packages: ${pkgList}`);
@@ -429,6 +401,9 @@ function buildVersionMarkdown(entry) {
         lines.push('');
       }
     }
+    if (titlesOnly) {
+      lines.push('');
+    }
   }
 
   if (patchChanges.length > 0) {
@@ -437,17 +412,21 @@ function buildVersionMarkdown(entry) {
     for (const cs of patchChanges) {
       const pkgList = cs.packages.map((p) => `\`${p}\``).join(', ');
       lines.push(`- **${cs.firstLine}** (${pkgList})`);
-      if (cs.body.trim()) {
+      if (!titlesOnly && cs.body.trim()) {
         lines.push('');
         lines.push(cs.body);
         lines.push('');
       }
     }
+    if (titlesOnly) {
+      lines.push('');
+    }
   }
 
   if (plainEntries.length > 0) {
     for (const pe of plainEntries) {
-      lines.push(`- **${pe.packageName}**: ${pe.text}`);
+      const text = titlesOnly ? pe.text.trim().split('\n')[0] : pe.text;
+      lines.push(`- **${pe.packageName}**: ${text}`);
     }
     lines.push('');
   }

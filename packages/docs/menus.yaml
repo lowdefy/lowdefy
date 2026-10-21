@@ -17,28 +17,12 @@
     docsSection: Learn
     title: Learn
   links:
-    - id: welcome
-      type: MenuGroup
+    - id: introduction
+      type: MenuLink
+      pageId: introduction
       properties:
-        title: Welcome
+        title: Introduction
         icon: home
-      links:
-        - id: introduction
-          type: MenuLink
-          pageId: introduction
-          properties:
-            title: Introduction
-            icon: Coffee
-        - id: why-lowdefy
-          type: MenuLink
-          url: https://lowdefy.com
-          properties:
-            title: Why Lowdefy
-        - id: showcase
-          type: MenuLink
-          pageId: showcase
-          properties:
-            title: Showcase
     - id: start-here
       type: MenuGroup
       properties:

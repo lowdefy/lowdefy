@@ -39,9 +39,11 @@ _ref:
           - id: plugins_card_intro
             type: Card
             layout:
-              flex: 1 1 280px
+              span: 12
             style:
               cursor: pointer
+              .element:
+                height: 100%
             properties:
               title: Introduction
               size: small
@@ -60,9 +62,11 @@ _ref:
           - id: plugins_card_dev
             type: Card
             layout:
-              flex: 1 1 280px
+              span: 12
             style:
               cursor: pointer
+              .element:
+                height: 100%
             properties:
               title: Developing plugins
               size: small
@@ -81,9 +85,11 @@ _ref:
           - id: plugins_card_actions
             type: Card
             layout:
-              flex: 1 1 280px
+              span: 8
             style:
               cursor: pointer
+              .element:
+                height: 100%
             properties:
               title: Actions
               size: small
@@ -102,9 +108,11 @@ _ref:
           - id: plugins_card_connections
             type: Card
             layout:
-              flex: 1 1 280px
+              span: 8
             style:
               cursor: pointer
+              .element:
+                height: 100%
             properties:
               title: Connections
               size: small
@@ -123,9 +131,11 @@ _ref:
           - id: plugins_card_operators
             type: Card
             layout:
-              flex: 1 1 280px
+              span: 8
             style:
               cursor: pointer
+              .element:
+                height: 100%
             properties:
               title: Operators
               size: small

@@ -299,15 +299,15 @@ CI does not test pull requests or working-branch pushes by default. Whoever chan
 pull request (see [Before pushing](#before-pushing)). Tests run in CI on demand and before every
 release, all routed from `.github/workflows/ci.yml` and `release.yaml`:
 
-| When                                                  | Runs                                                        |
-| ----------------------------------------------------- | ----------------------------------------------------------- |
-| `ci` label on a pull request, and every push after    | fast path                                                   |
-| `ci-full` label on a pull request (re-add to re-run)  | complete path, once                                         |
-| a pull request into `main`, on every push             | complete path                                               |
-| a push to `main`: `release.yaml`, before it publishes | complete path                                               |
-| Actions tab, `CI`, "Run workflow" (`full` unticked)   | fast path on every package                                  |
-| Actions tab, `CI`, "Run workflow" (`full` ticked)     | complete path                                               |
-| `run-mongodb-tests` / `run-block-e2e` label           | that suite alone (`test-mongodb.yml`, `test-block-e2e.yml`) |
+| When                                                                       | Runs                                                        |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `ci` label on a pull request, and every push after                         | fast path                                                   |
+| `ci-full` label on a pull request (re-add to re-run)                       | complete path, once                                         |
+| a pull request into `main` other than "Publish new release", on every push | complete path                                               |
+| the publish push to `main`: `release.yaml`, first                          | complete path                                               |
+| Actions tab, `CI`, "Run workflow" (`full` unticked)                        | fast path on every package                                  |
+| Actions tab, `CI`, "Run workflow" (`full` ticked)                          | complete path                                               |
+| `run-mongodb-tests` / `run-block-e2e` label                                | that suite alone (`test-mongodb.yml`, `test-block-e2e.yml`) |
 
 The labels are a click in the pull request's sidebar. GitHub offers "Run workflow" only for a
 workflow on the default branch (`main`); `gh workflow run ci.yml --ref <branch> -f full=true`
@@ -335,13 +335,27 @@ A new push to a pull request cancels its run in progress.
 
 **Complete path** (`.github/workflows/test-complete.yml`): the unit tests (`pnpm build`, the
 dependency check and every package's tests, not stopping at the first failing package) on
-ubuntu and windows with Node 24 and 26, then the Windows time zone test in its own step;
-`pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
+ubuntu with Node 24 and 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
+jobs); `pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
 `@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
-Chromium); and every block e2e suite (`test-block-e2e.yml`). `release.yaml` runs it on every
-push to `main` and opens the version pull request or publishes only when it passes, so a
-release cannot skip it. Before cutting a release, add `ci-full` to the pull request into
-`main`, or run it from the Actions tab. Codecov gets its ubuntu / Node 24 coverage only.
+Chromium); and every block e2e suite (`test-block-e2e.yml`). Codecov gets its Node 24 coverage
+only.
+
+A release runs the complete path twice: on the Release pull request from `develop` into `main`
+(every push), and on the publish push. `release.yaml` decides from the pushed commit's
+`.changeset/` folder what a push to `main` does:
+
+- **Pending changesets** (the Release merge from `develop`): the `version` job opens or updates
+  the "Publish new release" pull request. No tests run; the Release pull request ran them on
+  the same code. That pull request (`changeset-release/main`) skips them too, since it only
+  bumps versions and changelogs.
+- **No pending changesets** (normally the merge of "Publish new release"): the `test` job runs
+  the complete path, and the `publish` job publishes to npm, tags and drafts the GitHub release
+  only when it passes. Any other push to `main` without changesets, such as a hotfix, takes this
+  path too; the idempotent publish steps find everything already released. Empty changesets
+  (`changeset --empty`) do not count as pending, matching the changesets action.
+
+[Releasing](./releasing.md) covers the version and publish jobs step by step.
 
 ## Before pushing
 

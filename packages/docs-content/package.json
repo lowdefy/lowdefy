@@ -21,6 +21,7 @@
   "exports": {
     "./index.json": "./index.json",
     "./hazards.json": "./hazards.json",
+    "./scripts/collectImportedFiles.js": "./scripts/collectImportedFiles.js",
     "./scripts/extractAgentDocs.js": "./scripts/extractAgentDocs.js",
     "./scripts/hashDocSources.js": "./scripts/hashDocSources.js",
     "./scripts/isRedirectPage.js": "./scripts/isRedirectPage.js",

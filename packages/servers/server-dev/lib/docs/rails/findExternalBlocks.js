@@ -20,9 +20,9 @@ import pageBlocks from '../pageBlocks.js';
 import readBuiltArtifact from './readBuiltArtifact.js';
 import readRoutineSteps from '../readRoutineSteps.js';
 
-// The meta.dataSet declarations a data session runs against the session's database (see
-// lib/server/applyDataSetRedirect.js): 'redirect' takes the session database, 'walled' reaches it
-// only through walled connections. Every other declaration, or none, would reach a real service or
+// The meta.dataSet declarations a data session runs against the session's databases (see
+// lib/server/applyDataSetRedirect.js): 'redirect' takes its target's session database, 'walled'
+// reaches them only through walled connections. Every other declaration, or none, would reach a real service or
 // is refused by the gate.
 const CLICKABLE_DATA_SET_MODES = new Set(['redirect', 'walled']);
 

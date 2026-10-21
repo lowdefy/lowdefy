@@ -63,7 +63,7 @@ Made by a Lowdefy 🤖
 Open the `lowdefy.yaml` file using a text editor like [VS Code](https://code.visualstudio.com/download). The content of the file should look like this:
 
 ```yaml
-lowdefy: 6.1.0
+lowdefy: 7.0.0
 name: Lowdefy starter
 
 pages:
