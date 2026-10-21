@@ -143,6 +143,20 @@ test.describe('Table toolbar', () => {
     await expect(page.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]')).toBeVisible();
   });
 
+  test('the openFilter method opens the filter builder', async ({ page }) => {
+    await page.locator('#tb_open_filter').click();
+    await expect(page.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]')).toBeVisible();
+  });
+
+  test('openFilter with a key adds an empty condition on that column', async ({ page }) => {
+    await page.locator('#tb_open_filter_city').click();
+    const builder = page.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]');
+    await expect(builder).toBeVisible();
+    const leaf = builder.locator('[data-lf-filter-leaf]').last();
+    await expect(leaf).toHaveAttribute('data-col-key', 'city');
+    await expect(leaf).toContainText('City');
+  });
+
   // ============================================
   // SORT AND GROUP
   // ============================================

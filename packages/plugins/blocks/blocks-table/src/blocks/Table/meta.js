@@ -588,6 +588,8 @@ export default {
     openImport: 'Open the CSV import dialog (`importCsv: true`).',
     openColumnManager:
       'Open the column manager: show, hide, reorder and pin columns, or reset them to the default view.',
+    openFilter:
+      "Open the filter builder, anchored to the toolbar's Filter button as when it is clicked, for an Edit filter button elsewhere on the page. Accepts `{ key }` to add an empty condition on that column (a filterable column key) and focus it. Needs `toolbar.filter`; without it the method logs a warning and does nothing.",
   },
   properties: {
     type: 'object',

@@ -71,6 +71,33 @@ blocks:
             tb_cause:
               _event: cause
 
+  # The openFilter method, from buttons outside the toolbar.
+  - id: tb_open_filter
+    type: Button
+    properties:
+      title: Edit filter
+    events:
+      onClick:
+        - id: call_open_filter
+          type: CallMethod
+          params:
+            blockId: tb
+            method: openFilter
+
+  - id: tb_open_filter_city
+    type: Button
+    properties:
+      title: Filter by city
+    events:
+      onClick:
+        - id: call_open_filter_city
+          type: CallMethod
+          params:
+            blockId: tb
+            method: openFilter
+            args:
+              - key: city
+
   - id: tb_value
     type: Span
     properties:
