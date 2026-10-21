@@ -405,6 +405,18 @@ test('name', async () => {
 
 PRs target `develop` branch.
 
+## The 6.x Maintenance Line (`v6` branch)
+
+This branch is the 6.x maintenance line. Lowdefy 7.x releases from `main` under the npm dist-tag `latest`; 6.x patches release from `v6` under the dist-tag `v6`. Each branch runs its own copy of the release setup, so these files deliberately differ between `v6` and `main`/`develop`:
+
+- `.github/workflows/release.yaml` runs on pushes to `v6`, titles its version PR "Publish new 6.x release", and creates GitHub releases with `--latest=false`.
+- `package.json` `release:publish` is `changeset publish --tag v6`.
+- `.changeset/config.json` `baseBranch` is `v6`.
+
+**Never merge `v6` into `develop` or `main`** — it would carry these files over and point 7.x releases at `v6`. **Never merge `main` or `develop` into `v6`** — it would undo them, and the next 6.x publish would take `latest` away from 7.x. Backport by cherry-picking or re-applying the change on a branch from `v6`, and open the PR against `v6`.
+
+To release 6.x: merge PRs with changesets into `v6`, then merge the "Publish new 6.x release" PR the workflow opens. Check afterwards with `npm view lowdefy dist-tags`: `latest` must still be 7.x.
+
 ## @lowdefy/helpers Usage
 
 **These utilities are core to the codebase. Use them consistently instead of native alternatives.**
