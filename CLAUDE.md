@@ -411,6 +411,8 @@ test('name', async () => {
 
 PRs target `develop` branch.
 
+**`v6` is a separate release line. Never merge `v6` into `develop` or `main`.** 7.x releases from `main` under the npm dist-tag `latest`; 6.x patches release from the `v6` branch under the dist-tag `v6`. `v6` carries its own `.github/workflows/release.yaml`, `release:publish` script and `.changeset/config.json` `baseBranch`, and a merge would carry them over and point 7.x releases at `v6`. To backport a change to 6.x, cherry-pick or re-apply it on a branch from `v6` and open the PR against `v6`.
+
 ## @lowdefy/helpers Usage
 
 **These utilities are core to the codebase. Use them consistently instead of native alternatives.**
