@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import getErrorBarColor from './getErrorBarColor.js';
+import { expect, test } from 'vitest';
 
 test('getErrorBarColor returns red when any entry is not a warning', () => {
   expect(

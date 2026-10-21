@@ -18,19 +18,19 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import withBrowserSlot from './withBrowserSlot.js';
 
 function fakeAcquire() {
-  const release = jest.fn();
-  const acquire = jest.fn(async () => ({ release }));
+  const release = vi.fn();
+  const acquire = vi.fn(async () => ({ release }));
   return { acquire, release };
 }
 
 test('withBrowserSlot runs the operation in a browser slot and releases it after', async () => {
   const { acquire, release } = fakeAcquire();
-  const task = jest.fn(async () => {
+  const task = vi.fn(async () => {
     expect(release).not.toHaveBeenCalled();
     return { data: 'png' };
   });
@@ -52,7 +52,7 @@ test('withBrowserSlot answers a slot wait that outlasts its limit as the operati
   const acquire = async () => {
     throw new Error('All 3 browser slots on this machine stayed busy for 5 minutes. Try again.');
   };
-  const task = jest.fn();
+  const task = vi.fn();
   await expect(withBrowserSlot({ task, acquire })).resolves.toEqual({
     error: 'All 3 browser slots on this machine stayed busy for 5 minutes. Try again.',
   });

@@ -15,6 +15,7 @@
 */
 
 import mergeCollectionIndexes from './mergeCollectionIndexes.js';
+import { expect, test } from 'vitest';
 
 test('mergeCollectionIndexes lets a later index replace an earlier one with the same key', () => {
   expect(

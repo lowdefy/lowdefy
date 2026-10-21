@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { describe, expect } from 'vitest';
 
 // A containing target matches the text a person reads, even when the markup
 // splits it across elements. Run by the real runner over the fixture app's

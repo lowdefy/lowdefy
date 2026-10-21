@@ -13,10 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('child_process', () => ({
-  execFile: jest.fn(),
+vi.doMock('child_process', () => ({
+  execFile: vi.fn(),
 }));
 
 const { execFile } = await import('child_process');

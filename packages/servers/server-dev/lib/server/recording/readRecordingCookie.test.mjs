@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { afterEach, expect, test } from 'vitest';
+
 const { default: readRecordingCookie } = await import('./readRecordingCookie.js');
 const { default: recordingCookiePayload } = await import('./recordingCookiePayload.js');
 const { default: isRecordingEnabled } = await import('./isRecordingEnabled.js');

@@ -15,15 +15,15 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 // A real McpServer with the logging capability rides the real @hono/mcp
 // transport, so the test covers the actual notification path; only the docs
 // tool registrations and the bus subscription are stubbed out.
-const mockSubscribeMcpServerToDevEvents = jest.fn();
-const mockUnsubscribe = jest.fn();
-jest.unstable_mockModule('../../../lib/docs/createDocsMcpServer.js', () => ({
+const mockSubscribeMcpServerToDevEvents = vi.fn();
+const mockUnsubscribe = vi.fn();
+vi.doMock('../../../lib/docs/createDocsMcpServer.js', () => ({
   default: () =>
     new McpServer(
       { name: 'lowdefy-docs-test', version: '1.0.0' },
@@ -31,7 +31,7 @@ jest.unstable_mockModule('../../../lib/docs/createDocsMcpServer.js', () => ({
     ),
   subscribeMcpServerToDevEvents: mockSubscribeMcpServerToDevEvents,
 }));
-jest.unstable_mockModule('../../../lib/docs/devEventBus.js', () => ({
+vi.doMock('../../../lib/docs/devEventBus.js', () => ({
   bootedAt: '2026-05-06T07:08:09.000Z',
 }));
 

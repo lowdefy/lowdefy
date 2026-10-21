@@ -21,7 +21,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import { MongoClient } from 'mongodb';
 
 // Data set journeys end to end: a real Chromium drives journeys through the dev server's own
@@ -35,7 +35,7 @@ import { MongoClient } from 'mongodb';
 // small HTML stand-in for a Lowdefy page (window.lowdefy state, blocks as #bl-<id>), so no client
 // bundle is built. Skipped when no Chromium can be launched.
 
-jest.setTimeout(240000);
+vi.setConfig({ testTimeout: 240000, hookTimeout: 240000 });
 
 const execFileAsync = promisify(execFile);
 
@@ -100,11 +100,11 @@ const pluginModules = {
 };
 pluginFiles.forEach((filePath) => {
   const relative = path.relative(pluginsDirectory, filePath);
-  jest.unstable_mockModule(filePath, () => pluginModules[relative] ?? { default: {} });
+  vi.doMock(filePath, () => pluginModules[relative] ?? { default: {} });
 });
 // The journeys run on a stand-in page, not a built Lowdefy page, so there is no page build to
 // check their step references against; the fixture suite covers the checks.
-jest.unstable_mockModule('../checkStepReferences.js', () => ({
+vi.doMock('../checkStepReferences.js', () => ({
   default: async () => {},
 }));
 

@@ -18,14 +18,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { Hono } from 'hono';
 import { serializer } from '@lowdefy/helpers';
 
 import { endpointFixture, pageFixture } from '../../../lib/server/mutants/test/fixtures.mjs';
 
-const mockBuildPageIfNeeded = jest.fn();
-jest.unstable_mockModule('../../../lib/server/jitPageBuilder.js', () => ({
+const mockBuildPageIfNeeded = vi.fn();
+vi.doMock('../../../lib/server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
 }));
 
@@ -41,7 +41,7 @@ function write(name, content) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockBuildPageIfNeeded.mockResolvedValue(true);
   serverDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-mutants-route-'));
   const page = pageFixture();

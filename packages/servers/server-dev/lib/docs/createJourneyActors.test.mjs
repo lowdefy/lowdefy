@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockOpenPage = jest.fn();
-jest.unstable_mockModule('./getBrowser.js', () => ({ openPage: mockOpenPage }));
+const mockOpenPage = vi.fn();
+vi.doMock('./getBrowser.js', () => ({ openPage: mockOpenPage }));
 
 const { default: createJourneyActors } = await import('./createJourneyActors.js');
 
 beforeEach(() => {
   mockOpenPage.mockReset();
   mockOpenPage.mockImplementation(async ({ user }) => ({
-    context: { close: jest.fn(async () => {}) },
+    context: { close: vi.fn(async () => {}) },
     page: {},
     user,
   }));

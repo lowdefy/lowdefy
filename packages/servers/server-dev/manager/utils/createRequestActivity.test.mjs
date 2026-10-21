@@ -16,20 +16,37 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createRequestActivity from './createRequestActivity.mjs';
 
 beforeEach(() => {
-  jest.useFakeTimers({ now: new Date('2026-10-02T10:00:00.000Z'), doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    now: new Date('2026-10-02T10:00:00.000Z'),
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('createRequestActivity writes the starting activity at once', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   createRequestActivity({ onChange });
   expect(onChange.mock.calls).toEqual([
     [{ lastActivityAt: '2026-10-02T10:00:00.000Z', activeRequests: 0 }],
@@ -37,16 +54,16 @@ test('createRequestActivity writes the starting activity at once', () => {
 });
 
 test('createRequestActivity counts requests in and out of flight', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const activity = createRequestActivity({ onChange });
-  jest.advanceTimersByTime(10000);
+  vi.advanceTimersByTime(10000);
   activity.begin();
   activity.begin();
   activity.end();
-  jest.advanceTimersByTime(5000);
+  vi.advanceTimersByTime(5000);
   expect(onChange.mock.calls.at(-1)[0].activeRequests).toBe(1);
   activity.end();
-  jest.advanceTimersByTime(5000);
+  vi.advanceTimersByTime(5000);
   expect(onChange.mock.calls.at(-1)[0]).toEqual({
     lastActivityAt: '2026-10-02T10:00:15.000Z',
     activeRequests: 0,
@@ -54,9 +71,9 @@ test('createRequestActivity counts requests in and out of flight', () => {
 });
 
 test('createRequestActivity writes a request starting on an idle record at once', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const activity = createRequestActivity({ onChange });
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   activity.begin();
   expect(onChange).toHaveBeenCalledTimes(2);
   expect(onChange.mock.calls[1][0]).toEqual({
@@ -66,10 +83,10 @@ test('createRequestActivity writes a request starting on an idle record at once'
 });
 
 test('createRequestActivity writes the end of the last request at once when the record is older than the throttle', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const activity = createRequestActivity({ onChange });
   activity.begin();
-  jest.advanceTimersByTime(60000);
+  vi.advanceTimersByTime(60000);
   activity.end();
   expect(onChange.mock.calls.at(-1)[0]).toEqual({
     lastActivityAt: '2026-10-02T10:01:00.000Z',
@@ -78,16 +95,16 @@ test('createRequestActivity writes the end of the last request at once when the 
 });
 
 test('createRequestActivity bounds the writes for a burst of short requests and lands the final value', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const activity = createRequestActivity({ onChange });
   onChange.mockClear();
   for (let i = 0; i < 100; i += 1) {
     activity.begin();
-    jest.advanceTimersByTime(20);
+    vi.advanceTimersByTime(20);
     activity.end();
-    jest.advanceTimersByTime(20);
+    vi.advanceTimersByTime(20);
   }
-  jest.advanceTimersByTime(5000);
+  vi.advanceTimersByTime(5000);
   expect(onChange.mock.calls.length).toBeLessThanOrEqual(3);
   expect(onChange.mock.calls.at(-1)[0]).toEqual({
     lastActivityAt: new Date(Date.parse('2026-10-02T10:00:00.000Z') + 3980).toISOString(),
@@ -96,25 +113,25 @@ test('createRequestActivity bounds the writes for a burst of short requests and 
 });
 
 test('createRequestActivity touch refreshes lastActivityAt through the throttle', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const activity = createRequestActivity({ onChange });
-  jest.advanceTimersByTime(2000);
+  vi.advanceTimersByTime(2000);
   activity.touch();
   expect(onChange).toHaveBeenCalledTimes(1);
-  jest.advanceTimersByTime(3000);
+  vi.advanceTimersByTime(3000);
   expect(onChange).toHaveBeenCalledTimes(2);
   expect(onChange.mock.calls[1][0].lastActivityAt).toBe('2026-10-02T10:00:02.000Z');
 });
 
 test('createRequestActivity trackResponse ends a request once, on finish or close', () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const activity = createRequestActivity({ onChange });
   const res = new EventEmitter();
   activity.trackResponse(res);
   expect(onChange.mock.calls.at(-1)[0].activeRequests).toBe(1);
   res.emit('finish');
   res.emit('close');
-  jest.advanceTimersByTime(5000);
+  vi.advanceTimersByTime(5000);
   expect(onChange.mock.calls.at(-1)[0].activeRequests).toBe(0);
   activity.begin();
   expect(onChange.mock.calls.at(-1)[0].activeRequests).toBe(1);

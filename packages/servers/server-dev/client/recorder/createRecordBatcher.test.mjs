@@ -14,20 +14,36 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createRecordBatcher from './createRecordBatcher.js';
 
 beforeEach(() => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('createRecordBatcher sends at 20 records', () => {
-  const send = jest.fn();
+  const send = vi.fn();
   const batcher = createRecordBatcher({ send });
   for (let index = 0; index < 19; index += 1) batcher.add({ index });
   expect(send).not.toHaveBeenCalled();
@@ -37,20 +53,20 @@ test('createRecordBatcher sends at 20 records', () => {
 });
 
 test('createRecordBatcher sends 5 s after the first record of a batch', () => {
-  const send = jest.fn();
+  const send = vi.fn();
   const batcher = createRecordBatcher({ send });
   batcher.add({ index: 0 });
-  jest.advanceTimersByTime(4000);
+  vi.advanceTimersByTime(4000);
   batcher.add({ index: 1 });
-  jest.advanceTimersByTime(999);
+  vi.advanceTimersByTime(999);
   expect(send).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   expect(send).toHaveBeenCalledWith([{ index: 0 }, { index: 1 }]);
 });
 
 test('createRecordBatcher flush resolves when the send settles, and swallows a failed send', async () => {
   let settle;
-  const send = jest.fn(
+  const send = vi.fn(
     () =>
       new Promise((resolve, reject) => {
         settle = reject;
@@ -70,7 +86,7 @@ test('createRecordBatcher flush resolves when the send settles, and swallows a f
 });
 
 test('createRecordBatcher flush with nothing batched sends nothing', async () => {
-  const send = jest.fn();
+  const send = vi.fn();
   await createRecordBatcher({ send }).flush();
   expect(send).not.toHaveBeenCalled();
 });

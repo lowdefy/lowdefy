@@ -21,7 +21,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import buildPageIfNeeded, {
   buildPageWithContext,
@@ -32,7 +32,7 @@ import buildPageIfNeeded, {
 } from './jitPageBuilder.js';
 
 // A JIT page build loads the build package's plugins on first use.
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000, hookTimeout: 30000 });
 
 function writeFile(filePath, content) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -498,7 +498,7 @@ test('warnings are logged to the terminal again after an edit', async () => {
     pages: { warns: { refPath: 'pages/warns.yaml' } },
   });
   const context = app.context();
-  const warn = jest.spyOn(context.logger, 'warn').mockImplementation(() => {});
+  const warn = vi.spyOn(context.logger, 'warn').mockImplementation(() => {});
   const loggedWarnings = () =>
     warn.mock.calls.filter(([warning]) => warning?.message?.includes('propertys')).length;
 

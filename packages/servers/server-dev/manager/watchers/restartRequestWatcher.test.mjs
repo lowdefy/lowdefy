@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import waitFor from '../../test-utils/waitFor.mjs';
@@ -25,7 +25,7 @@ import waitFor from '../../test-utils/waitFor.mjs';
 const { default: restartRequestWatcher } = await import('./restartRequestWatcher.mjs');
 
 // macOS can hold file events back for tens of seconds on a busy machine.
-jest.setTimeout(180000);
+vi.setConfig({ testTimeout: 180000, hookTimeout: 180000 });
 
 let fixtureDir;
 let context;
@@ -37,10 +37,10 @@ beforeEach(async () => {
   await flushFsEvents();
   context = {
     directories: { build: path.join(fixtureDir, 'build') },
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
-    buildActivity: { setBusy: jest.fn() },
-    lowdefyBuild: jest.fn(async () => {}),
-    syncServer: jest.fn(async () => {}),
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    buildActivity: { setBusy: vi.fn() },
+    lowdefyBuild: vi.fn(async () => {}),
+    syncServer: vi.fn(async () => {}),
   };
 });
 

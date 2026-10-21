@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
 // Browser operations take machine-wide slots under LOWDEFY_HOME. Tests take
 // theirs in a home of their own, never beside the developer's dev servers.

@@ -22,6 +22,7 @@ import { callRequest } from '@lowdefy/api';
 import createReadConfigFile from '@lowdefy/api/context/createReadConfigFile.js';
 
 import applyDataSetRedirect from './applyDataSetRedirect.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // A walled-client plugin under auth.organizations.policy: tenant, served inside a data session and
 // outside one, in both orders. The unwalled-reach verdict is memoised per process and read from the

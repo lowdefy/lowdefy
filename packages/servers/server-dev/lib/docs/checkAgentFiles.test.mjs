@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import checkAgentFiles from './checkAgentFiles.js';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 let root;
 

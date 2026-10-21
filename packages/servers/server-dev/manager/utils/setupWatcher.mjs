@@ -17,11 +17,14 @@
 import path from 'path';
 
 import chokidar from 'chokidar';
+import { type } from '@lowdefy/helpers';
+
 import BatchChanges from './BatchChanges.mjs';
 import createDotPathIgnore from './createDotPathIgnore.mjs';
+import createGlobIgnore from './createGlobIgnore.mjs';
 
 // chokidar hands ignore functions a path with forward slashes on every platform
-// (anymatch normalizes it), while watch paths and the directories they are
+// (its matcher normalizes it), while watch paths and the directories they are
 // compared with use the platform separator. Ignore functions get the platform
 // form, so a comparison with a watch path holds on Windows too.
 function withNativePath(ignore) {
@@ -42,9 +45,14 @@ function setupWatcher({
 }) {
   return new Promise((resolve) => {
     const batchChanges = new BatchChanges({ context, fn: callback, delay, onBusy });
-    const defaultIgnorePaths = watchDotfiles ? [] : [createDotPathIgnore({ watchPaths })];
+    const ignored = watchDotfiles ? [] : [createDotPathIgnore({ watchPaths })];
+    ignored.push(...ignorePaths.filter((ignore) => !type.isString(ignore)));
+    const globIgnores = ignorePaths.filter((ignore) => type.isString(ignore));
+    if (globIgnores.length > 0) {
+      ignored.push(createGlobIgnore(globIgnores));
+    }
     const configWatcher = chokidar.watch(watchPaths, {
-      ignored: [...defaultIgnorePaths, ...ignorePaths].map(withNativePath),
+      ignored: ignored.map(withNativePath),
       persistent: true,
       ignoreInitial: true,
     });

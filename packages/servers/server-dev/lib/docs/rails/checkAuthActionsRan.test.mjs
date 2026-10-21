@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import checkAuthActionsRan, { armAuthActionRecorder } from './checkAuthActionsRan.js';
 import authEngineMethods from './authEngineMethods.js';
@@ -46,10 +46,10 @@ async function callAuth(window, method, ...args) {
 function createWindow() {
   const store = new Map();
   const auth = {
-    login: jest.fn(async () => 'logged in'),
-    setActiveOrganization: jest.fn(async () => 'switched'),
-    updateSession: jest.fn(async () => 'synced'),
-    notAuthEngine: jest.fn(),
+    login: vi.fn(async () => 'logged in'),
+    setActiveOrganization: vi.fn(async () => 'switched'),
+    updateSession: vi.fn(async () => 'synced'),
+    notAuthEngine: vi.fn(),
   };
   return {
     auth,

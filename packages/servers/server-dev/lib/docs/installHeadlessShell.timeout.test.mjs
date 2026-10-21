@@ -16,11 +16,11 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockSpawn = jest.fn();
-const mockSpawnSync = jest.fn();
-jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn, spawnSync: mockSpawnSync }));
+const mockSpawn = vi.fn();
+const mockSpawnSync = vi.fn();
+vi.doMock('child_process', () => ({ spawn: mockSpawn, spawnSync: mockSpawnSync }));
 
 // A file of its own: installHeadlessShell keeps its one install per process
 // in module state.
@@ -28,21 +28,37 @@ const { default: installHeadlessShell } = await import('./installHeadlessShell.j
 
 test('installHeadlessShell kills an install that has not finished within 3 minutes and gives up', async () => {
   // performance is not redefinable on this Node, and nothing here reads it.
-  jest.useFakeTimers({ doNotFake: ['performance'] });
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  jest.spyOn(console, 'info').mockImplementation(() => {});
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  vi.spyOn(console, 'info').mockImplementation(() => {});
   try {
     const installer = Object.assign(new EventEmitter(), {
       pid: 4242,
       stderr: new EventEmitter(),
-      kill: jest.fn(),
+      kill: vi.fn(),
     });
     mockSpawn.mockReturnValue(installer);
 
     const install = installHeadlessShell();
-    jest.advanceTimersByTime(3 * 60 * 1000 - 1);
+    vi.advanceTimersByTime(3 * 60 * 1000 - 1);
     expect(installer.kill).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(1);
+    vi.advanceTimersByTime(1);
 
     const result = await install;
     expect(result.installed).toBe(false);
@@ -66,7 +82,7 @@ test('installHeadlessShell kills an install that has not finished within 3 minut
     expect(installHeadlessShell()).toBe(install);
     expect(mockSpawn).toHaveBeenCalledTimes(1);
   } finally {
-    jest.useRealTimers();
-    jest.restoreAllMocks();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   }
 });

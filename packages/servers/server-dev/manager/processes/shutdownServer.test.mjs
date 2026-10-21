@@ -16,7 +16,7 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import shutdownServer from './shutdownServer.mjs';
 
@@ -25,9 +25,9 @@ test('shutdownServer records when the stopped child has exited, for the proxy to
     exitCode: null,
     signalCode: null,
     killed: false,
-    kill: jest.fn(),
+    kill: vi.fn(),
   });
-  const context = { devServer: child, logger: { debug: jest.fn(), info: jest.fn() } };
+  const context = { devServer: child, logger: { debug: vi.fn(), info: vi.fn() } };
 
   shutdownServer(context)();
 

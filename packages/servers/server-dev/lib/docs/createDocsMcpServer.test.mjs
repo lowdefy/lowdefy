@@ -22,7 +22,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/types.js';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import setupTestFixtures from './setupTestFixtures.mjs';
 
@@ -33,14 +33,14 @@ process.chdir(fixtureDir);
 
 // runJourney needs a browser; mocked so the tool's result shaping (JSON text
 // followed by image blocks) can be asserted without one.
-const mockRunJourney = jest.fn();
-jest.unstable_mockModule('./runJourney.js', () => ({
+const mockRunJourney = vi.fn();
+vi.doMock('./runJourney.js', () => ({
   default: mockRunJourney,
-  runSteps: jest.fn(),
+  runSteps: vi.fn(),
   MAIN_ACTOR: 'main',
 }));
-const mockScreenshotPage = jest.fn();
-jest.unstable_mockModule('./screenshotPage.js', () => ({ default: mockScreenshotPage }));
+const mockScreenshotPage = vi.fn();
+vi.doMock('./screenshotPage.js', () => ({ default: mockScreenshotPage }));
 
 const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
   './createDocsMcpServer.js'

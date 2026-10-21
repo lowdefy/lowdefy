@@ -18,7 +18,7 @@ import fs from 'fs';
 import fsPromises from 'fs/promises';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import publishBuildDirectory from './publishBuildDirectory.mjs';
 
@@ -26,7 +26,7 @@ import publishBuildDirectory from './publishBuildDirectory.mjs';
 // each while a poller runs on every loop turn, and the locked-rename test waits
 // out the full 3.3 s retry schedule. On a loaded machine they pass jest's 5 s
 // default, and a timed-out poller then fails the next test.
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000, hookTimeout: 30000 });
 
 let root;
 let buildDirectory;
@@ -50,7 +50,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   fs.rmSync(root, { recursive: true, force: true });
 });
 
@@ -185,8 +185,7 @@ test('publishBuildDirectory keeps the control files the manager and dev tools wr
 test('publishBuildDirectory retries a rename while another process holds the file', async () => {
   write(buildDirectory, 'app.json', 'old');
   write(stagingDirectory, 'app.json', 'new');
-  jest
-    .spyOn(fsPromises, 'rename')
+  vi.spyOn(fsPromises, 'rename')
     .mockRejectedValueOnce(lockedError('EPERM'))
     .mockRejectedValueOnce(lockedError('EBUSY'));
 
@@ -198,7 +197,7 @@ test('publishBuildDirectory retries a rename while another process holds the fil
 
 test('publishBuildDirectory fails with the rename error when a file stays locked', async () => {
   write(stagingDirectory, 'app.json', 'new');
-  const rename = jest.spyOn(fsPromises, 'rename').mockRejectedValue(lockedError('EPERM'));
+  const rename = vi.spyOn(fsPromises, 'rename').mockRejectedValue(lockedError('EPERM'));
 
   await expect(publishBuildDirectory({ buildDirectory, stagingDirectory })).rejects.toThrow(
     'EPERM: resource busy or locked, rename'

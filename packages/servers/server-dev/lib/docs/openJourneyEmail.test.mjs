@@ -18,7 +18,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
@@ -55,12 +55,12 @@ function writeMessage({ id, to, subject, secondsAfterStart = 1, html, text = nul
 function createPage({ onWait = () => {} } = {}) {
   const page = {
     opened: [],
-    goto: jest.fn(async (url) => {
+    goto: vi.fn(async (url) => {
       const base64 = url.slice('data:text/html;charset=utf-8;base64,'.length);
       page.opened.push(Buffer.from(base64, 'base64').toString());
     }),
-    evaluate: jest.fn(async () => {}),
-    waitForTimeout: jest.fn(async () => onWait()),
+    evaluate: vi.fn(async () => {}),
+    waitForTimeout: vi.fn(async () => onWait()),
   };
   return page;
 }
@@ -96,8 +96,8 @@ test.each([
     `<a href="http://localhost/${expectedId}" target="_blank">Open ${expectedId}</a>`,
   ]);
   // Links open where the email is, since each actor drives one tab.
-  const link = { removeAttribute: jest.fn() };
-  global.document = { querySelectorAll: jest.fn(() => [link]) };
+  const link = { removeAttribute: vi.fn() };
+  global.document = { querySelectorAll: vi.fn(() => [link]) };
   await page.evaluate.mock.calls[0][0]();
   delete global.document;
   expect(link.removeAttribute).toHaveBeenCalledWith('target');
