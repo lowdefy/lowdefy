@@ -16,12 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { operatorsServer } from '@lowdefy/operators-js';
-import {
-  ConfigError,
-  RequestError,
-  ServiceError,
-  UserError,
-} from '@lowdefy/errors';
+import { ConfigError, RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import callRequestResolver from './callRequestResolver.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -151,8 +146,7 @@ test('callApi works with module endpoint id (slash in id)', async () => {
 
 test('callApi throws ConfigError when endpoint is missing', async () => {
   const context = createTestContext();
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'missing', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'missing', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -174,8 +168,7 @@ test('callApi throws UserError on :throw in target routine', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -197,8 +190,7 @@ test('callApi throws UserError on :reject in target routine', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -220,8 +212,7 @@ test('depth cap throws ConfigError at depth >= 10', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -267,8 +258,7 @@ test('debug events emitted on success: start and end', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await callRequestResolver(context, {
     connectionProperties: {},
     endpointDepth: 0,
@@ -310,8 +300,7 @@ test('debug end event NOT emitted when callApi throws', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await callRequestResolver(context, {
     connectionProperties: {},
     endpointDepth: 0,
@@ -441,7 +430,11 @@ test('raw service-shaped error is wrapped into ServiceError', async () => {
     caught = e;
   }
   expect(caught).toBeInstanceOf(ServiceError);
-  expect(caught.cause).toBe(rawServiceErr);
+  expect(caught.message).toBe(
+    'conn1: Connection timed out. The service may be slow or unreachable. timeout'
+  );
+  expect(caught.cause).not.toBe(rawServiceErr);
+  expect(caught.cause).toMatchObject({ name: 'Error', message: 'timeout', code: 'ETIMEDOUT' });
 });
 
 test('configKey attached when missing', async () => {
@@ -462,4 +455,90 @@ test('configKey attached when missing', async () => {
     caught = e;
   }
   expect(caught.configKey).toBe('request_key');
+});
+
+async function catchError(requestResolver, { context = createTestContext(), config } = {}) {
+  try {
+    await callRequestResolver(context, {
+      connectionProperties: {},
+      endpointDepth: 0,
+      requestConfig: config ?? requestConfig,
+      requestProperties: { message: 'My ID is 8001015009087' },
+      requestResolver,
+    });
+  } catch (e) {
+    return e;
+  }
+  throw new Error('Expected the resolver to fail.');
+}
+
+test('a failed request carries its ids, not its properties', async () => {
+  const caught = await catchError(async () => {
+    throw new Error('raw');
+  });
+  expect(caught.received).toBeUndefined();
+  expect(caught.endpointId).toBe('caller_endpoint');
+  expect(caught.requestId).toBe('req1');
+  expect(caught.connectionId).toBe('conn1');
+});
+
+test('an endpoint step names the endpoint it belongs to', async () => {
+  const caught = await catchError(
+    async () => {
+      throw new Error('raw');
+    },
+    {
+      config: {
+        '~k': 'step_key',
+        id: 'request:save_thread_endpoint:save',
+        stepId: 'save',
+        endpointId: 'save_thread_endpoint',
+        connectionId: 'conn1',
+        type: 'TestRequest',
+      },
+    }
+  );
+  expect(caught.message).toBe('raw at conn1/save.');
+  expect(caught.endpointId).toBe('save_thread_endpoint');
+  expect(caught.requestId).toBe('save');
+});
+
+test("a connection's error is kept as its name, code, status and message, not its other fields", async () => {
+  const caught = await catchError(async ({ request }) => {
+    const error = new Error('E11000 duplicate key error', {
+      cause: Object.assign(new Error('write concern'), { status: 409, op: request }),
+    });
+    error.name = 'MongoServerError';
+    error.code = 11000;
+    error.errInfo = { document: request };
+    throw error;
+  });
+  expect(caught).toBeInstanceOf(RequestError);
+  expect(caught.code).toBe(11000);
+  expect(caught.cause.name).toBe('MongoServerError');
+  expect(caught.cause.message).toBe('E11000 duplicate key error');
+  expect(caught.cause.stack).toMatch(/^MongoServerError: E11000 duplicate key error\n\s+at /);
+  expect(caught.cause.errInfo).toBeUndefined();
+  expect(caught.cause.cause).toMatchObject({
+    name: 'Error',
+    message: 'write concern',
+    statusCode: 409,
+  });
+  expect(caught.cause.cause.op).toBeUndefined();
+});
+
+test("a connection's error message is cut to 500 characters", async () => {
+  const caught = await catchError(async () => {
+    throw new Error('x'.repeat(600));
+  });
+  expect(caught.cause.message).toBe(`${'x'.repeat(499)}…`);
+  expect(caught.message).toBe(`${'x'.repeat(499)}… at conn1/req1.`);
+});
+
+test('a value thrown that is not an error is named by its type', async () => {
+  const caught = await catchError(async () => {
+    throw 'My ID is 8001015009087';
+  });
+  expect(caught).toBeInstanceOf(RequestError);
+  expect(caught.message).toBe('Request resolver threw a string. at conn1/req1.');
 });

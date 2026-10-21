@@ -18,6 +18,7 @@ import { RequestError, ServiceError } from '@lowdefy/errors';
 
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import summarisedError from './summarisedError.js';
 
 async function callRequestResolver(
   context,
@@ -74,14 +75,15 @@ async function callRequestResolver(
     });
     return response;
   } catch (error) {
-    // Add configKey to any error for location tracing
-    if (!error.configKey) {
+    // Add configKey to any error for location tracing. A thrown string or null takes no
+    // property, and the TypeError assigning one raises would quote the string.
+    if (error instanceof Object && !error.configKey) {
       error.configKey = requestConfig['~k'];
     }
 
     // Lowdefy errors pass through unchanged — re-wrapping every boundary would
     // nest causes and truncate the deepest (most informative) frame.
-    if (error.isLowdefyError) {
+    if (error?.isLowdefyError) {
       logger.debug(
         { params: { id: stepOrRequestId, type: requestConfig.type }, err: error },
         error.message
@@ -89,13 +91,30 @@ async function callRequestResolver(
       throw error;
     }
 
+    // The error that leaves here is logged whole by the routine, at error level, and sent to
+    // Sentry, so it carries ids and the resolver's error summarised - never the request's
+    // evaluated properties (an agent chat's save-thread step holds the whole thread there) or
+    // the connection's error itself, which can embed the document it rejected. The dev tools
+    // still show that error: it is kept as devCause, which is not enumerable, so no log or error
+    // report walks it, and only the dev error payload reads it.
+    const cause = summarisedError(error);
+    const addFields = (wrapped) => {
+      Object.assign(wrapped, {
+        endpointId: requestConfig.endpointId ?? endpointId,
+        requestId: stepOrRequestId,
+        connectionId: requestConfig.connectionId,
+      });
+      Object.defineProperty(wrapped, 'devCause', { value: error, configurable: true });
+    };
+
     // Check if this is a service error (network, timeout, 5xx)
     if (ServiceError.isServiceError(error)) {
       const serviceError = new ServiceError(undefined, {
-        cause: error,
+        cause,
         service: requestConfig.connectionId,
         configKey: requestConfig['~k'],
       });
+      addFields(serviceError);
       logger.debug(
         { params: { id: stepOrRequestId, type: requestConfig.type }, err: serviceError },
         serviceError.message
@@ -104,13 +123,13 @@ async function callRequestResolver(
     }
 
     // Wrap other errors in RequestError (request/connection logic error)
-    const requestError = new RequestError(error.message, {
-      cause: error,
+    const requestError = new RequestError(cause.message, {
+      cause,
       typeName: requestConfig.type,
-      received: requestProperties,
       location: `${requestConfig.connectionId}/${stepOrRequestId}`,
       configKey: requestConfig['~k'],
     });
+    addFields(requestError);
 
     logger.debug(
       { params: { id: stepOrRequestId, type: requestConfig.type }, err: requestError },

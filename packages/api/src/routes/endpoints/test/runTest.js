@@ -57,10 +57,20 @@ const mockTestRequestError = jest.fn((request) => {
   throw new Error(request.request.message);
 });
 const mockTestRequestWait = jest.fn((request) => wait(request.request.ms));
+// Fails as a MongoDB write fails schema validation: the driver's error carries the document it
+// rejected.
+const mockTestRequestRejectDocument = jest.fn((request) => {
+  const error = new Error('Document failed validation');
+  error.name = 'MongoServerError';
+  error.code = 121;
+  error.errInfo = { details: { document: request.request.document } };
+  throw error;
+});
 
 mockTestRequest.schema = {};
 mockTestRequestError.schema = {};
 mockTestRequestWait.schema = {};
+mockTestRequestRejectDocument.schema = {};
 
 mockTestRequest.meta = {
   checkRead: false,
@@ -74,6 +84,10 @@ mockTestRequestWait.meta = {
   checkRead: false,
   checkWrite: false,
 };
+mockTestRequestRejectDocument.meta = {
+  checkRead: false,
+  checkWrite: false,
+};
 
 const connections = {
   TestConnection: {
@@ -82,6 +96,7 @@ const connections = {
       TestRequest: mockTestRequest,
       TestRequestError: mockTestRequestError,
       TestRequestWait: mockTestRequestWait,
+      TestRequestRejectDocument: mockTestRequestRejectDocument,
     },
   },
 };
