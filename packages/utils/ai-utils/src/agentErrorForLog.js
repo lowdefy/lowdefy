@@ -14,16 +14,14 @@
   limitations under the License.
 */
 
-// What an agent log may say about an error. Chat text can hold personal information, and
-// logs have their own retention and access, so no log carries messages, prompts, tool inputs
-// or tool outputs. An error carries them where a plain `{ err }` log would write them: a
-// TypeValidationError's or JSONParseError's message embeds the value it rejected (the whole
-// conversation, a tool's input), InvalidToolInputError, ToolCallRepairError and RetryError
-// repeat their cause's message, and every stack opens with its message. So an AI SDK error is
-// logged by name and code alone, except APICallError, whose message is the provider's reply;
-// any other error keeps its message, cut to 500 characters. Causes are followed the same way.
+import { errorSummaryForLog } from '@lowdefy/errors';
 
-const MESSAGE_LIMIT = 500;
+// What an agent log may say about an error: the summary every Lowdefy log of an error uses (its
+// name, code, status code and message cut to 500 characters, with an AI SDK error's message left
+// out but for an APICallError's, and the same for three causes). Chat text can hold personal
+// information, so no agent log carries messages, prompts, tool inputs or tool outputs.
+const agentErrorForLog = errorSummaryForLog;
+
 const CAUSE_DEPTH = 3;
 
 // AISDKError.isInstance reads this marker; the error classes themselves are not imported so
@@ -32,29 +30,6 @@ const aiSdkErrorMarker = Symbol.for('vercel.ai.error');
 
 function isAiSdkError(error) {
   return error[aiSdkErrorMarker] === true;
-}
-
-function truncate(text) {
-  if (text.length <= MESSAGE_LIMIT) return text;
-  return `${text.slice(0, MESSAGE_LIMIT - 1)}…`;
-}
-
-function agentErrorForLog(error, depth = 0) {
-  if (!(error instanceof Error)) {
-    return { name: typeof error };
-  }
-  const summary = { name: error.name };
-  if (!isAiSdkError(error) || error.name === 'AI_APICallError') {
-    summary.message = truncate(String(error.message));
-  }
-  if (error.code !== undefined) summary.code = error.code;
-  if (error.statusCode !== undefined) summary.statusCode = error.statusCode;
-  // A RetryError holds the attempt that failed last as lastError rather than as its cause.
-  const cause = error.lastError ?? error.cause;
-  if (cause !== undefined && depth < CAUSE_DEPTH) {
-    summary.cause = agentErrorForLog(cause, depth + 1);
-  }
-  return summary;
 }
 
 function carriesAiSdkError(error, depth = 0) {
