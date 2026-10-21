@@ -1,4 +1,18 @@
-name: Release
+# Named for its release line, so the Actions list tells it apart from the 6.x line's Release on
+# the v6 branch. Keep the file name: npm's trusted publisher for every package names release.yaml.
+name: Release 7.x
+# Says what the push was. Whether it publishes is decided by the mode job below, and the report
+# job comments the outcome on the release pull request.
+run-name: >-
+  ${{
+  (github.event_name == 'workflow_dispatch' && 'Release 7.x: run by hand') ||
+  ((contains(github.event.head_commit.message, 'from lowdefy/changeset-release/main') ||
+  startsWith(github.event.head_commit.message, 'Publish new release')) &&
+  'Publish 7.x (release pull request merged)') ||
+  (contains(github.event.head_commit.message, 'from lowdefy/develop') &&
+  'Release 7.x: develop merged into main') ||
+  'Release 7.x: other push to main'
+  }}
 on:
   push:
     branches:
@@ -65,6 +79,7 @@ jobs:
       - run: pnpm i --frozen-lockfile
 
       - name: Create Release Pull Request
+        id: changesets
         uses: changesets/action@v1
         with:
           version: pnpm release:version
@@ -73,6 +88,12 @@ jobs:
           title: 'Publish new release'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        if: steps.changesets.outputs.pullRequestNumber
+        run: |
+          echo "Nothing was published. This push opened or updated the release pull request:" >> "$GITHUB_STEP_SUMMARY"
+          echo "${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.changesets.outputs.pullRequestNumber }}" >> "$GITHUB_STEP_SUMMARY"
 
   # The complete path (test-complete.yml): the full OS and Node matrix and the slow
   # suites. Runs only on a publish push; the Release PR from develop into main runs it
@@ -152,3 +173,28 @@ jobs:
               --target ${{ github.sha }} \
               --notes-file /tmp/release-notes.md
           fi
+
+  # Whatever happened to the tests and the publish, say so on the merged release pull request
+  # and in the run summary, so nobody has to read the jobs to know whether the release went out.
+  report:
+    name: Report
+    needs: [mode, test, publish]
+    if: always() && needs.mode.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            scripts
+            packages/cli
+      - run: node scripts/report-release.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIST_TAG: latest
+          RELEASE_BRANCH: changeset-release/main
+          TEST_RESULT: ${{ needs.test.result }}
+          PUBLISH_RESULT: ${{ needs.publish.result }}
