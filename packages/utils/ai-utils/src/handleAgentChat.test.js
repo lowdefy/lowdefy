@@ -89,7 +89,14 @@ const mockConvertToModelMessages = jest.fn().mockResolvedValue([]);
 const mockPruneMessages = jest.fn().mockReturnValue([]);
 const mockValidateUIMessages = jest.fn().mockResolvedValue([]);
 
+// Carries the AI SDK's error marker and name, as the real TypeValidationError does.
 class MockTypeValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'AI_TypeValidationError';
+    this[Symbol.for('vercel.ai.error')] = true;
+  }
+
   static isInstance(error) {
     return error instanceof MockTypeValidationError;
   }
@@ -2430,30 +2437,42 @@ test('messages without parts are dropped before the agent runs', async () => {
 test('a validation failure is logged and written to the stream as an error, not thrown', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
-  const validationError = new MockTypeValidationError('Type validation failed: Value: [...]');
+  const chatText = 'My ID number is 8001015009087';
+  const messages = [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: chatText }] }];
+  const validationError = new MockTypeValidationError(
+    `Type validation failed: Value: ${JSON.stringify(messages)}.`
+  );
+  validationError.value = messages;
   mockCreateAgentUIStream.mockRejectedValueOnce(validationError);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: [], properties: { model: 'gpt-4o' } },
-      messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+      agent: { agentId: 'support', tools: [], properties: { model: 'gpt-4o' } },
+      messages,
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: {
+      agentContext: { conversationId: 'conv-1' },
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+    },
   });
 
-  const writer = { write: jest.fn(), onError: (error) => `redacted: ${error.message}` };
+  const writer = { write: jest.fn(), onError: () => 'Something went wrong.' };
   await expect(mockCreateUIMessageStream._lastExecute({ writer })).resolves.toBeUndefined();
 
-  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Agent stream failed'));
-  expect(writer.write).toHaveBeenCalledWith({
-    type: 'error',
-    errorText: 'redacted: Type validation failed: Value: [...]',
-  });
-  consoleSpy.mockRestore();
+  expect(errorSpy).toHaveBeenCalledWith(
+    'Agent stream failed: {"agentId":"support","conversationId":"conv-1","stepCount":0,"error":{"name":"AI_TypeValidationError"}}'
+  );
+  const logged = JSON.stringify([...errorSpy.mock.calls, ...warnSpy.mock.calls]);
+  expect(logged).not.toContain('8001015009087');
+  expect(writer.write).toHaveBeenCalledWith({ type: 'error', errorText: 'Something went wrong.' });
+  errorSpy.mockRestore();
+  warnSpy.mockRestore();
 });
 
 // Stands in for the wire policy prepareAgent builds from @lowdefy/api's

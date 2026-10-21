@@ -22,9 +22,10 @@ async function controlReturn(context, routineContext, { control }) {
     location: control['~k'] ?? ':return',
   });
 
+  // No evaluated values: they can carry chat text or other personal information,
+  // which no log level may hold.
   context.logger.debug({
     event: 'debug_control_return',
-    response,
   });
   return {
     status: 'return',

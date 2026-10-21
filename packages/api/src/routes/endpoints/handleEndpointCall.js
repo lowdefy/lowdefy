@@ -100,7 +100,6 @@ async function handleEndpointCall(context, routineContext, { step }) {
     event: 'debug_end_endpoint_call',
     stepId: step.stepId,
     targetEndpointId: evaluatedProperties.endpointId,
-    response,
   });
 
   return { status: 'continue' };

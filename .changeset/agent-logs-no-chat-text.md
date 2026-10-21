@@ -1,0 +1,8 @@
+---
+'@lowdefy/ai-utils': patch
+'@lowdefy/api': patch
+---
+
+fix(ai-utils, api): Agent and endpoint logs leave chat text out
+
+Agent and endpoint logs no longer write chat text, prompts, tool inputs or tool outputs. An agent error is logged as a summary: its name, code, status code and message (cut to 500 characters), the same for up to three causes, and the agent id and conversation id. The message of an AI SDK error is left out, apart from an `APICallError`'s, since errors such as `TypeValidationError` embed the conversation or a tool's input. A failed stream also logs its step count. A mid-stream error, which the AI SDK used to write to the console whole, is logged the same way. A `CallAgent` step that fails on an AI SDK error throws a copy with only that summary's name, code and safe message, so the routine's error log cannot write the prompt. The `debug_endpoint` log names an API call by its ids and no longer writes its payload, so an agent chat's save-thread call no longer writes the whole thread there. Routine step debug logs no longer write the values they evaluate: `:set_state` logs the keys it sets, `:if` and `:switch` log whether the condition held, `:for` and `:parallel_for` log the item count and index, and `:return`, a request step's result and a called endpoint's response are left out. A `CallAgent` prompt that is not a string is named by its type in the error. A failed request step still logs its evaluated properties as the error's `received`, as every failed request does.
