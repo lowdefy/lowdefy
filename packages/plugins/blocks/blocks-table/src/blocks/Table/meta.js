@@ -428,8 +428,17 @@ export default {
         view: 'The current view.',
       },
     },
+    onViewMenu: {
+      description:
+        'Trigger when the user picks a `viewMenu` item on a saved view tab, after its confirmation when the item has `confirm`.',
+      event: {
+        key: 'The item key.',
+        id: 'The id of the view the menu belongs to.',
+      },
+    },
     onViewDelete: {
-      description: 'Trigger when the user deletes a saved view from its tab menu.',
+      description:
+        'Trigger when the user deletes a saved view from its tab menu (the default menu, without `viewMenu`).',
       event: {
         id: 'The id of the view to delete.',
       },
@@ -989,9 +998,30 @@ export default {
             shared: { type: 'boolean', description: 'Whether the view is shared.' },
             locked: {
               type: 'boolean',
-              description: 'Hide Save and Delete, so the view is only changed on purpose.',
+              description:
+                'Hide Save and disable the default Delete view, so the view is only changed on purpose. `viewMenu` items stay enabled.',
             },
             count: { type: 'number', description: 'A count shown on the tab (queue tabs).' },
+          },
+        },
+      },
+      viewMenu: {
+        type: 'array',
+        description:
+          "The items of the active view tab's menu, in place of Delete view: for example Rename, Duplicate and Archive. Clicking one fires `onViewMenu` with its `key` and the view `id`. Without it the menu has Delete view, firing `onViewDelete` (disabled on a `locked` view).",
+        items: {
+          type: 'object',
+          required: ['key'],
+          additionalProperties: false,
+          properties: {
+            key: { type: 'string', description: 'The item key `onViewMenu` receives.' },
+            label: { type: 'string', description: 'The item text. Defaults to the key.' },
+            danger: { type: 'boolean', description: 'Show the item in the danger colour.' },
+            confirm: {
+              type: ['boolean', 'string'],
+              description:
+                'Ask before firing: `true` asks "Are you sure?", a string asks that message.',
+            },
           },
         },
       },
