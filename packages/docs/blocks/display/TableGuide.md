@@ -75,6 +75,30 @@ The table shows what it is doing while data loads, the same way in `Table`, `Tab
 | false     | none (`[]`, or `data` null or missing) | **Empty:** "No rows" (`emptyText`), or "No matching rows" with _Clear filters_ when a filter or search is set |
 | false     | rows                                   | **Ready**                                                                                                     |
 
+**Empty states.** With no rows and no filter or search, blocks in the `empty` slot replace "No rows" (else `emptyText`). When a filter or search hides every row, the table says "No matching rows" and offers _Clear filters_; blocks in the `emptyFiltered` slot replace both, for a view whose filter is the point, such as a saved list, where clearing it would throw the list away:
+
+```yaml
+slots:
+  empty:
+    blocks:
+      - id: no_deals
+        type: Paragraph
+        properties:
+          content: No deals yet.
+  emptyFiltered:
+    blocks:
+      - id: no_matching_deals
+        type: Paragraph
+        properties:
+          content: No deals match this view right now.
+      - id: edit_filter
+        type: Button
+        properties:
+          title: Edit filter
+```
+
+The wrapper keeps `data-lf-empty="filtered"` whenever a filter or search hides every row, whichever is shown.
+
 **Wire `loading` to the request.** A request that runs again makes `_request` return `null` until the new response lands (unless the `Request` action sets `holdValue: true`). The table holds its rows while `loading` is true, so a refetch never flashes empty, either way:
 
 ```yaml

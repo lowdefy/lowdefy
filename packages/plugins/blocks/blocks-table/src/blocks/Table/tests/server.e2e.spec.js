@@ -242,6 +242,19 @@ test.describe('Table server mode', () => {
     await expect(cell(page, 'table_server', '2', 'stage')).toHaveText('won');
   });
 
+  test('a filter that matches nothing shows the emptyFiltered slot', async ({ page }) => {
+    const server = await mockServer(page);
+    await openTablePage(page, 'table-server');
+    const empty = getBlock(page, 'table_server_empty').locator('[data-lf-empty]');
+    await expect(empty).toHaveAttribute('data-lf-empty', 'filtered');
+    await expect(empty).toContainText('No deals match this view right now.');
+    await expect(empty.locator('[data-lf-clear-filters]')).toHaveCount(0);
+    expect(server.for('table_server_empty')[0].payload.view.filter).toMatchObject({
+      key: 'stage',
+      value: 'none of these',
+    });
+  });
+
   test('ignores a stale response that lands after a newer view', async ({ page }) => {
     // Ascending answers slowly, descending at once: the ascending rows land last and must not
     // replace the descending ones.

@@ -326,7 +326,10 @@ export default {
     toolbarEnd: 'Blocks at the end of the toolbar, side by side like `toolbarStart`.',
     bulkActions:
       'Blocks in the bulk action bar, shown while rows are selected, side by side at the end of the bar like `toolbarStart`.',
-    empty: 'Blocks shown instead of the empty state when there are no rows.',
+    empty:
+      'Blocks shown instead of the empty state when there are no rows and no filter or search.',
+    emptyFiltered:
+      'Blocks shown instead of "No matching rows" and Clear filters when a filter or search hides every row, for example "No deals match this view right now." with an Edit filter button, so the view keeps its filter.',
   },
   // Server mode fetches through an internal event running the Request action.
   actions: ['Request'],

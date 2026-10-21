@@ -163,6 +163,33 @@ blocks:
               op: eq
               value: won
 
+  # A filter that matches nothing in server mode shows the emptyFiltered slot.
+  - id: table_server_empty
+    type: Table
+    properties:
+      height: 200
+      data:
+        mode: server
+        request: table_rows
+        blockSize: 100
+      defaultView:
+        filter:
+          key: stage
+          op: eq
+          value: none of these
+      columns:
+        - key: id
+          type: number
+        - key: name
+        - key: stage
+    slots:
+      emptyFiltered:
+        blocks:
+          - id: table_server_empty_message
+            type: Paragraph
+            properties:
+              content: No deals match this view right now.
+
   - id: server_update
     type: Button
     properties:
