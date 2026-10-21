@@ -1,8 +1,11 @@
 name: Test Pull Requests
 
+# Every pull request into v6, and the publish push to v6 (release.yaml), which publishes only
+# when these pass.
 on:
   pull_request:
   merge_group:
+  workflow_call:
 
 permissions:
   contents: read
