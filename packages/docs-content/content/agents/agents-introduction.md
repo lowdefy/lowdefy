@@ -9,7 +9,7 @@ Agents are defined at the root of your Lowdefy configuration, alongside `connect
 A connection, an agent, and a chat block — that's all you need:
 
 ```yaml
-lowdefy: 6.1.0
+lowdefy: 7.0.0
 
 connections:
   - id: anthropic

@@ -33,7 +33,7 @@ Change the `lowdefy.yaml` to look like this:
 
 ```yaml
 name: lowdefy-project-template
-lowdefy: 6.1.0
+lowdefy: 7.0.0
 
 pages:
 ################ -------- Copy from here -------- ################

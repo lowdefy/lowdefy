@@ -14,7 +14,7 @@ The 404 page (used to indicate that a requested page cannot be found) is always 
 
 ###### List specific public pages and APIs:
 ```yaml
-lowdefy: 6.1.0
+lowdefy: 7.0.0
 auth:
   pages:
     protected: true
@@ -31,7 +31,7 @@ auth:
 
 ###### List specific protected pages and APIs:
 ```yaml
-lowdefy: 6.1.0
+lowdefy: 7.0.0
 auth:
   pages:
     public: true
@@ -47,7 +47,7 @@ auth:
 
 ###### Mixed configuration:
 ```yaml
-lowdefy: 6.1.0
+lowdefy: 7.0.0
 auth:
   # Protect specific pages while keeping most public
   pages:
@@ -75,7 +75,7 @@ Exact page IDs still work: `home`, `team-users/users-list`.
 
 ###### Wildcard pattern example:
 ```yaml
-lowdefy: 6.1.0
+lowdefy: 7.0.0
 auth:
   pages:
     protected: true

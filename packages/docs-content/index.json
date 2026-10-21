@@ -1,5 +1,5 @@
 {
-  "version": "6.1.0",
+  "version": "7.0.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -3986,7 +3986,7 @@
         "blocks/display/AgGridGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "f963ee3a6a4d41b3dcd84cc0ae1243a6b5fba6421123526d85f67c511406fdf5"
+      "hash": "e91ba0de5022fa672b9aa1411ff2ad6b3f51867306e2d9f972a1e5529ad46309"
     },
     "display-blocks/anchor": {
       "files": [
