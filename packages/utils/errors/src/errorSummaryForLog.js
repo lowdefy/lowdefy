@@ -38,13 +38,24 @@ function isAiSdkError(error) {
   return error[aiSdkErrorMarker] === true;
 }
 
+// An error from another realm, such as a DOMException in a VM context, fails instanceof Error.
+function isError(value) {
+  if (value instanceof Error) return true;
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof value.stack === 'string' &&
+    typeof value.message === 'string'
+  );
+}
+
 function truncate(text) {
   if (text.length <= MESSAGE_LIMIT) return text;
   return `${text.slice(0, MESSAGE_LIMIT - 1)}…`;
 }
 
 function errorSummaryForLog(error, depth = 0) {
-  if (!(error instanceof Error)) {
+  if (!isError(error)) {
     return { name: typeof error };
   }
   const summary = { name: error.name };

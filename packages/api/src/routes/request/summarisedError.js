@@ -16,12 +16,27 @@
 
 import { errorSummaryForLog, readErrorCodes } from '@lowdefy/errors';
 
-// Stack frames name code, never data, so they are kept; the stack's first line repeats the
-// message and is rebuilt from the summary's.
+// Stack frames name code, never data, so they are kept. The stack's opening lines repeat the
+// message, so they are rebuilt from the summary's; they are dropped by count, not by shape,
+// since a message can hold a line that looks like a frame.
 function stackFrames(error) {
-  return String(error.stack ?? '')
+  if (typeof error.stack !== 'string') return [];
+  const headerLineCount = String(error).split('\n').length;
+  return error.stack
     .split('\n')
+    .slice(headerLineCount)
     .filter((line) => /^\s+at /.test(line));
+}
+
+// An error from another realm, such as a DOMException in a VM context, fails instanceof Error.
+function isError(value) {
+  if (value instanceof Error) return true;
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof value.stack === 'string' &&
+    typeof value.message === 'string'
+  );
 }
 
 function fromSummary(summary, original) {
@@ -32,7 +47,7 @@ function fromSummary(summary, original) {
   if (summary.code !== undefined) error.code = summary.code;
   if (summary.statusCode !== undefined) error.statusCode = summary.statusCode;
   const cause = original.lastError ?? original.cause;
-  if (summary.cause !== undefined && cause instanceof Error) {
+  if (summary.cause !== undefined && isError(cause)) {
     error.cause = fromSummary(summary.cause, cause);
   }
   return error;
@@ -42,9 +57,9 @@ function fromSummary(summary, original) {
 // message cut to 500 characters, with the stack frames, for the error and three causes. A
 // connection's error can carry the request's inputs in its other fields - a MongoDB write
 // error the document it rejected, an HTTP client's error the request body - and every log
-// and error report of the routine writes the error it is thrown, so none of them is kept.
+// and error report writes the error it is given, so none of them is kept.
 function summarisedError(error) {
-  if (!(error instanceof Error)) {
+  if (!isError(error)) {
     const { code, statusCode } = readErrorCodes(error);
     return fromSummary(
       {
