@@ -16,6 +16,7 @@
 
 import foldInteractions from './foldInteractions.js';
 import traceRecord from './traceRecord.js';
+import { expect, test } from 'vitest';
 
 function summary(records) {
   return records.map((record) => {

@@ -16,6 +16,7 @@
 
 import isMountEventName from './isMountEventName.js';
 import pairTraceEvents from './pairTraceEvents.js';
+import { expect, test } from 'vitest';
 
 const T0 = 1_700_000_000_000;
 

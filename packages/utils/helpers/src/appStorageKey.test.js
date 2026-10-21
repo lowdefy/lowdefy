@@ -15,6 +15,7 @@
 */
 
 import appStorageKey from './appStorageKey.js';
+import { expect, test } from 'vitest';
 
 test('appStorageKey names the app slug, base path and key', () => {
   expect(appStorageKey({ basePath: '/crm', name: 'lowdefy_darkMode', slug: 'sales' })).toBe(

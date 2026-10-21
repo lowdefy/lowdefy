@@ -14,21 +14,22 @@
   limitations under the License.
 */
 
-import YAML from 'yaml';
-import crypto from 'crypto';
+import yamlToJs from './yamlToJs.js';
 
-function getCacheKey(fileData, filePath, options) {
-  const optionsString = typeof options === 'string' ? options : JSON.stringify(options);
-  return crypto.createHash('sha1').update(fileData).update(optionsString).digest('base64');
+// Vite's ?raw and ?url imports load the file itself, so they are left alone.
+const skippedQueries = /(^|&)(raw|url)(=|&|$)/;
+
+function yamlPlugin({ include = /\.yaml$/ } = {}) {
+  return {
+    name: 'lowdefy-yaml',
+    transform(source, id) {
+      const [file, query = ''] = id.split('?');
+      if (!include.test(file) || skippedQueries.test(query)) {
+        return null;
+      }
+      return { code: `export default ${yamlToJs(source)};`, map: null };
+    },
+  };
 }
 
-function process(sourceText) {
-  return { code: `module.exports = ${JSON.stringify(YAML.parse(sourceText), null, '\t')}` };
-}
-
-const transformer = {
-  getCacheKey,
-  process,
-};
-
-export default transformer;
+export default yamlPlugin;

@@ -17,6 +17,7 @@
 import buildSessionReport from './buildSessionReport.js';
 import formatSessionReport from './formatSessionReport.js';
 import traceRecord from '../journeyCompiler/traceRecord.js';
+import { expect, test } from 'vitest';
 
 // The list shows local time, so the expected clock is read the same way.
 function clock(iso) {

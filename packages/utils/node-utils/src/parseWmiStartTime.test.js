@@ -15,6 +15,7 @@
 */
 
 import parseWmiStartTime from './parseWmiStartTime.js';
+import { expect, test } from 'vitest';
 
 test('parseWmiStartTime converts a CIM_DATETIME with its own UTC offset to epoch milliseconds', () => {
   expect(parseWmiStartTime('20261002225531.123456+120')).toEqual(

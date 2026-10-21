@@ -29,6 +29,7 @@ import {
 
 import extractErrorProps from './extractErrorProps.js';
 import serializer from './serializer.js';
+import { expect, test } from 'vitest';
 
 test('serialize convert object js date to ~d', () => {
   let object = {

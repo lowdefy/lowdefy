@@ -16,6 +16,7 @@
 
 import nunjucks from 'nunjucks';
 import urlQueryFilter from './urlQueryFilter.js';
+import { describe, expect, test } from 'vitest';
 
 export const nunjucksEnv = new nunjucks.Environment();
 nunjucksEnv.addFilter('urlQuery', urlQueryFilter);

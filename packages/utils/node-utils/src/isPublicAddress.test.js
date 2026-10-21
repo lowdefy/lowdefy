@@ -15,6 +15,7 @@
 */
 
 import isPublicAddress from './isPublicAddress.js';
+import { expect, test } from 'vitest';
 
 test.each([
   ['0.0.0.0'],

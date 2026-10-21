@@ -18,6 +18,7 @@ import { spawn } from 'child_process';
 
 import getProcessStartTime from './getProcessStartTime.js';
 import readProcessStartTime from './readProcessStartTime.js';
+import { expect, test } from 'vitest';
 
 test('readProcessStartTime reads the same start time as getProcessStartTime', async () => {
   const startTime = await readProcessStartTime({ pid: process.pid });

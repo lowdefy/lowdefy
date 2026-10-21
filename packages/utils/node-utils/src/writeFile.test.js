@@ -18,6 +18,7 @@ import fs from 'fs';
 import fsExtra from 'fs-extra';
 import path from 'path';
 import writeFile from './writeFile.js';
+import { expect, test } from 'vitest';
 
 const baseDir = path.resolve(process.cwd(), 'test/writeFile');
 

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockGenerateText = jest.fn();
-const mockJsonSchema = jest.fn((schema) => ({ wrapped: schema }));
-const mockOutputObject = jest.fn((spec) => ({ outputSpec: spec }));
+const mockGenerateText = vi.fn();
+const mockJsonSchema = vi.fn((schema) => ({ wrapped: schema }));
+const mockOutputObject = vi.fn((spec) => ({ outputSpec: spec }));
 
-jest.unstable_mockModule('ai', () => ({
+vi.doMock('ai', () => ({
   generateText: mockGenerateText,
   jsonSchema: mockJsonSchema,
   Output: { object: mockOutputObject },

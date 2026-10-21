@@ -16,6 +16,7 @@
 
 import renderEmail from '../../renderEmail.js';
 import ResetPasswordEmail from './ResetPasswordEmail.js';
+import { expect, test } from 'vitest';
 
 test('ResetPasswordEmail renders to html and text and includes the url', async () => {
   const { html, text } = await renderEmail({

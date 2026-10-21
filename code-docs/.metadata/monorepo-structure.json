@@ -66,9 +66,9 @@
       "@lowdefy/block-dev",
       "@lowdefy/block-utils",
       "@lowdefy/helpers",
-      "@lowdefy/jest-yaml-transform",
       "@lowdefy/node-utils",
-      "@lowdefy/nunjucks"
+      "@lowdefy/nunjucks",
+      "@lowdefy/vite-yaml-plugin"
     ]
   },
   "architecture": {

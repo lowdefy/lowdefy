@@ -16,6 +16,7 @@
 
 import unset from './unset.js';
 import { ReservedKeyError } from './ReservedKeyError.js';
+import { describe, expect, test } from 'vitest';
 
 test('unset a.1.b', () => {
   const obj = {

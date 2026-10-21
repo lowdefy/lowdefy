@@ -15,6 +15,7 @@
 */
 
 import findPlaceholderStep from './findPlaceholderStep.js';
+import { expect, test } from 'vitest';
 
 test('findPlaceholderStep names the first fill placeholder with its step index', () => {
   expect(

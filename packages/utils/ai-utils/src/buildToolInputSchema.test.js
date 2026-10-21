@@ -15,6 +15,7 @@
 */
 
 import buildToolInputSchema from './buildToolInputSchema.js';
+import { expect, test } from 'vitest';
 
 test('buildToolInputSchema returns a schema without combinators unchanged', () => {
   const schema = {

@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import { beforeEach, expect, test } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
 import { type } from '@lowdefy/helpers';
 

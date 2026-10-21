@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-const mockOraClear = jest.fn();
-const mockOraFail = jest.fn();
-const mockOraRender = jest.fn();
-const mockOraStart = jest.fn();
-const mockOraStopAndPersist = jest.fn();
-const mockOraSucceed = jest.fn();
+const mockOraClear = vi.fn();
+const mockOraFail = vi.fn();
+const mockOraRender = vi.fn();
+const mockOraStart = vi.fn();
+const mockOraStopAndPersist = vi.fn();
+const mockOraSucceed = vi.fn();
 
 const mockSpinner = {
   clear: mockOraClear,
@@ -33,39 +33,43 @@ const mockSpinner = {
   succeed: mockOraSucceed,
 };
 
-jest.unstable_mockModule('ora', () => {
-  const mockOraConstructor = jest.fn(() => mockSpinner);
+vi.doMock('ora', () => {
+  const mockOraConstructor = vi.fn(() => mockSpinner);
   return {
     default: mockOraConstructor,
   };
 });
 
 // mock console
-const mockConsoleError = jest.fn();
-const mockConsoleLog = jest.fn();
-const mockConsoleWarn = jest.fn();
-const mockConsoleDebug = jest.fn();
+const mockConsoleError = vi.fn();
+const mockConsoleLog = vi.fn();
+const mockConsoleWarn = vi.fn();
+const mockConsoleDebug = vi.fn();
 console.error = mockConsoleError;
 console.log = mockConsoleLog;
 console.warn = mockConsoleWarn;
 console.debug = mockConsoleDebug;
 
 // Mock timestamps
-const mockGetHours = jest.fn();
-const mockGetMinutes = jest.fn();
-const mockGetSeconds = jest.fn();
+const mockGetHours = vi.fn();
+const mockGetMinutes = vi.fn();
+const mockGetSeconds = vi.fn();
+// A function, not an arrow function: the logger calls `new Date()`, and a vitest mock of an arrow
+// function cannot be called with new.
 // eslint-disable-next-line no-global-assign
-Date = jest.fn(() => ({
-  getHours: mockGetHours,
-  getMinutes: mockGetMinutes,
-  getSeconds: mockGetSeconds,
-}));
+Date = vi.fn(function () {
+  return {
+    getHours: mockGetHours,
+    getMinutes: mockGetMinutes,
+    getSeconds: mockGetSeconds,
+  };
+});
 
 Date.now = () => {};
 
 // The first test pays the cold import of the logger's module graph (jest.resetModules), which
 // can pass Jest's 5 s default on a loaded Windows runner.
-jest.setTimeout(20000);
+vi.setConfig({ testTimeout: 20000, hookTimeout: 20000 });
 
 // Save original CI value so tests are deterministic regardless of environment
 const originalCI = process.env.CI;
@@ -75,7 +79,7 @@ afterEach(() => {
 
 describe('memoisation', () => {
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
     mockOraClear.mockClear();
     mockOraFail.mockClear();
     mockOraRender.mockClear();
@@ -123,7 +127,7 @@ describe('memoisation', () => {
 describe('string input', () => {
   beforeEach(() => {
     process.env.CI = 'false';
-    jest.resetModules();
+    vi.resetModules();
     mockOraClear.mockClear();
     mockOraFail.mockClear();
     mockOraRender.mockClear();
@@ -171,7 +175,7 @@ describe('string input', () => {
 describe('error input', () => {
   beforeEach(() => {
     process.env.CI = 'false';
-    jest.resetModules();
+    vi.resetModules();
     mockOraClear.mockClear();
     mockOraFail.mockClear();
     mockOraRender.mockClear();
@@ -300,7 +304,7 @@ describe('error input', () => {
 describe('cause chain', () => {
   beforeEach(() => {
     process.env.CI = 'false';
-    jest.resetModules();
+    vi.resetModules();
     mockOraClear.mockClear();
     mockOraFail.mockClear();
     mockOraRender.mockClear();
@@ -410,7 +414,7 @@ describe('cause chain', () => {
 describe('pino two-arg form', () => {
   beforeEach(() => {
     process.env.CI = 'false';
-    jest.resetModules();
+    vi.resetModules();
     mockOraClear.mockClear();
     mockOraFail.mockClear();
     mockOraRender.mockClear();
@@ -475,7 +479,7 @@ describe('pino two-arg form', () => {
 describe('fallback', () => {
   beforeEach(() => {
     process.env.CI = 'false';
-    jest.resetModules();
+    vi.resetModules();
     mockOraClear.mockClear();
     mockOraFail.mockClear();
     mockOraRender.mockClear();
@@ -498,7 +502,7 @@ describe('fallback', () => {
 describe('level filtering', () => {
   beforeEach(() => {
     process.env.CI = 'false';
-    jest.resetModules();
+    vi.resetModules();
     mockOraClear.mockClear();
     mockOraFail.mockClear();
     mockOraRender.mockClear();
@@ -608,7 +612,7 @@ describe('level filtering', () => {
 describe('writeLine while spinning', () => {
   beforeEach(() => {
     process.env.CI = 'false';
-    jest.resetModules();
+    vi.resetModules();
     mockOraClear.mockClear();
     mockOraFail.mockClear();
     mockOraRender.mockClear();
@@ -619,7 +623,7 @@ describe('writeLine while spinning', () => {
   });
 
   test('info while spinning uses clear/write/render instead of stopAndPersist', async () => {
-    const mockWrite = jest.fn();
+    const mockWrite = vi.fn();
     const origWrite = process.stderr.write;
     process.stderr.write = mockWrite;
     try {
@@ -639,7 +643,7 @@ describe('writeLine while spinning', () => {
   });
 
   test('error while spinning uses clear/write/render instead of stopAndPersist', async () => {
-    const mockWrite = jest.fn();
+    const mockWrite = vi.fn();
     const origWrite = process.stderr.write;
     process.stderr.write = mockWrite;
     try {

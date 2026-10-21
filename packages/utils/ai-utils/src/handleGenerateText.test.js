@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockGenerateText = jest.fn();
+const mockGenerateText = vi.fn();
 
-jest.unstable_mockModule('ai', () => ({
+vi.doMock('ai', () => ({
   generateText: mockGenerateText,
 }));
 

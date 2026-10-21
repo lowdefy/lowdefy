@@ -17,6 +17,7 @@
 import createSecretScrubber from './createSecretScrubber.js';
 import markCredential from './markCredential.js';
 import runInCredentialScope from './runInCredentialScope.js';
+import { describe, expect, test } from 'vitest';
 
 // '?' and '>' runs put '/' and '+' into the base64, so the standard and URL-safe alphabets differ.
 const BASE64_SECRET = 'PLANTED???>>>secret???>>>';

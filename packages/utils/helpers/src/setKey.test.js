@@ -16,6 +16,7 @@
 
 import setKey from './setKey.js';
 import { ReservedKeyError } from './ReservedKeyError.js';
+import { expect, test } from 'vitest';
 
 test('setKey assigns the value on an empty target', () => {
   const target = {};

@@ -15,6 +15,7 @@
 */
 
 import parsePageId from './parsePageId.js';
+import { expect, test } from 'vitest';
 
 test('parsePageId extracts page ids including nested ids', () => {
   expect(parsePageId('http://localhost/page-1')).toBe('page-1');

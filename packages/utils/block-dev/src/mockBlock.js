@@ -14,21 +14,23 @@
   limitations under the License.
 */
 
+import { vi } from 'vitest';
+
 import stubBlockProps from './stubBlockProps.js';
 
 const mockBlock = ({ meta, schema }) => {
   const mockMath = Object.create(global.Math);
   mockMath.random = () => 0.5;
   global.Math = mockMath;
-  const moveItemDown = jest.fn();
-  const moveItemUp = jest.fn();
-  const pushItem = jest.fn();
-  const registerEvent = jest.fn();
-  const registerMethod = jest.fn();
-  const removeItem = jest.fn();
-  const setValue = jest.fn();
-  const triggerEvent = jest.fn();
-  const unshiftItem = jest.fn();
+  const moveItemDown = vi.fn();
+  const moveItemUp = vi.fn();
+  const pushItem = vi.fn();
+  const registerEvent = vi.fn();
+  const registerMethod = vi.fn();
+  const removeItem = vi.fn();
+  const setValue = vi.fn();
+  const triggerEvent = vi.fn();
+  const unshiftItem = vi.fn();
   const methods = {
     moveItemDown,
     moveItemUp,
@@ -56,15 +58,15 @@ const mockBlock = ({ meta, schema }) => {
     if (!window.matchMedia) {
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: jest.fn().mockImplementation((query) => ({
+        value: vi.fn().mockImplementation((query) => ({
           matches: false,
           media: query.includes('max-width'),
           onchange: null,
-          addListener: jest.fn(),
-          removeListener: jest.fn(),
-          addEventListener: jest.fn(),
-          removeEventListener: jest.fn(),
-          dispatchEvent: jest.fn(),
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          dispatchEvent: vi.fn(),
         })),
       });
     }
