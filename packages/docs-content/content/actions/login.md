@@ -28,7 +28,7 @@ The `callbackUrl` parameter of the Login action specifies where the user lands a
 
 If none of the three resolves - an app with no `homePageId` whose menu offers the signed-out user no page to fall back on - the action throws rather than staying silently on the sign-in page.
 
-To sign in without navigating at all, set `callbackUrl: false`. This is for a login form in a modal or an embedded panel, where the session store re-renders the page with the new user in place. It is not valid for magic-link or social/OAuth sign-in, which redirect through a hop Lowdefy does not control.
+To sign in without navigating at all, set `callbackUrl: false`. This is for a login form in a modal or an embedded panel: the page renders the new user in place, as the server resolves them, before the next action in the chain runs. It is not valid for magic-link or social/OAuth sign-in, which redirect through a hop Lowdefy does not control.
 
 A sign-in the auth server rejects - a wrong password, an expired or already-used link, an invalid code - is an expected outcome, not an app error. The action throws a `UserError`: `catch` actions on the event still run and the error message still displays, but it is logged to the browser console only and is never reported to the server. The auth server's response is available to `catch` actions as `_actions.<actionId>.error.metaData`, with a `code` (for example `INVALID_EMAIL_OR_PASSWORD`) and the HTTP `status`. A network failure or a server fault is still thrown as an action error and reported.
 

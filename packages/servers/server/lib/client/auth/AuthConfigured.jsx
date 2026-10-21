@@ -121,11 +121,12 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
   const wasAuthenticated = useRef(Boolean(serverUser));
   const sessionUserId = session?.user?.id;
 
-  // A session the page resolved no caller for - a sign-in that stays on the
-  // page (callbackUrl: false), or one that the server refused when it served
-  // the page - asks the server who it is. A sign-in with a destination never
-  // gets here: it hard-reloads, and the reloaded page carries its caller. While
-  // the server answers nobody, the page keeps rendering nobody.
+  // A session the page resolved no caller for - a sign-in in another tab, or
+  // one the server refused when it served the page - asks the server who it
+  // is. A sign-in on this page never needs it: one with a destination
+  // hard-reloads, and one without (callbackUrl: false) renders the caller the
+  // server resolves before the Login action returns (settleSignIn). While the
+  // server answers nobody, the page keeps rendering nobody.
   useEffect(() => {
     if (type.isNone(sessionUserId) || !type.isNone(resolvedUser)) {
       return undefined;
