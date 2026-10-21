@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { parseDataSet } from '@lowdefy/node-utils';
 
 import checkSharedCollectionIds from './checkSharedCollectionIds.js';
-import findCollectionCollisions from './findCollectionCollisions.js';
+import describeTargetKey from './describeTargetKey.js';
 import readConnectionArtifacts from './readConnectionArtifacts.js';
 import resolveDataSetCollection from './resolveDataSetCollection.js';
 
@@ -31,38 +32,52 @@ function getKeyedConnectionIds({ dataSet }) {
   ];
 }
 
+// Sorts a URI's default database (no databaseName) before its named ones.
+function sortKey(key) {
+  const [uri, databaseName] = JSON.parse(key);
+  return [uri, databaseName ?? ''].join('\u0000');
+}
+
+// Every database target the built connections name, sorted, so each run numbers them alike and the
+// first one (the database a computed target reads) is the same on every run.
+function listDatabaseTargets({ artifacts }) {
+  const keys = new Set();
+  Object.values(artifacts).forEach((artifact) => {
+    const key = describeTargetKey({ properties: artifact.properties });
+    if (!type.isNone(key)) keys.add(key);
+  });
+  return [...keys].sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+}
+
 // The data set checks only the dev build can make, on top of parseDataSet's: every connection the
-// data set names is a MongoDBCollection with a literal collection, and connections that would merge
-// into one collection under the one-database redirect are refused (when the data set names one of
-// them) or reported, and a generated _id that another connection on the same collection also holds
-// is refused. Runs before any browser opens.
+// data set names is a MongoDBCollection with a literal collection, and a generated _id that another
+// connection on the same collection in the same database target also holds is refused. Adds the
+// database target of each connection it names (targets) and of every connection in the build
+// (databaseTargets): a data session gives each target a database of its own. Runs before any
+// browser opens.
 async function readDataSet({ configDirectory, buildDirectory, name }) {
   const dataSet = await parseDataSet({ configDirectory, name });
-  const warnings = [...dataSet.warnings];
-
   const artifacts = await readConnectionArtifacts({ buildDirectory });
   const keyedIds = getKeyedConnectionIds({ dataSet });
+  const databaseTargets = listDatabaseTargets({ artifacts });
   const collections = {};
+  const targets = {};
   keyedIds.forEach((connectionId) => {
+    const artifact = artifacts[connectionId];
     collections[connectionId] = resolveDataSetCollection({
       dataSetName: name,
       connectionId,
-      artifact: artifacts[connectionId],
+      artifact,
     }).collection;
+    // A target computed per request reads the session's first database, the first target's, so it
+    // groups and checks _ids with that target's connections.
+    targets[connectionId] =
+      describeTargetKey({ properties: artifact.properties }) ?? databaseTargets[0] ?? null;
   });
 
-  findCollectionCollisions({ artifacts }).forEach(({ collection, connectionIds }) => {
-    const [a, b] = connectionIds;
-    const message = `Connections "${a}" and "${b}" both name collection "${collection}" in different databases; under a data set they read one database, so they share one collection.`;
-    if (keyedIds.includes(a) || keyedIds.includes(b)) {
-      throw new Error(`Data set "${name}": ${message}`);
-    }
-    warnings.push(message);
-  });
+  checkSharedCollectionIds({ dataSetName: name, dataSet: { ...dataSet, collections, targets } });
 
-  checkSharedCollectionIds({ dataSetName: name, dataSet: { ...dataSet, collections } });
-
-  return { ...dataSet, collections, warnings };
+  return { ...dataSet, collections, targets, databaseTargets };
 }
 
 export default readDataSet;

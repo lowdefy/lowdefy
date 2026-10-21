@@ -65,6 +65,7 @@ import readDevInstanceRecord from './readDevInstanceRecord.js';
 import readProcessStartTime from './readProcessStartTime.js';
 import readServerRegistry from './readServerRegistry.js';
 import registerServer from './registerServer.js';
+import relativePosixPath from './relativePosixPath.js';
 import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordingFiles.js';
 import readRecordings from './recordings/readRecordings.js';
 import runInCredentialScope from './runInCredentialScope.js';
@@ -178,6 +179,7 @@ export {
   readProcessStartTime,
   readServerRegistry,
   registerServer,
+  relativePosixPath,
   readRecordings,
   RECORDING_SOURCES,
   runInCredentialScope,

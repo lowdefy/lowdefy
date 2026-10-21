@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Collapse
     pageTitle: Collapse
-    section: Container Blocks
     filePath: blocks/container/Collapse.yaml
     block_type: Collapse
     antd_component: Collapse

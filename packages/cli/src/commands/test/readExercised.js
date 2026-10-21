@@ -21,7 +21,8 @@ import hashJourney from './hashJourney.js';
 
 // The newest measured path of one journey, or null when none was recorded or
 // the journey has changed since (its hash no longer matches). `file` is the
-// journey file relative to the config directory.
+// journey file relative to the config directory, with forward slashes
+// (relativePosixPath), as writeExercised keys it.
 function readExercised({ directories, file, journey }) {
   const filePath = getExercisedPath({ directories });
   if (!fs.existsSync(filePath)) {

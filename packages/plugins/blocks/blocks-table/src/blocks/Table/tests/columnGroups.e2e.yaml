@@ -1,0 +1,119 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Collapsible column groups (columnGroups.e2e.spec.js): a group collapses to its `closed` and
+# `always` columns and expands to its `open` and `always` columns from the chevron in its header.
+
+id: table-column-groups
+type: Box
+
+blocks:
+  - id: cg
+    type: Table
+    properties:
+      persist:
+        key: e2e_column_groups
+        storage: local
+      toolbar:
+        search: true
+      columns:
+        - key: project
+          width: 140
+        - key: outcomes
+          title: Outcomes
+          collapsible: true
+          collapsed: true
+          children:
+            - key: total
+              type: number
+              width: 90
+              showWhen: closed
+            - key: completed
+              type: number
+              width: 110
+            - key: opted_out
+              title: Opted Out
+              width: 110
+              showWhen: open
+            - key: not_reached
+              title: Not Reached
+              type: number
+              width: 120
+              showWhen: open
+      data:
+        - { id: 1, project: Alpha, total: 10, completed: 4, opted_out: Zulu, not_reached: 3 }
+        - { id: 2, project: Beta, total: 20, completed: 9, opted_out: Yankee, not_reached: 5 }
+
+  - id: cg_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'collapsed='
+          - _json.stringify:
+              - _state: cg.view.collapsedColumnGroups
+              - space: 0
+
+  - id: cg_export
+    type: Button
+    properties:
+      title: Export groups
+    events:
+      onClick:
+        - id: export
+          type: CallMethod
+          params:
+            blockId: cg
+            method: exportCsv
+            args:
+              - filename: groups.csv
+
+  - id: cg_open_manager
+    type: Button
+    properties:
+      title: Open group columns
+    events:
+      onClick:
+        - id: open_manager
+          type: CallMethod
+          params:
+            blockId: cg
+            method: openColumnManager
+
+  # An outer group whose inner group shows only while the outer one is expanded.
+  - id: cg_nested
+    type: Table
+    properties:
+      columns:
+        - key: name
+        - key: all
+          title: All
+          collapsible: true
+          collapsed: true
+          children:
+            - key: sum
+              type: number
+              showWhen: closed
+            - key: detail
+              title: Detail
+              showWhen: open
+              collapsible: true
+              children:
+                - key: detail_total
+                  type: number
+                - key: detail_a
+                  type: number
+                  showWhen: open
+      data:
+        - { id: 1, name: Ann, sum: 6, detail_total: 6, detail_a: 2 }

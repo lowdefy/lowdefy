@@ -4,9 +4,8 @@
 (void): void
 (blockId: string): void
 (blockIds: string[]): void
-(blockIds: string[]): void
 (params: {
-  blockId?: string|string[],
+  blockIds?: string|string[],
   regex?: string|string[],
 }): void
 ```
@@ -17,6 +16,8 @@ It is used in conjunction with the `required` and `validate` fields on input blo
 The first time a `Validate` action is called, validation errors and warnings are shown to the user. The [`Reset`](/Reset) action resets the validation status and the page `state`. The [`ResetValidation`](/ResetValidation) action resets only the validation status.
 
 The `Validate` action `blockIds` or `regex` params are used to limit which blocks are validated. Only the matched blocks will be validated, and validation results are shown for only those matched blocks.
+
+A container's blockId matches the container and every block inside it, so `params: contact_card` validates the inputs in the `contact_card` card. Matching follows the blocks on the page, not id prefixes, so it reaches `contact.name` inside `contact_card`. A blockId that matches no block logs a warning in the browser console and the action succeeds.
 
 When the action runs in a list row, `$` in a blockId is replaced with the row index, as in `SetState` and `CallMethod`, so `list.$.name` matches the `name` input in the same row. `$` in a `regex` pattern keeps its regex meaning.
 
@@ -82,7 +83,7 @@ An array of blockIds of the blocks to validate.
 - id: validate_foo_price_and_my_input
   type: Validate
   params:
-    blockId: my_input
+    blockIds: my_input
     regex:
       - ^foo\.
       - ^.*price.*$

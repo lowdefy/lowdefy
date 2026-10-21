@@ -1,5 +1,256 @@
 # @lowdefy/ai-utils
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/errors@7.1.0
+- @lowdefy/helpers@7.1.0
+- @lowdefy/node-utils@7.1.0
+
+## 7.0.0
+
+### Major Changes
+
+- d216f8b: **Behaviour change:** `GenerateText` and `GenerateObject` no longer accept a `system` role message in `messages` unless the request sets `allowSystemInMessages: true`.
+
+  A system message instructs the model as the app itself, so a message list built from user input (`_payload`, `_state`) could carry a system turn that the model would treat as the app's own instructions. Requests opt in explicitly, and one without the opt-in fails with an error naming the property.
+
+  To migrate: put the system prompt in the `system` property. If the system message is written in your own config, add `allowSystemInMessages: true` to the request. Never set it for messages that come from a user.
+
+### Minor Changes
+
+- cf25c09: feat(api): `CallAgent` routine steps take `files` beside their prompt
+
+  A `CallAgent` step can now hand the model images and documents: `files: [{ url, mediaType }]` sends the prompt and one part per file as a single user message, an image part for `image/*` and a document part otherwise. The link goes to the provider as a URL, which a provider that takes that media type as a link fetches itself; otherwise the server downloads the file first, within the agent's `fileDownload` limits. Pass a presigned link to a private file. A `files` that is not an array, or an entry without a `url` and a `mediaType`, fails the step with a `ConfigError`. Without `files` a step runs as before.
+
+- 08d8938: feat(api): Tool endpoints read the files attached in an agent chat with `_agent: files`
+
+  An `AgentChat` file uploaded through `uploadPolicyRequestId` now keeps its storage key on its message part, as `providerMetadata: { lowdefy: { key } }`, so saved conversations and `onFinish` hooks hold it beside the signed link. `_agent: files` gives a tool endpoint, and the endpoints it calls with `CallApi`, the files of every message the chat request carried, as `[{ key, filename, mediaType }]`; it is `[]` under a `CallAgent` step. The model gets a line naming each file before it (`Attached file: screenshot.png`), so it can pass the name to a tool, and the storage key is not sent to the model. The saved messages are unchanged. The files come from the person's own chat request, so a tool should look a file up by name in `_agent: files` and check that the key is one the caller may read before reading it.
+
+- df62144: feat(ai-utils): Agents bound the files the server downloads with `fileDownload`
+
+  When the model does not take a file as a link for its media type (a CSV or text file on most providers, most files on Google), the server downloads the file and sends its content. That download is now bounded: the agent property `fileDownload: { maxBytes, timeout }` caps it at 20 MB and 30 seconds by default, and a larger or slower file fails the turn. Only an `https:` link to a public address is downloaded, with the address checked after DNS resolution and on every redirect. A failed download names the file's host, never its link, so a signed link does not reach the server log.
+
+- f7fa621: feat(agent): agent calls carry the page's path parameters
+
+  `AgentChat` sends the page's `pathParams` with each call next to `urlQuery`, the agent route accepts them, and the page-context option adds a `pathParams` line to the agent's instructions when the page has any. A record id moved from the query into the page path is still known to the agent. Links in agent messages are resolved to their page and path values through the engine's path memory.
+
+- 099d412: AgentChat: send `sharedState` as read-only context
+
+  - **`sharedStateReadOnly: boolean`** (default `false`). When `true`, the block still sends `sharedState` with each turn (to `_payload`, and to the agent's context block with `pageContext: true`), but the server does not register the `update-page-state` tool, so the model is never offered a write to page state. Use it to give an agent context such as the current time or the record on screen when some of those values are also bound to inputs the agent should not change. Without it, an app that wanted context but no writes had to list every other tool in the agent's `activeTools`.
+
+- 4cb7ad9: feat(ai-utils): GenerateText and GenerateObject bound the files the server downloads with `fileDownload`
+
+  A file in a `GenerateText` or `GenerateObject` request's `messages` that the model does not take as a link (a CSV or text file on most providers, most files on Google) is downloaded by the server within the same limits agents have: the request property `fileDownload: { maxBytes, timeout }` caps it at 20 MB and 30 seconds by default, only an `https:` link to a public address is downloaded, with the address checked on every redirect, and a failed download names the file's host, never its link. Download errors no longer start with "Agent", since requests share them.
+
+- 07a67b5: AI requests take `maxOutputTokens` and `timeout`, and a closed request cancels its model call.
+
+  - `GenerateText`, `GenerateObject` and `Decide` take `timeout`: the milliseconds a model call may take, retries included, before it is cancelled. `Decide` also takes `maxOutputTokens`.
+  - The `Anthropic`, `OpenAI`, `Google` and `AIGateway` connections take `maxOutputTokens` and `timeout` as defaults for every request and agent on the connection that does not set its own.
+  - Request resolvers receive `signal`, which aborts when the request that started the work closes: when the server's request timeout (`config.requestTimeout`) answers first, or, on the Node server, when the client disconnects. The AI requests pass it to the model call, so a call that nobody is waiting for stops instead of running, and billing, to its end. A call stopped by the request timeout fails with a `ServiceError`. A call stopped because the client left fails with a `UserError`, which is logged as a warning.
+  - Work that outlives its request is not cancelled with it: endpoints with `async: true`, detached runs, and agent chat turns, which still run to their end so `onFinish` hooks save the conversation. A `CallAgent` step is cancelled with the routine that runs it.
+
+  A synchronous routine that kept running after its request timed out now has its AI calls cancelled at the timeout. Use `async: true` for work that takes longer than `config.requestTimeout`.
+
+- ac9db75: feat(ai): Move the AI plugins to AI SDK 7
+
+  `ai` 7.0.116 with `@ai-sdk/gateway` 4, `@ai-sdk/anthropic` 4, `@ai-sdk/google` 4, `@ai-sdk/openai` 4,
+  `@ai-sdk/react` 4 and `@ai-sdk/mcp` 2. Lowdefy's own config is unchanged: `GenerateText` and
+  `GenerateObject` still take `system` (passed to the model as the SDK's `instructions`), and
+  agent hooks keep their names — `onStart`, `onStepStart`, `onToolCallStart`, `onToolCallFinish`,
+  `onStepFinish` and `onFinish`.
+
+  - Tools marked `confirm: true` ask for approval through the agent's `toolApproval` setting rather than
+    a per-tool flag; approvals in `AgentChat` work as before.
+  - `reasoningText` and `providerMetadata` in a `GenerateText` / `GenerateObject` response come from
+    the final step, as before.
+  - The event payloads of the `onToolCallStart`, `onToolCallFinish`, `onStart`, `onStepStart` and
+    `onStepFinish` hooks follow AI SDK 7's event shapes.
+
+- 1766343: feat: Typed decisions outside a request, and dev errors that know which browser caused them
+
+  `@lowdefy/ai-utils` exports `decide({ model, backend, state, questions, options })`, the typed-decision call behind the `Decide` request, for code that holds a model but has no connection or request. It returns the answers, the token usage and the provider metadata, which on the AI Gateway carries the call's cost.
+
+  In the development server, browser and server errors now record which browser context caused them. Errors caused by the dev server's own headless browser during a journey run stay out of the build status and the agent event stream. Tabs that the dev server's own browser opens are still counted, but the agent tools that read state from a live tab no longer pick them over your own tab.
+
+- 460fdaa: feat(ai): New `Decide` request for typed AI decisions
+
+  `Decide` asks typed questions about a state — pick one of these options (`choice` + `options`),
+  is this true (`yesno`), where does this sit on a scale (`score` + `levels`) — and returns each
+  answer in its declared shape with a confidence, so a routine can branch on
+  `_step: triage.team.choice` and send a low-confidence answer to a person.
+
+  - On the `AIGateway` connection it asks an evaluation model by default, such as TypeSafe's Jev
+    (`typesafe-ai/jev`): a probability for every option in one pass, billed on input tokens only.
+  - On every AI connection, `backend: structured-output` asks any language model for the same answers
+    as schema-checked structured output.
+  - An answer outside its question's terms (an option or level the question does not have, a yes/no
+    that is not a boolean, or no answer) comes back with every field `null`, confidence and
+    probability included, so a review gate on confidence catches it.
+  - A `choice` option can be a name or an object with a `description` (other keys are ignored), so
+    one intents file can serve as both the `IntentInput` block's `intents` and the question's options.
+  - The build checks a routine against the questions it declares: a branch that compares an answer
+    with a name that is not one of its options, or a `_step` reference to a question or field the
+    step does not have, is a build error instead of a branch that never matches. Questions whose
+    `options` or `levels` are built by an operator are not checked.
+
+  The docs gain an AI Gateway connection page.
+
+### Patch Changes
+
+- 6862032: fix(ai-utils): Agent endpoint tools with a top-level `oneOf`, `anyOf` or `allOf` in their payloadSchema work on Anthropic models
+
+  Anthropic (directly, or through the AI Gateway, Bedrock or Vertex) and OpenAI refuse a tool whose input schema has `oneOf`, `anyOf` or `allOf` at the top level, and fail the whole request, so every turn of such an agent failed. The model now gets the payloadSchema without the top-level combinator, with the constraint as a line at the head of the tool's description (`Input constraint: Provide parameters for exactly one of: (title, body) or (id).`) and with any properties defined only inside the branches. The endpoint still validates each call against its full payloadSchema, so a payload that breaks the constraint comes back to the model as an error to correct.
+
+- b226c43: fix: Classify expected outcomes and faults consistently across the v7 runtime and build.
+
+  A sign-in the auth server rejects - a wrong password, an expired or already-used link, a stale
+  OAuth authorization query - was reported as an `ActionError`: logged in the browser, posted to
+  `/api/client-error`, and logged again on the server at error level against the action's config
+  location, while BetterAuth itself logged every 4xx as `ERROR [Better Auth]`. These are expected
+  outcomes of user interaction, not app faults. Auth client methods now throw a `UserError` for a
+  4xx (with `metaData.code` / `metaData.status` for `catch` actions to branch on), and the server
+  owns BetterAuth's API-error logging so a rejected attempt is one warn line.
+
+  The same rule was applied across the code new in v7:
+
+  - New `AuthorizationError` (403): an authenticated caller refused by a request, endpoint, agent,
+    websocket or auth-step gate is one warn line and a 403, not a `ConfigError` logged at error
+    level with a 500 and a Sentry event. The agent and websocket gates now also return 401 to an
+    unauthenticated caller. All three servers handle `AuthenticationError`,
+    `TwoFactorEnrolmentRequiredError` and `AuthorizationError` the same way; `server` no longer
+    reports each fault to Sentry twice.
+  - A wrong HTTP method on an API route is a 405, not an error-level log and a 500.
+  - Routine `:throw`, schema validation failures and a nested `CallApi` that ended in `:throw` are
+    `UserError`s logged at warn, not error.
+  - Config faults that were plain `Error`s are `ConfigError`s (unconfigured auth, mock user without
+    auth, missing `auth.email`, unknown block type, ambiguous link targets, strategy secrets,
+    tenant-wall refusals, storage post-policy fields, `_organization` / `_build.authConfig`
+    misuse); invariant violations are `LowdefyInternalError`s (write-phase artifact checks, invalid
+    routine, auth adapter contract); upstream failures are `ServiceError`s (websocket transport,
+    JWKS fetch, BetterAuth 5xx, tenant preflight probes, SMTP only when the network failed).
+    `ServiceError.isServiceError` also recognises AWS SDK `$metadata.httpStatusCode` and numeric
+    5xx codes.
+  - Build: agents, MCP endpoints, notifications, websockets, `CallAgent` / `RenderNotification`
+    step references and organization client-action references collect every error instead of
+    stopping at the first; `websocket-refs`, `dynamic-endpoint-refs`, `callapi-refs`,
+    `callapi-internal-refs` and `icons` are valid `~ignoreBuildChecks` slugs; a plugin module that
+    resolves but fails to load is reported instead of surfacing later as an unknown type (a plugin
+    without an optional subpath such as `schemas` is not a failure); the deprecated
+    `public/styles.less` check runs as a validation step rather than failing the write phase.
+  - Errors revived from the wire keep their class for the auth gate errors, and the dev client
+    revives serialized Lowdefy errors instead of flattening them to their message.
+
+- aa6bb38: feat(api)!: A declared `payloadSchema` is now enforced on every caller.
+
+  **Breaking:** a caller that sends a payload outside an endpoint's `payloadSchema` is now refused
+  before the routine runs. Until now the schema was only advertised to MCP clients and agents, and
+  nothing checked a payload against it. This is a major bump for `@lowdefy/api` and `@lowdefy/build`
+  because apps whose callers relied on the schema not being checked will see those calls fail.
+
+  Every payload is validated on every call path, and a non-conforming one is refused. Who built
+  the payload decides how the refusal is reported:
+
+  - **An outside caller's payload** is the caller's mistake, a `UserError` logged at warn level and
+    never captured to Sentry. REST (`POST /api/endpoints/<endpointId>` without naming a page)
+    answers `400` with `{ name: 'UserError', message }`; MCP `tools/call` answers `isError: true`
+    carrying the message, and agent tool calls get it as a tool error, so the model can retry.
+  - **A payload the app's own config built** (a page's `CallAPI`, a nested or detached `CallApi`
+    step, a Dynamic block's endpoint, an auth or agent hook, a scheduled run's `schedule.payload`)
+    breaks the endpoint's own contract, so the refusal is a `ConfigError`, logged as a server error
+    with its config location. A page's `CallAPI` fails with `_error.name: ConfigError` (outside
+    development with the generic server error message), a nested `CallApi` reaches the routine's
+    `:catch` as a `ConfigError`, and a detached target or scheduled run fails its run.
+
+  The message names the endpoint, the failing location and what would be accepted, e.g.
+
+  - `Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.`
+  - `... at /status: must be equal to one of the allowed values (draft, placed).`
+  - `... at (root): must NOT have additional properties (colour).`
+  - `... at /slug: must match pattern "^[a-z0-9-]+$".`
+
+  When a location fails both its `type` and one of `enum`, `pattern`, `required` or
+  `additionalProperties`, that keyword is reported.
+
+  There is no opt-out: the way to not validate is to not declare a `payloadSchema`. The build now fails
+  when an endpoint declares both `webhook` and `payloadSchema`, since a webhook routine receives the
+  `{ body, query, headers }` envelope rather than the schema's shape.
+
+  `cleanBuildArtifact` (strips `~k`/`~r`/`~l` markers and unwraps `~arr`) moves into
+  `@lowdefy/helpers`, replacing the private copies in `@lowdefy/api` and `@lowdefy/ai-utils`.
+
+- Updated dependencies [14c4764]
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [cad92af]
+- Updated dependencies [4d08b55]
+- Updated dependencies [6144814]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [04077d9]
+- Updated dependencies [d42f420]
+- Updated dependencies [ebf95f8]
+- Updated dependencies [24383b5]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [09717e8]
+- Updated dependencies [2baefc1]
+- Updated dependencies [662eaa9]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [c744e40]
+- Updated dependencies [239a3a7]
+- Updated dependencies [4cc0f36]
+- Updated dependencies [ef64856]
+- Updated dependencies [cb0acad]
+- Updated dependencies [9a92898]
+- Updated dependencies [0205b5a]
+- Updated dependencies [316f5be]
+- Updated dependencies [ba86509]
+- Updated dependencies [f9d8520]
+- Updated dependencies [e5b2f83]
+- Updated dependencies [da76905]
+- Updated dependencies [1766343]
+- Updated dependencies [9ed1386]
+- Updated dependencies [73c5e14]
+- Updated dependencies [c3e0d79]
+- Updated dependencies [959ec32]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [94fc9e0]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [2755501]
+- Updated dependencies [ae3541c]
+- Updated dependencies [cac0798]
+- Updated dependencies [9512788]
+- Updated dependencies [99c9dac]
+- Updated dependencies [7623c86]
+- Updated dependencies [31911e7]
+  - @lowdefy/node-utils@7.0.0
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/errors@7.0.0
+
+## 6.1.0
+
+### Patch Changes
+
+- 6d6f8fa: Improved error handling: each reader of a server error now gets its own view of it.
+
+  - **Users and app config see the author's message or one generic message.** A server error the app author did not write now reaches the browser as "Something went wrong.", with its `name`, `code`, `statusCode`, `configKey` and a `requestId`. Messages written with `:throw` or `:reject`, failed `ValidateSchema` steps, a plugin's `UserError`, and authentication refusals, are shown as before. This applies to the error toast, `_actions`, `_request_details`, websocket errors, MCP tool results and the AgentChat stream, the same way in development and production. An action whose error toast showed a connection's own message now shows the generic one.
+    - The generic message is the built-in `server.genericError` i18n string. Override it per locale under `config.i18n.messages`, for example `server.genericError: 'Etwas ist schiefgelaufen.'`.
+    - To show different text for one action, set `messages.error` on the action.
+    - To show the real message, read it with the new `_error` operator in the endpoint's `:catch` and send it on, for example `:throw: { _error: message }`.
+  - **The dev server shows the full error.** In `lowdefy dev`, the error bar, the browser console and the dev MCP tools show the full server error, with its config location, while app config sees the same generic error as in production. Different failures of the same action are now each shown, instead of only the first.
+  - **The browser console prints the request id** under a server error, to find the matching server log line and Sentry event.
+  - **Production logs and Sentry keep a fixed set of error fields.** Each logged error keeps its name, message, stack, `code`, `statusCode` and cause, plus Lowdefy's own fields (`configKey`, `source`, `received`, ...) on Lowdefy errors. Fields a library attaches, such as an HTTP client's request config and response, are no longer logged. Values of the app's secrets (`LOWDEFY_SECRET_*`, `CRON_SECRET`, `AUTH_SECRET`) are replaced with `[REDACTED]` in production log lines and Sentry events, and credential-named keys in `received` are masked. Sentry events now carry the error's fields under `extra.error` and a `requestId` tag, and no longer attach incoming request bodies.
+  - **An AxiosHttp request that gets a 5xx response now fails with a `ServiceError`**, where it used to fail with a `RequestError`. AxiosHttp now sets `statusCode` on its error, and a 5xx status marks an error as a service failure, like a network error or timeout. Config that checks `name` for `RequestError` on these failures, for example `_eq: [{ _error: name }, 'RequestError']`, should also accept `ServiceError`, or check `statusCode` instead. The server log event for these failures is now `service_error`.
+
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/helpers@6.1.0
+  - @lowdefy/errors@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-requests-sql
     pageTitle: 6. Saving data to SQL
-    section: Tutorial
     filePath: tutorial/tutorial-requests-sql.yaml
     content:
       - id: body_sqlite
@@ -211,10 +210,3 @@ _ref:
 
                 Next, we will add a new page to display all open tickets an a table.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: API / HTTP Requests
-            previous_page_id: tutorial-requests-api
-            next_page_title: Display data
-            next_page_id: tutorial-display-data-page

@@ -96,6 +96,36 @@ test('interpolateProperties matches nested markdownProperties paths', () => {
   expect(result.quote.author).toEqual('_i_');
 });
 
+test('interpolateProperties leaves values with the markdown filter unescaped in markdown fields', () => {
+  const result = interpolateProperties({
+    properties: { message: '{{ intro }}\n\n{{ body | markdown }}' },
+    data: { intro: '# not a heading', body: '## Heading\n\n- [link](https://example.com)' },
+    markdownProperties: ['message'],
+  });
+  expect(result.message).toEqual(
+    '\\# not a heading\n\n## Heading\n\n- [link](https://example.com)'
+  );
+});
+
+test('interpolateProperties markdown filter leaves plain fields unchanged', () => {
+  const result = interpolateProperties({
+    properties: { subject: '{{ title | markdown }}', message: '{{ title | markdown }}' },
+    data: { title: 'a\\*b' },
+    markdownProperties: ['message'],
+  });
+  expect(result.subject).toEqual('a\\*b');
+  expect(result.message).toEqual('a\\*b');
+});
+
+test('interpolateProperties markdown filter passes non-string values through', () => {
+  const result = interpolateProperties({
+    properties: { message: '{{ count | markdown }} {{ missing | markdown }}' },
+    data: { count: 3 },
+    markdownProperties: ['message'],
+  });
+  expect(result.message).toEqual('3 ');
+});
+
 test('interpolateProperties passes non-string values through', () => {
   const result = interpolateProperties({
     properties: { count: 3, enabled: false, nothing: null, subject: '{{ name }}' },

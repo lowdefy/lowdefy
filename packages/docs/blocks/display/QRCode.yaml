@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: QRCode
     pageTitle: QRCode
-    section: Display Blocks
     filePath: blocks/display/QRCode.yaml
     block_type: QRCode
     antd_component: QRCode

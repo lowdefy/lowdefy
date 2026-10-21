@@ -1,5 +1,7 @@
 id: command_box_{{ id }}
 type: Box
+layout:
+  wrap: nowrap
 style:
   backgroundColor: var(--ant-color-bg-layout)
   borderColor: var(--ant-color-border-secondary)
@@ -20,12 +22,14 @@ blocks:
   - id: command_{{ id }}
     type: Paragraph
     layout:
-      flex: 0 1 auto
-    # style:
-      # backgroundColor: '#ffffff'
+      flex: 1 1 0
+    # The command wraps at its spaces on narrow screens instead of running past the box.
+    style:
+      minWidth: 0
     properties:
       style:
         marginTop: 16px
+        marginRight: 16px
       code: true
       copyable:
         icon: copy

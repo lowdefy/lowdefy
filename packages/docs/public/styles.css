@@ -1,4 +1,97 @@
+/* clip, not hidden: overflow-x hidden turns the body into a scroll container,
+   which silently disables position: sticky for the header and sidebar. */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip !important;
+}
+
+/* Sticky header, and a sidebar that scrolls independently beneath it —
+   without this the sider stretches to the menu's full height (4000px+ with
+   a reference group open) and menu navigation scrolls the whole page. */
+.ant-layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+@media (min-width: 992px) {
+  .ant-layout-sider {
+    position: sticky;
+    top: 64px;
+    align-self: flex-start;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+}
+
+/* Self-hosted brand fonts — same faces the website loads via next/font. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin-600-normal.woff2') format('woff2');
+}
+
+/* Brand accents copied from packages/website/src/app/globals.css.
+   The site switches dark variants on a root .dark class which this app does
+   not set — the grid uses one mid-opacity value that reads on both themes. */
+.text-gradient {
+  background-image: linear-gradient(to right, #2cb7ff, #29d3ca);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-grid {
+  background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.bg-grid-dense {
+  background-image: linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.glow-blue {
+  box-shadow:
+    0 0 40px rgba(25, 144, 255, 0.08),
+    0 0 80px rgba(25, 144, 255, 0.03);
 }

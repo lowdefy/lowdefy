@@ -420,3 +420,15 @@ test('applyMailFilter drops .invalid recipients before the allowlist runs', () =
     subject: 'A',
   });
 });
+
+test('applyMailFilter keeps an address on a domain of many dots without stalling', () => {
+  // /\.+$/, which the code used before, took quadratic time on this input: seconds at this
+  // length, against a few milliseconds now. Jest cannot time out synchronous code, so the time
+  // is checked.
+  const to = `a@${'.'.repeat(200000)}x`;
+  const start = performance.now();
+  const result = applyMailFilter({ filter: null, mail: { to } });
+  const ms = performance.now() - start;
+  expect(result).toEqual({ to, cc: undefined, bcc: undefined });
+  expect(ms).toBeLessThan(1000);
+});

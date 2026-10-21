@@ -32,7 +32,11 @@ requests:
       #   org_id:
       #     _user: organization.id
       options:
+        # Insert order: every row's _id is a random UUID, which carries no order, so the rows
+        # sort by their insert time, then their place in an import batch. Index these fields.
         sort:
+          createdAt: 1
+          position: 1
           _id: 1
         limit: 5000
         projection:
@@ -215,13 +219,17 @@ blocks:
               selection:
                 - _event: row._id
 
-      # Rows: inserted by the leads endpoints, which also start the autoRun columns.
+      # Rows: inserted by the leads endpoints, which also start the autoRun columns. A new row is
+      # saved under the key it shows under while it saves (`rowKey`), so the saved row the
+      # websocket brings in takes its place, even before this event ends.
       onRowAdd:
         - id: add_row
           type: CallAPI
           params:
             endpointId: leads_add
             payload:
+              rowKey:
+                _event: rowKey
               values:
                 _event: values
         - id: reload_rows

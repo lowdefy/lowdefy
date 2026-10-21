@@ -173,14 +173,7 @@ test('journeysVariants does not replay a variant with a placeholder to fill', as
   });
   await variants({ kinds: 'negative' });
   expect(mockPost).toHaveBeenCalledTimes(1);
-  const relative = path.join(
-    'tests',
-    'journeys',
-    '_candidates',
-    'variants',
-    'tickets',
-    'saves-a-ticket-negative.yaml'
-  );
+  const relative = 'tests/journeys/_candidates/variants/tickets/saves-a-ticket-negative.yaml';
   const prefix = `NOT RUN  ${relative}: `;
   expect(logs.warn[0].slice(0, prefix.length)).toEqual(prefix);
 });
@@ -330,14 +323,7 @@ test('journeysVariants keeps an edited variant on a rerun and says so', async ()
   await variants({ run: false, kinds: 'double-submit' });
   expect(fs.readFileSync(variantFile, 'utf8')).toBe(edited);
   expect(logs.warn).toContain(
-    `KEPT     ${path.join(
-      'tests',
-      'journeys',
-      '_candidates',
-      'variants',
-      'tickets',
-      'saves-a-ticket-double-submit.yaml'
-    )}: edited since it was generated; delete it to regenerate`
+    'KEPT     tests/journeys/_candidates/variants/tickets/saves-a-ticket-double-submit.yaml: edited since it was generated; delete it to regenerate'
   );
 });
 
@@ -351,18 +337,7 @@ test('journeysVariants reports a conflict for a journey whose name slugs like an
   expect(process.exitCode).toBeUndefined();
   expect(fs.readFileSync(variantFile, 'utf8')).toBe(first);
   expect(logs.warn).toContain(
-    `CONFLICT ${path.join(
-      'tests',
-      'journeys',
-      '_candidates',
-      'variants',
-      'tickets',
-      'saves-a-ticket-double-submit.yaml'
-    )}: holds a variant of "saves a ticket" from ${path.join(
-      'tests',
-      'journeys',
-      'tickets.yaml'
-    )}; rename one of the journeys`
+    'CONFLICT tests/journeys/_candidates/variants/tickets/saves-a-ticket-double-submit.yaml: holds a variant of "saves a ticket" from tests/journeys/tickets.yaml; rename one of the journeys'
   );
 });
 

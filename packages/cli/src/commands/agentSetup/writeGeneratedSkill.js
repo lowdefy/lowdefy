@@ -19,10 +19,12 @@ import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
 
 import hashSkill from './hashSkill.js';
+import isUneditedSkill from './isUneditedSkill.js';
 import parseSkillFile from './parseSkillFile.js';
+import SKILL_FOLDERS from './skillFolders.js';
 
-function renderWithHash({ appPath, render, name }) {
-  const { frontmatter, body } = parseSkillFile(render({ appPath }));
+function renderWithHash({ render, name }) {
+  const { frontmatter, body } = parseSkillFile(render());
   if (frontmatter === null) {
     throw new Error(`Skill "${name}" must render a frontmatter block.`);
   }
@@ -30,32 +32,38 @@ function renderWithHash({ appPath, render, name }) {
   return `---\n${frontmatter}\nlowdefy-skill-hash: ${hash}\n---\n${body}`;
 }
 
-// A generated skill is refreshed on every rerun while nobody has edited it:
-// its frontmatter and body still hash to the `lowdefy-skill-hash` it was
-// written with. A file that was edited, or that carries no hash, is left
-// alone.
-async function writeGeneratedSkill({ context, projectDirectory, appPath, name, render }) {
-  const relativePath = path.join('.claude', 'skills', name, 'SKILL.md');
-  const skillPath = path.join(projectDirectory, relativePath);
-  const content = renderWithHash({ appPath, render, name });
+// A skill's copies in `.agents/skills` and `.claude/skills` are one unit. While
+// every existing copy is unedited, both are refreshed on each rerun, and a
+// missing one is recreated. An edit to either copy (or a copy with no hash)
+// freezes both, so the two never drift apart silently.
+async function writeGeneratedSkill({ context, projectDirectory, name, render }) {
+  const content = renderWithHash({ render, name });
+  const copies = SKILL_FOLDERS.map((folder) => {
+    const relativePath = path.join(folder, name, 'SKILL.md');
+    const skillPath = path.join(projectDirectory, relativePath);
+    const existing = fs.existsSync(skillPath) ? fs.readFileSync(skillPath, 'utf8') : null;
+    return { relativePath, skillPath, existing };
+  });
 
-  if (!fs.existsSync(skillPath)) {
+  const edited = copies.filter(({ existing }) => existing !== null && !isUneditedSkill(existing));
+  if (edited.length > 0) {
+    edited.forEach((copy) => {
+      const twin = copies.find((other) => other !== copy);
+      context.logger.info(
+        `'${copy.relativePath}' was edited; its twin '${twin.relativePath}' is frozen with it. Copy the edit across, or delete both and rerun.`
+      );
+    });
+    return;
+  }
+
+  for (const { relativePath, skillPath, existing } of copies) {
+    if (existing === content) {
+      context.logger.info(`'${relativePath}' is up to date.`);
+      continue;
+    }
     await writeFile(skillPath, content);
-    context.logger.info(`Created '${relativePath}'.`);
-    return;
+    context.logger.info(`${existing === null ? 'Created' : 'Updated'} '${relativePath}'.`);
   }
-  const existing = fs.readFileSync(skillPath, 'utf8');
-  const { frontmatter, hash, body } = parseSkillFile(existing);
-  if (hash === null || hash !== hashSkill({ frontmatter, body })) {
-    context.logger.info(`'${relativePath}' was edited - skipping.`);
-    return;
-  }
-  if (existing === content) {
-    context.logger.info(`'${relativePath}' is up to date.`);
-    return;
-  }
-  await writeFile(skillPath, content);
-  context.logger.info(`Updated '${relativePath}'.`);
 }
 
 export default writeGeneratedSkill;

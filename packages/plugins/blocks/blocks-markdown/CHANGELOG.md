@@ -1,5 +1,74 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/block-utils@7.1.0
+
+## 7.0.0
+
+### Patch Changes
+
+- 99a4f35: Update dependencies to releases with published security fixes.
+
+  - `axios` 1.20.0 in the CLI and AxiosHttp.
+  - `dompurify` 3.4.16 in `block-utils`, `blocks-basic` and `blocks-markdown`.
+
+  **`dompurify` 3.4.16** keeps the SVG `pointer-events` and `vector-effect` attributes, which earlier releases removed. HTML rendered by `Html`, `ClickableHtml`, `DangerousHtml`, `DangerousMarkdown` and other `renderHtml` properties may keep them.
+
+- a9442cc: Production pages load only the plugin code they use.
+
+  The production client used to ship every block, action, operator and icon the app uses anywhere in one main bundle, and every first visit downloaded all of it. Now the build writes one small module per distinct page type set, and each page loads its own. On the docs app the main bundle drops from 6,016 kB to 1,021 kB (1,778 kB to 332 kB gzipped). A simple page's first load drops from 1,720 kB to 529 kB gzipped.
+
+  - The HTML preloads the page's chunks alongside the main bundle, so the first page does not wait an extra round trip.
+  - Content-hashed assets are served with `Cache-Control: public, max-age=31536000, immutable`, on the Node server and in `lowdefy vercel-output`.
+  - Lowdefy's plugin packages declare `"sideEffects": ["**/*.css"]`, so a page that uses one block no longer loads the whole package.
+  - The build adds the types a page runs without naming them: the operators the `_js` accessors call, and the actions and operators a block runs for events it registers itself (such as `Request` in `Upload` or `SetLocale` in `PageHeaderMenu`), which blocks list in `meta.actions` and `meta.operators`. Plugin blocks that register their own events should list them the same way.
+  - A Dynamic block whose content uses a type its `properties.types` did not declare still works: the page loads the full type set and the server logs a warning naming the type to declare.
+
+  No config changes. The dev server is unchanged.
+
+- Updated dependencies [99a4f35]
+- Updated dependencies [1227e62]
+- Updated dependencies [6144814]
+- Updated dependencies [cb3551c]
+- Updated dependencies [575a5ee]
+- Updated dependencies [36f864c]
+- Updated dependencies [239a3a7]
+- Updated dependencies [49490b6]
+- Updated dependencies [a79fb1d]
+- Updated dependencies [08f76bb]
+- Updated dependencies [a9442cc]
+- Updated dependencies [3c2258c]
+- Updated dependencies [3eb3691]
+- Updated dependencies [537bf54]
+  - @lowdefy/block-utils@7.0.0
+
+## 6.1.0
+
+### Patch Changes
+
+- 1d3a0b8: Update dependencies to releases with published security fixes.
+
+  - `hono` 4.13.5 and `@hono/node-server` 2.0.10 in the servers.
+  - `ws` 8.21.0 in the servers; `postcss` 8.5.23 in the dev server.
+  - The servers drop leftover Next.js-era dependencies they no longer use: `@sentry/nextjs` from `@lowdefy/server`, and the `webpack` and `@next/eslint-plugin-next` devDependencies.
+  - `axios` 1.18.0 in the CLI and AxiosHttp.
+  - `dompurify` 3.4.13 in `block-utils`, `blocks-basic` and `blocks-markdown`.
+  - `echarts` 6.1.0, `mysql2` 3.23.1, `nodemailer` 9.1.1, `uuid` 13.0.1 and `@auth/mongodb-adapter` 3.11.3 in their plugins.
+  - `tar` 7.5.21 and `picomatch` 4.0.4 in the build, `js-yaml` 4.3.2 in `e2e-utils`, and `@babel/core` 7.29.6 in `block-utils`.
+  - `@auth/core` 0.41.3 in the servers and `plugin-next-auth`, whose peer range is now `>=0.41.3`. `@auth/mongodb-adapter` 3.11.3 depends on the same release.
+
+  Two of these change output an app can see:
+
+  - **`echarts` 6.1.0** changes chart defaults. Bar, pictorialBar, candlestick and boxplot series no longer draw past the grid edge; set `containShape: false` on the axis to restore the previous look. `axis.startValue` no longer sets `min`. The second argument of a `tooltip.valueFormatter` function is now `rawDataIndex`.
+  - **`dompurify` 3.4.13** keeps a few attributes and elements that earlier releases removed: `command` / `commandfor`, `<selectedcontent>`, and some SVG attributes. HTML rendered by `Html`, `ClickableHtml`, `DangerousHtml`, `DangerousMarkdown` and other `renderHtml` properties may keep them.
+
+- Updated dependencies [ea69869]
+- Updated dependencies [1d3a0b8]
+  - @lowdefy/block-utils@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

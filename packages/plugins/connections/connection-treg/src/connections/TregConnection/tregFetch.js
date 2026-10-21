@@ -22,14 +22,23 @@ import redactToken from './redactToken.js';
 const DEFAULT_BASE_URL = 'https://treg.to';
 const DEFAULT_TIMEOUT_MS = 30000;
 
+// A loop, not /\/+$/: that regex takes quadratic time on a long run of slashes.
+function trimTrailingSlashes(text) {
+  let end = text.length;
+  while (end > 0 && text[end - 1] === '/') {
+    end -= 1;
+  }
+  return text.slice(0, end);
+}
+
 function buildUrl({ baseUrl, path, query }) {
   const base = new URL(baseUrl);
-  const url = new URL(`${baseUrl.replace(/\/+$/, '')}${path}`);
+  const url = new URL(`${trimTrailingSlashes(baseUrl)}${path}`);
   // The URL parser drops tabs and newlines, resolves "." and ".." segments (also encoded)
   // and turns backslashes into slashes, so a path that looked safe can reach another /call/
   // target, where treg injects the team's credential. Only a path the parser keeps exactly
   // as written is sent.
-  const expectedPath = `${base.pathname.replace(/\/+$/, '')}${path}`;
+  const expectedPath = `${trimTrailingSlashes(base.pathname)}${path}`;
   if (
     url.origin !== base.origin ||
     url.pathname !== expectedPath ||

@@ -7,6 +7,9 @@ export default {
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'node',
+  // Many suites start git, node or dev server processes, which take several
+  // times longer on Windows runners than on Linux and pass jest's 5s default.
+  testTimeout: 30000,
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
   // Only *.test.js files are suites; src/commands/test/test.js is the `lowdefy test` handler.
   testRegex: '\\.test\\.js$',

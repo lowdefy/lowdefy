@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: GoogleMaps
     pageTitle: GoogleMaps
-    section: Container Blocks
     filePath: blocks/container/GoogleMaps.yaml
     block_type: GoogleMaps
     github_path: packages/plugins/blocks/blocks-google-maps/src/blocks/GoogleMaps

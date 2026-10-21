@@ -59,7 +59,7 @@ function addPlugin(serverDir, { checks } = {}) {
   return name;
 }
 
-function createTestContext({ serverDir, typesMap, skipPluginChecks }) {
+function createTestContext({ serverDir, typesMap, skipPluginChecks, pluginInstallFollows }) {
   const logger = { warn: jest.fn(), error: jest.fn(), info: jest.fn(), log: jest.fn() };
   return createContext({
     customTypesMap: typesMap,
@@ -69,6 +69,7 @@ function createTestContext({ serverDir, typesMap, skipPluginChecks }) {
       server: serverDir,
     },
     logger,
+    pluginInstallFollows,
     skipPluginChecks,
     stage: 'dev',
   });
@@ -356,6 +357,63 @@ test('runPluginChecks returns a used package that is not installed as pending, a
   expect(messages(context.warnings)).toEqual([
     '~ignoreBuildChecks slug "some-rule" is not a built-in check or a rule of any loaded plugin. It may be a rule of a plugin whose rules did not load: @lowdefy-test/not-installed.',
     'Plugin checks for @lowdefy-test/not-installed did not run: package not installed.',
+  ]);
+});
+
+test('runPluginChecks returns a pending connection-only package without warning', async () => {
+  const serverDir = createServer();
+  const context = createTestContext({
+    serverDir,
+    typesMap: {
+      connections: { TestConnection: { package: '@lowdefy-test/connection-not-installed' } },
+      requests: { TestRequest: { package: '@lowdefy-test/connection-not-installed' } },
+    },
+  });
+  context.typeCounters.connections.increment(
+    'TestConnection',
+    'c',
+    keyed(context, 'c', { connectionId: 'db' })
+  );
+  context.typeCounters.requests.increment('TestRequest', 'r', keyed(context, 'r', { id: 'get' }));
+
+  const { pending } = await runPluginChecks({ context });
+
+  expect(pending).toEqual([
+    { name: '@lowdefy-test/connection-not-installed', schemaChecked: false },
+  ]);
+  expect(context.errors).toEqual([]);
+  expect(context.warnings).toEqual([]);
+});
+
+test('runPluginChecks holds the pending warning when a plugin install follows', async () => {
+  const serverDir = createServer();
+  const context = createTestContext({
+    serverDir,
+    typesMap: { blocks: { Box: { package: '@lowdefy-test/not-installed' } } },
+    pluginInstallFollows: true,
+  });
+  context.typeCounters.blocks.increment('Box', 'b', keyed(context, 'b', { blockId: 'box' }));
+
+  const { pending } = await runPluginChecks({ context });
+
+  expect(pending).toEqual([{ name: '@lowdefy-test/not-installed', schemaChecked: true }]);
+  expect(context.warnings).toEqual([]);
+});
+
+test('runPluginChecks with skipPluginChecks gives no pending warning', async () => {
+  const serverDir = createServer();
+  const context = createTestContext({
+    serverDir,
+    typesMap: { blocks: { Box: { package: '@lowdefy-test/not-installed' } } },
+    skipPluginChecks: true,
+  });
+  context.typeCounters.blocks.increment('Box', 'b', keyed(context, 'b', { blockId: 'box' }));
+
+  const { pending } = await runPluginChecks({ context });
+
+  expect(pending).toEqual([{ name: '@lowdefy-test/not-installed', schemaChecked: true }]);
+  expect(messages(context.warnings)).toEqual([
+    'Plugin checks were skipped (--skip-plugin-checks).',
   ]);
 });
 

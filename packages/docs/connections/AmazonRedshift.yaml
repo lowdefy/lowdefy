@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: AmazonRedshift
     pageTitle: Amazon Redshift
-    section: Connections
     filePath: connections/AmazonRedshift.yaml
     content:
       - id: markdown_intro

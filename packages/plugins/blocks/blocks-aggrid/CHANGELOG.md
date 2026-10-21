@@ -1,5 +1,332 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- 96d6f1c: fix(blocks-aggrid): Show the tick in ticked AgGrid checkboxes
+
+  A ticked checkbox in an AgGrid Balham block, including a read-only boolean cell and a row-selection checkbox, showed no tick. The antd theme draws the ticked box in the primary colour, and the Balham block drew the tick in that same colour, so a ticked box read as empty and a read-only one as a plain grey square. The other blocks drew the tick in the background colour, so it turned dark in dark mode. Every AgGrid block now draws a white tick on the primary colour, as antd's Checkbox does.
+
+- b1d58df: fix(blocks-aggrid): AgGrid columns accept named filters and components
+
+  The build warned `columnDefs.N.filter must be type "boolean"` on every AgGrid column whose `filter` named an AG Grid filter, such as `filter: agDateColumnFilter`, though the grid filtered correctly. `filter` now takes `true`, `false` or a provided filter name: `agTextColumnFilter`, `agNumberColumnFilter` or `agDateColumnFilter`. Any other name, such as a misspelt one or an Enterprise filter this block does not include, still warns. `cellRenderer` and `tooltipComponent` likewise accept the name of a registered component, such as the cell renderer `agAnimateShowChangeCellRenderer`.
+
+- Updated dependencies [c6d665a]
+- Updated dependencies [3df29f3]
+  - @lowdefy/blocks-antd@7.1.0
+  - @lowdefy/block-utils@7.1.0
+  - @lowdefy/helpers@7.1.0
+
+## 7.0.0
+
+### Major Changes
+
+- 36f864c: feat!: Lucide icons replace react-icons, with icon settings and icon-set plugins.
+
+  Lowdefy icons are now [Lucide](https://lucide.dev) icons rendered by `lucide-react`. react-icons names such as `AiOutlineUser` no longer resolve. Run `lowdefy upgrade` to rewrite them, or follow the migration guide at `/v6-to-v7` in the docs.
+
+  Breaking changes:
+
+  - **Icon names.** Use a semantic name (`edit`, `delete`, `chevron-down`, …), a Lucide name in PascalCase (`Pencil`, `Trash`), or a set-qualified name (`lucide:Pencil`). An unknown name at an icon property fails the build with a suggestion; old react-icons and Ant Design names get a migration message.
+  - **Block and Ant Design icons are Lucide.** Every icon a block chooses (validation marks, date picker calendar, menu and sidebar toggles, dark-mode switch, upload lists, pagination arrows, …) and Ant Design's own close, status, expand and loading icons now render through semantic names, so they follow the app's icon set and `theme.icons.aliases`.
+  - **`theme.icons.aliases` targets lose the `Lu` prefix** (`LuPencil` → `Pencil`), and several semantic names now point at Lucide 1.x names (`delete` → `Trash`, `filter` → `Funnel`, `help` → `CircleQuestionMark`, `history` → `RotateCcwClock`).
+  - **Icon hover titles** are generated from the new names ("Pencil", "Arrow left right").
+
+  New:
+
+  - **Icon settings.** `theme.icons.size` (default `1em`), `theme.icons.strokeWidth` (default `2`) and `theme.icons.nonScalingStroke` set app-wide defaults; every icon accepts `strokeWidth` and `nonScalingStroke`.
+  - **Icon-set plugins.** A plugin declares `iconSets` in `types.js` and exports icon data from `./iconSets`. Sets are layered in plugin order - the last plugin wins per icon name, and a partial set falls through - so a plugin can add a single icon to `lucide` or replace one. `theme.icons.set` picks the default set for PascalCase names and can re-skin semantic names.
+  - **`@lowdefy/icons-react-icons`** holds every react-icons 5.6.0 icon under its old name. Install it and set `theme.icons.set: react-icons` to keep old names, for example icon names stored in a database.
+  - **`lowdefy upgrade`** gains a `7.0.0` phase that rewrites react-icons names to semantic or Lucide names from a table covering every Ant Design, Lucide and commonly used react-icons name.
+
+  Fixes: the header locale selector and the AgGrid row menu icons now bundle in production builds, and the dev server reports unknown icon names on pages written inline in `lowdefy.yaml`.
+
+### Minor Changes
+
+- 2735310: feat: Add icon placement to buttons and expose more antd 6.6 features on button, menu, navigation and page layout blocks.
+
+  Buttons can now put their icon after the title. Set `iconPlacement: end` on a `Button`, on a
+  `DropdownButton` (the main button, in normal and split mode), or on each button of an ag-grid
+  `buttons` cell.
+
+  New properties, events and CSS keys:
+
+  - `Button`: `iconPlacement`, `target` (open an `href` in a new tab), and more design tokens in
+    `theme` (`fontWeight`, `iconGap`, `contentFontSize*`, `default*` colors, shadows and more).
+  - `DropdownButton`: `iconPlacement`, and `left`/`right` placements.
+  - `DropdownMenu`: `selectable` (needed for `onSelect` to fire), and `left`/`right` placements.
+  - `FloatButton`: `disabled`, and a back to top mode with `backTop`, `visibilityHeight`,
+    `duration` and `showProgress` (a scroll progress ring).
+  - `Menu`: `triggerSubMenuAction` (open submenus on click), `tooltip` for collapsed inline
+    menus, a `popup` CSS key for submenu popups, and `keyPath` in the `onClick` and `onSelect`
+    events. Horizontal menus draw their overflow indicator with the app's icons.
+  - `Breadcrumb`: `item` and `separator` CSS keys, and `links` on a breadcrumb item to show a
+    dropdown menu of links (also on the page layout `breadcrumb` property).
+  - `Pagination`: `align`, `size: large`, `showLessItems`, `responsive`, an `item` CSS key, and
+    more design tokens.
+  - `Steps`: `maxCount` to collapse long step lists, `item`, `itemTitle`, `itemSubtitle` and
+    `itemContent` CSS keys, and more design tokens.
+  - `Tabs`: `centered`, `tabBarGutter`, `indicator` (size and alignment of the ink bar),
+    `destroyOnHidden`, and `item` and `popup` CSS keys.
+  - `Affix`: `target`, the id of a scrollable element to stick to.
+  - `Tour`: `gap.offset` and `gap.radius`, `nextButtonProps` and `prevButtonProps` for step
+    button text, object `scrollIntoViewOptions`, and `title`, `description`, `cover` and `footer`
+    CSS keys.
+  - `Layout` and `Sider`: the `theme` property now applies antd Layout design tokens (such as
+    `bodyBg`, `headerHeight`, `footerBg` and the sider trigger tokens), and the docs list them.
+  - `Sider`: a `body` CSS key, `xxxl` breakpoint, and `onBreakpoint` now passes `{ broken }`.
+  - `PageSiderMenu` and `PageSidebarLayout`: a `siderBody` CSS key, and `sider.collapsible` is
+    documented on both.
+  - ag-grid `buttons` cell: per-button `iconPlacement`. ag-grid `menu` cell: `left`/`right`
+    placements.
+
+  Fixes that change what existing apps see or receive:
+
+  - `Pagination` passed the wrong `skip` in its `onChange` and `onSizeChange` event payloads: one
+    page too many (`current * pageSize`). The event `skip` now matches the block value
+    (`(current - 1) * pageSize`). Apps that corrected for this, for example by subtracting the
+    page size from `_event: skip`, must remove that correction. Apps that read `skip` from the
+    block value in state are not affected.
+  - An inline `Menu` with `collapsed: true` outside a `Sider` now collapses. Before, antd never
+    received the setting and the menu rendered expanded.
+  - A collapsible `Sider`'s trigger (and the trigger shown when `collapsedWidth` is 0) did nothing
+    when clicked. It now toggles the sider, and in `PageSiderMenu` and `PageSidebarLayout` it
+    toggles the page's sider state. Responsive collapse is unchanged: crossing the breakpoint
+    only fires `onBreakpoint`.
+  - The `theme` property of `Layout`, `Sider`, `PageHeaderMenu` and `PageSiderMenu` had no effect.
+    `Layout` and `Sider` now apply it as antd Layout design tokens, and `PageHeaderMenu` and
+    `PageSiderMenu`, like `PageSidebarLayout`, apply it as global design tokens for the page.
+    Apps that set it will now see it applied.
+  - `DropdownButton` and `DropdownMenu` applied the `menu` CSS key through props antd ignores, so
+    menu classes and styles never reached the popup. The `profileMenu` and `localeSelectorMenu`
+    CSS keys of `Header` and the page layouts had the same problem. `DropdownButton` also dropped
+    its `item` CSS key, and outside split mode, like `DropdownMenu`, its element id, class and
+    style: these now land on the button (`DropdownButton`) and the trigger wrapper
+    (`DropdownMenu`).
+  - `Tabs` passed its `tabBar`, `tabPane` and `inkBar` CSS keys under names antd 6 does not use,
+    so they had no effect. They now style the tab bar, each tab pane and the ink bar.
+  - The `item` style of `Menu` and `DropdownMenu` was ignored; only the class applied. Both now
+    apply.
+  - `Tour` ignored `gap: { x, y }`. It now maps to antd's `gap.offset`.
+
+  Other fixes:
+
+  - `Pagination` always showed the item range and total, although the docs said `showTotal`
+    defaults to false. The docs now say it defaults to true, and `showTotal: false` hides it.
+  - `Steps` no longer logs antd deprecation warnings for `size: default`, `progressDot` and item
+    `description`.
+  - `FloatButton` no longer logs a deprecation warning for `description`, and draws its default
+    icon with the app's icons.
+  - `DropdownButton` passes antd's `medium` size for `size: middle`.
+  - The `Header`, `Footer` and `Content` `theme` docs now say antd only applies Layout tokens
+    from the parent `Layout` block. The `arrow` CSS key of `DropdownButton` and `DropdownMenu` and
+    the `subMenu` CSS key of `DropdownMenu` are documented as having no effect, since antd does
+    not expose those parts.
+
+- 1227e62: feat: Table, grid, Anchor and HTML links carry `pathParams`
+
+  Links set as block properties fill a page path's placeholders with `pathParams`, next to `urlQuery`. In TableLight, Table and AgGrid cell and row links the values are row field paths, as `urlQuery` values are there: `link: { pageId: ticket, pathParams: { ticket_id: _id } }`. A relation cell defaults `urlQuery` to `{ _id: _id }` only when neither `urlQuery` nor `pathParams` is set. `Anchor` takes `pathParams`, and an HTML link takes `data-path-params` as a JSON object: `<a data-page-id="ticket" data-path-params='{"ticket_id":"1"}'>`.
+
+  AgGrid link and avatar link cells now build their href through the Lowdefy Link, so it includes the app's `basePath`. A plain click still emits `onCellLink` without navigating.
+
+- 7c20d1b: feat: Events no longer bubble to the blocks around the block that handled them
+
+  A click on a block inside another clickable block used to run the events of both, so a Button in a clickable Card also opened the card, and a Box in a List row also ran the row's `onClick`. Now a browser event runs only the innermost event that handles it: once a block with actions for the event fires, the blocks around it skip that same browser event. A block without an event for the interaction, like a Paragraph in the card, still passes the click on to the card. Only blocks on the browser event's own path skip it: events that blocks fire from effects, events of blocks inside the one that handled it, events from method calls, and events a block runs for its own machinery (a file upload's policy request, a table's row fetch) all still run.
+
+  Set `bubble: true` on an event to also run the events of the blocks around it:
+
+  ```yaml
+  events:
+    onClick:
+      bubble: true
+      try:
+        - id: select
+          type: SetState
+          params:
+            selected: true
+  ```
+
+  Inside AgGrid blocks, clicks on a cell's buttons, links, menus, inputs, selectors, switches or selection checkbox no longer trigger `onRowClick` or `onCellClick`. They only fire the control's own event.
+
+  This changes behaviour for apps that relied on a nested click running both events: add `bubble: true` to the inner event to keep it. The `nested-event-bubbling` codemod in `lowdefy upgrade` adds `bubble: true` only where an outer event reads a value the inner event sets, moves AgGrid row-click state setup into the cell control events that relied on it, and lists the other nested events for review. Closes #1154.
+
+### Patch Changes
+
+- 0a1f07a: ag-grid block fixes:
+
+  - Editing a cell in an input grid (`AgGridInput*`, `AgGridLowdefyInput`) that is sorted or filtered no longer overwrites another row. The edit used the row's displayed position as its position in the value, so a second row could receive the new value.
+  - Icons show in `buttons` and `menu` cells in the input grids. The input grids now pass `components` to their cells, as the display grids do.
+  - After a row drag in an input grid, the grid is fed the new order directly instead of the old rows.
+  - `quickFilterValue` works: it shows only rows with a cell containing the text, and it can be bound to state. Before, the property was read but did nothing.
+  - Event handlers read the current render's `events` instead of those from the first render.
+
+- 7836aa2: fix: ConfigProvider `componentDisabled` now disables the Lowdefy blocks inside it.
+
+  `componentDisabled: true` on a ConfigProvider block was documented to disable every child
+  component, but Lowdefy's input blocks and buttons ignored it: they passed `disabled={false}` to
+  antd whenever the block was not loading, and antd lets an explicit `false` beat the
+  ConfigProvider. Blocks now pass their `disabled` property through unchanged (and `true` while
+  loading), so inside a ConfigProvider with `componentDisabled: true`:
+
+  - Every input, selector, date selector, switch, slider, color selector and button is disabled,
+    including TagSelector and TagMultipleSelector pills, SegmentedSelector, RatingSlider,
+    PhoneNumberInput, DropdownButton (its hover menu no longer opens either), the ControlledList add
+    button and remove icons, and the textInput, selector, switch and buttons cells of the AgGrid
+    blocks.
+  - A block that sets `disabled: false` itself stays enabled, and `disabled: true` still disables a
+    block anywhere.
+  - Pasting into an UploadDragger does nothing while it is disabled by the ConfigProvider.
+
+  Nothing changes for blocks outside a ConfigProvider, or when `componentDisabled` is not set. As in
+  antd, ParagraphInput, TitleInput (whose `disabled` is a style only) and Pagination don't follow
+  `componentDisabled`.
+
+  AutoComplete now matches the other Select-based blocks:
+
+  - New `onOpenChange` event with `{ open }` when the dropdown opens or closes.
+  - New `listHeight`, `placement`, `popupMatchSelectWidth` and `virtual` properties, the same as
+    Selector.
+  - `size: default` is passed to antd as `medium`, so antd 6 no longer warns about it.
+  - An empty `prefix` no longer falls back to `prefixIcon`, matching Selector.
+
+- 6144814: Allow only safe link schemes in block hrefs
+
+  An `href` is used only when its scheme is one DOMPurify allows by default (`http`, `https`, `ftp`, `ftps`, `mailto`, `tel`, `callto`, `sms`, `cid`, `xmpp`, `matrix`), or it is a relative path, a query or a fragment. Any other value, including one with leading whitespace or control characters, renders no link. This applies to `Button`, `Tag` and `FloatButton`, the url cell of table, AgentChat message and tool result links, `TiptapMentionInput` mention links, and every `href` given to the Lowdefy `Link` component, which covers table and ag-grid link, avatar and relation cells. A `Link` whose `href` is refused renders a span without navigating, and does not fall back to its `pageId` or `url`; the `Link` action with such an `href` throws "Invalid Link: no target resolved." as it does for a `url` it cannot resolve.
+
+  `@lowdefy/helpers` exports the check as `getSafeHref(href)`, which returns the href or `undefined`; `@lowdefy/block-utils` re-exports it.
+
+- c377065: fix(blocks-aggrid): Bundle the default menu cell icon for the AgGrid input blocks
+
+  The menu cell falls back to the `more-vertical` icon when a column's menu sets no icon. The display AgGrid blocks declared that icon so the build bundled it, but the AgGridInput blocks, which render the same menu cell, declared no icons, so the default menu button rendered without its icon. The input blocks now declare it too. Fixes #2393.
+
+- d2c8e01: feat(api)!: Data read into a Dynamic block's `:return` stays data.
+
+  **Breaking:** a Dynamic block without a dynamic blocks policy no longer renders blocks or actions that its endpoint read as data. In v6, stored operator-free block config returned from a Dynamic endpoint rendered as it was; in v7 the block renders its fallback. Every block and action in the returned content must be written in the endpoint's `:return` config. A block or action that is data an operator returned (a step result, routine state, the payload, a `:for` item, a nested endpoint's result), or a copy or extension of one made with `_get`, `__args` or `__object.assign`, fails resolution. Operators that only pass their checked params through (`_if`, `_switch`, `_if_none`, `_get`, `_args`, `_function`, `_log`, `_array`, and `_object` except `fromEntries` and `defineProperty`) may return written config; content that breaks the rule renders the fallback, with an error naming the operator and the path in its result. Blocks built up in routine state, returned by a nested endpoint, looped over with `_item`, or built by `_js`/`_jsonata` fail: build them inside `:return` with `_array.map`/`_array.concat`, share block config with `_ref`, and write client operators (`__state`, `_array.map` callbacks) in the `:return` config. Data may still fill values inside written blocks, as in the documented `_array.map` pattern, and a block built by config from a stored field renders even when it equals the field. To render stored or generated block config, put the Dynamic block under a dynamic blocks policy and return the content through a `ValidateDynamic` step. See the v6 to v7 migration guide.
+
+  Also:
+
+  - Only operator keys lose their escaping underscore in the returned content (`__state` becomes `_state`); data keys such as `__typename` pass through unchanged.
+  - Data read into a Dynamic `:return` may nest at most 200 levels deep, and dynamic blocks policy content likewise (`limits.depth`); deeper data fails resolution with an error saying so.
+  - An object from data that `_object.assign` merges with other config can no longer end up as an operator on the client, for example next to a key whose value is a function or evaluates to undefined.
+  - Only keys that name one of the app's operators count as operators: in the literal data check an installed client or server operator, in dynamic blocks policies and the fragment build a client operator. Data such as `{ _score: 0.5 }` or `{ _source: { ... } }` now renders as data instead of failing. The build writes `plugins/clientOperators.json` with every client operator name the app knows.
+  - Dynamic blocks policies: with `state` set, every `_state` read in the content must name a literal key under that path. URLs are judged by the block's properties schema, which now marks URL-valued properties with `urlKind` (`Search` `indexUrl`, `QRCode` `icon`, `Watermark` `image`, `Tour` step covers, avatar and logo sources, link `url`s and `href`s, `Img` `src`/`srcSet`, AgGrid link cells), whatever the property is called. Every value no schema marks is still judged by its key name; `urlKind: false` opts a URL-named property out (`Search` `result.url`, the Tiptap `image` settings). URLs are read as the browser's URL parser reads them, so surrounding spaces and embedded tabs or newlines do not change the verdict.
+
+- a2b5466: fix: Block meta now declares the events and properties the components already support.
+
+  The `EChart` block declares all 35 ECharts events it wires through, not just `onClick`, so they are valid config and appear on the docs page. `AgGrid`, `Tabs` and `DropdownButton` mark themselves as firing event names authored in their own properties.
+
+  Several property schemas were narrower than the components that read them and are widened to match: numeric `Avatar` and `Spinner` sizes, `Collapse` `defaultActiveKey` arrays, `Layout` `hasSider`, `SkeletonInput` `label`, `SkeletonButton` `shape`, `ProgressBar` `progress`, `PhoneNumberInput` `showFlags`, `ColorSelector` `label` and `title`, `Sider` and `Menu` theme strings, `TimelineList` pending text, `SegmentedSelector` middle size, selector option values of any type, and the AgGrid grid-option passthrough and cell types.
+
+- 239a3a7: feat: dates, numbers, avatars, copy buttons, truncation, text tones and confirmations in HTML.
+
+  - **Dates.** `<time datetime="…" data-time="relative">` shows "3 hours ago" and keeps it current, with the exact time on hover. `date`, `datetime` and `time` use the app's locale, and any other value is a dayjs format. Dates show in the reader's time zone.
+  - **Numbers.** `data-format` formats the element's number as `number`, `currency` (with `data-currency="USD"`), `percent`, `compact` or `bytes`, with the same formatting as the ag-grid `number` cells; `data-decimals` fixes the decimals.
+  - **Avatars.** `data-avatar="Jane Doe"` renders initials in a theme colour, the same as the ag-grid `avatar` cells, and on an `<img>` replaces a missing or broken image. No image service is called.
+  - **Copy.** `data-copy` adds an accessible copy button for the element's text or the attribute's value. The copy and check icons are always bundled, and the labels are the new `client.copy`, `client.copyValue`, `client.copied` and `client.copyFailed` translation keys.
+  - **Truncation.** `data-truncate` (or `data-truncate="3"`) clamps text to 1–6 lines with an ellipsis and shows the full text in a tooltip only when it is cut off, the same clamp as the ag-grid `ellipsis` columns.
+  - **Text tone.** `data-tone="secondary"` (also `tertiary`, `quaternary`, `success`, `warning`, `error`, `info`) colours text with theme tokens that follow dark mode.
+  - **Confirm.** In `ClickableHtml`, `data-confirm="Delete this row?"` on a `data-event` element opens a themed confirmation first; only OK fires the event, once. Focus moves to Cancel and returns afterwards, and Escape cancels. A change to the HTML closes it without firing. A bare `data-confirm` asks the new `client.confirm` message ("Are you sure?").
+  - **Keyboard.** Space now activates focusable `data-event` targets and popover triggers on key up, like a native button.
+
+- 49490b6: feat: in-app links and status tags in HTML.
+
+  - **Links.** In any HTML string, `<a data-page-id="contacts" data-url-query="_id=42">` links to an app page: Lowdefy sets the `href` (with the app's `basePath`), and a plain click opens the page without reloading the app, like a `Link` action. `data-link` does the same for an existing app-relative `href="/path"`; a `data-page-id` or `data-link` that does not resolve to a page of the app is left as written. `data-new-tab` opens any link in a new tab (sanitising removes `target`, so `target="_blank"` never worked in HTML). The build warns when a `data-page-id` in page config or in an API endpoint names a page that does not exist, with a suggestion for a likely typo.
+  - **Status tags and dots.** `<span data-tag="success">Approved</span>` renders a tinted tag and `data-status="warning"` a status dot, in theme colours that follow dark mode. Values are antd status names and preset colours, CSS colours, or any other value, which picks a stable colour. HTML tags look exactly like the ag-grid `tag` cells: both now use the same formatting code in `@lowdefy/block-utils`.
+  - **Docs.** A new HTML attributes page describes every attribute HTML understands, and the Html block's schema, hazards and examples teach agents to use them instead of hard-coded hrefs and inline-styled pills.
+
+- a79fb1d: feat: semantic icon names, and icons, tooltips and popovers in HTML.
+
+  - **Semantic icon names.** Anywhere an icon name is accepted you can now write a name like `edit`, `delete`, `warning` or `external-link` (67 built-in names plus Ant Design spellings like `plus` and `setting`). They map to Lucide icons, so apps look consistent without picking a pack per icon. Add or override names with `theme.icons.aliases` in `lowdefy.yaml`, and list icon names that only exist at runtime under `theme.icons.include`. Existing React Icons names work exactly as before, and the build still bundles only the icons your config uses.
+  - **Icons, tooltips and popovers in HTML.** Every block that renders HTML (`Html`, `ClickableHtml`, `DangerousHtml`, and HTML properties such as Tooltip and Card titles) understands `<i data-icon="edit"></i>`, `data-tooltip="Text"`, and `data-popover="id"` with a matching `data-popover-content="id"` element. Tooltips and popovers use the app's antd theme and load on first use. An open popover stays open with its new content when the HTML changes, as long as the new HTML still has its trigger. In `ClickableHtml`, `data-event` targets are now keyboard focusable (Enter and Space click them), and a `data-event` inside a popover fires and closes it.
+  - **Icon fixes.** Icons no longer remount on every parent render, an icon that failed recovers when its name changes, and a clickable `Icon` block is keyboard focusable.
+  - **Agents.** The dev server adds `lowdefy_search_icons` and `GET /lowdefy-docs/icons?q=`, and the agent setup files explain the icon and HTML conventions.
+
+- a9442cc: Production pages load only the plugin code they use.
+
+  The production client used to ship every block, action, operator and icon the app uses anywhere in one main bundle, and every first visit downloaded all of it. Now the build writes one small module per distinct page type set, and each page loads its own. On the docs app the main bundle drops from 6,016 kB to 1,021 kB (1,778 kB to 332 kB gzipped). A simple page's first load drops from 1,720 kB to 529 kB gzipped.
+
+  - The HTML preloads the page's chunks alongside the main bundle, so the first page does not wait an extra round trip.
+  - Content-hashed assets are served with `Cache-Control: public, max-age=31536000, immutable`, on the Node server and in `lowdefy vercel-output`.
+  - Lowdefy's plugin packages declare `"sideEffects": ["**/*.css"]`, so a page that uses one block no longer loads the whole package.
+  - The build adds the types a page runs without naming them: the operators the `_js` accessors call, and the actions and operators a block runs for events it registers itself (such as `Request` in `Upload` or `SetLocale` in `PageHeaderMenu`), which blocks list in `meta.actions` and `meta.operators`. Plugin blocks that register their own events should list them the same way.
+  - A Dynamic block whose content uses a type its `properties.types` did not declare still works: the page loads the full type set and the server logs a warning naming the type to declare.
+
+  No config changes. The dev server is unchanged.
+
+- 3eb3691: Tag colours are fixed and readable.
+
+  - **Preset tag colours render as themselves.** purple, cyan, geekblue, gold, lime, magenta and volcano pointed at CSS variables antd doesn't define, so they fell back to blue, orange, red or green. `pink` is added.
+  - **Tag text is readable.** Tags (Table, TableLight, ag-grid tag and progress cells, HTML `data-tag`/`data-status`) use antd Tag's fill, border and text shade, with the text mixed toward the base text colour. Every preset, status name and custom colour reaches at least 4.5:1 contrast in light and dark themes; gold text on its tint went from 1.75:1 to 6.4:1. red, orange, yellow, green and blue now take their base colour from antd's palette, as antd's Tag does, so status dots and rule colours shift slightly.
+  - **An input-container's slots can render with their own loading state** (`content[slot](style, { loading })`). By default they still inherit the block's loading, so existing blocks are unchanged. The Table uses this so its toolbar and bulk-bar buttons stay usable while the page loads.
+
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [f0162f4]
+- Updated dependencies [2735310]
+- Updated dependencies [80b5cbf]
+- Updated dependencies [26a1894]
+- Updated dependencies [6f20e75]
+- Updated dependencies [7c4879b]
+- Updated dependencies [7836aa2]
+- Updated dependencies [2bdb855]
+- Updated dependencies [80c0ad2]
+- Updated dependencies [99a4f35]
+- Updated dependencies [1227e62]
+- Updated dependencies [ae6afbf]
+- Updated dependencies [6144814]
+- Updated dependencies [cfc8f71]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [10bee50]
+- Updated dependencies [cb3551c]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [575a5ee]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [5852b65]
+- Updated dependencies [d2c8e01]
+- Updated dependencies [36f864c]
+- Updated dependencies [eaa6517]
+- Updated dependencies [1bb3012]
+- Updated dependencies [2ffac21]
+- Updated dependencies [a2b5466]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [49490b6]
+- Updated dependencies [a79fb1d]
+- Updated dependencies [1766343]
+- Updated dependencies [08f76bb]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [a9442cc]
+- Updated dependencies [3c2258c]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [3eb3691]
+- Updated dependencies [537bf54]
+- Updated dependencies [9de3cf9]
+- Updated dependencies [3f3a320]
+- Updated dependencies [ecdfb65]
+- Updated dependencies [4a69885]
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/blocks-antd@7.0.0
+  - @lowdefy/block-utils@7.0.0
+
+## 6.1.0
+
+### Patch Changes
+
+- ae9803e: feat(blocks): icon-only buttons get tooltips. A Button with `hideTitle: true` (or a circle button with no visible title) now shows its `title` on hover, and a buttons cell in an AgGrid does the same for each icon-only button, so a row of glyphs says what each one does. A `tooltip` property on either sets its own hover text.
+- Updated dependencies [ae9803e]
+- Updated dependencies [ea69869]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/blocks-antd@6.1.0
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/helpers@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes

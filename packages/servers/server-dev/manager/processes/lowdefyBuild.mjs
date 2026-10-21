@@ -26,7 +26,7 @@ function formatDuration(ms) {
 }
 
 function lowdefyBuild({ directories, logger, options }) {
-  async function build() {
+  async function build({ pluginInstallFollows = false } = {}) {
     logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
 
@@ -47,6 +47,7 @@ function lowdefyBuild({ directories, logger, options }) {
         customTypesMapMobile,
         directories: { ...directories, build: directories.buildStaging },
         logger,
+        pluginInstallFollows,
         refResolver: options.refResolver,
         skipPluginChecks: options.skipPluginChecks,
         stage: 'dev',
@@ -85,8 +86,8 @@ function lowdefyBuild({ directories, logger, options }) {
   // Watchers, restarts and plugin installs each start builds, and every build
   // writes the same staging directory, so a build waits for the one before it.
   let previousBuild = Promise.resolve();
-  return () => {
-    const nextBuild = previousBuild.then(build);
+  return (buildOptions) => {
+    const nextBuild = previousBuild.then(() => build(buildOptions));
     previousBuild = nextBuild.catch(() => {});
     return nextBuild;
   };

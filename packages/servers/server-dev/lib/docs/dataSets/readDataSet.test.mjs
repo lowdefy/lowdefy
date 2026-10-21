@@ -84,9 +84,11 @@ test('readDataSet reads module connections, which the build writes under their m
   writeConnection('contacts/contacts', mongo({ collection: 'contacts' }));
   writeConnection('crm-contacts', mongo({ collection: 'contacts', databaseName: 'crm' }));
   writeDataSet('alpha', 'fixtures:\n  contacts/contacts: [{ _id: c1 }]\n');
-  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
-    'Data set "alpha": Connections "contacts/contacts" and "crm-contacts" both name collection "contacts" in different databases'
-  );
+  const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'alpha' });
+  expect(dataSet.databaseTargets).toEqual([
+    JSON.stringify(['secret:MONGODB_URI', null]),
+    JSON.stringify(['secret:MONGODB_URI', 'crm']),
+  ]);
 });
 
 test('readDataSet maps a module connection to its collection', async () => {
@@ -127,37 +129,66 @@ test('readDataSet refuses an indexed connection whose databaseName is an operato
   );
 });
 
-test('readDataSet refuses a keyed connection naming one collection under a different databaseName from another connection', async () => {
-  writeConnection('tickets', mongo({ collection: 'tickets', databaseName: 'app' }));
-  writeConnection('legacy-tickets', mongo({ collection: 'tickets', databaseName: 'legacy' }));
-  writeDataSet('alpha', 'fixtures:\n  tickets: [{ _id: a }]\n');
-  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
-    'Data set "alpha": Connections "legacy-tickets" and "tickets" both name collection "tickets" in different databases'
-  );
-});
-
-test('readDataSet refuses a keyed connection naming one collection under a different databaseUri secret from another connection', async () => {
+test('readDataSet maps each keyed connection to its database target', async () => {
   writeConnection('tickets', mongo({ collection: 'tickets' }));
+  writeConnection('legacy-tickets', mongo({ collection: 'tickets', databaseName: 'legacy' }));
   writeConnection('reporting', {
     type: 'MongoDBCollection',
     properties: { databaseUri: { _secret: 'REPORTING_URI' }, collection: 'tickets' },
   });
-  writeDataSet('alpha', 'fixtures:\n  tickets: [{ _id: a }]\n');
-  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
-    'Connections "reporting" and "tickets" both name collection "tickets" in different databases'
+  writeConnection('computed', {
+    type: 'MongoDBCollection',
+    properties: { databaseUri: { _env: 'URI' }, collection: 'tickets' },
+  });
+  writeConnection('api', { type: 'AxiosHttp', properties: { baseURL: 'https://example.com' } });
+  writeDataSet(
+    'alpha',
+    'fixtures:\n  tickets: [{ _id: a }]\n  legacy-tickets: [{ _id: a }]\n  reporting: [{ _id: a }]\n  computed: [{ _id: b }]\n'
   );
+  const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'alpha' });
+  expect(dataSet.targets).toEqual({
+    tickets: JSON.stringify(['secret:MONGODB_URI', null]),
+    'legacy-tickets': JSON.stringify(['secret:MONGODB_URI', 'legacy']),
+    reporting: JSON.stringify(['secret:REPORTING_URI', null]),
+    // Computed per request: the first target's, the database it reads.
+    computed: JSON.stringify(['secret:MONGODB_URI', null]),
+  });
+  // Every target in the build, sorted, whether or not the data set names it.
+  expect(dataSet.databaseTargets).toEqual([
+    JSON.stringify(['secret:MONGODB_URI', null]),
+    JSON.stringify(['secret:MONGODB_URI', 'legacy']),
+    JSON.stringify(['secret:REPORTING_URI', null]),
+  ]);
+  expect(dataSet.warnings).toEqual([]);
 });
 
-test('readDataSet warns on the same collision between two unkeyed connections', async () => {
-  writeConnection('tickets', mongo({ collection: 'tickets' }));
-  writeConnection('a', mongo({ collection: 'events', databaseName: 'one' }));
-  writeConnection('b', mongo({ collection: 'events', databaseName: 'two' }));
-  writeConnection('computed', mongo({ collection: { _state: 'c' }, databaseName: 'three' }));
-  writeDataSet('alpha', 'fixtures:\n  tickets: [{ _id: a }]\n');
+test('readDataSet accepts one _id generated on one collection in two database targets', async () => {
+  writeConnection('users', mongo({ collection: 'users' }));
+  writeConnection('auth-users', {
+    type: 'MongoDBCollection',
+    properties: { databaseUri: { _secret: 'AUTH_URI' }, collection: 'users' },
+  });
+  writeDataSet(
+    'alpha',
+    'fixtures:\n  auth-users: [{ _id: users-1 }]\ngenerate:\n  seed: 1\n  users:\n    count: 1\n'
+  );
   const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'alpha' });
-  expect(dataSet.warnings).toEqual([
-    'Connections "a" and "b" both name collection "events" in different databases; under a data set they read one database, so they share one collection.',
-  ]);
+  expect(dataSet.collections).toEqual({ users: 'users', 'auth-users': 'users' });
+});
+
+test('readDataSet refuses a generated _id a computed-target connection also holds on the first target', async () => {
+  writeConnection('users', mongo({ collection: 'users' }));
+  writeConnection('computed-users', {
+    type: 'MongoDBCollection',
+    properties: { databaseUri: { _env: 'URI' }, collection: 'users' },
+  });
+  writeDataSet(
+    'alpha',
+    'fixtures:\n  computed-users: [{ _id: users-1 }]\ngenerate:\n  seed: 1\n  users:\n    count: 1\n'
+  );
+  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
+    'connections "users" and "computed-users" both load collection "users".'
+  );
 });
 
 test('readDataSet resolves generated connections and refuses one the app does not have', async () => {

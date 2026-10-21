@@ -88,10 +88,10 @@ test('the type manifest lists every type the shell registers, and no other', () 
   ['actions', 'blocks', 'operators'].forEach((category) => {
     expect(Object.keys(typeManifest[category]).sort()).toEqual(Object.keys(types[category]).sort());
   });
-  expect(typeManifest.blocks.Box).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
-  expect(typeManifest.blocks.Screen).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
-  expect(typeManifest.blocks.TextInput).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
-  expect(typeManifest.blocks.Markdown).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
+  expect(typeManifest.blocks.Box).toEqual({ package: '@lowdefy/blocks-native', version: 7 });
+  expect(typeManifest.blocks.Screen).toEqual({ package: '@lowdefy/blocks-native', version: 7 });
+  expect(typeManifest.blocks.TextInput).toEqual({ package: '@lowdefy/blocks-native', version: 7 });
+  expect(typeManifest.blocks.Markdown).toEqual({ package: '@lowdefy/blocks-native', version: 7 });
   expect(typeManifest.actions.SetState.package).toBe('@lowdefy/actions-core');
   expect(typeManifest.operators._state.package).toBe('@lowdefy/operators-js');
 });
@@ -145,7 +145,7 @@ test("a shell plugin's native types register and join the manifest, named with i
       expect(manifest.blocks.PrinterTag).toEqual(printer);
       expect(manifest.actions.PrinterPrint).toEqual(printer);
       expect(manifest.blocks.Label).toBeUndefined();
-      expect(manifest.blocks.Tag).toEqual({ package: '@lowdefy/blocks-native', version: 6 });
+      expect(manifest.blocks.Tag).toEqual({ package: '@lowdefy/blocks-native', version: 7 });
       // The registry jest.isolateModules loads them in is its own, so they are compared by what
       // they do: the plugin's Label under its prefixed name, the built-in Tag kept.
       expect(

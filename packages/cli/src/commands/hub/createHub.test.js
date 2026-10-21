@@ -92,8 +92,11 @@ let hub;
 
 // A range of its own for each test run, clear of the hub's real 4100-4999, so
 // hubs and hub tests in other worktrees never take the ports a test expects.
+// It ends below 49152, where Windows' dynamic port range starts: Windows
+// reserves blocks inside that range for Hyper-V and NAT, binding a reserved
+// port fails with EACCES, and a range inside one block has no free pair.
 function randomPortRange() {
-  const first = 20000 + 2 * Math.floor(Math.random() * 15000);
+  const first = 20000 + 2 * Math.floor(Math.random() * 14500);
   return { first, last: first + 40 };
 }
 
@@ -373,6 +376,35 @@ process.exit(1);`
   expect(survived).toBe(false);
 });
 
+test('a dev server whose leader reads as gone before its exit event reads as exited, not stopped', async () => {
+  // On Windows process.kill(pid, 0) fails as soon as the leader exits, before
+  // Node delivers its exit event. The mock reads the leader as gone while it
+  // still runs, so the hub is asked in that window on every platform.
+  fs.writeFileSync(
+    path.join(configDirectory, 'fake-dev.cjs'),
+    `setInterval(() => { if (require('fs').existsSync('die')) process.exit(1); }, 25);`
+  );
+  hub = createTestHub({ readyTimeoutMs: 1000 });
+  const started = await hub.start({ configDirectory });
+  expect(started.state).toEqual('starting');
+  const kill = process.kill.bind(process);
+  const killSpy = jest.spyOn(process, 'kill').mockImplementation((pid, signal) => {
+    if (signal === 0 && Math.abs(pid) === started.pid) {
+      throw Object.assign(new Error('kill ESRCH'), { code: 'ESRCH' });
+    }
+    return kill(pid, signal);
+  });
+  try {
+    const status = hub.status({ configDirectory });
+    fs.writeFileSync(path.join(configDirectory, 'die'), '');
+    expect(await status).toEqual(
+      expect.objectContaining({ state: 'exited', exit: expect.objectContaining({ code: 1 }) })
+    );
+  } finally {
+    killSpy.mockRestore();
+  }
+});
+
 onPosix(
   'hub reap stops a server whose worktree was removed on the second pass that finds it gone',
   async () => {
@@ -597,11 +629,17 @@ test.each([
   }
 );
 
-// A server on a Lowdefy version that records its start time in a format this
-// hub reads as another process's: it serves, but its record never verifies.
+// A server on a Lowdefy version that records its start time in a way this hub
+// reads as another process's: it serves, but its record never verifies. The
+// start time must be in the form this platform reads - one in another form
+// cannot be compared, so it proves nothing and the record would verify. On
+// Linux that is a zero boot id, as in otherStartTime; elsewhere, epoch
+// milliseconds long past.
+const UNMATCHED_START_TIME =
+  process.platform === 'linux' ? 'linux:00000000-0000-0000-0000-000000000000:0' : 1;
 const UNVERIFIABLE_DEV_SERVER = FAKE_DEV_SERVER.replace(
   "version: '6.0.0',",
-  "version: '7.0.0',\n  processStartTime: 1,"
+  `version: '7.0.0',\n  processStartTime: ${JSON.stringify(UNMATCHED_START_TIME)},`
 );
 
 test('hub status names the version of a running server whose record it cannot verify', async () => {

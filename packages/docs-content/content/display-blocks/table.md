@@ -56,7 +56,7 @@ A `Table` with only `columns` and `data` already does what users expect of a tab
 | Copy with Cmd/Ctrl+C                                                              | on                                                                        | always on, also with `keyboard: false`                                                        |
 | Text wrap                                                                         | off: text stays on one line                                               | `wrap` or `ellipsis` on a column, `view.wrap`, or the toolbar Wrap toggle (`toolbar.density`) |
 | Hover highlight, empty state, loading states                                      | on                                                                        | `emptyText`, the `empty` slot, `loading`, the block's `skeleton`                              |
-| Summary footer                                                                    | on when a column has an `aggregate` (or the view has `aggregates`)        | `summary: false`                                                                              |
+| Summary footer                                                                    | on when a column has an `aggregate` (or the view has `aggregates`)        | `summary: false`; `summaryRow` shows a row the app computed instead                           |
 | Height                                                                            | grows with its rows up to `maxHeight` (600px), then scrolls               | `height` for a fixed height                                                                   |
 | Toolbar                                                                           | off                                                                       | `toolbar: true` (every item) or `toolbar: { search: true, ... }`                              |
 | Row selection                                                                     | off                                                                       | `rowSelection: { type: checkbox }`                                                            |
@@ -694,6 +694,31 @@ Aggregates: `sum`, `avg`, `min`, `max`, `count`, `countDistinct`, `countEmpty`, 
 
 Server mode groups the same way through `MongoDBTableQuery`: the first request returns the groups with their counts and aggregates, and a group's rows load when it is opened. Server groups start collapsed, open one at a time, and have no group checkbox.
 
+#### A total row from the request
+
+Some totals can not be computed from the rows: a response rate's total is the total responses over the total invited, not the sum or average of the rows' rates. Compute the row in the request and pass it as `summaryRow`:
+
+```yaml
+- id: outcomes
+  type: Table
+  properties:
+    data:
+      _request: outcomes.0.rows
+    summaryRow:
+      _request: outcomes.0.total
+    columns:
+      - key: region
+      - key: invited
+        type: number
+      - key: rate
+        type: percent
+```
+
+- The footer shows the row in place of the aggregates. Each column renders it as it renders a body row, with its `type`, `cell`, `rules` and tooltip; action columns (`buttons`, `menu`) stay empty. Group headers keep their aggregates.
+- It is not a data row. Sorting, filtering, search, selection and the record count leave it out, and it stays in view under `height` like the aggregate footer.
+- `exportCsv` adds it as the last line. In server mode the app writes the file in `onExport`, so the app adds it there.
+- `summary: false` hides it, as it hides the aggregates.
+
 ### Tree
 
 Rows nested under a parent, with a chevron in the first column.
@@ -1051,8 +1076,41 @@ columns:
 | `rules`                                                        | Conditional formatting (below).                                                                                                                                                      |
 | `validate`, `required`, `default`                              | Editing: checks before an edit commits, and a `TableInput` new row's value (ignored on the key column, which always gets a new temporary key).                                       |
 | `children`                                                     | Columns grouped under a shared header (the group needs a `title`).                                                                                                                   |
+| `collapsible`, `collapsed`                                     | On a group: a chevron in its header collapses and expands it, and `collapsed: true` starts it collapsed (below).                                                                     |
+| `showWhen`                                                     | In a collapsible group: `open`, `closed` or `always` (the default), when the column or inner group shows (below).                                                                    |
 
 `columns` is data, so it can come from a request: `columns: { _request: deal_fields }`. Columns added to config later appear in stored views as hidden, and unknown keys in a stored view are dropped.
+
+### Collapsible column groups
+
+A wide report can open narrow: a group with `collapsible: true` collapses to a summary column and expands to its breakdown columns from the chevron in its header.
+
+```yaml
+columns:
+  - key: project
+  - key: outcomes
+    title: Outcomes
+    collapsible: true
+    collapsed: true
+    children:
+      - key: total
+        type: number
+        showWhen: closed
+      - key: completed
+        type: number
+      - key: opted_out
+        type: number
+        showWhen: open
+      - key: not_reached
+        type: number
+        showWhen: open
+```
+
+- A collapsed group shows its children with `showWhen: closed` or `always`; an expanded one those with `open` or `always`. Here the table opens with Project, Total and Completed, and the chevron swaps Total for Opted out and Not reached.
+- `showWhen` follows the nearest collapsible group above it. An inner group with `showWhen: open` hides with every column under it while the outer group is collapsed, and can be collapsible itself.
+- A collapsible group needs a child that shows when it is collapsed, so its header and chevron stay on the table.
+- The collapsed groups are the view's `collapsedColumnGroups`, by group `key` (without one, `group:<index>`). They are saved and persisted with the view, and `SetState` on it collapses and expands groups.
+- A column its group hides is not displayed, searched or exported, and stays visible in the view. The column manager lists it as unavailable rather than letting the user tick it on.
 
 ### Cell types
 
@@ -1157,18 +1215,19 @@ Every rule whose `when` holds applies, in order: class names add up, and a later
 
 The view is one serialisable object, the `view` part of the value:
 
-| Key               | Holds                                                                                                                                                                                                        |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `columns`         | `[{ key, width, pinned, hidden }]` in display order                                                                                                                                                          |
-| `sort`            | `[{ key, desc }]`, outermost first                                                                                                                                                                           |
-| `filter`          | a condition, or null                                                                                                                                                                                         |
-| `search`          | the search text: rows match when every word appears (ignoring case) in the display text of the searched columns                                                                                              |
-| `group`           | `[{ key }]` of groupable columns, outermost first                                                                                                                                                            |
-| `collapsedGroups` | keys of collapsed groups                                                                                                                                                                                     |
-| `aggregates`      | `{ <columnKey>: <fn> \| null }` over the columns' own `aggregate`                                                                                                                                            |
-| `density`         | `compact` (32px rows), `default` (40px) or `comfortable` (52px); starts from `size`                                                                                                                          |
-| `wrap`            | `true` wraps the text of text-like columns (text, email, phone, url, link, html, relation) without their own `wrap` or `ellipsis`; rows grow to their content. The toolbar density control has a Wrap toggle |
-| `pageSize`        | rows per page with `pagination`; defaults to the `pageSize` property                                                                                                                                         |
+| Key                     | Holds                                                                                                                                                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `columns`               | `[{ key, width, pinned, hidden }]` in display order                                                                                                                                                          |
+| `collapsedColumnGroups` | keys of collapsed column groups (`collapsible` groups)                                                                                                                                                       |
+| `sort`                  | `[{ key, desc }]`, outermost first                                                                                                                                                                           |
+| `filter`                | a condition, or null                                                                                                                                                                                         |
+| `search`                | the search text: rows match when every word appears (ignoring case) in the display text of the searched columns                                                                                              |
+| `group`                 | `[{ key }]` of groupable columns, outermost first                                                                                                                                                            |
+| `collapsedGroups`       | keys of collapsed row groups                                                                                                                                                                                 |
+| `aggregates`            | `{ <columnKey>: <fn> \| null }` over the columns' own `aggregate`                                                                                                                                            |
+| `density`               | `compact` (32px rows), `default` (40px) or `comfortable` (52px); starts from `size`                                                                                                                          |
+| `wrap`                  | `true` wraps the text of text-like columns (text, email, phone, url, link, html, relation) without their own `wrap` or `ellipsis`; rows grow to their content. The toolbar density control has a Wrap toggle |
+| `pageSize`              | rows per page with `pagination`; defaults to the `pageSize` property                                                                                                                                         |
 
 - `defaultView` sets the initial view and the one `Reset` returns to. Each part missing from the value falls back to `defaultView`, then to the column defaults. `defaultView.columns` entries merge over the column config, and columns it leaves out keep their defaults.
 - While the column layout equals the configured one, the derived view leaves `columns` out, so columns added to config keep appearing until the user changes the layout.
@@ -1289,6 +1348,8 @@ fields:
         _step: load_columns
 ```
 
+**New rows.** "+ New row" fires `onRowAdd { rowKey, values }`, and the row shows at the end of the table, saving, under `rowKey`, a new random UUID. Insert the row under that key (as its `_id`, or at the field the Table's `rowKey` property names) and the saved row takes the saving row's place the moment it reaches `data`, from a live push or a refetch, even before the event ends. A row stored under a key of its own (a generated ObjectId) shows beside the saving row until the event ends. An app that uses `rowKey` should key every row with a UUID `_id`, imported rows too (`_uuid: true`), and leave `rowKeyType` on MongoDBEnrichmentEnqueue and MongoDBTableChanges at its default, `auto` (`objectId` refuses UUID keys). UUIDs carry no order, so sort the rows by a creation time, with a tiebreak for rows inserted together (their position in an import batch), and index those fields. The key comes from the browser: check its format on the server, and only ever insert with it (`MongoDBInsertOne`, `MongoDBInsertMany`), never an upsert, replace or update keyed by it, so a key that is taken fails the insert instead of overwriting another user's or tenant's row.
+
 **Read columns on the server.** Endpoints that enqueue runs or run the worker read the table's columns themselves (declared columns plus the stored user columns), never from the event payload: a browser can send any column config. Check every user column when it is saved (its key, provider, inputs, prompt and template), as the enrichment reference app's column check does.
 
 **Errors users can read.** A cell's `error` is shown to every user of the table: in the cell's tooltip ("Failed after 3 attempts" and the message, shortened) and whole in the details panel. Store messages a user can act on, not the error a connection threw, which names the app's connection and carries the service's response (`company_api: Server returned error 500...`). In the worker's `:catch` and in provider endpoints, map a thrown error to its status (`Provider error (500)`, `Rate limited by the provider (429)`, `The provider did not respond`) and leave the full error to the server log, as the reference app's `run_cell` and `enrich_company_lookup` do.
@@ -1300,7 +1361,7 @@ fields:
 ## Moving from TableLight or AgGrid
 
 - **From TableLight:** change `type: TableLight` to `type: Table`. Every property keeps its meaning; set `pagination: true` if you relied on TableLight's automatic pager.
-- **From AgGrid:** move column config by hand. `field` stays `field`, `headerName` becomes `title`, `cell.type` becomes the column's `type` and the rest of `cell` stays. Row events carry `{ row, rowKey, index }`, and button and menu events the same payloads as AgGrid's button and menu cells. `AgGridInput*` holds the rows as its value; `TableInput` holds the changes, saved with `MongoDBTableChanges`.
+- **From AgGrid:** move column config by hand. `field` stays `field`, `headerName` becomes `title`, `cell.type` becomes the column's `type` and the rest of `cell` stays. Row events carry `{ row, rowKey, index }`, and button and menu events the same payloads as AgGrid's button and menu cells. A total row in `pinnedBottomRowData` becomes `summaryRow`. `AgGridInput*` holds the rows as its value; `TableInput` holds the changes, saved with `MongoDBTableChanges`.
 
 ```yaml
 - id: deals_basic
@@ -1735,6 +1796,76 @@ fields:
         owner: Ada
         amount: 9000
         probability: 0.4
+```
+
+```yaml
+- id: response_totals
+  type: Table
+  properties:
+    columns:
+      - key: region
+      - key: invited
+        type: number
+      - key: completed
+        type: number
+      - key: rate
+        title: Response rate
+        type: percent
+        cell:
+          decimals: 1
+    data:
+      - _id: r1
+        region: North
+        invited: 400
+        completed: 120
+        rate: 0.3
+      - _id: r2
+        region: South
+        invited: 100
+        completed: 60
+        rate: 0.6
+    summaryRow:
+      region: Total
+      invited: 500
+      completed: 180
+      rate: 0.36
+```
+
+```yaml
+- id: outcomes_groups
+  type: Table
+  properties:
+    columns:
+      - key: region
+      - key: outcomes
+        title: Outcomes
+        collapsible: true
+        collapsed: true
+        children:
+          - key: total
+            type: number
+            showWhen: closed
+          - key: completed
+            type: number
+          - key: refused
+            type: number
+            showWhen: open
+          - key: not_reached
+            type: number
+            showWhen: open
+    data:
+      - _id: r1
+        region: North
+        total: 400
+        completed: 120
+        refused: 80
+        not_reached: 200
+      - _id: r2
+        region: South
+        total: 100
+        completed: 60
+        refused: 10
+        not_reached: 30
 ```
 
 ```yaml
@@ -2271,6 +2402,7 @@ fields:
 | `defaultView.columns.$.width` | number | - |  |
 | `defaultView.columns.$.pinned` | string | - | Pin the column to the start or end, where it stays visible while scrolling. Enum: `start`, `end`. |
 | `defaultView.columns.$.hidden` | boolean | - |  |
+| `defaultView.collapsedColumnGroups` | array | - | Keys of the collapsed collapsible column groups, over the groups' own `collapsed`. A group's key is its `key`, else `group:<index>` (`group:2.0` for the first group inside the third). |
 | `defaultView.sort` | array | - | Sort order: `[{ key, desc }]`. |
 | `defaultView.sort.$.key` | string | - |  |
 | `defaultView.sort.$.desc` | boolean | - |  |
@@ -2351,7 +2483,8 @@ fields:
 | `addRowText` | string | `"New row"` | Text of the new-row row. |
 | `inputFieldPrefix` | string | - | Where user-defined input columns added in the picker or by a CSV import keep their values: under this path, then the column key (with `values`, a `notes` column stores at `values.notes`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, at the key. |
 | `importCsv` | boolean | `false` | Show an Import button in the toolbar: a CSV file (at most 50 MB and 100,000 rows) is parsed in the browser, in slices so the page stays responsive, its headers mapped to input columns (or new text columns), and the rows sent through onImport in batches of 500. |
-| `summary` | boolean | `true` | Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it. |
+| `summary` | boolean | `true` | Show the summary footer when `summaryRow` is set or any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it. |
+| `summaryRow` | object \| null | - | A row the app computed, such as a report total from the request, shown in the summary footer in place of the aggregates. Each column renders it like a body row, with its `type`, `cell` and `rules`; action columns stay empty. It is not a data row: sorting, filtering, search, selection and the record count leave it out, and `exportCsv` adds it as the last line (in server mode `onExport` produces the file). Group headers keep their aggregates. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
@@ -2373,7 +2506,7 @@ fields:
 | `onColumnRun` | `{ column, mode, selection }` | Trigger to run an enrichment or ai column: Run in its header menu (all rows, empty cells, errors or stale cells) or "Run selected" in the bulk bar. Enqueue the cells, for example with MongoDBEnrichmentEnqueue; their states then show in the cells. |
 | `onRowRun` | `{ row, rowKey, columns }` | Trigger when a row's run button is clicked (the trailing column, shown on hover): run every enrichment and ai column of the row. |
 | `onCellRun` | `{ row, rowKey, column }` | Trigger when one cell is rerun: Rerun in the cell details panel, or the rerun button of a stale cell. |
-| `onRowAdd` | `{ values }` | Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, while the event runs; after it the row comes from `data` (add it there, for example by refetching). When the actions fail, the row goes and the editor shows the error with the values kept. |
+| `onRowAdd` | `{ rowKey, values }` | Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, under `rowKey` while the event runs; after it the row comes from `data` (add it there, for example by refetching). Save the row under `rowKey` (as its `_id`, or at the field the `rowKey` property names): the saved row then replaces the saving one as soon as `data` has it, even while the event still runs; a row saved under another key shows beside the saving row until the event settles. When the actions fail, the row goes and the editor shows the error with the values kept. |
 | `onImport` | `{ rows, newColumns, batchIndex, batchCount, total }` | Trigger for each batch of rows a CSV import sends (`importCsv`), 500 rows at a time, each awaited before the next; a failed batch stops the import and shows its error. Insert the rows, for example with MongoDBInsertMany, and create `newColumns` once. |
 | `onCellLink` | `{ link, row, value }` | Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do. |
 | `onCellButton` | `{ row, rowKey, value, button, buttonIndex }` | Documentation reference - the event fired is the `eventName` of each button in a `buttons` cell. Define any number of named events on the block, such as `onEdit`. |

@@ -1,5 +1,156 @@
 # @lowdefy/blocks-tiptap
 
+## 7.1.0
+
+### Patch Changes
+
+- Updated dependencies [c6d665a]
+- Updated dependencies [3df29f3]
+  - @lowdefy/blocks-antd@7.1.0
+  - @lowdefy/blocks-files@7.1.0
+  - @lowdefy/block-utils@7.1.0
+  - @lowdefy/helpers@7.1.0
+
+## 7.0.0
+
+### Major Changes
+
+- 36f864c: feat!: Lucide icons replace react-icons, with icon settings and icon-set plugins.
+
+  Lowdefy icons are now [Lucide](https://lucide.dev) icons rendered by `lucide-react`. react-icons names such as `AiOutlineUser` no longer resolve. Run `lowdefy upgrade` to rewrite them, or follow the migration guide at `/v6-to-v7` in the docs.
+
+  Breaking changes:
+
+  - **Icon names.** Use a semantic name (`edit`, `delete`, `chevron-down`, …), a Lucide name in PascalCase (`Pencil`, `Trash`), or a set-qualified name (`lucide:Pencil`). An unknown name at an icon property fails the build with a suggestion; old react-icons and Ant Design names get a migration message.
+  - **Block and Ant Design icons are Lucide.** Every icon a block chooses (validation marks, date picker calendar, menu and sidebar toggles, dark-mode switch, upload lists, pagination arrows, …) and Ant Design's own close, status, expand and loading icons now render through semantic names, so they follow the app's icon set and `theme.icons.aliases`.
+  - **`theme.icons.aliases` targets lose the `Lu` prefix** (`LuPencil` → `Pencil`), and several semantic names now point at Lucide 1.x names (`delete` → `Trash`, `filter` → `Funnel`, `help` → `CircleQuestionMark`, `history` → `RotateCcwClock`).
+  - **Icon hover titles** are generated from the new names ("Pencil", "Arrow left right").
+
+  New:
+
+  - **Icon settings.** `theme.icons.size` (default `1em`), `theme.icons.strokeWidth` (default `2`) and `theme.icons.nonScalingStroke` set app-wide defaults; every icon accepts `strokeWidth` and `nonScalingStroke`.
+  - **Icon-set plugins.** A plugin declares `iconSets` in `types.js` and exports icon data from `./iconSets`. Sets are layered in plugin order - the last plugin wins per icon name, and a partial set falls through - so a plugin can add a single icon to `lucide` or replace one. `theme.icons.set` picks the default set for PascalCase names and can re-skin semantic names.
+  - **`@lowdefy/icons-react-icons`** holds every react-icons 5.6.0 icon under its old name. Install it and set `theme.icons.set: react-icons` to keep old names, for example icon names stored in a database.
+  - **`lowdefy upgrade`** gains a `7.0.0` phase that rewrites react-icons names to semantic or Lucide names from a table covering every Ant Design, Lucide and commonly used react-icons name.
+
+  Fixes: the header locale selector and the AgGrid row menu icons now bundle in production builds, and the dev server reports unknown icon names on pages written inline in `lowdefy.yaml`.
+
+### Patch Changes
+
+- 6144814: Allow only safe link schemes in block hrefs
+
+  An `href` is used only when its scheme is one DOMPurify allows by default (`http`, `https`, `ftp`, `ftps`, `mailto`, `tel`, `callto`, `sms`, `cid`, `xmpp`, `matrix`), or it is a relative path, a query or a fragment. Any other value, including one with leading whitespace or control characters, renders no link. This applies to `Button`, `Tag` and `FloatButton`, the url cell of table, AgentChat message and tool result links, `TiptapMentionInput` mention links, and every `href` given to the Lowdefy `Link` component, which covers table and ag-grid link, avatar and relation cells. A `Link` whose `href` is refused renders a span without navigating, and does not fall back to its `pageId` or `url`; the `Link` action with such an `href` throws "Invalid Link: no target resolved." as it does for a `url` it cannot resolve.
+
+  `@lowdefy/helpers` exports the check as `getSafeHref(href)`, which returns the href or `undefined`; `@lowdefy/block-utils` re-exports it.
+
+- d2c8e01: feat(api)!: Data read into a Dynamic block's `:return` stays data.
+
+  **Breaking:** a Dynamic block without a dynamic blocks policy no longer renders blocks or actions that its endpoint read as data. In v6, stored operator-free block config returned from a Dynamic endpoint rendered as it was; in v7 the block renders its fallback. Every block and action in the returned content must be written in the endpoint's `:return` config. A block or action that is data an operator returned (a step result, routine state, the payload, a `:for` item, a nested endpoint's result), or a copy or extension of one made with `_get`, `__args` or `__object.assign`, fails resolution. Operators that only pass their checked params through (`_if`, `_switch`, `_if_none`, `_get`, `_args`, `_function`, `_log`, `_array`, and `_object` except `fromEntries` and `defineProperty`) may return written config; content that breaks the rule renders the fallback, with an error naming the operator and the path in its result. Blocks built up in routine state, returned by a nested endpoint, looped over with `_item`, or built by `_js`/`_jsonata` fail: build them inside `:return` with `_array.map`/`_array.concat`, share block config with `_ref`, and write client operators (`__state`, `_array.map` callbacks) in the `:return` config. Data may still fill values inside written blocks, as in the documented `_array.map` pattern, and a block built by config from a stored field renders even when it equals the field. To render stored or generated block config, put the Dynamic block under a dynamic blocks policy and return the content through a `ValidateDynamic` step. See the v6 to v7 migration guide.
+
+  Also:
+
+  - Only operator keys lose their escaping underscore in the returned content (`__state` becomes `_state`); data keys such as `__typename` pass through unchanged.
+  - Data read into a Dynamic `:return` may nest at most 200 levels deep, and dynamic blocks policy content likewise (`limits.depth`); deeper data fails resolution with an error saying so.
+  - An object from data that `_object.assign` merges with other config can no longer end up as an operator on the client, for example next to a key whose value is a function or evaluates to undefined.
+  - Only keys that name one of the app's operators count as operators: in the literal data check an installed client or server operator, in dynamic blocks policies and the fragment build a client operator. Data such as `{ _score: 0.5 }` or `{ _source: { ... } }` now renders as data instead of failing. The build writes `plugins/clientOperators.json` with every client operator name the app knows.
+  - Dynamic blocks policies: with `state` set, every `_state` read in the content must name a literal key under that path. URLs are judged by the block's properties schema, which now marks URL-valued properties with `urlKind` (`Search` `indexUrl`, `QRCode` `icon`, `Watermark` `image`, `Tour` step covers, avatar and logo sources, link `url`s and `href`s, `Img` `src`/`srcSet`, AgGrid link cells), whatever the property is called. Every value no schema marks is still judged by its key name; `urlKind: false` opts a URL-named property out (`Search` `result.url`, the Tiptap `image` settings). URLs are read as the browser's URL parser reads them, so surrounding spaces and embedded tabs or newlines do not change the verdict.
+
+- a9442cc: Production pages load only the plugin code they use.
+
+  The production client used to ship every block, action, operator and icon the app uses anywhere in one main bundle, and every first visit downloaded all of it. Now the build writes one small module per distinct page type set, and each page loads its own. On the docs app the main bundle drops from 6,016 kB to 1,021 kB (1,778 kB to 332 kB gzipped). A simple page's first load drops from 1,720 kB to 529 kB gzipped.
+
+  - The HTML preloads the page's chunks alongside the main bundle, so the first page does not wait an extra round trip.
+  - Content-hashed assets are served with `Cache-Control: public, max-age=31536000, immutable`, on the Node server and in `lowdefy vercel-output`.
+  - Lowdefy's plugin packages declare `"sideEffects": ["**/*.css"]`, so a page that uses one block no longer loads the whole package.
+  - The build adds the types a page runs without naming them: the operators the `_js` accessors call, and the actions and operators a block runs for events it registers itself (such as `Request` in `Upload` or `SetLocale` in `PageHeaderMenu`), which blocks list in `meta.actions` and `meta.operators`. Plugin blocks that register their own events should list them the same way.
+  - A Dynamic block whose content uses a type its `properties.types` did not declare still works: the page loads the full type set and the server logs a warning naming the type to declare.
+
+  No config changes. The dev server is unchanged.
+
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [f0162f4]
+- Updated dependencies [2735310]
+- Updated dependencies [80b5cbf]
+- Updated dependencies [26a1894]
+- Updated dependencies [6f20e75]
+- Updated dependencies [7c4879b]
+- Updated dependencies [7836aa2]
+- Updated dependencies [2bdb855]
+- Updated dependencies [80c0ad2]
+- Updated dependencies [99a4f35]
+- Updated dependencies [1227e62]
+- Updated dependencies [ae6afbf]
+- Updated dependencies [6144814]
+- Updated dependencies [cfc8f71]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [10bee50]
+- Updated dependencies [cb3551c]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [575a5ee]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [5852b65]
+- Updated dependencies [d2c8e01]
+- Updated dependencies [36f864c]
+- Updated dependencies [eaa6517]
+- Updated dependencies [1bb3012]
+- Updated dependencies [2ffac21]
+- Updated dependencies [a2b5466]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [49490b6]
+- Updated dependencies [a79fb1d]
+- Updated dependencies [1766343]
+- Updated dependencies [08f76bb]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [a9442cc]
+- Updated dependencies [3c2258c]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [3eb3691]
+- Updated dependencies [537bf54]
+- Updated dependencies [9de3cf9]
+- Updated dependencies [3f3a320]
+- Updated dependencies [ecdfb65]
+- Updated dependencies [4a69885]
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/blocks-antd@7.0.0
+  - @lowdefy/blocks-files@7.0.0
+  - @lowdefy/block-utils@7.0.0
+
+## 6.1.0
+
+### Patch Changes
+
+- 08e05f9: fix(blocks-tiptap): The `TiptapInput` and `TiptapMentionInput` blocks now use TipTap v3 internally, which includes the fix for the `@tiptap/core` security advisory GHSA-cp6q-959q-f8rh. No config changes are needed: block properties, events and methods are unchanged, and content saved by the blocks loads and saves with the same html, text, markdown and mentions values as before.
+
+  Editing and pasting now follow TipTap v3:
+
+  - Escape in the mention popup now ends the suggestion; before, a following Enter inserted the hidden first match.
+  - With a multi-character mention trigger such as `@@`, Backspace after a mention leaves the trigger as typed.
+  - Typing inline code around existing backticks no longer drops a character.
+  - Dragging an image that is already in the editor moves it instead of starting an upload.
+  - Text typed straight after a pasted link, or after pasted markdown formatting such as `**bold**`, at the end of the paste continues that link or formatting.
+  - Backspace at the start of a paragraph in a blockquote lifts the paragraph out of the quote; before, it joined the paragraph to the one above.
+  - Delete at the end of a list item that is followed by a nested list whose items have their own sublists moves those nested items up into the list.
+  - Pasting plain text that starts with `1. ` creates an ordered list.
+  - Links with relative or protocol-less hrefs, such as `docs/page` or `example.org/path`, are kept; before, the link was dropped.
+  - Pasted or seeded html keeps more of its formatting: `width` and `height` on images, `title` on links, `text-align` on table cells, and an ordered list's CSS `list-style-type`. Highlight colours are kept as written instead of as `rgb()`, and `type="1"` on an ordered list is dropped because it is the default.
+  - A table with `table.resizable: false` now updates its column widths when columns change. In the editor it renders inside a `div.tableWrapper`, as resizable tables already did.
+
+- Updated dependencies [ae9803e]
+- Updated dependencies [ea69869]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/blocks-antd@6.1.0
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/helpers@6.1.0
+  - @lowdefy/blocks-files@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes

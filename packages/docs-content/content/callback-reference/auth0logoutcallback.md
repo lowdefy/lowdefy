@@ -16,7 +16,7 @@ To trigger the Auth0 logout, the `Logout` action `callbackUrl.url` param should 
 ###### Configuring Auth0LogoutCallback.
 
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 providers:
   - id: auth0
     type: Auth0Provider

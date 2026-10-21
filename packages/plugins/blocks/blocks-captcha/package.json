@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-captcha",
-  "version": "6.0.0",
+  "version": "7.1.0",
   "license": "Apache-2.0",
   "description": "Captcha Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
@@ -43,7 +43,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "6.0.0"
+    "@lowdefy/block-utils": "7.1.0"
   },
   "peerDependencies": {
     "react": ">=18",

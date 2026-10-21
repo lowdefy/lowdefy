@@ -84,6 +84,49 @@ blocks:
         - { id: 1, name: Ann, amount: 3 }
         - { id: 2, name: Ben, amount: 7 }
 
+  # A total row the app computed: its rate is not the average of the rows' rates.
+  - id: tf_summary_row
+    type: Table
+    properties:
+      toolbar:
+        search: true
+      columns:
+        - key: name
+        - key: invited
+          type: number
+          aggregate: sum
+        - key: rate
+          type: percent
+          cell: { decimals: 0 }
+          rules:
+            - when: { op: gte, value: 0.4 }
+              style: { color: 'rgb(0, 128, 0)' }
+        - key: open
+          type: buttons
+          cell:
+            buttons:
+              - title: Open
+                eventName: onOpen
+      data:
+        - { id: 1, name: Cape Town, invited: 10, rate: 0.9 }
+        - { id: 2, name: Durban, invited: 30, rate: 0.2 }
+        - { id: 3, name: Johannesburg, invited: 60, rate: 0.6 }
+      summaryRow: { name: Total, invited: 100, rate: 0.47 }
+
+  - id: tf_summary_row_export
+    type: Button
+    properties:
+      title: Export totals
+    events:
+      onClick:
+        - id: export
+          type: CallMethod
+          params:
+            blockId: tf_summary_row
+            method: exportCsv
+            args:
+              - filename: totals.csv
+
   # ============================================
   # PAGINATION
   # ============================================

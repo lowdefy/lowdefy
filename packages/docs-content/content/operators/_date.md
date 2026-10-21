@@ -7,6 +7,8 @@
 
 The `_date` operator returns a date object representing a single moment in time. It can take a string in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format, or a number that is the number of milliseconds since 1 January 1970 UTC (the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time)).
 
+`_date` creates and reads dates but cannot format them with a pattern. To format a date for display, or to add, subtract or compare dates, use [`_dayjs`](/_dayjs).
+
 > This operator can be used as a [`_build`](/_build) operator method.
 
 #### Arguments

@@ -7,7 +7,7 @@ Roles are read from the `roles` field on the [user object](/user-object) — an 
 Declare the role names your app uses in `auth.roles` (id, optional label and description) so tooling can list them:
 
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 auth:
   roles:
     - id: user-admin
@@ -24,7 +24,7 @@ Similarly, the API endpoints that are protected by roles are configured in the `
 
 ###### Protect pages and API endpoints using roles:
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 auth:
   pages:
     public: true

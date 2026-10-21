@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Footer
     pageTitle: Footer
-    section: Container Blocks
     filePath: blocks/container/Footer.yaml
     block_type: Footer
     antd_component: Footer

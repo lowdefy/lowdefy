@@ -1,5 +1,176 @@
 # @lowdefy/e2e-utils
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/helpers@7.1.0
+- @lowdefy/node-utils@7.1.0
+
+## 7.0.0
+
+### Minor Changes
+
+- 6dc9114: feat: Page routes match request paths to pages
+
+  - The HTML page route and `/api/page/*` take the request path and match it to a page, so a page with a `path` pattern such as `{space}/tickets/{ticket_id}` is served at `/support/tickets/1234`. A page without `path` is still served at its id, so `/api/page/{pageId}` keeps working.
+  - `/` (home) and `/404` stay fixed routes ahead of the matcher. When `homePageId` is unset, `/` redirects to the first menu link's URL built with its `pathParams`; a configured home page with a fixed `path` is served at `/`.
+  - The first-load payload and the `/api/page/*` response carry `pageId`, `pathParams` and `matchedPath` (the matched path without `basePath` or one trailing `/`) next to `pageConfig`.
+  - The sign-in and two-factor enrolment `callbackUrl` is the requested path plus query on every route; the `/api/page/*` sign-in redirect used to drop the query.
+  - The dev server matches the path against the route table, JIT-builds the matched page, and returns `{ pageId, pathParams, matchedPath, pageConfig }`.
+  - In `@lowdefy/e2e-utils`, `goto` and `waitForPage` take `{ pageId, path, pathParams, urlQuery }` and build the URL under the app's `basePath`; a string target is used as written. The ready check and the state, request, validation and `setUrlQuery` helpers read the page instance on screen, so a patterned page's instances are told apart.
+
+- ae3541c: feat: Lowdefy servers stop when whatever started them stops
+
+  A Lowdefy server started by a test runner, a script or a coding agent's command could outlive it when that process was killed or timed out, and keep holding a few hundred megabytes of memory for days. Servers now stop with their owner, however it ends.
+
+  - **`lowdefy start`, `lowdefy dev` and `lowdefy test`** start the server with node directly (no `pnpm run start` in between), forward SIGINT, SIGTERM and SIGHUP to it, and hold its stdin, so the server stops even when the CLI is killed outright. The dev server's Vite process stops when the dev manager is killed. A server run directly with `node`, as in a Docker image or on Vercel, behaves as before.
+  - **`--exit-with-pid <pid>`** on `lowdefy start` and `lowdefy dev`, or the `LOWDEFY_EXIT_WITH_PID` environment variable, stops the server when that process exits. The variable passes through wrappers such as `pnpm exec`, `npx` or a secrets manager.
+  - **Test tools set it for you.** The Playwright configs from `@lowdefy/e2e-utils` and `@lowdefy/block-dev-e2e` tie the server to the Playwright run, so a killed or timed-out run leaves no server behind.
+  - **`startServer`** from `@lowdefy/e2e-utils/startServer` builds and starts an app's e2e server for other test runners (a vitest or Jest `globalSetup`) and scripts, tied to the calling process, and returns `stop()`.
+  - **`@lowdefy/e2e-utils` no longer reuses a running server by default.** A server left on the port would serve an old build to new tests. Set `LOWDEFY_E2E_REUSE_SERVER=true` to reuse one (for example after `pnpm e2e:server`), and `LOWDEFY_E2E_PORT` to move a run to another port.
+  - **`lowdefy hub ps`** lists the Lowdefy servers running on the machine and the process that owns each. **`lowdefy hub prune`** lists the servers whose owner is gone, and `--kill` stops them. It also finds servers kept running by a `lowdefy` CLI whose own starter was killed (such as a `pnpm exec` wrapper killed outright) and servers left running by older Lowdefy versions (including a dev server's Vite process left behind by a killed dev server), and never stops a server whose owner is alive and still has its own starter, or one run as a launchd or systemd service. Servers record themselves in `~/.lowdefy/servers` (moved by `LOWDEFY_HOME`), and the hub prunes servers whose owner is gone each time it starts. On Windows, servers are identified by their process creation time, so `prune` works there for servers that record themselves.
+
+### Patch Changes
+
+- 81a5ad3: Client navigation by path. The production, e2e and dev clients fetch pages by URL path and learn the page id and path values from the server. Each set of path values is its own page instance: `Client` keys the page tree by the instance key, so following a link from one ticket to another remounts the page, and passes `pathParams` to the page context. The engine keeps up to 10 instances per page and gives actions `getPathParams`. The shown page is written to the path memory before its context is built, and auth callbacks write their target before navigating. A navigation to the path the shown page was matched on skips the fetch, unless the page is dynamic. The router's location carries the path instead of a page id. `setUrlQuery` waits for a page refetch only on dynamic pages.
+- eab310c: fix(e2e-utils): Reuse a running server only when it is this app's e2e build
+
+  `createConfig` and `createMultiAppConfig` reused any server that answered on the test port,
+  so `pnpm e2e` could silently run against `lowdefy dev`, a production build, or the e2e
+  server of another app or git worktree, where request mocks and the e2e session do not
+  apply. The e2e server now answers `GET /api/e2e/identity` with the build directory it
+  serves, and a Playwright global setup compares it with the app's build directory before
+  any test runs. Any other server on the port stops the run with an error that names the
+  port. Reusing this app's own e2e server (for example one started with `pnpm e2e:server`)
+  still skips the build. Configs that extend the base config keep the check as long as they
+  keep its `globalSetup`.
+
+- 2746b40: chore(e2e-utils): Mark the `@playwright/test` peer dependency optional — the `./runtime` subpath does not use it, so `@lowdefy/server-dev` can drive pages through `playwright-core` without installing the test runner.
+- 81bd4f0: feat(plugin-posthog): new PostHog product analytics plugin
+
+  A default plugin that wraps the `posthog-js` browser SDK, so no script tag or snippet is
+  needed. `posthog-js` is loaded lazily by `PostHogInit`, so an app with `enabled: false`
+  never downloads it. Run `PostHogInit` from the app's root `events.onInitAsync`, which runs
+  once per app load on whichever page opens first; repeat calls with the same `apiKey` do nothing.
+
+  Adds `PostHogInit`, `PostHogCapture`, `PostHogPageview`, `PostHogCapturePageLeave`,
+  `PostHogIdentify`, `PostHogSetPersonProperties`, `PostHogAlias`, `PostHogGroup`,
+  `PostHogReset`, `PostHogOptIn`, `PostHogOptOut`, `PostHogFeatureFlag` and
+  `PostHogReloadFeatureFlags`, each with a params schema.
+
+  With PostHog disabled every other action is a silent no-op, so analytics can never break an
+  app, but invalid params still throw and an action that runs before `PostHogInit` logs a
+  console warning. `PostHogIdentify` reads the identity `posthog-js` holds and resets before
+  identifying a different person on a shared browser.
+
+  - **Lowdefy semantics** — every event gets `lowdefy_page_id` (the page id, also on a page with a
+    path pattern) and `lowdefy_path_params` (the page's path values, `{}` without a pattern).
+    Autocaptured clicks, rage clicks and dead clicks also get `lowdefy_block_id`,
+    `lowdefy_block_type`, `lowdefy_block_ids`, `lowdefy_option` on a dropdown option, `lowdefy_row`
+    and `lowdefy_column` inside a grid, and `lowdefy_text`: the text of the control the click
+    reached (a button, menu item, option or label), even when the click lands on its icon, a child
+    or a wrapper.
+  - **Event failures** — a `lowdefy_event_failed` event is captured when a block or app event fails,
+    with ids only, never messages or values, and at most 50 per app load. Failures in the app's
+    `onInit` are captured too, although `PostHogInit` runs later in `onInitAsync`. Set
+    `captureEventFailures: false` on `PostHogInit` to turn it off.
+  - **Click text masking** — on by default. Click text (`$el_text`, `lowdefy_text`, `text` entries in
+    `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when the
+    config of the page it was clicked on, the menus, the i18n messages or the antd locale spell it
+    out. Grid and table cell values, options and menu items filled by requests, labels built from
+    records and `Dynamic` block output are removed; button, menu, tab, column header and literal
+    option labels stay. Element attributes other than structural ones (tag, classes, `class`,
+    `role`, `type`, `row-index`, `col-id`, `nth-child`, `nth-of-type`) are removed, including
+    `title`, `aria-label` and `data-*`, and `id` is kept only as a block wrapper id. Classes and
+    `data-ph-capture-attribute-*` values are not masked, so apps must not build them from data. URLs
+    are not masked. Set `maskDataText: false` on `PostHogInit` to send full click text, or
+    `options.mask_all_text: true` to send none.
+  - **Deployment environments** — `PostHogInit` registers the current environment as the
+    `environment` super property on every event, and `posthog.enabled: false` in an environment
+    turns PostHog off there (`PostHogInit` behaves as `enabled: false`), alongside the `cron`,
+    `email` and `sentry` switches.
+
+  For plugin authors: action plugins receive a `trace` argument for observing completed events and
+  the read-only app metadata as `lowdefyApp`; the engine trace gains `isConfigText({ text, pageId })`,
+  and `@lowdefy/helpers` exports `filterElementsChain`.
+
+  AutoComplete and PhoneNumberInput render their dropdowns inside the block, like Selector.
+
+- effdeb3: Journey steps can reach controls that are not blocks. Wherever `click`, `fill`, `select`, `expect.visible` and `expect.text` take a `blockId`, they also take a target object: `{ blockId, row, column }` narrows to a grid row (zero-based, as displayed) or cell (by col-id), `text` names the interactive control with exactly that visible text, and `nth` picks among several matches. `text` on its own searches the page front-most layer first — an open dropdown menu, then an open dialog, then the page — so a confirm dialog's `Delete` is clicked over the grid's `Delete` cell buttons behind its mask. This makes grid cell buttons, confirm dialogs, modal footers and menu items addressable by `lowdefy_run_journey`, `POST /lowdefy-docs/journey` and `lowdefy test`. Unknown target keys are rejected before a browser opens, and a failed step names the target the way it was written (`block "grid" row 1 control "Edit" to be actionable`).
+
+  A `click`, `open`, `fill` or `select` whose `text` or `containing` target has no `nth` must match exactly one visible element, or the step fails and says how to narrow it:
+
+  ```
+  Matched 3 controls with text "Delete" in the page; add nth: 0..2, or a blockId/row to narrow it.
+  ```
+
+  Expectations do not need one match: `expect.visible` passes when any match is visible and `expect.hidden` when none is.
+
+- Updated dependencies [14c4764]
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [cad92af]
+- Updated dependencies [6144814]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [ebf95f8]
+- Updated dependencies [24383b5]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [c744e40]
+- Updated dependencies [239a3a7]
+- Updated dependencies [4cc0f36]
+- Updated dependencies [ef64856]
+- Updated dependencies [cb0acad]
+- Updated dependencies [9a92898]
+- Updated dependencies [0205b5a]
+- Updated dependencies [316f5be]
+- Updated dependencies [ba86509]
+- Updated dependencies [f9d8520]
+- Updated dependencies [e5b2f83]
+- Updated dependencies [da76905]
+- Updated dependencies [1766343]
+- Updated dependencies [9ed1386]
+- Updated dependencies [73c5e14]
+- Updated dependencies [c3e0d79]
+- Updated dependencies [959ec32]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [ae3541c]
+- Updated dependencies [99c9dac]
+- Updated dependencies [7623c86]
+- Updated dependencies [31911e7]
+  - @lowdefy/node-utils@7.0.0
+  - @lowdefy/helpers@7.0.0
+
+## 6.1.0
+
+### Patch Changes
+
+- 1d3a0b8: Update dependencies to releases with published security fixes.
+
+  - `hono` 4.13.5 and `@hono/node-server` 2.0.10 in the servers.
+  - `ws` 8.21.0 in the servers; `postcss` 8.5.23 in the dev server.
+  - The servers drop leftover Next.js-era dependencies they no longer use: `@sentry/nextjs` from `@lowdefy/server`, and the `webpack` and `@next/eslint-plugin-next` devDependencies.
+  - `axios` 1.18.0 in the CLI and AxiosHttp.
+  - `dompurify` 3.4.13 in `block-utils`, `blocks-basic` and `blocks-markdown`.
+  - `echarts` 6.1.0, `mysql2` 3.23.1, `nodemailer` 9.1.1, `uuid` 13.0.1 and `@auth/mongodb-adapter` 3.11.3 in their plugins.
+  - `tar` 7.5.21 and `picomatch` 4.0.4 in the build, `js-yaml` 4.3.2 in `e2e-utils`, and `@babel/core` 7.29.6 in `block-utils`.
+  - `@auth/core` 0.41.3 in the servers and `plugin-next-auth`, whose peer range is now `>=0.41.3`. `@auth/mongodb-adapter` 3.11.3 depends on the same release.
+
+  Two of these change output an app can see:
+
+  - **`echarts` 6.1.0** changes chart defaults. Bar, pictorialBar, candlestick and boxplot series no longer draw past the grid edge; set `containShape: false` on the axis to restore the previous look. `axis.startValue` no longer sets `min`. The second argument of a `tooltip.valueFormatter` function is now `rawDataIndex`.
+  - **`dompurify` 3.4.13** keeps a few attributes and elements that earlier releases removed: `command` / `commandfor`, `<selectedcontent>`, and some SVG attributes. HTML rendered by `Html`, `ClickableHtml`, `DangerousHtml`, `DangerousMarkdown` and other `renderHtml` properties may keep them.
+
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/helpers@6.1.0
+
 ## 6.0.0
 
 ### Major Changes

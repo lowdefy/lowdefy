@@ -22,7 +22,7 @@ The schema for a Lowdefy connection is:
 
 ###### Connections definition example:
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 connections:
   - id: connection1
     type: ConnectionType1
@@ -100,7 +100,7 @@ _request: my_request
 
 ###### lowdefy.yaml
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 
 connections:
   - id: connection1
@@ -142,7 +142,7 @@ To create this `connection`, define the connection as follows in the `lowdefy.ya
 
 ###### lowdefy.yaml
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 
 connections:
   - id: my_api
@@ -159,7 +159,7 @@ To use this connection, a `request` must be defined, which references the corres
 
 ###### lowdefy.yaml
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 
 connections:
   - id: my_api
@@ -183,7 +183,7 @@ This request should be called when the page is mounted. To do this, the [`Reques
 
 ###### lowdefy.yaml
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 
 connections:
   - id: my_api
@@ -214,7 +214,7 @@ In this example, a [`Selector`](/Selector) block will be added. The [`_array.map
 
 ###### lowdefy.yaml
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 
 connections:
   - id: my_api
@@ -259,7 +259,7 @@ To do this, create a new request that will make use of a `payload` to get the po
 
 ###### lowdefy.yaml
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 
 connections:
   - id: my_api
@@ -321,7 +321,7 @@ This is done as follows:
 
 ###### lowdefy.yaml
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 
 connections:
   - id: my_api

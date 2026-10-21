@@ -96,7 +96,7 @@ test('runAppTests runs every journey against the dev server and reports each as 
   expect(results[0]).toMatchObject({
     name: 'orders list',
     passed: true,
-    filePath: path.join('tests', 'journeys', 'orders.yaml'),
+    filePath: 'tests/journeys/orders.yaml',
   });
   expect(results[1]).toMatchObject({ name: 'refund button', passed: false });
   expect(results[1].report).toContain('refund is hidden');
@@ -154,7 +154,7 @@ test('runAppTests honours paths and repeat and returns the class of each journey
     class: 'FAIL',
     runs: 2,
     passedRuns: 0,
-    filePath: path.join('tests', 'journeys', '_candidates', 'refunds.yaml'),
+    filePath: 'tests/journeys/_candidates/refunds.yaml',
   });
 });
 
@@ -276,7 +276,7 @@ test('runAppTests tier common runs the common and unranked journeys and skips de
   expect(results.map((result) => result.name)).toEqual(['top', 'new', 'retired']);
   expect(results[2]).toEqual({
     name: 'retired',
-    filePath: path.join('tests', 'journeys', 'd.yaml'),
+    filePath: 'tests/journeys/d.yaml',
     skipped: 'deprecated',
     report: 'SKIP deprecated  retired  1.0/day (3m)',
   });

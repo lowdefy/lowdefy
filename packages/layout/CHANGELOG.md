@@ -1,5 +1,60 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/block-utils@7.1.0
+- @lowdefy/helpers@7.1.0
+
+## 7.0.0
+
+### Patch Changes
+
+- 2c04c5b: `layout.align` is applied instead of being silently dropped. It sets the vertical alignment of a block's own content area (the v5 replacement for `layout.contentAlign`; v4's self-alignment `align` is now `layout.selfAlign`). It was previously discarded, with a console warning on every render, unless `layout.selfAlign` happened to be set as well, so a correctly migrated `layout: { align: middle }` did nothing at all. `layout.contentAlign` is now also accepted at runtime, for parity with `gap`, `justify`, `direction`, `wrap` and `overflow`.
+
+  Blocks that set `layout.align` without `layout.selfAlign` will now align their content area where they previously did not.
+
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [99a4f35]
+- Updated dependencies [1227e62]
+- Updated dependencies [6144814]
+- Updated dependencies [cb3551c]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [575a5ee]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [36f864c]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [49490b6]
+- Updated dependencies [a79fb1d]
+- Updated dependencies [1766343]
+- Updated dependencies [08f76bb]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [a9442cc]
+- Updated dependencies [3c2258c]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [3eb3691]
+- Updated dependencies [537bf54]
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/block-utils@7.0.0
+
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [ea69869]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/helpers@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

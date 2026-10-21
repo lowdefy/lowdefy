@@ -353,7 +353,7 @@ test("test writes each journey's newest exercised path to .lowdefy/test/exercise
     version: 1,
     buildId: 'build-1',
     journeys: {
-      [`${path.join('tests', 'journeys', 'a.yaml')}#first journey`]: {
+      ['tests/journeys/a.yaml#first journey']: {
         hash: expect.stringMatching(/^[0-9a-f]{40}$/),
         configHash: null,
         passed: true,
@@ -635,8 +635,8 @@ test('test runs a journey with a list of users once per user, each named for its
     fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'exercised.json'), 'utf8')
   );
   expect(Object.keys(written.journeys)).toEqual([
-    `${path.join('tests', 'journeys', 'a.yaml')}#edits a ticket [admin]`,
-    `${path.join('tests', 'journeys', 'a.yaml')}#edits a ticket [member]`,
+    'tests/journeys/a.yaml#edits a ticket [admin]',
+    'tests/journeys/a.yaml#edits a ticket [member]',
   ]);
   const testRun = JSON.parse(
     fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'run.json'), 'utf8')

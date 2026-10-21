@@ -1,5 +1,55 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/helpers@7.1.0
+- @lowdefy/nunjucks@7.1.0
+
+## 7.0.0
+
+### Minor Changes
+
+- 2755501: feat: The build checks block properties, action params and operator params against their plugin schemas
+
+  - After refs resolve, every block's `properties`, action's `params` and operator's params is validated against the schema its plugin ships. A finding is a warning with the type, the field, and the file and line of the field: `[ConfigWarning · plugin-schema] Block "Button" property "colr" is not allowed.`
+  - A value an operator gives at runtime is not judged. A missing required key or a misspelt key still reports, even beside operators.
+  - `~ignoreBuildChecks: [plugin-schema]` silences the check on a node, and `plugin-checks` and `--skip-plugin-checks` cover it. A plugin makes its schema findings errors with `schemaLevel: 'error'` in its `./checks` export.
+  - `@lowdefy/ajv` exports `getConfigSchemaErrors` and `formatSchemaError`. Dynamic pages validate block properties with the same function, so a `oneOf` above an operator no longer reports at runtime.
+  - The `Validate` and `ResetValidation` schemas accept `true` and the `{ blockIds, regex }` form the actions already take.
+
+### Patch Changes
+
+- d12c7cc: fix: Schema validation no longer grows server memory or fails on a schema with an `$id`.
+
+  - The shared ajv instance kept every schema object it compiled. A `ValidateSchema` step compiled a fresh copy of its schema on every call, and an endpoint's `payloadSchema` was compiled again whenever its config file was read again, so the server's memory grew for its whole life.
+  - A second copy of a schema with an `$id` failed with `schema with key or id ... already exists`: a `ValidateSchema` step with such a schema worked once and then failed on every call, and so did a `payloadSchema` after a dev rebuild or a config cache eviction.
+
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [6144814]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [1766343]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [81bd4f0]
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/nunjucks@7.0.0
+
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [1d3a0b8]
+  - @lowdefy/nunjucks@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

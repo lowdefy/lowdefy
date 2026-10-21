@@ -21,627 +21,627 @@ const typeManifest = {
   actions: {
     AcceptInvitation: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     CallAPI: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     CallMethod: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     ChangePassword: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     CopyToClipboard: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     DisplayMessage: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     EmailOtpSend: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     EmailOtpVerify: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Fetch: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     GeolocationCurrentPosition: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     GetLocalStorage: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     LeaveOrganization: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Link: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     ListOrganizations: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Login: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Logout: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     MagicLinkVerify: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     OAuthConsent: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     OAuthContinue: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     PasskeyDelete: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     PasskeyRegister: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     PasskeySignIn: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     PasskeyUpdate: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     PhoneNumberSendOtp: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     PhoneNumberVerify: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Publish: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     RemoveLocalStorage: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Request: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     RequestPasswordReset: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Reset: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     ResetPassword: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     ResetValidation: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     RevokeOtherSessions: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     ScrollTo: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SendVerificationEmail: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SetActiveOrganization: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SetDarkMode: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SetFocus: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SetGlobal: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SetLocale: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SetLocalStorage: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SetState: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     SignUp: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Subscribe: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Throw: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     TwoFactorDisable: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     TwoFactorEnable: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     TwoFactorGenerateBackupCodes: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     TwoFactorVerify: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Unsubscribe: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     UpdateSession: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Validate: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
     Wait: {
       package: '@lowdefy/actions-core',
-      version: 6,
+      version: 7,
     },
   },
   blocks: {
     ActivityTimeline: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     AgentChat: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Alert: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Avatar: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Box: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Button: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Card: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     ChipSelector: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Composer: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     DateSelector: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Divider: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Empty: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Icon: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Illustration: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     List: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     ListItem: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Markdown: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Menu: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     MultipleSelector: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     NumberInput: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     PageDots: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Paragraph: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Screen: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     SegmentedControl: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Selector: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Sheet: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Skeleton: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Spinner: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     StatusIcon: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Switch: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Tabs: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Tag: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     TextArea: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     TextInput: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Title: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
   },
   operators: {
     _actions: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _and: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _api: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _app: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _args: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _array: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _base64: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _boolean: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _date: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _divide: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _eq: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _error: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _event: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _event_log: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _function: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _get: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _global: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _gt: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _gte: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _if: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _if_none: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _index: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _input: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _intl: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _js: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _json: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _locale: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _location: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _log: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _lt: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _lte: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _math: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _media: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _menu: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _ne: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _not: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _number: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _object: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _operator: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _or: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _path_params: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _product: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _random: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _regex: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _request: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _request_details: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _state: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _string: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _subtract: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _sum: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _switch: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _t: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _theme: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _type: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _uri: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _url_query: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _user: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _websocket: {
       package: '@lowdefy/operators-js',
-      version: 6,
+      version: 7,
     },
     _change_case: {
       package: '@lowdefy/operators-change-case',
-      version: 6,
+      version: 7,
     },
     _cron: {
       package: '@lowdefy/operators-cron',
-      version: 6,
+      version: 7,
     },
     _dayjs: {
       package: '@lowdefy/operators-dayjs',
-      version: 6,
+      version: 7,
     },
     _diff: {
       package: '@lowdefy/operators-diff',
-      version: 6,
+      version: 7,
     },
     _jsonata: {
       package: '@lowdefy/operators-jsonata',
-      version: 6,
+      version: 7,
     },
     _mql: {
       package: '@lowdefy/operators-mql',
-      version: 6,
+      version: 7,
     },
     _nunjucks: {
       package: '@lowdefy/operators-nunjucks',
-      version: 6,
+      version: 7,
     },
     _uuid: {
       package: '@lowdefy/operators-uuid',
-      version: 6,
+      version: 7,
     },
     _yaml: {
       package: '@lowdefy/operators-yaml',
-      version: 6,
+      version: 7,
     },
   },
 };

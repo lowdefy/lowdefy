@@ -83,7 +83,7 @@ This example shows how you can create and read from `global`:
 
 `lowdefy.yaml`
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 global:
   key: value
 pages:
@@ -101,7 +101,7 @@ The following examples shows how to modify the `global` object:
 
 `lowdefy.yaml`
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 global:
   key: value
 pages:

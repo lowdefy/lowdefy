@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Spinner
     pageTitle: Spinner
-    section: Container Blocks
     filePath: blocks/container/Spinner.yaml
     block_type: Spinner
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/Spinner

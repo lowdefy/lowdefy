@@ -20,17 +20,21 @@ import generateRowKey from '../editing/generateRowKey.js';
 import triggerEnrichmentEvent from './triggerEnrichmentEvent.js';
 
 // Action `addNewRow({ values })`: "+ New row" on Table. The row shows at once at the end of the
-// table, marked saving, under a temporary key, while onRowAdd `{ values }` runs; it leaves when
-// the event settles (on success the app's data holds the saved row). Resolves with the error
-// message, or null.
+// table, marked saving, under a key made here, while onRowAdd `{ rowKey, values }` runs. The key
+// is sent so the app can save the row under it: the saved row can reach the app's data (pushed
+// live, or refetched) before the event settles, and with the same key the saving row hands over
+// to it the moment it does (useEnrichmentRows) instead of both showing until the event settles.
+// Either way the saving row leaves when the event settles, so it never outlives a failure, or an
+// app that keys the row itself. Resolves with the error message, or null.
 function createAddRow(api) {
   return async function addNewRow({ values }) {
+    const rowKey = generateRowKey();
     const row = serializer.copy(values);
-    set(row, api.properties.rowKey ?? '_id', `new:${generateRowKey()}`);
+    set(row, api.properties.rowKey ?? '_id', rowKey);
     const { setPending } = api.enrichment;
     setPending((pending) => [...pending, row]);
     try {
-      return await triggerEnrichmentEvent({ api, name: 'onRowAdd', event: { values } });
+      return await triggerEnrichmentEvent({ api, name: 'onRowAdd', event: { rowKey, values } });
     } finally {
       setPending((pending) => pending.filter((entry) => entry !== row));
     }

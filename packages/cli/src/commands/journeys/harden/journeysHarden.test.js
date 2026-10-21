@@ -173,7 +173,7 @@ beforeEach(() => {
     steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
   });
   mockGet.mockImplementation(async () => ({
-    data: { buildId: currentBuildId, build: { status: 'ok' } },
+    data: { buildId: currentBuildId, build: { status: 'ok', configStatus: 'ok' } },
   }));
   mockPost.mockImplementation(async (target, body) => {
     if (target === `${url}/lowdefy-docs/mutants`) {
@@ -240,14 +240,14 @@ test('journeysHarden runs each mutant on the journeys on its path and writes the
   );
   expect(report.journeys).toEqual([
     {
-      file: path.join('tests', 'journeys', 'orders.yaml'),
+      file: 'tests/journeys/orders.yaml',
       name: 'orders',
       killed: 1,
       total: 3,
       unique: 1,
     },
     {
-      file: path.join('tests', 'journeys', 'refunds.yaml'),
+      file: 'tests/journeys/refunds.yaml',
       name: 'refunds',
       killed: 0,
       total: 2,
@@ -323,11 +323,7 @@ test('journeysHarden leaves out a journey whose baseline fails, and says to repl
   }));
   await harden({ list: true });
   expect(logs.warn[0]).toEqual(
-    `Left out "orders": its baseline run failed (boom). Replay it first: lowdefy test --repeat 3 ${path.join(
-      'tests',
-      'journeys',
-      'orders.yaml'
-    )}`
+    'Left out "orders": its baseline run failed (boom). Replay it first: lowdefy test --repeat 3 tests/journeys/orders.yaml'
   );
 });
 
@@ -431,11 +427,7 @@ test('journeysHarden leaves out a journey without a data set, names it, and hard
   await harden();
   expect(process.exitCode).toBeUndefined();
   expect(logs.error).toEqual([
-    `Left out "refunds" (${path.join(
-      'tests',
-      'journeys',
-      'refunds.yaml'
-    )}): it has no data set, so its mutant runs would write to your database. Give it a data set (data:) to harden it.`,
+    'Left out "refunds" (tests/journeys/refunds.yaml): it has no data set, so its mutant runs would write to your database. Give it a data set (data:) to harden it.',
   ]);
   expect([...new Set(journeyRuns.map(({ pageId }) => pageId))]).toEqual(['orders']);
   expect(readReport().journeys.map(({ name }) => name)).toEqual(['orders']);
@@ -477,8 +469,8 @@ test('journeysHarden keeps the scores of journeys a later run did not measure in
   });
   expect(read.score).toEqual({ killed: 1, total: 4 });
   expect([...read.byJourney.keys()]).toEqual([
-    `${path.join('tests', 'journeys', 'orders.yaml')}#orders`,
-    `${path.join('tests', 'journeys', 'refunds.yaml')}#refunds`,
+    'tests/journeys/orders.yaml#orders',
+    'tests/journeys/refunds.yaml#refunds',
   ]);
 });
 

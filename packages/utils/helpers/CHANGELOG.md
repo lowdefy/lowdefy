@@ -1,5 +1,276 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/errors@7.1.0
+
+## 7.0.0
+
+### Minor Changes
+
+- f7fa621: feat(agent): agent calls carry the page's path parameters
+
+  `AgentChat` sends the page's `pathParams` with each call next to `urlQuery`, the agent route accepts them, and the page-context option adds a `pathParams` line to the agent's instructions when the page has any. A record id moved from the query into the page path is still known to the agent. Links in agent messages are resolved to their page and path values through the engine's path memory.
+
+- 099d412: AgentChat: send `sharedState` as read-only context
+
+  - **`sharedStateReadOnly: boolean`** (default `false`). When `true`, the block still sends `sharedState` with each turn (to `_payload`, and to the agent's context block with `pageContext: true`), but the server does not register the `update-page-state` tool, so the model is never offered a write to page state. Use it to give an agent context such as the current time or the record on screen when some of those values are also bound to inputs the agent should not change. Without it, an app that wanted context but no writes had to list every other tool in the agent's `activeTools`.
+
+- 2595439: `@lowdefy/connection-treg`: call treg's catalog of external API endpoints from server routines
+
+  [treg](https://treg.to) puts thousands of external API endpoints (enrichment, SEO and SERP data, social data, scraping, generation) behind one token. The new `TregConnection` connection is a default type, so apps use it without installing a plugin.
+
+  - **`TregCall`** calls a catalog or routed endpoint by id, such as `treg.people.email.find`. It takes `query`, `body`, an `idempotencyKey` (a retry gets the stored answer and is not charged again), a `maxCost` ceiling in USD, cache and routing options, and `meta` tags for per-customer usage. It returns `output`, `raw`, the charged `cost` in micro-USD and USD, the `callId`, the provider that served it and those tried. With `await`, it polls an async task until it is done. Upstream URLs are never accepted as endpoints, and the team's own registered tools need `allowCustomTools: true` on the connection.
+  - **`TregCatalogSearch`**, **`TregCatalogGet`** (with `access: true`, the team's price) and **`TregBalance`** for admin pages and provider catalogues.
+  - A balance that is too low or a call over `maxCost` is a final error. A rate limit, a busy or out-of-capacity treg and a network failure are a `ServiceError` with `retryAfter`, the seconds treg asked to wait. A treg 422 is a `ConfigError`. Error messages never contain the token, a provider's response body or the top-up link.
+
+  A `:catch` can now read a `ServiceError`'s wait as `_error: retryAfter`.
+
+  `MongoDBEnrichmentComplete` results take a `cost` in micro-USD, stored as the cell's `cost`, and the `Table` cell details panel shows it. An enrichment provider backed by treg returns `TregCall`'s `cost.micro` there. A retried error result can also take `retryAfterMs`, which replaces the exponential backoff (at most a day), so a worker waits as long as treg's `retry_after` asks.
+
+- f9e483f: feat: The dev server records journeys
+
+  `lowdefy dev` now records how you use your app in the browser, locally, so an agent can turn what you tried into journeys. Recordings stay in `.lowdefy/traces/` on your machine, are kept for 7 days or 200 MB, and never include password fields. Set `LOWDEFY_DEV_RECORD=false` to turn recording off. `lowdefy agent-setup` now also installs a `journeys-from-dev` skill.
+
+- 239a3a7: feat: dates, numbers, avatars, copy buttons, truncation, text tones and confirmations in HTML.
+
+  - **Dates.** `<time datetime="…" data-time="relative">` shows "3 hours ago" and keeps it current, with the exact time on hover. `date`, `datetime` and `time` use the app's locale, and any other value is a dayjs format. Dates show in the reader's time zone.
+  - **Numbers.** `data-format` formats the element's number as `number`, `currency` (with `data-currency="USD"`), `percent`, `compact` or `bytes`, with the same formatting as the ag-grid `number` cells; `data-decimals` fixes the decimals.
+  - **Avatars.** `data-avatar="Jane Doe"` renders initials in a theme colour, the same as the ag-grid `avatar` cells, and on an `<img>` replaces a missing or broken image. No image service is called.
+  - **Copy.** `data-copy` adds an accessible copy button for the element's text or the attribute's value. The copy and check icons are always bundled, and the labels are the new `client.copy`, `client.copyValue`, `client.copied` and `client.copyFailed` translation keys.
+  - **Truncation.** `data-truncate` (or `data-truncate="3"`) clamps text to 1–6 lines with an ellipsis and shows the full text in a tooltip only when it is cut off, the same clamp as the ag-grid `ellipsis` columns.
+  - **Text tone.** `data-tone="secondary"` (also `tertiary`, `quaternary`, `success`, `warning`, `error`, `info`) colours text with theme tokens that follow dark mode.
+  - **Confirm.** In `ClickableHtml`, `data-confirm="Delete this row?"` on a `data-event` element opens a themed confirmation first; only OK fires the event, once. Focus moves to Cancel and returns afterwards, and Escape cancels. A change to the HTML closes it without firing. A bare `data-confirm` asks the new `client.confirm` message ("Are you sure?").
+  - **Keyboard.** Space now activates focusable `data-event` targets and popover triggers on key up, like a native button.
+
+- 1766343: feat: One recorded trace format, and the functions that read it
+
+  A recorded trace is a JSONL file of interactions (a click, a change, a key press, on which block) joined to what the app did in response, in one record format (version 1) shared by every recorder.
+
+  `@lowdefy/node-utils` exports the record reader (`parseTraceLines`), the record validator (`validateTraceRecord`), `compileSegments`, which cuts records into the segments and sequences that journey evidence and coverage read, and the journey identity functions (`journeySequence`, `stepIdentity`). `@lowdefy/helpers` exports `pairTraceEvents`, the rule that decides which DOM interaction caused which engine event, and `isMountEventName`. The dev server's `GET /lowdefy-docs/build-status` reports a top-level `buildId`, the build it serves now.
+
+- a34939d: `@lowdefy/helpers` adds the shared helpers for page path patterns: `parsePathPattern(path)` splits a pattern such as `tickets/{space}/{ticket_id}` into fixed segments and placeholders and rejects patterns Lowdefy does not support (partial, optional and catch-all placeholders, repeated names, empty segments, outer slashes, characters page ids do not allow); `buildPagePath({ pageId, path, pathParams })` writes a page's URL path from its values, encoding each one, and refuses a value of `.` or `..` (the browser would drop that segment), naming the page and the placeholder; and `pageInstanceKey({ pageId, path, pathParams })` gives the key a page instance is stored under, one per set of values for a page with placeholders.
+- e6302c6: fix: Reload when the server answers as another caller
+
+  Page, request and endpoint responses now carry an `x-lowdefy-caller` header naming who the server answered as: `<caller>; session=<hash>; roles=<hash>; memberships=<hash>`. `<caller>` is a short hash of the user id and active organization id, empty when anonymous. `session` hashes the session id, `roles` the caller's app roles and organization role (owner, admin or member) in the active organization, and `memberships` the ids of every organization the person belongs to (under the pinned organization policy, only the app's own organization). A field the server does not know is left out, such as `session` for an API key caller. The browser compares the header with the caller the page renders and reloads the page when the caller or their roles differ, so a page never keeps showing one person's or organization's data after a sign-in as someone else or an organization switch in another tab, and `_user.roles`, `_user.org_roles` and role-gated blocks always match the server. A new session or a changed list of organizations for the same person, organization and roles does not reload the page.
+
+  - A request or endpoint call answered with a 401 while the page shows a signed-in user reloads the page, since the session has ended. A 403 from a page request reloads too; a 403 from an endpoint, and a two-factor enrolment refusal, are thrown as before.
+  - When the session names a different user than the page renders, the page reloads instead of keeping the previous user rendered.
+  - A kept page instance is rebuilt after `SetActiveOrganization` and `UpdateSession` instead of rendering the state and request results it had under the previous organization.
+  - `CallAPI` results read by `_api` are dropped when the organization changes, so a result fetched for one organization is never read under another. Global state is left as it is.
+  - A tab reloads at most once every 10 seconds for these reasons; a second difference inside that window fails the call with an `AuthenticationError` instead of reloading again.
+  - `@lowdefy/helpers` exports `callerStamp`, `parseCallerStamp` and `rolesHash`.
+
+- 81bd4f0: feat(plugin-posthog): new PostHog product analytics plugin
+
+  A default plugin that wraps the `posthog-js` browser SDK, so no script tag or snippet is
+  needed. `posthog-js` is loaded lazily by `PostHogInit`, so an app with `enabled: false`
+  never downloads it. Run `PostHogInit` from the app's root `events.onInitAsync`, which runs
+  once per app load on whichever page opens first; repeat calls with the same `apiKey` do nothing.
+
+  Adds `PostHogInit`, `PostHogCapture`, `PostHogPageview`, `PostHogCapturePageLeave`,
+  `PostHogIdentify`, `PostHogSetPersonProperties`, `PostHogAlias`, `PostHogGroup`,
+  `PostHogReset`, `PostHogOptIn`, `PostHogOptOut`, `PostHogFeatureFlag` and
+  `PostHogReloadFeatureFlags`, each with a params schema.
+
+  With PostHog disabled every other action is a silent no-op, so analytics can never break an
+  app, but invalid params still throw and an action that runs before `PostHogInit` logs a
+  console warning. `PostHogIdentify` reads the identity `posthog-js` holds and resets before
+  identifying a different person on a shared browser.
+
+  - **Lowdefy semantics** — every event gets `lowdefy_page_id` (the page id, also on a page with a
+    path pattern) and `lowdefy_path_params` (the page's path values, `{}` without a pattern).
+    Autocaptured clicks, rage clicks and dead clicks also get `lowdefy_block_id`,
+    `lowdefy_block_type`, `lowdefy_block_ids`, `lowdefy_option` on a dropdown option, `lowdefy_row`
+    and `lowdefy_column` inside a grid, and `lowdefy_text`: the text of the control the click
+    reached (a button, menu item, option or label), even when the click lands on its icon, a child
+    or a wrapper.
+  - **Event failures** — a `lowdefy_event_failed` event is captured when a block or app event fails,
+    with ids only, never messages or values, and at most 50 per app load. Failures in the app's
+    `onInit` are captured too, although `PostHogInit` runs later in `onInitAsync`. Set
+    `captureEventFailures: false` on `PostHogInit` to turn it off.
+  - **Click text masking** — on by default. Click text (`$el_text`, `lowdefy_text`, `text` entries in
+    `$elements_chain` and `$elements`, `$selected_content` and link targets) is kept only when the
+    config of the page it was clicked on, the menus, the i18n messages or the antd locale spell it
+    out. Grid and table cell values, options and menu items filled by requests, labels built from
+    records and `Dynamic` block output are removed; button, menu, tab, column header and literal
+    option labels stay. Element attributes other than structural ones (tag, classes, `class`,
+    `role`, `type`, `row-index`, `col-id`, `nth-child`, `nth-of-type`) are removed, including
+    `title`, `aria-label` and `data-*`, and `id` is kept only as a block wrapper id. Classes and
+    `data-ph-capture-attribute-*` values are not masked, so apps must not build them from data. URLs
+    are not masked. Set `maskDataText: false` on `PostHogInit` to send full click text, or
+    `options.mask_all_text: true` to send none.
+  - **Deployment environments** — `PostHogInit` registers the current environment as the
+    `environment` super property on every event, and `posthog.enabled: false` in an environment
+    turns PostHog off there (`PostHogInit` behaves as `enabled: false`), alongside the `cron`,
+    `email` and `sentry` switches.
+
+  For plugin authors: action plugins receive a `trace` argument for observing completed events and
+  the read-only app metadata as `lowdefyApp`; the engine trace gains `isConfigText({ text, pageId })`,
+  and `@lowdefy/helpers` exports `filterElementsChain`.
+
+  AutoComplete and PhoneNumberInput render their dropdowns inside the block, like Selector.
+
+### Patch Changes
+
+- 6144814: Allow only safe link schemes in block hrefs
+
+  An `href` is used only when its scheme is one DOMPurify allows by default (`http`, `https`, `ftp`, `ftps`, `mailto`, `tel`, `callto`, `sms`, `cid`, `xmpp`, `matrix`), or it is a relative path, a query or a fragment. Any other value, including one with leading whitespace or control characters, renders no link. This applies to `Button`, `Tag` and `FloatButton`, the url cell of table, AgentChat message and tool result links, `TiptapMentionInput` mention links, and every `href` given to the Lowdefy `Link` component, which covers table and ag-grid link, avatar and relation cells. A `Link` whose `href` is refused renders a span without navigating, and does not fall back to its `pageId` or `url`; the `Link` action with such an `href` throws "Invalid Link: no target resolved." as it does for a `url` it cannot resolve.
+
+  `@lowdefy/helpers` exports the check as `getSafeHref(href)`, which returns the href or `undefined`; `@lowdefy/block-utils` re-exports it.
+
+- db1a4d3: fix(client): Keep browser storage per app and clear user data at sign-out
+
+  Every key Lowdefy writes to the browser's local storage now names the app it belongs to (its `slug` and base path), so apps served from one origin no longer read or overwrite each other's values. The dark mode, locale and sider open preferences are kept per app and stay across sign-outs; a preference stored before this change is moved to the app's key the first time it is read.
+
+  Data that belongs to a person is also kept per signed-in user: the `Search` block's recent searches. It is cleared when the user signs out with `Logout`, and on page load when a different user, or nobody, is signed in on the browser. The scroll positions Lowdefy keeps in session storage are cleared at the same time.
+
+  Blocks reach the keys through two new block methods, `methods.getAppStorageKey(name)` and `methods.getUserStorageKey(name)`, and actions through `methods.getAppStorageKey(name)`.
+
+- bfc6a00: fix: Endpoint responses no longer carry build markers, and the dev run-endpoint tool reports a failed routine's own error.
+
+  - Endpoint and request responses built from config (a `:return` object, a `:set_state` value read back) no longer include `~k`, `~r` and `~l` keys or wrap arrays as `{ "~arr": [...] }`. A webhook endpoint now sends its `:return` value to the caller in exactly the shape the config gives it.
+  - The dev server's run-endpoint and run-request tools (`lowdefy_run_endpoint`, `lowdefy_run_request`) no longer answer with `TypeError: Cannot read properties of undefined (reading 'length')` when a routine fails or ends without `:return`. They return the routine's result, including its error and the error's config source.
+  - `serializer.serialize` accepts `skipMarkers`, as `serializeToString` already does.
+
+- b226c43: fix: Classify expected outcomes and faults consistently across the v7 runtime and build.
+
+  A sign-in the auth server rejects - a wrong password, an expired or already-used link, a stale
+  OAuth authorization query - was reported as an `ActionError`: logged in the browser, posted to
+  `/api/client-error`, and logged again on the server at error level against the action's config
+  location, while BetterAuth itself logged every 4xx as `ERROR [Better Auth]`. These are expected
+  outcomes of user interaction, not app faults. Auth client methods now throw a `UserError` for a
+  4xx (with `metaData.code` / `metaData.status` for `catch` actions to branch on), and the server
+  owns BetterAuth's API-error logging so a rejected attempt is one warn line.
+
+  The same rule was applied across the code new in v7:
+
+  - New `AuthorizationError` (403): an authenticated caller refused by a request, endpoint, agent,
+    websocket or auth-step gate is one warn line and a 403, not a `ConfigError` logged at error
+    level with a 500 and a Sentry event. The agent and websocket gates now also return 401 to an
+    unauthenticated caller. All three servers handle `AuthenticationError`,
+    `TwoFactorEnrolmentRequiredError` and `AuthorizationError` the same way; `server` no longer
+    reports each fault to Sentry twice.
+  - A wrong HTTP method on an API route is a 405, not an error-level log and a 500.
+  - Routine `:throw`, schema validation failures and a nested `CallApi` that ended in `:throw` are
+    `UserError`s logged at warn, not error.
+  - Config faults that were plain `Error`s are `ConfigError`s (unconfigured auth, mock user without
+    auth, missing `auth.email`, unknown block type, ambiguous link targets, strategy secrets,
+    tenant-wall refusals, storage post-policy fields, `_organization` / `_build.authConfig`
+    misuse); invariant violations are `LowdefyInternalError`s (write-phase artifact checks, invalid
+    routine, auth adapter contract); upstream failures are `ServiceError`s (websocket transport,
+    JWKS fetch, BetterAuth 5xx, tenant preflight probes, SMTP only when the network failed).
+    `ServiceError.isServiceError` also recognises AWS SDK `$metadata.httpStatusCode` and numeric
+    5xx codes.
+  - Build: agents, MCP endpoints, notifications, websockets, `CallAgent` / `RenderNotification`
+    step references and organization client-action references collect every error instead of
+    stopping at the first; `websocket-refs`, `dynamic-endpoint-refs`, `callapi-refs`,
+    `callapi-internal-refs` and `icons` are valid `~ignoreBuildChecks` slugs; a plugin module that
+    resolves but fails to load is reported instead of surfacing later as an unknown type (a plugin
+    without an optional subpath such as `schemas` is not a failure); the deprecated
+    `public/styles.less` check runs as a validation step rather than failing the write phase.
+  - Errors revived from the wire keep their class for the auth gate errors, and the dev client
+    revives serialized Lowdefy errors instead of flattening them to their message.
+
+- aa6bb38: feat(api)!: A declared `payloadSchema` is now enforced on every caller.
+
+  **Breaking:** a caller that sends a payload outside an endpoint's `payloadSchema` is now refused
+  before the routine runs. Until now the schema was only advertised to MCP clients and agents, and
+  nothing checked a payload against it. This is a major bump for `@lowdefy/api` and `@lowdefy/build`
+  because apps whose callers relied on the schema not being checked will see those calls fail.
+
+  Every payload is validated on every call path, and a non-conforming one is refused. Who built
+  the payload decides how the refusal is reported:
+
+  - **An outside caller's payload** is the caller's mistake, a `UserError` logged at warn level and
+    never captured to Sentry. REST (`POST /api/endpoints/<endpointId>` without naming a page)
+    answers `400` with `{ name: 'UserError', message }`; MCP `tools/call` answers `isError: true`
+    carrying the message, and agent tool calls get it as a tool error, so the model can retry.
+  - **A payload the app's own config built** (a page's `CallAPI`, a nested or detached `CallApi`
+    step, a Dynamic block's endpoint, an auth or agent hook, a scheduled run's `schedule.payload`)
+    breaks the endpoint's own contract, so the refusal is a `ConfigError`, logged as a server error
+    with its config location. A page's `CallAPI` fails with `_error.name: ConfigError` (outside
+    development with the generic server error message), a nested `CallApi` reaches the routine's
+    `:catch` as a `ConfigError`, and a detached target or scheduled run fails its run.
+
+  The message names the endpoint, the failing location and what would be accepted, e.g.
+
+  - `Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.`
+  - `... at /status: must be equal to one of the allowed values (draft, placed).`
+  - `... at (root): must NOT have additional properties (colour).`
+  - `... at /slug: must match pattern "^[a-z0-9-]+$".`
+
+  When a location fails both its `type` and one of `enum`, `pattern`, `required` or
+  `additionalProperties`, that keyword is reported.
+
+  There is no opt-out: the way to not validate is to not declare a `payloadSchema`. The build now fails
+  when an endpoint declares both `webhook` and `payloadSchema`, since a webhook routine receives the
+  `{ body, query, headers }` envelope rather than the schema's shape.
+
+  `cleanBuildArtifact` (strips `~k`/`~r`/`~l` markers and unwraps `~arr`) moves into
+  `@lowdefy/helpers`, replacing the private copies in `@lowdefy/api` and `@lowdefy/ai-utils`.
+
+- Updated dependencies [4d08b55]
+- Updated dependencies [04077d9]
+- Updated dependencies [d42f420]
+- Updated dependencies [ebf95f8]
+- Updated dependencies [09717e8]
+- Updated dependencies [2baefc1]
+- Updated dependencies [662eaa9]
+- Updated dependencies [b226c43]
+- Updated dependencies [94fc9e0]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [2755501]
+- Updated dependencies [cac0798]
+- Updated dependencies [9512788]
+  - @lowdefy/errors@7.0.0
+
+## 6.1.0
+
+### Minor Changes
+
+- 6d6f8fa: feat: add the `_error` operator, which reads the error being handled.
+
+  - **Inside a server `:catch`**, `_error` returns the error that sent the routine there: its `name`, real `message`, `code`, `statusCode` and `cause` chain. Values of the app's secrets in the message are replaced with `[REDACTED]`. It resolves to the innermost `:catch`, a `:finally` reads the error of the `:catch` around its `:try`, and each `:parallel` branch reads its own. A routine can now branch on the failure:
+
+    ```yaml
+    - :try:
+        - id: get_customer
+          type: AxiosHttp
+          connectionId: crm
+          properties:
+            url: /customers
+      :catch:
+        - :if:
+            _eq: [{ _error: statusCode }, 404]
+          :then:
+            - :reject: Customer not found
+        - :throw: Customer lookup failed
+    ```
+
+  - **Inside a client `catch` action list**, `_error` returns the error that sent the event there. An error from the server keeps its `code` and `statusCode`, so a page can branch on a failed `Request` without an endpoint.
+  - **Outside a catch**, `_error` returns `null`.
+  - **`:throw` and `:reject` accept an Error as their message.** `:throw: { _error: true }` rethrows the caught error, keeping its class, `code` and `statusCode`; `:reject: { _error: true }` rejects with its message as the user would see it. Use `{ _error: message }` to send the real message to the user.
+  - `code` and `statusCode` are read the same way for every connection: `code` is the error's own `code`, and `statusCode` the first number among its `statusCode`, `status` and `response.status`. A request error now carries both from the error its connection threw, and AxiosHttp sets both on a non-2xx response.
+
+### Patch Changes
+
+- 6d6f8fa: Improved error handling: each reader of a server error now gets its own view of it.
+
+  - **Users and app config see the author's message or one generic message.** A server error the app author did not write now reaches the browser as "Something went wrong.", with its `name`, `code`, `statusCode`, `configKey` and a `requestId`. Messages written with `:throw` or `:reject`, failed `ValidateSchema` steps, a plugin's `UserError`, and authentication refusals, are shown as before. This applies to the error toast, `_actions`, `_request_details`, websocket errors, MCP tool results and the AgentChat stream, the same way in development and production. An action whose error toast showed a connection's own message now shows the generic one.
+    - The generic message is the built-in `server.genericError` i18n string. Override it per locale under `config.i18n.messages`, for example `server.genericError: 'Etwas ist schiefgelaufen.'`.
+    - To show different text for one action, set `messages.error` on the action.
+    - To show the real message, read it with the new `_error` operator in the endpoint's `:catch` and send it on, for example `:throw: { _error: message }`.
+  - **The dev server shows the full error.** In `lowdefy dev`, the error bar, the browser console and the dev MCP tools show the full server error, with its config location, while app config sees the same generic error as in production. Different failures of the same action are now each shown, instead of only the first.
+  - **The browser console prints the request id** under a server error, to find the matching server log line and Sentry event.
+  - **Production logs and Sentry keep a fixed set of error fields.** Each logged error keeps its name, message, stack, `code`, `statusCode` and cause, plus Lowdefy's own fields (`configKey`, `source`, `received`, ...) on Lowdefy errors. Fields a library attaches, such as an HTTP client's request config and response, are no longer logged. Values of the app's secrets (`LOWDEFY_SECRET_*`, `CRON_SECRET`, `AUTH_SECRET`) are replaced with `[REDACTED]` in production log lines and Sentry events, and credential-named keys in `received` are masked. Sentry events now carry the error's fields under `extra.error` and a `requestId` tag, and no longer attach incoming request bodies.
+  - **An AxiosHttp request that gets a 5xx response now fails with a `ServiceError`**, where it used to fail with a `RequestError`. AxiosHttp now sets `statusCode` on its error, and a 5xx status marks an error as a service failure, like a network error or timeout. Config that checks `name` for `RequestError` on these failures, for example `_eq: [{ _error: name }, 'RequestError']`, should also accept `ServiceError`, or check `statusCode` instead. The server log event for these failures is now `service_error`.
+
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/errors@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

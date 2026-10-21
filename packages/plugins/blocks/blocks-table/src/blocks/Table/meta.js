@@ -266,6 +266,25 @@ const column = {
       items: { type: ['object', 'string'] },
       docs: { displayType: 'yaml' },
     },
+    collapsible: {
+      type: 'boolean',
+      default: false,
+      description:
+        'On a group: show a chevron in the group header that collapses the group to its columns with `showWhen: always` or `closed` and expands it to those with `always` or `open`. The collapsed groups are the view `collapsedColumnGroups`.',
+    },
+    collapsed: {
+      type: 'boolean',
+      default: false,
+      description:
+        'On a collapsible group: start collapsed. The view `collapsedColumnGroups` overrides it.',
+    },
+    showWhen: {
+      type: 'string',
+      enum: ['always', 'open', 'closed'],
+      default: 'always',
+      description:
+        "In a collapsible group: when this column (or inner group) shows. `open` while the group is expanded, `closed` while it is collapsed, `always` in both. It follows the nearest collapsible group above it, so collapsing an outer group also hides an inner group with `showWhen: open`. A collapsible group needs a child that shows when it is collapsed. A column a group's state hides is not displayed, searched or exported, and the column picker lists it as unavailable.",
+    },
   },
 };
 
@@ -489,8 +508,10 @@ export default {
     },
     onRowAdd: {
       description:
-        'Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, while the event runs; after it the row comes from `data` (add it there, for example by refetching). When the actions fail, the row goes and the editor shows the error with the values kept.',
+        'Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, under `rowKey` while the event runs; after it the row comes from `data` (add it there, for example by refetching). Save the row under `rowKey` (as its `_id`, or at the field the `rowKey` property names): the saved row then replaces the saving one as soon as `data` has it, even while the event still runs; a row saved under another key shows beside the saving row until the event settles. When the actions fail, the row goes and the editor shows the error with the values kept.',
       event: {
+        rowKey:
+          'The key the row shows under while it saves: a new random UUID, for the app to save the row under.',
         values:
           'The typed values, set at each column `field` path (`{ name, company: { domain } }`), empty fields left out.',
       },
@@ -649,6 +670,12 @@ export default {
             type: 'array',
             description: 'Column order, widths, pinning and visibility.',
             items: viewColumn,
+          },
+          collapsedColumnGroups: {
+            type: 'array',
+            description:
+              "Keys of the collapsed collapsible column groups, over the groups' own `collapsed`. A group's key is its `key`, else `group:<index>` (`group:2.0` for the first group inside the third).",
+            items: { type: 'string' },
           },
           sort: {
             type: 'array',
@@ -1074,7 +1101,13 @@ export default {
         type: 'boolean',
         default: true,
         description:
-          'Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it.',
+          'Show the summary footer when `summaryRow` is set or any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it.',
+      },
+      summaryRow: {
+        type: ['object', 'null'],
+        description:
+          'A row the app computed, such as a report total from the request, shown in the summary footer in place of the aggregates. Each column renders it like a body row, with its `type`, `cell` and `rules`; action columns stay empty. It is not a data row: sorting, filtering, search, selection and the record count leave it out, and `exportCsv` adds it as the last line (in server mode `onExport` produces the file). Group headers keep their aggregates.',
+        docs: { displayType: 'yaml' },
       },
     },
   },

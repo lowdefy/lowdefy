@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: TagMultipleSelector
     pageTitle: TagMultipleSelector
-    section: Input Blocks
     filePath: blocks/input/TagMultipleSelector.yaml
     block_type: TagMultipleSelector
     antd_component: Tag

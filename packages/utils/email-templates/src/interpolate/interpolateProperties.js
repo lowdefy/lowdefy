@@ -18,19 +18,29 @@ import { type } from '@lowdefy/helpers';
 import { createEnvironment } from '@lowdefy/nunjucks';
 
 import escapeMarkdownData from './escapeMarkdownData.js';
+import unescapeMarkdown from './unescapeMarkdown.js';
 
 // Autoescape is off because emails are not HTML sinks for plain properties like subject.
 // Markdown fields are protected by escaping the interpolated data values instead.
-const environment = createEnvironment({ autoescape: false });
+const plainEnvironment = createEnvironment({ autoescape: false });
+const markdownEnvironment = createEnvironment({ autoescape: false });
+
+// The markdown filter marks a value as markdown the app wrote, so it renders as markdown.
+// Markdown properties render against escaped data, so the filter undoes the escaping;
+// plain properties render against raw data, so the filter leaves the value as it is.
+plainEnvironment.addFilter('markdown', (value) => value);
+markdownEnvironment.addFilter('markdown', (value) =>
+  type.isString(value) ? unescapeMarkdown(value) : value
+);
 
 function interpolateValue({ value, path, data, escapedData, markdownProperties }) {
   if (type.isString(value)) {
     // Array indices are stripped so 'metadata.0.value' matches a 'metadata.value' entry.
     const dottedPath = path.filter((segment) => !/^\d+$/.test(segment)).join('.');
     if (markdownProperties.includes(dottedPath)) {
-      return environment.renderString(value, escapedData);
+      return markdownEnvironment.renderString(value, escapedData);
     }
-    return environment.renderString(value, data);
+    return plainEnvironment.renderString(value, data);
   }
   if (type.isArray(value)) {
     return value.map((item, index) =>

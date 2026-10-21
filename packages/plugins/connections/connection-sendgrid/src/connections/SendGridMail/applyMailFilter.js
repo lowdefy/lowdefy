@@ -20,11 +20,18 @@ function getBareAddress(recipient) {
   if (type.isObject(recipient)) {
     return recipient.email.toLowerCase();
   }
-  const match = recipient.match(/<([^>]+)>/);
+  // [^<>] keeps the match linear: with [^>] a long run of "<" takes quadratic time.
+  const match = recipient.match(/<([^<>]+)>/);
   if (match) {
     return match[1].toLowerCase();
   }
   return recipient.toLowerCase();
+}
+
+// An "@" with at least one character on each side.
+function isAddress(part) {
+  const at = part.indexOf('@', 1);
+  return at !== -1 && at < part.length - 1;
 }
 
 // SendGrid reads a string recipient as one address, so a string holding several addresses is
@@ -37,17 +44,30 @@ function getAddresses(recipient) {
   if (!type.isString(recipient)) {
     return [];
   }
-  return recipient.match(/[^\s<>,;"]+@[^\s<>,;"]+/g) ?? [];
+  // Splitting on the separators and checking each part is linear; matching
+  // /[^\s<>,;"]+@[^\s<>,;"]+/g directly takes quadratic time on a long part with no "@".
+  return recipient.split(/[\s<>,;"]+/).filter(isAddress);
+}
+
+// A loop, not /\.+$/: that regex takes quadratic time on a long run of dots, and the domain comes
+// from the request.
+function trimTrailingDots(domain) {
+  let end = domain.length;
+  while (end > 0 && domain[end - 1] === '.') {
+    end -= 1;
+  }
+  return domain.slice(0, end);
 }
 
 // .invalid is reserved and never resolves (RFC 6761). A trailing dot is the fully qualified
 // form of the same domain.
 function isInvalidAddress(address) {
-  const domain = address
-    .slice(address.lastIndexOf('@') + 1)
-    .trim()
-    .toLowerCase()
-    .replace(/\.+$/, '');
+  const domain = trimTrailingDots(
+    address
+      .slice(address.lastIndexOf('@') + 1)
+      .trim()
+      .toLowerCase()
+  );
   return domain === 'invalid' || domain.endsWith('.invalid');
 }
 

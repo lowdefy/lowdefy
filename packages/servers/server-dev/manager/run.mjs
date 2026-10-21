@@ -17,7 +17,9 @@
 
 import opener from 'opener';
 import { registerServer, watchOwner } from '@lowdefy/node-utils';
+import checkAgentFiles from '../lib/docs/checkAgentFiles.js';
 import getContext from './getContext.mjs';
+import getLowdefyVersion from './utils/getLowdefyVersion.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import createBuildActivity from './utils/createBuildActivity.mjs';
 import createLanPairing from './utils/createLanPairing.mjs';
@@ -217,6 +219,15 @@ try {
     context.logger.info(
       formatLanPairing({ lan: context.lan, port: context.options.port, basePath: context.basePath })
     );
+  }
+  // Lowdefy's agent block: missing, from another version, or not imported by
+  // CLAUDE.md. Build status reports the same notices to agents on every read.
+  const agentFiles = checkAgentFiles({
+    configDirectory: context.directories.config,
+    lowdefyVersion: await getLowdefyVersion(context).catch(() => null),
+  });
+  for (const notice of agentFiles) {
+    context.logger.warn(notice.message);
   }
   // A hub-owned server was started for an agent, not for a person at a browser.
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true' && context.options.owner !== 'hub') {

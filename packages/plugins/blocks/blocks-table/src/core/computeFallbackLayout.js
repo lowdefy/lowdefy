@@ -26,12 +26,14 @@ function getRegion(pinned) {
 
 // The layout the table will have, from the column config alone (no TanStack): the view's column
 // order, visibility, pins and widths (resolveViewColumns, as the table's initial state resolves
-// them), the leading columns and the trailing ones (last in the end region), through the
-// engine's buildLayout. The lazy block's fallback lays
-// its header and skeleton rows out with it, so the swap to the table does not move a column.
+// them) less the columns collapsed column groups hide (`groupVisibility`: getDisplayedVisibility
+// over an empty view visibility), the leading columns and the trailing ones (last in the end
+// region), through the engine's buildLayout. The lazy block's fallback lays its header and
+// skeleton rows out with it, so the swap to the table does not move a column.
 function computeFallbackLayout({
   columns,
   defaultView,
+  groupVisibility,
   leadingColumns,
   trailingColumns = [],
   value,
@@ -41,7 +43,7 @@ function computeFallbackLayout({
   const regions = { start: [], center: [], end: [] };
   const sizing = {};
   resolveViewColumns({ value, defaultView, columns }).forEach((entry) => {
-    if (entry.hidden) return;
+    if (entry.hidden || groupVisibility[entry.key] === false) return;
     const column = byKey.get(entry.key);
     const minWidth = column.minWidth ?? columnSizes.minWidth;
     const maxWidth = column.maxWidth ?? columnSizes.maxWidth;

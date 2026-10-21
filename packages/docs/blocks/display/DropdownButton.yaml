@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: DropdownButton
     pageTitle: DropdownButton
-    section: Display Blocks
     filePath: blocks/display/DropdownButton.yaml
     block_type: DropdownButton
     antd_component: Dropdown

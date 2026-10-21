@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: AzureBlobStorage
     pageTitle: Azure Blob Storage
-    section: Connections
     filePath: connections/AzureBlobStorage.yaml
     content:
       - id: markdown

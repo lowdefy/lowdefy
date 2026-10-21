@@ -28,7 +28,7 @@ For client-side error capture, you also need to expose the DSN to the browser:
 You can customize Sentry behavior using the `logger` configuration in your `lowdefy.yaml`:
 
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.1.0
 
 logger:
   sentry:

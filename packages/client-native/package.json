@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/client-native",
-  "version": "6.0.0",
+  "version": "7.1.0",
   "license": "Apache-2.0",
   "description": "Lowdefy Client Native - the React Native renderer for Lowdefy pages, over @lowdefy/client-core",
   "homepage": "https://lowdefy.com",
@@ -40,12 +40,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "@lowdefy/client-core": "6.0.0",
-    "@lowdefy/engine": "6.0.0",
-    "@lowdefy/errors": "6.0.0",
-    "@lowdefy/helpers": "6.0.0",
-    "@lowdefy/layout-native": "6.0.0",
-    "@lowdefy/style-native": "6.0.0"
+    "@lowdefy/client-core": "7.1.0",
+    "@lowdefy/engine": "7.1.0",
+    "@lowdefy/errors": "7.1.0",
+    "@lowdefy/helpers": "7.1.0",
+    "@lowdefy/layout-native": "7.1.0",
+    "@lowdefy/style-native": "7.1.0"
   },
   "peerDependencies": {
     "react": "^19.2.0",
@@ -56,8 +56,8 @@
     "@babel/core": "7.29.6",
     "@babel/plugin-transform-class-static-block": "7.29.7",
     "@jest/globals": "29.7.0",
-    "@lowdefy/actions-core": "6.0.0",
-    "@lowdefy/operators-js": "6.0.0",
+    "@lowdefy/actions-core": "7.1.0",
+    "@lowdefy/operators-js": "7.1.0",
     "@react-native/babel-preset": "0.88.0",
     "@react-native/jest-preset": "0.88.0",
     "@swc/cli": "0.8.1",

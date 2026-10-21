@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import path from 'path';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 import createProgress from './createProgress.js';
 import readsMail from './readsMail.js';
@@ -33,7 +33,7 @@ async function runBaseline({ items, url, configDirectory, log = () => {} }) {
   });
   for (const item of items) {
     const result = await runJourney({ item, url });
-    const file = path.relative(configDirectory, item.filePath);
+    const file = relativePosixPath({ from: configDirectory, to: item.filePath });
     const name = result.name;
     if (!result.passed) {
       failed.push({ file, name, message: result.message });

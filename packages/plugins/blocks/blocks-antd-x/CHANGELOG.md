@@ -1,5 +1,183 @@
 # @lowdefy/blocks-antd-x
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/blocks-files@7.1.0
+- @lowdefy/block-utils@7.1.0
+- @lowdefy/helpers@7.1.0
+
+## 7.0.0
+
+### Major Changes
+
+- 36f864c: feat!: Lucide icons replace react-icons, with icon settings and icon-set plugins.
+
+  Lowdefy icons are now [Lucide](https://lucide.dev) icons rendered by `lucide-react`. react-icons names such as `AiOutlineUser` no longer resolve. Run `lowdefy upgrade` to rewrite them, or follow the migration guide at `/v6-to-v7` in the docs.
+
+  Breaking changes:
+
+  - **Icon names.** Use a semantic name (`edit`, `delete`, `chevron-down`, …), a Lucide name in PascalCase (`Pencil`, `Trash`), or a set-qualified name (`lucide:Pencil`). An unknown name at an icon property fails the build with a suggestion; old react-icons and Ant Design names get a migration message.
+  - **Block and Ant Design icons are Lucide.** Every icon a block chooses (validation marks, date picker calendar, menu and sidebar toggles, dark-mode switch, upload lists, pagination arrows, …) and Ant Design's own close, status, expand and loading icons now render through semantic names, so they follow the app's icon set and `theme.icons.aliases`.
+  - **`theme.icons.aliases` targets lose the `Lu` prefix** (`LuPencil` → `Pencil`), and several semantic names now point at Lucide 1.x names (`delete` → `Trash`, `filter` → `Funnel`, `help` → `CircleQuestionMark`, `history` → `RotateCcwClock`).
+  - **Icon hover titles** are generated from the new names ("Pencil", "Arrow left right").
+
+  New:
+
+  - **Icon settings.** `theme.icons.size` (default `1em`), `theme.icons.strokeWidth` (default `2`) and `theme.icons.nonScalingStroke` set app-wide defaults; every icon accepts `strokeWidth` and `nonScalingStroke`.
+  - **Icon-set plugins.** A plugin declares `iconSets` in `types.js` and exports icon data from `./iconSets`. Sets are layered in plugin order - the last plugin wins per icon name, and a partial set falls through - so a plugin can add a single icon to `lucide` or replace one. `theme.icons.set` picks the default set for PascalCase names and can re-skin semantic names.
+  - **`@lowdefy/icons-react-icons`** holds every react-icons 5.6.0 icon under its old name. Install it and set `theme.icons.set: react-icons` to keep old names, for example icon names stored in a database.
+  - **`lowdefy upgrade`** gains a `7.0.0` phase that rewrites react-icons names to semantic or Lucide names from a table covering every Ant Design, Lucide and commonly used react-icons name.
+
+  Fixes: the header locale selector and the AgGrid row menu icons now bundle in production builds, and the dev server reports unknown icon names on pages written inline in `lowdefy.yaml`.
+
+### Minor Changes
+
+- 08d8938: feat(api): Tool endpoints read the files attached in an agent chat with `_agent: files`
+
+  An `AgentChat` file uploaded through `uploadPolicyRequestId` now keeps its storage key on its message part, as `providerMetadata: { lowdefy: { key } }`, so saved conversations and `onFinish` hooks hold it beside the signed link. `_agent: files` gives a tool endpoint, and the endpoints it calls with `CallApi`, the files of every message the chat request carried, as `[{ key, filename, mediaType }]`; it is `[]` under a `CallAgent` step. The model gets a line naming each file before it (`Attached file: screenshot.png`), so it can pass the name to a tool, and the storage key is not sent to the model. The saved messages are unchanged. The files come from the person's own chat request, so a tool should look a file up by name in `_agent: files` and check that the key is one the caller may read before reading it.
+
+- d3e1ee1: AgentConversations: mark a conversation row as loading
+
+  - **`loadingKey: string`.** Mirrors `activeKey`: the row with that key shows a spinner in place of its icon and is marked `aria-busy`. Set it on `onSelect` while the app reads the conversation's transcript and clear it when the read completes, so the list shows that the selected conversation is still loading rather than only the chat column.
+  - **`items[].loading: boolean`.** The same indicator per item, for rows loading on their own (for example while a title is being generated).
+
+  Closes #2397.
+
+- f7fa621: feat(agent): agent calls carry the page's path parameters
+
+  `AgentChat` sends the page's `pathParams` with each call next to `urlQuery`, the agent route accepts them, and the page-context option adds a `pathParams` line to the agent's instructions when the page has any. A record id moved from the query into the page path is still known to the agent. Links in agent messages are resolved to their page and path values through the engine's path memory.
+
+- 099d412: AgentChat: send `sharedState` as read-only context
+
+  - **`sharedStateReadOnly: boolean`** (default `false`). When `true`, the block still sends `sharedState` with each turn (to `_payload`, and to the agent's context block with `pageContext: true`), but the server does not register the `update-page-state` tool, so the model is never offered a write to page state. Use it to give an agent context such as the current time or the record on screen when some of those values are also bound to inputs the agent should not change. Without it, an app that wanted context but no writes had to list every other tool in the agent's `activeTools`.
+
+- ac9db75: feat(ai): Move the AI plugins to AI SDK 7
+
+  `ai` 7.0.116 with `@ai-sdk/gateway` 4, `@ai-sdk/anthropic` 4, `@ai-sdk/google` 4, `@ai-sdk/openai` 4,
+  `@ai-sdk/react` 4 and `@ai-sdk/mcp` 2. Lowdefy's own config is unchanged: `GenerateText` and
+  `GenerateObject` still take `system` (passed to the model as the SDK's `instructions`), and
+  agent hooks keep their names — `onStart`, `onStepStart`, `onToolCallStart`, `onToolCallFinish`,
+  `onStepFinish` and `onFinish`.
+
+  - Tools marked `confirm: true` ask for approval through the agent's `toolApproval` setting rather than
+    a per-tool flag; approvals in `AgentChat` work as before.
+  - `reasoningText` and `providerMetadata` in a `GenerateText` / `GenerateObject` response come from
+    the final step, as before.
+  - The event payloads of the `onToolCallStart`, `onToolCallFinish`, `onStart`, `onStepStart` and
+    `onStepFinish` hooks follow AI SDK 7's event shapes.
+
+- 2dab826: chore: Update antd to 6.6.5 and Ant Design X to 2.9.0.
+
+  antd moves from 6.3.1 to 6.6.5, `@ant-design/x` and `@ant-design/x-markdown` from 2.7.0 to 2.9.0,
+  and `@ant-design/icons` from 6.1.0 to 6.3.4. Custom block plugins that import from `antd`
+  directly should pin `antd@6.6.5` so the app keeps a single copy of antd.
+
+- 4fa189f: feat(blocks-antd-x): Add the `IntentInput` block, a text input that becomes what the user means
+
+  The user types in their own words, a classifier picks the intent, and the box grows to show that intent's slot: a faded preview while unsure, a "Did you mean" choice between the two leading intents when they are close, and the slot solid when sure. Each intent's slot holds ordinary blocks, such as a pre-filled form and the button that saves it.
+
+  The block does no classifying itself. It fires `onClassify` shortly after the text changes, and takes the answer back through `answer` in the shape of a `Decide` choice answer, so `answer: { _request: classify.intent }` wires it to an evaluation model such as TypeSafe's Jev on the AI Gateway, which answers in well under a second. Options that are not intents, such as a `none` option for unfinished text, are ignored, and the last answer is kept while the next one loads. The shown intent only changes when another intent leads two answers in a row, keeps the lead while the user pauses, or reaches `confidence.switch`, so the box does not flicker as the user types. The value is `{ text, intent, mode }`, where `mode` is `idle`, `preview`, `choose` or `committed`.
+
+- 08f76bb: Heavy blocks load their code when they first mount.
+
+  - `createLazyBlock` in `@lowdefy/block-utils` lets any plugin block load its implementation on first mount. A hidden block, or one in a closed panel, unopened tab or modal, never downloads it. The block's methods (declared in `meta.methods`) can be called from mount: calls made before the code arrives run in order once it loads, or fail with the usual error. Implementation modules are named `*.lazy.js`, and the production server prefetches them at low priority.
+  - `AgentChat` is lazy. Its drawer launcher paints immediately, and a click before load opens the drawer when the chat arrives. Mermaid diagrams, code highlighting and LaTeX load only when a message uses them. `setInput` is now listed in the block's methods, and `renderLatex` works in the browser build.
+  - `EChart` loads the charting library inside its own sized box, so pages paint without it and the layout does not move.
+  - `HtmlComponent` no longer re-sanitizes and re-renders HTML that has not changed.
+
+  No config changes.
+
+### Patch Changes
+
+- 9cd5a44: AgentChat: send requests under the app's basePath
+
+  The chat transport posted to `/api/agent/...` without the app's `basePath`, so an app served under a subpath got 404s. It now prefixes the block's `basePath`, like every other client request.
+
+- 6144814: Allow only safe link schemes in block hrefs
+
+  An `href` is used only when its scheme is one DOMPurify allows by default (`http`, `https`, `ftp`, `ftps`, `mailto`, `tel`, `callto`, `sms`, `cid`, `xmpp`, `matrix`), or it is a relative path, a query or a fragment. Any other value, including one with leading whitespace or control characters, renders no link. This applies to `Button`, `Tag` and `FloatButton`, the url cell of table, AgentChat message and tool result links, `TiptapMentionInput` mention links, and every `href` given to the Lowdefy `Link` component, which covers table and ag-grid link, avatar and relation cells. A `Link` whose `href` is refused renders a span without navigating, and does not fall back to its `pageId` or `url`; the `Link` action with such an `href` throws "Invalid Link: no target resolved." as it does for a `url` it cannot resolve.
+
+  `@lowdefy/helpers` exports the check as `getSafeHref(href)`, which returns the href or `undefined`; `@lowdefy/block-utils` re-exports it.
+
+- f30e559: fix: Track the current workspace version for the `@lowdefy/block-dev-e2e` and `@lowdefy/e2e-utils` dev dependencies (were pinned at `5.4.0`).
+- a9442cc: Production pages load only the plugin code they use.
+
+  The production client used to ship every block, action, operator and icon the app uses anywhere in one main bundle, and every first visit downloaded all of it. Now the build writes one small module per distinct page type set, and each page loads its own. On the docs app the main bundle drops from 6,016 kB to 1,021 kB (1,778 kB to 332 kB gzipped). A simple page's first load drops from 1,720 kB to 529 kB gzipped.
+
+  - The HTML preloads the page's chunks alongside the main bundle, so the first page does not wait an extra round trip.
+  - Content-hashed assets are served with `Cache-Control: public, max-age=31536000, immutable`, on the Node server and in `lowdefy vercel-output`.
+  - Lowdefy's plugin packages declare `"sideEffects": ["**/*.css"]`, so a page that uses one block no longer loads the whole package.
+  - The build adds the types a page runs without naming them: the operators the `_js` accessors call, and the actions and operators a block runs for events it registers itself (such as `Request` in `Upload` or `SetLocale` in `PageHeaderMenu`), which blocks list in `meta.actions` and `meta.operators`. Plugin blocks that register their own events should list them the same way.
+  - A Dynamic block whose content uses a type its `properties.types` did not declare still works: the page loads the full type set and the server logs a warning naming the type to declare.
+
+  No config changes. The dev server is unchanged.
+
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [7c4879b]
+- Updated dependencies [7836aa2]
+- Updated dependencies [99a4f35]
+- Updated dependencies [1227e62]
+- Updated dependencies [6144814]
+- Updated dependencies [cb3551c]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [575a5ee]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [36f864c]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [49490b6]
+- Updated dependencies [a79fb1d]
+- Updated dependencies [1766343]
+- Updated dependencies [08f76bb]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [a9442cc]
+- Updated dependencies [3c2258c]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [3eb3691]
+- Updated dependencies [537bf54]
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/blocks-files@7.0.0
+  - @lowdefy/block-utils@7.0.0
+
+## 6.1.0
+
+### Minor Changes
+
+- f92aa11: AgentChat: stop the stream on a conversation switch, re-sync same-shaped transcripts, and add a `loading` property
+
+  - **A `conversationId` change aborts an in-flight reply.** The block cleared its messages on a switch but left the request running: its `onDataPart`, tool-call and `onFinish` events kept firing into the page for a conversation no longer shown, and the server kept generating. The Chat instance being left is now stopped on the switch.
+  - **External messages re-sync when the conversation changes.** The `messages` sync skipped `setMessages` when the array had the same length and last id as before, and that memo did not reset on a switch. Every assistant message an older onFinish hook persisted carries id `''`, so any two same-length transcripts collided and the switch showed an empty chat. The conversation id is now part of the comparison.
+  - **`loading: boolean`.** While true, a skeleton replaces the message area, suggestions are hidden and the composer is disabled — for apps that read a conversation's transcript from their own store on select, so nothing can be sent into a conversation whose history has not synced yet.
+
+- 9592255: feat(blocks-antd-x): AgentChat passes `styles` and `classNames` through to the bubbles and the composer.
+
+  The filled user bubble, the outlined assistant border and the composer border take their colour from the theme's `colorPrimary`, which antd-x applies with a precedence no page stylesheet beats, so an app whose primary is a neutral had to reach them with `!important` on every property. `messageDisplay.roles.user`, `messageDisplay.roles.assistant` and `sender` now accept antd-x's own `styles` and `classNames`, keyed by semantic part.
+
+### Patch Changes
+
+- 5ad2b62: fix(blocks-antd-x): AgentChat drops an unanswered tool call before it can poison the conversation.
+
+  A reply cut off mid-stream, by a closed tab, a dropped connection or a serverless duration limit, leaves its tool call at `input-available` with no result. UIMessage validation rejects the whole history for one such part, so every later send failed before it reached the model, a history persisted in that state failed on every load, and nothing said so. The block now filters those parts, and any message left with nothing but a step marker, wherever messages enter its list: the `messages` property, the `setMessages` method, and immediately before every send or regenerate. Approval states are kept, since a pending approval is still answerable on resume, and so is a call a client-side tool is still answering, or a call in a reply that is still streaming.
+
+- 08cbf21: fix(blocks-antd-x): AgentChat refuses a second send while the first is still in `onBeforeSend`.
+
+  The composer was only locked while `useChat` reported streaming, and a send begins with an await on `onBeforeSend`, the seam apps use for a quota or entitlement request. For as long as that took, every further submit ran the send again: one slow check, N identical messages, N agent requests the moment the checks resolved. The block now holds a pending-send flag from the start of `handleSend` to its end and shows the Sender's loading state for the whole of it. While it is held, a second submit, a welcome prompt, a suggestion (hidden meanwhile), an edit, a regenerate and the `sendMessage` and `regenerate` methods are all refused, so nothing overtakes the message still being checked.
+
+- Updated dependencies [ea69869]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/helpers@6.1.0
+  - @lowdefy/blocks-files@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes

@@ -91,10 +91,10 @@ async function getContext() {
 
   // Wrap lowdefyBuild to capture and store the shallow build result
   const buildFn = lowdefyBuild(context);
-  context.lowdefyBuild = async () => {
+  context.lowdefyBuild = async (buildOptions) => {
     let result;
     try {
-      result = await buildFn();
+      result = await buildFn(buildOptions);
     } catch (error) {
       context.lastBuildFailed = true;
       throw error;

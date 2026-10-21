@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Auth0LogoutCallback
     pageTitle: Auth0LogoutCallback
-    section: User Authentication
     filePath: users/reference/Auth0LogoutCallback.yaml
     content:
       - id: content

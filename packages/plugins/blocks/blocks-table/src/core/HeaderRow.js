@@ -25,13 +25,14 @@ function renderHeaderCells({ api, cols, activeCol, state }) {
   ));
 }
 
-function renderGroupRows({ api, centerCols, layout, levels }) {
+function renderGroupRows({ api, centerCols, collapsed, layout, levels }) {
   const groupRows = [];
   for (let level = 0; level < levels.depth; level++) {
     groupRows.push(
       <GroupHeaderRow
         api={api}
         centerCols={centerCols}
+        collapsed={collapsed}
         key={level}
         layout={layout}
         level={level}
@@ -60,7 +61,13 @@ function HeaderRow({
       role="rowgroup"
       style={style}
     >
-      {renderGroupRows({ api, centerCols, layout, levels })}
+      {renderGroupRows({
+        api,
+        centerCols,
+        collapsed: state.collapsedColumnGroups,
+        layout,
+        levels,
+      })}
       <div aria-rowindex={levels.depth + 1} className="lf-table-row" data-row-index={-1} role="row">
         {renderHeaderCells({ api, cols: layout.start, activeCol, state })}
         <div className="lf-table-center">

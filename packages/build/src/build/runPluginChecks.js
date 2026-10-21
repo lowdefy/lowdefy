@@ -227,15 +227,24 @@ async function runPluginChecks({ context, allSlugPackages = false }) {
         (target) => target.packageName === name && Object.hasOwn(schemaCheckKinds, target.kind)
       ),
     }));
-  pending.forEach(({ name }) =>
-    context.handleWarning(
-      new ConfigWarning(`Plugin checks for ${name} did not run: package not installed.`)
-    )
-  );
 
   if (context.skipPluginChecks) {
     context.handleWarning(new ConfigWarning('Plugin checks were skipped (--skip-plugin-checks).'));
     return { pending };
+  }
+  // A pending package warns only when it owns a schema-checked type: its
+  // checks are known to be missed. One that only adds connections or requests
+  // may have no ./checks, and its rules cannot be known until it is installed.
+  // When an install and a second build follow (lowdefy build), that build
+  // warns for whatever is still missing.
+  if (!context.pluginInstallFollows) {
+    pending
+      .filter(({ schemaChecked }) => schemaChecked)
+      .forEach(({ name }) =>
+        context.handleWarning(
+          new ConfigWarning(`Plugin checks for ${name} did not run: package not installed.`)
+        )
+      );
   }
   runRules({ context, targets, loaded });
   const schemaFindings = await runSchemaChecks({ context, targets, loaded });
