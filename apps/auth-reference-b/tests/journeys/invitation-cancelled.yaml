@@ -1,0 +1,36 @@
+# The seeded database (scripts/seed-journeys.mjs) holds a pending invitation
+# to org-b for cancelled@example.test, under the id
+# journey-cancelled-invitation, and the org-b owner who sent it.
+- name: an invitee whose invitation is cancelled after sign-in opens the accept page as nobody
+  pageId: login
+  user: none
+  timeout: 30000
+  steps:
+    - fill: { blockId: email, value: cancelled@example.test }
+    - click: magic_link_button
+    - expect: { url: { contains: /check-email } }
+    - email: { to: cancelled@example.test, subject: Your sign-in link }
+    - click: { text: Sign in }
+    - expect: { url: { contains: /home } }
+    # The owner cancels the invitation while the invitee is still signed in.
+    - as: owner
+    - goto: login
+    - fill: { blockId: email, value: owner@example.test }
+    - click: magic_link_button
+    - expect: { url: { contains: /check-email } }
+    - email: { to: owner@example.test, subject: Your sign-in link }
+    - click: { text: Sign in }
+    - expect: { url: { contains: /home } }
+    - goto: members
+    - fill: { blockId: cancel_invitation_id, value: journey-cancelled-invitation }
+    - click: cancel_invitation_button
+    - expect: { text: { blockId: cancel_response_html, contains: canceled } }
+    # The invitee's session lives on, but with no invitation pending and no
+    # member row the server answers it as nobody. The page renders nobody too,
+    # so the accept page's request is answered as the caller it shows.
+    - as: main
+    - goto: accept-invitation
+    - expect: { text: { blockId: caller_html, contains: 'Awaiting organization: null' } }
+    # Protected pages send them to sign in, as they do anyone signed out.
+    - goto: dashboard
+    - expect: { url: { contains: /login } }

@@ -18,10 +18,12 @@
   Seeds the journeys' starting point (pnpm test:journeys:auth --app
   auth-reference-b runs it on the fresh database before the dev server starts).
   org-b is invite-only, so a fresh database holds nobody who could sign up or
-  send an invitation: this writes the org-b owner and the pending invitation
-  that owner sent to invitee@example.test, under the fixed id
-  journey-invitation. The owner has no password - only the invitation is used.
-  The invitation is accepted once, so each run needs a fresh database.
+  send an invitation: this writes the org-b owner and the pending invitations
+  that owner sent to invitee@example.test (id journey-invitation) and
+  cancelled@example.test (id journey-cancelled-invitation). The owner has no
+  password - they sign in by magic link - and holds the app's admin role, so
+  the members page opens for them to cancel the second invitation. The
+  invitations are used once, so each run needs a fresh database.
 
   Rows are stored as the engine writes them (see ../../auth-reference/scripts/
   set-member.mjs): snake_case columns, plain string ids, and the pinned
@@ -56,19 +58,35 @@ try {
     user_id: 'journey-owner',
     organization_id: 'org-b',
     role: 'owner',
+    app_roles: ['admin'],
     created_at: now,
   });
-  await db.collection('user-invitations').insertOne({
-    _id: 'journey-invitation',
-    email: 'invitee@example.test',
-    role: 'member',
-    organization_id: 'org-b',
-    status: 'pending',
-    inviter_id: 'journey-owner',
-    expires_at: new Date(now.getTime() + 60 * 60 * 1000),
-    created_at: now,
-  });
-  console.log('Seeded the org-b owner and a pending invitation for invitee@example.test.');
+  const expiresAt = new Date(now.getTime() + 60 * 60 * 1000);
+  await db.collection('user-invitations').insertMany([
+    {
+      _id: 'journey-invitation',
+      email: 'invitee@example.test',
+      role: 'member',
+      organization_id: 'org-b',
+      status: 'pending',
+      inviter_id: 'journey-owner',
+      expires_at: expiresAt,
+      created_at: now,
+    },
+    {
+      _id: 'journey-cancelled-invitation',
+      email: 'cancelled@example.test',
+      role: 'member',
+      organization_id: 'org-b',
+      status: 'pending',
+      inviter_id: 'journey-owner',
+      expires_at: expiresAt,
+      created_at: now,
+    },
+  ]);
+  console.log(
+    'Seeded the org-b owner and pending invitations for invitee@example.test and cancelled@example.test.'
+  );
 } finally {
   await client.close();
 }
