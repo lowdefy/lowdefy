@@ -1,5 +1,11 @@
 # journey-fixture-walled-plugin
 
+## 0.0.2
+
+### Patch Changes
+
+- @lowdefy/connection-mongodb@7.1.0
+
 ## 0.0.1
 
 ### Patch Changes
