@@ -43,7 +43,7 @@ const allowedErrorKeys = new Set([
   'pageId',
   'isReject',
   'endpointId',
-  'requestId',
+  'stepId',
   'connectionId',
 ]);
 
@@ -204,7 +204,7 @@ test("serializeErrorForLog keeps a failed request's ids and leaves out the conne
   });
   Object.assign(error, {
     endpointId: 'save-thread',
-    requestId: 'save_thread',
+    stepId: 'save_thread',
     connectionId: 'threads',
   });
   Object.defineProperty(error, 'devCause', { value: driverError });
@@ -214,7 +214,7 @@ test("serializeErrorForLog keeps a failed request's ids and leaves out the conne
   expect(serialized).toMatchObject({
     name: 'RequestError',
     endpointId: 'save-thread',
-    requestId: 'save_thread',
+    stepId: 'save_thread',
     connectionId: 'threads',
   });
   expect(JSON.stringify(serialized)).not.toMatch(/planted/);

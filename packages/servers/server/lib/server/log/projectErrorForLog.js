@@ -40,7 +40,7 @@ const lowdefyErrorFields = [
   // A failed request step's ids (callRequestResolver), so its error log names the step
   // rather than its inputs.
   'endpointId',
-  'requestId',
+  'stepId',
   'connectionId',
 ];
 

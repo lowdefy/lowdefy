@@ -478,7 +478,7 @@ test('a failed request carries its ids, not its properties', async () => {
   });
   expect(caught.received).toBeUndefined();
   expect(caught.endpointId).toBe('caller_endpoint');
-  expect(caught.requestId).toBe('req1');
+  expect(caught.stepId).toBe('req1');
   expect(caught.connectionId).toBe('conn1');
 });
 
@@ -500,7 +500,7 @@ test('an endpoint step names the endpoint it belongs to', async () => {
   );
   expect(caught.message).toBe('raw at conn1/save.');
   expect(caught.endpointId).toBe('save_thread_endpoint');
-  expect(caught.requestId).toBe('save');
+  expect(caught.stepId).toBe('save');
 });
 
 test("a connection's error is kept as its name, code, status and message, not its other fields", async () => {
@@ -540,5 +540,16 @@ test('a value thrown that is not an error is named by its type', async () => {
     throw 'My ID is 8001015009087';
   });
   expect(caught).toBeInstanceOf(RequestError);
-  expect(caught.message).toBe('Request resolver threw a string. at conn1/req1.');
+  expect(caught.message).toBe(
+    'Request resolver threw a value of type string, not an error. at conn1/req1.'
+  );
+});
+
+test('a plain object thrown keeps its code, not its other fields', async () => {
+  const caught = await catchError(async () => {
+    throw { code: 'ECONNREFUSED', message: 'My ID is 8001015009087' };
+  });
+  expect(caught).toBeInstanceOf(ServiceError);
+  expect(caught.code).toBe('ECONNREFUSED');
+  expect(JSON.stringify([caught.message, caught.cause.message])).not.toContain('8001015009087');
 });

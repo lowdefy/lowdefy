@@ -133,7 +133,7 @@ test('a failed request step logs its ids and error summary, never its inputs', a
   expect(logged.message).toBe('Document failed validation at test/save_thread.');
   expect(logged.code).toBe(121);
   expect(logged.endpointId).toBe('test_endpoint');
-  expect(logged.requestId).toBe('save_thread');
+  expect(logged.stepId).toBe('save_thread');
   expect(logged.connectionId).toBe('test');
   expect(logged.received).toBeUndefined();
   expect(serializer.serialize(logged.cause)['~e']).toEqual({

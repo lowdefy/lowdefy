@@ -91,17 +91,18 @@ async function callRequestResolver(
       throw error;
     }
 
-    // The error that leaves here is logged whole by the routine, at error level, and sent to
-    // Sentry, so it carries ids and the resolver's error summarised - never the request's
+    // The error that leaves here is logged whole at error level by the server's error handler
+    // and sent to Sentry, so it carries ids and the resolver's error summarised - never the request's
     // evaluated properties (an agent chat's save-thread step holds the whole thread there) or
     // the connection's error itself, which can embed the document it rejected. The dev tools
     // still show that error: it is kept as devCause, which is not enumerable, so no log or error
-    // report walks it, and only the dev error payload reads it.
+    // report walks it, and only the dev error payload reads it. stepId, not requestId: on an
+    // error requestId is the HTTP request's id (context.rid) everywhere else.
     const cause = summarisedError(error);
     const addFields = (wrapped) => {
       Object.assign(wrapped, {
         endpointId: requestConfig.endpointId ?? endpointId,
-        requestId: stepOrRequestId,
+        stepId: stepOrRequestId,
         connectionId: requestConfig.connectionId,
       });
       Object.defineProperty(wrapped, 'devCause', { value: error, configurable: true });

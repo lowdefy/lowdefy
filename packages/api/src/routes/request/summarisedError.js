@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { errorSummaryForLog } from '@lowdefy/errors';
+import { errorSummaryForLog, readErrorCodes } from '@lowdefy/errors';
 
 // Stack frames name code, never data, so they are kept; the stack's first line repeats the
 // message and is rebuilt from the summary's.
@@ -45,7 +45,16 @@ function fromSummary(summary, original) {
 // and error report of the routine writes the error it is thrown, so none of them is kept.
 function summarisedError(error) {
   if (!(error instanceof Error)) {
-    return new Error(`Request resolver threw a ${typeof error}.`);
+    const { code, statusCode } = readErrorCodes(error);
+    return fromSummary(
+      {
+        name: 'Error',
+        message: `Request resolver threw a value of type ${typeof error}, not an error.`,
+        code,
+        statusCode,
+      },
+      {}
+    );
   }
   return fromSummary(errorSummaryForLog(error), error);
 }

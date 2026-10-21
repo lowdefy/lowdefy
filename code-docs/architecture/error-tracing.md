@@ -77,7 +77,7 @@ All error classes in `@lowdefy/errors` with single flat entry point:
 | `PluginError`          | Base class (not used directly) | —                         | —                 |
 | `OperatorError`        | Operator failures              | Operator parsers          | No (use received) |
 | `ActionError`          | Action failures                | Action runner (engine)    | No (use received) |
-| `RequestError`         | Request/connection failures    | Request handler (API)     | No (use received) |
+| `RequestError`         | Request/connection failures    | Request handler (API)     | No (use location) |
 | `BlockError`           | Block rendering failures       | ErrorBoundary (client)    | No (use received) |
 | `ServiceError`         | External service failures      | Plugin interface layer    | No (use service)  |
 | `UserError`            | Expected user interaction      | Actions (Validate, Throw) | No (client-only)  |
@@ -303,7 +303,7 @@ BetterAuth's own route bodies (`/api/auth/*`) are outside this policy: the auth 
 
 ### Dev tools
 
-**The dev server adds a `devError` field beside the wire error.** `redactErrorResponse` returns `{ '~e': <wire error> }` in every mode; when `context.mode === 'dev'` it adds `devError: { '~e': <full error> }` — the error as the dev terminal logs it: full cause chain, `stack`, `source` and `config`, plus `requestId`. It is neither scrubbed nor allowlisted, with one exception: `received` is dropped at every node. On the request path it holds the evaluated request properties, resolved `_secret` values included, and a dev server can be reached over a LAN or tunnel; the terminal still logs it. `normalizeErrorSources` makes each `source` in `devError` config-relative, so the dev tools show the path the developer knows; it keys on the error-node shape (`name` and `message` both strings), so a `source` key inside author data — a `UserError`'s `cause` or `metaData` — is never rewritten.
+**The dev server adds a `devError` field beside the wire error.** `redactErrorResponse` returns `{ '~e': <wire error> }` in every mode; when `context.mode === 'dev'` it adds `devError: { '~e': <full error> }` — the error as the dev terminal logs it: full cause chain, `stack`, `source` and `config`, plus `requestId`. It is neither scrubbed nor allowlisted, with one exception: `received` is dropped at every node. It holds evaluated values, resolved `_secret` values included, and a dev server can be reached over a LAN or tunnel. A failed request's error carries the connection's error only as a summary (see "A failed request's error" below); `devError` takes the connection's error itself from the error's non-enumerable `devCause`, so the dev tools keep its detail. `normalizeErrorSources` makes each `source` in `devError` config-relative, so the dev tools show the path the developer knows; it keys on the error-node shape (`name` and `message` both strings), so a `source` key inside author data — a `UserError`'s `cause` or `metaData` — is never rewritten.
 
 `devError` sits beside `~e`, not inside it, because the serializer's reviver replaces any object holding `~e` with its error: a plain `serializer.deserialize` of the payload drops `devError`, so no decode path that forgets about it can hand it to config. `buildEndpointResult`'s `error` field is `redactErrorResponse`'s payload, so it carries `devError` in dev; its `response` field never does — an Error in a response value is data the routine returned, not a failure of the request.
 
@@ -317,7 +317,7 @@ The `WeakMap` is the guarantee that config never reads `devError`. The decoded e
 
 **`requestId` on the console line.** The browser logger prints `  Request ID: <id>` under a Lowdefy error that carries one. The console, not the toast, carries it: it is what a user or support quotes to find the matching log line and Sentry event.
 
-**Other dev tools.** The dev terminal and the agent error feed (`GET /lowdefy-docs/build-status`) read the server's own logging, never the wire, so they keep full fidelity; `server-dev` builds its logger with `createNodeLogger`'s default `err` serializer. The dev MCP route serves a coding agent, a dev tool: for a failed endpoint `createMcpServer` returns `devError`'s message with ` (at <source>)` and ` Hint: <hint>` appended, and on its catch branch the raw `error.message`.
+**Other dev tools.** The dev terminal and the agent error feed (`GET /lowdefy-docs/build-status`) read the server's own logging, never the wire, so they keep full fidelity, but for a failed request's connection error, which they see as its summary; `server-dev` builds its logger with `createNodeLogger`'s default `err` serializer. The dev MCP route serves a coding agent, a dev tool: for a failed endpoint `createMcpServer` returns `devError`'s message with ` (at <source>)` and ` Hint: <hint>` appended, and on its catch branch the raw `error.message`.
 
 **Dev-only exemptions.** `logClientError` returns `configError: serializer.serialize(validationError)` plus an absolute `source` at HTTP 200, and `server-dev`'s `clientError.js` is the only route that forwards them to the browser (prod and e2e return `{ success: true }`). `jitPage` sends build-error `stack` because `BuildErrorPage.jsx` renders it. Both carry more than the wire allows, on the developer's own machine.
 
@@ -330,9 +330,11 @@ The prod log cannot enumerate every field a library hides a credential in — ax
 **Layer 1 — the shape comes from an allowlist.** The prod logger (`servers/server/lib/server/log/createLogger.js`) passes `serializeErrorForLog` as pino's `err` serializer. It is the log projection, `projectErrorForLog` (`projectErrorForLog.js`), over the one walk, so it applies at every error node. Each node keeps:
 
 - Every node: `name`, `message`, `stack`, `code`, `statusCode`, `cause`.
-- Only nodes whose `name` is in `lowdefyErrorNames`: `configKey`, `source`, `config`, `handled`, `isLowdefyError`, `received`, `typeName`, `location`, `service`, `hint`, `methodName`, `metaData`, `blockId`, `pageId`, `isReject`. Libraries reuse some of these names for their own data — axios's `config` carries auth, params and headers — so keying on the field alone would let a library's copy through.
+- Only nodes whose `name` is in `lowdefyErrorNames`: `configKey`, `source`, `config`, `handled`, `isLowdefyError`, `received`, `typeName`, `location`, `service`, `hint`, `methodName`, `metaData`, `blockId`, `pageId`, `isReject`, `endpointId`, `stepId`, `connectionId`. Libraries reuse some of these names for their own data — axios's `config` carries auth, params and headers — so keying on the field alone would let a library's copy through.
 
-Everything else is dropped: axios's `config`, `request` and `response`, pg's `detail`, Node's `input`, any object a future library invents. Upstream response bodies go with them; that is the debugging cost of not depending on field names. `received` stays: it is the evaluated request properties, the most useful thing in the log, and layer 2 removes the secrets in it.
+Everything else is dropped: axios's `config`, `request` and `response`, pg's `detail`, Node's `input`, any object a future library invents. Upstream response bodies go with them; that is the debugging cost of not depending on field names. `received` stays: it is an operator's or control's evaluated input, and layer 2 removes the secrets in it. A failed request's error no longer carries the request properties as `received` (see below).
+
+**A failed request's error carries no inputs.** `callRequestResolver` wraps a resolver's error without the evaluated request properties, which hold whatever the request sends (a chat thread, a form), and replaces the connection's error with its summary (`summarisedError`, from `errorSummaryForLog` in `@lowdefy/errors`): at each of up to four nodes the name, code, status code, message cut to 500 characters and stack frames, and no other field, so a MongoDB error's `errInfo` or `writeErrors` and an HTTP client's request body are never logged by any server, at any level, or sent to Sentry. The wrapper names the step by `endpointId`, `stepId` (a page request's id) and `connectionId`. The connection's error itself is kept as the non-enumerable `devCause`, which only `devError` reads.
 
 **Inside `received`, credential-named keys are masked.** `received` is the one kept field holding values the server fetched at runtime — a token from one step sent as `headers.Authorization` in the next — which the by-value scrub cannot recognise. `maskCredentialKeys` replaces, at any depth, the value under any key that, lower-cased with `-` and `_` removed, contains `authorization`, `token`, `secret`, `password`, `apikey` or `cookie` with `[REDACTED]`. That catches `Authorization`, `access_token`, `x-api-key` and `client_secret`, and masks a harmless `tokenCount` too, which costs a log nothing. The wire and `_error` never carry `received`, so the mask exists only in the log projection.
 
@@ -473,20 +475,22 @@ try {
 
   if (error instanceof ConfigError) throw error;
 
+  // No request properties and no driver fields: see "A failed request's error carries no inputs".
+  const cause = summarisedError(error);
+
   if (ServiceError.isServiceError(error)) {
     throw new ServiceError(undefined, {
-      cause: error,
+      cause,
       service: connectionId,
       configKey: requestConfig['~k'],
-    });
+    }); // + endpointId, stepId, connectionId; devCause: error (non-enumerable)
   }
 
-  throw new RequestError(error.message, {
-    cause: error,
+  throw new RequestError(cause.message, {
+    cause,
     typeName: requestType,
-    received: requestProperties,
     configKey: requestConfig['~k'],
-  });
+  }); // + endpointId, stepId, connectionId; devCause: error (non-enumerable)
 }
 ```
 
