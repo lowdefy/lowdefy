@@ -21,7 +21,7 @@ on:
   workflow_dispatch:
     inputs:
       full:
-        description: Run the complete path (ubuntu and windows, Node 24 and 26, MongoDB, journey fixtures, block e2e)
+        description: Run the complete path (Node 24 and 26, MongoDB, journey fixtures, block e2e)
         type: boolean
         default: false
 

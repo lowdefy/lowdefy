@@ -335,11 +335,11 @@ A new push to a pull request cancels its run in progress.
 
 **Complete path** (`.github/workflows/test-complete.yml`): the unit tests (`pnpm build`, the
 dependency check and every package's tests, not stopping at the first failing package) on
-ubuntu and windows with Node 24 and 26, then the Windows time zone test in its own step;
-`pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
+ubuntu with Node 24 and 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
+jobs); `pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
 `@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
-Chromium); and every block e2e suite (`test-block-e2e.yml`). Codecov gets its ubuntu / Node 24
-coverage only.
+Chromium); and every block e2e suite (`test-block-e2e.yml`). Codecov gets its Node 24 coverage
+only.
 
 A release runs the complete path twice: on the Release pull request from `develop` into `main`
 (every push), and on the publish push. `release.yaml` decides from the pushed commit's
