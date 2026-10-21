@@ -2,8 +2,8 @@
 # npm rejects a tag that reads as a version range, such as `v6` or `6.x`. Keep the file name:
 # npm's trusted publisher for every package names release.yaml.
 name: Release 6.x
-# Says what the push was. Whether it publishes is decided by the "Detect publish mode" step, and
-# the report job comments the outcome on the release pull request.
+# Says what the push was. Whether it publishes is decided by the mode job below, and the report
+# job comments the outcome on the release pull request.
 run-name: >-
   ${{
   (github.event_name == 'workflow_dispatch' && 'Release 6.x: run by hand') ||
@@ -26,25 +26,24 @@ permissions:
   id-token: write
 
 jobs:
-  release:
-    name: Release
+  # Pending changesets (a fix merged into v6) mean this push opens or updates the "Publish new
+  # 6.x release" PR. No pending changesets mean this push publishes: normally the merge of that
+  # PR. Decided here, on the pushed commit: the changesets action checks out the version branch,
+  # where the changesets are already consumed and the versions bumped, so a check after it would
+  # publish the version branch before its pull request is merged.
+  mode:
+    name: Detect publish mode
     runs-on: ubuntu-latest
-    environment: publish
     if: github.repository == 'lowdefy/lowdefy'
     outputs:
       publish: ${{ steps.mode.outputs.publish }}
     steps:
       - uses: actions/checkout@v5
-
-      # Pending changesets (a fix merged into v6) mean this push opens or updates the "Publish
-      # new 6.x release" PR. No pending changesets mean this push publishes: normally the merge
-      # of that PR. Decided first, on the pushed commit: the changesets action checks out the
-      # version branch, where the changesets are already consumed and the versions bumped, so a
-      # check after it would publish the version branch before its pull request is merged.
-      # Count only changesets that release a package: the changesets action ignores empty ones
-      # (`changeset --empty`) and opens no PR for them.
-      - name: Detect publish mode
-        id: mode
+        with:
+          sparse-checkout: .changeset
+      # Count only changesets that release a package: the changesets action ignores empty
+      # ones (`changeset --empty`) and opens no PR for them.
+      - id: mode
         run: |
           count=0
           for file in .changeset/*.md; do
@@ -60,24 +59,25 @@ jobs:
             echo "publish=false" >> "$GITHUB_OUTPUT"
           fi
 
+  # Versioning only: opens or updates the "Publish new 6.x release" PR. Publishing runs in the
+  # publish job on the merge of that PR.
+  version:
+    name: Open release pull request
+    needs: mode
+    if: needs.mode.outputs.publish == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: pnpm
-          registry-url: 'https://registry.npmjs.org'
 
       - run: pnpm i --frozen-lockfile
-      - run: pnpm build
-      - name: Upgrade npm for OIDC trusted publishing
-        run: npm install -g npm@latest
 
-      # Versioning only: when changesets exist, this opens/updates the "Publish new
-      # release" PR. Publishing is handled explicitly below so we control its exit
-      # semantics and can recover from a partial publish by re-running.
       - name: Create Release Pull Request
         id: changesets
-        if: steps.mode.outputs.publish == 'false'
         uses: changesets/action@v1
         with:
           version: pnpm release:version
@@ -93,14 +93,40 @@ jobs:
           echo "Nothing was published. This push opened or updated the release pull request:" >> "$GITHUB_STEP_SUMMARY"
           echo "${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.changesets.outputs.pullRequestNumber }}" >> "$GITHUB_STEP_SUMMARY"
 
-      # Everything below runs only on a publish push, and each step is idempotent so a re-run
-      # recovers cleanly from a config or network error part-way through.
+  # The pull request tests (test-pulls.yml: build and every package's tests on Node 22, 24 and
+  # 26), run again on the commit that publishes. Runs only on a publish push.
+  test:
+    name: Tests
+    needs: mode
+    if: needs.mode.outputs.publish == 'true'
+    uses: ./.github/workflows/test-pulls.yml
+
+  # Needs test, and has no status check in its `if`, so it runs only when test passed. Each step
+  # is idempotent so a re-run recovers cleanly from a config or network error part-way through.
+  publish:
+    name: Publish
+    needs: [mode, test]
+    if: needs.mode.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    environment: publish
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@latest
 
       # Attempt the publish, but do not trust its exit code: `changeset publish` fails on
       # versions that already exist, which is a success condition on a re-run. The verify
       # step below is the real gate.
       - name: Publish to npm
-        if: steps.mode.outputs.publish == 'true'
         run: pnpm release:publish || true
         env:
           NPM_CONFIG_PROVENANCE: 'true'
@@ -108,16 +134,13 @@ jobs:
       # Source of truth: every publishable package must be live on npm at its release
       # version. Missing anything fails the job (a real failure — re-run after fixing).
       - name: Verify all packages published
-        if: steps.mode.outputs.publish == 'true'
         run: node scripts/verify-published.mjs
 
       - name: Resolve release version
-        if: steps.mode.outputs.publish == 'true'
         id: version
         run: echo "version=v$(node -p "require('./packages/cli/package.json').version")" >> "$GITHUB_OUTPUT"
 
       - name: Generate release notes
-        if: steps.mode.outputs.publish == 'true'
         run: |
           npm install -g @anthropic-ai/claude-code
           node scripts/release-notes.mjs --output-file=/tmp/release-notes.md
@@ -126,7 +149,6 @@ jobs:
 
       # Idempotent: query origin so a re-run on a fresh checkout still sees an existing tag.
       - name: Tag release commit
-        if: steps.mode.outputs.publish == 'true'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           if git ls-remote --tags origin "refs/tags/$VERSION" | grep -q .; then
@@ -138,7 +160,6 @@ jobs:
 
       # Idempotent: only create the release if one does not already exist for this version.
       - name: Create Github Release
-        if: steps.mode.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -154,12 +175,12 @@ jobs:
               --notes-file /tmp/release-notes.md
           fi
 
-  # Whatever happened to the publish, say so on the merged release pull request and in the run
-  # summary, so nobody has to read the job to know whether the release went out.
+  # Whatever happened to the tests and the publish, say so on the merged release pull request
+  # and in the run summary, so nobody has to read the jobs to know whether the release went out.
   report:
     name: Report
-    needs: release
-    if: always() && needs.release.outputs.publish == 'true'
+    needs: [mode, test, publish]
+    if: always() && needs.mode.outputs.publish == 'true'
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -177,4 +198,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DIST_TAG: latest-6
           RELEASE_BRANCH: changeset-release/v6
-          PUBLISH_RESULT: ${{ needs.release.result }}
+          TEST_RESULT: ${{ needs.test.result }}
+          PUBLISH_RESULT: ${{ needs.publish.result }}
