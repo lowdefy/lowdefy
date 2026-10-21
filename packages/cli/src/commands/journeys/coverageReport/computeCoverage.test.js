@@ -17,6 +17,7 @@
 import { journeySequence, profileProduction } from '@lowdefy/node-utils';
 
 import computeCoverage from './computeCoverage.js';
+import { expect, test } from 'vitest';
 
 function identity(verb, blockId, text = null) {
   return JSON.stringify([verb, blockId, null, text]);

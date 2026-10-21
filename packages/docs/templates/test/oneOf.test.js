@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -41,17 +42,17 @@ const schema = {
 
 test('oneOf propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "field",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
-          "headerStyle": Object {
+          "headerStyle": {
             "background": "rgba(0, 0, 0, 0.06)",
             "color": "rgba(0, 0, 0, 0.45)",
           },
@@ -59,16 +60,16 @@ test('oneOf propertiesFormTransformer', () => {
           "size": "small",
           "title": "Select field type",
         },
-        "slots": Object {
-          "content": Object {
-            "blocks": Array [
-              Object {
+        "slots": {
+          "content": {
+            "blocks": [
+              {
                 "id": "__number_block.properties.field",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "label": Object {
+                "properties": {
+                  "label": {
                     "align": "right",
                     "extra": "number description",
                     "span": 8,
@@ -79,12 +80,12 @@ test('oneOf propertiesFormTransformer', () => {
                 },
                 "required": false,
                 "type": "NumberInput",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.field",
                         },
                         "number",
@@ -94,13 +95,13 @@ test('oneOf propertiesFormTransformer', () => {
                   },
                 },
               },
-              Object {
+              {
                 "id": "__string_block.properties.field",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "label": Object {
+                "properties": {
+                  "label": {
                     "align": "right",
                     "extra": "string description",
                     "span": 8,
@@ -110,12 +111,12 @@ test('oneOf propertiesFormTransformer', () => {
                 },
                 "required": false,
                 "type": "TextInput",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.field",
                         },
                         "string",
@@ -127,17 +128,17 @@ test('oneOf propertiesFormTransformer', () => {
               },
             ],
           },
-          "extra": Object {
-            "blocks": Array [
-              Object {
+          "extra": {
+            "blocks": [
+              {
                 "id": "__type_block.properties.field",
-                "properties": Object {
+                "properties": {
                   "buttonStyle": "outlined",
                   "color": "rgba(0, 0, 0, 0.1)",
-                  "label": Object {
+                  "label": {
                     "disabled": true,
                   },
-                  "options": Array [
+                  "options": [
                     "number",
                     "string",
                   ],
@@ -156,48 +157,48 @@ test('oneOf propertiesFormTransformer', () => {
 
 test('oneOf propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
-        Object {
-          "field": Object {
-            "_mql.expr": Object {
-              "expr": Object {
-                "$switch": Object {
-                  "branches": Array [
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
+        {
+          "field": {
+            "_mql.expr": {
+              "expr": {
+                "$switch": {
+                  "branches": [
+                    {
+                      "case": {
+                        "_eq": [
+                          {
                             "_state": "__type_block.properties.field",
                           },
                           "number",
                         ],
                       },
-                      "then": Object {
-                        "_state": Object {
+                      "then": {
+                        "_state": {
                           "contextId": "Block:Block:{}",
                           "key": "__number_block.properties.field",
                         },
                       },
                     },
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
+                    {
+                      "case": {
+                        "_eq": [
+                          {
                             "_state": "__type_block.properties.field",
                           },
                           "string",
                         ],
                       },
-                      "then": Object {
-                        "_state": Object {
+                      "then": {
+                        "_state": {
                           "contextId": "Block:Block:{}",
                           "key": "__string_block.properties.field",
                         },
@@ -207,7 +208,7 @@ test('oneOf propertiesGetterTransformer', () => {
                   "default": null,
                 },
               },
-              "on": Object {},
+              "on": {},
             },
           },
         },
@@ -218,7 +219,7 @@ test('oneOf propertiesGetterTransformer', () => {
 
 test('oneOf defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": null,
     }
   `);
@@ -244,7 +245,7 @@ test('oneOf defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": 1,
     }
   `);
@@ -284,17 +285,17 @@ const schemaStrObj = {
 
 test('oneOf schemaStrObj propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaStrObj)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "field",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
-          "headerStyle": Object {
+          "headerStyle": {
             "background": "rgba(0, 0, 0, 0.06)",
             "color": "rgba(0, 0, 0, 0.45)",
           },
@@ -302,16 +303,16 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
           "size": "small",
           "title": "Select field type",
         },
-        "slots": Object {
-          "content": Object {
-            "blocks": Array [
-              Object {
+        "slots": {
+          "content": {
+            "blocks": [
+              {
                 "id": "__string_block.properties.field",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "label": Object {
+                "properties": {
+                  "label": {
                     "align": "right",
                     "extra": "string description",
                     "span": 8,
@@ -321,12 +322,12 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                 },
                 "required": false,
                 "type": "TextInput",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.field",
                         },
                         "string",
@@ -336,15 +337,15 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                   },
                 },
               },
-              Object {
-                "blocks": Array [
-                  Object {
+              {
+                "blocks": [
+                  {
                     "id": "__object_block.properties.field.bool",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "label": Object {
+                    "properties": {
+                      "label": {
                         "align": "right",
                         "extra": "bool description",
                         "span": 8,
@@ -355,13 +356,13 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "required": false,
                     "type": "Switch",
                   },
-                  Object {
+                  {
                     "id": "__object_block.properties.field.str",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "label": Object {
+                    "properties": {
+                      "label": {
                         "align": "right",
                         "extra": "str description",
                         "span": 8,
@@ -374,23 +375,23 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                   },
                 ],
                 "id": "__object_block.properties.field",
-                "layout": Object {
+                "layout": {
                   "gap": 0,
                 },
-                "properties": Object {
-                  "bodyStyle": Object {
+                "properties": {
+                  "bodyStyle": {
                     "padding": 0,
                   },
                   "size": "small",
                   "title": "field:",
                 },
                 "type": "Card",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.field",
                         },
                         "object",
@@ -402,17 +403,17 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
               },
             ],
           },
-          "extra": Object {
-            "blocks": Array [
-              Object {
+          "extra": {
+            "blocks": [
+              {
                 "id": "__type_block.properties.field",
-                "properties": Object {
+                "properties": {
                   "buttonStyle": "outlined",
                   "color": "rgba(0, 0, 0, 0.1)",
-                  "label": Object {
+                  "label": {
                     "disabled": true,
                   },
-                  "options": Array [
+                  "options": [
                     "string",
                     "object",
                   ],
@@ -431,52 +432,52 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
 
 test('oneOf schemaStrObj propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaStrObj, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
-        Object {
-          "field": Object {
-            "_mql.expr": Object {
-              "expr": Object {
-                "$switch": Object {
-                  "branches": Array [
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
+        {
+          "field": {
+            "_mql.expr": {
+              "expr": {
+                "$switch": {
+                  "branches": [
+                    {
+                      "case": {
+                        "_eq": [
+                          {
                             "_state": "__type_block.properties.field",
                           },
                           "string",
                         ],
                       },
-                      "then": Object {
-                        "_state": Object {
+                      "then": {
+                        "_state": {
                           "contextId": "Block:Block:{}",
                           "key": "__string_block.properties.field",
                         },
                       },
                     },
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
+                    {
+                      "case": {
+                        "_eq": [
+                          {
                             "_state": "__type_block.properties.field",
                           },
                           "object",
                         ],
                       },
-                      "then": Object {
-                        "_object.assign": Array [
-                          Object {
-                            "_state": Object {
+                      "then": {
+                        "_object.assign": [
+                          {
+                            "_state": {
                               "contextId": "Block:Block:{}",
-                              "default": Object {},
+                              "default": {},
                               "key": "__object_block.properties.field",
                             },
                           },
@@ -487,7 +488,7 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
                   "default": null,
                 },
               },
-              "on": Object {},
+              "on": {},
             },
           },
         },
@@ -498,7 +499,7 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
 
 test('oneOf schemaStrObj defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaStrObj)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": null,
     }
   `);
@@ -536,8 +537,8 @@ test('oneOf schemaStrObj defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
-      "field": Object {
+    {
+      "field": {
         "str": "x",
       },
     }
@@ -570,17 +571,17 @@ const schemaOneOfStrYaml = {
 
 test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
   expect(propertiesFormTransformer(schemaOneOfStrYaml)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "field",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
-          "headerStyle": Object {
+          "headerStyle": {
             "background": "rgba(0, 0, 0, 0.06)",
             "color": "rgba(0, 0, 0, 0.45)",
           },
@@ -588,16 +589,16 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
           "size": "small",
           "title": "Select field type",
         },
-        "slots": Object {
-          "content": Object {
-            "blocks": Array [
-              Object {
+        "slots": {
+          "content": {
+            "blocks": [
+              {
                 "id": "__string_block.properties.field",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "label": Object {
+                "properties": {
+                  "label": {
                     "align": "right",
                     "extra": "string description",
                     "span": 8,
@@ -607,12 +608,12 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
                 },
                 "required": false,
                 "type": "TextInput",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.field",
                         },
                         "string",
@@ -622,16 +623,16 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
                   },
                 },
               },
-              Object {
+              {
                 "id": "__object_block.properties.field",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "autoSize": Object {
+                "properties": {
+                  "autoSize": {
                     "minRows": 2,
                   },
-                  "label": Object {
+                  "label": {
                     "align": "right",
                     "extra": "object description",
                     "span": 8,
@@ -642,12 +643,12 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
                 },
                 "required": false,
                 "type": "TextArea",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.field",
                         },
                         "object",
@@ -659,17 +660,17 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
               },
             ],
           },
-          "extra": Object {
-            "blocks": Array [
-              Object {
+          "extra": {
+            "blocks": [
+              {
                 "id": "__type_block.properties.field",
-                "properties": Object {
+                "properties": {
                   "buttonStyle": "outlined",
                   "color": "rgba(0, 0, 0, 0.1)",
-                  "label": Object {
+                  "label": {
                     "disabled": true,
                   },
-                  "options": Array [
+                  "options": [
                     "string",
                     "object",
                   ],
@@ -689,78 +690,78 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
 test('oneOf propertiesGetterTransformer schemaOneOfStrYaml', () => {
   expect(propertiesGetterTransformer(schemaOneOfStrYaml, { block_type: 'Block' }))
     .toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
-            "contextId": "Block:Block:{}",
-            "default": Object {},
-            "key": "block.properties",
-          },
-        },
-        Object {
-          "field": Object {
-            "_mql.expr": Object {
-              "expr": Object {
-                "$switch": Object {
-                  "branches": Array [
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
-                            "_state": "__type_block.properties.field",
-                          },
-                          "string",
-                        ],
-                      },
-                      "then": Object {
-                        "_state": Object {
-                          "contextId": "Block:Block:{}",
-                          "key": "__string_block.properties.field",
-                        },
-                      },
-                    },
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
-                            "_state": "__type_block.properties.field",
-                          },
-                          "object",
-                        ],
-                      },
-                      "then": Object {
-                        "_yaml.parse": Array [
-                          Object {
-                            "_if_none": Array [
-                              Object {
-                                "_state": Object {
-                                  "contextId": "Block:Block:{}",
-                                  "key": "__object_block.properties.field",
-                                },
-                              },
-                              "",
-                            ],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                  "default": null,
-                },
-              },
-              "on": Object {},
+      {
+        "_object.assign": [
+          {
+            "_state": {
+              "contextId": "Block:Block:{}",
+              "default": {},
+              "key": "block.properties",
             },
           },
-        },
-      ],
-    }
-  `);
+          {
+            "field": {
+              "_mql.expr": {
+                "expr": {
+                  "$switch": {
+                    "branches": [
+                      {
+                        "case": {
+                          "_eq": [
+                            {
+                              "_state": "__type_block.properties.field",
+                            },
+                            "string",
+                          ],
+                        },
+                        "then": {
+                          "_state": {
+                            "contextId": "Block:Block:{}",
+                            "key": "__string_block.properties.field",
+                          },
+                        },
+                      },
+                      {
+                        "case": {
+                          "_eq": [
+                            {
+                              "_state": "__type_block.properties.field",
+                            },
+                            "object",
+                          ],
+                        },
+                        "then": {
+                          "_yaml.parse": [
+                            {
+                              "_if_none": [
+                                {
+                                  "_state": {
+                                    "contextId": "Block:Block:{}",
+                                    "key": "__object_block.properties.field",
+                                  },
+                                },
+                                "",
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                    "default": null,
+                  },
+                },
+                "on": {},
+              },
+            },
+          },
+        ],
+      }
+    `);
 });
 
 test('oneOf defaultValueTransformer schemaOneOfStrYaml', () => {
   expect(defaultValueTransformer(schemaOneOfStrYaml)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": null,
     }
   `);
@@ -789,7 +790,7 @@ test('oneOf defaultValueTransformer schemaOneOfStrYaml', () => {
     },
   };
   expect(defaultValueTransformer(schemaOneOfStrYamlDV)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": "str",
     }
   `);

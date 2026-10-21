@@ -15,6 +15,7 @@
 */
 
 import hashId from './hashId.js';
+import { expect, test } from 'vitest';
 
 const salt = Buffer.alloc(32, 7);
 

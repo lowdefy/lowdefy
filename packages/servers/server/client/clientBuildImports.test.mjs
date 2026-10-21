@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { expect, test } from 'vitest';
 
 // Everything the client imports from build/ ships in the browser bundle. build/config.json is
 // server-only: it carries every deployment environment's settings (other environments' urls,

@@ -20,6 +20,7 @@ import expandPersonas from './expandPersonas.js';
 import flowLines from '../journeys/evidence/flowLines.js';
 import selectTier from './selectTier.js';
 import sequenceId from '../journeys/evidence/sequenceId.js';
+import { expect, test } from 'vitest';
 
 const configDirectory = path.join('/app');
 const context = {

@@ -14,21 +14,21 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import hashBuild from '../../test/hashBuild.js';
 import hashJourney from '../../test/hashJourney.js';
 import os from 'os';
 import path from 'path';
 
-const mockPost = jest.fn();
-const mockGet = jest.fn();
-jest.unstable_mockModule('axios', () => ({
+const mockPost = vi.fn();
+const mockGet = vi.fn();
+vi.doMock('axios', () => ({
   default: { post: mockPost, get: mockGet },
 }));
 
-const mockStartDevServer = jest.fn();
-jest.unstable_mockModule('../../test/startDevServer.js', () => ({
+const mockStartDevServer = vi.fn();
+vi.doMock('../../test/startDevServer.js', () => ({
   default: mockStartDevServer,
 }));
 
@@ -156,9 +156,9 @@ beforeEach(() => {
       info: (line) => logs.info.push(line),
       warn: (line) => logs.warn.push(line),
       error: (line) => logs.error.push(line),
-      debug: jest.fn(),
+      debug: vi.fn(),
     },
-    sendTelemetry: jest.fn(),
+    sendTelemetry: vi.fn(),
   };
   writeJourney('orders.yaml', {
     name: 'orders',

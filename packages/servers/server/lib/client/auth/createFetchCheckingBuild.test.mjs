@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createFetchCheckingBuild from './createFetchCheckingBuild.js';
 
@@ -26,14 +26,14 @@ function mockFetch({ status, buildId }) {
     status,
     headers: new Headers(buildId ? { 'x-lowdefy-build': buildId } : {}),
   };
-  global.fetch = jest.fn(() => Promise.resolve(response));
+  global.fetch = vi.fn(() => Promise.resolve(response));
   return response;
 }
 
 function createWindow() {
   const stored = {};
   return {
-    location: { reload: jest.fn() },
+    location: { reload: vi.fn() },
     sessionStorage: {
       getItem: (key) => stored[key] ?? null,
       setItem: (key, value) => {

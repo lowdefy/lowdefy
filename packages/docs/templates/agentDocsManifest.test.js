@@ -32,6 +32,7 @@ import resolvePageSections from '@lowdefy/docs-content/scripts/resolvePageSectio
 import sectionKind from '@lowdefy/docs-content/scripts/sectionKind.js';
 
 import walkMenus from './walkMenus.js';
+import { expect, test } from 'vitest';
 
 // Must match toSlugSegment in @lowdefy/docs-content/scripts/extractAgentDocs.js.
 function toSlugSegment(value) {

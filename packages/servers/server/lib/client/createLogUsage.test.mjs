@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createLogUsage from './createLogUsage.js';
 
@@ -32,7 +32,7 @@ beforeEach(() => {
       stored[key] = value;
     },
   };
-  globalThis.fetch = jest.fn();
+  globalThis.fetch = vi.fn();
 });
 
 afterEach(() => {

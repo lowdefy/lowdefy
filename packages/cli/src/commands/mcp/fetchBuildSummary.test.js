@@ -17,6 +17,7 @@
 import http from 'http';
 
 import fetchBuildSummary from './fetchBuildSummary.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // A dev server that accepts connections and never answers.
 let server;

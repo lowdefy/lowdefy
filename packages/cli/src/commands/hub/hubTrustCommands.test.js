@@ -18,7 +18,7 @@ import { execFileSync } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import hubTrust from './hubTrust.js';
 import hubTrusted from './hubTrusted.js';
@@ -26,7 +26,7 @@ import hubUntrust from './hubUntrust.js';
 import readTrustedRepositories from './readTrustedRepositories.js';
 import trustRepository from './trustRepository.js';
 
-jest.setTimeout(60000);
+vi.setConfig({ testTimeout: 60000, hookTimeout: 60000 });
 
 let base;
 let output;
@@ -48,7 +48,7 @@ beforeEach(() => {
   base = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-hub-trust-')));
   process.env.LOWDEFY_HOME = path.join(base, 'lowdefy-home');
   process.stdin.isTTY = true;
-  output = jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
+  output = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 });
 
 afterEach(() => {

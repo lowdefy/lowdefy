@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import pruneScopeDirectory from './pruneScopeDirectory.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const DAY = 24 * 60 * 60 * 1000;
 let scopeDirectory;

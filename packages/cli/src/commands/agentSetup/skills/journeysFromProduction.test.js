@@ -16,6 +16,7 @@
 
 import skills from './index.js';
 import journeysFromProduction from './journeysFromProduction.js';
+import { expect, test } from 'vitest';
 
 test('the skill list includes journeys-from-production with its renderer and AGENTS.md line', () => {
   const entry = skills.find((skill) => skill.name === 'journeys-from-production');

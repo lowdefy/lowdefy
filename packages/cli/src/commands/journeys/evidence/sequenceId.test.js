@@ -18,6 +18,7 @@ import flowLines from './flowLines.js';
 import parseFlowLines from './parseFlowLines.js';
 import sequenceId, { SEQUENCE_VERSION } from './sequenceId.js';
 import sequenceVersion from './sequenceVersion.js';
+import { expect, test } from 'vitest';
 
 const steps = [
   { click: { blockId: 'assign_button', text: 'Assign' } },

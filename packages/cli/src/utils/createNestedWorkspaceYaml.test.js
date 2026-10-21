@@ -15,6 +15,7 @@
 */
 
 import createNestedWorkspaceYaml from './createNestedWorkspaceYaml.js';
+import { expect, test } from 'vitest';
 
 test('createNestedWorkspaceYaml writes the default build allowlist when the parent sets nothing', () => {
   const yaml = createNestedWorkspaceYaml({

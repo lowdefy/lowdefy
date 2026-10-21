@@ -15,6 +15,7 @@
 */
 
 import resolveChain from './resolveChain.js';
+import { expect, test } from 'vitest';
 
 const registry = {
   versions: [

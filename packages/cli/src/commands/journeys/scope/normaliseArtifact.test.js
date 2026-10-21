@@ -15,6 +15,7 @@
 */
 
 import normaliseArtifact from './normaliseArtifact.js';
+import { expect, test } from 'vitest';
 
 test('normaliseArtifact strips build markers at every depth and unwraps ~arr', () => {
   const artifact = {

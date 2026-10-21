@@ -15,6 +15,7 @@
 */
 
 import lintJourney from './lintJourney.js';
+import { expect, test } from 'vitest';
 
 function journey(steps, extra = {}) {
   return { name: 'assigns a ticket', pageId: 'tickets', steps, ...extra };

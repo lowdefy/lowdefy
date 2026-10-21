@@ -15,20 +15,20 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
 // The real URI helpers drive the challenge strings, so the header assertions
 // below exercise the actual BETTER_AUTH_URL derivation - only createMcpServer
 // is stubbed out.
 const uriHelpers = await import('@lowdefy/api/routes/mcp/getMcpUri.js');
 
-const mockCreateMcpServer = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
+const mockCreateMcpServer = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
   ...uriHelpers,
   createMcpServer: mockCreateMcpServer,
 }));
 
-jest.unstable_mockModule('@hono/mcp', () => ({
+vi.doMock('@hono/mcp', () => ({
   StreamableHTTPTransport: class {
     handleRequest() {
       return new Response(JSON.stringify({ served: true }), {
@@ -40,7 +40,7 @@ jest.unstable_mockModule('@hono/mcp', () => ({
 }));
 
 const mockAuthJson = { configured: true, oauthProvider: { consentPage: '/oauth/consent' } };
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({
+vi.doMock('../../lib/build/auth.js', () => ({
   default: mockAuthJson,
 }));
 
@@ -48,7 +48,7 @@ const { default: mcpHandler } = await import('./mcp.js');
 
 const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 let contextOverrides;
 
@@ -57,7 +57,7 @@ function createApp() {
   app.use('*', async (c, next) => {
     c.set('lowdefyContext', {
       config: { basePath: '' },
-      logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
       readConfigFile: mockReadConfigFile,
       ...contextOverrides,
     });
@@ -73,7 +73,7 @@ beforeEach(() => {
   contextOverrides = {};
   mockReadConfigFile.mockReset();
   mockCreateMcpServer.mockReset();
-  mockCreateMcpServer.mockResolvedValue({ connect: jest.fn() });
+  mockCreateMcpServer.mockResolvedValue({ connect: vi.fn() });
   mockReadConfigFile.mockResolvedValue({ configured: true, hasPublicTool: true, endpoints: [] });
 });
 

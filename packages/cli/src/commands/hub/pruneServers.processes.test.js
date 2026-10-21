@@ -22,6 +22,7 @@ import { wait } from '@lowdefy/helpers';
 import { getProcessStartTime, isPidAlive } from '@lowdefy/node-utils';
 
 import pruneServers from './pruneServers.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 // pruneServers against real processes this test spawns, on every platform the
 // tests run on, Windows included: a record carries a start time, prune stops a

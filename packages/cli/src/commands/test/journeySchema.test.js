@@ -19,6 +19,7 @@ import { STEP_KEYS } from '@lowdefy/node-utils';
 
 import journeySchema from './journeySchema.js';
 import validateJourney from './validateJourney.js';
+import { expect, test } from 'vitest';
 
 const minimalJourney = {
   name: 'submits the form',

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -27,17 +27,17 @@ const { default: isProcessStartTime } = await import('@lowdefy/node-utils/isProc
 // pid -> start time (epoch milliseconds) of the processes "running" in each test.
 let running;
 let records;
-const mockFindLegacyOrphans = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockFindLegacyOrphans = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({
   compareProcessStartTimes,
   isPidAlive: (pid) => running.has(pid),
   isProcessStartTime,
   readProcessStartTime: async ({ pid }) => running.get(pid) ?? null,
   readServerRegistry: async () => records,
 }));
-jest.unstable_mockModule('./findLegacyOrphans.js', () => ({ default: mockFindLegacyOrphans }));
-const mockFindOrphanedClis = jest.fn();
-jest.unstable_mockModule('./findOrphanedClis.js', () => ({ default: mockFindOrphanedClis }));
+vi.doMock('./findLegacyOrphans.js', () => ({ default: mockFindLegacyOrphans }));
+const mockFindOrphanedClis = vi.fn();
+vi.doMock('./findOrphanedClis.js', () => ({ default: mockFindOrphanedClis }));
 
 const { default: pruneServers } = await import('./pruneServers.js');
 
@@ -82,7 +82,7 @@ beforeEach(() => {
   mockFindOrphanedClis.mockReset();
   mockFindOrphanedClis.mockReturnValue([]);
   // Processes honour SIGTERM unless marked stubborn; SIGKILL always works.
-  process.kill = jest.fn((pid, signal) => {
+  process.kill = vi.fn((pid, signal) => {
     signals.push({ pid, signal });
     if (!running.has(pid)) {
       const error = new Error('ESRCH');
@@ -177,7 +177,7 @@ test('pruneServers keeps the record of a signalled server whose start time canno
   records = [{ ...record({ pid: 100, prunable: true, recordPath }), processStartTime: STUBBORN }];
   // ps starts failing once the server has been sent SIGTERM.
   const kill = process.kill;
-  process.kill = jest.fn((pid, signal) => {
+  process.kill = vi.fn((pid, signal) => {
     kill(pid, signal);
     if (signal === 'SIGTERM') {
       running.set(pid, null);

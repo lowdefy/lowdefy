@@ -19,6 +19,7 @@ import { OperatorError, RequestError, ServiceError, UserError } from '@lowdefy/e
 import maskCredentialKeys from './maskCredentialKeys.js';
 import projectErrorForLog from './projectErrorForLog.js';
 import serializeErrorForLog from './serializeErrorForLog.js';
+import { expect, test } from 'vitest';
 
 const allowedErrorKeys = new Set([
   'name',

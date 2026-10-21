@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -43,8 +44,8 @@ const schema = {
 
 test('manual propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "manual",
         "type": "TestInput",
       },
@@ -54,17 +55,17 @@ test('manual propertiesFormTransformer', () => {
 
 test('manual propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
-        Object {
-          "field": Object {
+        {
+          "field": {
             "a": 1,
           },
         },
@@ -74,7 +75,7 @@ test('manual propertiesGetterTransformer', () => {
 });
 
 test('manual defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`{}`);
   const schemaDV = {
     properties: {
       type: 'object',
@@ -99,7 +100,7 @@ test('manual defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": "value",
     }
   `);
@@ -136,20 +137,20 @@ const schemaNested = {
 
 test('manual schemaNested propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaNested)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
+    [
+      {
+        "blocks": [
+          {
             "id": "manual",
             "type": "TestInput",
           },
         ],
         "id": "block.properties.obj",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -163,27 +164,27 @@ test('manual schemaNested propertiesFormTransformer', () => {
 
 test('manual schemaNested propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaNested, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
-        Object {
-          "obj": Object {
-            "_object.assign": Array [
-              Object {
-                "_state": Object {
+        {
+          "obj": {
+            "_object.assign": [
+              {
+                "_state": {
                   "contextId": "Block:Block:{}",
-                  "default": Object {},
+                  "default": {},
                   "key": "block.properties.obj",
                 },
               },
-              Object {
-                "field": Object {
+              {
+                "field": {
                   "a": 1,
                 },
               },
@@ -196,7 +197,7 @@ test('manual schemaNested propertiesGetterTransformer', () => {
 });
 
 test('manual schemaNested defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`{}`);
   const schemaDV = {
     properties: {
       type: 'object',
@@ -227,9 +228,9 @@ test('manual schemaNested defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
-      "obj": Object {
-        "field": Object {
+    {
+      "obj": {
+        "field": {
           "a": 1,
         },
       },

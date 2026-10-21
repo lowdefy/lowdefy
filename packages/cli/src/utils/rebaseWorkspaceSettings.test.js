@@ -17,6 +17,7 @@
 import path from 'path';
 
 import rebaseWorkspaceSettings from './rebaseWorkspaceSettings.js';
+import { expect, test } from 'vitest';
 
 const directory = '/repo/apps/app/.lowdefy/server';
 const workspaceRoot = '/repo';

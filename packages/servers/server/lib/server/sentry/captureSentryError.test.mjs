@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { RequestError, TenantIntegrityError } from '@lowdefy/errors';
 
-const captureException = jest.fn();
+const captureException = vi.fn();
 
 const { default: sentrySdk } = await import('./sentrySdk.js');
 const { default: captureSentryError } = await import('./captureSentryError.js');

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -26,13 +26,13 @@ import readTraceSalt from './pull/readTraceSalt.js';
 // The config text set comes from a full build by the dev server's builder;
 // these tests hold it fixed.
 const CONFIG_TEXTS = new Set(['Help']);
-jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+vi.doMock('./configText/readConfigText.js', () => ({
   default: async () => ({ texts: CONFIG_TEXTS, isConfigText: (text) => CONFIG_TEXTS.has(text) }),
 }));
 
 // Grouping starts at 100000 rows in use; the cache written below holds 5, so
 // 6 puts it just under the threshold, and one more visit over it.
-jest.unstable_mockModule('./flowGroupingMinRows.js', () => ({ default: 6 }));
+vi.doMock('./flowGroupingMinRows.js', () => ({ default: 6 }));
 
 const { default: journeysCoverage } = await import('./journeysCoverage.js');
 const { default: tokenText } = await import('./tokenText.js');
@@ -136,7 +136,7 @@ beforeEach(() => {
     options: { since: '2d', group: true },
     sendTelemetry: async () => {},
   };
-  jest.spyOn(Date, 'now').mockReturnValue(NOW);
+  vi.spyOn(Date, 'now').mockReturnValue(NOW);
   writeDay('2026-10-02', [
     ...visit({
       session: 's1',
@@ -155,7 +155,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 
@@ -233,7 +233,7 @@ test('journeys coverage groups a window at the threshold, unless --no-group', as
 });
 
 test('journeys coverage --json prints the report', async () => {
-  const write = jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
+  const write = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
   context.options.json = true;
   const report = await journeysCoverage({ context });
   expect(JSON.parse(write.mock.calls[0][0])).toEqual(report);

@@ -15,16 +15,16 @@
 */
 
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('fs', () => ({
+vi.doMock('fs', () => ({
   default: {
-    existsSync: jest.fn(),
+    existsSync: vi.fn(),
   },
 }));
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  findPnpmWorkspaceRoot: jest.fn(),
+vi.doMock('@lowdefy/node-utils', () => ({
+  findPnpmWorkspaceRoot: vi.fn(),
 }));
 
 // The fixtures name files with POSIX paths; findTraceBase joins them with the
