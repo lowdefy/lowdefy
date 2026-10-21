@@ -28,7 +28,7 @@ import { oauthProviderClient } from '@better-auth/oauth-provider/client';
 import { passkeyClient } from '@better-auth/passkey/client';
 
 import claimCallerReload from '@lowdefy/client/claimCallerReload.js';
-import { normalizeCaller } from '@lowdefy/helpers';
+import { normalizeCaller, type } from '@lowdefy/helpers';
 
 import bundleBuildId from '../bundleBuildId.js';
 import createFetchCheckingBuild from './createFetchCheckingBuild.js';
@@ -77,9 +77,31 @@ const sessionScoped = (params) => ({
   fetchOptions: { ...params?.fetchOptions, disableSignal: true },
 });
 
+// The server-resolved caller - roles from the active member row and the
+// merged attributes bag - or null when the server admits no caller.
+async function getResolvedUser() {
+  const response = await fetchCheckingBuild(`${basePath}/api/user`, {
+    credentials: 'same-origin',
+  });
+  if (!response.ok) {
+    // /api/user itself always answers 200 { user } - user: null when no
+    // caller is admitted, which updateSession branches on. A non-OK
+    // response is a transport failure (gateway error page, 5xx) with no
+    // parsable body.
+    throw new Error(`Failed to fetch the resolved user (HTTP ${response.status}).`);
+  }
+  return response.json();
+}
+
 // The server resolves the caller per request and embeds it in the page
 // config, so the first render never flashes unauthenticated. The BetterAuth
-// client store takes over once its session fetch settles.
+// client store then tracks the session, but the caller this page renders is
+// always one the server resolved. A live session is not a caller: the server
+// can refuse one (a pinned invitee whose invitation was cancelled or expired,
+// a member removed mid-session), and it stamps every response it answers that
+// session with as nobody. Rendering a caller built from the session would then
+// disagree with every stamped response, and shouldReloadForCaller would reload
+// and fail the page.
 //
 // Roles and merged attributes resolve server-side from the active member row
 // - the base session carries neither. The last server-resolved caller is
@@ -97,6 +119,29 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
   const { data: session, isPending } = authClient.useSession();
   const [resolvedUser, setResolvedUser] = useState(serverUser);
   const wasAuthenticated = useRef(Boolean(serverUser));
+  const sessionUserId = session?.user?.id;
+
+  // A session the page resolved no caller for - a sign-in that stays on the
+  // page (callbackUrl: false), or one that the server refused when it served
+  // the page - asks the server who it is. A sign-in with a destination never
+  // gets here: it hard-reloads, and the reloaded page carries its caller. While
+  // the server answers nobody, the page keeps rendering nobody.
+  useEffect(() => {
+    if (type.isNone(sessionUserId) || !type.isNone(resolvedUser)) {
+      return undefined;
+    }
+    // A session that changed before the answer arrived asks again; the
+    // previous answer is for a session this page no longer holds.
+    let current = true;
+    getResolvedUser().then(({ user }) => {
+      if (current && !type.isNone(user)) {
+        setResolvedUser(user);
+      }
+    });
+    return () => {
+      current = false;
+    };
+  }, [sessionUserId, resolvedUser]);
 
   useEffect(() => {
     if (session) {
@@ -138,7 +183,9 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
   }
   const resolved = resolvedUser;
   if (!resolved) {
-    return children({ roles: [], ...normalizeCaller(session.user) }, setResolvedUser);
+    // The server has not resolved a caller for this session (see the effect
+    // above), so the page renders nobody, as the server answers it.
+    return children(null, setResolvedUser);
   }
   if (resolved.id !== session.user.id) {
     // The session names another person than the resolved caller; the effect
@@ -177,21 +224,8 @@ function AuthConfigured({ authConfig, children, serverUser }) {
       const { data, error } = sessionAtom.get();
       return { data, error };
     },
-    // The server-resolved caller - roles from the active member row and the
-    // merged attributes bag - for re-syncing after session changes.
-    getResolvedUser: async () => {
-      const response = await fetchCheckingBuild(`${basePath}/api/user`, {
-        credentials: 'same-origin',
-      });
-      if (!response.ok) {
-        // /api/user itself always answers 200 { user } - user: null when no
-        // caller is admitted, which updateSession branches on. A non-OK
-        // response is a transport failure (gateway error page, 5xx) with no
-        // parsable body.
-        throw new Error(`Failed to fetch the resolved user (HTTP ${response.status}).`);
-      }
-      return response.json();
-    },
+    // For re-syncing after session changes.
+    getResolvedUser,
     suppressSessionReload: () => {
       reloadSuppressedRef.current = true;
     },
