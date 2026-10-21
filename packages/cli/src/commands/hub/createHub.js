@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { once } from 'events';
 import { spawn } from 'child_process';
 import { type, wait } from '@lowdefy/helpers';
 import {
@@ -164,6 +165,20 @@ function createHub({
     slots: START_SLOTS,
   });
 
+  // On Windows the leader reads as gone as soon as it exits, before Node
+  // delivers its exit event, and the exit handler is what records the exit and
+  // drops the registry entry. Until then the server would read as stopped, which
+  // waitForReady takes for a stop by another caller, so wait for the event.
+  async function waitForPendingExit({ configDirectory, managed }) {
+    const child = launchedChildren.get(configDirectory);
+    if (type.isUndefined(managed) || child?.pid !== managed.pid) {
+      return;
+    }
+    if (child.exitCode === null && child.signalCode === null) {
+      await once(child, 'exit');
+    }
+  }
+
   async function describe(configDirectory) {
     const record = await readDevInstanceAsync({ configDirectory });
     const managed = registry.instances[configDirectory];
@@ -196,6 +211,7 @@ function createHub({
         command: managed.command,
       };
     }
+    await waitForPendingExit({ configDirectory, managed });
     if (startSlots.isQueued(configDirectory)) {
       return {
         configDirectory,
