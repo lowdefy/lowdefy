@@ -183,7 +183,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: read
-      contents: read
+      # GitHub lists draft releases only to a token that can write them.
+      contents: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v5
