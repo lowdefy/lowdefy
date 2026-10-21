@@ -18,7 +18,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { isReserved, type } from '@lowdefy/helpers';
+import { getOperatorType, isReserved, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { RESERVED_PLATFORM_TOOL_NAMES } from '@lowdefy/ai-utils';
 import countOperators from '../utils/countOperators.js';
@@ -59,6 +59,65 @@ function detectCycles(agents) {
     }
   }
   return null;
+}
+
+// redact masks the user's messages at runtime (see the api's redactMessages). Any part of it
+// may be an operator, evaluated per request, so only literal values are checked here; the
+// runtime checks what the operators return.
+function validateRedact(agent) {
+  const { redact } = agent;
+  if (type.isNone(redact) || getOperatorType(redact) !== null) return;
+  const configKey = redact['~k'] ?? agent['~k'];
+  const fail = (message, received) => {
+    throw new ConfigError(message, { received, configKey });
+  };
+  const literal = (value) => getOperatorType(value) === null;
+  if (!type.isNone(redact.replacement) && literal(redact.replacement)) {
+    if (!type.isString(redact.replacement)) {
+      fail(`Agent "${agent.id}" "redact.replacement" should be a string.`, redact.replacement);
+    }
+  }
+  if (!literal(redact.patterns)) return;
+  if (!type.isArray(redact.patterns) || redact.patterns.length === 0) {
+    fail(`Agent "${agent.id}" "redact.patterns" should be a non-empty array.`, redact.patterns);
+  }
+  redact.patterns.forEach((entry, index) => {
+    if (!literal(entry)) return;
+    const location = `redact.patterns[${index}]`;
+    if (!type.isString(entry) && !type.isObject(entry)) {
+      fail(`Agent "${agent.id}" "${location}" should be a string or an object.`, entry);
+    }
+    const { name, pattern, flags } = type.isString(entry) ? { pattern: entry } : entry;
+    if (literal(pattern) && !type.isString(pattern)) {
+      fail(`Agent "${agent.id}" "${location}.pattern" should be a string.`, pattern);
+    }
+    if (!type.isNone(name) && literal(name) && !type.isString(name)) {
+      fail(`Agent "${agent.id}" "${location}.name" should be a string.`, name);
+    }
+    if (!type.isNone(flags) && literal(flags) && !type.isString(flags)) {
+      fail(`Agent "${agent.id}" "${location}.flags" should be a string.`, flags);
+    }
+    // With the sticky flag a global replace stops at the first gap between matches.
+    if (type.isString(flags) && flags.includes('y')) {
+      fail(`Agent "${agent.id}" "${location}.flags" should not include "y".`, flags);
+    }
+    if (type.isString(pattern) && (type.isNone(flags) || type.isString(flags))) {
+      const allFlags = (flags ?? '').includes('g') ? flags : `${flags ?? ''}g`;
+      let regex;
+      try {
+        regex = new RegExp(pattern, allFlags);
+      } catch (error) {
+        fail(
+          `Agent "${agent.id}" "${location}" is not a valid regular expression: ${error.message}`,
+          pattern
+        );
+      }
+      // A pattern that matches empty text would put the replacement between every character.
+      if (regex.test('')) {
+        fail(`Agent "${agent.id}" "${location}" matches empty text.`, pattern);
+      }
+    }
+  });
 }
 
 function buildAgents({ components, context }) {
@@ -294,10 +353,10 @@ function buildAgents({ components, context }) {
     if (agent.properties?.fileSystem) {
       const basePath = agent.properties.fileSystem.basePath;
       if (!type.isString(basePath)) {
-        throw new ConfigError(
-          `Agent "${agent.id}" fileSystem.basePath is not a string.`,
-          { received: basePath, configKey }
-        );
+        throw new ConfigError(`Agent "${agent.id}" fileSystem.basePath is not a string.`, {
+          received: basePath,
+          configKey,
+        });
       }
       const resolved = path.resolve(context.directories.config, basePath);
       if (!fs.existsSync(resolved)) {
@@ -308,13 +367,18 @@ function buildAgents({ components, context }) {
       }
     }
 
+    validateRedact(agent);
+
     // Rename id to internal format
     agent.agentId = agent.id;
     context.agentIds.add(agent.agentId);
     agent.id = `agent:${agent.agentId}`;
 
-    // Count server operators in properties
+    // Count server operators in properties and redact, both evaluated per request
     countOperators(agent.properties ?? {}, {
+      counter: context.typeCounters.operators.server,
+    });
+    countOperators(agent.redact ?? {}, {
       counter: context.typeCounters.operators.server,
     });
   });

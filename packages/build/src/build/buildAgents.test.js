@@ -2002,3 +2002,111 @@ test('buildAgents throws when a sub-agent tool name derived from a legal agent i
     expect(e.configKey).toBe('parentKey');
   }
 });
+
+describe('buildAgents redact', () => {
+  function buildWithRedact(redact) {
+    const context = testContext();
+    const components = {
+      connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+      agents: [
+        {
+          id: 'agent1',
+          type: 'ClaudeAgent',
+          connectionId: 'conn1',
+          properties: { model: 'test-model' },
+          redact,
+          '~k': 'agent-key',
+        },
+      ],
+    };
+    let error;
+    try {
+      buildAgents({ components, context });
+    } catch (e) {
+      error = e;
+    }
+    return { context, components, error };
+  }
+
+  test('a valid redact passes', () => {
+    const { error, components } = buildWithRedact({
+      replacement: '***',
+      patterns: [
+        { name: 'email', pattern: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}', flags: 'i' },
+        '\\d(?:[ -]?\\d){8,}',
+      ],
+    });
+    expect(error).toBeUndefined();
+    expect(components.agents[0].redact.patterns).toHaveLength(2);
+  });
+
+  test('missing patterns fails with the agent config location', () => {
+    const { error } = buildWithRedact({ replacement: '***' });
+    expect(error.message).toEqual('Agent "agent1" "redact.patterns" should be a non-empty array.');
+    expect(error.configKey).toEqual('agent-key');
+  });
+
+  test('empty patterns fails', () => {
+    const { error } = buildWithRedact({ patterns: [] });
+    expect(error.message).toEqual('Agent "agent1" "redact.patterns" should be a non-empty array.');
+  });
+
+  test('a non-string pattern fails with the agent config location', () => {
+    const { error } = buildWithRedact({ patterns: [{ name: 'id', pattern: 123 }] });
+    expect(error.message).toEqual(
+      'Agent "agent1" "redact.patterns[0].pattern" should be a string.'
+    );
+    expect(error.configKey).toEqual('agent-key');
+  });
+
+  test('a pattern entry that is neither a string nor an object fails', () => {
+    const { error } = buildWithRedact({ patterns: [42] });
+    expect(error.message).toEqual(
+      'Agent "agent1" "redact.patterns[0]" should be a string or an object.'
+    );
+  });
+
+  test('an invalid literal regex fails with the agent config location', () => {
+    const { error } = buildWithRedact({ patterns: ['ok', '(unclosed'] });
+    expect(error.message).toMatch(
+      /^Agent "agent1" "redact\.patterns\[1\]" is not a valid regular expression: /
+    );
+    expect(error.configKey).toEqual('agent-key');
+  });
+
+  test('a pattern that matches empty text fails', () => {
+    const { error } = buildWithRedact({ patterns: ['\\d*'] });
+    expect(error.message).toEqual('Agent "agent1" "redact.patterns[0]" matches empty text.');
+  });
+
+  test('invalid literal flags fail', () => {
+    const { error } = buildWithRedact({ patterns: [{ pattern: 'a', flags: 'q' }] });
+    expect(error.message).toMatch(/is not a valid regular expression/);
+  });
+
+  test('the sticky flag fails', () => {
+    const { error } = buildWithRedact({ patterns: [{ pattern: '\\d{4}', flags: 'y' }] });
+    expect(error.message).toEqual(
+      'Agent "agent1" "redact.patterns[0].flags" should not include "y".'
+    );
+  });
+
+  test('a non-string replacement fails', () => {
+    const { error } = buildWithRedact({ replacement: 1, patterns: ['a'] });
+    expect(error.message).toEqual('Agent "agent1" "redact.replacement" should be a string.');
+  });
+
+  test('operators are left for runtime and counted as server operators', () => {
+    const { error, context } = buildWithRedact({
+      replacement: { _secret: 'REDACT_REPLACEMENT' },
+      patterns: [{ name: 'id', pattern: { _secret: 'ID_PATTERN' } }, { _env: 'EXTRA_PATTERN' }],
+    });
+    expect(error).toBeUndefined();
+    expect(context.typeCounters.operators.server.getCounts()).toEqual({ _env: 1, _secret: 2 });
+  });
+
+  test('patterns given by an operator are left for runtime', () => {
+    const { error } = buildWithRedact({ patterns: { _secret: 'PII_PATTERNS' } });
+    expect(error).toBeUndefined();
+  });
+});
