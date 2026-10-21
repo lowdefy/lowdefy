@@ -1,5 +1,44 @@
 # Change Log
 
+## 6.2.0
+
+### Minor Changes
+
+- bdfe5c9: feat(api): Agents mask patterns in the user's messages with `redact`
+
+  An agent's new `redact` property lists regular expressions the server masks in the text of every user message before the model, title generation, tools and `onFinish` hooks see it. Use it to keep ID numbers, email addresses and other personal information a user pastes into a chat away from the AI provider and out of chat history.
+
+  ```yaml
+  agents:
+    - id: support_agent
+      type: ClaudeAgent
+      connectionId: anthropic
+      redact:
+        replacement: '[removed]' # default
+        patterns:
+          - name: email
+            pattern: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+          - '\d(?:[ -]?\d){8,}'
+  ```
+
+  Patterns are strings or `{ name, pattern, flags }` objects, and may be operators. The build rejects a missing or empty `patterns` list, a pattern that is not a string, an invalid regular expression, the sticky flag `y` and a pattern that matches empty text; a pattern an operator returns is checked when the request runs. It applies to chat turns, not to sub-agent calls or the `CallAgent` step. Assistant messages, tool calls and files are left as they are, and the debug log counts replacements by name without the matched text.
+
+### Patch Changes
+
+- 5a194c3: fix(ai-utils, api): Agent and endpoint logs leave chat text out
+
+  Agent and endpoint logs no longer write chat text, prompts, tool inputs or tool outputs. An agent error is logged as a summary: its name, code, status code and message (cut to 500 characters), the same for up to three causes, and the agent id and conversation id. The message of an AI SDK error is left out, apart from an `APICallError`'s, since errors such as `TypeValidationError` embed the conversation or a tool's input. A failed stream also logs its step count. A mid-stream error, which the AI SDK used to write to the console whole, is logged the same way. A `CallAgent` step that fails on an AI SDK error throws a copy with only that summary's name, code and safe message, so the routine's error log cannot write the prompt. The `debug_endpoint` log names an API call by its ids and no longer writes its payload, so an agent chat's save-thread call no longer writes the whole thread there. Routine step debug logs no longer write the values they evaluate: `:set_state` logs the keys it sets, `:if` and `:switch` log whether the condition held, `:for` and `:parallel_for` log the item count and index, and `:return`, a request step's result and a called endpoint's response are left out. A `CallAgent` prompt that is not a string is named by its type in the error. A failed request step still logs its evaluated properties as the error's `received`, as every failed request does.
+
+- Updated dependencies [bdfe5c9]
+  - @lowdefy/build@6.2.0
+  - @lowdefy/operators@6.2.0
+  - @lowdefy/operators-js@6.2.0
+  - @lowdefy/ajv@6.2.0
+  - @lowdefy/errors@6.2.0
+  - @lowdefy/helpers@6.2.0
+  - @lowdefy/node-utils@6.2.0
+  - @lowdefy/nunjucks@6.2.0
+
 ## 6.1.0
 
 ### Minor Changes

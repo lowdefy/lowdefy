@@ -1,5 +1,33 @@
 # @lowdefy/server-enterprise
 
+## 6.2.0
+
+### Patch Changes
+
+- Updated dependencies [5a194c3]
+- Updated dependencies [bdfe5c9]
+  - @lowdefy/api@6.2.0
+  - @lowdefy/client@6.2.0
+  - @lowdefy/layout@6.2.0
+  - @lowdefy/actions-core@6.2.0
+  - @lowdefy/blocks-aggrid@6.2.0
+  - @lowdefy/blocks-antd@6.2.0
+  - @lowdefy/blocks-antd-x@6.2.0
+  - @lowdefy/blocks-basic@6.2.0
+  - @lowdefy/blocks-echarts@6.2.0
+  - @lowdefy/blocks-files@6.2.0
+  - @lowdefy/blocks-loaders@6.2.0
+  - @lowdefy/blocks-markdown@6.2.0
+  - @lowdefy/blocks-tiptap@6.2.0
+  - @lowdefy/operators-js@6.2.0
+  - @lowdefy/plugin-next-auth@6.2.0
+  - @lowdefy/websockets-core@6.2.0
+  - @lowdefy/block-utils@6.2.0
+  - @lowdefy/errors@6.2.0
+  - @lowdefy/helpers@6.2.0
+  - @lowdefy/logger@6.2.0
+  - @lowdefy/node-utils@6.2.0
+
 ## 6.1.0
 
 ### Minor Changes

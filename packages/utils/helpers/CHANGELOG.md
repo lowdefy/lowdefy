@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.2.0
+
+### Patch Changes
+
+- @lowdefy/errors@6.2.0
+
 ## 6.1.0
 
 ### Minor Changes
