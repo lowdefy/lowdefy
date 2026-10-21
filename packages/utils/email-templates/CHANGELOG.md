@@ -1,5 +1,12 @@
 # @lowdefy/email-templates
 
+## 6.2.1
+
+### Patch Changes
+
+- @lowdefy/helpers@6.2.1
+- @lowdefy/nunjucks@6.2.1
+
 ## 6.2.0
 
 ### Patch Changes

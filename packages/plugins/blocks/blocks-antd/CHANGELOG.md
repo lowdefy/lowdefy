@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.2.1
+
+### Patch Changes
+
+- @lowdefy/block-utils@6.2.1
+- @lowdefy/helpers@6.2.1
+- @lowdefy/nunjucks@6.2.1
+
 ## 6.2.0
 
 ### Patch Changes

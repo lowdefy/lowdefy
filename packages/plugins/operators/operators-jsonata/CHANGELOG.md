@@ -1,5 +1,12 @@
 # @lowdefy/operators-jsonata
 
+## 6.2.1
+
+### Patch Changes
+
+- @lowdefy/operators@6.2.1
+- @lowdefy/helpers@6.2.1
+
 ## 6.2.0
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @lowdefy/blocks-tiptap
 
+## 6.2.1
+
+### Patch Changes
+
+- @lowdefy/blocks-files@6.2.1
+- @lowdefy/block-utils@6.2.1
+- @lowdefy/helpers@6.2.1
+- @lowdefy/blocks-antd@6.2.1
+
 ## 6.2.0
 
 ### Patch Changes

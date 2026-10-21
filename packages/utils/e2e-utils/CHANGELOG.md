@@ -1,5 +1,11 @@
 # @lowdefy/e2e-utils
 
+## 6.2.1
+
+### Patch Changes
+
+- @lowdefy/helpers@6.2.1
+
 ## 6.2.0
 
 ### Patch Changes

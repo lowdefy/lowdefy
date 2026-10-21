@@ -1,5 +1,42 @@
 # Change Log
 
+## 6.2.1
+
+### Patch Changes
+
+- Updated dependencies [47e64ba]
+  - @lowdefy/api@6.2.1
+  - @lowdefy/errors@6.2.1
+  - @lowdefy/build@6.2.1
+  - @lowdefy/client@6.2.1
+  - @lowdefy/engine@6.2.1
+  - @lowdefy/actions-core@6.2.1
+  - @lowdefy/connection-axios-http@6.2.1
+  - @lowdefy/operators-js@6.2.1
+  - @lowdefy/block-utils@6.2.1
+  - @lowdefy/helpers@6.2.1
+  - @lowdefy/logger@6.2.1
+  - @lowdefy/node-utils@6.2.1
+  - @lowdefy/operators-change-case@6.2.1
+  - @lowdefy/operators-dayjs@6.2.1
+  - @lowdefy/operators-diff@6.2.1
+  - @lowdefy/operators-mql@6.2.1
+  - @lowdefy/operators-nunjucks@6.2.1
+  - @lowdefy/operators-uuid@6.2.1
+  - @lowdefy/operators-yaml@6.2.1
+  - @lowdefy/blocks-antd-x@6.2.1
+  - @lowdefy/blocks-tiptap@6.2.1
+  - @lowdefy/layout@6.2.1
+  - @lowdefy/blocks-aggrid@6.2.1
+  - @lowdefy/blocks-antd@6.2.1
+  - @lowdefy/blocks-basic@6.2.1
+  - @lowdefy/blocks-echarts@6.2.1
+  - @lowdefy/blocks-loaders@6.2.1
+  - @lowdefy/blocks-markdown@6.2.1
+  - @lowdefy/plugin-next-auth@6.2.1
+  - @lowdefy/websockets-core@6.2.1
+  - @lowdefy/docs-content@6.2.1
+
 ## 6.2.0
 
 ### Patch Changes
