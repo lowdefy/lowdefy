@@ -1,5 +1,6 @@
 name: Release
-# The 6.x maintenance line. It publishes under the npm dist-tag `v6`, so `latest` stays on 7.x.
+# The 6.x maintenance line. It publishes under the npm dist-tag `latest-6`, so `latest` stays on 7.x.
+# npm rejects a tag that reads as a version range, such as `v6` or `6.x`.
 on:
   push:
     branches:
