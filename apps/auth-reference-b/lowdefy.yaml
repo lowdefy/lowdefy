@@ -58,6 +58,13 @@ auth:
     policy: pinned
     org: org-b
 
+  # The app's own roles, granted per member as app_roles - not the
+  # organization tier (owner/admin/member), which no gate reads.
+  roles:
+    - id: admin
+      label: Administration
+      description: Opens the members page.
+
   pages:
     protected: true
     public:
@@ -84,7 +91,14 @@ connections:
       from: auth-reference-b@localhost
       host:
         _secret: SMTP_HOST
-      port: 1025
+      # Mailpit's port for the walkthrough, or the dev server's mail sink for
+      # the journeys (pnpm test:journeys:auth sets SMTP_PORT to it).
+      port:
+        _number.parseInt:
+          on:
+            _if_none:
+              - _secret: SMTP_PORT
+              - '1025'
       secure: false
 
 # Per-step floor demos: a user-initiated admin step is floored on the
@@ -94,6 +108,7 @@ connections:
 api:
   - _ref: api/list-members-step.yaml
   - _ref: api/list-members-system.yaml
+  - _ref: api/invitation-caller.yaml
 
 pages:
   - _ref: pages/home.yaml

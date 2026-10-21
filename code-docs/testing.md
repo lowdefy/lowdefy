@@ -108,10 +108,14 @@ pnpm test:journeys:auth --filter invitation  # journeys whose name matches
 pnpm test:journeys:auth --app auth-reference # another app (default auth-reference-tenant)
 ```
 
-The pinned-organization app (`apps/auth-reference`) carries the password reset journey.
+The pinned-organization app (`apps/auth-reference`) carries the password reset journey. The
+pinned invite-only app (`apps/auth-reference-b`, `--app auth-reference-b`) carries an
+invitee accepting a pending invitation; its `scripts/seed-journeys.mjs` writes the org owner
+and the invitation, since nobody can sign up to an empty invite-only app.
 
 `scripts/test-journeys-auth.mjs` starts a single-node memory replica set (fresh every run,
-auth indexes provisioned), then this checkout's dev server (`scripts/dev.mjs`) with the
+auth indexes provisioned, then seeded by the app's `scripts/seed-journeys.mjs` when it has
+one), then this checkout's dev server (`scripts/dev.mjs`) with the
 app's secrets, a pinned `BETTER_AUTH_URL`, the dev mail sink (`LOWDEFY_DEV_SMTP_PORT`) and
 `INVITATION_EXPIRES_IN=60` (read by the app's build, so invitations expire after the
 60 second minimum and the expiry journey can wait one out, about a minute of the run),

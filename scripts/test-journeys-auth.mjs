@@ -99,6 +99,20 @@ async function startDatabase({ port }) {
     await replSet.stop();
     throw new Error('Could not provision the auth indexes.');
   }
+  // An app whose journeys cannot start from an empty database (an invite-only
+  // app has nobody who can sign up) seeds its own starting rows.
+  const seedScript = path.join(APP_DIRECTORY, 'scripts', 'seed-journeys.mjs');
+  if (fs.existsSync(seedScript)) {
+    const seedCode = await run({
+      command: process.execPath,
+      commandArgs: [seedScript],
+      env: { ...process.env, AUTH_DATABASE_URI: uri },
+    });
+    if (seedCode !== 0) {
+      await replSet.stop();
+      throw new Error(`Could not seed the database with ${path.relative(REPO_ROOT, seedScript)}.`);
+    }
+  }
   return { replSet, uri };
 }
 

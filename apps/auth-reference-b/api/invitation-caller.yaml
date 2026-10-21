@@ -1,0 +1,13 @@
+# Who the server answers the accept page as. A signed-in invitee who has not
+# accepted holds no member row in org-b, so every protected page treats them
+# as logged out - but they are not a stranger: they are a caller awaiting the
+# organization, carrying the id of their pending invitation to it. Ungated,
+# like the accept page that reads it.
+id: invitation-caller
+type: Api
+routine:
+  - ':return':
+      awaiting_organization:
+        _user: awaiting_organization
+      pending_invitation_id:
+        _user: pending_invitation_id
