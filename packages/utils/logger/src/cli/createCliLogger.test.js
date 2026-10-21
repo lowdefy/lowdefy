@@ -67,8 +67,8 @@ Date = vi.fn(function () {
 
 Date.now = () => {};
 
-// The first test pays the cold import of the logger's module graph (jest.resetModules), which
-// can pass Jest's 5 s default on a loaded Windows runner.
+// The first test pays the cold import of the logger's module graph (vi.resetModules), which
+// can pass the 5 s default on a loaded Windows runner.
 vi.setConfig({ testTimeout: 20000, hookTimeout: 20000 });
 
 // Save original CI value so tests are deterministic regardless of environment

@@ -23,7 +23,7 @@ import { MIN_PORT } from './pickDataStorePort.js';
 
 vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
-// The real memory replica set, in a process of its own (jest runs each file in its own worker), so
+// The real memory replica set, in a process of its own (each test file runs in a worker of its own), so
 // killing its mongod here touches no other suite's store.
 
 async function describeMongod(store) {

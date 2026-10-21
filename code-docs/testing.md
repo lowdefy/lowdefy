@@ -382,6 +382,10 @@ The developer may add the `ci` or `ci-full` label to run them again in CI.
   `LOWDEFY_HOME` at a temporary directory in tests so they never touch the real hub.
 - A running dev server records itself in `<app>/.lowdefy/instance.json`; tests that start
   one should stop it and remove the file.
+- server-dev's watchers use chokidar 4, which watches with `fs.watch`. On macOS, Node restarts
+  its one FSEvents stream whenever a watcher is added or closed, and a write made during the
+  restart is never reported. Watcher tests call `flushFsEvents()` (`test-utils/`) after a
+  watcher is ready and before the first edit, or repeat the edit until it is seen.
 - Hub tests pass a port range of their own (`portRange` to `createHub`, `range` to
   `allocatePorts`), away from the real hub's 4100–4999, which hubs started by agents in other
   worktrees bind.

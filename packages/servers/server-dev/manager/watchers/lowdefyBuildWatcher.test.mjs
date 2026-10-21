@@ -187,6 +187,21 @@ test('watchIgnore globs and node_modules are not watched', async () => {
   );
 });
 
+test('a --watch glob watches the files it matches and no others', async () => {
+  const shared = path.join(repoDir, 'shared');
+  const block = path.join(shared, 'blocks', 'title.yaml');
+  const notes = path.join(shared, 'blocks', 'notes.md');
+  write(block, 'id: title\n');
+  write(notes, 'notes\n');
+  await flushFsEvents();
+  context.options.watch = [path.join(shared, '**', '*.yaml')];
+
+  const configWatcher = await startWatcher();
+
+  expect(isWatched({ configWatcher, filePath: block })).toBe(true);
+  expect(isWatched({ configWatcher, filePath: notes })).toBe(false);
+});
+
 test('a page file edit that changes the page path rebuilds the config', async () => {
   await startWatcher();
   declaredPaths.set('home', 'start');

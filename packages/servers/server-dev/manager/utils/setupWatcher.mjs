@@ -22,6 +22,7 @@ import { type } from '@lowdefy/helpers';
 import BatchChanges from './BatchChanges.mjs';
 import createDotPathIgnore from './createDotPathIgnore.mjs';
 import createGlobIgnore from './createGlobIgnore.mjs';
+import createGlobWatchPaths from './createGlobWatchPaths.mjs';
 
 // chokidar hands ignore functions a path with forward slashes on every platform
 // (its matcher normalizes it), while watch paths and the directories they are
@@ -45,13 +46,19 @@ function setupWatcher({
 }) {
   return new Promise((resolve) => {
     const batchChanges = new BatchChanges({ context, fn: callback, delay, onBusy });
-    const ignored = watchDotfiles ? [] : [createDotPathIgnore({ watchPaths })];
+    const globWatch = createGlobWatchPaths(watchPaths);
+    const ignored = watchDotfiles
+      ? []
+      : [createDotPathIgnore({ watchPaths: globWatch.watchPaths })];
+    if (globWatch.ignore !== null) {
+      ignored.push(globWatch.ignore);
+    }
     ignored.push(...ignorePaths.filter((ignore) => !type.isString(ignore)));
     const globIgnores = ignorePaths.filter((ignore) => type.isString(ignore));
     if (globIgnores.length > 0) {
       ignored.push(createGlobIgnore(globIgnores));
     }
-    const configWatcher = chokidar.watch(watchPaths, {
+    const configWatcher = chokidar.watch(globWatch.watchPaths, {
       ignored: ignored.map(withNativePath),
       persistent: true,
       ignoreInitial: true,

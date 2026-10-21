@@ -31,7 +31,7 @@ import getBetterAuthConfig from './getBetterAuthConfig.js';
 // here instead of at runtime.
 //
 // BetterAuth skips its origin check when NODE_ENV is 'test', as it is under
-// jest, so the instance turns it back on explicitly.
+// the test runner, so the instance turns it back on explicitly.
 
 const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
 

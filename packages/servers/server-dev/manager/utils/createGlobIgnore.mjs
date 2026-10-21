@@ -19,7 +19,8 @@ import path from 'path';
 import picomatch from 'picomatch';
 
 function toUnixPath(filePath) {
-  return path.normalize(filePath).replace(/\\/g, '/');
+  const normalized = path.normalize(filePath);
+  return path.sep === '\\' ? normalized.replace(/\\/g, '/') : normalized;
 }
 
 // chokidar 4 matches a string in `ignored` only as an exact path, where chokidar 3 read it as a

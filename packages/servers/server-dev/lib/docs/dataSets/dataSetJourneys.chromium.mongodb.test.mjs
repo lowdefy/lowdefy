@@ -27,7 +27,7 @@ import { MongoClient } from 'mongodb';
 // Data set journeys end to end: a real Chromium drives journeys through the dev server's own
 // journey route, API context, endpoint, detached and websocket handlers and the MongoDB connection
 // plugin, over a build of the fixture app in test/app. Its connections, its module's connection and
-// its auth adapter read the MONGODB_URI secret, pointed at a database of its own on the jest-mongodb
+// its auth adapter read the MONGODB_URI secret, pointed at a database of its own on the suite's
 // memory server (MONGO_URL), which stands in for the developer's real database. Journeys on the
 // "shop" data set must reach the data store's session database for every request, module
 // connection, detached call and change stream, must never reach the auth engine, and must leave the
@@ -131,7 +131,7 @@ const { default: websocketHandler } = await import('../../../src/routes/websocke
 const { handleWebSocketUpgrade } = await import('../../../src/websocket/devWebSocket.js');
 const { getBrowser } = await import('../getBrowser.js');
 // The connection plugin keeps one driver client per URI for the life of the process; the suite
-// closes them so jest can exit. Imported by file: the package does not export it.
+// closes them so the test worker can exit. Imported by file: the package does not export it.
 const { closeClients } = await import(
   path.join(
     serverDevDirectory,
