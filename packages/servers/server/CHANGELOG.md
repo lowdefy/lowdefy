@@ -1,5 +1,36 @@
 # @lowdefy/server-enterprise
 
+## 6.2.1
+
+### Patch Changes
+
+- 47e64ba: fix(api, errors, server): A failed request no longer logs its inputs
+
+  A failed request, on a page or as an endpoint routine step, no longer writes the request's evaluated properties or the connection's error to the logs. The request properties were attached to the error as `received`, which the error log wrote at every log level, so a step that saved an agent chat's thread logged the whole thread when it failed. The connection's error, which can hold the document it rejected, is now carried as a summary: its name, code, status code and message cut to 500 characters, with the same for up to three causes. The error log also names the step by `endpointId`, `stepId` (a page request's id) and `connectionId`. In dev, the dev tools still show the connection's full error; the dev terminal shows the summary. `errorSummaryForLog`, the error summary agent logs already used, moves to `@lowdefy/errors`.
+
+- Updated dependencies [47e64ba]
+  - @lowdefy/api@6.2.1
+  - @lowdefy/errors@6.2.1
+  - @lowdefy/client@6.2.1
+  - @lowdefy/actions-core@6.2.1
+  - @lowdefy/blocks-files@6.2.1
+  - @lowdefy/operators-js@6.2.1
+  - @lowdefy/block-utils@6.2.1
+  - @lowdefy/helpers@6.2.1
+  - @lowdefy/logger@6.2.1
+  - @lowdefy/node-utils@6.2.1
+  - @lowdefy/blocks-antd-x@6.2.1
+  - @lowdefy/blocks-tiptap@6.2.1
+  - @lowdefy/layout@6.2.1
+  - @lowdefy/blocks-aggrid@6.2.1
+  - @lowdefy/blocks-antd@6.2.1
+  - @lowdefy/blocks-basic@6.2.1
+  - @lowdefy/blocks-echarts@6.2.1
+  - @lowdefy/blocks-loaders@6.2.1
+  - @lowdefy/blocks-markdown@6.2.1
+  - @lowdefy/plugin-next-auth@6.2.1
+  - @lowdefy/websockets-core@6.2.1
+
 ## 6.2.0
 
 ### Patch Changes
