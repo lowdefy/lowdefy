@@ -18,6 +18,7 @@ import createSortKeyGetter from '@lowdefy/blocks-antd/table/createSortKeyGetter.
 
 import sortRowModel from './sortRowModel.js';
 import sortKeysCache from './sortKeysCache.js';
+import { expect, test } from 'vitest';
 
 function createTable({ values, subset }) {
   const coreRows = values.map((value, index) => ({

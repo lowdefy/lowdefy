@@ -15,6 +15,7 @@
 */
 
 import normalizeTree from './normalizeTree.js';
+import { expect, test } from 'vitest';
 
 test('normalizeTree returns null without a tree', () => {
   expect(normalizeTree({ tree: undefined })).toBeNull();

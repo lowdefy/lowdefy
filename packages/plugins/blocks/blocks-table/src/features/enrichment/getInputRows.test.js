@@ -17,6 +17,7 @@
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 
 import getInputRows from './getInputRows.js';
+import { expect, test } from 'vitest';
 
 const { columns } = normalizeColumns({
   columns: [

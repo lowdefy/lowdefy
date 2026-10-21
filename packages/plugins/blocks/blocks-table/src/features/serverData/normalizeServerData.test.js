@@ -15,6 +15,7 @@
 */
 
 import normalizeServerData from './normalizeServerData.js';
+import { expect, test } from 'vitest';
 
 test('normalizeServerData returns null for client rows', () => {
   expect(normalizeServerData([{ id: 1 }])).toBeNull();

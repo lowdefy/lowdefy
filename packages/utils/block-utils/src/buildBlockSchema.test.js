@@ -16,6 +16,7 @@
 
 import { validate as ajvValidate } from '@lowdefy/ajv';
 import buildBlockSchema from './buildBlockSchema.js';
+import { expect, test } from 'vitest';
 
 function validate(meta, data) {
   const schema = buildBlockSchema(meta);
@@ -78,18 +79,12 @@ test('no events produces empty event properties', () => {
 });
 
 test('class: string passes', () => {
-  const { valid } = validate(
-    { category: 'display' },
-    { id: 'b1', type: 'Box', class: 'my-class' }
-  );
+  const { valid } = validate({ category: 'display' }, { id: 'b1', type: 'Box', class: 'my-class' });
   expect(valid).toBe(true);
 });
 
 test('class: array passes', () => {
-  const { valid } = validate(
-    { category: 'display' },
-    { id: 'b1', type: 'Box', class: ['a', 'b'] }
-  );
+  const { valid } = validate({ category: 'display' }, { id: 'b1', type: 'Box', class: ['a', 'b'] });
   expect(valid).toBe(true);
 });
 
@@ -150,10 +145,7 @@ test('style: unknown .key fails', () => {
 });
 
 test('style: empty object matches keyed-style', () => {
-  const { valid } = validate(
-    { category: 'display' },
-    { id: 'b1', type: 'Box', style: {} }
-  );
+  const { valid } = validate({ category: 'display' }, { id: 'b1', type: 'Box', style: {} });
   expect(valid).toBe(true);
 });
 

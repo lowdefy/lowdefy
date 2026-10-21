@@ -15,6 +15,7 @@
 */
 
 import findRow from './findRow.js';
+import { expect, test } from 'vitest';
 
 function createTable({ prePaginated = {}, core = {} }) {
   return {

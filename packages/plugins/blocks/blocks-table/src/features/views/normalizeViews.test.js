@@ -18,6 +18,7 @@ import assert from 'node:assert/strict';
 
 import findActiveView from './findActiveView.js';
 import normalizeViews from './normalizeViews.js';
+import { test } from 'vitest';
 
 test('normalizeViews treats a list that has not loaded as no views', () => {
   assert.deepEqual(normalizeViews(null), []);

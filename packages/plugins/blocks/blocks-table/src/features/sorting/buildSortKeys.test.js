@@ -23,6 +23,7 @@ import buildSortKeys from './buildSortKeys.js';
 import getCachedSortKeys from './getCachedSortKeys.js';
 import prepareSortKeys from './prepareSortKeys.js';
 import sortIndices from './sortIndices.js';
+import { expect, test } from 'vitest';
 
 function createRandom(seed) {
   let state = seed;

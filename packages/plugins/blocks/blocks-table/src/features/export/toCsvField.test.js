@@ -15,6 +15,7 @@
 */
 
 import toCsvField from './toCsvField.js';
+import { expect, test } from 'vitest';
 
 test('toCsvField leaves plain text as it is', () => {
   expect(toCsvField('Ada Lovelace')).toBe('Ada Lovelace');

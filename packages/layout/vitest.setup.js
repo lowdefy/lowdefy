@@ -14,15 +14,11 @@
   limitations under the License.
 */
 
-// Unit tests cover the block metas. Blocks are tested end to end with Playwright
-// (src/**/tests/*.e2e.spec.js), which Jest skips.
-export default {
-  clearMocks: true,
-  errorOnDeprecated: true,
-  testEnvironment: 'node',
-  testMatch: ['<rootDir>/src/**/*.test.js'],
-  testPathIgnorePatterns: ['<rootDir>/dist/'],
-  transform: {
-    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
-  },
-};
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
+
+// @testing-library/react unmounts what a test rendered only when afterEach is a global, as it was
+// under jest. Without it, a hook from an earlier test stays mounted and keeps writing to window.
+afterEach(() => {
+  cleanup();
+});

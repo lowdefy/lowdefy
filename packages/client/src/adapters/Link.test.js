@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 
 import createLinkComponent from './Link.js';
@@ -23,8 +23,8 @@ import createLinkComponent from './Link.js';
 function setup({ basePath = '' } = {}) {
   const router = {
     basePath,
-    push: jest.fn(),
-    replace: jest.fn(),
+    push: vi.fn(),
+    replace: vi.fn(),
   };
   const Link = createLinkComponent({ router });
   return { Link, router };

@@ -17,6 +17,7 @@
 import compileCondition from './compileCondition.js';
 import normalizeColumns from './normalizeColumns.js';
 import readColumnValue from './readColumnValue.js';
+import { expect, test } from 'vitest';
 
 function leaf(columns, key) {
   return normalizeColumns({ columns }).columnsByKey[key];

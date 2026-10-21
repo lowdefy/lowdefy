@@ -15,6 +15,7 @@
 */
 
 import createRowKeyGetter from './createRowKeyGetter.js';
+import { expect, test } from 'vitest';
 
 test('createRowKeyGetter reads _id, then id', () => {
   const getRowKey = createRowKeyGetter();

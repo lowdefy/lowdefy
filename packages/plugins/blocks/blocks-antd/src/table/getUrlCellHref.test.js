@@ -15,6 +15,7 @@
 */
 
 import getUrlCellHref from './getUrlCellHref.js';
+import { expect, test } from 'vitest';
 
 test('getUrlCellHref passes http, https, protocol and root relative URLs', () => {
   expect(getUrlCellHref('https://a.test/x')).toBe('https://a.test/x');

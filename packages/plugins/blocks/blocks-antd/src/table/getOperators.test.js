@@ -18,6 +18,7 @@ import fs from 'fs';
 
 import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
 import getOperators from './getOperators.js';
+import { expect, test } from 'vitest';
 
 const COMMON = ['eq', 'ne', 'in', 'nin', 'empty', 'notEmpty'];
 

@@ -19,6 +19,7 @@ import { render } from '@testing-library/react';
 
 import blockDefaultProps from './blockDefaultProps.js';
 import withBlockDefaults from './withBlockDefaults.js';
+import { beforeEach, expect, test } from 'vitest';
 
 let receivedProps;
 

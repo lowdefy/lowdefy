@@ -15,6 +15,7 @@
 */
 
 import clearUserStorage from './clearUserStorage.js';
+import { beforeEach, expect, test } from 'vitest';
 
 const scope = { basePath: '/crm', slug: 'sales' };
 

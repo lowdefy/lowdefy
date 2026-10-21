@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 
 import createLazyBlock from './createLazyBlock.js';
@@ -49,11 +49,11 @@ function createEngineMethods() {
   return {
     registered,
     methods: {
-      registerEvent: jest.fn(),
-      registerMethod: jest.fn((name, fn) => {
+      registerEvent: vi.fn(),
+      registerMethod: vi.fn((name, fn) => {
         registered[name] = fn;
       }),
-      triggerEvent: jest.fn(),
+      triggerEvent: vi.fn(),
     },
   };
 }
@@ -101,7 +101,7 @@ let consoleError;
 
 beforeEach(() => {
   // React logs errors caught by an error boundary.
-  consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+  consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 afterEach(() => {
@@ -129,7 +129,7 @@ test('createLazyBlock throws when meta is not an object', () => {
 
 test('preload calls load once and returns the same promise on every call', async () => {
   const Implementation = createImplementation({ log: [] });
-  const load = jest.fn(() => Promise.resolve({ default: Implementation }));
+  const load = vi.fn(() => Promise.resolve({ default: Implementation }));
   const LazyBlock = createLazyBlock({ load, meta });
   const first = LazyBlock.preload();
   const second = LazyBlock.preload();
@@ -142,7 +142,7 @@ test('preload calls load once and returns the same promise on every call', async
 
 test('preload retries the load after a failed load', async () => {
   const Implementation = createImplementation({ log: [] });
-  const load = jest
+  const load = vi
     .fn()
     .mockImplementationOnce(() => Promise.reject(new Error('Network down')))
     .mockImplementationOnce(() => Promise.resolve({ default: Implementation }));
@@ -228,7 +228,7 @@ test('queued calls reject when the load fails, and the error reaches the error b
   const deferred = createDeferred();
   const LazyBlock = createLazyBlock({ load: () => deferred.promise, meta });
   const { methods, registered } = createEngineMethods();
-  const onError = jest.fn();
+  const onError = vi.fn();
   render(
     <ErrorBoundary blockId="chat" onError={onError}>
       <LazyBlock blockId="chat" methods={methods} properties={{}} />
@@ -252,7 +252,7 @@ test('a block whose load failed loads again on the next mount', async () => {
   const log = [];
   const Implementation = createImplementation({ log });
   const first = createDeferred();
-  const load = jest
+  const load = vi
     .fn()
     .mockImplementationOnce(() => first.promise)
     .mockImplementationOnce(() => Promise.resolve({ default: Implementation }));
@@ -322,7 +322,7 @@ test('the implementation methods object reads framework methods reassigned after
   render(<LazyBlock blockId="chat" methods={methods} properties={{}} />);
 
   // The engine re-assigns framework methods onto block.methods each render.
-  const setValue = jest.fn();
+  const setValue = vi.fn();
   Object.assign(methods, { setValue });
   received[0].methods.setValue(3);
   expect(setValue).toHaveBeenCalledWith(3);
@@ -366,7 +366,7 @@ test('the Fallback receives the block props while loading and no fallback render
 });
 
 test('an undeclared method is registered directly and warns once in development', async () => {
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   const log = [];
   const Implementation = createImplementation({ log });
   const LazyBlock = createLazyBlock({

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 
-jest.unstable_mockModule('antd', () => {
+vi.doMock('antd', () => {
   const defaultAlgorithm = (seed) => ({ ...seed, __algo: 'default' });
   const darkAlgorithm = (seed) => ({ ...seed, __algo: 'dark' });
   const compactAlgorithm = (seed) => ({ ...seed, __algo: 'compact' });
@@ -34,7 +34,7 @@ const { default: useDarkMode } = await import('./useDarkMode.js');
 
 function setupMatchMedia(matches) {
   const listeners = new Set();
-  window.matchMedia = jest.fn().mockImplementation(() => ({
+  window.matchMedia = vi.fn().mockImplementation(() => ({
     matches,
     addEventListener: (_, cb) => listeners.add(cb),
     removeEventListener: (_, cb) => listeners.delete(cb),

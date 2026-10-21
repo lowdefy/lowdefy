@@ -20,6 +20,7 @@ import countConditions from './countConditions.js';
 import getQuickFilterValues from './getQuickFilterValues.js';
 import normalizeToolbar from './normalizeToolbar.js';
 import setQuickFilterValues from './setQuickFilterValues.js';
+import { test } from 'vitest';
 
 test('setQuickFilterValues adds an in leaf ANDed with the existing filter', () => {
   const amount = { key: 'amount', op: 'gte', value: 100 };

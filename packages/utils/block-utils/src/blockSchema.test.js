@@ -15,6 +15,7 @@
 */
 
 import blockSchema from './blockSchema.js';
+import { expect, test } from 'vitest';
 
 test('default', () => {
   expect(blockSchema).toMatchSnapshot();

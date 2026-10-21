@@ -17,6 +17,7 @@ import assignOptionColors from './assignOptionColors.js';
 import needsTemplates from './needsTemplates.js';
 import normalizeColumns from './normalizeColumns.js';
 import USER_COLUMN_TYPES from './userColumnTypes.js';
+import { expect, test } from 'vitest';
 
 // User-defined columns are runtime data other users wrote, rendered in every viewer's browser:
 // only text-safe types and keys reach the column core.

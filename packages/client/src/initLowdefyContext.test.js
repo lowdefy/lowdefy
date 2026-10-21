@@ -17,6 +17,7 @@
 import { getHtmlEnhancements } from '@lowdefy/block-utils/registerHtmlEnhancements.js';
 
 import initLowdefyContext from './initLowdefyContext.js';
+import { expect, test } from 'vitest';
 
 function baseArgs(overrides = {}) {
   const lowdefy = {};

@@ -15,6 +15,7 @@
 */
 
 import resolveControlFlag from './resolveControlFlag.js';
+import { expect, test } from 'vitest';
 
 test('resolveControlFlag uses the compiled condition when there is one', () => {
   expect(

@@ -19,6 +19,7 @@ import assert from 'node:assert/strict';
 import buildGroupTree from './buildGroupTree.js';
 import createAccessor from '../../core/createAccessor.js';
 import flattenGroups from './flattenGroups.js';
+import { test } from 'vitest';
 
 function level(key) {
   return { key, accessor: createAccessor(key), order: 'appearance' };
