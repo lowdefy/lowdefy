@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+import { serializer } from '@lowdefy/helpers';
+
 import runTest from './test/runTest.js';
 
 const chatText = 'My ID is 8001015009087';
@@ -31,6 +34,10 @@ function request(stepId, response) {
     properties: { response },
   };
 }
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 function loggedText(context) {
   return JSON.stringify(
@@ -95,5 +102,48 @@ test('routine logs keep the keys, counts and outcomes they trace', async () => {
     event: 'debug_control_for_iteration',
     itemName: 'message',
     index: 0,
+  });
+});
+
+// Every call at every level, its errors walked as the dev server's log writes them: every own
+// field and every cause.
+function serializedLogs(context) {
+  return JSON.stringify(
+    serializer.serialize(
+      ['debug', 'info', 'warn', 'error'].flatMap((level) => context.logger[level].mock.calls)
+    )
+  );
+}
+
+test('a failed request step logs its ids and error summary, never its inputs', async () => {
+  const routine = [
+    {
+      id: 'request:test_endpoint:save_thread',
+      type: 'TestRequestRejectDocument',
+      stepId: 'save_thread',
+      endpointId: 'test_endpoint',
+      connectionId: 'test',
+      properties: { document: { threadId: 'thread_1', message: { _payload: 'message' } } },
+    },
+  ];
+  const { res, context } = await runTest({ routine, payload: { message: chatText } });
+  expect(res.status).toEqual('error');
+  expect(context.logger.error).toHaveBeenCalledTimes(1);
+  expect(serializedLogs(context)).not.toContain('8001015009087');
+
+  const [logged] = context.logger.error.mock.calls[0];
+  expect(logged).toBe(res.error);
+  expect(logged.name).toBe('RequestError');
+  expect(logged.message).toBe('Document failed validation at test/save_thread.');
+  expect(logged.code).toBe(121);
+  expect(logged.endpointId).toBe('test_endpoint');
+  expect(logged.stepId).toBe('save_thread');
+  expect(logged.connectionId).toBe('test');
+  expect(logged.received).toBeUndefined();
+  expect(serializer.serialize(logged.cause)['~e']).toEqual({
+    name: 'MongoServerError',
+    message: 'Document failed validation',
+    code: 121,
+    stack: expect.stringMatching(/^MongoServerError: Document failed validation\n\s+at /),
   });
 });

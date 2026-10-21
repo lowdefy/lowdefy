@@ -43,6 +43,9 @@ const lowdefyErrorFields = [
   'organizationId',
   'field',
   'endpointId',
+  // A failed request's step id (callRequestResolver), beside its endpointId and connectionId,
+  // so its error log names the step rather than its inputs.
+  'stepId',
 ];
 
 function projectErrorForLog(err) {

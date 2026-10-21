@@ -95,3 +95,18 @@ test('a value thrown that is not an error is named by its type', () => {
   expect(errorSummaryForLog('My ID is 8001015009087')).toEqual({ name: 'string' });
   expect(errorSummaryForLog(null)).toEqual({ name: 'object' });
 });
+
+test('an error from another realm, which fails instanceof Error, is summarised as an error', () => {
+  const foreign = {
+    name: 'TimeoutError',
+    message: 'The operation timed out.',
+    code: 23,
+    stack: 'TimeoutError: The operation timed out.\n    at run (file.js:1:1)',
+  };
+
+  expect(errorSummaryForLog(foreign)).toEqual({
+    name: 'TimeoutError',
+    message: 'The operation timed out.',
+    code: 23,
+  });
+});

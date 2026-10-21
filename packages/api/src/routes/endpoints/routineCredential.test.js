@@ -183,7 +183,7 @@ test('Credentials a called endpoint marks are redacted in the CallApi step resul
   expect(endCall).not.toHaveProperty('response');
 });
 
-test('A credential in a failed request properties is redacted in the logged error and its received', async () => {
+test('A credential in a failed request properties is redacted in the logged error, which keeps no received', async () => {
   mockEcho.mockImplementationOnce(() => {
     throw new Error(`Upstream refused key ${newKey}.`);
   });
@@ -199,7 +199,7 @@ test('A credential in a failed request properties is redacted in the logged erro
   expect(res.status).toEqual('error');
   lines.forEach((line) => expect(line).not.toContain(newKey));
   const errorLine = JSON.parse(lines.find((line) => JSON.parse(line).level === 'error'));
-  expect(errorLine.received).toEqual({ key: '[REDACTED]' });
+  expect(errorLine).not.toHaveProperty('received');
 });
 
 test('_credential outside a credential scope throws', async () => {

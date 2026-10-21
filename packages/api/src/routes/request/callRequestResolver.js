@@ -19,7 +19,7 @@ import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import createWalledResolver from './createWalledResolver.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
-import maskCredentialProperties from './maskCredentialProperties.js';
+import summarisedError from './summarisedError.js';
 
 async function callRequestResolver(
   context,
@@ -106,14 +106,15 @@ async function callRequestResolver(
     });
     return response;
   } catch (error) {
-    // Add configKey to any error for location tracing
-    if (!error.configKey) {
+    // Add configKey to any error for location tracing. A thrown string or null takes no
+    // property, and the TypeError assigning one raises would quote the string.
+    if (error instanceof Object && !error.configKey) {
       error.configKey = requestConfig['~k'];
     }
 
     // Lowdefy errors pass through unchanged — re-wrapping every boundary would
     // nest causes and truncate the deepest (most informative) frame.
-    if (error.isLowdefyError) {
+    if (error?.isLowdefyError) {
       logger.debug(
         { params: { id: stepOrRequestId, type: requestConfig.type }, err: error },
         error.message
@@ -123,7 +124,7 @@ async function callRequestResolver(
 
     // The client left before the resolver finished and the resolver stopped on the
     // signal: the cancellation is the caller's doing, not a fault in the request.
-    if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') {
+    if (signal?.reason?.name === 'AbortError' && error?.name === 'AbortError') {
       const cancelled = new UserError(signal.reason.message, { cause: error });
       logger.debug(
         { params: { id: stepOrRequestId, type: requestConfig.type }, err: cancelled },
@@ -132,13 +133,38 @@ async function callRequestResolver(
       throw cancelled;
     }
 
+    // The error that leaves here is logged whole at error level by the server's error handler
+    // and sent to Sentry, so it carries ids and the resolver's error summarised - never the
+    // request's evaluated properties (an agent chat's save-thread step holds the whole thread
+    // there) or the connection's error itself, which can embed the document it rejected. The dev
+    // tools still show that error: it is kept as devCause, which is not enumerable, so no log or
+    // error report walks it, and only the dev error payload reads it. stepId, not requestId: on
+    // an error requestId is the HTTP request's id (context.rid) everywhere else.
+    const cause = summarisedError(error);
+    const addFields = (wrapped) => {
+      Object.assign(wrapped, {
+        endpointId: requestConfig.endpointId ?? endpointId,
+        stepId: stepOrRequestId,
+        connectionId: requestConfig.connectionId,
+      });
+      Object.defineProperty(wrapped, 'devCause', { value: error, configurable: true });
+    };
+
     // Check if this is a service error (network, timeout, 5xx, 429)
     if (ServiceError.isServiceError(error)) {
+      // ServiceError reads the code, HTTP status, Retry-After and hint from its cause, wherever
+      // the client put them, so it is built over the connection's error with only the message
+      // cut, then given the summary as its cause. A Proxy, not a copy: a DOMException's fields
+      // are getters that only work on the exception itself.
       const serviceError = new ServiceError(undefined, {
-        cause: error,
+        cause: new Proxy(error, {
+          get: (target, key) => (key === 'message' ? cause.message : target[key]),
+        }),
         service: requestConfig.connectionId,
         configKey: requestConfig['~k'],
       });
+      serviceError.cause = cause;
+      addFields(serviceError);
       logger.debug(
         { params: { id: stepOrRequestId, type: requestConfig.type }, err: serviceError },
         serviceError.message
@@ -147,13 +173,13 @@ async function callRequestResolver(
     }
 
     // Wrap other errors in RequestError (request/connection logic error)
-    const requestError = new RequestError(error.message, {
-      cause: error,
+    const requestError = new RequestError(cause.message, {
+      cause,
       typeName: requestConfig.type,
-      received: maskCredentialProperties({ requestProperties, requestResolver }),
       location: `${requestConfig.connectionId}/${stepOrRequestId}`,
       configKey: requestConfig['~k'],
     });
+    addFields(requestError);
 
     logger.debug(
       { params: { id: stepOrRequestId, type: requestConfig.type }, err: requestError },
