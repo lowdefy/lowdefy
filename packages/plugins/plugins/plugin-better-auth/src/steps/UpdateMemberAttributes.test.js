@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import UpdateMemberAttributes from './UpdateMemberAttributes.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -25,7 +25,7 @@ const organizationId = 'org-1';
 
 test('UpdateMemberAttributes updates the member row directly through the adapter, scoped to the resolved organization', async () => {
   const updated = { id: 'member-1', attributes: { region: 'eu' } };
-  const adapter = { update: jest.fn().mockResolvedValue(updated) };
+  const adapter = { update: vi.fn().mockResolvedValue(updated) };
   const { auth } = createMockAuth({ adapter });
   const result = await UpdateMemberAttributes({
     auth,
@@ -44,7 +44,7 @@ test('UpdateMemberAttributes updates the member row directly through the adapter
 });
 
 test('UpdateMemberAttributes throws when no member matches the memberId within the resolved organization', async () => {
-  const adapter = { update: jest.fn().mockResolvedValue(null) };
+  const adapter = { update: vi.fn().mockResolvedValue(null) };
   const { auth } = createMockAuth({ adapter });
   await expect(
     UpdateMemberAttributes({

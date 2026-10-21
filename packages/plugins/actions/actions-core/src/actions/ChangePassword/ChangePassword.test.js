@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import ChangePassword from './ChangePassword.js';
 
-const mockChangePassword = jest.fn();
+const mockChangePassword = vi.fn();
 const methods = { changePassword: mockChangePassword };
 
 test('ChangePassword passes params to the changePassword method', async () => {

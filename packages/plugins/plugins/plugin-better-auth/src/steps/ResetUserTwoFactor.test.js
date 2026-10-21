@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import ResetUserTwoFactor from './ResetUserTwoFactor.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 function createAdapter({ user = { id: 'u1', twoFactorEnabled: false } } = {}) {
   return {
-    deleteMany: jest.fn().mockResolvedValue(undefined),
-    update: jest.fn().mockResolvedValue(user),
+    deleteMany: vi.fn().mockResolvedValue(undefined),
+    update: vi.fn().mockResolvedValue(user),
   };
 }
 
@@ -30,11 +30,11 @@ test('ResetUserTwoFactor fires the three writes in order with exact arguments', 
   const calls = [];
   const user = { id: 'u1', twoFactorEnabled: false };
   const adapter = {
-    deleteMany: jest.fn((args) => {
+    deleteMany: vi.fn((args) => {
       calls.push(['deleteMany', args]);
       return Promise.resolve(undefined);
     }),
-    update: jest.fn((args) => {
+    update: vi.fn((args) => {
       calls.push(['update', args]);
       return Promise.resolve(user);
     }),
@@ -128,8 +128,8 @@ test('ResetUserTwoFactor throws and makes no adapter call when userId is missing
 
 test('ResetUserTwoFactor throws when the user does not exist', async () => {
   const adapter = {
-    deleteMany: jest.fn().mockResolvedValue(undefined),
-    update: jest.fn().mockResolvedValue(undefined),
+    deleteMany: vi.fn().mockResolvedValue(undefined),
+    update: vi.fn().mockResolvedValue(undefined),
   };
   const { auth } = createMockAuth({ adapter });
   await expect(ResetUserTwoFactor({ auth, properties: { userId: 'u1' } })).rejects.toThrow(

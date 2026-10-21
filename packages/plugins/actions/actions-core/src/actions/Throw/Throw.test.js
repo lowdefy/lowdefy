@@ -16,6 +16,7 @@
 
 import { UserError } from '@lowdefy/errors';
 import Throw from './Throw.js';
+import { expect, test } from 'vitest';
 
 const methods = { getBlockId: () => 'blockId', getPageId: () => 'pageId' };
 

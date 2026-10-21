@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import PhoneNumberVerify from './PhoneNumberVerify.js';
 
-const mockPhoneNumberVerify = jest.fn();
+const mockPhoneNumberVerify = vi.fn();
 const methods = { phoneNumberVerify: mockPhoneNumberVerify };
 
 test('PhoneNumberVerify action invocation', () => {

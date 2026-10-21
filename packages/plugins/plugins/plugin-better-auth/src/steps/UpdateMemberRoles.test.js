@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import UpdateMemberRoles from './UpdateMemberRoles.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -25,8 +25,8 @@ const organizationId = 'org-1';
 
 test('UpdateMemberRoles writes appRoles directly through the adapter, scoped to the resolved organization', async () => {
   const updated = { id: 'member-1', appRoles: ['branch-manager'] };
-  const adapter = { findOne: jest.fn(), update: jest.fn().mockResolvedValue(updated) };
-  const updateMemberRole = jest.fn();
+  const adapter = { findOne: vi.fn(), update: vi.fn().mockResolvedValue(updated) };
+  const updateMemberRole = vi.fn();
   const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
   const result = await UpdateMemberRoles({
     auth,
@@ -46,7 +46,7 @@ test('UpdateMemberRoles writes appRoles directly through the adapter, scoped to 
 });
 
 test('UpdateMemberRoles accepts an unrecognised role name without checking any catalog', async () => {
-  const adapter = { update: jest.fn().mockResolvedValue({ id: 'member-1' }) };
+  const adapter = { update: vi.fn().mockResolvedValue({ id: 'member-1' }) };
   const { auth } = createMockAuth({ adapter });
   await UpdateMemberRoles({
     auth,
@@ -57,7 +57,7 @@ test('UpdateMemberRoles accepts an unrecognised role name without checking any c
 });
 
 test('UpdateMemberRoles clears the member app roles when appRoles is an empty array', async () => {
-  const adapter = { update: jest.fn().mockResolvedValue({ id: 'member-1', appRoles: [] }) };
+  const adapter = { update: vi.fn().mockResolvedValue({ id: 'member-1', appRoles: [] }) };
   const { auth } = createMockAuth({ adapter });
   const result = await UpdateMemberRoles({
     auth,
@@ -70,9 +70,9 @@ test('UpdateMemberRoles clears the member app roles when appRoles is an empty ar
 
 test('UpdateMemberRoles does not read the member row or write the user row', async () => {
   const adapter = {
-    findOne: jest.fn(),
-    findMany: jest.fn(),
-    update: jest.fn().mockResolvedValue({ id: 'member-1' }),
+    findOne: vi.fn(),
+    findMany: vi.fn(),
+    update: vi.fn().mockResolvedValue({ id: 'member-1' }),
   };
   const { auth } = createMockAuth({ adapter });
   await UpdateMemberRoles({
@@ -86,7 +86,7 @@ test('UpdateMemberRoles does not read the member row or write the user row', asy
 });
 
 test('UpdateMemberRoles throws when no member matches the memberId within the resolved organization', async () => {
-  const adapter = { update: jest.fn().mockResolvedValue(null) };
+  const adapter = { update: vi.fn().mockResolvedValue(null) };
   const { auth } = createMockAuth({ adapter });
   await expect(
     UpdateMemberRoles({

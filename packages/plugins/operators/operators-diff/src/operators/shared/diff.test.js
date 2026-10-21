@@ -15,6 +15,7 @@
 */
 
 import diff from './diff.js';
+import { expect, test } from 'vitest';
 
 const location = 'locationId';
 
@@ -93,7 +94,7 @@ test('_diff.deep number', () => {
   expect(() =>
     diff({ params: -1000, location, methodName: 'deep' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_diff.deep accepts one of the following types: object, array."`
+    `[Error: _diff.deep accepts one of the following types: object, array.]`
   );
 });
 
@@ -101,7 +102,7 @@ test('_diff.deep null', () => {
   expect(() =>
     diff({ params: null, location, methodName: 'deep' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_diff.deep accepts one of the following types: object, array."`
+    `[Error: _diff.deep accepts one of the following types: object, array.]`
   );
 });
 
@@ -109,7 +110,7 @@ test('_diff.deep invalid string', () => {
   expect(() =>
     diff({ params: 'abc', location, methodName: 'deep' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_diff.deep accepts one of the following types: object, array."`
+    `[Error: _diff.deep accepts one of the following types: object, array.]`
   );
 });
 
@@ -117,30 +118,30 @@ test('_diff.x not supported', () => {
   expect(() =>
     diff({ params: -1000, location, methodName: 'x' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_diff.x is not supported, use one of the following: deep."`
+    `[Error: _diff.x is not supported, use one of the following: deep.]`
   );
 });
 
 test('_diff number', () => {
   expect(() => diff({ params: -1000, location })).toThrowErrorMatchingInlineSnapshot(
-    `"_diff requires a valid method name, use one of the following: deep."`
+    `[Error: _diff requires a valid method name, use one of the following: deep.]`
   );
 });
 
 test('_diff null', () => {
   expect(() => diff({ params: null, location })).toThrowErrorMatchingInlineSnapshot(
-    `"_diff requires a valid method name, use one of the following: deep."`
+    `[Error: _diff requires a valid method name, use one of the following: deep.]`
   );
 });
 
 test('_diff invalid operator type', () => {
   expect(() => diff({ params: {}, location })).toThrowErrorMatchingInlineSnapshot(
-    `"_diff requires a valid method name, use one of the following: deep."`
+    `[Error: _diff requires a valid method name, use one of the following: deep.]`
   );
 });
 
 test('_diff invalid string', () => {
   expect(() => diff({ params: 'abc', location })).toThrowErrorMatchingInlineSnapshot(
-    `"_diff requires a valid method name, use one of the following: deep."`
+    `[Error: _diff requires a valid method name, use one of the following: deep.]`
   );
 });

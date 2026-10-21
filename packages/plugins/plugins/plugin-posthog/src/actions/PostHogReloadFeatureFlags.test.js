@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
 
-const mockUnsubscribe = jest.fn();
+const mockUnsubscribe = vi.fn();
 
 const mockPostHog = {
-  init: jest.fn(),
-  onFeatureFlags: jest.fn(),
-  reloadFeatureFlags: jest.fn(),
+  init: vi.fn(),
+  onFeatureFlags: vi.fn(),
+  reloadFeatureFlags: vi.fn(),
 };
 
-jest.unstable_mockModule('posthog-js', () => ({ default: mockPostHog }));
+vi.doMock('posthog-js', () => ({ default: mockPostHog }));
 
 let PostHogInit;
 let PostHogReloadFeatureFlags;
@@ -35,7 +35,7 @@ let flagsCallback;
 
 beforeEach(async () => {
   resetPostHogState();
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   flagsCallback = null;
   mockPostHog.onFeatureFlags.mockImplementation((callback) => {
     flagsCallback = callback;
@@ -45,7 +45,7 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 async function init(params = { apiKey: 'phc_key' }) {

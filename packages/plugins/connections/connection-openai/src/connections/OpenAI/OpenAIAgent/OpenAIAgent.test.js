@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockHandleAgentChat = jest.fn();
+const mockHandleAgentChat = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
+vi.doMock('@lowdefy/ai-utils', () => ({
   handleAgentChat: mockHandleAgentChat,
 }));
 
@@ -30,7 +30,7 @@ test('OpenAIAgent resolver delegates to handleAgentChat', async () => {
   const { default: OpenAIAgent } = await import('./OpenAIAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: { agent: { properties: {} }, messages: [] },
     context: {},
   };
@@ -54,7 +54,7 @@ test('OpenAIAgent resolver maps reasoningEffort to providerOptions', async () =>
     agent: { properties: { model: 'o3', reasoningEffort: 'high' } },
     messages: [],
   };
-  const args = { connection: { provider: jest.fn() }, properties, context: {} };
+  const args = { connection: { provider: vi.fn() }, properties, context: {} };
 
   await OpenAIAgent.resolver(args);
 
@@ -72,7 +72,7 @@ test('OpenAIAgent resolver maps reasoningSummary to providerOptions', async () =
     agent: { properties: { model: 'o3', reasoningSummary: 'detailed' } },
     messages: [],
   };
-  const args = { connection: { provider: jest.fn() }, properties, context: {} };
+  const args = { connection: { provider: vi.fn() }, properties, context: {} };
 
   await OpenAIAgent.resolver(args);
 
@@ -92,7 +92,7 @@ test('OpenAIAgent resolver maps both reasoning props to providerOptions', async 
     },
     messages: [],
   };
-  const args = { connection: { provider: jest.fn() }, properties, context: {} };
+  const args = { connection: { provider: vi.fn() }, properties, context: {} };
 
   await OpenAIAgent.resolver(args);
 
@@ -116,7 +116,7 @@ test('OpenAIAgent resolver merges with existing providerOptions', async () => {
     },
     messages: [],
   };
-  const args = { connection: { provider: jest.fn() }, properties, context: {} };
+  const args = { connection: { provider: vi.fn() }, properties, context: {} };
 
   await OpenAIAgent.resolver(args);
 
@@ -134,7 +134,7 @@ test('OpenAIAgent resolver does not set providerOptions when no sugar props', as
     agent: { properties: { model: 'gpt-4o' } },
     messages: [],
   };
-  const args = { connection: { provider: jest.fn() }, properties, context: {} };
+  const args = { connection: { provider: vi.fn() }, properties, context: {} };
 
   await OpenAIAgent.resolver(args);
 

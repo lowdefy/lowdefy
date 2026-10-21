@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockSend = jest.fn();
-const mockS3ClientConstructor = jest.fn();
-const mockGetObjectCommand = jest.fn();
+const mockSend = vi.fn();
+const mockS3ClientConstructor = vi.fn();
+const mockGetObjectCommand = vi.fn();
 
-jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
-  S3Client: jest.fn().mockImplementation((...args) => {
+vi.doMock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn().mockImplementation(function (...args) {
     mockS3ClientConstructor(...args);
     return { send: (...sendArgs) => mockSend(...sendArgs) };
   }),
-  GetObjectCommand: jest.fn().mockImplementation((params) => {
+  GetObjectCommand: vi.fn().mockImplementation(function (params) {
     mockGetObjectCommand(params);
     return params;
   }),
@@ -41,13 +41,15 @@ beforeEach(() => {
   mockSend.mockReset();
   mockS3ClientConstructor.mockReset();
   mockGetObjectCommand.mockReset();
-  mockSend.mockImplementation(() => ({
-    Body: {
-      transformToByteArray: async () => new Uint8Array(Buffer.from('file content')),
-    },
-    ContentType: 'text/plain',
-    ContentLength: 12,
-  }));
+  mockSend.mockImplementation(function () {
+    return {
+      Body: {
+        transformToByteArray: async () => new Uint8Array(Buffer.from('file content')),
+      },
+      ContentType: 'text/plain',
+      ContentLength: 12,
+    };
+  });
 });
 
 test('AwsS3GetObject reads the object and returns base64 content', async () => {
@@ -86,11 +88,13 @@ test('AwsS3GetObject passes versionId when provided', async () => {
 });
 
 test('AwsS3GetObject omits contentType when the response has none and sizes from content', async () => {
-  mockSend.mockImplementation(() => ({
-    Body: {
-      transformToByteArray: async () => new Uint8Array(Buffer.from('x')),
-    },
-  }));
+  mockSend.mockImplementation(function () {
+    return {
+      Body: {
+        transformToByteArray: async () => new Uint8Array(Buffer.from('x')),
+      },
+    };
+  });
   const request = { key: 'key' };
   const connection = {
     accessKeyId: 'accessKeyId',
@@ -135,7 +139,7 @@ test('AwsS3GetObject passes endpoint and forcePathStyle to the S3 client', async
 });
 
 test('Error from s3 client', async () => {
-  mockSend.mockImplementation(() => {
+  mockSend.mockImplementation(function () {
     throw new Error('Test S3 client error.');
   });
   const request = { key: 'key' };

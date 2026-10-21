@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import AcceptInvitation from './AcceptInvitation.js';
 
-const mockAcceptInvitation = jest.fn();
+const mockAcceptInvitation = vi.fn();
 const methods = { acceptInvitation: mockAcceptInvitation };
 
 test('AcceptInvitation passes params to the acceptInvitation method', async () => {

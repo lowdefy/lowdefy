@@ -15,6 +15,7 @@
 */
 
 import sum from './sum.js';
+import { expect, test } from 'vitest';
 
 test('_sum number parameters', () => {
   expect(sum({ params: [1, 1], location: 'locationId' })).toBe(2);

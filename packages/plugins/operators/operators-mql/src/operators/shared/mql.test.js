@@ -15,6 +15,7 @@
 */
 
 import mql from './mql.js';
+import { expect, test } from 'vitest';
 
 test('_mql.aggregate on: null', () => {
   expect(
@@ -195,7 +196,7 @@ test('_mql.aggregate on is string', () => {
       location: 'locationId',
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Data must be of type array."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Data must be of type array.]`);
 });
 
 test('_mql.aggregate invalid', () => {
@@ -221,7 +222,7 @@ test('_mql.aggregate invalid', () => {
       location: 'locationId',
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"unregistered pipeline operator $badOp."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: unregistered pipeline operator $badOp.]`);
 });
 
 test('_mql.aggregate on is object', () => {
@@ -242,7 +243,7 @@ test('_mql.aggregate on is object', () => {
       location: 'locationId',
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Data must be of type array."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Data must be of type array.]`);
 });
 
 test('_mql.aggregate pipeline not an array', () => {
@@ -262,7 +263,7 @@ test('_mql.aggregate pipeline not an array', () => {
       location: 'locationId',
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Pipeline must be of type array."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Pipeline must be of type array.]`);
 });
 
 test('_mql.aggregate params not object or array', () => {
@@ -273,7 +274,7 @@ test('_mql.aggregate params not object or array', () => {
       methodName: 'aggregate',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_mql.aggregate accepts one of the following types: array, object."`
+    `[Error: _mql.aggregate accepts one of the following types: array, object.]`
   );
 });
 
@@ -355,7 +356,7 @@ test('_mql.expr invalid', () => {
       methodName: 'expr',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"$cond expects array(3) or object with 'if-then-else' expressions"`
+    `[Error: $cond expects array(3) or object with 'if-then-else' expressions]`
   );
 });
 
@@ -369,7 +370,7 @@ test('_mql.expr invalid on', () => {
       location: 'locationId',
       methodName: 'expr',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Data must be of type object."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Data must be of type object.]`);
 });
 
 test('_mql.expr logic', () => {
@@ -542,7 +543,7 @@ test('_mql.test invalid expr', () => {
       location: 'locationId',
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Query test must be of type object."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Query test must be of type object.]`);
 });
 
 test('_mql.test invalid params', () => {
@@ -553,7 +554,7 @@ test('_mql.test invalid params', () => {
       methodName: 'test',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_mql.test accepts one of the following types: array, object."`
+    `[Error: _mql.test accepts one of the following types: array, object.]`
   );
 });
 
@@ -567,7 +568,7 @@ test('_mql.test null', () => {
       location: 'locationId',
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Query test must be of type object."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Query test must be of type object.]`);
 });
 
 test('_mql.test invalid test', () => {
@@ -580,7 +581,7 @@ test('_mql.test invalid test', () => {
       location: 'locationId',
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"unknown query operator $badOp"`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: unknown query operator $badOp]`);
 });
 
 test('_mql.test invalid on', () => {
@@ -593,7 +594,7 @@ test('_mql.test invalid on', () => {
       location: 'locationId',
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Data must be of type object."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Data must be of type object.]`);
 });
 
 test('_mql invalid method name', () => {
@@ -607,7 +608,7 @@ test('_mql invalid method name', () => {
       methodName: 'invalid',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_mql.invalid is not supported, use one of the following: aggregate, expr, test."`
+    `[Error: _mql.invalid is not supported, use one of the following: aggregate, expr, test.]`
   );
 });
 
@@ -621,6 +622,6 @@ test('_mql undefined method name', () => {
       location: 'locationId',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_mql requires a valid method name, use one of the following: aggregate, expr, test."`
+    `[Error: _mql requires a valid method name, use one of the following: aggregate, expr, test.]`
   );
 });

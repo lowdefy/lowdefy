@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import SignUp from './SignUp.js';
 
-const mockSignUp = jest.fn();
+const mockSignUp = vi.fn();
 const methods = { signUp: mockSignUp };
 
 test('SignUp action invocation', () => {

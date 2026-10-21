@@ -17,6 +17,7 @@
 import { ConfigError, ServiceError } from '@lowdefy/errors';
 
 import mapTregError from './mapTregError.js';
+import { describe, expect, test } from 'vitest';
 
 const TOKEN = 'tok_live_5ecret_value';
 const connection = { token: TOKEN };

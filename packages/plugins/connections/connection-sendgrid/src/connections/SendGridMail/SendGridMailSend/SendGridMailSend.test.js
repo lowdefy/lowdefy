@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockSend = jest.fn();
+const mockSend = vi.fn();
 
-jest.unstable_mockModule('@sendgrid/mail', () => {
+vi.doMock('@sendgrid/mail', () => {
   return {
     default: {
-      setApiKey: jest.fn(),
+      setApiKey: vi.fn(),
       send: (msg) => {
         if (msg.to === 'response_error') {
           const error = new Error('Test error.');
@@ -42,8 +42,8 @@ jest.unstable_mockModule('@sendgrid/mail', () => {
 });
 
 afterEach(() => {
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
+  vi.resetAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('send with valid request and connection', async () => {

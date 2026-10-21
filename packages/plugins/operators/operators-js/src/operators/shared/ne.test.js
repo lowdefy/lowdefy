@@ -15,6 +15,7 @@
 */
 
 import ne from './ne.js';
+import { expect, test } from 'vitest';
 
 const location = 'locationId';
 

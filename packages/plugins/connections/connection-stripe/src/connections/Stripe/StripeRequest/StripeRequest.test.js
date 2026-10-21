@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
 const connection = {
   secretKey: 'foo',
 };
 
-jest.unstable_mockModule('stripe', () => {
+vi.doMock('stripe', () => {
   return {
     default: function () {
       return {

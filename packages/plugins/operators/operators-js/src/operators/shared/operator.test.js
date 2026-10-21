@@ -22,6 +22,7 @@ import _not from './not.js';
 import _payload from '../server/payload.js';
 import _operator from './operator.js';
 import _state from '../shared/state.js';
+import { expect, test } from 'vitest';
 
 const operators = {
   _args,

@@ -19,6 +19,7 @@ import { ObjectId } from 'mongodb';
 import compileCondition from './compileCondition.js';
 import normalizeFields from './normalizeFields.js';
 import validateView from './validateView.js';
+import { describe, expect, test } from 'vitest';
 
 const fieldsByKey = normalizeFields({
   fields: {

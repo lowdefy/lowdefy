@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import Knex from './Knex.js';
+import { expect, test } from 'vitest';
 
 const schema = Knex.schema;
 

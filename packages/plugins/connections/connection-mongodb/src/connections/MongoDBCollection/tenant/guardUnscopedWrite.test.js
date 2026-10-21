@@ -19,6 +19,7 @@ import {
   assertUnscopedDoc,
   assertUnscopedUpdate,
 } from './guardUnscopedWrite.js';
+import { describe, expect, test } from 'vitest';
 
 const field = 'organization_id';
 const refusal = 'must leave "organization_id" a non-empty organization id on every row it writes';

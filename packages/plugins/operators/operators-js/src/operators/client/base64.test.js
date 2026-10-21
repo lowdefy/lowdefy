@@ -15,6 +15,7 @@
 */
 
 import base64 from './base64.js';
+import { expect, test } from 'vitest';
 
 console.error = () => {};
 
@@ -28,7 +29,7 @@ test('_base64.decode a number', () => {
   expect(() =>
     base64({ params: 10, location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -36,7 +37,7 @@ test('_base64.decode a boolean', () => {
   expect(() =>
     base64({ params: true, location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -44,7 +45,7 @@ test('_base64.decode a object', () => {
   expect(() =>
     base64({ params: { a: 1 }, location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -52,7 +53,7 @@ test('_base64.decode a array', () => {
   expect(() =>
     base64({ params: ['a', 'b'], location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -60,7 +61,7 @@ test('_base64.decode undefined', () => {
   expect(() =>
     base64({ location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -68,7 +69,7 @@ test('_base64.decode null', () => {
   expect(() =>
     base64({ params: null, location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -82,7 +83,7 @@ test('_base64.encode a number', () => {
   expect(() =>
     base64({ params: 10, location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -90,7 +91,7 @@ test('_base64.encode a boolean', () => {
   expect(() =>
     base64({ params: true, location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -98,7 +99,7 @@ test('_base64.encode a object', () => {
   expect(() =>
     base64({ params: { a: 1 }, location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -106,7 +107,7 @@ test('_base64.encode a array', () => {
   expect(() =>
     base64({ params: ['a', 'b'], location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -114,7 +115,7 @@ test('_base64.encode undefined', () => {
   expect(() =>
     base64({ location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -122,6 +123,6 @@ test('_base64.encode null', () => {
   expect(() =>
     base64({ params: null, location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });

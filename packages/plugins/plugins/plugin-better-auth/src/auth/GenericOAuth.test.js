@@ -15,6 +15,7 @@
 */
 
 import GenericOAuth from './GenericOAuth.js';
+import { expect, test } from 'vitest';
 
 test('GenericOAuth passes properties through with the Lowdefy id as providerId', () => {
   expect(GenericOAuth({ id: 'idp', properties: { clientId: 'cid', providerId: 'other' } })).toEqual(

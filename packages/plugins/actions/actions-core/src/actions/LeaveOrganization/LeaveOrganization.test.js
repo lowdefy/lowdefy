@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import LeaveOrganization from './LeaveOrganization.js';
 
-const mockLeaveOrganization = jest.fn();
+const mockLeaveOrganization = vi.fn();
 const methods = { leaveOrganization: mockLeaveOrganization };
 
 test('LeaveOrganization calls the leaveOrganization method with no params', async () => {

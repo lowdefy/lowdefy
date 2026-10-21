@@ -15,13 +15,13 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import _log from './log.js';
 
 const location = 'location';
 
 const logger = console.log;
-const mockLogger = jest.fn();
+const mockLogger = vi.fn();
 beforeEach(() => {
   console.log = mockLogger;
   mockLogger.mockReset();

@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGenerateSignedPostPolicyV4 = jest.fn();
-const mockFile = jest.fn();
-const mockBucket = jest.fn();
-const mockStorageConstructor = jest.fn();
+const mockGenerateSignedPostPolicyV4 = vi.fn();
+const mockFile = vi.fn();
+const mockBucket = vi.fn();
+const mockStorageConstructor = vi.fn();
 
-jest.unstable_mockModule('@google-cloud/storage', () => ({
-  Storage: jest.fn().mockImplementation((...args) => {
+vi.doMock('@google-cloud/storage', () => ({
+  Storage: vi.fn().mockImplementation(function (...args) {
     mockStorageConstructor(...args);
     return { bucket: mockBucket };
   }),
@@ -39,16 +39,22 @@ beforeEach(() => {
   mockFile.mockReset();
   mockBucket.mockReset();
   mockStorageConstructor.mockReset();
-  mockBucket.mockImplementation(() => ({ file: mockFile }));
-  mockFile.mockImplementation(() => ({
-    generateSignedPostPolicyV4: mockGenerateSignedPostPolicyV4,
-  }));
-  mockGenerateSignedPostPolicyV4.mockImplementation(() => [
-    {
-      url: 'https://storage.googleapis.com/bucket/',
-      fields: { key: 'key', policy: 'policy' },
-    },
-  ]);
+  mockBucket.mockImplementation(function () {
+    return { file: mockFile };
+  });
+  mockFile.mockImplementation(function () {
+    return {
+      generateSignedPostPolicyV4: mockGenerateSignedPostPolicyV4,
+    };
+  });
+  mockGenerateSignedPostPolicyV4.mockImplementation(function () {
+    return [
+      {
+        url: 'https://storage.googleapis.com/bucket/',
+        fields: { key: 'key', policy: 'policy' },
+      },
+    ];
+  });
 });
 
 test('GcsSignedPostPolicy returns a POST descriptor with top-level key and bucket', async () => {
@@ -105,7 +111,7 @@ test('GcsSignedPostPolicy throws when fields is not an object', async () => {
 });
 
 test('Error from storage client', async () => {
-  mockGenerateSignedPostPolicyV4.mockImplementation(() => {
+  mockGenerateSignedPostPolicyV4.mockImplementation(function () {
     throw new Error('Test GCS client error.');
   });
   const request = { key: 'key' };

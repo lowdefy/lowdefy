@@ -19,6 +19,7 @@ import { validate } from '@lowdefy/ajv';
 
 import startMockTreg from '../../../test/startMockTreg.js';
 import TregCall from './TregCall.js';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 const TOKEN = 'tok_live_5ecret_value';
 const { schema } = TregCall;

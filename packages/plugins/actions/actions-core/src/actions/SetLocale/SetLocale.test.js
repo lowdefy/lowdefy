@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import SetLocale from './SetLocale.js';
 
-const mockSetLocale = jest.fn();
-const mockSetGlobal = jest.fn();
+const mockSetLocale = vi.fn();
+const mockSetGlobal = vi.fn();
 
 const globals = { window: { __lowdefy_setLocale: mockSetLocale } };
 const methods = { setGlobal: mockSetGlobal };

@@ -15,6 +15,7 @@
 */
 
 import stampTenantOnLogRecord from './stampTenantOnLogRecord.js';
+import { expect, test } from 'vitest';
 
 test('stampTenantOnLogRecord stamps the tenant field onto the record', () => {
   const record = { requestId: 'r1', type: 'MongoDBInsertOne' };

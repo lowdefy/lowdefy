@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import { afterAll } from 'vitest';
+
 import { closeClients } from '../src/connections/MongoDBCollection/getClient.js';
 
 // Cached clients are kept open for the process lifetime, so close them after each
-// test file to let Jest workers exit cleanly.
+// test file to let the test workers exit cleanly.
 afterAll(async () => {
   await closeClients();
 });

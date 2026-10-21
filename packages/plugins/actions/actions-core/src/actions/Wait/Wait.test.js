@@ -16,6 +16,7 @@
 
 import { wait } from '@lowdefy/helpers';
 import Wait from './Wait.js';
+import { expect, test } from 'vitest';
 
 test('wait set ms before continuing', async () => {
   let flag = false;

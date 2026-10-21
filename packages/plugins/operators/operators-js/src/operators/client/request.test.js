@@ -16,6 +16,7 @@
 
 import { WebParser } from '@lowdefy/operators';
 import _request from './request.js';
+import { expect, test } from 'vitest';
 
 const operators = {
   _request,

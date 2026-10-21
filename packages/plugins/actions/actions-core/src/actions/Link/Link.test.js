@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import Link from './Link.js';
 
-const mockLink = jest.fn();
+const mockLink = vi.fn();
 const methods = { link: mockLink };
 
 console.log = () => {};

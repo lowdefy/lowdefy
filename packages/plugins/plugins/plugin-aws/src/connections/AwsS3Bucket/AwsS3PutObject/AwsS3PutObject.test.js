@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockSend = jest.fn();
-const mockS3ClientConstructor = jest.fn();
-const mockPutObjectCommand = jest.fn();
+const mockSend = vi.fn();
+const mockS3ClientConstructor = vi.fn();
+const mockPutObjectCommand = vi.fn();
 
-jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
-  S3Client: jest.fn().mockImplementation((...args) => {
+vi.doMock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn().mockImplementation(function (...args) {
     mockS3ClientConstructor(...args);
     return { send: (...sendArgs) => mockSend(...sendArgs) };
   }),
-  PutObjectCommand: jest.fn().mockImplementation((params) => {
+  PutObjectCommand: vi.fn().mockImplementation(function (params) {
     mockPutObjectCommand(params);
     return params;
   }),
@@ -120,7 +120,7 @@ test('AwsS3PutObject passes endpoint and forcePathStyle to the S3 client', async
 });
 
 test('Error from s3 client', async () => {
-  mockSend.mockImplementation(() => {
+  mockSend.mockImplementation(function () {
     throw new Error('Test S3 client error.');
   });
   const request = { key: 'key', content: 'content' };
