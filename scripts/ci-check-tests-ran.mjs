@@ -15,11 +15,11 @@
 */
 
 /*
-  Fails when a jest run (its `--json --outputFile` result) passed no test. Suites that skip
-  every test when their environment is missing (the journey fixture suites with no
-  Chromium) would otherwise pass in CI having proved nothing.
+  Fails when a vitest run (its json reporter result, `--reporter=json --outputFile.json`) passed
+  no test. Suites that skip every test when their environment is missing (the journey fixture
+  suites with no Chromium) would otherwise pass in CI having proved nothing.
 
-  Usage: node scripts/ci-check-jest-ran.mjs <jest json result file>
+  Usage: node scripts/ci-check-tests-ran.mjs <vitest json result file>
 */
 
 import fs from 'node:fs';
