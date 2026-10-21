@@ -61,3 +61,22 @@ test('parseColumnFilter hands several conditions, groups and other operators to 
   expect(parseColumnFilter({ kind: 'number', conditions: [leaf, leaf] })).toBe(null);
   expect(parseColumnFilter({ kind: 'text', conditions: [{ or: [leaf] }] })).toBe(null);
 });
+
+test('parseColumnFilter and buildColumnFilter round-trip a relative before and after', () => {
+  for (const leaf of [
+    { key: 'd', op: 'before', value: { last: 3, unit: 'month' } },
+    { key: 'd', op: 'after', value: { next: 2, unit: 'week' } },
+    { key: 'd', op: 'within', value: { last: 7, unit: 'day' } },
+  ]) {
+    const state = parseColumnFilter({ kind: 'date', conditions: [leaf] });
+    expect(state).toEqual({ mode: 'relative', op: leaf.op, relative: leaf.value });
+    expect(buildColumnFilter({ kind: 'date', key: 'd', state })).toEqual(leaf);
+  }
+  // A fixed before or after needs the filter builder, as it did.
+  expect(
+    parseColumnFilter({
+      kind: 'date',
+      conditions: [{ key: 'd', op: 'before', value: '2026-01-01' }],
+    })
+  ).toBe(null);
+});

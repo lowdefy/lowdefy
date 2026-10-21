@@ -92,7 +92,7 @@ export default {
     view: {
       type: ['object', 'null'],
       description:
-        'The Table view ({ sort, filter, search, group, aggregates }), usually { _payload: view }. Validated against "fields".',
+        'The Table view ({ sort, filter, search, group, aggregates }), usually { _payload: view }. Validated against "fields". On date fields, "within" takes a relative date { last | next: n, unit: day | week | month | year }, and "before" and "after" take a date or a relative date such as { last: 3, unit: month } (before the day 3 months ago), resolved when the query runs.',
       errorMessage: {
         type: 'MongoDBTableQuery request property "view" should be an object.',
       },
@@ -160,7 +160,7 @@ export default {
     timezone: {
       type: 'string',
       description:
-        'The IANA time zone (for example "Europe/London") whose days date filters compare: eq, ne, before, after and between on date fields, and within. Defaults to UTC. Pass the user\'s time zone to match the days the Table shows.',
+        'The IANA time zone (for example "Europe/London") whose days date filters compare: eq, ne, before, after and between on date fields, within, and relative before and after on any date field. Defaults to UTC. Pass the user\'s time zone to match the days the Table shows.',
       errorMessage: {
         type: 'MongoDBTableQuery request property "timezone" should be a string.',
       },
