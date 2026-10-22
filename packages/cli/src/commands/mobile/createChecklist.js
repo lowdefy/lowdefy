@@ -51,6 +51,10 @@ function storeRecords({ shell }) {
         shell.ios?.bundleId,
         'ios.bundleId'
       )}, in team ${valueOrMissing(shell.ios?.teamId, 'ios.teamId')}.`,
+      `App Store Connect: copy the new app's Apple ID (App Information) into ios.ascAppId, so a non-interactive submit finds the app. Now ${valueOrMissing(
+        shell.ios?.ascAppId,
+        'ios.ascAppId'
+      )}.`,
       `Play Console: a new app with package ${valueOrMissing(
         shell.android?.package,
         'android.package'

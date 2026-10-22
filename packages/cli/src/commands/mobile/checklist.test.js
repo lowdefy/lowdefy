@@ -43,7 +43,7 @@ function createShell(overrides = {}) {
     profile: 'field',
     distribution: 'private',
     eas: { owner: 'example', projectId: 'p1' },
-    ios: { bundleId: 'com.example.field', teamId: 'ABCDE12345' },
+    ios: { bundleId: 'com.example.field', teamId: 'ABCDE12345', ascAppId: '6825509768' },
     android: { package: 'com.example.field' },
     ...overrides,
   };
@@ -96,7 +96,7 @@ test('a store shell is reviewed and promoted but not made private', () => {
 test("the steps carry the shell's own values", () => {
   const steps = createChecklist({ shell: createShell(), profile: FIELD, env: 'staging' });
   const text = JSON.stringify(steps);
-  ['com.example.field', 'ABCDE12345', 'example', 'p1'].forEach((value) => {
+  ['com.example.field', 'ABCDE12345', '6825509768', 'example', 'p1'].forEach((value) => {
     expect(text).toContain(value);
   });
   expect(getStep(steps, 'first-build').details[0]).toContain(
@@ -111,6 +111,7 @@ test('a value the shell does not set is named as missing', () => {
     env: 'production',
   });
   expect(getStep(steps, 'store-records').details[0]).toContain('<ios.bundleId not set>');
+  expect(getStep(steps, 'store-records').details[1]).toContain('<ios.ascAppId not set>');
 });
 
 test('the signing key step is done once android.sha256 is set', () => {

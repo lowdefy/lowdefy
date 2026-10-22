@@ -3045,6 +3045,16 @@ export default {
                 type: 'Mobile shell "ios.teamId" should be a string.',
               },
             },
+            ascAppId: {
+              type: 'string',
+              pattern: '^[0-9]+$',
+              description:
+                "The app's App Store Connect id (App Information, Apple ID), which a non-interactive submit uploads to.",
+              errorMessage: {
+                type: 'Mobile shell "ios.ascAppId" should be a string.',
+                pattern: 'Mobile shell "ios.ascAppId" should be digits only, like "6825509768".',
+              },
+            },
           },
           errorMessage: {
             type: 'Mobile shell "ios" should be an object.',

@@ -29,12 +29,17 @@ import installShellProject from './installShellProject.js';
 import loadMobileShell from './loadMobileShell.js';
 import readShellPackageJson from './readShellPackageJson.js';
 import readShellPluginPackages from './readShellPluginPackages.js';
+import readShellPnpmVersion from './readShellPnpmVersion.js';
 import writeShellAppTypes from './writeShellAppTypes.js';
 import writeShellTypeManifest from './writeShellTypeManifest.js';
 import writeShellWorkspace from './writeShellWorkspace.js';
 
-function getEnvironmentNames(config) {
-  return Object.keys(config.environments ?? {}).filter((name) => !name.startsWith('~'));
+// A shell opens its environment's url, so an environment without one, like a
+// developer's local one, gets no build or submit profile.
+function getShellEnvironmentNames(config) {
+  return Object.keys(config.environments ?? {}).filter(
+    (name) => !name.startsWith('~') && type.isString(config.environments[name].url)
+  );
 }
 
 async function writeJson({ filePath, value }) {
@@ -87,10 +92,6 @@ async function config({ context }) {
     url,
   });
   await writeJson({ filePath: path.join(projectDirectory, 'shell.json'), value: shellJson });
-  await writeJson({
-    filePath: path.join(projectDirectory, 'eas.json'),
-    value: createEasJson({ environments: getEnvironmentNames(appConfig) }),
-  });
   if (type.isString(shell.icon)) {
     await fs.promises.copyFile(shell.icon, path.join(projectDirectory, 'icon.png'));
   }
@@ -102,6 +103,15 @@ async function config({ context }) {
     await writeShellAppTypes({ packages, projectDirectory });
   }
   await installShellProject({ context, directory: projectDirectory, dryRun });
+  // After the install, which records the pnpm version eas.json pins.
+  await writeJson({
+    filePath: path.join(projectDirectory, 'eas.json'),
+    value: createEasJson({
+      ascAppId: shell.ios?.ascAppId,
+      environments: getShellEnvironmentNames(appConfig),
+      pnpmVersion: readShellPnpmVersion({ projectDirectory }),
+    }),
+  });
   if (!dryRun) {
     await checkInstalledShellPlugins({ context, projectDirectory, shellJson, shellPackage });
     await writeShellTypeManifest({ context, projectDirectory, shell: shellJson });
