@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import buildOrganizationPlugin from './buildOrganizationPlugin.js';
 
 const authConfig = {
@@ -97,6 +99,29 @@ test('buildOrganizationPlugin does not mention $lowdefy-system anywhere in the b
     });
   }
   walk(plugin);
+});
+
+test('buildOrganizationPlugin binds the afterCreateOrganization hook that grants creatorAppRoles', async () => {
+  const update = jest.fn(async () => ({}));
+  const auth = { $context: Promise.resolve({ adapter: { update } }) };
+  const plugin = buildOrganizationPlugin({
+    authConfig: {
+      ...authConfig,
+      organizations: { ...authConfig.organizations, creatorAppRoles: ['auditor'] },
+    },
+    getAuth: () => auth,
+    sendInvitationEmail: async () => {},
+  });
+  await plugin.options.organizationHooks.afterCreateOrganization({
+    organization: { id: 'org_1' },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+  });
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { appRoles: ['auditor'] },
+  });
 });
 
 test('buildOrganizationPlugin blocks client-driven organization creation', () => {

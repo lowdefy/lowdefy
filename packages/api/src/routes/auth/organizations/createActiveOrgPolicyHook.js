@@ -42,7 +42,8 @@ const mintPendingMs = 10 * 60 * 1000;
 // they hold several; a user with a pending invitation gets a session but no
 // org (they proceed to accept); a fresh signup under create: auto mints its
 // own organization lazily, as owner, through the org plugin's adapter layer
-// (the endpoint cannot serve the mint - see applyTenantPolicy).
+// (the endpoint cannot serve the mint - see applyTenantPolicy), holding the
+// app roles auth.organizations.creatorAppRoles lists.
 function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   async function applyPinnedPolicy({ auth, adapter, internalAdapter, session, ctx }) {
     const organization = await ensureOrganization({ auth, logger, slug: organizations.org });
@@ -156,7 +157,13 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
     try {
       await adapter.create({
         model: 'member',
-        data: { userId, organizationId, role: 'owner', createdAt: new Date() },
+        data: {
+          userId,
+          organizationId,
+          role: 'owner',
+          appRoles: organizations.creatorAppRoles,
+          createdAt: new Date(),
+        },
       });
     } catch (error) {
       const winner = await findMember({ adapter, userId, organizationId });

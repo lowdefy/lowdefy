@@ -74,7 +74,7 @@ function createMockAuth({
 }
 
 const pinned = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
-const tenant = { policy: 'tenant', signup: 'open', create: 'auto' };
+const tenant = { policy: 'tenant', signup: 'open', create: 'auto', creatorAppRoles: [] };
 
 test('pinned: a member of the pinned org gets it as the active organization', async () => {
   const { auth } = createMockAuth({ member: { id: 'member_1', role: 'admin' } });
@@ -264,6 +264,25 @@ test('tenant: a fresh signup mints its own organization as owner and clears the 
   expect(result).toEqual({
     data: { userId: 'user_1', activeOrganizationId: db.organization[0].id },
   });
+});
+
+test('tenant: a fresh signup owner row holds the creatorAppRoles app roles', async () => {
+  const { auth, db } = createMemoryAuth();
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    logger: { error: jest.fn(), warn: jest.fn() },
+    organizations: { ...tenant, creatorAppRoles: ['owner', 'billing'] },
+  });
+  await hook({ userId: 'user_1' });
+  expect(db.member).toEqual([
+    expect.objectContaining({ userId: 'user_1', role: 'owner', appRoles: ['owner', 'billing'] }),
+  ]);
+});
+
+test('tenant: a fresh signup owner row holds no app roles when creatorAppRoles is empty', async () => {
+  const { auth, db } = createMemoryAuth();
+  await mintHook(auth)({ userId: 'user_1' });
+  expect(db.member).toEqual([expect.objectContaining({ role: 'owner', appRoles: [] })]);
 });
 
 test('tenant: a retried mint joins the marked organization a failed member write left behind', async () => {

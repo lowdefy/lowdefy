@@ -40,7 +40,7 @@ const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/ad
 const { default: buildOrganizationPlugin } = await import('./buildOrganizationPlugin.js');
 const { default: createActiveOrgPolicyHook } = await import('./createActiveOrgPolicyHook.js');
 
-const tenant = { policy: 'tenant', signup: 'open', create: 'auto' };
+const tenant = { policy: 'tenant', signup: 'open', create: 'auto', creatorAppRoles: [] };
 
 let client;
 let run = 0;
@@ -54,7 +54,8 @@ afterAll(async () => {
   await Promise.all([client, ...clients].map((each) => each.close()));
 });
 
-async function setup() {
+async function setup({ creatorAppRoles = [] } = {}) {
+  const organizations = { ...tenant, creatorAppRoles };
   run += 1;
   const database = `tenantMint${run}`;
   let auth;
@@ -64,13 +65,13 @@ async function setup() {
     database: MongoDBAuthAdapter({ properties: { uri: process.env.MONGO_URL, database } }),
     logger: { disabled: true },
     advanced: { database: { generateId: () => randomUUID() } },
-    plugins: [buildOrganizationPlugin({ getAuth: () => auth })],
+    plugins: [buildOrganizationPlugin({ authConfig: { organizations }, getAuth: () => auth })],
   });
   const context = await auth.$context;
   const hook = createActiveOrgPolicyHook({
     getAuth: () => auth,
     logger: { error: jest.fn(), warn: jest.fn() },
-    organizations: tenant,
+    organizations,
   });
   async function createUser(name) {
     return context.internalAdapter.createUser({
@@ -79,7 +80,7 @@ async function setup() {
       emailVerified: true,
     });
   }
-  return { adapter: context.adapter, createUser, db: client.db(database), hook };
+  return { adapter: context.adapter, auth, createUser, db: client.db(database), hook };
 }
 
 // Pause the next adapter.create matching `match`, after (or before) it
@@ -254,4 +255,27 @@ test('a marker left by a mint that wrote its owner row is cleared, and the organ
   expect(members).toEqual([
     expect.objectContaining({ organization_id: result.data.activeOrganizationId, role: 'owner' }),
   ]);
+});
+
+test('a signup mint writes the creatorAppRoles app roles on the owner row', async () => {
+  const { createUser, db, hook } = await setup({ creatorAppRoles: ['owner'] });
+  const user = await createUser('creator');
+  await hook({ userId: user.id });
+  const { members } = await stateOf({ db, userId: user.id });
+  expect(members).toEqual([expect.objectContaining({ role: 'owner', app_roles: ['owner'] })]);
+});
+
+test('the createOrganization endpoint gives its creator the creatorAppRoles app roles', async () => {
+  const { auth, createUser, db } = await setup({ creatorAppRoles: ['owner'] });
+  const user = await createUser('operator-made');
+  // The CreateOrganization step's system action: no session, no headers, an
+  // explicit creator.
+  const result = await auth.api.createOrganization({
+    body: { name: 'Operator Made', slug: `operator-made-${run}`, userId: user.id },
+  });
+  expect(result.members).toEqual([
+    expect.objectContaining({ userId: user.id, role: 'owner', appRoles: ['owner'] }),
+  ]);
+  const members = await db.collection('user-members').find({ user_id: user.id }).toArray();
+  expect(members).toEqual([expect.objectContaining({ role: 'owner', app_roles: ['owner'] })]);
 });
