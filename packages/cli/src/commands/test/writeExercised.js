@@ -17,6 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 import getExercisedPath from './getExercisedPath.js';
 import hashJourney from './hashJourney.js';
@@ -43,7 +44,7 @@ function writeExercised({ directories, results, buildId, configHash }) {
   const filePath = getExercisedPath({ directories });
   const journeys = readFile(filePath).journeys ?? {};
   measured.forEach((result) => {
-    const file = path.relative(directories.config, result.filePath);
+    const file = relativePosixPath({ from: directories.config, to: result.filePath });
     journeys[`${file}#${result.name}`] = {
       hash: hashJourney(result.journey),
       configHash: configHash ?? null,

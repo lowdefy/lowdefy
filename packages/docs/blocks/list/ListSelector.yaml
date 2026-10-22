@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: ListSelector
     pageTitle: ListSelector
-    section: List Blocks
     filePath: blocks/list/ListSelector.yaml
     block_type: ListSelector
     antd_component: Card

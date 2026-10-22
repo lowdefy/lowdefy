@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Selector
     pageTitle: Selector
-    section: Input Blocks
     filePath: blocks/input/Selector.yaml
     block_type: Selector
     antd_component: Select

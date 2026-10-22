@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: GoogleMapsHeatmap
     pageTitle: GoogleMapsHeatmap
-    section: Container Blocks
     filePath: blocks/container/GoogleMapsHeatmap.yaml
     block_type: GoogleMapsHeatmap
     github_path: packages/plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsHeatmap

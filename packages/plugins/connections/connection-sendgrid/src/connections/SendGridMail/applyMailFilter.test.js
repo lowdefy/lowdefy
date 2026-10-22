@@ -284,3 +284,56 @@ test('applyMailFilter drops .invalid recipients before the allowlist runs', () =
     })
   ).toEqual({ to: ['a@real.com'], cc: undefined, bcc: undefined });
 });
+
+// Each input took quadratic time with the regex the code used before: seconds at this length,
+// against a few milliseconds now. Jest cannot time out synchronous code, so the time is checked.
+const LONG = 200000;
+
+function timed(fn) {
+  const start = performance.now();
+  const result = fn();
+  return { result, ms: performance.now() - start };
+}
+
+test('applyMailFilter keeps a long recipient with no "@" without stalling', () => {
+  const to = '!'.repeat(LONG);
+  const { result, ms } = timed(() => applyMailFilter({ filter: null, mail: { to } }));
+  expect(result).toEqual({ to, cc: undefined, bcc: undefined });
+  expect(ms).toBeLessThan(1000);
+});
+
+test('applyMailFilter keeps an address on a domain of many dots without stalling', () => {
+  const to = `a@${'.'.repeat(LONG)}x`;
+  const { result, ms } = timed(() => applyMailFilter({ filter: null, mail: { to } }));
+  expect(result).toEqual({ to, cc: undefined, bcc: undefined });
+  expect(ms).toBeLessThan(1000);
+});
+
+test('applyMailFilter allowlist reads a long run of "<" without stalling', () => {
+  const to = `${'<'.repeat(LONG)}a@allowed.com`;
+  const { result, ms } = timed(() =>
+    applyMailFilter({ filter: { allowlist: ['allowed.com'] }, mail: { to } })
+  );
+  expect(result).toEqual({ to, cc: undefined, bcc: undefined });
+  expect(ms).toBeLessThan(1000);
+});
+
+test('applyMailFilter allowlist reads the innermost "<address>" of nested angle brackets', () => {
+  const result = applyMailFilter({
+    filter: { allowlist: ['allowed.com'] },
+    mail: { to: 'Name <<a@allowed.com>' },
+  });
+  expect(result).toEqual({ to: 'Name <<a@allowed.com>', cc: undefined, bcc: undefined });
+});
+
+test('applyMailFilter does not read a string with "@" only at an edge as an address', () => {
+  const result = applyMailFilter({
+    filter: null,
+    mail: { to: ['@audit.invalid', 'audit.invalid@'] },
+  });
+  expect(result).toEqual({
+    to: ['@audit.invalid', 'audit.invalid@'],
+    cc: undefined,
+    bcc: undefined,
+  });
+});

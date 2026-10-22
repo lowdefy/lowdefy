@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: AIGateway
     pageTitle: AI Gateway
-    section: Connections
     filePath: connections/AIGateway.yaml
     content:
       - id: md1

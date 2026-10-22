@@ -17,8 +17,8 @@
 function slugifyPrefix(value) {
   return String(value)
     .toLowerCase()
-    .replace(/[^a-z0-9-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 // Lowdefy sets the cookie name prefix - it is not app-configurable. In dev,

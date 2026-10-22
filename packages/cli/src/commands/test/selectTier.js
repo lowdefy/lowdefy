@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 import committedJourneys from '../journeys/committedJourneys.js';
 import computeTiers from '../journeys/usage/computeTiers.js';
@@ -96,7 +96,7 @@ async function selectTier({ context, selected, tier, usageWindow, fullTierOption
   selected.forEach((entry) => {
     const { item } = entry;
     const key = journeyKey({
-      file: path.relative(context.directories.config, item.filePath),
+      file: relativePosixPath({ from: context.directories.config, to: item.filePath }),
       journeyIndex: item.journeyIndex,
     });
     const row = rows.get(key);

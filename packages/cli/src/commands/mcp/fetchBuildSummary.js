@@ -27,12 +27,12 @@ async function fetchBuildSummary({ url, timeoutMs = BUILD_SUMMARY_TIMEOUT_MS }) 
       headers: { [devPassiveHeader]: '1' },
       signal: AbortSignal.timeout(timeoutMs),
     });
-    const { build, pages, clientErrors = [], serverErrors = [] } = await response.json();
+    const { build, clientErrors = [], serverErrors = [] } = await response.json();
     return {
       status: build?.status,
       errors: build?.errors?.length ?? 0,
       warnings: build?.warnings?.length ?? 0,
-      failedPages: pages?.failed?.length ?? 0,
+      failedPageCount: build?.failedPages?.length ?? 0,
       clientErrors: clientErrors.length,
       serverErrors: serverErrors.length,
     };

@@ -127,7 +127,7 @@ async function openPage({
       ]);
     }
     // A journey on a data set: every request from this context reads the data
-    // session's database (see lib/server/applyDataSetRedirect.js), while the
+    // session's databases (see lib/server/applyDataSetRedirect.js), while the
     // developer's own tabs keep the app's real one. Set before the first
     // navigation, so no request from this context ever goes without it.
     if (!type.isUndefined(dataCookie)) {

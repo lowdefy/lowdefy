@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Descriptions
     pageTitle: Descriptions
-    section: Container Blocks
     filePath: blocks/container/Descriptions.yaml
     block_type: Descriptions
     antd_component: Descriptions

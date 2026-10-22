@@ -40,7 +40,7 @@ The schema for a Lowdefy API is:
 ###### API definition example:
 
 ```yaml
-lowdefy: '6.0.0'
+lowdefy: '7.0.0'
 
 connections:
   - id: users
@@ -75,7 +75,7 @@ Lowdefy APIs use the same [authorization configuration](/protected-pages-apis) a
 Unlike requests which are defined on a specific page and inherit the authorization of the page they are defined on, API endpoints can be called from any page in the app. Thus they do not inherit the authorization of the page they are called from, and authorization should be configured separately.
 
 ```yaml
-lowdefy: '6.0.0'
+lowdefy: '7.0.0'
 
 auth:
   # Configure which APIs require authentication
@@ -1168,7 +1168,7 @@ blocks:
 Here's a comprehensive example showing various features:
 
 ```yaml
-lowdefy: '6.0.0'
+lowdefy: '7.0.0'
 auth:
   api:
     protected: true

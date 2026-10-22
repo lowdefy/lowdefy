@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: plugins-icon-sets
     pageTitle: Icon Sets
-    section: Plugins
     filePath: plugins/plugins-icon-sets.yaml
     content:
       - id: md1

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import path from 'path';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 // What `run.journey` names a journey by in its recording: the file relative
 // to the config directory, plus `#<name>` for a journey that has one, so the
 // coverage report can tell which journey drove what.
 function recordingJourneyName({ configDirectory, filePath, journey }) {
-  const relative = path.relative(configDirectory, filePath).split(path.sep).join('/');
+  const relative = relativePosixPath({ from: configDirectory, to: filePath });
   if (typeof journey?.name === 'string' && journey.name !== '') {
     return `${relative}#${journey.name}`;
   }

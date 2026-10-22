@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Anchor
     pageTitle: Anchor
-    section: Display Blocks
     filePath: blocks/display/Anchor.yaml
     block_type: Anchor
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Anchor

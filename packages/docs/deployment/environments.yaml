@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: deployment-environments
     pageTitle: Deployment environments
-    section: Deployment
     filePath: deployment/environments.yaml
     content:
       - id: content

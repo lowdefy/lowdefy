@@ -91,7 +91,11 @@ test('build runs the Lowdefy build once when no plugin checks are pending', asyn
   const context = createContext();
   await build({ context });
   expect(mockRunLowdefyBuild).toHaveBeenCalledTimes(1);
-  expect(mockRunLowdefyBuild).toHaveBeenCalledWith({ context, directory: serverDirectory });
+  expect(mockRunLowdefyBuild).toHaveBeenCalledWith({
+    context,
+    directory: serverDirectory,
+    pluginInstallFollows: true,
+  });
   expect(calls).toEqual([
     'getServer',
     'resetServerPackageJson',
@@ -119,6 +123,12 @@ test('build runs the Lowdefy build again after the install when plugin checks ar
   const context = createContext();
   await build({ context });
   expect(mockRunLowdefyBuild).toHaveBeenCalledTimes(2);
+  // The first build holds its pending warnings; the build after the install
+  // gives them.
+  expect(mockRunLowdefyBuild.mock.calls.map(([options]) => options.pluginInstallFollows)).toEqual([
+    true,
+    undefined,
+  ]);
   expect(calls).toEqual([
     'getServer',
     'resetServerPackageJson',

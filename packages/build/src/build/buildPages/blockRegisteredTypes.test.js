@@ -182,7 +182,7 @@ function includedDeclarations({ parsed, names }) {
           other.names
             .filter((name) => name !== 'default')
             .filter((name) =>
-              new RegExp(`\\b${name.replace('$', '\\$')}\\b`).test(declaration.text)
+              new RegExp(`\\b${name.replaceAll('$', '\\$')}\\b`).test(declaration.text)
             )
             .forEach((name) => wanted.add(name))
         )

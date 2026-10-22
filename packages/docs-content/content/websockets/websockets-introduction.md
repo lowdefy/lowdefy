@@ -9,7 +9,7 @@ Websockets work identically on a self-hosted Node.js server and on Vercel, where
 A channel and a page subscription — this page shows a live tick counter:
 
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 
 websockets:
   - id: ticker

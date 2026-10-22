@@ -54,6 +54,10 @@ const antdParams = {
   rowHoverColor: 'var(--ant-color-fill-tertiary)',
   selectedRowBackgroundColor: 'var(--ant-color-primary-bg)',
   checkboxCheckedBackgroundColor: 'var(--ant-color-primary)',
+  // Balham's base draws the tick in accentColor, which is the primary colour above, so a ticked box
+  // read as empty. The other bases draw it in backgroundColor, which turns dark in dark mode. antd's
+  // own Checkbox always draws a white tick on the primary colour.
+  checkboxCheckedShapeColor: 'var(--ant-color-white)',
   checkboxUncheckedBorderColor: 'var(--ant-color-border)',
   fontFamily: 'var(--ant-font-family)',
   fontSize: 'var(--ant-font-size)',

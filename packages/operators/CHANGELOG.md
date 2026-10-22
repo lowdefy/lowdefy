@@ -1,5 +1,93 @@
 # Change Log
 
+## 7.0.0
+
+### Minor Changes
+
+- b3ba6fb: feat: Tool endpoints know the calling agent with the `_agent` operator
+
+  - **`_agent` server operator.** `_agent: id` returns the id of the agent that called the endpoint as a tool or hook, `_agent: conversationId` the chat's conversation id, and `_agent: true` both as `{ id, conversationId }`. On a call that did not come from an agent (a page request, an MCP tool call, a scheduled, webhook or auth hook run), it returns `null`, or the `default` when one is given, and never throws.
+  - **Set by the engine, not the model.** The agent runtime puts the running agent on the tool endpoint's routine. Nothing in the tool's payload or the chat request can set or change it, so an app can record agent work apart from a person's.
+  - **Inherited by nested calls.** Endpoints a tool endpoint calls through `CallApi` (including `detached: true`) or a connection's `callApi` see the same agent.
+  - **Headless agents.** Tools an agent run by a `CallAgent` routine step calls see the agent with `conversationId: null`.
+
+- 91740e6: Client operator evaluation compiles each config tree it parses repeatedly.
+
+  The browser evaluated every block's config by round-tripping it through `JSON.stringify` and `JSON.parse` on every update, including config with no operators. Now `WebParser` compiles a config tree the second time it is parsed into closures that build the same result directly, and uses them from then on. Output is identical, including operator results of `undefined`, hidden config keys and errors. Anything the JSON round trip would change is not compiled and evaluates as before.
+
+  On the docs app, parser time per update drops 2.2–3.4× (1.7× on the page dominated by operator work), and a whole engine update is 1.5–1.8× faster. No config changes; dev and production both use it.
+
+- badaa49: Pages re-evaluate only the blocks whose inputs changed.
+
+  Every change - a keystroke, SetState, a request completing - used to re-evaluate every block on the page. The engine now records what each block reads (the state paths, requests, globals and other values its operators read) and re-evaluates only the blocks whose reads changed. Values that change without notice - the clock, the URL, window size, randomness - keep their blocks evaluating on every update, exactly as before. On the docs app and a large production app, a keystroke evaluates 6-8x fewer blocks overall (from all blocks on a page to a handful), with identical output.
+
+  - Every core operator declares how it reads (`tracking`); an operator without a declaration keeps its blocks evaluating every time, so third-party plugins keep working unchanged.
+  - `_js` functions that use the clock, randomness or browser globals are detected at build and treated as always changing.
+  - Set `config.dependencyTracking: false` in `lowdefy.yaml` to evaluate every block on every update as before.
+
+- f889c26: feat: dynamic blocks policies. Declare `policies.dynamicBlocks` in `lowdefy.yaml` to render block config stored as data — generated forms, model output — through a `Dynamic` block within limits the app sets. A policy lists the blocks, actions, operators, endpoints, requests, pages and origins content may use, an optional state path it must write under, whether HTML is allowed, and size, depth and actions-per-event limits. It requires literal values wherever content names a target.
+
+  - `Dynamic` blocks take `properties.policy`. The policy's types are bundled into the page, and the resolved content is checked against the policy on every page get; a violation renders the fallback and logs each rule broken.
+  - New built-in routine step `ValidateDynamic` runs the same check and returns `{ valid, errors, blocks }`, with a content path, rule and message per error, for a generator to correct and retry. In a Dynamic block's endpoint, `_step: <stepId>.blocks` of a passing step with the block's policy is returned as config; all other data stays literal.
+  - New built-in routine step `DescribeDynamicPolicy` returns what a policy allows, with the schemas of its blocks, actions and operators, to build a model's prompt from.
+  - The build validates policies (installed types, exact origins, no `Dynamic` or `_operator`), checks their pages, endpoints and requests on every page that hosts them, and warns when a policy without HTML lists operators that build strings.
+
+- 959ec32: feat: The `_credential` operator keeps a runtime-made credential out of the server logs
+
+  The log scrub only knew the secrets the server holds, so a value a routine made at runtime, such as a new API key or a secret derived with `_hmac`, printed in plain text at debug level in every `:set_state`, `:return`, step result and error `received` that held it. Wrap the value in `_credential` where it is made: it is returned unchanged, so the routine and its caller still get it, and every log line for the rest of that request shows `[REDACTED]` in its place, on the production and development servers alike. Marked values are also scrubbed from the request's Sentry events, and an endpoint run through a `CallApi` step with `detached: true` keeps the marks its dispatcher made. The development server still logs `_secret` values in full.
+
+- 5017abe: feat: `_media` updates when the browser window is resized
+
+  Blocks that use `_media` now re-evaluate when the window is resized, so `_media` can drive responsive `visible` conditions and properties the way CSS breakpoints do. The page keeps one resize listener, shared with the `onResize` event, and waits until the resize settles (150ms) before doing any work. Only blocks that read a `media` value that changed are re-evaluated: a block that reads `_media: size` updates when the window crosses a breakpoint, not on every pixel of a resize, and blocks that do not use `_media` are never touched. Blocks reading `_media` are also no longer re-evaluated on every unrelated page update.
+
+  The `onResize` page event is now debounced by 150ms (was 200ms), and runs after `_media` blocks have been updated for the new size.
+
+  Fixes #799.
+
+### Patch Changes
+
+- 81a5ad3: Client navigation by path. The production, e2e and dev clients fetch pages by URL path and learn the page id and path values from the server. Each set of path values is its own page instance: `Client` keys the page tree by the instance key, so following a link from one ticket to another remounts the page, and passes `pathParams` to the page context. The engine keeps up to 10 instances per page and gives actions `getPathParams`. The shown page is written to the path memory before its context is built, and auth callbacks write their target before navigating. A navigation to the path the shown page was matched on skips the fetch, unless the page is dynamic. The router's location carries the path instead of a page id. `setUrlQuery` waits for a page refetch only on dynamic pages.
+- d2c8e01: feat(api)!: Data read into a Dynamic block's `:return` stays data.
+
+  **Breaking:** a Dynamic block without a dynamic blocks policy no longer renders blocks or actions that its endpoint read as data. In v6, stored operator-free block config returned from a Dynamic endpoint rendered as it was; in v7 the block renders its fallback. Every block and action in the returned content must be written in the endpoint's `:return` config. A block or action that is data an operator returned (a step result, routine state, the payload, a `:for` item, a nested endpoint's result), or a copy or extension of one made with `_get`, `__args` or `__object.assign`, fails resolution. Operators that only pass their checked params through (`_if`, `_switch`, `_if_none`, `_get`, `_args`, `_function`, `_log`, `_array`, and `_object` except `fromEntries` and `defineProperty`) may return written config; content that breaks the rule renders the fallback, with an error naming the operator and the path in its result. Blocks built up in routine state, returned by a nested endpoint, looped over with `_item`, or built by `_js`/`_jsonata` fail: build them inside `:return` with `_array.map`/`_array.concat`, share block config with `_ref`, and write client operators (`__state`, `_array.map` callbacks) in the `:return` config. Data may still fill values inside written blocks, as in the documented `_array.map` pattern, and a block built by config from a stored field renders even when it equals the field. To render stored or generated block config, put the Dynamic block under a dynamic blocks policy and return the content through a `ValidateDynamic` step. See the v6 to v7 migration guide.
+
+  Also:
+
+  - Only operator keys lose their escaping underscore in the returned content (`__state` becomes `_state`); data keys such as `__typename` pass through unchanged.
+  - Data read into a Dynamic `:return` may nest at most 200 levels deep, and dynamic blocks policy content likewise (`limits.depth`); deeper data fails resolution with an error saying so.
+  - An object from data that `_object.assign` merges with other config can no longer end up as an operator on the client, for example next to a key whose value is a function or evaluates to undefined.
+  - Only keys that name one of the app's operators count as operators: in the literal data check an installed client or server operator, in dynamic blocks policies and the fragment build a client operator. Data such as `{ _score: 0.5 }` or `{ _source: { ... } }` now renders as data instead of failing. The build writes `plugins/clientOperators.json` with every client operator name the app knows.
+  - Dynamic blocks policies: with `state` set, every `_state` read in the content must name a literal key under that path. URLs are judged by the block's properties schema, which now marks URL-valued properties with `urlKind` (`Search` `indexUrl`, `QRCode` `icon`, `Watermark` `image`, `Tour` step covers, avatar and logo sources, link `url`s and `href`s, `Img` `src`/`srcSet`, AgGrid link cells), whatever the property is called. Every value no schema marks is still judged by its key name; `urlKind: false` opts a URL-named property out (`Search` `result.url`, the Tiptap `image` settings). URLs are read as the browser's URL parser reads them, so surrounding spaces and embedded tabs or newlines do not change the verdict.
+
+- 1f58d7f: Pages read their path values with the `_path_params` operator (the same `key` / `all` / `default` arguments as `_url_query`, values always strings), and `_js` functions read them with a `pathParams` accessor. The `Link` action and the auth actions' callback targets (`Login`, `Logout`, `SignUp`, `EmailOtpVerify`, `MagicLinkVerify`, `PhoneNumberVerify`, `TwoFactorVerify`, `SendVerificationEmail`, `PasskeySignIn`) accept `pathParams` next to `urlQuery`.
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [4d08b55]
+- Updated dependencies [6144814]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [04077d9]
+- Updated dependencies [d42f420]
+- Updated dependencies [ebf95f8]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [09717e8]
+- Updated dependencies [2baefc1]
+- Updated dependencies [662eaa9]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [1766343]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [94fc9e0]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [2755501]
+- Updated dependencies [cac0798]
+- Updated dependencies [9512788]
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/errors@7.0.0
+
 ## 6.1.0
 
 ### Minor Changes

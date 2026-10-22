@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: journey-data-sets
     pageTitle: Journey Data Sets
-    section: Testing
     filePath: testing/journey-data-sets.yaml
     content:
       - id: md1

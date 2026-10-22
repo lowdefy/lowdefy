@@ -82,7 +82,7 @@ The file path to the referenced file, from the root of the project directory.
 ###### Reference pages:
 ```yaml
 # lowdefy.yaml
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 pages:
   - _ref: pages/page1.yaml
   - _ref: pages/page2.yaml
@@ -103,7 +103,7 @@ blocks:
 ```
 Returns:
 ```
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 pages:
   - id: page1
     type: PageHeaderMenu
@@ -176,7 +176,7 @@ blocks:
 ###### Use key:
 ```yaml
 # lowdefy.yaml
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 version:
   _ref:
     path: package.json
@@ -190,7 +190,7 @@ version:
 ```
 Returns:
 ```
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 version: 1.0.0
 ```
 
@@ -227,7 +227,7 @@ module.exports = useLocalOrSharedConfig;
 
 ```yaml
 // lowdefy.yaml
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 
 cli:
   refResolver: resolvers/useLocalOrSharedConfig.js
@@ -253,7 +253,7 @@ module.exports = addFooter;
 ```
 ```yaml
 // lowdefy.yaml
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 
 pages:
   - _ref:

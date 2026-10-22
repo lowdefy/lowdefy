@@ -34,7 +34,7 @@ async function controlFor(context, routineContext, { control }) {
 
   logger.debug({
     event: 'debug_control_for',
-    array,
+    itemCount: Array.isArray(array) ? array.length : null,
     itemName,
   });
 
@@ -54,9 +54,8 @@ async function controlFor(context, routineContext, { control }) {
 
     logger.debug({
       event: 'debug_control_for_iteration',
-      itemName: itemName,
-      value: item,
-      items: updatedItems,
+      itemName,
+      index,
     });
 
     const res = await runRoutine(

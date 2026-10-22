@@ -25,11 +25,13 @@ async function controlIf(context, routineContext, { control }) {
     location: control['~k'] ?? ':if',
   });
 
+  // No evaluated values: they can carry chat text or other personal information,
+  // which no log level may hold.
   logger.debug({
     event: 'debug_control_if',
     condition: {
       input: control[':if'],
-      evaluated: evaluatedIf,
+      result: Boolean(evaluatedIf),
     },
   });
   if (evaluatedIf) {

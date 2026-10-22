@@ -242,7 +242,7 @@ test('truthy guard statement throw', async () => {
   expect(res.status).toEqual('error');
   expect(res.error).toEqual(error);
   expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if', condition: { input: true, result: true } }],
     [{ event: 'debug_control_if_run_then' }],
     [
       {
@@ -262,7 +262,6 @@ test('truthy guard statement throw', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_guard_statement',
-        result: 'guard statement',
       },
     ],
   ]);
@@ -310,11 +309,10 @@ test('throw in a try block with catch return', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
     [{ event: 'debug_control_catch' }],
-    [{ event: 'debug_control_return', response: { message: 'Error was caught' } }],
+    [{ event: 'debug_control_return' }],
   ]);
 });
 
@@ -359,7 +357,6 @@ test('throw in a try block with missing catch', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
   ]);
@@ -409,7 +406,6 @@ test('throw in a try block with error in finally', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
     [{ event: 'debug_control_catch' }],
@@ -463,7 +459,6 @@ test('throw in try block with cause', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
   ]);
@@ -512,7 +507,6 @@ test('throw in try block with empty catch', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
     [{ event: 'debug_control_catch' }],
@@ -562,11 +556,10 @@ test('throw in try block with return in finally block', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
     [{ event: 'debug_control_finally' }],
-    [{ event: 'debug_control_return', response: { message: 'Error ignored' } }],
+    [{ event: 'debug_control_return' }],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
 });
@@ -623,7 +616,6 @@ test('throw in try block with request in finally block', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
     [{ event: 'debug_control_finally' }],
@@ -645,7 +637,6 @@ test('throw in try block with request in finally block', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end_2',
-        result: 'end',
       },
     ],
   ]);

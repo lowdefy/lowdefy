@@ -5,7 +5,7 @@
 (blockId: string): void
 (blockIds: string[]): void
 (params: {
-  blockId?: string|string[],
+  blockIds?: string|string[],
   regex?: string|string[],
 }): void
 ```
@@ -15,6 +15,8 @@ The `ResetValidation` action is used to reset validation flags on input fields.
 By default when a page is opened, no validation flags are set on any input fields. When the `Validate` is called, a validation flag is set on input fields matching the validation params. To reset the validation flags, use the `ResetValidation` action.
 
 The `ResetValidation` action `blockIds` or `regex` params are used to limit which blocks validation errors and warnings should be reset.
+
+A container's blockId matches the container and every block inside it, so `params: contact_card` lowers the validation flags of the inputs in the `contact_card` card. A blockId that matches no block logs a warning in the browser console.
 
 When the action runs in a list row, `$` in a blockId is replaced with the row index, as in `SetState` and `CallMethod`, so `list.$.name` matches the `name` input in the same row. `$` in a `regex` pattern keeps its regex meaning.
 
@@ -80,7 +82,7 @@ An array of blockIds of the blocks for which to lower validation flags.
 - id: reset_foo_price_and_my_input
   type: ResetValidation
   params:
-    blockId: my_input
+    blockIds: my_input
     regex:
       - ^foo\.
       - ^.*price.*$

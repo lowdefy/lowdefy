@@ -24,9 +24,17 @@ Directory — where Vercel picks it up automatically.
 - **Install Command:** `bash vercel.install.docs.sh`
 - **Build Command:** `bash vercel.build.docs.sh`
 - **Output Directory:** leave blank — the build emits `.vercel/output`, auto-detected
+- **Ignored Build Step:** leave as is — `vercel.json` overrides it
 
-`vercel.json` here sets `framework: null`; install and build commands are set per-project in the
-Vercel dashboard (so other apps can deploy from the same server package with their own scripts).
+`vercel.json` here sets `framework: null` and `ignoreCommand: bash vercel.ignore.release.sh`; install
+and build commands are set per-project in the Vercel dashboard (so other apps can deploy from the
+same server package with their own scripts).
+
+`vercel.ignore.release.sh` makes every project deployed from this server package follow npm
+releases: it builds only the `changeset-release/main` branch (the "Publish new release" PR preview)
+and the merge of that PR into `main` (the commit the release workflow publishes). Release merges from
+`develop`, `develop` itself and feature branches are skipped. Detecting the publish merge relies on
+that PR being merged with a merge commit, which keeps the branch name in the commit message.
 
 ## Environment variables
 

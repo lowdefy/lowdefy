@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-add-blocks
     pageTitle: 3. Adding blocks
-    section: Tutorial
     filePath: tutorial/tutorial-add-blocks.yaml
     content:
       - id: body_add_blocks
@@ -166,10 +165,3 @@ _ref:
 
             Currently our form doesn't do very much. In the next section we will use [actions](/events-and-actions) and [operators](/operators) to make it more interactive.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Creating a page
-            previous_page_id: tutorial-create-page
-            next_page_title: Interactive pages
-            next_page_id: tutorial-actions-operators

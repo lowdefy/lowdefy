@@ -16,6 +16,8 @@
 
 import { useRef, useState } from 'react';
 
+import receiveSyncedValue from './receiveSyncedValue.js';
+
 function same(a, b) {
   return JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 }
@@ -24,20 +26,20 @@ function same(a, b) {
 // transition, so the committed value can lag several edits behind; an editor that re-read it
 // after each edit would build the next edit on a stale condition. The editor keeps its own state
 // and writes through `onChange`; a value that arrives from outside (SetState, another editor)
-// replaces it.
+// replaces it. Every write still in flight is remembered, not only the latest: an older write
+// arriving late, taken as a change from outside, would reset the editor to it.
 function useSyncedState({ value, onChange }) {
   const [local, setLocal] = useState(value);
-  const sent = useRef(value);
+  const inFlight = useRef([]);
   const [seen, setSeen] = useState(value);
   if (!same(seen, value)) {
     setSeen(value);
-    if (!same(value, sent.current)) {
-      sent.current = value;
-      setLocal(value);
-    }
+    const received = receiveSyncedValue({ inFlight: inFlight.current, value });
+    inFlight.current = received.inFlight;
+    if (received.external) setLocal(value);
   }
   function update(next) {
-    sent.current = next;
+    inFlight.current = [...inFlight.current, next];
     setLocal(next);
     onChange(next);
   }

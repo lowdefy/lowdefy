@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: PostgreSQL
     pageTitle: PostgreSQL
-    section: Connections
     filePath: connections/PostgreSQL.yaml
     content:
       - id: markdown_intro

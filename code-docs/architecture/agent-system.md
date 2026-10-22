@@ -71,6 +71,7 @@ This separation means the same endpoint can serve a page button, another endpoin
    - Resolves MCP connection references to inline transport config
    - Looks up the agent type resolver from the plugin registry via `getAgentResolver`
    - Builds a `resolverContext` with `callEndpoint`, `getEndpointConfig`, `getAgentConfig`, `getConnectionForAgent`, and `resolveMcpSources` -- these are the capabilities available to the agent runtime
+   - When the agent has `redact`, evaluates its operators and masks every match of its patterns in the `text` parts of every `role: user` message (`redactMessages`), so the model, title generation, tools and hooks only see the masked text. Assistant, tool and file parts pass through; the debug log counts replacements per pattern name, never the text
    - Calls `agentType.resolver()` with the connection, properties, and context
 
 5. The agent resolver (e.g., `ClaudeAgent`) maps provider-specific properties into `providerOptions` and delegates to `handleAgentChat()`.
@@ -534,6 +535,7 @@ Developers wire their own persistence. The block renders the list; the app confi
 | `packages/utils/ai-utils/src/fileSystem/readFile.js`                                                            | File reading with 512KB truncation                                          |
 | `packages/utils/ai-utils/src/fileSystem/searchFiles.js`                                                         | Case-insensitive search with 200 match limit                                |
 | `packages/api/src/routes/agent/callAgent.js`                                                                    | API route handler: loads config, resolves connections, calls resolver       |
+| `packages/api/src/routes/agent/redactMessages.js`                                                               | Masks the agent's `redact` patterns in user messages                        |
 | `packages/api/src/routes/agent/getAgentConfig.js`                                                               | Reads agent JSON from build artifacts                                       |
 | `packages/api/src/routes/agent/getAgentResolver.js`                                                             | Looks up agent type from plugin registry                                    |
 | `packages/build/src/build/buildAgents.js`                                                                       | Build-time validation, normalization, cycle detection                       |

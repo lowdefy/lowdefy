@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { relativePosixPath } from '@lowdefy/node-utils';
 
 import buildMutationReport from './buildMutationReport.js';
 import formatHardenReport from './formatHardenReport.js';
@@ -71,10 +71,10 @@ function selectJourneys({ context }) {
     ...new Set(
       withoutDataSet.map(
         (item) =>
-          `Left out "${(item.personaOf ?? item.journey).name}" (${path.relative(
-            context.directories.config,
-            item.filePath
-          )}): it has no data set, so its mutant runs would write to your database. Give it a data set (data:) to harden it.`
+          `Left out "${(item.personaOf ?? item.journey).name}" (${relativePosixPath({
+            from: context.directories.config,
+            to: item.filePath,
+          })}): it has no data set, so its mutant runs would write to your database. Give it a data set (data:) to harden it.`
       )
     ),
   ];
@@ -92,10 +92,10 @@ function currentJourneyKeys({ context }) {
   return new Set(
     selectTests({ context })
       .filter(({ item }) => type.isObject(item.journey))
-      .map(
-        ({ item }) =>
-          `${path.relative(context.directories.config, item.filePath)}#${item.journey.name}`
-      )
+      .map(({ item }) => {
+        const file = relativePosixPath({ from: context.directories.config, to: item.filePath });
+        return `${file}#${item.journey.name}`;
+      })
   );
 }
 

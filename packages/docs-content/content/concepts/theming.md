@@ -7,7 +7,7 @@ Lowdefy uses the [Ant Design](https://ant.design/) design token system for themi
 Configure your app's theme in `lowdefy.yaml` under `theme.antd`:
 
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 theme:
   antd:
     token:

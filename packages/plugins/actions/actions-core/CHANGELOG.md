@@ -1,5 +1,140 @@
 # Change Log
 
+## 7.0.0
+
+### Major Changes
+
+- 6b3a9bb: feat!: Replace the NextAuth-shaped auth system with BetterAuth.
+
+  Lowdefy auth now runs on [BetterAuth](https://www.better-auth.com) 1.7.7 through the new `@lowdefy/plugin-better-auth` package; `@lowdefy/plugin-next-auth` and `@lowdefy/plugin-auth0` are removed. Every app with an `auth:` block is affected — follow the migration guide at `/migration/auth-upgrade` in the docs.
+
+  Breaking changes:
+
+  - **`auth.database` is required** for any login method; sessions are database-backed only (`session.maxAge` → `expiresIn`, no JWT strategy). Collections follow the `user-*` convention fixed by the adapter and auth columns are stored in snake_case.
+  - **Provider type names change** — `GoogleProvider`, `GitHubProvider`, ... become `Google`, `GitHub`, ...; `OpenIDConnectProvider` → `GenericOAuth`. Provider `id`s and `/api/auth/callback/<id>` URLs are unchanged. Built-in and `GenericOAuth` providers share one id namespace, so the build fails when a `GenericOAuth` `id` is the key of a built-in provider the app also configures. `GenericOAuth` takes `trustEmail: true` to mark its users' emails verified, for an issuer that sends no `email_verified` claim. An invalid provider property fails startup with the provider id and its config location.
+  - **`auth.callbacks` / `auth.events` JS plugins are replaced by `auth.hooks`** — bindings to `InternalApi` endpoints fired in a system context. Verification identifiers carry a `magic-link:` or `auth-state:` prefix, which a `verification.create.before` / `after` hook matching on the identifier must allow for.
+  - **`NEXTAUTH_SECRET` / `AUTH_SECRET` env vars are replaced by `auth.secret`** (use the `_secret` operator); pin the canonical URL with `BETTER_AUTH_URL`, or the `url` of the current environment in `config.environments`. With `auth.email` configured, a production server refuses to start (`ConfigError`) until one of them is set, since every emailed link is built from it; without `auth.email` it logs a warning. While unpinned, auth trusts only the origin the request arrived on, so behind a proxy that ends TLS and forwards plain `http`, sign-in is refused until the URL is pinned. The dev server uses the request origin.
+  - **Built-in auth UI and `auth.theme` are removed** — the app provides its own pages via `authPages` (`signIn`, `signUp`, `error`, `forgotPassword`, `resetPassword`, `verifyEmail`, `twoFactor`, `twoFactorEnrol`, `acceptInvitation`). The emailed verification link from `SignUp` / `SendVerificationEmail` without a `callbackUrl` lands on `verifyEmail` (default `/verify-email`), with `?error=INVALID_TOKEN` or `TOKEN_EXPIRED` when it fails. The reset link from `RequestPasswordReset` without a `redirectTo` lands on `resetPassword` (default `/reset-password`) with `?token=`, or `?error=INVALID_TOKEN`. The build warns when the app sends these emails (`auth.email` with `emailAndPassword`) and the page is missing.
+  - **`EmailProvider` becomes `auth.magicLink` + `auth.email`**, with branded auth emails sent over an SMTP connection.
+  - **The session user shape changes** — `userFields` is removed; `_user` carries `id`, `name`, `email`, `image`, `email_verified`, `active_organization_id`, `profile`, plus `roles` (app roles from the active membership's `appRoles`), `org_roles` (the `owner`/`admin`/`member` tier), `attributes` (merged global + per-organization bag), `two_factor_enrolled` and `auth_method`. `name` and `image` resolve per organization, from the member row `UpdateUserProfile` writes, falling back to the user row. A caller awaiting an organization carries `has_pending_invitation` and, when there is one, `pending_invitation_id`. `_user.sub` is gone — `_user.id` is the internal id.
+  - **Organizations are always on** — roles live on organization memberships; `auth.organizations` configures `pinned` vs `tenant` policy, invitations, the role catalog and the tenant wall that scopes connections by `organization_id`. `invitationExpiresIn` sets how long an invitation stays acceptable (seconds, at least 60, default 48 hours); an expired or cancelled invitation fails with code `INVITATION_EXPIRED`. Accepting an invitation does not switch a session already active in another organization. Organizations have no practical member cap (default 1,000,000); `membershipLimit` sets one, and an unpaged `ListMembers` returns every member.
+  - **Retired client actions** — `ImpersonateUser`, `StopImpersonating` (no replacement); `InviteMember`, `CancelInvitation`, `UpdateMemberRole`, `RemoveMember`, `UpdateOrganization` are now auth steps run from routines.
+  - **Signed-out requests no longer reveal page or endpoint existence** — protected apps answer sign-in for every URL and `401` for missing or protected requests alike.
+
+  New in this line: two-factor auth (TOTP, backup codes, passkeys, `twoFactor.required` enrolment; id token sign-ins are challenged too unless the provider sets `twoFactorTrusted: true`, and `Login` with an `idToken` then navigates to `authPages.twoFactor`), phone number and captcha sign-in, the app as an OAuth 2.1 authorization server for MCP clients (`auth.oauthProvider`, scoped MCP tools), the `_organization` server operator and the `_build.authConfig` projection, and a self-service auth action catalog (`SignUp`, `PasskeySignIn`, `PasskeyUpdate`, `TwoFactorGenerateBackupCodes`, `SetActiveOrganization`, `AcceptInvitation`, `LeaveOrganization`, ...). Auth rate limits (sign-in and sign-up: 3 attempts per 10 seconds per address), the session's recorded address and the captcha check use the client address the server resolves; behind a reverse proxy, list the proxy in `config.trustedProxies`.
+
+### Minor Changes
+
+- 81bd4f0: feat(actions-core): new `SetLocalStorage`, `GetLocalStorage` and `RemoveLocalStorage` actions
+
+  Read and write the browser's local storage from an event chain. Values are serialized, so
+  objects, arrays and dates are read back as the types that were stored. `GetLocalStorage`
+  returns the stored value, or the optional `default` when the key is not set or the browser
+  blocks local storage, and returns plain string values that were not written by
+  `SetLocalStorage` as they are. Keys starting with `lowdefy_` or `lf-` are reserved for
+  Lowdefy's own settings and are rejected. Keys are stored per app (its `slug` and base path), so
+  apps served from one origin do not share values. Values stay after sign-out, so they should not
+  hold secrets or personal data.
+
+- b56bb7a: feat: Lowdefy apps as OAuth 2.1 authorization server for external MCP clients.
+
+  The app's MCP endpoint gains an app-issued OAuth 2.1 envelope, so external MCP clients connect with app-issued bearer tokens.
+
+  - One MCP address per deployment: `POST /api/mcp`, with RFC 9728 metadata at `/.well-known/oauth-protected-resource/api/mcp`. The resource URIs default to the current environment's `url` in `config.environments`. The organization a token acts in is chosen at authorization, not encoded in the address.
+  - After login and before consent the authorization server sends the user to `auth.oauthProvider.postLoginPage` (required under the `tenant` organizations policy) to choose one of their organizations; the page runs `SetActiveOrganization` then the new `OAuthContinue` action. Consent is then per (client, user, organization), and every access token carries the choice as its `organization_id` claim — refresh grants keep it.
+  - Scopes are `mcp:read`, `mcp:write` and `offline_access`, so clients get refresh tokens: access tokens last 1 hour, refresh tokens 30 days. A rotated refresh token is accepted again for two minutes, so several sessions sharing one sign-in can refresh together.
+  - The `/api/mcp` route resolves the member from that claim, refuses a token whose grant no longer stands (consent deleted), and stamps `auth_method: 'mcp'` on the caller. A token whose user is no longer a member of its organization gets the `401` `WWW-Authenticate` challenge and cannot be refreshed, which sends the client back through authorization.
+  - New `RevokeMcpGrant` auth step: an MCP tool built on it gives up the calling assistant's own grant, so the assistant's next call is challenged to reconnect — and to choose an organization again.
+  - `mcp.endpoints` entries carry a `scope` (`mcp:read` | `mcp:write`); tools are listed and callable only when the caller's role gate and token scope both allow.
+
+- 1f58d7f: Pages read their path values with the `_path_params` operator (the same `key` / `all` / `default` arguments as `_url_query`, values always strings), and `_js` functions read them with a `pathParams` accessor. The `Link` action and the auth actions' callback targets (`Login`, `Logout`, `SignUp`, `EmailOtpVerify`, `MagicLinkVerify`, `PhoneNumberVerify`, `TwoFactorVerify`, `SendVerificationEmail`, `PasskeySignIn`) accept `pathParams` next to `urlQuery`.
+
+### Patch Changes
+
+- 550be9f: feat(api,client,build): email one-time code sign-in, and the magic-link email carries the code
+
+  Magic-link sign-in fails behind corporate mail security that opens links before the
+  person does: the scanner follows the link, the single-use token is spent, and the
+  click that follows is rejected. Apps can now offer a one-time code instead. Enable
+  `auth.emailOTP` and the app emails a short code the person types into the tab they
+  started from, which no link scanner can consume, and which also works when the email
+  is read on a different device from the one signing in. Two new actions drive it,
+  `EmailOtpSend` and `EmailOtpVerify`.
+
+  With both `auth.magicLink` and `auth.emailOTP` enabled, the magic-link email carries
+  the code as well, so one email serves both paths and nothing about the existing
+  `Login` flow changes: the person clicks the button, or falls back to typing the code.
+
+- e5cffa6: feat(api,client,build,actions-core): magic-link landing page keeps the token unconsumed until a real click
+
+  A magic-link sign-in token can only be used once, and the auth server spends it on
+  the first request to the link — including a request nobody made. Corporate email
+  security (Microsoft Defender Safe Links, Proofpoint URL Defense, Mimecast) opens
+  every link in a message as it is delivered, so by the time the person clicks, the
+  link is already used up and they land on the error page.
+
+  Set the new `auth.authPages.magicLink` to a page in your app and the sign-in email
+  links there instead, carrying the token and the sign-in destinations along. The
+  page just sits there when a scanner fetches it; a button on it runs the new
+  `MagicLinkVerify` action, which finishes the sign-in. The token is only spent when
+  a person clicks, so scanned mailboxes can sign in again.
+
+  `MagicLinkVerify` needs no configuration — it reads the token and the destinations
+  from the page's own address. Bind it to a button click, never to page load: a
+  scanner that runs the page's JavaScript would use up the token all the same.
+
+  Leave `auth.authPages.magicLink` unset and magic-link sign-in behaves exactly as
+  before. The sign-in email also now shows the link as readable text under the
+  button, for mail clients that strip or rewrite buttons.
+
+- a9442cc: Production pages load only the plugin code they use.
+
+  The production client used to ship every block, action, operator and icon the app uses anywhere in one main bundle, and every first visit downloaded all of it. Now the build writes one small module per distinct page type set, and each page loads its own. On the docs app the main bundle drops from 6,016 kB to 1,021 kB (1,778 kB to 332 kB gzipped). A simple page's first load drops from 1,720 kB to 529 kB gzipped.
+
+  - The HTML preloads the page's chunks alongside the main bundle, so the first page does not wait an extra round trip.
+  - Content-hashed assets are served with `Cache-Control: public, max-age=31536000, immutable`, on the Node server and in `lowdefy vercel-output`.
+  - Lowdefy's plugin packages declare `"sideEffects": ["**/*.css"]`, so a page that uses one block no longer loads the whole package.
+  - The build adds the types a page runs without naming them: the operators the `_js` accessors call, and the actions and operators a block runs for events it registers itself (such as `Request` in `Upload` or `SetLocale` in `PageHeaderMenu`), which blocks list in `meta.actions` and `meta.operators`. Plugin blocks that register their own events should list them the same way.
+  - A Dynamic block whose content uses a type its `properties.types` did not declare still works: the page loads the full type set and the server logs a warning naming the type to declare.
+
+  No config changes. The dev server is unchanged.
+
+- 2755501: feat: The build checks block properties, action params and operator params against their plugin schemas
+
+  - After refs resolve, every block's `properties`, action's `params` and operator's params is validated against the schema its plugin ships. A finding is a warning with the type, the field, and the file and line of the field: `[ConfigWarning · plugin-schema] Block "Button" property "colr" is not allowed.`
+  - A value an operator gives at runtime is not judged. A missing required key or a misspelt key still reports, even beside operators.
+  - `~ignoreBuildChecks: [plugin-schema]` silences the check on a node, and `plugin-checks` and `--skip-plugin-checks` cover it. A plugin makes its schema findings errors with `schemaLevel: 'error'` in its `./checks` export.
+  - `@lowdefy/ajv` exports `getConfigSchemaErrors` and `formatSchemaError`. Dynamic pages validate block properties with the same function, so a `oneOf` above an operator no longer reports at runtime.
+  - The `Validate` and `ResetValidation` schemas accept `true` and the `{ blockIds, regex }` form the actions already take.
+
+- Updated dependencies [f7fa621]
+- Updated dependencies [099d412]
+- Updated dependencies [4d08b55]
+- Updated dependencies [6144814]
+- Updated dependencies [db1a4d3]
+- Updated dependencies [04077d9]
+- Updated dependencies [d42f420]
+- Updated dependencies [ebf95f8]
+- Updated dependencies [2595439]
+- Updated dependencies [f9e483f]
+- Updated dependencies [09717e8]
+- Updated dependencies [2baefc1]
+- Updated dependencies [662eaa9]
+- Updated dependencies [bfc6a00]
+- Updated dependencies [b226c43]
+- Updated dependencies [239a3a7]
+- Updated dependencies [1766343]
+- Updated dependencies [a34939d]
+- Updated dependencies [e6302c6]
+- Updated dependencies [aa6bb38]
+- Updated dependencies [94fc9e0]
+- Updated dependencies [81bd4f0]
+- Updated dependencies [2755501]
+- Updated dependencies [cac0798]
+- Updated dependencies [9512788]
+  - @lowdefy/helpers@7.0.0
+  - @lowdefy/errors@7.0.0
+
 ## 6.1.0
 
 ### Patch Changes

@@ -461,6 +461,90 @@ test.describe('AG Grid theming', () => {
   });
 
   // ============================================
+  // CHECKBOXES
+  // ============================================
+
+  // The tick is the wrapper's ::after, a mask painted with --ag-checkbox-checked-shape-color; the box
+  // is the wrapper's own background. Comparing the two is what catches a tick drawn in the box colour,
+  // which is invisible however the box itself is styled. The mask is read as well: without it the
+  // ::after paints a white square over the box, which passes every colour check.
+  test.describe('checkboxes', () => {
+    const checkboxColors = (locator) =>
+      locator.evaluate((el) => ({
+        box: getComputedStyle(el).backgroundColor,
+        tick: getComputedStyle(el, '::after').backgroundColor,
+        shape: getComputedStyle(el, '::after').maskImage,
+        checked: el.classList.contains('ag-checked'),
+        disabled: el.classList.contains('ag-disabled'),
+      }));
+
+    const cellCheckbox = (page, blockId, colId) =>
+      getBlock(page, blockId)
+        .locator(`.ag-row[row-index="0"] .ag-cell[col-id="${colId}"] .ag-checkbox-input-wrapper`)
+        .first();
+
+    const selectionCheckbox = (page, blockId) =>
+      getBlock(page, blockId)
+        .locator(
+          '.ag-row[row-index="0"] .ag-cell[col-id="ag-Grid-SelectionColumn"] .ag-checkbox-input-wrapper'
+        )
+        .first();
+
+    test.beforeEach(async ({ page }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+    });
+
+    for (const blockId of ['theming_checkbox_lowdefy', 'theming_checkbox_balham']) {
+      test(`${blockId}: a read-only ticked cell shows a white tick`, async ({ page }) => {
+        const checkbox = cellCheckbox(page, blockId, 'active');
+        await expect(checkbox).toBeVisible();
+        const colors = await checkboxColors(checkbox);
+        // A read-only boolean cell is a disabled checkbox; the reported case was exactly this one.
+        expect(colors).toMatchObject({ checked: true, disabled: true });
+        expect(colors.tick).toBe('rgb(255, 255, 255)');
+        expect(colors.tick).not.toBe(colors.box);
+        expect(colors.shape).toMatch(/^url\(/);
+      });
+
+      test(`${blockId}: an editable ticked cell shows a white tick`, async ({ page }) => {
+        const checkbox = cellCheckbox(page, blockId, 'active_1');
+        await expect(checkbox).toBeVisible();
+        const colors = await checkboxColors(checkbox);
+        expect(colors).toMatchObject({ checked: true, disabled: false });
+        expect(colors.tick).toBe('rgb(255, 255, 255)');
+        expect(colors.tick).not.toBe(colors.box);
+        expect(colors.shape).toMatch(/^url\(/);
+      });
+
+      test(`${blockId}: a ticked row-selection checkbox shows a white tick`, async ({ page }) => {
+        const checkbox = selectionCheckbox(page, blockId);
+        await checkbox.locator('input').click();
+        await expect(checkbox).toHaveClass(/ag-checked/);
+        const colors = await checkboxColors(checkbox);
+        expect(colors.disabled).toBe(false);
+        expect(colors.tick).toBe('rgb(255, 255, 255)');
+        expect(colors.tick).not.toBe(colors.box);
+        expect(colors.shape).toMatch(/^url\(/);
+      });
+    }
+
+    // Quartz's default tick is backgroundColor, white in light mode only, so the Lowdefy blocks
+    // passed the light-mode tests above before the fix and lost the tick contrast in dark mode.
+    test('the tick stays white in dark mode', async ({ page }) => {
+      const checkbox = cellCheckbox(page, 'theming_checkbox_lowdefy', 'active');
+      await expect(checkbox).toBeVisible();
+      const lightRow = await rowBackground(page, 'theming_checkbox_lowdefy');
+      await clickButton(page, 'theming_dark_on');
+      await expect.poll(() => isDark(page)).toBe(true);
+      // The light-mode tick is white too, so wait for the grid itself to turn dark first.
+      await expect.poll(() => rowBackground(page, 'theming_checkbox_lowdefy')).not.toBe(lightRow);
+      await expect
+        .poll(async () => (await checkboxColors(checkbox)).tick)
+        .toBe('rgb(255, 255, 255)');
+    });
+  });
+
+  // ============================================
   // NO LEGACY-CSS ERROR
   // ============================================
 

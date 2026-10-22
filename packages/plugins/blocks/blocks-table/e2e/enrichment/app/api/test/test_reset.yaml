@@ -32,12 +32,22 @@ routine:
     connectionId: table_columns
     properties:
       filter: {}
+  # The same insert time for every seed, and their order in the file as the tiebreak, as
+  # leads_import stamps a batch.
   - id: seed
     type: MongoDBInsertMany
     connectionId: leads
     properties:
       docs:
-        _ref: api/test/seed_leads.yaml
+        _array.map:
+          - _ref: api/test/seed_leads.yaml
+          - _function:
+              __object.assign:
+                - __args: 0
+                - createdAt:
+                    _date: now
+                  position:
+                    __args: 1
   - :return:
       insertedCount:
         _step: seed.insertedCount

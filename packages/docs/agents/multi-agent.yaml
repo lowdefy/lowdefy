@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: agent-multi-agent
     pageTitle: Multi-Agent
-    section: Agents
     filePath: agents/multi-agent.yaml
     content:
       - id: md1
@@ -159,10 +158,3 @@ _ref:
 
             > Tools with `confirm: true` are not supported on sub-agents, since sub-agents run server-side without direct user interaction. A build warning is shown if this is configured.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: MCP Tools
-            previous_page_id: agent-mcp-tools
-            next_page_title: Server Hooks
-            next_page_id: agent-server-hooks

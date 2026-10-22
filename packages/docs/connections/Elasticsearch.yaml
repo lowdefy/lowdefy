@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Elasticsearch
     pageTitle: Elasticsearch
-    section: Connections
     filePath: connections/Elasticsearch.yaml
     content:
       - id: markdown

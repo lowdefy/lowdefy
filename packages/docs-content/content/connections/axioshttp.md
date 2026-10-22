@@ -64,7 +64,7 @@ Properties for a AxiosHttp can be set on either the connection, the request, or 
 ###### A basic full example requesting data from https://jsonplaceholder.typicode.com
 
 ```yaml
-lowdefy: 6.0.0
+lowdefy: 7.0.0
 name: Lowdefy starter
 connections:
   - id: my_api

@@ -332,3 +332,54 @@ blocks:
         - dealer: A dealership name far wider than its column
         - dealer: Another dealership name far wider than its column
         - dealer: Short
+
+  # ============================================
+  # CHECKBOXES — ticked boxes show a tick
+  # ============================================
+
+  # A boolean field renders AG Grid's checkbox cell, read-only unless the column is editable. The
+  # read-only one is the case that read as unticked: it is disabled, and AG Grid greys a disabled box,
+  # so a tick drawn in the box colour left a plain grey square. Balham is here as well because its
+  # base draws the tick in the accent colour, the same primary colour antdParams gives the box; the
+  # Quartz base behind the Lowdefy blocks draws it in the background colour. Row selection uses the
+  # same checkbox styling, so the second grid of each pair covers it too.
+
+  - id: theming_checkbox_lowdefy
+    type: AgGridLowdefy
+    properties:
+      height: 200
+      rowSelection:
+        mode: multiRow
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Active
+          field: active
+        - headerName: Editable
+          field: active
+          editable: true
+      rowData:
+        - name: Alice
+          active: true
+        - name: Bob
+          active: false
+
+  - id: theming_checkbox_balham
+    type: AgGridBalham
+    properties:
+      height: 200
+      rowSelection:
+        mode: multiRow
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Active
+          field: active
+        - headerName: Editable
+          field: active
+          editable: true
+      rowData:
+        - name: Alice
+          active: true
+        - name: Bob
+          active: false

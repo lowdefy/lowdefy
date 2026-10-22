@@ -17,19 +17,25 @@
 import { useMemo, useState } from 'react';
 
 import createEnrichmentState from './createEnrichmentState.js';
+import getSavingRows from './getSavingRows.js';
 
 const EMPTY = [];
 
 // Data pipeline stage 3: rows added with "+ New row" show at the end while onRowAdd runs
-// (optimistic, marked `data-saving` through `api.savingRows`), and leave once it settles: on
-// success the app's data holds the row, on failure the editor shows the error. Returns the input
-// rows while nothing is saving.
-function useEnrichmentRows({ api, rows }) {
+// (optimistic, marked `data-saving` through `api.savingRows`). One leaves as soon as the data has
+// a row with its key (the app saved it under the `rowKey` the event sent), or else when the
+// event settles: on success the app's data holds the row, on failure the editor shows the error.
+// Returns the input rows while nothing is saving.
+function useEnrichmentRows({ api, config, rows }) {
   if (!api.enrichment) api.enrichment = createEnrichmentState();
   const [pending, setPending] = useState(EMPTY);
   api.enrichment.setPending = setPending;
-  api.savingRows = useMemo(() => (pending.length === 0 ? null : new Set(pending)), [pending]);
-  return useMemo(() => (pending.length === 0 ? rows : [...rows, ...pending]), [rows, pending]);
+  const saving = useMemo(
+    () => getSavingRows({ getKey: config.getKey, pending, rows }),
+    [config.getKey, pending, rows]
+  );
+  api.savingRows = useMemo(() => (saving.length === 0 ? null : new Set(saving)), [saving]);
+  return useMemo(() => (saving.length === 0 ? rows : [...rows, ...saving]), [rows, saving]);
 }
 
 export default useEnrichmentRows;

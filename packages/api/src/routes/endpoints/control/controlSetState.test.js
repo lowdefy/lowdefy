@@ -54,7 +54,7 @@ test('set_state sets simple value', async () => {
     {
       event: 'debug_control_set_state',
       input: { key: 'value' },
-      evaluated: { key: 'value' },
+      keys: ['key'],
     },
   ]);
 });
@@ -121,7 +121,7 @@ test('set_state with empty object', async () => {
     {
       event: 'debug_control_set_state',
       input: {},
-      evaluated: {},
+      keys: [],
     },
   ]);
 });

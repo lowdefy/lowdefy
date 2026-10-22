@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: agent-server-hooks
     pageTitle: Server Hooks
-    section: Agents
     filePath: agents/server-hooks.yaml
     content:
       - id: md1
@@ -359,10 +358,3 @@ _ref:
                           feedback: true
             ```
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Multi-Agent
-            previous_page_id: agent-multi-agent
-            next_page_title: AgentChat
-            next_page_id: AgentChat

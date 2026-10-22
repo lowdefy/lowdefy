@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Masonry
     pageTitle: Masonry
-    section: Container Blocks
     filePath: blocks/container/Masonry.yaml
     block_type: Masonry
     antd_component: Masonry

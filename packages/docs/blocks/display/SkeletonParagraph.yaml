@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: SkeletonParagraph
     pageTitle: SkeletonParagraph
-    section: Display Blocks
     filePath: blocks/display/SkeletonParagraph.yaml
     block_type: SkeletonParagraph
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonParagraph

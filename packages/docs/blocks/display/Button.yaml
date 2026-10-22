@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Button
     pageTitle: Button
-    section: Display Blocks
     filePath: blocks/display/Button.yaml
     block_type: Button
     antd_component: Button

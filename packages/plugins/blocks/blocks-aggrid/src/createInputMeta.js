@@ -184,10 +184,19 @@ function createInputMeta(blockName, { size = false } = {}) {
                 description: 'Set to true (or return true from function) to allow row dragging.',
               },
               filter: {
-                type: 'boolean',
+                type: ['boolean', 'string'],
+                // Only AG Grid's community filters: this block does not include
+                // Enterprise, and a misspelt name should fail the build check.
+                enum: [
+                  true,
+                  false,
+                  'agTextColumnFilter',
+                  'agNumberColumnFilter',
+                  'agDateColumnFilter',
+                ],
                 default: false,
                 description:
-                  'Filter component to use for this column. Set to true to use the default filter.',
+                  'Filter to use for this column. Set to `true` to use the default filter, or name a provided filter: `agTextColumnFilter`, `agNumberColumnFilter` or `agDateColumnFilter`. `agSetColumnFilter` and `agMultiColumnFilter` need AG Grid Enterprise, which this block does not include.',
               },
               sortable: {
                 type: 'boolean',
@@ -209,9 +218,9 @@ function createInputMeta(blockName, { size = false } = {}) {
                   'An object of css values returning an object of css values for a particular cell.',
               },
               cellRenderer: {
-                type: 'object',
+                type: ['object', 'string'],
                 description:
-                  "Provide your own cell Renderer function (using the `_function` operator) for this column's cells.",
+                  "Provide your own cell Renderer function (using the `_function` operator) for this column's cells, or name a registered cell renderer such as `agAnimateShowChangeCellRenderer`.",
               },
               valueFormatter: {
                 type: ['object', 'string'],
@@ -229,9 +238,9 @@ function createInputMeta(blockName, { size = false } = {}) {
                   'Provide a function (using the `_function` operator) that returns the tooltip value for a cell. Overrides `tooltipField`.',
               },
               tooltipComponent: {
-                type: 'object',
+                type: ['object', 'string'],
                 description:
-                  'Provide a custom tooltip component. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/).',
+                  'Provide a custom tooltip component, or the name of a component registered with the AG Grid `components` grid option. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/).',
               },
               ellipsis: {
                 type: 'number',

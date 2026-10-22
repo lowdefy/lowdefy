@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: protected-pages-apis
     pageTitle: Protected Pages and APIs
-    section: User Authentication
     filePath: users/protected-pages-apis.yaml
     content:
       - id: content
@@ -125,10 +124,3 @@ _ref:
                 - Protected resources require users to be authenticated before access is granted
                 - Role-based access control can be layered on top of protection for finer-grained permissions
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Introduction
-            previous_page_id: users-introduction
-            next_page_title: Roles
-            next_page_id: roles

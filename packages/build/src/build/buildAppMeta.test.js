@@ -18,6 +18,13 @@ import { jest } from '@jest/globals';
 
 import testContext from '../test-utils/testContext.js';
 
+// Mocked once at top level, with behaviour set per test: calling jest.resetModules() and
+// re-importing mid-file crashes Jest 28's ESM loader ("Module cache already has entry").
+const mockExecSync = jest.fn();
+jest.unstable_mockModule('child_process', () => ({
+  execSync: mockExecSync,
+}));
+
 const mockGetRefContent = jest.fn();
 jest.unstable_mockModule('./buildRefs/getRefContent.js', () => ({
   default: mockGetRefContent,
@@ -35,6 +42,7 @@ const originalEnvShaPresent = Object.prototype.hasOwnProperty.call(process.env, 
 const originalEnvSha = process.env.LOWDEFY_GIT_SHA;
 
 beforeEach(() => {
+  mockExecSync.mockReset();
   mockGetRefContent.mockReset();
   process.env.LOWDEFY_GIT_SHA = 'test-sha';
 });
@@ -168,40 +176,28 @@ test('buildAppMeta rejects a static _ operator in a root scalar', async () => {
 });
 
 test('buildAppMeta LOWDEFY_GIT_SHA env var wins over git rev-parse', async () => {
-  jest.resetModules();
-  jest.unstable_mockModule('child_process', () => ({
-    execSync: jest.fn(() => Buffer.from('from-git-rev-parse\n')),
-  }));
-  jest.unstable_mockModule('./buildRefs/getRefContent.js', () => ({
-    default: jest.fn().mockResolvedValue({}),
-  }));
-  const { default: buildAppMetaMocked } = await import('./buildAppMeta.js');
+  mockExecSync.mockImplementation(() => Buffer.from('from-git-rev-parse\n'));
+  mockGetRefContent.mockResolvedValue({});
 
   process.env.LOWDEFY_GIT_SHA = 'from-env-var';
   const context = makeContext();
-  await buildAppMetaMocked({ context });
+  await buildAppMeta({ context });
   expect(context.appMeta.gitSha).toBe('from-env-var');
 
   delete process.env.LOWDEFY_GIT_SHA;
   const context2 = makeContext();
-  await buildAppMetaMocked({ context: context2 });
+  await buildAppMeta({ context: context2 });
   expect(context2.appMeta.gitSha).toBe('from-git-rev-parse');
 });
 
 test('buildAppMeta returns null gitSha when env unset and git rev-parse fails', async () => {
-  jest.resetModules();
-  jest.unstable_mockModule('child_process', () => ({
-    execSync: jest.fn(() => {
-      throw new Error('not a git repo');
-    }),
-  }));
-  jest.unstable_mockModule('./buildRefs/getRefContent.js', () => ({
-    default: jest.fn().mockResolvedValue({}),
-  }));
-  const { default: buildAppMetaMocked } = await import('./buildAppMeta.js');
+  mockExecSync.mockImplementation(() => {
+    throw new Error('not a git repo');
+  });
+  mockGetRefContent.mockResolvedValue({});
 
   delete process.env.LOWDEFY_GIT_SHA;
   const context = makeContext();
-  await buildAppMetaMocked({ context });
+  await buildAppMeta({ context });
   expect(context.appMeta.gitSha).toBeNull();
 });

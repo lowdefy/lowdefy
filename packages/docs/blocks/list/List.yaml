@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: List
     pageTitle: List
-    section: List Blocks
     filePath: blocks/list/List.yaml
     block_type: List
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/List

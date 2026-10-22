@@ -60,3 +60,13 @@ test('lowdefyBuild passes skipPluginChecks undefined to shallowBuild when the op
   expect(args.skipPluginChecks).toBeUndefined();
   expect(args.stage).toEqual('dev');
 });
+
+test('lowdefyBuild passes pluginInstallFollows to shallowBuild', async () => {
+  await lowdefyBuild(createContext({}))({ pluginInstallFollows: true });
+  expect(mockShallowBuild.mock.calls.at(-1)[0].pluginInstallFollows).toBe(true);
+});
+
+test('lowdefyBuild passes pluginInstallFollows false when the build is not given it', async () => {
+  await lowdefyBuild(createContext({}))();
+  expect(mockShallowBuild.mock.calls.at(-1)[0].pluginInstallFollows).toBe(false);
+});

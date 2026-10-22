@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: websocket-publish
     pageTitle: Publish and Actions
-    section: WebSockets
     filePath: websockets/publish.yaml
     content:
       - id: md1
@@ -132,11 +131,3 @@ _ref:
                 ### Self-Hosted
 
                 The Node.js server handles websocket upgrades directly — nothing to configure. A single server process delivers publishes to all subscribers, so `Channel` behavior is complete on one instance. Behind a reverse proxy, forward the upgrade headers and the original `Host` header (`proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade"; proxy_set_header Host $host;` for nginx). The server refuses a websocket upgrade from a page whose origin does not match the `Host` it receives.
-
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Page Subscriptions
-            previous_page_id: websocket-subscriptions
-            next_page_title: Docker
-            next_page_id: docker

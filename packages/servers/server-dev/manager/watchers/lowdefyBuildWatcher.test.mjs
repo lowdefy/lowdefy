@@ -48,6 +48,12 @@ let localModuleRoot;
 let context;
 let watcher;
 
+// The path a ref map records for an app _ref: as written in YAML, relative to
+// the config directory with forward slashes on every platform.
+function appRefPath(filePath) {
+  return path.relative(configDir, filePath).split(path.sep).join('/');
+}
+
 function invalidated() {
   return fs.existsSync(path.join(buildDir, 'invalidatePages'));
 }
@@ -94,12 +100,13 @@ beforeEach(async () => {
   write(path.join(configDir, 'lowdefy.yaml'), 'lowdefy: local\n');
   write(path.join(configDir, 'pages.yaml'), '- _ref: pages/home.yaml\n');
   write(path.join(configDir, 'pages', 'home.yaml'), 'id: home\ntype: Box\n');
+  write(path.join(configDir, 'menus', 'main.yaml'), '- id: main\n');
   write(path.join(localModuleRoot, 'module.lowdefy.yaml'), 'name: Layout\n');
   write(path.join(localModuleRoot, 'menus.yaml'), '- id: main\n');
   write(path.join(worktreeDir, 'modules', 'shared', 'title-block.yaml'), 'id: title\n');
   write(
     path.join(buildDir, 'skeletonSourceFiles.json'),
-    JSON.stringify(['pages.yaml', path.join(localModuleRoot, 'menus.yaml')])
+    JSON.stringify(['menus/main.yaml', 'pages.yaml', path.join(localModuleRoot, 'menus.yaml')])
   );
   write(
     path.join(buildDir, 'routes.json'),
@@ -227,6 +234,15 @@ test('after a failed config build, an edit to a file not in skeletonSourceFiles 
   await waitFor(invalidated, { description: 'the pages to be invalidated' });
 });
 
+test('a skeleton file in a subdirectory of the config directory rebuilds the config', async () => {
+  await startWatcher();
+  fs.appendFileSync(path.join(configDir, 'menus', 'main.yaml'), '- id: other\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
+});
+
 test('a skeleton file in a local module outside the config directory rebuilds the config', async () => {
   await startWatcher();
   fs.appendFileSync(path.join(localModuleRoot, 'menus.yaml'), '- id: other\n');
@@ -263,7 +279,7 @@ test('a file that appears in refMap.json after the watch started is watched', as
   expect(isWatched({ configWatcher, filePath: footer })).toBe(false);
 
   const refMap = JSON.parse(fs.readFileSync(path.join(buildDir, 'refMap.json'), 'utf8'));
-  refMap[6] = { parent: '3', path: path.relative(configDir, footer) };
+  refMap[6] = { parent: '3', path: appRefPath(footer) };
   fs.writeFileSync(path.join(buildDir, 'refMap.json'), JSON.stringify(refMap));
 
   // The refMap watcher batches its change before adding the file.
@@ -282,7 +298,7 @@ test('a file a JIT page build read outside every watched directory is watched fr
     path.join(buildDir, 'jitMaps', 'abc123-1-1.json'),
     JSON.stringify({
       keyMap: {},
-      refMap: { p_abc123_1: { parent: null, path: path.relative(configDir, header) } },
+      refMap: { p_abc123_1: { parent: null, path: appRefPath(header) } },
     })
   );
   // The maps watcher batches its change for half a second before adding.

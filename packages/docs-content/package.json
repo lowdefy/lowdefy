@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/docs-content",
-  "version": "6.1.0",
+  "version": "7.0.0",
   "license": "Apache-2.0",
   "description": "Lowdefy documentation extracted as markdown for AI coding agents.",
   "homepage": "https://lowdefy.com",
@@ -21,8 +21,12 @@
   "exports": {
     "./index.json": "./index.json",
     "./hazards.json": "./hazards.json",
+    "./scripts/collectImportedFiles.js": "./scripts/collectImportedFiles.js",
     "./scripts/extractAgentDocs.js": "./scripts/extractAgentDocs.js",
     "./scripts/hashDocSources.js": "./scripts/hashDocSources.js",
+    "./scripts/isRedirectPage.js": "./scripts/isRedirectPage.js",
+    "./scripts/resolvePageSections.js": "./scripts/resolvePageSections.js",
+    "./scripts/sectionKind.js": "./scripts/sectionKind.js",
     "./content/*": "./content/*"
   },
   "files": [
@@ -32,7 +36,7 @@
     "scripts/*"
   ],
   "dependencies": {
-    "@lowdefy/nunjucks": "6.1.0"
+    "@lowdefy/nunjucks": "7.0.0"
   },
   "publishConfig": {
     "access": "public"

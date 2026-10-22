@@ -20,21 +20,23 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { parseArgs } from 'util';
 
+import collectImportedFiles from './collectImportedFiles.js';
 import hashDocSources from './hashDocSources.js';
 
 // Second step of `pnpm docs:content`. extractAgentDocs runs inside the docs
 // build, which knows each page's ref id but not yet the files behind it; the
 // build's refMap.json (written at its end) maps ref ids to files and their
 // parents. For each doc this finds the ref that pages.yaml resolved to the page,
-// lists that ref's file and every file referenced below it, and records them
-// with their hash in index.json. A package.json is read for its version, which
-// every release bumps, not for page content, so it is left out: otherwise each
-// release and dependency update would mark every doc stale. The page frame
+// lists that ref's file, every file referenced below it and the files those JS
+// files import (collectImportedFiles), and records them with their hash in
+// index.json. A package.json is read for its version, which every release
+// bumps, not for page content, so it is left out: otherwise each release and
+// dependency update would mark every doc stale. The page frame
 // (pageFrame, with its header, footer and feedback requests) holds no markdown
 // and wraps every page, so it is left out too: otherwise one edit to it would
 // change all the hashes, and two branches doing that would conflict in
 // index.json on every doc.
-function collectSourceFiles({ refMap, entryRefId, pageFrame }) {
+function collectSourceFiles({ configDirectory, refMap, entryRefId, pageFrame }) {
   const children = new Map();
   Object.entries(refMap).forEach(([id, ref]) => {
     const siblings = children.get(ref.parent) ?? [];
@@ -54,6 +56,7 @@ function collectSourceFiles({ refMap, entryRefId, pageFrame }) {
     }
     queue.push(...(children.get(id) ?? []));
   }
+  collectImportedFiles({ configDirectory, files: [...files] }).forEach((file) => files.add(file));
   return [...files].sort();
 }
 
@@ -73,7 +76,7 @@ function recordSourceHashes({ configDirectory, outputDir, pageFrame, pagesFile, 
   const sources = {};
   index.docs.forEach(({ slug }) => {
     const entryRefId = findEntryRef({ refMap, refId: index.sources[slug].refId, pagesFile });
-    const files = collectSourceFiles({ refMap, entryRefId, pageFrame });
+    const files = collectSourceFiles({ configDirectory, refMap, entryRefId, pageFrame });
     sources[slug] = { files, hash: hashDocSources({ configDirectory, files }) };
   });
   fs.writeFileSync(indexPath, JSON.stringify({ ...index, sources }, null, 2));

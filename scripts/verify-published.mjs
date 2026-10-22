@@ -34,32 +34,13 @@
  * workspace package, minus the `ignore` list in .changeset/config.json.
  */
 
-import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import getPublishablePackages from './lib/getPublishablePackages.mjs';
 
-const RETRIES = 5;
-const RETRY_DELAY_MS = 5000;
+// About five minutes: npm took over 20 seconds to show 14 of 7.1.0's packages.
+const RETRIES = 20;
+const RETRY_DELAY_MS = 15000;
 const CONCURRENCY = 10;
 const REGISTRY = (process.env.npm_config_registry ?? 'https://registry.npmjs.org').replace(/\/$/, '');
-
-function readJson(path) {
-  return JSON.parse(readFileSync(path, 'utf8'));
-}
-
-function getPublishablePackages() {
-  const { ignore = [] } = readJson('.changeset/config.json');
-  const ignored = new Set(ignore);
-
-  const workspaces = JSON.parse(
-    execFileSync('pnpm', ['ls', '-r', '--depth', '-1', '--json'], { encoding: 'utf8' })
-  );
-
-  return workspaces
-    .map((workspace) => readJson(join(workspace.path, 'package.json')))
-    .filter((pkg) => pkg.name && pkg.version && pkg.private !== true && !ignored.has(pkg.name))
-    .map((pkg) => ({ name: pkg.name, version: pkg.version }));
-}
 
 async function isPublished({ name, version }) {
   // The version manifest endpoint is a single lightweight request: 200 = live, 404 = not there.

@@ -1142,3 +1142,182 @@ test('callAgent resolverContext.getAgentConfig authorizes sub-agents against the
     agentConfig
   );
 });
+
+describe('redact', () => {
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: { apiKey: 'sk-test' },
+  };
+
+  function setup({ redact, operators }) {
+    const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+    const agentConfig = {
+      auth: { public: true },
+      agentId: 'my-agent',
+      id: 'agent:my-agent',
+      type: 'ClaudeAgent',
+      connectionId: 'my-anthropic',
+      tools: [],
+      properties: { model: 'claude-3-5-sonnet' },
+      ...(redact === undefined ? {} : { redact }),
+    };
+    const context = testContext({
+      logger,
+      readConfigFile: createMockReadConfigFile({ agentConfig, connectionConfig }),
+      connections: {
+        Anthropic: { create: jest.fn().mockReturnValue({}), requests: {} },
+      },
+      operators,
+      user: { id: 'user_1' },
+    });
+    context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+    return { context, mockResolver };
+  }
+
+  const redact = {
+    patterns: [
+      { name: 'email', pattern: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}' },
+      '\\d(?:[ -]?\\d){8,}',
+    ],
+  };
+
+  const messages = [
+    {
+      id: 'm1',
+      role: 'user',
+      parts: [{ type: 'text', text: 'My ID is 8001015009087, mail me at jo@example.com' }],
+    },
+    {
+      id: 'm2',
+      role: 'assistant',
+      parts: [
+        { type: 'text', text: 'Noted jo@example.com and 8001015009087.' },
+        {
+          type: 'tool-lookup',
+          toolCallId: 't1',
+          state: 'output-available',
+          input: { email: 'jo@example.com' },
+          output: { id: '8001015009087' },
+        },
+      ],
+    },
+    {
+      id: 'm3',
+      role: 'user',
+      parts: [
+        { type: 'text', text: 'Also call 08255512345 or ann@example.org' },
+        {
+          type: 'file',
+          mediaType: 'image/png',
+          filename: 'jo@example.com.png',
+          url: 'https://files.example.com/a.png',
+        },
+      ],
+    },
+  ];
+
+  test('masks every user message and leaves assistant, tool and file parts alone', async () => {
+    const { context, mockResolver } = setup({ redact });
+    await callAgent(context, { agentId: 'my-agent', pageId: 'p', messages });
+
+    const sent = mockResolver.mock.calls[0][0].properties.messages;
+    expect(sent[0].parts[0].text).toEqual('My ID is [removed], mail me at [removed]');
+    expect(sent[1]).toBe(messages[1]);
+    expect(sent[2].parts[0].text).toEqual('Also call [removed] or [removed]');
+    expect(sent[2].parts[0].text).not.toContain('08255512345');
+    expect(sent[2].parts[1]).toBe(messages[2].parts[1]);
+    // The browser's messages are not changed in place.
+    expect(messages[0].parts[0].text).toEqual('My ID is 8001015009087, mail me at jo@example.com');
+  });
+
+  test('logs the count of replacements by name, never the matched text', async () => {
+    const { context } = setup({ redact });
+    await callAgent(context, { agentId: 'my-agent', pageId: 'p', messages });
+
+    const call = logger.debug.mock.calls.find(([entry]) => entry.event === 'debug_agent_redact');
+    expect(call[0]).toEqual({
+      event: 'debug_agent_redact',
+      agentId: 'my-agent',
+      replacements: { email: 2, 'redact.patterns[1]': 2 },
+    });
+    expect(JSON.stringify(logger.debug.mock.calls)).not.toContain('8001015009087');
+    expect(JSON.stringify(logger.debug.mock.calls)).not.toContain('jo@example.com');
+  });
+
+  test('uses replacement and flags', async () => {
+    const { context, mockResolver } = setup({
+      redact: { replacement: '***', patterns: [{ pattern: 'SECRET', flags: 'i' }] },
+    });
+    await callAgent(context, {
+      agentId: 'my-agent',
+      pageId: 'p',
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'secret and Secret' }] }],
+    });
+    const sent = mockResolver.mock.calls[0][0].properties.messages;
+    expect(sent[0].parts[0].text).toEqual('*** and ***');
+  });
+
+  test('evaluates operators in redact', async () => {
+    const { context, mockResolver } = setup({
+      redact: { patterns: { _piiPatterns: true } },
+      operators: { _piiPatterns: () => ['\\d{4}'] },
+    });
+    await callAgent(context, {
+      agentId: 'my-agent',
+      pageId: 'p',
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'pin 1234' }] }],
+    });
+    const sent = mockResolver.mock.calls[0][0].properties.messages;
+    expect(sent[0].parts[0].text).toEqual('pin [removed]');
+  });
+
+  test('a sticky flag from an operator is a ConfigError', async () => {
+    const { context, mockResolver } = setup({
+      redact: { patterns: { _piiPatterns: true } },
+      operators: { _piiPatterns: () => [{ pattern: '\\d{4}', flags: 'y' }] },
+    });
+    await expect(
+      callAgent(context, {
+        agentId: 'my-agent',
+        pageId: 'p',
+        messages: [{ role: 'user', parts: [{ type: 'text', text: 'pin 1234 5678' }] }],
+      })
+    ).rejects.toThrow('Agent "redact.patterns[0].flags" should not include "y".');
+    expect(mockResolver).not.toHaveBeenCalled();
+  });
+
+  test('a pattern that matches empty text is a ConfigError', async () => {
+    const { context, mockResolver } = setup({ redact: { patterns: ['\\d*'] } });
+    await expect(
+      callAgent(context, {
+        agentId: 'my-agent',
+        pageId: 'p',
+        messages: [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+      })
+    ).rejects.toThrow('Agent "redact.patterns[0]" matches empty text.');
+    expect(mockResolver).not.toHaveBeenCalled();
+  });
+
+  test('an invalid pattern from an operator is a ConfigError', async () => {
+    const { context, mockResolver } = setup({
+      redact: { patterns: { _piiPatterns: true } },
+      operators: { _piiPatterns: () => ['(unclosed'] },
+    });
+    await expect(
+      callAgent(context, {
+        agentId: 'my-agent',
+        pageId: 'p',
+        messages: [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+      })
+    ).rejects.toThrow(ConfigError);
+    expect(mockResolver).not.toHaveBeenCalled();
+  });
+
+  test('without redact the messages reach the resolver untouched', async () => {
+    const { context, mockResolver } = setup({});
+    await callAgent(context, { agentId: 'my-agent', pageId: 'p', messages });
+    expect(mockResolver.mock.calls[0][0].properties.messages).toBe(messages);
+  });
+});
