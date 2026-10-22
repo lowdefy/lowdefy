@@ -219,3 +219,19 @@ test.describe('Table toolbar', () => {
     expect((await download).suggestedFilename()).toBe('tb.csv');
   });
 });
+
+test.describe('Table toolbar on a phone', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('below 768px the Filter button opens the builder as a full-height sheet', async ({
+    page,
+  }) => {
+    await openTablePage(page, 'toolbar');
+    await button(page, 'tb', 'filter').click();
+    const sheet = page.locator('.lf-table-filter-sheet');
+    await expect(sheet.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]')).toBeVisible();
+    await expect(sheet.locator('[data-lf-record-count]')).toHaveText('5 rows');
+    const box = await sheet.boundingBox();
+    expect(box.height).toBeGreaterThan(800);
+  });
+});

@@ -15,13 +15,14 @@
 */
 
 import React, { Suspense, useEffect, useRef, useState } from 'react';
-import { Button, Popover, Tooltip } from 'antd';
+import { Button, Drawer, Popover, Tooltip } from 'antd';
 
 import countConditions from './countConditions.js';
 import describeTableFilter from '../filtering/describeTableFilter.js';
 import focusFilterLeaf from './focusFilterLeaf.js';
 import LazyFilterBuilder from '../filtering/LazyFilterBuilder.js';
 import PopoverLoadingContent from '../../core/PopoverLoadingContent.js';
+import RecordCount from './RecordCount.js';
 import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
@@ -31,7 +32,9 @@ const FOCUS_FRAMES = 60;
 // Opens the filter builder on the whole `view.filter`; the button counts its conditions and shows
 // the filter in words as its tooltip. Edits go through applyFiltering, the one filter write path.
 // The `openFilter` method opens it too (api.filterButton), optionally focusing a new condition.
-function FilterButton({ api }) {
+// On a phone (`phone`) the builder opens as a full-height sheet, with the record count at its
+// foot following each edit.
+function FilterButton({ api, phone = false }) {
   const [open, setOpen] = useState(false);
   const [focus, setFocus] = useState(null);
   const popoverRef = useRef(null);
@@ -78,6 +81,39 @@ function FilterButton({ api }) {
       </Suspense>
     </div>
   );
+  const button = (
+    <Tooltip title={phone ? null : sentence}>
+      <Button
+        data-lf-toolbar-button="filter"
+        icon={<ToolbarIcon api={api} name="filter" />}
+        onClick={phone ? () => setOpen(true) : undefined}
+        onFocus={LazyFilterBuilder.preload}
+        onPointerEnter={LazyFilterBuilder.preload}
+        size="small"
+      >
+        Filter
+        <ToolbarCount count={countConditions(filter)} />
+      </Button>
+    </Tooltip>
+  );
+  if (phone) {
+    return (
+      <>
+        {button}
+        <Drawer
+          className="lf-table-filter-sheet"
+          footer={<RecordCount api={api} />}
+          onClose={() => setOpen(false)}
+          open={open}
+          placement="bottom"
+          size="100%"
+          title="Filter"
+        >
+          {content}
+        </Drawer>
+      </>
+    );
+  }
   return (
     <Popover
       content={content}
@@ -86,18 +122,7 @@ function FilterButton({ api }) {
       placement="bottomLeft"
       trigger="click"
     >
-      <Tooltip title={sentence}>
-        <Button
-          data-lf-toolbar-button="filter"
-          icon={<ToolbarIcon api={api} name="filter" />}
-          onFocus={LazyFilterBuilder.preload}
-          onPointerEnter={LazyFilterBuilder.preload}
-          size="small"
-        >
-          Filter
-          <ToolbarCount count={countConditions(filter)} />
-        </Button>
-      </Tooltip>
+      {button}
     </Popover>
   );
 }

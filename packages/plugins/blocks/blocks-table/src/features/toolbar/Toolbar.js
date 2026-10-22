@@ -15,13 +15,14 @@
 */
 
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Grid } from 'antd';
 
 import DensityToggle from './DensityToggle.js';
 import ExportButton from './ExportButton.js';
 import FilterButton from './FilterButton.js';
 import LazyColumnManagerPopover from '../columnManager/LazyColumnManagerPopover.js';
 import GroupButton from './GroupButton.js';
+import isPhoneLayout from '../../core/isPhoneLayout.js';
 import QuickFilter from './QuickFilter.js';
 import RecordCount from './RecordCount.js';
 import renderSlot from '../../core/renderSlot.js';
@@ -35,8 +36,10 @@ import './toolbar.css';
 // The table's own chrome above the grid (D7): view tabs, then one row with the `toolbarStart`
 // slot, search, quick filters and the view controls, and at the end the record count, density,
 // columns, export, the features' `toolbarItems` (enrichment's CSV import) and the `toolbarEnd`
-// slot. antd components: this is chrome, not cells.
+// slot. antd components: this is chrome, not cells. Below the md breakpoint the tabs and the
+// filter builder take their phone layout (isPhoneLayout).
 function Toolbar({ api, searchRef, toolbar }) {
+  const phone = isPhoneLayout(Grid.useBreakpoint());
   const { columnsByKey } = api.config;
   const { content } = api;
   const groupable = api.config.columns.filter((column) => column.groupable);
@@ -44,7 +47,7 @@ function Toolbar({ api, searchRef, toolbar }) {
   const showTabs = toolbar.views && api.views.items.length > 0;
   return (
     <div className="lf-table-toolbar" data-lf-toolbar="">
-      {showTabs ? <ViewTabs api={api} /> : null}
+      {showTabs ? <ViewTabs api={api} phone={phone} /> : null}
       <div className="lf-table-toolbar-row">
         <div className="lf-table-toolbar-start">
           {renderSlot({ content, slot: 'toolbarStart' })}
@@ -52,7 +55,7 @@ function Toolbar({ api, searchRef, toolbar }) {
           {quickFilters.map((column) => (
             <QuickFilter api={api} column={column} key={column.key} />
           ))}
-          {toolbar.filter ? <FilterButton api={api} /> : null}
+          {toolbar.filter ? <FilterButton api={api} phone={phone} /> : null}
           {toolbar.sort ? <SortButton api={api} /> : null}
           {toolbar.group && groupable.length > 0 ? (
             <GroupButton api={api} groupable={groupable} />
