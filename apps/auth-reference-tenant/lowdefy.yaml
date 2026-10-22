@@ -53,9 +53,22 @@ auth:
           _build.if_none:
             - _build.env: INVITATION_EXPIRES_IN
             - '172800'
+    # The owner of a new organization holds the owner app role, so pages
+    # gated on app roles open for a new signup in their own organization.
+    # Invited members get the app roles their invitation carries instead.
+    creatorAppRoles:
+      - owner
+
+  roles:
+    - id: owner
+      label: Owner
+      description: Created the organization.
 
   pages:
     protected: true
+    roles:
+      owner:
+        - owner-settings
     public:
       - login
       - signup
@@ -119,3 +132,4 @@ pages:
   - _ref: pages/organizations.yaml
   - _ref: pages/members.yaml
   - _ref: pages/notes.yaml
+  - _ref: pages/owner-settings.yaml
