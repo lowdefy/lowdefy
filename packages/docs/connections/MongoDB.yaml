@@ -703,8 +703,17 @@ _ref:
             queued: 2400          # cells queued, those waiting for an input column included
             skipped: 12           # selected cells the mode left alone (live, fresh or not matching)
             missingInputs: 3      # cells set to empty for a missing input
+            byColumn:             # the same counts for each column run, summing to the totals
+              email: { queued: 1200, missingInputs: 3 }
+              pitch: { queued: 1200, missingInputs: 0 }
             runId: 66f9…
             ```
+
+            ##### Dry run
+
+            With `dryRun: true` the request reads and plans exactly as a run does (the same selection, mode, `maxCells`, `maxTimeMS` and tenant scope) and returns the counts the run would write, writing no cell and no change log record. The response is `{ dryRun: true, queued, missingInputs, skipped, byColumn }`, with no `runId`. Over `maxCells` it throws as a run would, so an app learns a run is too large before it asks.
+
+            Use it to confirm a run that costs money before it starts: in the run event, call the request with `dryRun: true`, show a confirm with each column's `queued` count times that column's provider cost, and on a yes call it again without `dryRun`. Cells can change between the two calls, so the run's own response, whose `byColumn` has the same shape, says what was queued.
 
             #### Properties
             - `columns: string[]`: __Required__ - The keys of the enrichment or ai columns to run.
@@ -715,6 +724,7 @@ _ref:
             - `filter: object`: The base filter every read and write is scoped by, for example `{ org_id: { _user: organization.id } }`. Required unless the connection is tenant-scoped. Set it to `{}` to run on every document.
             - `maxCells: integer`: Default: `10000` - The most cells one enqueue may write, queued and missing input cells together.
             - `maxTimeMS: integer`: Default: `30000` - The time limit of each read.
+            - `dryRun: boolean`: Default: `false` - Count the cells the run would queue and set empty, by column, and write nothing. See [Dry run](#dry-run).
             - `runId: string`: The `runId` the queued cells get, 1 to 64 letters, digits, `_` or `-`. Generated when left out.
             - `user: object`: The user that `{ $user: path }` values in a selection filter resolve from. Set it to `{ _user: true }`.
             - `timezone: string`: Default: `UTC` - The IANA time zone whose days the date filters of a selection compare.

@@ -18,11 +18,8 @@ import getCollection from '../getCollection.js';
 import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
-import runBulkWriteBatches from '../enrichment/runBulkWriteBatches.js';
-import scopeWriteOperations from '../enrichment/scopeWriteOperations.js';
-import writeEnrichmentLog from '../enrichment/writeEnrichmentLog.js';
 import compileEnrichmentEnqueue from './compileEnrichmentEnqueue.js';
-import planEnqueue from './planEnqueue.js';
+import runEnqueue from './runEnqueue.js';
 import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
@@ -31,7 +28,9 @@ const requestType = 'MongoDBEnrichmentEnqueue';
 // Queues the cells of enrichment columns for the worker: the selected rows (inside the base
 // filter and tenant) and the mode's cells, never a live one. Cells whose inputs are missing
 // are set to empty with the missing column named instead. The writes are unordered bulkWrites
-// of 1000 cells, and nothing is written when more than `maxCells` cells would be.
+// of 1000 cells, and nothing is written when more than `maxCells` cells would be. With
+// `dryRun` it reads and plans exactly as a run does, then returns the counts the run would
+// write, by column, writing nothing, so an app can price a run and ask before it spends.
 async function MongoDBEnrichmentEnqueue(context) {
   const { connection, request, tenant, tenantGuard } = context;
   assertTenantWritable({ tenantGuard, requestType });
@@ -42,51 +41,12 @@ async function MongoDBEnrichmentEnqueue(context) {
     now: new Date(),
   });
   const { collection, logCollection } = await getCollection({ connection });
-  let response;
-  let operations;
   try {
-    const plan = await planEnqueue({ collection, compiled, tenant });
-    const queueOperations = scopeWriteOperations({
-      operations: plan.queueOperations,
-      tenant,
-      tenantGuard,
-    });
-    const missingOperations = scopeWriteOperations({
-      operations: plan.missingOperations,
-      tenant,
-      tenantGuard,
-    });
-    operations = [...queueOperations, ...missingOperations];
-    const queued = await runBulkWriteBatches({ collection, operations: queueOperations });
-    const missing = await runBulkWriteBatches({ collection, operations: missingOperations });
-    response = {
-      queued: queued.matchedCount,
-      skipped: Math.max(0, plan.cellCount - queued.matchedCount - missing.matchedCount),
-      missingInputs: missing.matchedCount,
-      runId: compiled.runId,
-    };
+    const response = await runEnqueue({ collection, logCollection, compiled, properties, context });
+    return serialize(response);
   } catch (error) {
     throw mapMongoError(error, { connection, requestType });
   }
-  if (operations.length > 0) {
-    try {
-      await writeEnrichmentLog({
-        args: {
-          columns: compiled.targets.map((target) => target.columnKey),
-          mode: compiled.mode,
-          runId: compiled.runId,
-          selection: properties.selection ?? null,
-        },
-        context,
-        logCollection,
-        response,
-        type: requestType,
-      });
-    } catch (error) {
-      throw mapMongoError(error, { connection, requestType });
-    }
-  }
-  return serialize(response);
 }
 
 MongoDBEnrichmentEnqueue.schema = schema;
