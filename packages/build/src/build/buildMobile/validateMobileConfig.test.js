@@ -196,7 +196,9 @@ test('validateMobileConfig throws on a duplicate shell id', () => {
 test('validateMobileConfig throws on an unknown ios key', () => {
   expect(() =>
     validateMobileConfig({ context, mobile: { shells: [{ id: 'field', ios: { appId: 'x' } }] } })
-  ).toThrow('App "mobile.shells[0].ios" has unknown key "appId". Allowed keys: bundleId, teamId.');
+  ).toThrow(
+    'App "mobile.shells[0].ios" has unknown key "appId". Allowed keys: bundleId, teamId, ascAppId.'
+  );
 });
 
 test('validateMobileConfig throws when android sha256 is not a string or strings', () => {
@@ -290,7 +292,7 @@ const storeShell = {
   scheme: 'field',
   distribution: 'private',
   eas: { owner: 'example', projectId: '2b6f0000-0000-0000-0000-000000000000' },
-  ios: { bundleId: 'com.example.field', teamId: 'ABCDE12345' },
+  ios: { bundleId: 'com.example.field', teamId: 'ABCDE12345', ascAppId: '6825509768' },
   android: { package: 'com.example.field', sha256: ['AA:BB'] },
 };
 
@@ -363,6 +365,16 @@ test.each([
     'a bundle id with an underscore',
     { ios: { bundleId: 'com.example.field_app' } },
     'App "mobile.shells[0].ios.bundleId" should be a reverse-DNS bundle id',
+  ],
+  [
+    'an ascAppId that is not digits',
+    { ios: { bundleId: 'com.example.field', ascAppId: 'pelican' } },
+    'App "mobile.shells[0].ios.ascAppId" should be the App Store Connect app id, digits only, like "6825509768".',
+  ],
+  [
+    'a numeric ascAppId',
+    { ios: { bundleId: 'com.example.field', ascAppId: 6825509768 } },
+    'App "mobile.shells[0].ios.ascAppId" should be a string.',
   ],
   [
     'a bad package',

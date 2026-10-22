@@ -239,6 +239,28 @@ test('basic, field and dev shells carry the speech purpose texts and RECORD_AUDI
     });
   }));
 
+// Every shell links expo-image, which references the Photos framework (PhotoLibraryAssetLoader.swift),
+// so App Store Connect refuses an upload whose Info.plist has no photo library purpose (ITMS-90683).
+test('basic, field and dev shells carry the photo library purpose text', () =>
+  withTemporaryDirectory(async (directory) => {
+    const shells = [
+      { profile: 'basic', variant: 'release' },
+      { profile: 'field', variant: 'release' },
+      { profile: 'dev', variant: 'dev' },
+    ];
+    shells.forEach(({ profile, variant }) => {
+      const configPath = path.join(directory, `${profile}.json`);
+      fs.writeFileSync(configPath, JSON.stringify({ ...fieldShell, icon: undefined, profile }));
+      const config = readAppConfig(configPath, 'introspect', { variant });
+      assert.equal(
+        config.ios.infoPlist.NSPhotoLibraryUsageDescription,
+        '$(PRODUCT_NAME) shows a photo from your library only when you choose one.',
+        profile
+      );
+      assert.equal(config.ios.infoPlist.EXDevMenuShowFloatingActionButton, false, profile);
+    });
+  }));
+
 test('a shell config without an icon keeps Expo defaults and still declares compliance', () =>
   withTemporaryDirectory(async (directory) => {
     const configPath = path.join(directory, 'shell.json');

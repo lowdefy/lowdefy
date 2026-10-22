@@ -22,6 +22,7 @@ import test from 'node:test';
 const require = createRequire(import.meta.url);
 const {
   MICROPHONE_PERMISSION,
+  PHOTO_LIBRARY_PERMISSION,
   PROFILES,
   RELEASE_PROFILES,
   SPEECH_RECOGNITION_PERMISSION,
@@ -69,6 +70,15 @@ test('basic carries the speech module, its config plugin and its permissions', (
     'NSSpeechRecognitionUsageDescription',
     'android.permission.RECORD_AUDIO',
   ].forEach((permission) => assert.ok(basic.permissions.includes(permission), permission));
+});
+
+test('every profile carries the photo library purpose text expo-image needs', () => {
+  Object.keys(PROFILES).forEach((name) => {
+    const profile = resolveProfile(name);
+    assert.ok('expo-image' in profile.modules, name);
+    assert.ok(profile.permissions.includes('NSPhotoLibraryUsageDescription'), name);
+    assert.equal(profile.infoPlist.NSPhotoLibraryUsageDescription, PHOTO_LIBRARY_PERMISSION, name);
+  });
 });
 
 test('every profile carries speech', () => {

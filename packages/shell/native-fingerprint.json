@@ -1,12 +1,12 @@
 {
-  "nativeVersion": 2,
-  "hash": "32a477d7fe75d305f87e57d1f633f2fe6d3f9a59",
+  "nativeVersion": 3,
+  "hash": "198840142d4120c0fc88134d34e8ec0a2556c403",
   "profiles": {
-    "basic": "cd8736936deaf720f1427407d9401b1f900a9d75",
-    "field": "5375e8ffcc85dfb3a9c0f9abc0b7ee6cd1dfeea4",
-    "field-nfc": "5375e8ffcc85dfb3a9c0f9abc0b7ee6cd1dfeea4",
-    "field-tracking": "5375e8ffcc85dfb3a9c0f9abc0b7ee6cd1dfeea4",
-    "dev": "654adfb2adfcd0c77034176aa02ac36c20a449c2",
-    "development": "654adfb2adfcd0c77034176aa02ac36c20a449c2"
+    "basic": "b4e4ab01b7281cf18d42e0c352632a20e68c7c2d",
+    "field": "d3f4e73e5b5523799deff08813cf779337a5f6a0",
+    "field-nfc": "d3f4e73e5b5523799deff08813cf779337a5f6a0",
+    "field-tracking": "d3f4e73e5b5523799deff08813cf779337a5f6a0",
+    "dev": "f15d6afc5610e229257f9ac2ad75bda34fc12947",
+    "development": "f15d6afc5610e229257f9ac2ad75bda34fc12947"
   }
 }

@@ -41,7 +41,7 @@ const SHELL_KEYS = [
   'plugins',
 ];
 const SHELL_PLUGIN_KEYS = ['name', 'version', 'typePrefix', 'options'];
-const IOS_KEYS = ['bundleId', 'teamId'];
+const IOS_KEYS = ['bundleId', 'teamId', 'ascAppId'];
 const ANDROID_KEYS = ['package', 'sha256'];
 const EAS_KEYS = ['owner', 'projectId'];
 // The capability profiles @lowdefy/shell defines. The shell's own table is
@@ -56,6 +56,8 @@ const STORE_VERSION_PATTERN = /^\d+\.\d+$/;
 const PLUGIN_VERSION_PATTERN = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/;
 // Apple: alphanumerics, hyphens and periods, in reverse-DNS form.
 const IOS_BUNDLE_ID_PATTERN = /^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
+// App Store Connect's numeric app id (App Information, Apple ID).
+const ASC_APP_ID_PATTERN = /^[0-9]+$/;
 // Android: at least two segments, each starting with a letter; letters, digits
 // and underscores only.
 const ANDROID_PACKAGE_PATTERN = /^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$/;
@@ -245,6 +247,13 @@ function validateShellIos({ ios, path, configKey }) {
     configKey,
   });
   checkOptionalString({ value: ios.teamId, path: `${path}.teamId`, configKey });
+  checkOptionalPattern({
+    value: ios.ascAppId,
+    pattern: ASC_APP_ID_PATTERN,
+    path: `${path}.ascAppId`,
+    description: 'the App Store Connect app id, digits only, like "6825509768"',
+    configKey,
+  });
 }
 
 function validateShellAndroid({ android, path, configKey }) {

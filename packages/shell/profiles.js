@@ -30,6 +30,8 @@ const path = require('node:path');
   - plugins: the config plugin entries app.config.ts applies. A profile's entry for a plugin its
     parent also has replaces the parent's.
   - permissions: the iOS Info.plist keys and Android permissions its modules ask for.
+  - infoPlist: iOS purpose texts no config plugin writes, as { [Info.plist key]: text }, for a
+    module that links a framework App Store Connect asks a purpose for.
   - jsEntries: the feature modules only it uses. A bundle for any other profile resolves them to
     empty modules (metro.config.js).
   - privacyReasons: the required-reason APIs its modules use, for the iOS privacy manifest, as
@@ -52,6 +54,11 @@ const MICROPHONE_PERMISSION =
   '$(PRODUCT_NAME) uses the microphone when you tap the microphone button, to turn what you say into text.';
 const SPEECH_RECOGNITION_PERMISSION =
   '$(PRODUCT_NAME) turns what you say into text on this device. Your voice is not recorded or sent anywhere.';
+// expo-image links the Photos framework (PhotoLibraryAssetLoader.swift, for `ph://` URIs), so App
+// Store Connect refuses an upload without a photo library purpose (ITMS-90683). No config plugin
+// writes it.
+const PHOTO_LIBRARY_PERMISSION =
+  '$(PRODUCT_NAME) shows a photo from your library only when you choose one.';
 
 const PROFILES = {
   // What every shell carries: the runtime, native blocks, sign-in, biometric unlock and on-device
@@ -106,7 +113,9 @@ const PROFILES = {
       'NSMicrophoneUsageDescription',
       'NSSpeechRecognitionUsageDescription',
       'android.permission.RECORD_AUDIO',
+      'NSPhotoLibraryUsageDescription',
     ],
+    infoPlist: { NSPhotoLibraryUsageDescription: PHOTO_LIBRARY_PERMISSION },
     jsEntries: [],
     // React Native's own (file timestamps, UserDefaults, boot time), and the free disk space
     // expo-sqlite checks before it writes.
@@ -194,7 +203,8 @@ function unique(values) {
 }
 
 // Merges two resolved profiles, or a profile entry onto its resolved parent: lists are joined
-// without duplicates, and `added`'s modules and plugins replace `base`'s of the same name.
+// without duplicates, and `added`'s modules, plugins and Info.plist texts replace `base`'s of the
+// same name.
 function mergeProfiles(base, added) {
   const plugins = [...base.plugins];
   (added.plugins ?? []).forEach((plugin) => {
@@ -226,6 +236,7 @@ function mergeProfiles(base, added) {
     modules: { ...base.modules, ...added.modules },
     plugins,
     permissions: unique([...base.permissions, ...(added.permissions ?? [])]),
+    infoPlist: { ...base.infoPlist, ...added.infoPlist },
     jsEntries: unique([...base.jsEntries, ...(added.jsEntries ?? [])]),
     privacyReasons,
     dataCollected,
@@ -237,6 +248,7 @@ const EMPTY_PROFILE = {
   modules: {},
   plugins: [],
   permissions: [],
+  infoPlist: {},
   jsEntries: [],
   privacyReasons: [],
   dataCollected: [],
@@ -246,8 +258,8 @@ const EMPTY_PROFILE = {
  * Everything a capability profile carries, with the profiles it extends folded in.
  *
  * @param {string} name The profile's name (shell.json `profile`).
- * @returns {{ name, capabilities, modules, plugins, permissions, jsEntries, privacyReasons,
- *   dataCollected }}
+ * @returns {{ name, capabilities, modules, plugins, permissions, infoPlist, jsEntries,
+ *   privacyReasons, dataCollected }}
  */
 function resolveProfile(name) {
   if (!Object.prototype.hasOwnProperty.call(PROFILES, name)) {
@@ -265,6 +277,7 @@ function resolveProfile(name) {
 module.exports = {
   DEV_ENTRY,
   MICROPHONE_PERMISSION,
+  PHOTO_LIBRARY_PERMISSION,
   PROFILES,
   RELEASE_PROFILES,
   mergeProfiles,

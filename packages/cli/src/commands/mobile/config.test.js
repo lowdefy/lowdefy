@@ -196,12 +196,14 @@ test('config writes shell.json, eas.json and the icon', async () => {
     build: {
       production: {
         channel: 'production',
+        environment: 'production',
         autoIncrement: true,
         distribution: 'store',
         env: { LOWDEFY_SHELL_CONFIG: './shell.json', LOWDEFY_SHELL_VARIANT: 'release' },
       },
       staging: {
         channel: 'staging',
+        environment: 'preview',
         autoIncrement: true,
         distribution: 'store',
         env: { LOWDEFY_SHELL_CONFIG: './shell.json', LOWDEFY_SHELL_VARIANT: 'release' },
@@ -226,6 +228,62 @@ test('config writes shell.json, eas.json and the icon', async () => {
     shellJson: readProjectJson('shell.json'),
     shellVersion: '7.1.0',
   });
+});
+
+// What pnpm writes after it installs a project (node_modules/.modules.yaml).
+function writeModulesYaml(packageManager) {
+  fs.mkdirSync(projectPath('node_modules'), { recursive: true });
+  fs.writeFileSync(
+    projectPath('node_modules', '.modules.yaml'),
+    JSON.stringify({ layoutVersion: 5, packageManager, nodeLinker: 'isolated' }, null, 2)
+  );
+}
+
+test('config pins every build profile to the pnpm that installed the shell project', async () => {
+  mockSpawnProcess.mockImplementation(async () => writeModulesYaml('pnpm@10.33.0'));
+  await config({ context: createContext() });
+  const { build } = readProjectJson('eas.json');
+  expect(build.production.pnpm).toBe('10.33.0');
+  expect(build.staging.pnpm).toBe('10.33.0');
+  expect(build.development.pnpm).toBe('10.33.0');
+});
+
+test('config fails when the shell project was not installed with pnpm', async () => {
+  mockSpawnProcess.mockImplementation(async () => writeModulesYaml('npm@10.9.0'));
+  await expect(config({ context: createContext() })).rejects.toThrow(
+    `The shell project at ${projectPath()} was not installed with pnpm. Its node_modules/.modules.yaml records packageManager "npm@10.9.0".`
+  );
+});
+
+test('config writes ios.ascAppId into every submit profile', async () => {
+  writeApp({ shells: [{ ...fieldShell, ios: { ...fieldShell.ios, ascAppId: '6825509768' } }] });
+  await config({ context: createContext({ env: 'staging' }) });
+  expect(readProjectJson('eas.json').submit).toEqual({
+    production: { android: { track: 'internal' }, ios: { ascAppId: '6825509768' } },
+    staging: { android: { track: 'internal' }, ios: { ascAppId: '6825509768' } },
+  });
+});
+
+test('config gives prod the production EAS environment and others preview, and skips envs without a url', async () => {
+  const savedEnvironments = appConfig.environments;
+  appConfig.environments = {
+    '~k': 'environments',
+    local: { email: { filter: false } },
+    staging: { url: 'https://staging.field.example.com' },
+    prod: { url: 'https://field.example.com' },
+  };
+  try {
+    writeApp({ shells: [fieldShell] });
+    await config({ context: createContext({ env: 'staging' }) });
+  } finally {
+    appConfig.environments = savedEnvironments;
+  }
+  const easJson = readProjectJson('eas.json');
+  expect(Object.keys(easJson.build)).toEqual(['staging', 'prod', 'development']);
+  expect(easJson.build.staging.environment).toBe('preview');
+  expect(easJson.build.prod.environment).toBe('production');
+  expect(easJson.build.development.environment).toBeUndefined();
+  expect(Object.keys(easJson.submit)).toEqual(['staging', 'prod']);
 });
 
 test('config prints the runtime version', async () => {
