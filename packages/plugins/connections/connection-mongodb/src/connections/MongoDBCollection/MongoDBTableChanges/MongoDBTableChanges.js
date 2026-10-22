@@ -18,6 +18,7 @@ import { ObjectId } from 'mongodb';
 import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import omitLogFields from '../omitLogFields.js';
 import { assertUnscopedBulkOperations } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
@@ -86,18 +87,21 @@ async function MongoDBTableChanges({
     try {
       await logCollection.insertOne(
         stampTenantOnLogRecord({
-          record: {
-            args: { changes: properties.changes, operations, options: compiled.options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            response,
-            timestamp: new Date(),
-            type: 'MongoDBTableChanges',
-            meta: connection.changeLog?.meta,
-          },
+          record: omitLogFields({
+            connection,
+            record: {
+              args: { changes: properties.changes, operations, options: compiled.options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              response,
+              timestamp: new Date(),
+              type: 'MongoDBTableChanges',
+              meta: connection.changeLog?.meta,
+            },
+          }),
           tenant,
         })
       );

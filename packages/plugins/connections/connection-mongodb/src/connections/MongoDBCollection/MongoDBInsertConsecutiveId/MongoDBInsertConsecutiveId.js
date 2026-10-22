@@ -21,6 +21,7 @@ import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import omitLogFields from '../omitLogFields.js';
 import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
 import requestMetas from '../requestMetas.js';
@@ -67,18 +68,21 @@ async function MongoDBInsertConsecutiveId({
       if (logCollection) {
         await logCollection.insertOne(
           stampTenantOnLogRecord({
-            record: {
-              args: { doc, options },
-              blockId,
-              connectionId,
-              pageId,
-              payload,
-              requestId,
-              response,
-              timestamp: new Date(),
-              type: 'MongoDBInsertConsecutiveId',
-              meta: connection.changeLog?.meta,
-            },
+            record: omitLogFields({
+              connection,
+              record: {
+                args: { doc, options },
+                blockId,
+                connectionId,
+                pageId,
+                payload,
+                requestId,
+                response,
+                timestamp: new Date(),
+                type: 'MongoDBInsertConsecutiveId',
+                meta: connection.changeLog?.meta,
+              },
+            }),
             tenant,
           }),
           { session }

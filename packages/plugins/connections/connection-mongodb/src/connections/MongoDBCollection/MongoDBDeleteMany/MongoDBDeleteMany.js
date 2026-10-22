@@ -17,6 +17,7 @@
 import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import omitLogFields from '../omitLogFields.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -48,18 +49,21 @@ async function MongodbDeleteMany({
     if (logCollection) {
       await logCollection.insertOne(
         stampTenantOnLogRecord({
-          record: {
-            args: { filter, options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            response,
-            timestamp: new Date(),
-            type: 'MongoDBDeleteMany',
-            meta: connection.changeLog?.meta,
-          },
+          record: omitLogFields({
+            connection,
+            record: {
+              args: { filter, options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              response,
+              timestamp: new Date(),
+              type: 'MongoDBDeleteMany',
+              meta: connection.changeLog?.meta,
+            },
+          }),
           tenant,
         })
       );
