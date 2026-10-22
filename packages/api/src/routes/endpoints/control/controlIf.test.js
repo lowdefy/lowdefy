@@ -46,7 +46,7 @@ test('if condition is true', async () => {
         event: 'debug_control_if',
         condition: {
           input: true,
-          evaluated: true,
+          result: true,
         },
       },
     ],
@@ -73,7 +73,6 @@ test('if condition is true', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_true',
-        result: 'Was true',
       },
     ],
   ]);
@@ -110,7 +109,7 @@ test('if condition is false', async () => {
         event: 'debug_control_if',
         condition: {
           input: false,
-          evaluated: false,
+          result: false,
         },
       },
     ],
@@ -137,7 +136,6 @@ test('if condition is false', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_false',
-        result: 'Was false',
       },
     ],
   ]);
@@ -174,7 +172,7 @@ test('if condition is truthy', async () => {
         event: 'debug_control_if',
         condition: {
           input: 1,
-          evaluated: 1,
+          result: true,
         },
       },
     ],
@@ -201,7 +199,6 @@ test('if condition is truthy', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_true',
-        result: 'Was true',
       },
     ],
   ]);
@@ -238,7 +235,7 @@ test('if condition is falsey', async () => {
         event: 'debug_control_if',
         condition: {
           input: 0,
-          evaluated: 0,
+          result: false,
         },
       },
     ],
@@ -265,7 +262,6 @@ test('if condition is falsey', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_false',
-        result: 'Was false',
       },
     ],
   ]);
@@ -302,7 +298,7 @@ test('if condition is null', async () => {
         event: 'debug_control_if',
         condition: {
           input: null,
-          evaluated: null,
+          result: false,
         },
       },
     ],
@@ -329,7 +325,6 @@ test('if condition is null', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_false',
-        result: 'Was false',
       },
     ],
   ]);
@@ -370,7 +365,7 @@ test('if condition operators are evaluated', async () => {
           input: {
             _eq: [1, 2],
           },
-          evaluated: false,
+          result: false,
         },
       },
     ],
@@ -397,7 +392,6 @@ test('if condition operators are evaluated', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_false',
-        result: 'Was false',
       },
     ],
   ]);
@@ -425,7 +419,7 @@ test('if condition is false with no else', async () => {
         event: 'debug_control_if',
         condition: {
           input: false,
-          evaluated: false,
+          result: false,
         },
       },
     ],
@@ -454,7 +448,7 @@ test('if condition is true with no else', async () => {
         event: 'debug_control_if',
         condition: {
           input: true,
-          evaluated: true,
+          result: true,
         },
       },
     ],
@@ -481,7 +475,6 @@ test('if condition is true with no else', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_true',
-        result: 'Was true',
       },
     ],
   ]);

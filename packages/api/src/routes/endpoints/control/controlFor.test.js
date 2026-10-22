@@ -36,7 +36,7 @@ test('for loop iterates over array', async () => {
   expect(context.logger.debug.mock.calls).toContainEqual([
     {
       event: 'debug_control_for',
-      array: ['a', 'b', 'c'],
+      itemCount: 3,
       itemName: 'item',
     },
   ]);
@@ -61,7 +61,7 @@ test('for loop with empty array', async () => {
   expect(context.logger.debug.mock.calls).toContainEqual([
     {
       event: 'debug_control_for',
-      array: [],
+      itemCount: 0,
       itemName: 'item',
     },
   ]);
@@ -193,5 +193,7 @@ test('for loop logs iteration details', async () => {
   );
   expect(iterationLog).toBeDefined();
   expect(iterationLog[0].itemName).toEqual('item');
-  expect(iterationLog[0].value).toEqual('x');
+  expect(iterationLog[0].index).toEqual(0);
+  expect(iterationLog[0]).not.toHaveProperty('value');
+  expect(iterationLog[0]).not.toHaveProperty('items');
 });

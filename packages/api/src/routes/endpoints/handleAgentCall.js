@@ -49,7 +49,9 @@ async function handleAgentCall(context, routineContext, { step }) {
     throw new ConfigError(
       `CallAgent step "${
         step.stepId
-      }" properties.prompt must evaluate to a string. Received ${JSON.stringify(prompt)}.`,
+      }" properties.prompt must evaluate to a string. Received a value of type "${
+        prompt === null ? 'null' : typeof prompt
+      }".`,
       { configKey: step['~k'] }
     );
   }

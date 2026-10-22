@@ -50,7 +50,6 @@ test('single stage', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request',
-        result: 1,
       },
     ],
   ]);
@@ -91,7 +90,6 @@ test('array with single stage', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request',
-        result: 1,
       },
     ],
   ]);
@@ -141,7 +139,6 @@ test('array with two stages', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
-        result: 1,
       },
     ],
     [
@@ -162,7 +159,6 @@ test('array with two stages', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_2',
-        result: 2,
       },
     ],
   ]);

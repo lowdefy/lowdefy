@@ -145,7 +145,8 @@ test('A credential marked in :set_state is redacted in every later log line and 
   );
   lines.forEach((line) => expect(line).not.toContain(newKey));
   const setState = JSON.parse(lines.find((line) => line.includes('debug_control_set_state')));
-  expect(setState.evaluated.key).toEqual('[REDACTED]');
+  expect(setState.keys).toEqual(['key']);
+  expect(setState).not.toHaveProperty('evaluated');
   expect(res.response).toEqual({ key: newKey });
   expect(buildEndpointResult(context, res).response).toEqual({ key: newKey });
 });
@@ -179,10 +180,10 @@ test('Credentials a called endpoint marks are redacted in the CallApi step resul
     expect(line).not.toContain(webhookSecret);
   });
   const endCall = JSON.parse(lines.find((line) => line.includes('debug_end_endpoint_call')));
-  expect(endCall.response).toEqual({ key: '[REDACTED]', webhook_secret: '[REDACTED]' });
+  expect(endCall).not.toHaveProperty('response');
 });
 
-test('A credential in a failed request properties is redacted in the logged error and its received', async () => {
+test('A credential in a failed request properties is redacted in the logged error, which keeps no received', async () => {
   mockEcho.mockImplementationOnce(() => {
     throw new Error(`Upstream refused key ${newKey}.`);
   });
@@ -198,7 +199,7 @@ test('A credential in a failed request properties is redacted in the logged erro
   expect(res.status).toEqual('error');
   lines.forEach((line) => expect(line).not.toContain(newKey));
   const errorLine = JSON.parse(lines.find((line) => JSON.parse(line).level === 'error'));
-  expect(errorLine.received).toEqual({ key: '[REDACTED]' });
+  expect(errorLine).not.toHaveProperty('received');
 });
 
 test('_credential outside a credential scope throws', async () => {
@@ -262,7 +263,7 @@ test('A credential the dispatcher marked is redacted in a detached target that r
   });
   expect(target.result.success).toBe(true);
   const setState = target.lines.find((line) => line.includes('debug_control_set_state'));
-  expect(JSON.parse(setState).evaluated.key).toEqual('[REDACTED]');
+  expect(JSON.parse(setState)).not.toHaveProperty('evaluated');
   target.lines.forEach((line) => expect(line).not.toContain(newKey));
 });
 
@@ -321,6 +322,5 @@ test('A member token CreateMcpToken makes is redacted in every log line and retu
   );
   lines.forEach((line) => expect(line).not.toContain(token));
   const endCall = JSON.parse(lines.find((line) => line.includes('debug_end_endpoint_call')));
-  expect(endCall.response.token).toEqual('[REDACTED]');
-  expect(endCall.response.start).toEqual(token.slice(0, 12));
+  expect(endCall).not.toHaveProperty('response');
 });

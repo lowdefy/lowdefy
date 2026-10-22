@@ -89,7 +89,14 @@ const mockConvertToModelMessages = vi.fn().mockResolvedValue([]);
 const mockPruneMessages = vi.fn().mockReturnValue([]);
 const mockValidateUIMessages = vi.fn().mockResolvedValue([]);
 
+// Carries the AI SDK's error marker and name, as the real TypeValidationError does.
 class MockTypeValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'AI_TypeValidationError';
+    this[Symbol.for('vercel.ai.error')] = true;
+  }
+
   static isInstance(error) {
     return error instanceof MockTypeValidationError;
   }
@@ -635,9 +642,20 @@ test('hook callback errors do not propagate', async () => {
     context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
+  testLogger.warn.mockClear();
   const onStepFinish = lastAgentConfig.onStepEnd;
   // Should not throw
   expect(() => onStepFinish({ stepType: 'tool-result' })).not.toThrow();
+  await new Promise((resolve) => setImmediate(resolve));
+  expect(testLogger.warn).toHaveBeenCalledWith(
+    {
+      agentId: undefined,
+      conversationId: null,
+      endpointId: 'failing-endpoint',
+      error: { name: 'Error', message: 'endpoint failed' },
+    },
+    'Agent hook endpoint failed.'
+  );
 });
 
 test('no hooks produces no callbacks on ToolLoopAgent', async () => {
@@ -1155,7 +1173,10 @@ test('onFinish hook failure logs an error and continues to the next hook', async
 
   expect(callEndpoint).toHaveBeenCalledTimes(2);
   expect(testLogger.error).toHaveBeenCalledWith(
-    expect.objectContaining({ err: expect.any(Error) }),
+    expect.objectContaining({
+      endpointId: 'failing-hook',
+      error: { name: 'Error', message: 'Network timeout' },
+    }),
     expect.stringContaining('onFinish hook "failing-hook" failed')
   );
   expect(localWriter.write).toHaveBeenCalledTimes(1);
@@ -2451,7 +2472,11 @@ test('generateTitle failure is non-fatal and does not break the stream', async (
   ).resolves.toBeUndefined();
 
   expect(testLogger.warn).toHaveBeenCalledWith(
-    expect.objectContaining({ err: expect.any(Error) }),
+    {
+      agentId: undefined,
+      conversationId: null,
+      error: { name: 'Error', message: 'model unavailable' },
+    },
     'generateTitle failed.'
   );
   expect(localWriter.write).not.toHaveBeenCalledWith(
@@ -2492,7 +2517,12 @@ test('messages without parts are dropped before the agent runs', async () => {
 test('a validation failure is logged and written to the stream as an error, not thrown', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
-  const validationError = new MockTypeValidationError('Type validation failed: Value: [...]');
+  const chatText = 'My ID number is 8001015009087';
+  const messages = [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: chatText }] }];
+  const validationError = new MockTypeValidationError(
+    `Type validation failed: Value: ${JSON.stringify(messages)}.`
+  );
+  validationError.value = messages;
   mockCreateAgentUIStream.mockRejectedValueOnce(validationError);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
@@ -2501,20 +2531,38 @@ test('a validation failure is logged and written to the stream as an error, not 
   await handleAgentChat({
     connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: [], properties: { model: 'gpt-4o' } },
-      messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+      agent: { agentId: 'support', tools: [], properties: { model: 'gpt-4o' } },
+      messages,
     },
-    context: { logger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+    context: {
+      agentContext: { conversationId: 'conv-1' },
+      logger,
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
+    },
   });
 
-  const writer = { write: vi.fn(), onError: (error) => `redacted: ${error.message}` };
+  const writer = { write: vi.fn(), onError: () => 'Something went wrong.' };
   await expect(mockCreateUIMessageStream._lastExecute({ writer })).resolves.toBeUndefined();
 
-  expect(logger.error).toHaveBeenCalledWith({ err: validationError }, 'Agent stream failed.');
-  expect(writer.write).toHaveBeenCalledWith({
-    type: 'error',
-    errorText: 'redacted: Type validation failed: Value: [...]',
-  });
+  expect(logger.error).toHaveBeenCalledWith(
+    {
+      agentId: 'support',
+      conversationId: 'conv-1',
+      stepCount: 0,
+      error: { name: 'AI_TypeValidationError' },
+    },
+    'Agent stream failed.'
+  );
+  expect(logger.debug).toHaveBeenCalledWith(
+    { agentId: 'support', conversationId: 'conv-1', stack: expect.any(Array) },
+    'Agent stream failed: stack.'
+  );
+  const logged = JSON.stringify(
+    ['debug', 'info', 'warn', 'error'].flatMap((level) => logger[level].mock.calls)
+  );
+  expect(logged).not.toContain('8001015009087');
+  expect(writer.write).toHaveBeenCalledWith({ type: 'error', errorText: 'Something went wrong.' });
 });
 
 // Stands in for the wire policy prepareAgent builds from @lowdefy/api's

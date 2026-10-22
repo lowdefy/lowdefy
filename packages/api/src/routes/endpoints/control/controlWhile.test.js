@@ -49,7 +49,7 @@ test('while loop runs until the condition is false', async () => {
   const logs = whileLogs(context);
   expect(logs.length).toEqual(4);
   expect(logs.map((log) => log.iteration)).toEqual([0, 1, 2, 3]);
-  expect(logs.map((log) => log.condition.evaluated)).toEqual([true, true, true, false]);
+  expect(logs.map((log) => log.condition.result)).toEqual([true, true, true, false]);
 });
 
 test('while loop does not run when the condition is false initially', async () => {
@@ -71,7 +71,7 @@ test('while loop does not run when the condition is false initially', async () =
   expect(whileLogs(context)).toEqual([
     {
       event: 'debug_control_while',
-      condition: { input: false, evaluated: false },
+      condition: { input: false, result: false },
       iteration: 0,
     },
   ]);
@@ -92,7 +92,7 @@ test('while loop evaluates the condition with operators against current state', 
   const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
   expect(routineContext.state.done).toEqual(true);
-  expect(whileLogs(context).map((log) => log.condition.evaluated)).toEqual([true, false]);
+  expect(whileLogs(context).map((log) => log.condition.result)).toEqual([true, false]);
 });
 
 test('while loop returns a :return result from its body immediately', async () => {

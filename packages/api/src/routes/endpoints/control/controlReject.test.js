@@ -245,7 +245,7 @@ test('truthy guard statement reject', async () => {
   expect(res.status).toEqual('reject');
   expect(res.error).toEqual(new UserError('rejected by guard statement', { isReject: true }));
   expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if', condition: { input: true, result: true } }],
     [{ event: 'debug_control_if_run_then' }],
     [
       {
@@ -265,7 +265,6 @@ test('truthy guard statement reject', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_guard_statement',
-        result: 'guard statement',
       },
     ],
   ]);
@@ -303,7 +302,7 @@ test('falsy guard statement reject', async () => {
   expect(res.status).toEqual('reject');
   expect(res.error).toEqual(new UserError('made it to the end', { isReject: true }));
   expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_if', condition: { input: false, evaluated: false } }],
+    [{ event: 'debug_control_if', condition: { input: false, result: false } }],
     [
       {
         event: 'debug_start_request',
@@ -322,7 +321,6 @@ test('falsy guard statement reject', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
   ]);
@@ -369,7 +367,6 @@ test('reject in a try catch block', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_try_reject',
-        result: 'try_reject_block',
       },
     ],
   ]);
@@ -422,7 +419,7 @@ test('deep nested reject', async () => {
   expect(res.status).toEqual('reject');
   expect(res.error).toEqual(new UserError('rejected by first if', { isReject: true }));
   expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if', condition: { input: true, result: true } }],
     [{ event: 'debug_control_if_run_then' }],
     [
       {
@@ -442,10 +439,9 @@ test('deep nested reject', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_first_if',
-        result: 'first if',
       },
     ],
-    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if', condition: { input: true, result: true } }],
     [{ event: 'debug_control_if_run_then' }],
     [
       {
@@ -465,7 +461,6 @@ test('deep nested reject', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_second_if',
-        result: 'second if',
       },
     ],
   ]);

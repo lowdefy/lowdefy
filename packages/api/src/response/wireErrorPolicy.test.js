@@ -65,7 +65,7 @@ const WIRE_ERROR_KEYS = new Set([
 
 const silentLogger = { debug: () => {}, error: () => {}, info: () => {}, warn: () => {} };
 
-// The evaluated request properties, which a RequestError carries as `received`.
+// The evaluated request properties, which a RequestError no longer carries.
 const requestProperties = {
   url: '/v1/customers',
   headers: { Authorization: 'Bearer PLANTED_KEY_REQUEST_PROPERTIES' },
@@ -435,8 +435,8 @@ const cases = [
 ];
 
 // Wraps the error exactly as a failing request step does: ServiceError for a
-// network, timeout or 5xx failure, RequestError carrying the evaluated request
-// properties otherwise.
+// network, timeout or 5xx failure, RequestError otherwise, each carrying the
+// thrown error summarised and, for the dev tools only, whole as devCause.
 async function throwFromRequest(thrown) {
   const context = testContext({ logger: silentLogger });
   async function requestResolver() {
