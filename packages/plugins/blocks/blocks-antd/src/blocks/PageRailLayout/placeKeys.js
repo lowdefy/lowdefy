@@ -14,27 +14,14 @@
   limitations under the License.
 */
 
-import React from 'react';
-
-function RailBadge({
-  count,
-  dot = false,
-  showZero = false,
-  overflowCount = 99,
-  tone = 'default',
-  color,
-}) {
-  if (!dot && !count && !showZero) return null;
-  const text = count > overflowCount ? `${overflowCount}+` : String(count);
-  return (
-    <span
-      className={`lf-rail-badge${dot ? ' lf-rail-badge-dot' : ''}`}
-      data-tone={tone}
-      style={color ? { '--lf-rail-badge-bg': color } : undefined}
-    >
-      {dot ? null : text}
-    </span>
-  );
+// The build renames menu link ids to `menuitem:<menuId>:<id>`; an app keys badges by the id it
+// wrote, or by the page id.
+function getPlaceKey(link) {
+  return String(link.id ?? link.pageId).replace(/^menuitem:[^:]*:/, '');
 }
 
-export default RailBadge;
+function getPlaceBadge(badges, link) {
+  return badges[getPlaceKey(link)] ?? (link.pageId ? badges[link.pageId] : undefined);
+}
+
+export { getPlaceBadge, getPlaceKey };

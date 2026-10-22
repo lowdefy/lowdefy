@@ -17,10 +17,10 @@
 import React from 'react';
 import { Tooltip } from 'antd';
 
-import RailBadge from './RailBadge.js';
+import getBadge from './getBadge.js';
 
-// One icon over a short label: a place in the rail, a foot item, or a tab in the phone tab bar.
-// With a page or url it is a link; without, a button that fires onClick.
+// One icon over a short label: a place or foot item in the rail, a tab in the phone tab bar, or a
+// row in the phone's More sheet. With a page or url it is a link; without, a button.
 function RailItem({
   active = false,
   badge,
@@ -30,64 +30,94 @@ function RailItem({
   events,
   hideTip = false,
   icon,
+  iconNode,
   link,
   onClick,
+  shortcutLabel,
   style,
   tip,
   title,
 }) {
+  const shownBadge = getBadge(badge);
+  const ariaLabel = [
+    title,
+    shownBadge && !shownBadge.dot ? shownBadge.label ?? shownBadge.text : null,
+  ]
+    .filter(Boolean)
+    .join(', ');
   const content = (
     <>
-      <span className="lf-rail-icon">
-        {icon && (
-          <Icon
-            blockId={`${blockId}_icon`}
-            events={events}
-            properties={icon}
-            classNames={{ element: 'lf-rail-icon-glyph' }}
-          />
+      <span className="lf-rail-item-icon">
+        {iconNode ??
+          (icon && (
+            <Icon
+              blockId={`${blockId}_icon`}
+              events={events}
+              properties={icon}
+              classNames={{ element: 'lf-rail-item-glyph' }}
+            />
+          ))}
+        {shownBadge && (
+          <span
+            className={`lf-rail-badge lf-rail-badge-${shownBadge.tone}${
+              shownBadge.dot ? ' lf-rail-badge-dot' : ''
+            }`}
+            aria-hidden="true"
+          >
+            {shownBadge.dot ? null : shownBadge.text}
+          </span>
         )}
-        {badge && <RailBadge {...badge} />}
       </span>
-      <span className="lf-rail-label">{title}</span>
+      <span className="lf-rail-item-label">{title}</span>
     </>
   );
   const itemClassName = `lf-rail-item${active ? ' lf-rail-item-active' : ''}${
     className ? ` ${className}` : ''
   }`;
-  const hasTarget = link && (link.pageId || link.url);
-  const item = hasTarget ? (
-    <Link
-      {...link}
-      id={`${blockId}_link`}
-      className={itemClassName}
-      style={style}
-      onClick={onClick}
-    >
-      {content}
-    </Link>
-  ) : (
-    <button
-      type="button"
-      id={`${blockId}_button`}
-      className={itemClassName}
-      style={style}
-      onClick={onClick}
-    >
-      {content}
-    </button>
-  );
-  const tipText = hideTip ? null : (
-    <>
-      <div className="lf-rail-tip-title">{title}</div>
-      {tip && <div className="lf-rail-tip-text">{tip}</div>}
-    </>
+  const item =
+    link && (link.pageId || link.url) ? (
+      <Link
+        {...link}
+        id={blockId}
+        ariaLabel={ariaLabel}
+        className={itemClassName}
+        style={style}
+        onClick={onClick}
+      >
+        {content}
+      </Link>
+    ) : (
+      <button
+        type="button"
+        id={blockId}
+        aria-label={ariaLabel}
+        className={itemClassName}
+        style={style}
+        onClick={onClick}
+      >
+        {content}
+      </button>
+    );
+  if (hideTip) return item;
+  const tipText = (
+    <span className="lf-rail-tip">
+      <span className="lf-rail-tip-title">
+        {title}
+        {shortcutLabel && <kbd className="lf-rail-tip-kbd">{shortcutLabel}</kbd>}
+      </span>
+      {tip && <span className="lf-rail-tip-text">{tip}</span>}
+    </span>
   );
   return (
-    <Tooltip title={tipText} placement="right" mouseEnterDelay={0.3}>
-      <div className="lf-rail-item-wrap" aria-current={active ? 'page' : undefined}>
+    <Tooltip
+      title={tipText}
+      placement="right"
+      mouseEnterDelay={0.4}
+      classNames={{ root: 'lf-rail-portal' }}
+    >
+      <span className="lf-rail-item-wrap" aria-current={active ? 'page' : undefined}>
         {item}
-      </div>
+      </span>
     </Tooltip>
   );
 }

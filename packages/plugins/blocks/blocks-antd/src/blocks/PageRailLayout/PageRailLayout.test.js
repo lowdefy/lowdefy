@@ -14,9 +14,15 @@
   limitations under the License.
 */
 
-import { clampPanelWidth, getPanelLimits } from './clampPanelWidth.js';
+import {
+  COLLAPSE_DISTANCE,
+  clampPanelWidth,
+  getDragWidth,
+  getPanelLimits,
+} from './clampPanelWidth.js';
+import getBadge from './getBadge.js';
 import getLayoutMode from './getLayoutMode.js';
-import getRailBadge from './getRailBadge.js';
+import { getPlaceBadge, getPlaceKey } from './placeKeys.js';
 
 const limits = getPanelLimits({});
 
@@ -31,6 +37,10 @@ describe('getPanelLimits', () => {
       maxWidth: 400,
       initialWidth: 260,
     });
+  });
+
+  test('never lets the largest width fall below the smallest', () => {
+    expect(getPanelLimits({ minWidth: 300, maxWidth: 200 }).maxWidth).toBe(300);
   });
 });
 
@@ -55,37 +65,117 @@ describe('clampPanelWidth', () => {
   });
 });
 
-describe('getLayoutMode', () => {
-  const breakpoints = { drawerBreakpoint: 1100, mobileBreakpoint: 768 };
-
-  test('is desktop at and above the drawer breakpoint', () => {
-    expect(getLayoutMode({ width: 1100, ...breakpoints })).toBe('desktop');
-    expect(getLayoutMode({ width: 1600, ...breakpoints })).toBe('desktop');
+describe('getDragWidth', () => {
+  test('follows the pointer within the range', () => {
+    expect(getDragWidth({ raw: 350, ...limits })).toEqual({ width: 350, collapse: false });
   });
 
-  test('is tablet between the breakpoints', () => {
-    expect(getLayoutMode({ width: 1099, ...breakpoints })).toBe('tablet');
-    expect(getLayoutMode({ width: 768, ...breakpoints })).toBe('tablet');
+  test('stops at the largest width', () => {
+    expect(getDragWidth({ raw: 900, ...limits })).toEqual({ width: 480, collapse: false });
   });
 
-  test('is phone below the mobile breakpoint', () => {
-    expect(getLayoutMode({ width: 767, ...breakpoints })).toBe('phone');
-    expect(getLayoutMode({ width: 390, ...breakpoints })).toBe('phone');
+  test('resists below the smallest width, moving a quarter of the distance', () => {
+    expect(getDragWidth({ raw: 200, ...limits })).toEqual({ width: 230, collapse: false });
+  });
+
+  test('collapses once the drag is far enough past the smallest width', () => {
+    expect(getDragWidth({ raw: 240 - COLLAPSE_DISTANCE, ...limits }).collapse).toBe(false);
+    expect(getDragWidth({ raw: 240 - COLLAPSE_DISTANCE - 1, ...limits })).toEqual({
+      width: 0,
+      collapse: true,
+    });
   });
 });
 
-describe('getRailBadge', () => {
+describe('getLayoutMode', () => {
+  const breakpoints = { drawerBreakpoint: 1100, mobileBreakpoint: 768 };
+  const at = (width) => (query) => ({
+    matches: width <= Number(query.match(/max-width: ([\d.]+)px/)[1]),
+  });
+
+  test('is desktop at and above the drawer breakpoint', () => {
+    expect(getLayoutMode({ ...breakpoints, matchMedia: at(1100) })).toBe('desktop');
+    expect(getLayoutMode({ ...breakpoints, matchMedia: at(1600) })).toBe('desktop');
+  });
+
+  test('is tablet between the breakpoints', () => {
+    expect(getLayoutMode({ ...breakpoints, matchMedia: at(1099) })).toBe('tablet');
+    expect(getLayoutMode({ ...breakpoints, matchMedia: at(768) })).toBe('tablet');
+  });
+
+  test('is phone below the mobile breakpoint', () => {
+    expect(getLayoutMode({ ...breakpoints, matchMedia: at(767) })).toBe('phone');
+    expect(getLayoutMode({ ...breakpoints, matchMedia: at(390) })).toBe('phone');
+  });
+
+  test('is desktop where there is no matchMedia', () => {
+    expect(getLayoutMode({ ...breakpoints, matchMedia: undefined })).toBe('desktop');
+  });
+});
+
+describe('getBadge', () => {
   test('reads a number as a default badge', () => {
-    expect(getRailBadge(5)).toEqual({ count: 5, tone: 'default' });
+    expect(getBadge(5)).toEqual({ dot: false, text: '5', tone: 'default', label: undefined });
   });
 
-  test('reads count and tone from an object', () => {
-    expect(getRailBadge({ count: 2, tone: 'error' })).toEqual({ count: 2, tone: 'error' });
-    expect(getRailBadge({ count: 2 })).toEqual({ count: 2, tone: 'default' });
+  test('reads count, tone and label from an object', () => {
+    expect(getBadge({ count: 2, tone: 'error', label: '2 late' })).toEqual({
+      dot: false,
+      text: '2',
+      tone: 'error',
+      label: '2 late',
+    });
   });
 
-  test('reads anything else as no badge', () => {
-    expect(getRailBadge(undefined)).toEqual({ count: 0, tone: 'default' });
-    expect(getRailBadge(null)).toEqual({ count: 0, tone: 'default' });
+  test('shows nothing for 0 or no value', () => {
+    expect(getBadge(0)).toBe(null);
+    expect(getBadge(undefined)).toBe(null);
+    expect(getBadge(null)).toBe(null);
+  });
+
+  test('shows a dot with no number', () => {
+    expect(getBadge({ dot: true })).toEqual({
+      dot: true,
+      text: '0',
+      tone: 'default',
+      label: undefined,
+    });
+  });
+
+  test('caps the number at the overflow count', () => {
+    expect(getBadge(120).text).toBe('99+');
+    expect(getBadge({ count: 12, overflowCount: 9 }).text).toBe('9+');
+  });
+});
+
+describe('getPlaceKey', () => {
+  test("strips the build's menu item prefix", () => {
+    expect(getPlaceKey({ id: 'menuitem:default:controls' })).toBe('controls');
+  });
+
+  test('keeps an id the build did not rename', () => {
+    expect(getPlaceKey({ id: 'controls' })).toBe('controls');
+  });
+
+  test('falls back to the page id', () => {
+    expect(getPlaceKey({ pageId: 'controls' })).toBe('controls');
+  });
+});
+
+describe('getPlaceBadge', () => {
+  test('finds a badge by the id the app wrote', () => {
+    expect(
+      getPlaceBadge({ controls: 3 }, { id: 'menuitem:default:controls', pageId: 'framework' })
+    ).toBe(3);
+  });
+
+  test('finds a badge by page id', () => {
+    expect(
+      getPlaceBadge({ framework: 4 }, { id: 'menuitem:default:controls', pageId: 'framework' })
+    ).toBe(4);
+  });
+
+  test('is undefined when neither matches', () => {
+    expect(getPlaceBadge({}, { id: 'menuitem:default:controls' })).toBe(undefined);
   });
 });

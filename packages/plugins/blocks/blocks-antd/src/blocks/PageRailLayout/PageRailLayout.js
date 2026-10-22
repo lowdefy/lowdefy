@@ -14,26 +14,52 @@
   limitations under the License.
 */
 
-import React, { useEffect, useState } from 'react';
-import { Avatar, Drawer, Dropdown } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Avatar, Drawer, Dropdown, Tooltip } from 'antd';
 import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
 import { buildMenuItems, flattenLinks } from '../buildMenuItems.js';
 import getDropdownMenuIcons from '../getDropdownMenuIcons.js';
 import { getDarkModeIcon, getDarkModeLabel, registerDarkModeMethod } from '../headerActions.js';
+import useItemShortcuts from '../useItemShortcuts.js';
 import withPageTheme from '../withPageTheme.js';
 import { getPanelLimits } from './clampPanelWidth.js';
-import getRailBadge from './getRailBadge.js';
-import PanelResizeHandle from './PanelResizeHandle.js';
+import Crumbs from './Crumbs.js';
+import Mark from './Mark.js';
+import PanelResizeHandle, { PANEL_WIDTH_VAR } from './PanelResizeHandle.js';
+import getBadge from './getBadge.js';
+import { getPlaceBadge, getPlaceKey } from './placeKeys.js';
 import RailItem from './RailItem.js';
+import SwitcherList from './SwitcherList.js';
 import useLayoutMode from './useLayoutMode.js';
-import usePanelWidth from './usePanelWidth.js';
+import usePanelState from './usePanelState.js';
+import useSwipeToClose from './useSwipeToClose.js';
 import './style.css';
 
-const darkModeKey = '__lf_dark_mode';
-const contentPadding = { default: '24px 32px 32px', compact: '16px', none: 0 };
+const DARK_MODE_KEY = '__lf_dark_mode';
+const DEFAULT_SHORTCUT = 'mod+\\';
+const contentPadding = { default: '24px 32px 40px', compact: '16px', none: 0 };
+
+const isMac =
+  typeof navigator !== 'undefined' &&
+  (navigator.userAgentData?.platform === 'macOS' ||
+    /Mac|iPhone|iPad|iPod/.test(navigator.platform ?? ''));
+
+function shortcutLabel(shortcut) {
+  if (!shortcut) return null;
+  return shortcut
+    .split('+')
+    .map((part) => {
+      const key = part.toLowerCase();
+      if (key === 'mod') return isMac ? '⌘' : 'Ctrl+';
+      if (key === 'shift') return isMac ? '⇧' : 'Shift+';
+      if (key === 'alt') return isMac ? '⌥' : 'Alt+';
+      if (key === 'ctrl') return isMac ? '⌃' : 'Ctrl+';
+      return part.length === 1 ? part.toUpperCase() : part;
+    })
+    .join('');
+}
 
 function getPlaces({ menus, menu }) {
   let links = menu?.links;
@@ -41,7 +67,7 @@ function getPlaces({ menus, menu }) {
     const found = (menus ?? []).find((item) => item.menuId === (menu?.menuId ?? 'default'));
     links = (found ?? menus?.[0] ?? {}).links;
   }
-  // A place with a MenuGroup is not supported: the panel is where a place's pages go.
+  // A place is one link: the panel, not a group in the rail, is where a place's pages go.
   return (links ?? []).filter((link) => !link.type || link.type === 'MenuLink');
 }
 
@@ -55,7 +81,6 @@ function getLinkTarget(link) {
 }
 
 function PageRailLayout({
-  basePath,
   blockId,
   classNames = {},
   components,
@@ -68,79 +93,136 @@ function PageRailLayout({
   styles = {},
 }) {
   const { Icon, Link } = components;
+  const rootRef = useRef(null);
+  const panelRef = useRef(null);
+  const toggleRef = useRef(null);
+
   const panelProps = properties.panel ?? {};
   const limits = getPanelLimits(panelProps);
-  const drawerBreakpoint = panelProps.drawerBreakpoint ?? 1100;
-  const mobileBreakpoint = properties.mobileBreakpoint ?? 768;
-  const mode = useLayoutMode({ drawerBreakpoint, mobileBreakpoint });
-  const { width, setWidth, commit } = usePanelWidth({ methods, panel: panelProps, limits });
-  const [drawerOpen, setDrawerOpenState] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
-
-  useEffect(() => {
-    registerDarkModeMethod(methods);
-  }, []);
-  useEffect(() => {
-    if (mode !== 'tablet') setDrawerOpenState(false);
-    if (mode !== 'phone') setMoreOpen(false);
-  }, [mode]);
-
-  function setDrawerOpen(open) {
-    setDrawerOpenState(open);
-    methods.triggerEvent({ name: 'onPanelDrawerToggle', event: { open } });
-  }
-
+  const mode = useLayoutMode({
+    drawerBreakpoint: panelProps.drawerBreakpoint ?? 1100,
+    mobileBreakpoint: properties.mobileBreakpoint ?? 768,
+  });
+  const isPhone = mode === 'phone';
   const hasPanel = !!content.panel;
+  const panel = usePanelState({ methods, panel: panelProps, limits, mode });
+  const panelOpen = hasPanel && panel.open;
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [contextOpen, setContextOpen] = useState(false);
+
   const places = getPlaces({ menus, menu: properties.menu });
   const selectedKeys = properties.menu?.selectedKeys ?? [pageId];
   const badges = properties.badges ?? {};
   const footItems = properties.footItems ?? [];
   const notifications = properties.notifications;
   const profile = properties.profile;
+  const crumbs = (properties.crumbs ?? []).filter((crumb) => crumb && crumb.label !== undefined);
+  const switchers = crumbs.filter((crumb) => crumb.switcher);
+  const toggleShortcut =
+    panelProps.shortcut === null ? null : panelProps.shortcut ?? DEFAULT_SHORTCUT;
   const isActive = (link) => selectedKeys.includes(link.pageId ?? link.id);
-  const isPhone = mode === 'phone';
-  const isDesktop = mode === 'desktop';
+
+  // Methods, re-registered each render so they act on the current state.
+  const latest = useRef({});
+  latest.current = { panel };
+  useEffect(() => {
+    registerDarkModeMethod(methods);
+    methods.registerMethod('openPanel', () => latest.current.panel.setOpen(true, 'method'));
+    methods.registerMethod('closePanel', () => latest.current.panel.setOpen(false, 'method'));
+    methods.registerMethod('togglePanel', () => latest.current.panel.toggle('method'));
+  }, []);
+
+  useEffect(() => {
+    if (mode !== 'phone') {
+      setMoreOpen(false);
+      setContextOpen(false);
+    }
+  }, [mode]);
+
+  // A drawer takes focus when it opens and gives it back to the toggle when it closes; Escape
+  // closes it.
+  useEffect(() => {
+    if (!panel.isDrawer || !hasPanel) return undefined;
+    if (panel.open) {
+      const frame = requestAnimationFrame(() => panelRef.current?.focus({ preventScroll: true }));
+      const onKey = (event) => {
+        if (event.key === 'Escape') panel.setOpen(false, 'escape');
+      };
+      window.addEventListener('keydown', onKey);
+      return () => {
+        cancelAnimationFrame(frame);
+        window.removeEventListener('keydown', onKey);
+      };
+    }
+    if (panelRef.current?.contains(document.activeElement))
+      toggleRef.current?.focus({ preventScroll: true });
+    return undefined;
+  }, [panel.open, panel.isDrawer, hasPanel]);
+
+  useItemShortcuts({
+    items: [
+      ...(hasPanel && toggleShortcut ? [{ key: '__panel', shortcut: toggleShortcut }] : []),
+      ...places
+        .filter((link) => link.properties?.shortcut)
+        .map((link) => ({ key: getPlaceKey(link), shortcut: link.properties.shortcut })),
+    ],
+    onMatch: (key) => {
+      if (key === '__panel') {
+        latest.current.panel.toggle('shortcut');
+        return;
+      }
+      document.getElementById(`${blockId}_place_${key}`)?.click();
+    },
+  });
+
+  const swipe = useSwipeToClose({
+    enabled: panel.isDrawer && panelOpen,
+    onClose: (source) => panel.setOpen(false, source),
+    rootRef,
+    target: panelRef,
+  });
 
   function placeProps(link, index) {
     const key = link.pageId ?? link.id;
     return {
       active: isActive(link),
-      badge: badges[link.id] !== undefined ? getRailBadge(badges[link.id]) : undefined,
-      blockId: `${blockId}_place_${link.id}`,
+      badge: getPlaceBadge(badges, link),
+      blockId: `${blockId}_place_${getPlaceKey(link)}`,
       components,
       events,
       icon: link.properties?.icon,
       link: getLinkTarget(link),
+      shortcutLabel: shortcutLabel(link.properties?.shortcut),
       tip: link.properties?.tip ?? link.properties?.tooltip,
       title: link.properties?.title ?? link.pageId ?? link.id,
       hideTip: isPhone,
       onClick: (event) => {
-        // On a tablet the active place opens the panel drawer instead of reloading the page.
-        if (mode === 'tablet' && isActive(link) && hasPanel) {
+        setMoreOpen(false);
+        // The place already open toggles its panel instead of reloading the page.
+        if (hasPanel && link.pageId === pageId && !event.metaKey && !event.ctrlKey) {
           event.preventDefault();
-          setDrawerOpen(!drawerOpen);
+          panel.toggle('rail');
           return;
         }
-        methods.triggerEvent({
-          name: 'onMenuItemClick',
-          event: { key, keyPath: [key], index },
-        });
+        methods.triggerEvent({ name: 'onMenuItemClick', event: { key, keyPath: [key], index } });
       },
     };
   }
 
   function footItemProps(item) {
     return {
+      badge: item.badge,
       blockId: `${blockId}_foot_${item.id}`,
       components,
       events,
+      hideTip: isPhone,
       icon: item.icon,
       link: getLinkTarget(item),
+      shortcutLabel: shortcutLabel(item.shortcut),
       tip: item.tip,
       title: item.title,
-      hideTip: isPhone,
-      badge: item.badge !== undefined ? getRailBadge(item.badge) : undefined,
       onClick: () => {
+        setMoreOpen(false);
         if (!item.pageId && !item.url) {
           methods.triggerEvent({ name: 'onFootItemClick', event: { id: item.id } });
         }
@@ -150,140 +232,269 @@ function PageRailLayout({
 
   function notificationsProps() {
     return {
+      badge: {
+        count: notifications.count ?? 0,
+        dot: notifications.dot,
+        overflowCount: notifications.overflowCount,
+        tone: notifications.tone ?? 'error',
+        label: notifications.count ? `${notifications.count} unread` : undefined,
+      },
       blockId: `${blockId}_notifications`,
       className: classNames.notifications,
       components,
       events,
+      hideTip: isPhone,
       icon: notifications.icon ?? { name: 'bell' },
       link: notifications.link && getLinkTarget(notifications.link),
       style: styles.notifications,
       tip: notifications.tip,
-      title: notifications.title ?? 'Notifications',
-      hideTip: isPhone,
-      badge: {
-        count: notifications.count ?? 0,
-        dot: notifications.dot,
-        showZero: notifications.showZero,
-        overflowCount: notifications.overflowCount,
-        color: notifications.color,
+      title: notifications.title ?? 'Alerts',
+      onClick: () => {
+        setMoreOpen(false);
+        methods.triggerEvent({ name: 'onNotificationsClick' });
       },
-      onClick: () => methods.triggerEvent({ name: 'onNotificationsClick' }),
     };
   }
 
-  function renderProfileAvatar() {
-    const avatarProps = profile.avatar ?? {};
+  function renderAvatar(size) {
+    const avatar = profile?.avatar ?? {};
     return (
       <Avatar
         id={`${blockId}_profile_avatar`}
         className={classNames.profileAvatar}
-        style={{
-          backgroundColor: !avatarProps.src && avatarProps.color,
-          ...styles.profileAvatar,
-        }}
-        src={avatarProps.src}
-        size={avatarProps.size ?? 24}
-        shape={avatarProps.shape ?? 'circle'}
+        style={{ backgroundColor: !avatar.src ? avatar.color : undefined, ...styles.profileAvatar }}
+        src={avatar.src}
+        size={size}
+        shape={avatar.shape ?? 'circle'}
         icon={
-          !avatarProps.src &&
-          !avatarProps.content && (
+          !avatar.src &&
+          !avatar.content && (
             <Icon
               blockId={`${blockId}_profile_avatar_icon`}
               events={events}
-              properties={avatarProps.icon ?? { name: 'user' }}
+              properties={avatar.icon ?? { name: 'user' }}
             />
           )
         }
       >
-        {avatarProps.content}
+        {avatar.content}
       </Avatar>
     );
   }
 
-  function toggleDarkMode() {
-    methods.triggerEvent({ name: '__toggleDarkMode' });
+  function triggerProfileLink(link) {
+    methods.triggerEvent({
+      name: 'onProfileMenuClick',
+      event: { key: link.id, keyPath: [link.id], pageId: link.pageId, url: link.url },
+    });
   }
 
   function renderProfile() {
     const links = profile.links ?? [];
     const linkMap = flattenLinks(links);
-    const items = buildMenuItems({
-      links,
-      components,
-      classNames: {},
-      styles: {},
-      events,
-    });
+    const items = buildMenuItems({ links, components, classNames: {}, styles: {}, events });
+    // The theme sits above the app's own links, so a menu ends with the app's last link (sign out).
     if (properties.darkModeToggle) {
-      if (items.length > 0) items.push({ type: 'divider', key: `${darkModeKey}_divider` });
-      items.push({
-        key: darkModeKey,
-        label: getDarkModeLabel(),
+      if (items.length > 0) items.unshift({ type: 'divider', key: `${DARK_MODE_KEY}_divider` });
+      items.unshift({
+        key: DARK_MODE_KEY,
+        label: `Theme: ${getDarkModeLabel()}`,
         icon: (
           <Icon
-            blockId={`${blockId}_dark_mode_toggle_icon`}
+            blockId={`${blockId}_dark_mode_icon`}
             events={events}
             properties={{ name: getDarkModeIcon() }}
           />
         ),
       });
     }
+    const header = (profile.name || profile.email) && {
+      key: '__lf_profile_header',
+      type: 'group',
+      label: (
+        <span className="lf-rail-profile-head">
+          {profile.name && <span className="lf-rail-profile-name">{profile.name}</span>}
+          {profile.email && <span className="lf-rail-profile-email">{profile.email}</span>}
+        </span>
+      ),
+    };
     const trigger = (
-      <button
-        type="button"
-        className={cn('lf-rail-item', classNames.profile)}
+      <RailItem
+        blockId={`${blockId}_profile`}
+        className={cn('lf-rail-item-profile', classNames.profile)}
+        components={components}
+        events={events}
+        hideTip
+        iconNode={renderAvatar(28)}
         style={styles.profile}
-        id={`${blockId}_profile`}
-      >
-        <span className="lf-rail-icon">{renderProfileAvatar()}</span>
-        <span className="lf-rail-label">{profile.title ?? 'Profile'}</span>
-      </button>
+        title={profile.title ?? 'Account'}
+      />
     );
-    if (items.length === 0) return <div className="lf-rail-item-wrap">{trigger}</div>;
     return (
       <Dropdown
         menu={{
           ...getDropdownMenuIcons({ blockId: `${blockId}_profile_menu`, Icon }),
-          items,
-          onClick: ({ key, keyPath }) => {
-            if (key === darkModeKey) {
-              toggleDarkMode();
+          items: header
+            ? [header, { type: 'divider', key: '__lf_profile_divider' }, ...items]
+            : items,
+          onClick: ({ key }) => {
+            if (key === DARK_MODE_KEY) {
+              methods.triggerEvent({ name: '__toggleDarkMode' });
               return;
             }
-            const link = linkMap[key];
-            methods.triggerEvent({
-              name: 'onProfileMenuClick',
-              event: { key, keyPath, pageId: link?.pageId, url: link?.url },
-            });
+            triggerProfileLink(linkMap[key] ?? { id: key });
           },
         }}
         trigger={['click']}
-        placement={isPhone ? 'topRight' : 'rightBottom'}
-        classNames={{ root: classNames.profileMenu }}
+        placement="rightBottom"
+        classNames={{ root: cn('lf-rail-portal lf-rail-profile-menu', classNames.profileMenu) }}
         styles={{ root: styles.profileMenu }}
         onOpenChange={(open) =>
           methods.triggerEvent({ name: 'onProfileMenuOpen', event: { open } })
         }
       >
-        <div className="lf-rail-item-wrap">{trigger}</div>
+        <span className="lf-rail-dropdown-anchor">{trigger}</span>
       </Dropdown>
     );
   }
 
-  function renderBreadcrumb() {
-    if (type.isNone(properties.breadcrumb)) return null;
+  function onSwitch(crumb, option) {
+    setContextOpen(false);
+    methods.triggerEvent({
+      name: 'onSwitch',
+      event: { crumbId: crumb.id, optionId: option.id, pageId: option.pageId, url: option.url },
+    });
+  }
+
+  function onSwitcherAction(crumb, action) {
+    setContextOpen(false);
+    methods.triggerEvent({
+      name: 'onSwitcherAction',
+      event: { crumbId: crumb.id, actionId: action.id },
+    });
+  }
+
+  function renderPanelToggle() {
+    if (!hasPanel) return null;
+    const label = panelOpen ? 'Hide panel' : 'Show panel';
+    const button = (
+      <button
+        ref={toggleRef}
+        type="button"
+        id={`${blockId}_panel_toggle`}
+        className="lf-rail-bar-button lf-rail-panel-toggle"
+        aria-label={label}
+        aria-expanded={panelOpen}
+        aria-controls={`${blockId}_panel`}
+        onClick={() => panel.toggle('button')}
+      >
+        <Icon
+          blockId={`${blockId}_panel_toggle_icon`}
+          events={events}
+          properties={{
+            name: panelOpen && !panel.isDrawer ? 'sidebar-collapse' : 'sidebar-expand',
+          }}
+        />
+      </button>
+    );
+    if (isPhone) return button;
     return (
-      <Breadcrumb
-        blockId={`${blockId}_breadcrumb`}
-        basePath={basePath}
-        components={components}
-        classNames={{ element: classNames.breadcrumb }}
-        events={events}
-        methods={methods}
-        properties={properties.breadcrumb}
-        styles={{ element: { margin: 0, ...styles.breadcrumb } }}
-        rename={{ events: { onClick: 'onBreadcrumbClick' } }}
-      />
+      <Tooltip
+        title={
+          <span className="lf-rail-tip-title">
+            {label}
+            {toggleShortcut && (
+              <kbd className="lf-rail-tip-kbd">{shortcutLabel(toggleShortcut)}</kbd>
+            )}
+          </span>
+        }
+        placement="bottomLeft"
+        mouseEnterDelay={0.4}
+        classNames={{ root: 'lf-rail-portal' }}
+      >
+        {button}
+      </Tooltip>
+    );
+  }
+
+  function renderPhoneContext() {
+    const lead = switchers[switchers.length - 1];
+    const last = crumbs[crumbs.length - 1];
+    return (
+      <>
+        {lead && (
+          <button
+            type="button"
+            id={`${blockId}_context`}
+            className="lf-rail-context-pill"
+            aria-haspopup="dialog"
+            aria-label={`${lead.label}, switch`}
+            onClick={() => setContextOpen(true)}
+          >
+            <span className="lf-rail-context-marks">
+              {switchers.map((crumb) => (
+                <Mark
+                  key={crumb.id}
+                  blockId={`${blockId}_context_${crumb.id}`}
+                  components={components}
+                  events={events}
+                  mark={crumb.mark}
+                  size={20}
+                />
+              ))}
+            </span>
+            <span className="lf-rail-context-label">{lead.label}</span>
+            <Icon
+              blockId={`${blockId}_context_chevron`}
+              events={events}
+              properties={{ name: 'chevron-down' }}
+            />
+          </button>
+        )}
+        {last && !last.switcher && <span className="lf-rail-bar-title">{last.label}</span>}
+      </>
+    );
+  }
+
+  function renderBar() {
+    if (!hasPanel && crumbs.length === 0 && !content.header) return null;
+    return (
+      <header
+        id={`${blockId}_bar`}
+        className={cn('lf-rail-bar', classNames.bar)}
+        style={styles.bar}
+      >
+        {renderPanelToggle()}
+        {isPhone
+          ? renderPhoneContext()
+          : crumbs.length > 0 && (
+              <Crumbs
+                blockId={blockId}
+                className={classNames.crumbs}
+                components={components}
+                crumbs={crumbs}
+                events={events}
+                onAction={onSwitcherAction}
+                onCrumbClick={(crumb) =>
+                  methods.triggerEvent({ name: 'onCrumbClick', event: { id: crumb.id } })
+                }
+                onSelect={onSwitch}
+                style={styles.crumbs}
+              />
+            )}
+        <div className={cn('lf-rail-bar-extra', classNames.header)} style={styles.header}>
+          {content.header &&
+            (!isPhone || properties.headerOnPhone === true) &&
+            content.header({
+              width: 'auto',
+              flex: '0 1 auto',
+              alignItems: 'center',
+              flexWrap: 'nowrap',
+              justifyContent: 'flex-end',
+              gap: 8,
+            })}
+        </div>
+      </header>
     );
   }
 
@@ -297,18 +508,18 @@ function PageRailLayout({
         style={styles.rail}
       >
         {logo?.src && (
-          <Link home={true} className="lf-rail-logo">
-            <img
-              src={logo.src}
-              alt={logo.alt ?? ''}
-              className={classNames.logo}
-              style={styles.logo}
-            />
+          <Link
+            home={true}
+            id={`${blockId}_logo`}
+            ariaLabel={logo.alt ?? 'Home'}
+            className="lf-rail-logo"
+          >
+            <img src={logo.src} alt="" className={classNames.logo} style={styles.logo} />
           </Link>
         )}
         <div className="lf-rail-places">
           {places.map((link, index) => (
-            <RailItem key={link.id} {...placeProps(link, index)} />
+            <RailItem key={getPlaceKey(link)} {...placeProps(link, index)} />
           ))}
         </div>
         <div className={cn('lf-rail-foot', classNames.railFoot)} style={styles.railFoot}>
@@ -322,116 +533,86 @@ function PageRailLayout({
     );
   }
 
-  function renderPanelBody() {
+  function renderPanel() {
+    if (!hasPanel) return null;
+    const title = panelProps.title;
     return (
-      <>
-        {content.panelHeader && (
-          <div
-            className={cn('lf-rail-panel-header', classNames.panelHeader)}
-            style={styles.panelHeader}
-          >
-            {content.panelHeader()}
-          </div>
-        )}
-        <div className={cn('lf-rail-panel-body', classNames.panelBody)} style={styles.panelBody}>
-          {content.panel()}
-        </div>
-      </>
-    );
-  }
-
-  function renderContentHeader() {
-    const breadcrumb = renderBreadcrumb();
-    const toggle = mode === 'tablet' && hasPanel;
-    if (!breadcrumb && !content.contentHeader && !toggle) return null;
-    return (
-      <header
-        className={cn('lf-rail-content-header', classNames.contentHeader)}
-        style={styles.contentHeader}
+      <aside
+        id={`${blockId}_panel`}
+        ref={panelRef}
+        tabIndex={-1}
+        aria-label={title ?? 'Panel'}
+        aria-hidden={panel.isDrawer && !panelOpen ? true : undefined}
+        className={cn('lf-rail-panel', classNames.panel)}
+        style={styles.panel}
+        onClickCapture={(event) => {
+          // Following a link from the drawer closes it, so the page it opens is in view.
+          if (!panel.isDrawer || panelProps.closeOnNavigate === false) return;
+          if (event.target.closest?.('a[href]')) panel.setOpen(false, 'navigate');
+        }}
+        {...(panel.isDrawer ? swipe : {})}
       >
-        {toggle && (
-          <button
-            type="button"
-            id={`${blockId}_panel_toggle`}
-            className="lf-rail-icon-button"
-            aria-label="Open panel"
-            aria-expanded={drawerOpen}
-            onClick={() => setDrawerOpen(!drawerOpen)}
-          >
-            <Icon
-              blockId={`${blockId}_panel_toggle_icon`}
-              events={events}
-              properties={{ name: 'sidebar-expand' }}
-            />
-          </button>
-        )}
-        {breadcrumb}
-        {content.contentHeader &&
-          content.contentHeader({
-            flex: '1 1 auto',
-            width: 'auto',
-            alignItems: 'center',
-            flexWrap: 'nowrap',
-            minWidth: 0,
-          })}
-      </header>
-    );
-  }
-
-  function renderMain() {
-    const body = (
-      <>
-        {renderContentHeader()}
-        <div
-          className={cn('lf-rail-content', classNames.content)}
-          style={{ padding: contentPadding[properties.padding ?? 'default'], ...styles.content }}
-        >
-          {content.content && content.content()}
+        <div className="lf-rail-panel-clip">
+          <div className="lf-rail-panel-inner">
+            {panel.isDrawer && (
+              <div className="lf-rail-panel-top">
+                <span className="lf-rail-panel-title">{title}</span>
+                <button
+                  type="button"
+                  id={`${blockId}_panel_close`}
+                  className="lf-rail-bar-button"
+                  aria-label="Close panel"
+                  onClick={() => panel.setOpen(false, 'button')}
+                >
+                  <Icon
+                    blockId={`${blockId}_panel_close_icon`}
+                    events={events}
+                    properties={{ name: 'close' }}
+                  />
+                </button>
+              </div>
+            )}
+            {content.panelHeader && (
+              <div
+                className={cn('lf-rail-panel-header', classNames.panelHeader)}
+                style={styles.panelHeader}
+              >
+                {content.panelHeader()}
+              </div>
+            )}
+            <div
+              className={cn('lf-rail-panel-body', classNames.panelBody)}
+              style={styles.panelBody}
+            >
+              {content.panel()}
+            </div>
+          </div>
         </div>
-      </>
-    );
-    if (isPhone) {
-      return (
-        <main
-          className={cn('lf-rail-main lf-rail-main-phone', classNames.main)}
-          style={styles.main}
-        >
-          {content.mobileHeader && (
-            <div className="lf-rail-mobile-header">{content.mobileHeader()}</div>
-          )}
-          {hasPanel && (
-            <section className={cn('lf-rail-panel-phone', classNames.panel)} style={styles.panel}>
-              {renderPanelBody()}
-            </section>
-          )}
-          {body}
-        </main>
-      );
-    }
-    return (
-      <main className={cn('lf-rail-main', classNames.main)} style={styles.main}>
-        {body}
-      </main>
+        {!panel.isDrawer && (
+          <PanelResizeHandle
+            blockId={blockId}
+            className={cn('lf-rail-panel-handle', classNames.resizeHandle)}
+            limits={limits}
+            onCollapse={(source) => panel.setOpen(false, source)}
+            onCommit={(width, options) => panel.commitWidth(width, options)}
+            open={panelOpen}
+            rootRef={rootRef}
+            style={styles.resizeHandle}
+            width={panel.width}
+          />
+        )}
+      </aside>
     );
   }
 
-  function renderMoreRow({ key, icon, title, badge, link, onClick }) {
+  function renderMoreRow(key, props) {
     return (
       <RailItem
         key={key}
+        {...props}
         blockId={`${blockId}_more_${key}`}
         className="lf-rail-more-row"
-        components={components}
-        events={events}
         hideTip
-        icon={icon}
-        link={link}
-        onClick={(event) => {
-          setMoreOpen(false);
-          if (onClick) onClick(event);
-        }}
-        title={title}
-        badge={badge}
       />
     );
   }
@@ -440,19 +621,18 @@ function PageRailLayout({
     const tabCount = properties.mobileTabs ?? 4;
     const tabs = places.slice(0, tabCount);
     const overflow = places.slice(tabCount);
-    const overflowActive = overflow.some(isActive);
-    const overflowBadge =
-      overflow.some((link) => getRailBadge(badges[link.id]).count > 0) ||
-      (!type.isNone(notifications) && notifications.count > 0) ||
-      footItems.some((item) => item.badge !== undefined && getRailBadge(item.badge).count > 0);
+    const profileLinks = Object.values(flattenLinks(profile?.links)).filter(
+      (link) => !link.type || link.type === 'MenuLink'
+    );
     const hasMore =
       overflow.length > 0 ||
       footItems.length > 0 ||
       !type.isNone(notifications) ||
       !type.isNone(profile);
-    const profileLinks = Object.values(flattenLinks(profile?.links)).filter(
-      (link) => !link.type || link.type === 'MenuLink'
-    );
+    const moreNeedsYou =
+      overflow.some((link) => getBadge(getPlaceBadge(badges, link))) ||
+      footItems.some((item) => getBadge(item.badge)) ||
+      (!type.isNone(notifications) && (notifications.count ?? 0) > 0);
     return (
       <>
         <nav
@@ -462,18 +642,23 @@ function PageRailLayout({
           style={styles.tabBar}
         >
           {tabs.map((link, index) => (
-            <RailItem key={link.id} {...placeProps(link, index)} />
+            <RailItem
+              key={getPlaceKey(link)}
+              {...placeProps(link, index)}
+              className="lf-rail-tab"
+            />
           ))}
           {hasMore && (
             <RailItem
               blockId={`${blockId}_more`}
+              className="lf-rail-tab"
               components={components}
               events={events}
               hideTip
-              active={overflowActive}
+              active={moreOpen || overflow.some(isActive)}
               icon={{ name: 'more' }}
               title="More"
-              badge={overflowBadge ? { count: 0, dot: true } : undefined}
+              badge={moreNeedsYou ? { dot: true, tone: 'error' } : undefined}
               onClick={() => setMoreOpen(true)}
             />
           )}
@@ -481,51 +666,55 @@ function PageRailLayout({
         <Drawer
           open={moreOpen}
           placement="bottom"
-          height="auto"
+          size="auto"
           closable={false}
           onClose={() => setMoreOpen(false)}
-          rootClassName="lf-rail-portal"
-          classNames={{ body: cn('lf-rail-more', classNames.moreSheet) }}
+          rootClassName={cn('lf-rail-portal lf-rail-sheet', classNames.moreSheet)}
           styles={{ body: styles.moreSheet }}
         >
-          <div id={`${blockId}_more_sheet`}>
+          <div id={`${blockId}_more_sheet`} className="lf-rail-sheet-content">
+            <div className="lf-rail-sheet-grab" aria-hidden="true" />
             {overflow.map((link, index) =>
-              renderMoreRow({ key: `place_${link.id}`, ...placeProps(link, tabCount + index) })
+              renderMoreRow(`place_${getPlaceKey(link)}`, placeProps(link, tabCount + index))
             )}
-            {footItems.map((item) => {
-              const itemProps = footItemProps(item);
-              return renderMoreRow({ key: `foot_${item.id}`, ...itemProps });
-            })}
-            {!type.isNone(notifications) &&
-              renderMoreRow({ key: 'notifications', ...notificationsProps() })}
+            {footItems.map((item) => renderMoreRow(`foot_${item.id}`, footItemProps(item)))}
+            {!type.isNone(notifications) && renderMoreRow('notifications', notificationsProps())}
             {!type.isNone(profile) && (
               <>
-                <div className="lf-rail-more-heading">{profile.title ?? 'Profile'}</div>
+                <div className="lf-rail-sheet-profile">
+                  {renderAvatar(36)}
+                  <span className="lf-rail-profile-head">
+                    <span className="lf-rail-profile-name">
+                      {profile.name ?? profile.title ?? 'Account'}
+                    </span>
+                    {profile.email && (
+                      <span className="lf-rail-profile-email">{profile.email}</span>
+                    )}
+                  </span>
+                </div>
+                {properties.darkModeToggle &&
+                  renderMoreRow('dark_mode', {
+                    blockId: `${blockId}_more_dark_mode`,
+                    components,
+                    events,
+                    icon: { name: getDarkModeIcon() },
+                    title: `Theme: ${getDarkModeLabel()}`,
+                    onClick: () => methods.triggerEvent({ name: '__toggleDarkMode' }),
+                  })}
                 {profileLinks.map((link) =>
-                  renderMoreRow({
-                    key: `profile_${link.id}`,
+                  renderMoreRow(`profile_${getPlaceKey(link)}`, {
+                    blockId: `${blockId}_more_profile_${getPlaceKey(link)}`,
+                    components,
+                    events,
                     icon: link.properties?.icon,
-                    title: link.properties?.title ?? link.pageId ?? link.id,
                     link: getLinkTarget(link),
-                    onClick: () =>
-                      methods.triggerEvent({
-                        name: 'onProfileMenuClick',
-                        event: {
-                          key: link.id,
-                          keyPath: [link.id],
-                          pageId: link.pageId,
-                          url: link.url,
-                        },
-                      }),
+                    title: link.properties?.title ?? link.pageId ?? link.id,
+                    onClick: () => {
+                      setMoreOpen(false);
+                      triggerProfileLink(link);
+                    },
                   })
                 )}
-                {properties.darkModeToggle &&
-                  renderMoreRow({
-                    key: 'dark_mode',
-                    icon: { name: getDarkModeIcon() },
-                    title: getDarkModeLabel(),
-                    onClick: toggleDarkMode,
-                  })}
               </>
             )}
           </div>
@@ -534,66 +723,109 @@ function PageRailLayout({
     );
   }
 
-  const asideProps = properties.aside ?? {};
-  const asideOpen = !!content.aside && asideProps.open === true;
+  function renderContextSheet() {
+    if (switchers.length === 0) return null;
+    return (
+      <Drawer
+        open={contextOpen}
+        placement="bottom"
+        size="auto"
+        closable={false}
+        destroyOnHidden
+        onClose={() => setContextOpen(false)}
+        rootClassName="lf-rail-portal lf-rail-sheet"
+      >
+        <div id={`${blockId}_context_sheet`} className="lf-rail-sheet-content">
+          <div className="lf-rail-sheet-grab" aria-hidden="true" />
+          {/* The switcher on the pill, the one changed most, comes first. */}
+          {[...switchers].reverse().map((crumb) => (
+            <section key={crumb.id} className="lf-rail-sheet-section">
+              <SwitcherList
+                autoFocus={false}
+                blockId={`${blockId}_crumb_${crumb.id}_sheet`}
+                components={components}
+                crumb={{
+                  ...crumb,
+                  switcher: { title: crumb.switcher.title ?? crumb.label, ...crumb.switcher },
+                }}
+                events={events}
+                onAction={(action) => onSwitcherAction(crumb, action)}
+                onDone={() => setContextOpen(false)}
+                onSelect={(option) => onSwitch(crumb, option)}
+              />
+            </section>
+          ))}
+        </div>
+      </Drawer>
+    );
+  }
+
+  let panelState = 'none';
+  if (hasPanel) panelState = panelOpen ? 'open' : 'closed';
+  const aside = properties.aside ?? {};
+  const asideOpen = !!content.aside && aside.open === true;
 
   return (
     <div
       id={blockId}
-      className={cn('lf-rail-layout', `lf-rail-layout-${mode}`, classNames.element)}
-      style={styles.element}
+      ref={rootRef}
+      className={cn('lf-rail-layout', classNames.element)}
+      data-mode={mode}
+      data-panel={panelState}
+      data-aside={asideOpen ? 'open' : 'closed'}
+      style={{
+        [PANEL_WIDTH_VAR]: `${panelOpen && !panel.isDrawer ? panel.width : 0}px`,
+        '--lf-rail-panel-width-open': `${panel.width}px`,
+        '--lf-rail-aside-current': `${aside.width ?? 400}px`,
+        ...styles.element,
+      }}
     >
+      <a className="lf-rail-skip" href={`#${blockId}_main`}>
+        Skip to content
+      </a>
       {!isPhone && renderRail()}
-      {isDesktop && hasPanel && (
-        <aside
-          id={`${blockId}_panel`}
-          className={cn('lf-rail-panel', classNames.panel)}
-          style={{ width, ...styles.panel }}
-        >
-          {renderPanelBody()}
-          <PanelResizeHandle
-            className={cn('lf-rail-resize-handle', classNames.resizeHandle)}
-            style={styles.resizeHandle}
-            limits={limits}
-            width={width}
-            setWidth={setWidth}
-            commit={commit}
-          />
-        </aside>
-      )}
-      {renderMain()}
-      {asideOpen && (
-        <aside
-          id={`${blockId}_aside`}
-          className={cn('lf-rail-aside', classNames.aside)}
-          style={{ width: asideProps.width ?? 400, ...styles.aside }}
-        >
-          {content.aside()}
-        </aside>
-      )}
-      {isPhone && renderTabBar()}
-      {mode === 'tablet' && hasPanel && (
-        <Drawer
-          open={drawerOpen}
-          placement="left"
-          size={width}
-          closable={false}
-          onClose={() => setDrawerOpen(false)}
-          rootClassName="lf-rail-portal lf-rail-drawer"
-          classNames={{ body: cn('lf-rail-drawer-body', classNames.drawer) }}
-        >
-          {/* Following a link inside the panel closes the drawer. */}
-          <div
-            id={`${blockId}_drawer`}
-            className="lf-rail-drawer-panel"
-            onClick={(event) => {
-              if (event.target.closest?.('a')) setDrawerOpen(false);
-            }}
+      <div className="lf-rail-stage">
+        {renderBar()}
+        <div className="lf-rail-body">
+          {renderPanel()}
+          {hasPanel && panel.isDrawer && (
+            <div
+              className="lf-rail-scrim"
+              aria-hidden="true"
+              onClick={() => panel.setOpen(false, 'scrim')}
+            />
+          )}
+          <main
+            id={`${blockId}_main`}
+            tabIndex={-1}
+            className={cn('lf-rail-main', classNames.main)}
+            style={{ padding: contentPadding[properties.padding ?? 'default'], ...styles.main }}
           >
-            {renderPanelBody()}
-          </div>
-        </Drawer>
-      )}
+            {content.content && content.content()}
+          </main>
+          {asideOpen && (
+            <>
+              {mode !== 'desktop' && (
+                <div
+                  className="lf-rail-scrim lf-rail-aside-scrim"
+                  aria-hidden="true"
+                  onClick={() => methods.triggerEvent({ name: 'onAsideClose' })}
+                />
+              )}
+              <aside
+                id={`${blockId}_aside`}
+                aria-label={aside.title ?? 'Side panel'}
+                className={cn('lf-rail-aside', classNames.aside)}
+                style={styles.aside}
+              >
+                {content.aside()}
+              </aside>
+            </>
+          )}
+        </div>
+      </div>
+      {isPhone && renderTabBar()}
+      {isPhone && renderContextSheet()}
     </div>
   );
 }

@@ -20,9 +20,9 @@
       style:
         .element:
           height: 560px
+          overflow: auto
+          --lf-rail-viewport-height: 560px
       properties:
-        panel:
-          storageKey: prl_basic_panel_width
         menu:
           selectedKeys:
             - prl_basic_controls
@@ -67,19 +67,64 @@
               properties:
                 title: Sign out
         darkModeToggle: true
-        breadcrumb:
-          list:
-            - Controls
-            - Access control
+        panel:
+          title: Controls
+          storageKey: prl_basic_panel
+        crumbs:
+          - id: org
+            label: Acme Ltd
+            mark:
+              text: AL
+              color: '#17b3a3'
+            switcher:
+              title: Organisations
+              options:
+                - id: acme
+                  label: Acme Ltd
+                  description: Owner
+                  selected: true
+                  mark:
+                    text: AL
+                    color: '#17b3a3'
+                - id: globex
+                  label: Globex
+                  description: Admin
+                  extra: 4
+                  mark:
+                    text: GX
+                    color: '#5b7fd6'
+              actions:
+                - id: new
+                  label: New organisation
+                  icon: Plus
+          - id: lens
+            label: ISO 27001
+            mark:
+              percent: 62
+            switcher:
+              options:
+                - id: all
+                  label: All frameworks
+                  mark:
+                    percent: 48
+                - id: iso
+                  label: ISO 27001
+                  selected: true
+                  mark:
+                    percent: 62
+          - id: place
+            label: Controls
+          - id: record
+            label: Access control
       slots:
-        panelHeader:
+        header:
           blocks:
-            - id: prl_basic_org
-              type: Title
+            - id: prl_basic_comment
+              type: Button
               properties:
-                content: Acme Ltd
-                level: 5
-                margin: false
+                title: Comment
+                size: small
+                icon: MessageCircle
         panel:
           blocks:
             - id: prl_basic_menu
@@ -109,7 +154,7 @@
             - id: prl_basic_text
               type: Paragraph
               properties:
-                content: Drag the panel edge to resize it. The width is remembered.
+                content: Drag the panel edge to resize it, or past its smallest width to collapse it. Double-click the edge to reset it, and press Ctrl or Cmd with the backslash key to show or hide the panel. Pick the organisation or the framework from the crumbs.
 - title: PageRailLayout with an aside
   fullWidth: true
   blocks:
@@ -118,6 +163,8 @@
       style:
         .element:
           height: 480px
+          overflow: auto
+          --lf-rail-viewport-height: 480px
       properties:
         panel:
           storageKey: prl_aside_panel_width
@@ -164,6 +211,8 @@
       style:
         .element:
           height: 360px
+          overflow: auto
+          --lf-rail-viewport-height: 360px
       properties:
         menu:
           links:

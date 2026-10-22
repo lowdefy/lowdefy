@@ -16,19 +16,30 @@
 
 import { useEffect, useState } from 'react';
 
-import getLayoutMode from './getLayoutMode.js';
+import getLayoutMode, { getLayoutQueries } from './getLayoutMode.js';
 
+function browserMatchMedia() {
+  return typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+    ? (query) => window.matchMedia(query)
+    : undefined;
+}
+
+// desktop, tablet or phone. Read once before the first paint, then on media query changes only,
+// so resizing a window does not re-render the page on every pixel.
 function useLayoutMode({ drawerBreakpoint, mobileBreakpoint }) {
   const [mode, setMode] = useState(() =>
-    getLayoutMode({ width: window.innerWidth, drawerBreakpoint, mobileBreakpoint })
+    getLayoutMode({ drawerBreakpoint, mobileBreakpoint, matchMedia: browserMatchMedia() })
   );
   useEffect(() => {
-    function update() {
-      setMode(getLayoutMode({ width: window.innerWidth, drawerBreakpoint, mobileBreakpoint }));
-    }
+    const matchMedia = browserMatchMedia();
+    if (!matchMedia) return undefined;
+    const update = () => setMode(getLayoutMode({ drawerBreakpoint, mobileBreakpoint, matchMedia }));
+    const lists = Object.values(getLayoutQueries({ drawerBreakpoint, mobileBreakpoint })).map(
+      matchMedia
+    );
+    lists.forEach((list) => list.addEventListener?.('change', update));
     update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    return () => lists.forEach((list) => list.removeEventListener?.('change', update));
   }, [drawerBreakpoint, mobileBreakpoint]);
   return mode;
 }

@@ -97,32 +97,79 @@
       blocks: []
     panel:
       blocks: []
+- id: 'properties.panel.startOpen'
+  type: PageRailLayout
+  properties:
+    panel:
+      title: Controls
+      startOpen: true
+      closeOnNavigate: false
+      shortcut: null
+  slots:
+    panel:
+      blocks: []
 - id: 'properties.mobileBreakpoint'
   type: PageRailLayout
   properties:
     mobileBreakpoint: 600
     mobileTabs: 3
-  slots:
-    mobileHeader:
-      blocks: []
+    headerOnPhone: true
 - id: 'properties.aside'
   type: PageRailLayout
   properties:
     aside:
       open: true
       width: 320
+      title: Assistant
   slots:
     aside:
       blocks: []
-- id: 'properties.breadcrumb.list'
+- id: 'properties.crumbs'
   type: PageRailLayout
   properties:
-    breadcrumb:
-      list:
-        - Link one
-        - Link two
+    crumbs:
+      - id: org
+        label: Northwind Holdings
+        mark:
+          text: NH
+          color: '#17b3a3'
+        switcher:
+          title: Organisations
+          options:
+            - id: nh
+              label: Northwind Holdings
+              description: Owner
+              selected: true
+              mark:
+                text: NH
+            - id: ag
+              label: Acme Group
+              extra: 5
+              pageId: switch
+              urlQuery:
+                org: ag
+          actions:
+            - id: new
+              label: New organisation
+              icon: Plus
+      - id: lens
+        label: All frameworks
+        mark:
+          percent: 30
+        switcher:
+          options:
+            - id: all
+              label: All frameworks
+              selected: true
+              mark:
+                percent: 30
+      - id: place
+        label: Controls
+        pageId: controls
+      - id: record
+        label: Privacy Notice
   slots:
-    contentHeader:
+    header:
       blocks: []
 - id: 'properties.padding: compact'
   type: PageRailLayout
@@ -142,6 +189,14 @@
   style:
     .rail:
       border: 5px solid blue
+- id: 'style.bar'
+  type: PageRailLayout
+  style:
+    .bar:
+      border: 5px solid blue
+  slots:
+    header:
+      blocks: []
 - id: 'style.panel'
   type: PageRailLayout
   style:
@@ -150,10 +205,10 @@
   slots:
     panel:
       blocks: []
-- id: 'style.content'
+- id: 'style.main'
   type: PageRailLayout
   style:
-    .content:
+    .main:
       border: 5px solid blue
   slots:
     content:
