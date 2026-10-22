@@ -18,6 +18,7 @@ import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import omitLogFields from '../omitLogFields.js';
 import { assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
@@ -90,19 +91,22 @@ async function MongodbUpdateOne({
     try {
       await logCollection.insertOne(
         stampTenantOnLogRecord({
-          record: {
-            args: { filter, update, options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            before,
-            after,
-            timestamp: new Date(),
-            type: 'MongoDBUpdateOne',
-            meta: connection.changeLog?.meta,
-          },
+          record: omitLogFields({
+            connection,
+            record: {
+              args: { filter, update, options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              before,
+              after,
+              timestamp: new Date(),
+              type: 'MongoDBUpdateOne',
+              meta: connection.changeLog?.meta,
+            },
+          }),
           tenant,
         })
       );

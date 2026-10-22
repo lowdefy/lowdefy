@@ -60,6 +60,20 @@ export default {
             type: 'MongoDBCollection connection property "changeLog.meta" should be an object.',
           },
         },
+        omit: {
+          type: 'array',
+          description:
+            'Top-level fields whose values change log records never hold. Each copy a record makes of a document or a write (before, after, the inserted documents, each update operator or pipeline stage) has "[omitted]" in place of the field\'s value; a key "body.html" counts as "body". The record still shows which fields a write set.',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'MongoDBCollection connection property "changeLog.omit" should be an array of field names.',
+            },
+          },
+          errorMessage: {
+            type: 'MongoDBCollection connection property "changeLog.omit" should be an array of field names.',
+          },
+        },
       },
       errorMessage: {
         type: 'MongoDBCollection connection property "changeLog" should be an object.',

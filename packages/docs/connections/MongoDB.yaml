@@ -66,6 +66,7 @@ _ref:
             - `changeLog: object`: Log all changes made by write requests to a log collection.
               - `collection: string`: __Required__ - The name of the collection change log records are written to.
               - `meta: object`: Additional data to include in every change log record, for example the user making the change.
+              - `omit: string[]`: Top-level fields whose values change log records never hold, for example `[body]` when the collection stores text that must be gone once its document is deleted. Each copy a record makes of a document or a write (`before`, `after`, `args.doc`, `args.docs`, each update operator or pipeline stage, and `MongoDBTableChanges`' changeset and operations) has `"[omitted]"` in place of the field's value, so the record still shows which fields a write set. A key `body.html` counts as `body`. Name `_enrich` to leave enrichment cell values out of the enrichment requests' records.
             - `read: boolean`: Default: `true` - Allow read operations like find on the collection.
             - `write: boolean`: Default: `false` - Allow write operations like update on the collection.
             - `options: object`: See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
