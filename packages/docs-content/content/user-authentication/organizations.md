@@ -28,11 +28,13 @@ An app that sets nothing gets `pinned` with one auto-seeded organization, invite
 | `create` | `auto` \| `operator` | **tenant only** | `tenant` → `auto` | How a tenant organization comes into being: `auto` mints one for a user at first session; `operator` leaves creation to your own config (the `CreateOrganization` step). |
 | `invitationExpiresIn` | integer (seconds, min 60) | both | `172800` (48h) | How long an invitation stays acceptable. Re-sending an invitation refreshes its expiry. |
 | `membershipLimit` | integer (min 1) | both | `1000000` (effectively open) | The most members one organization may have. Once an organization has this many, accepting an invitation and adding a member are refused (a 403). Set it to cap organization size, for example per tenant. It is also the default page size of `ListMembers` when no `limit` is given. |
+| `creatorAppRoles` | array of role ids | both | `[]` | App roles the owner of a new organization gets on their membership. See [App roles for a new organization's owner](#app-roles-for-a-new-organizations-owner). |
 
 The build cross-checks these, and the errors are worth knowing before you hit them:
 
 - **`org` is required under `pinned`** and **rejected under `tenant`** — under `tenant` there is no single organization to pin; organizations are created per user.
 - **`create` is rejected under `pinned`** — the active organization is ensured at startup, so there is nothing to create on demand.
+- **Every `creatorAppRoles` id must be declared in `auth.roles`**, the same as the roles a page or API gate names.
 - **Renaming `org` strands the existing membership.** The startup ensure is by slug, so changing `org` mints a *fresh* organization rather than renaming the old one, and every existing `member` row still points at the old id. Treat the pinned slug as permanent.
 
 Defaults line up with intent: `pinned` defaults to a closed, invite-only internal app; `tenant` defaults to self-serve SaaS (`signup: open`, `create: auto`).
@@ -62,6 +64,34 @@ A membership carries **two** independent role authorities, and keeping them apar
 - **`_user.roles`** — the app's own role strings, from the membership's `appRoles`. These are what [`auth.pages.roles` and `auth.api.roles`](/roles) match, and the only thing they match.
 
 So an app that wants a page for organization administrators does **not** gate it on the `admin` tier — it gates on one of its own app roles, and lets the write authority answer the administration question separately, at the step. See [Roles](/roles) for page and API gating, and [Auth Steps](/auth-steps) for the administration model.
+
+### App roles for a new organization's owner
+
+When Lowdefy creates an organization and makes someone its owner, that person gets the `owner` tier and, by default, no app roles. In an app whose pages, endpoints and menus are gated on app roles, a new signup's own organization is then closed to them. `creatorAppRoles` lists the app roles the owner gets as well:
+
+```yaml
+auth:
+  roles:
+    - id: owner
+    - id: admin
+  organizations:
+    policy: tenant
+    creatorAppRoles:
+      - owner
+  pages:
+    roles:
+      owner:
+        - billing
+```
+
+Here a new signup under `create: auto` becomes the `owner` of their own organization with `_user.roles` `[owner]`, so the `billing` page opens for them. The owner's tier stays `owner`; only the membership's `appRoles` is added.
+
+It applies wherever Lowdefy itself makes someone the owner of a new organization:
+
+- the organization a tenant signup mints under `create: auto`;
+- the [`CreateOrganization`](/auth-steps) step, when it is given a creator (`userId`). An organization created without a creator has no owner to grant roles to.
+
+It does not apply to anyone who joins an existing organization: invited members get the app roles their invitation carries, and users auto-joined to a pinned organization under `signup: open` join as `member` with none. Changing the setting leaves existing memberships as they are; use `UpdateMemberRoles` for those.
 
 ## Bootstrapping the first administrator
 
