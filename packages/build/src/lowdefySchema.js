@@ -1568,11 +1568,25 @@ export default {
                 minimum: 'Auth "organizations.membershipLimit" should be at least 1.',
               },
             },
+            creatorAppRoles: {
+              type: 'array',
+              description:
+                'App roles, declared in auth.roles, that the owner of a new organization gets on their member row. Applies where Lowdefy creates an organization and makes someone its owner: the tenant signup mint under "create: auto" and the CreateOrganization step with a creator. Defaults to [], an owner with no app roles.',
+              items: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "organizations.creatorAppRoles" should be an array of role ids.',
+                },
+              },
+              errorMessage: {
+                type: 'Auth "organizations.creatorAppRoles" should be an array of role ids.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "organizations" should be an object.',
             additionalProperties:
-              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create", "invitationExpiresIn" and "membershipLimit".',
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create", "invitationExpiresIn", "membershipLimit" and "creatorAppRoles".',
           },
         },
         dev: {

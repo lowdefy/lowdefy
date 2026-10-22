@@ -130,6 +130,7 @@ test('buildAuth fills in configured defaults for a minimal valid auth config', (
       policy: 'pinned',
       org: 'default',
       signup: 'invite-only',
+      creatorAppRoles: [],
     },
     authPages: {
       signIn: '/login',
