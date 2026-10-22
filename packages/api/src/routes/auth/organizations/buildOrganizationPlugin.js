@@ -144,7 +144,7 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     organizationHooks: {
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
       afterCreateOrganization: createAfterCreateOrganizationHook({
-        creatorAppRoles: authConfig.organizations?.creatorAppRoles,
+        creatorAppRoles: authConfig.organizations?.creatorAppRoles ?? [],
         getAuth,
       }),
     },

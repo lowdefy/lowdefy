@@ -27,10 +27,11 @@ import { type } from '@lowdefy/helpers';
 // The endpoint returns the member object it passes here, so the roles are set
 // on it as well, and the CreateOrganization step's result shows the row as
 // written. A creator-less organization (CreateOrganization's provisioning
-// path) has no member to grant roles to.
+// path) has no member to grant roles to, and an empty list leaves the member
+// row as the endpoint wrote it.
 function createAfterCreateOrganizationHook({ creatorAppRoles, getAuth }) {
   return async function afterCreateOrganizationHook({ member }) {
-    if (type.isNone(member)) {
+    if (type.isNone(member) || creatorAppRoles.length === 0) {
       return;
     }
     const { adapter } = await getAuth().$context;

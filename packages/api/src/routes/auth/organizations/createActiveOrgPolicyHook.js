@@ -154,17 +154,12 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   }
 
   async function joinAsOwner({ adapter, userId, organizationId }) {
+    const data = { userId, organizationId, role: 'owner', createdAt: new Date() };
+    if (organizations.creatorAppRoles.length > 0) {
+      data.appRoles = organizations.creatorAppRoles;
+    }
     try {
-      await adapter.create({
-        model: 'member',
-        data: {
-          userId,
-          organizationId,
-          role: 'owner',
-          appRoles: organizations.creatorAppRoles,
-          createdAt: new Date(),
-        },
-      });
+      await adapter.create({ model: 'member', data });
     } catch (error) {
       const winner = await findMember({ adapter, userId, organizationId });
       if (type.isNone(winner)) {

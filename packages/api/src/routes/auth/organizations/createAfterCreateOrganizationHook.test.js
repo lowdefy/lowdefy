@@ -43,17 +43,15 @@ test('afterCreateOrganizationHook writes creatorAppRoles onto the creator member
   expect(member.appRoles).toEqual(['owner', 'billing']);
 });
 
-test('afterCreateOrganizationHook writes an empty appRoles array when creatorAppRoles is empty', async () => {
+test('afterCreateOrganizationHook leaves the member row alone when creatorAppRoles is empty', async () => {
   const { auth, update } = createMockAuth();
   const hook = createAfterCreateOrganizationHook({ creatorAppRoles: [], getAuth: () => auth });
+  const member = { id: 'member_1', role: 'owner' };
 
-  await hook({ organization: { id: 'org_1' }, member: { id: 'member_1' }, user: { id: 'user_1' } });
+  await hook({ organization: { id: 'org_1' }, member, user: { id: 'user_1' } });
 
-  expect(update).toHaveBeenCalledWith({
-    model: 'member',
-    where: [{ field: 'id', value: 'member_1' }],
-    update: { appRoles: [] },
-  });
+  expect(update).not.toHaveBeenCalled();
+  expect('appRoles' in member).toBe(false);
 });
 
 test('afterCreateOrganizationHook writes nothing for a creator-less organization', async () => {

@@ -279,10 +279,11 @@ test('tenant: a fresh signup owner row holds the creatorAppRoles app roles', asy
   ]);
 });
 
-test('tenant: a fresh signup owner row holds no app roles when creatorAppRoles is empty', async () => {
+test('tenant: a fresh signup owner row carries no appRoles field when creatorAppRoles is empty', async () => {
   const { auth, db } = createMemoryAuth();
   await mintHook(auth)({ userId: 'user_1' });
-  expect(db.member).toEqual([expect.objectContaining({ role: 'owner', appRoles: [] })]);
+  expect(db.member).toHaveLength(1);
+  expect('appRoles' in db.member[0]).toBe(false);
 });
 
 test('tenant: a retried mint joins the marked organization a failed member write left behind', async () => {
