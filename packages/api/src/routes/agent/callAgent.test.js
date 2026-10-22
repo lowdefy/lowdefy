@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { vi, beforeEach, expect, test } from 'vitest';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
 import callAgent from './callAgent.js';
