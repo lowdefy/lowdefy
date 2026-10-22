@@ -27,7 +27,7 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "main": "expo-router/entry",
-  "nativeVersion": 2,
+  "nativeVersion": 3,
   "files": [
     "app/*",
     "scripts/*",

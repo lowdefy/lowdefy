@@ -127,9 +127,10 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       // The shell uses only the encryption the OS provides (HTTPS, the Keychain), so App Store
       // Connect asks no export compliance question on upload.
       config: { usesNonExemptEncryption: false },
+      // The profile's purpose texts no config plugin writes (profiles.js `infoPlist`).
       // expo-dev-menu's floating tools button sits over the header's trailing actions in a
       // development build; the dev menu stays a shake away (DevMenuPreferences.swift reads this).
-      infoPlist: { EXDevMenuShowFloatingActionButton: false },
+      infoPlist: { ...profile.infoPlist, EXDevMenuShowFloatingActionButton: false },
       privacyManifests: getPrivacyManifest({ privacyReasons: profile.privacyReasons }),
     },
     android: {
