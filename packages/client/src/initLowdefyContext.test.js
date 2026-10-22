@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { getHtmlEnhancements } from '@lowdefy/block-utils/registerHtmlEnhancements.js';
 
 import initLowdefyContext from './initLowdefyContext.js';
@@ -37,7 +38,7 @@ function baseArgs(overrides = {}) {
     router: { basePath: '' },
     stage: 'production',
     types: { actions: {}, blocks: {}, icons: {}, operators: {} },
-    window: { document: {}, fetch: () => undefined },
+    window: { addEventListener: jest.fn(), document: {}, fetch: () => undefined },
   };
 }
 
@@ -191,4 +192,13 @@ test('initLowdefyContext keeps user storage of the person signed in', () => {
   args.window = window;
   initLowdefyContext(args);
   expect(window.localStorage.getItem('lowdefy:sales::lowdefy_user:u1:views')).toBe('{}');
+});
+
+test('initLowdefyContext watches the page unload once across renders', () => {
+  const args = baseArgs();
+  initLowdefyContext(args);
+  initLowdefyContext(args);
+  expect(args.lowdefy.unloading).toBe(false);
+  const events = args.window.addEventListener.mock.calls.map(([name]) => name);
+  expect(events).toEqual(['beforeunload', 'pagehide', 'pageshow']);
 });

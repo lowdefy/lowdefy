@@ -32,6 +32,7 @@ import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 import setLowdefyUser from './setLowdefyUser.js';
 import setupLink from './setupLink.js';
+import watchPageUnload from './watchPageUnload.js';
 import { createUrl } from './adapters/url.js';
 
 // loadAllIcons (production server only) loads every icon the app bundles into
@@ -59,6 +60,11 @@ function initLowdefyContext({
   // the same pages, and the page response it fetches next rewrites its own.
   if (type.isUndefined(lowdefy.pathMemory)) {
     lowdefy.pathMemory = new Map();
+  }
+  // Watched once per tab: this runs on every render, and a dev config reload
+  // does not unload the page.
+  if (type.isUndefined(lowdefy.unloading)) {
+    watchPageUnload({ lowdefy, window });
   }
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {

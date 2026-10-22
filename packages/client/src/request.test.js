@@ -178,6 +178,37 @@ describe('build check', () => {
     expect(settled).not.toHaveBeenCalled();
   });
 
+  test('request leaves other in-flight requests unsettled when a build refusal reloads the page', async () => {
+    const lowdefy = createLowdefy(null);
+    let cancelOther;
+    global.fetch = jest
+      .fn()
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve, reject) => {
+            cancelOther = () => reject(new TypeError('Failed to fetch'));
+          })
+      )
+      .mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: false,
+          status: 409,
+          headers: { get: () => null },
+          json: () => Promise.resolve(refusal),
+        })
+      );
+    const settled = jest.fn();
+    const args = { lowdefy, buildId: 'build-1', url: '/api/test', method: 'POST', body: {} };
+    request(args).then(settled, settled);
+    request(args).then(settled, settled);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(window.location.reload).toHaveBeenCalledTimes(1);
+    expect(lowdefy.unloading).toBe(true);
+    cancelOther();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(settled).not.toHaveBeenCalled();
+  });
+
   test('request throws the refusal as a UserError once the tab has already reloaded for that build', async () => {
     window.sessionStorage.setItem('lowdefy.reloadedForBuild', 'build-2');
     mockFetchResponse({ ok: false, status: 409, body: refusal });
@@ -429,5 +460,48 @@ describe('caller check', () => {
       roles: null,
       memberships: null,
     });
+  });
+});
+
+describe('page unload', () => {
+  function createUnloadingLowdefy(unloading) {
+    return { ...createLowdefy(null), unloading };
+  }
+
+  test('request never settles when the browser cancels its fetch as the page unloads', async () => {
+    global.fetch = jest.fn(() => Promise.reject(new TypeError('Failed to fetch')));
+    const settled = jest.fn();
+    request({ lowdefy: createUnloadingLowdefy(true), url: '/api/test' }).then(settled, settled);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(settled).not.toHaveBeenCalled();
+  });
+
+  test('request never settles when the browser cancels the body read as the page unloads', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        headers: { get: () => null },
+        json: () => Promise.reject(new TypeError('Load failed')),
+      })
+    );
+    const settled = jest.fn();
+    request({ lowdefy: createUnloadingLowdefy(true), url: '/api/test' }).then(settled, settled);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(settled).not.toHaveBeenCalled();
+  });
+
+  test('request throws a network failure while the page stays open', async () => {
+    global.fetch = jest.fn(() => Promise.reject(new TypeError('Failed to fetch')));
+    await expect(
+      request({ lowdefy: createUnloadingLowdefy(false), url: '/api/test' })
+    ).rejects.toThrow('Failed to fetch');
+  });
+
+  test('request still throws a server error response while the page unloads', async () => {
+    mockFetchResponse({ ok: false, body: { message: 'Bad gateway.' } });
+    await expect(
+      request({ lowdefy: createUnloadingLowdefy(true), url: '/api/test' })
+    ).rejects.toThrow('Bad gateway.');
   });
 });

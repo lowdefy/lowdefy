@@ -18,7 +18,9 @@ import { decodeServerError } from '@lowdefy/engine';
 import { expectedErrorNames, lowdefyErrorTypes } from '@lowdefy/errors';
 import { translate, type } from '@lowdefy/helpers';
 
+import awaitUnlessUnloading from './awaitUnlessUnloading.js';
 import recordCallerStamp from './recordCallerStamp.js';
+import reloadPage from './reloadPage.js';
 import shouldReloadForAuthError from './shouldReloadForAuthError.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
 import shouldReloadForCaller from './shouldReloadForCaller.js';
@@ -30,7 +32,8 @@ import shouldReloadForCaller from './shouldReloadForCaller.js';
 // promise never settles: the page is unloading, and a rejection would run the
 // action's catch actions and report the refusal as an error. Only the
 // production client carries a build id; the server lets a call naming none
-// through (dev and e2e pages, third-party webhooks).
+// through (dev and e2e pages, third-party webhooks). A fetch the browser
+// cancels as the page unloads never settles either (awaitUnlessUnloading).
 //
 // lowdefy.user is the caller the page renders. The tab also reloads when the
 // server answered as another caller or with other roles, or refused the
@@ -54,24 +57,27 @@ async function request({
   if (!type.isNone(buildId)) {
     headers['x-lowdefy-build'] = buildId;
   }
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: JSON.stringify(body),
+  const res = await awaitUnlessUnloading({
+    lowdefy,
+    promise: fetch(url, {
+      method,
+      headers,
+      body: JSON.stringify(body),
+    }),
   });
   const serverCaller = res.headers.get('x-lowdefy-caller');
   if (shouldReloadForCaller({ serverCaller, user, window })) {
-    window.location.reload();
+    reloadPage({ lowdefy, window });
     return new Promise(() => {});
   }
   recordCallerStamp({ lowdefy, serverCaller });
   if (!res.ok) {
-    const body = await res.json();
+    const body = await awaitUnlessUnloading({ lowdefy, promise: res.json() });
     if (
       res.status === 409 &&
       shouldReloadForBuild({ bundleBuildId: buildId, serverBuildId: body?.buildId, window })
     ) {
-      window.location.reload();
+      reloadPage({ lowdefy, window });
       return new Promise(() => {});
     }
     if (body?.['~e']) {
@@ -85,14 +91,14 @@ async function request({
       const ExpectedError = lowdefyErrorTypes[body.name];
       const error = new ExpectedError(body.message);
       if (shouldReloadForAuthError({ error, reloadOnAuthorizationError, user, window })) {
-        window.location.reload();
+        reloadPage({ lowdefy, window });
         return new Promise(() => {});
       }
       throw error;
     }
     throw new Error(body.message || translate({ key: 'client.requestError' }));
   }
-  return res.json();
+  return awaitUnlessUnloading({ lowdefy, promise: res.json() });
 }
 
 export default request;
