@@ -34,6 +34,7 @@ const TABLE_ONLY_KEYS = {
     addColumn: 'adding columns',
     importCsv: 'CSV import',
     inputFieldPrefix: 'adding columns',
+    rawEndpoint: 'enrichment cell details',
   },
   columns: {
     provider: 'enrichment columns',

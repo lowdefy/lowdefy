@@ -130,10 +130,22 @@ function TruncatedRaw({ raw }) {
 }
 
 // The raw result tree, its root named after the column that ran (the extract source for an
-// extract cell).
-function RawResult({ api, raw, source }) {
+// extract cell). Only a raw result the rows carry can be added as extract columns, since extract
+// columns read it from the row.
+function RawResult({ addable, api, raw, source }) {
   if (raw === undefined || raw === null) return <p className="lf-enrich-muted">No raw result.</p>;
   if (raw._truncated === true) return <TruncatedRaw raw={raw} />;
+  if (!addable) {
+    return (
+      <>
+        <p className="lf-enrich-muted" data-lf-details-raw-fetched="">
+          Loaded from the raw result endpoint. The rows leave it out, so its values cannot be added
+          as columns.
+        </p>
+        <JsonTree label={htmlToText(source.title)} value={raw} />
+      </>
+    );
+  }
   return (
     <JsonTree
       label={htmlToText(source.title)}
@@ -165,7 +177,7 @@ function RawSection({ api, run, rowKey, source }) {
       live = false;
     };
   }, [fetchable, endpoint, rowKey, source.key, finishedAt]);
-  if (!fetchable) return <RawResult api={api} raw={stored} source={source} />;
+  if (!fetchable) return <RawResult addable api={api} raw={stored} source={source} />;
   if (fetched === null) {
     return (
       <p className="lf-enrich-muted" data-lf-details-raw-loading="">
@@ -180,7 +192,7 @@ function RawSection({ api, run, rowKey, source }) {
       </p>
     );
   }
-  return <RawResult api={api} raw={fetched.raw} source={source} />;
+  return <RawResult addable={false} api={api} raw={fetched.raw} source={source} />;
 }
 
 function renderBody({ api, column, row, rowId }) {
@@ -244,7 +256,13 @@ function renderBody({ api, column, row, rowId }) {
         <Inputs rows={inputRows} />
       </Section>
       <Section name="raw" title="Raw result">
-        <RawSection api={api} run={run} rowKey={rowKey} source={runColumn} />
+        <RawSection
+          api={api}
+          key={`${rowKey}:${runColumn.key}`}
+          run={run}
+          rowKey={rowKey}
+          source={runColumn}
+        />
       </Section>
     </>
   );
@@ -254,8 +272,8 @@ function renderBody({ api, column, row, rowId }) {
 // while open, reading the row live (a push update shows at once). It shows the run's status
 // (with Rerun, onCellRun), the value through the column's type, the error, the timings and
 // cost, the inputs the value was computed from, and the raw result as a JSON tree whose nodes
-// can each be added as an extract column (onColumnAdd), loaded from `rawEndpoint` when the rows
-// leave it out. For an extract cell it shows its source column's run.
+// can each be added as an extract column (onColumnAdd), loaded from `rawEndpoint` (view only) when
+// the rows leave it out. For an extract cell it shows its source column's run.
 function CellDetails({ api, details }) {
   const column = api.config.columnsByKey.get(details.key);
   const row = api.table.getRow(details.rowId, true)?.original;

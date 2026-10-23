@@ -53,9 +53,24 @@ auth:
           _build.if_none:
             - _build.env: INVITATION_EXPIRES_IN
             - '172800'
+    # The owner of a new organization holds the workspace-admin app role, so
+    # pages gated on app roles open for a new signup in their own
+    # organization. Invited members get the app roles their invitation
+    # carries instead. The role is not named owner: that is the organization
+    # tier, a separate authority that reaches apps as _user.org_roles.
+    creatorAppRoles:
+      - workspace-admin
+
+  roles:
+    - id: workspace-admin
+      label: Workspace admin
+      description: Administers the organization they created.
 
   pages:
     protected: true
+    roles:
+      workspace-admin:
+        - workspace-settings
     public:
       - login
       - signup
@@ -119,3 +134,4 @@ pages:
   - _ref: pages/organizations.yaml
   - _ref: pages/members.yaml
   - _ref: pages/notes.yaml
+  - _ref: pages/workspace-settings.yaml

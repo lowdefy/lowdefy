@@ -1330,7 +1330,10 @@ groups:               # only when view.group has more levels than groupPath
     aggregates: { amount: 125000 }
 aggregates:           # only when view.aggregates is set, over the rows this request matches
   amount: 3400000
+sentence: Stage is any of Lead or Won   # only when view.filter is set
 ```
+
+`sentence` is the filter in words, from the field `title` and `options` (`describeCondition` in `@lowdefy/helpers`). It reads the same as the Table's Filter button tooltip when each field carries its column's plain-text `title` and its options as `[{ value, label }]`; a field without a `title` reads as its key, where the Table shows the key humanized. An agent or a server routine that runs the request with no browser can then say what a saved view matches.
 
 When `view.group` is set and `groupPath` is shorter than it, the request returns the groups of the next level, inside the groups in `groupPath`. When `groupPath` has a value for every level, it returns the leaf rows of that group.
 
@@ -1343,7 +1346,7 @@ The view `filter` is a condition: `{ and: [...] }`, `{ or: [...] }` or `{ key, o
 | all | `eq`, `ne`, `in`, `nin`, `empty`, `notEmpty` |
 | `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status`, `avatar` | `contains`, `notContains`, `startsWith`, `endsWith` |
 | `number`, `currency`, `percent`, `progress`, `rating` | `gt`, `gte`, `lt`, `lte`, `between` (`value: [from, to]`) |
-| `date`, `datetime` | `before`, `after`, `between`, `within` (`value: { last or next: n, unit: day, week, month or year }`) |
+| `date`, `datetime` | `before`, `after`, `between`, `within` (`value: { last or next: n, unit: day, week, month or year }`); `before` and `after` take a date or the same relative value |
 | `boolean` | `isTrue`, `isFalse` |
 | `tags`, `people` | `contains` (has the value), `notContains` (does not have the value); `in` is has any of, `nin` is has none of |
 | `image`, `json` | the operators for all types only |
@@ -1353,6 +1356,7 @@ These are the operators the `Table` filter menus offer for each column type, so 
 - Text comparisons are case-insensitive.
 - `empty` matches null, missing, `''` and `[]`.
 - `eq` and `ne` on dates compare whole days, and so do `before`, `after` and `between` on `date` fields. `within` covers whole days, from the start of the day `n` units ago to the end of today (or from the start of today to the end of the day `n` units ahead), as the table filters in the browser.
+- `before` and `after` with a relative value, such as `{ last: 3, unit: month }`, resolve when the query runs to the day it names in `timezone`: `before` matches values before the start of that day and `after` values from the end of it, on `date` and `datetime` fields alike. A bad relative value is refused with the message `within` gives.
 - Days are the days of `timezone`, UTC by default. The browser filters by the user's local days, so pass the user's time zone for day-based filters, for example `timezone: { _payload: timezone }` with `timezone: { _js: 'return Intl.DateTimeFormat().resolvedOptions().timeZone;' }` in the request `payload`. A date-only value such as `2026-03-01` (what `date` column filters send) is that day in the time zone. An instant is compared by the day it falls on there.
 - `isFalse` matches every value that is not `true`.
 - Numeric values may be numbers or numeric strings, and date values dates, date strings or timestamps.
@@ -1386,6 +1390,8 @@ A request over a limit throws before the query runs.
   - `sortable: boolean`: Default: `true` - Allow sorting by the field.
   - `filterable: boolean`: Default: `true` - Allow filtering by the field.
   - `groupable: boolean`: Default: `false` - Allow grouping by the field, and `countDistinct` on it. `tags` and `people` fields can not be grouped.
+  - `title: string`: Default: the field key - The field's name in the response `sentence`, as the Table column's title.
+  - `options: object[]`: The field's options as `[{ value, label }]`. The response `sentence` reads option values as their labels.
 - `pipeline: object[]`: Default: `[]` - Base aggregation stages that always run first, for example tenant scoping and a `$project`. `$out` and `$merge` are not allowed.
 - `view: object`: The Table view, `{ _payload: view }`. Only `sort`, `filter`, `search`, `group` and `aggregates` are read.
 - `startRow: integer`: Default: `0` - Index of the first row to return, `{ _payload: startRow }`.

@@ -55,10 +55,11 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // Under policy: pinned, a session whose active organization is not this app's
 // organization is treated the same way, member row there or not.
 //
-// A session carrying no active organization at all differs by policy. Under
-// pinned it resolves to unauthenticated on the same reasoning. Under tenant it
-// resolves to a caller carrying identity, no membership and no roles, marked
-// awaitingOrganization - the invited user before they accept.
+// A session carrying no active organization at all resolves to a caller
+// carrying identity, no membership and no roles, marked awaitingOrganization -
+// the invited user before they accept. Under pinned only while they hold a
+// pending invitation to this app's organization; without one it resolves to
+// unauthenticated.
 // createAuthorizeOutcome refuses that caller wherever auth.public is false, so
 // the marker widens no access; it exists so the always-public accept page can
 // tell an invited user from a stranger.
@@ -571,28 +572,29 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     });
     return;
   }
+  const registered = getRegisteredOrganization({ auth });
   const activeOrganizationId = session.session.activeOrganizationId;
   if (type.isNone(activeOrganizationId)) {
-    // A session with no active organization differs by policy. Under tenant it
-    // is the invited user before they accept - their pre-accept session carries
-    // no organization by design, because they are about to join someone else's.
+    // A session with no active organization is the invited user before they
+    // accept - their pre-accept session carries no organization by design,
+    // because they are about to join an organization they do not belong to yet.
     // Resolving them to null leaves the always-public accept page unable to
     // tell them from a stranger, and that page is the one page they can reach.
     // They become a caller carrying identity, no membership and no roles,
     // marked awaitingOrganization - createAuthorizeOutcome refuses that caller
-    // wherever auth.public is false, so the marker widens no access. Under
-    // pinned the state has no meaning: one organization exists, and someone
-    // outside it has no reason to be known to the app.
-    if (getRegisteredOrganization({ auth })?.policy !== 'tenant') {
+    // wherever auth.public is false, so the marker widens no access.
+    //
+    // It also keeps the page and the server on one caller: the client renders
+    // the session's user, so a server that resolved that session to null would
+    // stamp every response as another caller (callerStamp) and the accept page
+    // would reload until it fails.
+    if (type.isNone(registered)) {
       context.logger.debug(
         `Session for user "${session.user.id}" has no active organization - resolved unauthenticated.`
       );
       context.user = null;
       return;
     }
-    context.logger.debug(
-      `Session for user "${session.user.id}" has no active organization under tenant - resolved awaiting organization.`
-    );
     // Why they are awaiting matters to the app: an invited user who signed up
     // directly (instead of via the invitation link) holds a pending invitation
     // and no member row, and without a marker the public pages cannot tell
@@ -601,12 +603,53 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     // invitation is read here (only for this rare caller, one indexed read) so
     // the app can route them to the accept page and hand it the invitation id.
     // Diagnosis only - accepting stays the caller's own, explicit act.
+    //
+    // Under pinned the lookup is narrowed to this app's organization, whose id
+    // is its slug, as applyPinnedPolicy narrows the admission that minted this
+    // session: an invitation another app sent from a shared auth database is
+    // not this app's to accept.
+    const { adapter } = await auth.$context;
     const pendingInvitation = type.isString(session.user.email)
       ? await findPendingInvitation({
-          adapter: (await auth.$context).adapter,
+          adapter,
           email: session.user.email,
+          organizationId: registered.policy === 'pinned' ? registered.slug : undefined,
         })
       : null;
+    // Under pinned one organization exists, so a session awaiting it with no
+    // pending invitation there - one expired or cancelled since sign-in - has
+    // nothing to accept and no reason to be known to the app.
+    if (registered.policy === 'pinned' && type.isNone(pendingInvitation)) {
+      context.logger.debug(
+        `Session for user "${session.user.id}" has no active organization and no pending invitation to this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
+      );
+      context.user = null;
+      return;
+    }
+    // Under pinned a member row there means they joined some other way (an
+    // admin added them directly) while the invitation stayed pending. They are
+    // not awaiting: unauthenticated sends protected pages to the login page,
+    // and that sign-in re-pins the session (applyPinnedPolicy). Awaiting would
+    // refuse those pages with no way back.
+    if (registered.policy === 'pinned') {
+      const member = await adapter.findOne({
+        model: 'member',
+        where: [
+          { field: 'userId', value: session.user.id },
+          { field: 'organizationId', value: registered.slug },
+        ],
+      });
+      if (!type.isNone(member)) {
+        context.logger.debug(
+          `Session for user "${session.user.id}" has no active organization but holds a member row in this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
+        );
+        context.user = null;
+        return;
+      }
+    }
+    context.logger.debug(
+      `Session for user "${session.user.id}" has no active organization under ${registered.policy} - resolved awaiting organization.`
+    );
     // No member row, so no per-organization attributes and no roles of either
     // kind - the global attributes ride alone.
     context.authSession = { id: session.session.id, memberOrganizationIds: null };
@@ -651,7 +694,6 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
   // shared session the other way and breaks the app they came from.
   //
   // Under tenant there is no pinned organization and the check does not apply.
-  const registered = getRegisteredOrganization({ auth });
   if (registered?.policy === 'pinned' && activeOrganizationId !== registered.slug) {
     context.logger.debug(
       `Session for user "${session.user.id}" has active organization "${activeOrganizationId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`

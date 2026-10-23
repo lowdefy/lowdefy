@@ -75,6 +75,9 @@ test('the rows carry no raw result, and the details panel loads it from rawEndpo
   release();
   await expect(details(page).locator('[data-lf-json-node="country"]')).toContainText('"NL"');
   await expect(details(page).locator('[data-lf-details-raw-loading]')).toHaveCount(0);
+  // Extract columns read the raw result from the row, so a loaded one can not be added as one.
+  await expect(details(page).locator('[data-lf-details-raw-fetched]')).toBeVisible();
+  await expect(details(page).locator('[data-lf-json-add]')).toHaveCount(0);
   const [adaKey] = await rowKeys(request, ['Ada Brightwell']);
   expect(payloads).toEqual([{ rowKey: adaKey, key: 'company' }]);
 });

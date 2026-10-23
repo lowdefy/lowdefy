@@ -16,10 +16,10 @@
 
 import React from 'react';
 import { DatePicker, Segmented, Select, Space } from 'antd';
+import { getOperatorLabel } from '@lowdefy/helpers';
 
 import defaultRelativeDate from './defaultRelativeDate.js';
 import formatFilterDate from './formatFilterDate.js';
-import getOperatorLabel from './getOperatorLabel.js';
 import parseFilterDate from './parseFilterDate.js';
 import RelativeDateEditor from './RelativeDateEditor.js';
 

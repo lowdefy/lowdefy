@@ -16,6 +16,7 @@
 
 import { vi, afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
+import { callerHash, callerStamp, parseCallerStamp } from '@lowdefy/helpers';
 
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveAuthentication from './resolveAuthentication.js';
@@ -742,8 +743,169 @@ test('a caller awaiting an organization carries the global attributes alone', as
   expect(context.user.awaiting_organization).toBe(true);
 });
 
-test('a session carrying no organization stays unauthenticated under pinned', async () => {
+test('resolves a caller awaiting the pinned organization when the session holds a pending invitation to it', async () => {
+  const { auth, findMany, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'Invited@Example.com', name: 'Invited' },
+      session: { id: 'sess_1' },
+    },
+    invitations: [
+      {
+        id: 'invitation_1',
+        organizationId: 'team-portal',
+        status: 'pending',
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toEqual({
+    id: 'user_1',
+    email: 'Invited@Example.com',
+    name: 'Invited',
+    roles: [],
+    org_roles: [],
+    attributes: {},
+    awaiting_organization: true,
+    has_pending_invitation: true,
+    pending_invitation_id: 'invitation_1',
+  });
+  // An invitation another app sent from a shared auth database is not this
+  // app's to accept, so the lookup is narrowed to the pinned organization.
+  expect(findMany).toHaveBeenCalledWith({
+    model: 'invitation',
+    where: [
+      { field: 'email', value: 'invited@example.com' },
+      { field: 'status', value: 'pending' },
+      { field: 'organizationId', value: 'team-portal' },
+    ],
+  });
+  expect(findOne).toHaveBeenCalledWith({
+    model: 'member',
+    where: [
+      { field: 'userId', value: 'user_1' },
+      { field: 'organizationId', value: 'team-portal' },
+    ],
+  });
+  expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: null });
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'Session for user "user_1" has no active organization under pinned - resolved awaiting organization.'
+  );
+});
+
+test('the pinned awaiting caller is stamped as the session user the page renders', async () => {
+  const sessionUser = { id: 'user_1', email: 'invited@example.com' };
+  const { auth } = mockAuth({
+    session: { user: sessionUser, session: { id: 'sess_1' } },
+    invitations: [
+      {
+        id: 'invitation_1',
+        organizationId: 'team-portal',
+        status: 'pending',
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  // The client renders the session's user before it accepts; a stamp naming
+  // another caller reloads the accept page until it fails.
+  const stamp = parseCallerStamp(
+    callerStamp({ user: context.user, authSession: context.authSession })
+  );
+  expect(stamp.caller).toBe(callerHash({ user: sessionUser }));
+});
+
+test('a session carrying no organization stays unauthenticated under pinned without a pending invitation', async () => {
   const { auth, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'invited@example.com' },
+      session: { id: 'sess_1' },
+    },
+    invitations: [],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toBe(null);
+  expect(context.authSession).toBe(null);
+  expect(findOne).not.toHaveBeenCalled();
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'Session for user "user_1" has no active organization and no pending invitation to this app\'s pinned organization "team-portal" - resolved unauthenticated.'
+  );
+});
+
+test('a pinned session carrying no organization stays unauthenticated when it holds a member row there', async () => {
+  const { auth, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'invited@example.com' },
+      session: { id: 'sess_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+    invitations: [
+      {
+        id: 'invitation_1',
+        organizationId: 'team-portal',
+        status: 'pending',
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  // Unauthenticated sends protected pages to the login page, whose sign-in
+  // re-pins the session; awaiting would refuse them with no way back.
+  expect(context.user).toBe(null);
+  expect(context.authSession).toBe(null);
+  expect(findOne).toHaveBeenCalledWith({
+    model: 'member',
+    where: [
+      { field: 'userId', value: 'user_1' },
+      { field: 'organizationId', value: 'team-portal' },
+    ],
+  });
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'Session for user "user_1" has no active organization but holds a member row in this app\'s pinned organization "team-portal" - resolved unauthenticated.'
+  );
+});
+
+test('an expired invitation leaves a pinned session carrying no organization unauthenticated', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'invited@example.com' },
+      session: { id: 'sess_1' },
+    },
+    invitations: [
+      {
+        id: 'invitation_1',
+        organizationId: 'team-portal',
+        status: 'pending',
+        expiresAt: new Date(Date.now() - 60_000).toISOString(),
+      },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toBe(null);
+});
+
+test('a pinned session carrying no organization and no email stays unauthenticated', async () => {
+  const { auth, findMany } = mockAuth({
     session: { user: { id: 'user_1' }, session: { id: 'sess_1' } },
   });
   registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
@@ -752,7 +914,7 @@ test('a session carrying no organization stays unauthenticated under pinned', as
   await resolveAuthentication(context, { auth, headers: {} });
 
   expect(context.user).toBe(null);
-  expect(findOne).not.toHaveBeenCalled();
+  expect(findMany).not.toHaveBeenCalled();
 });
 
 test('a tenant member removed mid-session stays unauthenticated', async () => {
