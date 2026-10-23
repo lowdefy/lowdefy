@@ -65,3 +65,21 @@ test('runDevServer leaves LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS out when skipPluginCh
   expect('LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS' in env).toBe(false);
   expect(env.LOWDEFY_BUILD_REF_RESOLVER).toEqual('resolver.js');
 });
+
+test('runDevServer ends the shutdown spinner once the manager exits', async () => {
+  const context = createContext({});
+  await runDevServer({ context, directory: '/dev' });
+  expect(context.logger.info).toHaveBeenCalledWith(
+    { spin: 'succeed' },
+    'Development server stopped.'
+  );
+});
+
+test('runDevServer does not report a stop when the manager fails', async () => {
+  mockSpawnServer.mockRejectedValue(new Error('Server exited with code 1.'));
+  const context = createContext({});
+  await expect(runDevServer({ context, directory: '/dev' })).rejects.toThrow(
+    'Server exited with code 1.'
+  );
+  expect(context.logger.info).not.toHaveBeenCalled();
+});
