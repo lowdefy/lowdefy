@@ -76,6 +76,7 @@ function OpenInEditorListener({ basePath, pageId }) {
   const hoverRef = useRef(hoverBlock);
   hoverRef.current = hoverBlock;
   const lastPointerRef = useRef(null); // { x, y }
+  const frameRef = useRef(null); // pending animation frame of a hover resolve
 
   // Style tag lifecycle — the listener is always mounted, so this lives for
   // the app's lifetime and only the body class toggles per hover.
@@ -103,6 +104,7 @@ function OpenInEditorListener({ basePath, pageId }) {
 
   useEffect(() => {
     function clearHover() {
+      cancelScheduledHover();
       if (hoverRef.current) {
         setHoverBlock(null);
       }
@@ -132,11 +134,30 @@ function OpenInEditorListener({ basePath, pageId }) {
       }
     }
 
+    // elementFromPoint and getBoundingClientRect force layout, so pointer moves
+    // resolve the hover at most once per animation frame, at the latest point.
+    function scheduleResolveHover() {
+      if (frameRef.current !== null) {
+        return;
+      }
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = null;
+        resolveHover();
+      });
+    }
+
+    function cancelScheduledHover() {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+    }
+
     function onPointerMove(event) {
       try {
         lastPointerRef.current = { x: event.clientX, y: event.clientY };
         if (isOpenModifier(event)) {
-          resolveHover();
+          scheduleResolveHover();
         } else {
           clearHover();
         }
@@ -220,6 +241,7 @@ function OpenInEditorListener({ basePath, pageId }) {
     window.addEventListener('scroll', onScroll, true);
     window.addEventListener('click', onClickCapture, { capture: true });
     return () => {
+      cancelScheduledHover();
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
