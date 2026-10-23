@@ -15,6 +15,7 @@
 */
 
 import fetchCellRaw, { readCellRawResult } from './fetchCellRaw.js';
+import { expect, test } from 'vitest';
 
 const answered = (response) => ({
   success: true,

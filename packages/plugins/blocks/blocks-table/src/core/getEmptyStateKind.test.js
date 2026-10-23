@@ -18,6 +18,7 @@
 // covers both modes.
 import getEmptyStateKind from './getEmptyStateKind.js';
 import isViewFiltered from './isViewFiltered.js';
+import { expect, test } from 'vitest';
 
 const slot = () => null;
 const viewFilter = { and: [{ key: 'stage', op: 'in', value: ['won'] }] };

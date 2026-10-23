@@ -16,6 +16,7 @@
 
 import createViewsApi from './createViewsApi.js';
 import normalizeViewMenu from './normalizeViewMenu.js';
+import { describe, expect, test } from 'vitest';
 
 function makeApi(events) {
   const fired = [];

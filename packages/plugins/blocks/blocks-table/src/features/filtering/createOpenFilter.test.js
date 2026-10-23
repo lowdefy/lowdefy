@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
-
 import createOpenFilter from './createOpenFilter.js';
+import { expect, test, vi } from 'vitest';
 
 const columns = [
   { key: 'stage', type: 'status', filterable: true, options: [{ value: 'won', label: 'Won' }] },
@@ -76,7 +75,7 @@ test('openFilter { key } refuses a key that is not a filterable column', () => {
 });
 
 test('openFilter without the toolbar filter item warns and does nothing', () => {
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   for (const setup of [
     { toolbar: null, mounted: false },
     { toolbar: { filter: false }, mounted: false },

@@ -15,6 +15,7 @@
 */
 
 import countKeyLeaves from './countKeyLeaves.js';
+import { expect, test } from 'vitest';
 
 test('countKeyLeaves counts the leaves on a key at any depth', () => {
   const condition = {

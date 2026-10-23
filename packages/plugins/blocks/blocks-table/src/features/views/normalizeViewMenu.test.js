@@ -15,6 +15,7 @@
 */
 
 import normalizeViewMenu from './normalizeViewMenu.js';
+import { expect, test } from 'vitest';
 
 test('normalizeViewMenu keeps items with a unique string key and defaults label, danger and confirm', () => {
   expect(normalizeViewMenu(null)).toBe(null);

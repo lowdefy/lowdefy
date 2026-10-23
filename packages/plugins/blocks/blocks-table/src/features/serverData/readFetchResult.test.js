@@ -15,6 +15,7 @@
 */
 
 import readFetchResult from './readFetchResult.js';
+import { expect, test } from 'vitest';
 
 const rows = [{ _id: 'r1' }];
 

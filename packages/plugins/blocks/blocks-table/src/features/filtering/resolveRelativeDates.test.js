@@ -17,6 +17,7 @@
 import dayjs from 'dayjs';
 
 import resolveRelativeDates from './resolveRelativeDates.js';
+import { expect, test } from 'vitest';
 
 test('resolveRelativeDates leaves fixed dates, other operators and groups intact', () => {
   const now = dayjs('2026-05-31T10:00:00');

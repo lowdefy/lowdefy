@@ -15,6 +15,7 @@
 */
 
 import describeTableFilter from './describeTableFilter.js';
+import { expect, test } from 'vitest';
 
 const columns = [
   { key: 'name', title: 'Name', type: 'text' },

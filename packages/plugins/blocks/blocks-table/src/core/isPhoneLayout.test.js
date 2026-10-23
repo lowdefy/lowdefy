@@ -15,6 +15,7 @@
 */
 
 import isPhoneLayout from './isPhoneLayout.js';
+import { expect, test } from 'vitest';
 
 test('the phone layout is below the md breakpoint', () => {
   expect(isPhoneLayout({ xs: true, sm: true, md: false })).toBe(true);

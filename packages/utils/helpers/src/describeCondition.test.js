@@ -15,6 +15,7 @@
 */
 
 import describeCondition from './describeCondition.js';
+import { expect, test } from 'vitest';
 
 const fields = {
   name: { title: 'Name', type: 'text' },

@@ -15,6 +15,7 @@
 */
 
 import isCompleteLeaf from './isCompleteLeaf.js';
+import { expect, test } from 'vitest';
 
 test('isCompleteLeaf takes a relative before or after leaf as complete only with a whole relative date', () => {
   expect(isCompleteLeaf({ key: 'd', op: 'before', value: { last: 3, unit: 'month' } })).toBe(true);

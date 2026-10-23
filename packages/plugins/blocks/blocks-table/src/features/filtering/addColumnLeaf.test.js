@@ -15,6 +15,7 @@
 */
 
 import addColumnLeaf from './addColumnLeaf.js';
+import { expect, test } from 'vitest';
 
 const columns = [
   { key: 'stage', type: 'status', filterable: true, options: [{ value: 'won', label: 'Won' }] },

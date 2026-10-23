@@ -17,6 +17,7 @@
 import assert from 'node:assert/strict';
 
 import getVisibleQuickFilterOptions from './getVisibleQuickFilterOptions.js';
+import { test } from 'vitest';
 
 const options = [
   { value: 'ada', label: 'Ada Lovelace' },
