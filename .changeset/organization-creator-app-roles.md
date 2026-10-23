@@ -12,11 +12,11 @@ A new signup under `organizations.policy: tenant` with `create: auto` became the
 ```yaml
 auth:
   roles:
-    - id: owner
+    - id: workspace-admin
   organizations:
     policy: tenant
     creatorAppRoles:
-      - owner
+      - workspace-admin
 ```
 
 It applies to the organization a tenant signup mints and to the `CreateOrganization` step when it is given a creator. The owner's organization tier stays `owner`; invited members and users auto-joined to a pinned organization are unchanged. Every listed id must be declared in `auth.roles`, or the build fails naming the unknown id. Unset, it defaults to `[]` and owners get no app roles, as before. Existing memberships are left as they are.

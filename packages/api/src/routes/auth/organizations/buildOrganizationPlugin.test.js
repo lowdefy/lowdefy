@@ -18,7 +18,12 @@ import buildOrganizationPlugin from './buildOrganizationPlugin.js';
 import { expect, test, vi } from 'vitest';
 
 const authConfig = {
-  organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
+  organizations: {
+    policy: 'pinned',
+    org: 'default',
+    signup: 'invite-only',
+    creatorAppRoles: [],
+  },
   roles: [{ id: 'auditor' }, { id: 'branch-manager' }],
 };
 
@@ -241,8 +246,9 @@ test('buildOrganizationPlugin passes auth.organizations.membershipLimit through'
   expect(plugin.options.membershipLimit).toBe(10000);
 });
 
-test('buildOrganizationPlugin tolerates a missing authConfig', () => {
+test('buildOrganizationPlugin uses the plugin defaults when organizations sets no expiry or limit', () => {
   const plugin = buildOrganizationPlugin({
+    authConfig: { organizations: { creatorAppRoles: [] } },
     getAuth: () => ({}),
     sendInvitationEmail: async () => {},
   });

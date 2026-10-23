@@ -95,19 +95,20 @@ _ref:
             ```yaml
             auth:
               roles:
-                - id: owner
-                - id: admin
+                - id: billing-admin
+                - id: editor
               organizations:
                 policy: tenant
                 creatorAppRoles:
-                  - owner
+                  - billing-admin
+                  - editor
               pages:
                 roles:
-                  owner:
+                  billing-admin:
                     - billing
             ```
 
-            Here a new signup under `create: auto` becomes the `owner` of their own organization with `_user.roles` `[owner]`, so the `billing` page opens for them. The owner's tier stays `owner`; only the membership's `appRoles` is added.
+            Here a new signup under `create: auto` becomes the `owner` of their own organization with `_user.roles` `[billing-admin, editor]`, so the `billing` page opens for them. The owner's tier stays `owner`; only the membership's `appRoles` is added.
 
             It applies wherever Lowdefy itself makes someone the owner of a new organization:
 

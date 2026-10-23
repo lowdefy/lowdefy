@@ -18,10 +18,10 @@
     - expect: { url: { contains: /home } }
     - goto: dashboard
     - expect: { text: { blockId: user_details, contains: 'org_roles: ["owner"]' } }
-    # auth.organizations.creatorAppRoles grants the owner app role, so the
-    # page gated on it opens.
-    - goto: owner-settings
-    - expect: { visible: owner_settings_body }
+    # auth.organizations.creatorAppRoles grants the workspace-admin app
+    # role, so the page gated on it opens.
+    - goto: workspace-settings
+    - expect: { visible: workspace_settings_body }
     - goto: organizations
     - expect: { text: { blockId: organizations_list, contains: Signup Owner (active) } }
     # A second session, on another device, joins the same organization and

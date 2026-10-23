@@ -51,8 +51,8 @@
     - expect: { text: { blockId: current_user, contains: 'org_roles: ["member"]' } }
     # creatorAppRoles is for the owner of a new organization only: an invitee
     # holds the app roles their invitation carries (none here), so the page
-    # gated on the owner app role refuses them.
-    - goto: owner-settings
+    # gated on the workspace-admin app role refuses them.
+    - goto: workspace-settings
     - expect: { url: { contains: /404 } }
     - as: main
     - goto: members

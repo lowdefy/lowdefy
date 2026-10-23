@@ -19,6 +19,7 @@
 import { ConfigError } from '@lowdefy/errors';
 import { isReserved } from '@lowdefy/helpers';
 
+import assertRolesDeclared from './assertRolesDeclared.js';
 import normalizeRoleCatalog from './normalizeRoleCatalog.js';
 
 // The authored auth.roles catalog is the single source of truth for an app's
@@ -54,27 +55,23 @@ function buildRoleCatalog({ components }) {
 
   ['pages', 'api', 'websockets'].forEach((entity) => {
     const rolesMap = components.auth[entity]?.roles ?? {};
-    Object.keys(rolesMap).forEach((roleName) => {
-      if (!authoredIds.has(roleName)) {
-        throw new ConfigError(
-          `Auth gate references role "${roleName}", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.org_roles.`,
-          { configKey: rolesMap['~k'] ?? components.auth['~k'] }
-        );
-      }
+    assertRolesDeclared({
+      authoredIds,
+      configKey: rolesMap['~k'] ?? components.auth['~k'],
+      getMessage: (roleName) =>
+        `Auth gate references role "${roleName}", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.org_roles.`,
+      roleNames: Object.keys(rolesMap),
     });
   });
 
   const creatorAppRoles = components.auth.organizations?.creatorAppRoles ?? [];
-  creatorAppRoles.forEach((roleName) => {
-    if (!authoredIds.has(roleName)) {
-      throw new ConfigError(
-        `Auth "organizations.creatorAppRoles" lists role "${roleName}", which is not declared in auth.roles. List app roles declared in auth.roles.`,
-        {
-          configKey:
-            creatorAppRoles['~k'] ?? components.auth.organizations['~k'] ?? components.auth['~k'],
-        }
-      );
-    }
+  assertRolesDeclared({
+    authoredIds,
+    configKey:
+      creatorAppRoles['~k'] ?? components.auth.organizations?.['~k'] ?? components.auth['~k'],
+    getMessage: (roleName) =>
+      `Auth "organizations.creatorAppRoles" lists role "${roleName}", which is not declared in auth.roles. List app roles declared in auth.roles.`,
+    roleNames: creatorAppRoles,
   });
 
   components.auth.roles = normalizeRoleCatalog(authoredRoles);

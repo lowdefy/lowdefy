@@ -1578,8 +1578,11 @@ export default {
                   type: 'Auth "organizations.creatorAppRoles" should be an array of role ids.',
                 },
               },
+              uniqueItems: true,
               errorMessage: {
                 type: 'Auth "organizations.creatorAppRoles" should be an array of role ids.',
+                uniqueItems:
+                  'Auth "organizations.creatorAppRoles" should not list a role id more than once.',
               },
             },
           },

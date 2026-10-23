@@ -35,12 +35,27 @@ function createAfterCreateOrganizationHook({ creatorAppRoles, getAuth }) {
       return;
     }
     const { adapter } = await getAuth().$context;
-    await adapter.update({
-      model: 'member',
-      where: [{ field: 'id', value: member.id }],
-      update: { appRoles: creatorAppRoles },
-    });
-    member.appRoles = creatorAppRoles;
+    try {
+      await adapter.update({
+        model: 'member',
+        where: [{ field: 'id', value: member.id }],
+        update: { appRoles: [...creatorAppRoles] },
+      });
+    } catch (error) {
+      // The endpoint has already written the organization and the owner row.
+      // Left in place, the owner has no app roles and a retry of the step is
+      // refused because the slug is taken, so both rows are removed and the
+      // whole create fails as one.
+      await adapter.delete({ model: 'member', where: [{ field: 'id', value: member.id }] });
+      await adapter.delete({
+        model: 'organization',
+        where: [{ field: 'id', value: member.organizationId }],
+      });
+      throw error;
+    }
+    // A copy, so a routine that mutates the step result cannot change the
+    // roles every later organization's owner gets.
+    member.appRoles = [...creatorAppRoles];
   };
 }
 

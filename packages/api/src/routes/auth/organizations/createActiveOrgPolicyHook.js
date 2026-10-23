@@ -156,7 +156,7 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   async function joinAsOwner({ adapter, userId, organizationId }) {
     const data = { userId, organizationId, role: 'owner', createdAt: new Date() };
     if (organizations.creatorAppRoles.length > 0) {
-      data.appRoles = organizations.creatorAppRoles;
+      data.appRoles = [...organizations.creatorAppRoles];
     }
     try {
       await adapter.create({ model: 'member', data });
