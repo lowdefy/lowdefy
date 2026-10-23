@@ -146,6 +146,24 @@
     margin: 0;
   }
 
+  .lf-table-views-phone {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .lf-table-view-select {
+    min-width: 0;
+    max-width: 100%;
+    font-weight: 500;
+  }
+
+  .lf-table-filter-sheet .lf-table-toolbar-popover {
+    min-width: 0;
+    max-width: none;
+  }
+
   .lf-table-view-tab {
     display: inline-flex;
     align-items: center;

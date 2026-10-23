@@ -238,3 +238,21 @@ test.describe('Table view persistence', () => {
     await expect(page).not.toHaveURL(/[?&]pv=/);
   });
 });
+
+test.describe('Table saved views on a phone', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('below 768px the tabs are one select, and picking a view loads it', async ({ page }) => {
+    await openTablePage(page, 'views');
+    const select = getBlock(page, 'vw').locator('[data-lf-view-select]');
+    await expect(select).toBeVisible();
+    await expect(getBlock(page, 'vw').locator('.ant-tabs')).toHaveCount(0);
+    await expect(select).toContainText('All');
+    await select.locator('.ant-select').click();
+    await page.locator('.ant-select-item-option', { hasText: 'Oldest' }).click();
+    await expect(select).toContainText('Oldest');
+    await expect(value(page)).toHaveText(
+      'sort=[{"key":"age","desc":true}] density=default cause=view'
+    );
+  });
+});
