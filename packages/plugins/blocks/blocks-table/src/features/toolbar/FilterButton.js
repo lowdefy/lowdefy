@@ -26,7 +26,9 @@ import RecordCount from './RecordCount.js';
 import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
-// The lazy builder can take a few frames to render the condition openFilter added.
+// The lazy builder can take a few frames to render the condition openFilter added. A focus
+// request that has not landed by then, or when the builder closes, is dropped, so a later plain
+// open never focuses an old condition.
 const FOCUS_FRAMES = 60;
 
 // Opens the filter builder on the whole `view.filter`; the button counts its conditions and shows
@@ -38,8 +40,13 @@ function FilterButton({ api, phone = false }) {
   const [open, setOpen] = useState(false);
   const [focus, setFocus] = useState(null);
   const popoverRef = useRef(null);
+  function changeOpen(next) {
+    setOpen(next);
+    if (!next) setFocus(null);
+  }
   api.filterButton = {
     open({ focus: target }) {
+      LazyFilterBuilder.preload();
       setFocus(target);
       setOpen(true);
     },
@@ -60,7 +67,11 @@ function FilterButton({ api, phone = false }) {
         return;
       }
       frames += 1;
-      if (frames < FOCUS_FRAMES) frame = requestAnimationFrame(tryFocus);
+      if (frames < FOCUS_FRAMES) {
+        frame = requestAnimationFrame(tryFocus);
+        return;
+      }
+      setFocus(null);
     }
     frame = requestAnimationFrame(tryFocus);
     return () => cancelAnimationFrame(frame);
@@ -86,7 +97,7 @@ function FilterButton({ api, phone = false }) {
       <Button
         data-lf-toolbar-button="filter"
         icon={<ToolbarIcon api={api} name="filter" />}
-        onClick={phone ? () => setOpen(true) : undefined}
+        onClick={phone ? () => changeOpen(true) : undefined}
         onFocus={LazyFilterBuilder.preload}
         onPointerEnter={LazyFilterBuilder.preload}
         size="small"
@@ -103,7 +114,7 @@ function FilterButton({ api, phone = false }) {
         <Drawer
           className="lf-table-filter-sheet"
           footer={<RecordCount api={api} />}
-          onClose={() => setOpen(false)}
+          onClose={() => changeOpen(false)}
           open={open}
           placement="bottom"
           size="100%"
@@ -117,7 +128,7 @@ function FilterButton({ api, phone = false }) {
   return (
     <Popover
       content={content}
-      onOpenChange={setOpen}
+      onOpenChange={changeOpen}
       open={open}
       placement="bottomLeft"
       trigger="click"
