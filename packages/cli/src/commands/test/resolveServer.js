@@ -25,7 +25,9 @@ const STARTING_TIMEOUT_MS = 5 * 60 * 1000;
 const POLL_INTERVAL_MS = 1000;
 const PING_TIMEOUT_MS = 2000;
 
-// The options that shape a server this run starts, and that a running one ignores.
+// The options that shape a server this run starts, and that a running one ignores. Only those
+// given on the command line count: context.options always carries a port (3000 by default), and
+// lowdefy.yaml's cli options apply to a hub server too.
 const SERVER_OPTIONS = [
   ['refResolver', '--ref-resolver'],
   ['port', '--port'],
@@ -51,8 +53,9 @@ async function answersPing(url) {
 }
 
 function warnIgnoredOptions({ context, url }) {
+  const given = context.commandLineOptions ?? {};
   const ignored = SERVER_OPTIONS.filter(
-    ([key]) => !type.isNone(context.options[key]) && context.options[key] !== ''
+    ([key]) => !type.isNone(given[key]) && given[key] !== ''
   ).map(([, flag]) => flag);
   if (ignored.length === 0) {
     return;

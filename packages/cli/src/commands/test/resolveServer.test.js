@@ -34,6 +34,7 @@ beforeEach(() => {
   context = {
     directories: { config: configDirectory },
     options: {},
+    commandLineOptions: {},
     logger: {
       info: (line) => logs.info.push(line),
       warn: (line) => logs.warn.push(line),
@@ -77,9 +78,9 @@ test('resolveServer reuses a ready dev server and says its use is not measured',
 
 test('resolveServer warns about each option a reused server ignores', async () => {
   mockReadDevInstance.mockReturnValue(ready);
-  context.options = { refResolver: 'resolver.js' };
+  context.commandLineOptions = { refResolver: 'resolver.js' };
   await resolveServer({ context });
-  context.options = {
+  context.commandLineOptions = {
     refResolver: 'resolver.js',
     port: '3005',
     devDirectory: 'dev',
@@ -90,6 +91,15 @@ test('resolveServer warns about each option a reused server ignores', async () =
     'Using the running dev server at http://localhost:3100/app; --ref-resolver does not apply to it. Stop it to run with these options.',
     'Using the running dev server at http://localhost:3100/app; --ref-resolver, --port, --dev-directory, --server-directory do not apply to it. Stop it to run with these options.',
   ]);
+});
+
+test('resolveServer does not warn about the default port or lowdefy.yaml cli options', async () => {
+  mockReadDevInstance.mockReturnValue(ready);
+  // getOptions always sets a port, and merges lowdefy.yaml's cli options in.
+  context.options = { port: 3000, refResolver: 'resolver.js' };
+  context.commandLineOptions = { logLevel: 'info' };
+  await resolveServer({ context });
+  expect(logs.warn).toEqual([]);
 });
 
 test('resolveServer starts its own server when none runs, or the record is in another state', async () => {
