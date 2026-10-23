@@ -43,11 +43,14 @@ const mockScreenshotPage = vi.fn();
 vi.doMock('./screenshotPage.js', () => ({ default: mockScreenshotPage }));
 const mockInspectState = vi.fn();
 vi.doMock('./inspectState.js', () => ({ default: mockInspectState }));
+const mockGetPageConfig = vi.fn();
+vi.doMock('./getPageConfig.js', () => ({ default: mockGetPageConfig }));
 
 const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
   './createDocsMcpServer.js'
 );
 const { publish } = await import('./devEventBus.js');
+const { INSTRUCTIONS } = await import('./devToolDefinitions.js');
 
 const EXPECTED_TOOLS = [
   'lowdefy_list_types',
@@ -147,7 +150,9 @@ test('MCP server exposes instructions teaching the feedback loop', async () => {
   const client = await connectClient();
   const instructions = client.getInstructions();
   expect(instructions).toContain('lowdefy_build_status');
-  expect(instructions).toContain('never guess type names');
+  expect(instructions).toContain('Never guess a type name');
+  expect(instructions).toContain('wait: true');
+  expect(instructions).toContain('STALE:');
   await client.close();
 });
 
@@ -190,7 +195,7 @@ test('MCP tools that act as someone take one user option and share one sentence 
   const client = await connectClient();
   const { tools } = await client.listTools();
   const sentence =
-    'Pass user to act as someone: a user object such as {"roles":["admin"]}, "none" to act signed out, or the name of a user in the data set that data names';
+    'Pass user (and data) to act as someone, in the forms the server instructions give.';
 
   [
     'lowdefy_screenshot_page',
@@ -257,6 +262,100 @@ test('MCP lowdefy_screenshot_page advertises steps and urlQuery, and passes them
     })
   );
   expect(result.content).toEqual([{ type: 'image', data: 'AAAA', mimeType: 'image/png' }]);
+  await client.close();
+});
+
+// Every agent session pays for the tool list and the instructions before it
+// does any work, so growing either past these is a deliberate change.
+test('MCP tools/list stays at most 25,000 characters and the instructions at most 2,500', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  expect(JSON.stringify(tools).length).toBeLessThanOrEqual(25000);
+  expect(INSTRUCTIONS.length).toBeLessThanOrEqual(2500);
+  expect(client.getInstructions()).toEqual(INSTRUCTIONS);
+  await client.close();
+});
+
+test('MCP lowdefy_get_page_config returns a small page inline as compact JSON', async () => {
+  mockGetPageConfig.mockResolvedValue({ id: 'home', type: 'Box' });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_get_page_config',
+    arguments: { pageId: 'home' },
+  });
+
+  expect(result.content[0].text).toEqual('{"page":{"id":"home","type":"Box"}}');
+  await client.close();
+});
+
+test('MCP lowdefy_get_page_config writes a page over the cap to a file and says so', async () => {
+  const page = { id: 'big', type: 'Box', properties: { html: 'x'.repeat(41000) } };
+  mockGetPageConfig.mockResolvedValue(page);
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_get_page_config',
+    arguments: { pageId: 'big' },
+  });
+
+  const body = JSON.parse(result.content[0].text);
+  expect(body.page).toBeUndefined();
+  expect(body.pageChars).toBe(JSON.stringify(page).length);
+  expect(body.note).toContain('written in full to pageFile');
+  expect(JSON.parse(fs.readFileSync(body.pageFile, 'utf8'))).toEqual(page);
+  await client.close();
+});
+
+test('MCP lowdefy_get_page_config returns one block subtree for blockId', async () => {
+  const card = {
+    blockId: 'card',
+    type: 'Card',
+    slots: { content: { blocks: [{ blockId: 'title', type: 'Title' }] } },
+  };
+  mockGetPageConfig.mockResolvedValue({
+    id: 'home',
+    type: 'Box',
+    slots: { content: { blocks: [{ blockId: 'other', type: 'Box' }, card] } },
+  });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_get_page_config',
+    arguments: { pageId: 'home', blockId: 'card' },
+  });
+
+  expect(JSON.parse(result.content[0].text)).toEqual({ block: card });
+  await client.close();
+});
+
+test('MCP lowdefy_get_page_config refuses a blockId the page does not have', async () => {
+  mockGetPageConfig.mockResolvedValue({ id: 'home', type: 'Box', slots: {} });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_get_page_config',
+    arguments: { pageId: 'home', blockId: 'missing' },
+  });
+
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toContain('Block "missing" not found on page "home"');
+  await client.close();
+});
+
+test('MCP lowdefy_get_page_config returns build errors as they are', async () => {
+  mockGetPageConfig.mockResolvedValue({ buildError: true, errors: [{ message: 'Bad.' }] });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_get_page_config',
+    arguments: { pageId: 'home', blockId: 'card' },
+  });
+
+  expect(JSON.parse(result.content[0].text)).toEqual({
+    buildError: true,
+    errors: [{ message: 'Bad.' }],
+  });
   await client.close();
 });
 
@@ -587,7 +686,7 @@ test('MCP lowdefy_run_journey advertises data and the name form of user', async 
   const { tools } = await client.listTools();
   const { properties } = tools.find((tool) => tool.name === 'lowdefy_run_journey').inputSchema;
   expect(properties.data.type).toEqual('string');
-  expect(properties.user.description).toMatch('the name of a user in the journey');
+  expect(properties.user.description).toMatch('a list of data set user names');
   await client.close();
 });
 
@@ -693,7 +792,7 @@ test('MCP instructions teach lowdefy_run_journey as the way to verify behaviour'
   const client = await connectClient();
   const instructions = client.getInstructions();
   expect(instructions).toContain('lowdefy_run_journey');
-  expect(instructions).toContain('verify behaviour');
+  expect(instructions).toContain('verify its behaviour');
   await client.close();
 });
 

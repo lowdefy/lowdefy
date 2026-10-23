@@ -20,6 +20,8 @@ import { validateJourneyUser } from '@lowdefy/node-utils';
 
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import findConfig from './findConfig.js';
+import findPageBlock from './findPageBlock.js';
+import fitResponse from './fitResponse.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
 import getBuildStatusAfterEdits from './getBuildStatusAfterEdits.js';
@@ -61,8 +63,9 @@ function appendHazards(doc) {
   return `${doc.markdown}\n\n## Hazards\n\n${lines.join('\n')}\n`;
 }
 
+// Compact JSON: indentation would add about half again to every result.
 function textResult(value) {
-  const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
+  const text = typeof value === 'string' ? value : JSON.stringify(value);
   return { content: [{ type: 'text', text }] };
 }
 
@@ -165,12 +168,29 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     return textResult(await getBuildStatus());
   });
 
-  registerDevTool('lowdefy_get_page_config', async ({ pageId }) => {
+  // Capped like run_request: a large page is written to a file rather than
+  // returned whole. getPageConfig and the HTTP route still return the full
+  // page, which lowdefy journeys variants reads.
+  registerDevTool('lowdefy_get_page_config', async ({ pageId, blockId }) => {
     const result = await getPageConfig({ pageId });
     if (result === null) {
       return notFoundResult(`Page "${pageId}" not found. Use lowdefy_app_map for valid page ids.`);
     }
-    return textResult(result);
+    if (result.buildError === true || result.installing === true) {
+      return textResult(result);
+    }
+    if (type.isUndefined(blockId)) {
+      return textResult(fitResponse({ result: { page: result }, name: pageId, field: 'page' }));
+    }
+    const block = findPageBlock({ page: result, blockId });
+    if (block === null) {
+      return notFoundResult(
+        `Block "${blockId}" not found on page "${pageId}". Use lowdefy_find_config to locate it, or omit blockId for the whole page.`
+      );
+    }
+    return textResult(
+      fitResponse({ result: { block }, name: `${pageId}.${blockId}`, field: 'block' })
+    );
   });
 
   registerDevTool('lowdefy_find_config', async ({ id, pageId }) =>
@@ -229,7 +249,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       }
       return {
         content: [
-          { type: 'text', text: JSON.stringify(summary, null, 2) },
+          { type: 'text', text: JSON.stringify(summary) },
           image,
           ...result.screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
         ],
@@ -275,7 +295,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         };
         return {
           content: [
-            { type: 'text', text: JSON.stringify(summary, null, 2) },
+            { type: 'text', text: JSON.stringify(summary) },
             ...runs.flatMap(({ screenshots = [] }) =>
               screenshots.map(({ data: image, mimeType }) => ({
                 type: 'image',
@@ -305,7 +325,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       };
       return {
         content: [
-          { type: 'text', text: JSON.stringify(summary, null, 2) },
+          { type: 'text', text: JSON.stringify(summary) },
           ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
         ],
       };
