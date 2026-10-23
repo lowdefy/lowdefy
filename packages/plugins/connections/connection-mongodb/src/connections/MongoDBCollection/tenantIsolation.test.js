@@ -835,6 +835,21 @@ test('enrichment: enqueue on a tenant connection only queues cells of its org', 
   });
 });
 
+test('enrichment: a dry run on a tenant connection counts only cells of its org', async () => {
+  const collection = 'tenantIsolationEnrichmentDryRun';
+  await populateTestMongoDb({ collection, documents: enrichmentDocs });
+  const res = await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, columns: ['email'], dryRun: true },
+    connection: enrichmentConnection(collection),
+    tenant,
+  });
+  expect(res).toMatchObject({ dryRun: true, queued: 2, missingInputs: 0 });
+  const docs = await readAll(collection);
+  docs.forEach((doc) => {
+    expect(doc._enrich).toBeUndefined();
+  });
+});
+
 test("enrichment: claim on a tenant connection never claims another org's older queued cells", async () => {
   const collection = 'tenantIsolationEnrichmentClaim';
   await populateTestMongoDb({ collection, documents: enrichmentDocs });

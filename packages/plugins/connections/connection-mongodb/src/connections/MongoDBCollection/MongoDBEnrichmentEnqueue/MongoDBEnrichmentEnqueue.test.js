@@ -65,7 +65,13 @@ describe('mode all', () => {
       documents: leads(),
     });
     const response = await enqueue({ connection, runId: 'run1' });
-    expect(response).toEqual({ queued: 2, skipped: 0, missingInputs: 1, runId: 'run1' });
+    expect(response).toEqual({
+      queued: 2,
+      skipped: 0,
+      missingInputs: 1,
+      byColumn: { email: { queued: 2, missingInputs: 1 } },
+      runId: 'run1',
+    });
     const docs = await readDocuments(collection);
     expect(cell(docs, 'a')).toEqual({
       status: 'queued',
@@ -118,7 +124,13 @@ describe('mode all', () => {
     });
     const { collection, connection } = await setupEnrichmentCollection({ name, documents });
     const response = await enqueue({ connection, runId: 'run2' });
-    expect(response).toEqual({ queued: 1, skipped: 2, missingInputs: 1, runId: 'run2' });
+    expect(response).toEqual({
+      queued: 1,
+      skipped: 2,
+      missingInputs: 1,
+      byColumn: { email: { queued: 1, missingInputs: 1 } },
+      runId: 'run2',
+    });
     const docs = await readDocuments(collection);
     expect(cell(docs, 'a').runId).toBe('old');
     expect(cell(docs, 'b')).toMatchObject({ status: 'running', claimToken: 'live' });
@@ -392,6 +404,92 @@ describe('limits', () => {
     expect(response).toMatchObject({ queued: 2, skipped: 0 });
     const docs = await readDocuments(collection);
     expect(cell(docs, 'a', 'pitch').status).toBe('queued');
+  });
+});
+
+describe('dryRun', () => {
+  test('counts the cells a run would queue and set empty, and writes nothing', async () => {
+    const { collection, connection, logCollection } = await setupEnrichmentCollection({
+      name,
+      documents: leads(),
+      changeLog: true,
+    });
+    const before = await readDocuments(collection);
+    const dry = await enqueue({ connection, dryRun: true });
+    expect(dry).toEqual({
+      dryRun: true,
+      queued: 2,
+      skipped: 0,
+      missingInputs: 1,
+      byColumn: { email: { queued: 2, missingInputs: 1 } },
+    });
+    expect(await readDocuments(collection)).toEqual(before);
+    expect(await readDocuments(logCollection)).toEqual([]);
+
+    const run = await enqueue({ connection, runId: 'run1' });
+    expect(run).toEqual({
+      queued: dry.queued,
+      skipped: dry.skipped,
+      missingInputs: dry.missingInputs,
+      byColumn: dry.byColumn,
+      runId: 'run1',
+    });
+  });
+
+  test('counts queue, wait and missing cells by column, summing to the totals', async () => {
+    const { collection, connection } = await setupEnrichmentCollection({
+      name,
+      documents: leads(),
+    });
+    const before = await readDocuments(collection);
+    const dry = await enqueue({ connection, columns: ['email', 'pitch'], dryRun: true });
+    // pitch waits for email on a and b; on c its email input is missing too.
+    expect(dry.byColumn).toEqual({
+      email: { queued: 2, missingInputs: 1 },
+      pitch: { queued: 2, missingInputs: 1 },
+    });
+    expect(dry).toMatchObject({ queued: 4, missingInputs: 2, skipped: 0 });
+    expect(await readDocuments(collection)).toEqual(before);
+    const run = await enqueue({ connection, columns: ['email', 'pitch'] });
+    expect(run.byColumn).toEqual(dry.byColumn);
+    expect(run).toMatchObject({ queued: 4, missingInputs: 2, skipped: 0 });
+  });
+
+  test("counts only the mode's cells", async () => {
+    const documents = leads();
+    documents[0]._enrich = {
+      email: { status: 'ok', value: 'ada@acme.test', inputHash: 'changed' },
+    };
+    documents[1]._enrich = { email: { status: 'error', error: 'Down' } };
+    const { connection } = await setupEnrichmentCollection({ name, documents });
+    const count = async (mode) => (await enqueue({ connection, mode, dryRun: true })).queued;
+    expect(await count('all')).toBe(2);
+    expect(await count('empty')).toBe(0);
+    expect(await count('errors')).toBe(1);
+    expect(await count('stale')).toBe(1);
+  });
+
+  test('a filter matching nothing counts nothing', async () => {
+    const { connection } = await setupEnrichmentCollection({ name, documents: leads() });
+    expect(await enqueue({ connection, filter: { org: 'nobody' }, dryRun: true })).toEqual({
+      dryRun: true,
+      queued: 0,
+      skipped: 0,
+      missingInputs: 0,
+      byColumn: { email: { queued: 0, missingInputs: 0 } },
+    });
+  });
+
+  test('over maxCells it throws as a run does, and writes nothing', async () => {
+    const { collection, connection } = await setupEnrichmentCollection({
+      name,
+      documents: leads(),
+    });
+    await expect(enqueue({ connection, maxCells: 2, dryRun: true })).rejects.toThrow(
+      'MongoDBEnrichmentEnqueue would write more than "maxCells" (2) cells.'
+    );
+    const docs = await readDocuments(collection);
+    expect(docs.every((doc) => doc._enrich === undefined)).toBe(true);
   });
 });
 
