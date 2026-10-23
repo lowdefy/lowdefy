@@ -47,6 +47,11 @@ function createViewsApi({ api, active, currentView, dirty, setActiveId, views })
         event: { view: currentView, title, shared: shared === true },
       });
     },
+    // With onViewSaveAs actions, Save as is the app's: it opens its own dialog and stores the view.
+    handsSaveAs: Boolean(api.events.onViewSaveAs),
+    requestSaveAs() {
+      api.methods.triggerEvent({ name: 'onViewSaveAs', event: { view: currentView } });
+    },
     discard() {
       load(active);
     },
