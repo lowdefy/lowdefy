@@ -46,6 +46,28 @@
   min-width: 0;
 }
 
+/* A flex container cannot end its own text in an ellipsis, so a cell holding only text (no
+   cellRenderer, no checkbox or drag handle) lays out as a block, centred by align-content, and
+   AG Grid's .ag-cell-value text-overflow applies. */
+.antdTheme :global(.ag-cell:not(:has(> *))) {
+  display: block;
+  align-content: center;
+}
+
+/* A flex item's default min-width: auto lets it grow to its text's width, wider than the cell, so
+   the cell clips it before any ellipsis. .ag-cell-wrapper (checkbox, drag handle, autoHeight) is one
+   such item. */
+.antdTheme :global(.ag-cell > *) {
+  min-width: 0;
+}
+
+/* A renderer's text-only element, such as a cellRenderer's HTML, ends in an ellipsis like plain
+   text. Elements with children are left alone, so the cell never clips a button's focus ring. */
+.antdTheme :global(.ag-cell > :not(:has(*))) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* paragraphInput cell: antd offsets the inline edit textarea with a negative margin/inset to
    overlay the static text in normal block flow. Inside a flex-centred grid cell that shifts the
    editor off-centre, so neutralise it and let the cell's align-items keep it centred. */

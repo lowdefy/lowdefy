@@ -150,6 +150,7 @@ test('callRequest, payload operators are evaluated', async () => {
   expect(mockCallRequest.mock.calls[0][0]).toEqual({
     blockId: 'block_id',
     pageId: 'page1',
+    readOnly: false,
     requestId: 'req_one',
     payload: {
       event: { event: true },

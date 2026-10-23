@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import isReadOnlyRequest from '../../isReadOnlyRequest.js';
 import validateId from '../../../utils/validateId.js';
 import validateSharedPipelineWrite from '../../validateSharedPipelineWrite.js';
 import validateTenantNoneRead from '../../validateTenantNoneRead.js';
@@ -110,6 +111,10 @@ function buildRequest(request, pageContext) {
   }
 
   request.auth = auth;
+  request.readOnly = isReadOnlyRequest({
+    request,
+    requestMetas: context.typesMap?.requestMetas,
+  });
   request.requestId = request.id;
   request.pageId = pageId;
   request.id = `request:${pageId}:${request.id}`;

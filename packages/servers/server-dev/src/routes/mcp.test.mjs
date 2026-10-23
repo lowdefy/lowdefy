@@ -213,3 +213,18 @@ test('mcpHandler serves openly with no envelope when oauthProvider is not config
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({ served: true });
 });
+
+test('mcpHandler answers a GET with 405, since the stateless server offers no event stream', async () => {
+  contextOverrides.mcpAuth = { tokenStatus: 'valid' };
+  const res = await createApp().request('/api/mcp', { method: 'GET' });
+  expect(res.status).toEqual(405);
+  expect(res.headers.get('Allow')).toEqual('POST');
+  expect(await res.json()).toEqual({ error: 'Method not allowed.' });
+  expect(mockCreateMcpServer).not.toHaveBeenCalled();
+});
+
+test('mcpHandler challenges a GET with an invalid token before answering 405', async () => {
+  contextOverrides.mcpAuth = { tokenStatus: 'invalid', parseableJwt: true };
+  const res = await createApp().request('/api/mcp', { method: 'GET' });
+  expect(res.status).toEqual(401);
+});
