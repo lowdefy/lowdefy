@@ -332,7 +332,8 @@ export default {
       'Blocks shown instead of "No matching rows" and Clear filters when a filter or search hides every row, for example "No deals match this view right now." with an Edit filter button, so the view keeps its filter.',
   },
   // Server mode fetches through an internal event running the Request action, or CallAPI for
-  // `data.endpoint`, whose payload reads the fetch event with _event.
+  // `data.endpoint`. The cell details panel loads a cell's raw result from `rawEndpoint` with
+  // CallAPI. Both payloads read the event with _event.
   actions: ['Request', 'CallAPI'],
   operators: ['_event'],
   cssKeys: {
@@ -1144,6 +1145,11 @@ export default {
         type: 'string',
         description:
           'Where user-defined input columns added in the picker or by a CSV import keep their values: under this path, then the column key (with `values`, a `notes` column stores at `values.notes`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, at the key.',
+      },
+      rawEndpoint: {
+        type: 'string',
+        description:
+          "The id of an API endpoint the details panel calls for a finished enrichment or ai cell's raw result when the row's `_enrich.<key>` carries none, so rows can leave the raw answers out. Its payload is `{ rowKey, key }` (the row's key and the column key); it returns `{ raw }`.",
       },
       importCsv: {
         type: 'boolean',

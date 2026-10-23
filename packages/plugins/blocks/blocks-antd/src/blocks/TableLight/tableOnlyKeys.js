@@ -46,6 +46,7 @@ const TABLE_ONLY_KEYS = {
     importCsv: 'CSV import',
     summaryRow: 'a summary row from data',
     inputFieldPrefix: 'adding columns',
+    rawEndpoint: 'enrichment cell details',
   },
   columns: {
     filterable: 'column filters',
