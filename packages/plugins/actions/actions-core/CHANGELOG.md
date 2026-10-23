@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/errors@7.1.0
+- @lowdefy/helpers@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

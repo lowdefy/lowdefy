@@ -1,5 +1,31 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- d197cb4: fix(server-dev): Build status no longer says ok while a page fails to build
+
+  The dev server builds each page when it is first requested, after the config build. `lowdefy_build_status` and `GET /lowdefy-docs/build-status` took their top-level `build.status` from the config build alone, so it read `ok` while a page failed, and the failure showed only in `pages.failed` further down. Agents that read the top line moved on with a broken page.
+
+  `build.status` now reads `pages_failed` when the config builds but a page failed its latest build and has not changed since, and `build.failedPages` names those pages. A failed page that changed after that build is not counted until it is rebuilt, since its failure may already be fixed. Each page's errors stay under `pages.failed`. `error` still means the config build itself failed and the dev server is serving the previous build; it names no failed pages. `build.configStatus` is the config build's own status, and `lowdefy journeys harden`, which waits for a successful config build after an edit, reads it. `lowdefy_dev_status` reports the number of failed pages as `failedPageCount`.
+
+- e8bf1e4: fix(cli): A dev server that crashes while starting on Windows is reported as exited, not stopped
+
+  When a dev server the hub started (through `lowdefy mcp` and `lowdefy_dev_start`) crashed while starting on Windows, the hub could answer that it was `stopped`, as if another session had stopped it, with no exit code to show why. Windows reports the process as gone a moment before Node tells the hub it exited, and a status read in that moment found neither a running server nor a recorded exit.
+
+  The hub now waits for that exit to be recorded, so it answers `exited` with the exit code.
+
+- 3408010: fix: `lowdefy build` no longer warns `Plugin checks for <package> did not run: package not installed.` for plugins that have nothing to check.
+
+  A clean build warned for every plugin the server had not installed yet, including connection plugins like `@lowdefy/connection-mongodb` that ship no build check rules. The warning now names only plugins that own a block, action or operator type, and `lowdefy build` gives it only from the build after it installs the app's plugins, so it shows a plugin that is still missing rather than one it was about to install. `lowdefy dev` does the same when it starts. Journeys and dev page builds still warn for a missing block, action or operator plugin. `--skip-plugin-checks` no longer gives this warning.
+
+  - @lowdefy/ajv@7.1.0
+  - @lowdefy/errors@7.1.0
+  - @lowdefy/helpers@7.1.0
+  - @lowdefy/logger@7.1.0
+  - @lowdefy/node-utils@7.1.0
+
 ## 7.0.0
 
 ### Major Changes
