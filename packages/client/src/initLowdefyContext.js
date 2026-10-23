@@ -27,12 +27,12 @@ import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
 import createStorage from './storage/createStorage.js';
 import createLinkComponent from './createLinkComponent.js';
+import createPageUnload from './createPageUnload.js';
 import createHandleError from './createHandleError.js';
 import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 import setLowdefyUser from './setLowdefyUser.js';
 import setupLink from './setupLink.js';
-import watchPageUnload from './watchPageUnload.js';
 import { createUrl } from './adapters/url.js';
 
 // loadAllIcons (production server only) loads every icon the app bundles into
@@ -63,8 +63,8 @@ function initLowdefyContext({
   }
   // Watched once per tab: this runs on every render, and a dev config reload
   // does not unload the page.
-  if (type.isUndefined(lowdefy.unloading)) {
-    watchPageUnload({ lowdefy, window });
+  if (type.isUndefined(lowdefy.pageUnload)) {
+    lowdefy.pageUnload = createPageUnload({ window });
   }
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {

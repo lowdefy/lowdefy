@@ -17,23 +17,27 @@
 import { vi, expect, test } from 'vitest';
 import awaitUnlessUnloading from './awaitUnlessUnloading.js';
 
+function createLowdefy(leaving) {
+  return { pageUnload: { isLeaving: () => leaving, hold: () => new Promise(() => {}) } };
+}
+
 test('awaitUnlessUnloading resolves with the value of a fulfilled promise', async () => {
   await expect(
-    awaitUnlessUnloading({ lowdefy: { unloading: false }, promise: Promise.resolve(1) })
+    awaitUnlessUnloading({ lowdefy: createLowdefy(false), promise: Promise.resolve(1) })
   ).resolves.toBe(1);
 });
 
 test('awaitUnlessUnloading rethrows a rejection while the page stays open', async () => {
   const error = new TypeError('Failed to fetch');
   await expect(
-    awaitUnlessUnloading({ lowdefy: { unloading: false }, promise: Promise.reject(error) })
+    awaitUnlessUnloading({ lowdefy: createLowdefy(false), promise: Promise.reject(error) })
   ).rejects.toBe(error);
 });
 
-test('awaitUnlessUnloading never settles on a rejection while the page unloads', async () => {
+test('awaitUnlessUnloading holds a rejection while the page is leaving', async () => {
   const settled = vi.fn();
   awaitUnlessUnloading({
-    lowdefy: { unloading: true },
+    lowdefy: createLowdefy(true),
     promise: Promise.reject(new TypeError('Failed to fetch')),
   }).then(settled, settled);
   await new Promise((resolve) => setTimeout(resolve, 0));

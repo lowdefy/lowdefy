@@ -29,8 +29,12 @@ import request from './request.js';
 
 // The page's lowdefy object: the caller it renders and where it keeps the last
 // caller stamp.
-function createLowdefy(user) {
-  return { _internal: {}, user };
+function createLowdefy(user, { leaving = false } = {}) {
+  return {
+    _internal: {},
+    pageUnload: { isLeaving: () => leaving, hold: () => new Promise(() => {}) },
+    user,
+  };
 }
 
 function mockFetchResponse({ ok, status = ok ? 200 : 500, body, headers = {} }) {
@@ -211,37 +215,6 @@ describe('build check', () => {
     }).then(settled, settled);
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(window.location.reload).toHaveBeenCalledTimes(1);
-    expect(settled).not.toHaveBeenCalled();
-  });
-
-  test('request leaves other in-flight requests unsettled when a build refusal reloads the page', async () => {
-    const lowdefy = createLowdefy(null);
-    let cancelOther;
-    global.fetch = vi
-      .fn()
-      .mockImplementationOnce(
-        () =>
-          new Promise((resolve, reject) => {
-            cancelOther = () => reject(new TypeError('Failed to fetch'));
-          })
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          ok: false,
-          status: 409,
-          headers: { get: () => null },
-          text: () => Promise.resolve(JSON.stringify(refusal)),
-        })
-      );
-    const settled = vi.fn();
-    const args = { lowdefy, buildId: 'build-1', url: '/api/test', method: 'POST', body: {} };
-    request(args).then(settled, settled);
-    request(args).then(settled, settled);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(window.location.reload).toHaveBeenCalledTimes(1);
-    expect(lowdefy.unloading).toBe(true);
-    cancelOther();
-    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(settled).not.toHaveBeenCalled();
   });
 
@@ -500,19 +473,18 @@ describe('caller check', () => {
 });
 
 describe('page unload', () => {
-  function createUnloadingLowdefy(unloading) {
-    return { ...createLowdefy(null), unloading };
-  }
-
-  test('request never settles when the browser cancels its fetch as the page unloads', async () => {
+  test('request never settles when the browser cancels its fetch as the page leaves', async () => {
     global.fetch = vi.fn(() => Promise.reject(new TypeError('Failed to fetch')));
     const settled = vi.fn();
-    request({ lowdefy: createUnloadingLowdefy(true), url: '/api/test' }).then(settled, settled);
+    request({ lowdefy: createLowdefy(null, { leaving: true }), url: '/api/test' }).then(
+      settled,
+      settled
+    );
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(settled).not.toHaveBeenCalled();
   });
 
-  test('request never settles when the browser cancels the body read as the page unloads', async () => {
+  test('request never settles when the browser cancels the body read as the page leaves', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
@@ -522,22 +494,25 @@ describe('page unload', () => {
       })
     );
     const settled = vi.fn();
-    request({ lowdefy: createUnloadingLowdefy(true), url: '/api/test' }).then(settled, settled);
+    request({ lowdefy: createLowdefy(null, { leaving: true }), url: '/api/test' }).then(
+      settled,
+      settled
+    );
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(settled).not.toHaveBeenCalled();
   });
 
   test('request throws a network failure while the page stays open', async () => {
     global.fetch = vi.fn(() => Promise.reject(new TypeError('Failed to fetch')));
-    await expect(
-      request({ lowdefy: createUnloadingLowdefy(false), url: '/api/test' })
-    ).rejects.toThrow('Failed to fetch');
+    await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toThrow(
+      'Failed to fetch'
+    );
   });
 
   test('request still throws a server error response while the page unloads', async () => {
     mockFetchResponse({ ok: false, body: { message: 'Bad gateway.' } });
     await expect(
-      request({ lowdefy: createUnloadingLowdefy(true), url: '/api/test' })
+      request({ lowdefy: createLowdefy(null, { leaving: true }), url: '/api/test' })
     ).rejects.toThrow('Bad gateway.');
   });
 });

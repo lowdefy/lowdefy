@@ -198,7 +198,7 @@ test('initLowdefyContext watches the page unload once across renders', () => {
   const args = baseArgs();
   initLowdefyContext(args);
   initLowdefyContext(args);
-  expect(args.lowdefy.unloading).toBe(false);
+  expect(args.lowdefy.pageUnload.isLeaving()).toBe(false);
   const events = args.window.addEventListener.mock.calls.map(([name]) => name);
   expect(events).toEqual(['beforeunload', 'pagehide', 'pageshow']);
 });

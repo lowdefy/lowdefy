@@ -22,7 +22,6 @@ import awaitUnlessUnloading from './awaitUnlessUnloading.js';
 import NonJsonResponseError from './NonJsonResponseError.js';
 import parseJsonObject from './parseJsonObject.js';
 import recordCallerStamp from './recordCallerStamp.js';
-import reloadPage from './reloadPage.js';
 import shouldReloadForAuthError from './shouldReloadForAuthError.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
 import shouldReloadForCaller from './shouldReloadForCaller.js';
@@ -35,7 +34,7 @@ import shouldReloadForCaller from './shouldReloadForCaller.js';
 // action's catch actions and report the refusal as an error. Only the
 // production client carries a build id; the server lets a call naming none
 // through (dev and e2e pages, third-party webhooks). A fetch the browser
-// cancels as the page unloads never settles either (awaitUnlessUnloading).
+// cancels as the page unloads is held instead of thrown (awaitUnlessUnloading).
 //
 // lowdefy.user is the caller the page renders. The tab also reloads when the
 // server answered as another caller or with other roles, or refused the
@@ -69,7 +68,7 @@ async function request({
   });
   const serverCaller = res.headers.get('x-lowdefy-caller');
   if (shouldReloadForCaller({ serverCaller, user, window })) {
-    reloadPage({ lowdefy, window });
+    window.location.reload();
     return new Promise(() => {});
   }
   recordCallerStamp({ lowdefy, serverCaller });
@@ -83,7 +82,7 @@ async function request({
       res.status === 409 &&
       shouldReloadForBuild({ bundleBuildId: buildId, serverBuildId: body?.buildId, window })
     ) {
-      reloadPage({ lowdefy, window });
+      window.location.reload();
       return new Promise(() => {});
     }
     if (body?.['~e']) {
@@ -97,7 +96,7 @@ async function request({
       const ExpectedError = lowdefyErrorTypes[body.name];
       const error = new ExpectedError(body.message);
       if (shouldReloadForAuthError({ error, reloadOnAuthorizationError, user, window })) {
-        reloadPage({ lowdefy, window });
+        window.location.reload();
         return new Promise(() => {});
       }
       throw error;

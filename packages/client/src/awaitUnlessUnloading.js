@@ -14,18 +14,17 @@
   limitations under the License.
 */
 
-// Awaits a fetch or a read of its body. When it rejects while the page is
-// unloading (watchPageUnload), the browser cancelled it on the way out: the
-// request often reached the server and succeeded. Rejecting would run the
-// action's catch actions and report a network failure that never happened, so
-// the promise never settles instead, as the page is going away. A rejection
-// while the page stays open is a real failure and still throws.
+// Awaits a fetch or a read of its body. A rejection while the page is leaving
+// is most likely the browser cancelling it on the way out, so it is held until
+// the page either goes (it never settles) or stays (it throws) (createPageUnload).
+// Throwing at once would run the action's catch actions and report a network
+// failure that never happened. A rejection while the page stays open throws.
 async function awaitUnlessUnloading({ lowdefy, promise }) {
   try {
     return await promise;
   } catch (error) {
-    if (lowdefy.unloading === true) {
-      return new Promise(() => {});
+    if (lowdefy.pageUnload.isLeaving()) {
+      return lowdefy.pageUnload.hold(error);
     }
     throw error;
   }
