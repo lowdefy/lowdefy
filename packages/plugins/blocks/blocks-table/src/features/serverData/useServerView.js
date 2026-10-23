@@ -21,7 +21,8 @@ import pickServerView from './pickServerView.js';
 
 // Watches the view (whichever feature owns sort, filter, search or group) and hands it to the
 // store, which refetches from the top when it changes. Registers the internal `__tableFetch`
-// event, a Request action for `data.request` (the pattern Upload uses for its policy request).
+// event, a Request action for `data.request` (the pattern Upload uses for its policy request), or a
+// CallAPI action for `data.endpoint` with the fetch event as its payload.
 function useServerView({ api, config, state }) {
   const { server } = config;
   const store = api.serverStore;
@@ -37,12 +38,19 @@ function useServerView({ api, config, state }) {
       // A failed block shows as the table's own error row with Retry, so the action's global
       // error message is off; the engine still logs the error.
       actions: [
-        {
-          id: '__tableFetch',
-          type: 'Request',
-          params: [server.request],
-          messages: { error: false },
-        },
+        server.endpoint
+          ? {
+              id: '__tableFetch',
+              type: 'CallAPI',
+              params: { endpointId: server.endpoint, payload: { _event: true } },
+              messages: { error: false },
+            }
+          : {
+              id: '__tableFetch',
+              type: 'Request',
+              params: [server.request],
+              messages: { error: false },
+            },
       ],
     });
   }, [server]);

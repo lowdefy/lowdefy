@@ -189,6 +189,42 @@ blocks:
             type: Paragraph
             properties:
               content: No deals match this view right now.
+  # ============================================
+  # ROWS FROM AN API ENDPOINT
+  # ============================================
+
+  - id: table_server_endpoint
+    type: Table
+    properties:
+      height: 400
+      toolbar:
+        search: true
+      data:
+        mode: server
+        endpoint: table-rows
+        blockSize: 100
+      columns:
+        - key: id
+          type: number
+          width: 100
+        - key: name
+        - key: stage
+        - key: amount
+          type: number
+
+  - id: server_endpoint_filter
+    type: Button
+    properties:
+      title: Filter the endpoint table
+    events:
+      onClick:
+        - id: server_endpoint_filter_set
+          type: SetState
+          params:
+            table_server_endpoint.view.filter:
+              key: stage
+              op: eq
+              value: won
 
   - id: server_update
     type: Button

@@ -44,3 +44,27 @@ test('pickServerView sends the aggregates in effect: view entries over column de
     }).aggregates
   ).toEqual({ amount: 'avg', score: 'max' });
 });
+
+test('pickServerView leaves out a condition with no value yet, as the browser row test does', () => {
+  expect(
+    pickServerView({ view: { filter: { and: [{ key: 'name', op: 'contains' }] } }, columns: [] })
+      .filter
+  ).toBe(null);
+  expect(
+    pickServerView({
+      view: {
+        filter: {
+          and: [
+            { key: 'title', op: 'contains', value: 'CX' },
+            { key: 'name', op: 'eq' },
+            { or: [{ key: 'labels', op: 'in' }] },
+          ],
+        },
+      },
+      columns: [],
+    }).filter
+  ).toEqual({ and: [{ key: 'title', op: 'contains', value: 'CX' }] });
+  expect(
+    pickServerView({ view: { filter: { key: 'labels', op: 'notEmpty' } }, columns: [] }).filter
+  ).toEqual({ key: 'labels', op: 'notEmpty' });
+});

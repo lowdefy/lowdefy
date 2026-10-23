@@ -25,15 +25,33 @@ test('normalizeServerData returns null for client rows', () => {
 test('normalizeServerData defaults the block size and cache size', () => {
   expect(normalizeServerData({ mode: 'server', request: 'deals' })).toEqual({
     request: 'deals',
+    endpoint: null,
     blockSize: 200,
     maxBlocks: 20,
   });
 });
 
-test('normalizeServerData throws for a missing request or a bad block size', () => {
-  expect(() => normalizeServerData({ mode: 'server' })).toThrow('requires "request"');
+test('normalizeServerData takes an endpoint in place of a request', () => {
+  expect(normalizeServerData({ mode: 'server', endpoint: 'deals-rows', blockSize: 50 })).toEqual({
+    request: null,
+    endpoint: 'deals-rows',
+    blockSize: 50,
+    maxBlocks: 20,
+  });
+});
+
+test('normalizeServerData throws without exactly one of request and endpoint', () => {
+  expect(() => normalizeServerData({ mode: 'server' })).toThrow(
+    /requires one of "request".*or "endpoint"/
+  );
+  expect(() => normalizeServerData({ mode: 'server', request: 'a', endpoint: 'b' })).toThrow(
+    /requires one of "request"/
+  );
+});
+
+test('normalizeServerData throws for a bad mode or a bad block size', () => {
   expect(() => normalizeServerData({ mode: 'client', request: 'x' })).toThrow(
-    'must be a list of rows or { mode: server, request }'
+    'must be a list of rows or { mode: server, request | endpoint }'
   );
   expect(() => normalizeServerData({ mode: 'server', request: 'x', blockSize: 0 })).toThrow(
     '"data.blockSize" must be a positive integer'
