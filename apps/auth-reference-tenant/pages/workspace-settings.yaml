@@ -1,0 +1,18 @@
+# Gated on the workspace-admin app role (auth.pages.roles), which the owner of
+# a new organization holds through auth.organizations.creatorAppRoles.
+id: workspace-settings
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: workspace_settings_title
+    type: Title
+    properties:
+      content: Workspace settings (workspace-admin app role)
+      level: 2
+  - id: workspace_settings_body
+    type: Html
+    properties:
+      html: <p>Only members holding the workspace-admin app role open this page.</p>

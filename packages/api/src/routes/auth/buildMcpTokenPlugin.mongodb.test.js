@@ -120,7 +120,13 @@ test('a member token resolves its member through the real adapter and records la
     database: MongoDBAuthAdapter({ properties: { uri: process.env.MONGO_URL, database } }),
     logger: { disabled: true },
     advanced: { database: { generateId: () => randomUUID() } },
-    plugins: [buildOrganizationPlugin({ getAuth: () => auth }), buildMcpTokenPlugin()],
+    plugins: [
+      buildOrganizationPlugin({
+        authConfig: { organizations: { creatorAppRoles: [] } },
+        getAuth: () => auth,
+      }),
+      buildMcpTokenPlugin(),
+    ],
   });
   const { adapter, internalAdapter } = await auth.$context;
   const user = await internalAdapter.createUser({

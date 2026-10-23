@@ -62,6 +62,7 @@ function setAuthDefaults({ components }) {
     setDefault(auth.organizations, 'signup', 'open');
     setDefault(auth.organizations, 'create', 'auto');
   }
+  setDefault(auth.organizations, 'creatorAppRoles', []);
 
   setDefault(auth, 'authPages', {});
   setDefault(auth.authPages, 'signIn', '/login');
