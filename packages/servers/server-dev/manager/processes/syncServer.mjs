@@ -36,6 +36,9 @@ function syncServer(context) {
       return false;
     }
     context.idleChild.markRestartPending();
+    // No child runs, so the next start reads every artifact as it is now. Recorded here so the
+    // next build while stopped does not see the same package.json change and install again.
+    context.serverArtifacts.record();
     return true;
   }
 

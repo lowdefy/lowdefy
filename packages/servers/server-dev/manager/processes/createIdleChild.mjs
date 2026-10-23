@@ -83,8 +83,10 @@ function createIdleChild(context, { idleMs = IDLE_CHILD_MS, checkMs, now = Date.
     context.instance.update({ child: 'running' });
     waking = context.syncServer
       .run(async () => {
-        // A sync queued ahead of the wake (the install path) already started one.
+        // A sync queued ahead of the wake (the install path) already started one, with the
+        // changes built while stopped.
         if (context.devServer) {
+          restartPending = false;
           return;
         }
         context.logger.info(

@@ -44,7 +44,7 @@ function createContext({ snapshot = {}, busy = false } = {}) {
     events: [],
     instance: { update: vi.fn() },
     logger: { info: vi.fn(), error: vi.fn() },
-    serverArtifacts: { check: vi.fn(() => ({ install: false, restart: true })) },
+    serverArtifacts: { check: vi.fn(() => ({ install: false, restart: true })), record: vi.fn() },
   };
   context.requestActivity = { snapshot: () => context.activity };
   context.shutdownServer = vi.fn(() => {
@@ -160,6 +160,31 @@ test('createIdleChild does not start a second child when a queued sync started o
   await Promise.all([synced, woken]);
 
   expect(context.restartServer).not.toHaveBeenCalled();
+});
+
+test('createIdleChild clears a pending restart when a queued sync started the child first', async () => {
+  const context = createContext();
+  create(context);
+  context.clock.advance(IDLE_MS);
+  await idleChild.stop();
+  await context.syncServer();
+  expect(idleChild.isRestartPending()).toBe(true);
+
+  let finishInstall;
+  const synced = context.syncServer.run(
+    () =>
+      new Promise((resolve) => {
+        finishInstall = resolve;
+      })
+  );
+  const woken = idleChild.wake();
+  context.devServer = { pid: 3 };
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  finishInstall();
+  await Promise.all([synced, woken]);
+
+  expect(context.restartServer).not.toHaveBeenCalled();
+  expect(idleChild.isRestartPending()).toBe(false);
 });
 
 test('createIdleChild does not stop a child that was used while the stop waited in the queue', async () => {

@@ -110,7 +110,10 @@ const Page = ({
   lowdefy._devBuildId = pageConfig._buildId ?? null;
 
   // Dev tabs live long, so cap the engine's event and call histories (read in initLowdefyContext).
-  lowdefy._internal = { ...lowdefy._internal, historyLimits: DEV_HISTORY_LIMITS };
+  // Set in place, as recordCallerStamp does: replacing lowdefy._internal on every render would
+  // leave anything holding the old object writing to a copy nobody reads.
+  lowdefy._internal = lowdefy._internal ?? {};
+  lowdefy._internal.historyLimits = DEV_HISTORY_LIMITS;
 
   return (
     <Client

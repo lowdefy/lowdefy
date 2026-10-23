@@ -38,7 +38,7 @@ function createContext(changes) {
     lowdefyBuild: record('build'),
     optimizeDependencies: record('optimize'),
     restartServer: record('restart'),
-    serverArtifacts: { check: vi.fn(() => changes) },
+    serverArtifacts: { check: vi.fn(() => changes), record: vi.fn() },
     shutdownServer: vi.fn(() => events.push('shutdown')),
   };
 }
@@ -169,6 +169,8 @@ test('syncServer installs, rebuilds and optimises for an idle-stopped child with
   await createStartedSync(context)();
 
   expect(context.events).toEqual(['shutdown', 'install', 'build', 'track', 'optimize', 'pending']);
+  // Recorded, so the next build while stopped does not install again.
+  expect(context.serverArtifacts.record).toHaveBeenCalledTimes(1);
 });
 
 test('syncServer restarts a child that is running again', async () => {
@@ -179,6 +181,7 @@ test('syncServer restarts a child that is running again', async () => {
 
   expect(context.events).toEqual(['restart']);
   expect(context.idleChild.markRestartPending).not.toHaveBeenCalled();
+  expect(context.serverArtifacts.record).not.toHaveBeenCalled();
 });
 
 test('syncServer runs queued lifecycle tasks one at a time with the syncs', async () => {
