@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
-
+import { vi, afterEach, expect, test } from 'vitest';
 import createCallRequest from './createCallRequest.js';
 
 function createLowdefy() {
@@ -23,7 +22,7 @@ function createLowdefy() {
     basePath: '',
     buildId: null,
     user: null,
-    _internal: { logger: { warn: jest.fn() } },
+    _internal: { logger: { warn: vi.fn() } },
   };
 }
 
@@ -64,7 +63,7 @@ afterEach(() => {
 });
 
 test('callRequest sends a read-only request again when the host fails it with a non-JSON body', async () => {
-  global.fetch = jest
+  global.fetch = vi
     .fn()
     .mockResolvedValueOnce(platformFailure)
     .mockResolvedValueOnce(jsonResponse({ body: { response: [1] } }));
@@ -79,7 +78,7 @@ test('callRequest sends a read-only request again when the host fails it with a 
 });
 
 test('callRequest sends a read-only request again only once', async () => {
-  global.fetch = jest.fn().mockResolvedValue(platformFailure);
+  global.fetch = vi.fn().mockResolvedValue(platformFailure);
   const callRequest = createCallRequest(createLowdefy());
   await expect(callRequest({ ...call, readOnly: true })).rejects.toThrow(
     'The server could not answer (status 500). Try again.'
@@ -88,7 +87,7 @@ test('callRequest sends a read-only request again only once', async () => {
 });
 
 test('callRequest never sends a request that may write again', async () => {
-  global.fetch = jest.fn().mockResolvedValue(platformFailure);
+  global.fetch = vi.fn().mockResolvedValue(platformFailure);
   const lowdefy = createLowdefy();
   const callRequest = createCallRequest(lowdefy);
   await expect(callRequest({ ...call, readOnly: false })).rejects.toThrow(
@@ -99,7 +98,7 @@ test('callRequest never sends a request that may write again', async () => {
 });
 
 test('callRequest does not send a read-only request again after a JSON error from the app', async () => {
-  global.fetch = jest
+  global.fetch = vi
     .fn()
     .mockResolvedValue(
       jsonResponse({ ok: false, status: 500, body: { message: 'Query failed.' } })
