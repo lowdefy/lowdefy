@@ -84,6 +84,16 @@ test.describe('Table toolbar', () => {
     await expect(getBlock(page, 'tb_empty').locator('.ant-empty')).toHaveCount(0);
   });
 
+  test('the emptyFiltered slot replaces No matching rows when a filter hides every row', async ({
+    page,
+  }) => {
+    const empty = getBlock(page, 'tb_empty_filtered').locator('[data-lf-empty]');
+    await expect(empty).toHaveAttribute('data-lf-empty', 'filtered');
+    await expect(empty).toContainText('No people match this view right now.');
+    await expect(empty).not.toContainText('No people yet.');
+    await expect(empty.locator('[data-lf-clear-filters]')).toHaveCount(0);
+  });
+
   test('the record count shows the rows the view matches', async ({ page }) => {
     await expect(toolbar(page, 'tb').locator('[data-lf-record-count]')).toHaveText('5 rows');
   });

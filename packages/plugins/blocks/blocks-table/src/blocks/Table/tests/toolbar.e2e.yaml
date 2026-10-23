@@ -138,3 +138,30 @@ blocks:
             type: Paragraph
             properties:
               content: No people yet. Add the first one.
+
+  # A filter that hides every row shows the emptyFiltered slot, not "No matching rows".
+  - id: tb_empty_filtered
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+      defaultView:
+        filter:
+          key: name
+          op: eq
+          value: Nobody by this name
+    slots:
+      empty:
+        blocks:
+          - id: tb_empty_filtered_empty
+            type: Paragraph
+            properties:
+              content: No people yet.
+      emptyFiltered:
+        blocks:
+          - id: tb_empty_filtered_message
+            type: Paragraph
+            properties:
+              content: No people match this view right now.

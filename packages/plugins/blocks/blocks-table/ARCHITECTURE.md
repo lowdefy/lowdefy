@@ -1,6 +1,6 @@
 # blocks-table architecture
 
-`Table` is an input block with slots (category `input-container`: `toolbarStart`, `toolbarEnd`, `bulkActions`, `empty`) whose value is its UI state, `{ view, selected, expanded }` (design D2, D6). This note is for whoever adds the next feature module. Design: `lowdefy-design/designs/table/design.md`. Benchmarks: `bench/RESULTS.md`.
+`Table` is an input block with slots (category `input-container`: `toolbarStart`, `toolbarEnd`, `bulkActions`, `empty`, `emptyFiltered`) whose value is its UI state, `{ view, selected, expanded }` (design D2, D6). This note is for whoever adds the next feature module. Design: `lowdefy-design/designs/table/design.md`. Benchmarks: `bench/RESULTS.md`.
 
 ## Layers
 

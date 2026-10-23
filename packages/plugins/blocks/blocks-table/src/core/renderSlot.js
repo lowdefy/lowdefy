@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-// Renders one of the table's slots (toolbarStart, toolbarEnd, bulkActions, empty), or null when
-// it has no blocks. Slot blocks keep only their own loading: the table's loading (its rows
+// Renders one of the table's slots (toolbarStart, toolbarEnd, bulkActions, empty, emptyFiltered),
+// or null when it has no blocks. Slot blocks keep only their own loading: the table's loading (its rows
 // loading, including the page's onMount that fetches them) is shown by the table itself, and a
 // create or refresh button next to it must stay usable meanwhile.
 function renderSlot({ content, slot }) {
