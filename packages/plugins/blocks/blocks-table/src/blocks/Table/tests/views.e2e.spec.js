@@ -136,6 +136,28 @@ test.describe('Table saved views', () => {
     await expect(events(page)).toContainText('delete={"id":"all"}');
   });
 
+  test('viewMenu items replace Delete view and fire onViewMenu, after a confirm when asked', async ({
+    page,
+  }) => {
+    const menuTab = getBlock(page, 'vw_menu').locator('[data-lf-view-tab="all"]');
+    const menuEvents = getBlock(page, 'vw_menu_events');
+    await menuTab.locator('[data-lf-view-menu]').click();
+    const items = page.locator('.ant-dropdown:visible .ant-dropdown-menu-item');
+    await expect(items).toHaveText(['Rename', 'Archive']);
+    await items.filter({ hasText: 'Rename' }).click();
+    await expect(menuEvents).toHaveText('menu={"key":"rename","id":"all"}');
+
+    await menuTab.locator('[data-lf-view-menu]').click();
+    await items.filter({ hasText: 'Archive' }).click();
+    await expect(page.locator('[data-lf-view-menu-confirm-message]')).toHaveText(
+      'Archive this view?'
+    );
+    // Nothing fires until the dialog is confirmed.
+    await expect(menuEvents).toHaveText('menu={"key":"rename","id":"all"}');
+    await page.locator('[data-lf-view-menu-confirm]').click();
+    await expect(menuEvents).toHaveText('menu={"key":"archive","id":"all"}');
+  });
+
   test('changing activeView selects and loads that view', async ({ page }) => {
     await page.locator('#vw_pick_fixed').click();
     await expect(activeTab(page)).toContainText('Fixed');

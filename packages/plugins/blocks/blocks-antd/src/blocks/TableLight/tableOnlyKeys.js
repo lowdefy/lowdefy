@@ -25,6 +25,7 @@ const TABLE_ONLY_KEYS = {
     toolbar: 'the toolbar',
     views: 'saved views',
     activeView: 'saved views',
+    viewMenu: 'saved views',
     defaultView: 'views',
     persist: 'view persistence',
     virtual: 'virtualisation',
