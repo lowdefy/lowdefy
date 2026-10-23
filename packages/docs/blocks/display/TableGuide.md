@@ -1402,6 +1402,17 @@ routine:
       _step: deals_page
 ```
 
+**Fields from the page.** `data.payload` adds fields to every fetch event, beside `startRow`, `view` and the rest, for a filter the page keeps outside the table's view, such as a region picked above the table. Kept out of the view, it never ends up in a saved view's filter. The table's own fields win on a clash, and a changed payload starts the rows again from the top. Read the fields in the request or routine with `_event` or `_payload`, and check them there like any other input.
+
+```yaml
+data:
+  mode: server
+  endpoint: deals-rows
+  payload:
+    region:
+      _state: region
+```
+
 The fetch event carries no time zone, so a routine that filters dates by the user's days sets `timezone` itself, for example from the user's profile.
 
 **Time zones and indexes.** The browser compares date filters by the user's local days, the server by the days of the request's `timezone` (UTC by default): pass the user's time zone, as `deals_page` does. The request sorts before it pages, so an index on the base match, filter and sort fields (for example `{ org_id: 1, updated: -1, _id: 1 }`) serves each block; without one, MongoDB sorts every matching document for every block. Add indexes for the sorts a large table offers.

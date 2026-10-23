@@ -76,6 +76,23 @@ test('createServerStore fetches the first block with the view when the view is s
   expect(store.isLoading()).toBe(true);
 });
 
+test('createServerStore adds the payload fields to each fetch event, and its own fields win a clash', () => {
+  const { api, calls } = createDeferredApi();
+  const store = createServerStore({
+    api,
+    server: { blockSize: 50, maxBlocks: 10, payload: { region: 'EU', startRow: 99 } },
+  });
+  store.setView({ view: VIEW, viewKey: 'a' });
+  expect(calls[0].event).toEqual({
+    region: 'EU',
+    startRow: 0,
+    endRow: 50,
+    view: VIEW,
+    groupPath: [],
+    selected: undefined,
+  });
+});
+
 test('createServerStore shows the total as rows with holes once the first block lands', async () => {
   const { api, calls } = createDeferredApi();
   const store = createServerStore({ api, server: { blockSize: 50, maxBlocks: 10 } });
