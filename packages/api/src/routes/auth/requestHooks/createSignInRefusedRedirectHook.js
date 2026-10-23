@@ -18,11 +18,9 @@ import { isAPIError } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
 // The refusals session.create.before raises: the admin plugin's ban check, and
-// the active-organization wall (createActiveOrgPolicyHook). Both run after the
-// endpoint's origin checks have passed, so the error callback URL they redirect
-// to has already been judged trusted. Any other error on this path - an origin
-// check failure among them - keeps BetterAuth's own response, since its
-// callback URL may be the untrusted one.
+// the active-organization wall (createActiveOrgPolicyHook). Any other error on
+// this path - an origin check failure among them - keeps BetterAuth's own
+// response.
 const SESSION_REFUSAL_CODES = ['BANNED_USER', 'MEMBERSHIP_REQUIRED'];
 
 // /magic-link/verify redirects to errorCallbackURL?error= for token and
@@ -33,16 +31,27 @@ const SESSION_REFUSAL_CODES = ['BANNED_USER', 'MEMBERSHIP_REQUIRED'];
 // URL exactly as the endpoint does.
 function createSignInRefusedRedirectHook() {
   return async function signInRefusedRedirectHook(ctx) {
+    // A direct auth.api.magicLinkVerify() call has no browser to redirect, and
+    // its caller detects the refusal by the APIError it throws.
+    if (type.isNone(ctx.request)) {
+      return undefined;
+    }
     const returned = ctx.context.returned;
     if (!isAPIError(returned) || !SESSION_REFUSAL_CODES.includes(returned.body?.code)) {
       return undefined;
     }
-    const callbackURL = type.isString(ctx.query?.callbackURL)
-      ? decodeURIComponent(ctx.query.callbackURL)
-      : '/';
-    const errorCallbackURL = type.isString(ctx.query?.errorCallbackURL)
+    // Truthiness, as the endpoint reads them: an empty errorCallbackURL= falls
+    // back to callbackURL, and an empty callbackURL= to '/'.
+    const callbackURL = ctx.query.callbackURL ? decodeURIComponent(ctx.query.callbackURL) : '/';
+    const errorCallbackURL = ctx.query.errorCallbackURL
       ? decodeURIComponent(ctx.query.errorCallbackURL)
       : callbackURL;
+    // The endpoint's originCheck has passed by the time it creates a session,
+    // but a before hook can raise these codes ahead of that check. Checking the
+    // origin here keeps the redirect safe whichever raised the refusal.
+    if (!ctx.context.isTrustedOrigin(errorCallbackURL, { allowRelativePaths: true })) {
+      return undefined;
+    }
     const url = new URL(errorCallbackURL, ctx.context.baseURL);
     url.searchParams.set('error', returned.body.code);
     if (type.isString(returned.body.message)) {

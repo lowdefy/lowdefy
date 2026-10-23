@@ -635,8 +635,10 @@ test('buildRequestHooks redirects a ban on /magic-link/verify when magicLink is 
   const response = await hooks.after({
     path: '/magic-link/verify',
     query: { callbackURL: '/', errorCallbackURL: '/login' },
+    request: new Request('https://app.example.com/api/auth/magic-link/verify'),
     context: {
       baseURL: 'https://app.example.com/api/auth',
+      isTrustedOrigin: () => true,
       returned: new MockAPIError('FORBIDDEN', { message: 'Banned.', code: 'BANNED_USER' }),
     },
   });
@@ -649,8 +651,10 @@ test('buildRequestHooks does not register the sign-in refused redirect without m
   const response = await hooks.after({
     path: '/magic-link/verify',
     query: { callbackURL: '/', errorCallbackURL: '/login' },
+    request: new Request('https://app.example.com/api/auth/magic-link/verify'),
     context: {
       baseURL: 'https://app.example.com/api/auth',
+      isTrustedOrigin: () => true,
       returned: new MockAPIError('FORBIDDEN', { message: 'Banned.', code: 'BANNED_USER' }),
     },
   });
