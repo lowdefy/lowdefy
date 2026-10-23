@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { render } from '@testing-library/react';
 import DOMPurify from 'dompurify';
 
@@ -150,7 +150,7 @@ test('Render bad html', async () => {
 });
 
 test('HtmlComponent does not sanitize or reset innerHTML when re-rendered with the same html', () => {
-  const sanitize = jest.spyOn(DOMPurify, 'sanitize');
+  const sanitize = vi.spyOn(DOMPurify, 'sanitize');
   const { container, rerender } = render(
     <HtmlComponent id="same" html="<details>Info</details>" />
   );
@@ -164,7 +164,7 @@ test('HtmlComponent does not sanitize or reset innerHTML when re-rendered with t
 });
 
 test('HtmlComponent sanitizes and replaces innerHTML when the html changes', () => {
-  const sanitize = jest.spyOn(DOMPurify, 'sanitize');
+  const sanitize = vi.spyOn(DOMPurify, 'sanitize');
   const { container, rerender } = render(<HtmlComponent html="<b>One</b>" />);
   rerender(<HtmlComponent html="<b>Two</b>" />);
   expect(sanitize).toHaveBeenCalledTimes(2);

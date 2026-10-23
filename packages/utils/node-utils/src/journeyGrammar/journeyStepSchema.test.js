@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import JOURNEY_STEP_EXAMPLES from './journeyStepExamples.js';
 import journeyStepSchema, { JOURNEY_STEP_SCHEMAS } from './journeyStepSchema.js';
 import validateJourneySteps, { STEP_KEYS } from './validateJourneySteps.js';
+import { expect, test } from 'vitest';
 
 // The schema is what an agent reads; validateJourneySteps is what runs. These
 // tests hold the two to the same steps.

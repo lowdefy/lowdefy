@@ -15,6 +15,7 @@
 */
 
 import getObjectReadKeys from './getObjectReadKeys.js';
+import { expect, test } from 'vitest';
 
 const arrayIndices = [3, 7];
 

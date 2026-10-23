@@ -15,6 +15,7 @@
 */
 
 import getBlockMatcher from '../src/getBlockMatcher.js';
+import { expect, test } from 'vitest';
 
 test('params is invalid', () => {
   expect(() => getBlockMatcher({ params: 1 })).toThrow('Invalid validate params.');

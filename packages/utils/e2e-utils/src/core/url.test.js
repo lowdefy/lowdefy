@@ -15,6 +15,7 @@
 */
 
 import { createTargetLocation } from './url.js';
+import { expect, test } from 'vitest';
 
 test('createTargetLocation adds a query key to a url that has none', () => {
   expect(

@@ -15,6 +15,7 @@
 */
 
 import preserveMetaProperties from './preserveMetaProperties.js';
+import { expect, test } from 'vitest';
 
 test('preserveMetaProperties copies non-enumerable meta props from source to target', () => {
   const source = { a: 1 };

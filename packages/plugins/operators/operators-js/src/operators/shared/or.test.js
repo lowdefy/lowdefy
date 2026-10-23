@@ -15,6 +15,7 @@
 */
 import { ServerParser, WebParser } from '@lowdefy/operators';
 import _or from './or.js';
+import { expect, test } from 'vitest';
 
 const operators = {
   _or,

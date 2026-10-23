@@ -18,6 +18,7 @@ import { validate } from '@lowdefy/ajv';
 import MongoDBDeleteOne from './MongoDBDeleteOne.js';
 import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBDeleteOne.meta;
 const schema = MongoDBDeleteOne.schema;

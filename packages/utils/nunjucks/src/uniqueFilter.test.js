@@ -16,6 +16,7 @@
 
 import nunjucks from 'nunjucks';
 import uniqueFilter from './uniqueFilter.js';
+import { describe, expect, test } from 'vitest';
 
 export const nunjucksEnv = new nunjucks.Environment();
 nunjucksEnv.addFilter('unique', uniqueFilter);

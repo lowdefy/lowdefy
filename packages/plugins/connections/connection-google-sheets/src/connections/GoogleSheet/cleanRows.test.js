@@ -15,6 +15,7 @@
 */
 
 import cleanRows from './cleanRows.js';
+import { expect, test } from 'vitest';
 
 test('cleanRows removes objects with key _sheet from an array of rows', () => {
   expect(

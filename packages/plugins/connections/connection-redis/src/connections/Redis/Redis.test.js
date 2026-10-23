@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import Redis from './Redis.js';
+import { expect, test } from 'vitest';
 
 const schema = Redis.schema;
 

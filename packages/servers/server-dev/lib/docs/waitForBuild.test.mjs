@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import waitForBuild from './waitForBuild.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let configDirectory;
 const originalConfigDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG;

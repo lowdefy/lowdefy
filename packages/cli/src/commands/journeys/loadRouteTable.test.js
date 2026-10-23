@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import loadRouteTable from './loadRouteTable.js';
+import { expect, test } from 'vitest';
 
 test('loadRouteTable reads the routes and basePath of the build', () => {
   const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-route-table-'));

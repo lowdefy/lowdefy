@@ -15,11 +15,11 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockSubscribe = jest.fn();
-const mockUnsubscribe = jest.fn();
-jest.unstable_mockModule('../../../lib/docs/devEventBus.js', () => ({
+const mockSubscribe = vi.fn();
+const mockUnsubscribe = vi.fn();
+vi.doMock('../../../lib/docs/devEventBus.js', () => ({
   bootedAt: '2026-05-06T07:08:09.000Z',
   subscribe: mockSubscribe,
 }));

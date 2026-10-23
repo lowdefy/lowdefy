@@ -16,6 +16,7 @@
 
 import validateAuthConfig from './validateAuthConfig.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 const context = testContext();
 

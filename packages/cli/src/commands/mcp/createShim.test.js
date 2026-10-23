@@ -35,6 +35,7 @@ import createShim from './createShim.js';
 import createLineReader from '../hub/createLineReader.js';
 import getHubPaths from '../hub/getHubPaths.js';
 import { HUB_PROTOCOL } from '../hub/hubProtocol.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const devTools = {
   instructions: 'Dev server instructions.',

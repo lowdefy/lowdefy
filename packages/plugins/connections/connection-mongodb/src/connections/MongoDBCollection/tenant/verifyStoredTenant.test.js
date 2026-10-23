@@ -19,6 +19,7 @@ import { TenantIntegrityError } from '@lowdefy/errors';
 import verifyStoredTenant, { idsOfMap } from './verifyStoredTenant.js';
 import getTestCollection from '../../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { expect, test } from 'vitest';
 
 const tenant = { field: 'organization_id', value: 'org_a' };
 

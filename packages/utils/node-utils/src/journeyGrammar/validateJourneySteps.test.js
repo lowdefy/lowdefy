@@ -15,6 +15,7 @@
 */
 
 import validateJourneySteps from './validateJourneySteps.js';
+import { expect, test } from 'vitest';
 
 // Every step error ends with examples of the step; a test of the rule a
 // message names compares the message without them.

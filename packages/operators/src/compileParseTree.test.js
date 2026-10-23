@@ -15,6 +15,7 @@
 */
 
 import compileParseTree from './compileParseTree.js';
+import { expect, test } from 'vitest';
 
 const evaluation = { reviveKey: (value) => value };
 

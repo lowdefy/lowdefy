@@ -17,6 +17,7 @@
 import assert from 'node:assert/strict';
 
 import resolveAggregates from './resolveAggregates.js';
+import { test } from 'vitest';
 
 const columns = [
   { key: 'name' },

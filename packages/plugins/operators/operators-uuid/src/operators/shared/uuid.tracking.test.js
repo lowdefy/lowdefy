@@ -15,6 +15,7 @@
 */
 
 import _uuid from './uuid.js';
+import { expect, test } from 'vitest';
 
 function kind(callInfo) {
   return _uuid.tracking(callInfo).kind;

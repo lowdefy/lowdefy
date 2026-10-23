@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { WebParser } from '@lowdefy/operators';
 
 import * as operatorsClient from './operatorsClient.js';
@@ -199,7 +199,7 @@ test.each([
   ],
 ])('%s', (_, input, expected) => {
   // _log writes its params to the console.
-  jest.spyOn(console, 'log').mockImplementation(() => {});
+  vi.spyOn(console, 'log').mockImplementation(() => {});
   const { events, pureCalls } = record({ input });
   expect(events).toEqual(expected);
   // Every call signals the recorder, so the engine can tell a pure block from a parser that does not

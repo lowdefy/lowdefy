@@ -17,6 +17,7 @@
 import path from 'path';
 
 import getDirectories from './getDirectories.js';
+import { expect, test } from 'vitest';
 
 // getDirectories receives the config directory already resolved (startUp), and
 // resolves or joins every other directory, so the expected values are built

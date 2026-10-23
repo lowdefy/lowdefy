@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createCounter from '../../utils/createCounter.js';
 import validatePageTypes from './validatePageTypes.js';
 
 function createContext({ blocks = {}, actions = {}, clientOps = {}, serverOps = {} } = {}) {
   return {
-    handleWarning: jest.fn(),
+    handleWarning: vi.fn(),
     typeCounters: {
       blocks: createCounter(),
       actions: createCounter(),

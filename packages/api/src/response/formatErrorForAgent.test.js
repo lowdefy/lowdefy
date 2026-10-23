@@ -16,6 +16,7 @@
 import { AuthorizationError, UserError } from '@lowdefy/errors';
 
 import formatErrorForAgent from './formatErrorForAgent.js';
+import { expect, test } from 'vitest';
 
 function errorWith(props) {
   return Object.assign(new Error('Request failed.'), props);

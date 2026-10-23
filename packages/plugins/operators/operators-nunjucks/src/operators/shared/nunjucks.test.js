@@ -16,6 +16,7 @@
 
 import { ServerParser } from '@lowdefy/operators';
 import _nunjucks from './nunjucks.js';
+import { expect, test } from 'vitest';
 
 const operators = {
   _nunjucks,

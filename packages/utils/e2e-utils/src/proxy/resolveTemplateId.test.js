@@ -15,6 +15,7 @@
 */
 
 import resolveTemplateId from './resolveTemplateId.js';
+import { expect, test } from 'vitest';
 
 test('returns id unchanged when no numeric segments are present', () => {
   expect(resolveTemplateId('next_button')).toBe('next_button');

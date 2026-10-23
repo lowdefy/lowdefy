@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import apiKey from './apiKey.js';
 
@@ -22,7 +22,7 @@ const longKey = 'k'.repeat(32);
 const otherLongKey = 'o'.repeat(32);
 
 function mockLogger() {
-  return { debug: jest.fn(), warn: jest.fn() };
+  return { debug: vi.fn(), warn: vi.fn() };
 }
 
 test('apiKey verify matches a configured key and returns the synthetic caller id', async () => {

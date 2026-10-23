@@ -16,6 +16,7 @@
 
 import buildMutationReport from './buildMutationReport.js';
 import scoreMutants from './scoreMutants.js';
+import { expect, test } from 'vitest';
 
 test('buildMutationReport writes the suite score, each mutant with who ran it, and each journey', () => {
   const baselines = [{ key: 'tests/journeys/a.yaml#a', file: 'tests/journeys/a.yaml', name: 'a' }];

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import SetState from './SetState.js';
 
-const mockSetState = jest.fn();
+const mockSetState = vi.fn();
 const methods = { setState: mockSetState };
 
 test('SetState action invocation', () => {

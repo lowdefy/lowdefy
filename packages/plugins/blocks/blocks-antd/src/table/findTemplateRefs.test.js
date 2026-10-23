@@ -16,6 +16,7 @@
 import findTemplateProblem from './findTemplateProblem.js';
 import findTemplateRefs from './findTemplateRefs.js';
 import renderPlaceholders from './renderPlaceholders.js';
+import { expect, test } from 'vitest';
 
 test('findTemplateRefs gives the key a placeholder starts with, for keys with a dash too', () => {
   expect(findTemplateRefs('{{ my-col }} {{ company.name }} {{-name-}} {{ company }}')).toEqual([

@@ -16,6 +16,7 @@
 
 import skills from './index.js';
 import journeysAutopilot from './journeysAutopilot.js';
+import { expect, test } from 'vitest';
 
 test('the skill list includes journeys-autopilot with its renderer and AGENTS.md line', () => {
   const entry = skills.find((skill) => skill.name === 'journeys-autopilot');

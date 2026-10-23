@@ -16,6 +16,7 @@
 
 import TenantIntegrityError from './TenantIntegrityError.js';
 import lowdefyErrorNames from './lowdefyErrorNames.js';
+import { expect, test } from 'vitest';
 
 test('TenantIntegrityError sets name and isLowdefyError', () => {
   const error = new TenantIntegrityError('bad row');

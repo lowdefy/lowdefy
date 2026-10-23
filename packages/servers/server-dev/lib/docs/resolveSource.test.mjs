@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockTabAvailable = jest.fn();
+const mockTabAvailable = vi.fn();
 
-jest.unstable_mockModule('./tabAvailable.js', () => ({
+vi.doMock('./tabAvailable.js', () => ({
   default: mockTabAvailable,
 }));
 
 const { default: resolveSource } = await import('./resolveSource.js');
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('resolveSource tries the tab when source is "tab"', () => {

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 
 import testContext from '../../test-utils/testContext.js';
 import buildRefs from './buildRefs.js';
 
-const mockLogWarn = jest.fn();
+const mockLogWarn = vi.fn();
 
 const logger = {
   warn: mockLogWarn,
@@ -36,7 +36,7 @@ const readConfigFileMockImplementation = (files) => {
   return mockImp;
 };
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 const context = testContext({
   logger,

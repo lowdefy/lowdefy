@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 // The table's documented shape (codemods v7-0-0/react-icons-to-lucide.json).
-jest.unstable_mockModule('./readIconMigrationTable.js', () => ({
+vi.doMock('./readIconMigrationTable.js', () => ({
   default: () => ({
     icons: {
       AiOutlineDelete: 'delete',

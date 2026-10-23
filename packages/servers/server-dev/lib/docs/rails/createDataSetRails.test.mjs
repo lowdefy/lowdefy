@@ -19,6 +19,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import createDataSetRails from './createDataSetRails.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let buildDirectory;
 

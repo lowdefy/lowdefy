@@ -16,6 +16,7 @@
 
 import DependencyTracker from '../../src/tracking/DependencyTracker.js';
 import { captureRenders, countEvaluations, trackingContext } from '../trackingContext.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 const pageId = 'one';
 

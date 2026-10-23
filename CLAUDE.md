@@ -359,9 +359,9 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 
 ## Testing
 
-- Test files: `{name}.test.js` co-located with source
+- Test files: `{name}.test.js` co-located with source, run by vitest. Import `test`, `expect`, `vi` and the hooks from `'vitest'`: there are no globals
 - **Do not create tests for blocks** (currently disabled)
-- **NEVER run `pnpm jest` or `npx jest` directly** — always use `pnpm test`
+- **NEVER run `pnpm vitest` or `npx vitest` directly** — always use `pnpm test`
 - **CI does not test pull requests by default** — run the tests your change needs before you push (`code-docs/testing.md`, "Before pushing") and list them in the PR body. The `ci` label runs the fast affected-only job on a PR, `ci-full` the complete matrix with the MongoDB, journey fixture and block e2e suites; pushes to `main` always run the complete path.
 
 ### Running Tests
@@ -375,8 +375,8 @@ pnpm test
 # Single package
 pnpm --filter=@lowdefy/api test
 
-# Single package with jest flags (no `--` separator — it breaks flag parsing)
-pnpm --filter=@lowdefy/api test --testPathPattern='validatePluginSchema' --no-coverage
+# Single package with vitest arguments (no `--` separator — it breaks argument parsing)
+pnpm --filter=@lowdefy/api test validatePluginSchema
 ```
 
 ### Cross-Package Changes
@@ -399,11 +399,15 @@ test('test error', () => {}); // What error? What scenario?
 **Dynamic imports for ES module mocking:**
 
 ```javascript
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({ readFile: jest.fn() }));
+import { expect, test, vi } from 'vitest';
+
+vi.doMock('@lowdefy/node-utils', () => ({ readFile: vi.fn() }));
 test('name', async () => {
   const { default: fn } = await import('./fn.js');
 });
 ```
+
+`vi.doMock` is not hoisted, so the module under test is imported after it. A mock the code calls with `new` (a client class, `Date`) needs a `function` implementation, not an arrow function.
 
 ## Commits
 

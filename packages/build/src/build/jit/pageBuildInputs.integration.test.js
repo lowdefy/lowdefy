@@ -30,7 +30,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeAll, expect, test } from 'vitest';
 import { serializer } from '@lowdefy/helpers';
 
 const fileChannel = new AsyncLocalStorage();
@@ -63,7 +63,7 @@ for (const [target, name] of [
   [fs.promises, 'readFile'],
 ]) {
   const original = target[name];
-  jest.spyOn(target, name).mockImplementation(function observedRead(file, ...args) {
+  vi.spyOn(target, name).mockImplementation(function observedRead(file, ...args) {
     observeRead(file);
     return original.call(this, file, ...args);
   });
@@ -80,7 +80,7 @@ const mockComputeAppMeta = (source = {}) => ({
   lowdefyVersion: source.lowdefy ?? null,
   gitSha: 'test-git-sha',
 });
-jest.unstable_mockModule('../buildApp.js', () => ({
+vi.doMock('../buildApp.js', () => ({
   computeAppMeta: mockComputeAppMeta,
   default: ({ components, context }) => {
     components.app = components.app ?? {};
@@ -91,20 +91,20 @@ jest.unstable_mockModule('../buildApp.js', () => ({
     return components;
   },
 }));
-jest.unstable_mockModule('../full/updateServerPackageJson.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../full/updateServerPackageJson.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyPublicFolder.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyPublicFolder.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyAgentFileSystems.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyAgentFileSystems.js', () => ({
+  default: vi.fn(async () => {}),
 }));
 
 // Every per-build context a page build makes, for the owned-field test.
 const pageBuildContexts = [];
 const { default: realCreatePageBuildContext } = await import('./createPageBuildContext.js');
-jest.unstable_mockModule('./createPageBuildContext.js', () => ({
+vi.doMock('./createPageBuildContext.js', () => ({
   default: (keptContext) => {
     const pageBuildContext = realCreatePageBuildContext(keptContext);
     pageBuildContexts.push(pageBuildContext);

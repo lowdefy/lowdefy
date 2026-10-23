@@ -21,6 +21,7 @@ import enumerateArtifact from './enumerateArtifact.js';
 import findNodeByKey from './findNodeByKey.js';
 import operators from './operators/index.js';
 import { endpointFixture, eventsFixture, pageFixture, requestFixture } from './test/fixtures.mjs';
+import { expect, test } from 'vitest';
 
 const PAGE = 'pages/tickets.json';
 const EVENTS = 'events.json';

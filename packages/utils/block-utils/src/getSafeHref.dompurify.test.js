@@ -17,6 +17,7 @@
 import DOMPurify from 'dompurify';
 
 import { getSafeHref } from './index.js';
+import { expect, test } from 'vitest';
 
 function dompurifyKeepsHref(href) {
   const anchor = document.createElement('a');

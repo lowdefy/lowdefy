@@ -15,6 +15,7 @@
 */
 
 import getProtectedEntities, { getEntityDefaultProtected } from './getProtectedEntities.js';
+import { expect, test } from 'vitest';
 
 test('No config', () => {
   const components = {

@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import escapeRegex from './escapeRegex.js';
 import getDayRange from './getDayRange.js';
+import getRelativeDayRange from './getRelativeDayRange.js';
 import getWithinRange from './getWithinRange.js';
 
 // Text comparisons are case-insensitive, as in the browser, so string values of text and
@@ -71,12 +72,20 @@ function compileNe({ field, value, timeZone }) {
   return { [field.path]: { $ne: matcher } };
 }
 
-function compileBefore({ field, value, timeZone }) {
+// A relative bound (`{ last | next, unit }`, parsed; a fixed bound is a Date) names a day, so it
+// compares whole days on date and datetime fields alike.
+function compileBefore({ field, value, now, timeZone }) {
+  if (!type.isDate(value)) {
+    return { [field.path]: { $lt: getRelativeDayRange({ value, now, timeZone }).start } };
+  }
   const bound = field.type === 'date' ? getDayRange({ value, timeZone }).start : value;
   return { [field.path]: { $lt: bound } };
 }
 
-function compileAfter({ field, value, timeZone }) {
+function compileAfter({ field, value, now, timeZone }) {
+  if (!type.isDate(value)) {
+    return { [field.path]: { $gte: getRelativeDayRange({ value, now, timeZone }).end } };
+  }
   if (field.type === 'date') {
     return { [field.path]: { $gte: getDayRange({ value, timeZone }).end } };
   }
@@ -123,9 +132,9 @@ function compileLeaf({ condition, field, now, timeZone }) {
     case 'between':
       return compileRange({ field, value, timeZone });
     case 'before':
-      return compileBefore({ field, value, timeZone });
+      return compileBefore({ field, value, now, timeZone });
     case 'after':
-      return compileAfter({ field, value, timeZone });
+      return compileAfter({ field, value, now, timeZone });
     case 'within': {
       const { start, end } = getWithinRange({ value, now, timeZone });
       return { [path]: { $gte: start, $lt: end } };

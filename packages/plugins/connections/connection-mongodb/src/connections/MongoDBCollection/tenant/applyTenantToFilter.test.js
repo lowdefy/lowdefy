@@ -15,6 +15,7 @@
 */
 
 import applyTenantToFilter from './applyTenantToFilter.js';
+import { expect, test } from 'vitest';
 
 const tenant = { field: 'organization_id', value: 'org_a' };
 

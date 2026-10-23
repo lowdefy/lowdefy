@@ -15,6 +15,7 @@
 */
 
 import resolveCronEnvironment from './resolveCronEnvironment.js';
+import { expect, test } from 'vitest';
 
 const config = {
   environment: 'production',

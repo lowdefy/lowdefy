@@ -15,6 +15,7 @@
 */
 
 import jsonata from './jsonata.js';
+import { expect, test } from 'vitest';
 
 test('_jsonata basic expression', () => {
   expect(
@@ -145,7 +146,7 @@ test('_jsonata non-string expression throws', () => {
       params: { on: { a: 1 }, expr: 123 },
       location: 'locationId',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Expression must be a string."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Expression must be a string.]`);
 });
 
 test('_jsonata invalid expression throws', () => {

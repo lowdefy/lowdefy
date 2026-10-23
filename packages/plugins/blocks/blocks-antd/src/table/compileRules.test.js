@@ -15,6 +15,7 @@
 */
 
 import compileRules from './compileRules.js';
+import { expect, test } from 'vitest';
 
 const column = { key: 'score', field: 'score', type: 'number' };
 

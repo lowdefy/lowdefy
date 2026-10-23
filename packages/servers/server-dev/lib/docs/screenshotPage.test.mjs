@@ -17,25 +17,25 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, expect, test } from 'vitest';
 
 // A real screenshot needs an installed browser, which jest can't rely on, so
 // this only covers the error paths: bad input, and chromium.launch failing
 // (the "no browser installed" case). chromium.launch is mocked so the real
 // browser flow is untouched everywhere else.
-jest.unstable_mockModule('playwright-core', () => ({
-  chromium: { launch: jest.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
-  selectors: { register: jest.fn(async () => {}) },
+vi.doMock('playwright-core', () => ({
+  chromium: { launch: vi.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
+  selectors: { register: vi.fn(async () => {}) },
 }));
 // A missing shell would otherwise start a real download.
-jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: () => null }));
+vi.doMock('./installHeadlessShell.js', () => ({ default: () => null }));
 // A data set caller loads a data set into the dev server's memory store; both
 // are mocked so the test checks who the page opens as and on which database.
-const mockReadDataSet = jest.fn();
-const mockOpenDataSession = jest.fn();
-jest.unstable_mockModule('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
-jest.unstable_mockModule('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
-jest.unstable_mockModule('./dataSets/openDataSession.js', () => ({
+const mockReadDataSet = vi.fn();
+const mockOpenDataSession = vi.fn();
+vi.doMock('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
+vi.doMock('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
+vi.doMock('./dataSets/openDataSession.js', () => ({
   default: mockOpenDataSession,
 }));
 
@@ -114,19 +114,19 @@ test('screenshotPage opens the page at the urlQuery and captures after the steps
   const { chromium } = await import('playwright-core');
   const calls = [];
   const page = {
-    goto: jest.fn(async (url) => calls.push(`goto ${url}`)),
-    waitForFunction: jest.fn(async () => {}),
-    waitForTimeout: jest.fn(async () => {}),
-    screenshot: jest.fn(async () => {
+    goto: vi.fn(async (url) => calls.push(`goto ${url}`)),
+    waitForFunction: vi.fn(async () => {}),
+    waitForTimeout: vi.fn(async () => {}),
+    screenshot: vi.fn(async () => {
       calls.push('screenshot');
       return Buffer.from('png');
     }),
   };
   const context = {
-    addCookies: jest.fn(async () => {}),
-    newPage: jest.fn(async () => page),
-    close: jest.fn(async () => {}),
-    on: jest.fn(),
+    addCookies: vi.fn(async () => {}),
+    newPage: vi.fn(async () => page),
+    close: vi.fn(async () => {}),
+    on: vi.fn(),
   };
   // getBrowser caches the browser while it reports connected; disconnecting
   // it after the test makes the next test's launch take effect.
@@ -170,24 +170,24 @@ test('screenshotPage keeps the colour scheme and returns screenshot step capture
   const { chromium } = await import('playwright-core');
   let captures = 0;
   const page = {
-    goto: jest.fn(async () => {}),
-    waitForFunction: jest.fn(async () => {}),
-    waitForTimeout: jest.fn(async () => {}),
-    screenshot: jest.fn(async () => {
+    goto: vi.fn(async () => {}),
+    waitForFunction: vi.fn(async () => {}),
+    waitForTimeout: vi.fn(async () => {}),
+    screenshot: vi.fn(async () => {
       captures += 1;
       return Buffer.from(`png-${captures}`);
     }),
   };
   const context = {
-    addCookies: jest.fn(async () => {}),
+    addCookies: vi.fn(async () => {}),
     // A journey's network counter listens for the context's requests.
-    on: jest.fn(),
+    on: vi.fn(),
     // Its pages report what they ran through the journey observer binding.
-    exposeBinding: jest.fn(async () => {}),
-    newPage: jest.fn(async () => page),
-    close: jest.fn(async () => {}),
+    exposeBinding: vi.fn(async () => {}),
+    newPage: vi.fn(async () => page),
+    close: vi.fn(async () => {}),
   };
-  const newContext = jest.fn(async () => context);
+  const newContext = vi.fn(async () => context);
   let connected = true;
   chromium.launch.mockResolvedValue({ isConnected: () => connected, newContext });
   try {
@@ -239,21 +239,21 @@ test("screenshotPage renders as a data set user, on the data set's own database"
   const { chromium } = await import('playwright-core');
   const member = { id: 'u_member', roles: ['member'] };
   mockReadDataSet.mockResolvedValue({ name: 'crm', users: { member } });
-  const close = jest.fn(async () => {});
+  const close = vi.fn(async () => {});
   mockOpenDataSession.mockResolvedValue({ cookie: 'session1', session: { id: 'session1' }, close });
   const page = {
-    goto: jest.fn(async () => {}),
-    waitForFunction: jest.fn(async () => {}),
-    waitForTimeout: jest.fn(async () => {}),
-    screenshot: jest.fn(async () => Buffer.from('png')),
+    goto: vi.fn(async () => {}),
+    waitForFunction: vi.fn(async () => {}),
+    waitForTimeout: vi.fn(async () => {}),
+    screenshot: vi.fn(async () => Buffer.from('png')),
   };
   const cookies = [];
   const context = {
-    addCookies: jest.fn(async (added) => cookies.push(...added)),
-    route: jest.fn(async () => {}),
-    newPage: jest.fn(async () => page),
-    close: jest.fn(async () => {}),
-    on: jest.fn(),
+    addCookies: vi.fn(async (added) => cookies.push(...added)),
+    route: vi.fn(async () => {}),
+    newPage: vi.fn(async () => page),
+    close: vi.fn(async () => {}),
+    on: vi.fn(),
   };
   let connected = true;
   chromium.launch.mockResolvedValue({
@@ -288,17 +288,17 @@ test('screenshotPage opens the page signed out for user "none"', async () => {
   const { chromium } = await import('playwright-core');
   mockOpenDataSession.mockClear();
   const page = {
-    goto: jest.fn(async () => {}),
-    waitForFunction: jest.fn(async () => {}),
-    waitForTimeout: jest.fn(async () => {}),
-    screenshot: jest.fn(async () => Buffer.from('png')),
+    goto: vi.fn(async () => {}),
+    waitForFunction: vi.fn(async () => {}),
+    waitForTimeout: vi.fn(async () => {}),
+    screenshot: vi.fn(async () => Buffer.from('png')),
   };
   const cookies = [];
   const context = {
-    addCookies: jest.fn(async (added) => cookies.push(...added)),
-    newPage: jest.fn(async () => page),
-    close: jest.fn(async () => {}),
-    on: jest.fn(),
+    addCookies: vi.fn(async (added) => cookies.push(...added)),
+    newPage: vi.fn(async () => page),
+    close: vi.fn(async () => {}),
+    on: vi.fn(),
   };
   let connected = true;
   chromium.launch.mockResolvedValue({

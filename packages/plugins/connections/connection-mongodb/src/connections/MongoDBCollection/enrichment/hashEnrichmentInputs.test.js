@@ -22,6 +22,7 @@ import { serializer } from '@lowdefy/helpers';
 import canonicalJson from './canonicalJson.js';
 import cyrb53 from './cyrb53.js';
 import hashEnrichmentInputs from './hashEnrichmentInputs.js';
+import { expect, test } from 'vitest';
 
 // The markers the fixture uses for values JSON can not hold (see its description).
 function reviveTyped(value) {

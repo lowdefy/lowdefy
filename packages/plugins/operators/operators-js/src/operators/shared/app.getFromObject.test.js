@@ -17,10 +17,10 @@
 // Kept separate from app.test.js because this test needs @lowdefy/operators mocked, while
 // app.test.js exercises the real getFromObject. Mocking at top level avoids a mid-file
 // jest.resetModules() re-import, which crashes Jest 28's ESM loader.
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockGetFromObject = jest.fn();
-jest.unstable_mockModule('@lowdefy/operators', () => ({
+const mockGetFromObject = vi.fn();
+vi.doMock('@lowdefy/operators', () => ({
   getFromObject: mockGetFromObject,
 }));
 

@@ -16,6 +16,7 @@
 
 import computeFallbackLayout from './computeFallbackLayout.js';
 import needsTrailingColumn from '../features/enrichment/needsTrailingColumn.js';
+import { expect, test } from 'vitest';
 
 const columns = [
   { key: 'name', width: 120 },

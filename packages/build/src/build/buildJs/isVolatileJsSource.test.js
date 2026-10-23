@@ -15,6 +15,7 @@
 */
 
 import isVolatileJsSource from './isVolatileJsSource.js';
+import { expect, test } from 'vitest';
 
 test.each([
   'return new Date();',

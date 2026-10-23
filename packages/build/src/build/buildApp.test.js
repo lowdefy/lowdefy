@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import buildApp from './buildApp.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 const context = testContext();
 

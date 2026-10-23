@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockCreateGateway = jest.fn();
+const mockCreateGateway = vi.fn();
 
-jest.unstable_mockModule('@ai-sdk/gateway', () => ({
+vi.doMock('@ai-sdk/gateway', () => ({
   createGateway: mockCreateGateway,
 }));
 
@@ -28,15 +28,15 @@ jest.unstable_mockModule('@ai-sdk/gateway', () => ({
 // than the mock above provides.
 // Tags each resolver with the factory's arguments, so a test can read them
 // after the module (imported once) built its requests.
-const mockCreateDecide = (args) => Object.assign(jest.fn(), { factoryArgs: args });
-jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
+const mockCreateDecide = (args) => Object.assign(vi.fn(), { factoryArgs: args });
+vi.doMock('@lowdefy/ai-utils', () => ({
   createDecide: mockCreateDecide,
-  createGenerateObject: jest.fn(() => jest.fn()),
-  createGenerateText: jest.fn(() => jest.fn()),
+  createGenerateObject: vi.fn(() => vi.fn()),
+  createGenerateText: vi.fn(() => vi.fn()),
 }));
 
 test('AIGateway create returns provider with apiKey', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateGateway.mockReturnValue(mockProvider);
 
   const { default: AIGateway } = await import('./AIGateway.js');
@@ -52,7 +52,7 @@ test('AIGateway create returns provider with apiKey', async () => {
 });
 
 test('AIGateway create passes baseURL and headers when provided', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateGateway.mockReturnValue(mockProvider);
 
   const { default: AIGateway } = await import('./AIGateway.js');
@@ -74,7 +74,7 @@ test('AIGateway create passes baseURL and headers when provided', async () => {
 });
 
 test('AIGateway create handles undefined connection (OIDC / env fallback)', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateGateway.mockReturnValue(mockProvider);
 
   const { default: AIGateway } = await import('./AIGateway.js');
@@ -90,7 +90,7 @@ test('AIGateway create handles undefined connection (OIDC / env fallback)', asyn
 });
 
 test('AIGateway create returns the connection maxOutputTokens and timeout for its agents', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateGateway.mockReturnValue(mockProvider);
 
   const { default: AIGateway } = await import('./AIGateway.js');

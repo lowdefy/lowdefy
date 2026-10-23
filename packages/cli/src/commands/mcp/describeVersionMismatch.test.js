@@ -17,6 +17,7 @@
 import path from 'path';
 
 import describeVersionMismatch from './describeVersionMismatch.js';
+import { expect, test } from 'vitest';
 
 test('describeVersionMismatch tells the agent to pass the pinned agent-setup command to the developer', () => {
   expect(

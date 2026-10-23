@@ -15,6 +15,7 @@
 */
 
 import isPageContentPath from './isPageContentPath.js';
+import { expect, test } from 'vitest';
 
 test('returns false for non-pages paths', () => {
   expect(isPageContentPath('connections.0.properties')).toBe(false);

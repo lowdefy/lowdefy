@@ -15,6 +15,7 @@
 */
 
 import parseTier from './parseTier.js';
+import { expect, test } from 'vitest';
 
 test('parseTier defaults to full and accepts every tier', () => {
   expect(parseTier()).toBe('full');

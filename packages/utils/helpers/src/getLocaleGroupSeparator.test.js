@@ -15,6 +15,7 @@
 */
 
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
+import { expect, test } from 'vitest';
 
 test('en-US group separator is a comma', () => {
   expect(getLocaleGroupSeparator('en-US')).toBe(',');

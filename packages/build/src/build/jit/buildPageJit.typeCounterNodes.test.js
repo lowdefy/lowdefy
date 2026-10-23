@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 const realNodeUtils = await import('@lowdefy/node-utils');
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
-  writeFile: jest.fn().mockResolvedValue(undefined),
-  writeFileIfChanged: jest.fn().mockResolvedValue(true),
+  writeFile: vi.fn().mockResolvedValue(undefined),
+  writeFileIfChanged: vi.fn().mockResolvedValue(true),
 }));
 
 const pageBuildContexts = [];
 const { default: realCreatePageBuildContext } = await import('./createPageBuildContext.js');
-jest.unstable_mockModule('./createPageBuildContext.js', () => ({
+vi.doMock('./createPageBuildContext.js', () => ({
   default: (keptContext) => {
     const pageBuildContext = realCreatePageBuildContext(keptContext);
     pageBuildContexts.push(pageBuildContext);
@@ -61,7 +61,7 @@ blocks:
           params:
             flag: true
 `,
-    writeBuildArtifact: jest.fn().mockResolvedValue(undefined),
+    writeBuildArtifact: vi.fn().mockResolvedValue(undefined),
   });
   context.errors = [];
   context.typesMap = snapshotTypesMap;

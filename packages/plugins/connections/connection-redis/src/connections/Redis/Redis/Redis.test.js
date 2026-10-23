@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeAll, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-jest.unstable_mockModule('redis', () => {
+vi.doMock('redis', () => {
   return {
-    createClient: jest.fn(),
+    createClient: vi.fn(),
   };
 });
 
@@ -33,12 +33,20 @@ test('redis command with connection as an object', async () => {
   const Redis = (await import('./Redis.js')).default;
   const response = 'responseValue';
   const client = {
-    on: jest.fn(),
-    connect: jest.fn().mockImplementation(() => Promise.resolve()),
-    GET: jest.fn().mockImplementation(() => Promise.resolve(response)),
-    quit: jest.fn().mockImplementation(() => Promise.resolve()),
+    on: vi.fn(),
+    connect: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
+    GET: vi.fn().mockImplementation(function () {
+      return Promise.resolve(response);
+    }),
+    quit: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
   };
-  mockedCreateClient.mockImplementationOnce(() => client);
+  mockedCreateClient.mockImplementationOnce(function () {
+    return client;
+  });
   const connection = {
     connection: {
       password: 'password',
@@ -68,12 +76,20 @@ test('redis command with connection as a string', async () => {
   const Redis = (await import('./Redis.js')).default;
   const response = 'responseValue';
   const client = {
-    on: jest.fn(),
-    connect: jest.fn().mockImplementation(() => Promise.resolve()),
-    GET: jest.fn().mockImplementation(() => Promise.resolve(response)),
-    quit: jest.fn().mockImplementation(() => Promise.resolve()),
+    on: vi.fn(),
+    connect: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
+    GET: vi.fn().mockImplementation(function () {
+      return Promise.resolve(response);
+    }),
+    quit: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
   };
-  mockedCreateClient.mockImplementationOnce(() => client);
+  mockedCreateClient.mockImplementationOnce(function () {
+    return client;
+  });
   const connection = {
     connection: 'redis://user:password@redis:server.com:5000/4',
   };
@@ -96,14 +112,18 @@ test('redis command with connection as a string', async () => {
 test('connection error', async () => {
   const Redis = (await import('./Redis.js')).default;
   const client = {
-    on: jest.fn((event, cb) => {
+    on: vi.fn(function (event, cb) {
       if (event === 'error') {
         cb(new Error('connection error'));
       }
     }),
-    connect: jest.fn().mockImplementation(() => Promise.reject(new Error('connection error'))),
+    connect: vi.fn().mockImplementation(function () {
+      return Promise.reject(new Error('connection error'));
+    }),
   };
-  mockedCreateClient.mockImplementationOnce(() => client);
+  mockedCreateClient.mockImplementationOnce(function () {
+    return client;
+  });
   const connection = {
     connection: {
       password: 'password',
@@ -127,10 +147,14 @@ test('connection error', async () => {
 test('invalid command', async () => {
   const Redis = (await import('./Redis.js')).default;
   const client = {
-    on: jest.fn(),
-    connect: jest.fn().mockImplementation(() => Promise.resolve()),
+    on: vi.fn(),
+    connect: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
   };
-  mockedCreateClient.mockImplementationOnce(() => client);
+  mockedCreateClient.mockImplementationOnce(function () {
+    return client;
+  });
   const connection = {
     connection: {
       password: 'password',
@@ -154,11 +178,17 @@ test('invalid command', async () => {
 test('invalid parameters type', async () => {
   const Redis = (await import('./Redis.js')).default;
   const client = {
-    on: jest.fn(),
-    connect: jest.fn().mockImplementation(() => Promise.resolve()),
-    GET: jest.fn().mockImplementation(() => Promise.resolve()),
+    on: vi.fn(),
+    connect: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
+    GET: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
   };
-  mockedCreateClient.mockImplementationOnce(() => client);
+  mockedCreateClient.mockImplementationOnce(function () {
+    return client;
+  });
   const connection = {
     connection: {
       password: 'password',
@@ -184,12 +214,20 @@ test('invalid parameters type', async () => {
 test('invalid parameters number', async () => {
   const Redis = (await import('./Redis.js')).default;
   const client = {
-    on: jest.fn(),
-    connect: jest.fn().mockImplementation(() => Promise.resolve()),
-    SET: jest.fn().mockImplementation(() => Promise.reject(new Error('SET error'))),
-    quit: jest.fn().mockImplementation(() => Promise.resolve()),
+    on: vi.fn(),
+    connect: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
+    SET: vi.fn().mockImplementation(function () {
+      return Promise.reject(new Error('SET error'));
+    }),
+    quit: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
   };
-  mockedCreateClient.mockImplementationOnce(() => client);
+  mockedCreateClient.mockImplementationOnce(function () {
+    return client;
+  });
   const connection = {
     connection: {
       password: 'password',

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import loadFrameworkHazards from './loadFrameworkHazards.js';
+import { expect, test } from 'vitest';
 
 test('loadFrameworkHazards loads the shipped hazards.json with well-formed unique entries', () => {
   const hazards = loadFrameworkHazards();

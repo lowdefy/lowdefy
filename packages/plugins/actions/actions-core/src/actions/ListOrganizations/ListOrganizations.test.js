@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import ListOrganizations from './ListOrganizations.js';
 
-const mockListOrganizations = jest.fn();
+const mockListOrganizations = vi.fn();
 const methods = { listOrganizations: mockListOrganizations };
 
 test('ListOrganizations calls the listOrganizations method with no params', async () => {

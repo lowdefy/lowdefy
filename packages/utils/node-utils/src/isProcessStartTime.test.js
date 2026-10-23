@@ -15,6 +15,7 @@
 */
 
 import isProcessStartTime from './isProcessStartTime.js';
+import { expect, test } from 'vitest';
 
 test('isProcessStartTime accepts epoch milliseconds and the Linux boot id with ticks', () => {
   expect(isProcessStartTime(1790000000000)).toBe(true);

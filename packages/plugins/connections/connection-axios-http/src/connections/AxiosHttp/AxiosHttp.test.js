@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import AxiosHttp from './AxiosHttp.js';
+import { expect, test } from 'vitest';
 
 const schema = AxiosHttp.schema;
 

@@ -18,6 +18,7 @@ import computeTiers from './computeTiers.js';
 import flowLines from '../evidence/flowLines.js';
 import inTier from './inTier.js';
 import sequenceId from '../evidence/sequenceId.js';
+import { expect, test } from 'vitest';
 
 // A journey with one click on its own block, refreshed, whose months give it
 // `rate` sessions a day over 10 days of 2026-10.

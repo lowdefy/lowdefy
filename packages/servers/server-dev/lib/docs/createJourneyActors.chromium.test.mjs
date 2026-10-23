@@ -16,7 +16,7 @@
 
 import http from 'node:http';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 
 import pageReadyScript from '../../test-utils/pageReadyScript.mjs';
 
@@ -24,7 +24,7 @@ import pageReadyScript from '../../test-utils/pageReadyScript.mjs';
 // routes, so the context-level request listener is exercised as a journey
 // runs it: installed before the first navigation, and still counting after a
 // full page load. Skipped when no Chromium can be launched.
-jest.unstable_mockModule('../build/config.js', () => ({ default: {} }));
+vi.doMock('../build/config.js', () => ({ default: {} }));
 
 const { getBrowser } = await import('./getBrowser.js');
 const { default: createJourneyActors } = await import('./createJourneyActors.js');
@@ -97,7 +97,7 @@ beforeAll(async () => {
   origin = `http://127.0.0.1:${server.address().port}`;
 });
 
-// Closing Chromium on Windows can take longer than Jest's 5 s hook default.
+// Closing Chromium on Windows can take longer than the 10 s hook default.
 afterAll(async () => {
   await browser?.close();
   server.closeAllConnections();

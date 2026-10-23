@@ -15,6 +15,7 @@
 */
 
 import applyMailFilter from './applyMailFilter.js';
+import { expect, test } from 'vitest';
 
 const mail = {
   to: 'a@allowed.com',

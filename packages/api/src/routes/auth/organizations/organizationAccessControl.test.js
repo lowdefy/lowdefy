@@ -15,6 +15,7 @@
 */
 
 import { roles, statements } from './organizationAccessControl.js';
+import { expect, test } from 'vitest';
 
 test('organizationAccessControl extends the member statement with list', () => {
   expect(statements.member).toEqual(expect.arrayContaining(['create', 'update', 'delete', 'list']));

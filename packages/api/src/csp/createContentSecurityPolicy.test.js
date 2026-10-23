@@ -15,6 +15,7 @@
 */
 
 import createContentSecurityPolicy from './createContentSecurityPolicy.js';
+import { expect, test } from 'vitest';
 
 const policy = {
   reportOnly: false,

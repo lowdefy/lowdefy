@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 import MongoDBBulkWrite from './MongoDBBulkWrite.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBBulkWrite.meta;
 const schema = MongoDBBulkWrite.schema;

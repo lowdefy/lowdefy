@@ -15,25 +15,25 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockCreateWebSocketConnection = jest.fn(() => ({
-  close: jest.fn(),
-  handleMessage: jest.fn(),
+const mockCreateWebSocketConnection = vi.fn(() => ({
+  close: vi.fn(),
+  handleMessage: vi.fn(),
 }));
 // The route's origin rule has its own tests (src/routes/websocket.test.mjs);
 // these requests carry no Origin, which it allows.
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  createChannelRegistry: jest.fn(() => ({})),
+vi.doMock('@lowdefy/api', () => ({
+  createChannelRegistry: vi.fn(() => ({})),
   createWebSocketConnection: mockCreateWebSocketConnection,
   isWebSocketOriginAllowed: () => true,
 }));
 const mockStrategies = [];
-jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
+vi.doMock('../../lib/server/auth/getStrategies.js', () => ({
   default: () => mockStrategies,
 }));
-const mockLogger = { warn: jest.fn(), debug: jest.fn() };
-jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
+const mockLogger = { warn: vi.fn(), debug: vi.fn() };
+vi.doMock('../../lib/server/log/createLogger.js', () => ({
   default: () => mockLogger,
 }));
 
@@ -56,10 +56,10 @@ function createApp({ status } = {}) {
 }
 
 function createUpgrade() {
-  const socket = { end: jest.fn() };
-  const ws = { close: jest.fn(), on: jest.fn(), send: jest.fn() };
+  const socket = { end: vi.fn() };
+  const ws = { close: vi.fn(), on: vi.fn(), send: vi.fn() };
   const wss = {
-    handleUpgrade: jest.fn((request, socket, head, callback) => {
+    handleUpgrade: vi.fn((request, socket, head, callback) => {
       callback(ws);
       return ws;
     }),

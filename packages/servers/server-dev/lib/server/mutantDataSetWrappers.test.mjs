@@ -20,6 +20,7 @@ import applyDataSetRedirect from './applyDataSetRedirect.js';
 import createMutantReadConfigFile from './mutants/createMutantReadConfigFile.js';
 import { endpointFixture } from './mutants/test/fixtures.mjs';
 import { openMutantRun } from './mutants/mutantRuns.js';
+import { expect, test } from 'vitest';
 
 // A journey on a data set under a mutant has both read wrappers on its
 // context: the data set redirect on connections/<id>.json and the mutant on

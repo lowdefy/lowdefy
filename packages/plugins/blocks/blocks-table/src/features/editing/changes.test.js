@@ -24,6 +24,7 @@ import normalizeChanges from './normalizeChanges.js';
 import removeChangeRow from './removeChangeRow.js';
 import setChangeField from './setChangeField.js';
 import setRowField from './setRowField.js';
+import { describe, expect, test } from 'vitest';
 
 const getKey = (row) => row.id;
 

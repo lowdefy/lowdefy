@@ -16,12 +16,12 @@
 
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 // The handler is byte-identical to `server-dev`'s and `server-e2e`'s apart from
 // the Sentry capture tested at the bottom of this file. Keep the three in sync
 // when changing any of them.
-const captureException = jest.fn();
+const captureException = vi.fn();
 
 const { default: sentrySdk } = await import('../../lib/server/sentry/sentrySdk.js');
 const { default: createErrorHandler } = await import('./errorHandler.js');
@@ -32,7 +32,7 @@ const { default: createErrorHandler } = await import('./errorHandler.js');
 const SECRET = 'SECRET-RECEIVED-VALUE';
 
 function createLogger() {
-  return { error: jest.fn(), warn: jest.fn() };
+  return { error: vi.fn(), warn: vi.fn() };
 }
 
 // The error handler is only reachable through hono's app-level onError, so the
@@ -92,7 +92,7 @@ function createErrorWithCause() {
 
 test('errorHandler returns 401 with only name and message for an AuthenticationError on an api path', async () => {
   const logger = createLogger();
-  const context = { handleError: jest.fn() };
+  const context = { handleError: vi.fn() };
   const res = await createApp({
     context,
     error: createAuthenticationError('Unauthenticated.'),
@@ -131,7 +131,7 @@ test('errorHandler returns text Unauthorized at 401 for an AuthenticationError o
 
 test('errorHandler returns 403 with only name and message for an AuthorizationError on an api path', async () => {
   const logger = createLogger();
-  const context = { handleError: jest.fn() };
+  const context = { handleError: vi.fn() };
   const res = await createApp({
     context,
     error: createAuthorizationError('Forbidden.'),
@@ -172,7 +172,7 @@ test('errorHandler returns text Forbidden at 403 for an AuthorizationError on a 
 
 test('errorHandler returns 403 with only name and message for a TwoFactorEnrolmentRequiredError on an api path', async () => {
   const logger = createLogger();
-  const context = { handleError: jest.fn() };
+  const context = { handleError: vi.fn() };
   const res = await createApp({
     context,
     error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
@@ -202,7 +202,7 @@ test('errorHandler does not send a TwoFactorEnrolmentRequiredError through the r
 
 test('errorHandler returns text at 403 for a TwoFactorEnrolmentRequiredError on a page path', async () => {
   const logger = createLogger();
-  const context = { handleError: jest.fn() };
+  const context = { handleError: vi.fn() };
   const res = await createApp({
     context,
     error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
@@ -217,7 +217,7 @@ test('errorHandler returns text at 403 for a TwoFactorEnrolmentRequiredError on 
 
 test('errorHandler returns 400 with only name and message for a UserError on an api path', async () => {
   const logger = createLogger();
-  const context = { handleError: jest.fn() };
+  const context = { handleError: vi.fn() };
   const res = await createApp({
     context,
     error: createUserError('Payload for endpoint "x" does not match its payloadSchema.'),
@@ -336,7 +336,7 @@ test('errorHandler returns text Internal Server Error at 500 on a page path with
 
 test('errorHandler awaits context.handleError before serializing the response', async () => {
   const context = {
-    handleError: jest.fn(async (error) => {
+    handleError: vi.fn(async (error) => {
       await new Promise((resolve) => setTimeout(resolve, 10));
       error.handled = true;
     }),
@@ -357,7 +357,7 @@ test('errorHandler awaits context.handleError before serializing the response', 
 // serialization or the error is logged a second time.
 test('errorHandler returns handled true on the 500 envelope after handleError sets it', async () => {
   const context = {
-    handleError: jest.fn(async (error) => {
+    handleError: vi.fn(async (error) => {
       error.handled = true;
     }),
   };
@@ -408,7 +408,7 @@ test('errorHandler treats a basePath prefixed page path as a page path', async (
 // captureSentryError), so the handler must not capture the same fault again.
 test('errorHandler does not capture to Sentry when a lowdefyContext handled the error', async () => {
   sentrySdk.current = { captureException };
-  const context = { handleError: jest.fn() };
+  const context = { handleError: vi.fn() };
   await createApp({
     context,
     error: createErrorWithCause(),

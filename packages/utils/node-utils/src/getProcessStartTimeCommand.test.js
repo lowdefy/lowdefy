@@ -17,6 +17,7 @@
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 import parsePsStartTime from './parsePsStartTime.js';
 import parseWmiStartTime from './parseWmiStartTime.js';
+import { expect, test } from 'vitest';
 
 test('getProcessStartTimeCommand reads lstart from ps in the C locale and UTC on macOS', () => {
   const { command, args, options, parse } = getProcessStartTimeCommand({

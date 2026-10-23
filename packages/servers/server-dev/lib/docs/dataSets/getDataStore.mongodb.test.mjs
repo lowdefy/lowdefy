@@ -15,15 +15,15 @@
 */
 
 import fs from 'node:fs';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import getDataStore from './getDataStore.js';
 import openDataSession from './openDataSession.js';
 import { MIN_PORT } from './pickDataStorePort.js';
 
-jest.setTimeout(120000);
+vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
-// The real memory replica set, in a process of its own (jest runs each file in its own worker), so
+// The real memory replica set, in a process of its own (each test file runs in a worker of its own), so
 // killing its mongod here touches no other suite's store.
 
 async function describeMongod(store) {

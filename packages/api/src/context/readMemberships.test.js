@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import readMemberships from './readMemberships.js';
 
 function mockAdapter({ rows, activeRow = null }) {
   return {
-    findMany: jest.fn().mockResolvedValue(rows),
-    findOne: jest.fn().mockResolvedValue(activeRow),
+    findMany: vi.fn().mockResolvedValue(rows),
+    findOne: vi.fn().mockResolvedValue(activeRow),
   };
 }
 

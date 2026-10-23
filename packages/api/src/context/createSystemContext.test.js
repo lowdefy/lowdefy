@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import createSystemContext from './createSystemContext.js';
@@ -23,10 +23,10 @@ import { registerAuthEnforcement } from '../routes/auth/getAuthEnforcement.js';
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 function createTestSystemContext(overrides = {}) {
@@ -36,7 +36,7 @@ function createTestSystemContext(overrides = {}) {
     buildDirectory: '/build',
     config: {},
     connections: {},
-    createHandleError: jest.fn(
+    createHandleError: vi.fn(
       ({ context }) =>
         async (error) =>
           context.logger.error(error)
@@ -124,7 +124,7 @@ test('createSystemContext scrubs a hook routine _error with its scrubSecrets', a
 
 test('createSystemContext carries auth and steps so hook routines can run auth steps', () => {
   const auth = { api: {} };
-  const steps = { CreateApiKey: jest.fn() };
+  const steps = { CreateApiKey: vi.fn() };
   const context = createTestSystemContext({ auth, steps });
   expect(context.auth).toBe(auth);
   expect(context.steps).toBe(steps);

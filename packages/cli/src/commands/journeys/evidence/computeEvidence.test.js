@@ -17,6 +17,7 @@
 import computeEvidence from './computeEvidence.js';
 import flowLines from './flowLines.js';
 import sequenceId from './sequenceId.js';
+import { expect, test } from 'vitest';
 
 const today = '2026-10-05';
 

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -47,7 +47,7 @@ const write = (filePath, content) => {
 
 beforeEach(() => {
   projectDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-skills-test-'));
-  context = { logger: { info: jest.fn() } };
+  context = { logger: { info: vi.fn() } };
 });
 
 afterEach(() => {

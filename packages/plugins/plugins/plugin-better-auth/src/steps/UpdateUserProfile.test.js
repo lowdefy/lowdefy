@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import UpdateUserProfile from './UpdateUserProfile.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 function createAdapter({ user = { id: 'user-1' } } = {}) {
   return {
-    findOne: jest.fn().mockResolvedValue(user),
-    update: jest.fn().mockImplementation(async ({ update }) => ({ id: 'user-1', ...update })),
+    findOne: vi.fn().mockResolvedValue(user),
+    update: vi.fn().mockImplementation(async ({ update }) => ({ id: 'user-1', ...update })),
   };
 }
 
@@ -203,8 +203,8 @@ test('UpdateUserProfile refuses unknown properties', async () => {
 
 test('UpdateUserProfile accepts organizationId, which the floor reads and the step ignores', async () => {
   const adapter = {
-    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
-    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+    findOne: vi.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: vi.fn().mockResolvedValue({ id: 'user-1' }),
   };
   const { auth } = createMockAuth({ adapter });
 
@@ -270,8 +270,8 @@ test('UpdateUserProfile declares the userId self-target exemption inside its aut
 
 test('UpdateUserProfile denormalizes name and image onto the member row of the resolved organization', async () => {
   const adapter = {
-    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
-    update: jest
+    findOne: vi.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: vi
       .fn()
       .mockImplementation(async ({ model, update }) => ({ id: `${model}-1`, ...update })),
   };
@@ -303,8 +303,8 @@ test('UpdateUserProfile denormalizes name and image onto the member row of the r
 
 test('UpdateUserProfile skips the member denorm when no organizationId is resolved', async () => {
   const adapter = {
-    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
-    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+    findOne: vi.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: vi.fn().mockResolvedValue({ id: 'user-1' }),
   };
   const { auth } = createMockAuth({ adapter });
 
@@ -320,8 +320,8 @@ test('UpdateUserProfile skips the member denorm when no organizationId is resolv
 
 test('UpdateUserProfile skips the member denorm when only profile or contactId is written', async () => {
   const adapter = {
-    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
-    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+    findOne: vi.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: vi.fn().mockResolvedValue({ id: 'user-1' }),
   };
   const { auth } = createMockAuth({ adapter });
 
@@ -337,8 +337,8 @@ test('UpdateUserProfile skips the member denorm when only profile or contactId i
 
 test('UpdateUserProfile does not denorm an empty-string display copy onto the member row', async () => {
   const adapter = {
-    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
-    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+    findOne: vi.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: vi.fn().mockResolvedValue({ id: 'user-1' }),
   };
   const { auth } = createMockAuth({ adapter });
 
@@ -357,8 +357,8 @@ test('UpdateUserProfile does not denorm an empty-string display copy onto the me
 
 test('UpdateUserProfile tolerates a caller with no member row in the resolved organization', async () => {
   const adapter = {
-    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
-    update: jest
+    findOne: vi.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: vi
       .fn()
       .mockImplementationOnce(async ({ update }) => ({ id: 'user-1', ...update }))
       // Adapter update on a no-match member returns null - selfTargetExempt

@@ -15,6 +15,7 @@
 */
 
 import userStorageKey from './userStorageKey.js';
+import { expect, test } from 'vitest';
 
 test('userStorageKey names the app, the owner and the key', () => {
   expect(

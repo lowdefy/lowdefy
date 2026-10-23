@@ -18,6 +18,7 @@ import fs from 'fs';
 import path from 'path';
 
 import setupTestFixtures from './setupTestFixtures.mjs';
+import { expect, test } from 'vitest';
 
 // lib/build/config.js reads build/config.json from process.cwd() at import
 // time, so the fixture carries the basePath before getOverview is imported.

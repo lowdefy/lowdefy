@@ -18,6 +18,7 @@ import assert from 'node:assert/strict';
 
 import decodeViewParam from './decodeViewParam.js';
 import encodeViewParam from './encodeViewParam.js';
+import { test } from 'vitest';
 
 test('encodeViewParam and decodeViewParam round-trip a view payload', () => {
   const payload = {

@@ -16,6 +16,7 @@
 
 import clearReloadedForTypes from './clearReloadedForTypes.js';
 import shouldReloadForTypes from './shouldReloadForTypes.js';
+import { expect, test } from 'vitest';
 
 function createWindow({ href = 'https://example.com/orders', throws = false } = {}) {
   const stored = {};

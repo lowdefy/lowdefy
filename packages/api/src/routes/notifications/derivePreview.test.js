@@ -15,6 +15,7 @@
 */
 
 import derivePreview from './derivePreview.js';
+import { expect, test } from 'vitest';
 
 test('derivePreview returns the explicit preview when set', () => {
   expect(derivePreview({ properties: { preview: 'Custom preview', message: '**Ignored**' } })).toBe(

@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockScreenshotPage = jest.fn();
+const mockScreenshotPage = vi.fn();
 
-jest.unstable_mockModule('../../../lib/docs/screenshotPage.js', () => ({
+vi.doMock('../../../lib/docs/screenshotPage.js', () => ({
   default: mockScreenshotPage,
 }));
 
@@ -26,8 +26,8 @@ const { default: docsScreenshotHandler } = await import('./screenshot.js');
 
 function createContext(url) {
   const parsed = new URL(url);
-  const json = jest.fn((data, status) => ({ data, status: status ?? 200 }));
-  const body = jest.fn((data, status, headers) => ({ data, status, headers }));
+  const json = vi.fn((data, status) => ({ data, status: status ?? 200 }));
+  const body = vi.fn((data, status, headers) => ({ data, status, headers }));
   return {
     req: {
       url,
@@ -40,7 +40,7 @@ function createContext(url) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockScreenshotPage.mockResolvedValue({ data: 'cG5n', mimeType: 'image/png' });
 });
 

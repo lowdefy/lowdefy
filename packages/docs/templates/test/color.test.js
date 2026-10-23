@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -36,14 +37,14 @@ const schema = {
 
 test('color propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "block.properties.field",
-        "layout": Object {
+        "layout": {
           "_global": "settings_input_layout",
         },
-        "properties": Object {
-          "label": Object {
+        "properties": {
+          "label": {
             "align": "right",
             "extra": "description",
             "span": 8,
@@ -61,12 +62,12 @@ test('color propertiesFormTransformer', () => {
 
 test('color propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
@@ -77,7 +78,7 @@ test('color propertiesGetterTransformer', () => {
 
 test('color defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": null,
     }
   `);
@@ -98,7 +99,7 @@ test('color defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": "value",
     }
   `);

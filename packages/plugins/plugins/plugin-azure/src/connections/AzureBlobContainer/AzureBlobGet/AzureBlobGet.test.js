@@ -14,22 +14,22 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockDownloadToBuffer = jest.fn();
-const mockGetProperties = jest.fn();
-const mockGetBlockBlobClient = jest.fn();
-const mockGetContainerClient = jest.fn();
-const mockBlobServiceClientConstructor = jest.fn();
-const mockStorageSharedKeyCredentialConstructor = jest.fn();
+const mockDownloadToBuffer = vi.fn();
+const mockGetProperties = vi.fn();
+const mockGetBlockBlobClient = vi.fn();
+const mockGetContainerClient = vi.fn();
+const mockBlobServiceClientConstructor = vi.fn();
+const mockStorageSharedKeyCredentialConstructor = vi.fn();
 
-jest.unstable_mockModule('@azure/storage-blob', () => ({
-  StorageSharedKeyCredential: jest.fn().mockImplementation((...args) => {
+vi.doMock('@azure/storage-blob', () => ({
+  StorageSharedKeyCredential: vi.fn().mockImplementation(function (...args) {
     mockStorageSharedKeyCredentialConstructor(...args);
     return { type: 'credential' };
   }),
-  BlobServiceClient: jest.fn().mockImplementation((...args) => {
+  BlobServiceClient: vi.fn().mockImplementation(function (...args) {
     mockBlobServiceClientConstructor(...args);
     return { getContainerClient: mockGetContainerClient };
   }),
@@ -47,18 +47,26 @@ beforeEach(() => {
   mockGetContainerClient.mockReset();
   mockBlobServiceClientConstructor.mockReset();
   mockStorageSharedKeyCredentialConstructor.mockReset();
-  mockGetContainerClient.mockImplementation(() => ({
-    getBlockBlobClient: mockGetBlockBlobClient,
-  }));
-  mockGetBlockBlobClient.mockImplementation(() => ({
-    downloadToBuffer: mockDownloadToBuffer,
-    getProperties: mockGetProperties,
-  }));
-  mockDownloadToBuffer.mockImplementation(async () => Buffer.from('file content'));
-  mockGetProperties.mockImplementation(async () => ({
-    contentType: 'text/plain',
-    contentLength: 12,
-  }));
+  mockGetContainerClient.mockImplementation(function () {
+    return {
+      getBlockBlobClient: mockGetBlockBlobClient,
+    };
+  });
+  mockGetBlockBlobClient.mockImplementation(function () {
+    return {
+      downloadToBuffer: mockDownloadToBuffer,
+      getProperties: mockGetProperties,
+    };
+  });
+  mockDownloadToBuffer.mockImplementation(async function () {
+    return Buffer.from('file content');
+  });
+  mockGetProperties.mockImplementation(async function () {
+    return {
+      contentType: 'text/plain',
+      contentLength: 12,
+    };
+  });
 });
 
 test('AzureBlobGet reads the blob and returns base64 content', async () => {
@@ -86,7 +94,9 @@ test('AzureBlobGet reads the blob and returns base64 content', async () => {
 });
 
 test('AzureBlobGet omits contentType when properties have none and sizes from content', async () => {
-  mockGetProperties.mockImplementation(async () => ({}));
+  mockGetProperties.mockImplementation(async function () {
+    return {};
+  });
   const request = { key: 'key' };
   const connection = {
     account: 'account',
@@ -103,7 +113,7 @@ test('AzureBlobGet omits contentType when properties have none and sizes from co
 });
 
 test('Error from azure client', async () => {
-  mockDownloadToBuffer.mockImplementation(() => {
+  mockDownloadToBuffer.mockImplementation(function () {
     throw new Error('Test Azure client error.');
   });
   const request = { key: 'key' };

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
@@ -23,14 +23,14 @@ import testContext from '../../test/testContext.js';
 
 const { _payload, _user } = operatorsServer;
 
-const mockReadConfigFile = jest.fn();
-const mockResolver = jest.fn();
+const mockReadConfigFile = vi.fn();
+const mockResolver = vi.fn();
 // A change stream reads its connection, as the MongoDB source declares.
 mockResolver.meta = { checkRead: true, checkWrite: false, publish: false };
-const mockNoReadResolver = jest.fn();
+const mockNoReadResolver = vi.fn();
 mockNoReadResolver.meta = { checkRead: false, checkWrite: false, publish: false };
-const mockNoMetaResolver = jest.fn();
-const mockUndeclaredReadResolver = jest.fn();
+const mockNoMetaResolver = vi.fn();
+const mockUndeclaredReadResolver = vi.fn();
 mockUndeclaredReadResolver.meta = { publish: false };
 
 const connections = {

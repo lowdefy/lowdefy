@@ -42,6 +42,7 @@ import tenantPreflight from './tenant/tenantPreflight.js';
 import { columnDefs, fields } from '../../../test/enrichmentTable.js';
 import getTestCollection from '../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
+import { expect, test } from 'vitest';
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';

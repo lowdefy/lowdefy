@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockGetCollection = jest.fn();
+const mockGetCollection = vi.fn();
 
-jest.unstable_mockModule('../getCollection.js', () => ({
+vi.doMock('../getCollection.js', () => ({
   default: mockGetCollection,
 }));
 
@@ -31,7 +31,7 @@ function createFakeStream({ changes = [], failWith = null } = {}) {
   });
   return {
     watchCalls: [],
-    close: jest.fn(async () => {
+    close: vi.fn(async () => {
       closed = true;
       release();
     }),
@@ -53,11 +53,11 @@ function createFakeStream({ changes = [], failWith = null } = {}) {
 
 function createHarness({ changes, failWith } = {}) {
   const stream = createFakeStream({ changes, failWith });
-  const collection = { watch: jest.fn(() => stream) };
+  const collection = { watch: vi.fn(() => stream) };
   // getCollection resolves { client, collection, logCollection } — the
   // resolver destructures collection off it.
   mockGetCollection.mockResolvedValue({ collection });
-  const publish = jest.fn();
+  const publish = vi.fn();
   const abortController = new AbortController();
   return { abortController, collection, publish, stream };
 }

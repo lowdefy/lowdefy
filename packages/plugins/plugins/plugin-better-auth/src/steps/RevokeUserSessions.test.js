@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import RevokeUserSessions from './RevokeUserSessions.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -22,7 +22,7 @@ import createMockAuth from '../../test/createMockAuth.js';
 const acting = { system: true, user: null };
 
 test('RevokeUserSessions passes userId through as body to the admin revokeUserSessions endpoint', async () => {
-  const revokeUserSessions = jest.fn().mockResolvedValue({ success: true });
+  const revokeUserSessions = vi.fn().mockResolvedValue({ success: true });
   const { auth } = createMockAuth({ adminEndpoints: { revokeUserSessions } });
   const result = await RevokeUserSessions({ acting, auth, properties: { userId: 'user-2' } });
   expect(result).toEqual({ success: true });

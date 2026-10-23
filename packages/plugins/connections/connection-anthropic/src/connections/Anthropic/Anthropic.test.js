@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockCreateAnthropic = jest.fn();
+const mockCreateAnthropic = vi.fn();
 
-jest.unstable_mockModule('@ai-sdk/anthropic', () => ({
+vi.doMock('@ai-sdk/anthropic', () => ({
   createAnthropic: mockCreateAnthropic,
 }));
 
 test('Anthropic create returns provider with apiKey', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateAnthropic.mockReturnValue(mockProvider);
 
   const { default: Anthropic } = await import('./Anthropic.js');
@@ -36,7 +36,7 @@ test('Anthropic create returns provider with apiKey', async () => {
 });
 
 test('Anthropic create passes baseURL when provided', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateAnthropic.mockReturnValue(mockProvider);
 
   const { default: Anthropic } = await import('./Anthropic.js');
@@ -53,7 +53,7 @@ test('Anthropic create passes baseURL when provided', async () => {
 });
 
 test('Anthropic create handles undefined connection', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateAnthropic.mockReturnValue(mockProvider);
 
   const { default: Anthropic } = await import('./Anthropic.js');
@@ -65,7 +65,7 @@ test('Anthropic create handles undefined connection', async () => {
 });
 
 test('Anthropic create returns the connection maxOutputTokens and timeout for its agents', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateAnthropic.mockReturnValue(mockProvider);
 
   const { default: Anthropic } = await import('./Anthropic.js');

@@ -15,6 +15,7 @@
 */
 
 import urlQuery from './urlQuery.js';
+import { expect, test } from 'vitest';
 
 test('primitives', () => {
   expect(urlQuery.stringify(1)).toEqual('');

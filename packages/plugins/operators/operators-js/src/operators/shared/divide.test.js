@@ -15,6 +15,7 @@
 */
 
 import divide from './divide.js';
+import { expect, test } from 'vitest';
 
 test('_divide param 0 greater than param 1', () => {
   expect(divide({ params: [1, 1], location: 'locationId' })).toBe(1);
@@ -26,32 +27,32 @@ test('_divide param 0 greater than param 1', () => {
 test('_divide by zero', () => {
   expect(() =>
     divide({ params: [1, 0], location: 'locationId' })
-  ).toThrowErrorMatchingInlineSnapshot(`"_divide by zero not allowed."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: _divide by zero not allowed.]`);
 });
 
 test('_divide params not an array', () => {
   expect(() =>
     divide({ params: '1, 0', location: 'locationId' })
-  ).toThrowErrorMatchingInlineSnapshot(`"_divide takes an array type as input."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: _divide takes an array type as input.]`);
 });
 
 test('_divide params array with length 1', () => {
   expect(() => divide({ params: [1], location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(
-    `"_divide takes an array of length 2 as input."`
+    `[Error: _divide takes an array of length 2 as input.]`
   );
 });
 
 test('_divide params array with length 3', () => {
   expect(() =>
     divide({ params: [1, 2, 3], location: 'locationId' })
-  ).toThrowErrorMatchingInlineSnapshot(`"_divide takes an array of length 2 as input."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: _divide takes an array of length 2 as input.]`);
 });
 
 test('_divide params array with non numbers', () => {
   expect(() =>
     divide({ params: ['1', 1], location: 'locationId' })
-  ).toThrowErrorMatchingInlineSnapshot(`"_divide takes an array of 2 numbers."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: _divide takes an array of 2 numbers.]`);
   expect(() =>
     divide({ params: [1, '1'], location: 'locationId' })
-  ).toThrowErrorMatchingInlineSnapshot(`"_divide takes an array of 2 numbers."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: _divide takes an array of 2 numbers.]`);
 });

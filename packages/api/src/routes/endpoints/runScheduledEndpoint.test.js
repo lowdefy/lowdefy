@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('./runRoutine.js', () => ({
-  default: jest.fn(async () => ({ status: 'return', response: 'ok' })),
+vi.doMock('./runRoutine.js', () => ({
+  default: vi.fn(async () => ({ status: 'return', response: 'ok' })),
 }));
 
 const { default: runScheduledEndpoint } = await import('./runScheduledEndpoint.js');
@@ -25,18 +25,18 @@ const { default: runRoutine } = await import('./runRoutine.js');
 const { default: testContext } = await import('../../test/testContext.js');
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 function makeContext(endpoint, { user } = {}) {
-  const readConfigFile = jest.fn((path) =>
+  const readConfigFile = vi.fn((path) =>
     path === `api/${endpoint.endpointId}.json` ? endpoint : null
   );
   return testContext({ logger, readConfigFile, user });
@@ -125,7 +125,7 @@ const cronConfig = {
 };
 
 function makeEnvironmentContext(endpoint, { config = cronConfig } = {}) {
-  const readConfigFile = jest.fn((path) =>
+  const readConfigFile = vi.fn((path) =>
     path === `api/${endpoint.endpointId}.json` ? endpoint : null
   );
   return testContext({ logger, readConfigFile, config });

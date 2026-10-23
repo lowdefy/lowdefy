@@ -17,14 +17,14 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 // pid -> start time of the processes "running" in each test.
 let running;
-jest.unstable_mockModule('./readProcessStartTime.js', () => ({
+vi.doMock('./readProcessStartTime.js', () => ({
   default: async ({ pid }) => running.get(pid) ?? null,
 }));
-jest.unstable_mockModule('./isPidAlive.js', () => ({
+vi.doMock('./isPidAlive.js', () => ({
   default: (pid) => running.has(pid),
 }));
 

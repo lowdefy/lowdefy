@@ -16,6 +16,7 @@
 
 import RequestError from './RequestError.js';
 import PluginError from './PluginError.js';
+import { expect, test } from 'vitest';
 
 test('RequestError sets name and is instanceof PluginError', () => {
   const original = new Error('Collection not found');

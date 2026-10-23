@@ -16,18 +16,18 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 const events = [];
 
-jest.unstable_mockModule('./startServer.mjs', () => ({
-  default: jest.fn((context) => {
+vi.doMock('./startServer.mjs', () => ({
+  default: vi.fn((context) => {
     events.push('start');
     context.devServer = createChild();
   }),
 }));
-jest.unstable_mockModule('../utils/waitForServer.mjs', () => ({
-  default: jest.fn(async () => true),
+vi.doMock('../utils/waitForServer.mjs', () => ({
+  default: vi.fn(async () => true),
 }));
 
 function createChild() {
@@ -36,7 +36,7 @@ function createChild() {
     signalCode: null,
     killed: false,
     pid: 1234,
-    kill: jest.fn(),
+    kill: vi.fn(),
   });
 }
 
@@ -45,9 +45,9 @@ async function createContext({ devServer = null } = {}) {
   const context = {
     buildActivity: { track: (fn) => fn() },
     devServer,
-    logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn() },
-    markServerReady: jest.fn(),
-    serverArtifacts: { record: jest.fn() },
+    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn() },
+    markServerReady: vi.fn(),
+    serverArtifacts: { record: vi.fn() },
   };
   context.shutdownServer = shutdownServer(context);
   return context;
@@ -58,7 +58,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 async function flush() {
@@ -69,7 +69,7 @@ async function flush() {
 
 async function advance(ms) {
   await flush();
-  jest.advanceTimersByTime(ms);
+  vi.advanceTimersByTime(ms);
   await flush();
 }
 
@@ -94,7 +94,23 @@ test('restartServer starts the new child only after the old child exits', async 
 });
 
 test('restartServer SIGKILLs an old child that ignores SIGTERM, then starts the new child', async () => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   const { default: restartServer } = await import('./restartServer.mjs');
   const oldChild = createChild();
   oldChild.kill.mockImplementation((signal) => {
@@ -117,7 +133,23 @@ test('restartServer SIGKILLs an old child that ignores SIGTERM, then starts the 
 });
 
 test('restartServer finishes after both timeouts and warns when the old child never exits', async () => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   const { default: restartServer } = await import('./restartServer.mjs');
   const oldChild = createChild();
   const context = await createContext({ devServer: oldChild });
@@ -151,12 +183,28 @@ test('restartServer waits for a child that syncServer shut down before installin
 });
 
 test('restartServer with no previous child starts at once', async () => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   const { default: restartServer } = await import('./restartServer.mjs');
   const context = await createContext();
 
   await restartServer(context)();
 
   expect(events).toEqual(['start']);
-  expect(jest.getTimerCount()).toBe(0);
+  expect(vi.getTimerCount()).toBe(0);
 });

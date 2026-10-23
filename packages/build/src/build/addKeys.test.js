@@ -18,6 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 import parseTestYaml from '../test-utils/parseTestYaml.js';
 import testContext from '../test-utils/testContext.js';
 import makeId from '../utils/makeId.js';
+import { expect, test } from 'vitest';
 
 test('mutate keyMap and components', async () => {
   makeId.reset();

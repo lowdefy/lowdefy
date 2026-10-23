@@ -15,6 +15,7 @@
 */
 
 import { createUrl } from './url.js';
+import { expect, test } from 'vitest';
 
 test('createUrl joins basePath, pathname and string query', () => {
   expect(createUrl({ pathname: '/page-1' })).toBe('/page-1');

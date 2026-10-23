@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -52,7 +52,7 @@ const translate = (key) => ({ 'client.confirm': 'Are you sure?' })[key];
 
 beforeEach(() => {
   registerHtmlEnhancements({ HtmlOverlay, Icon: () => null, icons: {}, translate });
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 });
 
 afterEach(() => {
@@ -61,7 +61,7 @@ afterEach(() => {
 });
 
 function renderConfirm(html, dataEvents = ['onArchive', 'onDelete', 'onOpen']) {
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const utils = render(
     <HtmlComponent dataEvents={dataEvents} html={html} onDataEvent={onDataEvent} />
   );
@@ -214,7 +214,7 @@ test('data-confirm without data-event, or in HTML without events, is reported', 
 });
 
 test('a copy button inside a confirm-gated element only copies', async () => {
-  const writeText = jest.fn().mockResolvedValue(undefined);
+  const writeText = vi.fn().mockResolvedValue(undefined);
   Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
   registerHtmlEnhancements({
     HtmlOverlay,
@@ -304,7 +304,7 @@ test.each([
   ['other text in the HTML changes', { names: ['Alice', 'Bob'], note: '<p>2 rows</p>' }],
   ['the element is gone', { names: [] }],
 ])('an open confirm closes without firing when %s', (_, next) => {
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const dataEvents = ['onDelete'];
   const { container, rerender } = render(
     <HtmlComponent

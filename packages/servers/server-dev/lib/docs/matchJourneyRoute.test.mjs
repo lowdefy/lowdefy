@@ -19,6 +19,7 @@ import matchExercisedPages from './matchExercisedPages.js';
 import matchJourneyRoute from './matchJourneyRoute.js';
 import mergeNetworkSnapshots from './mergeNetworkSnapshots.js';
 import nextJourneySequence from './nextJourneySequence.js';
+import { expect, test } from 'vitest';
 
 const origin = 'http://localhost:3111';
 

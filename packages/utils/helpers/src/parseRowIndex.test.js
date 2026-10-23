@@ -15,6 +15,7 @@
 */
 
 import parseRowIndex from './parseRowIndex.js';
+import { expect, test } from 'vitest';
 
 test('parseRowIndex reads a zero-based row index', () => {
   expect(parseRowIndex('0')).toBe(0);

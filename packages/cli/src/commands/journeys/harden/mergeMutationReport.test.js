@@ -15,6 +15,7 @@
 */
 
 import mergeMutationReport from './mergeMutationReport.js';
+import { expect, test } from 'vitest';
 
 function verdict(name, value) {
   return { file: `${name}.yaml`, name, verdict: value, failure: null, misses: [] };

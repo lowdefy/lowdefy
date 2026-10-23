@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-const mockReadConfigText = jest.fn();
-jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+const mockReadConfigText = vi.fn();
+vi.doMock('./configText/readConfigText.js', () => ({
   default: mockReadConfigText,
 }));
 
@@ -54,7 +54,7 @@ function writeDay(day, records) {
 function read(options) {
   const context = {
     directories: { config: root, test: path.join(root, '.lowdefy', 'test'), traces },
-    logger: { warn: jest.fn() },
+    logger: { warn: vi.fn() },
   };
   return readProductionTrace({ context, now, ...options });
 }

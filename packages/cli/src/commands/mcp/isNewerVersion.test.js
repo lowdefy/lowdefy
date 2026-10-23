@@ -15,6 +15,7 @@
 */
 
 import isNewerVersion from './isNewerVersion.js';
+import { expect, test } from 'vitest';
 
 const EXPERIMENTAL = '0.0.0-experimental-20261002122353';
 const LATER_EXPERIMENTAL = '0.0.0-experimental-20261003000000';

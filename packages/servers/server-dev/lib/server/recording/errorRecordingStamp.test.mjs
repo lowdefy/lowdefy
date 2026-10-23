@@ -15,6 +15,7 @@
 */
 
 import errorRecordingStamp from './errorRecordingStamp.js';
+import { expect, test } from 'vitest';
 
 test('errorRecordingStamp gives the source, run id and journey of a verified run cookie', () => {
   expect(

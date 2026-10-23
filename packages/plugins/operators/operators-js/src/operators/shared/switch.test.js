@@ -15,6 +15,7 @@
 */
 
 import _switch from './switch.js';
+import { expect, test } from 'vitest';
 
 test('_switch evaluates to true for the first case', () => {
   expect(

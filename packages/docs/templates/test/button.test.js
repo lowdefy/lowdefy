@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -36,22 +37,22 @@ const schema = {
 
 test('button propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
+    [
+      {
+        "blocks": [
+          {
             "id": "block.properties.field.icon",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
+            "properties": {
               "allowClear": true,
-              "label": Object {
+              "label": {
                 "align": "right",
-                "extra": "Icon name, such as the semantic name <code>edit</code> or the <a href=\\"https://lucide.dev/icons\\">Lucide</a> name <code>Pencil</code>, or properties of an Icon block to use as the button icon.",
+                "extra": "Icon name, such as the semantic name <code>edit</code> or the <a href="https://lucide.dev/icons">Lucide</a> name <code>Pencil</code>, or properties of an Icon block to use as the button icon.",
                 "span": 8,
               },
-              "options": Object {
+              "options": {
                 "_global": "all_icons",
               },
               "showSearch": true,
@@ -60,13 +61,13 @@ test('button propertiesFormTransformer', () => {
             },
             "type": "Selector",
           },
-          Object {
+          {
             "id": "block.properties.field.title",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "label": Object {
+            "properties": {
+              "label": {
                 "align": "right",
                 "extra": "Title text on the button.",
                 "span": 8,
@@ -76,18 +77,18 @@ test('button propertiesFormTransformer', () => {
             },
             "type": "TextInput",
           },
-          Object {
+          {
             "id": "block.properties.field.type",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "label": Object {
+            "properties": {
+              "label": {
                 "align": "right",
                 "extra": "The button type.",
                 "span": 8,
               },
-              "options": Array [
+              "options": [
                 "primary",
                 "default",
                 "dashed",
@@ -102,10 +103,10 @@ test('button propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.field_button_card",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
+        "properties": {
           "inner": true,
           "size": "small",
           "title": "block.properties.field:",
@@ -118,12 +119,12 @@ test('button propertiesFormTransformer', () => {
 
 test('button propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
@@ -133,7 +134,7 @@ test('button propertiesGetterTransformer', () => {
 });
 
 test('button defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`{}`);
   const schemaDV = {
     properties: {
       type: 'object',
@@ -155,8 +156,8 @@ test('button defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
-      "field": Object {
+    {
+      "field": {
         "icon": "upload",
         "title": "Upload",
         "type": "default",

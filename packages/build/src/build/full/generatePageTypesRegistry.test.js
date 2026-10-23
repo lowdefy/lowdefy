@@ -15,6 +15,7 @@
 */
 
 import generatePageTypesRegistry from './generatePageTypesRegistry.js';
+import { expect, test } from 'vitest';
 
 test('generatePageTypesRegistry maps each types key to its chunk', () => {
   const source = generatePageTypesRegistry({ typesKeys: ['0123456789ab', 'ba9876543210'] });

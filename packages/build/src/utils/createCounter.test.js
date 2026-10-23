@@ -15,6 +15,7 @@
 */
 
 import createCounter from './createCounter.js';
+import { expect, test } from 'vitest';
 
 test('counter', async () => {
   const counter = createCounter();

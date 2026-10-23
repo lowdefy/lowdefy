@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 const {
   findPageInstance,
@@ -40,7 +40,7 @@ function ticket({ space = 's', ticketId }) {
   };
 }
 
-function connectTab({ id, pageId, send = jest.fn(), ...origin }) {
+function connectTab({ id, pageId, send = vi.fn(), ...origin }) {
   registerTab({ id, send, ...origin });
   if (pageId) {
     updateTabPage({ id, pageId, pathParams: {}, instanceKey: `page:${pageId}` });
@@ -49,7 +49,7 @@ function connectTab({ id, pageId, send = jest.fn(), ...origin }) {
 }
 
 test('registerTab adds a tab visible via listTabs, on no page until its first page renders', () => {
-  registerTab({ id: 'tab-1', send: jest.fn() });
+  registerTab({ id: 'tab-1', send: vi.fn() });
   const tabs = listTabs();
   expect(tabs).toHaveLength(1);
   expect(tabs[0]).toMatchObject({ id: 'tab-1', pageId: null, pathParams: null, instanceKey: null });
@@ -57,7 +57,7 @@ test('registerTab adds a tab visible via listTabs, on no page until its first pa
 });
 
 test('registerTab throws when id is missing', () => {
-  expect(() => registerTab({ send: jest.fn() })).toThrow('registerTab requires');
+  expect(() => registerTab({ send: vi.fn() })).toThrow('registerTab requires');
 });
 
 test('registerTab throws when send is not a function', () => {
@@ -88,14 +88,14 @@ test('updateTabPage on an unknown tab id does not throw', () => {
 });
 
 test('updateTabPage throws when the instance key is missing', () => {
-  registerTab({ id: 'tab-1', send: jest.fn() });
+  registerTab({ id: 'tab-1', send: vi.fn() });
   expect(() => updateTabPage({ id: 'tab-1', pageId: 'about' })).toThrow(
     'updateTabPage requires "pageId" and "instanceKey" strings'
   );
 });
 
 test('findPageInstance reads the instance on screen when the tab is on the page', () => {
-  registerTab({ id: 'tab-1', send: jest.fn() });
+  registerTab({ id: 'tab-1', send: vi.fn() });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '2' }) });
   const { tab, ...instance } = findPageInstance({ pageId: 'ticket' });
@@ -104,8 +104,8 @@ test('findPageInstance reads the instance on screen when the tab is on the page'
 });
 
 test('findPageInstance reads the most recently rendered instance when no tab is on the page', () => {
-  registerTab({ id: 'tab-1', send: jest.fn() });
-  registerTab({ id: 'tab-2', send: jest.fn() });
+  registerTab({ id: 'tab-1', send: vi.fn() });
+  registerTab({ id: 'tab-2', send: vi.fn() });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
   updateTabPage({ id: 'tab-2', ...ticket({ ticketId: '2' }) });
   updateTabPage({ id: 'tab-1', pageId: 'home', instanceKey: 'page:home' });
@@ -116,8 +116,8 @@ test('findPageInstance reads the most recently rendered instance when no tab is 
 });
 
 test('findPageInstance prefers a tab showing the page over a later render elsewhere', () => {
-  registerTab({ id: 'tab-1', send: jest.fn() });
-  registerTab({ id: 'tab-2', send: jest.fn() });
+  registerTab({ id: 'tab-1', send: vi.fn() });
+  registerTab({ id: 'tab-2', send: vi.fn() });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
   updateTabPage({ id: 'tab-2', ...ticket({ ticketId: '2' }) });
   updateTabPage({ id: 'tab-2', pageId: 'home', instanceKey: 'page:home' });
@@ -127,7 +127,7 @@ test('findPageInstance prefers a tab showing the page over a later render elsewh
 });
 
 test('findPageInstance with pathParams reads that instance, comparing values as strings', () => {
-  registerTab({ id: 'tab-1', send: jest.fn() });
+  registerTab({ id: 'tab-1', send: vi.fn() });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '2' }) });
   const { tab, ...instance } = findPageInstance({
@@ -139,7 +139,7 @@ test('findPageInstance with pathParams reads that instance, comparing values as 
 });
 
 test('findPageInstance returns undefined for values no tab has rendered', () => {
-  registerTab({ id: 'tab-1', send: jest.fn() });
+  registerTab({ id: 'tab-1', send: vi.fn() });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
   expect(
     findPageInstance({ pageId: 'ticket', pathParams: { space: 's', ticket_id: '3' } })
@@ -150,14 +150,14 @@ test('findPageInstance returns undefined for values no tab has rendered', () => 
 test('findPageInstance without a pageId reads the most recently connected tab on screen', () => {
   connectTab({ id: 'tab-1', pageId: 'home' });
   connectTab({ id: 'tab-2', pageId: 'about' });
-  registerTab({ id: 'tab-3', send: jest.fn() });
+  registerTab({ id: 'tab-3', send: vi.fn() });
   const { tab, ...instance } = findPageInstance();
   expect(tab.id).toEqual('tab-2');
   expect(instance).toEqual({ pageId: 'about', pathParams: {}, instanceKey: 'page:about' });
 });
 
 test('findPageInstance forgets the instances of a tab that disconnected', () => {
-  registerTab({ id: 'tab-1', send: jest.fn() });
+  registerTab({ id: 'tab-1', send: vi.fn() });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
   unregisterTab({ id: 'tab-1' });
   expect(findPageInstance({ pageId: 'ticket' })).toBeUndefined();
@@ -178,7 +178,7 @@ test('requestFromTab sends the event to the matching tab and resolves via resolv
 });
 
 test('requestFromTab names the instance to read in the event it sends', async () => {
-  const send = jest.fn();
+  const send = vi.fn();
   registerTab({ id: 'tab-1', send });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '2' }) });

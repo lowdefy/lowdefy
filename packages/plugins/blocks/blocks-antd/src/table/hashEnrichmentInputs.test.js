@@ -22,6 +22,7 @@ import { serializer } from '@lowdefy/helpers';
 import cyrb53 from './cyrb53.js';
 import hashEnrichmentInputs from './hashEnrichmentInputs.js';
 import toCanonicalJson from './toCanonicalJson.js';
+import { expect, test } from 'vitest';
 
 // The same fixture is checked into @lowdefy/connection-mongodb (test/enrichmentInputHash.json),
 // where the enrichment requests hash the inputs on the server: both copies must stay identical.

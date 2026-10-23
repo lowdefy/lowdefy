@@ -15,6 +15,7 @@
 */
 
 import string from './string.js';
+import { describe, expect, test } from 'vitest';
 const location = 'location';
 
 describe('_string.charAt', () => {
@@ -50,7 +51,7 @@ describe('_string.charAt', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.charAt must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.charAt must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -59,7 +60,7 @@ describe('_string.charAt', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.charAt must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.charAt must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -68,7 +69,7 @@ describe('_string.charAt', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.charAt accepts one of the following types: array, object."`
+      `[Error: _string.charAt accepts one of the following types: array, object.]`
     );
   });
 });
@@ -120,7 +121,7 @@ describe('_string.concat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.concat must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.concat must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -129,7 +130,7 @@ describe('_string.concat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.concat accepts one of the following types: array."`
+      `[Error: _string.concat accepts one of the following types: array.]`
     );
     expect(() =>
       string({
@@ -138,7 +139,7 @@ describe('_string.concat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.concat accepts one of the following types: array."`
+      `[Error: _string.concat accepts one of the following types: array.]`
     );
   });
 });
@@ -183,7 +184,7 @@ describe('_string.endsWith', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.endsWith must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.endsWith must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -192,7 +193,7 @@ describe('_string.endsWith', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.endsWith must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.endsWith must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -201,7 +202,7 @@ describe('_string.endsWith', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.endsWith accepts one of the following types: array, object."`
+      `[Error: _string.endsWith accepts one of the following types: array, object.]`
     );
   });
 });
@@ -246,7 +247,7 @@ describe('_string.includes', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.includes must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.includes must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -255,7 +256,7 @@ describe('_string.includes', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.includes must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.includes must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -264,7 +265,7 @@ describe('_string.includes', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.includes accepts one of the following types: array, object."`
+      `[Error: _string.includes accepts one of the following types: array, object.]`
     );
   });
 });
@@ -316,7 +317,7 @@ describe('_string.indexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.indexOf must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.indexOf must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -325,7 +326,7 @@ describe('_string.indexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.indexOf must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.indexOf must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -334,7 +335,7 @@ describe('_string.indexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.indexOf accepts one of the following types: array, object."`
+      `[Error: _string.indexOf accepts one of the following types: array, object.]`
     );
   });
 });
@@ -379,7 +380,7 @@ describe('_string.lastIndexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.lastIndexOf must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.lastIndexOf must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -388,7 +389,7 @@ describe('_string.lastIndexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.lastIndexOf must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.lastIndexOf must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -397,7 +398,7 @@ describe('_string.lastIndexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.lastIndexOf accepts one of the following types: array, object."`
+      `[Error: _string.lastIndexOf accepts one of the following types: array, object.]`
     );
   });
 });
@@ -466,7 +467,7 @@ describe('_string.match', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.match must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.match must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -475,7 +476,7 @@ describe('_string.match', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.match must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.match must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -484,7 +485,7 @@ describe('_string.match', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.match accepts one of the following types: array, object."`
+      `[Error: _string.match accepts one of the following types: array, object.]`
     );
   });
 });
@@ -515,7 +516,7 @@ describe('_string.normalize', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"The normalization form should be one of NFC, NFD, NFKC, NFKD."`
+      `[RangeError: The normalization form should be one of NFC, NFD, NFKC, NFKD.]`
     );
     expect(() =>
       string({
@@ -524,7 +525,7 @@ describe('_string.normalize', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.normalize must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.normalize must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -533,7 +534,7 @@ describe('_string.normalize', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.normalize must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.normalize must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -542,7 +543,7 @@ describe('_string.normalize', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.normalize accepts one of the following types: array, object."`
+      `[Error: _string.normalize accepts one of the following types: array, object.]`
     );
   });
 });
@@ -580,7 +581,7 @@ describe('_string.padEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.padEnd must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.padEnd must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -589,7 +590,7 @@ describe('_string.padEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.padEnd must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.padEnd must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -598,7 +599,7 @@ describe('_string.padEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.padEnd accepts one of the following types: array, object."`
+      `[Error: _string.padEnd accepts one of the following types: array, object.]`
     );
   });
 });
@@ -636,7 +637,7 @@ describe('_string.padStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.padStart must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.padStart must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -645,7 +646,7 @@ describe('_string.padStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.padStart must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.padStart must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -654,7 +655,7 @@ describe('_string.padStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.padStart accepts one of the following types: array, object."`
+      `[Error: _string.padStart accepts one of the following types: array, object.]`
     );
   });
 });
@@ -685,7 +686,7 @@ describe('_string.repeat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.repeat must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.repeat must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -694,7 +695,7 @@ describe('_string.repeat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.repeat must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.repeat must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -703,7 +704,7 @@ describe('_string.repeat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.repeat accepts one of the following types: array, object."`
+      `[Error: _string.repeat accepts one of the following types: array, object.]`
     );
   });
 });
@@ -741,7 +742,7 @@ describe('_string.replace', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.replace must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.replace must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -750,7 +751,7 @@ describe('_string.replace', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.replace must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.replace must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -759,7 +760,7 @@ describe('_string.replace', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.replace accepts one of the following types: array, object."`
+      `[Error: _string.replace accepts one of the following types: array, object.]`
     );
   });
 });
@@ -804,7 +805,7 @@ describe('_string.search', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.search must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.search must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -813,7 +814,7 @@ describe('_string.search', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.search must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.search must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -822,7 +823,7 @@ describe('_string.search', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.search accepts one of the following types: array, object."`
+      `[Error: _string.search accepts one of the following types: array, object.]`
     );
   });
 });
@@ -867,7 +868,7 @@ describe('_string.slice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.slice must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.slice must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -876,7 +877,7 @@ describe('_string.slice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.slice must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.slice must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -885,7 +886,7 @@ describe('_string.slice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.slice accepts one of the following types: array, object."`
+      `[Error: _string.slice accepts one of the following types: array, object.]`
     );
   });
 });
@@ -923,7 +924,7 @@ describe('_string.split', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.split must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.split must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -932,7 +933,7 @@ describe('_string.split', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.split must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.split must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -941,7 +942,7 @@ describe('_string.split', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.split accepts one of the following types: array, object."`
+      `[Error: _string.split accepts one of the following types: array, object.]`
     );
   });
 });
@@ -986,7 +987,7 @@ describe('_string.startsWith', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.startsWith must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.startsWith must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -995,7 +996,7 @@ describe('_string.startsWith', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.startsWith must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.startsWith must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -1004,7 +1005,7 @@ describe('_string.startsWith', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.startsWith accepts one of the following types: array, object."`
+      `[Error: _string.startsWith accepts one of the following types: array, object.]`
     );
   });
 });
@@ -1049,7 +1050,7 @@ describe('_string.substring', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.substring must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.substring must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -1058,7 +1059,7 @@ describe('_string.substring', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.substring must be evaluated on an string instance. For named args provide an string instance to the \\"on\\" property, for listed args provide an string instance as the first element in the operator argument array."`
+      `[Error: _string.substring must be evaluated on an string instance. For named args provide an string instance to the "on" property, for listed args provide an string instance as the first element in the operator argument array.]`
     );
     expect(() =>
       string({
@@ -1067,7 +1068,7 @@ describe('_string.substring', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.substring accepts one of the following types: array, object."`
+      `[Error: _string.substring accepts one of the following types: array, object.]`
     );
   });
 });
@@ -1091,7 +1092,7 @@ describe('_string.toLowerCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.toLowerCase accepts one of the following types: string, null."`
+      `[Error: _string.toLowerCase accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1100,7 +1101,7 @@ describe('_string.toLowerCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.toLowerCase accepts one of the following types: string, null."`
+      `[Error: _string.toLowerCase accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1109,7 +1110,7 @@ describe('_string.toLowerCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.toLowerCase accepts one of the following types: string, null."`
+      `[Error: _string.toLowerCase accepts one of the following types: string, null.]`
     );
   });
 });
@@ -1133,7 +1134,7 @@ describe('_string.toUpperCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.toUpperCase accepts one of the following types: string, null."`
+      `[Error: _string.toUpperCase accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1142,7 +1143,7 @@ describe('_string.toUpperCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.toUpperCase accepts one of the following types: string, null."`
+      `[Error: _string.toUpperCase accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1151,7 +1152,7 @@ describe('_string.toUpperCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.toUpperCase accepts one of the following types: string, null."`
+      `[Error: _string.toUpperCase accepts one of the following types: string, null.]`
     );
   });
 });
@@ -1175,7 +1176,7 @@ describe('_string.trim', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trim accepts one of the following types: string, null."`
+      `[Error: _string.trim accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1184,7 +1185,7 @@ describe('_string.trim', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trim accepts one of the following types: string, null."`
+      `[Error: _string.trim accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1193,7 +1194,7 @@ describe('_string.trim', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trim accepts one of the following types: string, null."`
+      `[Error: _string.trim accepts one of the following types: string, null.]`
     );
   });
 });
@@ -1217,7 +1218,7 @@ describe('_string.trimEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trimEnd accepts one of the following types: string, null."`
+      `[Error: _string.trimEnd accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1226,7 +1227,7 @@ describe('_string.trimEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trimEnd accepts one of the following types: string, null."`
+      `[Error: _string.trimEnd accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1235,7 +1236,7 @@ describe('_string.trimEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trimEnd accepts one of the following types: string, null."`
+      `[Error: _string.trimEnd accepts one of the following types: string, null.]`
     );
   });
 });
@@ -1259,7 +1260,7 @@ describe('_string.trimStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trimStart accepts one of the following types: string, null."`
+      `[Error: _string.trimStart accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1268,7 +1269,7 @@ describe('_string.trimStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trimStart accepts one of the following types: string, null."`
+      `[Error: _string.trimStart accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1277,7 +1278,7 @@ describe('_string.trimStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.trimStart accepts one of the following types: string, null."`
+      `[Error: _string.trimStart accepts one of the following types: string, null.]`
     );
   });
 });
@@ -1301,7 +1302,7 @@ describe('_string.length', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.length accepts one of the following types: string, null."`
+      `[Error: _string.length accepts one of the following types: string, null.]`
     );
     expect(() =>
       string({
@@ -1310,7 +1311,7 @@ describe('_string.length', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.length accepts one of the following types: string, null."`
+      `[Error: _string.length accepts one of the following types: string, null.]`
     );
   });
 });
@@ -1428,7 +1429,7 @@ describe('_string.format', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _string.format - first array element must be the template string at location."`
+      `[Error: Operator Error: _string.format - first array element must be the template string at location.]`
     );
   });
   test('throws when object template is missing', () => {
@@ -1439,7 +1440,7 @@ describe('_string.format', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _string.format - \\"template\\" must be a string at location."`
+      `[Error: Operator Error: _string.format - "template" must be a string at location.]`
     );
   });
   test('throws when params is not array or object', () => {
@@ -1450,14 +1451,14 @@ describe('_string.format', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _string.format accepts an array or object at location."`
+      `[Error: Operator Error: _string.format accepts an array or object at location.]`
     );
   });
 });
 
 test('_string called with no method or params', () => {
   expect(() => string({ location: 'location' })).toThrowErrorMatchingInlineSnapshot(
-    `"_string requires a method. Use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length."`
+    `[Error: _string requires a method. Use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length.]`
   );
 });
 
@@ -1465,6 +1466,6 @@ test('_string invalid method', () => {
   expect(() =>
     string({ params: ['a'], methodName: 'X', location: 'location' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_string.X is not supported, use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length."`
+    `[Error: _string.X is not supported, use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length.]`
   );
 });

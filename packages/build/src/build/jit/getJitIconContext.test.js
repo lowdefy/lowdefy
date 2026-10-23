@@ -19,6 +19,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import getJitIconContext from './getJitIconContext.js';
+import { expect, test } from 'vitest';
 
 function writeTheme(theme) {
   const buildDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-jit-icons-'));

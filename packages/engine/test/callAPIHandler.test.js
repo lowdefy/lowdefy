@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { expect, jest } from '@jest/globals';
+import { expect, vi, test } from 'vitest';
 
 import callAPIHandler from '../src/callAPIHandler.js';
 import { getDevError } from '../src/decodeServerError.js';
@@ -24,7 +24,7 @@ function createContext({ callAPI }) {
   const context = {
     pageId: 'page1',
     _internal: {
-      update: jest.fn(),
+      update: vi.fn(),
       lowdefy: {
         apiResponses: {},
         contexts: {},
@@ -39,7 +39,7 @@ function createContext({ callAPI }) {
 }
 
 test('callAPIHandler stores response and resolves', async () => {
-  const callAPI = jest
+  const callAPI = vi
     .fn()
     .mockResolvedValue({ response: { items: [1, 2] }, status: 'success', success: true });
   const context = createContext({ callAPI });
@@ -60,7 +60,7 @@ test('callAPIHandler stores response and resolves', async () => {
 
 test('callAPIHandler holdValue keeps previous response while loading', async () => {
   let resolveSecond;
-  const callAPI = jest
+  const callAPI = vi
     .fn()
     .mockResolvedValueOnce({ response: { items: [1, 2] }, status: 'success', success: true })
     .mockImplementationOnce(
@@ -96,7 +96,7 @@ test('callAPIHandler holdValue keeps previous response while loading', async () 
 
 test('callAPIHandler holdValue with no previous response leaves response null', async () => {
   let resolveCall;
-  const callAPI = jest.fn().mockImplementationOnce(
+  const callAPI = vi.fn().mockImplementationOnce(
     () =>
       new Promise((resolve) => {
         resolveCall = () =>
@@ -117,7 +117,7 @@ test('callAPIHandler holdValue with no previous response leaves response null', 
 });
 
 test('callAPIHandler holdValue retains previous response on error', async () => {
-  const callAPI = jest
+  const callAPI = vi
     .fn()
     .mockResolvedValueOnce({ response: { items: [1, 2] }, status: 'success', success: true })
     .mockRejectedValueOnce(new Error('mock error'));
@@ -146,7 +146,7 @@ test('callAPIHandler holdValue retains previous response on error', async () => 
 });
 
 test('callAPIHandler without holdValue clears response on error', async () => {
-  const callAPI = jest
+  const callAPI = vi
     .fn()
     .mockResolvedValueOnce({ response: { items: [1, 2] }, status: 'success', success: true })
     .mockRejectedValueOnce(new Error('mock error'));
@@ -170,7 +170,7 @@ test('callAPIHandler without holdValue clears response on error', async () => {
 });
 
 test('callAPIHandler stores and throws the same decoded error, with its dev error beside it', async () => {
-  const callAPI = jest.fn().mockResolvedValue({
+  const callAPI = vi.fn().mockResolvedValue({
     error: {
       '~e': { name: 'Error', message: 'Something went wrong.', requestId: 'rid-1' },
       devError: { '~e': { name: 'Error', message: 'Routine step failed.', requestId: 'rid-1' } },
@@ -200,7 +200,7 @@ test('callAPIHandler stores and throws the same decoded error, with its dev erro
 
 test('callAPIHandler stores and rethrows an error from callAPI unchanged', async () => {
   const error = new Error('Something went wrong.');
-  const callAPI = jest.fn().mockRejectedValue(error);
+  const callAPI = vi.fn().mockRejectedValue(error);
   const context = createContext({ callAPI });
 
   await expect(
@@ -213,7 +213,7 @@ test('callAPIHandler stores and rethrows an error from callAPI unchanged', async
 });
 
 test('callAPIHandler reports the endpoint change to every context the app holds', async () => {
-  const callAPI = jest.fn().mockResolvedValue({ response: {}, status: 'success', success: true });
+  const callAPI = vi.fn().mockResolvedValue({ response: {}, status: 'success', success: true });
   const context = createContext({ callAPI });
   const other = { _internal: { lowdefy: context._internal.lowdefy } };
   other._internal.DependencyTracker = new DependencyTracker(other);

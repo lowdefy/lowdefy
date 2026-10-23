@@ -15,6 +15,7 @@
 */
 
 import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
+import { expect, test } from 'vitest';
 
 function setRefMarker(obj, refId) {
   Object.defineProperty(obj, '~r', {

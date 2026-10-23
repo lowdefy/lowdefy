@@ -15,6 +15,7 @@
 */
 
 import resolveMailFilter from './resolveMailFilter.js';
+import { expect, test } from 'vitest';
 
 const environment = { name: 'staging', email: { filter: { replaceAddress: 'team@example.com' } } };
 

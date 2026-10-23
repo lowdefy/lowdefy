@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import Fetch from './Fetch.js';
 
-const json = jest.fn(() => Promise.resolve('json'));
-const text = jest.fn(() => Promise.resolve('text'));
+const json = vi.fn(() => Promise.resolve('json'));
+const text = vi.fn(() => Promise.resolve('text'));
 
-const fetch = jest.fn(() => Promise.resolve({ fetchResponse: true, json, text }));
+const fetch = vi.fn(() => Promise.resolve({ fetchResponse: true, json, text }));
 
 const globals = { fetch };
 

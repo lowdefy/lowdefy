@@ -17,6 +17,7 @@
 import { UserError } from '@lowdefy/errors';
 
 import summariseFailure from './summariseFailure.js';
+import { expect, test } from 'vitest';
 
 test('summariseFailure reads the action and the error of a failed action', () => {
   const error = new Error('Timed out.');

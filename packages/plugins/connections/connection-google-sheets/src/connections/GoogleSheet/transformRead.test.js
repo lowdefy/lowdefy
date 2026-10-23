@@ -15,6 +15,7 @@
 */
 
 import { transformRead } from './transformTypes.js';
+import { expect, test } from 'vitest';
 
 test('transformRead invalid input', () => {
   expect(() => transformRead({ input: 1 })).toThrow(

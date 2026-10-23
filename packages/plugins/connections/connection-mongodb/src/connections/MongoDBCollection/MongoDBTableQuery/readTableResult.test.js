@@ -15,6 +15,7 @@
 */
 
 import readTableResult from './readTableResult.js';
+import { expect, test } from 'vitest';
 
 const specs = [
   { key: 'amount', fn: 'sum', name: 'a0' },

@@ -18,6 +18,7 @@ import { callerHash, callerStamp } from '@lowdefy/helpers';
 import { AuthenticationError } from '@lowdefy/errors';
 
 import shouldReloadForCaller from './shouldReloadForCaller.js';
+import { expect, test } from 'vitest';
 
 function createWindow() {
   const stored = {};

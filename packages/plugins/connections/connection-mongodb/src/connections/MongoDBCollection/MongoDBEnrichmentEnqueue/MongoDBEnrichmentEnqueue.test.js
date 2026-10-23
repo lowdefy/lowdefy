@@ -23,6 +23,7 @@ import {
   readDocuments,
   setupEnrichmentCollection,
 } from '../../../../test/enrichmentTable.js';
+import { describe, expect, test } from 'vitest';
 
 const name = 'enrichmentEnqueue';
 const { checkRead, checkWrite } = MongoDBEnrichmentEnqueue.meta;

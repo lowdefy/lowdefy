@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockPublish = jest.fn();
-jest.unstable_mockModule('./devEventBus.js', () => ({
+const mockPublish = vi.fn();
+vi.doMock('./devEventBus.js', () => ({
   publish: mockPublish,
 }));
-jest.unstable_mockModule('./getBuildId.js', () => ({
+vi.doMock('./getBuildId.js', () => ({
   default: () => '2026-01-01T00:00:00.000Z',
 }));
 

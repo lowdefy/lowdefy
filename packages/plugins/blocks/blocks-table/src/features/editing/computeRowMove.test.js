@@ -18,6 +18,7 @@ import computeRowMove from './computeRowMove.js';
 import positionBetween from './positionBetween.js';
 import reorderByKeys from './reorderByKeys.js';
 import sortByPosition from './sortByPosition.js';
+import { expect, test } from 'vitest';
 
 const getKey = (row) => row.id;
 const rows = [

@@ -15,6 +15,7 @@
 */
 
 import traverseConfig from './traverseConfig.js';
+import { expect, test } from 'vitest';
 
 test('traverseConfig visits all objects', () => {
   const visited = [];

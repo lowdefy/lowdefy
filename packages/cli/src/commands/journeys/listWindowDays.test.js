@@ -15,6 +15,7 @@
 */
 
 import listWindowDays from './listWindowDays.js';
+import { expect, test } from 'vitest';
 
 test('listWindowDays lists every UTC day of a window, both ends included', () => {
   expect(listWindowDays({ from: '2026-09-29', to: '2026-10-02' })).toEqual([

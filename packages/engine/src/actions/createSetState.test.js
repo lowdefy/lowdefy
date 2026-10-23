@@ -17,6 +17,7 @@
 import { ActionError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
+import { expect, test } from 'vitest';
 
 const lowdefy = {
   _internal: {

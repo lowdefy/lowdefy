@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import Logout from './Logout.js';
 
-const mockLogout = jest.fn();
+const mockLogout = vi.fn();
 const methods = { logout: mockLogout };
 
 test('Logout action invocation', async () => {

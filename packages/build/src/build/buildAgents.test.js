@@ -16,6 +16,7 @@
 
 import buildAgents from './buildAgents.js';
 import testContext from '../test-utils/testContext.js';
+import { describe, expect, test } from 'vitest';
 
 test('buildAgents no agents', () => {
   const context = testContext();

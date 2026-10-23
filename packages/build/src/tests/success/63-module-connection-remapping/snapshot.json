@@ -1425,6 +1425,7 @@
           "payload": {
             "~k": "1u"
           },
+          "readOnly": false,
           "requestId": "send-email",
           "pageId": "notify/inbox",
           "~k": "o"
@@ -1450,6 +1451,7 @@
       "public": true,
       "~k": "1v"
     },
+    "readOnly": false,
     "requestId": "send-email",
     "pageId": "notify/inbox",
     "~k": "o"
@@ -1498,6 +1500,7 @@
           "payload": {
             "~k": "22"
           },
+          "readOnly": false,
           "requestId": "send-email",
           "pageId": "notify2/inbox",
           "~k": "v"
@@ -1523,6 +1526,7 @@
       "public": true,
       "~k": "23"
     },
+    "readOnly": false,
     "requestId": "send-email",
     "pageId": "notify2/inbox",
     "~k": "v"

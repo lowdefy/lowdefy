@@ -15,6 +15,7 @@
 */
 
 import readJsonPath from './readJsonPath.js';
+import { expect, test } from 'vitest';
 
 test('readJsonPath reads dotted object keys and array indices', () => {
   const document = { data: [{ url: 'https://cdn.example/a.png' }], task: { status: 'done' } };

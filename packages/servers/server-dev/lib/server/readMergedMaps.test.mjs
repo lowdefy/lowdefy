@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import readMergedMaps from './readMergedMaps.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let buildDirectory;
 

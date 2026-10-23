@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
-const mockSpawnProcess = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockSpawnProcess = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({
   spawnProcess: mockSpawnProcess,
 }));
-jest.unstable_mockModule('@lowdefy/logger/cli', () => ({
-  createStdOutLineHandler: jest.fn(() => 'lineHandler'),
+vi.doMock('@lowdefy/logger/cli', () => ({
+  createStdOutLineHandler: vi.fn(() => 'lineHandler'),
 }));
 
 const { default: runLowdefyBuild } = await import('./runLowdefyBuild.js');
@@ -31,7 +31,7 @@ const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
 function createContext(options) {
   return {
     directories: { config: '/app' },
-    logger: { info: jest.fn() },
+    logger: { info: vi.fn() },
     options: { refResolver: 'resolver.js', ...options },
     pnpmCmd: 'pnpm',
   };

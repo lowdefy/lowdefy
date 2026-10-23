@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import resolveDevCommand from './resolveDevCommand.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let configDirectory;
 

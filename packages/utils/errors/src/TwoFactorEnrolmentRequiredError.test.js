@@ -15,6 +15,7 @@
 */
 
 import TwoFactorEnrolmentRequiredError from './TwoFactorEnrolmentRequiredError.js';
+import { expect, test } from 'vitest';
 
 test('TwoFactorEnrolmentRequiredError sets name and isLowdefyError', () => {
   const error = new TwoFactorEnrolmentRequiredError();

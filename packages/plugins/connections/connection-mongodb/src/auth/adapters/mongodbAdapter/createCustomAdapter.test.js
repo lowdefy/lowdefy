@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ObjectId } from 'mongodb';
 
 import createCustomAdapter from './createCustomAdapter.js';
@@ -35,18 +35,18 @@ const schema = {
 };
 
 function setup({ collectionMethods = {} } = {}) {
-  const aggregateToArray = jest.fn().mockResolvedValue([]);
+  const aggregateToArray = vi.fn().mockResolvedValue([]);
   const collection = {
-    insertOne: jest.fn().mockResolvedValue({ insertedId: new ObjectId() }),
-    aggregate: jest.fn(() => ({ toArray: aggregateToArray })),
-    findOneAndUpdate: jest.fn().mockResolvedValue({ value: null }),
-    updateMany: jest.fn().mockResolvedValue({ modifiedCount: 0 }),
-    deleteOne: jest.fn().mockResolvedValue({}),
-    deleteMany: jest.fn().mockResolvedValue({ deletedCount: 0 }),
-    findOneAndDelete: jest.fn().mockResolvedValue({ value: null }),
+    insertOne: vi.fn().mockResolvedValue({ insertedId: new ObjectId() }),
+    aggregate: vi.fn(() => ({ toArray: aggregateToArray })),
+    findOneAndUpdate: vi.fn().mockResolvedValue({ value: null }),
+    updateMany: vi.fn().mockResolvedValue({ modifiedCount: 0 }),
+    deleteOne: vi.fn().mockResolvedValue({}),
+    deleteMany: vi.fn().mockResolvedValue({ deletedCount: 0 }),
+    findOneAndDelete: vi.fn().mockResolvedValue({ value: null }),
     ...collectionMethods,
   };
-  const db = { collection: jest.fn(() => collection) };
+  const db = { collection: vi.fn(() => collection) };
   const customAdapter = createCustomAdapter({ getDb: async () => db })({
     getFieldAttributes: ({ model, field }) => schema[model].fields[field] ?? {},
     getFieldName: ({ field }) => field,

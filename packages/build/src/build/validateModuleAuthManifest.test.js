@@ -15,6 +15,7 @@
 */
 
 import validateModuleAuthManifest from './validateModuleAuthManifest.js';
+import { describe, expect, test } from 'vitest';
 
 test('validateModuleAuthManifest passes when auth is undefined', () => {
   expect(() => validateModuleAuthManifest({ auth: undefined, entryId: 'crm' })).not.toThrow();

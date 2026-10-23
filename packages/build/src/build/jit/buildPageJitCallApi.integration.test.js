@@ -26,7 +26,7 @@
 // _module.endpointId during a JIT build. This test runs the actual pipeline against
 // real files on disk to reproduce the dev-server behaviour Gerrie reported.
 
-import { jest } from '@jest/globals';
+import { vi, beforeAll, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -45,7 +45,7 @@ const mockComputeAppMeta = (source = {}) => ({
   lowdefyVersion: source.lowdefy ?? null,
   gitSha: 'test-git-sha',
 });
-jest.unstable_mockModule('../buildApp.js', () => ({
+vi.doMock('../buildApp.js', () => ({
   computeAppMeta: mockComputeAppMeta,
   default: ({ components, context }) => {
     components.app = components.app ?? {};
@@ -56,14 +56,14 @@ jest.unstable_mockModule('../buildApp.js', () => ({
     return components;
   },
 }));
-jest.unstable_mockModule('../full/updateServerPackageJson.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../full/updateServerPackageJson.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyPublicFolder.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyPublicFolder.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyAgentFileSystems.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyAgentFileSystems.js', () => ({
+  default: vi.fn(async () => {}),
 }));
 
 const { default: shallowBuild } = await import('./shallowBuild.js');

@@ -15,6 +15,7 @@
 */
 
 import moveSkeletonBlocksToSlot from './moveSkeletonBlocksToSlot.js';
+import { expect, test } from 'vitest';
 
 function createPageContext() {
   return { pageId: 'page1', context: {} };

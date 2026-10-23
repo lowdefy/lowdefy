@@ -15,6 +15,7 @@
 */
 
 import getSafeHref from './getSafeHref.js';
+import { expect, test } from 'vitest';
 
 test('getSafeHref passes http and https URLs in any case', () => {
   expect(getSafeHref('https://a.test/x')).toBe('https://a.test/x');

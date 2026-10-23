@@ -15,6 +15,7 @@
 */
 
 import isAllowedUrl from './isAllowedUrl.js';
+import { expect, test } from 'vitest';
 
 const policy = { links: { pages: ['thanks', 'ticket'], origins: ['https://example.com'] } };
 const routes = [

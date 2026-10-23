@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import GoogleSheet from './GoogleSheet.js';
+import { expect, test } from 'vitest';
 
 const schema = GoogleSheet.schema;
 

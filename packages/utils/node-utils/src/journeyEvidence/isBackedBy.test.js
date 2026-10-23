@@ -19,6 +19,7 @@ import journeySequence from '../journeyCompiler/journeySequence.js';
 import traceRecord from '../journeyCompiler/traceRecord.js';
 import { blockMetas, traceRecords } from '../journeyCompiler/testTrace.js';
 import isBackedBy from './isBackedBy.js';
+import { expect, test } from 'vitest';
 
 function entry(page, verb, blockId, text = null) {
   return { page, identity: JSON.stringify([verb, blockId, null, text]) };

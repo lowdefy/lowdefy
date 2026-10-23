@@ -15,6 +15,7 @@
 */
 
 import resolveLocale from './resolveLocale.js';
+import { expect, test } from 'vitest';
 
 const i18n = {
   defaultLocale: 'en-US',

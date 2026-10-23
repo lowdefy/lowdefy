@@ -17,6 +17,7 @@
 import { createHash } from 'node:crypto';
 
 import callerStamp from './callerStamp.js';
+import { expect, test } from 'vitest';
 
 function sha256Prefix(text) {
   return createHash('sha256').update(text).digest('hex').slice(0, 16);

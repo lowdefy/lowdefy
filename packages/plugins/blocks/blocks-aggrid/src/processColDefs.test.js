@@ -15,6 +15,7 @@
 */
 
 import processColDefs from './processColDefs.js';
+import { expect, test } from 'vitest';
 
 // AG Grid resolves a string cellRenderer to a registered component, such as
 // agAnimateShowChangeCellRenderer, so it must reach the colDef unchanged.

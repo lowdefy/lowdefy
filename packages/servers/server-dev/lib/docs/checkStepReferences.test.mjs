@@ -18,14 +18,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 
 // getPageConfig JIT-builds a page the journey has not visited; here the
 // fixture build already holds every page it knows.
-const mockGetPageConfig = jest.fn(async ({ pageId }) =>
+const mockGetPageConfig = vi.fn(async ({ pageId }) =>
   ['home', 'second'].includes(pageId) ? {} : null
 );
-jest.unstable_mockModule('./getPageConfig.js', () => ({ default: mockGetPageConfig }));
+vi.doMock('./getPageConfig.js', () => ({ default: mockGetPageConfig }));
 
 const { default: checkStepReferences } = await import('./checkStepReferences.js');
 

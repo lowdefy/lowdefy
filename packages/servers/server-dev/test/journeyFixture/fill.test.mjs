@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // A fill step on a block with no text input of its own: a ColorSelector, whose input
 // shows only in its picker popup, and a Switch, which fill cannot type into. Run by the

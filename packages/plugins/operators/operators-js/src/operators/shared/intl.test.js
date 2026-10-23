@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import intl from './intl.js';
+import { describe, expect, test } from 'vitest';
 
 describe('_intl.dateTimeFormat', () => {
   const methodName = 'dateTimeFormat';

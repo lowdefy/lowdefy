@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // searchIcons reads the dev build's iconAliases.json and customTypesMap.json,
 // which only exist in a built server directory, and loads installed icon set
 // plugins through the build's loader. Lucide's names are real.
-const mockReadBuildArtifact = jest.fn();
-jest.unstable_mockModule('./readBuildArtifact.js', () => ({
+const mockReadBuildArtifact = vi.fn();
+vi.doMock('./readBuildArtifact.js', () => ({
   default: mockReadBuildArtifact,
 }));
 
 const buildDev = await import('@lowdefy/build/dev');
-const mockLoadIconSets = jest.fn();
-jest.unstable_mockModule('@lowdefy/build/dev', () => ({
+const mockLoadIconSets = vi.fn();
+vi.doMock('@lowdefy/build/dev', () => ({
   ...buildDev,
   loadIconSets: mockLoadIconSets,
 }));

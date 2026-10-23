@@ -16,6 +16,7 @@
 
 import createTokenResolver from './createTokenResolver.js';
 import tokenText from './tokenText.js';
+import { expect, test } from 'vitest';
 
 const salt = Buffer.alloc(32, 7);
 

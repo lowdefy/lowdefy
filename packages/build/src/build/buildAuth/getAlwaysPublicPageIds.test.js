@@ -15,6 +15,7 @@
 */
 
 import getAlwaysPublicPageIds from './getAlwaysPublicPageIds.js';
+import { expect, test } from 'vitest';
 
 // The app's routes: each page at its id, except the account page, which has a
 // path of its own.

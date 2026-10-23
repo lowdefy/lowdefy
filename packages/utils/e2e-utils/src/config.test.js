@@ -17,10 +17,10 @@
 import fs from 'fs';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 // The real module replaces jest's expect when imported outside the Playwright runner.
-jest.unstable_mockModule('@playwright/test', () => ({
+vi.doMock('@playwright/test', () => ({
   defineConfig: (config) => config,
   devices: { 'Desktop Chrome': {} },
 }));

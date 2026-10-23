@@ -19,12 +19,12 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, expect, test } from 'vitest';
 
-const mockLaunch = jest.fn();
-jest.unstable_mockModule('playwright-core', () => ({
+const mockLaunch = vi.fn();
+vi.doMock('playwright-core', () => ({
   chromium: { launch: mockLaunch },
-  selectors: { register: jest.fn(async () => {}) },
+  selectors: { register: vi.fn(async () => {}) },
 }));
 
 // openPage takes its browser as a parameter, so a fake one covers the cookie
@@ -56,26 +56,26 @@ afterEach(async () => {
 });
 
 function createBrowser() {
-  const addCookies = jest.fn();
+  const addCookies = vi.fn();
   const page = {
-    goto: jest.fn().mockResolvedValue(undefined),
-    waitForFunction: jest.fn().mockResolvedValue(undefined),
+    goto: vi.fn().mockResolvedValue(undefined),
+    waitForFunction: vi.fn().mockResolvedValue(undefined),
   };
   // Like Playwright's, the context emits close once, when it first closes.
   const context = Object.assign(new EventEmitter(), {
     addCookies,
-    newPage: jest.fn().mockResolvedValue(page),
-    route: jest.fn().mockResolvedValue(undefined),
+    newPage: vi.fn().mockResolvedValue(page),
+    route: vi.fn().mockResolvedValue(undefined),
   });
   let closed = false;
-  context.close = jest.fn(async () => {
+  context.close = vi.fn(async () => {
     if (closed) return;
     closed = true;
     context.emit('close');
   });
   openedContexts.push(context);
   return {
-    browser: { newContext: jest.fn().mockResolvedValue(context) },
+    browser: { newContext: vi.fn().mockResolvedValue(context) },
     addCookies,
     context,
     page,
@@ -465,7 +465,7 @@ test('openPage aborts and records a data set journey request to the dev server p
   }
   const route = {
     request: () => ({ url: () => 'http://127.0.0.1:3001/api/page/tickets' }),
-    abort: jest.fn(async () => {}),
+    abort: vi.fn(async () => {}),
   };
   await handle(route);
   expect(route.abort).toHaveBeenCalledTimes(1);
@@ -489,11 +489,27 @@ test('openPage routes nothing and records no departures without a dataCookie', a
 });
 
 test('a failed openPage closes its context, so the idle browser still closes', async () => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   try {
     const { browser, page } = createBrowser();
     browser.isConnected = () => true;
-    browser.close = jest.fn(async () => {});
+    browser.close = vi.fn(async () => {});
     mockLaunch.mockResolvedValue(browser);
     page.goto.mockRejectedValue(new Error('net::ERR_CONNECTION_REFUSED'));
 
@@ -501,13 +517,13 @@ test('a failed openPage closes its context, so the idle browser still closes', a
     await expect(
       openPage({ browser: launched, origin: 'http://localhost:3001', pageId: 'home' })
     ).rejects.toThrow('net::ERR_CONNECTION_REFUSED');
-    jest.advanceTimersByTime(90_000);
+    vi.advanceTimersByTime(90_000);
     for (let i = 0; i < 5; i += 1) {
       await Promise.resolve();
     }
 
     expect(browser.close).toHaveBeenCalledTimes(1);
   } finally {
-    jest.useRealTimers();
+    vi.useRealTimers();
   }
 });

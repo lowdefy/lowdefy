@@ -17,6 +17,7 @@
 import buildConnections from './buildConnections.js';
 import validateSharedPipelineWrite from './validateSharedPipelineWrite.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 const databaseUri = { _secret: 'MONGODB_URI' };
 

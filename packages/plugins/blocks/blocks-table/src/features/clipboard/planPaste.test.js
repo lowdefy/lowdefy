@@ -19,6 +19,7 @@ import applyChangeUpdates from '../editing/applyChangeUpdates.js';
 import createEmptyChanges from '../editing/createEmptyChanges.js';
 import createEditSpecs from '../editing/createEditSpecs.js';
 import planPaste from './planPaste.js';
+import { expect, test } from 'vitest';
 
 function column(key, type = 'text') {
   return { key, field: key, type, cell: {}, editable: false, validate: [] };

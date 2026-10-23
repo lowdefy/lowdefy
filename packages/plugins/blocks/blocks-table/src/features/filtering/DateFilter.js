@@ -15,10 +15,11 @@
 */
 
 import React from 'react';
-import { DatePicker, Segmented } from 'antd';
+import { DatePicker, Segmented, Select, Space } from 'antd';
 
 import defaultRelativeDate from './defaultRelativeDate.js';
 import formatFilterDate from './formatFilterDate.js';
+import getOperatorLabel from './getOperatorLabel.js';
 import parseFilterDate from './parseFilterDate.js';
 import RelativeDateEditor from './RelativeDateEditor.js';
 
@@ -27,7 +28,13 @@ const MODES = [
   { value: 'relative', label: 'Relative' },
 ];
 
-// A date range (either end open), or a relative period such as "within the last 7 days".
+const RELATIVE_OPS = ['within', 'before', 'after'].map((op) => ({
+  value: op,
+  label: getOperatorLabel({ op, family: 'date' }),
+}));
+
+// A date range (either end open), or a relative condition: "within the last 7 days", "before 3
+// months ago", "after 2 weeks from now".
 function DateFilter({ column, state, onChange }) {
   return (
     <div className="lf-filter-simple lf-filter-date">
@@ -36,7 +43,7 @@ function DateFilter({ column, state, onChange }) {
         onChange={(mode) =>
           onChange(
             mode === 'relative'
-              ? { mode, relative: state.relative ?? defaultRelativeDate }
+              ? { mode, op: state.op ?? 'within', relative: state.relative ?? defaultRelativeDate }
               : { mode, from: null, to: null }
           )
         }
@@ -45,11 +52,22 @@ function DateFilter({ column, state, onChange }) {
         value={state.mode}
       />
       {state.mode === 'relative' ? (
-        <RelativeDateEditor
-          onChange={(relative) => onChange({ mode: 'relative', relative })}
-          size="small"
-          value={state.relative}
-        />
+        <Space size={4} wrap>
+          <Select
+            aria-label="Operator"
+            onChange={(op) => onChange({ mode: 'relative', op, relative: state.relative })}
+            options={RELATIVE_OPS}
+            popupMatchSelectWidth={false}
+            size="small"
+            value={state.op ?? 'within'}
+          />
+          <RelativeDateEditor
+            bound={state.op === 'before' || state.op === 'after'}
+            onChange={(relative) => onChange({ mode: 'relative', op: state.op, relative })}
+            size="small"
+            value={state.relative}
+          />
+        </Space>
       ) : (
         <DatePicker.RangePicker
           allowEmpty={[true, true]}

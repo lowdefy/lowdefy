@@ -17,6 +17,7 @@
 import assert from 'node:assert/strict';
 
 import countGroupSelection from './countGroupSelection.js';
+import { test } from 'vitest';
 
 test('countGroupSelection counts the selected leaf rows in the group range', () => {
   const leaves = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }];

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 
 import precomputeRuntimeOperators from './precomputeRuntimeOperators.js';
 
@@ -34,7 +34,7 @@ const mockContext = {
     },
   },
   logger: {
-    warn: jest.fn(),
+    warn: vi.fn(),
   },
   errors: [],
   keyMap: {},
@@ -254,7 +254,7 @@ describe('precomputeRuntimeOperators', () => {
   test('handles undefined typesMap in context', () => {
     const contextWithoutTypesMap = {
       typesMap: undefined,
-      logger: { warn: jest.fn() },
+      logger: { warn: vi.fn() },
     };
     const input = {
       result: { _sum: [1, 2, 3] },
