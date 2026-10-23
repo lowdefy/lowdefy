@@ -247,7 +247,7 @@ A page with only a rail
 | `logo.src` | string | - | Logo image URL. |
 | `logo.alt` | string | - | Accessible name of the logo link. Defaults to Home. |
 | `menu` | object | - | The places in the rail, each an icon over a short label. A MenuGroup or MenuDivider is not supported: the panel is where a place's pages go. Clicking the place whose page is open toggles its panel. |
-| `menu.links` | array | - | Menu links. Compatible with `_menu` operator output. A link's `properties.tip` is added to its hover tip, and `properties.shortcut` (such as `g c` or `mod+1`) opens it from the keyboard. |
+| `menu.links` | array | - | Menu links. Compatible with `_menu` operator output. A link's `properties.tip` is added to its hover tip, and `properties.shortcut` (modifiers and one key joined by `+`, such as `mod+1`) opens it from the keyboard. |
 | `menu.links.$.id` | string | - | Menu item id. |
 | `menu.links.$.pageId` | string | - | Page to link to. |
 | `menu.links.$.properties` | object | - | properties from menu item. |

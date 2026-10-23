@@ -24,12 +24,16 @@ import getDropdownMenuIcons from '../getDropdownMenuIcons.js';
 import { getDarkModeIcon, getDarkModeLabel, registerDarkModeMethod } from '../headerActions.js';
 import useItemShortcuts from '../useItemShortcuts.js';
 import withPageTheme from '../withPageTheme.js';
-import { getPanelLimits } from './clampPanelWidth.js';
 import Crumbs from './Crumbs.js';
 import Mark from './Mark.js';
 import PanelResizeHandle, { PANEL_WIDTH_VAR } from './PanelResizeHandle.js';
 import getBadge from './getBadge.js';
-import { getPlaceBadge, getPlaceKey } from './placeKeys.js';
+import getPanelLimits from './getPanelLimits.js';
+import getPlaceBadge from './getPlaceBadge.js';
+import getPlaceKey from './getPlaceKey.js';
+import getPlaceSelectKey from './getPlaceSelectKey.js';
+import getShortcutLabel from './getShortcutLabel.js';
+import isPlainClick from './isPlainClick.js';
 import RailItem from './RailItem.js';
 import SwitcherList from './SwitcherList.js';
 import useLayoutMode from './useLayoutMode.js';
@@ -40,26 +44,6 @@ import './style.css';
 const DARK_MODE_KEY = '__lf_dark_mode';
 const DEFAULT_SHORTCUT = 'mod+\\';
 const contentPadding = { default: '24px 32px 40px', compact: '16px', none: 0 };
-
-const isMac =
-  typeof navigator !== 'undefined' &&
-  (navigator.userAgentData?.platform === 'macOS' ||
-    /Mac|iPhone|iPad|iPod/.test(navigator.platform ?? ''));
-
-function shortcutLabel(shortcut) {
-  if (!shortcut) return null;
-  return shortcut
-    .split('+')
-    .map((part) => {
-      const key = part.toLowerCase();
-      if (key === 'mod') return isMac ? '⌘' : 'Ctrl+';
-      if (key === 'shift') return isMac ? '⇧' : 'Shift+';
-      if (key === 'alt') return isMac ? '⌥' : 'Alt+';
-      if (key === 'ctrl') return isMac ? '⌃' : 'Ctrl+';
-      return part.length === 1 ? part.toUpperCase() : part;
-    })
-    .join('');
-}
 
 function getPlaces({ menus, menu }) {
   let links = menu?.links;
@@ -120,7 +104,7 @@ function PageRailLayout({
   const switchers = crumbs.filter((crumb) => crumb.switcher);
   const toggleShortcut =
     panelProps.shortcut === null ? null : panelProps.shortcut ?? DEFAULT_SHORTCUT;
-  const isActive = (link) => selectedKeys.includes(link.pageId ?? link.id);
+  const isActive = (link) => selectedKeys.includes(getPlaceSelectKey(link));
 
   // Methods, re-registered each render so they act on the current state.
   const latest = useRef({});
@@ -171,7 +155,13 @@ function PageRailLayout({
         latest.current.panel.toggle('shortcut');
         return;
       }
-      document.getElementById(`${blockId}_place_${key}`)?.click();
+      // Blocks have no way to navigate but a link, so the shortcut clicks the place's link: in the
+      // rail, the tab bar or, for a place past the phone's tabs, the More sheet, which is always
+      // rendered for this.
+      const place =
+        document.getElementById(`${blockId}_place_${key}`) ??
+        document.getElementById(`${blockId}_more_place_${key}`);
+      place?.click();
     },
   });
 
@@ -183,7 +173,7 @@ function PageRailLayout({
   });
 
   function placeProps(link, index) {
-    const key = link.pageId ?? link.id;
+    const key = getPlaceSelectKey(link);
     return {
       active: isActive(link),
       badge: getPlaceBadge(badges, link),
@@ -192,14 +182,14 @@ function PageRailLayout({
       events,
       icon: link.properties?.icon,
       link: getLinkTarget(link),
-      shortcutLabel: shortcutLabel(link.properties?.shortcut),
+      shortcutLabel: getShortcutLabel(link.properties?.shortcut),
       tip: link.properties?.tip ?? link.properties?.tooltip,
       title: link.properties?.title ?? link.pageId ?? link.id,
       hideTip: isPhone,
       onClick: (event) => {
         setMoreOpen(false);
         // The place already open toggles its panel instead of reloading the page.
-        if (hasPanel && link.pageId === pageId && !event.metaKey && !event.ctrlKey) {
+        if (hasPanel && link.pageId === pageId && isPlainClick(event)) {
           event.preventDefault();
           panel.toggle('rail');
           return;
@@ -218,7 +208,7 @@ function PageRailLayout({
       hideTip: isPhone,
       icon: item.icon,
       link: getLinkTarget(item),
-      shortcutLabel: shortcutLabel(item.shortcut),
+      shortcutLabel: getShortcutLabel(item.shortcut),
       tip: item.tip,
       title: item.title,
       onClick: () => {
@@ -404,7 +394,7 @@ function PageRailLayout({
           <span className="lf-rail-tip-title">
             {label}
             {toggleShortcut && (
-              <kbd className="lf-rail-tip-kbd">{shortcutLabel(toggleShortcut)}</kbd>
+              <kbd className="lf-rail-tip-kbd">{getShortcutLabel(toggleShortcut)}</kbd>
             )}
           </span>
         }
@@ -547,8 +537,11 @@ function PageRailLayout({
         style={styles.panel}
         onClickCapture={(event) => {
           // Following a link from the drawer closes it, so the page it opens is in view.
+          // A click that opens a new tab or window leaves this page, and the drawer, where they are.
           if (!panel.isDrawer || panelProps.closeOnNavigate === false) return;
-          if (event.target.closest?.('a[href]')) panel.setOpen(false, 'navigate');
+          const anchor = event.target.closest?.('a[href]');
+          if (!anchor || anchor.target === '_blank' || !isPlainClick(event)) return;
+          panel.setOpen(false, 'navigate');
         }}
         {...(panel.isDrawer ? swipe : {})}
       >
@@ -669,6 +662,7 @@ function PageRailLayout({
           size="auto"
           closable={false}
           onClose={() => setMoreOpen(false)}
+          forceRender
           rootClassName={cn('lf-rail-portal lf-rail-sheet', classNames.moreSheet)}
           styles={{ body: styles.moreSheet }}
         >

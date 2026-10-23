@@ -17,7 +17,7 @@
 // Pointer capture keeps a drag's moves coming to the element that started it. The browser
 // throws when the pointer is already gone (a cancelled touch, a pen lifted mid-gesture); the drag
 // still works without capture, so a failure must never abort the gesture.
-function capture(element, pointerId) {
+function capturePointer(element, pointerId) {
   try {
     element?.setPointerCapture?.(pointerId);
   } catch {
@@ -25,12 +25,4 @@ function capture(element, pointerId) {
   }
 }
 
-function release(element, pointerId) {
-  try {
-    if (element?.hasPointerCapture?.(pointerId)) element.releasePointerCapture(pointerId);
-  } catch {
-    // pointer no longer active
-  }
-}
-
-export { capture, release };
+export default capturePointer;

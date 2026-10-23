@@ -45,6 +45,7 @@ properties:
         properties:
           title: Audit
           icon: ClipboardList
+          shortcut: alt+5
   badges:
     rail_controls: 12
     rail_documents:

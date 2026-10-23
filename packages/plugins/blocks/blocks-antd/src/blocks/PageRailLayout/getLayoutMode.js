@@ -14,14 +14,7 @@
   limitations under the License.
 */
 
-// The breakpoints are properties, so CSS media queries cannot hold them: the block reads the
-// mode here and the stylesheet keys off data-mode.
-function getLayoutQueries({ drawerBreakpoint, mobileBreakpoint }) {
-  return {
-    phone: `(max-width: ${mobileBreakpoint - 0.02}px)`,
-    tablet: `(max-width: ${drawerBreakpoint - 0.02}px)`,
-  };
-}
+import getLayoutQueries from './getLayoutQueries.js';
 
 function getLayoutMode({ drawerBreakpoint, mobileBreakpoint, matchMedia }) {
   if (typeof matchMedia !== 'function') return 'desktop';
@@ -31,5 +24,4 @@ function getLayoutMode({ drawerBreakpoint, mobileBreakpoint, matchMedia }) {
   return 'desktop';
 }
 
-export { getLayoutQueries };
 export default getLayoutMode;
