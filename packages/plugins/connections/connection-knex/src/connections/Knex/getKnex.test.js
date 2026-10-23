@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
-const mockKnex = jest.fn(() => ({
+const mockKnex = vi.fn(() => ({
   client: { connectionSettings: {} },
-  destroy: jest.fn(() => Promise.resolve()),
+  destroy: vi.fn(() => Promise.resolve()),
 }));
 
-jest.unstable_mockModule('knex', () => ({ default: mockKnex }));
+vi.doMock('knex', () => ({ default: mockKnex }));
 
 const { default: getKnex, destroyKnexClients } = await import('./getKnex.js');
 

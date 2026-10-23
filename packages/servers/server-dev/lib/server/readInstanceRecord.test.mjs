@@ -18,10 +18,10 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, expect, test } from 'vitest';
 
-const mockGetProcessStartTime = jest.fn();
-jest.unstable_mockModule('child_process', () => ({
+const mockGetProcessStartTime = vi.fn();
+vi.doMock('child_process', () => ({
   spawnSync: mockGetProcessStartTime,
   execSync: mockGetProcessStartTime,
   execFileSync: mockGetProcessStartTime,
@@ -73,9 +73,25 @@ test('readInstanceRecord returns null for a record caught mid-write', () => {
 
 test('the idle GC poll reads the record and collects without spawning a process', () => {
   // performance is not redefinable on this Node, and nothing here reads it.
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   try {
-    const gc = jest.fn();
+    const gc = vi.fn();
     const start = Date.parse('2026-10-03T10:00:00.000Z');
     // A full record, which readDevInstance would check with ps.
     writeRecord({
@@ -88,12 +104,12 @@ test('the idle GC poll reads the record and collects without spawning a process'
     });
 
     startIdleGc({ configDirectory, gc, now: () => start + 10_000 });
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
 
     expect(gc).toHaveBeenCalledTimes(1);
     expect(mockGetProcessStartTime).not.toHaveBeenCalled();
   } finally {
-    jest.clearAllTimers();
-    jest.useRealTimers();
+    vi.clearAllTimers();
+    vi.useRealTimers();
   }
 });

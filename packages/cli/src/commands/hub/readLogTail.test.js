@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -44,7 +44,7 @@ test('readLogTail returns nothing when there is no log', () => {
 test('readLogTail loads only the end of a log larger than its read window, without a fragment line', () => {
   const filler = `${'x'.repeat(99)}\n`.repeat(30000);
   fs.writeFileSync(logPath, `first line\n${filler}second last\nlast\n`);
-  const readFileSync = jest.spyOn(fs, 'readFileSync');
+  const readFileSync = vi.spyOn(fs, 'readFileSync');
   const lines = readLogTail({ logPath, lines: 1000 });
   expect(lines.slice(-2)).toEqual(['second last', 'last']);
   expect(lines.every((line) => line === 'x'.repeat(99) || line.endsWith('last'))).toBe(true);

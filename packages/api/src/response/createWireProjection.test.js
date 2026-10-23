@@ -25,6 +25,7 @@ import {
 import { projectCaughtError, serializer } from '@lowdefy/helpers';
 
 import createWireProjection from './createWireProjection.js';
+import { expect, test } from 'vitest';
 
 const context = { rid: 'rid-1' };
 

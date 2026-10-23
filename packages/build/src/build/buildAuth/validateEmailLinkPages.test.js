@@ -16,6 +16,7 @@
 
 import validateEmailLinkPages from './validateEmailLinkPages.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 function run({ auth, pages }) {
   const context = testContext();

@@ -18,6 +18,7 @@ import createCounter from '../../utils/createCounter.js';
 import alwaysBundledIcons from '../icons/alwaysBundledIcons.js';
 import mandatoryClientTypes from '../mandatoryClientTypes.js';
 import buildPageTypes from './buildPageTypes.js';
+import { expect, test } from 'vitest';
 
 function definitions(names, pkg) {
   return Object.fromEntries(

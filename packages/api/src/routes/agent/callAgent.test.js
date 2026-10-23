@@ -14,25 +14,25 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
 import callAgent from './callAgent.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 function createMockReadConfigFile({ agentConfig, connectionConfig, endpointConfigs }) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     if (path === `agents/${agentConfig?.agentId}.json`) {
       return agentConfig;
     }
@@ -51,9 +51,9 @@ function createMockReadConfigFile({ agentConfig, connectionConfig, endpointConfi
 }
 
 test('callAgent loads agent config, creates connection, and calls resolver', async () => {
-  const mockStream = { toUIMessageStreamResponse: jest.fn() };
-  const mockResolver = jest.fn().mockResolvedValue({ response: mockStream });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockStream = { toUIMessageStreamResponse: vi.fn() };
+  const mockResolver = vi.fn().mockResolvedValue({ response: mockStream });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -104,7 +104,7 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
 });
 
 test('callAgent throws ConfigError when agent does not exist', async () => {
-  const readConfigFile = jest.fn().mockReturnValue(null);
+  const readConfigFile = vi.fn().mockReturnValue(null);
   const context = testContext({
     logger,
     readConfigFile,
@@ -149,7 +149,7 @@ test('callAgent throws ConfigError when agent type not found in registry', async
     logger,
     readConfigFile,
     connections: {
-      SomeConnection: { create: jest.fn().mockReturnValue({}), requests: {} },
+      SomeConnection: { create: vi.fn().mockReturnValue({}), requests: {} },
     },
     user: { id: 'user_1' },
   });
@@ -194,7 +194,7 @@ test('callAgent throws when connection type not found in registry', async () => 
     connections: {},
     user: { id: 'user_1' },
   });
-  context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: vi.fn(), schema: {} } };
 
   await expect(
     callAgent(context, {
@@ -214,11 +214,11 @@ test('callAgent throws when connection type not found in registry', async () => 
 
 test('callAgent resolver context callEndpoint executes endpoint routine', async () => {
   let capturedResolverContext;
-  const mockResolver = jest.fn().mockImplementation(({ context: resolverCtx }) => {
+  const mockResolver = vi.fn().mockImplementation(({ context: resolverCtx }) => {
     capturedResolverContext = resolverCtx;
-    return { toUIMessageStreamResponse: jest.fn() };
+    return { toUIMessageStreamResponse: vi.fn() };
   });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -277,11 +277,11 @@ test('callAgent resolver context callEndpoint executes endpoint routine', async 
 
 test('callAgent resolver context getEndpointConfig returns endpoint config', async () => {
   let capturedResolverContext;
-  const mockResolver = jest.fn().mockImplementation(({ context: resolverCtx }) => {
+  const mockResolver = vi.fn().mockImplementation(({ context: resolverCtx }) => {
     capturedResolverContext = resolverCtx;
-    return { toUIMessageStreamResponse: jest.fn() };
+    return { toUIMessageStreamResponse: vi.fn() };
   });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -341,11 +341,11 @@ test('callAgent resolver context getEndpointConfig returns endpoint config', asy
 
 test('callAgent resolver context callEndpoint allows InternalApi endpoints', async () => {
   let capturedResolverContext;
-  const mockResolver = jest.fn().mockImplementation(({ context: resolverCtx }) => {
+  const mockResolver = vi.fn().mockImplementation(({ context: resolverCtx }) => {
     capturedResolverContext = resolverCtx;
-    return { toUIMessageStreamResponse: jest.fn() };
+    return { toUIMessageStreamResponse: vi.fn() };
   });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -403,7 +403,7 @@ test('callAgent resolver context callEndpoint allows InternalApi endpoints', asy
 });
 
 test('callAgent propagates error when connection.create throws', async () => {
-  const mockCreate = jest.fn().mockImplementation(() => {
+  const mockCreate = vi.fn().mockImplementation(() => {
     throw new Error('Invalid API key');
   });
 
@@ -432,7 +432,7 @@ test('callAgent propagates error when connection.create throws', async () => {
     },
     user: { id: 'user_1' },
   });
-  context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: vi.fn(), schema: {} } };
 
   await expect(
     callAgent(context, {
@@ -444,8 +444,8 @@ test('callAgent propagates error when connection.create throws', async () => {
 });
 
 test('callAgent propagates error when resolver throws', async () => {
-  const mockResolver = jest.fn().mockRejectedValue(new Error('Model not available'));
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockRejectedValue(new Error('Model not available'));
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -485,11 +485,11 @@ test('callAgent propagates error when resolver throws', async () => {
 
 test('callAgent resolver context callEndpoint returns error when routine fails', async () => {
   let capturedResolverContext;
-  const mockResolver = jest.fn().mockImplementation(({ context: resolverCtx }) => {
+  const mockResolver = vi.fn().mockImplementation(({ context: resolverCtx }) => {
     capturedResolverContext = resolverCtx;
-    return { toUIMessageStreamResponse: jest.fn() };
+    return { toUIMessageStreamResponse: vi.fn() };
   });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -547,11 +547,11 @@ test('callAgent resolver context callEndpoint returns error when routine fails',
 
 test('callAgent resolver context getEndpointConfig throws for missing endpoint', async () => {
   let capturedResolverContext;
-  const mockResolver = jest.fn().mockImplementation(({ context: resolverCtx }) => {
+  const mockResolver = vi.fn().mockImplementation(({ context: resolverCtx }) => {
     capturedResolverContext = resolverCtx;
-    return { toUIMessageStreamResponse: jest.fn() };
+    return { toUIMessageStreamResponse: vi.fn() };
   });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -592,8 +592,8 @@ test('callAgent resolver context getEndpointConfig throws for missing endpoint',
 });
 
 test('callAgent passes agentContext with conversationId, pageId, pathParams, urlQuery, userId to resolver context', async () => {
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -644,8 +644,8 @@ test('callAgent passes agentContext with conversationId, pageId, pathParams, url
 });
 
 test('callAgent passes sharedState and sharedStateReadOnly to agentContext', async () => {
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -697,8 +697,8 @@ test('callAgent passes sharedState and sharedStateReadOnly to agentContext', asy
 });
 
 test('callAgent passes userId from context.user.id when sub is not present', async () => {
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -738,8 +738,8 @@ test('callAgent passes userId from context.user.id when sub is not present', asy
 });
 
 test('callAgent passes null userId when no user session', async () => {
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -778,8 +778,8 @@ test('callAgent passes null userId when no user session', async () => {
 });
 
 test('callAgent passes getAgentConfig in resolver context', async () => {
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -806,7 +806,7 @@ test('callAgent passes getAgentConfig in resolver context', async () => {
     properties: { apiKey: 'sk-test' },
   };
 
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'agents/my-agent.json') return agentConfig;
     if (path === 'agents/sub-agent.json') return subAgentConfig;
     if (path === 'connections/my-anthropic.json') return connectionConfig;
@@ -833,8 +833,8 @@ test('callAgent passes getAgentConfig in resolver context', async () => {
 });
 
 test('callAgent passes getConnectionForAgent in resolver context', async () => {
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -852,7 +852,7 @@ test('callAgent passes getConnectionForAgent in resolver context', async () => {
     properties: { apiKey: 'sk-test' },
   };
 
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'agents/my-agent.json') return agentConfig;
     if (path === 'connections/my-anthropic.json') return connectionConfig;
     return null;
@@ -882,8 +882,8 @@ test('callAgent passes getConnectionForAgent in resolver context', async () => {
 });
 
 test('callAgent evaluates operators in agent properties before passing to resolver', async () => {
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -925,8 +925,8 @@ test('callAgent evaluates operators in agent properties before passing to resolv
 
 test('callAgent provides agentContext as payload for operator evaluation', async () => {
   let capturedPayload;
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
     auth: { public: true },
@@ -987,9 +987,9 @@ test('callAgent provides agentContext as payload for operator evaluation', async
 });
 
 test('callAgent passes resolveMcpSources in resolver context', async () => {
-  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
-  const mockMcpCreate = jest.fn().mockReturnValue({ url: 'http://mcp.test', transport: 'http' });
+  const mockResolver = vi.fn().mockResolvedValue({ response: {} });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockMcpCreate = vi.fn().mockReturnValue({ url: 'http://mcp.test', transport: 'http' });
 
   const agentConfig = {
     auth: { public: true },
@@ -1013,7 +1013,7 @@ test('callAgent passes resolveMcpSources in resolver context', async () => {
     properties: { url: 'http://mcp.test' },
   };
 
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'agents/my-agent.json') return agentConfig;
     if (path === 'connections/my-anthropic.json') return connectionConfig;
     if (path === 'connections/my-mcp.json') return mcpConnectionConfig;
@@ -1038,7 +1038,7 @@ test('callAgent passes resolveMcpSources in resolver context', async () => {
 });
 
 test('callAgent rejects a protected agent when there is no session', async () => {
-  const mockResolver = jest.fn();
+  const mockResolver = vi.fn();
   const agentConfig = {
     auth: { public: false },
     agentId: 'my-agent',
@@ -1060,9 +1060,9 @@ test('callAgent rejects a protected agent when there is no session', async () =>
 });
 
 test('callAgent runs a protected agent when a session exists', async () => {
-  const mockStream = { toUIMessageStreamResponse: jest.fn() };
-  const mockResolver = jest.fn().mockResolvedValue({ response: mockStream });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockStream = { toUIMessageStreamResponse: vi.fn() };
+  const mockResolver = vi.fn().mockResolvedValue({ response: mockStream });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
   const agentConfig = {
     auth: { public: false },
     agentId: 'my-agent',
@@ -1092,9 +1092,9 @@ test('callAgent runs a protected agent when a session exists', async () => {
 });
 
 test('callAgent resolverContext.getAgentConfig authorizes sub-agents against the session', async () => {
-  const mockStream = { toUIMessageStreamResponse: jest.fn() };
-  const mockResolver = jest.fn().mockResolvedValue({ response: mockStream });
-  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const mockStream = { toUIMessageStreamResponse: vi.fn() };
+  const mockResolver = vi.fn().mockResolvedValue({ response: mockStream });
+  const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
   const agentConfig = {
     auth: { public: true },
     agentId: 'parent-agent',
@@ -1119,7 +1119,7 @@ test('callAgent resolverContext.getAgentConfig authorizes sub-agents against the
     type: 'Anthropic',
     properties: { apiKey: 'sk-test' },
   };
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'agents/parent-agent.json') return agentConfig;
     if (path === 'agents/protected-sub.json') return protectedSubAgentConfig;
     if (path === 'connections/my-anthropic.json') return connectionConfig;
@@ -1152,7 +1152,7 @@ describe('redact', () => {
   };
 
   function setup({ redact, operators }) {
-    const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+    const mockResolver = vi.fn().mockResolvedValue({ response: {} });
     const agentConfig = {
       auth: { public: true },
       agentId: 'my-agent',
@@ -1167,7 +1167,7 @@ describe('redact', () => {
       logger,
       readConfigFile: createMockReadConfigFile({ agentConfig, connectionConfig }),
       connections: {
-        Anthropic: { create: jest.fn().mockReturnValue({}), requests: {} },
+        Anthropic: { create: vi.fn().mockReturnValue({}), requests: {} },
       },
       operators,
       user: { id: 'user_1' },

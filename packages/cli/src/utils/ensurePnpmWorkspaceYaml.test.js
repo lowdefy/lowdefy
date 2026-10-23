@@ -15,28 +15,28 @@
 */
 
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('fs', () => ({
+vi.doMock('fs', () => ({
   default: {
-    existsSync: jest.fn(),
+    existsSync: vi.fn(),
   },
 }));
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  findPnpmWorkspaceRoot: jest.fn(),
-  findWorkspacePackages: jest.fn(),
-  readFile: jest.fn(),
-  writeFile: jest.fn(),
-  writeFileIfChanged: jest.fn(),
+vi.doMock('@lowdefy/node-utils', () => ({
+  findPnpmWorkspaceRoot: vi.fn(),
+  findWorkspacePackages: vi.fn(),
+  readFile: vi.fn(),
+  writeFile: vi.fn(),
+  writeFileIfChanged: vi.fn(),
 }));
 
-jest.unstable_mockModule('./readParentWorkspace.js', () => ({
-  default: jest.fn(),
+vi.doMock('./readParentWorkspace.js', () => ({
+  default: vi.fn(),
 }));
 
-jest.unstable_mockModule('./linkWorkspacePlugins.js', () => ({
-  default: jest.fn(),
+vi.doMock('./linkWorkspacePlugins.js', () => ({
+  default: vi.fn(),
 }));
 
 // The fixtures name files with POSIX paths; ensurePnpmWorkspaceYaml joins them
@@ -48,7 +48,7 @@ function toPosix(filePath) {
 const devDirectory = '/repo/app/.lowdefy/dev';
 
 beforeEach(async () => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   const { default: fs } = await import('fs');
   const { findPnpmWorkspaceRoot, readFile } = await import('@lowdefy/node-utils');
   readFile.mockResolvedValue(null);
@@ -123,7 +123,7 @@ test('ensurePnpmWorkspaceYaml writes a nested workspace from the parent settings
     },
   };
   readParentWorkspace.mockResolvedValue(parentWorkspace);
-  const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn() }, pnpmCmd: 'pnpm' };
+  const context = { lowdefyVersion: '5.5.1', logger: { debug: vi.fn() }, pnpmCmd: 'pnpm' };
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
   expect(writeFile).not.toHaveBeenCalled();
   expect(readParentWorkspace.mock.calls).toEqual([[{ pnpmCmd: 'pnpm', workspaceRoot: '/repo' }]]);
@@ -171,7 +171,7 @@ test('ensurePnpmWorkspaceYaml copies the parent .npmrc and warns about credentia
     rootDependencies: {},
     settings: {},
   });
-  const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn(), warn: jest.fn() } };
+  const context = { lowdefyVersion: '5.5.1', logger: { debug: vi.fn(), warn: vi.fn() } };
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
   expect(readFile.mock.calls).toEqual([
     [path.join(devDirectory, 'pnpm-workspace.yaml')],
@@ -220,7 +220,7 @@ minimumReleaseAgeExclude:
 `
       : null
   );
-  const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn() } };
+  const context = { lowdefyVersion: '5.5.1', logger: { debug: vi.fn() } };
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
   expect(writeFileIfChanged.mock.calls).toEqual([
     [

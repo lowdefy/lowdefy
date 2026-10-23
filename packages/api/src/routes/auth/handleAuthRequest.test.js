@@ -15,6 +15,7 @@
 */
 
 import handleAuthRequest, { CLIENT_ADDRESS_HEADER } from './handleAuthRequest.js';
+import { expect, test } from 'vitest';
 
 const echoAuth = {
   handler: async (request) => ({

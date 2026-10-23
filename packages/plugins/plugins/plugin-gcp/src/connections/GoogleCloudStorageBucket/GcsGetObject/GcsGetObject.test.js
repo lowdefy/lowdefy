@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockDownload = jest.fn();
-const mockGetMetadata = jest.fn();
-const mockFile = jest.fn();
-const mockBucket = jest.fn();
-const mockStorageConstructor = jest.fn();
+const mockDownload = vi.fn();
+const mockGetMetadata = vi.fn();
+const mockFile = vi.fn();
+const mockBucket = vi.fn();
+const mockStorageConstructor = vi.fn();
 
-jest.unstable_mockModule('@google-cloud/storage', () => ({
-  Storage: jest.fn().mockImplementation((...args) => {
+vi.doMock('@google-cloud/storage', () => ({
+  Storage: vi.fn().mockImplementation(function (...args) {
     mockStorageConstructor(...args);
     return { bucket: mockBucket };
   }),
@@ -41,10 +41,18 @@ beforeEach(() => {
   mockFile.mockReset();
   mockBucket.mockReset();
   mockStorageConstructor.mockReset();
-  mockBucket.mockImplementation(() => ({ file: mockFile }));
-  mockFile.mockImplementation(() => ({ download: mockDownload, getMetadata: mockGetMetadata }));
-  mockDownload.mockImplementation(async () => [Buffer.from('file content')]);
-  mockGetMetadata.mockImplementation(async () => [{ contentType: 'text/plain', size: '12' }]);
+  mockBucket.mockImplementation(function () {
+    return { file: mockFile };
+  });
+  mockFile.mockImplementation(function () {
+    return { download: mockDownload, getMetadata: mockGetMetadata };
+  });
+  mockDownload.mockImplementation(async function () {
+    return [Buffer.from('file content')];
+  });
+  mockGetMetadata.mockImplementation(async function () {
+    return [{ contentType: 'text/plain', size: '12' }];
+  });
 });
 
 test('GcsGetObject reads the object and returns base64 content', async () => {
@@ -64,7 +72,9 @@ test('GcsGetObject reads the object and returns base64 content', async () => {
 });
 
 test('GcsGetObject omits contentType when metadata has none and sizes from content', async () => {
-  mockGetMetadata.mockImplementation(async () => [{}]);
+  mockGetMetadata.mockImplementation(async function () {
+    return [{}];
+  });
   const request = { key: 'key' };
   const connection = { bucket: 'bucket' };
   const res = await GcsGetObject({ request, connection });
@@ -77,7 +87,9 @@ test('GcsGetObject omits contentType when metadata has none and sizes from conte
 });
 
 test('GcsGetObject sizes from the returned content even when metadata disagrees', async () => {
-  mockGetMetadata.mockImplementation(async () => [{ contentType: 'text/plain', size: '999' }]);
+  mockGetMetadata.mockImplementation(async function () {
+    return [{ contentType: 'text/plain', size: '999' }];
+  });
   const request = { key: 'key' };
   const connection = { bucket: 'bucket' };
   const res = await GcsGetObject({ request, connection });
@@ -85,7 +97,7 @@ test('GcsGetObject sizes from the returned content even when metadata disagrees'
 });
 
 test('Error from storage client', async () => {
-  mockDownload.mockImplementation(() => {
+  mockDownload.mockImplementation(function () {
     throw new Error('Test GCS client error.');
   });
   const request = { key: 'key' };

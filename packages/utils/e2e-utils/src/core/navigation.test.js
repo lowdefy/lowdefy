@@ -15,6 +15,7 @@
 */
 
 import { createPageUrl } from './navigation.js';
+import { expect, test } from 'vitest';
 
 test('createPageUrl returns a string target unchanged', () => {
   expect(createPageUrl('/items?a=1')).toBe('/items?a=1');

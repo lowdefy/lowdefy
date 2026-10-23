@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 
 import createSameOriginGuard from './createSameOriginGuard.js';
+import { expect, test } from 'vitest';
 
 function createApp({ allowNoOrigin } = {}) {
   const guardSameOrigin = createSameOriginGuard({ allowNoOrigin });

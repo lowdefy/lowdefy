@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 
 import LoadingContainer from './LoadingContainer.js';
@@ -31,13 +31,13 @@ function Card({ blockId, content, methods }) {
 
 test('LoadingContainer renders a Card skeleton that can be clicked without an error', () => {
   const lowdefy = {
-    _internal: { components: {}, storage: { appKey: jest.fn(), userKey: jest.fn() } },
+    _internal: { components: {}, storage: { appKey: vi.fn(), userKey: vi.fn() } },
     basePath: '',
     menus: [],
     pageId: 'page',
   };
   const skeleton = { id: 'skeleton', type: 'Card', slots: { content: { blocks: [] } } };
-  const onError = jest.fn();
+  const onError = vi.fn();
   window.addEventListener('error', onError);
   const { container } = render(
     <LoadingContainer

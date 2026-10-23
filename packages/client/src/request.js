@@ -19,6 +19,8 @@ import { expectedErrorNames, lowdefyErrorTypes } from '@lowdefy/errors';
 import { translate, type } from '@lowdefy/helpers';
 
 import awaitUnlessUnloading from './awaitUnlessUnloading.js';
+import NonJsonResponseError from './NonJsonResponseError.js';
+import parseJsonObject from './parseJsonObject.js';
 import recordCallerStamp from './recordCallerStamp.js';
 import reloadPage from './reloadPage.js';
 import shouldReloadForAuthError from './shouldReloadForAuthError.js';
@@ -72,7 +74,11 @@ async function request({
   }
   recordCallerStamp({ lowdefy, serverCaller });
   if (!res.ok) {
-    const body = await awaitUnlessUnloading({ lowdefy, promise: res.json() });
+    const text = await awaitUnlessUnloading({ lowdefy, promise: res.text() });
+    const body = parseJsonObject(text);
+    if (body === null) {
+      throw new NonJsonResponseError({ status: res.status, text });
+    }
     if (
       res.status === 409 &&
       shouldReloadForBuild({ bundleBuildId: buildId, serverBuildId: body?.buildId, window })

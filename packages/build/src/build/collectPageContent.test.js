@@ -15,6 +15,7 @@
 */
 
 import collectPageContent from './collectPageContent.js';
+import { expect, test } from 'vitest';
 
 test('collectPageContent returns empty string when no pages', () => {
   expect(collectPageContent([])).toBe('');
@@ -30,7 +31,11 @@ test('collectPageContent returns empty string for undefined pages', () => {
 
 test('collectPageContent collects string from properties.html', () => {
   const result = collectPageContent([
-    { id: 'p1', type: 'DangerousHtml', properties: { html: '<div class="bg-red-500">Hello</div>' } },
+    {
+      id: 'p1',
+      type: 'DangerousHtml',
+      properties: { html: '<div class="bg-red-500">Hello</div>' },
+    },
   ]);
   expect(result).toBe('<div class="bg-red-500">Hello</div>');
 });
@@ -71,9 +76,7 @@ test('collectPageContent collects strings from nested blocks via blocks', () => 
       id: 'p1',
       type: 'Box',
       properties: { title: 'Parent' },
-      blocks: [
-        { id: 'c1', type: 'Text', properties: { content: 'Child' } },
-      ],
+      blocks: [{ id: 'c1', type: 'Text', properties: { content: 'Child' } }],
     },
   ]);
   expect(result).toContain('Parent');
@@ -87,9 +90,7 @@ test('collectPageContent collects strings from blocks in areas.content.blocks', 
       type: 'Box',
       areas: {
         content: {
-          blocks: [
-            { id: 'c1', type: 'Text', properties: { content: 'In area' } },
-          ],
+          blocks: [{ id: 'c1', type: 'Text', properties: { content: 'In area' } }],
         },
       },
     },
@@ -104,9 +105,7 @@ test('collectPageContent collects strings from blocks in slots.header.blocks', (
       type: 'Card',
       slots: {
         header: {
-          blocks: [
-            { id: 'h1', type: 'Title', properties: { content: 'Header text' } },
-          ],
+          blocks: [{ id: 'h1', type: 'Title', properties: { content: 'Header text' } }],
         },
       },
     },
@@ -120,7 +119,10 @@ test('collectPageContent descends into nested objects in properties', () => {
       id: 'p1',
       type: 'Selector',
       properties: {
-        options: [{ label: 'hello', value: 'h' }, { label: 'world', value: 'w' }],
+        options: [
+          { label: 'hello', value: 'h' },
+          { label: 'world', value: 'w' },
+        ],
       },
     },
   ]);
@@ -175,16 +177,12 @@ test('collectPageContent skips blocks without properties', () => {
 });
 
 test('collectPageContent collects string class value', () => {
-  const result = collectPageContent([
-    { id: 'p1', type: 'Box', class: 'text-red-500 p-4' },
-  ]);
+  const result = collectPageContent([{ id: 'p1', type: 'Box', class: 'text-red-500 p-4' }]);
   expect(result).toContain('text-red-500 p-4');
 });
 
 test('collectPageContent collects array class value', () => {
-  const result = collectPageContent([
-    { id: 'p1', type: 'Box', class: ['p-4', 'mt-2'] },
-  ]);
+  const result = collectPageContent([{ id: 'p1', type: 'Box', class: ['p-4', 'mt-2'] }]);
   expect(result).toContain('p-4');
   expect(result).toContain('mt-2');
 });

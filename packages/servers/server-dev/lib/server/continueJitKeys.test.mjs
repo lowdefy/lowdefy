@@ -17,6 +17,7 @@
 import { makeId } from '@lowdefy/build/dev';
 
 import continueJitKeys from './continueJitKeys.js';
+import { expect, test } from 'vitest';
 
 test('two dev server processes serving one config build never hand out the same key', () => {
   const idCounter = { prefix: 'a1b2_', counter: 40 };

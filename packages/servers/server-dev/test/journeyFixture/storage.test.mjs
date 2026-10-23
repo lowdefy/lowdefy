@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // Object storage under a data set: an AwsS3Bucket connection declares
 // meta.dataSet 'external', so a page-load request on it is sunk (recorded and

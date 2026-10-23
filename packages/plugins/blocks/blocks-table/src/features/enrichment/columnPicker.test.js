@@ -25,6 +25,7 @@ import generateColumnKey from './generateColumnKey.js';
 import getPickerKinds from './getPickerKinds.js';
 import syncPromptInputs from './syncPromptInputs.js';
 import validateDraft from './validateDraft.js';
+import { expect, test } from 'vitest';
 
 const inputKeys = ['name', 'domain'];
 

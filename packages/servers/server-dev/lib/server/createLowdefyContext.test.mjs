@@ -18,50 +18,50 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, describe, expect, test } from 'vitest';
 import { projectCaughtError } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 const secret = 'planted-dev-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
 
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  createApiContext: jest.fn(),
-  createRequestSignal: jest.fn(({ clientSignal, timeoutSignal }) =>
+vi.doMock('@lowdefy/api', () => ({
+  createApiContext: vi.fn(),
+  createRequestSignal: vi.fn(({ clientSignal, timeoutSignal }) =>
     timeoutSignal ? AbortSignal.any([clientSignal, timeoutSignal]) : clientSignal
   ),
   // Returns what the server passes, so the test reads the auth-hook system context inputs.
-  createSystemContext: jest.fn((options) => options),
-  ensureMcpOauthResource: jest.fn(async () => {}),
-  normalizeInjectedCaller: jest.fn((user) => user),
-  resolveAuthentication: jest.fn(async () => {}),
-  resolvePinnedOrganization: jest.fn(async () => {}),
-  resolveTenantPreflight: jest.fn(async () => {}),
+  createSystemContext: vi.fn((options) => options),
+  ensureMcpOauthResource: vi.fn(async () => {}),
+  normalizeInjectedCaller: vi.fn((user) => user),
+  resolveAuthentication: vi.fn(async () => {}),
+  resolvePinnedOrganization: vi.fn(async () => {}),
+  resolveTenantPreflight: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../build/appMeta.js', () => ({ default: {} }));
-jest.unstable_mockModule('../build/config.js', () => ({ default: {} }));
-jest.unstable_mockModule('../build/auth.js', () => ({ default: {} }));
-jest.unstable_mockModule('../build/i18n.js', () => ({ default: {} }));
-jest.unstable_mockModule('./log/createHandleError.js', () => ({
-  default: jest.fn(() => jest.fn()),
+vi.doMock('../build/appMeta.js', () => ({ default: {} }));
+vi.doMock('../build/config.js', () => ({ default: {} }));
+vi.doMock('../build/auth.js', () => ({ default: {} }));
+vi.doMock('../build/i18n.js', () => ({ default: {} }));
+vi.doMock('./log/createHandleError.js', () => ({
+  default: vi.fn(() => vi.fn()),
 }));
-jest.unstable_mockModule('./log/createLogger.js', () => ({
-  default: jest.fn(() => ({
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+vi.doMock('./log/createLogger.js', () => ({
+  default: vi.fn(() => ({
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   })),
 }));
-jest.unstable_mockModule('./fileCache.js', () => ({ default: {} }));
-jest.unstable_mockModule('./auth/getAuth.js', () => ({ default: jest.fn(() => null) }));
-jest.unstable_mockModule('./auth/getHeadlessUser.js', () => ({
-  default: jest.fn(() => null),
+vi.doMock('./fileCache.js', () => ({ default: {} }));
+vi.doMock('./auth/getAuth.js', () => ({ default: vi.fn(() => null) }));
+vi.doMock('./auth/getHeadlessUser.js', () => ({
+  default: vi.fn(() => null),
 }));
-jest.unstable_mockModule('./auth/getMockUser.js', () => ({ default: jest.fn(() => undefined) }));
-jest.unstable_mockModule('./auth/getStrategies.js', () => ({ default: jest.fn(() => null) }));
-jest.unstable_mockModule('./loadDynamicJsMap.js', () => ({ default: jest.fn(() => ({})) }));
-jest.unstable_mockModule('./log/logRequest.js', () => ({ default: jest.fn() }));
+vi.doMock('./auth/getMockUser.js', () => ({ default: vi.fn(() => undefined) }));
+vi.doMock('./auth/getStrategies.js', () => ({ default: vi.fn(() => null) }));
+vi.doMock('./loadDynamicJsMap.js', () => ({ default: vi.fn(() => ({})) }));
+vi.doMock('./log/logRequest.js', () => ({ default: vi.fn() }));
 
 // createLowdefyContext statically imports the app build's plugin artifacts,
 // which only exist in a built app (build/** is gitignored). Materialize the
@@ -100,7 +100,7 @@ const connectionPlugins = {
   Knex: {},
 };
 fixtures.forEach(({ absolutePath }) => {
-  jest.unstable_mockModule(absolutePath, () => ({
+  vi.doMock(absolutePath, () => ({
     default: absolutePath.endsWith(`${path.sep}connections.js`) ? connectionPlugins : {},
     interpolateProperties: () => {},
     renderEmail: () => {},
@@ -263,7 +263,7 @@ describe('data sessions', () => {
   }
 
   function mockReadConfigFile() {
-    const readConfigFile = jest.fn(async () => realArtifact);
+    const readConfigFile = vi.fn(async () => realArtifact);
     createApiContext.mockImplementationOnce((context) => {
       context.readConfigFile = readConfigFile;
     });

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import startIdleGc from './startIdleGc.js';
 
@@ -37,15 +37,31 @@ function start(options = {}) {
 
 function tick(ms) {
   clock += ms;
-  jest.advanceTimersByTime(ms);
+  vi.advanceTimersByTime(ms);
 }
 
 beforeEach(() => {
   // performance is not redefinable on this Node, and nothing here reads it.
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   delete globalThis[STARTED];
   clock = START;
-  gc = jest.fn();
+  gc = vi.fn();
   record = {
     lastActivityAt: new Date(START).toISOString(),
     activeRequests: 0,
@@ -54,8 +70,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.clearAllTimers();
-  jest.useRealTimers();
+  vi.clearAllTimers();
+  vi.useRealTimers();
   delete globalThis[STARTED];
 });
 
@@ -111,7 +127,7 @@ test('startIdleGc does nothing when the instance record has no activity', () => 
 });
 
 test('startIdleGc does nothing when the child was started without gc exposed', () => {
-  // The gc default is globalThis.gc, which every later test file in a jest worker has once
+  // The gc default is globalThis.gc, which every later test file in a test worker has once
   // createIdleGc.test.mjs has set --expose-gc in it.
   const exposedGc = globalThis.gc;
   delete globalThis.gc;
@@ -120,7 +136,7 @@ test('startIdleGc does nothing when the child was started without gc exposed', (
     start();
 
     expect(globalThis[STARTED]).toBeUndefined();
-    expect(jest.getTimerCount()).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
   } finally {
     if (exposedGc !== undefined) {
       globalThis.gc = exposedGc;
@@ -132,7 +148,7 @@ test('startIdleGc starts one interval however often the app entry is evaluated',
   start();
   start();
 
-  expect(jest.getTimerCount()).toBe(1);
+  expect(vi.getTimerCount()).toBe(1);
   tick(10_000);
   expect(gc).toHaveBeenCalledTimes(1);
 });

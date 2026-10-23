@@ -18,6 +18,7 @@ import { ReservedKeyError } from '@lowdefy/helpers';
 
 import State from '../src/State.js';
 import DependencyTracker from '../src/tracking/DependencyTracker.js';
+import { expect, test } from 'vitest';
 
 function createContext(state) {
   const context = { state, _internal: { lowdefy: { _internal: {} } } };

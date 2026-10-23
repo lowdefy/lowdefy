@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import buildEnvironments from './buildEnvironments.js';
 import testContext from '../test-utils/testContext.js';
@@ -22,7 +22,7 @@ import testContext from '../test-utils/testContext.js';
 const originalEnvironment = process.env.LOWDEFY_ENVIRONMENT;
 
 function makeContext({ stage = 'test' } = {}) {
-  const warn = jest.fn();
+  const warn = vi.fn();
   const context = testContext({ logger: { warn } });
   context.stage = stage;
   return { context, warn };

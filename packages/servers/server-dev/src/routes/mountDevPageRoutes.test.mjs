@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 
 import mountDevPageRoutes from './mountDevPageRoutes.js';
+import { expect, test } from 'vitest';
 
 test.each([
   ['/app', '/app'],

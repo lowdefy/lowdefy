@@ -16,6 +16,7 @@
 
 import validate from './validate.js';
 import ajv, { MAX_VALIDATION_ERRORS } from './ajvInstance.js';
+import { expect, test } from 'vitest';
 
 test('Object matches schema', () => {
   const schema = {

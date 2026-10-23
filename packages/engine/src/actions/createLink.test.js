@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import { ActionError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
@@ -33,13 +33,15 @@ const lowdefy = {
         }
       },
     },
-    link: jest.fn(),
+    link: vi.fn(),
   },
 };
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 // Comment out to use console
 console.log = () => {};

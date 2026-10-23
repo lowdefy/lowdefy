@@ -16,6 +16,7 @@
 
 import parseTsv from './parseTsv.js';
 import serializeTsv from './serializeTsv.js';
+import { describe, expect, test } from 'vitest';
 
 describe('parseTsv', () => {
   test('parseTsv splits rows on newlines and fields on tabs', () => {

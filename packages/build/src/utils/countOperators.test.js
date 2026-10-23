@@ -16,6 +16,7 @@
 
 import countOperators from './countOperators.js';
 import createCounter from './createCounter.js';
+import { expect, test } from 'vitest';
 
 test('countOperators from null', () => {
   const counter = createCounter();

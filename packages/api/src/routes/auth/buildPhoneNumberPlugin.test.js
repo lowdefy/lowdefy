@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 
@@ -31,7 +31,7 @@ function createAuthConfig(overrides = {}) {
   };
 }
 
-const sendPhoneOtp = jest.fn();
+const sendPhoneOtp = vi.fn();
 
 test('buildPhoneNumberPlugin returns the phone-number plugin with scalar options from config', () => {
   const plugin = buildPhoneNumberPlugin({
@@ -61,7 +61,7 @@ test('buildPhoneNumberPlugin pins the E.164 phone number validator', () => {
 });
 
 test('buildPhoneNumberPlugin wires the bound sendPasswordResetOTP slot', () => {
-  const sendPhonePasswordResetOtp = jest.fn();
+  const sendPhonePasswordResetOtp = vi.fn();
   const plugin = buildPhoneNumberPlugin({
     authConfig: createAuthConfig(),
     sendPhoneOtp,
@@ -82,7 +82,7 @@ test('buildPhoneNumberPlugin throws a naming error from sendPasswordResetOTP whe
 });
 
 test('buildPhoneNumberPlugin sets callbackOnVerification only when phone.verified is bound', () => {
-  const phoneVerified = jest.fn();
+  const phoneVerified = vi.fn();
   const withCallback = buildPhoneNumberPlugin({
     authConfig: createAuthConfig(),
     phoneVerified,

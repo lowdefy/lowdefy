@@ -19,6 +19,7 @@ import { ConfigError, UserError } from '@lowdefy/errors';
 
 import createUserAfterHook from './createUserAfterHook.js';
 import createUserBeforeHook from './createUserBeforeHook.js';
+import { expect, test } from 'vitest';
 
 const hook = { id: 'test-hook', point: 'user.create.before', endpointId: 'auth/test' };
 

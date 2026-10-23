@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import invokeEndpoint from './invokeEndpoint.js';
 
@@ -29,7 +29,7 @@ function apiError({ status, statusCode, message, code }) {
 }
 
 test('invokeEndpoint returns the endpoint result', async () => {
-  const endpoint = jest.fn().mockResolvedValue({ id: 'member-1' });
+  const endpoint = vi.fn().mockResolvedValue({ id: 'member-1' });
   expect(await invokeEndpoint({ endpoint, input: { body: {} } })).toEqual({ id: 'member-1' });
   expect(endpoint).toHaveBeenCalledWith({ body: {} });
 });
@@ -41,7 +41,7 @@ test('invokeEndpoint surfaces a 4xx APIError rail message as a plain error', asy
     message: 'Role not found.',
     code: 'ROLE_NOT_FOUND',
   });
-  const endpoint = jest.fn().mockRejectedValue(cause);
+  const endpoint = vi.fn().mockRejectedValue(cause);
   await expect(invokeEndpoint({ endpoint, input: {} })).rejects.toMatchObject({
     name: 'Error',
     message: 'Role not found.',
@@ -56,7 +56,7 @@ test('invokeEndpoint wraps a 5xx APIError as a ServiceError', async () => {
     message: 'Something broke.',
     code: 'INTERNAL_SERVER_ERROR',
   });
-  const endpoint = jest.fn().mockRejectedValue(cause);
+  const endpoint = vi.fn().mockRejectedValue(cause);
   await expect(invokeEndpoint({ endpoint, input: {} })).rejects.toMatchObject({
     name: 'ServiceError',
     service: 'BetterAuth',
@@ -66,6 +66,6 @@ test('invokeEndpoint wraps a 5xx APIError as a ServiceError', async () => {
 
 test('invokeEndpoint rethrows a non-APIError unchanged', async () => {
   const cause = new Error('Adapter blew up.');
-  const endpoint = jest.fn().mockRejectedValue(cause);
+  const endpoint = vi.fn().mockRejectedValue(cause);
   await expect(invokeEndpoint({ endpoint, input: {} })).rejects.toBe(cause);
 });

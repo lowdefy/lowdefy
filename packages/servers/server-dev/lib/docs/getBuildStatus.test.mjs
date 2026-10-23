@@ -17,18 +17,18 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-const mockClientErrors = jest.fn();
-jest.unstable_mockModule('./clientErrorStore.js', () => ({ default: { list: mockClientErrors } }));
-const mockServerErrors = jest.fn();
-jest.unstable_mockModule('./serverErrorStore.js', () => ({ default: { list: mockServerErrors } }));
-jest.unstable_mockModule('./getBuildId.js', () => ({ default: () => 'build-2' }));
-const mockGetPageBuildStatus = jest.fn(() => ({ unbuilt: 0 }));
-jest.unstable_mockModule('./getPageBuildStatus.js', () => ({ default: mockGetPageBuildStatus }));
+const mockClientErrors = vi.fn();
+vi.doMock('./clientErrorStore.js', () => ({ default: { list: mockClientErrors } }));
+const mockServerErrors = vi.fn();
+vi.doMock('./serverErrorStore.js', () => ({ default: { list: mockServerErrors } }));
+vi.doMock('./getBuildId.js', () => ({ default: () => 'build-2' }));
+const mockGetPageBuildStatus = vi.fn(() => ({ unbuilt: 0 }));
+vi.doMock('./getPageBuildStatus.js', () => ({ default: mockGetPageBuildStatus }));
 const okBuild = () => ({ status: 'ok', errors: [], warnings: ['a build warning'] });
-const mockReadBuildArtifact = jest.fn(okBuild);
-jest.unstable_mockModule('./readBuildArtifact.js', () => ({ default: mockReadBuildArtifact }));
+const mockReadBuildArtifact = vi.fn(okBuild);
+vi.doMock('./readBuildArtifact.js', () => ({ default: mockReadBuildArtifact }));
 
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
 

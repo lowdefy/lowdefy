@@ -15,6 +15,7 @@
 */
 
 import _t from './t.js';
+import { expect, test } from 'vitest';
 
 const i18n = {
   active: 'de-DE',
@@ -23,8 +24,7 @@ const i18n = {
   messages: {
     'en-US': {
       hello: 'Hello',
-      'cart.items':
-        '{count, plural, =0 {No items} one {# item} other {# items}}',
+      'cart.items': '{count, plural, =0 {No items} one {# item} other {# items}}',
       greeting: 'Hello, {name}!',
     },
     'de-DE': {

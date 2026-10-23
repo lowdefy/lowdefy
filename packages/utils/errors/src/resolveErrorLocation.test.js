@@ -17,6 +17,7 @@
 import path from 'path';
 
 import resolveErrorLocation from './resolveErrorLocation.js';
+import { expect, test } from 'vitest';
 
 const keyMap = {
   abc123: {

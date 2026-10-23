@@ -15,6 +15,7 @@
 */
 
 import gte from './gte.js';
+import { expect, test } from 'vitest';
 
 const location = 'locationId';
 

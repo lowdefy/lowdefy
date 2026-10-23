@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import watchPageUnload from './watchPageUnload.js';
 
 function createWindow() {

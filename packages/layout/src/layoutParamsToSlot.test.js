@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import layoutParamsToSlot from './layoutParamsToSlot.js';
 
 let warnSpy;
 
 beforeEach(() => {
-  warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 afterEach(() => {

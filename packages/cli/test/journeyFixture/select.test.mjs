@@ -18,6 +18,7 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // `lowdefy test` selections from the built CLI over the fixture app: the full
 // run reads sub-folders and skips "_" folders, and a folder, its glob and a tag

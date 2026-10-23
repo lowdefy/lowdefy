@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { getHtmlEnhancements } from '@lowdefy/block-utils/registerHtmlEnhancements.js';
 
 import initLowdefyContext from './initLowdefyContext.js';
@@ -38,7 +38,7 @@ function baseArgs(overrides = {}) {
     router: { basePath: '' },
     stage: 'production',
     types: { actions: {}, blocks: {}, icons: {}, operators: {} },
-    window: { addEventListener: jest.fn(), document: {}, fetch: () => undefined },
+    window: { addEventListener: vi.fn(), document: {}, fetch: () => undefined },
   };
 }
 

@@ -18,6 +18,7 @@ import assert from 'node:assert/strict';
 
 import buildStickyLevels from './buildStickyLevels.js';
 import getStickyGroups from './getStickyGroups.js';
+import { test } from 'vitest';
 
 function levelsOf(depths) {
   const rows = depths.map((depth) => (depth === null ? { kind: 'row' } : { kind: 'group', depth }));

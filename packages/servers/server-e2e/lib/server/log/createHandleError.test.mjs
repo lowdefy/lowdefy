@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import createHandleError from './createHandleError.js';
@@ -33,10 +33,10 @@ const refMap = { ref_1: { path: 'pages/home.yaml' } };
 function testContext({ logger, readConfigFile, configDirectory } = {}) {
   return {
     configDirectory,
-    logger: logger ?? { error: jest.fn() },
+    logger: logger ?? { error: vi.fn() },
     readConfigFile:
       readConfigFile ??
-      jest.fn(async (path) => {
+      vi.fn(async (path) => {
         if (path === 'keyMap.json') return keyMap;
         if (path === 'refMap.json') return refMap;
         return null;
@@ -45,7 +45,7 @@ function testContext({ logger, readConfigFile, configDirectory } = {}) {
 }
 
 beforeEach(() => {
-  console.error = jest.fn();
+  console.error = vi.fn();
 });
 
 test('handleError marks the error handled and resolves its location', async () => {
@@ -80,7 +80,7 @@ test('handleError marks a LowdefyInternalError handled even though it never gets
 
 test('handleError marks the error handled before it logs, so a throwing logger cannot skip the flag', async () => {
   const logger = {
-    error: jest.fn(() => {
+    error: vi.fn(() => {
       throw new Error('Log drain unreachable.');
     }),
   };
@@ -100,7 +100,7 @@ test('handleError marks the error handled before it logs, so a throwing logger c
 });
 
 test('handleError marks the error handled when location resolution rejects', async () => {
-  const readConfigFile = jest.fn(async () => {
+  const readConfigFile = vi.fn(async () => {
     throw new Error('keyMap.json unreadable.');
   });
   const context = testContext({ readConfigFile });

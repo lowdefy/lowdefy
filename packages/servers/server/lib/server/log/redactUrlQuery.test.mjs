@@ -15,6 +15,7 @@
 */
 
 import redactUrlQuery from './redactUrlQuery.js';
+import { expect, test } from 'vitest';
 
 test('redactUrlQuery redacts the magic-link token and keeps the other parameters', () => {
   expect(

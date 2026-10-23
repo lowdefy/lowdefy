@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { UserError } from '@lowdefy/errors';
 
-const mockTool = jest.fn();
-const mockJsonSchema = jest.fn();
-const mockStepCountIs = jest.fn((n) => ({ type: 'stepCount', count: n }));
-const mockHasToolCall = jest.fn((name) => ({ type: 'hasToolCall', toolName: name }));
+const mockTool = vi.fn();
+const mockJsonSchema = vi.fn();
+const mockStepCountIs = vi.fn((n) => ({ type: 'stepCount', count: n }));
+const mockHasToolCall = vi.fn((name) => ({ type: 'hasToolCall', toolName: name }));
 
 function createMockReadableStream(chunks = []) {
   return {
     getReader: () => {
       let index = 0;
       return {
-        read: jest.fn().mockImplementation(async () => {
+        read: vi.fn().mockImplementation(async () => {
           if (index < chunks.length) {
             return { done: false, value: chunks[index++] };
           }
@@ -39,7 +39,7 @@ function createMockReadableStream(chunks = []) {
 }
 
 const mockWriter = {
-  write: jest.fn(),
+  write: vi.fn(),
 };
 // The AI SDK delivers the full updated UI message list (input + this assistant
 // message) to the stream-level onEnd (ai v7's name for onFinish). The mocks
@@ -56,19 +56,19 @@ async function defaultCreateAgentUIStream(opts) {
   }
   return createMockReadableStream();
 }
-const mockCreateAgentUIStream = jest.fn().mockImplementation(defaultCreateAgentUIStream);
-const mockCreateUIMessageStream = jest.fn().mockImplementation(({ execute }) => {
+const mockCreateAgentUIStream = vi.fn().mockImplementation(defaultCreateAgentUIStream);
+const mockCreateUIMessageStream = vi.fn().mockImplementation(({ execute }) => {
   mockCreateUIMessageStream._lastExecute = execute;
   return { type: 'readable-stream' };
 });
-const mockCreateUIMessageStreamResponse = jest.fn().mockReturnValue({ type: 'web-response' });
-const mockGenerateText = jest.fn().mockResolvedValue({ text: 'Generated Title' });
-const mockGenerateId = jest.fn(() => 'generated-id');
+const mockCreateUIMessageStreamResponse = vi.fn().mockReturnValue({ type: 'web-response' });
+const mockGenerateText = vi.fn().mockResolvedValue({ text: 'Generated Title' });
+const mockGenerateId = vi.fn(() => 'generated-id');
 
 let lastAgentConfig = null;
 let lastAgentInstance = null;
 const MOCK_PART_STREAM = { type: 'mock-part-stream' };
-const mockToUIMessageStream = jest.fn().mockImplementation((opts) => {
+const mockToUIMessageStream = vi.fn().mockImplementation((opts) => {
   if (opts?.onEnd) {
     opts.onEnd({ messages: [...(opts?.originalMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
   }
@@ -82,12 +82,12 @@ class MockToolLoopAgent {
     lastAgentInstance = this;
   }
 
-  stream = jest.fn().mockResolvedValue({ stream: MOCK_PART_STREAM });
+  stream = vi.fn().mockResolvedValue({ stream: MOCK_PART_STREAM });
 }
 
-const mockConvertToModelMessages = jest.fn().mockResolvedValue([]);
-const mockPruneMessages = jest.fn().mockReturnValue([]);
-const mockValidateUIMessages = jest.fn().mockResolvedValue([]);
+const mockConvertToModelMessages = vi.fn().mockResolvedValue([]);
+const mockPruneMessages = vi.fn().mockReturnValue([]);
+const mockValidateUIMessages = vi.fn().mockResolvedValue([]);
 
 // Carries the AI SDK's error marker and name, as the real TypeValidationError does.
 class MockTypeValidationError extends Error {
@@ -102,7 +102,7 @@ class MockTypeValidationError extends Error {
   }
 }
 
-jest.unstable_mockModule('ai', () => ({
+vi.doMock('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
   TypeValidationError: MockTypeValidationError,
   convertToModelMessages: mockConvertToModelMessages,
@@ -120,13 +120,13 @@ jest.unstable_mockModule('ai', () => ({
   validateUIMessages: mockValidateUIMessages,
 }));
 
-const mockCreateMCPClient = jest.fn();
-jest.unstable_mockModule('@ai-sdk/mcp', () => ({
+const mockCreateMCPClient = vi.fn();
+vi.doMock('@ai-sdk/mcp', () => ({
   createMCPClient: mockCreateMCPClient,
 }));
 
-const mockBuildUpdatePageStateTool = jest.fn();
-jest.unstable_mockModule('./buildUpdatePageStateTool.js', () => ({
+const mockBuildUpdatePageStateTool = vi.fn();
+vi.doMock('./buildUpdatePageStateTool.js', () => ({
   default: mockBuildUpdatePageStateTool,
 }));
 
@@ -135,18 +135,18 @@ class MockStdioMCPTransport {
     this.config = config;
   }
 }
-jest.unstable_mockModule('@ai-sdk/mcp/mcp-stdio', () => ({
+vi.doMock('@ai-sdk/mcp/mcp-stdio', () => ({
   Experimental_StdioMCPTransport: MockStdioMCPTransport,
 }));
 
-const mockHandleAgentGenerate = jest.fn();
-jest.unstable_mockModule('./handleAgentGenerate.js', () => ({
+const mockHandleAgentGenerate = vi.fn();
+vi.doMock('./handleAgentGenerate.js', () => ({
   default: mockHandleAgentGenerate,
 }));
 
 const MOCK_SCHEMA = { type: 'object', properties: {} };
 
-const testLogger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const testLogger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 test('dispatches to handleAgentGenerate when context.mode is generate', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
@@ -154,7 +154,7 @@ test('dispatches to handleAgentGenerate when context.mode is generate', async ()
   mockHandleAgentGenerate.mockResolvedValue(mockResult);
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: { agent: { properties: { model: 'test-model' } }, prompt: 'Go.' },
     context: { logger: testLogger, mode: 'generate' },
   };
@@ -172,12 +172,12 @@ test('creates ToolLoopAgent with correct parameters', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   const mockModel = {};
-  const provider = jest.fn().mockReturnValue(mockModel);
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const provider = vi.fn().mockReturnValue(mockModel);
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Search tool',
     payloadSchema: { type: 'object', properties: { query: { type: 'string' } } },
   });
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: { result: 'ok' } });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: { result: 'ok' } });
 
   const messages = [{ role: 'user', content: 'Hello' }];
   const agent = {
@@ -227,14 +227,14 @@ test('builds tools from endpoint configs', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   const payloadSchema = { type: 'object', properties: { query: { type: 'string' } } };
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'A search endpoint',
     payloadSchema,
   });
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: { hits: [] } });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: { hits: [] } });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [{ endpointId: 'search' }], properties: { model: 'gpt-4o' } },
       messages: [],
@@ -267,7 +267,7 @@ test('uses default stopWhen and toolChoice when optional properties missing', as
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -275,7 +275,7 @@ test('uses default stopWhen and toolChoice when optional properties missing', as
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(mockStepCountIs).toHaveBeenCalledWith(10);
@@ -290,11 +290,11 @@ test('uses default stopWhen and toolChoice when optional properties missing', as
 test('handles agent with no tools property defined', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const getEndpointConfig = jest.fn();
-  const callEndpoint = jest.fn();
+  const getEndpointConfig = vi.fn();
+  const callEndpoint = vi.fn();
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { properties: { model: 'gpt-4o' } },
       messages: [],
@@ -312,17 +312,17 @@ test('throws when tool endpoint execution fails with error message', async () =>
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Failing endpoint',
     payloadSchema: { type: 'object' },
   });
-  const callEndpoint = jest.fn().mockResolvedValue({
+  const callEndpoint = vi.fn().mockResolvedValue({
     success: false,
     error: { '~e': { message: 'Database connection refused', name: 'Error' } },
   });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [{ endpointId: 'db-query' }], properties: { model: 'gpt-4o' } },
       messages: [],
@@ -342,14 +342,14 @@ test('throws generic message when tool endpoint fails without error message', as
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Failing endpoint',
     payloadSchema: { type: 'object' },
   });
-  const callEndpoint = jest.fn().mockResolvedValue({ success: false });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: false });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [{ endpointId: 'db-query' }], properties: { model: 'gpt-4o' } },
       messages: [],
@@ -367,14 +367,14 @@ test('builds multiple tools from multiple endpoint configs', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const getEndpointConfig = jest
+  const getEndpointConfig = vi
     .fn()
     .mockResolvedValueOnce({ description: 'Search tool', payloadSchema: { type: 'object' } })
     .mockResolvedValueOnce({ description: 'Write tool', payloadSchema: { type: 'object' } });
-  const callEndpoint = jest.fn();
+  const callEndpoint = vi.fn();
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [{ endpointId: 'search' }, { endpointId: 'write' }],
@@ -398,14 +398,14 @@ test('tool execute returns null when endpoint response is null', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Nullable endpoint',
     payloadSchema: { type: 'object' },
   });
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: null });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: null });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [{ endpointId: 'nullable' }], properties: { model: 'gpt-4o' } },
       messages: [],
@@ -427,18 +427,18 @@ test('cleanBuildArtifact strips non-enumerable serializer markers from payload s
   const payloadSchema = { type: 'object', properties: { query: { type: 'string' } } };
   Object.defineProperty(payloadSchema, '~k', { value: 'some.config.key', enumerable: false });
 
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Schema test endpoint',
     payloadSchema,
   });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [{ endpointId: 'schema-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig },
   });
 
   const cleanedSchema = mockJsonSchema.mock.calls[0][0];
@@ -455,14 +455,14 @@ test('tool execute cleans build artifact markers from response', async () => {
   const response = { data: 'result value', count: 42 };
   Object.defineProperty(response, '~k', { value: 'response.config.key', enumerable: false });
 
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Response cleaning endpoint',
     payloadSchema: { type: 'object' },
   });
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [{ endpointId: 'response-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
@@ -489,7 +489,7 @@ test('providerOptions passed to ToolLoopAgent', async () => {
   };
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -497,7 +497,7 @@ test('providerOptions passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.providerOptions).toEqual(providerOptions);
@@ -510,7 +510,7 @@ test('undefined providerOptions does not break agent creation', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -518,7 +518,7 @@ test('undefined providerOptions does not break agent creation', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.providerOptions).toBeUndefined();
@@ -530,10 +530,10 @@ test('hook callbacks are passed to ToolLoopAgent constructor', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -544,7 +544,7 @@ test('hook callbacks are passed to ToolLoopAgent constructor', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.onToolExecutionEnd).toEqual(expect.any(Function));
@@ -557,10 +557,10 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -569,7 +569,7 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   const onStepFinish = lastAgentConfig.onStepEnd;
@@ -594,10 +594,10 @@ test('non-onFinish hook callbacks strip messages from event payload', async () =
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -606,7 +606,7 @@ test('non-onFinish hook callbacks strip messages from event payload', async () =
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   const onStepFinish = lastAgentConfig.onStepEnd;
@@ -627,10 +627,10 @@ test('hook callback errors do not propagate', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockRejectedValue(new Error('endpoint failed'));
+  const callEndpoint = vi.fn().mockRejectedValue(new Error('endpoint failed'));
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -639,7 +639,7 @@ test('hook callback errors do not propagate', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   testLogger.warn.mockClear();
@@ -665,7 +665,7 @@ test('no hooks produces no callbacks on ToolLoopAgent', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -673,7 +673,7 @@ test('no hooks produces no callbacks on ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.onStart).toBeUndefined();
@@ -688,15 +688,15 @@ test('empty tools array produces empty tools object', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const getEndpointConfig = jest.fn();
+  const getEndpointConfig = vi.fn();
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig },
   });
 
   expect(lastAgentConfig.tools).toEqual({});
@@ -707,12 +707,12 @@ test('tool with confirm true asks for user approval', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Dangerous tool',
     payloadSchema: { type: 'object' },
   });
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [{ endpointId: 'dangerous', confirm: true }],
@@ -720,7 +720,7 @@ test('tool with confirm true asks for user approval', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig },
   });
   // ai v7: approval is set on the agent, by tool name.
   expect(lastAgentConfig.toolApproval).toEqual({ dangerous: 'user-approval' });
@@ -730,12 +730,12 @@ test('tool without confirm asks for no approval', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Normal tool',
     payloadSchema: { type: 'object' },
   });
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [{ endpointId: 'normal' }],
@@ -743,7 +743,7 @@ test('tool without confirm asks for no approval', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig },
   });
   expect(lastAgentConfig.toolApproval).toEqual({});
 });
@@ -752,17 +752,17 @@ test('creates MCP clients from agent mcp config', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
   const mockClient = {
-    tools: jest.fn().mockResolvedValue({ 'mcp-search': { description: 'MCP search' } }),
-    close: jest.fn().mockResolvedValue(undefined),
+    tools: vi.fn().mockResolvedValue({ 'mcp-search': { description: 'MCP search' } }),
+    close: vi.fn().mockResolvedValue(undefined),
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const evaluateOperators = jest.fn((input) => input);
+  const evaluateOperators = vi.fn((input) => input);
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -773,8 +773,8 @@ test('creates MCP clients from agent mcp config', async () => {
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       evaluateOperators,
     },
   });
@@ -789,8 +789,8 @@ test('endpoint tools take precedence over MCP tools on name conflict', async () 
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const mockClient = {
-    tools: jest.fn().mockResolvedValue({ search: { description: 'MCP search' } }),
-    close: jest.fn().mockResolvedValue(undefined),
+    tools: vi.fn().mockResolvedValue({ search: { description: 'MCP search' } }),
+    close: vi.fn().mockResolvedValue(undefined),
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
   testLogger.warn.mockClear();
@@ -798,13 +798,13 @@ test('endpoint tools take precedence over MCP tools on name conflict', async () 
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Endpoint search',
     payloadSchema: { type: 'object' },
   });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [{ endpointId: 'search' }],
@@ -815,9 +815,9 @@ test('endpoint tools take precedence over MCP tools on name conflict', async () 
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
+      callEndpoint: vi.fn(),
       getEndpointConfig,
-      evaluateOperators: jest.fn((x) => x),
+      evaluateOperators: vi.fn((x) => x),
     },
   });
 
@@ -828,18 +828,18 @@ test('MCP source with confirm asks approval for all its tools', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const mockClient = {
-    tools: jest.fn().mockResolvedValue({
+    tools: vi.fn().mockResolvedValue({
       'mcp-tool-a': { description: 'A' },
       'mcp-tool-b': { description: 'B' },
     }),
-    close: jest.fn().mockResolvedValue(undefined),
+    close: vi.fn().mockResolvedValue(undefined),
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   const result = await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -850,9 +850,9 @@ test('MCP source with confirm asks approval for all its tools', async () => {
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
-      evaluateOperators: jest.fn((x) => x),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
+      evaluateOperators: vi.fn((x) => x),
     },
   });
 
@@ -872,7 +872,7 @@ test('unreachable MCP server logs warning and continues', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   const result = await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -883,9 +883,9 @@ test('unreachable MCP server logs warning and continues', async () => {
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
-      evaluateOperators: jest.fn((x) => x),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
+      evaluateOperators: vi.fn((x) => x),
     },
   });
 
@@ -899,9 +899,9 @@ test('unreachable MCP server logs warning and continues', async () => {
 test('MCP clients closed on finish', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
-  const mockClose = jest.fn().mockResolvedValue(undefined);
+  const mockClose = vi.fn().mockResolvedValue(undefined);
   const mockClient = {
-    tools: jest.fn().mockResolvedValue({ 'mcp-tool': { description: 'Tool' } }),
+    tools: vi.fn().mockResolvedValue({ 'mcp-tool': { description: 'Tool' } }),
     close: mockClose,
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
@@ -909,7 +909,7 @@ test('MCP clients closed on finish', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -920,9 +920,9 @@ test('MCP clients closed on finish', async () => {
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
-      evaluateOperators: jest.fn((x) => x),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
+      evaluateOperators: vi.fn((x) => x),
     },
   });
 
@@ -937,15 +937,15 @@ test('stdio MCP source creates StdioMCPTransport with command and args', async (
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
   const mockClient = {
-    tools: jest.fn().mockResolvedValue({ 'aws-docs': { description: 'Search AWS docs' } }),
-    close: jest.fn().mockResolvedValue(undefined),
+    tools: vi.fn().mockResolvedValue({ 'aws-docs': { description: 'Search AWS docs' } }),
+    close: vi.fn().mockResolvedValue(undefined),
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -963,9 +963,9 @@ test('stdio MCP source creates StdioMCPTransport with command and args', async (
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
-      evaluateOperators: jest.fn((x) => x),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
+      evaluateOperators: vi.fn((x) => x),
     },
   });
 
@@ -986,16 +986,16 @@ test('no mcp config produces no MCP clients', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
-      evaluateOperators: jest.fn((x) => x),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
+      evaluateOperators: vi.fn((x) => x),
     },
   });
 
@@ -1006,8 +1006,8 @@ test('MCP tool listing failure logs warning and continues', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const mockClient = {
-    tools: jest.fn().mockRejectedValue(new Error('Tool listing timed out')),
-    close: jest.fn().mockResolvedValue(undefined),
+    tools: vi.fn().mockRejectedValue(new Error('Tool listing timed out')),
+    close: vi.fn().mockResolvedValue(undefined),
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
   testLogger.warn.mockClear();
@@ -1016,7 +1016,7 @@ test('MCP tool listing failure logs warning and continues', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   const result = await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1027,9 +1027,9 @@ test('MCP tool listing failure logs warning and continues', async () => {
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
-      evaluateOperators: jest.fn((x) => x),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
+      evaluateOperators: vi.fn((x) => x),
     },
   });
 
@@ -1046,11 +1046,11 @@ test('stream-level onFinish calls hook endpoints with messages payload', async (
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
   const messages = [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }];
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1059,13 +1059,13 @@ test('stream-level onFinish calls hook endpoints with messages payload', async (
       },
       messages,
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
   expect(execute).toEqual(expect.any(Function));
 
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await execute({ writer: localWriter });
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
@@ -1085,10 +1085,10 @@ test('no onFinish hooks does not call callEndpoint in execute', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn();
+  const callEndpoint = vi.fn();
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1096,11 +1096,11 @@ test('no onFinish hooks does not call callEndpoint in execute', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await execute({ writer: localWriter });
 
   expect(callEndpoint).not.toHaveBeenCalled();
@@ -1117,10 +1117,10 @@ test('onFinish hook dataParts are written to the stream writer', async () => {
     { type: 'data', value: { suggestions: ['How are you?'] } },
     { type: 'data', value: { title: 'Greeting conversation' } },
   ];
-  const callEndpoint = jest.fn().mockResolvedValue({ response: { dataParts } });
+  const callEndpoint = vi.fn().mockResolvedValue({ response: { dataParts } });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1129,11 +1129,11 @@ test('onFinish hook dataParts are written to the stream writer', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await execute({ writer: localWriter });
 
   expect(localWriter.write).toHaveBeenCalledTimes(2);
@@ -1149,13 +1149,13 @@ test('onFinish hook failure logs an error and continues to the next hook', async
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest
+  const callEndpoint = vi
     .fn()
     .mockRejectedValueOnce(new Error('Network timeout'))
     .mockResolvedValueOnce({ response: { dataParts: [{ type: 'data', value: { ok: true } }] } });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1164,11 +1164,11 @@ test('onFinish hook failure logs an error and continues to the next hook', async
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await execute({ writer: localWriter });
 
   expect(callEndpoint).toHaveBeenCalledTimes(2);
@@ -1189,10 +1189,10 @@ test('onFinish hook without dataParts does not write to stream', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1201,11 +1201,11 @@ test('onFinish hook without dataParts does not write to stream', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await execute({ writer: localWriter });
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', expect.any(Object));
@@ -1219,7 +1219,7 @@ test('stopOnToolCall with single string creates array stopWhen', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1227,7 +1227,7 @@ test('stopOnToolCall with single string creates array stopWhen', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(mockHasToolCall).toHaveBeenCalledWith('submit_form');
@@ -1244,7 +1244,7 @@ test('stopOnToolCall with array creates stopWhen with multiple conditions', asyn
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1252,7 +1252,7 @@ test('stopOnToolCall with array creates stopWhen with multiple conditions', asyn
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(mockHasToolCall).toHaveBeenCalledWith('submit_form');
@@ -1271,7 +1271,7 @@ test('no stopOnToolCall produces single stopWhen condition', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1279,7 +1279,7 @@ test('no stopOnToolCall produces single stopWhen condition', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.stopWhen).toEqual({ type: 'stepCount', count: 10 });
@@ -1292,7 +1292,7 @@ test('activeTools passed to ToolLoopAgent', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1300,7 +1300,7 @@ test('activeTools passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.activeTools).toEqual(['search', 'write']);
@@ -1313,7 +1313,7 @@ test('sampling parameters passed to ToolLoopAgent', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1328,7 +1328,7 @@ test('sampling parameters passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.topP).toBe(0.9);
@@ -1345,7 +1345,7 @@ test('stopSequences passed to ToolLoopAgent', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1353,7 +1353,7 @@ test('stopSequences passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.stopSequences).toEqual(['END', 'STOP']);
@@ -1366,7 +1366,7 @@ test('maxRetries passed to ToolLoopAgent', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1374,7 +1374,7 @@ test('maxRetries passed to ToolLoopAgent', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.maxRetries).toBe(5);
@@ -1387,7 +1387,7 @@ test('timeout as number passed to createAgentUIStream', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1395,11 +1395,11 @@ test('timeout as number passed to createAgentUIStream', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await execute({ writer: localWriter });
 
   expect(mockCreateAgentUIStream).toHaveBeenCalledWith(expect.objectContaining({ timeout: 30000 }));
@@ -1414,7 +1414,7 @@ test('timeout as object passed to createAgentUIStream', async () => {
   const timeout = { totalMs: 60000, stepMs: 10000 };
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1422,11 +1422,11 @@ test('timeout as object passed to createAgentUIStream', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await execute({ writer: localWriter });
 
   expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
@@ -1441,7 +1441,7 @@ test('no timeout omits key from createAgentUIStream', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1449,11 +1449,11 @@ test('no timeout omits key from createAgentUIStream', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await execute({ writer: localWriter });
 
   const streamCallArgs =
@@ -1468,7 +1468,7 @@ test('undefined new properties do not break agent creation', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1476,7 +1476,7 @@ test('undefined new properties do not break agent creation', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.activeTools).toBeUndefined();
@@ -1495,14 +1495,14 @@ test('tool execute passes abortSignal to callEndpoint', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const getEndpointConfig = jest.fn().mockResolvedValue({
+  const getEndpointConfig = vi.fn().mockResolvedValue({
     description: 'Signal test',
     payloadSchema: { type: 'object' },
   });
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: { ok: true } });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: { ok: true } });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [{ endpointId: 'signal-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
@@ -1528,7 +1528,7 @@ test('repairToolCall is passed to ToolLoopAgent when enabled', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1536,7 +1536,7 @@ test('repairToolCall is passed to ToolLoopAgent when enabled', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.repairToolCall).toEqual(expect.any(Function));
@@ -1549,7 +1549,7 @@ test('repairToolCall is not set when not configured', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1557,7 +1557,7 @@ test('repairToolCall is not set when not configured', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   expect(lastAgentConfig.repairToolCall).toBeUndefined();
@@ -1569,11 +1569,11 @@ test('onFinish hook payload messages include the generated assistant reply', asy
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
   const inputMessages = [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }];
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1582,7 +1582,7 @@ test('onFinish hook payload messages include the generated assistant reply', asy
       },
       messages: inputMessages,
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   // Execute the stream to trigger onFinish
@@ -1603,7 +1603,7 @@ test('onFinish hook payload includes agentContext fields', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
   const messages = [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }];
   const agentContext = {
     conversationId: 'conv_123',
@@ -1613,7 +1613,7 @@ test('onFinish hook payload includes agentContext fields', async () => {
   };
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1622,7 +1622,7 @@ test('onFinish hook payload includes agentContext fields', async () => {
       },
       messages,
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn(), agentContext },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn(), agentContext },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -1643,7 +1643,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   // Mock createAgentUIStream to simulate multiple steps completing during execution
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
@@ -1688,7 +1688,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
   });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1697,7 +1697,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -1725,7 +1725,7 @@ test('usage accumulator handles missing usage gracefully', async () => {
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
     if (opts.onStepEnd) {
@@ -1736,7 +1736,7 @@ test('usage accumulator handles missing usage gracefully', async () => {
   });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1745,7 +1745,7 @@ test('usage accumulator handles missing usage gracefully', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -1774,7 +1774,7 @@ test('pageContext true prepends context block to instructions', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1787,8 +1787,8 @@ test('pageContext true prepends context block to instructions', async () => {
       messages: [],
     },
     context: {
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       agentContext: {
         pageId: 'principle-view',
         userId: 'user_abc',
@@ -1819,7 +1819,7 @@ test('pageContext false does not modify instructions', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1831,8 +1831,8 @@ test('pageContext false does not modify instructions', async () => {
       messages: [],
     },
     context: {
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       agentContext: { pageId: 'some-page', userId: 'user_1' },
     },
   });
@@ -1847,7 +1847,7 @@ test('pageContext omits empty urlQuery from context block', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1860,8 +1860,8 @@ test('pageContext omits empty urlQuery from context block', async () => {
       messages: [],
     },
     context: {
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       agentContext: { pageId: 'my-page', userId: 'user_1', urlQuery: {}, pathParams: {} },
     },
   });
@@ -1879,7 +1879,7 @@ test('pageContext includes sharedState in context block', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1892,8 +1892,8 @@ test('pageContext includes sharedState in context block', async () => {
       messages: [],
     },
     context: {
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       agentContext: {
         pageId: 'onboarding',
         userId: 'user_abc',
@@ -1915,7 +1915,7 @@ test('pageContext omits empty sharedState from context block', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -1928,8 +1928,8 @@ test('pageContext omits empty sharedState from context block', async () => {
       messages: [],
     },
     context: {
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       agentContext: { pageId: 'my-page', userId: 'user_1', sharedState: {} },
     },
   });
@@ -1947,14 +1947,14 @@ test('merges update-page-state tool when sharedState is present on agentContext'
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: {
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       agentContext: {
         pageId: 'p1',
         userId: 'u1',
@@ -1978,14 +1978,14 @@ test('does not merge update-page-state tool when sharedState is absent', async (
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: {
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       // no agentContext.sharedState
     },
   });
@@ -2002,14 +2002,14 @@ test('does not merge update-page-state tool when sharedStateReadOnly is true', a
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o', pageContext: true } },
       messages: [],
     },
     context: {
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       agentContext: {
         pageId: 'p1',
         userId: 'u1',
@@ -2030,7 +2030,7 @@ test('onFinish hook payload includes steps with toolCalls and toolResults', asyn
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   const mockToolCall = { toolCallId: 'tc1', toolName: 'set_form', input: { name: 'Acme' } };
   const mockToolResult = { ...mockToolCall, output: { success: true } };
@@ -2050,7 +2050,7 @@ test('onFinish hook payload includes steps with toolCalls and toolResults', asyn
   });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -2059,7 +2059,7 @@ test('onFinish hook payload includes steps with toolCalls and toolResults', asyn
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -2086,7 +2086,7 @@ test('onFinish hook payload has empty toolResults when no tools called', async (
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
     if (opts.onStepEnd) {
@@ -2103,7 +2103,7 @@ test('onFinish hook payload has empty toolResults when no tools called', async (
   });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -2112,7 +2112,7 @@ test('onFinish hook payload has empty toolResults when no tools called', async (
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
@@ -2148,7 +2148,7 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
   const pruneConfig = { reasoning: 'all', toolCalls: 'before-last-message' };
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -2156,10 +2156,10 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
       },
       messages,
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
 
   expect(mockValidateUIMessages).toHaveBeenCalledWith({
@@ -2207,11 +2207,11 @@ test('the assistant message is given an id on both stream paths', async () => {
 
   async function run(properties) {
     await handleAgentChat({
-      connection: { provider: jest.fn().mockReturnValue({}) },
+      connection: { provider: vi.fn().mockReturnValue({}) },
       properties,
-      context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+      context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
     });
-    await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+    await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
   }
 
   const messages = [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }];
@@ -2241,7 +2241,7 @@ test('without prune config, createAgentUIStream is used and prune functions are 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -2249,10 +2249,10 @@ test('without prune config, createAgentUIStream is used and prune functions are 
       },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
 
   expect(mockCreateAgentUIStream).toHaveBeenCalled();
@@ -2278,7 +2278,7 @@ test('all pruneConfig properties are spread into pruneMessages call', async () =
   };
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -2286,11 +2286,11 @@ test('all pruneConfig properties are spread into pruneMessages call', async () =
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({
-    writer: { write: jest.fn() },
+    writer: { write: vi.fn() },
   });
 
   expect(mockPruneMessages).toHaveBeenCalledWith({
@@ -2311,7 +2311,7 @@ test('prune branch passes timeout to agentInstance.stream', async () => {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -2319,11 +2319,11 @@ test('prune branch passes timeout to agentInstance.stream', async () => {
       },
       messages: [],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
   await mockCreateUIMessageStream._lastExecute({
-    writer: { write: jest.fn() },
+    writer: { write: vi.fn() },
   });
 
   expect(lastAgentInstance.stream).toHaveBeenCalledWith({
@@ -2343,10 +2343,10 @@ test('onFinish hook payload messages include the assistant reply on the prune pa
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: {
         tools: [],
@@ -2355,10 +2355,10 @@ test('onFinish hook payload messages include the assistant reply on the prune pa
       },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hi' }] }],
     },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
   });
 
-  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
     payload: expect.objectContaining({
@@ -2375,15 +2375,15 @@ test('generateTitle disabled does not call generateText or write a title part', 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
 
   expect(mockGenerateText).not.toHaveBeenCalled();
@@ -2401,15 +2401,15 @@ test('generateTitle true generates a title from the first user message on the fi
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'Help me find a laptop' }] }],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
 
   expect(mockGenerateText).toHaveBeenCalledTimes(1);
@@ -2430,7 +2430,7 @@ test('generateTitle does not run when the conversation already has an assistant 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
       messages: [
@@ -2439,10 +2439,10 @@ test('generateTitle does not run when the conversation already has an assistant 
         { role: 'user', parts: [{ type: 'text', text: 'Tell me more' }] },
       ],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
-  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
 
   expect(mockGenerateText).not.toHaveBeenCalled();
 });
@@ -2458,15 +2458,15 @@ test('generateTitle failure is non-fatal and does not break the stream', async (
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
       messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
-  const localWriter = { write: jest.fn() };
+  const localWriter = { write: vi.fn() };
   await expect(
     mockCreateUIMessageStream._lastExecute({ writer: localWriter })
   ).resolves.toBeUndefined();
@@ -2499,15 +2499,15 @@ test('messages without parts are dropped before the agent runs', async () => {
   const retry = { id: 'msg-3', role: 'user', parts: [{ type: 'text', text: 'again' }] };
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [user, emptyShell, retry],
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
   });
 
-  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
 
   expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
     expect.objectContaining({ uiMessages: [user, retry] })
@@ -2526,10 +2526,10 @@ test('a validation failure is logged and written to the stream as an error, not 
   mockCreateAgentUIStream.mockRejectedValueOnce(validationError);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
-  const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+  const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       agent: { agentId: 'support', tools: [], properties: { model: 'gpt-4o' } },
       messages,
@@ -2537,12 +2537,12 @@ test('a validation failure is logged and written to the stream as an error, not 
     context: {
       agentContext: { conversationId: 'conv-1' },
       logger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
     },
   });
 
-  const writer = { write: jest.fn(), onError: () => 'Something went wrong.' };
+  const writer = { write: vi.fn(), onError: () => 'Something went wrong.' };
   await expect(mockCreateUIMessageStream._lastExecute({ writer })).resolves.toBeUndefined();
 
   expect(logger.error).toHaveBeenCalledWith(
@@ -2578,22 +2578,22 @@ const userError = new UserError('That order is already closed.');
 async function runChat({ properties }) {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
   await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
+    connection: { provider: vi.fn().mockReturnValue({}) },
     properties: {
       messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
       ...properties,
     },
     context: {
       logger: testLogger,
-      callEndpoint: jest.fn(),
-      getEndpointConfig: jest.fn(),
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
       wireErrorMessage,
     },
   });
   const { onError } = mockCreateUIMessageStream.mock.calls.at(-1)[0];
   // The AI SDK hands execute a writer whose onError is the one given to
   // createUIMessageStream.
-  const writer = { write: jest.fn(), onError };
+  const writer = { write: vi.fn(), onError };
   await mockCreateUIMessageStream._lastExecute({ writer });
   return writer;
 }
@@ -2667,7 +2667,7 @@ test.each([
     mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
     mockCreateAgentUIStream.mockImplementationOnce(async () => ({
       getReader: () => ({
-        read: jest.fn().mockRejectedValue(error),
+        read: vi.fn().mockRejectedValue(error),
       }),
     }));
 

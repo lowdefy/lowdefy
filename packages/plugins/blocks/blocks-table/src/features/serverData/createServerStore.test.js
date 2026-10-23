@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import createServerStore from './createServerStore.js';
 
@@ -26,7 +26,7 @@ function createDeferredApi() {
     config: { getKey: (row) => row.id },
     scrollerRef: { current: { scrollTop: 500 } },
     methods: {
-      triggerEvent: jest.fn(({ event }) => {
+      triggerEvent: vi.fn(({ event }) => {
         let resolve;
         const promise = new Promise((done) => {
           resolve = done;
@@ -74,6 +74,23 @@ test('createServerStore fetches the first block with the view when the view is s
     selected: ['x'],
   });
   expect(store.isLoading()).toBe(true);
+});
+
+test('createServerStore adds the payload fields to each fetch event, and its own fields win a clash', () => {
+  const { api, calls } = createDeferredApi();
+  const store = createServerStore({
+    api,
+    server: { blockSize: 50, maxBlocks: 10, payload: { region: 'EU', startRow: 99 } },
+  });
+  store.setView({ view: VIEW, viewKey: 'a' });
+  expect(calls[0].event).toEqual({
+    region: 'EU',
+    startRow: 0,
+    endRow: 50,
+    view: VIEW,
+    groupPath: [],
+    selected: undefined,
+  });
 });
 
 test('createServerStore shows the total as rows with holes once the first block lands', async () => {
@@ -130,9 +147,25 @@ test('createServerStore ignores a response that was in flight when the table ref
 });
 
 test('createServerStore waits for a fast scroll to settle before loading', async () => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   let now = 0;
-  const spy = jest.spyOn(performance, 'now').mockImplementation(() => now);
+  const spy = vi.spyOn(performance, 'now').mockImplementation(() => now);
   const { api, calls } = createDeferredApi();
   const store = createServerStore({ api, server: { blockSize: 50, maxBlocks: 10 } });
   store.setView({ view: VIEW, viewKey: 'a' });
@@ -149,14 +182,14 @@ test('createServerStore waits for a fast scroll to settle before loading', async
     store.onRange({ rowStart: step * 1000, rowEnd: step * 1000 + 30 });
   }
   expect(calls).toHaveLength(1);
-  jest.advanceTimersByTime(200);
+  vi.advanceTimersByTime(200);
   expect(calls).toHaveLength(2);
   expect(calls[1].event.startRow).toBe(20000);
   spy.mockRestore();
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('createServerStore loads a group level lazily when the group opens', async () => {
@@ -216,9 +249,25 @@ test('createServerStore merges transaction updates into loaded rows without a re
 });
 
 test('createServerStore does not load mid-scroll when a block lands during a fast scroll', async () => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   let now = 0;
-  const spy = jest.spyOn(performance, 'now').mockImplementation(() => now);
+  const spy = vi.spyOn(performance, 'now').mockImplementation(() => now);
   const { api, calls } = createDeferredApi();
   const store = createServerStore({ api, server: { blockSize: 50, maxBlocks: 10 } });
   store.setView({ view: VIEW, viewKey: 'a' });
@@ -235,7 +284,7 @@ test('createServerStore does not load mid-scroll when a block lands during a fas
   // The landed block re-renders the grid with the same range.
   store.onRange({ rowStart: 5000, rowEnd: 5030 });
   expect(calls).toHaveLength(1);
-  jest.advanceTimersByTime(200);
+  vi.advanceTimersByTime(200);
   expect(calls).toHaveLength(2);
   expect(calls[1].event.startRow).toBe(5000);
   spy.mockRestore();

@@ -16,6 +16,7 @@
 
 import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
 import getSkeletonShape from './getSkeletonShape.js';
+import { expect, test } from 'vitest';
 
 test('getSkeletonShape shapes each type family like its cell', () => {
   expect(getSkeletonShape('text')).toBe('text');

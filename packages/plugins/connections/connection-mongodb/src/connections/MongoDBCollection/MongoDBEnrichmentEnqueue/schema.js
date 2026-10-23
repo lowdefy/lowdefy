@@ -80,6 +80,15 @@ export default {
         maximum: 'MongoDBEnrichmentEnqueue request property "maxTimeMS" should be at most 600000.',
       },
     },
+    dryRun: {
+      type: 'boolean',
+      default: false,
+      description:
+        'Count the cells the run would queue, by column, and write nothing: returns { dryRun: true, queued, missingInputs, skipped, byColumn }. The read, the mode and "maxCells" are those of the real run, so over "maxCells" it throws as the run would. Call it first to show what a run costs, then again without it to run.',
+      errorMessage: {
+        type: 'MongoDBEnrichmentEnqueue request property "dryRun" should be a boolean.',
+      },
+    },
     runId: {
       type: 'string',
       description:

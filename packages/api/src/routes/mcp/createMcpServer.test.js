@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { operatorsServer } from '@lowdefy/operators-js';
@@ -25,10 +25,10 @@ import createMcpServer, { scopeCovers } from './createMcpServer.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const mcpJson = {
@@ -83,7 +83,7 @@ function memberMcpAuth(grantedScopes) {
 // connection string the end user must never see.
 const foreignError = new Error('connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432');
 
-const mockFailingRequest = jest.fn(() => {
+const mockFailingRequest = vi.fn(() => {
   throw foreignError;
 });
 mockFailingRequest.schema = {};
@@ -93,7 +93,7 @@ mockFailingRequest.meta = { checkRead: false, checkWrite: false };
 // delay makes a hook that is not awaited visible: its call would land after
 // the tool reply.
 const hookCalls = [];
-const mockRecordRequest = jest.fn(async ({ request }) => {
+const mockRecordRequest = vi.fn(async ({ request }) => {
   await new Promise((resolve) => setTimeout(resolve, 20));
   hookCalls.push(request.call);
   return null;
@@ -144,7 +144,7 @@ function createContext({
     },
     ...configs,
   };
-  const readConfigFile = jest.fn((path) => files[path] ?? null);
+  const readConfigFile = vi.fn((path) => files[path] ?? null);
   const context = testContext({
     authEnforcement,
     connections,
@@ -155,7 +155,7 @@ function createContext({
     user,
   });
   context.mcpAuth = mcpAuth ?? anonymousMcpAuth;
-  context.authorizeOutcome = jest.fn(context.authorizeOutcome);
+  context.authorizeOutcome = vi.fn(context.authorizeOutcome);
   return context;
 }
 
@@ -174,7 +174,7 @@ async function listToolNames(context) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   hookCalls.length = 0;
 });
 
@@ -222,7 +222,7 @@ test('createMcpServer omits branding keys that are not configured', async () => 
 async function initializeResult(context) {
   const server = await createMcpServer({ context });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-  const send = jest.spyOn(serverTransport, 'send');
+  const send = vi.spyOn(serverTransport, 'send');
   const client = new Client({ name: 'test-client', version: '1.0.0' });
   await Promise.all([client.connect(clientTransport), server.connect(serverTransport)]);
   const [response] = send.mock.calls.find(([message]) => message.result?.protocolVersion);
@@ -425,7 +425,7 @@ test('tools/call warns once instead of logging an error when the endpoint gate r
   });
   // Visible to the tool listing, refused by the endpoint's own gate - the
   // shape that reaches the handler's catch as an AuthorizationError.
-  context.authorizeOutcome = jest.fn().mockReturnValueOnce('allow').mockReturnValue('deny');
+  context.authorizeOutcome = vi.fn().mockReturnValueOnce('allow').mockReturnValue('deny');
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
 
@@ -534,7 +534,7 @@ test('tools/call appends the config source of a failed routine in dev', async ()
   });
   context.configDirectory = '/app';
   // Mirrors createHandleError in server-dev, which resolves the location onto the error.
-  context.handleError = jest.fn(async (error) => {
+  context.handleError = vi.fn(async (error) => {
     error.source = `${path.resolve('/app/api/failing.yaml')}:4`;
     error.handled = true;
   });
@@ -551,11 +551,11 @@ test('tools/call appends the config source of a failed routine in dev', async ()
 test('tools/call routes an unexpected failure through handleError and reports its source in dev', async () => {
   const context = createContext({ mode: 'dev' });
   context.configDirectory = '/app';
-  context.handleError = jest.fn(async (error) => {
+  context.handleError = vi.fn(async (error) => {
     error.source = 'api/get-customer.yaml:2';
     error.handled = true;
   });
-  context.authorizeOutcome = jest.fn(() => {
+  context.authorizeOutcome = vi.fn(() => {
     throw new Error('Authorization exploded.');
   });
   const server = await createMcpServer({ context });

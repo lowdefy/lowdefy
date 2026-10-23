@@ -15,6 +15,7 @@
 */
 
 import normalizeRoleCatalog from './normalizeRoleCatalog.js';
+import { expect, test } from 'vitest';
 
 test('normalizeRoleCatalog returns an empty array when roles is undefined', () => {
   expect(normalizeRoleCatalog(undefined)).toEqual([]);

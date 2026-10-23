@@ -18,6 +18,7 @@ import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import get from './get.js';
 import projectCaughtError from './projectCaughtError.js';
+import { expect, test } from 'vitest';
 
 const SECRET = 'sk_live_abcdef123456';
 

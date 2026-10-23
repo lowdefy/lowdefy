@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ObjectId, UUID } from 'mongodb';
 
-const mockCreateAdapterFactory = jest.fn(() => 'adapterFactory');
+const mockCreateAdapterFactory = vi.fn(() => 'adapterFactory');
 
-jest.unstable_mockModule('better-auth/adapters', () => ({
+vi.doMock('better-auth/adapters', () => ({
   createAdapterFactory: mockCreateAdapterFactory,
 }));
 
-async function getFactoryArgs({ db = { collection: jest.fn() } } = {}) {
+async function getFactoryArgs({ db = { collection: vi.fn() } } = {}) {
   const { default: mongodbAdapter } = await import('./mongodbAdapter.js');
   mongodbAdapter({ getDb: async () => db });
   return mockCreateAdapterFactory.mock.calls[0][0];
@@ -39,7 +39,7 @@ async function getFactoryConfig() {
 // resolution (schema[model].fields[field].fieldName || field) so the where path
 // exercises the derived physical names rather than a pass-through stub.
 async function constructCustomAdapter({ schema, collection = {} }) {
-  const { adapter } = await getFactoryArgs({ db: { collection: jest.fn(() => collection) } });
+  const { adapter } = await getFactoryArgs({ db: { collection: vi.fn(() => collection) } });
   return adapter({
     getFieldAttributes: ({ model, field }) => schema[model]?.fields[field] ?? {},
     getFieldName: ({ model, field }) => schema[model]?.fields[field]?.fieldName || field,
@@ -299,7 +299,7 @@ test('adapter construction keeps trailing acronyms and digits attached', async (
 
 test('a where clause on a logical field name resolves to the derived column', async () => {
   const schema = await resolveAuthSchema();
-  const aggregate = jest.fn(() => ({ toArray: jest.fn().mockResolvedValue([]) }));
+  const aggregate = vi.fn(() => ({ toArray: vi.fn().mockResolvedValue([]) }));
   const customAdapter = await constructCustomAdapter({ schema, collection: { aggregate } });
   await customAdapter.findOne({
     model: 'member',

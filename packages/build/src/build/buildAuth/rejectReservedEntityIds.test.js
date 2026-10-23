@@ -15,6 +15,7 @@
 */
 
 import rejectReservedEntityIds from './rejectReservedEntityIds.js';
+import { expect, test } from 'vitest';
 
 test('rejectReservedEntityIds accepts ordinary ids', () => {
   const components = {

@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import SMTP from './SMTP.js';
+import { expect, test } from 'vitest';
 
 const schema = SMTP.schema;
 

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { getDevError } from '@lowdefy/engine';
 import {
   AuthenticationError,
@@ -22,8 +22,9 @@ import {
   TwoFactorEnrolmentRequiredError,
   UserError,
 } from '@lowdefy/errors';
-import { callerHash, callerStamp } from '@lowdefy/helpers';
+import { callerHash, callerStamp, type } from '@lowdefy/helpers';
 
+import NonJsonResponseError from './NonJsonResponseError.js';
 import request from './request.js';
 
 // The page's lowdefy object: the caller it renders and where it keeps the last
@@ -33,12 +34,13 @@ function createLowdefy(user) {
 }
 
 function mockFetchResponse({ ok, status = ok ? 200 : 500, body, headers = {} }) {
-  global.fetch = jest.fn(() =>
+  global.fetch = vi.fn(() =>
     Promise.resolve({
       ok,
       status,
       headers: { get: (name) => headers[name] ?? null },
       json: () => Promise.resolve(body),
+      text: () => Promise.resolve(type.isString(body) ? body : JSON.stringify(body)),
     })
   );
 }
@@ -79,6 +81,40 @@ test('request throws the body message for a non-2xx response without an error pa
   mockFetchResponse({ ok: false, body: { message: 'Bad gateway.' } });
   await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toThrow(
     'Bad gateway.'
+  );
+});
+
+test('request throws a NonJsonResponseError with the status and body start for a plain-text error', async () => {
+  mockFetchResponse({
+    ok: false,
+    status: 500,
+    body: 'A server error has occurred\n\nFUNCTION_INVOCATION_FAILED\n\ncpt1::abc-123\n',
+  });
+  let thrown;
+  try {
+    await request({ lowdefy: createLowdefy(null), url: '/api/test', method: 'POST', body: {} });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(NonJsonResponseError);
+  expect(thrown.message).toBe('The server could not answer (status 500). Try again.');
+  expect(thrown.status).toBe(500);
+  expect(thrown.responseText).toBe(
+    'A server error has occurred\n\nFUNCTION_INVOCATION_FAILED\n\ncpt1::abc-123'
+  );
+});
+
+test('request says a 504 with a plain-text body timed out', async () => {
+  mockFetchResponse({ ok: false, status: 504, body: 'Gateway Timeout' });
+  await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toThrow(
+    'The request timed out. Try again.'
+  );
+});
+
+test('request treats a JSON error body that is not an object as a NonJsonResponseError', async () => {
+  mockFetchResponse({ ok: false, status: 502, body: '"Bad gateway"' });
+  await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toBeInstanceOf(
+    NonJsonResponseError
   );
 });
 
@@ -138,7 +174,7 @@ describe('build check', () => {
   beforeEach(() => {
     window.sessionStorage.clear();
     delete window.location;
-    window.location = { reload: jest.fn() };
+    window.location = { reload: vi.fn() };
   });
 
   afterEach(() => {
@@ -165,7 +201,7 @@ describe('build check', () => {
 
   test('request reloads and never settles when the server refuses a call from another build', async () => {
     mockFetchResponse({ ok: false, status: 409, body: refusal });
-    const settled = jest.fn();
+    const settled = vi.fn();
     request({
       lowdefy: createLowdefy(null),
       buildId: 'build-1',
@@ -181,7 +217,7 @@ describe('build check', () => {
   test('request leaves other in-flight requests unsettled when a build refusal reloads the page', async () => {
     const lowdefy = createLowdefy(null);
     let cancelOther;
-    global.fetch = jest
+    global.fetch = vi
       .fn()
       .mockImplementationOnce(
         () =>
@@ -194,10 +230,10 @@ describe('build check', () => {
           ok: false,
           status: 409,
           headers: { get: () => null },
-          json: () => Promise.resolve(refusal),
+          text: () => Promise.resolve(JSON.stringify(refusal)),
         })
       );
-    const settled = jest.fn();
+    const settled = vi.fn();
     const args = { lowdefy, buildId: 'build-1', url: '/api/test', method: 'POST', body: {} };
     request(args).then(settled, settled);
     request(args).then(settled, settled);
@@ -246,7 +282,7 @@ describe('caller check', () => {
   beforeEach(() => {
     window.sessionStorage.clear();
     delete window.location;
-    window.location = { reload: jest.fn() };
+    window.location = { reload: vi.fn() };
   });
 
   afterEach(() => {
@@ -254,7 +290,7 @@ describe('caller check', () => {
   });
 
   async function expectReloadWithoutSettling(args) {
-    const settled = jest.fn();
+    const settled = vi.fn();
     request(args).then(settled, settled);
     await new Promise((resolve) => setTimeout(resolve, 20));
     expect(window.location.reload).toHaveBeenCalledTimes(1);
@@ -469,15 +505,15 @@ describe('page unload', () => {
   }
 
   test('request never settles when the browser cancels its fetch as the page unloads', async () => {
-    global.fetch = jest.fn(() => Promise.reject(new TypeError('Failed to fetch')));
-    const settled = jest.fn();
+    global.fetch = vi.fn(() => Promise.reject(new TypeError('Failed to fetch')));
+    const settled = vi.fn();
     request({ lowdefy: createUnloadingLowdefy(true), url: '/api/test' }).then(settled, settled);
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(settled).not.toHaveBeenCalled();
   });
 
   test('request never settles when the browser cancels the body read as the page unloads', async () => {
-    global.fetch = jest.fn(() =>
+    global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
         status: 200,
@@ -485,14 +521,14 @@ describe('page unload', () => {
         json: () => Promise.reject(new TypeError('Load failed')),
       })
     );
-    const settled = jest.fn();
+    const settled = vi.fn();
     request({ lowdefy: createUnloadingLowdefy(true), url: '/api/test' }).then(settled, settled);
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(settled).not.toHaveBeenCalled();
   });
 
   test('request throws a network failure while the page stays open', async () => {
-    global.fetch = jest.fn(() => Promise.reject(new TypeError('Failed to fetch')));
+    global.fetch = vi.fn(() => Promise.reject(new TypeError('Failed to fetch')));
     await expect(
       request({ lowdefy: createUnloadingLowdefy(false), url: '/api/test' })
     ).rejects.toThrow('Failed to fetch');

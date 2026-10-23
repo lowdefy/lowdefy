@@ -14,22 +14,22 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import { AuthorizationError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
-const mockPrepareChannel = jest.fn();
-jest.unstable_mockModule('./prepareChannel.js', () => ({
+const mockPrepareChannel = vi.fn();
+vi.doMock('./prepareChannel.js', () => ({
   default: mockPrepareChannel,
 }));
 
 // Stands in for the session read: each call resolves the caller the test has
 // set as current, the way resolveAuthentication writes it to the object passed.
 let mockCurrentCaller = null;
-const mockResolveAuthentication = jest.fn(async (target) => {
+const mockResolveAuthentication = vi.fn(async (target) => {
   target.user = mockCurrentCaller;
 });
-jest.unstable_mockModule('../../context/resolveAuthentication.js', () => ({
+vi.doMock('../../context/resolveAuthentication.js', () => ({
   default: mockResolveAuthentication,
 }));
 
@@ -43,18 +43,18 @@ beforeAll(async () => {
 
 function setup({ mode = 'prod' } = {}) {
   const registry = {
-    subscribe: jest.fn(async () => {}),
-    unsubscribe: jest.fn(),
-    unsubscribeAll: jest.fn(),
-    publish: jest.fn(async () => {}),
+    subscribe: vi.fn(async () => {}),
+    unsubscribe: vi.fn(),
+    unsubscribeAll: vi.fn(),
+    publish: vi.fn(async () => {}),
   };
-  const send = jest.fn();
+  const send = vi.fn();
   const context = {
     rid: 'r',
     mode,
     i18n: { active: 'en-US', messages: {} },
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
-    handleError: jest.fn(),
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
+    handleError: vi.fn(),
   };
   const connection = createWebSocketConnection(context, { registry, send });
   return { connection, context, registry, send };
@@ -219,9 +219,9 @@ test('an authorization refusal warns and answers the client without reporting an
 });
 
 function setupPublishFailure({ mode }) {
-  const resolver = jest.fn(() => new Promise(() => {}));
+  const resolver = vi.fn(() => new Promise(() => {}));
   resolver.meta = { publish: true };
-  resolver.onPublish = jest.fn(async () => {
+  resolver.onPublish = vi.fn(async () => {
     throw new Error('insert failed: postgres://admin:planted-secret-value@db.internal:5432');
   });
   mockPrepareChannel.mockImplementation(async (context, { websocketId }) => ({
@@ -230,12 +230,12 @@ function setupPublishFailure({ mode }) {
     websocketConfig: { websocketId, type: 'TestSource', '~k': 'websockets.0' },
     websocketResolver: resolver,
   }));
-  const send = jest.fn();
+  const send = vi.fn();
   const context = {
     rid: 'r',
     mode,
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
-    handleError: jest.fn(),
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn() },
+    handleError: vi.fn(),
   };
   const connection = createWebSocketConnection(context, {
     registry: createChannelRegistry(),
@@ -336,7 +336,7 @@ async function untilPreparing(releases) {
 
 function setupHeldSubscribe() {
   const releases = [];
-  const resolver = jest.fn(() => new Promise(() => {}));
+  const resolver = vi.fn(() => new Promise(() => {}));
   mockPrepareChannel.mockImplementation(
     (context, { websocketId }) =>
       new Promise((resolve) => {
@@ -350,12 +350,12 @@ function setupHeldSubscribe() {
         );
       })
   );
-  const send = jest.fn();
+  const send = vi.fn();
   const context = {
     rid: 'r',
     mode: 'prod',
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
-    handleError: jest.fn(),
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn() },
+    handleError: vi.fn(),
   };
   const registry = createChannelRegistry();
   const connection = createWebSocketConnection(context, { registry, send });
@@ -384,7 +384,7 @@ test('an unsubscribe sent while its subscribe is being prepared removes the subs
 
 test('a connection that closes while a subscribe is being prepared leaves no subscription behind', async () => {
   const { connection, registry, releases } = setupHeldSubscribe();
-  const unsubscribeAll = jest.spyOn(registry, 'unsubscribeAll');
+  const unsubscribeAll = vi.spyOn(registry, 'unsubscribeAll');
 
   const subscribed = connection.handleMessage(
     JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's1' })
@@ -431,13 +431,29 @@ describe('caller re-check', () => {
   };
 
   beforeEach(() => {
-    jest.useFakeTimers({ doNotFake: ['performance'] });
+    vi.useFakeTimers({
+      toFake: [
+        'Date',
+        'hrtime',
+        'queueMicrotask',
+        'requestAnimationFrame',
+        'cancelAnimationFrame',
+        'requestIdleCallback',
+        'cancelIdleCallback',
+        'setImmediate',
+        'clearImmediate',
+        'setInterval',
+        'clearInterval',
+        'setTimeout',
+        'clearTimeout',
+      ],
+    });
     mockResolveAuthentication.mockClear();
     mockCurrentCaller = member;
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   async function flush() {
@@ -448,13 +464,13 @@ describe('caller re-check', () => {
 
   function setupWithAuth({ user = member } = {}) {
     const registry = {
-      subscribe: jest.fn(async () => {}),
-      unsubscribe: jest.fn(),
-      unsubscribeAll: jest.fn(),
-      publish: jest.fn(async () => {}),
+      subscribe: vi.fn(async () => {}),
+      unsubscribe: vi.fn(),
+      unsubscribeAll: vi.fn(),
+      publish: vi.fn(async () => {}),
     };
-    const send = jest.fn();
-    const closeSocket = jest.fn();
+    const send = vi.fn();
+    const closeSocket = vi.fn();
     const headers = new Headers({ cookie: 'session=1' });
     const strategies = [];
     const context = {
@@ -464,8 +480,8 @@ describe('caller re-check', () => {
       config: {},
       user,
       i18n: { active: 'en-US', messages: {} },
-      logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
-      handleError: jest.fn(),
+      logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
+      handleError: vi.fn(),
     };
     const connection = createWebSocketConnection(context, {
       closeSocket,
@@ -531,11 +547,11 @@ describe('caller re-check', () => {
     const { closeSocket, connection, registry } = setupWithAuth();
     mockCurrentCaller = caller;
 
-    jest.advanceTimersByTime(59 * 1000);
+    vi.advanceTimersByTime(59 * 1000);
     await flush();
     expect(closeSocket).not.toHaveBeenCalled();
 
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     await flush();
     expect(closeSocket).toHaveBeenCalledTimes(1);
     expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
@@ -546,7 +562,7 @@ describe('caller re-check', () => {
     const { closeSocket } = setupWithAuth({ user: null });
     mockCurrentCaller = member;
 
-    jest.advanceTimersByTime(60 * 1000);
+    vi.advanceTimersByTime(60 * 1000);
     await flush();
 
     expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
@@ -560,7 +576,7 @@ describe('caller re-check', () => {
     const { closeSocket, connection, registry, send } = setupWithAuth();
     mockCurrentCaller = caller;
 
-    jest.advanceTimersByTime(3 * 60 * 1000);
+    vi.advanceTimersByTime(3 * 60 * 1000);
     await flush();
     await connection.handleMessage(
       JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
@@ -578,7 +594,7 @@ describe('caller re-check', () => {
     const { closeSocket } = setupWithAuth({ user: null });
     mockCurrentCaller = null;
 
-    jest.advanceTimersByTime(60 * 1000);
+    vi.advanceTimersByTime(60 * 1000);
     await flush();
 
     expect(mockResolveAuthentication).toHaveBeenCalledTimes(1);
@@ -592,7 +608,7 @@ describe('caller re-check', () => {
     await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'b' }));
     await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'c' }));
 
-    expect(jest.getTimerCount()).toBe(1);
+    expect(vi.getTimerCount()).toBe(1);
   });
 
   test('close clears the re-check timer', async () => {
@@ -600,8 +616,8 @@ describe('caller re-check', () => {
     mockCurrentCaller = null;
 
     connection.close();
-    expect(jest.getTimerCount()).toBe(0);
-    jest.advanceTimersByTime(60 * 1000);
+    expect(vi.getTimerCount()).toBe(0);
+    vi.advanceTimersByTime(60 * 1000);
     await flush();
 
     expect(mockResolveAuthentication).not.toHaveBeenCalled();
@@ -613,7 +629,7 @@ describe('caller re-check', () => {
     const error = new Error('Session store unreachable.');
     mockResolveAuthentication.mockRejectedValueOnce(error);
 
-    jest.advanceTimersByTime(60 * 1000);
+    vi.advanceTimersByTime(60 * 1000);
     await flush();
 
     expect(context.handleError).toHaveBeenCalledWith(error);
@@ -633,7 +649,7 @@ describe('caller re-check', () => {
         })
     );
 
-    jest.advanceTimersByTime(60 * 1000);
+    vi.advanceTimersByTime(60 * 1000);
     await flush();
     connection.close();
     finish();
@@ -646,7 +662,7 @@ describe('caller re-check', () => {
     const { closeSocket, connection, context } = setupWithAuth();
     context.auth = null;
 
-    jest.advanceTimersByTime(60 * 1000);
+    vi.advanceTimersByTime(60 * 1000);
     await flush();
     await connection.handleMessage(
       JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })

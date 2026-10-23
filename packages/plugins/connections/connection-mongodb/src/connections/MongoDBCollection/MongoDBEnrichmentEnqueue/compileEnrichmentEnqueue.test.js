@@ -20,6 +20,7 @@ import hashEnrichmentInputs from '../enrichment/hashEnrichmentInputs.js';
 import compileEnrichmentEnqueue from './compileEnrichmentEnqueue.js';
 import planEnqueueCell from './planEnqueueCell.js';
 import schema from './schema.js';
+import { describe, expect, test } from 'vitest';
 
 const now = new Date('2026-09-29T10:00:00.000Z');
 

@@ -16,6 +16,7 @@
 
 import getColumnConditions from './getColumnConditions.js';
 import setColumnFilter from './setColumnFilter.js';
+import { expect, test } from 'vitest';
 
 const stage = { key: 'stage', op: 'in', value: ['won'] };
 const owner = { key: 'owner', op: 'eq', value: 'Ada' };

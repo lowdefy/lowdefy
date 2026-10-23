@@ -63,7 +63,8 @@ function parseRange({ field, op, value, user, timeZone }) {
   });
 }
 
-function parseWithin({ field, op, value }) {
+// A relative date, `{ last | next: n, unit }`, as `within` takes and `before` and `after` may take.
+function parseRelative({ field, op, value }) {
   const expected = '{ last | next: positive integer, unit: day | week | month | year }';
   if (!type.isObject(value)) {
     throw invalid({ field, op, expected, value });
@@ -82,6 +83,20 @@ function parseWithin({ field, op, value }) {
     throw invalid({ field, op, expected, value });
   }
   return { [direction]: count, unit: value.unit };
+}
+
+// `before` and `after` take a fixed date or a relative one, resolved when the query runs.
+// Any object other than a `{ $user }` reference is read as a relative date.
+function parseBound({ field, op, value, user, timeZone }) {
+  if (type.isObject(value) && !Object.prototype.hasOwnProperty.call(value, '$user')) {
+    return parseRelative({ field, op, value });
+  }
+  return coerceScalar({
+    field,
+    op,
+    value: resolveUserValue({ value, user, key: field.key }),
+    timeZone,
+  });
 }
 
 function parseText({ field, op, value, user }) {
@@ -110,7 +125,10 @@ function parseLeafValue({ field, op, value, user, timeZone }) {
     case 'between':
       return parseRange({ field, op, value, user, timeZone });
     case 'within':
-      return parseWithin({ field, op, value });
+      return parseRelative({ field, op, value });
+    case 'before':
+    case 'after':
+      return parseBound({ field, op, value, user, timeZone });
     case 'contains':
     case 'notContains':
       if (field.family === 'array') {

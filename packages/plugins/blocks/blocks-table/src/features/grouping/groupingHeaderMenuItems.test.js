@@ -18,6 +18,7 @@ import assert from 'node:assert/strict';
 
 import createSetGroup from './createSetGroup.js';
 import groupingHeaderMenuItems from './groupingHeaderMenuItems.js';
+import { test } from 'vitest';
 
 function createApi(grouping) {
   const calls = [];

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('../icons/readIconMigrationTable.js', () => ({
+vi.doMock('../icons/readIconMigrationTable.js', () => ({
   default: () => ({ icons: { AiOutlineDelete: 'delete' }, review: {} }),
 }));
 
@@ -38,7 +38,7 @@ const ALWAYS = [
 async function createContext({ iconsConfig, jsMap = {}, typesMapIcons = {} } = {}) {
   return {
     errors: [],
-    handleWarning: jest.fn(),
+    handleWarning: vi.fn(),
     icons: await createIconContext({ context: { typesMap: { iconSets: {} } }, iconsConfig }),
     jsMap,
     keyMap: {},

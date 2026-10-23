@@ -15,6 +15,7 @@
 */
 
 import getAuthKeys from './getAuthKeys.js';
+import { expect, test } from 'vitest';
 
 test('getAuthKeys returns an empty array when auth is undefined', () => {
   expect(getAuthKeys({ components: {} })).toEqual([]);

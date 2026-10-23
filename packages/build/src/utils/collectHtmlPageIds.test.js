@@ -15,6 +15,7 @@
 */
 
 import collectHtmlPageIds from './collectHtmlPageIds.js';
+import { expect, test } from 'vitest';
 
 function collect(value) {
   return [...collectHtmlPageIds({ json: JSON.stringify(value) })];

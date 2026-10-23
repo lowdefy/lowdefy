@@ -15,6 +15,7 @@
 */
 
 import sanitizeSessionResponse from './sanitizeSessionResponse.js';
+import { expect, test } from 'vitest';
 
 test('sanitizeSessionResponse removes the token from the session', () => {
   const result = sanitizeSessionResponse({

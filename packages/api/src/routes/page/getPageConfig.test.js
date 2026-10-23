@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import getPageConfig from './getPageConfig.js';
 import testContext from '../../test/testContext.js';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 const context = testContext({ readConfigFile: mockReadConfigFile });
 const authenticatedContext = testContext({
@@ -203,7 +203,7 @@ test('getPageConfig, gate is called with pageConfig and { pageId }', async () =>
   };
   serveFiles({ 'pages/pageId.json': pageConfig });
   const spiedContext = testContext({ readConfigFile: mockReadConfigFile });
-  spiedContext.authorizeOutcome = jest.fn(() => 'allow');
+  spiedContext.authorizeOutcome = vi.fn(() => 'allow');
   await getPageConfig(spiedContext, { path: 'pageId' });
   expect(spiedContext.authorizeOutcome).toHaveBeenCalledWith(pageConfig, { pageId: 'pageId' });
 });

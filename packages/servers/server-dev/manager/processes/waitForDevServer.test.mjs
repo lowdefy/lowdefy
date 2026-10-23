@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import waitForDevServer from './waitForDevServer.mjs';
 
@@ -23,7 +23,7 @@ const STEP_MS = 250;
 // The child's /api/ping: refused until answerAt, then ok. Date.now is faked,
 // so the wait's two-minute deadline runs on the same clock.
 function stubPing({ answerAt }) {
-  global.fetch = jest.fn(async () => {
+  global.fetch = vi.fn(async () => {
     if (Date.now() >= answerAt) {
       return { ok: true };
     }
@@ -36,13 +36,13 @@ function createContext() {
     basePath: '',
     devServer: { exitCode: null, signalCode: null },
     internalPort: 3211,
-    markServerReady: jest.fn(),
+    markServerReady: vi.fn(),
   };
 }
 
 async function advance(ms) {
   for (let elapsed = 0; elapsed < ms; elapsed += STEP_MS) {
-    jest.advanceTimersByTime(STEP_MS);
+    vi.advanceTimersByTime(STEP_MS);
     await new Promise((resolve) => setImmediate(resolve));
   }
 }
@@ -50,11 +50,26 @@ async function advance(ms) {
 const originalFetch = global.fetch;
 
 beforeEach(() => {
-  jest.useFakeTimers({ doNotFake: ['performance', 'setImmediate'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
   global.fetch = originalFetch;
 });
 

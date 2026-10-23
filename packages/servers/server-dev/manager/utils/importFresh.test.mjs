@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import importFresh from './importFresh.mjs';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let pluginDir;
 

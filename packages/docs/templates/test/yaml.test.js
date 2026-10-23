@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -36,17 +37,17 @@ const schema = {
 
 test('yaml propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "block.properties.field",
-        "layout": Object {
+        "layout": {
           "_global": "settings_input_layout",
         },
-        "properties": Object {
-          "autoSize": Object {
+        "properties": {
+          "autoSize": {
             "minRows": 2,
           },
-          "label": Object {
+          "label": {
             "align": "right",
             "extra": "description",
             "span": 8,
@@ -64,22 +65,22 @@ test('yaml propertiesFormTransformer', () => {
 
 test('yaml propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
-        Object {
-          "field": Object {
-            "_yaml.parse": Array [
-              Object {
-                "_if_none": Array [
-                  Object {
-                    "_state": Object {
+        {
+          "field": {
+            "_yaml.parse": [
+              {
+                "_if_none": [
+                  {
+                    "_state": {
                       "contextId": "Block:Block:{}",
                       "key": "block.properties.field",
                     },
@@ -97,7 +98,7 @@ test('yaml propertiesGetterTransformer', () => {
 
 test('yaml defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": "",
     }
   `);
@@ -118,7 +119,7 @@ test('yaml defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": "value",
     }
   `);
@@ -148,19 +149,19 @@ const schemaNested = {
 
 test('yaml schemaNested propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaNested)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
+    [
+      {
+        "blocks": [
+          {
             "id": "block.properties.obj.field",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "autoSize": Object {
+            "properties": {
+              "autoSize": {
                 "minRows": 2,
               },
-              "label": Object {
+              "label": {
                 "align": "right",
                 "extra": "field description",
                 "span": 8,
@@ -174,11 +175,11 @@ test('yaml schemaNested propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.obj",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -192,32 +193,32 @@ test('yaml schemaNested propertiesFormTransformer', () => {
 
 test('yaml schemaNested propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaNested, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
-        Object {
-          "obj": Object {
-            "_object.assign": Array [
-              Object {
-                "_state": Object {
+        {
+          "obj": {
+            "_object.assign": [
+              {
+                "_state": {
                   "contextId": "Block:Block:{}",
-                  "default": Object {},
+                  "default": {},
                   "key": "block.properties.obj",
                 },
               },
-              Object {
-                "field": Object {
-                  "_yaml.parse": Array [
-                    Object {
-                      "_if_none": Array [
-                        Object {
-                          "_state": Object {
+              {
+                "field": {
+                  "_yaml.parse": [
+                    {
+                      "_if_none": [
+                        {
+                          "_state": {
                             "contextId": "Block:Block:{}",
                             "key": "block.properties.obj.field",
                           },
@@ -238,8 +239,8 @@ test('yaml schemaNested propertiesGetterTransformer', () => {
 
 test('yaml schemaNested defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`
-    Object {
-      "obj": Object {
+    {
+      "obj": {
         "field": "",
       },
     }
@@ -267,9 +268,9 @@ test('yaml schemaNested defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
-      "obj": Object {
-        "field": Object {
+    {
+      "obj": {
+        "field": {
           "a": 1,
         },
       },
@@ -299,19 +300,19 @@ const schemaYamlInArray = {
 
 test('yaml schemaYamlInArray propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaYamlInArray)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
+    [
+      {
+        "blocks": [
+          {
             "id": "block.properties.arr.$",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "autoSize": Object {
+            "properties": {
+              "autoSize": {
                 "minRows": 2,
               },
-              "label": Object {
+              "label": {
                 "disabled": true,
               },
               "placeholder": "Type YAML here",
@@ -323,11 +324,11 @@ test('yaml schemaYamlInArray propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.arr",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "itemStyle": Object {
+        "properties": {
+          "itemStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -342,58 +343,58 @@ test('yaml schemaYamlInArray propertiesFormTransformer', () => {
 test('yaml schemaYamlInArray propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaYamlInArray, { block_type: 'Block' }))
     .toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
-            "contextId": "Block:Block:{}",
-            "default": Object {},
-            "key": "block.properties",
+      {
+        "_object.assign": [
+          {
+            "_state": {
+              "contextId": "Block:Block:{}",
+              "default": {},
+              "key": "block.properties",
+            },
           },
-        },
-        Object {
-          "arr": Object {
-            "_array.map": Object {
-              "callback": Object {
-                "_function": Object {
-                  "__yaml.parse": Array [
-                    Object {
-                      "__if_none": Array [
-                        Object {
-                          "__args": Object {
-                            "contextId": undefined,
-                            "key": "0",
+          {
+            "arr": {
+              "_array.map": {
+                "callback": {
+                  "_function": {
+                    "__yaml.parse": [
+                      {
+                        "__if_none": [
+                          {
+                            "__args": {
+                              "contextId": undefined,
+                              "key": "0",
+                            },
                           },
-                        },
-                        "",
-                      ],
+                          "",
+                        ],
+                      },
+                    ],
+                  },
+                },
+                "on": {
+                  "_if_none": [
+                    {
+                      "_state": {
+                        "contextId": "Block:Block:{}",
+                        "key": "block.properties.arr",
+                      },
                     },
+                    [],
                   ],
                 },
               },
-              "on": Object {
-                "_if_none": Array [
-                  Object {
-                    "_state": Object {
-                      "contextId": "Block:Block:{}",
-                      "key": "block.properties.arr",
-                    },
-                  },
-                  Array [],
-                ],
-              },
             },
           },
-        },
-      ],
-    }
-  `);
+        ],
+      }
+    `);
 });
 
 test('yaml schemaYamlInArray defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaYamlInArray)).toMatchInlineSnapshot(`
-    Object {
-      "arr": Array [],
+    {
+      "arr": [],
     }
   `);
   const schemaYamlInArrayDV = {
@@ -417,9 +418,9 @@ test('yaml schemaYamlInArray defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaYamlInArrayDV)).toMatchInlineSnapshot(`
-    Object {
-      "arr": Array [
-        Object {
+    {
+      "arr": [
+        {
           "a": 1,
         },
       ],
@@ -455,21 +456,21 @@ const schemaYamlInObjectInArray = {
 
 test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaYamlInObjectInArray)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
-            "blocks": Array [
-              Object {
+    [
+      {
+        "blocks": [
+          {
+            "blocks": [
+              {
                 "id": "block.properties.arr.$.yaml",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "autoSize": Object {
+                "properties": {
+                  "autoSize": {
                     "minRows": 2,
                   },
-                  "label": Object {
+                  "label": {
                     "align": "right",
                     "extra": "yaml description",
                     "span": 8,
@@ -483,11 +484,11 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
               },
             ],
             "id": "block.properties.arr.$",
-            "layout": Object {
+            "layout": {
               "gap": 0,
             },
-            "properties": Object {
-              "bodyStyle": Object {
+            "properties": {
+              "bodyStyle": {
                 "padding": 0,
               },
               "size": "small",
@@ -497,11 +498,11 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.arr",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "itemStyle": Object {
+        "properties": {
+          "itemStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -516,71 +517,71 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
 test('yaml schemaYamlInObjectInArray propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaYamlInObjectInArray, { block_type: 'Block' }))
     .toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
-            "contextId": "Block:Block:{}",
-            "default": Object {},
-            "key": "block.properties",
+      {
+        "_object.assign": [
+          {
+            "_state": {
+              "contextId": "Block:Block:{}",
+              "default": {},
+              "key": "block.properties",
+            },
           },
-        },
-        Object {
-          "arr": Object {
-            "_array.map": Object {
-              "callback": Object {
-                "_function": Object {
-                  "__object.assign": Array [
-                    Object {
-                      "__args": Object {
-                        "contextId": undefined,
-                        "default": Object {},
-                        "key": "0",
+          {
+            "arr": {
+              "_array.map": {
+                "callback": {
+                  "_function": {
+                    "__object.assign": [
+                      {
+                        "__args": {
+                          "contextId": undefined,
+                          "default": {},
+                          "key": "0",
+                        },
                       },
-                    },
-                    Object {
-                      "yaml": Object {
-                        "__yaml.parse": Array [
-                          Object {
-                            "__if_none": Array [
-                              Object {
-                                "__args": Object {
-                                  "contextId": undefined,
-                                  "key": "0.yaml",
+                      {
+                        "yaml": {
+                          "__yaml.parse": [
+                            {
+                              "__if_none": [
+                                {
+                                  "__args": {
+                                    "contextId": undefined,
+                                    "key": "0.yaml",
+                                  },
                                 },
-                              },
-                              "",
-                            ],
-                          },
-                        ],
+                                "",
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                "on": {
+                  "_if_none": [
+                    {
+                      "_state": {
+                        "contextId": "Block:Block:{}",
+                        "key": "block.properties.arr",
                       },
                     },
+                    [],
                   ],
                 },
               },
-              "on": Object {
-                "_if_none": Array [
-                  Object {
-                    "_state": Object {
-                      "contextId": "Block:Block:{}",
-                      "key": "block.properties.arr",
-                    },
-                  },
-                  Array [],
-                ],
-              },
             },
           },
-        },
-      ],
-    }
-  `);
+        ],
+      }
+    `);
 });
 
 test('yaml schemaYamlInObjectInArray defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaYamlInObjectInArray)).toMatchInlineSnapshot(`
-    Object {
-      "arr": Array [],
+    {
+      "arr": [],
     }
   `);
   const schemaYamlInObjectInArrayDV = {
@@ -610,10 +611,10 @@ test('yaml schemaYamlInObjectInArray defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaYamlInObjectInArrayDV)).toMatchInlineSnapshot(`
-    Object {
-      "arr": Array [
-        Object {
-          "yaml": Object {
+    {
+      "arr": [
+        {
+          "yaml": {
             "b": 1,
           },
         },

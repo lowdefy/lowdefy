@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockFindConfig = jest.fn();
-jest.unstable_mockModule('./findConfig.js', () => ({
+const mockFindConfig = vi.fn();
+vi.doMock('./findConfig.js', () => ({
   default: mockFindConfig,
 }));
 

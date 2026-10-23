@@ -15,6 +15,7 @@
 */
 
 import jsMapParser from './jsMapParser.js';
+import { expect, test } from 'vitest';
 
 test('jsMapParser hashes string form and returns _js hash', () => {
   const jsMap = {};

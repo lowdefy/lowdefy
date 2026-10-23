@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 
 import mountPageRoutes from './mountPageRoutes.js';
+import { expect, test } from 'vitest';
 
 function request({ basePath, path }) {
   const app = basePath === '' ? new Hono() : new Hono().basePath(basePath);

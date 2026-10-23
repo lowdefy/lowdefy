@@ -26,6 +26,7 @@ import PhoneNumberVerify from './actions/PhoneNumberVerify/schema.js';
 import SendVerificationEmail from './actions/SendVerificationEmail/schema.js';
 import SignUp from './actions/SignUp/schema.js';
 import TwoFactorVerify from './actions/TwoFactorVerify/schema.js';
+import { expect, test } from 'vitest';
 
 const schemas = {
   EmailOtpVerify,

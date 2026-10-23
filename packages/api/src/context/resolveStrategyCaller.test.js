@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
 function mockLogger() {
-  return { debug: jest.fn(), warn: jest.fn() };
+  return { debug: vi.fn(), warn: vi.fn() };
 }
 
 function mockStrategy({ attributes = {}, id, match = null, roles = [], type = 'apiKey' }) {
-  return { attributes, id, roles, type, verify: jest.fn().mockResolvedValue(match) };
+  return { attributes, id, roles, type, verify: vi.fn().mockResolvedValue(match) };
 }
 
 test('resolveStrategyCaller returns null when no strategies are configured', async () => {

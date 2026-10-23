@@ -21,6 +21,7 @@ import {
 } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
+import { expect, test } from 'vitest';
 
 const logger = { debug: () => {} };
 const endpointConfig = { endpointId: 'ep', auth: { public: false } };

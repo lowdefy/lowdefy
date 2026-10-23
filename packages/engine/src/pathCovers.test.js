@@ -15,6 +15,7 @@
 */
 
 import pathCovers from './pathCovers.js';
+import { expect, test } from 'vitest';
 
 test('a path covers itself', () => {
   expect(pathCovers({ path: 'contact.extra', target: 'contact.extra' })).toBe(true);

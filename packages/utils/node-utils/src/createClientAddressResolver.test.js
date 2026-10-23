@@ -15,6 +15,7 @@
 */
 
 import createClientAddressResolver from './createClientAddressResolver.js';
+import { expect, test } from 'vitest';
 
 const resolveUntrusted = createClientAddressResolver({ trustedProxies: [] });
 const resolveBehindProxies = createClientAddressResolver({

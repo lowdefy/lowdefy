@@ -17,6 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { afterAll, expect, test } from 'vitest';
 
 // readPagePath reads build/routes.json from process.cwd(): chdir into a fixture
 // that has one before the module loads.

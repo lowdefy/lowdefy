@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { StreamableHTTPError } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
 
@@ -24,8 +24,8 @@ test.each([
   ['the session is gone after a restart', new StreamableHTTPError(404, 'Session not found')],
   ['the dev server could not be reached', new TypeError('fetch failed')],
 ])('callWithReconnect calls once more on a fresh connection when %s', async (_, error) => {
-  const call = jest.fn().mockRejectedValueOnce(error).mockResolvedValueOnce({ content: [] });
-  const reconnect = jest.fn(async () => {});
+  const call = vi.fn().mockRejectedValueOnce(error).mockResolvedValueOnce({ content: [] });
+  const reconnect = vi.fn(async () => {});
   await expect(callWithReconnect({ call, reconnect })).resolves.toEqual({ content: [] });
   expect(reconnect).toHaveBeenCalledTimes(1);
   expect(call).toHaveBeenCalledTimes(2);
@@ -35,8 +35,8 @@ test.each([
   ['timed out', new McpError(ErrorCode.RequestTimeout, 'Request timed out')],
   ['failed in the server', new McpError(ErrorCode.InternalError, 'Journey step failed')],
 ])('callWithReconnect does not repeat a call that %s', async (_, error) => {
-  const call = jest.fn().mockRejectedValue(error);
-  const reconnect = jest.fn(async () => {});
+  const call = vi.fn().mockRejectedValue(error);
+  const reconnect = vi.fn(async () => {});
   await expect(callWithReconnect({ call, reconnect })).rejects.toBe(error);
   expect(call).toHaveBeenCalledTimes(1);
   expect(reconnect).not.toHaveBeenCalled();

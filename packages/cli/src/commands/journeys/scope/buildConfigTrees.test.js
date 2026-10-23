@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import buildConfigTrees from './buildConfigTrees.js';
 
@@ -64,7 +64,7 @@ beforeEach(() => {
   context = {
     directories: { config, dev },
     options: {},
-    logger: { debug: jest.fn() },
+    logger: { debug: vi.fn() },
   };
 });
 afterEach(() => {

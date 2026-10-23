@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import path from 'path';
 
 test('relativePosixPath joins segments with forward slashes', async () => {
@@ -25,8 +25,8 @@ test('relativePosixPath joins segments with forward slashes', async () => {
 });
 
 test('relativePosixPath turns Windows separators into forward slashes', async () => {
-  jest.resetModules();
-  jest.unstable_mockModule('path', () => ({ default: path.win32 }));
+  vi.resetModules();
+  vi.doMock('path', () => ({ default: path.win32 }));
   const { default: relativePosixPath } = await import('./relativePosixPath.js');
   expect(
     relativePosixPath({ from: 'C:\\repo\\app', to: 'C:\\repo\\app\\tests\\journeys\\tickets.yaml' })

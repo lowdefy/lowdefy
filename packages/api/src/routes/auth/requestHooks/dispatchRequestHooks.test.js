@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import dispatchRequestHooks from './dispatchRequestHooks.js';
 
 test('dispatchRequestHooks returns undefined when no registration matches the path', async () => {
-  const handler = jest.fn();
+  const handler = vi.fn();
   const result = await dispatchRequestHooks({
     ctx: { path: '/sign-in/email' },
     registrations: [{ id: 'a', matches: (path) => path === '/sign-in/magic-link', handler }],
@@ -35,8 +35,8 @@ test('dispatchRequestHooks returns undefined with no registrations at all', asyn
 });
 
 test('dispatchRequestHooks falls through a matching handler returning undefined to a later match', async () => {
-  const first = jest.fn(async () => undefined);
-  const second = jest.fn(async () => ({ status: true }));
+  const first = vi.fn(async () => undefined);
+  const second = vi.fn(async () => ({ status: true }));
   const result = await dispatchRequestHooks({
     ctx: { path: '/sign-in/magic-link' },
     registrations: [
@@ -50,8 +50,8 @@ test('dispatchRequestHooks falls through a matching handler returning undefined 
 });
 
 test('dispatchRequestHooks short-circuits on the first non-undefined return', async () => {
-  const first = jest.fn(async () => ({ status: true }));
-  const second = jest.fn(async () => ({ status: false }));
+  const first = vi.fn(async () => ({ status: true }));
+  const second = vi.fn(async () => ({ status: false }));
   const result = await dispatchRequestHooks({
     ctx: { path: '/sign-in/magic-link' },
     registrations: [
@@ -64,7 +64,7 @@ test('dispatchRequestHooks short-circuits on the first non-undefined return', as
 });
 
 test('dispatchRequestHooks returns a falsy non-undefined result rather than falling through', async () => {
-  const second = jest.fn();
+  const second = vi.fn();
   const result = await dispatchRequestHooks({
     ctx: { path: '/callback/google' },
     registrations: [
@@ -77,8 +77,8 @@ test('dispatchRequestHooks returns a falsy non-undefined result rather than fall
 });
 
 test('dispatchRequestHooks does not call the handler of a non-matching registration', async () => {
-  const skipped = jest.fn();
-  const matched = jest.fn(async () => undefined);
+  const skipped = vi.fn();
+  const matched = vi.fn(async () => undefined);
   await dispatchRequestHooks({
     ctx: { path: '/two-factor/verify-totp' },
     registrations: [
@@ -91,7 +91,7 @@ test('dispatchRequestHooks does not call the handler of a non-matching registrat
 });
 
 test('dispatchRequestHooks lets an error thrown by a handler propagate', async () => {
-  const later = jest.fn();
+  const later = vi.fn();
   await expect(
     dispatchRequestHooks({
       ctx: { path: '/sign-in/magic-link' },
@@ -111,7 +111,7 @@ test('dispatchRequestHooks lets an error thrown by a handler propagate', async (
 });
 
 test('dispatchRequestHooks matches nothing when ctx has no path', async () => {
-  const handler = jest.fn();
+  const handler = vi.fn();
   const result = await dispatchRequestHooks({
     ctx: { body: {} },
     registrations: [

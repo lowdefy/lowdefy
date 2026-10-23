@@ -17,6 +17,7 @@
 import path from 'path';
 
 import isPathInsideRoot from './isPathInsideRoot.js';
+import { expect, test } from 'vitest';
 
 const root = path.resolve('/modules/app');
 

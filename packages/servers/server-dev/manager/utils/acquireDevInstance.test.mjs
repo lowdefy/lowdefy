@@ -22,6 +22,7 @@ import { spawnSync } from 'child_process';
 import { getProcessStartTime, isProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
 
 import acquireDevInstance from './acquireDevInstance.mjs';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let configDirectory;
 

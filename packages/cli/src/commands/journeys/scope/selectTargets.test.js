@@ -22,6 +22,7 @@ import describeEmptyScope from './describeEmptyScope.js';
 import diffBuilds from './diffBuilds.js';
 import readBuildArtifacts from './readBuildArtifacts.js';
 import selectTargets from './selectTargets.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let root;
 beforeEach(() => {

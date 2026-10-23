@@ -15,6 +15,7 @@
 */
 
 import servedBuilds from './servedBuilds.js';
+import { expect, test } from 'vitest';
 
 function buildId(index) {
   return new Date(Date.UTC(2026, 9, 3, 0, index)).toISOString();

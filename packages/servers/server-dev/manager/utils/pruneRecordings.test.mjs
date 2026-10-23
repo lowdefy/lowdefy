@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import pruneRecordings from './pruneRecordings.mjs';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const NOW = Date.parse('2026-10-03T12:00:00Z');
 let configDirectory;

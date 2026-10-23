@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { serializer } from '@lowdefy/helpers';
 
@@ -29,9 +29,9 @@ import testContext from '../../test/testContext.js';
 // the tenant verdict each request ran with, standing in for MongoDB (the
 // *.mongodb.test.js suite runs the same flow against a real database).
 
-const logger = { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() };
+const logger = { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() };
 
-const walledRequest = jest.fn(({ request, tenant }) => ({ request, tenant }));
+const walledRequest = vi.fn(({ request, tenant }) => ({ request, tenant }));
 walledRequest.schema = {};
 walledRequest.meta = { checkRead: false, checkWrite: false };
 const verify = ({ request }) => request.token === 'good';
@@ -139,7 +139,7 @@ function createContext({ entry, user = null, extra = [] }) {
     connections,
     operators: operatorsServer,
     organization: { policy: 'tenant' },
-    readConfigFile: jest.fn((path) => files[path] ?? null),
+    readConfigFile: vi.fn((path) => files[path] ?? null),
     user,
   });
 }
@@ -164,7 +164,7 @@ const standIn = { id: 'github', name: 'GitHub', organization_id: 'org-1', system
 const orgVerdict = { field: 'organization_id', value: 'org-1' };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('a verified webhook calls an endpoint bound to an organization as a named stand-in caller', async () => {
@@ -327,7 +327,7 @@ test('a bound run can restate its binding but not name another organization or c
 
 test('a detached CallApi carries the binding and the stand-in caller to the detached run', async () => {
   process.env.CRON_SECRET = 'shhh';
-  const fetchMock = jest.fn(async () => ({ status: 200 }));
+  const fetchMock = vi.fn(async () => ({ status: 200 }));
   global.fetch = fetchMock;
   const context = createContext({
     entry: verifiedWebhook([

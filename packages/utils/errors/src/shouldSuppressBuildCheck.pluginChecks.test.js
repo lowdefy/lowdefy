@@ -18,6 +18,7 @@ import shouldSuppressBuildCheck, {
   PLUGIN_CHECKS_SLUG,
   VALID_CHECK_SLUGS,
 } from './shouldSuppressBuildCheck.js';
+import { expect, test } from 'vitest';
 
 const pluginError = {
   configKey: 'child',

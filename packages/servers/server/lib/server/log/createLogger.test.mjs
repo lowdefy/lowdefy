@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { createNodeLogger } from '@lowdefy/logger/node';
 import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
@@ -30,10 +30,10 @@ const destination = {
 
 // The prod logger writes to stdout; route the real logger to memory so each test reads the
 // exact line pino would emit, after the streamWrite hook.
-jest.unstable_mockModule('@lowdefy/logger/node', () => ({
+vi.doMock('@lowdefy/logger/node', () => ({
   createNodeLogger: (options) => createNodeLogger({ ...options, destination }),
 }));
-jest.unstable_mockModule('../../build/appMeta.js', () => ({ default: {} }));
+vi.doMock('../../build/appMeta.js', () => ({ default: {} }));
 
 process.env.LOWDEFY_SECRET_API_KEY = secret;
 process.env.LOWDEFY_SECRET_SHORT = shortSecret;

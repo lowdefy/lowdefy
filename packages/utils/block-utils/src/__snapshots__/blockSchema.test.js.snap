@@ -1,15 +1,15 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`default 1`] = `
-Object {
+{
   "additionalProperties": false,
-  "properties": Object {
-    "areas": Object {
-      "patternProperties": Object {
-        "^.*$": Object {
-          "properties": Object {
-            "blocks": Object {
-              "items": Object {
+  "properties": {
+    "areas": {
+      "patternProperties": {
+        "^.*$": {
+          "properties": {
+            "blocks": {
+              "items": {
                 "type": "object",
               },
               "type": "array",
@@ -20,31 +20,31 @@ Object {
       },
       "type": "object",
     },
-    "blocks": Object {
-      "items": Object {
+    "blocks": {
+      "items": {
         "type": "object",
       },
       "type": "array",
     },
-    "class": Object {
-      "oneOf": Array [
-        Object {
+    "class": {
+      "oneOf": [
+        {
           "type": "string",
         },
-        Object {
-          "items": Object {
+        {
+          "items": {
             "type": "string",
           },
           "type": "array",
         },
-        Object {
-          "additionalProperties": Object {
-            "oneOf": Array [
-              Object {
+        {
+          "additionalProperties": {
+            "oneOf": [
+              {
                 "type": "string",
               },
-              Object {
-                "items": Object {
+              {
+                "items": {
                   "type": "string",
                 },
                 "type": "array",
@@ -55,86 +55,86 @@ Object {
         },
       ],
     },
-    "events": Object {
+    "events": {
       "type": "object",
     },
-    "id": Object {
+    "id": {
       "type": "string",
     },
-    "layout": Object {
+    "layout": {
       "type": "object",
     },
-    "menus": Object {
-      "items": Object {
-        "properties": Object {
-          "id": Object {
+    "menus": {
+      "items": {
+        "properties": {
+          "id": {
             "description": "Menu id.",
             "type": "string",
           },
-          "links": Object {
-            "items": Object {
-              "properties": Object {
-                "id": Object {
+          "links": {
+            "items": {
+              "properties": {
+                "id": {
                   "description": "Menu item id.",
                   "type": "string",
                 },
-                "links": Object {
-                  "items": Object {
-                    "properties": Object {
-                      "id": Object {
+                "links": {
+                  "items": {
+                    "properties": {
+                      "id": {
                         "description": "Menu item id.",
                         "type": "string",
                       },
-                      "pageId": Object {
+                      "pageId": {
                         "description": "Page to link to.",
                         "type": "string",
                       },
-                      "properties": Object {
+                      "properties": {
                         "description": "properties from menu item.",
-                        "links": Object {
-                          "items": Object {
-                            "properties": Object {
-                              "id": Object {
+                        "links": {
+                          "items": {
+                            "properties": {
+                              "id": {
                                 "description": "Menu item id.",
                                 "type": "string",
                               },
-                              "pageId": Object {
+                              "pageId": {
                                 "description": "Page to link to.",
                                 "type": "string",
                               },
-                              "properties": Object {
+                              "properties": {
                                 "description": "properties from menu item.",
-                                "properties": Object {
-                                  "danger": Object {
+                                "properties": {
+                                  "danger": {
                                     "description": "Apply danger style to menu item.",
                                     "type": "boolean",
                                   },
-                                  "dashed": Object {
+                                  "dashed": {
                                     "default": false,
                                     "description": "Whether the divider line is dashed.",
                                     "type": "boolean",
                                   },
-                                  "title": Object {
+                                  "title": {
                                     "description": "Menu item title.",
                                     "type": "string",
                                   },
                                 },
                                 "type": "object",
                               },
-                              "style": Object {
+                              "style": {
                                 "description": "Css style to applied to sub-link.",
                                 "type": "object",
                               },
-                              "type": Object {
+                              "type": {
                                 "description": "Menu item type.",
-                                "enum": Array [
+                                "enum": [
                                   "MenuDivider",
                                   "MenuLink",
                                 ],
                                 "type": "string",
                               },
                             },
-                            "required": Array [
+                            "required": [
                               "id",
                               "type",
                             ],
@@ -142,30 +142,30 @@ Object {
                           },
                           "type": "array",
                         },
-                        "properties": Object {
-                          "danger": Object {
+                        "properties": {
+                          "danger": {
                             "description": "Apply danger style to menu item.",
                             "type": "boolean",
                           },
-                          "dashed": Object {
+                          "dashed": {
                             "default": false,
                             "description": "Whether the divider line is dashed.",
                             "type": "boolean",
                           },
-                          "title": Object {
+                          "title": {
                             "description": "Menu item title.",
                             "type": "string",
                           },
                         },
                         "type": "object",
                       },
-                      "style": Object {
+                      "style": {
                         "description": "Css style to applied to sub-link.",
                         "type": "object",
                       },
-                      "type": Object {
+                      "type": {
                         "description": "Menu item type.",
-                        "enum": Array [
+                        "enum": [
                           "MenuDivider",
                           "MenuLink",
                           "MenuGroup",
@@ -173,7 +173,7 @@ Object {
                         "type": "string",
                       },
                     },
-                    "required": Array [
+                    "required": [
                       "id",
                       "type",
                     ],
@@ -181,43 +181,43 @@ Object {
                   },
                   "type": "array",
                 },
-                "pageId": Object {
+                "pageId": {
                   "description": "Page to link to.",
                   "type": "string",
                 },
-                "properties": Object {
+                "properties": {
                   "description": "properties from menu item.",
-                  "properties": Object {
-                    "danger": Object {
+                  "properties": {
+                    "danger": {
                       "description": "Apply danger style to menu item.",
                       "type": "boolean",
                     },
-                    "dashed": Object {
+                    "dashed": {
                       "default": false,
                       "description": "Whether the divider line is dashed.",
                       "type": "boolean",
                     },
-                    "icon": Object {
-                      "description": "Icon name (a semantic name like edit, otherwise a <a href=\\"https://lucide.dev/icons/\\">Lucide</a> name in PascalCase like Pencil) or properties of an Icon block to customize icon on menu item.",
-                      "type": Array [
+                    "icon": {
+                      "description": "Icon name (a semantic name like edit, otherwise a <a href="https://lucide.dev/icons/">Lucide</a> name in PascalCase like Pencil) or properties of an Icon block to customize icon on menu item.",
+                      "type": [
                         "string",
                         "object",
                       ],
                     },
-                    "title": Object {
+                    "title": {
                       "description": "Menu item title.",
                       "type": "string",
                     },
                   },
                   "type": "object",
                 },
-                "style": Object {
+                "style": {
                   "description": "Css style to applied to link.",
                   "type": "object",
                 },
-                "type": Object {
+                "type": {
                   "description": "Menu item type.",
-                  "enum": Array [
+                  "enum": [
                     "MenuDivider",
                     "MenuLink",
                     "MenuGroup",
@@ -225,7 +225,7 @@ Object {
                   "type": "string",
                 },
               },
-              "required": Array [
+              "required": [
                 "id",
                 "type",
               ],
@@ -234,36 +234,36 @@ Object {
             "type": "array",
           },
         },
-        "required": Array [
+        "required": [
           "id",
         ],
         "type": "object",
       },
       "type": "array",
     },
-    "properties": Object {
+    "properties": {
       "type": "object",
     },
-    "required": Object {
-      "type": Array [
+    "required": {
+      "type": [
         "boolean",
         "object",
       ],
     },
-    "style": Object {
+    "style": {
       "type": "object",
     },
-    "styles": Object {
-      "additionalProperties": Object {
+    "styles": {
+      "additionalProperties": {
         "type": "object",
       },
       "type": "object",
     },
-    "type": Object {
+    "type": {
       "type": "string",
     },
   },
-  "required": Array [
+  "required": [
     "id",
     "type",
   ],

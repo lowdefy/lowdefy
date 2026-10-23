@@ -15,9 +15,9 @@
 */
 
 // Runs one build in its own Node process and logs JSON lines to stdout, as
-// `lowdefy build` runs each Lowdefy build in a process of its own. Jest caches
-// module resolution, so a test that installs a package between two builds in
-// one Jest process would not see it. Options are one JSON argument.
+// `lowdefy build` runs each Lowdefy build in a process of its own. The test
+// runner caches module resolution, so a test that installs a package between
+// two builds in one test process would not see it. Options are one JSON argument.
 import { createNodeLogger } from '@lowdefy/logger/node';
 
 import build from '../index.js';

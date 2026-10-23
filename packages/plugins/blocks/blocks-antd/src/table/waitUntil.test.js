@@ -15,6 +15,7 @@
 */
 
 import waitUntil from './waitUntil.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 // A hand-run timer queue in place of setTimeout, so each test decides when timers fire.
 let timers;

@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import initialBuild from './initialBuild.mjs';
 
@@ -26,14 +26,14 @@ let calls;
 
 function createContext({ installPlugins, skipPluginChecks } = {}) {
   const record = (name, impl) =>
-    jest.fn(async () => {
+    vi.fn(async () => {
       calls.push(name);
       if (impl) await impl();
     });
   return {
     directories: { build: buildDirectory, server: buildDirectory },
     options: { skipPluginChecks },
-    readDotEnv: jest.fn(() => calls.push('readDotEnv')),
+    readDotEnv: vi.fn(() => calls.push('readDotEnv')),
     lowdefyBuild: record('lowdefyBuild'),
     checkMockUserWarning: record('checkMockUserWarning'),
     installPlugins: record('installPlugins', installPlugins),

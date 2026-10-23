@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGenerateBlobSASQueryParameters = jest.fn();
-const mockStorageSharedKeyCredentialConstructor = jest.fn();
-const mockPermissionsParse = jest.fn();
+const mockGenerateBlobSASQueryParameters = vi.fn();
+const mockStorageSharedKeyCredentialConstructor = vi.fn();
+const mockPermissionsParse = vi.fn();
 
-jest.unstable_mockModule('@azure/storage-blob', () => ({
-  StorageSharedKeyCredential: jest.fn().mockImplementation((...args) => {
+vi.doMock('@azure/storage-blob', () => ({
+  StorageSharedKeyCredential: vi.fn().mockImplementation(function (...args) {
     mockStorageSharedKeyCredentialConstructor(...args);
     return { type: 'credential' };
   }),
@@ -41,10 +41,14 @@ beforeEach(() => {
   mockGenerateBlobSASQueryParameters.mockReset();
   mockStorageSharedKeyCredentialConstructor.mockReset();
   mockPermissionsParse.mockReset();
-  mockPermissionsParse.mockImplementation((permissions) => permissions);
-  mockGenerateBlobSASQueryParameters.mockImplementation(() => ({
-    toString: () => 'sas-token',
-  }));
+  mockPermissionsParse.mockImplementation(function (permissions) {
+    return permissions;
+  });
+  mockGenerateBlobSASQueryParameters.mockImplementation(function () {
+    return {
+      toString: () => 'sas-token',
+    };
+  });
 });
 
 test('AzureBlobUploadSas returns a PUT descriptor with top-level key and bucket', async () => {
@@ -87,7 +91,7 @@ test('AzureBlobUploadSas sets the Content-Type header when contentType is provid
 });
 
 test('Error from azure client', async () => {
-  mockGenerateBlobSASQueryParameters.mockImplementation(() => {
+  mockGenerateBlobSASQueryParameters.mockImplementation(function () {
     throw new Error('Test Azure client error.');
   });
   const request = { key: 'key' };

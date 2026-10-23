@@ -17,6 +17,7 @@
 import buildPreviewProps from './buildPreviewProps.js';
 import DigestEmail from './notifications/DigestEmail/DigestEmail.js';
 import NotificationEmail from './notifications/NotificationEmail/NotificationEmail.js';
+import { expect, test } from 'vitest';
 
 test('buildPreviewProps interpolates properties with testData', () => {
   const result = buildPreviewProps({

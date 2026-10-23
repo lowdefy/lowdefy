@@ -2533,6 +2533,7 @@
             },
             "~k": "22"
           },
+          "readOnly": false,
           "requestId": "createUser",
           "pageId": "create-user",
           "~k": "21"
@@ -2580,6 +2581,7 @@
       "public": true,
       "~k": "62"
     },
+    "readOnly": false,
     "requestId": "createUser",
     "pageId": "create-user",
     "~k": "21"
@@ -2758,6 +2760,7 @@
             },
             "~k": "33"
           },
+          "readOnly": false,
           "requestId": "getUser",
           "pageId": "edit-user",
           "~k": "32"
@@ -2779,6 +2782,7 @@
             },
             "~k": "39"
           },
+          "readOnly": false,
           "requestId": "updateUser",
           "pageId": "edit-user",
           "~k": "38"
@@ -2814,6 +2818,7 @@
       "public": true,
       "~k": "6f"
     },
+    "readOnly": false,
     "requestId": "getUser",
     "pageId": "edit-user",
     "~k": "32"
@@ -2869,6 +2874,7 @@
       "public": true,
       "~k": "6g"
     },
+    "readOnly": false,
     "requestId": "updateUser",
     "pageId": "edit-user",
     "~k": "38"
@@ -3145,6 +3151,7 @@
           "payload": {
             "~k": "5l"
           },
+          "readOnly": false,
           "requestId": "getUsers",
           "pageId": "users",
           "~k": "j"
@@ -3158,6 +3165,7 @@
             },
             "~k": "p"
           },
+          "readOnly": false,
           "requestId": "deleteUser",
           "pageId": "users",
           "~k": "o"
@@ -3193,6 +3201,7 @@
       "public": true,
       "~k": "5n"
     },
+    "readOnly": false,
     "requestId": "deleteUser",
     "pageId": "users",
     "~k": "o"
@@ -3221,6 +3230,7 @@
       "public": true,
       "~k": "5m"
     },
+    "readOnly": false,
     "requestId": "getUsers",
     "pageId": "users",
     "~k": "j"

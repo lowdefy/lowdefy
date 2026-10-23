@@ -17,6 +17,7 @@
 import { createHash } from 'node:crypto';
 
 import rolesHash from './rolesHash.js';
+import { expect, test } from 'vitest';
 
 test('rolesHash is the stamp hash of the sorted app roles and organization role tier', () => {
   expect(rolesHash({ user: { roles: ['editor', 'admin'] } })).toBe('228d50a09b1b1e2b');

@@ -17,6 +17,7 @@
 import { ReservedKeyError } from '@lowdefy/helpers';
 
 import createFieldAccessor from './createFieldAccessor.js';
+import { expect, test } from 'vitest';
 
 test('createFieldAccessor reads a top-level and a nested field', () => {
   expect(createFieldAccessor('name')({ name: 'Ada' })).toBe('Ada');

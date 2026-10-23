@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
@@ -23,16 +23,16 @@ import resolveAuthentication from './resolveAuthentication.js';
 // member is the caller's row in the session's active organization; memberRows
 // adds the rows they hold in other organizations.
 function mockAuth({ session, member, memberRows = [], count, passkey, invitations } = {}) {
-  const findOne = jest.fn().mockResolvedValue(member ?? null);
-  const countFn = jest.fn().mockResolvedValue(count ?? 0);
+  const findOne = vi.fn().mockResolvedValue(member ?? null);
+  const countFn = vi.fn().mockResolvedValue(count ?? 0);
   const activeRows = member
     ? [{ organizationId: session?.session?.activeOrganizationId, ...member }]
     : [];
-  const findMany = jest.fn(async ({ model }) =>
+  const findMany = vi.fn(async ({ model }) =>
     model === 'member' ? [...activeRows, ...memberRows] : invitations ?? []
   );
   const auth = {
-    api: { getSession: jest.fn().mockResolvedValue(session ?? null) },
+    api: { getSession: vi.fn().mockResolvedValue(session ?? null) },
     $context: Promise.resolve({ adapter: { findOne, count: countFn, findMany } }),
   };
   if (passkey) {
@@ -526,11 +526,11 @@ test('resolves two_factor_enrolled false, not undefined, when twoFactorEnabled i
 });
 
 function mockStrategy({ attributes = {}, id, match = null, roles = [], type = 'apiKey' }) {
-  return { attributes, id, roles, type, verify: jest.fn().mockResolvedValue(match) };
+  return { attributes, id, roles, type, verify: vi.fn().mockResolvedValue(match) };
 }
 
 function mockLogger() {
-  return { debug: jest.fn(), warn: jest.fn() };
+  return { debug: vi.fn(), warn: vi.fn() };
 }
 
 test('resolves a strategy caller when no session resolves', async () => {
@@ -909,7 +909,7 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     session,
     user,
   } = {}) {
-    const findOne = jest.fn(async ({ model }) => {
+    const findOne = vi.fn(async ({ model }) => {
       if (model === 'user') {
         return user ?? null;
       }
@@ -921,10 +921,10 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
       }
       return null;
     });
-    const findMany = jest.fn(async ({ model }) => (model === 'jwks' ? jwksRows : []));
-    const countFn = jest.fn().mockResolvedValue(count);
+    const findMany = vi.fn(async ({ model }) => (model === 'jwks' ? jwksRows : []));
+    const countFn = vi.fn().mockResolvedValue(count);
     const auth = {
-      api: { getSession: jest.fn().mockResolvedValue(session ?? null) },
+      api: { getSession: vi.fn().mockResolvedValue(session ?? null) },
       $context: Promise.resolve({ adapter: { count: countFn, findMany, findOne } }),
     };
     if (passkey) {

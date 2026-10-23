@@ -16,6 +16,7 @@
 
 import claimDomEvent from './claimDomEvent.js';
 import exemptFromDomEvent from './exemptFromDomEvent.js';
+import { expect, test } from 'vitest';
 
 // A DOM event whose path runs through the layout elements of these blocks, innermost first, as
 // the client renders them (`bl-<blockId>`).

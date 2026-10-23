@@ -15,6 +15,7 @@
 */
 
 import ConfigError from './ConfigError.js';
+import { expect, test } from 'vitest';
 
 test('ConfigError creates error with message only', () => {
   const error = new ConfigError('Test error message');

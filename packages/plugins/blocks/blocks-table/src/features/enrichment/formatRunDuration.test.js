@@ -15,6 +15,7 @@
 */
 
 import formatRunDuration from './formatRunDuration.js';
+import { expect, test } from 'vitest';
 
 const at = (seconds) => new Date(Date.UTC(2026, 8, 1, 10, 0, 0) + seconds * 1000);
 

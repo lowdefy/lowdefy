@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockEvaluate = jest.fn();
-const mockGenerateText = jest.fn();
-const mockJsonSchema = jest.fn((schema) => ({ wrapped: schema }));
-const mockOutputObject = jest.fn((spec) => ({ outputSpec: spec }));
+const mockEvaluate = vi.fn();
+const mockGenerateText = vi.fn();
+const mockJsonSchema = vi.fn((schema) => ({ wrapped: schema }));
+const mockOutputObject = vi.fn((spec) => ({ outputSpec: spec }));
 
-jest.unstable_mockModule('ai', () => ({
+vi.doMock('ai', () => ({
   experimental_evaluate: mockEvaluate,
   generateText: mockGenerateText,
   jsonSchema: mockJsonSchema,
@@ -52,21 +52,21 @@ const state = { subject: 'Charged twice', body: 'My card was charged twice for o
 function gateway() {
   const languageModel = { modelId: 'language' };
   const evaluationModel = { modelId: 'evaluation' };
-  const provider = jest.fn().mockReturnValue(languageModel);
-  provider.evaluationModel = jest.fn().mockReturnValue(evaluationModel);
+  const provider = vi.fn().mockReturnValue(languageModel);
+  provider.evaluationModel = vi.fn().mockReturnValue(evaluationModel);
   return { provider, languageModel, evaluationModel };
 }
 
 test('createDecide attaches a per-connection schema and meta', async () => {
   const { default: createDecide } = await import('./createDecide.js');
   const Decide = createDecide({
-    createProvider: jest.fn(),
+    createProvider: vi.fn(),
     backends: ['evaluation', 'structured-output'],
   });
   expect(Decide.meta).toEqual({ checkRead: false, checkWrite: false });
   expect(Decide.schema.title).toBe('Lowdefy Request Schema - Decide');
   expect(Decide.schema.properties.backend.enum).toEqual(['evaluation', 'structured-output']);
-  expect(createDecide({ createProvider: jest.fn() }).schema.properties.backend.enum).toEqual([
+  expect(createDecide({ createProvider: vi.fn() }).schema.properties.backend.enum).toEqual([
     'structured-output',
   ]);
 });
@@ -304,7 +304,7 @@ test('Decide sends only the descriptions of object options to the evaluation mod
 
 test('Decide schema accepts object options with extra keys', async () => {
   const { default: createDecide } = await import('./createDecide.js');
-  const Decide = createDecide({ createProvider: jest.fn() });
+  const Decide = createDecide({ createProvider: vi.fn() });
   const result = validate({
     schema: Decide.schema,
     data: {

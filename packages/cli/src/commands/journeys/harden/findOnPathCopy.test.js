@@ -15,6 +15,7 @@
 */
 
 import findOnPathCopy from './findOnPathCopy.js';
+import { expect, test } from 'vitest';
 
 function exercised({ rendered }) {
   return { pages: Object.keys(rendered), requests: [], endpoints: [], events: [], rendered };

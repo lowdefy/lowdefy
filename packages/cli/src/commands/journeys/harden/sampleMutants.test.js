@@ -15,6 +15,7 @@
 */
 
 import sampleMutants from './sampleMutants.js';
+import { expect, test } from 'vitest';
 
 const mutants = Array.from({ length: 30 }, (_, index) => ({ id: `mutant${index}` }));
 

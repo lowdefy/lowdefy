@@ -17,6 +17,7 @@
 import dataSessionRegistry from './dataSessionRegistry.js';
 import readDataSession from './readDataSession.js';
 import { journeyActorToken } from '../../server/auth/journeyActor.js';
+import { afterEach, expect, test } from 'vitest';
 
 afterEach(() => {
   dataSessionRegistry.clear();

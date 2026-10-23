@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const readConfigText = jest.fn(async () => ({
+const readConfigText = vi.fn(async () => ({
   texts: new Set(['Save']),
   isConfigText: (text) => text === 'Save',
 }));
-jest.unstable_mockModule('../configText/readConfigText.js', () => ({ default: readConfigText }));
+vi.doMock('../configText/readConfigText.js', () => ({ default: readConfigText }));
 
 const { default: readTierConfigText } = await import('./readTierConfigText.js');
 const { default: sequenceId } = await import('../evidence/sequenceId.js');

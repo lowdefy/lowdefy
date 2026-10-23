@@ -18,6 +18,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import ErrorPage from './ErrorPage.js';
+import { expect, test } from 'vitest';
 
 test('default', () => {
   const { container } = render(<ErrorPage />);

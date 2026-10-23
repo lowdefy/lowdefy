@@ -16,6 +16,7 @@
 
 import resolveHeadlessUser from './resolveHeadlessUser.js';
 import { headlessUser } from './headlessUser.js';
+import { expect, test } from 'vitest';
 
 test('resolveHeadlessUser returns the default roleless user when no user is given', () => {
   expect(resolveHeadlessUser({})).toEqual({

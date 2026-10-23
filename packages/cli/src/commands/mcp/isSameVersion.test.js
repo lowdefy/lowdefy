@@ -15,6 +15,7 @@
 */
 
 import isSameVersion from './isSameVersion.js';
+import { expect, test } from 'vitest';
 
 test('isSameVersion is true for the same release written two ways', () => {
   expect(isSameVersion({ a: '7.1.0', b: 'v7.1.0' })).toBe(true);

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-// Run by importAppCode.test.mjs in its own process: Jest can load neither Vite
-// nor a module URL with a query. Loads the build's importAppCode the way the dev
+// Run by importAppCode.test.mjs in its own process, so it loads Vite and module
+// URLs with a query as the dev server does, outside the test runner's module runtime. Loads the build's importAppCode the way the dev
 // server's JIT page builds do, then imports an app code file, imports it again
 // unchanged, edits it and imports it again. With `vite`, through Vite's SSR
 // module runner (@lowdefy/build linked, as in the monorepo); with `node`,

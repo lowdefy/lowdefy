@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import testContext from '../testContext.js';
 
-const warn = jest.fn();
+const warn = vi.fn();
 const lowdefy = {
   pageId: 'one',
   _internal: {

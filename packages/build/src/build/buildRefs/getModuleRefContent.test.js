@@ -15,6 +15,7 @@
 */
 
 import getModuleRefContent from './getModuleRefContent.js';
+import { describe, expect, test } from 'vitest';
 
 function createContext({ modules } = {}) {
   return { modules: modules ?? {} };
@@ -150,9 +151,7 @@ describe('getModuleRefContent', () => {
         refDef: { module: 'team-users' },
         referencedFrom: 'lowdefy.yaml',
       })
-    ).rejects.toThrow(
-      'Module _ref requires "component" or "menu" property.'
-    );
+    ).rejects.toThrow('Module _ref requires "component" or "menu" property.');
   });
 
   test('throws ConfigError listing available ids when component is not found', async () => {
@@ -240,9 +239,7 @@ describe('getModuleRefContent', () => {
         refDef: { module: 'team-users', menu: 'default' },
         referencedFrom: 'lowdefy.yaml',
       })
-    ).rejects.toThrow(
-      'Module "team-users" has no menu "default". The module defines no menus.'
-    );
+    ).rejects.toThrow('Module "team-users" has no menu "default". The module defines no menus.');
   });
 
   test('handles undefined manifest arrays with nullish coalescing', async () => {
@@ -423,9 +420,7 @@ describe('getModuleRefContent', () => {
       modules: {
         layout: createModuleEntry({
           id: 'layout',
-          components: [
-            { id: 'wrapper', component: { blocks: [{ _var: 'content' }] } },
-          ],
+          components: [{ id: 'wrapper', component: { blocks: [{ _var: 'content' }] } }],
         }),
       },
     });

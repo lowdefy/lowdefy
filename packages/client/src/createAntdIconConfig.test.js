@@ -19,6 +19,7 @@ import { render } from '@testing-library/react';
 import { Alert, Collapse, ConfigProvider, Tag, theme } from 'antd';
 
 import createAntdIconConfig from './createAntdIconConfig.js';
+import { expect, test } from 'vitest';
 
 function Icon({ className, properties }) {
   return (

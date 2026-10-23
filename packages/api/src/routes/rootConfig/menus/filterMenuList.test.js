@@ -15,6 +15,7 @@
 */
 
 import filterMenuList from './filterMenuList.js';
+import { expect, test } from 'vitest';
 
 // The fake gate reads the outcome the test stamped on each item.
 const context = { authorizeOutcome: (item) => item.outcome };

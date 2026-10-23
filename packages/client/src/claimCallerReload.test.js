@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import claimCallerReload from './claimCallerReload.js';
 
@@ -34,29 +34,29 @@ function createWindow({ stored = {}, throws = false } = {}) {
 }
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('claimCallerReload allows the first reload and records when it happened', () => {
-  jest.useFakeTimers({ now: 1_000_000 });
+  vi.useFakeTimers({ now: 1_000_000 });
   const stored = {};
   expect(claimCallerReload({ window: createWindow({ stored }) })).toBe(true);
   expect(stored['lowdefy.reloadedForCaller']).toEqual('1000000');
 });
 
 test('claimCallerReload refuses a second reload within 10 seconds', () => {
-  jest.useFakeTimers({ now: 1_000_000 });
+  vi.useFakeTimers({ now: 1_000_000 });
   const window = createWindow();
   expect(claimCallerReload({ window })).toBe(true);
-  jest.setSystemTime(1_009_999);
+  vi.setSystemTime(1_009_999);
   expect(claimCallerReload({ window })).toBe(false);
 });
 
 test('claimCallerReload allows another reload once 10 seconds have passed', () => {
-  jest.useFakeTimers({ now: 1_000_000 });
+  vi.useFakeTimers({ now: 1_000_000 });
   const window = createWindow();
   expect(claimCallerReload({ window })).toBe(true);
-  jest.setSystemTime(1_010_000);
+  vi.setSystemTime(1_010_000);
   expect(claimCallerReload({ window })).toBe(true);
 });
 

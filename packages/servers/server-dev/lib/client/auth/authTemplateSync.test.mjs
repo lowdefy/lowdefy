@@ -17,6 +17,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { expect, test } from 'vitest';
 
 const devAuthDir = path.dirname(fileURLToPath(import.meta.url));
 const prodAuthDir = path.resolve(devAuthDir, '../../../../server/lib/client/auth');

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 import { serializer } from '@lowdefy/helpers';
 
 import WebSockets from './WebSockets.js';
@@ -29,27 +29,27 @@ const initialChannelState = {
 
 function createTestContext({ subscriptions = [] } = {}) {
   const client = {
-    subscribe: jest.fn(async () => {}),
-    unsubscribe: jest.fn(),
-    publish: jest.fn(async () => {}),
+    subscribe: vi.fn(async () => {}),
+    unsubscribe: vi.fn(),
+    publish: vi.fn(async () => {}),
   };
   const context = {
     eventLog: [],
     _internal: {
       Actions: {
-        callActions: jest.fn(async ({ eventName }) => ({ eventName, success: true })),
+        callActions: vi.fn(async ({ eventName }) => ({ eventName, success: true })),
       },
       lowdefy: {
         _internal: {
           websocketClient: client,
-          handleError: jest.fn(),
+          handleError: vi.fn(),
         },
       },
       parser: {
-        parse: jest.fn(() => ({ output: {}, errors: [] })),
+        parse: vi.fn(() => ({ output: {}, errors: [] })),
       },
       rootBlock: { subscriptions },
-      update: jest.fn(),
+      update: vi.fn(),
     },
   };
   return { client, context };
@@ -61,11 +61,27 @@ function subscribeHandlers(client, callIndex = 0) {
 
 // Node's global performance object is not configurable, so it cannot be faked.
 function useFakeTimers() {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
 }
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('constructor initializes context.websockets channel state from rootBlock subscriptions', () => {
@@ -276,7 +292,7 @@ test('first message flushes immediately and later messages batch until the throt
   expect(context.websockets.ticker.messages).toEqual([{ tick: 1 }]);
   expect(context.websockets.ticker.messageCount).toBe(1);
 
-  jest.advanceTimersByTime(250);
+  vi.advanceTimersByTime(250);
 
   expect(context.websockets.ticker.messages).toEqual([{ tick: 1 }, { tick: 2 }, { tick: 3 }]);
   expect(context.websockets.ticker.lastMessage).toEqual({ tick: 3 });
@@ -295,7 +311,7 @@ test('messages are capped by maxMessages while messageCount keeps counting', asy
   onMessage(serializer.serialize({ data: { tick: 1 } }));
   onMessage(serializer.serialize({ data: { tick: 2 } }));
   onMessage(serializer.serialize({ data: { tick: 3 } }));
-  jest.advanceTimersByTime(250);
+  vi.advanceTimersByTime(250);
 
   expect(context.websockets.ticker.messages).toEqual([{ tick: 2 }, { tick: 3 }]);
   expect(context.websockets.ticker.lastMessage).toEqual({ tick: 3 });
@@ -320,7 +336,7 @@ test('onMessage event fires with the flushed batch in event.messages', async () 
   onMessage(serializer.serialize({ data: { tick: 1 } }));
   onMessage(serializer.serialize({ data: { tick: 2 } }));
   onMessage(serializer.serialize({ data: { tick: 3 } }));
-  jest.advanceTimersByTime(250);
+  vi.advanceTimersByTime(250);
 
   const events = context._internal.Actions.callActions.mock.calls.map(([call]) => ({
     eventName: call.eventName,
@@ -344,9 +360,9 @@ test('throttleRender below the minimum is clamped to 100ms', async () => {
   onMessage(serializer.serialize({ data: { tick: 1 } }));
   onMessage(serializer.serialize({ data: { tick: 2 } }));
 
-  jest.advanceTimersByTime(99);
+  vi.advanceTimersByTime(99);
   expect(context.websockets.ticker.messages).toEqual([{ tick: 1 }]);
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   expect(context.websockets.ticker.messages).toEqual([{ tick: 1 }, { tick: 2 }]);
 });
 
@@ -368,7 +384,7 @@ test('unsubscribe resets channel state, clears the flush timer and calls client 
   expect(context.websockets.ticker).toEqual(initialChannelState);
 
   // The pending flush timer was cleared — the buffered message never lands.
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   expect(context.websockets.ticker.messages).toEqual([]);
 
   // Messages after unsubscribe are ignored.
@@ -518,7 +534,7 @@ test('subscribe with a changed payload replaces the open channel', async () => {
   expect(context.websockets.thread.messages).toEqual([]);
 
   handlers.onConnected();
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   handlers.onMessage(serializer.serialize({ data: { text: 'two' } }));
   expect(context.websockets.thread.connected).toBe(true);
   expect(context.websockets.thread.messages).toEqual([{ text: 'two' }]);

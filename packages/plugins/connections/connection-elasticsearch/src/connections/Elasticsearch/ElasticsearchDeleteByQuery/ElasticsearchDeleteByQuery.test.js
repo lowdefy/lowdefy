@@ -14,13 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
-mockElasticsearchClient.deleteByQuery = jest.fn(() => mockElasticsearchClient);
-jest.unstable_mockModule('@elastic/elasticsearch', () => ({
-  Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
+const mockElasticsearchClient = vi.fn(function () {
+  return mockElasticsearchClient;
+});
+mockElasticsearchClient.deleteByQuery = vi.fn(function () {
+  return mockElasticsearchClient;
+});
+vi.doMock('@elastic/elasticsearch', () => ({
+  Client: vi.fn().mockImplementation(function () {
+    return mockElasticsearchClient;
+  }),
 }));
 
 const connection = {
@@ -78,7 +84,9 @@ test('ElasticsearchDeleteByQuery', async () => {
       failures: [],
     },
   };
-  mockElasticsearchClient.deleteByQuery.mockImplementationOnce(() => Promise.resolve(responseData));
+  mockElasticsearchClient.deleteByQuery.mockImplementationOnce(function () {
+    return Promise.resolve(responseData);
+  });
   const request = {
     query: {
       term: {

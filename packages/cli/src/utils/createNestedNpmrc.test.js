@@ -15,6 +15,7 @@
 */
 
 import createNestedNpmrc from './createNestedNpmrc.js';
+import { expect, test } from 'vitest';
 
 const parentNpmrcPath = '/repo/.npmrc';
 const serverNpmrc = 'strict-peer-dependencies=false\n';

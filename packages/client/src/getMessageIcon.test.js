@@ -15,6 +15,7 @@
 */
 
 import getMessageIcon from './getMessageIcon.js';
+import { expect, test } from 'vitest';
 
 test('getMessageIcon returns the semantic status icon without a title', () => {
   expect(getMessageIcon({ status: 'success' })).toEqual({ name: 'success', title: '' });

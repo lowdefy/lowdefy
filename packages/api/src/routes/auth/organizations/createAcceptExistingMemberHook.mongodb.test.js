@@ -19,7 +19,7 @@
 // instance on the MongoDB auth adapter, with the unique member index in place
 // (pnpm test:mongodb).
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import * as mongodb from 'mongodb';
 
 // The adapter keeps its client for the process lifetime, so the test records
@@ -32,7 +32,7 @@ class RecordingMongoClient extends mongodb.MongoClient {
   }
 }
 
-jest.unstable_mockModule('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
+vi.doMock('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
 
 const { betterAuth } = await import('better-auth');
 const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/adapters');
@@ -63,11 +63,11 @@ afterAll(async () => {
 
 function createLogger() {
   return {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    isLevelEnabled: jest.fn(() => false),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    isLevelEnabled: vi.fn(() => false),
   };
 }
 

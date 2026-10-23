@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { APIError } from 'better-auth/api';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
@@ -26,14 +26,14 @@ import testContext from '../../../test/testContext.js';
 const operators = { ...operatorsServer };
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 function createMockReadConfigFile(endpointConfigs = {}) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     const match = path.match(/^api\/(.+)\.json$/);
     if (match && endpointConfigs[match[1]]) {
       const config = endpointConfigs[match[1]];
@@ -72,12 +72,12 @@ function buildTestHooks({ endpointConfigs, hooks, organizations = { policy: 'ten
     authConfig: { hooks, organizations },
     createSystemContext: createMockSystemContextFactory({ endpointConfigs }),
     getAuth: () => ({}),
-    logger: { debug: jest.fn(), warn: jest.fn(), error: jest.fn() },
+    logger: { debug: vi.fn(), warn: vi.fn(), error: vi.fn() },
   });
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('buildHooks always registers the engine session.create.before policy slot', () => {
@@ -334,7 +334,7 @@ test('session points fetch the subject user through the internal adapter', async
       },
     },
   });
-  const findUserById = jest.fn(async () => ({ id: 'user_1', email: 'a@b.c' }));
+  const findUserById = vi.fn(async () => ({ id: 'user_1', email: 'a@b.c' }));
   const ctx = { context: { internalAdapter: { findUserById } } };
   await expect(
     databaseHooks.session.create.after({ id: 'session_1', userId: 'user_1' }, ctx)

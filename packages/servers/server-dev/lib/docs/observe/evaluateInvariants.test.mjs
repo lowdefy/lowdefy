@@ -15,6 +15,7 @@
 */
 
 import evaluateInvariants from './evaluateInvariants.js';
+import { describe, expect, test } from 'vitest';
 
 const origin = 'http://localhost:3111';
 

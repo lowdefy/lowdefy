@@ -15,6 +15,7 @@
 */
 
 import mapPlainValues from './mapPlainValues.js';
+import { expect, test } from 'vitest';
 
 function upper(value) {
   return typeof value === 'string' ? value.toUpperCase() : value;

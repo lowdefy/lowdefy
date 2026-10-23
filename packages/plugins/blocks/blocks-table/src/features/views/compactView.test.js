@@ -17,6 +17,7 @@
 import assert from 'node:assert/strict';
 
 import compactView from './compactView.js';
+import { test } from 'vitest';
 
 test('compactView keeps only the parts that differ from the default view', () => {
   const defaults = { sort: [{ key: 'updated', desc: true }], filter: null, density: 'default' };

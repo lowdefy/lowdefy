@@ -14,21 +14,22 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import path from 'path';
 
 class MockConfigError extends Error {
   constructor({ message, error, filePath, received }) {
-    const finalMessage = error instanceof Error ? `Could not parse YAML. ${error.message}` : message;
+    const finalMessage =
+      error instanceof Error ? `Could not parse YAML. ${error.message}` : message;
     super(finalMessage);
     this.name = 'ConfigError';
     this.received = received;
   }
 }
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => {
+vi.doMock('@lowdefy/node-utils', () => {
   return {
-    readFile: jest.fn(),
+    readFile: vi.fn(),
     ConfigError: MockConfigError,
   };
 });

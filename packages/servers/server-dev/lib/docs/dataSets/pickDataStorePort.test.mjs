@@ -15,7 +15,7 @@
 */
 
 import { EventEmitter } from 'node:events';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const listenErrors = [];
 
@@ -34,7 +34,7 @@ function createServer() {
   return server;
 }
 
-jest.unstable_mockModule('node:net', () => ({ default: { createServer } }));
+vi.doMock('node:net', () => ({ default: { createServer } }));
 
 const { default: pickDataStorePort, MIN_PORT } = await import('./pickDataStorePort.js');
 

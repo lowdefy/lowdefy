@@ -441,7 +441,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                     type: 'string',
                     enum: ['left', 'center', 'right'],
                     description:
-                      'Cell horizontal alignment. Defaults to `right` for `cell.type: number`. Sets `cellStyle.justifyContent` and `ag-*-aligned-header` on the header.',
+                      'Cell horizontal alignment. Defaults to `right` for `cell.type: number`. Sets `cellStyle.justifyContent`, `cellStyle.textAlign` and `ag-*-aligned-header` on the header.',
                   },
                   buttons: {
                     type: 'array',

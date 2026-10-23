@@ -16,6 +16,7 @@
 
 import omit from './omit.js';
 import { ReservedKeyError } from './ReservedKeyError.js';
+import { expect, test } from 'vitest';
 
 test('omit flat keys', () => {
   const obj = { a: 1, b: 2, c: 3, d: 4 };

@@ -15,6 +15,7 @@
 */
 
 import scopeMutants from './scopeMutants.js';
+import { expect, test } from 'vitest';
 
 function exercised({ pages, endpoints = [], events = [], rendered = {} }) {
   return { pages, appEvents: true, requests: [], endpoints, events, rendered };

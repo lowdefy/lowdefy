@@ -17,14 +17,14 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 // A budget one page build passes, so the next request recreates the context.
-jest.unstable_mockModule('./contextMapBudget.js', () => ({ default: 1 }));
+vi.doMock('./contextMapBudget.js', () => ({ default: 1 }));
 
 const { default: buildPageIfNeeded, getBuildContext } = await import('./jitPageBuilder.js');
 
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000, hookTimeout: 30000 });
 
 function writeJson(filePath, data) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });

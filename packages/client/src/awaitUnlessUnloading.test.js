@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
-
+import { vi, expect, test } from 'vitest';
 import awaitUnlessUnloading from './awaitUnlessUnloading.js';
 
 test('awaitUnlessUnloading resolves with the value of a fulfilled promise', async () => {
@@ -32,7 +31,7 @@ test('awaitUnlessUnloading rethrows a rejection while the page stays open', asyn
 });
 
 test('awaitUnlessUnloading never settles on a rejection while the page unloads', async () => {
-  const settled = jest.fn();
+  const settled = vi.fn();
   awaitUnlessUnloading({
     lowdefy: { unloading: true },
     promise: Promise.reject(new TypeError('Failed to fetch')),

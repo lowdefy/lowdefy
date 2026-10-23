@@ -15,6 +15,7 @@
 */
 
 import operatorScope from './operatorScope.js';
+import { expect, test } from 'vitest';
 
 test('operatorScope returns the operator fields of the routine context', () => {
   const error = new Error('Caught error.');

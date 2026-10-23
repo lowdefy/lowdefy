@@ -16,6 +16,7 @@
 
 import escapeMarkdown from './escapeMarkdown.js';
 import unescapeMarkdown from './unescapeMarkdown.js';
+import { expect, test } from 'vitest';
 
 test('unescapeMarkdown restores what escapeMarkdown escaped', () => {
   const strings = [

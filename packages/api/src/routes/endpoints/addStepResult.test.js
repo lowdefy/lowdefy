@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { ReservedKeyError } from '@lowdefy/helpers';
 
 import addStepResult from './addStepResult.js';
+import { expect, test } from 'vitest';
 
 test('No arrayIndices, set string', () => {
   const context = {};

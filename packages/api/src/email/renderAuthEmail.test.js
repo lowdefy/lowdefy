@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { InvitationEmail } from '@lowdefy/email-templates';
 
 import renderAuthEmail from './renderAuthEmail.js';
+import { describe, expect, test } from 'vitest';
 
 const logger = { debug() {}, error() {}, warn() {} };
 

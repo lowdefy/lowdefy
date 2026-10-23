@@ -17,6 +17,7 @@
 import { ConfigError } from '@lowdefy/errors';
 
 import _app from './app.js';
+import { expect, test } from 'vitest';
 
 test('_app dynamic is false', () => {
   expect(_app.dynamic).toBe(false);

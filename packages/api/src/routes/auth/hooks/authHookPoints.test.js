@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import authHookPoints from './authHookPoints.js';
 
@@ -70,7 +70,7 @@ test('user.update.after hands { user, changes: null } - BetterAuth provides only
 
 test('session and account points hand the record plus the fetched subject user', async () => {
   const user = { id: 'u1', email: 'a@b.c' };
-  const findUserById = jest.fn(async () => user);
+  const findUserById = vi.fn(async () => user);
   const ctx = { context: { internalAdapter: { findUserById } } };
   const session = { id: 's1', userId: 'u1' };
   const account = { id: 'acc1', userId: 'u1', providerId: 'google' };

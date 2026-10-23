@@ -18,6 +18,7 @@ import { RequestError, UserError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import redactResponse from './redactResponse.js';
+import { expect, test } from 'vitest';
 
 test('redactResponse gives an Error in a response value the wire shape and no devError in dev', () => {
   const error = new RequestError('Step failed.', {

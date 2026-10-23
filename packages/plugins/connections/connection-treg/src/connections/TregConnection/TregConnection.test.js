@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 
 import TregConnection from './TregConnection.js';
+import { expect, test } from 'vitest';
 
 const { schema } = TregConnection;
 

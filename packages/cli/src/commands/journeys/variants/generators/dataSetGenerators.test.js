@@ -19,6 +19,7 @@ import roleGranted from './roleGranted.js';
 import roleRefused from './roleRefused.js';
 import tenant from './tenant.js';
 import volume from './volume.js';
+import { expect, test } from 'vitest';
 
 const dataSet = {
   name: 'tickets',

@@ -14,21 +14,21 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import runWebhookEndpoint from './runWebhookEndpoint.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 async function runHook({ routine, query = {} }) {
@@ -36,7 +36,7 @@ async function runHook({ routine, query = {} }) {
   const context = testContext({
     logger,
     operators: operatorsServer,
-    readConfigFile: jest.fn((path) => endpoints[path.slice(4, -5)] ?? null),
+    readConfigFile: vi.fn((path) => endpoints[path.slice(4, -5)] ?? null),
   });
   return runWebhookEndpoint(context, { endpointId: 'hook', rawBody: '', query, headers: {} });
 }

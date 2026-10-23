@@ -18,6 +18,7 @@ import countImpliedClientTypes from './countImpliedClientTypes.js';
 import createCounter from '../../utils/createCounter.js';
 import createPageTypeCounters from './createPageTypeCounters.js';
 import jsAccessorOperators from '../jsAccessorOperators.js';
+import { expect, test } from 'vitest';
 
 function setup() {
   const appCounters = {

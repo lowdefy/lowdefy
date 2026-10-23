@@ -15,6 +15,7 @@
 */
 
 import LowdefyInternalError from './LowdefyInternalError.js';
+import { expect, test } from 'vitest';
 
 test('LowdefyInternalError creates error with message', () => {
   const error = new LowdefyInternalError('Unexpected condition');

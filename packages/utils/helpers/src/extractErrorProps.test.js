@@ -16,6 +16,7 @@
 
 import extractErrorProps from './extractErrorProps.js';
 import serializer from './serializer.js';
+import { expect, test } from 'vitest';
 
 test('extractErrorProps extracts basic error properties', () => {
   const err = new Error('test message');

@@ -15,15 +15,15 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import refuseOtherBuild from './refuseOtherBuild.js';
 
 function createApp() {
-  const handler = jest.fn((c) => c.json({ ran: true }));
+  const handler = vi.fn((c) => c.json({ ran: true }));
   const app = new Hono();
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { logger: { info: jest.fn() } });
+    c.set('lowdefyContext', { logger: { info: vi.fn() } });
     await next();
   });
   app.post('/api/request/home/save', refuseOtherBuild({ buildId: 'build-2' }), handler);

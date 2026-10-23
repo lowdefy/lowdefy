@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
 // The pin check runs npx; no test reaches npm.
-const spawnSync = jest.fn();
+const spawnSync = vi.fn();
 const childProcess = await import('child_process');
-jest.unstable_mockModule('child_process', () => ({ ...childProcess, spawnSync }));
+vi.doMock('child_process', () => ({ ...childProcess, spawnSync }));
 
 const { default: upsertMcpServer } = await import('./upsertMcpServer.js');
 
@@ -36,7 +36,7 @@ beforeEach(() => {
   context = {
     cliVersion: '7.0.3',
     directories: { config: projectDirectory },
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
   };
 });
 

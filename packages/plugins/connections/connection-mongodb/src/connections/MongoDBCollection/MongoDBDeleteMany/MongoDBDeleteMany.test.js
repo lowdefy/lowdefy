@@ -18,6 +18,7 @@ import { validate } from '@lowdefy/ajv';
 import MongoDBDeleteMany from './MongoDBDeleteMany.js';
 import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBDeleteMany.meta;
 const schema = MongoDBDeleteMany.schema;

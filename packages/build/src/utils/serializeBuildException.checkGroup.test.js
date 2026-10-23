@@ -17,6 +17,7 @@
 import { ConfigWarning } from '@lowdefy/errors';
 
 import serializeBuildException from './serializeBuildException.js';
+import { expect, test } from 'vitest';
 
 test('serializeBuildException copies checkGroup', () => {
   const warning = new ConfigWarning('_if has no test key.', {

@@ -14,22 +14,22 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { Hono } from 'hono';
 
-jest.unstable_mockModule('../../../lib/docs/clientErrorStore.js', () => ({
+vi.doMock('../../../lib/docs/clientErrorStore.js', () => ({
   default: { list: () => [] },
 }));
-jest.unstable_mockModule('../../../lib/docs/serverErrorStore.js', () => ({
+vi.doMock('../../../lib/docs/serverErrorStore.js', () => ({
   default: { list: () => [] },
 }));
-jest.unstable_mockModule('../../../lib/docs/getBuildId.js', () => ({
+vi.doMock('../../../lib/docs/getBuildId.js', () => ({
   default: () => '2026-10-03T08:00:00.000Z',
 }));
-jest.unstable_mockModule('../../../lib/docs/getPageBuildStatus.js', () => ({
+vi.doMock('../../../lib/docs/getPageBuildStatus.js', () => ({
   default: () => ({ unbuilt: 0 }),
 }));
-jest.unstable_mockModule('../../../lib/docs/readBuildArtifact.js', () => ({
+vi.doMock('../../../lib/docs/readBuildArtifact.js', () => ({
   default: () => ({ status: 'ok', errors: [], warnings: [] }),
 }));
 

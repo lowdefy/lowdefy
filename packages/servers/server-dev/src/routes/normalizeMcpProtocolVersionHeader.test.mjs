@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 
 import normalizeMcpProtocolVersionHeader from './normalizeMcpProtocolVersionHeader.js';
+import { expect, test } from 'vitest';
 
 function createApp() {
   const app = new Hono();

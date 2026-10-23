@@ -15,6 +15,7 @@
 */
 
 import validatePluginSchema from './validatePluginSchema.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {

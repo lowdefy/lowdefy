@@ -15,6 +15,7 @@
 */
 
 import getConfigSchemaErrors from './getConfigSchemaErrors.js';
+import { expect, test } from 'vitest';
 
 const ifSchema = {
   type: 'object',

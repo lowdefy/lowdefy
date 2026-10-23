@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -28,8 +28,8 @@ const fixturesDir = path.join(__dirname, 'tests/errors');
 const fixturesDirPosix = fixturesDir.split(path.sep).join('/');
 
 // Mock writeBuildArtifact to avoid file writes
-jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
-  default: () => jest.fn(),
+vi.doMock('./utils/writeBuildArtifact.js', () => ({
+  default: () => vi.fn(),
 }));
 
 // Import build after mocking

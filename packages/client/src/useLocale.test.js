@@ -15,12 +15,12 @@
 */
 
 /* eslint-disable no-global-assign */
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 
-const dayjsLocale = jest.fn();
+const dayjsLocale = vi.fn();
 
-jest.unstable_mockModule('dayjs', () => ({
+vi.doMock('dayjs', () => ({
   default: { locale: dayjsLocale },
 }));
 
@@ -37,8 +37,8 @@ const i18n = {
 };
 
 const antdLocaleLoaders = {
-  'en-US': jest.fn().mockResolvedValue({ default: { name: 'en_US-locale' } }),
-  'de-DE': jest.fn().mockResolvedValue({ default: { name: 'de_DE-locale' } }),
+  'en-US': vi.fn().mockResolvedValue({ default: { name: 'en_US-locale' } }),
+  'de-DE': vi.fn().mockResolvedValue({ default: { name: 'de_DE-locale' } }),
 };
 
 const dayjsLocaleMap = { 'en-US': 'en', 'de-DE': 'de' };

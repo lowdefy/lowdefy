@@ -17,6 +17,7 @@
 import normalizeTrackingKey from './normalizeTrackingKey.js';
 import readsIntersectChanges from './readsIntersectChanges.js';
 import trackingKeysIntersect from './trackingKeysIntersect.js';
+import { expect, test } from 'vitest';
 
 function intersect(read, change) {
   return trackingKeysIntersect({

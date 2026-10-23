@@ -15,6 +15,7 @@
 */
 
 import assertTenantWritable from './assertTenantWritable.js';
+import { expect, test } from 'vitest';
 
 test('assertTenantWritable refuses a write under the read-only tenant: none guard', () => {
   expect(() =>

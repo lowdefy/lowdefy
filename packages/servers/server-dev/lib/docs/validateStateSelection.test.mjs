@@ -15,6 +15,7 @@
 */
 
 import validateStateSelection from './validateStateSelection.js';
+import { expect, test } from 'vitest';
 
 test.each([undefined, true, false, [], ['form.name', 'rows']])(
   'validateStateSelection accepts %j',

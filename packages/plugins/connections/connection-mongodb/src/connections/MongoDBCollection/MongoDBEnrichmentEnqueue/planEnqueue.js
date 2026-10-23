@@ -25,18 +25,22 @@ const requestType = 'MongoDBEnrichmentEnqueue';
 // each row's current inputs (no server-side JavaScript), so the read is what bounds the work:
 // it stops, before anything is written, as soon as more than `maxCells` cells would be
 // written, and `maxTimeMS` bounds its time. Rows whose inputs are unchanged are read and
-// dropped, so memory holds at most `maxCells` planned writes.
+// dropped, so memory holds at most `maxCells` planned writes. The writes come back by column,
+// in the targets' order, so a run can report each column's counts and a dry run can count them.
 async function planEnqueue({ collection, compiled, tenant }) {
   const { maxCells, maxTimeMS, scope, targets } = compiled;
   const rowCount = await collection.countDocuments(scopeReadFilter({ filter: scope, tenant }), {
     maxTimeMS,
   });
-  const queueOperations = [];
-  const missingOperations = [];
+  const columns = [];
+  let planned = 0;
   // The columns this enqueue queues, by row: targets come upstream first, so a column that
   // reads one of them waits for it instead of finding its input missing.
   const pendingByRow = new Map();
   for (const target of targets) {
+    const queueOperations = [];
+    const missingOperations = [];
+    columns.push({ columnKey: target.columnKey, queueOperations, missingOperations });
     const cursor = collection.find(
       scopeReadFilter({ filter: andConditions([scope, target.condition]), tenant }),
       { projection: target.projection, sort: { _id: 1 }, batchSize: 1000, maxTimeMS }
@@ -51,7 +55,8 @@ async function planEnqueue({ collection, compiled, tenant }) {
           pendingByRow.get(rowId).add(target.columnKey);
         }
         if (cell.kind === 'missing') missingOperations.push(cell.operation);
-        if (queueOperations.length + missingOperations.length > maxCells) {
+        if (cell.kind !== 'skip') planned += 1;
+        if (planned > maxCells) {
           throw new Error(
             `${requestType} would write more than "maxCells" (${maxCells}) cells. Narrow the selection or the columns, or raise "maxCells". Nothing was queued.`
           );
@@ -61,7 +66,7 @@ async function planEnqueue({ collection, compiled, tenant }) {
       await cursor.close();
     }
   }
-  return { cellCount: rowCount * targets.length, queueOperations, missingOperations };
+  return { cellCount: rowCount * targets.length, columns };
 }
 
 export default planEnqueue;

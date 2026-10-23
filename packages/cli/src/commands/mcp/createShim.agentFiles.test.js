@@ -25,6 +25,7 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 
 import createShim from './createShim.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const VERSION = '7.1.0';
 

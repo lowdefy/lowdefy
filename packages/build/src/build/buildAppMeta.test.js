@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
 import testContext from '../test-utils/testContext.js';
 
 // Mocked once at top level, with behaviour set per test: calling jest.resetModules() and
 // re-importing mid-file crashes Jest 28's ESM loader ("Module cache already has entry").
-const mockExecSync = jest.fn();
-jest.unstable_mockModule('child_process', () => ({
+const mockExecSync = vi.fn();
+vi.doMock('child_process', () => ({
   execSync: mockExecSync,
 }));
 
-const mockGetRefContent = jest.fn();
-jest.unstable_mockModule('./buildRefs/getRefContent.js', () => ({
+const mockGetRefContent = vi.fn();
+vi.doMock('./buildRefs/getRefContent.js', () => ({
   default: mockGetRefContent,
 }));
 

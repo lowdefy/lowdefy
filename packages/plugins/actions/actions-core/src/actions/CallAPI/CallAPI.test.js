@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import CallAPI from './CallAPI.js';
 
-const mockCallAPI = jest.fn();
+const mockCallAPI = vi.fn();
 const methods = { callAPI: mockCallAPI };
 
 test('CallAPI action invocation', () => {

@@ -22,6 +22,7 @@ import {
 
 import authorizeRequest from './authorizeRequest.js';
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
+import { expect, test } from 'vitest';
 
 const logger = { debug: () => {} };
 const requestConfig = { requestId: 'req', auth: { public: false }, '~k': 'requests[0].auth' };

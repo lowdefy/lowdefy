@@ -15,6 +15,7 @@
 */
 
 import isRebindingSafeHost from './isRebindingSafeHost.js';
+import { expect, test } from 'vitest';
 
 test.each([
   ['localhost:4100', true],
