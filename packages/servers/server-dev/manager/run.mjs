@@ -199,6 +199,13 @@ try {
   if (!(await startFirstServer(context))) {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
   }
+  // The initial build runs outside buildActivity, so no idle GC followed it:
+  // without this the manager holds that build's heap (about 130 MB of
+  // footprint) for 20 s or more after ready, until V8 shrinks it on its own.
+  // A batch busy now gets its own GC when it ends.
+  if (!context.buildActivity.isBusy()) {
+    idleGc.onBuildingChange(false);
+  }
   context.idleChild.start();
   const docsUrl = `${context.url}/lowdefy-docs`;
   context.logger.info(
