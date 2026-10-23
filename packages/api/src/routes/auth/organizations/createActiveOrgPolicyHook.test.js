@@ -269,11 +269,15 @@ test('tenant: a fresh signup owner row holds the creatorAppRoles app roles', asy
   const hook = createActiveOrgPolicyHook({
     getAuth: () => auth,
     logger: { error: vi.fn(), warn: vi.fn() },
-    organizations: { ...tenant, creatorAppRoles: ['owner', 'billing'] },
+    organizations: { ...tenant, creatorAppRoles: ['workspace-admin', 'billing'] },
   });
   await hook({ userId: 'user_1' });
   expect(db.member).toEqual([
-    expect.objectContaining({ userId: 'user_1', role: 'owner', appRoles: ['owner', 'billing'] }),
+    expect.objectContaining({
+      userId: 'user_1',
+      role: 'owner',
+      appRoles: ['workspace-admin', 'billing'],
+    }),
   ]);
 });
 

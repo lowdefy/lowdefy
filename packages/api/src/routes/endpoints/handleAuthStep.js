@@ -202,8 +202,9 @@ async function handleAuthStep(context, routineContext, { step }) {
     }
   }
 
-  // organization is the retained organizations state ({ policy, pinned }) -
-  // steps read policy for their own messages. organizationId is the resolved
+  // organization is the retained organizations state ({ policy, pinned,
+  // creatorAppRoles }) - steps read policy for their own messages, and
+  // CreateOrganization reads the app roles it gives a new organization's owner. organizationId is the resolved
   // target, which is what a step scopes its write to.
   // mcp is the MCP route's token outcome (client, organization, scopes) for a
   // caller that arrived over /api/mcp, null on every other surface - the

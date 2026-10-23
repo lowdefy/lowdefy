@@ -17,65 +17,76 @@
 import { type } from '@lowdefy/helpers';
 import { getOrgAdapter } from 'better-auth/plugins';
 
-import getPluginEndpoint from './support/getPluginEndpoint.js';
-import invokeEndpoint from './support/invokeEndpoint.js';
-
-// The engine config sets allowUserToCreateOrganization: false; the endpoint
-// bypasses that switch only for "system actions" - a call with NO session, NO
-// headers, and an explicit body.userId which becomes the creator/owner. So this
-// step must not inject an acting session or pass a headers key at all.
-async function CreateOrganization({ acting, auth, properties }) {
+// The rows are written straight through the org plugin's own adapter layer, not
+// its createOrganization endpoint. The endpoint mints its creator as an owner
+// member with no app roles, so granting auth.organizations.creatorAppRoles
+// would take a second write, and undoing both rows when that one failed.
+// Written here, the owner row carries its app roles from the one write, the
+// same way the tenant signup mint writes it (createActiveOrgPolicyHook).
+//
+// Of what the endpoint checks for a system action, this keeps the two that
+// apply: the creator must be a user, and the slug must be free. The engine sets
+// no organizationLimit, teams or member hooks. A provisioned organization has
+// no creator - membership arrives by invitation - so it gets no member row.
+async function CreateOrganization({ acting, auth, organization: organizations, properties }) {
   const { userId: propertiesUserId, ...organizationFields } = properties;
   const userId = propertiesUserId ?? acting.user?.id;
+  if (type.isNone(organizationFields.name) || type.isNone(organizationFields.slug)) {
+    throw new Error('CreateOrganization requires "name" and "slug".');
+  }
   const authContext = await auth.$context;
 
-  // A provisioned organization has no creator - membership arrives by
-  // invitation. Without a creator the endpoint cannot serve the write: it
-  // requires one and mints them as an owner member. So the row is written
-  // straight through the org plugin's own adapter layer, minting no member.
-  if (type.isNone(userId)) {
-    if (type.isNone(organizationFields.name) || type.isNone(organizationFields.slug)) {
-      throw new Error(
-        'CreateOrganization requires "name" and "slug" when run without a userId (creator-less provisioning).'
-      );
+  let user = null;
+  if (!type.isNone(userId)) {
+    user = await authContext.internalAdapter.findUserById(userId);
+    if (type.isNone(user)) {
+      throw new Error(`CreateOrganization creator "${userId}" is not a user.`);
     }
-    const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
-    const orgAdapter = getOrgAdapter(authContext, orgPlugin.options);
-    // createOrganization spreads the row verbatim and adds no timestamp.
-    const organization = await orgAdapter.createOrganization({
-      organization: {
-        ...organizationFields,
-        createdAt: new Date(),
-      },
-    });
-    // Adapter-layer writes fire no organizationHooks, so the org plugin's
-    // declared afterCreateOrganization is invoked directly - the endpoint
-    // path's after-create side effects hold on this path too. Same payload
-    // shape as the endpoint's call ({ organization, member, user }); a
-    // provisioned organization has no creator, so member and user are null.
-    await orgPlugin.options?.organizationHooks?.afterCreateOrganization?.({
-      organization,
-      member: null,
-      user: null,
-    });
-    return organization;
   }
 
-  // The endpoint mints the creator as an owner member, and the engine's
-  // afterCreateOrganization hook gives that member the app roles
-  // auth.organizations.creatorAppRoles lists.
-  const endpoint = getPluginEndpoint({
-    authContext,
-    endpointKey: 'createOrganization',
-    pluginId: 'organization',
-  });
-  return invokeEndpoint({
-    endpoint,
-    input: {
-      body: { ...properties, userId },
-      context: { ...authContext },
+  const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
+  const orgAdapter = getOrgAdapter(authContext, orgPlugin.options);
+  // The unique slug index still rejects a create that races this read.
+  const existing = await orgAdapter.findOrganizationBySlug(organizationFields.slug);
+  if (!type.isNone(existing)) {
+    throw new Error(
+      `CreateOrganization refused - an organization with slug "${organizationFields.slug}" already exists.`
+    );
+  }
+  // createOrganization spreads the row verbatim and adds no timestamp.
+  const organization = await orgAdapter.createOrganization({
+    organization: {
+      ...organizationFields,
+      createdAt: new Date(),
     },
   });
+
+  let member = null;
+  if (!type.isNone(user)) {
+    const memberData = { userId: user.id, organizationId: organization.id, role: 'owner' };
+    // An empty list leaves the row without an appRoles field, as it was before
+    // creatorAppRoles existed. A copy, so a routine that mutates the step result
+    // cannot change the roles every later organization's owner gets.
+    if (organizations.creatorAppRoles.length > 0) {
+      memberData.appRoles = [...organizations.creatorAppRoles];
+    }
+    member = await orgAdapter.createMember(memberData);
+  }
+
+  // Adapter-layer writes fire no organizationHooks, so the org plugin's
+  // declared afterCreateOrganization is invoked directly, with the endpoint's
+  // payload shape ({ organization, member, user }).
+  await orgPlugin.options.organizationHooks?.afterCreateOrganization?.({
+    organization,
+    member,
+    user,
+  });
+
+  if (type.isNone(member)) {
+    return organization;
+  }
+  // The endpoint's result shape, which routines already read the owner from.
+  return { ...organization, members: [member] };
 }
 
 // system scope: under the pinned policy organizations are seeded by

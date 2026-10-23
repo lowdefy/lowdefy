@@ -17,7 +17,6 @@
 import { organization } from 'better-auth/plugins';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
-import createAfterCreateOrganizationHook from './createAfterCreateOrganizationHook.js';
 import modelNames from '../modelNames.js';
 import { ac, roles } from './organizationAccessControl.js';
 
@@ -143,10 +142,6 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     },
     organizationHooks: {
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
-      afterCreateOrganization: createAfterCreateOrganizationHook({
-        creatorAppRoles: authConfig.organizations.creatorAppRoles,
-        getAuth,
-      }),
     },
     sendInvitationEmail,
   };
