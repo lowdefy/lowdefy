@@ -63,14 +63,6 @@ Never guess type names or properties. Before writing config:
 ## Testing a change
 
 ${TESTING_RULES}
-
-## Visual feedback
-
-Developers can press \`Cmd/Ctrl+/\` in the running app to point at, draw on, and comment on
-what's on screen; the annotation helper copies an agent-readable feedback block to their
-clipboard, which they paste to you. Pasted blocks start with "Feedback:" and include the
-config file and line each annotation refers to — treat them as precise UI feedback and use
-\`lowdefy_inspect_state\` for the page's live state.
 `;
 }
 

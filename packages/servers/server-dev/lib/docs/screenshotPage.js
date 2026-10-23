@@ -29,13 +29,12 @@ import validateViewport from './validateViewport.js';
 import withBrowserSlot from './withBrowserSlot.js';
 import withDataSession from './withDataSession.js';
 
-// A feedback annotation's elementRect/shapes are captured in the developer's
-// live tab, viewport-relative at whatever scroll position they were at
-// (batch.viewport.scrollX/scrollY) — so to recapture the same region
-// headless, this scrolls to that same offset first, then converts the
-// viewport-relative clip to document coordinates by adding the scroll
-// offset back in. Mutually exclusive with fullPage: an explicit clip always
-// wins, since it targets a specific annotated region rather than the page.
+// A clip is viewport-relative at the given scroll position (scrollX/scrollY)
+// — so to capture the same region headless, this scrolls to that offset
+// first, then converts the viewport-relative clip to document coordinates by
+// adding the scroll offset back in. Mutually exclusive with fullPage: an
+// explicit clip always wins, since it targets a specific region rather than
+// the page.
 async function resolveClip({ page, clip, scrollX, scrollY }) {
   if (type.isNone(clip)) {
     return undefined;

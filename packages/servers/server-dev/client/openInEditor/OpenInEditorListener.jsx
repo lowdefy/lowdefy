@@ -17,16 +17,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { blockAncestorChain, nearestBlock } from '../feedback/elementInspect.js';
-import { highlightBox, labelChip, overlayContainer } from '../feedback/feedbackStyles.js';
+import { blockAncestorChain, nearestBlock } from './elementInspect.js';
+import { highlightBox, labelChip, overlayContainer } from './openInEditorStyles.js';
 import findBlockLocation from './findBlockLocation.js';
 import getCspNonce from '../../lib/client/getCspNonce.js';
 
 const STYLE_TAG_ID = 'lowdefy-open-in-editor-style-tag';
 const BODY_CLASS = 'lowdefy-open-in-editor-target';
 
-// Cursor over arbitrary app descendants can't be forced from inline styles —
-// same trick as feedbackStyles' picking/drawing classes.
+// Cursor over arbitrary app descendants can't be forced from inline styles,
+// so a style tag toggled by a body class sets it.
 function injectStyleTag() {
   if (typeof document === 'undefined' || document.getElementById(STYLE_TAG_ID)) {
     return;
@@ -49,16 +49,6 @@ function removeStyleTag() {
   document.getElementById(STYLE_TAG_ID)?.remove();
 }
 
-// The feedback overlay owns clicks while it is open (its picking mode claims
-// them) — the Option/Alt+click shortcut stays out of the way until it closes.
-// :not() skips this component's own highlight portal, which carries
-// data-lowdefy-feedback purely for screenshot/picking exclusion.
-function feedbackOverlayOpen() {
-  return Boolean(
-    document.querySelector('[data-lowdefy-feedback]:not([data-lowdefy-open-in-editor])')
-  );
-}
-
 // Option (macOS) / Alt (Windows, Linux) alone is the shortcut. Cmd/Ctrl are left
 // to the browser (open link in new tab) and Shift to text selection, so any of
 // them held alongside means the developer wants the browser's behaviour.
@@ -68,17 +58,15 @@ function isOpenModifier(event) {
 
 // Dev-only: Option/Alt+click any element to open the YAML that defines its
 // block in VS Code (vscode://file deep link, at the exact line). While the
-// modifier is held, the hovered block shows the same blue highlight box and
-// blockId chip as the annotation overlay's picking mode, and the cursor
-// switches to a pointer — so the developer sees exactly what a click will
-// open. Mounted always-on from Routing.jsx alongside Inspector and
-// FeedbackMount, and follows their resilience contract — every handler is
+// modifier is held, the hovered block shows a blue highlight box and blockId
+// chip, and the cursor switches to a pointer — so the developer sees exactly
+// what a click will open. Mounted always-on from Routing.jsx alongside
+// Inspector, and follows its resilience contract — every handler is
 // try/caught so this can never take the app down with it.
 //
 // The click resolves the nearest block and, when that id is generated at
 // runtime (list items, Dynamic endpoints), falls back through the ancestor
-// block chain until an id resolves in config — the same strategy the
-// feedback pipeline uses in enrichFeedback.js.
+// block chain until an id resolves in config.
 function OpenInEditorListener({ basePath, pageId }) {
   const [hoverBlock, setHoverBlock] = useState(null); // { blockId, rect }
   // Refs keep the freshest values without re-binding the capture listeners
@@ -123,7 +111,7 @@ function OpenInEditorListener({ basePath, pageId }) {
     function resolveHover() {
       try {
         const point = lastPointerRef.current;
-        if (!point || feedbackOverlayOpen()) {
+        if (!point) {
           clearHover();
           return;
         }
@@ -211,9 +199,6 @@ function OpenInEditorListener({ basePath, pageId }) {
         if (!isOpenModifier(event)) {
           return;
         }
-        if (feedbackOverlayOpen()) {
-          return;
-        }
         const candidates = blockAncestorChain(event.target);
         if (candidates.length === 0) {
           return;
@@ -247,10 +232,10 @@ function OpenInEditorListener({ basePath, pageId }) {
   if (!hoverBlock || typeof document === 'undefined' || !document.body) {
     return null;
   }
-  // data-lowdefy-feedback keeps this out of the annotation overlay's element
-  // picking and out of tab-captured screenshots (both exclude that root).
+  // data-lowdefy-dev-tools keeps the highlight out of block resolution and
+  // out of the journey recorder (both skip that root).
   return createPortal(
-    <div data-lowdefy-feedback data-lowdefy-open-in-editor style={overlayContainer}>
+    <div data-lowdefy-dev-tools style={overlayContainer}>
       <div
         style={{
           ...highlightBox,

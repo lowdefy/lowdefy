@@ -72,14 +72,6 @@ installed in this project (including local plugins).
 
 ${TESTING_RULES}
 
-### Visual feedback
-
-While the dev server is running, developers can press \`Cmd/Ctrl+/\` in the browser to point at,
-draw on, and comment on the running app; the annotation helper copies an agent-readable feedback
-block to their clipboard, which they paste into the agent session. Pasted blocks start with
-"Feedback:" and include the config file and line each annotation refers to — treat them as
-precise UI feedback.
-
 ${agentsMdSkills({ skills })}`;
 }
 

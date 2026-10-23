@@ -14,33 +14,30 @@
   limitations under the License.
 */
 
-// Pure DOM-reading helpers for the feedback overlay's "pick a block" mode.
+// Pure DOM-reading helpers for open-in-editor's block resolution.
 // Blocks render as id="bl-{blockId}" (skeletons use "s-bl-" and must NOT
 // match — the "^=" prefix selector already excludes them since "s-bl-..."
 // starts with "s-", not "bl-").
 
 const BLOCK_ID_PREFIX = 'bl-';
 const BLOCK_SELECTOR = `[id^="${BLOCK_ID_PREFIX}"]`;
-const FEEDBACK_ROOT_SELECTOR = '[data-lowdefy-feedback]';
-const MAX_TEXT_LENGTH = 120;
-const MAX_CLASS_LENGTH = 200;
+const DEV_TOOLS_ROOT_SELECTOR = '[data-lowdefy-dev-tools]';
 
-function isInsideFeedbackOverlay(el) {
+function isInsideDevTools(el) {
   if (!(el instanceof Element)) {
     return false;
   }
-  return Boolean(el.closest(FEEDBACK_ROOT_SELECTOR));
+  return Boolean(el.closest(DEV_TOOLS_ROOT_SELECTOR));
 }
 
 function stripBlockId(blockEl) {
   return blockEl.id.slice(BLOCK_ID_PREFIX.length);
 }
 
-// Nearest ancestor block element (or the element itself), ignoring the
-// feedback overlay's own DOM so pointing at the overlay never resolves to an
-// app block.
+// Nearest ancestor block element (or the element itself), ignoring the dev
+// tools' own DOM so pointing at the highlight never resolves to an app block.
 function nearestBlock(el) {
-  if (!(el instanceof Element) || isInsideFeedbackOverlay(el)) {
+  if (!(el instanceof Element) || isInsideDevTools(el)) {
     return null;
   }
   const blockEl = el.closest(BLOCK_SELECTOR);
@@ -52,7 +49,7 @@ function nearestBlock(el) {
 
 // All bl- ancestors, nearest to outermost, prefix stripped.
 function blockAncestorChain(el) {
-  if (!(el instanceof Element) || isInsideFeedbackOverlay(el)) {
+  if (!(el instanceof Element) || isInsideDevTools(el)) {
     return [];
   }
   const chain = [];
@@ -64,36 +61,4 @@ function blockAncestorChain(el) {
   return chain;
 }
 
-function describeElement(el) {
-  if (!(el instanceof Element)) {
-    return { tag: null, classes: null, text: null };
-  }
-
-  let classes = null;
-  try {
-    classes = typeof el.className === 'string' ? el.className : null;
-  } catch {
-    classes = null;
-  }
-  if (classes && classes.length > MAX_CLASS_LENGTH) {
-    classes = `${classes.slice(0, MAX_CLASS_LENGTH)}…`;
-  }
-
-  let text = '';
-  try {
-    text = el.textContent ? el.textContent.trim() : '';
-  } catch {
-    text = '';
-  }
-  if (text.length > MAX_TEXT_LENGTH) {
-    text = `${text.slice(0, MAX_TEXT_LENGTH)}…`;
-  }
-
-  return {
-    tag: el.tagName ?? null,
-    classes,
-    text: text || null,
-  };
-}
-
-export { nearestBlock, blockAncestorChain, describeElement };
+export { nearestBlock, blockAncestorChain };

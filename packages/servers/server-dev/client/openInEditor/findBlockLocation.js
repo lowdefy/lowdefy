@@ -17,8 +17,8 @@
 // Resolves a blockId to its YAML source via the dev server's existing
 // GET /lowdefy-docs/find/{id}?pageId= route (which JIT-builds the page's
 // keyMap on demand). Returns { file, line } with an absolute file path, or
-// null when the id has no configured location. Best-effort, matching
-// sendFeedback.js — a dev-only feature must never throw into the app.
+// null when the id has no configured location. Best-effort — a dev-only
+// feature must never throw into the app.
 async function findBlockLocation({ basePath, blockId, pageId }) {
   try {
     // Omit pageId when unknown — an empty ?pageId= reads as an unknown page
