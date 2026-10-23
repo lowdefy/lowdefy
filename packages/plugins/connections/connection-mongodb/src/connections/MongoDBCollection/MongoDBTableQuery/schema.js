@@ -75,12 +75,23 @@ export default {
             description:
               'Allow grouping by the field, and the "countDistinct" aggregate on it, which groups by its values.',
           },
+          title: {
+            type: 'string',
+            description:
+              'The field name the returned "sentence" uses, as the Table column title. Defaults to the field key.',
+          },
+          options: {
+            type: 'array',
+            description:
+              'The field options as [{ value, label }]. The returned "sentence" reads option values as their labels.',
+            items: { type: 'object' },
+          },
         },
         errorMessage: {
           type: 'MongoDBTableQuery request "fields" values should be objects.',
           required: 'MongoDBTableQuery request field should have required property "type".',
           additionalProperties:
-            'MongoDBTableQuery request field should only have "type", "path", "search", "sortable", "filterable" and "groupable".',
+            'MongoDBTableQuery request field should only have "type", "path", "search", "sortable", "filterable", "groupable", "title" and "options".',
         },
       },
       errorMessage: {
@@ -92,7 +103,7 @@ export default {
     view: {
       type: ['object', 'null'],
       description:
-        'The Table view ({ sort, filter, search, group, aggregates }), usually { _payload: view }. Validated against "fields". On date fields, "within" takes a relative date { last | next: n, unit: day | week | month | year }, and "before" and "after" take a date or a relative date such as { last: 3, unit: month } (before the day 3 months ago), resolved when the query runs.',
+        'The Table view ({ sort, filter, search, group, aggregates }), usually { _payload: view }. Validated against "fields". On date fields, "within" takes a relative date { last | next: n, unit: day | week | month | year }, and "before" and "after" take a date or a relative date such as { last: 3, unit: month } (before the day 3 months ago), resolved when the query runs. With a filter set, the response carries "sentence", the filter in words ("Stage is any of Lead or Won and Name contains CX"), the same sentence the Table\'s Filter button shows for the same titles and options.',
       errorMessage: {
         type: 'MongoDBTableQuery request property "view" should be an object.',
       },

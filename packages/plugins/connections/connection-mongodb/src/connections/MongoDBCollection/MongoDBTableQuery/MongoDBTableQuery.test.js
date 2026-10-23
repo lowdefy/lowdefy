@@ -487,6 +487,7 @@ describe('aggregates', () => {
       rows: [],
       total: 0,
       aggregates: { amount: 0, created: null, name: 0 },
+      sentence: 'stage is nothing',
     });
   });
 });
@@ -628,7 +629,7 @@ describe('schema', () => {
     expect(() =>
       validate({ schema, data: { fields: { a: { type: 'text', serach: true } } } })
     ).toThrow(
-      'MongoDBTableQuery request field should only have "type", "path", "search", "sortable", "filterable" and "groupable".'
+      'MongoDBTableQuery request field should only have "type", "path", "search", "sortable", "filterable", "groupable", "title" and "options".'
     );
   });
 

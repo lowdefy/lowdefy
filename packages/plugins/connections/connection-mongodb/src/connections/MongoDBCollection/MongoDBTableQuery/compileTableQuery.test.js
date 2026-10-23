@@ -53,6 +53,7 @@ describe('rows', () => {
       grouped: false,
       options: { maxTimeMS: 10000 },
       specs: [],
+      sentence: null,
       pipeline: [
         { $match: { org_id: 'org_1' } },
         { $sort: { _id: 1 } },
@@ -288,6 +289,7 @@ describe('grouping', () => {
       grouped: true,
       options: { maxTimeMS: 10000 },
       specs: [],
+      sentence: null,
       pipeline: [
         { $match: { org_id: 'org_1' } },
         {
@@ -681,5 +683,73 @@ describe('relative before and after', () => {
         matchFor({ filter: { key: 'lastContacted', op: 'before', value }, now })
       ).toThrow(expected);
     }
+  });
+});
+
+describe('sentence', () => {
+  const sentenceFields = {
+    name: { title: 'Name', type: 'text' },
+    stage: {
+      title: 'Stage',
+      type: 'status',
+      options: [
+        { value: 'lead', label: 'Lead' },
+        { value: 'won', label: 'Won' },
+        { value: 'lost', label: 'Lost' },
+      ],
+    },
+    amount: { title: 'Amount', type: 'currency' },
+    owner: { title: 'Owner', type: 'people' },
+  };
+
+  // blocks-table's describeTableFilter.test.js expects the same sentence from the Table's columns.
+  test('the filter reads in words with field titles and option labels', () => {
+    const { sentence } = compileTableQuery({
+      properties: {
+        fields: sentenceFields,
+        view: {
+          filter: {
+            and: [
+              { key: 'stage', op: 'in', value: ['lead', 'won'] },
+              { key: 'name', op: 'contains', value: 'CX' },
+              {
+                or: [
+                  { key: 'amount', op: 'gt', value: 1000 },
+                  { key: 'owner', op: 'contains', value: { $user: 'id' } },
+                ],
+              },
+            ],
+          },
+        },
+        user: { id: 'u1' },
+        startRow: 0,
+        endRow: 10,
+      },
+      now,
+    });
+    expect(sentence).toBe(
+      'Stage is any of Lead or Won and Name contains CX and (Amount greater than 1000 or Owner has me)'
+    );
+  });
+
+  test('a field without a title reads as its key', () => {
+    const { sentence } = compileTableQuery({
+      properties: {
+        fields: { amount: { type: 'currency' } },
+        view: { filter: { key: 'amount', op: 'gte', value: 10 } },
+        startRow: 0,
+        endRow: 10,
+      },
+      now,
+    });
+    expect(sentence).toBe('amount at least 10');
+  });
+
+  test('there is no sentence without a filter', () => {
+    const { sentence } = compileTableQuery({
+      properties: { fields: sentenceFields, view: { filter: null }, startRow: 0, endRow: 10 },
+      now,
+    });
+    expect(sentence).toBe(null);
   });
 });

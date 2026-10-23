@@ -15,18 +15,20 @@
 */
 
 import React, { Suspense } from 'react';
-import { Button, Popover } from 'antd';
+import { Button, Popover, Tooltip } from 'antd';
 
 import countConditions from './countConditions.js';
+import describeTableFilter from '../filtering/describeTableFilter.js';
 import LazyFilterBuilder from '../filtering/LazyFilterBuilder.js';
 import PopoverLoadingContent from '../../core/PopoverLoadingContent.js';
 import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
-// Opens the filter builder on the whole `view.filter`; the button counts its conditions. Edits go
-// through applyFiltering, the one filter write path.
+// Opens the filter builder on the whole `view.filter`; the button counts its conditions and shows
+// the filter in words as its tooltip. Edits go through applyFiltering, the one filter write path.
 function FilterButton({ api }) {
   const filter = api.state.filter ?? null;
+  const sentence = describeTableFilter({ condition: filter, columns: api.config.columns });
   const columns = api.config.columns.filter((column) => column.filterable);
   const content = (
     <div className="lf-table-toolbar-popover" data-lf-toolbar-filter="">
@@ -43,16 +45,18 @@ function FilterButton({ api }) {
   );
   return (
     <Popover content={content} placement="bottomLeft" trigger="click">
-      <Button
-        data-lf-toolbar-button="filter"
-        icon={<ToolbarIcon api={api} name="filter" />}
-        onFocus={LazyFilterBuilder.preload}
-        onPointerEnter={LazyFilterBuilder.preload}
-        size="small"
-      >
-        Filter
-        <ToolbarCount count={countConditions(filter)} />
-      </Button>
+      <Tooltip title={sentence}>
+        <Button
+          data-lf-toolbar-button="filter"
+          icon={<ToolbarIcon api={api} name="filter" />}
+          onFocus={LazyFilterBuilder.preload}
+          onPointerEnter={LazyFilterBuilder.preload}
+          size="small"
+        >
+          Filter
+          <ToolbarCount count={countConditions(filter)} />
+        </Button>
+      </Tooltip>
     </Popover>
   );
 }

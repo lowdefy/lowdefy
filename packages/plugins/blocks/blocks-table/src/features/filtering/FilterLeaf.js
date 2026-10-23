@@ -18,11 +18,11 @@ import React from 'react';
 import { Button, Select } from 'antd';
 import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 import getOperators from '@lowdefy/blocks-antd/table/getOperators.js';
+import { getOperatorLabel } from '@lowdefy/helpers';
 
 import changeLeafOperator from './changeLeafOperator.js';
 import CloseIcon from './CloseIcon.js';
 import createDefaultLeaf from './createDefaultLeaf.js';
-import getOperatorLabel from './getOperatorLabel.js';
 import getPlainTitle from './getPlainTitle.js';
 import ValueEditor from './ValueEditor.js';
 

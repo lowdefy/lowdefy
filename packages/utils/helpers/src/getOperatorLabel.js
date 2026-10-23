@@ -47,6 +47,9 @@ const ARRAY_LABELS = {
   ne: 'is not exactly',
 };
 
+// The words for a filter operator, shared by the Table's filter menus and describeCondition.
+// `family` is the column type's family (blocks-antd's cellTypeFamilies): array columns (tags,
+// people) read as "has".
 function getOperatorLabel({ op, family }) {
   if (family === 'array' && ARRAY_LABELS[op]) return ARRAY_LABELS[op];
   return LABELS[op] ?? op;
