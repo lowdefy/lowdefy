@@ -16,6 +16,7 @@
 
 import net from 'net';
 import findAvailablePort from './findAvailablePort.js';
+import { expect, test } from 'vitest';
 
 function listen(port, host) {
   return new Promise((resolve, reject) => {

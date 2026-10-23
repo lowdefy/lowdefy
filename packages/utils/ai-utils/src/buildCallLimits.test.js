@@ -21,6 +21,7 @@ import buildCallLimits from './buildCallLimits.js';
 import createDecide from './createDecide.js';
 import createGenerateObject from './createGenerateObject.js';
 import createGenerateText from './createGenerateText.js';
+import { expect, test } from 'vitest';
 
 test.each([
   [

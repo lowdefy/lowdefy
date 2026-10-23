@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 
 import createStdOutLineHandler from './createStdOutLineHandler.js';
 
 function createMockLogger() {
   return {
-    error: jest.fn(),
-    warn: jest.fn(),
-    info: jest.fn(),
-    debug: jest.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
   };
 }
 

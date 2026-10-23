@@ -15,6 +15,7 @@
 */
 
 import blockDefaultProps from './blockDefaultProps.js';
+import { expect, test } from 'vitest';
 
 test('default', () => {
   expect(blockDefaultProps).toMatchSnapshot();

@@ -18,6 +18,7 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // A journey with a list of users, run by the built CLI over the fixture app:
 // once per user, each in its own data session, reported as "<name> [<user>]".

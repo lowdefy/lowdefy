@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 import { ActionError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
@@ -33,7 +33,7 @@ const mockReqResponses = {
   req_error: expect.any(ActionError),
 };
 
-const mockCallRequest = jest.fn();
+const mockCallRequest = vi.fn();
 const mockCallRequestImp = ({ requestId }) => {
   if (requestId === 'req_error') throw mockReqResponses['req_error'];
   return new Promise((resolve, reject) => {
@@ -56,8 +56,10 @@ const lowdefy = {
 };
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 // Comment out to use console
 console.log = () => {};

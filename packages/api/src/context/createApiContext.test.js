@@ -16,6 +16,7 @@
 
 import createApiContext from './createApiContext.js';
 import { registerAuthEnforcement } from '../routes/auth/getAuthEnforcement.js';
+import { expect, test } from 'vitest';
 
 function createTestApiContext(overrides = {}) {
   const context = {

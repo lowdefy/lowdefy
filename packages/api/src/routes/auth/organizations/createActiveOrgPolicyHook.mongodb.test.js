@@ -20,7 +20,7 @@
 // is reproduced exactly; the parallel test fires many sessions at once.
 
 import { randomUUID } from 'node:crypto';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import * as mongodb from 'mongodb';
 
 // The adapter keeps its client for the process lifetime, so the test records
@@ -33,7 +33,7 @@ class RecordingMongoClient extends mongodb.MongoClient {
   }
 }
 
-jest.unstable_mockModule('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
+vi.doMock('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
 
 const { betterAuth } = await import('better-auth');
 const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/adapters');
@@ -70,7 +70,7 @@ async function setup({ creatorAppRoles = [] } = {}) {
   const context = await auth.$context;
   const hook = createActiveOrgPolicyHook({
     getAuth: () => auth,
-    logger: { error: jest.fn(), warn: jest.fn() },
+    logger: { error: vi.fn(), warn: vi.fn() },
     organizations,
   });
   async function createUser(name) {
@@ -216,7 +216,7 @@ test('while duplicate member rows block the unique index, repeated sign-ins are 
     { user_id: 'someone', organization_id: 'somewhere', role: 'owner' },
     { user_id: 'someone', organization_id: 'somewhere', role: 'owner' },
   ]);
-  const ensureUniqueIndexes = jest.fn(adapter.options.ensureUniqueIndexes);
+  const ensureUniqueIndexes = vi.fn(adapter.options.ensureUniqueIndexes);
   adapter.options.ensureUniqueIndexes = ensureUniqueIndexes;
   const users = await Promise.all(Array.from({ length: 5 }, (_, n) => createUser(`blocked${n}`)));
   for (const user of users) {

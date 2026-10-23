@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 import { serializer } from '@lowdefy/helpers';
 import operators from '@lowdefy/operators-js/operators/build';
 
@@ -33,7 +33,7 @@ import {
 
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 function createBuildContext() {
   const context = testContext({
@@ -97,9 +97,9 @@ describe('record lifecycle', () => {
   test('duplicate record id throws — one record per config position per build', () => {
     const context = createBuildContext();
     createRecord(context, { id: 'a:x', kind: 'component', body: {}, env: {} });
-    expect(() => createRecord(context, { id: 'a:x', kind: 'component', body: {}, env: {} })).toThrow(
-      'Deferred record "a:x" already exists'
-    );
+    expect(() =>
+      createRecord(context, { id: 'a:x', kind: 'component', body: {}, env: {} })
+    ).toThrow('Deferred record "a:x" already exists');
   });
 
   test('getRecord throws on a registry miss', () => {
@@ -296,9 +296,7 @@ describe('resolveDeferred and the wait-graph', () => {
     });
     const ctx = createWalkContext({ buildContext });
     await expect(
-      guard(
-        Promise.all([resolveDeferred(ctx, 'a:vars.x'), resolveDeferred(ctx, 'b:vars.y')])
-      )
+      guard(Promise.all([resolveDeferred(ctx, 'a:vars.x'), resolveDeferred(ctx, 'b:vars.y')]))
     ).rejects.toThrow('Circular deferred value dependency:');
   });
 
@@ -366,7 +364,11 @@ describe('registry serialization round-trip', () => {
     const back = getRecord(hydrated, 'team-users:components.0.component');
     expect(back.kind).toBe('component');
     expect(back.body).toEqual({ type: 'Box' });
-    expect(back.env).toEqual({ file: '/m/module.lowdefy.yaml', entryId: 'team-users', refId: 'r1' });
+    expect(back.env).toEqual({
+      file: '/m/module.lowdefy.yaml',
+      entryId: 'team-users',
+      refId: 'r1',
+    });
     expect(back.slot).toBeNull();
     expect(back.done).toBe(false);
     expect(back.value).toBeUndefined();
@@ -498,9 +500,9 @@ describe('varDefault records and the read path', () => {
       });
       const ctx = createWalkContext({ buildContext, moduleEntry });
 
-      await expect(
-        guard(resolve({ value: { '_module.var': first } }, ctx))
-      ).rejects.toThrow('Circular deferred value dependency:');
+      await expect(guard(resolve({ value: { '_module.var': first } }, ctx))).rejects.toThrow(
+        'Circular deferred value dependency:'
+      );
     }
   );
 });
@@ -514,7 +516,9 @@ describe('placeholder leak check', () => {
     context.modules = {
       'team-users': {
         manifest: {
-          components: [{ id: 'badge', component: makePlaceholder('team-users:components.0.component') }],
+          components: [
+            { id: 'badge', component: makePlaceholder('team-users:components.0.component') },
+          ],
           menus: [{ id: 'sidebar', links: makePlaceholder('team-users:menus.0.links') }],
           pages: [{ id: 'home', type: 'Box' }],
         },
@@ -522,7 +526,11 @@ describe('placeholder leak check', () => {
         connections: { db: 'app/db' },
         varDefs: {
           title: { default: makePlaceholder('team-users:vars.title.default') },
-          theme: { properties: { logo: { default: makePlaceholder('team-users:vars.theme.properties.logo.default') } } },
+          theme: {
+            properties: {
+              logo: { default: makePlaceholder('team-users:vars.theme.properties.logo.default') },
+            },
+          },
         },
       },
     };
@@ -559,6 +567,8 @@ describe('placeholder leak check', () => {
         varDefs: {},
       },
     };
-    expect(() => assertNoPlaceholderLeaks(context)).toThrow('at team-users.manifest.pages.0.blocks.0');
+    expect(() => assertNoPlaceholderLeaks(context)).toThrow(
+      'at team-users.manifest.pages.0.blocks.0'
+    );
   });
 });

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockGetSessionFromCtx = jest.fn();
-jest.unstable_mockModule('better-auth/api', () => ({
+const mockGetSessionFromCtx = vi.fn();
+vi.doMock('better-auth/api', () => ({
   // buildOauthPostLogin (the marker constant's home) imports APIError.
   APIError: class APIError extends Error {},
   getSessionFromCtx: mockGetSessionFromCtx,

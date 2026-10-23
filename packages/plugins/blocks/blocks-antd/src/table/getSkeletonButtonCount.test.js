@@ -15,6 +15,7 @@
 */
 
 import getSkeletonButtonCount from './getSkeletonButtonCount.js';
+import { expect, test } from 'vitest';
 
 const buttons = [{ eventName: 'a' }, { eventName: 'b' }, { eventName: 'c' }];
 

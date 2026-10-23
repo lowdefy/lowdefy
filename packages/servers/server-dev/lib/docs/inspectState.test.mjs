@@ -14,30 +14,30 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // inspectState.js only chooses between the tab and headless sources - the
 // sources' own behavior is covered by inspectStateHeadless.test.mjs and (once
 // written) inspectStateFromTab's own tests. Mock both, plus tabAvailable, so
 // only the fallback logic is under test here.
-const mockInspectStateFromTab = jest.fn();
-const mockInspectStateHeadless = jest.fn();
-const mockTabAvailable = jest.fn();
+const mockInspectStateFromTab = vi.fn();
+const mockInspectStateHeadless = vi.fn();
+const mockTabAvailable = vi.fn();
 
-jest.unstable_mockModule('./inspectStateFromTab.js', () => ({
+vi.doMock('./inspectStateFromTab.js', () => ({
   default: mockInspectStateFromTab,
 }));
-jest.unstable_mockModule('./inspectStateHeadless.js', () => ({
+vi.doMock('./inspectStateHeadless.js', () => ({
   default: mockInspectStateHeadless,
 }));
-jest.unstable_mockModule('./tabAvailable.js', () => ({
+vi.doMock('./tabAvailable.js', () => ({
   default: mockTabAvailable,
 }));
 
 const { default: inspectState } = await import('./inspectState.js');
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('inspectState uses the tab when source is "tab" and it succeeds', async () => {

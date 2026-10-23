@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import writeBuildStatus from './writeBuildStatus.mjs';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let buildDir;
 

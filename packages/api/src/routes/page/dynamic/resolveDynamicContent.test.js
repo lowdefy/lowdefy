@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError } from '@lowdefy/errors';
 
@@ -35,10 +35,10 @@ class Hider {
 const operators = { ...operatorsServer, _hider: () => new Hider() };
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const types = {
@@ -54,7 +54,7 @@ function createTestContext({ files = {}, session } = {}) {
   return testContext({
     operators,
     logger,
-    readConfigFile: jest.fn((path) => files[path] ?? null),
+    readConfigFile: vi.fn((path) => files[path] ?? null),
     session: session ?? { user: { id: 'user_1' } },
   });
 }
@@ -106,7 +106,7 @@ function makePageConfig(dynamicBlock, { requests } = {}) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('resolveDynamicContent splices resolved blocks into the Dynamic block content slot', async () => {

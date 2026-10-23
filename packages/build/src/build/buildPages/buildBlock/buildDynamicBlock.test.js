@@ -16,6 +16,7 @@
 
 import buildDynamicBlock from './buildDynamicBlock.js';
 import createCounter from '../../../utils/createCounter.js';
+import { expect, test } from 'vitest';
 
 function makePageContext() {
   return {

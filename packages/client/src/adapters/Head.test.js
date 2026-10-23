@@ -18,6 +18,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import Head from './Head.js';
+import { expect, test } from 'vitest';
 
 test('Head sets document.title from a title child and renders nothing', () => {
   const { container, rerender } = render(

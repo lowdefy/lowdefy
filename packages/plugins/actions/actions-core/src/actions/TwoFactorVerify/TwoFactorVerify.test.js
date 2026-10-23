@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import TwoFactorVerify from './TwoFactorVerify.js';
 
-const mockTwoFactorVerify = jest.fn();
+const mockTwoFactorVerify = vi.fn();
 const methods = { twoFactorVerify: mockTwoFactorVerify };
 
 test('TwoFactorVerify passes params to the twoFactorVerify method', async () => {

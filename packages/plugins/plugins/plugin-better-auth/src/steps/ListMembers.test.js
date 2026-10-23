@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import ListMembers from './ListMembers.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -22,7 +22,7 @@ import createMockAuth from '../../test/createMockAuth.js';
 const acting = { system: true, user: null };
 
 test('ListMembers passes properties through as query with headers to the org listMembers endpoint', async () => {
-  const listMembers = jest.fn().mockResolvedValue({ members: [], total: 0 });
+  const listMembers = vi.fn().mockResolvedValue({ members: [], total: 0 });
   const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
   const result = await ListMembers({
     acting,
@@ -54,7 +54,7 @@ test('ListMembers passes properties through as query with headers to the org lis
 });
 
 test('ListMembers lists the organizationId the floor resolved and forwards no slug', async () => {
-  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const listMembers = vi.fn().mockResolvedValue({ members: [] });
   const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
   await ListMembers({
     acting: {

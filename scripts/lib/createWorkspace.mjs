@@ -26,8 +26,7 @@ import { REPO_ROOT } from './parseArgs.mjs';
 const YAML = createRequire(path.join(REPO_ROOT, 'packages/cli/package.json'))('yaml');
 
 // The server's own dependencies with build scripts: true runs the script,
-// false skips it. mongodb-memory-server (through @shelf/jest-mongodb, a
-// server-dev dev dependency) only downloads a MongoDB binary in its
+// false skips it. mongodb-memory-server only downloads a MongoDB binary in its
 // postinstall, which mongodb-memory-server-core downloads when it first
 // starts one.
 const serverAllowBuilds = {

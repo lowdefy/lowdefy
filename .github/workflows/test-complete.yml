@@ -35,10 +35,6 @@ jobs:
       # again.
       - run: pnpm test:dependencies
       - run: pnpm -r --no-bail --filter=!@lowdefy/connection-mongodb --filter=!@lowdefy/lowdefy test
-      # One upload of the full suite's coverage. The fast path tests only affected
-      # packages, so its coverage would read as drops everywhere else.
-      - uses: codecov/codecov-action@v6
-        if: matrix.node == 24
 
   mongodb:
     name: MongoDB
@@ -74,12 +70,12 @@ jobs:
       # passed tests, not just a zero exit code.
       - name: Server-dev fixture suite
         run: |
-          pnpm --filter=@lowdefy/server-dev test:fixture --json --outputFile="$RUNNER_TEMP/fixture-server-dev.json"
-          node scripts/ci-check-jest-ran.mjs "$RUNNER_TEMP/fixture-server-dev.json"
+          pnpm --filter=@lowdefy/server-dev test:fixture --reporter=default --reporter=json --outputFile.json="$RUNNER_TEMP/fixture-server-dev.json"
+          node scripts/ci-check-tests-ran.mjs "$RUNNER_TEMP/fixture-server-dev.json"
       - name: CLI fixture suite
         run: |
-          pnpm --filter=lowdefy test:fixture --json --outputFile="$RUNNER_TEMP/fixture-cli.json"
-          node scripts/ci-check-jest-ran.mjs "$RUNNER_TEMP/fixture-cli.json"
+          pnpm --filter=lowdefy test:fixture --reporter=default --reporter=json --outputFile.json="$RUNNER_TEMP/fixture-cli.json"
+          node scripts/ci-check-tests-ran.mjs "$RUNNER_TEMP/fixture-cli.json"
       - uses: actions/upload-artifact@v6
         if: failure()
         with:

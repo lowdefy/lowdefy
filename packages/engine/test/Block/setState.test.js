@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import testContext from '../testContext.js';
 

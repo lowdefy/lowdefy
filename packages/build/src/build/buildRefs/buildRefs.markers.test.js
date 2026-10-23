@@ -17,12 +17,12 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import testContext from '../../test-utils/testContext.js';
 import buildRefs from './buildRefs.js';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 const readConfigFileMockImplementation = (files) => {
   const mockImp = (filePath) => {

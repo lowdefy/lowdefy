@@ -19,6 +19,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { expect, test } from 'vitest';
 
 // `lowdefy journeys harden` from the built CLI over the fixture app: the
 // journey asserts the save message and nothing else.

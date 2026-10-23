@@ -15,6 +15,7 @@
 */
 
 import holdRows from './holdRows.js';
+import { expect, test } from 'vitest';
 
 const rows = [{ id: 1 }, { id: 2 }];
 

@@ -15,6 +15,7 @@
 */
 
 import _locale from './locale.js';
+import { expect, test } from 'vitest';
 
 const i18n = {
   active: 'de-DE',

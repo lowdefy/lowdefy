@@ -105,10 +105,15 @@ function startWatcher() {
   // rebuild's own write re-adds it.
 }
 
+// The close waits until the event being handled is done. A subscriber may leave
+// inside the watcher's add event, and chokidar 4 registers the new file's
+// watch handle only after that event returns: a close made inside it would
+// leave the handle open, and the next watcher of buildStatus.json would share
+// that stale handle and miss every later write once the file is replaced.
 function stopWatcher() {
-  const closing = watcher.close();
+  const stopping = watcher;
   watcher = null;
-  return closing;
+  return new Promise((resolve) => setImmediate(resolve)).then(() => stopping.close());
 }
 
 function unsubscribe(send) {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, UserError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { serializer } from '@lowdefy/helpers';
@@ -28,16 +28,16 @@ import scheduleBackground from './scheduleBackground.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const flush = () => new Promise((resolve) => setImmediate(resolve));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('scheduleBackground logs completion and failure, never rejects', async () => {
@@ -73,7 +73,7 @@ test('scheduleBackground logs a UserError at warn level, not error', async () =>
 });
 
 test('acceptDetachedEndpoint logs a payload refused by the payloadSchema at error level: the dispatching step built it', async () => {
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'api/typed_child.json') {
       return {
         endpointId: 'typed_child',
@@ -85,7 +85,7 @@ test('acceptDetachedEndpoint logs a payload refused by the payloadSchema at erro
     }
     return null;
   });
-  const waitUntil = jest.fn();
+  const waitUntil = vi.fn();
   const context = testContext({ logger, operators: operatorsServer, readConfigFile });
   context.waitUntil = waitUntil;
   acceptDetachedEndpoint(context, {
@@ -102,14 +102,14 @@ test('acceptDetachedEndpoint logs a payload refused by the payloadSchema at erro
 });
 
 test('scheduleBackground hands the promise to context.waitUntil when the server injects it', async () => {
-  const waitUntil = jest.fn();
+  const waitUntil = vi.fn();
   const context = { logger, waitUntil };
   await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => ({}));
   expect(waitUntil).toHaveBeenCalledTimes(1);
 });
 
 test('async: true returns immediately and runs the routine in the background', async () => {
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/bg_ep.json') {
       return {
         endpointId: 'bg_ep',
@@ -158,7 +158,7 @@ test.each([
       }),
   ],
 ])('%s runs without the request signal', async (_, start) => {
-  const readConfigFile = jest.fn((path) =>
+  const readConfigFile = vi.fn((path) =>
     path === 'api/bg_ep.json'
       ? {
           endpointId: 'bg_ep',
@@ -179,9 +179,9 @@ test.each([
 
 test('detached: true dispatches to /api/detached with CRON_SECRET and continues', async () => {
   process.env.CRON_SECRET = 'shhh';
-  const fetchMock = jest.fn(async () => ({ status: 200 }));
+  const fetchMock = vi.fn(async () => ({ status: 200 }));
   global.fetch = fetchMock;
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/parent_ep.json') {
       return {
         endpointId: 'parent_ep',
@@ -249,9 +249,9 @@ function detachedParentReadConfigFile(path) {
 
 async function dispatchDetached({ loopbackHeaders }) {
   process.env.CRON_SECRET = 'shhh';
-  const fetchMock = jest.fn(async () => ({ status: 200 }));
+  const fetchMock = vi.fn(async () => ({ status: 200 }));
   global.fetch = fetchMock;
-  const context = testContext({ logger, readConfigFile: jest.fn(detachedParentReadConfigFile) });
+  const context = testContext({ logger, readConfigFile: vi.fn(detachedParentReadConfigFile) });
   context.origin = 'https://app.test';
   if (loopbackHeaders !== undefined) {
     context.loopbackHeaders = loopbackHeaders;
@@ -288,7 +288,7 @@ test('detached: true without loopbackHeaders sends the same headers as before', 
 
 test('detached: true without CRON_SECRET throws a ConfigError', async () => {
   delete process.env.CRON_SECRET;
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/parent_ep.json') {
       return {
         endpointId: 'parent_ep',
@@ -320,7 +320,7 @@ test('detached: true without CRON_SECRET throws a ConfigError', async () => {
 
 test('detached: true without a request origin on context is a LowdefyInternalError', async () => {
   process.env.CRON_SECRET = 'cron-secret';
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/parent_ep.json') {
       return {
         endpointId: 'parent_ep',
@@ -354,7 +354,7 @@ test('detached: true without a request origin on context is a LowdefyInternalErr
 
 test('webhook endpoints: gated on webhook: true, payload is { body, query, headers }', async () => {
   const { default: runWebhookEndpoint } = await import('./runWebhookEndpoint.js');
-  const mockReadConfigFile = jest.fn((path) => {
+  const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/hook_ep.json') {
       return {
         endpointId: 'hook_ep',
@@ -414,7 +414,7 @@ test('webhook endpoint response is the :return value exactly, without build mark
   const context = testContext({
     logger,
     operators: operatorsServer,
-    readConfigFile: jest.fn((path) => (path === 'api/handshake_ep.json' ? artifact : null)),
+    readConfigFile: vi.fn((path) => (path === 'api/handshake_ep.json' ? artifact : null)),
   });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'handshake_ep',
@@ -430,7 +430,7 @@ test('webhook endpoint response sends a date as an ISO string, not the serialize
   const context = testContext({
     logger,
     operators: operatorsServer,
-    readConfigFile: jest.fn((path) =>
+    readConfigFile: vi.fn((path) =>
       path === 'api/dated_ep.json'
         ? {
             endpointId: 'dated_ep',
@@ -455,7 +455,7 @@ test('webhook endpoint response sends a date as an ISO string, not the serialize
 // protected endpoints must not be re-gated on a (missing) user session.
 
 function createNestedCallReadConfigFile({ parent, childType = 'Api' }) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     if (path === `api/${parent.endpointId}.json`) {
       return parent;
     }
@@ -550,7 +550,7 @@ const verifierConnections = {
 };
 
 function createWebhookReadConfigFile({ parent }) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     if (path === `api/${parent.endpointId}.json`) {
       return parent;
     }
@@ -612,7 +612,7 @@ test('webhook with no verifier fails a nested protected Api CallApi (untrusted t
 });
 
 test('webhook with no verifier fails a nested protected InternalApi CallApi (untrusted throughout)', async () => {
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'api/parent_hook.json') {
       return {
         endpointId: 'parent_hook',
@@ -737,7 +737,7 @@ test('webhook whose verify gate passes blanket-passes a nested protected CallApi
 // A verifier that records what it was given, standing in for a signature check
 // over the exact bytes the sender posted.
 const recordingVerify = verifierResolver(
-  jest.fn(({ request }) => request.rawBody === request.expected)
+  vi.fn(({ request }) => request.rawBody === request.expected)
 );
 const recordingVerifierConnections = {
   StubVerifyConnection: {
@@ -823,9 +823,9 @@ test('webhook verifier gets a body that is not JSON as rawBody and can refuse it
 
 // A verifier connection whose type implements the tenant scoping contract -
 // under policy: tenant the wall engages for it like for any connection.
-const walledStubVerify = verifierResolver(jest.fn(({ request }) => request.token === 'good'));
+const walledStubVerify = verifierResolver(vi.fn(({ request }) => request.token === 'good'));
 const walledWritingVerify = verifierResolver(
-  jest.fn(() => true),
+  vi.fn(() => true),
   { checkWrite: true }
 );
 const walledVerifierConnections = {
@@ -937,7 +937,7 @@ test('webhook verifier that writes under tenant none throws the ConfigError inst
 // Detached carries the dispatcher's identity (Decision 4). The child endpoint
 // is protected by roles so the carried identity is what decides the nested call.
 function createDetachedReadConfigFile({ childRoles = ['admin'] } = {}) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     if (path === 'api/parent_detached.json') {
       return {
         endpointId: 'parent_detached',
@@ -1046,7 +1046,7 @@ test.each([
 );
 
 test('acceptDetachedEndpoint accepts at once and runs the routine after, under waitUntil', async () => {
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'api/slow_child.json') {
       return {
         endpointId: 'slow_child',
@@ -1057,7 +1057,7 @@ test('acceptDetachedEndpoint accepts at once and runs the routine after, under w
     }
     return null;
   });
-  const waitUntil = jest.fn();
+  const waitUntil = vi.fn();
   const context = testContext({ logger, operators: operatorsServer, readConfigFile });
   context.waitUntil = waitUntil;
   const accepted = acceptDetachedEndpoint(context, {
@@ -1084,9 +1084,9 @@ test('acceptDetachedEndpoint never rejects: a missing endpoint is logged, not th
   const context = testContext({
     logger,
     operators: operatorsServer,
-    readConfigFile: jest.fn(() => null),
+    readConfigFile: vi.fn(() => null),
   });
-  const waitUntil = jest.fn();
+  const waitUntil = vi.fn();
   context.waitUntil = waitUntil;
   expect(
     acceptDetachedEndpoint(context, {
@@ -1101,7 +1101,7 @@ test('acceptDetachedEndpoint never rejects: a missing endpoint is logged, not th
 });
 
 test('detached rehydrates the carried principal - roles are present on context.user', async () => {
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'api/echo_user.json') {
       return {
         endpointId: 'echo_user',
@@ -1127,7 +1127,7 @@ test('detached rehydrates the carried principal - roles are present on context.u
 });
 
 test('detached run refuses a payload that violates the target payloadSchema before its routine runs', async () => {
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'api/typed_child.json') {
       return {
         endpointId: 'typed_child',
@@ -1162,7 +1162,7 @@ test('detached run refuses a payload that violates the target payloadSchema befo
 });
 
 test('detached run refuses an outside caller payload that violates the target payloadSchema with a UserError', async () => {
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'api/typed_child.json') {
       return {
         endpointId: 'typed_child',

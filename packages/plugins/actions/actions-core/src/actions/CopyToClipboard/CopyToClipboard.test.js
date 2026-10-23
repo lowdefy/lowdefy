@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import CopyToClipboard from './CopyToClipboard.js';
 
-const mockWriteText = jest.fn();
+const mockWriteText = vi.fn();
 
 const window = {
   navigator: {

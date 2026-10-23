@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import PasskeyDelete from './PasskeyDelete.js';
 
-const mockPasskeyDelete = jest.fn();
+const mockPasskeyDelete = vi.fn();
 const methods = { passkeyDelete: mockPasskeyDelete };
 
 test('PasskeyDelete passes params to the passkeyDelete method', async () => {

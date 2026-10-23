@@ -15,6 +15,7 @@
 */
 
 import AuthorizationError from './AuthorizationError.js';
+import { expect, test } from 'vitest';
 
 test('AuthorizationError sets name and isLowdefyError', () => {
   const error = new AuthorizationError();

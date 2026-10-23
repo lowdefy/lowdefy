@@ -15,15 +15,15 @@
 */
 
 import net from 'node:net';
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import { closeClients } from '../../../connections/MongoDBCollection/getClient.js';
 
 // The vendored adapter is replaced by the getDb function it receives, so the test
 // drives the real driver directly.
-const mockMongodbAdapter = jest.fn(({ getDb }) => getDb);
+const mockMongodbAdapter = vi.fn(({ getDb }) => getDb);
 
-jest.unstable_mockModule('../mongodbAdapter/mongodbAdapter.js', () => ({
+vi.doMock('../mongodbAdapter/mongodbAdapter.js', () => ({
   default: mockMongodbAdapter,
 }));
 

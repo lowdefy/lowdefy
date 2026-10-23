@@ -18,6 +18,7 @@ import createIconSemanticMap from './createIconSemanticMap.js';
 import createLucideIconLayer from './createLucideIconLayer.js';
 import resolveIconName from './resolveIconName.js';
 import createTestIconLayer from '../../test-utils/createTestIconLayer.js';
+import { expect, test } from 'vitest';
 
 const node = [['path', { d: 'M0 0' }]];
 

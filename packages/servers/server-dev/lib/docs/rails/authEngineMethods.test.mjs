@@ -18,6 +18,7 @@ import fs from 'node:fs';
 
 import authEngineActions from './authEngineActions.js';
 import authEngineMethods from './authEngineMethods.js';
+import { expect, test } from 'vitest';
 
 test('authEngineMethods maps client auth methods to exactly the authEngineActions types', () => {
   expect(new Set(Object.values(authEngineMethods))).toEqual(authEngineActions);

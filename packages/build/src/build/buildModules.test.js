@@ -15,6 +15,7 @@
 */
 
 import buildModules from './buildModules.js';
+import { describe, expect, test } from 'vitest';
 
 function makeModuleEntry({ id, manifest, connections }) {
   return {

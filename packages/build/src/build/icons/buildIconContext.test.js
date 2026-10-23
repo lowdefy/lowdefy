@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockImportPluginModule = jest.fn();
-jest.unstable_mockModule('../writePluginImports/importPluginModule.js', () => ({
+const mockImportPluginModule = vi.fn();
+vi.doMock('../writePluginImports/importPluginModule.js', () => ({
   default: mockImportPluginModule,
 }));
-jest.unstable_mockModule('./readIconMigrationTable.js', () => ({
+vi.doMock('./readIconMigrationTable.js', () => ({
   default: () => ({ icons: { AiOutlineDelete: 'delete' }, review: {} }),
 }));
 

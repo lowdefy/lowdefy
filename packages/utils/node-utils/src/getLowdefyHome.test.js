@@ -18,6 +18,7 @@ import os from 'os';
 import path from 'path';
 
 import getLowdefyHome from './getLowdefyHome.js';
+import { afterEach, expect, test } from 'vitest';
 
 const originalHome = process.env.LOWDEFY_HOME;
 

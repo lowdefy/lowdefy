@@ -15,6 +15,7 @@
 */
 
 import validateId from './validateId.js';
+import { expect, test } from 'vitest';
 
 test('validateId allows valid ids', () => {
   expect(() => validateId({ id: 'my-page', field: 'Page id', configKey: '1' })).not.toThrow();

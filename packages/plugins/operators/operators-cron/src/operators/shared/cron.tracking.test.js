@@ -15,6 +15,7 @@
 */
 
 import _cron from './cron.js';
+import { expect, test } from 'vitest';
 
 function kind(callInfo) {
   return _cron.tracking(callInfo).kind;

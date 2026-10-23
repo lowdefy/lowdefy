@@ -15,6 +15,7 @@
 */
 
 import journeyTargetSelectors from './journeyTargetSelectors.js';
+import { expect, test } from 'vitest';
 
 test('journeyTargetSelectors interactiveControl lists every control the journey runner clicks', () => {
   expect(journeyTargetSelectors.interactiveControl).toBe(

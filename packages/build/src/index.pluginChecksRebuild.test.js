@@ -21,6 +21,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { testTypesMap } from './test-utils/runBuild.js';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 const childScript = path.join(
   path.dirname(fileURLToPath(import.meta.url)),

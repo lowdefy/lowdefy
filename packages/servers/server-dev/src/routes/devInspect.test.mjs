@@ -15,7 +15,7 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 const { listTabs, registerTab, requestFromTab, unregisterTab, updateTabPage } = await import(
   '../../lib/docs/tabChannel.js'
@@ -41,7 +41,7 @@ afterEach(() => {
   listTabs().forEach((tab) => unregisterTab({ id: tab.id }));
 });
 
-function connectTab({ id, pageId, send = jest.fn() }) {
+function connectTab({ id, pageId, send = vi.fn() }) {
   registerTab({ id, send });
   updateTabPage({ id, pageId, pathParams: {}, instanceKey: `page:${pageId}` });
 }
@@ -131,7 +131,7 @@ test('POST /api/dev-inspect/page for a tab that already disconnected returns ok'
 });
 
 test('POST /api/dev-inspect resolves a pending tab request with the posted result', async () => {
-  const send = jest.fn();
+  const send = vi.fn();
   connectTab({ id: 'tab-1', pageId: 'home', send });
   const pending = requestFromTab({ pageId: 'home', event: 'inspect-request' });
   const [, { requestId }] = send.mock.calls[0];

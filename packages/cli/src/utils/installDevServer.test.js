@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 const calls = [];
 function mockStep(name) {
   return {
-    default: jest.fn(async ({ directory, packageName }) =>
+    default: vi.fn(async ({ directory, packageName }) =>
       calls.push({ name, directory, packageName })
     ),
   };
 }
-jest.unstable_mockModule('./getServer.js', () => mockStep('getServer'));
-jest.unstable_mockModule('./addCustomPluginsAsDeps.js', () => mockStep('addCustomPluginsAsDeps'));
-jest.unstable_mockModule('./ensurePnpmWorkspaceYaml.js', () => mockStep('ensurePnpmWorkspaceYaml'));
-jest.unstable_mockModule('./installServer.js', () => mockStep('installServer'));
+vi.doMock('./getServer.js', () => mockStep('getServer'));
+vi.doMock('./addCustomPluginsAsDeps.js', () => mockStep('addCustomPluginsAsDeps'));
+vi.doMock('./ensurePnpmWorkspaceYaml.js', () => mockStep('ensurePnpmWorkspaceYaml'));
+vi.doMock('./installServer.js', () => mockStep('installServer'));
 
 const { default: installDevServer } = await import('./installDevServer.js');
 

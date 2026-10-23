@@ -15,6 +15,7 @@
 */
 
 import humanizeKey from './humanizeKey.js';
+import { expect, test } from 'vitest';
 
 test('humanizeKey turns snake, kebab, camel and dotted keys into a sentence-case title', () => {
   expect(humanizeKey('first_name')).toBe('First name');

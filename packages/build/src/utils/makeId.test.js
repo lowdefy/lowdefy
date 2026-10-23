@@ -15,6 +15,7 @@
 */
 
 import makeId from './makeId.js';
+import { beforeEach, expect, test } from 'vitest';
 
 beforeEach(() => {
   makeId.reset();

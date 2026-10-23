@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import errorSummaryForLog from './errorSummaryForLog.js';
 
 // The AI SDK marks its errors with this symbol; AISDKError.isInstance reads it.

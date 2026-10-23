@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import random from './random.js';
 
-const mockRandom = jest.fn();
+const mockRandom = vi.fn();
 const mockRandomImp = () => 0.5234;
 const mathRandomFn = Math.random;
 

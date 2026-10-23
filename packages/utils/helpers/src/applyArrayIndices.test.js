@@ -15,6 +15,7 @@
 */
 
 import applyArrayIndices from './applyArrayIndices.js';
+import { expect, test } from 'vitest';
 
 test('no arrayIndices', () => {
   expect(applyArrayIndices(undefined, 'a')).toEqual('a');

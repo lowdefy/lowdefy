@@ -15,6 +15,7 @@
 */
 
 import getCallerFingerprint from './getCallerFingerprint.js';
+import { expect, test } from 'vitest';
 
 const caller = {
   id: 'user-1',

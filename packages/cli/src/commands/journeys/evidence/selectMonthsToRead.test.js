@@ -17,6 +17,7 @@
 import flowLines from './flowLines.js';
 import selectMonthsToRead from './selectMonthsToRead.js';
 import sequenceId from './sequenceId.js';
+import { expect, test } from 'vitest';
 
 const today = '2026-10-05';
 const steps = [{ click: 'edit' }, { click: 'save' }];

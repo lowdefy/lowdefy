@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, fixtureUrl, launchChromium, postJourney } from './fixtureClient.mjs';
+import { describe, expect } from 'vitest';
 
 // A journey fails at the step that causes an app error, with the error's kind
 // and finding key. Expected outcomes (a failed Validate, a Throw, an auth gate's refusal) pass,

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import path from 'path';
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => {
+vi.doMock('@lowdefy/node-utils', () => {
   return {
-    readFile: jest.fn(),
+    readFile: vi.fn(),
   };
 });
 

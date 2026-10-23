@@ -22,6 +22,7 @@ import _if from './if.js';
 import _item from '../server/item.js';
 import _payload from '../server/payload.js';
 import _state from '../shared/state.js';
+import { expect, test } from 'vitest';
 
 const operators = {
   _args,

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
-const mockSend = jest.fn();
-const mockSetApiKey = jest.fn();
+const mockSend = vi.fn();
+const mockSetApiKey = vi.fn();
 
-jest.unstable_mockModule('@sendgrid/mail', () => {
+vi.doMock('@sendgrid/mail', () => {
   return {
     default: {
       setApiKey: mockSetApiKey,
@@ -29,7 +29,7 @@ jest.unstable_mockModule('@sendgrid/mail', () => {
 });
 
 afterEach(() => {
-  jest.resetAllMocks();
+  vi.resetAllMocks();
 });
 
 test('send sets the api key and returns the messageId from response headers', async () => {

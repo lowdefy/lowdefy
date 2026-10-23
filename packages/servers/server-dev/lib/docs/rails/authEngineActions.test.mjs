@@ -17,6 +17,7 @@
 import actionsCoreTypes from '@lowdefy/actions-core/types';
 
 import authEngineActions from './authEngineActions.js';
+import { expect, test } from 'vitest';
 
 // Every actions-core action that does not call the auth engine. A new action
 // type fails the test below until it is added here or to authEngineActions.

@@ -15,11 +15,11 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import { serve } from '@hono/node-server';
 import WebSocket, { WebSocketServer } from 'ws';
 
-jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
+vi.doMock('../../lib/server/auth/getStrategies.js', () => ({
   default: () => [],
 }));
 

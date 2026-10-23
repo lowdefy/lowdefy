@@ -17,6 +17,7 @@
 import http from 'http';
 
 import waitForConfigBuild from './waitForConfigBuild.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // A dev server whose build-status answers come from `answers`, one per read,
 // the last repeated.

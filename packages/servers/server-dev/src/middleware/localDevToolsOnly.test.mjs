@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 
 import localDevToolsOnly from './localDevToolsOnly.js';
+import { expect, test } from 'vitest';
 
 function request({ headers, method = 'POST' }) {
   const app = new Hono();

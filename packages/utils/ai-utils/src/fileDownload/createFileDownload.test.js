@@ -15,21 +15,21 @@
 */
 
 import { Socket } from 'node:net';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import { MockLanguageModelV4 } from 'ai/test';
 
-const mockFetchUrl = jest.fn();
-const undici = jest.requireActual('undici');
+const mockFetchUrl = vi.fn();
+const undici = await vi.importActual('undici');
 
 // fetch is mocked per test; a test that needs the real connection path hands it undici's fetch.
-jest.unstable_mockModule('undici', () => ({
+vi.doMock('undici', () => ({
   ...undici,
   fetch: (...fetchArgs) => mockFetchUrl(...fetchArgs),
 }));
 
 // Records every socket opened, whichever copy of undici built the connector: tls.connect and
 // net.connect both open theirs through Socket.prototype.connect.
-const socketConnect = jest.spyOn(Socket.prototype, 'connect');
+const socketConnect = vi.spyOn(Socket.prototype, 'connect');
 
 const { default: createFileDownload } = await import('./createFileDownload.js');
 const { default: createToolLoopAgent } = await import('../createToolLoopAgent.js');
@@ -124,7 +124,7 @@ test('createFileDownload refuses a Content-Length over maxBytes before reading t
 });
 
 test('createFileDownload refuses a body with no Content-Length once it passes maxBytes', async () => {
-  const cancel = jest.fn();
+  const cancel = vi.fn();
   let sent = 0;
   mockFetchUrl.mockImplementation(
     async () =>
@@ -300,8 +300,8 @@ async function runAgent({ model, fileDownload }) {
     agent: { agentId: 'report_agent', properties: { model: 'mock', fileDownload }, tools: [] },
     context: {
       agentContext: { sharedStateReadOnly: true },
-      callEndpoint: jest.fn(),
-      logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
+      callEndpoint: vi.fn(),
+      logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
     },
   });
   return agentInstance.generate({

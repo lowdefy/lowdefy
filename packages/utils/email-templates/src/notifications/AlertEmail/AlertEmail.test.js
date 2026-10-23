@@ -16,6 +16,7 @@
 
 import renderEmail from '../../renderEmail.js';
 import AlertEmail from './AlertEmail.js';
+import { expect, test } from 'vitest';
 
 test('AlertEmail renders title, message, metadata and button', async () => {
   const { html, text } = await renderEmail({

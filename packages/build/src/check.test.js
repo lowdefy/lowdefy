@@ -22,6 +22,7 @@ import { BuildError } from '@lowdefy/errors';
 import build from './index.js';
 import check from './check.js';
 import { snapshotTypesMap } from './test-utils/runBuildForSnapshots.js';
+import { afterAll, expect, test } from 'vitest';
 
 const silentLogger = { info() {}, log() {}, warn() {}, error() {}, debug() {}, succeed() {} };
 

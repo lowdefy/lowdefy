@@ -29,7 +29,7 @@ expanded: [] # the expanded tree rows or detail rows
 
 - `_state: deals.selected` is always the selection and `_state: deals.view` always the current view, with no `onChange` wiring.
 - Setting them sets the table: `SetState: { deals.selected: [] }` clears the selection, `SetState: { deals.view.filter: { key: stage, op: eq, value: won } }` filters it, and `Reset` returns to `defaultView`.
-- Rows come from `data`: a list of rows (client mode), or `{ mode: server, request }` (server mode, below).
+- Rows come from `data`: a list of rows (client mode), or `{ mode: server, request }` or `{ mode: server, endpoint }` (server mode, below).
 - `rowKey` names the field that identifies a row: `_id` by default, then `id`. Selection, expansion, events and edits all use it, so give rows a key. Rows with neither field get a key per row object, which does not survive a refetch.
 
 The table loads its code (TanStack Table and Virtual, about 47 kB gzipped) the first time a `Table` or `TableInput` mounts, showing its loading skeleton until then (see [Loading states](#loading-states)). A page without one does not load it.
@@ -74,6 +74,30 @@ The table shows what it is doing while data loads, the same way in `Table`, `Tab
 | true      | rows on screen                         | **Refreshing:** the rows stay, and a thin progress bar runs under the header                                  |
 | false     | none (`[]`, or `data` null or missing) | **Empty:** "No rows" (`emptyText`), or "No matching rows" with _Clear filters_ when a filter or search is set |
 | false     | rows                                   | **Ready**                                                                                                     |
+
+**Empty states.** With no rows and no filter or search, blocks in the `empty` slot replace "No rows" (else `emptyText`). When a filter or search hides every row, the table says "No matching rows" and offers _Clear filters_; blocks in the `emptyFiltered` slot replace both, for a view whose filter is the point, such as a saved list, where clearing it would throw the list away:
+
+```yaml
+slots:
+  empty:
+    blocks:
+      - id: no_deals
+        type: Paragraph
+        properties:
+          content: No deals yet.
+  emptyFiltered:
+    blocks:
+      - id: no_matching_deals
+        type: Paragraph
+        properties:
+          content: No deals match this view right now.
+      - id: edit_filter
+        type: Button
+        properties:
+          title: Edit filter
+```
+
+The wrapper keeps `data-lf-empty="filtered"` whenever a filter or search hides every row, whichever is shown.
 
 **Wire `loading` to the request.** A request that runs again makes `_request` return `null` until the new response lands (unless the `Request` action sets `holdValue: true`). The table holds its rows while `loading` is true, so a refetch never flashes empty, either way:
 
@@ -530,7 +554,8 @@ What each part does:
 
 - **Server mode.** The table fetches rows 0 to 200 on mount, then each block of `blockSize` rows (default 200) as it scrolls into view, keeping at most `maxBlocks` blocks (default 20). A sort, filter, search or grouping change fetches from the top, and the old rows stay on screen, dimmed, until the new ones land. See [MongoDBTableQuery](/MongoDB) for the request, and Security below.
 - **Row links.** A plain click opens the deal, Cmd/Ctrl+click or a middle click opens it in a new tab, and Enter on a focused row follows the link. Clicks on buttons, links, menus and editors in a cell never trigger the row. A click on a block in one of the table's slots, such as "Assign to me", runs that block's event and not the table's (the innermost block with actions handles a click, unless an event sets `bubble: true`), and the table still fires its own events for the methods that button calls, such as `onSelectionChange` after `clearSelection`.
-- **Saved views.** The tabs show `views`. A view `id` is a string, a number or a MongoDB ObjectId (`{ _oid }`, matched by its hex, so `id: $_id` works too); this example uses string ids so that Save as can pick one before the request runs. Selecting a tab loads its `view` (parts it leaves out come from `defaultView`) and fires `onViewSelect`. When the current view differs from the tab's, a strip offers Save, Save as and Discard; Save fires `onViewSave` with the tab's `id`, Save as asks for a title (and whether to share it) and fires `onViewSave` without an `id`. A tab's menu offers Delete, which fires `onViewDelete`. The table never stores views itself: update `views` and, for a new view, `activeView`. `locked: true` hides Save and Delete for that tab. Changing the search or collapsing groups never marks a view as changed.
+- **Saved views.** The tabs show `views`. A view `id` is a string, a number or a MongoDB ObjectId (`{ _oid }`, matched by its hex, so `id: $_id` works too); this example uses string ids so that Save as can pick one before the request runs. Selecting a tab loads its `view` (parts it leaves out come from `defaultView`) and fires `onViewSelect`. When the current view differs from the tab's, a strip offers Save, Save as and Discard; Save fires `onViewSave` with the tab's `id`, Save as asks for a title (and whether to share it) and fires `onViewSave` without an `id`; a table with `onViewSaveAs` actions fires that instead (see below). A tab's menu offers Delete, which fires `onViewDelete`; `viewMenu` replaces it with the app's own items (see below). The table never stores views itself: update `views` and, for a new view, `activeView`. `locked: true` hides Save and disables the default Delete for that tab. Changing the search or collapsing groups never marks a view as changed. On a phone (below 768px, antd's `md` breakpoint) the tabs are one select showing the active view, with its menu and the changed-view strip beside it.
+- **Quick filters.** `quickFilters: [stage]` puts a Stage chip in the toolbar. A column with `options` opens a checkbox list that writes one `in` condition, ANDed with the rest of the filter. A list of more than 8 options has a search box at its top that narrows the list by label as the user types (case-insensitive); ticked options stay listed, and Escape clears the search. A column without `options` opens its column filter.
 - **`persist`.** Keeps the user's current view and active tab in `localStorage` under `lowdefy-table:deals`, per app and per signed-in user, so a returning user sees what they left. The view is cleared when the user signs out. A persisted view wins over `activeView` when the page loads.
 - **Bulk actions.** While rows are selected, a bar below the table shows "N selected", "Select all M matching", Clear, and the `bulkActions` slot. Blocks in the toolbar and bulk action slots sit side by side at their content width, like the table's own buttons (set `gap` on the slot, or `layout.flex` on a block, to change that). The blocks in it read `_state: deals_table.selected`, and "Assign to me" sends it to `assign_deals`, one `updateMany` (see below).
 - **Hover buttons.** `showOn: hover` shows the buttons only on the hovered row, or the row focused with the keyboard. They mount only there, which keeps scrolling fast. The event carries `{ row, rowKey, value, button, buttonIndex }`. `applyTransaction` removes the archived row without a full refetch; in server mode a remove also refetches the visible rows.
@@ -541,6 +566,58 @@ What each part does:
 `fields` and `queryFields` are different key spaces: `queryFields` are the `MongoDBTableQuery` fields keyed by column key (`owner`, with `path: owner.name`), `fields` are keyed by the field path written (`owner.name`). Keep the query fields in one file and `_ref` it from both requests.
 
 To edit more columns, give each one its own request and pick it with the column key: `params: { _string.concat: [update_deal_, { _event: column.key }] }`. Do not build the `$set` field name from the event: the browser could then write any field. Alternatively, save the edit with [MongoDBTableChanges](/MongoDB), which checks the field against its `fields` allowlist and coerces the value to the field type.
+
+**Your own Save as dialog.** Give the table `onViewSaveAs` actions and Save as fires `onViewSaveAs { view }`, the current view, in place of its title and Shared popover, so saving a new view can ask for more: a unique name, a description, a preview of how many rows it matches. The table shows no popover; the app opens its dialog, stores the view and then updates `views` and `activeView`, as after `onViewSave`. Save (with an `id`) still fires `onViewSave`. Without `onViewSaveAs` actions, Save as works as above.
+
+```yaml
+- id: deals_table
+  type: Table
+  events:
+    onViewSaveAs:
+      - id: keep_view
+        type: SetState
+        params:
+          new_view:
+            view:
+              _event: view
+            title: ''
+            description: ''
+      - id: open_save_view
+        type: CallMethod
+        params:
+          blockId: save_view_modal
+          method: toggleOpen
+
+- id: save_view_modal
+  type: Modal
+  properties:
+    title: Save view
+  events:
+    onOk:
+      - id: insert_view
+        type: Request
+        params: insert_view # stores new_view, then refetches views and sets active_view
+  blocks:
+    - id: new_view.title
+      type: TextInput
+      required: true
+    - id: new_view.description
+      type: TextArea
+```
+
+**Your own view tab menu.** `viewMenu` sets the items of the active view tab's menu in place of Delete view, for example when views are archived rather than deleted because other features read them. Each item is `{ key, label?, danger?, confirm? }`; picking one fires `onViewMenu { key, id }` with the view's `id`. `confirm: true` asks "Are you sure?" first, and a string asks that message. `locked` does not disable these items. An empty `viewMenu` hides the menu.
+
+```yaml
+viewMenu:
+  - key: rename
+    label: Rename
+  - key: duplicate
+    label: Duplicate
+  - key: archive
+    label: Archive
+    danger: true
+    confirm: Archive this view? Lists that use it keep working.
+```
 
 ### Peek drawer
 
@@ -1184,9 +1261,12 @@ filter:
 - Numbers compare as numbers, so numeric strings work.
 - A `date` column compares whole days: `eq: 2026-03-01` is that day, and `lte: 2026-03-01` includes all of it. A `datetime` column compares the exact instant for `before`, `after` and `between`; `eq` compares the day for both.
 - `within` takes `{ last: n, unit }` or `{ next: n, unit }` with unit `day`, `week`, `month` or `year`: from the start of the day n units ago to the end of today, or from the start of today to the end of the day n units ahead.
+- `before` and `after` take a date or the same relative date, resolved each time the filter runs, so a saved view stays true as time passes: `{ key: last_contacted, op: before, value: { last: 3, unit: month } }` reads "before 3 months ago" and keeps rows dated before the start of that day, and `after` with `{ next: 2, unit: week }` keeps rows dated after the end of the day 2 weeks from now. A relative bound compares whole days on `date` and `datetime` columns alike. The filter builder offers Date or Relative for both, and a date column's filter menu picks `within`, `before` or `after` under Relative.
 - `isFalse` matches every value that is not `true`, including empty values.
 - Records in a list (`people`, `relation`) compare by `_id`, then `id`, `value`, `name` or `label`, and text operators read their label.
 - `{ $user: path }` as a value reads the table's `user` property, which blocks need because they do not see the session: set `user: { _user: true }`. A shared saved view with `{ $user: id }` then means "mine" for every user. In server mode the filter goes to the request, which resolves `$user` on the server from its own `user` property.
+
+**The filter in words.** The toolbar's Filter button shows the filter as one sentence in its tooltip, built from the column titles and option labels, for example "Stage is any of Lead or Won and Name contains CX and (Amount greater than 1000 or Owner has me)". Groups past the first level go in brackets, relative dates read "before 3 months ago", `$user` values read "me", and a key that names no column reads "an unknown field, <key>,", so a view whose column was removed is still explained. Conditions still being built are left out. The sentence comes from `describeCondition({ condition, fields })` in `@lowdefy/helpers`, a plain function with no React; `MongoDBTableQuery` returns the same sentence as `sentence` when its `fields` carry the same `title` and `options`.
 
 ### Conditional formatting
 
@@ -1228,6 +1308,7 @@ The view is one serialisable object, the `view` part of the value:
 - `defaultView` sets the initial view and the one `Reset` returns to. Each part missing from the value falls back to `defaultView`, then to the column defaults. `defaultView.columns` entries merge over the column config, and columns it leaves out keep their defaults.
 - While the column layout equals the configured one, the derived view leaves `columns` out, so columns added to config keep appearing until the user changes the layout.
 - `SetState` on any part loads it: `SetState: { deals.view.sort: [{ key: amount, desc: true }] }`. So do the methods `setFilter`, `clearFilters`, `setSearch` and `setGroup`.
+- `openFilter` opens the filter builder from a button elsewhere on the page (a list header's Edit filter, an `emptyFiltered` slot), anchored to the toolbar's Filter button as a click on it does: `CallMethod: { blockId: deals, method: openFilter }`. With `args: [{ key: stage }]` it first adds an empty condition on that filterable column and focuses it. It needs `toolbar.filter`; without it the method logs a warning and does nothing. On a phone (below 768px) the toolbar's filter builder opens as a full-height sheet, with the record count at its foot, instead of a popover.
 - `onChange` fires after the user changes the view or the selection, with `{ value, cause }`; `cause` is `sort`, `filter`, `search`, `columns`, `select`, `group`, `aggregate`, `expand`, `density`, `wrap` (the toolbar Wrap toggle) or `view` (a saved view loaded). It does not fire for `SetState`, `Reset` or the initial value.
 - To share a view in a link, `persist: { key: view, storage: url }` writes a compact encoding of the view to the `view` query parameter as it changes (with `history.replaceState`), and reads it on load.
 
@@ -1287,6 +1368,56 @@ In server mode the browser sends the view, and the view is user input. `MongoDBT
 - **Saves.** `MongoDBTableChanges` writes only the `fields` listed, at their paths, with coerced values, scoped by its base `filter`; row keys and values that are operator objects are refused. Fields that overlap a `filter` or `insertDefaults` field are refused, so a save can not move a row out of scope, and new rows are stamped with the `filter`'s equalities.
 
 Every column the user can sort or filter must be in `fields`, or the request fails when they try. Set `sortable: false` and `filterable: false` on columns the request does not allow, and give `toolbar.search` only to tables whose request has `search: true` fields. Server search matches the raw field values, not the display labels a client-side search reads.
+
+**Rows from an API endpoint.** When the rows may only be read behind an endpoint's own checks, give `data.endpoint` in place of `data.request`. The table calls the endpoint with `CallAPI`, with the fetch event `{ startRow, endRow, view, groupPath, selected }` as its payload, and reads the routine's response as it reads the request's, `{ rows, total, groups?, aggregates? }`. Give exactly one of `request` and `endpoint`. A response without `rows` and `total` shows the table's own error row.
+
+```yaml
+# The table
+data:
+  mode: server
+  endpoint: deals-rows
+
+# api/deals-rows.yaml
+id: deals-rows
+type: Api
+routine:
+  # The endpoint's own checks run first, for example a :reject for a caller without access.
+  - id: deals_page
+    type: MongoDBTableQuery
+    connectionId: deals
+    properties:
+      pipeline:
+        - $match:
+            org_id:
+              _user: organization.id
+      fields:
+        _ref: deals/table_fields.yaml
+      user:
+        _user: true
+      view:
+        _payload: view
+      startRow:
+        _payload: startRow
+      endRow:
+        _payload: endRow
+      groupPath:
+        _payload: groupPath
+  - :return:
+      _step: deals_page
+```
+
+**Fields from the page.** `data.payload` adds fields to every fetch event, beside `startRow`, `view` and the rest, for a filter the page keeps outside the table's view, such as a region picked above the table. Kept out of the view, it never ends up in a saved view's filter. The table's own fields win on a clash, and a changed payload starts the rows again from the top. Read the fields in the request or routine with `_event` or `_payload`, and check them there like any other input.
+
+```yaml
+data:
+  mode: server
+  endpoint: deals-rows
+  payload:
+    region:
+      _state: region
+```
+
+The fetch event carries no time zone, so a routine that filters dates by the user's days sets `timezone` itself, for example from the user's profile.
 
 **Time zones and indexes.** The browser compares date filters by the user's local days, the server by the days of the request's `timezone` (UTC by default): pass the user's time zone, as `deals_page` does. The request sorts before it pages, so an index on the base match, filter and sort fields (for example `{ org_id: 1, updated: -1, _id: 1 }`) serves each block; without one, MongoDB sorts every matching document for every block. Add indexes for the sorts a large table offers.
 
@@ -1351,6 +1482,8 @@ fields:
 **Errors users can read.** A cell's `error` is shown to every user of the table: in the cell's tooltip ("Failed after 3 attempts" and the message, shortened) and whole in the details panel. Store messages a user can act on, not the error a connection threw, which names the app's connection and carries the service's response (`company_api: Server returned error 500...`). In the worker's `:catch` and in provider endpoints, map a thrown error to its status (`Provider error (500)`, `Rate limited by the provider (429)`, `The provider did not respond`) and leave the full error to the server log, as the reference app's `run_cell` and `enrich_company_lookup` do.
 
 **Loading.** Wire `loading` to the rows request (`_request_details: leads.0.loading`) and reload columns and rows with `holdValue: true` after a column or row change, so the table keeps its rows and columns on screen while they reload; the first load shows the table's skeleton rows. The picker, details panel and import dialog open at once, with a spinner while their code loads.
+
+**Raw results on demand.** A provider's raw answer is often many times the size of the value, and the table only shows it in the details panel. A table can leave it out of its rows (strip `_enrich.<key>.raw` in the rows request) and set `rawEndpoint` to an API endpoint that returns one cell's raw result: the details panel calls it with `{ rowKey, key }` (the row's key and the column key) when it opens a finished enrichment or ai cell whose row carries no `raw`, shows "Loading the raw result…" meanwhile, and calls it again when the cell finishes a new run. The endpoint returns `{ raw }`; scope its read as you scope the rows. Extract columns read the raw result from the row, so keep the fields they read in the rows. The reference app's `enrichment_raw_endpoint` page and `leads_cell_raw` endpoint show the pattern.
 
 **Live results.** Push cell updates to the table with `applyTransaction({ update })` from a websocket (`MongoDBChangeStream` on the rows) that sends each changed row's `fullDocument` (projected to the fields the table shows, `_enrich` whole). The default shallow merge replaces each top-level field, so a cell whose rerun found nothing loses its old `value`, `raw` and `inputHash`, as the server unset them. Keep `merge: 'deep'` for partial patches you build yourself: a deep merge never removes a key, so a formula, an extract column or the stale marker would keep reading what the server removed.
 

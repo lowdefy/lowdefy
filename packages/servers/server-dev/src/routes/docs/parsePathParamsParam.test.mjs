@@ -15,6 +15,7 @@
 */
 
 import parsePathParamsParam from './parsePathParamsParam.js';
+import { expect, test } from 'vitest';
 
 test('parsePathParamsParam returns nothing when the param is absent', () => {
   expect(parsePathParamsParam({ value: undefined })).toEqual({});

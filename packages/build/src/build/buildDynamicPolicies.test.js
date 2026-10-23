@@ -16,6 +16,7 @@
 
 import buildDynamicPolicies from './buildDynamicPolicies.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 function createContext() {
   const warnings = [];

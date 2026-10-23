@@ -15,6 +15,7 @@
 */
 
 import normaliseJourneySteps from './normaliseJourneySteps.js';
+import { expect, test } from 'vitest';
 
 test('normaliseJourneySteps reads a bare wait number as wait ms', () => {
   expect(normaliseJourneySteps({ steps: [{ wait: 3000 }] })).toEqual([{ wait: { ms: 3000 } }]);

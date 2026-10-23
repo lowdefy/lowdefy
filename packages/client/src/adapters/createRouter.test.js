@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createRouter from './createRouter.js';
 
@@ -76,7 +76,7 @@ function createFakeWindow({ url = 'http://localhost/' } = {}) {
 test('push updates the url, notifies subscribers, and scrolls to top', async () => {
   const window = createFakeWindow();
   const router = createRouter({ basePath: '', window });
-  const listener = jest.fn();
+  const listener = vi.fn();
   router.subscribe(listener);
   await router.push({ pathname: '/page-1', query: 'a=1' });
   expect(window.calls.pushState).toEqual(['/page-1?a=1']);
@@ -122,7 +122,7 @@ test('back delegates to history.back', () => {
 test('popstate notifies subscribers with the new location', async () => {
   const window = createFakeWindow();
   const router = createRouter({ basePath: '', window });
-  const listener = jest.fn();
+  const listener = vi.fn();
   router.subscribe(listener);
   await router.push({ pathname: '/page-1' });
   listener.mockClear();
@@ -157,7 +157,7 @@ test('forceReload assigns location instead of pushing history', async () => {
 test('unsubscribe removes the listener', async () => {
   const window = createFakeWindow();
   const router = createRouter({ basePath: '', window });
-  const listener = jest.fn();
+  const listener = vi.fn();
   const unsubscribe = router.subscribe(listener);
   unsubscribe();
   await router.push({ pathname: '/page-1' });

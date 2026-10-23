@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockRaw = jest.fn(() => {
+const mockRaw = vi.fn(() => {
   return Promise.resolve({ rows: [{ name: 'name' }], _types: 'types' });
 });
 
-jest.unstable_mockModule('knex', () => {
+vi.doMock('knex', () => {
   return {
-    default: jest.fn(() => ({
+    default: vi.fn(() => ({
       client: { connectionSettings: {} },
       raw: mockRaw,
-      destroy: jest.fn(() => Promise.resolve()),
+      destroy: vi.fn(() => Promise.resolve()),
     })),
   };
 });

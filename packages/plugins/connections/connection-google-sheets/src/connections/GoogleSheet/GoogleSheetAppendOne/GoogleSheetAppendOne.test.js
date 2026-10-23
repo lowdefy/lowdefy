@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockAddRow = jest.fn();
+const mockAddRow = vi.fn();
 
-jest.unstable_mockModule('../getSheet', () => {
+vi.doMock('../getSheet', () => {
   return {
     default: () => ({
       addRow: mockAddRow,
@@ -49,16 +49,16 @@ test('googleSheetAppendOne', async () => {
     },
   });
   expect(mockAddRow.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "age": "34",
           "birth_date": "2020/04/26",
           "id": "1",
           "married": "TRUE",
           "name": "John",
         },
-        Object {
+        {
           "raw": undefined,
         },
       ],
@@ -99,16 +99,16 @@ test('googleSheetAppendOne, transform types', async () => {
     },
   });
   expect(mockAddRow.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "age": "34",
           "birth_date": "2020-04-26T00:00:00.000Z",
           "id": "1",
           "married": "TRUE",
           "name": "John",
         },
-        Object {
+        {
           "raw": undefined,
         },
       ],
@@ -139,16 +139,16 @@ test('googleSheetAppendOne, raw true', async () => {
     },
   });
   expect(mockAddRow.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "age": "34",
           "birth_date": "2020/04/26",
           "id": "1",
           "married": "TRUE",
           "name": "John",
         },
-        Object {
+        {
           "raw": true,
         },
       ],

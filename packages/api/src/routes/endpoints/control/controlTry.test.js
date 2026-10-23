@@ -17,6 +17,7 @@
 import { RequestError } from '@lowdefy/errors';
 
 import runTest from '../test/runTest.js';
+import { expect, test } from 'vitest';
 
 test('try catch with successful try', async () => {
   const routine = {

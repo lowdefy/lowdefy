@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
 import { create } from 'tar';
 
-const mockFetchGitModuleOverSsh = jest.fn();
-jest.unstable_mockModule('./fetchGitModuleOverSsh.js', () => ({
+const mockFetchGitModuleOverSsh = vi.fn();
+vi.doMock('./fetchGitModuleOverSsh.js', () => ({
   default: mockFetchGitModuleOverSsh,
 }));
 
@@ -44,13 +44,13 @@ describe('fetchGitHubModule', () => {
     process.env.GITHUB_TOKEN = 'test-token';
     delete process.env.GITHUB_SSH_KEY;
     mockFetchGitModuleOverSsh.mockReset();
-    jest.spyOn(global, 'fetch');
+    vi.spyOn(global, 'fetch');
   });
 
   afterEach(() => {
     process.env = { ...env };
     fs.rmSync(configDir, { recursive: true, force: true });
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   function mockApiResponse({ status, statusText, body = statusText }) {
@@ -131,7 +131,7 @@ describe('fetchGitHubModule', () => {
     async (status, statusText) => {
       process.env.GITHUB_SSH_KEY = 'private-key';
       const response = mockApiResponse({ status, statusText });
-      const cancel = jest.spyOn(response.body, 'cancel');
+      const cancel = vi.spyOn(response.body, 'cancel');
       mockSshFetchWritesModule();
 
       const result = await fetchGitHubModule(source, context);

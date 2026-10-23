@@ -15,6 +15,7 @@
 */
 
 import parseUsageWindow from './parseUsageWindow.js';
+import { expect, test } from 'vitest';
 
 test('parseUsageWindow defaults to 3 months', () => {
   expect(parseUsageWindow()).toBe(3);

@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import Stripe from './Stripe.js';
+import { expect, test } from 'vitest';
 
 const schema = Stripe.schema;
 

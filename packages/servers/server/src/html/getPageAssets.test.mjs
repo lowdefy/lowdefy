@@ -15,6 +15,7 @@
 */
 
 import getPageAssets from './getPageAssets.js';
+import { expect, test } from 'vitest';
 
 const assets = {
   icons: { js: ['assets/icons.js', 'assets/shared.js'], css: [] },

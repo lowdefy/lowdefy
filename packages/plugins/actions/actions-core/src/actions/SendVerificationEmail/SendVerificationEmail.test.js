@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import SendVerificationEmail from './SendVerificationEmail.js';
 
-const mockSendVerificationEmail = jest.fn();
+const mockSendVerificationEmail = vi.fn();
 const methods = { sendVerificationEmail: mockSendVerificationEmail };
 
 test('SendVerificationEmail passes params to the sendVerificationEmail method', async () => {

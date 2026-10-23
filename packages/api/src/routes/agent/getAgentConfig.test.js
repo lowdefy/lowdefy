@@ -14,22 +14,22 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
 import getAgentConfig from './getAgentConfig.js';
 
 const logger = {
-  debug: jest.fn(),
+  debug: vi.fn(),
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('getAgentConfig returns agent config when file exists', async () => {
   const agentConfig = { agentId: 'my-agent', type: 'ClaudeAgent' };
-  const readConfigFile = jest.fn().mockResolvedValue(agentConfig);
+  const readConfigFile = vi.fn().mockResolvedValue(agentConfig);
 
   const result = await getAgentConfig({ logger, readConfigFile }, { agentId: 'my-agent' });
 
@@ -38,7 +38,7 @@ test('getAgentConfig returns agent config when file exists', async () => {
 });
 
 test('getAgentConfig throws ConfigError when agent file returns null', async () => {
-  const readConfigFile = jest.fn().mockResolvedValue(null);
+  const readConfigFile = vi.fn().mockResolvedValue(null);
 
   await expect(
     getAgentConfig({ logger, readConfigFile }, { agentId: 'missing-agent' })
@@ -50,7 +50,7 @@ test('getAgentConfig throws ConfigError when agent file returns null', async () 
 
 test('getAgentConfig does not log debug on success', async () => {
   const agentConfig = { agentId: 'my-agent', type: 'ClaudeAgent' };
-  const readConfigFile = jest.fn().mockResolvedValue(agentConfig);
+  const readConfigFile = vi.fn().mockResolvedValue(agentConfig);
 
   await getAgentConfig({ logger, readConfigFile }, { agentId: 'my-agent' });
 
@@ -58,7 +58,7 @@ test('getAgentConfig does not log debug on success', async () => {
 });
 
 test('getAgentConfig logs debug on error before throwing', async () => {
-  const readConfigFile = jest.fn().mockResolvedValue(null);
+  const readConfigFile = vi.fn().mockResolvedValue(null);
 
   await expect(
     getAgentConfig({ logger, readConfigFile }, { agentId: 'bad-agent' })
@@ -71,7 +71,7 @@ test('getAgentConfig logs debug on error before throwing', async () => {
 });
 
 test('getAgentConfig translates the not-found error using i18n.messages for the active locale', async () => {
-  const readConfigFile = jest.fn().mockResolvedValue(null);
+  const readConfigFile = vi.fn().mockResolvedValue(null);
   const i18n = {
     active: 'de-DE',
     defaultLocale: 'en-US',

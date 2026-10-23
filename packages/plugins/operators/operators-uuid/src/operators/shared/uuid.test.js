@@ -13,14 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('uuid', () => {
+vi.doMock('uuid', () => {
   return {
-    v1: jest.fn(() => 'ABC-v1'),
-    v3: jest.fn(() => 'ABC-v3'),
-    v4: jest.fn(() => 'ABC-v4'),
-    v5: jest.fn(() => 'ABC-v5'),
+    v1: vi.fn(() => 'ABC-v1'),
+    v3: vi.fn(() => 'ABC-v3'),
+    v4: vi.fn(() => 'ABC-v4'),
+    v5: vi.fn(() => 'ABC-v5'),
   };
 });
 

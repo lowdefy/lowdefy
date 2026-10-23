@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -24,14 +24,14 @@ import testContext from '../../test/testContext.js';
 const operators = { ...operatorsServer };
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
-const mockResolver = jest.fn();
-const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+const mockResolver = vi.fn();
+const mockCreate = vi.fn().mockReturnValue({ provider: 'mock-provider' });
 
 function createAgentConfig(overrides = {}) {
   return {
@@ -47,7 +47,7 @@ function createAgentConfig(overrides = {}) {
 }
 
 function createMockReadConfigFile({ agentConfig, endpointConfigs = {} }) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     if (agentConfig && path === `agents/${agentConfig.agentId}.json`) {
       return agentConfig;
     }
@@ -105,7 +105,7 @@ const AGENT_RESULT = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockCreate.mockReturnValue({ provider: 'mock-provider' });
 });
 

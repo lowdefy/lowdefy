@@ -18,6 +18,7 @@ import { _app } from '@lowdefy/operators-js/operators/server';
 
 import createEvaluateOperators from './createEvaluateOperators.js';
 import testContext from '../test/testContext.js';
+import { expect, test } from 'vitest';
 
 test('createEvaluateOperators resolves `_app` against context.appMeta', () => {
   const context = testContext({

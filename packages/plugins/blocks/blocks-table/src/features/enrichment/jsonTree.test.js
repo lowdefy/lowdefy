@@ -19,6 +19,7 @@ import getJsonValueKind from './getJsonValueKind.js';
 import getJsonChildren from './getJsonChildren.js';
 import humanizePath from './humanizePath.js';
 import inferColumnType from './inferColumnType.js';
+import { expect, test } from 'vitest';
 
 test('getJsonChildren lists object entries with dot paths from the root', () => {
   expect(getJsonChildren({ value: { a: 1, b: { c: 2 }, d: {} }, path: '' })).toEqual({

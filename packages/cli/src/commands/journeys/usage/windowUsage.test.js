@@ -15,6 +15,7 @@
 */
 
 import windowUsage from './windowUsage.js';
+import { expect, test } from 'vitest';
 
 const months = [
   { month: '2026-06', days: 30, sessions: 600, persons: 50, orgs: 9, failures: 6 },

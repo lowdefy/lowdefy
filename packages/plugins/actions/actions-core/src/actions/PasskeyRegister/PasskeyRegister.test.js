@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import PasskeyRegister from './PasskeyRegister.js';
 
 test('PasskeyRegister passes params to the passkeyRegister method', async () => {
-  const mockPasskeyRegister = jest.fn();
+  const mockPasskeyRegister = vi.fn();
   const methods = { passkeyRegister: mockPasskeyRegister };
   await PasskeyRegister({ methods, params: { name: 'Work laptop' } });
   expect(mockPasskeyRegister.mock.calls).toEqual([[{ name: 'Work laptop' }]]);
@@ -26,7 +26,7 @@ test('PasskeyRegister passes params to the passkeyRegister method', async () => 
 
 test('PasskeyRegister returns the registered passkey from the method', async () => {
   const passkey = { id: 'passkey-1', name: 'Work laptop' };
-  const methods = { passkeyRegister: jest.fn(() => Promise.resolve(passkey)) };
+  const methods = { passkeyRegister: vi.fn(() => Promise.resolve(passkey)) };
   const result = await PasskeyRegister({ methods, params: { name: 'Work laptop' } });
   expect(result).toEqual(passkey);
 });

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import Validate from './Validate.js';
 
-const mockValidate = jest.fn();
+const mockValidate = vi.fn();
 const methods = { validate: mockValidate };
 
 test('Validate action invocation', () => {

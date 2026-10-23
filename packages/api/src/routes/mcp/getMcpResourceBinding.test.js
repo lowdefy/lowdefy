@@ -15,6 +15,7 @@
 */
 
 import getMcpResourceBinding, { registerMcpResourceBinding } from './getMcpResourceBinding.js';
+import { expect, test } from 'vitest';
 
 test('getMcpResourceBinding returns the registered resourceUri for an auth instance', () => {
   const auth = {};

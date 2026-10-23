@@ -20,6 +20,7 @@ import path from 'path';
 
 import _cron from './cron.js';
 import cronstrueLocales from '../../cronstrueLocales.js';
+import { expect, test } from 'vitest';
 
 const location = 'locationId';
 // A Monday, before the 09:00 occurrence of "0 9 * * 1".

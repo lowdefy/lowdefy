@@ -15,6 +15,7 @@
 */
 
 import parseIpRange from './parseIpRange.js';
+import { expect, test } from 'vitest';
 
 test.each([
   ['10.0.0.7', { address: '10.0.0.7', prefix: 32, family: 'ipv4' }],

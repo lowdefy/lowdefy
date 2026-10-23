@@ -15,6 +15,7 @@
 */
 
 import deriveLayout from './deriveLayout.js';
+import { expect, test } from 'vitest';
 
 const defaultStyle = {
   '--lf-span': 24,

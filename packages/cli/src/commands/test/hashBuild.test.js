@@ -18,6 +18,7 @@ import os from 'os';
 import path from 'path';
 
 import hashBuild from './hashBuild.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let configDirectory;
 let context;

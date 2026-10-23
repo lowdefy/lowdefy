@@ -17,6 +17,7 @@
 import { projectCaughtError } from '@lowdefy/helpers';
 
 import _error from './error.js';
+import { expect, test } from 'vitest';
 
 function caughtError() {
   const cause = new Error('Http response "404: Not Found".');

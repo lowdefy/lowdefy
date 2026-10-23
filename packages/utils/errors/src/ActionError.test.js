@@ -16,6 +16,7 @@
 
 import ActionError from './ActionError.js';
 import PluginError from './PluginError.js';
+import { expect, test } from 'vitest';
 
 test('ActionError sets name and is instanceof PluginError', () => {
   const original = new Error('SetState requires params');

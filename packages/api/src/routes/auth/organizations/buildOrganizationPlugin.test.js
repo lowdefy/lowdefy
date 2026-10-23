@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
-
 import buildOrganizationPlugin from './buildOrganizationPlugin.js';
+import { expect, test, vi } from 'vitest';
 
 const authConfig = {
   organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
@@ -102,7 +101,7 @@ test('buildOrganizationPlugin does not mention $lowdefy-system anywhere in the b
 });
 
 test('buildOrganizationPlugin binds the afterCreateOrganization hook that grants creatorAppRoles', async () => {
-  const update = jest.fn(async () => ({}));
+  const update = vi.fn(async () => ({}));
   const auth = { $context: Promise.resolve({ adapter: { update } }) };
   const plugin = buildOrganizationPlugin({
     authConfig: {

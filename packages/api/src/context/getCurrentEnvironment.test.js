@@ -15,6 +15,7 @@
 */
 
 import getCurrentEnvironment from './getCurrentEnvironment.js';
+import { expect, test } from 'vitest';
 
 const environments = {
   prod: { url: 'https://app.example.com' },

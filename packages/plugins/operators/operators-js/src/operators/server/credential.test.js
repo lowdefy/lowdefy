@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ServerParser } from '@lowdefy/operators';
 
 import _credential from './credential.js';
 
 test('_credential marks its value and returns it unchanged', () => {
-  const markCredential = jest.fn();
+  const markCredential = vi.fn();
   const value = { key: 'runtime-made-key-0001', secret: 'webhook-secret-0002' };
   expect(_credential({ markCredential, params: value })).toBe(value);
   expect(markCredential).toHaveBeenCalledWith(value);
 });
 
 test('_credential receives markCredential from the server parser', () => {
-  const markCredential = jest.fn();
+  const markCredential = vi.fn();
   const parser = new ServerParser({
     markCredential,
     operators: { _credential },

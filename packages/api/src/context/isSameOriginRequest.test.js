@@ -15,6 +15,7 @@
 */
 
 import isSameOriginRequest from './isSameOriginRequest.js';
+import { expect, test } from 'vitest';
 
 function check({ headers, ...options }) {
   return isSameOriginRequest({ getHeader: (name) => headers[name], ...options });

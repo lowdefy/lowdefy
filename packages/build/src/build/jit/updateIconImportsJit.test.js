@@ -18,6 +18,7 @@ import { icons as lucideIcons } from 'lucide';
 
 import createIconContext from '../icons/createIconContext.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
+import { expect, test } from 'vitest';
 
 test('updateIconImportsJit adds IconData keyed by the names as used', async () => {
   const icons = await createIconContext({ context: { typesMap: { iconSets: {} } } });

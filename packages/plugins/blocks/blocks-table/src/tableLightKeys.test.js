@@ -18,6 +18,7 @@ import tableLightMeta from '@lowdefy/blocks-antd/blocks/TableLight/meta.js';
 import TABLE_ONLY_KEYS from '@lowdefy/blocks-antd/blocks/TableLight/tableOnlyKeys.js';
 
 import tableMeta from './blocks/Table/meta.js';
+import { expect, test } from 'vitest';
 
 // TableLight is a strict subset of Table: every Table key TableLight does not take must be in
 // its Table-only list, so using it on TableLight says "use Table" instead of a bare unknown key.

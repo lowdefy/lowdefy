@@ -16,6 +16,7 @@
 
 import pino from 'pino';
 import createNodeLogger from './createNodeLogger.js';
+import { expect, test } from 'vitest';
 
 function createSink() {
   const lines = [];

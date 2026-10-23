@@ -15,6 +15,7 @@
 */
 
 import getMediaViewport from './getMediaViewport.js';
+import { expect, test } from 'vitest';
 
 test.each([
   [320, 'xs'],

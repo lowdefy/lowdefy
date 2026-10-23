@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import createLink from '../src/createLink.js';
 
@@ -37,11 +37,11 @@ function createLowdefy({ inputs = {}, home, basePath, origin = 'https://app.lowd
   return lowdefy;
 }
 
-const mockBackLink = jest.fn();
-const mockDisabledLink = jest.fn();
-const mockNewOriginLink = jest.fn();
-const mockNoLink = jest.fn();
-const mockSameOriginLink = jest.fn();
+const mockBackLink = vi.fn();
+const mockDisabledLink = vi.fn();
+const mockNewOriginLink = vi.fn();
+const mockNoLink = vi.fn();
+const mockSameOriginLink = vi.fn();
 
 beforeEach(() => {
   mockBackLink.mockReset();
@@ -68,22 +68,22 @@ test('createLink, link with pageId', () => {
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "pageId": "page_1",
           "pathname": "/page_1",
           "query": "",
           "setInput": [Function],
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "pageId": "page_1",
           "pathname": "/page_1",
           "query": "p=3",
           "setInput": [Function],
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -117,9 +117,9 @@ test('createLink, link with pageId new tab', () => {
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "newTab": true,
           "pageId": "page_1",
           "pathname": "/page_1",
@@ -127,14 +127,14 @@ test('createLink, link with pageId new tab', () => {
           "setInput": [Function],
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "newTab": true,
           "pageId": "page_1",
           "pathname": "/page_1",
           "query": "p=3",
           "setInput": [Function],
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -160,10 +160,10 @@ test('createLink, link with pageId with inputs', () => {
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "input": Object {
+    [
+      [
+        {
+          "input": {
             "a": 1,
           },
           "pageId": "page_1",
@@ -172,16 +172,16 @@ test('createLink, link with pageId with inputs', () => {
           "setInput": [Function],
         },
       ],
-      Array [
-        Object {
-          "input": Object {
+      [
+        {
+          "input": {
             "a": 2,
           },
           "pageId": "page_2",
           "pathname": "/page_2",
           "query": "p=3",
           "setInput": [Function],
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -214,18 +214,18 @@ test('createLink, link with url and protocol', () => {
   // The resolver returns a whole href for an external target with urlQuery
   // already folded in, so the separate query arg is always empty.
   expect(mockNewOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "query": "",
           "url": "http://localhost:8080/test",
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "query": "",
           "url": "http://localhost:8080/test?p=3",
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -251,20 +251,20 @@ test('createLink, link with url new tab and protocol', () => {
   expect(mockDisabledLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "newTab": true,
           "query": "",
           "url": "http://localhost:8080/test",
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "newTab": true,
           "query": "",
           "url": "http://localhost:8080/test?p=3",
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -290,20 +290,20 @@ test('createLink, link with url and no protocol', () => {
   expect(mockDisabledLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "newTab": true,
           "query": "",
           "url": "https://external.com/test",
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "newTab": true,
           "query": "",
           "url": "https://external.com/test?p=3",
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -327,9 +327,9 @@ test('createLink, link with leading-slash url navigates to an in-app page', () =
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "pathname": "/foo",
           "query": "",
           "setInput": [Function],
@@ -358,9 +358,9 @@ test('createLink, link with same-origin absolute url is a soft in-app navigation
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "pathname": "/reports",
           "query": "a=1",
           "setInput": [Function],
@@ -387,9 +387,9 @@ test('createLink, link with off-origin url is an external navigation', () => {
   expect(mockSameOriginLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "query": "",
           "url": "https://example.com/page",
         },
@@ -421,22 +421,22 @@ test('createLink, link with home, not configured', () => {
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "home": true,
           "pathname": "/home",
           "query": "",
           "setInput": [Function],
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "home": true,
           "pathname": "/home",
           "query": "p=3",
           "setInput": [Function],
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -476,22 +476,22 @@ test('createLink, link with home, configured', () => {
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "home": true,
           "pathname": "/",
           "query": "",
           "setInput": [Function],
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "home": true,
           "pathname": "/",
           "query": "p=3",
           "setInput": [Function],
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -523,9 +523,9 @@ test('createLink, link with home new tab, not configured', () => {
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "home": true,
           "newTab": true,
           "pathname": "/home",
@@ -533,14 +533,14 @@ test('createLink, link with home new tab, not configured', () => {
           "setInput": [Function],
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "home": true,
           "newTab": true,
           "pathname": "/home",
           "query": "p=3",
           "setInput": [Function],
-          "urlQuery": Object {
+          "urlQuery": {
             "p": 3,
           },
         },
@@ -571,11 +571,11 @@ test('createLink, link with home with inputs, not configured', () => {
   expect(mockNoLink.mock.calls).toEqual([]);
   expect(mockNewOriginLink.mock.calls).toEqual([]);
   expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "home": true,
-          "input": Object {
+          "input": {
             "a": 1,
           },
           "pathname": "/home",
@@ -726,7 +726,7 @@ test('createLink, more than one grammar key throws the resolver ambiguity error'
   expect(() =>
     link({ pageId: 'page_1', url: 'https://example.com' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined."`
+    `[ConfigError: Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.]`
   );
 });
 

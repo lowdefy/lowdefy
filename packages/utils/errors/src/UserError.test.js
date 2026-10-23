@@ -15,6 +15,7 @@
 */
 
 import UserError from './UserError.js';
+import { expect, test } from 'vitest';
 
 test('UserError sets name and isLowdefyError', () => {
   const error = new UserError('Validation failed');

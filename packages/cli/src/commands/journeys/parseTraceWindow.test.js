@@ -15,6 +15,7 @@
 */
 
 import parseTraceWindow from './parseTraceWindow.js';
+import { expect, test } from 'vitest';
 
 const now = Date.parse('2026-10-03T15:00:00.000Z');
 

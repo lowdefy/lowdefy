@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-const mockReadProcessStartTime = jest.fn();
-jest.unstable_mockModule('./readProcessStartTime.js', () => ({
+const mockReadProcessStartTime = vi.fn();
+vi.doMock('./readProcessStartTime.js', () => ({
   default: mockReadProcessStartTime,
 }));
 
@@ -35,7 +35,7 @@ let now = Date.now();
 beforeEach(() => {
   // Past the start time cache, so each test reads afresh.
   now += 60000;
-  jest.spyOn(Date, 'now').mockImplementation(() => now);
+  vi.spyOn(Date, 'now').mockImplementation(() => now);
   mockReadProcessStartTime.mockReset();
   mockReadProcessStartTime.mockResolvedValue(START_TIME);
   configDirectory = fs.realpathSync.native(
@@ -45,7 +45,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 

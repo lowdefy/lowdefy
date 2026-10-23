@@ -15,6 +15,7 @@
 */
 
 import { matchesPattern, isInPatternList } from './matchPattern.js';
+import { describe, expect, test } from 'vitest';
 
 describe('matchesPattern', () => {
   test('exact match for simple id', () => {

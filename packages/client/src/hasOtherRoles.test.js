@@ -17,6 +17,7 @@
 import { callerStamp, parseCallerStamp } from '@lowdefy/helpers';
 
 import hasOtherRoles from './hasOtherRoles.js';
+import { expect, test } from 'vitest';
 
 const user = { id: 'user_1', organization_id: 'org_1', roles: ['editor', 'admin'] };
 

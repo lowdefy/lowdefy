@@ -15,6 +15,7 @@
 */
 
 import ServiceError from './ServiceError.js';
+import { describe, expect, test } from 'vitest';
 
 test('ServiceError creates error with message only', () => {
   const error = new ServiceError('Connection failed');

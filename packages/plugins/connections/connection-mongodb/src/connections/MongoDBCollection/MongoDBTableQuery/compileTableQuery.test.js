@@ -17,6 +17,7 @@
 import { ObjectId } from 'mongodb';
 
 import compileTableQuery from './compileTableQuery.js';
+import { describe, expect, test } from 'vitest';
 
 const now = new Date('2026-09-28T12:00:00.000Z');
 
@@ -52,6 +53,7 @@ describe('rows', () => {
       grouped: false,
       options: { maxTimeMS: 10000 },
       specs: [],
+      sentence: null,
       pipeline: [
         { $match: { org_id: 'org_1' } },
         { $sort: { _id: 1 } },
@@ -287,6 +289,7 @@ describe('grouping', () => {
       grouped: true,
       options: { maxTimeMS: 10000 },
       specs: [],
+      sentence: null,
       pipeline: [
         { $match: { org_id: 'org_1' } },
         {
@@ -561,5 +564,192 @@ describe('config validation', () => {
     expect(() =>
       compileTableQuery({ properties: { fields: { a: { type: 'text', path: 'a..b' } } }, now })
     ).toThrow('MongoDBTableQuery field "a" has an invalid path. Received "a..b".');
+  });
+});
+
+// before and after take a relative date ({ last | next: n, unit }), resolved when the query
+// runs to the start of that day in the request's time zone.
+describe('relative before and after', () => {
+  const fields = {
+    lastContacted: { type: 'date' },
+    updated: { type: 'datetime', path: 'updated.timestamp' },
+  };
+
+  function matchFor({ filter, now, timezone }) {
+    const { pipeline } = compileTableQuery({
+      properties: { fields, view: { filter }, startRow: 0, endRow: 10, timezone },
+      now,
+    });
+    return pipeline[0].$match;
+  }
+
+  const now = new Date('2026-05-31T10:00:00Z');
+
+  test('before { last: 3, unit: month } is before the start of the day 3 months ago', () => {
+    const match = matchFor({
+      filter: { key: 'lastContacted', op: 'before', value: { last: 3, unit: 'month' } },
+      now,
+    });
+    // 31 May less 3 months is 28 February (clamped), as `within` shifts months.
+    expect(match).toEqual({ lastContacted: { $lt: new Date('2026-02-28T00:00:00Z') } });
+  });
+
+  test('after { next: 2, unit: week } is from the end of the day 2 weeks ahead', () => {
+    const match = matchFor({
+      filter: { key: 'lastContacted', op: 'after', value: { next: 2, unit: 'week' } },
+      now,
+    });
+    expect(match).toEqual({ lastContacted: { $gte: new Date('2026-06-15T00:00:00Z') } });
+  });
+
+  test('every unit in both directions', () => {
+    const cases = [
+      ['before', { last: 1, unit: 'day' }, { $lt: new Date('2026-05-30T00:00:00Z') }],
+      ['before', { next: 1, unit: 'day' }, { $lt: new Date('2026-06-01T00:00:00Z') }],
+      ['before', { last: 2, unit: 'week' }, { $lt: new Date('2026-05-17T00:00:00Z') }],
+      ['after', { last: 1, unit: 'month' }, { $gte: new Date('2026-05-01T00:00:00Z') }],
+      ['after', { next: 1, unit: 'month' }, { $gte: new Date('2026-07-01T00:00:00Z') }],
+      ['before', { last: 1, unit: 'year' }, { $lt: new Date('2025-05-31T00:00:00Z') }],
+      ['after', { next: 1, unit: 'year' }, { $gte: new Date('2027-06-01T00:00:00Z') }],
+    ];
+    for (const [op, value, expected] of cases) {
+      const match = matchFor({ filter: { key: 'lastContacted', op, value }, now });
+      expect(match).toEqual({ lastContacted: expected });
+    }
+  });
+
+  test('a relative bound compares days in the request time zone', () => {
+    // 22:30 UTC on 31 May is already 1 June in Johannesburg (UTC+2).
+    const late = new Date('2026-05-31T22:30:00Z');
+    const match = matchFor({
+      filter: { key: 'updated', op: 'before', value: { last: 3, unit: 'month' } },
+      now: late,
+      timezone: 'Africa/Johannesburg',
+    });
+    expect(match).toEqual({ 'updated.timestamp': { $lt: new Date('2026-02-28T22:00:00Z') } });
+    const after = matchFor({
+      filter: { key: 'updated', op: 'after', value: { last: 3, unit: 'day' } },
+      now: late,
+      timezone: 'Africa/Johannesburg',
+    });
+    // The day 3 days before 1 June is 29 May; after it is from 30 May 00:00 local.
+    expect(after).toEqual({ 'updated.timestamp': { $gte: new Date('2026-05-29T22:00:00Z') } });
+  });
+
+  test('rows older than 3 months match, newer ones do not', () => {
+    const match = matchFor({
+      filter: { key: 'lastContacted', op: 'before', value: { last: 3, unit: 'month' } },
+      now,
+    });
+    const bound = match.lastContacted.$lt;
+    const rows = ['2025-12-01', '2026-02-27', '2026-02-28', '2026-05-01'].map(
+      (day) => new Date(`${day}T09:00:00Z`)
+    );
+    expect(
+      rows.filter((date) => date < bound).map((date) => date.toISOString().slice(0, 10))
+    ).toEqual(['2025-12-01', '2026-02-27']);
+  });
+
+  test('a fixed date and a $user value still work', () => {
+    expect(
+      matchFor({ filter: { key: 'lastContacted', op: 'before', value: '2026-03-01' }, now })
+    ).toEqual({ lastContacted: { $lt: new Date('2026-03-01T00:00:00Z') } });
+    const { pipeline } = compileTableQuery({
+      properties: {
+        fields,
+        view: { filter: { key: 'updated', op: 'after', value: { $user: 'since' } } },
+        user: { since: '2026-04-01T12:00:00Z' },
+        startRow: 0,
+        endRow: 10,
+      },
+      now,
+    });
+    expect(pipeline[0].$match).toEqual({
+      'updated.timestamp': { $gt: new Date('2026-04-01T12:00:00Z') },
+    });
+  });
+
+  test('a bad relative value is refused with the within message', () => {
+    const expected =
+      /operator "before" expects \{ last \| next: positive integer, unit: day \| week \| month \| year \}/;
+    for (const value of [
+      { last: 0, unit: 'month' },
+      { last: 3, unit: 'decade' },
+      { last: 1.5, unit: 'day' },
+      { last: 3, next: 2, unit: 'day' },
+      { unit: 'day' },
+    ]) {
+      expect(() =>
+        matchFor({ filter: { key: 'lastContacted', op: 'before', value }, now })
+      ).toThrow(expected);
+    }
+  });
+});
+
+describe('sentence', () => {
+  const sentenceFields = {
+    name: { title: 'Name', type: 'text' },
+    stage: {
+      title: 'Stage',
+      type: 'status',
+      options: [
+        { value: 'lead', label: 'Lead' },
+        { value: 'won', label: 'Won' },
+        { value: 'lost', label: 'Lost' },
+      ],
+    },
+    amount: { title: 'Amount', type: 'currency' },
+    owner: { title: 'Owner', type: 'people' },
+  };
+
+  // blocks-table's describeTableFilter.test.js expects the same sentence from the Table's columns.
+  test('the filter reads in words with field titles and option labels', () => {
+    const { sentence } = compileTableQuery({
+      properties: {
+        fields: sentenceFields,
+        view: {
+          filter: {
+            and: [
+              { key: 'stage', op: 'in', value: ['lead', 'won'] },
+              { key: 'name', op: 'contains', value: 'CX' },
+              {
+                or: [
+                  { key: 'amount', op: 'gt', value: 1000 },
+                  { key: 'owner', op: 'contains', value: { $user: 'id' } },
+                ],
+              },
+            ],
+          },
+        },
+        user: { id: 'u1' },
+        startRow: 0,
+        endRow: 10,
+      },
+      now,
+    });
+    expect(sentence).toBe(
+      'Stage is any of Lead or Won and Name contains CX and (Amount greater than 1000 or Owner has me)'
+    );
+  });
+
+  test('a field without a title reads as its key', () => {
+    const { sentence } = compileTableQuery({
+      properties: {
+        fields: { amount: { type: 'currency' } },
+        view: { filter: { key: 'amount', op: 'gte', value: 10 } },
+        startRow: 0,
+        endRow: 10,
+      },
+      now,
+    });
+    expect(sentence).toBe('amount at least 10');
+  });
+
+  test('there is no sentence without a filter', () => {
+    const { sentence } = compileTableQuery({
+      properties: { fields: sentenceFields, view: { filter: null }, startRow: 0, endRow: 10 },
+      now,
+    });
+    expect(sentence).toBe(null);
   });
 });

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('./readIconMigrationTable.js', () => ({
+vi.doMock('./readIconMigrationTable.js', () => ({
   default: () => ({ icons: { AiOutlineDelete: 'delete', HomeOutlined: 'home' }, review: {} }),
 }));
 

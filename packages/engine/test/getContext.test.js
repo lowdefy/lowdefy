@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import getContext from '../src/getContext.js';
 import buildTestPage from '@lowdefy/build/buildTestPage';
@@ -116,7 +116,7 @@ test('triggerPageEvent triggers the event on the page root block', () => {
   const config = buildTestPage({ pageConfig: page });
   const context = getContext({ config, lowdefy, resetContext });
   const rootBlock = context._internal.RootSlots.slots.root.blocks[0];
-  const triggerEvent = jest.fn();
+  const triggerEvent = vi.fn();
   rootBlock.triggerEvent = triggerEvent;
   context._internal.triggerPageEvent({
     name: 'onVisible',
@@ -168,7 +168,7 @@ test('update memoized context', () => {
     type: 'Box',
   };
   const config = buildTestPage({ pageConfig: page });
-  const mockUpdate = jest.fn();
+  const mockUpdate = vi.fn();
   const c1 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
   c1._internal.update = mockUpdate;
   getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
@@ -219,7 +219,7 @@ test('dynamic page config builds a fresh context for a new config object', () =>
 
 test('dynamic rebuild does not lower an already-lowered reset flag', () => {
   const lowdefy = getLowdefy();
-  const setReset = jest.fn();
+  const setReset = vi.fn();
   const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
   config1.dynamic = true;
   const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
@@ -245,7 +245,7 @@ test('dynamic rebuild does not call mounted updaters during construction', () =>
     resetContext: { reset: true, setReset: () => {} },
   });
   // Simulate a mounted Block component registered on the live context.
-  const updaterSpy = jest.fn();
+  const updaterSpy = vi.fn();
   c1._internal.updaters[c1._internal.rootBlock.id] = updaterSpy;
   // getContext runs in the render body — updating mounted Block components
   // during the rebuild would setState mid-render. Updaters are scoped per

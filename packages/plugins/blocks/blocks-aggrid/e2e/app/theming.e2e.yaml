@@ -340,3 +340,68 @@ blocks:
           active: true
         - name: Bob
           active: false
+
+  # ============================================
+  # CELL OVERFLOW — ellipsis
+  # ============================================
+
+  # Narrow columns whose text is wider than them, one per way text reaches the cell: straight into
+  # the cell, through a cellRenderer function (text only, and HTML mixing elements and text),
+  # through a built-in cell type, and inside .ag-cell-wrapper, which AG Grid adds for a row-drag
+  # column. The Right and Justify columns are plain text with no renderer, aligned by cell.align and
+  # by a flex cellStyle from before plain cells were blocks.
+
+  - id: theming_cell_ellipsis
+    type: AgGridLowdefy
+    properties:
+      height: 200
+      columnDefs:
+        - headerName: Plain
+          colId: plain
+          field: dealer
+          width: 120
+        - headerName: Renderer
+          colId: renderer
+          field: dealer
+          width: 120
+          cellRenderer:
+            _function:
+              __args: 0.value
+        - headerName: HTML
+          colId: html
+          field: dealer
+          width: 120
+          cellRenderer:
+            _function:
+              __string.concat:
+                - '<b>Dealer</b> '
+                - __args: 0.value
+        - headerName: Link
+          colId: link
+          field: dealer
+          width: 120
+          cell:
+            type: link
+            href: https://example.com
+        - headerName: Drag
+          colId: drag
+          field: dealer
+          width: 120
+          rowDrag: true
+        - headerName: Right
+          colId: right
+          field: dealer
+          width: 120
+          cell:
+            align: right
+        - headerName: Justify
+          colId: justify
+          field: dealer
+          width: 120
+          cellStyle:
+            justifyContent: flex-end
+            alignItems: flex-end
+      rowData:
+        - dealer: A dealership name far wider than its column
+        - dealer: Another dealership name far wider than its column
+        - dealer: Short

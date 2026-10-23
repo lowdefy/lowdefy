@@ -17,10 +17,10 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockGetProcessStartTime = jest.fn();
-jest.unstable_mockModule('./getProcessStartTime.js', () => ({
+const mockGetProcessStartTime = vi.fn();
+vi.doMock('./getProcessStartTime.js', () => ({
   default: mockGetProcessStartTime,
 }));
 
@@ -35,7 +35,7 @@ beforeEach(() => {
   mockGetProcessStartTime.mockImplementation(({ pid }) => `start-of-${pid}`);
   exitListeners = [];
   const on = process.on.bind(process);
-  jest.spyOn(process, 'on').mockImplementation((event, listener) => {
+  vi.spyOn(process, 'on').mockImplementation((event, listener) => {
     if (event === 'exit') {
       exitListeners.push(listener);
       return process;
@@ -45,7 +45,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   fs.rmSync(path.dirname(directory), { recursive: true, force: true });
 });
 
@@ -141,7 +141,7 @@ test('registerServer release leaves a record that names another pid', () => {
 test('registerServer warns and returns null when the directory cannot be written', () => {
   const blocker = path.join(path.dirname(directory), 'file');
   fs.writeFileSync(blocker, '');
-  const logger = { warn: jest.fn() };
+  const logger = { warn: vi.fn() };
   const registration = registerServer({
     kind: 'server',
     port: 3112,

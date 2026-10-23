@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // The data-set rails: on a journey with a data set, a click that would reach a
 // connection whose type declares nothing or has no artifact is refused at that

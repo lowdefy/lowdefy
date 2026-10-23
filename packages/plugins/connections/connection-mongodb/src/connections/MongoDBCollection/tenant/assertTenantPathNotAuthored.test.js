@@ -15,6 +15,7 @@
 */
 
 import assertTenantPathNotAuthored from './assertTenantPathNotAuthored.js';
+import { expect, test } from 'vitest';
 
 const field = 'organization_id';
 const position = 'an update';

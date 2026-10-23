@@ -15,6 +15,7 @@
 */
 
 import cleanBuildArtifact from './cleanBuildArtifact.js';
+import { expect, test } from 'vitest';
 
 test('cleanBuildArtifact strips ~k markers and unwraps ~arr into a plain array', () => {
   const artifact = {

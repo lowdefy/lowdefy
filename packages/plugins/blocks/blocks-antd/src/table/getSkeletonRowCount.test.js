@@ -15,6 +15,7 @@
 */
 
 import getSkeletonRowCount from './getSkeletonRowCount.js';
+import { expect, test } from 'vitest';
 
 test('getSkeletonRowCount fills the body height', () => {
   expect(getSkeletonRowCount({ bodyHeight: 280, rowHeight: 40 })).toBe(7);

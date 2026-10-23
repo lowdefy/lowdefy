@@ -19,6 +19,7 @@ import buildManagerSequence from './buildManagerSequence.js';
 import getManagerEntries from './getManagerEntries.js';
 import moveSequenceEntry from './moveSequenceEntry.js';
 import sequenceToRegions from './sequenceToRegions.js';
+import { expect, test } from 'vitest';
 
 const state = {
   columnOrder: ['a', 'b', 'h', 'c', 'd'],

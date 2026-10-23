@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeAll, beforeEach, expect, test } from 'vitest';
 import { render } from '@testing-library/react';
 
 import HtmlComponent from '../HtmlComponent.js';
@@ -29,7 +29,7 @@ const TONE_COLORS = Object.fromEntries(
 );
 
 // jsdom has no CSS.supports; this stands in for the browser's colour parser.
-const supports = jest.fn((property, value) => /^rgb\(\d+ \d+ \d+\)$/.test(value));
+const supports = vi.fn((property, value) => /^rgb\(\d+ \d+ \d+\)$/.test(value));
 
 beforeAll(() => {
   window.CSS = { supports };

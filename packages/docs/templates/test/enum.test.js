@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -34,19 +35,19 @@ const schema = {
 
 test('enum propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "block.properties.enum",
-        "layout": Object {
+        "layout": {
           "_global": "settings_input_layout",
         },
-        "properties": Object {
-          "label": Object {
+        "properties": {
+          "label": {
             "align": "right",
             "extra": "description.",
             "span": 8,
           },
-          "options": Array [
+          "options": [
             "a",
             "b",
             "c",
@@ -63,12 +64,12 @@ test('enum propertiesFormTransformer', () => {
 
 test('enum propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
@@ -79,7 +80,7 @@ test('enum propertiesGetterTransformer', () => {
 
 test('enum defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
-    Object {
+    {
       "enum": null,
     }
   `);
@@ -98,7 +99,7 @@ test('enum defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
+    {
       "enum": "a",
     }
   `);

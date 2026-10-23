@@ -15,33 +15,31 @@
 */
 
 import path from 'node:path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
-const mockRunConfigTreeBuild = jest.fn();
+const mockRunConfigTreeBuild = vi.fn();
 let mockArgs = [];
 
 // parseArgs reads the real process.argv, which the test cannot set: jest gives
 // it a copy. The real parseArgs runs on the test's arguments instead.
 const actualUtil = await import('node:util');
-jest.unstable_mockModule('node:util', () => ({
+vi.doMock('node:util', () => ({
   ...actualUtil,
   default: actualUtil.default,
   parseArgs: (config) => actualUtil.parseArgs({ ...config, args: mockArgs }),
 }));
 
-jest.unstable_mockModule('./runConfigTreeBuild.mjs', () => ({
+vi.doMock('./runConfigTreeBuild.mjs', () => ({
   default: mockRunConfigTreeBuild,
 }));
 
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
 const savedExitCode = process.exitCode;
-let loadCount = 0;
-
 // buildConfigTree.mjs runs its build when imported, so each import is a fresh
 // module instance.
 async function runScript() {
-  loadCount += 1;
-  await import(`./buildConfigTree.mjs?case=${loadCount}`);
+  vi.resetModules();
+  await import('./buildConfigTree.mjs');
 }
 
 beforeEach(() => {

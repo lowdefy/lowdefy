@@ -14,40 +14,40 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { buildPagePath } from '@lowdefy/helpers';
 
-const mockOpenPage = jest.fn();
-const mockGetBrowser = jest.fn();
-jest.unstable_mockModule('./getBrowser.js', () => ({
+const mockOpenPage = vi.fn();
+const mockGetBrowser = vi.fn();
+vi.doMock('./getBrowser.js', () => ({
   getBrowser: mockGetBrowser,
   openPage: mockOpenPage,
   buildPageUrl: ({ origin, pageId, path, pathParams }) =>
     `${origin}/${buildPagePath({ pageId, path, pathParams })}`,
 }));
 // The route table the skeleton build writes; a page it does not hold has no pattern.
-const mockReadPagePath = jest.fn(() => undefined);
-jest.unstable_mockModule('./readPagePath.js', () => ({ default: mockReadPagePath }));
-const mockResolveJourneyDataSet = jest.fn();
-jest.unstable_mockModule('./dataSets/resolveJourneyDataSet.js', () => ({
+const mockReadPagePath = vi.fn(() => undefined);
+vi.doMock('./readPagePath.js', () => ({ default: mockReadPagePath }));
+const mockResolveJourneyDataSet = vi.fn();
+vi.doMock('./dataSets/resolveJourneyDataSet.js', () => ({
   default: mockResolveJourneyDataSet,
 }));
-const mockOpenDataSession = jest.fn();
-jest.unstable_mockModule('./dataSets/openDataSession.js', () => ({
+const mockOpenDataSession = vi.fn();
+vi.doMock('./dataSets/openDataSession.js', () => ({
   default: mockOpenDataSession,
 }));
-const mockGetDataStore = jest.fn();
-jest.unstable_mockModule('./dataSets/getDataStore.js', () => ({ default: mockGetDataStore }));
-jest.unstable_mockModule('./readDevAuthMode.js', () => ({
+const mockGetDataStore = vi.fn();
+vi.doMock('./dataSets/getDataStore.js', () => ({ default: mockGetDataStore }));
+vi.doMock('./readDevAuthMode.js', () => ({
   default: () => ({ authConfigured: true, mockUserActive: false }),
 }));
-jest.unstable_mockModule('./collectExercised.js', () => ({ default: async () => ({}) }));
+vi.doMock('./collectExercised.js', () => ({ default: async () => ({}) }));
 // The plugin connection map lives in a running server's build directory.
-jest.unstable_mockModule('./readConnectionPlugins.js', () => ({
+vi.doMock('./readConnectionPlugins.js', () => ({
   default: async () => ({ MongoDBCollection: { meta: { dataSet: 'redirect' } } }),
 }));
 
-jest.unstable_mockModule('./observe/waitForClientErrorReports.js', () => ({
+vi.doMock('./observe/waitForClientErrorReports.js', () => ({
   default: async () => {},
 }));
 
@@ -80,18 +80,18 @@ function createPage() {
     },
   };
   return {
-    evaluate: jest.fn(async (fn, arg) => fn(arg)),
-    waitForFunction: jest.fn(async () => {}),
-    waitForTimeout: jest.fn(async () => {}),
+    evaluate: vi.fn(async (fn, arg) => fn(arg)),
+    waitForFunction: vi.fn(async () => {}),
+    waitForTimeout: vi.fn(async () => {}),
     url: () => `${origin}/tickets`,
     isClosed: () => false,
   };
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   order = [];
-  close = jest.fn(async () => {
+  close = vi.fn(async () => {
     order.push('session.close');
   });
   mockGetBrowser.mockResolvedValue({});
@@ -100,7 +100,7 @@ beforeEach(() => {
   mockResolveJourneyDataSet.mockResolvedValue({ dataSet, user: { id: 'u_1', roles: ['admin'] } });
   mockOpenPage.mockImplementation(async () => ({
     context: {
-      close: jest.fn(async () => {
+      close: vi.fn(async () => {
         order.push('context.close');
       }),
     },
@@ -162,7 +162,7 @@ test('runJourney closes the data session after every actor, even when a step thr
   mockOpenPage
     .mockImplementationOnce(async () => ({
       context: {
-        close: jest.fn(async () => {
+        close: vi.fn(async () => {
           order.push('context.close');
         }),
       },
@@ -220,7 +220,7 @@ test('runJourney fails the step that sent a data set journey to another host of 
   const leftOrigin = [];
   mockOpenPage
     .mockImplementationOnce(async () => ({
-      context: { close: jest.fn(async () => {}) },
+      context: { close: vi.fn(async () => {}) },
       page: createPage(),
       ready: true,
       leftOrigin: [],
@@ -228,7 +228,7 @@ test('runJourney fails the step that sent a data set journey to another host of 
     .mockImplementationOnce(async () => {
       leftOrigin.push('http://127.0.0.1:3227/api/page/tickets');
       return {
-        context: { close: jest.fn(async () => {}) },
+        context: { close: vi.fn(async () => {}) },
         page: createPage(),
         ready: true,
         leftOrigin,

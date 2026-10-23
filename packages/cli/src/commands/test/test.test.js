@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -23,25 +23,25 @@ import YAML from 'yaml';
 import flowLines from '../journeys/evidence/flowLines.js';
 import sequenceId from '../journeys/evidence/sequenceId.js';
 
-const mockPost = jest.fn();
-const mockGet = jest.fn();
-jest.unstable_mockModule('axios', () => ({
+const mockPost = vi.fn();
+const mockGet = vi.fn();
+vi.doMock('axios', () => ({
   default: { post: mockPost, get: mockGet },
 }));
 
 // The config text set the tier ranking reads: "Save" is config text, a grid
 // cell's data value is not.
-const mockReadConfigText = jest.fn(async () => ({
+const mockReadConfigText = vi.fn(async () => ({
   texts: new Set(['Save']),
   isConfigText: (text) => text === 'Save',
 }));
-jest.unstable_mockModule('../journeys/configText/readConfigText.js', () => ({
+vi.doMock('../journeys/configText/readConfigText.js', () => ({
   default: mockReadConfigText,
 }));
 
-const mockStop = jest.fn();
-const mockStartDevServer = jest.fn();
-jest.unstable_mockModule('./startDevServer.js', () => ({
+const mockStop = vi.fn();
+const mockStartDevServer = vi.fn();
+vi.doMock('./startDevServer.js', () => ({
   default: mockStartDevServer,
 }));
 
@@ -78,9 +78,9 @@ beforeEach(() => {
       info: (line) => logs.info.push(line),
       warn: (line) => logs.warn.push(line),
       error: (line) => logs.error.push(line),
-      debug: jest.fn(),
+      debug: vi.fn(),
     },
-    sendTelemetry: jest.fn(),
+    sendTelemetry: vi.fn(),
   };
   mockReadConfigText.mockClear();
   mockStop.mockResolvedValue();
@@ -500,7 +500,7 @@ test('test runs the same journeys for a folder and a quoted ** glob of it', asyn
   writeJourneyFile('a.yaml', journeyYaml({ name: 'top journey' }));
   writeJourneyFile(path.join('review', 'b.yaml'), journeyYaml({ name: 'review journey' }));
   writeJourneyFile(path.join('review', 'deep', 'c.yaml'), journeyYaml({ name: 'deep journey' }));
-  const cwd = jest.spyOn(process, 'cwd').mockReturnValue(configDirectory);
+  const cwd = vi.spyOn(process, 'cwd').mockReturnValue(configDirectory);
   try {
     context.options.paths = ['tests/journeys/review'];
     await test({ context });
@@ -521,7 +521,7 @@ test('test runs the same journeys for a folder and a quoted ** glob of it', asyn
 test('test refuses a glob that matches nothing before booting a server', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'top journey' }));
-  const cwd = jest.spyOn(process, 'cwd').mockReturnValue(configDirectory);
+  const cwd = vi.spyOn(process, 'cwd').mockReturnValue(configDirectory);
   try {
     context.options.paths = ['tests/journeys/review/*.yaml'];
     await test({ context });

@@ -15,6 +15,7 @@
 */
 
 import packsForIconName from './packsForIconName.js';
+import { expect, test } from 'vitest';
 
 test('packsForIconName returns the single pack for a unique prefix', () => {
   expect(packsForIconName({ name: 'AiOutlineUser' })).toEqual(['ai']);

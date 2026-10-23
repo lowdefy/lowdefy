@@ -16,6 +16,7 @@
 
 import getKey from './getKey.js';
 import { ReservedKeyError } from './ReservedKeyError.js';
+import { expect, test } from 'vitest';
 
 test('getKey returns the value of an existing key', () => {
   expect(getKey({ a: 1 }, 'a')).toBe(1);

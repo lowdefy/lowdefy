@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import validateOrgClientActionRefs, {
   ORG_CLIENT_ACTION_TYPES,
 } from './validateOrgClientActionRefs.js';
+import { expect, test } from 'vitest';
 
 const makeRef = (actionType = 'SetActiveOrganization') => ({
   action: {

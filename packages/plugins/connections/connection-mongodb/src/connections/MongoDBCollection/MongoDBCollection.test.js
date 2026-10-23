@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import MongoDBCollection from './MongoDBCollection.js';
+import { expect, test } from 'vitest';
 
 const schema = MongoDBCollection.schema;
 

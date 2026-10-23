@@ -15,23 +15,23 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockCallRequest = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
+const mockCallRequest = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
   parseRequestBody: ({ text }) => JSON.parse(text),
-  redactErrorResponse: jest.fn((context, error) => ({ error: error.message })),
+  redactErrorResponse: vi.fn((context, error) => ({ error: error.message })),
 }));
 
-const mockBuildPageIfNeeded = jest.fn(async () => true);
-jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
+const mockBuildPageIfNeeded = vi.fn(async () => true);
+vi.doMock('../../lib/server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
-  getPageJitEnrichment: jest.fn(() => ({})),
+  getPageJitEnrichment: vi.fn(() => ({})),
 }));
 
-const mockGetMock = jest.fn(() => null);
-jest.unstable_mockModule('../../lib/docs/devMockRegistry.js', () => ({
+const mockGetMock = vi.fn(() => null);
+vi.doMock('../../lib/docs/devMockRegistry.js', () => ({
   getMock: mockGetMock,
 }));
 
@@ -45,7 +45,7 @@ function createApp() {
     c.set('lowdefyContext', {
       buildDirectory: '/build',
       configDirectory: '/config',
-      logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
+      logger: { debug: vi.fn(), info: vi.fn(), error: vi.fn() },
     });
     await next();
   });

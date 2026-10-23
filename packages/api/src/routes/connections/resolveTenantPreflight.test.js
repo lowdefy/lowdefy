@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, TenantIntegrityError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 // The unwalled-reach verdict reads the build through a fresh base reader, not
 // context.readConfigFile; both serve the same mocked build here.
-jest.unstable_mockModule('../../context/createReadConfigFile.js', () => ({
+vi.doMock('../../context/createReadConfigFile.js', () => ({
   default: () => mockReadConfigFile,
 }));
 
@@ -31,13 +31,13 @@ const { default: getConnectionConfig } = await import('./getConnectionConfig.js'
 const { default: resolveTenantPreflight, getTenantIntegrityStatus } = await import(
   './resolveTenantPreflight.js'
 );
-const mockProbe = jest.fn();
+const mockProbe = vi.fn();
 
 const logger = {
-  debug: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
+  debug: vi.fn(),
+  error: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
 };
 
 const connections = {
@@ -172,7 +172,7 @@ test('serves and reports: one error log and one capture per offending target, ne
     })
   );
   mockProbe.mockResolvedValue({ ok: false });
-  const captureError = jest.fn();
+  const captureError = vi.fn();
   const context = createTestContext();
   await expect(resolveTenantPreflight(context, { captureError })).resolves.toBeUndefined();
   // Deduped by evaluated target - two contacts connections share one probe.

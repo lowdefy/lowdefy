@@ -16,6 +16,7 @@
 
 import applyTransactionToRows from './applyTransactionToRows.js';
 import normalizeTransaction from './normalizeTransaction.js';
+import { expect, test } from 'vitest';
 
 const getKey = (row) => row.id;
 

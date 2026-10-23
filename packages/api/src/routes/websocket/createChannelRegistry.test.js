@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeAll, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
-const mockPrepareChannel = jest.fn();
-jest.unstable_mockModule('./prepareChannel.js', () => ({
+const mockPrepareChannel = vi.fn();
+vi.doMock('./prepareChannel.js', () => ({
   default: mockPrepareChannel,
 }));
 
@@ -30,14 +30,14 @@ beforeAll(async () => {
 
 function createTestContext() {
   return {
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
-    handleError: jest.fn(),
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn() },
+    handleError: vi.fn(),
     user: { sub: 'user-1' },
   };
 }
 
 function createSubscriber(id, { i18n } = {}) {
-  return { id, subscriptions: new Map(), send: jest.fn(), i18n };
+  return { id, subscriptions: new Map(), send: vi.fn(), i18n };
 }
 
 function sentFrames(subscriber) {
@@ -71,12 +71,28 @@ function mockPrepareWithUserTenant({ resolver } = {}) {
 }
 
 function createPendingResolver() {
-  return jest.fn(() => new Promise(() => {}));
+  return vi.fn(() => new Promise(() => {}));
 }
 
 // Node's global performance object is not configurable, so it cannot be faked.
 function useFakeTimers() {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
 }
 
 async function flushMicrotasks() {
@@ -87,12 +103,12 @@ async function flushMicrotasks() {
 }
 
 async function advanceTimers(ms) {
-  jest.advanceTimersByTime(ms);
+  vi.advanceTimersByTime(ms);
   await flushMicrotasks();
 }
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('first subscribe starts the resolver with connection, properties, publish, signal and logger', async () => {
@@ -312,7 +328,7 @@ test('re-subscribe that fails to prepare leaves the previous subscription closed
 
 test('resolver rejection sends an error frame to subscribers and restarts with backoff', async () => {
   useFakeTimers();
-  const resolver = jest
+  const resolver = vi
     .fn()
     .mockRejectedValueOnce(new Error('source failed: mongodb://admin:planted-secret-value@db'))
     .mockImplementation(() => new Promise(() => {}));
@@ -346,7 +362,7 @@ test('resolver rejection sends an error frame to subscribers and restarts with b
 });
 
 test('resolver rejection translates the error message with each subscriber locale', async () => {
-  const resolver = jest.fn().mockRejectedValueOnce(new Error('source failed'));
+  const resolver = vi.fn().mockRejectedValueOnce(new Error('source failed'));
   mockPrepare({ resolver });
   const registry = createChannelRegistry();
   const context = createTestContext();
@@ -373,7 +389,7 @@ test('resolver rejection translates the error message with each subscriber local
 
 test('unsubscribe while a restart is pending cancels the retry and removes the channel', async () => {
   useFakeTimers();
-  const resolver = jest.fn().mockRejectedValue(new Error('source failed'));
+  const resolver = vi.fn().mockRejectedValue(new Error('source failed'));
   mockPrepare({ resolver });
   const registry = createChannelRegistry();
   const context = createTestContext();
@@ -392,7 +408,7 @@ test('unsubscribe while a restart is pending cancels the retry and removes the c
 
 test('pending restart is skipped when all subscribers have left the channel', async () => {
   useFakeTimers();
-  const resolver = jest.fn().mockRejectedValue(new Error('source failed'));
+  const resolver = vi.fn().mockRejectedValue(new Error('source failed'));
   mockPrepare({ resolver });
   const registry = createChannelRegistry();
   const context = createTestContext();
@@ -414,7 +430,7 @@ test('pending restart is skipped when all subscribers have left the channel', as
 
 test('channel is removed after MAX_RETRIES consecutive resolver failures', async () => {
   useFakeTimers();
-  const resolver = jest.fn().mockRejectedValue(new Error('source failed'));
+  const resolver = vi.fn().mockRejectedValue(new Error('source failed'));
   mockPrepare({ resolver });
   const registry = createChannelRegistry();
   const context = createTestContext();
@@ -583,7 +599,7 @@ test('subscribers with identical properties and the same tenant verdict share th
 
 test('resolver errors after the channel is aborted are ignored', async () => {
   let rejectResolver;
-  const resolver = jest.fn(
+  const resolver = vi.fn(
     () =>
       new Promise((resolve, reject) => {
         rejectResolver = reject;

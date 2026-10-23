@@ -23,6 +23,7 @@ import {
   listMutants,
   postJourney,
 } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // A patterned page (ticket, at tickets/{ticket_id}) has one instance per ticket id. The e2e-utils
 // helpers and journey replay read the state of the instance on screen.

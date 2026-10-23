@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockCreateGoogle = jest.fn();
+const mockCreateGoogle = vi.fn();
 
-jest.unstable_mockModule('@ai-sdk/google', () => ({
+vi.doMock('@ai-sdk/google', () => ({
   createGoogle: mockCreateGoogle,
 }));
 
 test('Google create returns provider with apiKey', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
@@ -36,7 +36,7 @@ test('Google create returns provider with apiKey', async () => {
 });
 
 test('Google create passes baseURL when provided', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
@@ -53,7 +53,7 @@ test('Google create passes baseURL when provided', async () => {
 });
 
 test('Google create handles undefined connection', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
@@ -65,7 +65,7 @@ test('Google create handles undefined connection', async () => {
 });
 
 test('Google create returns the connection maxOutputTokens and timeout for its agents', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');

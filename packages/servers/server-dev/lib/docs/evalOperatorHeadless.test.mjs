@@ -17,18 +17,18 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, expect, test } from 'vitest';
 
 // A real headless evaluation needs an installed browser, which jest can't
 // rely on, so this only covers the error paths: bad input, and
 // chromium.launch failing (the "no browser installed" case). Mirrors
 // screenshotPage.test.mjs, which exercises the same getBrowser.js singleton.
-jest.unstable_mockModule('playwright-core', () => ({
-  chromium: { launch: jest.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
-  selectors: { register: jest.fn(async () => {}) },
+vi.doMock('playwright-core', () => ({
+  chromium: { launch: vi.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
+  selectors: { register: vi.fn(async () => {}) },
 }));
 // A missing shell would otherwise start a real download.
-jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: () => null }));
+vi.doMock('./installHeadlessShell.js', () => ({ default: () => null }));
 
 // lib/build/config.js reads build/config.json from process.cwd() at import
 // time — chdir into a fixture that has one before getBrowser.js (which

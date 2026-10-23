@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import EmailOtpSend from './EmailOtpSend.js';
 
-const mockEmailOtpSend = jest.fn();
+const mockEmailOtpSend = vi.fn();
 const methods = { emailOtpSend: mockEmailOtpSend };
 
 test('EmailOtpSend action invocation', () => {

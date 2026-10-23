@@ -15,6 +15,7 @@
 */
 
 import mingoFilter from './mingoFilter.js';
+import { expect, test } from 'vitest';
 
 test('mingoFilter equals shorthand', () => {
   const filter = { id: 1 };

@@ -16,6 +16,7 @@
 
 import classifyRuns from './classifyRuns.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
+import { expect, test } from 'vitest';
 
 const pass = { passed: true };
 function fail(index) {

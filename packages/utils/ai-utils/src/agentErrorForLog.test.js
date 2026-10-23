@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { APICallError, InvalidToolInputError, RetryError, TypeValidationError } from 'ai';
 
 import agentErrorForLog, { agentLogIds, stackFramesForLog } from './agentErrorForLog.js';

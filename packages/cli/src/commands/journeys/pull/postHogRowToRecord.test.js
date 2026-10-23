@@ -19,6 +19,7 @@ import { validateTraceRecord } from '@lowdefy/node-utils';
 import postHogRowToRecord from './postHogRowToRecord.js';
 import tokenText from '../tokenText.js';
 import { chains, row } from './tests/postHogRows.js';
+import { expect, test } from 'vitest';
 
 const salt = Buffer.alloc(32, 1);
 const T = '2026-10-01T10:00:00.123000Z';

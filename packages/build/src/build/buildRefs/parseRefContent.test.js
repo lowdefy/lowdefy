@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 
 import parseRefContent from './parseRefContent.js';
 
@@ -133,9 +133,9 @@ type: Box`;
 type: Box
 properties:
   title: [unclosed bracket`;
-    await expect(
-      parseRefContent({ content, refDef: { path: 'test.yaml' } })
-    ).rejects.toThrow('YAML parse error in "test.yaml".');
+    await expect(parseRefContent({ content, refDef: { path: 'test.yaml' } })).rejects.toThrow(
+      'YAML parse error in "test.yaml".'
+    );
     try {
       await parseRefContent({ content, refDef: { path: 'test.yaml' } });
     } catch (error) {
@@ -174,9 +174,9 @@ describe('reserved ~deferred key', () => {
   test('throws ConfigError when source content contains a ~deferred key', async () => {
     const content = `component:
   "~deferred": anything`;
-    await expect(
-      parseRefContent({ content, refDef: { path: 'page.yaml' } })
-    ).rejects.toThrow('The key "~deferred" is reserved by the Lowdefy build');
+    await expect(parseRefContent({ content, refDef: { path: 'page.yaml' } })).rejects.toThrow(
+      'The key "~deferred" is reserved by the Lowdefy build'
+    );
   });
 
   test('names the file in the reserved-key error', async () => {

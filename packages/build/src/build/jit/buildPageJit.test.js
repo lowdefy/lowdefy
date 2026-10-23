@@ -15,12 +15,12 @@
 */
 
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const realNodeUtils = await import('@lowdefy/node-utils');
-const mockWriteFile = jest.fn();
-const mockWriteFileIfChanged = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockWriteFile = vi.fn();
+const mockWriteFileIfChanged = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
   writeFile: mockWriteFile,
   writeFileIfChanged: mockWriteFileIfChanged,
@@ -33,8 +33,8 @@ const { default: buildPageJit } = await import('./buildPageJit.js');
 const { default: createIconContext } = await import('../icons/createIconContext.js');
 const { icons } = await import('lucide');
 
-const mockReadConfigFile = jest.fn();
-const mockWriteBuildArtifact = jest.fn();
+const mockReadConfigFile = vi.fn();
+const mockWriteBuildArtifact = vi.fn();
 
 function createTestContext() {
   const context = testContext({

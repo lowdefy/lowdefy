@@ -22,12 +22,13 @@
 #   api/enrichment/  enrichment_run (queue cells, start a worker) and enrichment_worker
 #   api/providers/   one endpoint per provider: enrich_<provider id>
 #   api/columns/     add, update and delete user-defined columns
-#   api/leads/       add, import and update rows
+#   api/leads/       add, import and update rows, and read one cell's raw result
 #   api/test/        E2E ONLY, DO NOT COPY: endpoints that delete, overwrite and dump the
 #                    database for the e2e suite. They refuse every call unless the
 #                    ENRICHMENT_E2E_SECRET secret is set and sent (api/test/e2e_guard.yaml).
 #   websockets.yaml  live cell updates from a change stream on the rows
-#   pages/           the enrichment page
+#   pages/           the enrichment page, and the same table with rows that leave the raw
+#                    results out (rawEndpoint)
 #
 # Secrets (LOWDEFY_SECRET_<name>): ENRICHMENT_MONGODB_URI (a replica set, for change streams),
 # ENRICHMENT_API_URL (the enrichment services), TREG_TOKEN, ANTHROPIC_API_KEY and
@@ -58,6 +59,7 @@ api:
   - _ref: api/leads/leads_add.yaml
   - _ref: api/leads/leads_import.yaml
   - _ref: api/leads/leads_update.yaml
+  - _ref: api/leads/leads_cell_raw.yaml
   # E2E ONLY, DO NOT COPY: guarded by the e2e secret (api/test/e2e_guard.yaml).
   - _ref: api/test/test_reset.yaml
   - _ref: api/test/test_leads.yaml
@@ -70,3 +72,4 @@ websockets:
 
 pages:
   - _ref: pages/enrichment.yaml
+  - _ref: pages/enrichment_raw_endpoint.yaml

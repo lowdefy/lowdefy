@@ -19,6 +19,7 @@ import http from 'http';
 import { RequestError } from '@lowdefy/errors';
 
 import AxiosHttp from './AxiosHttp.js';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = AxiosHttp.meta;
 

@@ -17,6 +17,7 @@
 import buildAgentAuth from './buildAgentAuth.js';
 import buildAuth from './buildAuth.js';
 import testContext from '../../test-utils/testContext.js';
+import { describe, expect, test } from 'vitest';
 
 const context = testContext();
 

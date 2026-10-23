@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createActingMemberAdapter from './createActingMemberAdapter.js';
 
@@ -27,7 +27,7 @@ const actingUser = {
 };
 
 test('createActingMemberAdapter returns a virtual member claiming owner for the acting user member lookup', async () => {
-  const findOne = jest.fn();
+  const findOne = vi.fn();
   const adapter = createActingMemberAdapter({ actingUser, adapter: { findOne } });
   const member = await adapter.findOne({
     model: 'member',
@@ -55,7 +55,7 @@ test('createActingMemberAdapter returns a virtual member claiming owner for the 
 
 test('createActingMemberAdapter delegates member lookups for other users', async () => {
   const realMember = { id: 'member-9', userId: 'user-9', role: 'member' };
-  const findOne = jest.fn().mockResolvedValue(realMember);
+  const findOne = vi.fn().mockResolvedValue(realMember);
   const adapter = createActingMemberAdapter({ actingUser, adapter: { findOne } });
   const args = {
     model: 'member',
@@ -70,7 +70,7 @@ test('createActingMemberAdapter delegates member lookups for other users', async
 });
 
 test('createActingMemberAdapter delegates member lookups without an organizationId clause', async () => {
-  const findOne = jest.fn().mockResolvedValue(null);
+  const findOne = vi.fn().mockResolvedValue(null);
   const adapter = createActingMemberAdapter({ actingUser, adapter: { findOne } });
   const args = { model: 'member', where: [{ field: 'userId', value: 'user-1' }] };
   await adapter.findOne(args);
@@ -79,7 +79,7 @@ test('createActingMemberAdapter delegates member lookups without an organization
 
 test('createActingMemberAdapter delegates lookups on other models', async () => {
   const realUser = { id: 'user-1' };
-  const findOne = jest.fn().mockResolvedValue(realUser);
+  const findOne = vi.fn().mockResolvedValue(realUser);
   const adapter = createActingMemberAdapter({ actingUser, adapter: { findOne } });
   const args = { model: 'user', where: [{ field: 'userId', value: 'user-1' }] };
   const user = await adapter.findOne(args);
@@ -88,14 +88,14 @@ test('createActingMemberAdapter delegates lookups on other models', async () => 
 });
 
 test('createActingMemberAdapter delegates all other adapter methods unchanged', async () => {
-  const findMany = jest.fn().mockResolvedValue([{ id: 'row-1' }]);
-  const create = jest.fn();
-  const update = jest.fn();
-  const deleteFn = jest.fn();
-  const count = jest.fn();
+  const findMany = vi.fn().mockResolvedValue([{ id: 'row-1' }]);
+  const create = vi.fn();
+  const update = vi.fn();
+  const deleteFn = vi.fn();
+  const count = vi.fn();
   const adapter = createActingMemberAdapter({
     actingUser,
-    adapter: { findOne: jest.fn(), findMany, create, update, delete: deleteFn, count },
+    adapter: { findOne: vi.fn(), findMany, create, update, delete: deleteFn, count },
   });
   expect(adapter.findMany).toBe(findMany);
   expect(adapter.create).toBe(create);

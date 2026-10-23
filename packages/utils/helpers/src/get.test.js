@@ -19,11 +19,11 @@
 // Copyright (c) 2014-2018, Jon Schlinkert.
 // https://www.npmjs.com/package/get-value
 
-import diff from 'jest-diff';
 import get from './get.js';
 import set from './set.js';
 import unset from './unset.js';
 import { ReservedKeyError } from './ReservedKeyError.js';
+import { describe, expect, test } from 'vitest';
 
 const expectToEqual = (result, value) => {
   expect(result).toEqual(value);
@@ -43,7 +43,7 @@ expect.extend({
           `Expected: ${this.utils.printExpected(expected)}\n` +
           `Received: ${this.utils.printReceived(received)}`
       : () => {
-          const diffString = diff(expected, received, {
+          const diffString = this.utils.diff(expected, received, {
             expand: this.expand,
           });
           return `${this.utils.matcherHint('deepStrictEqual', undefined, undefined, options)}\n\n${

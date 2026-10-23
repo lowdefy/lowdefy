@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // A misspelt reference fails its step and names the id, checked against the
 // fixture app's build before the step acts.

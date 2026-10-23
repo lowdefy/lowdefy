@@ -15,6 +15,7 @@
 */
 
 import createErrorMessage from './createErrorMessage.js';
+import { expect, test } from 'vitest';
 
 test('no errors', () => {
   expect(createErrorMessage()).toEqual('Schema validation error.');

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createAfterCreateOrganizationHook from './createAfterCreateOrganizationHook.js';
 
 function createMockAuth() {
-  const update = jest.fn(async () => ({}));
+  const update = vi.fn(async () => ({}));
   const auth = { $context: Promise.resolve({ adapter: { update } }) };
   return { auth, update };
 }

@@ -15,6 +15,7 @@
 */
 
 import collectHeaderMenuItems from './collectHeaderMenuItems.js';
+import { expect, test } from 'vitest';
 
 const column = { key: 'name' };
 const api = {};

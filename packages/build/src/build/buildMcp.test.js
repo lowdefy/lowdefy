@@ -16,6 +16,7 @@
 
 import buildMcp from './buildMcp.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 const publicEndpoint = {
   id: 'endpoint:get-customer',

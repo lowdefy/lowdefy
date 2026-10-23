@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
 
 function createMockAuth({ userRow = { id: 'user_1' } } = {}) {
-  const updateUser = jest.fn(async () => ({}));
-  const update = jest.fn(async () => ({}));
-  const findOne = jest.fn(async () => userRow);
+  const updateUser = vi.fn(async () => ({}));
+  const update = vi.fn(async () => ({}));
+  const findOne = vi.fn(async () => userRow);
   const auth = {
     $context: Promise.resolve({
       adapter: { findOne, update },

@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockReviewPageBuilds = jest.fn();
-jest.unstable_mockModule('./reviewPageBuilds.js', () => ({
+const mockReviewPageBuilds = vi.fn();
+vi.doMock('./reviewPageBuilds.js', () => ({
   default: mockReviewPageBuilds,
 }));
-const mockBuildPageIfNeeded = jest.fn();
-jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
+const mockBuildPageIfNeeded = vi.fn();
+vi.doMock('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
 }));
 
@@ -29,7 +29,7 @@ const { default: buildEditedPages, CONCURRENT_BUILDS } = await import('./buildEd
 const { default: getPageBuildStatus } = await import('./getPageBuildStatus.js');
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('buildEditedPages builds every edited page and returns their ids', async () => {

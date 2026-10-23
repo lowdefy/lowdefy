@@ -20,6 +20,7 @@ import os from 'os';
 import path from 'path';
 
 import listenHubSocket from './listenHubSocket.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let directory;
 let server;

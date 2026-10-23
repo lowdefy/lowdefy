@@ -15,6 +15,7 @@
 */
 
 import getSkeletonPhase from './getSkeletonPhase.js';
+import { expect, test } from 'vitest';
 
 test('getSkeletonPhase is idle before loading starts', () => {
   expect(getSkeletonPhase({ active: false, startedAt: null, now: 0 })).toEqual({

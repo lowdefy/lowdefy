@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import Unsubscribe from './Unsubscribe.js';
 
-const mockUnsubscribe = jest.fn();
+const mockUnsubscribe = vi.fn();
 const methods = { unsubscribe: mockUnsubscribe };
 
 test('Unsubscribe with a string param calls unsubscribe with the websocketId', () => {

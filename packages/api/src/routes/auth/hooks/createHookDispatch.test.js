@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const invokeEndpoint = jest.fn(async () => ({ status: 'continue' }));
+const invokeEndpoint = vi.fn(async () => ({ status: 'continue' }));
 
-jest.unstable_mockModule('../../endpoints/invokeEndpoint.js', () => ({
+vi.doMock('../../endpoints/invokeEndpoint.js', () => ({
   default: invokeEndpoint,
 }));
 

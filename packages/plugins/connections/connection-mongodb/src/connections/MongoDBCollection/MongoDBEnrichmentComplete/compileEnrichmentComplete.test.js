@@ -21,6 +21,7 @@ import getDownstream from './getDownstream.js';
 import limitRaw from './limitRaw.js';
 import planCompleteCell from './planCompleteCell.js';
 import schema from './schema.js';
+import { describe, expect, test } from 'vitest';
 
 const now = new Date('2026-09-29T10:00:00.000Z');
 const token = `${'b'.repeat(24)}:${'0123456789abcd'}`;

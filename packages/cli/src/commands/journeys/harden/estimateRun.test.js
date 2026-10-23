@@ -15,6 +15,7 @@
 */
 
 import estimateRun from './estimateRun.js';
+import { expect, test } from 'vitest';
 
 test('estimateRun spreads pairs over the workers, bounded by the busiest journey, plus mail journeys alone', () => {
   const baselines = [

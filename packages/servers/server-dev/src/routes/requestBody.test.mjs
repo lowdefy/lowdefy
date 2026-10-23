@@ -17,36 +17,36 @@
 import { fileURLToPath } from 'node:url';
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 
 import { isSameOriginRequest, parseRequestBody } from '@lowdefy/api';
 
 // usage.js reads package.json from the working directory as it loads, and a suite that
-// ran earlier in the same jest worker may have left the working directory in a temporary
+// ran earlier in the same test worker may have left the working directory in a temporary
 // fixture directory.
 process.chdir(fileURLToPath(new URL('../..', import.meta.url)));
 
-const mockGetEndpointConfig = jest.fn().mockRejectedValue(new Error('not found'));
-const mockRunWebhookEndpoint = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  acceptDetachedEndpoint: jest.fn(),
-  callAgent: jest.fn(),
-  callEndpoint: jest.fn(),
-  callRequest: jest.fn(),
+const mockGetEndpointConfig = vi.fn().mockRejectedValue(new Error('not found'));
+const mockRunWebhookEndpoint = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
+  acceptDetachedEndpoint: vi.fn(),
+  callAgent: vi.fn(),
+  callEndpoint: vi.fn(),
+  callRequest: vi.fn(),
   getEndpointConfig: mockGetEndpointConfig,
-  logClientError: jest.fn(),
+  logClientError: vi.fn(),
   isSameOriginRequest,
   parseRequestBody,
-  redactErrorResponse: jest.fn(),
+  redactErrorResponse: vi.fn(),
   runWebhookEndpoint: mockRunWebhookEndpoint,
 }));
-jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({ default: jest.fn() }));
-jest.unstable_mockModule('../../lib/docs/devMockRegistry.js', () => ({
-  getMock: jest.fn(),
-  loadMocks: jest.fn(),
+vi.doMock('../../lib/server/jitPageBuilder.js', () => ({ default: vi.fn() }));
+vi.doMock('../../lib/docs/devMockRegistry.js', () => ({
+  getMock: vi.fn(),
+  loadMocks: vi.fn(),
 }));
-jest.unstable_mockModule('../../lib/docs/loadState.js', () => ({ default: jest.fn() }));
-jest.unstable_mockModule('../../lib/docs/snapshotState.js', () => ({ default: jest.fn() }));
+vi.doMock('../../lib/docs/loadState.js', () => ({ default: vi.fn() }));
+vi.doMock('../../lib/docs/snapshotState.js', () => ({ default: vi.fn() }));
 
 const { default: createErrorHandler } = await import('../middleware/errorHandler.js');
 const routes = {
@@ -63,12 +63,12 @@ const routes = {
   '/lowdefy-feedback': (await import('./feedback.js')).default,
 };
 
-const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 function createApp() {
   const app = new Hono();
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { logger, handleError: jest.fn() });
+    c.set('lowdefyContext', { logger, handleError: vi.fn() });
     await next();
   });
   Object.entries(routes).forEach(([path, handler]) => app.all(path, handler));
