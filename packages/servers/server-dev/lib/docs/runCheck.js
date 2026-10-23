@@ -13,6 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import fs from 'fs';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
@@ -41,13 +43,38 @@ function brokenReport(message) {
   };
 }
 
+function readBuildFile(filePath) {
+  try {
+    return fs.readFileSync(filePath, 'utf8');
+  } catch {
+    // build/invalidatePages is absent until the first watched change.
+    return null;
+  }
+}
+
+// What a check run must have seen to answer a later call: the last config
+// build (buildStatus.json) and the manager's count of watched-file changes
+// since (build/invalidatePages, rewritten on every batch of changes).
+function readBuildSignature({ serverDirectory }) {
+  const buildDirectory = path.join(serverDirectory, 'build');
+  return JSON.stringify([
+    readBuildFile(path.join(buildDirectory, 'buildStatus.json')),
+    readBuildFile(path.join(buildDirectory, 'invalidatePages')),
+  ]);
+}
+
+// The run in flight, { signature, promise }, or null. No report outlives its
+// run: lowdefy_check is how an agent confirms a production build, and no key
+// sees every edit (unvisited pages, app code), so a kept report could pass a
+// broken app.
+let currentRun = null;
+
 // Runs `check` from @lowdefy/build against this dev server's config in a child
 // node process. The dev server directory is already installed, so no install
 // is needed — but @lowdefy/build keeps module-level state (the makeId counter
 // the JIT page builder relies on for stable ~k keys), and a full check resets
 // it, so the check cannot share this process with the running server.
-async function runCheck() {
-  const serverDirectory = process.cwd();
+async function spawnCheck({ serverDirectory }) {
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || serverDirectory;
   let stdout;
   try {
@@ -70,6 +97,25 @@ async function runCheck() {
   const lastLine = stdout.trim().split('\n').pop();
   const report = JSON.parse(lastLine);
   return { ok: report.errors.length === 0, ...report };
+}
+
+// A call made while a check runs joins it when the build it would check is the
+// one that run started on, so two checks fired at once start one child. A call
+// made after an edit starts a run of its own.
+function runCheck() {
+  const serverDirectory = process.cwd();
+  const signature = readBuildSignature({ serverDirectory });
+  if (currentRun !== null && currentRun.signature === signature) {
+    return currentRun.promise;
+  }
+  const run = { signature, promise: null };
+  run.promise = spawnCheck({ serverDirectory }).finally(() => {
+    if (currentRun === run) {
+      currentRun = null;
+    }
+  });
+  currentRun = run;
+  return run.promise;
 }
 
 export default runCheck;
