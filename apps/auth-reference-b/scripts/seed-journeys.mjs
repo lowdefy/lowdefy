@@ -21,7 +21,8 @@
   send an invitation: this writes the org-b owner and the pending invitation
   that owner sent to invitee@example.test, under the fixed id
   journey-invitation. The owner has no password - only the invitation is used.
-  The invitation is accepted once, so each run needs a fresh database.
+  Each row is upserted by its fixed id, so a rerun resets the invitation to
+  pending rather than failing on a duplicate key.
 
   Rows are stored as the engine writes them (see ../../auth-reference/scripts/
   set-member.mjs): snake_case columns, plain string ids, and the pinned
@@ -43,31 +44,40 @@ const now = new Date();
 const client = new MongoClient(uri);
 try {
   const db = client.db();
-  await db.collection('users').insertOne({
-    _id: 'journey-owner',
-    email: 'owner@example.test',
-    name: 'Journey Owner',
-    email_verified: true,
-    created_at: now,
-    updated_at: now,
-  });
-  await db.collection('user-members').insertOne({
-    _id: 'journey-owner-member',
-    user_id: 'journey-owner',
-    organization_id: 'org-b',
-    role: 'owner',
-    created_at: now,
-  });
-  await db.collection('user-invitations').insertOne({
-    _id: 'journey-invitation',
-    email: 'invitee@example.test',
-    role: 'member',
-    organization_id: 'org-b',
-    status: 'pending',
-    inviter_id: 'journey-owner',
-    expires_at: new Date(now.getTime() + 60 * 60 * 1000),
-    created_at: now,
-  });
+  await db.collection('users').replaceOne(
+    { _id: 'journey-owner' },
+    {
+      email: 'owner@example.test',
+      name: 'Journey Owner',
+      email_verified: true,
+      created_at: now,
+      updated_at: now,
+    },
+    { upsert: true }
+  );
+  await db.collection('user-members').replaceOne(
+    { _id: 'journey-owner-member' },
+    {
+      user_id: 'journey-owner',
+      organization_id: 'org-b',
+      role: 'owner',
+      created_at: now,
+    },
+    { upsert: true }
+  );
+  await db.collection('user-invitations').replaceOne(
+    { _id: 'journey-invitation' },
+    {
+      email: 'invitee@example.test',
+      role: 'member',
+      organization_id: 'org-b',
+      status: 'pending',
+      inviter_id: 'journey-owner',
+      expires_at: new Date(now.getTime() + 60 * 60 * 1000),
+      created_at: now,
+    },
+    { upsert: true }
+  );
   console.log('Seeded the org-b owner and a pending invitation for invitee@example.test.');
 } finally {
   await client.close();

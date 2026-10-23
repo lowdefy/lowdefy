@@ -588,7 +588,7 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     // the session's user, so a server that resolved that session to null would
     // stamp every response as another caller (callerStamp) and the accept page
     // would reload until it fails.
-    if (registered?.policy !== 'tenant' && registered?.policy !== 'pinned') {
+    if (type.isNone(registered)) {
       context.logger.debug(
         `Session for user "${session.user.id}" has no active organization - resolved unauthenticated.`
       );
@@ -608,9 +608,10 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     // is its slug, as applyPinnedPolicy narrows the admission that minted this
     // session: an invitation another app sent from a shared auth database is
     // not this app's to accept.
+    const { adapter } = await auth.$context;
     const pendingInvitation = type.isString(session.user.email)
       ? await findPendingInvitation({
-          adapter: (await auth.$context).adapter,
+          adapter,
           email: session.user.email,
           organizationId: registered.policy === 'pinned' ? registered.slug : undefined,
         })
@@ -624,6 +625,27 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
       );
       context.user = null;
       return;
+    }
+    // Under pinned a member row there means they joined some other way (an
+    // admin added them directly) while the invitation stayed pending. They are
+    // not awaiting: unauthenticated sends protected pages to the login page,
+    // and that sign-in re-pins the session (applyPinnedPolicy). Awaiting would
+    // refuse those pages with no way back.
+    if (registered.policy === 'pinned') {
+      const member = await adapter.findOne({
+        model: 'member',
+        where: [
+          { field: 'userId', value: session.user.id },
+          { field: 'organizationId', value: registered.slug },
+        ],
+      });
+      if (!type.isNone(member)) {
+        context.logger.debug(
+          `Session for user "${session.user.id}" has no active organization but holds a member row in this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
+        );
+        context.user = null;
+        return;
+      }
     }
     context.logger.debug(
       `Session for user "${session.user.id}" has no active organization under ${registered.policy} - resolved awaiting organization.`

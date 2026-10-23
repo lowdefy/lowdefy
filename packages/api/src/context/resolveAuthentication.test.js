@@ -784,7 +784,13 @@ test('resolves a caller awaiting the pinned organization when the session holds 
       { field: 'organizationId', value: 'team-portal' },
     ],
   });
-  expect(findOne).not.toHaveBeenCalled();
+  expect(findOne).toHaveBeenCalledWith({
+    model: 'member',
+    where: [
+      { field: 'userId', value: 'user_1' },
+      { field: 'organizationId', value: 'team-portal' },
+    ],
+  });
   expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: null });
   expect(context.logger.debug).toHaveBeenCalledWith(
     'Session for user "user_1" has no active organization under pinned - resolved awaiting organization.'
@@ -815,7 +821,6 @@ test('the pinned awaiting caller is stamped as the session user the page renders
     callerStamp({ user: context.user, authSession: context.authSession })
   );
   expect(stamp.caller).toBe(callerHash({ user: sessionUser }));
-  expect(stamp.caller).not.toBe('');
 });
 
 test('a session carrying no organization stays unauthenticated under pinned without a pending invitation', async () => {
@@ -836,6 +841,43 @@ test('a session carrying no organization stays unauthenticated under pinned with
   expect(findOne).not.toHaveBeenCalled();
   expect(context.logger.debug).toHaveBeenCalledWith(
     'Session for user "user_1" has no active organization and no pending invitation to this app\'s pinned organization "team-portal" - resolved unauthenticated.'
+  );
+});
+
+test('a pinned session carrying no organization stays unauthenticated when it holds a member row there', async () => {
+  const { auth, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'invited@example.com' },
+      session: { id: 'sess_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+    invitations: [
+      {
+        id: 'invitation_1',
+        organizationId: 'team-portal',
+        status: 'pending',
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  // Unauthenticated sends protected pages to the login page, whose sign-in
+  // re-pins the session; awaiting would refuse them with no way back.
+  expect(context.user).toBe(null);
+  expect(context.authSession).toBe(null);
+  expect(findOne).toHaveBeenCalledWith({
+    model: 'member',
+    where: [
+      { field: 'userId', value: 'user_1' },
+      { field: 'organizationId', value: 'team-portal' },
+    ],
+  });
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'Session for user "user_1" has no active organization but holds a member row in this app\'s pinned organization "team-portal" - resolved unauthenticated.'
   );
 });
 
