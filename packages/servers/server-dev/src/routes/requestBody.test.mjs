@@ -60,7 +60,6 @@ const routes = {
   '/api/usage': (await import('./usage.js')).default,
   '/lowdefy-docs/state-checkpoints/load': (await import('./docs/loadState.js')).default,
   '/lowdefy-docs/state-checkpoints/snapshot': (await import('./docs/snapshotState.js')).default,
-  '/lowdefy-feedback': (await import('./feedback.js')).default,
 };
 
 const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
@@ -103,7 +102,6 @@ test.each([
   ['/api/dev-inspect/page', sameOrigin, notJson],
   ['/lowdefy-docs/state-checkpoints/load', {}, 'Bad Request'],
   ['/lowdefy-docs/state-checkpoints/snapshot', {}, 'Bad Request'],
-  ['/lowdefy-feedback', sameOrigin, 'Bad Request'],
 ])(
   'POST %s with a body that is not JSON answers 400 and logs a warning',
   async (path, headers, text) => {

@@ -319,8 +319,8 @@ test('findConfig resolves a known pageId to its source file', async () => {
   expect(result.kind).toEqual('page');
   expect(result.pageId).toEqual('home');
   expect(result.file).toEqual('pages/home.yaml');
-  // A page's root block renders with blockId === pageId — open-in-editor and
-  // feedback enrichment read matches[0].location.source from this result.
+  // A page's root block renders with blockId === pageId — open-in-editor
+  // reads matches[0].location.source from this result.
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].location.source).toContain(path.join('pages', 'home.yaml'));
 });

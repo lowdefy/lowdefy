@@ -22,7 +22,7 @@ import keyChord from './keyChord.js';
 import sendRecords from './sendRecords.js';
 
 // Dev tools draw their own UI over the app; clicks on it are not the app.
-const IGNORED_ROOTS = '[data-lowdefy-feedback]';
+const IGNORED_ROOTS = '[data-lowdefy-dev-tools]';
 
 function elementOf(target) {
   if (target === null || target === undefined) return null;

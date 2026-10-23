@@ -42,7 +42,6 @@ Role-gated pages: the headless renderer signs in as a roleless user, so a page o
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
-Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
 
 State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
 
@@ -299,9 +298,7 @@ const devToolDefinitions = {
           height: z.number(),
         })
         .optional()
-        .describe(
-          "Crop to a viewport-relative region — pass an annotation's geometry from feedback."
-        ),
+        .describe('Crop to a viewport-relative region.'),
       scrollX: z.number().optional().describe('Scroll offset the clip was recorded at.'),
       scrollY: z.number().optional().describe('Scroll offset the clip was recorded at.'),
       width: z
