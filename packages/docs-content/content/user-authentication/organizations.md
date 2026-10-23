@@ -9,10 +9,10 @@ The single knob that decides how organizations behave is `auth.organizations.pol
 ```yaml
 auth:
   organizations:
-    policy: pinned # or "tenant"
+    policy: pinned   # or "tenant"
 ```
 
-**`pinned`** _(the default)_ — one organization for the whole deployment, ensured at startup. This is the shape for an internal app or a single-customer install: there is one workspace, everyone is a member of it, and the active organization is never switched. The organization plugin's per-organization routes (create, switch, self-service org management) are disabled.
+**`pinned`** *(the default)* — one organization for the whole deployment, ensured at startup. This is the shape for an internal app or a single-customer install: there is one workspace, everyone is a member of it, and the active organization is never switched. The organization plugin's per-organization routes (create, switch, self-service org management) are disabled.
 
 **`tenant`** — organizations are created per user, and a caller can belong to several and switch between them. This is the shape for a multi-tenant SaaS: each customer is an organization, members are invited into it, and `SetActiveOrganization` moves the caller between the workspaces they belong to.
 
@@ -20,22 +20,22 @@ An app that sets nothing gets `pinned` with one auto-seeded organization, invite
 
 ## The `organizations` keys
 
-| Key                   | Type                      | Applies to      | Default                                     | Meaning                                                                                                                                                                                                                                                                               |
-| --------------------- | ------------------------- | --------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `policy`              | `pinned` \| `tenant`      | both            | `pinned`                                    | The organization model, above.                                                                                                                                                                                                                                                        |
-| `org`                 | string                    | **pinned only** | `default`                                   | The slug the deployment pins as the active organization. Under `pinned` the slug **is** the organization's id.                                                                                                                                                                        |
-| `signup`              | `invite-only` \| `open`   | both            | `pinned` → `invite-only`, `tenant` → `open` | Whether uninvited sign-ups are admitted. `invite-only` refuses a sign-up with no invitation; `open` admits everyone.                                                                                                                                                                  |
-| `create`              | `auto` \| `operator`      | **tenant only** | `tenant` → `auto`                           | How a tenant organization comes into being: `auto` mints one for a user at first session; `operator` leaves creation to your own config (the `CreateOrganization` step).                                                                                                              |
-| `invitationExpiresIn` | integer (seconds, min 60) | both            | `172800` (48h)                              | How long an invitation stays acceptable. Re-sending an invitation refreshes its expiry.                                                                                                                                                                                               |
-| `membershipLimit`     | integer (min 1)           | both            | `1000000` (effectively open)                | The most members one organization may have. Once an organization has this many, accepting an invitation and adding a member are refused (a 403). Set it to cap organization size, for example per tenant. It is also the default page size of `ListMembers` when no `limit` is given. |
-| `creatorAppRoles`     | array of role ids         | both            | `[]`                                        | App roles the owner of a new organization gets on their membership. See [App roles for a new organization's owner](#app-roles-for-a-new-organizations-owner).                                                                                                                         |
+| Key | Type | Applies to | Default | Meaning |
+| --- | ---- | ---------- | ------- | ------- |
+| `policy` | `pinned` \| `tenant` | both | `pinned` | The organization model, above. |
+| `org` | string | **pinned only** | `default` | The slug the deployment pins as the active organization. Under `pinned` the slug **is** the organization's id. |
+| `signup` | `invite-only` \| `open` | both | `pinned` → `invite-only`, `tenant` → `open` | Whether uninvited sign-ups are admitted. `invite-only` refuses a sign-up with no invitation; `open` admits everyone. |
+| `create` | `auto` \| `operator` | **tenant only** | `tenant` → `auto` | How a tenant organization comes into being: `auto` mints one for a user at first session; `operator` leaves creation to your own config (the `CreateOrganization` step). |
+| `invitationExpiresIn` | integer (seconds, min 60) | both | `172800` (48h) | How long an invitation stays acceptable. Re-sending an invitation refreshes its expiry. |
+| `membershipLimit` | integer (min 1) | both | `1000000` (effectively open) | The most members one organization may have. Once an organization has this many, accepting an invitation and adding a member are refused (a 403). Set it to cap organization size, for example per tenant. It is also the default page size of `ListMembers` when no `limit` is given. |
+| `creatorAppRoles` | array of role ids | both | `[]` | App roles the owner of a new organization gets on their membership. See [App roles for a new organization's owner](#app-roles-for-a-new-organizations-owner). |
 
 The build cross-checks these, and the errors are worth knowing before you hit them:
 
 - **`org` is required under `pinned`** and **rejected under `tenant`** — under `tenant` there is no single organization to pin; organizations are created per user.
 - **`create` is rejected under `pinned`** — the active organization is ensured at startup, so there is nothing to create on demand.
 - **Every `creatorAppRoles` id must be declared in `auth.roles`**, the same as the roles a page or API gate names.
-- **Renaming `org` strands the existing membership.** The startup ensure is by slug, so changing `org` mints a _fresh_ organization rather than renaming the old one, and every existing `member` row still points at the old id. Treat the pinned slug as permanent.
+- **Renaming `org` strands the existing membership.** The startup ensure is by slug, so changing `org` mints a *fresh* organization rather than renaming the old one, and every existing `member` row still points at the old id. Treat the pinned slug as permanent.
 
 Defaults line up with intent: `pinned` defaults to a closed, invite-only internal app; `tenant` defaults to self-serve SaaS (`signup: open`, `create: auto`).
 
@@ -46,8 +46,8 @@ Under `tenant` with `create: auto`, the first session of a user who has no membe
 The mint is safe when the same user signs in from two tabs at once or submits twice: exactly one organization and one `owner` membership are written. It relies on two unique indexes in the auth database, which the server creates at startup (and checks again before it mints):
 
 ```js
-db['user-organizations'].createIndex({ slug: 1 }, { unique: true });
-db['user-members'].createIndex({ user_id: 1, organization_id: 1 }, { unique: true });
+db['user-organizations'].createIndex({ slug: 1 }, { unique: true })
+db['user-members'].createIndex({ user_id: 1, organization_id: 1 }, { unique: true })
 ```
 
 An equivalent unique index you created yourself, under any name, is accepted. If the auth database user may not create indexes, or the collections already hold duplicate rows, the server logs an error naming the index, and a sign-in that needs a new organization is refused with status 503 and the code `ORGANIZATION_SETUP_UNAVAILABLE` (existing members sign in as usual). The server tries again at most every 30 seconds while such sign-ins arrive, so removing the duplicates or creating the indexes by hand recovers without a restart.
@@ -100,7 +100,7 @@ Nothing grants organization authority implicitly — not even to the first user.
 
 ## The tenant wall
 
-Under `policy: tenant`, data must not leak across organizations. The **tenant wall** enforces that mechanically: a scoping-capable connection is filtered to the caller's active organization on every read and stamped with it on every write, without the request author writing a single filter clause. The wall is declared **on the connection**; requests, steps and websockets only declare _exceptions_.
+Under `policy: tenant`, data must not leak across organizations. The **tenant wall** enforces that mechanically: a scoping-capable connection is filtered to the caller's active organization on every read and stamped with it on every write, without the request author writing a single filter clause. The wall is declared **on the connection**; requests, steps and websockets only declare *exceptions*.
 
 ### Declaring scope on a connection
 
@@ -145,19 +145,19 @@ connections:
 
 **A shared connection's aggregation may not `$out` or `$merge` into a walled collection.** The rows an aggregation writes are not checked, so the build rejects a request or step on a `tenant: shared` connection whose literal pipeline writes, with `$out` or `$merge`, into a collection a scoped connection reads in the same database. Return the documents and write them with `MongoDBInsertMany` or `MongoDBBulkWrite`, which check every row. A target named by an operator, or in another database, is not checked at build time.
 
-**Under `tenant` policy every connection type must declare its capability.** A connection whose type does not declare tenant support (`connectionMetas.tenant`) fails the build — no connection is ever _silently_ unscoped. Connection plugins declare this in their `types.js`; you do not set it.
+**Under `tenant` policy every connection type must declare its capability.** A connection whose type does not declare tenant support (`connectionMetas.tenant`) fails the build — no connection is ever *silently* unscoped. Connection plugins declare this in their `types.js`; you do not set it.
 
 ### Exceptions at the point of use
 
 The wall scopes mechanically, but a few operations need an explicit opt-out or opt-in, declared on the request, step or websocket — never on the connection:
 
-| Surface   | Allowed values | Meaning                                                                                                      |
-| --------- | -------------- | ------------------------------------------------------------------------------------------------------------ |
-| Request   | `none`         | Read rows of every organization. The request may only read (see below).                                      |
-| Request   | `authored`     | The request authors its own tenant clause (audited at runtime).                                              |
-| Websocket | `none`         | Watch rows of every organization. `authored` is not allowed — change streams are always scoped mechanically. |
+| Surface | Allowed values | Meaning |
+| ------- | -------------- | ------- |
+| Request | `none` | Read rows of every organization. The request may only read (see below). |
+| Request | `authored` | The request authors its own tenant clause (audited at runtime). |
+| Websocket | `none` | Watch rows of every organization. `authored` is not allowed — change streams are always scoped mechanically. |
 
-An aggregation stage the wall cannot scope mechanically — `$search`, `$searchMeta`, `$vectorSearch`, `$geoNear`, `$graphLookup` — must declare `tenant: authored` and author the organization clause _inside the stage_. The runtime audits that clause against the caller's active organization; it does not trust the declaration alone.
+An aggregation stage the wall cannot scope mechanically — `$search`, `$searchMeta`, `$vectorSearch`, `$geoNear`, `$graphLookup` — must declare `tenant: authored` and author the organization clause *inside the stage*. The runtime audits that clause against the caller's active organization; it does not trust the declaration alone.
 
 ```yaml
 # A $search aggregation on a scoped connection: author the org filter
