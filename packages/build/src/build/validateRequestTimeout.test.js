@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateRequestTimeout from './validateRequestTimeout.js';
 import testContext from '../test-utils/testContext.js';
+import { afterEach, expect, test } from 'vitest';
 
 const vercelEnv = process.env.VERCEL;
 

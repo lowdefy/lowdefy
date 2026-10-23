@@ -19,6 +19,7 @@ import path from 'path';
 
 import getLowdefyHome from './getLowdefyHome.js';
 import getServerRegistryDirectory from './getServerRegistryDirectory.js';
+import { afterEach, expect, test } from 'vitest';
 
 const saved = process.env.LOWDEFY_HOME;
 

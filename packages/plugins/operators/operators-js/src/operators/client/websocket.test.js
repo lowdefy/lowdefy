@@ -16,6 +16,7 @@
 
 import { WebParser } from '@lowdefy/operators';
 import _websocket from './websocket.js';
+import { expect, test } from 'vitest';
 
 const operators = {
   _websocket,

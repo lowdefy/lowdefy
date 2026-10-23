@@ -15,6 +15,7 @@
 */
 
 import runTest from '../test/runTest.js';
+import { expect, test } from 'vitest';
 
 test('for loop iterates over array', async () => {
   const routine = {

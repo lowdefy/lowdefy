@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import RevokeOrgMcpToken from './RevokeOrgMcpToken.js';
 
@@ -32,8 +32,8 @@ const row = {
 
 function createAuth({ found = row, tokenModel = true } = {}) {
   const adapter = {
-    findOne: jest.fn(async () => found),
-    delete: jest.fn(async () => {}),
+    findOne: vi.fn(async () => found),
+    delete: vi.fn(async () => {}),
   };
   const plugins = tokenModel ? [{ id: 'lowdefy-mcp-token', schema: { mcpToken: {} } }] : [];
   return { auth: { $context: Promise.resolve({ adapter }), options: { plugins } }, adapter };

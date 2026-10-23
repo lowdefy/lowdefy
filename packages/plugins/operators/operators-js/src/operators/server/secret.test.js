@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/operators', () => ({
-  getFromObject: jest.fn(),
+vi.doMock('@lowdefy/operators', () => ({
+  getFromObject: vi.fn(),
 }));
 
 console.error = () => {};
@@ -69,13 +69,13 @@ test('secret get all is not allowed', async () => {
   const secret = (await import('./secret.js')).default;
 
   expect(() => secret({ params: true })).toThrowErrorMatchingInlineSnapshot(
-    `"Getting all secrets is not allowed."`
+    `[Error: Getting all secrets is not allowed.]`
   );
   expect(() => secret({ params: { all: true } })).toThrowErrorMatchingInlineSnapshot(
-    `"Getting all secrets is not allowed."`
+    `[Error: Getting all secrets is not allowed.]`
   );
   expect(() => secret({ params: { all: 'yes' } })).toThrowErrorMatchingInlineSnapshot(
-    `"Getting all secrets is not allowed."`
+    `[Error: Getting all secrets is not allowed.]`
   );
 });
 

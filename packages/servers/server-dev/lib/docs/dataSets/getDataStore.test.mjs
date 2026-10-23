@@ -17,30 +17,36 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
-const create = jest.fn();
-const connect = jest.fn();
-const listDatabases = jest.fn();
+const create = vi.fn();
+const connect = vi.fn();
+const listDatabases = vi.fn();
 
-jest.unstable_mockModule('mongodb-memory-server-core', () => ({
+vi.doMock('mongodb-memory-server-core', () => ({
   MongoMemoryReplSet: { create },
 }));
-jest.unstable_mockModule('mongodb-memory-server-core/lib/util/DryMongoBinary.js', () => ({
+vi.doMock('mongodb-memory-server-core/lib/util/DryMongoBinary.js', () => ({
   DryMongoBinary: {
-    generateOptions: jest.fn(async () => ({ version: '6.0.14' })),
-    locateBinary: jest.fn(async () => '/cache/mongod'),
+    generateOptions: vi.fn(async function () {
+      return { version: '6.0.14' };
+    }),
+    locateBinary: vi.fn(async function () {
+      return '/cache/mongod';
+    }),
   },
 }));
 const actualMongodb = await import('mongodb');
-jest.unstable_mockModule('mongodb', () => ({
+vi.doMock('mongodb', () => ({
   BSON: actualMongodb.BSON,
   ObjectId: actualMongodb.ObjectId,
-  MongoClient: jest.fn(() => ({
-    connect,
-    close: jest.fn(async () => {}),
-    db: () => ({ admin: () => ({ listDatabases }), dropDatabase: async () => {} }),
-  })),
+  MongoClient: vi.fn(function () {
+    return {
+      connect,
+      close: vi.fn(async function () {}),
+      db: () => ({ admin: () => ({ listDatabases }), dropDatabase: async () => {} }),
+    };
+  }),
 }));
 
 const { default: getDataStore } = await import('./getDataStore.js');
@@ -50,7 +56,9 @@ const { MIN_PORT } = await import('./pickDataStorePort.js');
 function createReplSet({ uri = 'mongodb://127.0.0.1:50001/?replicaSet=x', instanceInfo } = {}) {
   return {
     getUri: () => uri,
-    stop: jest.fn(async () => true),
+    stop: vi.fn(async function () {
+      return true;
+    }),
     servers: [{ instanceInfo }],
   };
 }
@@ -77,7 +85,7 @@ afterEach(async () => {
     await store?.stop();
   }
   delete globalThis[Symbol.for('lowdefy.devServer.dataStore')];
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   create.mockReset();
   listDatabases.mockReset();
 });
@@ -114,7 +122,9 @@ test('getDataStore clears a failed start so the next call retries', async () => 
 test('a SIGTERM stops the store with cleanup, then raises the signal again', async () => {
   const replSet = createReplSet();
   create.mockResolvedValue(replSet);
-  const kill = jest.spyOn(process, 'kill').mockImplementation(() => true);
+  const kill = vi.spyOn(process, 'kill').mockImplementation(function () {
+    return true;
+  });
   const before = snapshotListeners();
   await getDataStore();
   const [onSigterm] = addedListeners('SIGTERM', before.SIGTERM);
@@ -133,7 +143,9 @@ test('a SIGTERM stops the store with cleanup, then raises the signal again', asy
 test('a SIGHUP from a closed terminal stops the store with cleanup, then raises the signal again', async () => {
   const replSet = createReplSet();
   create.mockResolvedValue(replSet);
-  const kill = jest.spyOn(process, 'kill').mockImplementation(() => true);
+  const kill = vi.spyOn(process, 'kill').mockImplementation(function () {
+    return true;
+  });
   const before = snapshotListeners();
   await getDataStore();
   const [onSighup] = addedListeners('SIGHUP', before.SIGHUP);
@@ -146,7 +158,7 @@ test('a SIGHUP from a closed terminal stops the store with cleanup, then raises 
 test('the exit hook kills mongod and removes its temporary directory when no stop finished', async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mongo-mem-test-'));
   fs.writeFileSync(path.join(tmpDir, 'WiredTiger'), '');
-  const mongodProcess = { kill: jest.fn() };
+  const mongodProcess = { kill: vi.fn() };
   create.mockResolvedValue(
     createReplSet({ instanceInfo: { tmpDir, dbPath: tmpDir, instance: { mongodProcess } } })
   );

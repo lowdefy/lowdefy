@@ -20,6 +20,7 @@ import os from 'os';
 import path from 'path';
 
 import verifyServer from './verifyServer.js';
+import { afterAll, expect, test } from 'vitest';
 
 const buildDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-e2e-build-'));
 const servers = [];

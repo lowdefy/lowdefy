@@ -18,6 +18,7 @@ import MarkdownIt from 'markdown-it';
 
 import escapeMarkdown from './escapeMarkdown.js';
 import escapeMarkdownData from './escapeMarkdownData.js';
+import { expect, test } from 'vitest';
 
 test('escapeMarkdown neutralizes markdown links', () => {
   expect(escapeMarkdown('[x](url)')).toEqual('\\[x\\]\\(url\\)');

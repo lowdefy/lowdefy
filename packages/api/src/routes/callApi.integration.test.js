@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError, RequestError, UserError } from '@lowdefy/errors';
 
@@ -23,7 +23,7 @@ import testContext from '../test/testContext.js';
 
 // Resolver used by the outer (page-level) request. Behaviour is configured per
 // test via the `outerResolver` jest.fn().
-const outerResolver = jest.fn();
+const outerResolver = vi.fn();
 outerResolver.schema = {};
 outerResolver.meta = { checkRead: false, checkWrite: false };
 
@@ -61,7 +61,7 @@ function buildReadConfigFile({ endpointConfigs = {}, requestConfig, connectionCo
     auth: { public: true },
     properties: {},
   };
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     if (path === 'connections/testConn.json') {
       return connectionConfig ?? defaultConn;
     }
@@ -87,10 +87,10 @@ function createContext({ endpointConfigs = {}, user, logger } = {}) {
     operators,
     secrets,
     logger: logger ?? {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
     },
     readConfigFile: buildReadConfigFile({ endpointConfigs }),
     user: user ?? { id: 'user_1' },
@@ -299,7 +299,7 @@ test('9.6 a deep chain ending in :throw is never reported through handleError', 
       routine: { ':throw': 'deep' },
     },
   };
-  const handleErrorMock = jest.fn();
+  const handleErrorMock = vi.fn();
   const context = createContext({ endpointConfigs });
   context.handleError = handleErrorMock;
   outerResolver.mockImplementation(async ({ callApi, request }) => {
@@ -356,10 +356,10 @@ test('9.7 InternalApi endpoint is reachable via callApi', async () => {
 
 test('9.8 debug events emitted on success path', async () => {
   const logger = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   };
   const context = createContext({
     endpointConfigs: {
@@ -437,7 +437,7 @@ test('9.4 state isolation: caller state not visible in target, target writes do 
 });
 
 test('9.3c raw error from target propagates as RequestError', async () => {
-  const innerResolver = jest.fn(() => {
+  const innerResolver = vi.fn(() => {
     throw new Error('inner raw');
   });
   innerResolver.schema = {};
@@ -457,10 +457,10 @@ test('9.3c raw error from target propagates as RequestError', async () => {
     operators,
     secrets,
     logger: {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
     },
     readConfigFile: buildReadConfigFile({
       endpointConfigs: {

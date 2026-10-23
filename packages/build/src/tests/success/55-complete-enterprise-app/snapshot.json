@@ -4755,6 +4755,7 @@
             },
             "~k": "5d"
           },
+          "readOnly": false,
           "requestId": "getCustomer",
           "pageId": "customer-detail",
           "~k": "5c"
@@ -4788,6 +4789,7 @@
             },
             "~k": "5j"
           },
+          "readOnly": false,
           "requestId": "saveCustomer",
           "pageId": "customer-detail",
           "~k": "5i"
@@ -4829,6 +4831,7 @@
       },
       "~k": "cm"
     },
+    "readOnly": false,
     "requestId": "getCustomer",
     "pageId": "customer-detail",
     "~k": "5c"
@@ -4918,6 +4921,7 @@
       },
       "~k": "co"
     },
+    "readOnly": false,
     "requestId": "saveCustomer",
     "pageId": "customer-detail",
     "~k": "5i"
@@ -5295,6 +5299,7 @@
             },
             "~k": "2w"
           },
+          "readOnly": false,
           "requestId": "getCustomers",
           "pageId": "customers",
           "~k": "2v"
@@ -5400,6 +5405,7 @@
       },
       "~k": "c5"
     },
+    "readOnly": false,
     "requestId": "getCustomers",
     "pageId": "customers",
     "~k": "2v"
@@ -5639,6 +5645,7 @@
           "payload": {
             "~k": "bj"
           },
+          "readOnly": false,
           "requestId": "getStats",
           "pageId": "dashboard",
           "~k": "1q"
@@ -5664,6 +5671,7 @@
       "public": false,
       "~k": "bk"
     },
+    "readOnly": false,
     "requestId": "getStats",
     "pageId": "dashboard",
     "~k": "1q"

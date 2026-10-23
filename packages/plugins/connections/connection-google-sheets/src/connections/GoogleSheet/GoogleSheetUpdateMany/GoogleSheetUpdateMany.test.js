@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGetRows = jest.fn();
-const mockSave = jest.fn();
+const mockGetRows = vi.fn();
+const mockSave = vi.fn();
 
-jest.unstable_mockModule('../getSheet', () => {
+vi.doMock('../getSheet', () => {
   return {
     default: () => ({
       getRows: mockGetRows,
@@ -94,9 +94,9 @@ test('googleSheetUpdateMany, match one', async () => {
     modifiedCount: 1,
   });
   expect(mockSave.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "raw": undefined,
         },
       ],
@@ -123,9 +123,9 @@ test('googleSheetUpdateMany, match one, raw true', async () => {
     modifiedCount: 1,
   });
   expect(mockSave.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "raw": true,
         },
       ],
@@ -148,7 +148,7 @@ test('googleSheetUpdateMany, match nothing', async () => {
   expect(res).toEqual({
     modifiedCount: 0,
   });
-  expect(mockSave.mock.calls).toMatchInlineSnapshot(`Array []`);
+  expect(mockSave.mock.calls).toMatchInlineSnapshot(`[]`);
 });
 
 test('googleSheetUpdateMany, match more than one', async () => {
@@ -167,14 +167,14 @@ test('googleSheetUpdateMany, match more than one', async () => {
     modifiedCount: 2,
   });
   expect(mockSave.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "raw": undefined,
         },
       ],
-      Array [
-        Object {
+      [
+        {
           "raw": undefined,
         },
       ],

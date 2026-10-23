@@ -18,13 +18,13 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, expect, test } from 'vitest';
 
 // The worker is a real thread, outside jest's module registry: this mock only
 // reaches imports made in the test's own thread, so it shows the connection
 // packages are never imported here.
-const mockImportPluginModule = jest.fn();
-jest.unstable_mockModule('./importPluginModule.js', () => ({ default: mockImportPluginModule }));
+const mockImportPluginModule = vi.fn();
+vi.doMock('./importPluginModule.js', () => ({ default: mockImportPluginModule }));
 
 const { default: runConnectionSchemaWorker } = await import('./runConnectionSchemaWorker.js');
 

@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
 import testContext from '../../test/testContext.js';
 
@@ -25,14 +25,16 @@ const lowdefy = {
       },
     },
     auth: {
-      logout: jest.fn(),
+      logout: vi.fn(),
     },
   },
 };
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 beforeEach(() => {
   global.Date = mockDate;
@@ -68,6 +70,6 @@ test('Logout', async () => {
   });
   const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(lowdefy._internal.auth.logout.mock.calls).toEqual([[]]);
+  expect(lowdefy._internal.auth.logout.mock.calls).toEqual([[undefined]]);
   expect(res.success).toBe(true);
 });

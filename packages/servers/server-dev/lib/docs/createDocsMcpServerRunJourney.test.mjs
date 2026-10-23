@@ -17,7 +17,7 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import setupTestFixtures from './setupTestFixtures.mjs';
 
@@ -26,9 +26,9 @@ process.chdir(fixtureDir);
 
 // An app served under a basePath: lowdefy_run_journey must hand it to the
 // runner, which counts calls and app errors under it.
-jest.unstable_mockModule('../build/config.js', () => ({ default: { basePath: '/app' } }));
-const mockRunJourney = jest.fn();
-jest.unstable_mockModule('./runJourney.js', () => ({ default: mockRunJourney }));
+vi.doMock('../build/config.js', () => ({ default: { basePath: '/app' } }));
+const mockRunJourney = vi.fn();
+vi.doMock('./runJourney.js', () => ({ default: mockRunJourney }));
 
 const { default: createDocsMcpServer } = await import('./createDocsMcpServer.js');
 
@@ -42,7 +42,7 @@ async function connectClient() {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockRunJourney.mockResolvedValue({ pageId: 'ticket', passed: true, steps: [], screenshots: [] });
 });
 

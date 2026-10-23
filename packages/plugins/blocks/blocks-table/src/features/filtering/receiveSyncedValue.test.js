@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import receiveSyncedValue from './receiveSyncedValue.js';
 
 const first = { or: [{ key: 'amount', op: 'lt', value: 200 }] };

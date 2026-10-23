@@ -18,13 +18,13 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, expect, test } from 'vitest';
 
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import spyOnChokidar from '../../test-utils/spyOnChokidar.mjs';
 
 // macOS can hold file events back for tens of seconds on a busy machine.
-jest.setTimeout(180000);
+vi.setConfig({ testTimeout: 180000, hookTimeout: 180000 });
 
 // The bus watches build/buildStatus.json under process.cwd() — point it at a
 // throwaway server directory before the module is imported.
@@ -111,7 +111,7 @@ test('bootedAt is an ISO timestamp fixed at module load', () => {
 });
 
 test('subscribe delivers published events with an ISO timestamp and unsubscribe stops delivery', () => {
-  const send = jest.fn();
+  const send = vi.fn();
   const unsubscribe = listen(send);
 
   publish({ type: 'client_error', message: 'boom' });
@@ -126,7 +126,7 @@ test('subscribe delivers published events with an ISO timestamp and unsubscribe 
 });
 
 test('publish keeps the entry timestamp when the entry carries one', () => {
-  const send = jest.fn();
+  const send = vi.fn();
   listen(send);
   publish({ type: 'server_error', timestamp: '2026-01-02T03:04:05.000Z', message: 'x' });
   expect(send.mock.calls[0][0].timestamp).toEqual('2026-01-02T03:04:05.000Z');
@@ -145,10 +145,10 @@ test('subscribe rejects a non-function send', () => {
 });
 
 test('a subscriber that throws is removed and the others still receive', () => {
-  const throwing = jest.fn(() => {
+  const throwing = vi.fn(() => {
     throw new Error('stream gone');
   });
-  const healthy = jest.fn();
+  const healthy = vi.fn();
   listen(throwing);
   listen(healthy);
 
@@ -160,8 +160,8 @@ test('a subscriber that throws is removed and the others still receive', () => {
 });
 
 test('a subscriber whose send rejects is removed after the rejection settles', async () => {
-  const rejecting = jest.fn(() => Promise.reject(new Error('stream gone')));
-  const healthy = jest.fn(() => Promise.resolve());
+  const rejecting = vi.fn(() => Promise.reject(new Error('stream gone')));
+  const healthy = vi.fn(() => Promise.resolve());
   listen(rejecting);
   listen(healthy);
 
@@ -229,7 +229,7 @@ test('a successful buildStatus.json write publishes a build event that is not st
 
 test('removing buildStatus.json publishes nothing', async () => {
   await writeExistingStatus({ status: 'ok', errors: [], warnings: [] });
-  const send = jest.fn();
+  const send = vi.fn();
   listen(send);
   const { watcher } = watchers.at(-1);
   await watcherReady();
@@ -254,11 +254,13 @@ test('removing buildStatus.json publishes nothing', async () => {
 });
 
 test('the watcher closes when the last subscriber leaves so a later write publishes nothing', async () => {
-  const send = jest.fn();
+  const send = vi.fn();
   const unsubscribe = listen(send);
   const { watcher } = watchers.at(-1);
   await watcherReady();
   unsubscribe();
+  // The bus closes its watcher once the current event is handled.
+  await new Promise((resolve) => setImmediate(resolve));
   expect(watcher.closed).toBe(true);
 
   fs.writeFileSync(statusPath, JSON.stringify({ status: 'ok', errors: [], warnings: [] }));

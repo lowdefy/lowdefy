@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import findBuildFilesOutsideWatch from './findBuildFilesOutsideWatch.mjs';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let root;
 let buildDirectory;

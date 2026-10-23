@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createPageManager from './createPageManager.js';
 
 function createFakePage() {
   return {
-    evaluate: jest.fn(async () => 'ticket'),
-    goto: jest.fn(async () => {}),
-    waitForFunction: jest.fn(async () => {}),
-    waitForURL: jest.fn(async () => {}),
+    evaluate: vi.fn(async () => 'ticket'),
+    goto: vi.fn(async () => {}),
+    waitForFunction: vi.fn(async () => {}),
+    waitForURL: vi.fn(async () => {}),
   };
 }
 

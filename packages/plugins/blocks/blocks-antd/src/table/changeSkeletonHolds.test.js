@@ -15,6 +15,7 @@
 */
 
 import changeSkeletonHolds from './changeSkeletonHolds.js';
+import { afterEach, expect, test } from 'vitest';
 
 afterEach(() => {
   delete global.window;

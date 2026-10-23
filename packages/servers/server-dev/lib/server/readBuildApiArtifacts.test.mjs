@@ -20,6 +20,7 @@ import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 
 import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
+import { expect, test } from 'vitest';
 
 function makeBuildDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-read-api-'));

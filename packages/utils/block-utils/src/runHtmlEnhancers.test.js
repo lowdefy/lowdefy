@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createHtmlEnhancerGate from './createHtmlEnhancerGate.js';
 import HTML_ENHANCERS from './htmlEnhancers/htmlEnhancers.js';
@@ -28,7 +28,7 @@ function createRoot(html) {
 
 test('runHtmlEnhancers runs prepare in order and collects portals, cleanups and data by name', () => {
   const calls = [];
-  const cleanup = jest.fn();
+  const cleanup = vi.fn();
   const enhancers = [
     {
       name: 'first',

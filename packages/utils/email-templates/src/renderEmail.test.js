@@ -16,6 +16,7 @@
 
 import renderEmail from './renderEmail.js';
 import NotificationEmail from './notifications/NotificationEmail/NotificationEmail.js';
+import { expect, test } from 'vitest';
 
 test('renderEmail returns html and text and no subject', async () => {
   const result = await renderEmail({

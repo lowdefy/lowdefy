@@ -16,7 +16,7 @@
 
 import http from 'node:http';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import * as RealSentry from '@sentry/node';
@@ -39,7 +39,7 @@ const httpIntegrations = [];
 
 // The real SDK with its network transport swapped for memory, so each test reads the exact
 // event Sentry would send, after the hooks initSentry installs.
-jest.unstable_mockModule('@sentry/node', () => ({
+vi.doMock('@sentry/node', () => ({
   ...RealSentry,
   init: (options) => RealSentry.init({ ...options, transport: createStubTransport }),
   httpIntegration: (options) => {
@@ -48,7 +48,7 @@ jest.unstable_mockModule('@sentry/node', () => ({
     return integration;
   },
 }));
-jest.unstable_mockModule('../../build/logger.js', () => ({
+vi.doMock('../../build/logger.js', () => ({
   default: { sentry: { tracesSampleRate: 1 } },
 }));
 

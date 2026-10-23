@@ -15,6 +15,7 @@
 */
 
 import parseUserParam from './parseUserParam.js';
+import { expect, test } from 'vitest';
 
 test('parseUserParam returns nothing when the param is absent', () => {
   expect(parseUserParam({ value: undefined })).toEqual({});

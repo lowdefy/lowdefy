@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import createChangeSignal from './createChangeSignal.mjs';
 
@@ -26,12 +26,12 @@ function readSignal(buildDirectory) {
 }
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('each write gives build/invalidatePages a new, larger value, even within one millisecond', () => {
   const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-change-signal-'));
-  jest.spyOn(Date, 'now').mockReturnValue(5000);
+  vi.spyOn(Date, 'now').mockReturnValue(5000);
   const writeChangeSignal = createChangeSignal({ buildDirectory });
 
   expect(writeChangeSignal()).toBe(5000);
@@ -44,7 +44,7 @@ test('each write gives build/invalidatePages a new, larger value, even within on
 test('a new manager continues above the value the last one wrote', () => {
   const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-change-signal-'));
   fs.writeFileSync(path.join(buildDirectory, 'invalidatePages'), '9000');
-  jest.spyOn(Date, 'now').mockReturnValue(5000);
+  vi.spyOn(Date, 'now').mockReturnValue(5000);
 
   expect(createChangeSignal({ buildDirectory })()).toBe(9001);
   fs.rmSync(buildDirectory, { recursive: true, force: true });
@@ -53,7 +53,7 @@ test('a new manager continues above the value the last one wrote', () => {
 test('the value is the current time when the clock is ahead of the last value', () => {
   const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-change-signal-'));
   const writeChangeSignal = createChangeSignal({ buildDirectory });
-  jest.spyOn(Date, 'now').mockReturnValue(5000);
+  vi.spyOn(Date, 'now').mockReturnValue(5000);
   writeChangeSignal();
   Date.now.mockReturnValue(7000);
 

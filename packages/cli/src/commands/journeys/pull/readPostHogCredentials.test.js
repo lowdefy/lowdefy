@@ -15,6 +15,7 @@
 */
 
 import readPostHogCredentials from './readPostHogCredentials.js';
+import { describe, expect, test } from 'vitest';
 
 const KEY = 'phx_secret_key_never_logged_123';
 

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // The port probe is stubbed: real sockets made these tests flaky on CI, where
 // other test processes can hold any port in the OS ephemeral range.
 const busy = new Set();
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('@lowdefy/node-utils', () => ({
   isPortAvailable: async ({ port }) => !busy.has(port),
 }));
 

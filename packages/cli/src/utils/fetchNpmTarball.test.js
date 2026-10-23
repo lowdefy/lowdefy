@@ -19,7 +19,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 import { create } from 'tar';
 
 const tarballs = {};
@@ -31,7 +31,7 @@ function sri(data) {
   return `sha512-${crypto.createHash('sha512').update(data).digest('base64')}`;
 }
 
-jest.unstable_mockModule('axios', () => {
+vi.doMock('axios', () => {
   return {
     default: {
       get(url) {

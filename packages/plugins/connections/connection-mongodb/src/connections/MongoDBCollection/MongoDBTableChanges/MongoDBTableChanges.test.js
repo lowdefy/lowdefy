@@ -19,6 +19,7 @@ import { validate } from '@lowdefy/ajv';
 import MongoDBTableChanges from './MongoDBTableChanges.js';
 import getTestCollection from '../../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { describe, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBTableChanges.meta;
 const schema = MongoDBTableChanges.schema;

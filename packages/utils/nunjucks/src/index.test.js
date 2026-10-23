@@ -20,6 +20,7 @@ import {
   nunjucksFunction,
   validNunjucksString,
 } from './index.js';
+import { expect, test } from 'vitest';
 
 test('nunjucksString - string parsing', () => {
   expect(nunjucksString('$ {{value}}', '100')).toEqual('$ 100');
@@ -45,18 +46,18 @@ test('nunjucksString - errors', () => {
   expect(() => {
     nunjucksString('{% if a %}', {});
   }).toThrowErrorMatchingInlineSnapshot(`
-"(unknown path)
-  parseIf: expected elif, else, or endif, got end of file"
-`);
+    [Template render error: (unknown path)
+      parseIf: expected elif, else, or endif, got end of file]
+  `);
 });
 
 test('nunjucksFunction - errors', () => {
   expect(() => {
     nunjucksFunction('{% if a %}');
   }).toThrowErrorMatchingInlineSnapshot(`
-"(unknown path)
-  parseIf: expected elif, else, or endif, got end of file"
-`);
+    [Template render error: (unknown path)
+      parseIf: expected elif, else, or endif, got end of file]
+  `);
 });
 
 test('validNunjucksString - {% if %} single line', () => {
@@ -67,7 +68,7 @@ test('validNunjucksString - {% if %} single line', () => {
 test('validNunjucksString - {% if %} return error', () => {
   expect(validNunjucksString('{% if $state.name %} true {% endif %}', true)).toEqual(true);
   expect(validNunjucksString('{% if $state.name %}', true)).toMatchInlineSnapshot(`
-    Object {
+    {
       "message": "(unknown path)
       parseIf: expected elif, else, or endif, got end of file",
       "name": "Template render error",

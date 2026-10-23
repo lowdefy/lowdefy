@@ -14,21 +14,23 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGetSignedUrl = jest.fn();
-const mockS3ClientConstructor = jest.fn();
+const mockGetSignedUrl = vi.fn();
+const mockS3ClientConstructor = vi.fn();
 
-jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
-  S3Client: jest.fn().mockImplementation((...args) => {
+vi.doMock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn().mockImplementation(function (...args) {
     mockS3ClientConstructor(...args);
     return {};
   }),
-  GetObjectCommand: jest.fn().mockImplementation((params) => params),
+  GetObjectCommand: vi.fn().mockImplementation(function (params) {
+    return params;
+  }),
 }));
 
-jest.unstable_mockModule('@aws-sdk/s3-request-presigner', () => ({
+vi.doMock('@aws-sdk/s3-request-presigner', () => ({
   getSignedUrl: (...args) => mockGetSignedUrl(...args),
 }));
 
@@ -211,7 +213,7 @@ test('checkWrite should be false', async () => {
 });
 
 test('Error from s3 client', async () => {
-  mockGetSignedUrl.mockImplementation(() => {
+  mockGetSignedUrl.mockImplementation(function () {
     throw new Error('Test S3 client error.');
   });
   const request = { key: 'key' };

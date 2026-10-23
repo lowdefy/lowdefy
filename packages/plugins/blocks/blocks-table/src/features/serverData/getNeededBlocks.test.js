@@ -15,6 +15,7 @@
 */
 
 import getNeededBlocks from './getNeededBlocks.js';
+import { expect, test } from 'vitest';
 
 test('getNeededBlocks maps a display range to the blocks of one list', () => {
   const segments = [{ itemStart: 0, length: 1000, listKey: '[]', groupPath: [], listStart: 0 }];

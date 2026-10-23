@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockLookup = jest.fn();
+const mockLookup = vi.fn();
 
-jest.unstable_mockModule('node:dns', () => ({
+vi.doMock('node:dns', () => ({
   lookup: (...lookupArgs) => mockLookup(...lookupArgs),
 }));
 

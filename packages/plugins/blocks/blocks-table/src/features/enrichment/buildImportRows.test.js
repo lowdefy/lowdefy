@@ -20,6 +20,7 @@ import buildImportRows from './buildImportRows.js';
 import chunkRows from './chunkRows.js';
 import getInputColumns from './getInputColumns.js';
 import { NEW_COLUMN, SKIP_COLUMN } from './matchCsvHeaders.js';
+import { expect, test } from 'vitest';
 
 const { columns } = normalizeColumns({
   columns: [

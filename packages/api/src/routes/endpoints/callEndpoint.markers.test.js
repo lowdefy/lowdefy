@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { serializer } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -22,10 +22,10 @@ import callEndpoint from './callEndpoint.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 test('callEndpoint returns a :return built from config without its build markers', async () => {
@@ -60,7 +60,7 @@ test('callEndpoint returns a :return built from config without its build markers
   const context = testContext({
     logger,
     operators: operatorsServer,
-    readConfigFile: jest.fn((path) => (path === 'api/order_ep.json' ? artifact : null)),
+    readConfigFile: vi.fn((path) => (path === 'api/order_ep.json' ? artifact : null)),
     user: { id: 'user_1' },
   });
   const result = await callEndpoint(context, {

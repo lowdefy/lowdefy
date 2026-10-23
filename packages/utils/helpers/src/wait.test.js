@@ -14,16 +14,32 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import wait from './wait.js';
 
 beforeEach(() => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('wait resolves only once the set ms have passed', async () => {
@@ -31,10 +47,10 @@ test('wait resolves only once the set ms have passed', async () => {
   wait(10).then(() => {
     flag = true;
   });
-  jest.advanceTimersByTime(9);
+  vi.advanceTimersByTime(9);
   await Promise.resolve();
   expect(flag).toBe(false);
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   await Promise.resolve();
   expect(flag).toBe(true);
 });

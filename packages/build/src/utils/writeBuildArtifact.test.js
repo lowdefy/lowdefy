@@ -13,12 +13,12 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => {
+vi.doMock('@lowdefy/node-utils', () => {
   return {
-    writeFileAtomic: jest.fn(),
-    writeFileIfChanged: jest.fn(),
+    writeFileAtomic: vi.fn(),
+    writeFileIfChanged: vi.fn(),
   };
 });
 const directories = { build: '/build' };

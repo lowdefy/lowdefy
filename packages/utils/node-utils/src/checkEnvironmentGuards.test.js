@@ -15,6 +15,7 @@
 */
 
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const guards = {
   secrets: { MONGODB_URI: 'acme-prod\\.mongodb\\.net' },

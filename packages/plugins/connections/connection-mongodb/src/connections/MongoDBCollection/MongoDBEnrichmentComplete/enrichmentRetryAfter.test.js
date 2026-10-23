@@ -19,6 +19,7 @@ import { validate } from '@lowdefy/ajv';
 import compileEnrichmentComplete from './compileEnrichmentComplete.js';
 import planCompleteCell from './planCompleteCell.js';
 import schema from './schema.js';
+import { expect, test } from 'vitest';
 
 // A result's retryAfterMs: how long the provider asked to wait (a rate limit's Retry-After,
 // such as treg's retry_after on a 429 or 503), in place of the exponential backoff.

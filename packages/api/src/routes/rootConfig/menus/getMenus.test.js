@@ -13,12 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import getMenus from './getMenus.js';
 import testContext from '../../../test/testContext.js';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 const context = testContext({ readConfigFile: mockReadConfigFile });
 const contextUser = testContext({

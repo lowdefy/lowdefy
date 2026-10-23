@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { decodeServerError } from '@lowdefy/engine';
 import {
   AuthenticationError,
@@ -32,8 +32,8 @@ let fetchMock;
 
 function createLowdefy({ basePath } = {}) {
   return {
-    _internal: { logger: { error: jest.fn() } },
-    _runtimeErrorCallback: jest.fn(),
+    _internal: { logger: { error: vi.fn() } },
+    _runtimeErrorCallback: vi.fn(),
     basePath,
   };
 }
@@ -64,7 +64,7 @@ function mockResponse(body = {}) {
 }
 
 beforeEach(() => {
-  fetchMock = jest.fn().mockResolvedValue(mockResponse());
+  fetchMock = vi.fn().mockResolvedValue(mockResponse());
   globalThis.fetch = fetchMock;
 });
 

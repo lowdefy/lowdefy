@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 const secret = 'planted/secret+value=1';
 const shortSecret = 'short77';
 

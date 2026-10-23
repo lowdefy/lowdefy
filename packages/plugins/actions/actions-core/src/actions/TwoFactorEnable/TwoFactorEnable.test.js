@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import TwoFactorEnable from './TwoFactorEnable.js';
 
 test('TwoFactorEnable passes params to the twoFactorEnable method', async () => {
-  const mockTwoFactorEnable = jest.fn();
+  const mockTwoFactorEnable = vi.fn();
   const methods = { twoFactorEnable: mockTwoFactorEnable };
   await TwoFactorEnable({ methods, params: { password: 'pass-123' } });
   expect(mockTwoFactorEnable.mock.calls).toEqual([[{ password: 'pass-123' }]]);
@@ -26,7 +26,7 @@ test('TwoFactorEnable passes params to the twoFactorEnable method', async () => 
 
 test('TwoFactorEnable returns the totpURI and backup codes from the method', async () => {
   const response = { totpURI: 'otpauth://totp/app', backupCodes: ['code-1', 'code-2'] };
-  const methods = { twoFactorEnable: jest.fn(() => Promise.resolve(response)) };
+  const methods = { twoFactorEnable: vi.fn(() => Promise.resolve(response)) };
   const result = await TwoFactorEnable({ methods, params: { password: 'pass-123' } });
   expect(result).toEqual(response);
 });

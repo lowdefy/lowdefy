@@ -20,6 +20,7 @@ import path from 'path';
 import { wait } from '@lowdefy/helpers';
 
 import pageBuildRecords from './pageBuildRecords.js';
+import { expect, test } from 'vitest';
 
 function sha256(content) {
   return crypto.createHash('sha256').update(content).digest('hex');

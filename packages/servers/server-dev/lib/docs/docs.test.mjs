@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import setupTestFixtures from './setupTestFixtures.mjs';
 
@@ -32,21 +32,21 @@ process.chdir(fixtureDir);
 // server's own build/plugins/*.js — not the app fixture built above, and not
 // present in this checkout) — mock both so runRequest can be unit tested
 // without a real server build.
-const mockCallRequest = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
+const mockCallRequest = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
 }));
-const mockCreateLowdefyContext = jest.fn(async () => ({
-  logger: { info: jest.fn(), debug: jest.fn(), warn: jest.fn(), error: jest.fn() },
+const mockCreateLowdefyContext = vi.fn(async () => ({
+  logger: { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
-jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
+vi.doMock('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
 
 // findConfig force-builds a page when pageId is passed — the fixture pages
 // only exist as pre-written build artifacts, so stub the JIT builder out.
-const mockBuildPageIfNeeded = jest.fn(async () => true);
-jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
+const mockBuildPageIfNeeded = vi.fn(async () => true);
+vi.doMock('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
   reviewBuiltPage: async () => 'current',
   syncBuildSignals: () => ({

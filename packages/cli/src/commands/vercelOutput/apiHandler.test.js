@@ -24,6 +24,7 @@ import { createRequire } from 'module';
 import { pathToFileURL } from 'url';
 
 import apiHandler from './apiHandler.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // Runs the generated function entry in its own process against a small Hono
 // app, the way Vercel runs it: the entry's default export is a Node HTTP

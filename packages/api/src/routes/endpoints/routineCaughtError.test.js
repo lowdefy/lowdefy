@@ -18,7 +18,7 @@
 // and what reaches the browser when config sends it on. These run the real server operators
 // through runRoutine and buildEndpointResult.
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, LowdefyInternalError, ServiceError, UserError } from '@lowdefy/errors';
 import { wait } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
@@ -30,8 +30,8 @@ import testContext from '../../test/testContext.js';
 
 const secret = 'planted-secret-value';
 
-const mockEcho = jest.fn(({ request }) => request);
-const mockFail = jest.fn(async ({ request }) => {
+const mockEcho = vi.fn(({ request }) => request);
+const mockFail = vi.fn(async ({ request }) => {
   await wait(request.ms ?? 0);
   const error = new Error(request.message);
   error.received = { token: 'runtime-token' };
@@ -39,7 +39,7 @@ const mockFail = jest.fn(async ({ request }) => {
   throw error;
 });
 // The shape AxiosHttp throws for a non-2xx response.
-const mockFailHttp = jest.fn(() => {
+const mockFailHttp = vi.fn(() => {
   const cause = new Error('Request failed with status code 404');
   cause.code = 'ERR_BAD_REQUEST';
   const error = new Error('Http response "404: Not Found".', { cause });
@@ -47,19 +47,19 @@ const mockFailHttp = jest.fn(() => {
   error.statusCode = 404;
   throw error;
 });
-const mockFailUser = jest.fn(({ request }) => {
+const mockFailUser = vi.fn(({ request }) => {
   throw new UserError(request.message);
 });
-const mockFailService = jest.fn(() => {
+const mockFailService = vi.fn(() => {
   throw new ServiceError('Did not answer.', { service: 'Upstream', code: 'ETIMEDOUT' });
 });
-const mockFailConfig = jest.fn(() => {
+const mockFailConfig = vi.fn(() => {
   throw new ConfigError('Request property "collection" is not a collection.');
 });
-const mockFailInternal = jest.fn(() => {
+const mockFailInternal = vi.fn(() => {
   throw new LowdefyInternalError('Lost the connection pool.');
 });
-const mockWait = jest.fn(({ request }) => wait(request.ms));
+const mockWait = vi.fn(({ request }) => wait(request.ms));
 [
   mockEcho,
   mockFail,
@@ -93,9 +93,9 @@ const connections = {
 function createContext() {
   const context = testContext({
     connections,
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
     operators: operatorsServer,
-    readConfigFile: jest.fn(async (path) => {
+    readConfigFile: vi.fn(async (path) => {
       if (path === 'connections/test.json') {
         return { id: 'connection:test', type: 'TestConnection', connectionId: 'test' };
       }
@@ -144,7 +144,7 @@ function fail(stepId, message, ms) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('_error returns the caught error in :catch and null outside it', async () => {
@@ -255,7 +255,7 @@ test('_error resolves in the condition and body of a :while inside a :catch', as
 });
 
 test('_error resolves in the properties of an auth step inside a :catch', async () => {
-  const recordFailure = jest.fn(async ({ properties }) => ({ recorded: properties.message }));
+  const recordFailure = vi.fn(async ({ properties }) => ({ recorded: properties.message }));
   recordFailure.meta = { authority: { scope: 'system' } };
   const context = createContext();
   context.auth = {};

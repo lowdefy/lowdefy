@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createCachedPromises from './cachedPromises.js';
 import wait from './wait.js';
 
 test('cachedPromises calls getter with key', async () => {
   const cache = new Map();
-  const getter = jest.fn(() => Promise.resolve('value'));
+  const getter = vi.fn(() => Promise.resolve('value'));
   const cachedGetter = createCachedPromises({ cache, getter });
   const promise = cachedGetter('key');
   expect(`${promise}`).toEqual('[object Promise]');
@@ -33,7 +33,7 @@ test('cachedPromises calls getter with key', async () => {
 test('cachedPromises only calls getter once', async () => {
   const cache = new Map();
 
-  const getter = jest.fn(() => Promise.resolve('value'));
+  const getter = vi.fn(() => Promise.resolve('value'));
   const cachedGetter = createCachedPromises({ cache, getter });
   const result1 = await cachedGetter('key');
   expect(result1).toEqual('value');
@@ -45,7 +45,7 @@ test('cachedPromises only calls getter once', async () => {
 test('getter is called once if first call has not yet resolved', async () => {
   const cache = new Map();
 
-  const getter = jest.fn(async () => {
+  const getter = vi.fn(async () => {
     await wait(10);
     return 'value';
   });

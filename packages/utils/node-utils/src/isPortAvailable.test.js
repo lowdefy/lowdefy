@@ -15,11 +15,11 @@
 */
 
 import { EventEmitter } from 'events';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 let listenErrors;
 
-jest.unstable_mockModule('net', () => ({
+vi.doMock('net', () => ({
   default: {
     createServer: () => {
       const server = new EventEmitter();

@@ -17,6 +17,7 @@
 import MongoDBCollection from './connections/MongoDBCollection/MongoDBCollection.js';
 import requestMetas from './connections/MongoDBCollection/requestMetas.js';
 import types from './types.js';
+import { expect, test } from 'vitest';
 
 test('types requests lists every MongoDBCollection request resolver', () => {
   expect(types.requests).toEqual(Object.keys(MongoDBCollection.requests));

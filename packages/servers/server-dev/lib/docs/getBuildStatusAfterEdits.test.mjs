@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockWaitForBuild = jest.fn();
-jest.unstable_mockModule('./waitForBuild.js', () => ({ default: mockWaitForBuild }));
-const mockBuildEditedPages = jest.fn();
-jest.unstable_mockModule('./buildEditedPages.js', () => ({ default: mockBuildEditedPages }));
-const mockGetBuildStatus = jest.fn(({ checked } = {}) => ({ build: { status: 'ok' }, checked }));
-jest.unstable_mockModule('./getBuildStatus.js', () => ({ default: mockGetBuildStatus }));
+const mockWaitForBuild = vi.fn();
+vi.doMock('./waitForBuild.js', () => ({ default: mockWaitForBuild }));
+const mockBuildEditedPages = vi.fn();
+vi.doMock('./buildEditedPages.js', () => ({ default: mockBuildEditedPages }));
+const mockGetBuildStatus = vi.fn(({ checked } = {}) => ({ build: { status: 'ok' }, checked }));
+vi.doMock('./getBuildStatus.js', () => ({ default: mockGetBuildStatus }));
 
 const { default: getBuildStatusAfterEdits } = await import('./getBuildStatusAfterEdits.js');
 const { default: readProxyBuildWait } = await import('./readProxyBuildWait.js');
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('getBuildStatusAfterEdits builds the edited pages once the edits are processed', async () => {

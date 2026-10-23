@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import getEndpointConfig from './getEndpointConfig.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const endpointConfig = {
@@ -33,10 +33,10 @@ const endpointConfig = {
   routine: { ':return': 'ok' },
 };
 
-const readConfigFile = jest.fn((path) => (path === 'api/ep_1.json' ? endpointConfig : null));
+const readConfigFile = vi.fn((path) => (path === 'api/ep_1.json' ? endpointConfig : null));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test("getEndpointConfig returns the config for an existing endpoint when unauthenticated on an auth'd app", async () => {

@@ -15,19 +15,19 @@
 */
 
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('fs', () => ({
+vi.doMock('fs', () => ({
   default: {
-    existsSync: jest.fn(),
-    readFileSync: jest.fn(),
-    writeFileSync: jest.fn(),
+    existsSync: vi.fn(),
+    readFileSync: vi.fn(),
+    writeFileSync: vi.fn(),
   },
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => {});
+  vi.clearAllMocks();
+  vi.spyOn(console, 'log').mockImplementation(() => {});
 });
 
 test('allowDependencyBuild creates pnpm-workspace.yaml in the app directory when no workspace root exists', async () => {

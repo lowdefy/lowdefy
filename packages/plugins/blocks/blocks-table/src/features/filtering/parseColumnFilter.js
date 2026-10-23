@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import getGroupOperator from './getGroupOperator.js';
+import isRelativeDate from './isRelativeDate.js';
 import textFilterOperators from './textFilterOperators.js';
 
 function parseOptions(leaf) {
@@ -43,7 +44,10 @@ function parseDate(leaf) {
     return { mode: 'range', from: leaf.value[0] ?? null, to: leaf.value[1] ?? null };
   }
   if (leaf.op === 'within' && type.isObject(leaf.value)) {
-    return { mode: 'relative', relative: leaf.value };
+    return { mode: 'relative', op: 'within', relative: leaf.value };
+  }
+  if ((leaf.op === 'before' || leaf.op === 'after') && isRelativeDate(leaf.value)) {
+    return { mode: 'relative', op: leaf.op, relative: leaf.value };
   }
   return null;
 }

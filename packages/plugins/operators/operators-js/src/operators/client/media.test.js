@@ -16,6 +16,7 @@
 
 /* eslint-disable no-global-assign */
 import media from './media.js';
+import { expect, test } from 'vitest';
 
 console.error = () => {};
 

@@ -16,6 +16,7 @@
 
 import createComparator from './createComparator.js';
 import normalizeColumns from './normalizeColumns.js';
+import { expect, test } from 'vitest';
 
 function column(config) {
   return normalizeColumns({ columns: [{ key: 'x', ...config }] }).columns[0];

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockHandleAgentChat = jest.fn();
+const mockHandleAgentChat = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
+vi.doMock('@lowdefy/ai-utils', () => ({
   handleAgentChat: mockHandleAgentChat,
 }));
 
@@ -30,7 +30,7 @@ test('AIGatewayAgent resolver delegates to handleAgentChat', async () => {
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: { properties: { model: 'anthropic/claude-sonnet-4.5' } },
       messages: [],
@@ -50,7 +50,7 @@ test('AIGatewayAgent resolver maps order/only to providerOptions.gateway', async
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -77,7 +77,7 @@ test('AIGatewayAgent resolver maps fallbackModels to providerOptions.gateway.mod
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -103,7 +103,7 @@ test('AIGatewayAgent resolver maps user, tags, zeroDataRetention', async () => {
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -134,7 +134,7 @@ test('AIGatewayAgent resolver maps providerTimeouts and byok', async () => {
   const byok = { anthropic: [{ apiKey: 'sk-ant-xxx' }] };
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -161,7 +161,7 @@ test('AIGatewayAgent resolver merges sugar props with existing providerOptions',
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -192,7 +192,7 @@ test('AIGatewayAgent resolver does not set providerOptions when no sugar props',
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: { properties: { model: 'openai/gpt-5' } },
       messages: [],

@@ -19,6 +19,7 @@ import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 
 import buildCsv from './buildCsv.js';
 import createColumnAccessor from '../../core/createColumnAccessor.js';
+import { expect, test } from 'vitest';
 
 function createApi({ rows, summary = true, summaryRow }) {
   const normalized = normalizeColumns({

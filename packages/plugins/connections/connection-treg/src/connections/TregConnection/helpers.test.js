@@ -17,6 +17,7 @@
 import formatMeta from './formatMeta.js';
 import parseCost from './parseCost.js';
 import readRetryAfter from './readRetryAfter.js';
+import { expect, test } from 'vitest';
 
 test('formatMeta joins tags as key=value pairs and drops empty values', () => {
   expect(formatMeta({ customer: 'cust_1', workspace: 9, empty: null })).toBe(

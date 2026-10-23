@@ -15,6 +15,7 @@
 */
 
 import setLowdefyUser from './setLowdefyUser.js';
+import { expect, test } from 'vitest';
 
 function createLowdefy() {
   return { _internal: {}, apiResponses: {}, lowdefyGlobal: { theme: 'dark' }, user: null };

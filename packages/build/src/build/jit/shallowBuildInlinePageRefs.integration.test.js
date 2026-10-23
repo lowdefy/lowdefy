@@ -20,14 +20,14 @@
 // reference checks as the full build over them, or a Link to a page that does
 // not exist warns in `lowdefy build` and stays silent in `lowdefy dev`.
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
 process.env.AUTH_SECRET = 'test-secret-for-integration-test';
 
-jest.unstable_mockModule('../buildApp.js', () => ({
+vi.doMock('../buildApp.js', () => ({
   default: ({ components }) => {
     components.app = components.app ?? {};
     components.app.html = components.app.html ?? {};
@@ -45,14 +45,14 @@ jest.unstable_mockModule('../buildApp.js', () => ({
     return components;
   },
 }));
-jest.unstable_mockModule('../full/updateServerPackageJson.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../full/updateServerPackageJson.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyPublicFolder.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyPublicFolder.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyAgentFileSystems.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyAgentFileSystems.js', () => ({
+  default: vi.fn(async () => {}),
 }));
 
 const { default: shallowBuild } = await import('./shallowBuild.js');

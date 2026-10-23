@@ -14,20 +14,73 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { Dropdown } from 'antd';
+import React, { useState } from 'react';
+import { Dropdown, Modal } from 'antd';
 
 import ToolbarIcon from './ToolbarIcon.js';
 
-// The active tab's menu. Its trigger stops the click so the tab bar does not handle it.
+// The active tab's menu: the app's `viewMenu` items (firing onViewMenu) or Delete view. An item
+// with `confirm` asks first. Its trigger stops the click so the tab bar does not handle it.
 function ViewTabMenu({ api, view }) {
-  const items = [{ key: 'delete', label: 'Delete view', danger: true, disabled: view.locked }];
+  const [confirming, setConfirming] = useState(null);
+  const menuItems = api.views.menuItems(view);
+  if (menuItems.length === 0) return null;
+  const items = menuItems.map(({ key, label, danger, disabled }) => ({
+    key,
+    label,
+    danger,
+    disabled,
+  }));
+  function onClick({ key, domEvent }) {
+    domEvent?.stopPropagation();
+    const item = menuItems.find((entry) => entry.key === key);
+    if (item?.confirm) {
+      setConfirming(item);
+      return;
+    }
+    api.views.selectMenuItem({ key, view });
+  }
   return (
-    <Dropdown
-      menu={{ items, onClick: () => api.views.remove(view) }}
-      placement="bottomLeft"
-      trigger={['click']}
-    >
+    <>
+      <ViewMenuTrigger api={api} items={items} onClick={onClick} />
+      {confirming ? (
+        // The dialog renders in a portal, but React events still bubble to the tab, whose key and
+        // focus handlers would take Enter and focus away from the dialog.
+        <span
+          onClick={stopPropagation}
+          onFocus={stopPropagation}
+          onKeyDown={stopPropagation}
+          onMouseDown={stopPropagation}
+        >
+          <Modal
+            okButtonProps={{ danger: confirming.danger, 'data-lf-view-menu-confirm': '' }}
+            okText={confirming.label}
+            onCancel={() => setConfirming(null)}
+            onOk={() => {
+              setConfirming(null);
+              api.views.selectMenuItem({ key: confirming.key, view });
+            }}
+            open
+            title={confirming.label}
+            width={420}
+          >
+            <p data-lf-view-menu-confirm-message="">
+              {confirming.confirm === true ? 'Are you sure?' : confirming.confirm}
+            </p>
+          </Modal>
+        </span>
+      ) : null}
+    </>
+  );
+}
+
+function stopPropagation(event) {
+  event.stopPropagation();
+}
+
+function ViewMenuTrigger({ api, items, onClick }) {
+  return (
+    <Dropdown menu={{ items, onClick }} placement="bottomLeft" trigger={['click']}>
       <button
         aria-label="View options"
         className="lf-table-view-menu"

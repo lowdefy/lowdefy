@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import DeleteUser from './DeleteUser.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -31,22 +31,22 @@ const invitations = [{ id: 'invitation-1', email: 'user2@example.com', status: '
 function createCascadeMocks() {
   const calls = [];
   const adapter = {
-    findOne: jest.fn(async ({ model }) => {
+    findOne: vi.fn(async ({ model }) => {
       calls.push(`findOne:${model}`);
       if (model === 'user') return user;
       return null;
     }),
-    findMany: jest.fn(async ({ model }) => {
+    findMany: vi.fn(async ({ model }) => {
       calls.push(`findMany:${model}`);
       if (model === 'member') return members;
       if (model === 'invitation') return invitations;
       return [];
     }),
-    delete: jest.fn(async ({ model, where }) => {
+    delete: vi.fn(async ({ model, where }) => {
       calls.push(`delete:${model}:${where[0].value}`);
     }),
   };
-  const removeUser = jest.fn(async () => {
+  const removeUser = vi.fn(async () => {
     calls.push('removeUser');
     return { success: true };
   });
@@ -95,8 +95,8 @@ test('DeleteUser leaves the app-owned contact untouched', async () => {
 });
 
 test('DeleteUser throws when the user does not exist', async () => {
-  const adapter = { findOne: jest.fn().mockResolvedValue(null) };
-  const removeUser = jest.fn();
+  const adapter = { findOne: vi.fn().mockResolvedValue(null) };
+  const removeUser = vi.fn();
   const { auth } = createMockAuth({ adapter, adminEndpoints: { removeUser } });
   await expect(DeleteUser({ acting, auth, properties: { userId: 'missing' } })).rejects.toThrow(
     'DeleteUser found no user with id "missing".'

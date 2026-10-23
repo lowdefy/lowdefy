@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import OAuthContinue from './OAuthContinue.js';
 
-const mockOauth2Continue = jest.fn();
+const mockOauth2Continue = vi.fn();
 const methods = { oauth2Continue: mockOauth2Continue };
 
 test('OAuthContinue calls the oauth2Continue method with its params', async () => {

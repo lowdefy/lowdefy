@@ -18,16 +18,26 @@ import { type } from '@lowdefy/helpers';
 
 import defaultRelativeDate from './defaultRelativeDate.js';
 import getValueShape from './getValueShape.js';
+import isRelativeBound from './isRelativeBound.js';
+
+const RELATIVE_OPS = new Set(['within', 'before', 'after']);
 
 // A new operator keeps the value when it has the same shape, turns a scalar into a one-item list
-// (and back), and otherwise starts empty.
+// (and back), and otherwise starts empty. A relative date moves between `within`, `before` and
+// `after`, and no other operator takes one.
 function changeLeafOperator({ leaf, op }) {
   const from = getValueShape(leaf.op);
   const to = getValueShape(op);
   const next = { key: leaf.key, op };
+  const relative =
+    from === 'relative' || (RELATIVE_OPS.has(leaf.op) && isRelativeBound(leaf.value));
   if (to === 'none') return next;
   if (to === 'relative') {
-    next.value = from === 'relative' ? leaf.value : defaultRelativeDate;
+    next.value = relative ? leaf.value : defaultRelativeDate;
+    return next;
+  }
+  if (relative) {
+    if (RELATIVE_OPS.has(op)) next.value = leaf.value;
     return next;
   }
   if (from === to) {

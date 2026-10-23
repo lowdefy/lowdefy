@@ -18,8 +18,20 @@ import React, { useState } from 'react';
 import { Button, Checkbox, Input, Popover } from 'antd';
 
 // "Save as…": asks for a title and whether the view is shared, then fires onViewSave without an
-// id. The app creates the view and may make it active through `activeView`.
+// id. The app creates the view and may make it active through `activeView`. A table with
+// onViewSaveAs actions fires that instead, for the app's own dialog.
 function SaveViewAs({ api }) {
+  if (api.views.handsSaveAs) {
+    return (
+      <Button data-lf-view-action="save-as" onClick={() => api.views.requestSaveAs()} size="small">
+        Save as…
+      </Button>
+    );
+  }
+  return <SaveViewAsPopover api={api} />;
+}
+
+function SaveViewAsPopover({ api }) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [shared, setShared] = useState(false);

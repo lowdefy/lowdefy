@@ -15,6 +15,7 @@
 */
 
 import resolveLoadingState from './resolveLoadingState.js';
+import { expect, test } from 'vitest';
 
 test('resolveLoadingState is initial while loading with no rows', () => {
   expect(resolveLoadingState({ loading: true, sourceCount: 0, displayCount: 0 })).toBe('initial');

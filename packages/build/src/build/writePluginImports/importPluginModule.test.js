@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import importPluginModule from './importPluginModule.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 let tempDirectory;
 

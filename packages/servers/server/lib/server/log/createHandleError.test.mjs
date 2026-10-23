@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { TenantIntegrityError } from '@lowdefy/errors';
 
 const secret = 'planted-handle-error-secret';
@@ -38,14 +38,14 @@ function createAxiosError() {
 function testContext({ logger, headers } = {}) {
   return {
     headers,
-    logger: logger ?? { error: jest.fn() },
-    readConfigFile: jest.fn(async () => null),
+    logger: logger ?? { error: vi.fn() },
+    readConfigFile: vi.fn(async () => null),
     req: { url: '/api/request/page/req', method: 'POST', hostname: 'app.example.com' },
   };
 }
 
 beforeEach(() => {
-  console.error = jest.fn();
+  console.error = vi.fn();
 });
 
 test('handleError logs the referer header with credential query parameters redacted', async () => {
@@ -64,7 +64,7 @@ test('handleError fallback output carries no axios config auth and no planted se
   const logError = new Error(`Log sink rejected ${secret}`);
   const context = testContext({
     logger: {
-      error: jest.fn(() => {
+      error: vi.fn(() => {
         throw logError;
       }),
     },

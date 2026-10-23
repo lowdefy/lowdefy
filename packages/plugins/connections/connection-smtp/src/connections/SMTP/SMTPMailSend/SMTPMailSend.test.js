@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockSend = jest.fn();
+const mockSend = vi.fn();
 
-jest.unstable_mockModule('../send.js', () => ({
+vi.doMock('../send.js', () => ({
   default: mockSend,
 }));
 

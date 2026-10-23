@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import readFile from './readFile.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 let basePath;
 

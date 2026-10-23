@@ -1,4 +1,4 @@
 .lowdefy/**
 coverage/**
-jest.config.js
+vitest.config.js
 .babelrc

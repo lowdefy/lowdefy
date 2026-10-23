@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 
 import testContext from '../test-utils/testContext.js';
 import {
@@ -27,7 +27,7 @@ import {
 } from './registerModules.js';
 import { getRecord } from './buildRefs/deferredRegistry.js';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 function createTestContext(overrides = {}) {
   const context = testContext({

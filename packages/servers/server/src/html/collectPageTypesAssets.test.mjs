@@ -15,6 +15,7 @@
 */
 
 import collectPageTypesAssets from './collectPageTypesAssets.js';
+import { expect, test } from 'vitest';
 
 const manifest = {
   'client/main.jsx': { file: 'assets/main.js', css: ['assets/main.css'], imports: ['_react.js'] },

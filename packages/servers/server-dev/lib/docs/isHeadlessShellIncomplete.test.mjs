@@ -17,6 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { afterAll, afterEach, expect, test } from 'vitest';
 
 // Playwright's registry reads PLAYWRIGHT_BROWSERS_PATH when it loads, so it
 // is set before the first import.

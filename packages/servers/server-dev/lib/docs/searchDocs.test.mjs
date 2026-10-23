@@ -19,6 +19,7 @@ import path from 'path';
 
 import getDocsManifest from './getDocsManifest.js';
 import searchDocs from './searchDocs.js';
+import { expect, test } from 'vitest';
 
 // The order the substring search gave before terms: title or slug matches,
 // then body matches, each in manifest order.

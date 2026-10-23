@@ -15,6 +15,7 @@
 */
 
 import getAggregateText from './getAggregateText.js';
+import { expect, test } from 'vitest';
 
 test('getAggregateText formats counts, percentages and column values', () => {
   const amount = { type: 'currency', cell: { currency: 'USD', locale: 'en-US' } };

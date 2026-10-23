@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
 import createAuthStrategies from './createAuthStrategies.js';
@@ -22,7 +22,7 @@ import createAuthStrategies from './createAuthStrategies.js';
 const appMeta = { name: 'Test App', slug: 'test-app' };
 
 function mockLogger() {
-  return { debug: jest.fn(), warn: jest.fn() };
+  return { debug: vi.fn(), warn: vi.fn() };
 }
 
 test('createAuthStrategies returns an empty list when no strategies are configured', () => {
@@ -50,7 +50,7 @@ test('createAuthStrategies returns an empty list when no strategies are configur
 test('createAuthStrategies resolves _secret operators and constructs verifiers', () => {
   const logger = mockLogger();
   const verify = async () => null;
-  const apiKey = jest.fn(() => verify);
+  const apiKey = vi.fn(() => verify);
   const strategies = createAuthStrategies({
     appMeta,
     authJson: {

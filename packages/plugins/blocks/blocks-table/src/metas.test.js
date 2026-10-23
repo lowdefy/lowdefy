@@ -15,6 +15,7 @@
 */
 
 import * as metas from './metas.js';
+import { expect, test } from 'vitest';
 
 // The client only renders the slots of container categories, so a block with slots it cannot
 // render would document blocks that never show.

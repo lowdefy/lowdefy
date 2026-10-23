@@ -20,6 +20,7 @@ import path from 'path';
 
 import readExercised from './readExercised.js';
 import writeExercised from './writeExercised.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let directories;
 

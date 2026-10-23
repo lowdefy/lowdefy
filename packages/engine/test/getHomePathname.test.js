@@ -15,6 +15,7 @@
 */
 
 import getHomePathname from '../src/getHomePathname.js';
+import { expect, test } from 'vitest';
 
 test('getHomePathname returns the app root when a homePageId is configured', () => {
   expect(getHomePathname({ lowdefy: { home: { configured: true, pageId: 'dashboard' } } })).toEqual(

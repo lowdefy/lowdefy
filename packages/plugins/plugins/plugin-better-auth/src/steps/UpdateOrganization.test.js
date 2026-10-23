@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import UpdateOrganization from './UpdateOrganization.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -36,7 +36,7 @@ const acting = {
 const organizationId = 'org-1';
 
 test('UpdateOrganization calls updateOrganization with the name nested under data', async () => {
-  const updateOrganization = jest.fn().mockResolvedValue({ id: 'org-1', name: 'Acme Inc' });
+  const updateOrganization = vi.fn().mockResolvedValue({ id: 'org-1', name: 'Acme Inc' });
   const { auth } = createMockAuth({ organizationEndpoints: { updateOrganization } });
   const result = await UpdateOrganization({
     acting,
@@ -52,7 +52,7 @@ test('UpdateOrganization calls updateOrganization with the name nested under dat
 });
 
 test('UpdateOrganization passes logo and metadata through under data', async () => {
-  const updateOrganization = jest.fn().mockResolvedValue({ id: 'org-1' });
+  const updateOrganization = vi.fn().mockResolvedValue({ id: 'org-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { updateOrganization } });
   await UpdateOrganization({
     acting,
@@ -75,7 +75,7 @@ test('UpdateOrganization passes logo and metadata through under data', async () 
 });
 
 test('UpdateOrganization sends only the fields the caller named', async () => {
-  const updateOrganization = jest.fn().mockResolvedValue({ id: 'org-1' });
+  const updateOrganization = vi.fn().mockResolvedValue({ id: 'org-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { updateOrganization } });
   await UpdateOrganization({
     acting,
@@ -90,7 +90,7 @@ test('UpdateOrganization sends only the fields the caller named', async () => {
 });
 
 test('UpdateOrganization scopes the write to the organizationId passed by the floor', async () => {
-  const updateOrganization = jest.fn().mockResolvedValue({ id: 'org-explicit' });
+  const updateOrganization = vi.fn().mockResolvedValue({ id: 'org-explicit' });
   const { auth } = createMockAuth({ organizationEndpoints: { updateOrganization } });
   await UpdateOrganization({
     acting,
@@ -102,9 +102,9 @@ test('UpdateOrganization scopes the write to the organizationId passed by the fl
 });
 
 test('UpdateOrganization carries the real caller so the endpoint own member check runs', async () => {
-  const updateOrganization = jest.fn().mockResolvedValue({ id: 'org-1' });
+  const updateOrganization = vi.fn().mockResolvedValue({ id: 'org-1' });
   const { auth, authContext } = createMockAuth({
-    adapter: { findOne: jest.fn() },
+    adapter: { findOne: vi.fn() },
     organizationEndpoints: { updateOrganization },
   });
   await UpdateOrganization({ acting, auth, organizationId, properties: { name: 'Acme Inc' } });
@@ -117,7 +117,7 @@ test('UpdateOrganization carries the real caller so the endpoint own member chec
 });
 
 test('UpdateOrganization throws when none of name, logo or metadata are given', async () => {
-  const updateOrganization = jest.fn();
+  const updateOrganization = vi.fn();
   const { auth } = createMockAuth({ organizationEndpoints: { updateOrganization } });
   await expect(
     UpdateOrganization({ acting, auth, organizationId, properties: {} })
@@ -128,7 +128,7 @@ test('UpdateOrganization throws when none of name, logo or metadata are given', 
 });
 
 test('UpdateOrganization throws naming the id-is-the-slug reason when slug is given', async () => {
-  const updateOrganization = jest.fn();
+  const updateOrganization = vi.fn();
   const { auth } = createMockAuth({ organizationEndpoints: { updateOrganization } });
   await expect(
     UpdateOrganization({

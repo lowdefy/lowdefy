@@ -15,6 +15,7 @@
 */
 
 import validateJourneyUser from './validateJourneyUser.js';
+import { expect, test } from 'vitest';
 
 test('validateJourneyUser accepts every single-value form', () => {
   expect(validateJourneyUser({})).toEqual({});

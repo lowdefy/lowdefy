@@ -17,6 +17,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
+import { expect, test } from 'vitest';
 
 test('copy directory', async () => {
   const dirPathFrom = path.resolve(process.cwd(), 'test/copyDirectory/from/');

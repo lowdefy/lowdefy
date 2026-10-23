@@ -17,6 +17,7 @@
 /* eslint-disable max-classes-per-file */
 import { WebParser } from '@lowdefy/operators';
 import _menu from './menu.js';
+import { expect, test } from 'vitest';
 
 const arrayIndices = [1];
 

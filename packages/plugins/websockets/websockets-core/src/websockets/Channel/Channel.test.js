@@ -15,6 +15,7 @@
 */
 
 import Channel from './Channel.js';
+import { expect, test } from 'vitest';
 
 test('Channel resolves when the signal aborts', async () => {
   const controller = new AbortController();

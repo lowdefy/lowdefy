@@ -15,6 +15,7 @@
 */
 
 import parseSince from './parseSince.js';
+import { expect, test } from 'vitest';
 
 const NOW = Date.parse('2026-10-06T12:00:00.000Z');
 

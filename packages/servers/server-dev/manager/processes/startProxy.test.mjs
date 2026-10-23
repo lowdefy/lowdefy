@@ -17,7 +17,7 @@
 import http from 'node:http';
 import net from 'node:net';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 const { default: startProxy } = await import('./startProxy.mjs');
 const { default: createBuildActivity } = await import('../utils/createBuildActivity.mjs');
@@ -64,7 +64,7 @@ async function startChildAndProxy(handler) {
   context = {
     internalPort,
     options: { port: await getFreePort() },
-    logger: { debug: jest.fn() },
+    logger: { debug: vi.fn() },
     requestActivity: createRequestActivity({
       onChange: (fields) => activityRecords.push(fields),
       throttleMs: 0,

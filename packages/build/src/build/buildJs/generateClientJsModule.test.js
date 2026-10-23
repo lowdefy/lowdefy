@@ -16,6 +16,7 @@
 
 import generateClientJsModule from './generateClientJsModule.js';
 import generateJsFile from './generateJsFile.js';
+import { expect, test } from 'vitest';
 
 // The dev-server fold and the full build both generate client jsMap module text
 // through generateClientJsModule. The wire format the client compiles must not

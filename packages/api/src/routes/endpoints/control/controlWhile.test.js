@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import runTest from '../test/runTest.js';
 
@@ -25,7 +25,7 @@ function whileLogs(context) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('while loop runs until the condition is false', async () => {

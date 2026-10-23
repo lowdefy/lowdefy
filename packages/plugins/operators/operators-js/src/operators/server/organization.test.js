@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/operators', () => ({
-  getFromObject: jest.fn(),
+vi.doMock('@lowdefy/operators', () => ({
+  getFromObject: vi.fn(),
 }));
 
 test('organization calls getFromObject with the pinned organization for "id"', async () => {
@@ -94,7 +94,7 @@ test('organization throws when organization is undefined', async () => {
   expect(() =>
     organization({ location: 'location', organization: undefined, params: 'id' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_organization requires auth organizations to be configured - no organizations state is available."`
+    `[ConfigError: _organization requires auth organizations to be configured - no organizations state is available.]`
   );
 });
 
@@ -103,7 +103,7 @@ test('organization throws when organization is null', async () => {
   expect(() =>
     organization({ location: 'location', organization: null, params: 'id' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_organization requires auth organizations to be configured - no organizations state is available."`
+    `[ConfigError: _organization requires auth organizations to be configured - no organizations state is available.]`
   );
 });
 
@@ -116,7 +116,7 @@ test('organization throws under the "tenant" organizations policy', async () => 
       params: 'id',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_organization cannot resolve under the \\"tenant\\" organizations policy - there is no single pinned organization. Pass an explicit organization id instead."`
+    `[ConfigError: _organization cannot resolve under the "tenant" organizations policy - there is no single pinned organization. Pass an explicit organization id instead.]`
   );
 });
 
@@ -129,7 +129,7 @@ test('organization throws when the pinned organization has not been resolved', a
       params: 'id',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"The pinned organization has not been resolved - the startup ensure has not completed or failed."`
+    `[LowdefyInternalError: The pinned organization has not been resolved - the startup ensure has not completed or failed.]`
   );
 });
 

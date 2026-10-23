@@ -15,6 +15,7 @@
 */
 
 import isTraceId from './isTraceId.js';
+import { expect, test } from 'vitest';
 
 test('isTraceId refuses path traversal, empty strings, uppercase suffixes and non-strings', () => {
   expect(isTraceId('../x')).toBe(false);

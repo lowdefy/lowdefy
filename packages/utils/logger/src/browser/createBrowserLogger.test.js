@@ -15,13 +15,13 @@
 */
 
 // eslint-disable-next-line no-unused-vars
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 import createBrowserLogger from './createBrowserLogger.js';
 
-const mockConsoleError = jest.fn();
-const mockConsoleWarn = jest.fn();
-const mockConsoleInfo = jest.fn();
-const mockConsoleDebug = jest.fn();
+const mockConsoleError = vi.fn();
+const mockConsoleWarn = vi.fn();
+const mockConsoleInfo = vi.fn();
+const mockConsoleDebug = vi.fn();
 
 beforeEach(() => {
   mockConsoleError.mockClear();

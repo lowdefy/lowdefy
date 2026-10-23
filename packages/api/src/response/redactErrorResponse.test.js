@@ -19,6 +19,7 @@ import { ConfigError, RequestError, UserError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import redactErrorResponse from './redactErrorResponse.js';
+import { expect, test } from 'vitest';
 
 const configDirectory = path.resolve('/app/config');
 

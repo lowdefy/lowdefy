@@ -15,6 +15,7 @@
 */
 
 import selectOrphanedClis from './selectOrphanedClis.js';
+import { expect, test } from 'vitest';
 
 // Epoch milliseconds.
 const CLI_START = 1790000000000;

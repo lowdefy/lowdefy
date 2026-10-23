@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import startJourneyObserver from './startJourneyObserver.js';
 
@@ -24,19 +24,19 @@ function createFakeWindow({ binding } = {}) {
   class FakeMutationObserver {
     constructor(callback) {
       this.callback = callback;
-      this.disconnect = jest.fn();
-      this.observe = jest.fn();
+      this.disconnect = vi.fn();
+      this.observe = vi.fn();
       observers.push(this);
     }
   }
   const window = {
     document: { body: {} },
     MutationObserver: FakeMutationObserver,
-    requestAnimationFrame: jest.fn((callback) => {
+    requestAnimationFrame: vi.fn((callback) => {
       frames.push(callback);
       return frames.length;
     }),
-    cancelAnimationFrame: jest.fn(),
+    cancelAnimationFrame: vi.fn(),
   };
   if (binding !== undefined) {
     window.__lowdefyJourneyObserve = binding;
@@ -51,9 +51,9 @@ function createFakeWindow({ binding } = {}) {
 }
 
 function createFakeTrace() {
-  const unsubscribe = jest.fn();
-  const trace = { subscribe: jest.fn(() => unsubscribe) };
-  return { getTrace: jest.fn(() => trace), trace, unsubscribe };
+  const unsubscribe = vi.fn();
+  const trace = { subscribe: vi.fn(() => unsubscribe) };
+  return { getTrace: vi.fn(() => trace), trace, unsubscribe };
 }
 
 test('startJourneyObserver does nothing in a developer tab, where there is no binding', () => {
@@ -63,7 +63,7 @@ test('startJourneyObserver does nothing in a developer tab, where there is no bi
     window,
     lowdefy: { pageId: 'home' },
     getTrace,
-    collectVisibleBlockIds: jest.fn(() => ['a']),
+    collectVisibleBlockIds: vi.fn(() => ['a']),
   });
   expect(stop).toBeNull();
   expect(trace.subscribe).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ test('startJourneyObserver does nothing in a developer tab, where there is no bi
 });
 
 test('startJourneyObserver forwards completed events and each newly visible block once', () => {
-  const binding = jest.fn(async () => {});
+  const binding = vi.fn(async () => {});
   const { window, observers, mutate, runFrames } = createFakeWindow({ binding });
   const { getTrace, trace, unsubscribe } = createFakeTrace();
   const lowdefy = { pageId: 'home' };
@@ -132,7 +132,7 @@ test('startJourneyObserver forwards completed events and each newly visible bloc
 });
 
 test('startJourneyObserver keeps the app running when the binding or a payload throws', () => {
-  const binding = jest.fn(() => {
+  const binding = vi.fn(() => {
     throw new Error('context closed');
   });
   const { window } = createFakeWindow({ binding });

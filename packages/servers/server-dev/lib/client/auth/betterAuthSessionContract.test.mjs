@@ -15,6 +15,7 @@
 */
 
 import { createAuthClient } from 'better-auth/client';
+import { expect, test } from 'vitest';
 
 // AuthConfigured.jsx depends on behaviours of better-auth's client internals
 // that no public API documents:
@@ -72,7 +73,7 @@ function createClient(handleGetSession) {
   // makes the signal subscription live. It also keeps the store mounted for
   // bare .get() calls: on an unmounted onMount store, .get() temporarily
   // mounts it and schedules nanostores' delayed unmount on a timer that
-  // outlives the jest worker. The mount's own initial fetch is skipped in
+  // outlives the test worker. The mount's own initial fetch is skipped in
   // node (isServer), so no request is recorded here.
   client.$store.atoms.session.subscribe(() => {});
   const getSessionRequests = () => requests.filter((r) => r.url.includes('/get-session'));

@@ -17,6 +17,7 @@
 import { ConfigError, ConfigWarning, LowdefyInternalError } from '@lowdefy/errors';
 
 import serializeBuildException from './serializeBuildException.js';
+import { expect, test } from 'vitest';
 
 test('serializeBuildException extracts message, name and location fields', () => {
   const error = new ConfigError('Bad config', { configKey: 'abc123', checkSlug: 'my-check' });

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import schemaTest from './schemaTest.js';
 
 const runBlockSchemaTests = ({ examples, schema }) => {

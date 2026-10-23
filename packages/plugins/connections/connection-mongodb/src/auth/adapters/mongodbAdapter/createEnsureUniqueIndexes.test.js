@@ -23,6 +23,7 @@ import { organization } from 'better-auth/plugins';
 import { MongoClient } from 'mongodb';
 
 import MongoDBAuthAdapter from '../MongoDBAuthAdapter/MongoDBAuthAdapter.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 const indexes = [
   { model: 'organization', fields: ['slug'] },

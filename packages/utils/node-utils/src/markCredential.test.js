@@ -19,6 +19,7 @@ import getMarkedCredentials from './getMarkedCredentials.js';
 import markCredential from './markCredential.js';
 import runInCredentialScope from './runInCredentialScope.js';
 import scrubCredentials from './scrubCredentials.js';
+import { expect, test } from 'vitest';
 
 test('markCredential makes scrubCredentials replace the value in the rest of the scope', () => {
   runInCredentialScope(() => {

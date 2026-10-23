@@ -15,6 +15,7 @@
 */
 
 import scoreMutants from './scoreMutants.js';
+import { expect, test } from 'vitest';
 
 const baselines = [
   { key: 'a.yaml#a', file: 'a.yaml', name: 'a' },

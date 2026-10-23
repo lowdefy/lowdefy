@@ -17,6 +17,7 @@
 import createSetState from '../../src/actions/createSetState.js';
 import DependencyTracker from '../../src/tracking/DependencyTracker.js';
 import { countEvaluations, snapshot, trackingContext } from '../trackingContext.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 const pageId = 'one';
 

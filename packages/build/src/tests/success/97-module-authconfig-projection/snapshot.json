@@ -1504,6 +1504,7 @@
           "payload": {
             "~k": "2o"
           },
+          "readOnly": false,
           "requestId": "load-records",
           "pageId": "authmod/panel",
           "~k": "u"
@@ -1562,6 +1563,7 @@
       "public": true,
       "~k": "2p"
     },
+    "readOnly": false,
     "requestId": "load-records",
     "pageId": "authmod/panel",
     "~k": "u"

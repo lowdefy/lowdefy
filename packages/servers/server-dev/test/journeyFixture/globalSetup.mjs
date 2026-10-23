@@ -19,18 +19,22 @@ import startJourneyFixture from '../../../../../scripts/lib/startJourneyFixture.
 // Starts apps/journey-fixture once for every fixture test file, and hands its
 // url to the test workers through the environment they inherit. With no
 // Chromium every test skips.
-async function globalSetup() {
-  const fixture = await startJourneyFixture({
+let fixture;
+
+export async function setup() {
+  const started = await startJourneyFixture({
     port: Number(process.env.LOWDEFY_JOURNEY_FIXTURE_PORT ?? 3300),
   });
-  if (fixture.skipped) {
-    process.env.LOWDEFY_JOURNEY_FIXTURE_SKIP = fixture.skipped;
+  if (started.skipped) {
+    process.env.LOWDEFY_JOURNEY_FIXTURE_SKIP = started.skipped;
     return;
   }
-  globalThis.__lowdefyJourneyFixture = fixture;
+  fixture = started;
   process.env.LOWDEFY_JOURNEY_FIXTURE_URL = fixture.url;
   process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY = fixture.configDirectory;
   process.env.LOWDEFY_JOURNEY_FIXTURE_DATABASE_URI = fixture.uri;
 }
 
-export default globalSetup;
+export async function teardown() {
+  await fixture?.stop();
+}

@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGetRows = jest.fn();
-const mockAddRow = jest.fn();
+const mockGetRows = vi.fn();
+const mockAddRow = vi.fn();
 
-const mockSave = jest.fn();
+const mockSave = vi.fn();
 
-jest.unstable_mockModule('../getSheet', () => {
+vi.doMock('../getSheet', () => {
   return {
     default: () => ({
       addRow: mockAddRow,
@@ -109,9 +109,9 @@ test('googleSheetUpdateOne, match one', async () => {
     upserted: false,
   });
   expect(mockSave.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "raw": undefined,
         },
       ],
@@ -149,9 +149,9 @@ test('googleSheetUpdateOne, match one, raw true', async () => {
     upserted: false,
   });
   expect(mockSave.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "raw": true,
         },
       ],
@@ -175,7 +175,7 @@ test('googleSheetUpdateOne, match nothing', async () => {
     modifiedCount: 0,
     upserted: false,
   });
-  expect(mockSave.mock.calls).toMatchInlineSnapshot(`Array []`);
+  expect(mockSave.mock.calls).toMatchInlineSnapshot(`[]`);
 });
 
 test('googleSheetUpdateOne, match nothing, upsert true', async () => {
@@ -202,12 +202,12 @@ test('googleSheetUpdateOne, match nothing, upsert true', async () => {
     upserted: true,
   });
   expect(mockAddRow.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "name": "New",
         },
-        Object {
+        {
           "raw": undefined,
         },
       ],
@@ -242,9 +242,9 @@ test('googleSheetUpdateOne, match more than one', async () => {
     upserted: false,
   });
   expect(mockSave.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "raw": undefined,
         },
       ],

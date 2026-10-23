@@ -30,6 +30,7 @@
 // interception and this file together.
 
 import { twoFactor, TWO_FACTOR_ERROR_CODES } from 'better-auth/plugins/two-factor';
+import { expect, test } from 'vitest';
 
 test('twoFactor plugin sign-in matcher only covers email, username and phone-number', () => {
   const plugin = twoFactor();

@@ -122,6 +122,7 @@ class Requests {
         blockId: request.blockId,
         pageId: this.context.pageId,
         payload: serializer.serialize(request.payload),
+        readOnly: this.requestConfig[request.requestId].readOnly,
         requestId: request.requestId,
       });
       const deserializedResponse = serializer.deserialize(

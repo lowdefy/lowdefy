@@ -15,6 +15,7 @@
 */
 
 import normalizeCaller from './normalizeCaller.js';
+import { expect, test } from 'vitest';
 
 test('normalizeCaller snakes every camelCase top-level key', () => {
   const user = {

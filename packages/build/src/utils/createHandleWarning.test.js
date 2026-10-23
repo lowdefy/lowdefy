@@ -20,6 +20,7 @@ import { ConfigWarning } from '@lowdefy/errors';
 
 import createHandleWarning from './createHandleWarning.js';
 import createTestLogger from '../test-utils/createTestLogger.js';
+import { expect, test } from 'vitest';
 
 function createContext(overrides = {}) {
   const { logger, lines } = createTestLogger();

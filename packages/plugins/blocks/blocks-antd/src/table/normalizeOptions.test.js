@@ -15,6 +15,7 @@
 */
 
 import normalizeOptions from './normalizeOptions.js';
+import { expect, test } from 'vitest';
 
 test('normalizeOptions returns undefined when there are no options', () => {
   expect(normalizeOptions(undefined)).toBeUndefined();

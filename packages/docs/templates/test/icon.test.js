@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -36,20 +37,20 @@ const schema = {
 
 test('icon propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "block.properties.field",
-        "layout": Object {
+        "layout": {
           "_global": "settings_input_layout",
         },
-        "properties": Object {
+        "properties": {
           "allowClear": true,
-          "label": Object {
+          "label": {
             "align": "right",
             "extra": "description",
             "span": 8,
           },
-          "options": Object {
+          "options": {
             "_global": "all_icons",
           },
           "showSearch": true,
@@ -65,12 +66,12 @@ test('icon propertiesFormTransformer', () => {
 
 test('icon propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
@@ -81,7 +82,7 @@ test('icon propertiesGetterTransformer', () => {
 
 test('icon defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": null,
     }
   `);
@@ -102,7 +103,7 @@ test('icon defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
+    {
       "field": "value",
     }
   `);

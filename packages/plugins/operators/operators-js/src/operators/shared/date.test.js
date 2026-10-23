@@ -15,6 +15,7 @@
 */
 
 import _date from './date.js';
+import { expect, test } from 'vitest';
 
 const location = 'location';
 
@@ -61,19 +62,19 @@ test('_date from Date object', () => {
 
 test('_date null', () => {
   expect(() => _date({ params: null, location })).toThrowErrorMatchingInlineSnapshot(
-    `"_date.__default accepts one of the following types: number, string, date."`
+    `[Error: _date.__default accepts one of the following types: number, string, date.]`
   );
 });
 
 test('_date invalid operator type', () => {
   expect(() => _date({ params: {}, location })).toThrowErrorMatchingInlineSnapshot(
-    `"_date.__default accepts one of the following types: number, string, date."`
+    `[Error: _date.__default accepts one of the following types: number, string, date.]`
   );
 });
 
 test('_date invalid string', () => {
   expect(() => _date({ params: 'abc', location })).toThrowErrorMatchingInlineSnapshot(
-    `"abc could not resolve as a valid javascript date."`
+    `[Error: abc could not resolve as a valid javascript date.]`
   );
 });
 

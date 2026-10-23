@@ -48,10 +48,11 @@ function normalizeAddColumn(addColumn) {
 
 // The enrichment table config (design E3, E6): the provider catalogue, the add-column picker's
 // kinds (`addColumn: true | { kinds }`), where new input columns keep their values
-// (`inputFieldPrefix`: `<prefix>.<key>`, else the key), the add-row row (`addRow`, Table only: TableInput adds
-// rows to its changeset), CSV import (`importCsv`), the columns with a run state (`runColumns`,
-// enrichment and ai) and the columns whose cells open the details panel (`detailColumns`, plus
-// extract). The columns' providers are checked against the catalogue with the columns
+// (`inputFieldPrefix`: `<prefix>.<key>`, else the key), the endpoint the details panel loads a
+// cell's raw result from when the rows leave it out (`rawEndpoint`), the add-row row (`addRow`,
+// Table only: TableInput adds rows to its changeset), CSV import (`importCsv`), the columns with
+// a run state (`runColumns`, enrichment and ai) and the columns whose cells open the details
+// panel (`detailColumns`, plus extract). The columns' providers are checked against the catalogue with the columns
 // (normalizeColumns `providerIds`), so a user column with an unknown one is an error column.
 const FIELD_PATH = /^[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*$/;
 
@@ -67,6 +68,16 @@ function normalizeInputFieldPrefix(prefix) {
   return prefix;
 }
 
+function normalizeRawEndpoint(endpoint) {
+  if (type.isNone(endpoint)) return null;
+  if (!type.isString(endpoint) || endpoint.length === 0) {
+    throw new Error(
+      `Table "rawEndpoint" must be the id of an API endpoint. Received ${JSON.stringify(endpoint)}.`
+    );
+  }
+  return endpoint;
+}
+
 function normalizeEnrichment({ properties, columns }) {
   const providers = normalizeProviders(properties.providers);
   return {
@@ -77,6 +88,7 @@ function normalizeEnrichment({ properties, columns }) {
     addRowText: type.isString(properties.addRowText) ? properties.addRowText : null,
     importCsv: properties.importCsv === true,
     inputFieldPrefix: normalizeInputFieldPrefix(properties.inputFieldPrefix),
+    rawEndpoint: normalizeRawEndpoint(properties.rawEndpoint),
     runColumns: columns.filter((column) => RUN_KINDS.has(column.kind)),
     detailColumns: new Set(
       columns.filter((column) => DETAIL_KINDS.has(column.kind)).map((column) => column.key)

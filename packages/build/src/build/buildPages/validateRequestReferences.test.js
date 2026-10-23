@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 
 import validateRequestReferences from './validateRequestReferences.js';
 
 describe('validateRequestReferences', () => {
   const createContext = (stage = 'dev') => {
-    const warnFn = jest.fn();
+    const warnFn = vi.fn();
     const context = {
       stage,
       logger: {
-        warn: jest.fn(),
+        warn: vi.fn(),
       },
       handleWarning: (params) => {
         if (params.prodError && context.stage === 'prod') {

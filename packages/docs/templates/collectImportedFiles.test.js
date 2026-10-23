@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import collectImportedFiles from '@lowdefy/docs-content/scripts/collectImportedFiles.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let root;
 let configDirectory;
@@ -88,7 +89,5 @@ test('collectImportedFiles reads only JS files and stops on import cycles', () =
   write('docs/b.js', "import './a.js';\n");
   write('docs/page.yaml', "from './c.js'\n");
   write('docs/c.js', '');
-  expect(collectImportedFiles({ configDirectory, files: ['a.js', 'page.yaml'] })).toEqual([
-    'b.js',
-  ]);
+  expect(collectImportedFiles({ configDirectory, files: ['a.js', 'page.yaml'] })).toEqual(['b.js']);
 });

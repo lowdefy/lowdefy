@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import waitFor from '../../test-utils/waitFor.mjs';
@@ -25,7 +25,7 @@ import waitFor from '../../test-utils/waitFor.mjs';
 const { default: pluginSourceWatcher } = await import('./pluginSourceWatcher.mjs');
 
 // macOS can hold file events back for tens of seconds on a busy machine.
-jest.setTimeout(180000);
+vi.setConfig({ testTimeout: 180000, hookTimeout: 180000 });
 
 let root;
 let context;
@@ -71,12 +71,12 @@ beforeEach(() => {
   fs.mkdirSync(path.join(server, 'node_modules'), { recursive: true });
   fs.mkdirSync(path.join(server, 'build'), { recursive: true });
   context = {
-    buildActivity: { setBusy: jest.fn() },
+    buildActivity: { setBusy: vi.fn() },
     directories: { build: path.join(server, 'build'), config, server },
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
-    lowdefyBuild: jest.fn(async () => {}),
-    reloadClients: jest.fn(async () => {}),
-    syncServer: jest.fn(async () => {}),
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    lowdefyBuild: vi.fn(async () => {}),
+    reloadClients: vi.fn(async () => {}),
+    syncServer: vi.fn(async () => {}),
   };
   writeCustomTypesMap({});
 });

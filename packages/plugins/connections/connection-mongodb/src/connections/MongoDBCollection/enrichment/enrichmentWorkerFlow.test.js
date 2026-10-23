@@ -26,6 +26,7 @@ import {
   setupEnrichmentCollection,
   updateDocuments,
 } from '../../../../test/enrichmentTable.js';
+import { expect, test } from 'vitest';
 
 const name = 'enrichmentWorker';
 const filter = { org: 'o1' };

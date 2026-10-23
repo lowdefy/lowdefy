@@ -15,19 +15,19 @@
 */
 
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  linkDependenciesToWorkspace: jest.fn(),
-  readFile: jest.fn(),
-  writeFileIfChanged: jest.fn(),
+vi.doMock('@lowdefy/node-utils', () => ({
+  linkDependenciesToWorkspace: vi.fn(),
+  readFile: vi.fn(),
+  writeFileIfChanged: vi.fn(),
 }));
 
 const directory = '/repo/apps/app/.lowdefy/server';
 const workspaceRoot = '/repo';
 
 beforeEach(async () => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   const { linkDependenciesToWorkspace } = await import('@lowdefy/node-utils');
   linkDependenciesToWorkspace.mockImplementation(({ dependencies }) => dependencies);
 });

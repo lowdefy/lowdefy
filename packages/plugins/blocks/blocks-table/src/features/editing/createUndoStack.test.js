@@ -15,6 +15,7 @@
 */
 
 import createUndoStack from './createUndoStack.js';
+import { expect, test } from 'vitest';
 
 const a = ['a'];
 const b = ['b'];

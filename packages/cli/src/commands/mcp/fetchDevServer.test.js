@@ -17,6 +17,7 @@
 import http from 'http';
 
 import fetchDevServer, { DROPPED_MESSAGE } from './fetchDevServer.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // Each test sets how the fake dev server answers a request.
 let respond;

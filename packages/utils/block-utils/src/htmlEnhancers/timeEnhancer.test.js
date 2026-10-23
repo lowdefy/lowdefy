@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { act, render } from '@testing-library/react';
 
 import HtmlComponent from '../HtmlComponent.js';
@@ -43,16 +43,16 @@ const registration = {
 };
 
 beforeEach(() => {
-  jest.useFakeTimers();
-  jest.setSystemTime(new Date('2026-09-25T12:00:00Z'));
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-09-25T12:00:00Z'));
   registerHtmlEnhancements(registration);
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 });
 
 afterEach(() => {
   registerHtmlEnhancements(null);
   console.warn.mockRestore();
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 function renderTime(html) {
@@ -74,12 +74,12 @@ test('relative times update on one shared timer and stop updating after unmount'
   );
   expect(element.textContent).toBe('a few seconds ago');
   act(() => {
-    jest.advanceTimersByTime(60000);
+    vi.advanceTimersByTime(60000);
   });
   expect(element.textContent).toBe('2 minutes ago');
-  expect(jest.getTimerCount()).toBe(1);
+  expect(vi.getTimerCount()).toBe(1);
   unmount();
-  expect(jest.getTimerCount()).toBe(0);
+  expect(vi.getTimerCount()).toBe(0);
 });
 
 test('a relative time keeps an author tooltip or title and adds no second one', () => {

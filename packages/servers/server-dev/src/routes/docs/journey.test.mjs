@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockRunJourney = jest.fn();
+const mockRunJourney = vi.fn();
 
-jest.unstable_mockModule('../../../lib/docs/runJourney.js', () => ({
+vi.doMock('../../../lib/docs/runJourney.js', () => ({
   default: mockRunJourney,
 }));
-jest.unstable_mockModule('../../../lib/build/config.js', () => ({
+vi.doMock('../../../lib/build/config.js', () => ({
   default: { basePath: '/app' },
 }));
-const mockGetBuildId = jest.fn(() => 'build-1');
-jest.unstable_mockModule('../../../lib/docs/getBuildId.js', () => ({
+const mockGetBuildId = vi.fn(() => 'build-1');
+vi.doMock('../../../lib/docs/getBuildId.js', () => ({
   default: mockGetBuildId,
 }));
 const { readMutantRun } = await import('../../../lib/server/mutants/mutantRuns.js');
@@ -39,12 +39,12 @@ function createContext(body) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
   });
-  const json = jest.fn((data, status) => ({ data, status: status ?? 200 }));
+  const json = vi.fn((data, status) => ({ data, status: status ?? 200 }));
   return { req: { url: request.url, json: () => request.json() }, json };
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockRunJourney.mockResolvedValue({
     pageId: 'form',
     passed: true,

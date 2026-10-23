@@ -16,7 +16,7 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createBrowserLifecycle from './createBrowserLifecycle.js';
 
@@ -24,8 +24,8 @@ const IDLE = 90_000;
 
 function createFakeBrowser() {
   return {
-    close: jest.fn(async () => {}),
-    isConnected: jest.fn(() => true),
+    close: vi.fn(async () => {}),
+    isConnected: vi.fn(() => true),
   };
 }
 
@@ -46,16 +46,32 @@ async function flush() {
 
 beforeEach(() => {
   // performance is not redefinable on this Node, and nothing here reads it.
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('getBrowser launches once and shares the browser between concurrent calls', async () => {
   const browser = createFakeBrowser();
-  const launch = jest.fn(async () => browser);
+  const launch = vi.fn(async () => browser);
   const { getBrowser } = createBrowserLifecycle({ launch, idleTimeout: IDLE });
 
   const [first, second] = await Promise.all([getBrowser(), getBrowser()]);
@@ -71,9 +87,9 @@ test('the browser closes 90 s after the last getBrowser call when no context was
 
   await getBrowser();
   await flush();
-  jest.advanceTimersByTime(IDLE - 1);
+  vi.advanceTimersByTime(IDLE - 1);
   expect(browser.close).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   await flush();
 
   expect(browser.close).toHaveBeenCalledTimes(1);
@@ -89,32 +105,32 @@ test('the browser closes 90 s after the last context closes', async () => {
   await getBrowser();
   const context = createContext();
   trackContext(context);
-  jest.advanceTimersByTime(IDLE * 2);
+  vi.advanceTimersByTime(IDLE * 2);
   await flush();
   expect(browser.close).not.toHaveBeenCalled();
 
   await context.close();
-  jest.advanceTimersByTime(IDLE - 1);
+  vi.advanceTimersByTime(IDLE - 1);
   await flush();
   expect(browser.close).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   await flush();
   expect(browser.close).toHaveBeenCalledTimes(1);
 });
 
 test('a getBrowser call at 89 s pushes the idle close out', async () => {
   const browser = createFakeBrowser();
-  const launch = jest.fn(async () => browser);
+  const launch = vi.fn(async () => browser);
   const { getBrowser } = createBrowserLifecycle({ launch, idleTimeout: IDLE });
 
   await getBrowser();
   await flush();
-  jest.advanceTimersByTime(89_000);
+  vi.advanceTimersByTime(89_000);
   await getBrowser();
-  jest.advanceTimersByTime(89_000);
+  vi.advanceTimersByTime(89_000);
   await flush();
   expect(browser.close).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(1_000);
+  vi.advanceTimersByTime(1_000);
   await flush();
 
   expect(browser.close).toHaveBeenCalledTimes(1);
@@ -134,7 +150,7 @@ test('a context still open keeps the browser open', async () => {
   trackContext(first);
   trackContext(second);
   await first.close();
-  jest.advanceTimersByTime(IDLE * 3);
+  vi.advanceTimersByTime(IDLE * 3);
   await flush();
 
   expect(browser.close).not.toHaveBeenCalled();
@@ -143,7 +159,7 @@ test('a context still open keeps the browser open', async () => {
 test('a launch in flight keeps the idle close back until it settles', async () => {
   const browser = createFakeBrowser();
   let finishLaunch;
-  const launch = jest.fn(
+  const launch = vi.fn(
     () =>
       new Promise((resolve) => {
         finishLaunch = () => resolve(browser);
@@ -152,15 +168,15 @@ test('a launch in flight keeps the idle close back until it settles', async () =
   const { getBrowser } = createBrowserLifecycle({ launch, idleTimeout: IDLE });
 
   const pending = getBrowser();
-  jest.advanceTimersByTime(IDLE * 2);
+  vi.advanceTimersByTime(IDLE * 2);
   await flush();
   finishLaunch();
   await pending;
   await flush();
-  jest.advanceTimersByTime(IDLE - 1);
+  vi.advanceTimersByTime(IDLE - 1);
   await flush();
   expect(browser.close).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   await flush();
 
   expect(browser.close).toHaveBeenCalledTimes(1);
@@ -169,12 +185,12 @@ test('a launch in flight keeps the idle close back until it settles', async () =
 test('getBrowser relaunches after an idle close', async () => {
   const first = createFakeBrowser();
   const second = createFakeBrowser();
-  const launch = jest.fn().mockResolvedValueOnce(first).mockResolvedValueOnce(second);
+  const launch = vi.fn().mockResolvedValueOnce(first).mockResolvedValueOnce(second);
   const { getBrowser } = createBrowserLifecycle({ launch, idleTimeout: IDLE });
 
   await getBrowser();
   await flush();
-  jest.advanceTimersByTime(IDLE);
+  vi.advanceTimersByTime(IDLE);
   await flush();
 
   expect(await getBrowser()).toBe(second);
@@ -184,7 +200,7 @@ test('getBrowser relaunches after an idle close', async () => {
 
 test('getBrowser retries a failed launch on the next call', async () => {
   const browser = createFakeBrowser();
-  const launch = jest
+  const launch = vi
     .fn()
     .mockRejectedValueOnce(new Error('No browser.'))
     .mockResolvedValueOnce(browser);
@@ -199,7 +215,7 @@ test('getBrowser retries a failed launch on the next call', async () => {
 test('getBrowser relaunches once for concurrent callers when the browser disconnected', async () => {
   const crashed = createFakeBrowser();
   const fresh = createFakeBrowser();
-  const launch = jest.fn().mockResolvedValueOnce(crashed).mockResolvedValueOnce(fresh);
+  const launch = vi.fn().mockResolvedValueOnce(crashed).mockResolvedValueOnce(fresh);
   const { getBrowser } = createBrowserLifecycle({ launch, idleTimeout: IDLE });
 
   await getBrowser();

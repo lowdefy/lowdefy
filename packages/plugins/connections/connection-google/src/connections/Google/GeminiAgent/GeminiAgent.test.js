@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockHandleAgentChat = jest.fn();
+const mockHandleAgentChat = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
+vi.doMock('@lowdefy/ai-utils', () => ({
   handleAgentChat: mockHandleAgentChat,
 }));
 
@@ -30,7 +30,7 @@ test('GeminiAgent resolver delegates to handleAgentChat', async () => {
   const { default: GeminiAgent } = await import('./GeminiAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: { agent: { properties: { model: 'gemini-2.5-flash' } }, messages: [] },
     context: {},
   };
@@ -47,7 +47,7 @@ test('GeminiAgent resolver maps thinkingConfig to providerOptions.google', async
   const { default: GeminiAgent } = await import('./GeminiAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -76,7 +76,7 @@ test('GeminiAgent resolver maps safetySettings to providerOptions.google', async
     { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
   ];
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: { model: 'gemini-2.5-flash', safetySettings },
@@ -99,7 +99,7 @@ test('GeminiAgent resolver merges sugar with existing providerOptions', async ()
   const { default: GeminiAgent } = await import('./GeminiAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -133,7 +133,7 @@ test('GeminiAgent resolver maps both thinkingConfig and safetySettings together'
     { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
   ];
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -165,7 +165,7 @@ test('GeminiAgent resolver does not modify providerOptions when no sugar props',
   const { default: GeminiAgent } = await import('./GeminiAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: { properties: { model: 'gemini-2.5-flash' } },
       messages: [],

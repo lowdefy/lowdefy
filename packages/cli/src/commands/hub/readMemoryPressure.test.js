@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import readMemoryPressure from './readMemoryPressure.js';
 
@@ -71,7 +71,7 @@ test('readMemoryPressure is normal when sysctl fails', () => {
 });
 
 test('readMemoryPressure is normal on a platform without a pressure signal', () => {
-  const exec = jest.fn();
+  const exec = vi.fn();
   expect(readMemoryPressure({ platform: 'win32', exec })).toBe('normal');
   expect(exec).not.toHaveBeenCalled();
 });

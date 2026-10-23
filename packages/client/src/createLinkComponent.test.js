@@ -18,6 +18,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import createLinkComponent from './createLinkComponent.js';
+import { expect, test } from 'vitest';
 
 function RouterLink({ children, href, id }) {
   return (

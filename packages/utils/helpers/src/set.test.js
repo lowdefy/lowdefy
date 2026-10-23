@@ -19,6 +19,7 @@ import typeTest from './type.js';
 import * as setModule from './set.js';
 import set from './set.js';
 import { ReservedKeyError } from './ReservedKeyError.js';
+import { expect, test } from 'vitest';
 
 test('setNestedValue - set a nested value in array object', () => {
   const objOne = {
@@ -265,19 +266,17 @@ test('setNestedObject - should set a value only.', () => {
   expect(set({ a: 'a', b: { c: 'd' } }, 'b.c')).toEqual({ a: 'a', b: { c: undefined } });
 });
 
-test('setNestedObject - should set non-plain objects', (done) => {
+test('setNestedObject - should set non-plain objects', async () => {
   const o = {};
 
   set(o, 'a.b', new Date('July 20, 69 00:20:18 GMT+00:00'));
   const firstDate = o.a.b.getTime();
 
-  setTimeout(() => {
-    set(o, 'a.b', new Date('July 20, 69 00:20:18 GMT+00:00'));
-    const secondDate = o.a.b.getTime();
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  set(o, 'a.b', new Date('July 20, 69 00:20:18 GMT+00:00'));
+  const secondDate = o.a.b.getTime();
 
-    expect(firstDate).toEqual(secondDate);
-    done();
-  }, 10);
+  expect(firstDate).toEqual(secondDate);
 });
 
 test('setNestedObject - should not split escaped dots.', () => {

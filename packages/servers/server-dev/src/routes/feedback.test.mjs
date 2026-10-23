@@ -19,20 +19,20 @@ import os from 'os';
 import path from 'path';
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 // enrichFeedback (findConfig → force-builds a page) is covered on its own in
 // lib/docs/formatFeedback.test.mjs — here it's stubbed as a pass-through so
 // this file only exercises the route: origin check, validation, and enrich +
 // format wiring.
-const mockEnrichFeedback = jest.fn(async ({ batch }) => batch);
-jest.unstable_mockModule('../../lib/docs/enrichFeedback.js', () => ({
+const mockEnrichFeedback = vi.fn(async ({ batch }) => batch);
+vi.doMock('../../lib/docs/enrichFeedback.js', () => ({
   default: mockEnrichFeedback,
 }));
-const mockCaptureAnnotatedScreenshot = jest.fn(async () => ({
+const mockCaptureAnnotatedScreenshot = vi.fn(async () => ({
   path: '.lowdefy/annotations/test.png',
 }));
-jest.unstable_mockModule('../../lib/docs/captureAnnotatedScreenshot.js', () => ({
+vi.doMock('../../lib/docs/captureAnnotatedScreenshot.js', () => ({
   default: mockCaptureAnnotatedScreenshot,
 }));
 
@@ -153,9 +153,7 @@ test('feedbackHandler saves a tab-captured screenshot and skips the headless cap
   const files = fs.readdirSync(dir);
   expect(files).toHaveLength(1);
   expect(files[0]).toMatch(/^dashboard-.*\.png$/);
-  expect(fs.readFileSync(path.join(dir, files[0]))).toEqual(
-    Buffer.from(PNG_1X1_BASE64, 'base64')
-  );
+  expect(fs.readFileSync(path.join(dir, files[0]))).toEqual(Buffer.from(PNG_1X1_BASE64, 'base64'));
 });
 
 test('feedbackHandler falls back to the headless capture when the screenshot is not a PNG data URL', async () => {

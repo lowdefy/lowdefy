@@ -101,7 +101,7 @@ async function handleRequest(req, res) {
   response.headers.forEach((value, key) => res.appendHeader(key, value));
   if (response.body) {
     const reader = response.body.getReader();
-    // A GET stream (the MCP notification stream, an SSE feed) exists only for its client, and
+    // A GET stream (an SSE feed) exists only for its client, and
     // would otherwise hold the function until maxDuration, so it stops when the client goes. The
     // body of any other response is the tail of work that must finish (an agent run), so it is
     // read to the end.

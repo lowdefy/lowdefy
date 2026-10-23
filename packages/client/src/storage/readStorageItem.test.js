@@ -15,6 +15,7 @@
 */
 
 import readStorageItem from './readStorageItem.js';
+import { beforeEach, expect, test } from 'vitest';
 
 beforeEach(() => {
   window.localStorage.clear();

@@ -18,6 +18,7 @@ import createSetGlobal from '../../src/actions/createSetGlobal.js';
 import createSetState from '../../src/actions/createSetState.js';
 import DependencyTracker from '../../src/tracking/DependencyTracker.js';
 import { captureRenders, snapshot, trackingContext } from '../trackingContext.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // The differential oracle: the same script runs against a tracked context and a full-pass context
 // built from the same config, and after every step each block's evaluated output, its validation

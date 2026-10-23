@@ -19,6 +19,7 @@ import { ObjectId } from 'mongodb';
 import getWalledCollection from './getWalledCollection.js';
 import getTestCollection from '../../test/getTestCollection.js';
 import populateTestMongoDb from '../../test/populateTestMongoDb.js';
+import { expect, test } from 'vitest';
 
 const databaseUri = process.env.MONGO_URL;
 const orgA = { field: 'organization_id', value: 'org_a' };

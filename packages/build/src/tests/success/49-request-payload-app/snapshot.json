@@ -2272,6 +2272,7 @@
           "payload": {
             "~k": "4u"
           },
+          "readOnly": false,
           "requestId": "getItems",
           "pageId": "home",
           "~k": "e"
@@ -2289,6 +2290,7 @@
             },
             "~k": "h"
           },
+          "readOnly": false,
           "requestId": "searchItems",
           "pageId": "home",
           "~k": "g"
@@ -2306,6 +2308,7 @@
             },
             "~k": "p"
           },
+          "readOnly": false,
           "requestId": "createItem",
           "pageId": "home",
           "~k": "o"
@@ -2319,6 +2322,7 @@
             },
             "~k": "x"
           },
+          "readOnly": false,
           "requestId": "findItems",
           "pageId": "home",
           "~k": "w"
@@ -2336,6 +2340,7 @@
             },
             "~k": "15"
           },
+          "readOnly": false,
           "requestId": "insertItem",
           "pageId": "home",
           "~k": "14"
@@ -2353,6 +2358,7 @@
             },
             "~k": "1d"
           },
+          "readOnly": false,
           "requestId": "updateItem",
           "pageId": "home",
           "~k": "1c"
@@ -2362,6 +2368,7 @@
           "payload": {
             "~k": "51"
           },
+          "readOnly": false,
           "requestId": "aggregateStats",
           "pageId": "home",
           "~k": "1m"
@@ -2406,6 +2413,7 @@
       "public": true,
       "~k": "52"
     },
+    "readOnly": false,
     "requestId": "aggregateStats",
     "pageId": "home",
     "~k": "1m"
@@ -2445,6 +2453,7 @@
       "public": true,
       "~k": "4x"
     },
+    "readOnly": false,
     "requestId": "createItem",
     "pageId": "home",
     "~k": "o"
@@ -2482,6 +2491,7 @@
       "public": true,
       "~k": "4y"
     },
+    "readOnly": false,
     "requestId": "findItems",
     "pageId": "home",
     "~k": "w"
@@ -2502,6 +2512,7 @@
       "public": true,
       "~k": "4v"
     },
+    "readOnly": false,
     "requestId": "getItems",
     "pageId": "home",
     "~k": "e"
@@ -2540,6 +2551,7 @@
       "public": true,
       "~k": "4z"
     },
+    "readOnly": false,
     "requestId": "insertItem",
     "pageId": "home",
     "~k": "14"
@@ -2579,6 +2591,7 @@
       "public": true,
       "~k": "4w"
     },
+    "readOnly": false,
     "requestId": "searchItems",
     "pageId": "home",
     "~k": "g"
@@ -2623,6 +2636,7 @@
       "public": true,
       "~k": "50"
     },
+    "readOnly": false,
     "requestId": "updateItem",
     "pageId": "home",
     "~k": "1c"

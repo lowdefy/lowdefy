@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import js from './js.js';
 
 const rootLocation = 'root';
@@ -35,10 +35,10 @@ const map = {
 
 test('js default', async () => {
   const lowdefyOperators = {
-    _app: jest.fn(),
-    _payload: jest.fn(),
-    _secret: jest.fn(),
-    _user: jest.fn(),
+    _app: vi.fn(),
+    _payload: vi.fn(),
+    _secret: vi.fn(),
+    _user: vi.fn(),
   };
   const keys = Object.keys(map);
   keys.forEach((key) => {

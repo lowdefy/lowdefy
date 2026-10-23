@@ -15,6 +15,7 @@
 */
 
 import shouldReloadForBuild from './shouldReloadForBuild.js';
+import { expect, test } from 'vitest';
 
 function createWindow({ stored = {}, throws = false } = {}) {
   return {

@@ -15,6 +15,7 @@
 */
 
 import galleryTransformer from '../blocks/galleryTransformer.js';
+import { expect, test } from 'vitest';
 
 function propertyRow(description) {
   const table = galleryTransformer(

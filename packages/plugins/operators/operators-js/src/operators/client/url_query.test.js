@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/operators', () => ({
-  getFromObject: jest.fn(),
+vi.doMock('@lowdefy/operators', () => ({
+  getFromObject: vi.fn(),
 }));
 
 const globals = { window: { location: { search: '?some=value' } } };
@@ -51,5 +51,7 @@ test('url_query calls getFromObject', async () => {
         params: 'params',
       })
     )
-  ).toThrowErrorMatchingInlineSnapshot(`"Browser window.location not available for _url_query."`);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `[Error: Browser window.location not available for _url_query.]`
+  );
 });

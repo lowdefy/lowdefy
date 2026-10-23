@@ -17,11 +17,11 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 const calls = [];
 const record = (name, impl) =>
-  jest.fn(async (...args) => {
+  vi.fn(async (...args) => {
     calls.push(name);
     if (impl) await impl(...args);
   });
@@ -31,24 +31,24 @@ const mockResetServerPackageJson = record('resetServerPackageJson');
 const mockAddCustomPluginsAsDeps = record('addCustomPluginsAsDeps');
 const mockEnsurePnpmWorkspaceYaml = record('ensurePnpmWorkspaceYaml');
 const mockInstallServer = record('installServer');
-const mockRunLowdefyBuild = jest.fn();
+const mockRunLowdefyBuild = vi.fn();
 const mockRunClientBuild = record('runClientBuild');
 
-jest.unstable_mockModule('../../utils/getServer.js', () => ({ default: mockGetServer }));
-jest.unstable_mockModule('../../utils/resetServerPackageJson.js', () => ({
+vi.doMock('../../utils/getServer.js', () => ({ default: mockGetServer }));
+vi.doMock('../../utils/resetServerPackageJson.js', () => ({
   default: mockResetServerPackageJson,
 }));
-jest.unstable_mockModule('../../utils/addCustomPluginsAsDeps.js', () => ({
+vi.doMock('../../utils/addCustomPluginsAsDeps.js', () => ({
   default: mockAddCustomPluginsAsDeps,
 }));
-jest.unstable_mockModule('../../utils/ensurePnpmWorkspaceYaml.js', () => ({
+vi.doMock('../../utils/ensurePnpmWorkspaceYaml.js', () => ({
   default: mockEnsurePnpmWorkspaceYaml,
 }));
-jest.unstable_mockModule('../../utils/installServer.js', () => ({ default: mockInstallServer }));
-jest.unstable_mockModule('../../utils/runLowdefyBuild.js', () => ({
+vi.doMock('../../utils/installServer.js', () => ({ default: mockInstallServer }));
+vi.doMock('../../utils/runLowdefyBuild.js', () => ({
   default: mockRunLowdefyBuild,
 }));
-jest.unstable_mockModule('../../utils/runClientBuild.js', () => ({ default: mockRunClientBuild }));
+vi.doMock('../../utils/runClientBuild.js', () => ({ default: mockRunClientBuild }));
 
 const { default: build } = await import('./build.js');
 
@@ -69,9 +69,9 @@ function writePending({ schemaChecked = true } = {}) {
 function createContext() {
   return {
     directories: { server: serverDirectory },
-    logger: { info: jest.fn() },
+    logger: { info: vi.fn() },
     options: {},
-    sendTelemetry: jest.fn(),
+    sendTelemetry: vi.fn(),
   };
 }
 

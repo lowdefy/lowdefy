@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ServiceError } from '@lowdefy/errors';
 
-jest.unstable_mockModule('@lowdefy/connection-smtp/send', () => ({
-  default: jest.fn(async () => ({ messageId: 'test-message-id' })),
+vi.doMock('@lowdefy/connection-smtp/send', () => ({
+  default: vi.fn(async () => ({ messageId: 'test-message-id' })),
 }));
 
-jest.unstable_mockModule('../connections/getConnectionConfig.js', () => ({
-  default: jest.fn(),
+vi.doMock('../connections/getConnectionConfig.js', () => ({
+  default: vi.fn(),
 }));
 
 const { default: createSendEmail } = await import('./createSendEmail.js');
@@ -30,10 +30,10 @@ const { default: send } = await import('@lowdefy/connection-smtp/send');
 const { default: getConnectionConfig } = await import('../connections/getConnectionConfig.js');
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const connectionProperties = {
@@ -48,13 +48,13 @@ const connectionProperties = {
 function makeContext() {
   return {
     logger,
-    readConfigFile: jest.fn(),
-    evaluateOperators: jest.fn(() => connectionProperties),
+    readConfigFile: vi.fn(),
+    evaluateOperators: vi.fn(() => connectionProperties),
   };
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('resolves the connection by connectionId and sends the mail with resolved connection', async () => {

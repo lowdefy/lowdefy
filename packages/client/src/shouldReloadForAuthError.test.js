@@ -22,6 +22,7 @@ import {
 } from '@lowdefy/errors';
 
 import shouldReloadForAuthError from './shouldReloadForAuthError.js';
+import { expect, test } from 'vitest';
 
 function createWindow() {
   const stored = {};

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createEmailSendGate from './createEmailSendGate.js';
 
@@ -23,13 +23,13 @@ const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' 
 
 function createMockAuth({ member = null, invitations = [] } = {}) {
   const adapter = {
-    findOne: jest.fn(async ({ model }) => (model === 'organization' ? pinnedOrg : member)),
-    findMany: jest.fn(async () => invitations),
-    create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    findOne: vi.fn(async ({ model }) => (model === 'organization' ? pinnedOrg : member)),
+    findMany: vi.fn(async () => invitations),
+    create: vi.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
   };
   const internalAdapter = {
-    findUserById: jest.fn(async () => null),
-    findUserByEmail: jest.fn(async () => null),
+    findUserById: vi.fn(async () => null),
+    findUserByEmail: vi.fn(async () => null),
   };
   const auth = { $context: Promise.resolve({ adapter, internalAdapter }) };
   return { auth, adapter, internalAdapter };
@@ -38,7 +38,7 @@ function createMockAuth({ member = null, invitations = [] } = {}) {
 const pinned = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
 
 test('createEmailSendGate falls through when the body has no email', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const gate = createEmailSendGate({
     getAuth,
     organizations: pinned,

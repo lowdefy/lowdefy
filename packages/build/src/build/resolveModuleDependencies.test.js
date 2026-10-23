@@ -15,6 +15,7 @@
 */
 
 import resolveModuleDependencies from './resolveModuleDependencies.js';
+import { expect, test } from 'vitest';
 
 function makeModule({ dependencies = [], moduleDependencies = {} } = {}) {
   return { dependencies, moduleDependencies };

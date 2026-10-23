@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGenerateText = jest.fn();
-const mockJsonSchema = jest.fn((schema) => ({ wrapped: schema }));
-const mockOutputObject = jest.fn((spec) => ({ outputSpec: spec }));
+const mockGenerateText = vi.fn();
+const mockJsonSchema = vi.fn((schema) => ({ wrapped: schema }));
+const mockOutputObject = vi.fn((spec) => ({ outputSpec: spec }));
 
-jest.unstable_mockModule('ai', () => ({
+vi.doMock('ai', () => ({
   generateText: mockGenerateText,
   jsonSchema: mockJsonSchema,
   Output: { object: mockOutputObject },
@@ -35,7 +35,7 @@ beforeEach(() => {
 
 test('createGenerateObject returns a resolver with schema and meta attached', async () => {
   const { default: createGenerateObject } = await import('./createGenerateObject.js');
-  const GenerateObject = createGenerateObject({ createProvider: jest.fn() });
+  const GenerateObject = createGenerateObject({ createProvider: vi.fn() });
   expect(GenerateObject.meta).toEqual({ checkRead: false, checkWrite: false });
   expect(GenerateObject.schema).toBeDefined();
   expect(GenerateObject.schema.title).toBe('Lowdefy Request Schema - GenerateObject');
@@ -50,8 +50,8 @@ test('GenerateObject resolver builds the provider from connection properties and
   });
 
   const model = { modelId: 'test-model' };
-  const provider = jest.fn().mockReturnValue(model);
-  const createProvider = jest.fn().mockReturnValue(provider);
+  const provider = vi.fn().mockReturnValue(model);
+  const createProvider = vi.fn().mockReturnValue(provider);
   const GenerateObject = createGenerateObject({ createProvider });
 
   const outputSchema = { type: 'object', properties: { category: { type: 'string' } } };

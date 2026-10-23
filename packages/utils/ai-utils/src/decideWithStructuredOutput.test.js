@@ -17,6 +17,7 @@
 import { MockLanguageModelV4 } from 'ai/test';
 
 import decideWithStructuredOutput from './decideWithStructuredOutput.js';
+import { expect, test } from 'vitest';
 
 // The real AI SDK against a mock model: the SDK only parses the model's JSON, so
 // anything the answer schema promises has to hold after the model replies.

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import UpdateSession from './UpdateSession.js';
 
-const mockUpdateSession = jest.fn();
+const mockUpdateSession = vi.fn();
 const methods = { updateSession: mockUpdateSession };
 
 test('UpdateSession action invocation', async () => {

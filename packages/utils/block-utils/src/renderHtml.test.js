@@ -17,6 +17,7 @@
 import { render } from '@testing-library/react';
 
 import renderHtml from './renderHtml.js';
+import { expect, test } from 'vitest';
 const methods = {};
 
 test('renderHtml html is undefined', () => {

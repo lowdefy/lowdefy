@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import flagTypesOutsidePage from './flagTypesOutsidePage.js';
 
@@ -27,7 +27,7 @@ function usedTypes({ actions = [], blocks = [], operators = [] }) {
 }
 
 test('flagTypesOutsidePage leaves a page alone when its fragments stay within its types', () => {
-  const context = { logger: { warn: jest.fn() } };
+  const context = { logger: { warn: vi.fn() } };
   const pageConfig = { pageId: 'home' };
   flagTypesOutsidePage(context, {
     pageConfig,
@@ -39,7 +39,7 @@ test('flagTypesOutsidePage leaves a page alone when its fragments stay within it
 });
 
 test('flagTypesOutsidePage asks for the full type set and names the undeclared types', () => {
-  const context = { logger: { warn: jest.fn() } };
+  const context = { logger: { warn: vi.fn() } };
   const pageConfig = { pageId: 'home' };
   flagTypesOutsidePage(context, {
     pageConfig,
@@ -55,7 +55,7 @@ test('flagTypesOutsidePage asks for the full type set and names the undeclared t
 });
 
 test('flagTypesOutsidePage does nothing in dev, where the client bundles every type', () => {
-  const context = { logger: { warn: jest.fn() } };
+  const context = { logger: { warn: vi.fn() } };
   const pageConfig = { pageId: 'home' };
   flagTypesOutsidePage(context, {
     pageConfig,

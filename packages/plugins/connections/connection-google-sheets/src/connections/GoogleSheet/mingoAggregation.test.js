@@ -15,6 +15,7 @@
 */
 
 import mingoAggregation from './mingoAggregation.js';
+import { expect, test } from 'vitest';
 
 test('mingoAggregation sort', () => {
   const pipeline = [

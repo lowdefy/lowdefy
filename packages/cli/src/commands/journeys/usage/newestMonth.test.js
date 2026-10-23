@@ -15,6 +15,7 @@
 */
 
 import newestMonth from './newestMonth.js';
+import { expect, test } from 'vitest';
 
 function journey(months) {
   return { evidence: { production: { months: months.map((month) => ({ month })) } } };

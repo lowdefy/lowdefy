@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 import { callRequest } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 
@@ -366,7 +366,7 @@ describe('database targets', () => {
 });
 
 describe('a request through callRequest under a data session', () => {
-  const resolver = jest.fn(async () => ({ ok: true }));
+  const resolver = vi.fn(async () => ({ ok: true }));
   resolver.schema = {};
   resolver.meta = { checkRead: false, checkWrite: false };
 

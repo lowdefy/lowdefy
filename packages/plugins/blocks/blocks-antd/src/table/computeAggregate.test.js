@@ -15,6 +15,7 @@
 */
 
 import computeAggregate from './computeAggregate.js';
+import { expect, test } from 'vitest';
 
 const amount = { key: 'amount', type: 'currency' };
 const created = { key: 'created', type: 'date' };

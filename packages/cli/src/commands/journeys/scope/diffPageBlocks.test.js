@@ -15,6 +15,7 @@
 */
 
 import diffPageBlocks from './diffPageBlocks.js';
+import { expect, test } from 'vitest';
 
 function block({ blockId, type = 'Button', properties = {}, k, blocks }) {
   return {

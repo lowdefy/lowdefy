@@ -15,6 +15,7 @@
 */
 
 import getShownPage from './getShownPage.js';
+import { expect, test } from 'vitest';
 
 const pageConfig = { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}' };
 

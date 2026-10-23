@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError, RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
@@ -25,7 +25,7 @@ import testContext from '../../test/testContext.js';
 const operators = { ...operatorsServer };
 
 function createMockReadConfigFile(endpointConfigs = {}) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     const match = path.match(/^api\/(.+)\.json$/);
     if (match) {
       const key = match[1];
@@ -43,10 +43,10 @@ function createTestContext({ endpointConfigs = {} } = {}) {
   const context = testContext({
     operators,
     logger: {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
     },
     readConfigFile: createMockReadConfigFile(endpointConfigs),
     user: { id: 'user_1' },
@@ -67,13 +67,13 @@ const requestConfig = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('resolver argument bag includes callApi function', async () => {
   const context = createTestContext();
   let received;
-  const requestResolver = jest.fn((args) => {
+  const requestResolver = vi.fn((args) => {
     received = args;
     return 'ok';
   });
@@ -471,7 +471,7 @@ function resolverUntilAborted() {
 test('the resolver receives the request signal from the context', async () => {
   const context = createTestContext();
   context.signal = new AbortController().signal;
-  const requestResolver = jest.fn(() => 'ok');
+  const requestResolver = vi.fn(() => 'ok');
   await callRequestResolver(context, {
     connectionProperties: {},
     endpointDepth: 0,

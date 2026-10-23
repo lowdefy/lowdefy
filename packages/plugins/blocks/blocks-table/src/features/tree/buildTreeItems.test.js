@@ -16,6 +16,7 @@
 
 import buildTreeIndex from './buildTreeIndex.js';
 import buildTreeItems from './buildTreeItems.js';
+import { expect, test } from 'vitest';
 
 const DATA = [
   { id: 'root', name: 'Root' },

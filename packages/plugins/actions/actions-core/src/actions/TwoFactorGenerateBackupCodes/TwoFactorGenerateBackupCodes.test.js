@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import TwoFactorGenerateBackupCodes from './TwoFactorGenerateBackupCodes.js';
 
 test('TwoFactorGenerateBackupCodes passes params to the twoFactorGenerateBackupCodes method', async () => {
-  const mockTwoFactorGenerateBackupCodes = jest.fn();
+  const mockTwoFactorGenerateBackupCodes = vi.fn();
   const methods = { twoFactorGenerateBackupCodes: mockTwoFactorGenerateBackupCodes };
   await TwoFactorGenerateBackupCodes({ methods, params: { password: 'pass-123' } });
   expect(mockTwoFactorGenerateBackupCodes.mock.calls).toEqual([[{ password: 'pass-123' }]]);
@@ -26,7 +26,7 @@ test('TwoFactorGenerateBackupCodes passes params to the twoFactorGenerateBackupC
 
 test('TwoFactorGenerateBackupCodes returns the backup codes from the method', async () => {
   const response = { status: true, backupCodes: ['code-1', 'code-2'] };
-  const methods = { twoFactorGenerateBackupCodes: jest.fn(() => Promise.resolve(response)) };
+  const methods = { twoFactorGenerateBackupCodes: vi.fn(() => Promise.resolve(response)) };
   const result = await TwoFactorGenerateBackupCodes({ methods, params: { password: 'pass-123' } });
   expect(result).toEqual(response);
 });

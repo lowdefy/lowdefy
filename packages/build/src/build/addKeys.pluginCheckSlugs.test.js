@@ -16,6 +16,7 @@
 
 import addKeys from './addKeys.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 function runAddKeys(ignoreBuildChecks) {
   const context = testContext();

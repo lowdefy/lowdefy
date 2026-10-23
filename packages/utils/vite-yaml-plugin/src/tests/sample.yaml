@@ -1,0 +1,13 @@
+# A fixture imported through the plugin in vitest.
+id: page
+type: Box
+properties:
+  title: Hello
+  count: 3
+  enabled: true
+  empty: null
+blocks:
+  - id: a
+    type: Button
+  - id: b
+    type: Anchor

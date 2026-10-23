@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import RemoveMember from './RemoveMember.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -29,7 +29,7 @@ const organization = {
 const organizationId = 'org-1';
 
 test('RemoveMember passes properties through as body to the org removeMember endpoint', async () => {
-  const removeMember = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
+  const removeMember = vi.fn().mockResolvedValue({ member: { id: 'member-1' } });
   const { auth } = createMockAuth({ organizationEndpoints: { removeMember } });
   const result = await RemoveMember({
     acting,
@@ -53,11 +53,9 @@ test('RemoveMember throws when memberIdOrEmail property is missing', async () =>
 });
 
 test('RemoveMember writes nothing to the removed member user row', async () => {
-  const removeMember = jest
-    .fn()
-    .mockResolvedValue({ member: { id: 'member-1', userId: 'user_9' } });
-  const findOne = jest.fn(async () => null);
-  const update = jest.fn(async () => ({}));
+  const removeMember = vi.fn().mockResolvedValue({ member: { id: 'member-1', userId: 'user_9' } });
+  const findOne = vi.fn(async () => null);
+  const update = vi.fn(async () => ({}));
   const { auth } = createMockAuth({
     adapter: { findOne, update },
     organizationEndpoints: { removeMember },

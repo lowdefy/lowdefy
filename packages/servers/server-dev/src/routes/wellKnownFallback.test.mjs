@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import wellKnownFallbackHandler from './wellKnownFallback.js';
 
 test('an unserved well-known path answers 404 JSON, never the app shell', () => {
-  const json = jest.fn((data, status) => ({ data, status }));
+  const json = vi.fn((data, status) => ({ data, status }));
   const result = wellKnownFallbackHandler({
     req: { path: '/.well-known/oauth-protected-resource' },
     json,

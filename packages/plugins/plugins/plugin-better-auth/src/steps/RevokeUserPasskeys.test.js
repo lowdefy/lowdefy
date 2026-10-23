@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import RevokeUserPasskeys from './RevokeUserPasskeys.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 function createAdapter({ deleted = 0 } = {}) {
   return {
-    deleteMany: jest.fn().mockResolvedValue(deleted),
-    update: jest.fn(),
+    deleteMany: vi.fn().mockResolvedValue(deleted),
+    update: vi.fn(),
   };
 }
 

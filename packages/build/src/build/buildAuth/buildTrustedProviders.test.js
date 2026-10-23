@@ -15,6 +15,7 @@
 */
 
 import buildTrustedProviders from './buildTrustedProviders.js';
+import { expect, test } from 'vitest';
 
 test('buildTrustedProviders returns components unchanged when account is absent', () => {
   const components = {

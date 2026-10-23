@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import moveAreasToSlots from './moveAreasToSlots.js';
 
@@ -22,7 +22,7 @@ function createPageContext() {
   return {
     pageId: 'page1',
     context: {
-      handleWarning: jest.fn(),
+      handleWarning: vi.fn(),
     },
   };
 }

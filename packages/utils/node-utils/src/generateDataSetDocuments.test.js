@@ -16,6 +16,7 @@
 
 import generateDataSetDocuments from './generateDataSetDocuments.js';
 import validateDataSetGenerate from './validateDataSetGenerate.js';
+import { expect, test } from 'vitest';
 
 function fail(message) {
   throw new Error(message);

@@ -15,6 +15,7 @@
 */
 
 import collectHtmlPageLinks from './collectHtmlPageLinks.js';
+import { expect, test } from 'vitest';
 
 function collect(value) {
   return collectHtmlPageLinks({ json: JSON.stringify(value) });

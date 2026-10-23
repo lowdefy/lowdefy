@@ -15,6 +15,7 @@
 */
 
 import getWebSocketSources from './getWebSocketSources.js';
+import { expect, test } from 'vitest';
 
 test.each([
   ['https://app.example.com/page', ['wss://app.example.com']],

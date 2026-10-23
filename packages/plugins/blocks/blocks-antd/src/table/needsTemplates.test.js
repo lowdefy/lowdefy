@@ -15,6 +15,7 @@
 */
 
 import needsTemplates from './needsTemplates.js';
+import { expect, test } from 'vitest';
 
 test('needsTemplates is false for columns without templates', () => {
   expect(

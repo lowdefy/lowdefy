@@ -15,6 +15,7 @@
 */
 
 import chunkRecords, { MAX_CHUNK_BYTES } from './chunkRecords.js';
+import { expect, test } from 'vitest';
 
 function record(session, size = 1000) {
   return { session, t: '2026-10-03T14:03:11.000Z', kind: 'change', value: 'x'.repeat(size) };

@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/operators', () => ({
-  getFromObject: jest.fn(),
-  getObjectReadKeys: jest.fn(),
+vi.doMock('@lowdefy/operators', () => ({
+  getFromObject: vi.fn(),
+  getObjectReadKeys: vi.fn(),
 }));
 
 test('state calls getFromObject', async () => {

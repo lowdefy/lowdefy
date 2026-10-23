@@ -16,6 +16,7 @@
 
 import getOptionsMap from './getOptionsMap.js';
 import normalizeOptions from './normalizeOptions.js';
+import { expect, test } from 'vitest';
 
 test('getOptionsMap maps values to options with their index, first duplicate wins', () => {
   const options = normalizeOptions([

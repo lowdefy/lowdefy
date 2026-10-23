@@ -125,7 +125,7 @@ if (!values['skip-build']) {
 console.log(`
 Worktree ready: ${dir}
   Branch:    ${branch}
-  Tests:     pnpm --filter=<package> test --testPathPattern=<name> --no-coverage
+  Tests:     pnpm --filter=<package> test <name>
   MongoDB:   pnpm test:mongodb
   Dev app:   pnpm app:dev --no-open --port <free port>
   Remove:    git worktree remove ${dir}

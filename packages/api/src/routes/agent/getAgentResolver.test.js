@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 import getAgentResolver from './getAgentResolver.js';
 
-const logger = { debug: jest.fn() };
+const logger = { debug: vi.fn() };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('getAgentResolver returns agent type from registry', () => {
-  const mockAgentType = { run: jest.fn() };
+  const mockAgentType = { run: vi.fn() };
   const agents = { ClaudeAgent: mockAgentType };
   const agentConfig = { type: 'ClaudeAgent', agentId: 'my-agent' };
 

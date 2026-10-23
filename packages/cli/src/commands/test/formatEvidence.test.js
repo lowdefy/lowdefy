@@ -15,6 +15,7 @@
 */
 
 import formatEvidence from './formatEvidence.js';
+import { expect, test } from 'vitest';
 
 const production = {
   sessions: 412,

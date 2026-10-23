@@ -15,7 +15,7 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
-import { type } from '@lowdefy/helpers';
+import { describeCondition, type } from '@lowdefy/helpers';
 
 import compileAggregates from './compileAggregates.js';
 import compileCondition from './compileCondition.js';
@@ -143,6 +143,10 @@ function compileTableQuery({ properties, now }) {
       { $facet: facet },
     ],
     specs: aggregates.specs,
+    // The filter in words, from the view as sent (before coercion), as the Table describes it.
+    sentence: type.isNone(parsedView.filter)
+      ? null
+      : describeCondition({ condition: view.filter, fields: Object.fromEntries(fieldsByKey) }),
   };
 }
 

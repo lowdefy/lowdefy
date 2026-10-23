@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -24,8 +24,8 @@ import { errorToDisplayString } from '@lowdefy/errors';
 import createTestLogger from './test-utils/createTestLogger.js';
 import { testTypesMap } from './test-utils/runBuild.js';
 
-jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
-  default: () => jest.fn(),
+vi.doMock('./utils/writeBuildArtifact.js', () => ({
+  default: () => vi.fn(),
 }));
 
 const { default: build } = await import('./index.js');

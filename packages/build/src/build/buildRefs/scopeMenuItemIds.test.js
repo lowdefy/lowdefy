@@ -15,6 +15,7 @@
 */
 
 import { scopeMenuItemIds } from './scopeMenuItemIds.js';
+import { describe, expect, test } from 'vitest';
 
 describe('scopeMenuItemIds', () => {
   test('prefixes all id fields in a flat links array', () => {

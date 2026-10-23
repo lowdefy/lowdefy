@@ -15,6 +15,7 @@
 */
 
 import buildTwoFactorTrustedProviders from './buildTwoFactorTrustedProviders.js';
+import { expect, test } from 'vitest';
 
 test('buildTwoFactorTrustedProviders translates a built-in provider to its lowercased type, not its id', () => {
   const components = {

@@ -15,6 +15,7 @@
 */
 
 import withAppErrors from './withAppErrors.js';
+import { expect, test } from 'vitest';
 
 const findings = [
   {

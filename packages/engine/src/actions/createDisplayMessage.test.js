@@ -13,12 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import testContext from '../../test/testContext.js';
 
 // Mock message
-const mockMessage = jest.fn(() => () => undefined);
+const mockMessage = vi.fn(() => () => undefined);
 
 const lowdefy = {
   _internal: {

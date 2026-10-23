@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -25,7 +25,7 @@ import sequenceId from './evidence/sequenceId.js';
 
 // The config text set comes from a full build by the dev server's builder;
 // these tests hold it empty.
-jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+vi.doMock('./configText/readConfigText.js', () => ({
   default: async () => ({ texts: new Set(), isConfigText: () => false }),
 }));
 
@@ -110,7 +110,7 @@ beforeEach(() => {
     options: {},
     sendTelemetry: async () => {},
   };
-  jest.spyOn(process.stdout, 'write').mockImplementation((text) => {
+  vi.spyOn(process.stdout, 'write').mockImplementation((text) => {
     stdout.push(text);
     return true;
   });
@@ -159,7 +159,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   process.exitCode = undefined;
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });

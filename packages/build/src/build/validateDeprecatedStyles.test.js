@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeAll, beforeEach, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
-const mockExistsSync = jest.fn();
+const mockExistsSync = vi.fn();
 
-jest.unstable_mockModule('fs', () => ({
+vi.doMock('fs', () => ({
   default: { existsSync: mockExistsSync },
   existsSync: mockExistsSync,
 }));

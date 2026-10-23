@@ -15,6 +15,7 @@
 */
 
 import needsEnrichment from './needsEnrichment.js';
+import { expect, test } from 'vitest';
 
 function needs(properties) {
   return needsEnrichment({ input: false, properties });

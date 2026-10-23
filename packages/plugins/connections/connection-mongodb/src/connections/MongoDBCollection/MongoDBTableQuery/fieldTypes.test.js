@@ -17,6 +17,7 @@
 import fs from 'fs';
 
 import fieldTypes from './fieldTypes.js';
+import { expect, test } from 'vitest';
 
 // The Table's filter operators, per cell type, as @lowdefy/blocks-antd offers them in its filter
 // menus. The same fixture is checked into blocks-antd (test/tableFilterOperators.json) and

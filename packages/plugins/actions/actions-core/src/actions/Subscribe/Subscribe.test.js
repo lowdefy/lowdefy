@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import Subscribe from './Subscribe.js';
 
-const mockSubscribe = jest.fn();
+const mockSubscribe = vi.fn();
 const methods = { subscribe: mockSubscribe };
 
 test('Subscribe with a string param calls subscribe with the websocketId', () => {
