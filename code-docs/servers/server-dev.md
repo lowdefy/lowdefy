@@ -553,8 +553,8 @@ optimises itself. A failure only warns: the child then optimises itself, as it u
 re-optimisation the child triggers mid-session keeps its memory until the next restart.
 
 **Agent browser** (`lib/docs/getBrowser.js`, `createBrowserLifecycle.js`, `launchBrowser.js`,
-`installHeadlessShell.js`). Screenshots, journeys, headless inspection, operator evaluation and
-state loads share one browser per child:
+`installHeadlessShell.js`). Screenshots, journeys, headless inspection and expression evaluation
+share one browser per child:
 
 - `launchBrowser` imports `playwright-core` lazily and launches `chromium-headless-shell` first,
   system Chrome (`channel: 'chrome'`) as the fallback. A missing shell starts
@@ -576,18 +576,15 @@ state loads share one browser per child:
   (`killTaggedBrowser`), because system Chrome runs in its own process group and outlives a
   SIGKILLed child. The headless shell exits with its parent anyway.
 
-**Page instances in the headless tools.** Screenshot, inspect state, eval operator, snapshot and
-load state and journeys take `pathParams` next to `pageId` and `urlQuery`.
+**Page instances in the headless tools.** Screenshot, inspect state (with or without `expression`) and
+journeys take `pathParams` next to `pageId` and `urlQuery`.
 `resolvePageInstance` reads the page's pattern from `routes.json` (`readPagePath`) and returns
 `{ path, instanceKey }`, or the URL builder's error for a missing placeholder, which the tool
 returns to the agent before a browser opens. `openPage` and `buildPageUrl` take the pattern as
 `path`; the tools read `lowdefy.contexts[instanceKey]` and `lowdefy.inputs[instanceKey]`.
 `isPageReady()` waits for the instance on screen, the last key in
 `lowdefy.pageInstances[lowdefy.pageId]`, so a redirect settles on the page the app shows. A request naming only a `pageId` reads a live tab
-through `findPageInstance`; headless it needs `pathParams` for a patterned page. State
-checkpoints keep `pathParams.json` next to `urlQuery.json`, and `loadState` opens that instance.
-`/lowdefy-docs/screenshot`, `/inspect-state` and `/page-config` take multi-segment page ids;
-the GET routes take `pathParams` as JSON in the query. `getAppMap` lists each page's `path`, and
+through `findPageInstance`; headless it needs `pathParams` for a patterned page. `GET /lowdefy-docs/page-config` takes multi-segment page ids. `getAppMap` lists each page's `path`, and
 the overview lists the patterned pages.
 
 **Connection schemas.** The skeleton build's `writeConnectionSchemaMap` (`@lowdefy/build`) reads
@@ -841,7 +838,7 @@ Tailwind CSS updates arrive through Vite HMR (`globals.css` is in the dev module
 
 Dev serves over HTTP/1.1, where browsers allow six connections per host, and an open event stream holds one for the life of the tab. The `/api/reload` EventSource in `Reload.jsx` is therefore the **only** stream a tab opens, and every other dev-only channel rides it:
 
-- `reload.js` registers each connection as an inspectable tab in `lib/docs/tabChannel.js` and sends the id it chose as the first event (`tab`). Agent inspect/eval requests (`/lowdefy-docs/inspect-state`, `eval-operator`) arrive on the same stream as `inspect-request` / `eval-request` events.
+- `reload.js` registers each connection as an inspectable tab in `lib/docs/tabChannel.js` and sends the id it chose as the first event (`tab`). Agent `lowdefy_inspect_state` calls, with or without `expression`, arrive on the same stream as `inspect-request` / `eval-request` events.
 - `Reload.jsx` publishes `{ source, tabId }` through `client/DevStreamContext.js`; `Inspector.jsx` (rendered inside `Reload`'s render prop) attaches its listeners to that source instead of opening its own EventSource.
 - Page navigation is reported with a POST to `/api/dev-inspect/page` (`{ tabId, pageId, pathParams, instanceKey }` → `updateTabPage`) rather than reconnecting, so the registry stays current without churning connections or file watchers. The values come from the fetched page: dev `Page.jsx` calls `onPageShown` once a page renders, and `Routing.jsx` hands that instance to `Inspector` and `OpenInEditorListener` (until the first page renders they have none).
 - The registry keeps each tab's instance on screen and the instances it has rendered. `findPageInstance({ pageId, pathParams })` picks what a request reads: the instance on screen in a tab showing that page (and values), else the page's most recently rendered instance in any tab, whose context that tab still holds; with no `pageId`, the most recently connected tab's instance on screen. Path values compare as strings. `requestFromTab` sends the chosen `{ pageId, pathParams, instanceKey }` with the event, and `Inspector.jsx` reads `lowdefy.contexts[instanceKey]` and `lowdefy.inputs[instanceKey]`.
@@ -881,7 +878,7 @@ The Hono app is mounted into Vite via `@hono/vite-dev-server`. There is no compr
 
 **Files:** `lib/docs/getDocsIndex.js`, `searchDocs.js`, `getDoc.js`, `listPluginDocEntries.js`, `listModuleDocEntries.js`, `makeModuleManifestDoc.js`, `readDocEntry.js`
 
-The doc tools (`lowdefy_search_docs`, `lowdefy_get_doc`, `/lowdefy-docs/search`, `/lowdefy-docs/content/{slug}`) read one index in the server process. `getDocsIndex()` returns `{ entries, typeDocs }`. Each entry is `{ slug, title, section, kind?, typeName?, source, package, version }` plus where its markdown comes from (a file path, or the module entry a page is generated from). Content is read when asked for: core docs once per process, plugin and module docs on every read.
+The doc tools (`lowdefy_search_docs` and `lowdefy_get_doc`) read one index in the server process. `getDocsIndex()` returns `{ entries, typeDocs }`. Each entry is `{ slug, title, section, kind?, typeName?, source, package, version }` plus where its markdown comes from (a file path, or the module entry a page is generated from). Content is read when asked for: core docs once per process, plugin and module docs on every read.
 
 - **Core** (`source: core`): the `@lowdefy/docs-content` manifest.
 - **Plugins** (`plugin`, or `local-plugin` when the package's real directory is outside every `node_modules`), from the plugin packages the build lists (`plugins/availableTypes.json`, `customTypesMap.json`, `installedPluginPackages.json`), `@lowdefy/*` left out: the `README.md` as `plugins/<package>`, and each `docs/*.md` (else `dist/docs/*.md`) as `plugins/<package>/<stem>`. `typeDocs` maps `"<kind>:<type>"` to the doc whose stem is the type name, else to the README. `listPackageDocFiles` lists only regular files whose real path is inside the package, so a link out of it, a broken link or a directory named `*.md` is left out.

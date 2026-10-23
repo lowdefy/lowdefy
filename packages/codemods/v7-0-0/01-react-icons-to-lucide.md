@@ -109,8 +109,8 @@ surrounding text exactly (quotes, indentation, YAML style).
   an alias target, write the semantic name's Lucide target instead (see the list below), e.g.
   `invoice: AiOutlineFileText` → `invoice: FileText`, `trash: LuTrash2` → `trash: Trash`.
 - **Names not in the table.** Do not guess. Find the Lucide icon that matches by meaning (the
-  v7 dev server serves `GET /lowdefy-docs/icons?q=<words>` and the MCP tool
-  `lowdefy_search_icons`; or search https://lucide.dev/icons) and use its PascalCase name.
+  v7 dev server's MCP tool
+  `lowdefy_search_icons` searches icon names; or search https://lucide.dev/icons) and use its PascalCase name.
   If nothing fits, leave the name and list it in the report — it can keep working through the
   compatibility set.
 - **Qualified names stay as they are.** A name after a set id and a colon
