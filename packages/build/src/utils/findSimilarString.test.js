@@ -15,6 +15,7 @@
 */
 
 import findSimilarString from './findSimilarString.js';
+import { expect, test } from 'vitest';
 
 test('findSimilarString returns null for empty input', () => {
   expect(findSimilarString({ input: '', candidates: ['Button'] })).toBe(null);

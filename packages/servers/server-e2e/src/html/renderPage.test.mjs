@@ -15,21 +15,21 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const { default: getPageConfig } = await import('@lowdefy/api/routes/page/getPageConfig.js');
 
-const mockGetRootConfig = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
+const mockGetRootConfig = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
   getPageConfig,
   getRootConfig: mockGetRootConfig,
 }));
 
-jest.unstable_mockModule('../../lib/build/app.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: { basePath: '' } }));
-jest.unstable_mockModule('../../lib/build/theme.js', () => ({ default: {} }));
-jest.unstable_mockModule('./getAssets.js', () => ({ default: () => ({}) }));
-jest.unstable_mockModule('./template.js', () => ({
+vi.doMock('../../lib/build/app.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/config.js', () => ({ default: { basePath: '' } }));
+vi.doMock('../../lib/build/theme.js', () => ({ default: {} }));
+vi.doMock('./getAssets.js', () => ({ default: () => ({}) }));
+vi.doMock('./template.js', () => ({
   default: ({ config, title }) => JSON.stringify({ config, title }),
 }));
 
@@ -63,7 +63,7 @@ function createApp({
     c.set('lowdefyContext', {
       authEnforcement: { pagesProtectedByDefault },
       authorizeOutcome: () => outcome,
-      logger: { info: jest.fn() },
+      logger: { info: vi.fn() },
       readConfigFile: async (file) => {
         if (file === 'routes.json') return routeTable;
         return pages[file.slice('pages/'.length, -'.json'.length)] ?? null;

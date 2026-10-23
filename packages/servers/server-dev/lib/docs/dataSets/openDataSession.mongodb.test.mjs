@@ -17,7 +17,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import { MongoClient, ObjectId } from 'mongodb';
 import { parseDataSet } from '@lowdefy/node-utils';
 
@@ -29,7 +29,7 @@ import readDataSet from './readDataSet.js';
 import applyDataSetRedirect from '../../server/applyDataSetRedirect.js';
 import { journeyActorToken } from '../../server/auth/journeyActor.js';
 
-jest.setTimeout(120000);
+vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
 let store;
 let client;
@@ -454,18 +454,32 @@ test('close() waits for background work added to the session', async () => {
 test('close() drops after 30 s with a warning when background work never settles', async () => {
   const { session, close } = await openDataSession({ dataSet: makeDataSet({}) });
   await sessionDb(session).collection('kept').insertOne({ _id: 1 });
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   session.work.add(new Promise(() => {}));
-  jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate', 'queueMicrotask', 'performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   let warnings;
   try {
     const closing = close();
-    jest.advanceTimersByTime(30000);
-    jest.useRealTimers();
+    vi.advanceTimersByTime(30000);
+    vi.useRealTimers();
     await closing;
     warnings = warn.mock.calls.map(([message]) => message);
   } finally {
-    jest.useRealTimers();
+    vi.useRealTimers();
     warn.mockRestore();
   }
   expect(warnings).toEqual([expect.stringContaining('Data set "sample"')]);

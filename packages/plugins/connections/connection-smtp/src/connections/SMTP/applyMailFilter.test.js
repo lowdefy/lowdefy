@@ -15,6 +15,7 @@
 */
 
 import applyMailFilter from './applyMailFilter.js';
+import { expect, test } from 'vitest';
 
 test('applyMailFilter returns mail unchanged when filter is undefined', () => {
   const mail = {

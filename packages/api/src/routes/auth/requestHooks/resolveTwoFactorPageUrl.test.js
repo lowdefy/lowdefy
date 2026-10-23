@@ -15,6 +15,7 @@
 */
 
 import resolveTwoFactorPageUrl from './resolveTwoFactorPageUrl.js';
+import { expect, test } from 'vitest';
 
 test('resolveTwoFactorPageUrl returns an absolute url when the base origin is pinned', () => {
   expect(

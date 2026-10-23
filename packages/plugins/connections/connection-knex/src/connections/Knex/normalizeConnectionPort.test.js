@@ -17,6 +17,7 @@
 import { ConfigError } from '@lowdefy/errors';
 
 import normalizeConnectionPort from './normalizeConnectionPort.js';
+import { expect, test } from 'vitest';
 
 test('normalizeConnectionPort converts a string port to a number', () => {
   const knexClient = { client: { connectionSettings: { host: 'h', port: '45678' } } };

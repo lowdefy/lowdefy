@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 
 import stampCaller from './stampCaller.js';
+import { expect, test } from 'vitest';
 
 function createApp({ user, authSession }) {
   const app = new Hono();

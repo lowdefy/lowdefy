@@ -17,6 +17,7 @@
 import buildColumnFilter from './buildColumnFilter.js';
 import getFilterKind from './getFilterKind.js';
 import parseColumnFilter from './parseColumnFilter.js';
+import { expect, test } from 'vitest';
 
 test('getFilterKind picks the simple editor from the column type and options', () => {
   expect(getFilterKind({ type: 'text' })).toBe('text');

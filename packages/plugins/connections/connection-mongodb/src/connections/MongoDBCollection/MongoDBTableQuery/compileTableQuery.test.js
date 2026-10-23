@@ -17,6 +17,7 @@
 import { ObjectId } from 'mongodb';
 
 import compileTableQuery from './compileTableQuery.js';
+import { describe, expect, test } from 'vitest';
 
 const now = new Date('2026-09-28T12:00:00.000Z');
 

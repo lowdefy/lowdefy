@@ -16,6 +16,7 @@
 
 import createCounter from '../../utils/createCounter.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
+import { expect, test } from 'vitest';
 
 function makeContext({ blockCounts, actionCounts, clientOpCounts, serverOpCounts, typesMap }) {
   const blocks = createCounter();

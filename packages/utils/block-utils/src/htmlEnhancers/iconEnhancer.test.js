@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 
 import HtmlComponent from '../HtmlComponent.js';
@@ -29,7 +29,7 @@ function Icon({ properties }) {
 function register({ added = {}, fail = false } = {}) {
   const icons = { edit: {} };
   const load = {};
-  const loadAllIcons = jest.fn(() => {
+  const loadAllIcons = vi.fn(() => {
     load.promise ??= new Promise((resolve, reject) => {
       load.settle = () => {
         if (fail) {
@@ -47,7 +47,7 @@ function register({ added = {}, fail = false } = {}) {
 }
 
 beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 });
 
 afterEach(() => {

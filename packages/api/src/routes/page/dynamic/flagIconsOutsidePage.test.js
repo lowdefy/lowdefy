@@ -17,6 +17,7 @@
 import collectIconNames from '@lowdefy/build/collectIconNames';
 
 import flagIconsOutsidePage from './flagIconsOutsidePage.js';
+import { expect, test } from 'vitest';
 
 const pageTypeSets = { page1: { icons: ['close', 'edit', 'loading'] } };
 const iconImports = ['close', 'delete', 'edit', 'loading', 'Rocket'];

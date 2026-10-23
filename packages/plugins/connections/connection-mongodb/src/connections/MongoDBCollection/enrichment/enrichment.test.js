@@ -24,6 +24,7 @@ import parseColumnDefs from './parseColumnDefs.js';
 import pickRow from './pickRow.js';
 import resolveCellInputs from './resolveCellInputs.js';
 import resolveInputSources from './resolveInputSources.js';
+import { describe, expect, test } from 'vitest';
 
 const requestType = 'TestRequest';
 

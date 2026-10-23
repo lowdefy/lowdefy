@@ -15,14 +15,14 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { act, fireEvent, render } from '@testing-library/react';
 import { buildPagePath } from '@lowdefy/helpers';
 
 import HtmlComponent from '../HtmlComponent.js';
 import registerHtmlEnhancements from '../registerHtmlEnhancements.js';
 
-const link = jest.fn();
+const link = vi.fn();
 
 // Stands in for the client's createUrl with basePath /base.
 function createHref({ pathname, query }) {
@@ -48,7 +48,7 @@ beforeEach(() => {
     icons: {},
     link,
   });
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 });
 
 afterEach(() => {
@@ -196,7 +196,7 @@ test('data-new-tab opens any link in a new tab and keeps an author rel', () => {
 });
 
 test('a data-event on a data-page-id link fires the event and does not navigate', () => {
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const { container } = render(
     <HtmlComponent
       dataEvents={['onOpen']}

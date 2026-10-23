@@ -15,6 +15,7 @@
 */
 
 import interpolateProperties from './interpolateProperties.js';
+import { expect, test } from 'vitest';
 
 test('interpolateProperties interpolates plain fields without html escaping', () => {
   const result = interpolateProperties({

@@ -15,6 +15,7 @@
 */
 
 import translate from './translate.js';
+import { expect, test } from 'vitest';
 
 const i18n = {
   active: 'de-DE',

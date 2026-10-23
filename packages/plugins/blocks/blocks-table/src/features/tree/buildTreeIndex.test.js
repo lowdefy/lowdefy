@@ -15,6 +15,7 @@
 */
 
 import buildTreeIndex from './buildTreeIndex.js';
+import { expect, test } from 'vitest';
 
 const getId = (row) => String(row.id);
 

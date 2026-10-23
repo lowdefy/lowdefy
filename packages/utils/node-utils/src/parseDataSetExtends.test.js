@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import parseDataSet from './parseDataSet.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let configDirectory;
 

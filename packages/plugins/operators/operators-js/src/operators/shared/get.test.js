@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/operators', () => ({
-  getFromObject: jest.fn(),
+vi.doMock('@lowdefy/operators', () => ({
+  getFromObject: vi.fn(),
 }));
 
 test('_get calls getFromObject', async () => {
@@ -83,7 +83,9 @@ test('_get throws if params is not a object', async () => {
     location: 'location',
     params: 'params',
   };
-  expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(`"_get takes an object as params."`);
+  expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(
+    `[Error: _get takes an object as params.]`
+  );
 });
 
 test('_get throws if from is not a object, array or null', async () => {
@@ -98,6 +100,6 @@ test('_get throws if from is not a object, array or null', async () => {
     },
   };
   expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(
-    `"_get.from is not an object or array."`
+    `[Error: _get.from is not an object or array.]`
   );
 });

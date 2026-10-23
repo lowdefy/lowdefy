@@ -16,6 +16,7 @@
 
 import { ObjectId } from 'mongodb';
 import { serialize, deserialize } from './serialize.js';
+import { expect, test } from 'vitest';
 
 test('serialize with  dates', () => {
   const object = {

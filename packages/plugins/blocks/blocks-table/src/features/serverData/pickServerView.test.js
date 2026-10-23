@@ -15,6 +15,7 @@
 */
 
 import pickServerView from './pickServerView.js';
+import { expect, test } from 'vitest';
 
 test('pickServerView keeps only the parts the server reads, with empty defaults', () => {
   expect(

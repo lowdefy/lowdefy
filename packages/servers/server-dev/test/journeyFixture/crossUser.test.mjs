@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // One person writes, a second person (`as:`) reads it, in the same run and the same
 // data set database. The page shows who it is open as, so the journey also sees that each

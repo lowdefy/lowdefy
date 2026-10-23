@@ -17,6 +17,7 @@
 import { createHash } from 'node:crypto';
 
 import sha256Hex from './sha256Hex.js';
+import { expect, test } from 'vitest';
 
 test('sha256Hex matches node crypto across padding boundaries and several blocks', () => {
   [0, 1, 20, 53, 54, 55, 56, 62, 63, 64, 65, 119, 120, 128, 300].forEach((length) => {

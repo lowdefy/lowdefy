@@ -19,6 +19,7 @@ import { icons } from 'lucide';
 import defaultIconAliases from './defaultIconAliases.js';
 import getLucideIconNames from '../icons/getLucideIconNames.js';
 import { semanticNamePattern } from '../icons/iconNamePatterns.js';
+import { expect, test } from 'vitest';
 
 // Lucide renames icons and keeps the old name as an alias (Trash2 -> Trash,
 // Filter -> Funnel). Built-in targets are canonical so the map names the icons

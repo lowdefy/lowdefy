@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import { serializer } from '@lowdefy/helpers';
 
@@ -22,7 +22,7 @@ import writeApi from './writeApi.js';
 import testContext from '../test-utils/testContext.js';
 
 async function getSchedulesManifest(components) {
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   const context = testContext({ writeBuildArtifact });
   await writeApi({ components, context });
   const call = writeBuildArtifact.mock.calls.find(([name]) => name === 'schedules.json');

@@ -19,6 +19,7 @@ import buildConnections from './buildConnections.js';
 import buildPages from './full/buildPages.js';
 import createCounter from '../utils/createCounter.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 function ifNode(name) {
   return { _if: { test: { _state: name }, then: 1, else: 2 }, '~k': `if-${name}` };

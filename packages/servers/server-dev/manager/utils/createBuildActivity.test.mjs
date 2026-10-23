@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createBuildActivity from './createBuildActivity.mjs';
 
 test('waitForIdle waits for tracked work to finish and reports that it saw a build', async () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const activity = createBuildActivity({ onChange });
   let finish;
   const work = activity.track(

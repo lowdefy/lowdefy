@@ -15,6 +15,7 @@
 */
 
 import collectBlockHtmlLinks from './collectBlockHtmlLinks.js';
+import { expect, test } from 'vitest';
 
 test('collectBlockHtmlLinks collects data-page-id from the block config but not its children', () => {
   const linkActionRefs = [];

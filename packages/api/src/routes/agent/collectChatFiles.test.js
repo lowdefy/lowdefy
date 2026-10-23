@@ -15,6 +15,7 @@
 */
 
 import collectChatFiles from './collectChatFiles.js';
+import { expect, test } from 'vitest';
 
 function uploadedPart({ key, filename, mediaType = 'image/png' }) {
   return {

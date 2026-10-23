@@ -15,6 +15,7 @@
 */
 
 import getSecretsFromEnv from './getSecretsFromEnv.js';
+import { afterEach, expect, test } from 'vitest';
 
 const realEnv = process.env;
 

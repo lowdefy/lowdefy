@@ -15,6 +15,7 @@
 */
 
 import extractOperatorKey from './extractOperatorKey.js';
+import { expect, test } from 'vitest';
 
 test('extractOperatorKey with simple string', () => {
   const result = extractOperatorKey({ operatorValue: 'userName' });

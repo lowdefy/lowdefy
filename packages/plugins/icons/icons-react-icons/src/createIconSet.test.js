@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 const files = {
   'ai.json': { AiOutlineUser: { node: [['path', { d: 'user' }]], size: 1024 } },
@@ -24,13 +24,13 @@ const files = {
   'names.json': ['AiOutlineUser', 'FaWhatsapp', 'FaXTwitter', 'LuPencil'],
 };
 
-const readFile = jest.fn(async (url) => {
+const readFile = vi.fn(async (url) => {
   const fileName = url.pathname.split('/').pop();
   if (!files[fileName]) throw new Error(`ENOENT: ${fileName}`);
   return JSON.stringify(files[fileName]);
 });
 
-jest.unstable_mockModule('fs/promises', () => ({ readFile }));
+vi.doMock('fs/promises', () => ({ readFile }));
 
 const { default: createIconSet } = await import('./createIconSet.js');
 

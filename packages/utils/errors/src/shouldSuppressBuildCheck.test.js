@@ -15,6 +15,7 @@
 */
 
 import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBuildCheck.js';
+import { expect, test } from 'vitest';
 
 const keyMap = {
   abc123: {

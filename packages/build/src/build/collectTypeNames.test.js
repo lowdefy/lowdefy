@@ -15,6 +15,7 @@
 */
 
 import collectTypeNames from './collectTypeNames.js';
+import { expect, test } from 'vitest';
 
 test('collectTypeNames returns empty Set for empty typesMap', () => {
   const result = collectTypeNames({ typesMap: {} });

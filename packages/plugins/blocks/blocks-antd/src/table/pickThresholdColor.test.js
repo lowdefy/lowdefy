@@ -15,6 +15,7 @@
 */
 
 import pickThresholdColor from './pickThresholdColor.js';
+import { expect, test } from 'vitest';
 
 test('pickThresholdColor picks the colour of the band the value falls in', () => {
   const config = { thresholds: [50, 80], colors: ['red', 'orange', 'green'] };

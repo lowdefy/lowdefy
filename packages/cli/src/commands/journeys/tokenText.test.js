@@ -16,6 +16,7 @@
 
 import tokenText from './tokenText.js';
 import hashId from './pull/hashId.js';
+import { expect, test } from 'vitest';
 
 const salt = Buffer.from('a'.repeat(64), 'hex');
 

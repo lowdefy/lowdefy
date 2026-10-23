@@ -17,6 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
+import { expect, test } from 'vitest';
 
 // A request type added without the mapMongoError wrapper ships the driver's raw
 // message to the browser. This asserts the wrapper mechanically, over whatever

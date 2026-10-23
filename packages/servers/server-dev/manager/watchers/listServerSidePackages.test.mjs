@@ -15,6 +15,7 @@
 */
 
 import listServerSidePackages from './listServerSidePackages.mjs';
+import { expect, test } from 'vitest';
 
 test('listServerSidePackages lists packages with server-side types once each, not client-only ones', () => {
   const customTypesMap = {

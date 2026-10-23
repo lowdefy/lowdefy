@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGetSignedUrl = jest.fn();
-const mockFile = jest.fn();
-const mockBucket = jest.fn();
-const mockStorageConstructor = jest.fn();
+const mockGetSignedUrl = vi.fn();
+const mockFile = vi.fn();
+const mockBucket = vi.fn();
+const mockStorageConstructor = vi.fn();
 
-jest.unstable_mockModule('@google-cloud/storage', () => ({
-  Storage: jest.fn().mockImplementation((...args) => {
+vi.doMock('@google-cloud/storage', () => ({
+  Storage: vi.fn().mockImplementation(function (...args) {
     mockStorageConstructor(...args);
     return { bucket: mockBucket };
   }),
@@ -39,9 +39,15 @@ beforeEach(() => {
   mockFile.mockReset();
   mockBucket.mockReset();
   mockStorageConstructor.mockReset();
-  mockBucket.mockImplementation(() => ({ file: mockFile }));
-  mockFile.mockImplementation(() => ({ getSignedUrl: mockGetSignedUrl }));
-  mockGetSignedUrl.mockImplementation(() => ['https://signed.example.com/key']);
+  mockBucket.mockImplementation(function () {
+    return { file: mockFile };
+  });
+  mockFile.mockImplementation(function () {
+    return { getSignedUrl: mockGetSignedUrl };
+  });
+  mockGetSignedUrl.mockImplementation(function () {
+    return ['https://signed.example.com/key'];
+  });
 });
 
 test('GcsSignedGetUrl returns a signed read URL', async () => {
@@ -87,7 +93,7 @@ test('GcsSignedGetUrl public URL uses publicUrlBase override', async () => {
 });
 
 test('Error from storage client', async () => {
-  mockGetSignedUrl.mockImplementation(() => {
+  mockGetSignedUrl.mockImplementation(function () {
     throw new Error('Test GCS client error.');
   });
   const request = { key: 'key' };

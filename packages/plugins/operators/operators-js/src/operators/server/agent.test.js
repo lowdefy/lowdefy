@@ -15,6 +15,7 @@
 */
 
 import _agent from './agent.js';
+import { expect, test } from 'vitest';
 
 const agent = { id: 'support_agent', conversationId: 'conv_1' };
 

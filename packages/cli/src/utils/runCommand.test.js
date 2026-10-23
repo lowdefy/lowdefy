@@ -14,21 +14,21 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 import { wait } from '@lowdefy/helpers';
 
-jest.unstable_mockModule('./errorHandler', () => ({
-  default: jest.fn(),
+vi.doMock('./errorHandler', () => ({
+  default: vi.fn(),
 }));
-jest.unstable_mockModule('./startUp', () => ({
-  default: jest.fn(),
+vi.doMock('./startUp', () => ({
+  default: vi.fn(),
 }));
 
 const options = { option: true };
 const command = { command: true, name: () => 'test' };
 const cliVersion = 'cliVersion';
 
-const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {});
+const mockExit = vi.spyOn(process, 'exit').mockImplementation(() => {});
 
 afterEach(() => {
   mockExit.mockClear();
@@ -37,7 +37,7 @@ afterEach(() => {
 test('runCommand with synchronous function', async () => {
   const { default: runCommand } = await import('./runCommand.js');
 
-  const handler = jest.fn(() => 1 + 1);
+  const handler = vi.fn(() => 1 + 1);
   const wrapped = runCommand({ cliVersion, handler });
   const res = await wrapped(options, command);
   expect(res).toBe(2);
@@ -46,7 +46,7 @@ test('runCommand with synchronous function', async () => {
 
 test('runCommand with asynchronous function', async () => {
   const { default: runCommand } = await import('./runCommand.js');
-  const handler = jest.fn(async () => {
+  const handler = vi.fn(async () => {
     await wait(3);
     return 4;
   });
@@ -59,31 +59,31 @@ test('runCommand with asynchronous function', async () => {
 test('runCommand calls startUp', async () => {
   const { default: runCommand } = await import('./runCommand.js');
   const { default: startUp } = await import('./startUp.js');
-  const handler = jest.fn((...args) => args);
+  const handler = vi.fn((...args) => args);
   const wrapped = runCommand({ cliVersion, handler });
   const res = await wrapped(options, command);
   expect(res).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "context": Object {
+    [
+      {
+        "context": {
           "cliVersion": "cliVersion",
         },
-        "params": Array [],
+        "params": [],
       },
     ]
   `);
   expect(startUp.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "command": Object {
+    [
+      [
+        {
+          "command": {
             "command": true,
             "name": [Function],
           },
-          "context": Object {
+          "context": {
             "cliVersion": "cliVersion",
           },
-          "options": Object {
+          "options": {
             "option": true,
           },
         },
@@ -94,7 +94,7 @@ test('runCommand calls startUp', async () => {
 
 test('runCommand passes positional arguments to the handler as params', async () => {
   const { default: runCommand } = await import('./runCommand.js');
-  const handler = jest.fn(({ params }) => params);
+  const handler = vi.fn(({ params }) => params);
   const wrapped = runCommand({ cliVersion, handler });
   const res = await wrapped(['a.jsonl', 'b.jsonl'], options, command);
   expect(res).toEqual([['a.jsonl', 'b.jsonl']]);
@@ -103,17 +103,17 @@ test('runCommand passes positional arguments to the handler as params', async ()
 test('Catch error synchronous function', async () => {
   const { default: runCommand } = await import('./runCommand.js');
   const { default: errorHandler } = await import('./errorHandler.js');
-  const handler = jest.fn(() => {
+  const handler = vi.fn(() => {
     throw new Error('Error');
   });
   const wrapped = runCommand({ cliVersion, handler });
   await wrapped(options, command);
   expect(handler).toHaveBeenCalled();
   expect(errorHandler.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "context": Object {
+    [
+      [
+        {
+          "context": {
             "cliVersion": "cliVersion",
           },
           "error": [Error: Error],
@@ -127,7 +127,7 @@ test('Catch error synchronous function', async () => {
 test('Catch error asynchronous function', async () => {
   const { default: runCommand } = await import('./runCommand.js');
   const { default: errorHandler } = await import('./errorHandler.js');
-  const handler = jest.fn(async () => {
+  const handler = vi.fn(async () => {
     await wait(3);
     throw new Error('Async Error');
   });
@@ -135,10 +135,10 @@ test('Catch error asynchronous function', async () => {
   await wrapped(options, command);
   expect(handler).toHaveBeenCalled();
   expect(errorHandler.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "context": Object {
+    [
+      [
+        {
+          "context": {
             "cliVersion": "cliVersion",
           },
           "error": [Error: Async Error],

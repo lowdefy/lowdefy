@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import Reset from './Reset.js';
 
-const mockReset = jest.fn();
+const mockReset = vi.fn();
 const methods = { reset: mockReset };
 
 test('Reset action invocation', () => {

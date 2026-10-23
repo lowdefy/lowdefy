@@ -15,9 +15,9 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('../../lib/build/config.js', () => ({
+vi.doMock('../../lib/build/config.js', () => ({
   default: { basePath: '' },
 }));
 
@@ -43,7 +43,7 @@ function createApp({
     c.set('lowdefyContext', {
       authEnforcement: { pagesProtectedByDefault },
       authorizeOutcome: () => outcome,
-      logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
+      logger: { debug: vi.fn(), info: vi.fn(), error: vi.fn() },
       readConfigFile: async (file) => {
         if (file === 'routes.json') return routes;
         return pages[file.slice('pages/'.length, -'.json'.length)] ?? null;

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import GetLocalStorage from './GetLocalStorage.js';
 
-const mockGetItem = jest.fn();
+const mockGetItem = vi.fn();
 const globals = { window: { localStorage: { getItem: mockGetItem } } };
 const methods = { getAppStorageKey: (key) => `lowdefy:app::${key}` };
 

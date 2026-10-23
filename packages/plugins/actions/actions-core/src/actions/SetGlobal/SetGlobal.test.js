@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import SetGlobal from './SetGlobal.js';
 
-const mockSetGlobal = jest.fn();
+const mockSetGlobal = vi.fn();
 const methods = { setGlobal: mockSetGlobal };
 
 test('SetGlobal action invocation', () => {

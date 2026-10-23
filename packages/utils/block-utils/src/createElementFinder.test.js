@@ -15,6 +15,7 @@
 */
 
 import createElementFinder from './createElementFinder.js';
+import { expect, test } from 'vitest';
 
 function createRoot(html) {
   const root = document.createElement('div');

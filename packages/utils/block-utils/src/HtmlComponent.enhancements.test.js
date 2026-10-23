@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -43,7 +43,7 @@ const icons = { edit: () => null, delete: () => null, LuTrash2: () => null };
 
 beforeEach(() => {
   registerHtmlEnhancements({ HtmlOverlay, Icon, icons });
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 });
 
 afterEach(() => {
@@ -158,7 +158,7 @@ test('HtmlComponent opens a popover with Enter on its trigger', async () => {
 });
 
 test('HtmlComponent fires onDataEvent with the other data attributes as snake_case keys', () => {
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const { container } = render(
     <HtmlComponent
       dataEvents={['onEditClick']}
@@ -175,7 +175,7 @@ test('HtmlComponent fires onDataEvent with the other data attributes as snake_ca
 });
 
 test('HtmlComponent makes data-event targets focusable without changing their role', async () => {
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const { container } = render(
     <HtmlComponent
       dataEvents={['onSave']}
@@ -193,7 +193,7 @@ test('HtmlComponent makes data-event targets focusable without changing their ro
 });
 
 test('HtmlComponent fires a data-event inside a popover and closes the popover', () => {
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const { container } = render(
     <HtmlComponent
       dataEvents={['onArchive']}
@@ -253,7 +253,7 @@ test('HtmlComponent leaves HTML with only other data attributes on the plain pat
 });
 
 test('HtmlComponent fires only the data events dataEvents lists, and warns about the others', () => {
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const { container } = render(
     <HtmlComponent
       dataEvents={['onEdit', { name: 'onView' }]}
@@ -279,7 +279,7 @@ test.each([
   ['no enhancements registered', undefined, true],
 ])('HtmlComponent with %s fires no data events', (_, dataEvents, unregistered) => {
   if (unregistered) registerHtmlEnhancements(null);
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const { container } = render(
     <HtmlComponent
       dataEvents={dataEvents}
@@ -296,7 +296,7 @@ test.each([
 });
 
 test('HtmlComponent applies dataEvents to data events inside popover content', () => {
-  const onDataEvent = jest.fn();
+  const onDataEvent = vi.fn();
   const { container } = render(
     <HtmlComponent
       dataEvents={['onArchive']}

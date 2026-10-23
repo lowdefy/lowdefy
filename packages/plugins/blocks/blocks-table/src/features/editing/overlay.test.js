@@ -17,6 +17,7 @@
 import applyOverlay from './applyOverlay.js';
 import getEventError from './getEventError.js';
 import pruneOverlay from './pruneOverlay.js';
+import { describe, expect, test } from 'vitest';
 
 const getKey = (row) => row.id;
 

@@ -19,6 +19,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { getOperatorType, serializer, type } from '@lowdefy/helpers';
+import { expect, test } from 'vitest';
 
 // The production client loads each page's own client types. An operator missing
 // from them is not an error - WebParser passes unknown operators through as data

@@ -33,13 +33,16 @@ Git state that is _not_ per worktree: branches, tags, the stash and the `rerere`
 ```bash
 pnpm test                                           # every package except connection-mongodb
 pnpm --filter=@lowdefy/api test                     # one package
-pnpm --filter=@lowdefy/api test --testPathPattern=endpoint --no-coverage
+pnpm --filter=@lowdefy/api test endpoint             # one package, files matching a name
 ```
 
-Tests that do real work (build fixtures, child processes) set a generous `testTimeout` so
-they survive a loaded machine; don't tune timeouts down to what one idle run needs.
+Tests run on vitest. Each package has a `vitest.config.js` that caps the workers at 2, and
+test files import `test`, `expect`, `vi` and the hooks from `'vitest'`, since there are no
+globals. Tests that do real work (build fixtures, child processes) set a generous
+`testTimeout` (and the same `hookTimeout`) so they survive a loaded machine; don't tune
+timeouts down to what one idle run needs.
 
-Never pass `--` before jest flags, and never call `pnpm jest` or `npx jest` directly.
+Never pass `--` before vitest arguments, and never call `pnpm vitest` or `npx vitest` directly.
 Packages import each other from `dist/`, so run `pnpm build` after changing more than one
 package.
 
@@ -56,7 +59,7 @@ install, so only the published package (or a later lockfile change) breaks.
   block e2e helpers (reachable from a package's `./e2e` export) and private packages may
   also import `devDependencies`. So do the servers' `lowdefy/` build scripts and the
   webpack-bundled `@lowdefy/nunjucks`, listed in `scripts/lib/findUndeclaredImports.mjs`.
-- Tests that import `@jest/globals` declare it as a devDependency.
+- Tests import `vitest`, which every package with tests declares as a devDependency.
 
 The check reads what is declared, not what resolves: ESLint's
 `import/no-extraneous-dependencies` skips any import it cannot resolve, which in a pnpm
@@ -65,7 +68,8 @@ workspace is most undeclared imports.
 ## MongoDB tests
 
 `@lowdefy/connection-mongodb` runs against a real single-node replica set started by
-`mongodb-memory-server` (`@shelf/jest-mongodb` preset, `jest-mongodb-config.js`). The root
+`mongodb-memory-server-core`, which the package's vitest global setup
+(`mongodbGlobalSetup.js`) starts once per run and hands to the tests as `MONGO_URL`. The root
 `pnpm test` skips it, since it needs a `mongod` binary that the first run downloads. Run it
 with:
 
@@ -74,7 +78,7 @@ pnpm test:mongodb
 ```
 
 `pnpm test:mongodb` also runs `@lowdefy/api`'s `*.mongodb.test.js` suites
-(`pnpm --filter=@lowdefy/api test:mongodb`, `jest.mongodb.config.js`), which drive engine code
+(`pnpm --filter=@lowdefy/api test:mongodb`, `vitest.mongodb.config.js`), which drive engine code
 through a real BetterAuth instance and the MongoDB auth adapter, for example the tenant signup
 mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it needs a real
 server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/server-dev`'s
@@ -83,14 +87,14 @@ journey data sessions (`lib/docs/dataSets/openDataSession.mongodb.test.mjs`, whi
 server's own data store), the data store's port, stop and replacement after its mongod dies
 (`getDataStore.mongodb.test.mjs`, which kills that mongod), and the data set journeys end to end
 (`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app with
-tenant auth and a local module, with a database on the jest-mongodb server standing in for the
+tenant auth and a local module, with a database on the suite's MongoDB server standing in for the
 developer's, auth collections included, snapshotted before and compared after; skipped without a
 Chromium). To reproduce a race deterministically,
 pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
 run the other to completion before releasing it.
 
 CI runs it on the complete path, before every release (see [CI](#ci)), and on a pull
-request with the `run-mongodb-tests` label. Each jest run
+request with the `run-mongodb-tests` label. Each vitest run
 starts its own `mongod` on a free port, so worktrees can run it at the same time.
 
 ## Auth journeys
@@ -145,7 +149,7 @@ pnpm --filter=@lowdefy/server-dev test:fixture   # the runner, the observer, the
 pnpm --filter=lowdefy test:fixture                # `lowdefy journeys harden` and `lowdefy test` selections from the built CLI
 ```
 
-Each jest global setup (`test/journeyFixture/globalSetup.mjs` in either package) calls
+Each vitest global setup (`test/journeyFixture/globalSetup.mjs` in either package) calls
 `scripts/lib/startJourneyFixture.mjs`, which starts a memory replica set for the app's
 `fixture_db` connection and `scripts/dev.mjs --skip-build --dev-directory
 _server/dev-journey-fixture` with `CRON_SECRET` set, on three free ports from 3300
@@ -338,8 +342,8 @@ dependency check and every package's tests, not stopping at the first failing pa
 ubuntu with Node 24 and 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
 jobs); `pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
 `@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
-Chromium); and every block e2e suite (`test-block-e2e.yml`). Codecov gets its Node 24 coverage
-only.
+Chromium); and every block e2e suite (`test-block-e2e.yml`). No coverage is collected: jest's
+coverage and its Codecov upload were dropped with the move to vitest.
 
 A release runs the complete path twice: on the Release pull request from `develop` into `main`
 (every push), and on the publish push. `release.yaml` decides from the pushed commit's
@@ -378,6 +382,10 @@ The developer may add the `ci` or `ci-full` label to run them again in CI.
   `LOWDEFY_HOME` at a temporary directory in tests so they never touch the real hub.
 - A running dev server records itself in `<app>/.lowdefy/instance.json`; tests that start
   one should stop it and remove the file.
+- server-dev's watchers use chokidar 4, which watches with `fs.watch`. On macOS, Node restarts
+  its one FSEvents stream whenever a watcher is added or closed, and a write made during the
+  restart is never reported. Watcher tests call `flushFsEvents()` (`test-utils/`) after a
+  watcher is ready and before the first edit, or repeat the edit until it is seen.
 - Hub tests pass a port range of their own (`portRange` to `createHub`, `range` to
   `allocatePorts`), away from the real hub's 4100–4999, which hubs started by agents in other
   worktrees bind.

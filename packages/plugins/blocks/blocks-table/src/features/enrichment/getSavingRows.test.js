@@ -17,6 +17,7 @@
 import createRowKeyGetter from '@lowdefy/blocks-antd/table/createRowKeyGetter.js';
 
 import getSavingRows from './getSavingRows.js';
+import { expect, test } from 'vitest';
 
 const getKey = createRowKeyGetter({});
 

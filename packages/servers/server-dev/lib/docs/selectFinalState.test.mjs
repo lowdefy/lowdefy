@@ -15,6 +15,7 @@
 */
 
 import selectFinalState, { DEFAULT_STATE_LIMIT } from './selectFinalState.js';
+import { expect, test } from 'vitest';
 
 test('selectFinalState returns a small state whole by default', () => {
   expect(selectFinalState({ state: { a: 1 } })).toEqual({ state: { a: 1 } });

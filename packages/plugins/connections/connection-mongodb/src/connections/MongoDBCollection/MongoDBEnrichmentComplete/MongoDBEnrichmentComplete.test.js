@@ -26,6 +26,7 @@ import {
   setupEnrichmentCollection,
   updateDocuments,
 } from '../../../../test/enrichmentTable.js';
+import { describe, expect, test } from 'vitest';
 
 const name = 'enrichmentComplete';
 const { checkRead, checkWrite } = MongoDBEnrichmentComplete.meta;

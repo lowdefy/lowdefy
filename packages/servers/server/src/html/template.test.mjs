@@ -15,6 +15,7 @@
 */
 
 import template from './template.js';
+import { expect, test } from 'vitest';
 
 const assets = {
   js: 'assets/main.js',

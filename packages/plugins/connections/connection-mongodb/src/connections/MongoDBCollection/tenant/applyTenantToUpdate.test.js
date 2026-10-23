@@ -15,6 +15,7 @@
 */
 
 import applyTenantToUpdate from './applyTenantToUpdate.js';
+import { expect, test } from 'vitest';
 
 const tenant = { field: 'organization_id', value: 'org_a' };
 

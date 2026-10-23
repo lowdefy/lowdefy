@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -19,6 +19,7 @@
 
 import findInteractiveControls from './findInteractiveControls.js';
 import isInteractiveControl from './isInteractiveControl.js';
+import { beforeEach, expect, test } from 'vitest';
 
 beforeEach(() => {
   document.body.innerHTML = `

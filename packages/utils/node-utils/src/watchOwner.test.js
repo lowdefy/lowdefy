@@ -15,18 +15,18 @@
 */
 
 import { EventEmitter } from 'events';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockGetProcessStartTime = jest.fn();
-const mockIsPidAlive = jest.fn();
-const mockReadProcessStartTime = jest.fn();
-jest.unstable_mockModule('./getProcessStartTime.js', () => ({
+const mockGetProcessStartTime = vi.fn();
+const mockIsPidAlive = vi.fn();
+const mockReadProcessStartTime = vi.fn();
+vi.doMock('./getProcessStartTime.js', () => ({
   default: mockGetProcessStartTime,
 }));
-jest.unstable_mockModule('./readProcessStartTime.js', () => ({
+vi.doMock('./readProcessStartTime.js', () => ({
   default: mockReadProcessStartTime,
 }));
-jest.unstable_mockModule('./isPidAlive.js', () => ({
+vi.doMock('./isPidAlive.js', () => ({
   default: mockIsPidAlive,
 }));
 
@@ -43,15 +43,31 @@ async function flushReads() {
 
 function createStdin() {
   const stdin = new EventEmitter();
-  stdin.resume = jest.fn();
-  stdin.unref = jest.fn();
+  stdin.resume = vi.fn();
+  stdin.unref = vi.fn();
   return stdin;
 }
 
 let watcher;
 
 beforeEach(() => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   mockGetProcessStartTime.mockReset();
   mockGetProcessStartTime.mockReturnValue(START_TIME);
   mockReadProcessStartTime.mockReset();
@@ -63,18 +79,18 @@ beforeEach(() => {
 
 afterEach(() => {
   watcher?.stop();
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('watchOwner does nothing when neither variable is set', () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   const stdin = createStdin();
   watcher = watchOwner({ onExit, env: {}, stdin });
   expect(watcher.ownerPid).toBe(null);
   expect(stdin.resume).not.toHaveBeenCalled();
   expect(stdin.listenerCount('end')).toBe(0);
   stdin.emit('end');
-  jest.advanceTimersByTime(120000);
+  vi.advanceTimersByTime(120000);
   expect(onExit).not.toHaveBeenCalled();
   expect(mockGetProcessStartTime).not.toHaveBeenCalled();
   expect(mockReadProcessStartTime).not.toHaveBeenCalled();
@@ -82,7 +98,7 @@ test('watchOwner does nothing when neither variable is set', () => {
 });
 
 test('watchOwner calls onExit once when stdin ends under LOWDEFY_EXIT_ON_STDIN_CLOSE', () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   const stdin = createStdin();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_ON_STDIN_CLOSE: '1' }, stdin });
   expect(stdin.resume).toHaveBeenCalled();
@@ -95,7 +111,7 @@ test('watchOwner calls onExit once when stdin ends under LOWDEFY_EXIT_ON_STDIN_C
 });
 
 test('watchOwner ignores stdin when LOWDEFY_EXIT_ON_STDIN_CLOSE is not 1', () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   const stdin = createStdin();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_ON_STDIN_CLOSE: 'true' }, stdin });
   stdin.emit('end');
@@ -106,7 +122,7 @@ test('watchOwner ignores stdin when LOWDEFY_EXIT_ON_STDIN_CLOSE is not 1', () =>
 test('watchOwner calls onExit at once when the owner is already gone', () => {
   mockIsPidAlive.mockReturnValue(false);
   mockGetProcessStartTime.mockReturnValue(null);
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
   expect(onExit).toHaveBeenCalledTimes(1);
   expect(onExit).toHaveBeenCalledWith({ reason: 'owner-gone' });
@@ -114,58 +130,58 @@ test('watchOwner calls onExit at once when the owner is already gone', () => {
 });
 
 test('watchOwner calls onExit within one poll of the owner dying', () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
   expect(watcher.ownerStartTime).toBe(START_TIME);
-  jest.advanceTimersByTime(10000);
+  vi.advanceTimersByTime(10000);
   expect(onExit).not.toHaveBeenCalled();
   mockIsPidAlive.mockReturnValue(false);
-  jest.advanceTimersByTime(2000);
+  vi.advanceTimersByTime(2000);
   expect(onExit).toHaveBeenCalledTimes(1);
   expect(onExit).toHaveBeenCalledWith({ reason: 'owner-gone' });
-  jest.advanceTimersByTime(10000);
+  vi.advanceTimersByTime(10000);
   expect(onExit).toHaveBeenCalledTimes(1);
   expect(mockIsPidAlive).toHaveBeenCalledWith(4242);
 });
 
 test('watchOwner catches a reused owner pid on the minute start time check', async () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
   mockReadProcessStartTime.mockResolvedValue(START_TIME + 5400000);
-  jest.advanceTimersByTime(58000);
+  vi.advanceTimersByTime(58000);
   await flushReads();
   expect(onExit).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(2000);
+  vi.advanceTimersByTime(2000);
   await flushReads();
   expect(onExit).toHaveBeenCalledWith({ reason: 'owner-gone' });
 });
 
 test('watchOwner keeps running when the minute start time check cannot read ps for a live owner', async () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
   mockReadProcessStartTime.mockResolvedValue(null);
-  jest.advanceTimersByTime(60000);
+  vi.advanceTimersByTime(60000);
   await flushReads();
-  jest.advanceTimersByTime(60000);
+  vi.advanceTimersByTime(60000);
   await flushReads();
   expect(mockReadProcessStartTime).toHaveBeenCalledTimes(2);
   expect(onExit).not.toHaveBeenCalled();
   mockIsPidAlive.mockReturnValue(false);
-  jest.advanceTimersByTime(2000);
+  vi.advanceTimersByTime(2000);
   expect(onExit).toHaveBeenCalledWith({ reason: 'owner-gone' });
 });
 
 test('watchOwner reads the owner start time at most once a minute, without blocking', async () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
   expect(mockGetProcessStartTime).toHaveBeenCalledTimes(1);
-  jest.advanceTimersByTime(59000);
+  vi.advanceTimersByTime(59000);
   expect(mockReadProcessStartTime).toHaveBeenCalledTimes(0);
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   await flushReads();
   expect(mockReadProcessStartTime).toHaveBeenCalledTimes(1);
   expect(mockReadProcessStartTime).toHaveBeenCalledWith({ pid: 4242 });
-  jest.advanceTimersByTime(60000);
+  vi.advanceTimersByTime(60000);
   await flushReads();
   expect(mockReadProcessStartTime).toHaveBeenCalledTimes(2);
   expect(mockGetProcessStartTime).toHaveBeenCalledTimes(1);
@@ -175,9 +191,9 @@ test('watchOwner reads the owner start time at most once a minute, without block
 
 test('watchOwner starts no second start time read while one is still running', () => {
   mockReadProcessStartTime.mockReturnValue(new Promise(() => {}));
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
-  jest.advanceTimersByTime(180000);
+  vi.advanceTimersByTime(180000);
   expect(mockReadProcessStartTime).toHaveBeenCalledTimes(1);
   expect(onExit).not.toHaveBeenCalled();
 });
@@ -189,9 +205,9 @@ test('watchOwner ignores a start time read that finishes after stop', async () =
       finishRead = resolve;
     })
   );
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
-  jest.advanceTimersByTime(60000);
+  vi.advanceTimersByTime(60000);
   watcher.stop();
   finishRead('Fri Oct  2 09:30:00 2026');
   await flushReads();
@@ -200,34 +216,34 @@ test('watchOwner ignores a start time read that finishes after stop', async () =
 
 test('watchOwner relies on the pid alone when no start time can be read', () => {
   mockGetProcessStartTime.mockReturnValue(null);
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
-  jest.advanceTimersByTime(180000);
+  vi.advanceTimersByTime(180000);
   expect(onExit).not.toHaveBeenCalled();
   expect(mockGetProcessStartTime).toHaveBeenCalledTimes(1);
   expect(mockReadProcessStartTime).not.toHaveBeenCalled();
   mockIsPidAlive.mockReturnValue(false);
-  jest.advanceTimersByTime(2000);
+  vi.advanceTimersByTime(2000);
   expect(onExit).toHaveBeenCalledWith({ reason: 'owner-gone' });
 });
 
 test('watchOwner stop clears the owner poll', () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
   watcher.stop();
   mockIsPidAlive.mockReturnValue(false);
-  jest.advanceTimersByTime(10000);
+  vi.advanceTimersByTime(10000);
   expect(onExit).not.toHaveBeenCalled();
 });
 
 test('watchOwner throws when LOWDEFY_EXIT_WITH_PID is not a process id', () => {
   expect(() =>
-    watchOwner({ onExit: jest.fn(), env: { LOWDEFY_EXIT_WITH_PID: 'abc' }, stdin: createStdin() })
+    watchOwner({ onExit: vi.fn(), env: { LOWDEFY_EXIT_WITH_PID: 'abc' }, stdin: createStdin() })
   ).toThrow('LOWDEFY_EXIT_WITH_PID must be a process id. Received "abc".');
 });
 
 test('watchOwner fires once when stdin closes and the owner dies', () => {
-  const onExit = jest.fn();
+  const onExit = vi.fn();
   const stdin = createStdin();
   watcher = watchOwner({
     onExit,
@@ -236,7 +252,7 @@ test('watchOwner fires once when stdin closes and the owner dies', () => {
   });
   stdin.emit('end');
   mockIsPidAlive.mockReturnValue(false);
-  jest.advanceTimersByTime(10000);
+  vi.advanceTimersByTime(10000);
   expect(onExit).toHaveBeenCalledTimes(1);
   expect(onExit).toHaveBeenCalledWith({ reason: 'stdin-closed' });
 });

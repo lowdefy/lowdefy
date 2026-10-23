@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { serializer } from '@lowdefy/helpers';
 
 import runTest from './test/runTest.js';
@@ -36,7 +36,7 @@ function request(stepId, response) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 function loggedText(context) {

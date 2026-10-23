@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const pluginYaml = `
 plugins:
@@ -45,21 +45,21 @@ const pluginTypesEsm = {
 // export it uses, so the real module passes through and only file access is
 // replaced.
 const realNodeUtils = await import('@lowdefy/node-utils');
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
-  cleanDirectory: jest.fn(),
-  copyFileOrDirectory: jest.fn(),
-  getFileExtension: jest.fn(),
-  getFileSubExtension: jest.fn(),
-  getSecretsFromEnv: jest.fn(),
-  spawnProcess: jest.fn(),
-  readFile: jest.fn(async () => pluginYaml),
-  writeFile: jest.fn(),
-  writeFileIfChanged: jest.fn(),
-  installIfPackageJsonChanged: jest.fn(),
+  cleanDirectory: vi.fn(),
+  copyFileOrDirectory: vi.fn(),
+  getFileExtension: vi.fn(),
+  getFileSubExtension: vi.fn(),
+  getSecretsFromEnv: vi.fn(),
+  spawnProcess: vi.fn(),
+  readFile: vi.fn(async () => pluginYaml),
+  writeFile: vi.fn(),
+  writeFileIfChanged: vi.fn(),
+  installIfPackageJsonChanged: vi.fn(),
 }));
 
-jest.unstable_mockModule('node:module', () => ({
+vi.doMock('node:module', () => ({
   createRequire: () => (moduleName) => {
     if (moduleName === 'fake-plugin/types') {
       return pluginTypesEsm;
@@ -69,7 +69,7 @@ jest.unstable_mockModule('node:module', () => ({
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('unwraps ESM default export when loading plugin types', async () => {

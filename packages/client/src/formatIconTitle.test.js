@@ -15,6 +15,7 @@
 */
 
 import formatIconTitle from './formatIconTitle.js';
+import { expect, test } from 'vitest';
 
 test('formatIconTitle keeps a one-word set name', () => {
   expect(formatIconTitle('Pencil')).toBe('Pencil');

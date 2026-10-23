@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import validateFragment from './validateFragment.js';
 
@@ -36,7 +36,7 @@ const blockSchemas = {
 
 function createContext(files = {}) {
   return {
-    readConfigFile: jest.fn((path) => files[path] ?? null),
+    readConfigFile: vi.fn((path) => files[path] ?? null),
   };
 }
 

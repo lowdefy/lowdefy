@@ -19,6 +19,7 @@ import TAG_TONES from '@lowdefy/block-utils/format/tagTones.js';
 
 import getTagTone from './getTagTone.js';
 import normalizeOptions from './normalizeOptions.js';
+import { expect, test } from 'vitest';
 
 test('getTagTone uses the option colour, or neutral for an option without one', () => {
   const column = {

@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 // The real runner refuses these journeys before it fetches a browser; the mock
 // proves it never gets that far.
-const mockGetBrowser = jest.fn();
-jest.unstable_mockModule('../../../lib/docs/getBrowser.js', () => ({
+const mockGetBrowser = vi.fn();
+vi.doMock('../../../lib/docs/getBrowser.js', () => ({
   getBrowser: mockGetBrowser,
-  openPage: jest.fn(),
-  buildPageUrl: jest.fn(),
+  openPage: vi.fn(),
+  buildPageUrl: vi.fn(),
 }));
-jest.unstable_mockModule('../../../lib/build/config.js', () => ({ default: { basePath: '' } }));
-jest.unstable_mockModule('../../../lib/docs/getBuildId.js', () => ({
-  default: jest.fn(() => 'build-1'),
+vi.doMock('../../../lib/build/config.js', () => ({ default: { basePath: '' } }));
+vi.doMock('../../../lib/docs/getBuildId.js', () => ({
+  default: vi.fn(() => 'build-1'),
 }));
 
 const { default: docsJourneyHandler } = await import('./journey.js');
@@ -37,7 +37,7 @@ function createContext(body) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
   });
-  const json = jest.fn((data, status) => ({ data, status: status ?? 200 }));
+  const json = vi.fn((data, status) => ({ data, status: status ?? 200 }));
   return { req: { url: request.url, json: () => request.json() }, json };
 }
 

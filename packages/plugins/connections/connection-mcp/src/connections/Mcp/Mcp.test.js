@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import Mcp from './Mcp.js';
+import { expect, test } from 'vitest';
 
 test('Mcp.create returns connection properties as-is', () => {
   const result = Mcp.create({

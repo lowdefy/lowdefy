@@ -14,24 +14,24 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockSend = jest.fn();
-const mockS3ClientConstructor = jest.fn();
-const mockDeleteObjectCommand = jest.fn();
-const mockDeleteObjectsCommand = jest.fn();
+const mockSend = vi.fn();
+const mockS3ClientConstructor = vi.fn();
+const mockDeleteObjectCommand = vi.fn();
+const mockDeleteObjectsCommand = vi.fn();
 
-jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
-  S3Client: jest.fn().mockImplementation((...args) => {
+vi.doMock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn().mockImplementation(function (...args) {
     mockS3ClientConstructor(...args);
     return { send: (...sendArgs) => mockSend(...sendArgs) };
   }),
-  DeleteObjectCommand: jest.fn().mockImplementation((params) => {
+  DeleteObjectCommand: vi.fn().mockImplementation(function (params) {
     mockDeleteObjectCommand(params);
     return params;
   }),
-  DeleteObjectsCommand: jest.fn().mockImplementation((params) => {
+  DeleteObjectsCommand: vi.fn().mockImplementation(function (params) {
     mockDeleteObjectsCommand(params);
     return params;
   }),
@@ -55,7 +55,9 @@ beforeEach(() => {
   mockS3ClientConstructor.mockReset();
   mockDeleteObjectCommand.mockReset();
   mockDeleteObjectsCommand.mockReset();
-  mockSend.mockImplementation(() => ({}));
+  mockSend.mockImplementation(function () {
+    return {};
+  });
 });
 
 test('AwsS3DeleteObject deletes one key from the connection bucket', async () => {
@@ -69,9 +71,11 @@ test('AwsS3DeleteObject deletes one key from the connection bucket', async () =>
 });
 
 test('AwsS3DeleteObject deletes several keys from the connection bucket in one call', async () => {
-  mockSend.mockImplementation(() => ({
-    Deleted: [{ Key: 'a.png' }, { Key: 'b.png' }],
-  }));
+  mockSend.mockImplementation(function () {
+    return {
+      Deleted: [{ Key: 'a.png' }, { Key: 'b.png' }],
+    };
+  });
   const request = { keys: ['a.png', 'b.png'] };
   const res = await AwsS3DeleteObject({ request, connection });
   expect(mockDeleteObjectsCommand.mock.calls).toEqual([
@@ -87,10 +91,12 @@ test('AwsS3DeleteObject deletes several keys from the connection bucket in one c
 });
 
 test('AwsS3DeleteObject returns the keys S3 could not delete as errors', async () => {
-  mockSend.mockImplementation(() => ({
-    Deleted: [{ Key: 'a.png' }],
-    Errors: [{ Key: 'b.png', Code: 'AccessDenied', Message: 'Access Denied' }],
-  }));
+  mockSend.mockImplementation(function () {
+    return {
+      Deleted: [{ Key: 'a.png' }],
+      Errors: [{ Key: 'b.png', Code: 'AccessDenied', Message: 'Access Denied' }],
+    };
+  });
   const request = { keys: ['a.png', 'b.png'] };
   const res = await AwsS3DeleteObject({ request, connection });
   expect(res).toEqual({
@@ -107,7 +113,7 @@ test('AwsS3DeleteObject returns empty lists when S3 answers with neither Deleted
 });
 
 test('AwsS3DeleteObject throws when the single delete call fails', async () => {
-  mockSend.mockImplementation(() => {
+  mockSend.mockImplementation(function () {
     throw new Error('Access Denied');
   });
   const request = { key: 'a.png' };
@@ -115,7 +121,7 @@ test('AwsS3DeleteObject throws when the single delete call fails', async () => {
 });
 
 test('AwsS3DeleteObject throws when the multiple delete call fails', async () => {
-  mockSend.mockImplementation(() => {
+  mockSend.mockImplementation(function () {
     throw new Error('NoSuchBucket');
   });
   const request = { keys: ['a.png', 'b.png'] };

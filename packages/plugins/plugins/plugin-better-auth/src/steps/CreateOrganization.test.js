@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import createMockAuth from '../../test/createMockAuth.js';
 
-jest.unstable_mockModule('better-auth/plugins', () => ({
-  getOrgAdapter: jest.fn(),
+vi.doMock('better-auth/plugins', () => ({
+  getOrgAdapter: vi.fn(),
 }));
 
 const { getOrgAdapter } = await import('better-auth/plugins');
@@ -44,7 +44,7 @@ beforeEach(() => {
 });
 
 test('CreateOrganization invokes the endpoint as a system action with no session and no headers', async () => {
-  const createOrganization = jest.fn().mockResolvedValue({ id: 'org-1', name: 'Org One' });
+  const createOrganization = vi.fn().mockResolvedValue({ id: 'org-1', name: 'Org One' });
   const { auth } = createMockAuth({ organizationEndpoints: { createOrganization } });
   const result = await CreateOrganization({
     acting: systemCaller,
@@ -63,7 +63,7 @@ test('CreateOrganization invokes the endpoint as a system action with no session
 });
 
 test('CreateOrganization defaults body.userId to the acting caller id', async () => {
-  const createOrganization = jest.fn().mockResolvedValue({ id: 'org-1' });
+  const createOrganization = vi.fn().mockResolvedValue({ id: 'org-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createOrganization } });
   await CreateOrganization({
     acting: sessionCaller,
@@ -82,7 +82,7 @@ test('CreateOrganization rethrows APIError-shaped failures with the rail message
   const apiError = new Error('generic');
   apiError.status = 'BAD_REQUEST';
   apiError.body = { code: 'ORGANIZATION_ALREADY_EXISTS', message: 'Organization already exists' };
-  const createOrganization = jest.fn().mockRejectedValue(apiError);
+  const createOrganization = vi.fn().mockRejectedValue(apiError);
   const { auth } = createMockAuth({ organizationEndpoints: { createOrganization } });
   await expect(
     CreateOrganization({
@@ -94,10 +94,10 @@ test('CreateOrganization rethrows APIError-shaped failures with the rail message
 });
 
 test('CreateOrganization writes the organization row adapter-direct and mints no member when creator-less', async () => {
-  const createOrganization = jest
+  const createOrganization = vi
     .fn()
     .mockResolvedValue({ id: 'org-1', name: 'Org One', slug: 'org-one' });
-  const createMember = jest.fn();
+  const createMember = vi.fn();
   getOrgAdapter.mockReturnValue({ createOrganization, createMember });
   const { auth, authContext } = createMockAuth();
   const result = await CreateOrganization({
@@ -119,7 +119,7 @@ test('CreateOrganization writes the organization row adapter-direct and mints no
 });
 
 test('CreateOrganization creator-less forwards a caller id and metadata to the adapter', async () => {
-  const createOrganization = jest.fn().mockResolvedValue({ id: 'chosen-id' });
+  const createOrganization = vi.fn().mockResolvedValue({ id: 'chosen-id' });
   getOrgAdapter.mockReturnValue({ createOrganization });
   const { auth } = createMockAuth();
   const result = await CreateOrganization({
@@ -141,7 +141,7 @@ test('CreateOrganization creator-less forwards a caller id and metadata to the a
 });
 
 test('CreateOrganization creator-less throws naming the required fields when name is missing', async () => {
-  const createOrganization = jest.fn();
+  const createOrganization = vi.fn();
   getOrgAdapter.mockReturnValue({ createOrganization });
   const { auth } = createMockAuth();
   await expect(
@@ -153,7 +153,7 @@ test('CreateOrganization creator-less throws naming the required fields when nam
 });
 
 test('CreateOrganization creator-less throws naming the required fields when slug is missing', async () => {
-  const createOrganization = jest.fn();
+  const createOrganization = vi.fn();
   getOrgAdapter.mockReturnValue({ createOrganization });
   const { auth } = createMockAuth();
   await expect(
@@ -165,7 +165,7 @@ test('CreateOrganization creator-less throws naming the required fields when slu
 });
 
 test('CreateOrganization creator-less surfaces the unique-index error on a duplicate slug', async () => {
-  const createOrganization = jest
+  const createOrganization = vi
     .fn()
     .mockRejectedValue(new Error('E11000 duplicate key error: slug'));
   getOrgAdapter.mockReturnValue({ createOrganization });
@@ -181,9 +181,9 @@ test('CreateOrganization creator-less surfaces the unique-index error on a dupli
 
 test('CreateOrganization creator-less invokes the org plugin afterCreateOrganization hook with the endpoint payload shape', async () => {
   const created = { id: 'org-1', name: 'Org One', slug: 'org-one' };
-  const createOrganization = jest.fn().mockResolvedValue(created);
+  const createOrganization = vi.fn().mockResolvedValue(created);
   getOrgAdapter.mockReturnValue({ createOrganization });
-  const afterCreateOrganization = jest.fn();
+  const afterCreateOrganization = vi.fn();
   const { auth } = createMockAuth();
   auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
     afterCreateOrganization,
@@ -204,11 +204,11 @@ test('CreateOrganization creator-less invokes the org plugin afterCreateOrganiza
 });
 
 test('CreateOrganization creator-less surfaces an afterCreateOrganization hook failure', async () => {
-  const createOrganization = jest.fn().mockResolvedValue({ id: 'org-1' });
+  const createOrganization = vi.fn().mockResolvedValue({ id: 'org-1' });
   getOrgAdapter.mockReturnValue({ createOrganization });
   const { auth } = createMockAuth();
   auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
-    afterCreateOrganization: jest.fn().mockRejectedValue(new Error('hook failed')),
+    afterCreateOrganization: vi.fn().mockRejectedValue(new Error('hook failed')),
   };
   await expect(
     CreateOrganization({
@@ -220,8 +220,8 @@ test('CreateOrganization creator-less surfaces an afterCreateOrganization hook f
 });
 
 test('CreateOrganization with a userId leaves hook invocation to the endpoint', async () => {
-  const createOrganizationEndpoint = jest.fn().mockResolvedValue({ id: 'org-1' });
-  const afterCreateOrganization = jest.fn();
+  const createOrganizationEndpoint = vi.fn().mockResolvedValue({ id: 'org-1' });
+  const afterCreateOrganization = vi.fn();
   const { auth } = createMockAuth({
     organizationEndpoints: { createOrganization: createOrganizationEndpoint },
   });

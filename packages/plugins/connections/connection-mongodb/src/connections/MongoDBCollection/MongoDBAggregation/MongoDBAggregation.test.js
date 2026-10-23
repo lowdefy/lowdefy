@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 import MongoDBAggregation from './MongoDBAggregation.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBAggregation.meta;
 const schema = MongoDBAggregation.schema;

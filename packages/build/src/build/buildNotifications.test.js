@@ -17,6 +17,7 @@
 import buildNotifications from './buildNotifications.js';
 import createCounter from '../utils/createCounter.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 function createTestContext() {
   const context = testContext();

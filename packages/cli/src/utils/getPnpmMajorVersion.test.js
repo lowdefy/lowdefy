@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('child_process', () => ({
-  execSync: jest.fn(),
+vi.doMock('child_process', () => ({
+  execSync: vi.fn(),
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('getPnpmMajorVersion reads the major version of a pnpm pinned in packageManager', async () => {

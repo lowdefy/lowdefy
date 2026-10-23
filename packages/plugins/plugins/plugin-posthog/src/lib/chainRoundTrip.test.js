@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -25,6 +25,7 @@ import enrichEvent from './enrichEvent.js';
 import postHogState from './postHogState.js';
 import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
+import { afterEach, expect, test } from 'vitest';
 
 // The chain posthog-js itself records for a click on the element, with the version this plugin
 // pins. A posthog-js upgrade that changes the chain format fails here.

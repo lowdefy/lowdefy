@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -24,9 +24,9 @@ import { validateTraceRecord } from '@lowdefy/node-utils';
 import { chains, row } from './tests/postHogRows.js';
 
 const KEY = 'phx_pull_key_never_written_42';
-const mockQuery = jest.fn();
-jest.unstable_mockModule('./createPostHogQueryClient.js', () => ({
-  default: jest.fn(() => ({ query: mockQuery })),
+const mockQuery = vi.fn();
+vi.doMock('./createPostHogQueryClient.js', () => ({
+  default: vi.fn(() => ({ query: mockQuery })),
 }));
 
 const { default: journeysPullPosthog } = await import('./journeysPullPosthog.js');
@@ -114,11 +114,11 @@ beforeEach(() => {
   process.env.POSTHOG_PERSONAL_API_KEY = KEY;
   mockQuery.mockReset();
   mockQuery.mockImplementation(async (request) => answer(request));
-  jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-10-03T12:00:00.000Z'));
+  vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-10-03T12:00:00.000Z'));
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   fs.rmSync(configDirectory, { recursive: true, force: true });
   delete process.env.POSTHOG_PROJECT_ID;
   delete process.env.POSTHOG_API_HOST;

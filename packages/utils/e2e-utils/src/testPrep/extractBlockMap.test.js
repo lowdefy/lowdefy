@@ -15,6 +15,7 @@
 */
 
 import extractBlockMap from './extractBlockMap.js';
+import { expect, test } from 'vitest';
 
 const typesBlocks = {
   Box: { package: '@lowdefy/blocks-basic' },

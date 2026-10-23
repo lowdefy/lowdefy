@@ -18,6 +18,7 @@ import { ServiceError } from '@lowdefy/errors';
 
 import startMockTreg from '../../../test/startMockTreg.js';
 import TregCall from './TregCall.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const TOKEN = 'tok_live_5ecret_value';
 

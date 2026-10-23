@@ -17,6 +17,7 @@
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
 import errorToDisplayString from './errorToDisplayString.js';
+import { expect, test } from 'vitest';
 
 test('errorToDisplayString shows the checkSlug after the error name', () => {
   const error = new ConfigError('_if has no test key.', { checkSlug: 'if-test' });

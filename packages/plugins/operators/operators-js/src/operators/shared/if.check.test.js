@@ -16,6 +16,7 @@
 
 import checks from '../../checks.js';
 import ifTest from './if.check.js';
+import { expect, test } from 'vitest';
 
 const check = (params) =>
   ifTest.check({ params, node: { _if: params }, type: '_if', kind: 'operators' });

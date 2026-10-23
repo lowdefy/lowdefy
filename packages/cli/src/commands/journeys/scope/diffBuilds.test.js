@@ -20,6 +20,7 @@ import path from 'path';
 
 import diffBuilds from './diffBuilds.js';
 import readBuildArtifacts from './readBuildArtifacts.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let root;
 beforeEach(() => {

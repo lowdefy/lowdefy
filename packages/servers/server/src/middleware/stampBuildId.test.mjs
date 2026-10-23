@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 
 import stampBuildId from './stampBuildId.js';
+import { expect, test } from 'vitest';
 
 function createApp() {
   const app = new Hono();

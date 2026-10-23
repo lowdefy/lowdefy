@@ -18,6 +18,7 @@ import ActionError from './ActionError.js';
 import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
 import RequestError from './RequestError.js';
+import { expect, test } from 'vitest';
 
 test('PluginError wraps error with message via cause', () => {
   const original = new Error('Test error message');

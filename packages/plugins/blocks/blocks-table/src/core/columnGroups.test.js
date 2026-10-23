@@ -19,6 +19,7 @@ import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 import getColumnGroupRules from './getColumnGroupRules.js';
 import getDisplayedVisibility from './getDisplayedVisibility.js';
 import initCollapsedColumnGroups from '../features/visibility/initCollapsedColumnGroups.js';
+import { expect, test } from 'vitest';
 
 function rules(columns) {
   return getColumnGroupRules({ headerGroups: normalizeColumns({ columns }).headerGroups });

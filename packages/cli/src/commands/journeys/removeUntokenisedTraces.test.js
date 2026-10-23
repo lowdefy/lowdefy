@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-const mockReadConfigText = jest.fn();
-jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+const mockReadConfigText = vi.fn();
+vi.doMock('./configText/readConfigText.js', () => ({
   default: mockReadConfigText,
 }));
 
@@ -92,7 +92,7 @@ beforeEach(() => {
     test: path.join(root, '.lowdefy', 'test'),
     traces: path.join(root, '.lowdefy', 'traces'),
   };
-  logger = { warn: jest.fn() };
+  logger = { warn: vi.fn() };
   mockReadConfigText.mockReset();
   mockReadConfigText.mockResolvedValue({ texts: new Set(), isConfigText: () => false });
 });

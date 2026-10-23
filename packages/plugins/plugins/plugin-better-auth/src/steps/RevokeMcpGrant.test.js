@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import RevokeMcpGrant from './RevokeMcpGrant.js';
 
 function createAuth() {
   const adapter = {
-    deleteMany: jest.fn(async () => 1),
+    deleteMany: vi.fn(async () => 1),
   };
   return { auth: { $context: Promise.resolve({ adapter }) }, adapter };
 }

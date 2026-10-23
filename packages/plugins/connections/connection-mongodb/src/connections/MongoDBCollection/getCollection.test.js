@@ -16,6 +16,7 @@
 import { Collection, MongoClient } from 'mongodb';
 
 import getCollection from './getCollection.js';
+import { expect, test } from 'vitest';
 
 const databaseUri = process.env.MONGO_URL;
 

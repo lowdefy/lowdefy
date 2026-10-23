@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import BanUser from './BanUser.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -22,7 +22,7 @@ import createMockAuth from '../../test/createMockAuth.js';
 const acting = { system: true, user: null };
 
 test('BanUser passes properties through as body to the admin banUser endpoint', async () => {
-  const banUser = jest.fn().mockResolvedValue({ user: { id: 'user-2', banned: true } });
+  const banUser = vi.fn().mockResolvedValue({ user: { id: 'user-2', banned: true } });
   const { auth } = createMockAuth({ adminEndpoints: { banUser } });
   const result = await BanUser({
     acting,

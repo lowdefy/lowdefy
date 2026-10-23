@@ -15,6 +15,7 @@
 */
 
 import buildEntityAuth from './buildEntityAuth.js';
+import { describe, expect, test } from 'vitest';
 
 // Each page served at its id, as buildRoutes sets the route table.
 function routesContext(components) {

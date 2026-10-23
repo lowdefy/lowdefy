@@ -16,6 +16,7 @@
 
 import createCounter from '../../utils/createCounter.js';
 import createPageTypeCounters from './createPageTypeCounters.js';
+import { expect, test } from 'vitest';
 
 function createAppCounters() {
   return {

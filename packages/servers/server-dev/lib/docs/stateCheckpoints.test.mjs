@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, describe, expect, test } from 'vitest';
 
 // checkpointStore.js reads LOWDEFY_DIRECTORY_CONFIG for where to store
 // checkpoints, and lib/build/config.js (imported transitively by
@@ -43,14 +43,14 @@ process.env.LOWDEFY_DIRECTORY_CONFIG = fixtureDir;
 // loadState's registry-only mode (the only mode under test here) never
 // calls getBrowser(), but chromium is mocked anyway so importing
 // getBrowser.js can never accidentally launch a real browser.
-jest.unstable_mockModule('playwright-core', () => ({
-  chromium: { launch: jest.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
+vi.doMock('playwright-core', () => ({
+  chromium: { launch: vi.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
 }));
 // A missing shell would otherwise start a real download.
-jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: () => null }));
+vi.doMock('./installHeadlessShell.js', () => ({ default: () => null }));
 
-const mockInspectState = jest.fn();
-jest.unstable_mockModule('./inspectState.js', () => ({
+const mockInspectState = vi.fn();
+vi.doMock('./inspectState.js', () => ({
   default: mockInspectState,
 }));
 

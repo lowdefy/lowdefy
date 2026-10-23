@@ -19,39 +19,39 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, expect, test } from 'vitest';
 
 const secret = 'planted-e2e-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
 
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  createApiContext: jest.fn(),
-  createRequestSignal: jest.fn(({ clientSignal }) => clientSignal),
-  normalizeInjectedCaller: jest.fn((user) => user),
+vi.doMock('@lowdefy/api', () => ({
+  createApiContext: vi.fn(),
+  createRequestSignal: vi.fn(({ clientSignal }) => clientSignal),
+  normalizeInjectedCaller: vi.fn((user) => user),
 }));
-jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/i18n.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/server/log/createHandleError.js', () => ({
-  default: jest.fn(() => jest.fn()),
+vi.doMock('../../lib/build/appMeta.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/config.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/auth.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/i18n.js', () => ({ default: {} }));
+vi.doMock('../../lib/server/log/createHandleError.js', () => ({
+  default: vi.fn(() => vi.fn()),
 }));
-jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
-  default: jest.fn(() => ({
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+vi.doMock('../../lib/server/log/createLogger.js', () => ({
+  default: vi.fn(() => ({
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   })),
 }));
-jest.unstable_mockModule('../../lib/server/fileCache.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/server/getE2eSecrets.js', () => ({
-  default: jest.fn(() => ({ TEST: process.env.LOWDEFY_SECRET_TEST })),
+vi.doMock('../../lib/server/fileCache.js', () => ({ default: {} }));
+vi.doMock('../../lib/server/getE2eSecrets.js', () => ({
+  default: vi.fn(() => ({ TEST: process.env.LOWDEFY_SECRET_TEST })),
 }));
-jest.unstable_mockModule('../../lib/server/auth/getUser.js', () => ({
-  default: jest.fn(() => undefined),
+vi.doMock('../../lib/server/auth/getUser.js', () => ({
+  default: vi.fn(() => undefined),
 }));
-jest.unstable_mockModule('../../lib/server/log/logRequest.js', () => ({ default: jest.fn() }));
+vi.doMock('../../lib/server/log/logRequest.js', () => ({ default: vi.fn() }));
 
 // apiContext statically imports the app build's plugin artifacts, which only
 // exist in a built app (build/** is gitignored). Materialize the minimal set
@@ -79,7 +79,7 @@ fixtures.forEach(({ absolutePath, content }) => {
 // A checkout that has built an app already holds real artifacts here, which import plugins this
 // package does not depend on, so the stubs are also mocked over whatever is on disk.
 fixtures.forEach(({ absolutePath }) => {
-  jest.unstable_mockModule(absolutePath, () => ({
+  vi.doMock(absolutePath, () => ({
     default: {},
     interpolateProperties: () => {},
     renderEmail: () => {},

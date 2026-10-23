@@ -16,6 +16,7 @@
 
 import formatSessionLog from './formatSessionLog.js';
 import traceRecord from '../journeyCompiler/traceRecord.js';
+import { expect, test } from 'vitest';
 
 function event({ name = 'onClick', block, success = true, ...rest }) {
   return {

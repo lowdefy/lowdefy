@@ -16,6 +16,7 @@
 
 import renderEmail from '../../renderEmail.js';
 import VerifyEmail from './VerifyEmail.js';
+import { expect, test } from 'vitest';
 
 test('VerifyEmail renders to html and text and includes the url', async () => {
   const { html, text } = await renderEmail({

@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import { get } from '@lowdefy/helpers';
 import buildPages from '../../full/buildPages.js';
 import testContext from '../../../test-utils/testContext.js';
 
-const mockLogWarn = jest.fn();
-const mockLog = jest.fn();
+const mockLogWarn = vi.fn();
+const mockLog = vi.fn();
 
 const logger = {
   warn: mockLogWarn,
@@ -221,7 +221,6 @@ test('normalizeClassAndStyles handles / prefixed keys in style', () => {
     block: { marginTop: 20 },
   });
 });
-
 
 test('normalizeClassAndStyles merges properties.style and /element (/element overrides)', () => {
   const components = {
@@ -529,9 +528,7 @@ test('style nested object not matching cssKey has no hint', () => {
   expect(() => buildPages({ components, context: contextWithMetas })).toThrow(
     'Style property "hover" has a nested object value'
   );
-  expect(() => buildPages({ components, context: contextWithMetas })).not.toThrow(
-    'Did you mean'
-  );
+  expect(() => buildPages({ components, context: contextWithMetas })).not.toThrow('Did you mean');
 });
 
 test('class non-dot key matching cssKey throws with "Did you mean" hint', () => {

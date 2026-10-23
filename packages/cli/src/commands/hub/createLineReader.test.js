@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createLineReader from './createLineReader.js';
 
 test('createLineReader joins messages split across chunks and reads several from one chunk', () => {
-  const onMessage = jest.fn();
+  const onMessage = vi.fn();
   const onData = createLineReader({ onMessage });
   onData('{"id":1,"meth');
   onData('od":"hello"}\n{"id":2}\n{"id"');
@@ -30,7 +30,7 @@ test('createLineReader joins messages split across chunks and reads several from
 test.each([['{not json'], ['42']])(
   'createLineReader drops the line %s instead of throwing, and keeps reading',
   (line) => {
-    const onMessage = jest.fn();
+    const onMessage = vi.fn();
     const onData = createLineReader({ onMessage });
     expect(() => onData(`${line}\n{"id":1}\n`)).not.toThrow();
     expect(onMessage.mock.calls).toEqual([[{ id: 1 }]]);

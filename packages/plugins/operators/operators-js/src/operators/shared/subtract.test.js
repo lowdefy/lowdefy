@@ -15,6 +15,7 @@
 */
 
 import subtract from './subtract.js';
+import { expect, test } from 'vitest';
 
 test('_subtract param 0 greater than param 1', () => {
   expect(subtract({ params: [1, 1], location: 'locationId' })).toBe(0);

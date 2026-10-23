@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { wait } from '@lowdefy/helpers';
 import GeolocationCurrentPosition from './GeolocationCurrentPosition.js';
 
-const mockGetCurrentPosition = jest.fn();
+const mockGetCurrentPosition = vi.fn();
 
 class GeolocationPositionError extends Error {
   constructor(message, code) {
@@ -77,11 +77,11 @@ test('GeolocationCurrentPosition get successful geolocation', async () => {
     timestamp: 123,
   });
   expect(mockGetCurrentPosition.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
+    [
+      [
         [Function],
         [Function],
-        Object {
+        {
           "enableHighAccuracy": true,
           "maximumAge": 0,
           "timeout": 5000,
@@ -118,11 +118,11 @@ test('GeolocationCurrentPosition fail to get geolocation', async () => {
     message: 'Permission denied.',
   });
   expect(mockGetCurrentPosition.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
+    [
+      [
         [Function],
         [Function],
-        Object {
+        {
           "enableHighAccuracy": true,
           "maximumAge": 0,
           "timeout": 5000,

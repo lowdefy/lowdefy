@@ -18,6 +18,7 @@ import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 import compileColumns from './compileColumns.js';
 import normalizeColumns from './normalizeColumns.js';
+import { expect, test } from 'vitest';
 
 function compile(columns) {
   const normalized = normalizeColumns({ columns });

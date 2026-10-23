@@ -15,7 +15,7 @@
 */
 
 import http from 'node:http';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 
 import jwt from './jwt.js';
@@ -24,7 +24,7 @@ const hmacSecret = 's'.repeat(32);
 const encodedSecret = new TextEncoder().encode(hmacSecret);
 
 function mockLogger() {
-  return { debug: jest.fn(), warn: jest.fn() };
+  return { debug: vi.fn(), warn: vi.fn() };
 }
 
 async function signHmac(payload, { alg = 'HS256', ...options } = {}) {

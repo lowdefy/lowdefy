@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -17,7 +17,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 // Only the validator: the package index loads undici, which needs Node globals jsdom lacks.
 import validateTraceRecord from '@lowdefy/node-utils/journeyTrace/validateTraceRecord.js';
 
@@ -94,12 +94,12 @@ function interact({ element, kind = 'click', at, value }) {
 }
 
 function event(options) {
-  jest.setSystemTime(START + options.arrive);
+  vi.setSystemTime(START + options.arrive);
   buffer.addEvent(payload(options), { urlAfter: '/tickets' });
 }
 
 function closeAll() {
-  jest.advanceTimersByTime(HOLD_MS + 60000);
+  vi.advanceTimersByTime(HOLD_MS + 60000);
 }
 
 function el(id) {
@@ -107,7 +107,24 @@ function el(id) {
 }
 
 beforeEach(() => {
-  jest.useFakeTimers({ doNotFake: ['performance'], now: START });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+    now: START,
+  });
   records = [];
   buffer = createPairingBuffer({
     onRecord: (record) => records.push(record),
@@ -131,7 +148,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('typing then a debounced trailing onChange pairs the event with the last keystroke only', () => {

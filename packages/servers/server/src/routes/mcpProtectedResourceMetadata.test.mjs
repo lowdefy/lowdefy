@@ -15,9 +15,9 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('../../lib/build/config.js', () => ({
+vi.doMock('../../lib/build/config.js', () => ({
   default: { basePath: '' },
 }));
 

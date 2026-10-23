@@ -16,6 +16,7 @@
 
 import renderEmail from '../../renderEmail.js';
 import EmailOTPEmail from './EmailOTPEmail.js';
+import { expect, test } from 'vitest';
 
 test('EmailOTPEmail renders to html and text and includes the code', async () => {
   const { html, text } = await renderEmail({

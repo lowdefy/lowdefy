@@ -15,6 +15,7 @@
 */
 
 import { chromium } from 'playwright-core';
+import { test } from 'vitest';
 
 // What every fixture test file shares: the fixture server's url (set by
 // globalSetup.mjs), a test function that skips when there is no server, and

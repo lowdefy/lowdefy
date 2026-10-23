@@ -18,6 +18,7 @@ import { validate } from '@lowdefy/ajv';
 import MongoDBInsertMany from './MongoDBInsertMany.js';
 import clearTestMongoDb from '../../../../test/clearTestMongoDb.js';
 import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBInsertMany.meta;
 const schema = MongoDBInsertMany.schema;

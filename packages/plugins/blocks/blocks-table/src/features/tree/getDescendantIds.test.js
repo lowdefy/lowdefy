@@ -15,6 +15,7 @@
 */
 
 import getDescendantIds from './getDescendantIds.js';
+import { expect, test } from 'vitest';
 
 test('getDescendantIds returns every descendant of a row', () => {
   const childrenOf = new Map([

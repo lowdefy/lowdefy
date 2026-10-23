@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -17,7 +17,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createRecorder from './createRecorder.js';
 
@@ -29,11 +29,11 @@ function createRegistry() {
   const listeners = [];
   return {
     listeners,
-    subscribe: jest.fn((listener, options) => {
+    subscribe: vi.fn((listener, options) => {
       listeners.push({ listener, options });
       return () => listeners.splice(listeners.indexOf(listener), 1);
     }),
-    describeElement: jest.fn((element) => ({
+    describeElement: vi.fn((element) => ({
       page_id: 'tickets',
       block_id: element.closest('[id^="bl-"]')?.id.slice(3) ?? null,
       block_type: null,
@@ -68,7 +68,7 @@ function sentBodies() {
 
 beforeEach(() => {
   registry = createRegistry();
-  fetch = jest.fn(() => Promise.resolve({ status: 204 }));
+  fetch = vi.fn(() => Promise.resolve({ status: 204 }));
   window.fetch = fetch;
   window.sessionStorage.clear();
   document.body.innerHTML = '<div id="bl-save"><button id="save">Save</button></div>';
@@ -77,11 +77,11 @@ beforeEach(() => {
 
 afterEach(() => {
   recorder?.stop();
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('createRecorder with recording off subscribes to nothing and adds no listener', () => {
-  const addListener = jest.spyOn(document, 'addEventListener');
+  const addListener = vi.spyOn(document, 'addEventListener');
   expect(start({ enabled: false })).toBe(null);
   expect(start(null)).toBe(null);
   expect(registry.subscribe).not.toHaveBeenCalled();
@@ -210,10 +210,10 @@ test('a throwing trace payload or describeElement leaves the app running', () =>
 });
 
 test('a throwing sessionStorage leaves the recorder recording under an unremembered session', async () => {
-  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
     throw new Error('SecurityError');
   });
-  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+  vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
     throw new Error('SecurityError');
   });
   recorder = start();

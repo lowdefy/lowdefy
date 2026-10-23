@@ -15,6 +15,7 @@
 */
 
 import buildGeneratePrompt from './buildGeneratePrompt.js';
+import { expect, test } from 'vitest';
 
 test('buildGeneratePrompt returns the prompt text when there are no files', () => {
   expect(buildGeneratePrompt({ prompt: 'Go.', files: [] })).toBe('Go.');

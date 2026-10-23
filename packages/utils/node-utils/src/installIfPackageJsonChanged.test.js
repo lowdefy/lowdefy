@@ -17,7 +17,7 @@
 import fs from 'fs';
 import fsExtra from 'fs-extra';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 
 const baseDir = path.resolve(process.cwd(), 'test/installIfPackageJsonChanged');
@@ -32,7 +32,7 @@ afterAll(async () => {
 
 test('installIfPackageJsonChanged installs on first run and writes the hash', async () => {
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
-  const install = jest.fn();
+  const install = vi.fn();
   const installed = await installIfPackageJsonChanged({ directory: baseDir, install });
   expect(installed).toBe(true);
   expect(install).toHaveBeenCalledTimes(1);
@@ -41,7 +41,7 @@ test('installIfPackageJsonChanged installs on first run and writes the hash', as
 
 test('installIfPackageJsonChanged skips when package.json is unchanged', async () => {
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
-  const install = jest.fn();
+  const install = vi.fn();
   await installIfPackageJsonChanged({ directory: baseDir, install });
   const installed = await installIfPackageJsonChanged({ directory: baseDir, install });
   expect(installed).toBe(false);
@@ -50,7 +50,7 @@ test('installIfPackageJsonChanged skips when package.json is unchanged', async (
 
 test('installIfPackageJsonChanged installs again when package.json changes', async () => {
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
-  const install = jest.fn();
+  const install = vi.fn();
   await installIfPackageJsonChanged({ directory: baseDir, install });
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{"a":"1.0.0"}}');
   const installed = await installIfPackageJsonChanged({ directory: baseDir, install });
@@ -60,7 +60,7 @@ test('installIfPackageJsonChanged installs again when package.json changes', asy
 
 test('installIfPackageJsonChanged installs again when pnpm-workspace.yaml changes', async () => {
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
-  const install = jest.fn();
+  const install = vi.fn();
   await installIfPackageJsonChanged({ directory: baseDir, install });
   fs.writeFileSync(path.join(baseDir, 'pnpm-workspace.yaml'), 'overrides:\n  a: 1.0.0\n');
   const installed = await installIfPackageJsonChanged({ directory: baseDir, install });
@@ -73,7 +73,7 @@ test('installIfPackageJsonChanged installs again when pnpm-workspace.yaml change
 
 test('installIfPackageJsonChanged installs again when .npmrc changes', async () => {
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
-  const install = jest.fn();
+  const install = vi.fn();
   await installIfPackageJsonChanged({ directory: baseDir, install });
   fs.writeFileSync(path.join(baseDir, '.npmrc'), '@scope:registry=https://npm.example.com/\n');
   const installed = await installIfPackageJsonChanged({ directory: baseDir, install });
@@ -86,7 +86,7 @@ test('installIfPackageJsonChanged installs again when .npmrc changes', async () 
 
 test('installIfPackageJsonChanged installs when node_modules was deleted', async () => {
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
-  const install = jest.fn();
+  const install = vi.fn();
   await installIfPackageJsonChanged({ directory: baseDir, install });
   fs.rmSync(path.join(baseDir, 'node_modules'), { recursive: true, force: true });
   const installed = await installIfPackageJsonChanged({ directory: baseDir, install });
@@ -96,7 +96,7 @@ test('installIfPackageJsonChanged installs when node_modules was deleted', async
 
 test('installIfPackageJsonChanged does not write the hash when install throws', async () => {
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
-  const install = jest.fn(() => {
+  const install = vi.fn(() => {
     throw new Error('Install failed.');
   });
   await expect(installIfPackageJsonChanged({ directory: baseDir, install })).rejects.toThrow(
@@ -106,7 +106,7 @@ test('installIfPackageJsonChanged does not write the hash when install throws', 
 });
 
 test('installIfPackageJsonChanged throws when package.json is missing', async () => {
-  const install = jest.fn();
+  const install = vi.fn();
   await expect(installIfPackageJsonChanged({ directory: baseDir, install })).rejects.toThrow(
     `Could not read package.json in ${baseDir}.`
   );
@@ -115,7 +115,7 @@ test('installIfPackageJsonChanged throws when package.json is missing', async ()
 
 test('installIfPackageJsonChanged throws when directory is not a string', async () => {
   await expect(
-    installIfPackageJsonChanged({ directory: undefined, install: jest.fn() })
+    installIfPackageJsonChanged({ directory: undefined, install: vi.fn() })
   ).rejects.toThrow('installIfPackageJsonChanged requires a directory string.');
 });
 

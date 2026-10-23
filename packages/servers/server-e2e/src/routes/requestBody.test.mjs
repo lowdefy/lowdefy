@@ -15,17 +15,17 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import { isSameOriginRequest, parseRequestBody } from '@lowdefy/api';
 
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  callEndpoint: jest.fn(),
-  callRequest: jest.fn(),
-  logClientError: jest.fn(),
+vi.doMock('@lowdefy/api', () => ({
+  callEndpoint: vi.fn(),
+  callRequest: vi.fn(),
+  logClientError: vi.fn(),
   isSameOriginRequest,
   parseRequestBody,
-  redactErrorResponse: jest.fn(),
+  redactErrorResponse: vi.fn(),
 }));
 
 const { default: createErrorHandler } = await import('../middleware/errorHandler.js');
@@ -36,12 +36,12 @@ const routes = {
   '/api/usage': (await import('./usage.js')).default,
 };
 
-const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 function createApp() {
   const app = new Hono();
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { logger, handleError: jest.fn() });
+    c.set('lowdefyContext', { logger, handleError: vi.fn() });
     await next();
   });
   Object.entries(routes).forEach(([path, handler]) => app.all(path, handler));

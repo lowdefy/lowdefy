@@ -15,6 +15,7 @@
 */
 
 import runMutantWorkers from './runMutantWorkers.js';
+import { expect, test } from 'vitest';
 
 function baseline(key, readsMail = false) {
   return { key, readsMail };

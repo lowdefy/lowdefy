@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockConnect = jest.fn();
-const mockBuildConnector = jest.fn(() => mockConnect);
+const mockConnect = vi.fn();
+const mockBuildConnector = vi.fn(() => mockConnect);
 
-jest.unstable_mockModule('undici', () => ({
+vi.doMock('undici', () => ({
   buildConnector: (...args) => mockBuildConnector(...args),
 }));
 

@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import searchFiles from './searchFiles.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 let basePath;
 

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import writeAgents from './writeAgents.js';
 import testContext from '../test-utils/testContext.js';
 
-const mockWriteBuildArtifact = jest.fn();
+const mockWriteBuildArtifact = vi.fn();
 
 const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
@@ -66,14 +66,8 @@ test('writeAgents writes multiple agents', async () => {
   };
   await writeAgents({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'agents/agent1.json',
-      '{"id":"agent:agent1","agentId":"agent1","connectionId":"connection1"}',
-    ],
-    [
-      'agents/agent2.json',
-      '{"id":"agent:agent2","agentId":"agent2","connectionId":"connection2"}',
-    ],
+    ['agents/agent1.json', '{"id":"agent:agent1","agentId":"agent1","connectionId":"connection1"}'],
+    ['agents/agent2.json', '{"id":"agent:agent2","agentId":"agent2","connectionId":"connection2"}'],
   ]);
 });
 

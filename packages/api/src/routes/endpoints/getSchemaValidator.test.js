@@ -15,6 +15,7 @@
 */
 
 import getSchemaValidator from './getSchemaValidator.js';
+import { expect, test } from 'vitest';
 
 // A ValidateSchema step evaluates its schema on every call, so each call passes a new object.
 test('getSchemaValidator returns one validator for the same schema content in new objects', () => {

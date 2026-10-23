@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // A select step ticks a CheckboxSelector's option by its exact label and never
 // unticks one: run by the real runner over the fixture app's selectors page.

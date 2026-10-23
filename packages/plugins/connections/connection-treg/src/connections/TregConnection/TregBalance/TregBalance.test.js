@@ -18,6 +18,7 @@ import { validate } from '@lowdefy/ajv';
 
 import startMockTreg from '../../../test/startMockTreg.js';
 import TregBalance from './TregBalance.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const TOKEN = 'tok_live_5ecret_value';
 

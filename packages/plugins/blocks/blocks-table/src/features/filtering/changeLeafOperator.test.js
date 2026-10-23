@@ -17,6 +17,7 @@
 import changeLeafOperator from './changeLeafOperator.js';
 import createDefaultLeaf from './createDefaultLeaf.js';
 import toRootGroup from './toRootGroup.js';
+import { expect, test } from 'vitest';
 
 test('changeLeafOperator keeps a value of the same shape', () => {
   expect(changeLeafOperator({ leaf: { key: 'a', op: 'eq', value: 3 }, op: 'gt' })).toEqual({

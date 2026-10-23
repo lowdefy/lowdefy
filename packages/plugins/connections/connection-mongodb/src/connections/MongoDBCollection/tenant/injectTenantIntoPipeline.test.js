@@ -15,6 +15,7 @@
 */
 
 import injectTenantIntoPipeline from './injectTenantIntoPipeline.js';
+import { expect, test } from 'vitest';
 
 const tenant = { field: 'organization_id', value: 'org_a' };
 const authoredTenant = { field: 'organization_id', value: 'org_a', authored: true };

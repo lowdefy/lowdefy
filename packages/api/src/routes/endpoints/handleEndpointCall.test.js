@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError } from '@lowdefy/errors';
 
@@ -33,7 +33,7 @@ const secrets = {
   CONNECTION: 'connectionSecret',
 };
 
-const mockTestRequest = jest.fn((request) => request.request.response);
+const mockTestRequest = vi.fn((request) => request.request.response);
 
 mockTestRequest.schema = {};
 mockTestRequest.meta = { checkRead: false, checkWrite: false };
@@ -48,14 +48,14 @@ const connections = {
 };
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 function createMockReadConfigFile(endpointConfigs = {}) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     // Match connection configs
     if (path === 'connections/test.json') {
       return { id: 'connection:test', type: 'TestConnection', connectionId: 'test' };
@@ -92,7 +92,7 @@ function createTestContext({ endpointConfigs = {} } = {}) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('basic endpoint call stores return value in caller steps', async () => {

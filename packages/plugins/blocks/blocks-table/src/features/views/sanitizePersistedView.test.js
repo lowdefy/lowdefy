@@ -17,6 +17,7 @@
 import assert from 'node:assert/strict';
 
 import sanitizePersistedView from './sanitizePersistedView.js';
+import { test } from 'vitest';
 
 const columnKeys = ['name', 'stage', 'amount', 'source'];
 

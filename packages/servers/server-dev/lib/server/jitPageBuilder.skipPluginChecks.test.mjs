@@ -17,25 +17,24 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, beforeEach, expect, test } from 'vitest';
 
 const actualBuildDev = await import('@lowdefy/build/dev');
-const mockCreateContext = jest.fn(actualBuildDev.createContext);
+const mockCreateContext = vi.fn(actualBuildDev.createContext);
 
-jest.unstable_mockModule('@lowdefy/build/dev', () => ({
+vi.doMock('@lowdefy/build/dev', () => ({
   ...actualBuildDev,
   createContext: mockCreateContext,
 }));
 
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
-let loadCount = 0;
 let root;
 
 // The build context is kept at module scope, so each case loads a fresh
 // module instance.
 async function createBuildContext() {
-  loadCount += 1;
-  const { getBuildContext } = await import(`./jitPageBuilder.js?case=${loadCount}`);
+  vi.resetModules();
+  const { getBuildContext } = await import('./jitPageBuilder.js');
   return getBuildContext(path.join(root, 'build'), path.join(root, 'config'));
 }
 

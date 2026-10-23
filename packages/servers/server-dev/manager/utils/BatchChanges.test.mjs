@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { wait } from '@lowdefy/helpers';
 
 import BatchChanges from './BatchChanges.mjs';
 
-const context = { logger: { error: jest.fn() } };
+const context = { logger: { error: vi.fn() } };
 
 test('BatchChanges reports busy from the first change until the batch is processed', async () => {
   const events = [];
-  const fn = jest.fn(async () => {
+  const fn = vi.fn(async () => {
     events.push('processed');
   });
   const batch = new BatchChanges({
@@ -43,7 +43,7 @@ test('BatchChanges reports busy from the first change until the batch is process
 test('BatchChanges stays busy through a change that arrives while a batch is running', async () => {
   const events = [];
   let batch;
-  const fn = jest.fn(async (args) => {
+  const fn = vi.fn(async (args) => {
     events.push(`processed ${args.flat().join(',')}`);
     if (args.flat().includes('a.yaml')) {
       batch.newChange('b.yaml');

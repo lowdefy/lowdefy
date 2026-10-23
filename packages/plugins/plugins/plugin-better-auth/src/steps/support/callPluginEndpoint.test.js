@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import callPluginEndpoint from './callPluginEndpoint.js';
 import createMockAuth from '../../../test/createMockAuth.js';
@@ -36,8 +36,8 @@ const sessionCaller = {
 const systemCaller = { system: true, user: null };
 
 test('callPluginEndpoint for a user-initiated organization call uses the real adapter', async () => {
-  const listMembers = jest.fn().mockResolvedValue({ members: [] });
-  const adapter = { findOne: jest.fn() };
+  const listMembers = vi.fn().mockResolvedValue({ members: [] });
+  const adapter = { findOne: vi.fn() };
   const { auth, authContext } = createMockAuth({
     adapter,
     organizationEndpoints: { listMembers },
@@ -56,7 +56,7 @@ test('callPluginEndpoint for a user-initiated organization call uses the real ad
 });
 
 test('callPluginEndpoint for a user-initiated organization call injects the real caller identity', async () => {
-  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const listMembers = vi.fn().mockResolvedValue({ members: [] });
   const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
   await callPluginEndpoint({
     acting: sessionCaller,
@@ -72,7 +72,7 @@ test('callPluginEndpoint for a user-initiated organization call injects the real
 });
 
 test('callPluginEndpoint for a user-initiated organization call carries the caller own role, not admin', async () => {
-  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const listMembers = vi.fn().mockResolvedValue({ members: [] });
   const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
   await callPluginEndpoint({
     acting: { system: false, user: { ...sessionCaller.user, role: 'member' } },
@@ -85,7 +85,7 @@ test('callPluginEndpoint for a user-initiated organization call carries the call
 });
 
 test('callPluginEndpoint for a user-initiated organization call leaves role undefined when the caller has none', async () => {
-  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const listMembers = vi.fn().mockResolvedValue({ members: [] });
   const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
   await callPluginEndpoint({
     acting: sessionCaller,
@@ -98,8 +98,8 @@ test('callPluginEndpoint for a user-initiated organization call leaves role unde
 });
 
 test('callPluginEndpoint for a user-initiated admin call injects role admin and uses the real adapter', async () => {
-  const banUser = jest.fn().mockResolvedValue({});
-  const adapter = { findOne: jest.fn() };
+  const banUser = vi.fn().mockResolvedValue({});
+  const adapter = { findOne: vi.fn() };
   const { auth, authContext } = createMockAuth({ adapter, adminEndpoints: { banUser } });
   await callPluginEndpoint({
     acting: sessionCaller,
@@ -115,8 +115,8 @@ test('callPluginEndpoint for a user-initiated admin call injects role admin and 
 });
 
 test('callPluginEndpoint for a caller-less organization call wraps the adapter', async () => {
-  const listMembers = jest.fn().mockResolvedValue({ members: [] });
-  const adapter = { findOne: jest.fn() };
+  const listMembers = vi.fn().mockResolvedValue({ members: [] });
+  const adapter = { findOne: vi.fn() };
   const { auth, authContext } = createMockAuth({
     adapter,
     organizationEndpoints: { listMembers },
@@ -144,7 +144,7 @@ test('callPluginEndpoint for a caller-less organization call wraps the adapter',
 });
 
 test('callPluginEndpoint injects an acting session with role admin and doctored options', async () => {
-  const banUser = jest.fn().mockResolvedValue({ user: { id: 'user-2' } });
+  const banUser = vi.fn().mockResolvedValue({ user: { id: 'user-2' } });
   const { auth } = createMockAuth({ adminEndpoints: { banUser } });
   const result = await callPluginEndpoint({
     acting: sessionCaller,
@@ -164,7 +164,7 @@ test('callPluginEndpoint injects an acting session with role admin and doctored 
 });
 
 test('callPluginEndpoint does not mutate the real auth options', async () => {
-  const banUser = jest.fn().mockResolvedValue({});
+  const banUser = vi.fn().mockResolvedValue({});
   const { auth, authContext } = createMockAuth({ adminEndpoints: { banUser } });
   await callPluginEndpoint({
     acting: systemCaller,
@@ -178,7 +178,7 @@ test('callPluginEndpoint does not mutate the real auth options', async () => {
 });
 
 test('callPluginEndpoint for a session caller hands BetterAuth camelCase keys sourced from the snake_case caller', async () => {
-  const banUser = jest.fn().mockResolvedValue({});
+  const banUser = vi.fn().mockResolvedValue({});
   const { auth } = createMockAuth({ adminEndpoints: { banUser } });
   await callPluginEndpoint({
     acting: sessionCaller,
@@ -201,7 +201,7 @@ test('callPluginEndpoint for a session caller hands BetterAuth camelCase keys so
 });
 
 test('callPluginEndpoint for a system caller uses the lowdefy system identity', async () => {
-  const banUser = jest.fn().mockResolvedValue({});
+  const banUser = vi.fn().mockResolvedValue({});
   const { auth, authContext } = createMockAuth({ adminEndpoints: { banUser } });
   await callPluginEndpoint({
     acting: systemCaller,
@@ -225,7 +225,7 @@ test('callPluginEndpoint for a system caller uses the lowdefy system identity', 
 });
 
 test('callPluginEndpoint passes query for GET-style endpoints', async () => {
-  const listUsers = jest.fn().mockResolvedValue({ users: [] });
+  const listUsers = vi.fn().mockResolvedValue({ users: [] });
   const { auth } = createMockAuth({ adminEndpoints: { listUsers } });
   await callPluginEndpoint({
     acting: systemCaller,
@@ -244,7 +244,7 @@ test('callPluginEndpoint rethrows APIError-shaped failures with the rail message
   const apiError = new Error('generic');
   apiError.status = 'BAD_REQUEST';
   apiError.body = { code: 'ROLE_NOT_FOUND', message: 'ROLE_NOT_FOUND: superuser' };
-  const banUser = jest.fn().mockRejectedValue(apiError);
+  const banUser = vi.fn().mockRejectedValue(apiError);
   const { auth } = createMockAuth({ adminEndpoints: { banUser } });
   await expect(
     callPluginEndpoint({
@@ -261,7 +261,7 @@ test('callPluginEndpoint rethrows APIError code when the body has no message', a
   const apiError = new Error('generic');
   apiError.status = 'FORBIDDEN';
   apiError.body = { code: 'YOU_ARE_NOT_ALLOWED_TO_BAN_USERS' };
-  const banUser = jest.fn().mockRejectedValue(apiError);
+  const banUser = vi.fn().mockRejectedValue(apiError);
   const { auth } = createMockAuth({ adminEndpoints: { banUser } });
   await expect(
     callPluginEndpoint({
@@ -276,7 +276,7 @@ test('callPluginEndpoint rethrows APIError code when the body has no message', a
 
 test('callPluginEndpoint rethrows non-APIError failures unchanged', async () => {
   const failure = new Error('database exploded');
-  const banUser = jest.fn().mockRejectedValue(failure);
+  const banUser = vi.fn().mockRejectedValue(failure);
   const { auth } = createMockAuth({ adminEndpoints: { banUser } });
   await expect(
     callPluginEndpoint({

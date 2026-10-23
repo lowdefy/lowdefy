@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 test('readJourneyDataSetUsers reads the users of each data set the journeys name', async () => {
-  const logger = { warn: jest.fn() };
+  const logger = { warn: vi.fn() };
   const users = await readJourneyDataSetUsers({
     configDirectory,
     journeys: [{ data: 'tickets', user: 'alice' }, { data: 'tickets' }, { user: { roles: [] } }],
@@ -50,7 +50,7 @@ test('readJourneyDataSetUsers reads the users of each data set the journeys name
 });
 
 test('readJourneyDataSetUsers warns about and leaves out a data set it cannot read', async () => {
-  const logger = { warn: jest.fn() };
+  const logger = { warn: vi.fn() };
   const users = await readJourneyDataSetUsers({
     configDirectory,
     journeys: [{ data: 'broken', user: 'alice' }],

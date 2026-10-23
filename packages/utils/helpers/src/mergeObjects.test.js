@@ -15,6 +15,7 @@
 */
 
 import mergeObjects from './mergeObjects.js';
+import { expect, test } from 'vitest';
 
 test('object with no media unchanged', () => {
   const obj = {
@@ -59,22 +60,22 @@ test('object with all media', () => {
     xl: { a: 'xl', b: 4 },
   };
   expect(mergeObjects([obj1, obj2])).toMatchInlineSnapshot(`
-    Object {
+    {
       "a": "a",
-      "lg": Object {
+      "lg": {
         "a": "lg",
         "b": 3,
       },
-      "md": Object {
+      "md": {
         "a": "md",
         "b": 2,
       },
-      "sm": Object {
+      "sm": {
         "a": "sm",
         "b": 1,
       },
       "x": 0,
-      "xl": Object {
+      "xl": {
         "a": "xl",
         "b": 4,
       },
@@ -85,16 +86,16 @@ test('object with all media', () => {
 test('merge list of objects, larger indices overwrite smaller', () => {
   expect(mergeObjects([{ a: 1 }, { sm: { b: 2 } }, { sm: { b: 4 } }, { md: { c: 2 } }]))
     .toMatchInlineSnapshot(`
-    Object {
-      "a": 1,
-      "md": Object {
-        "c": 2,
-      },
-      "sm": Object {
-        "b": 4,
-      },
-    }
-  `);
+      {
+        "a": 1,
+        "md": {
+          "c": 2,
+        },
+        "sm": {
+          "b": 4,
+        },
+      }
+    `);
 });
 
 test('merge objects with null', () => {

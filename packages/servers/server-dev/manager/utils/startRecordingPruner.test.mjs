@@ -14,24 +14,40 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockPruneRecordings = jest.fn();
-jest.unstable_mockModule('./pruneRecordings.mjs', () => ({ default: mockPruneRecordings }));
+const mockPruneRecordings = vi.fn();
+vi.doMock('./pruneRecordings.mjs', () => ({ default: mockPruneRecordings }));
 
 const { default: startRecordingPruner } = await import('./startRecordingPruner.mjs');
 
-const logger = { debug: jest.fn() };
+const logger = { debug: vi.fn() };
 
 beforeEach(() => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   mockPruneRecordings.mockReset();
   mockPruneRecordings.mockReturnValue({ directories: [], files: [] });
   logger.debug.mockReset();
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('startRecordingPruner prunes at start and then on the interval, with recording off', () => {
@@ -39,7 +55,7 @@ test('startRecordingPruner prunes at start and then on the interval, with record
   const interval = startRecordingPruner({ configDirectory: '/app', logger, intervalMs: 1000 });
   expect(mockPruneRecordings).toHaveBeenCalledTimes(1);
   expect(mockPruneRecordings).toHaveBeenCalledWith({ configDirectory: '/app' });
-  jest.advanceTimersByTime(2500);
+  vi.advanceTimersByTime(2500);
   expect(mockPruneRecordings).toHaveBeenCalledTimes(3);
   clearInterval(interval);
   delete process.env.LOWDEFY_DEV_RECORD;
@@ -51,7 +67,7 @@ test('startRecordingPruner logs a failure at debug and keeps running', () => {
   });
   const interval = startRecordingPruner({ configDirectory: '/app', logger, intervalMs: 1000 });
   expect(logger.debug).toHaveBeenCalledWith('Pruning dev recordings failed: EACCES');
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   expect(mockPruneRecordings).toHaveBeenCalledTimes(2);
   clearInterval(interval);
 });

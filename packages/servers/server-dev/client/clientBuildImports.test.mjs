@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { expect, test } from 'vitest';
 
 // Everything the client imports from build/ ships in the browser bundle. build/config.json is
 // server-only: it carries every deployment environment's settings (other environments' urls,
@@ -53,9 +54,10 @@ function listSourceFiles(dir) {
 test('client code imports only client-safe build artifacts', () => {
   const imported = ['client', 'lib/client'].flatMap((dir) =>
     listSourceFiles(path.join(root, dir)).flatMap((file) =>
-      [...fs.readFileSync(file, 'utf8').matchAll(/from '[^']*\/build\/([^']+)'/g)].map(
-        (match) => ({ file: path.relative(root, file), artifact: match[1] })
-      )
+      [...fs.readFileSync(file, 'utf8').matchAll(/from '[^']*\/build\/([^']+)'/g)].map((match) => ({
+        file: path.relative(root, file),
+        artifact: match[1],
+      }))
     )
   );
   expect(imported.length).toBeGreaterThan(0);

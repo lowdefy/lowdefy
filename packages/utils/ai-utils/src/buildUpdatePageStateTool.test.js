@@ -15,6 +15,7 @@
 */
 
 import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
+import { expect, test } from 'vitest';
 
 test('returns null when sharedState is absent', () => {
   expect(buildUpdatePageStateTool({ sharedState: undefined })).toBeNull();

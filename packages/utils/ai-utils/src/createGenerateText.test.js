@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGenerateText = jest.fn();
+const mockGenerateText = vi.fn();
 
-jest.unstable_mockModule('ai', () => ({
+vi.doMock('ai', () => ({
   generateText: mockGenerateText,
 }));
 
@@ -29,7 +29,7 @@ beforeEach(() => {
 
 test('createGenerateText returns a resolver with schema and meta attached', async () => {
   const { default: createGenerateText } = await import('./createGenerateText.js');
-  const GenerateText = createGenerateText({ createProvider: jest.fn() });
+  const GenerateText = createGenerateText({ createProvider: vi.fn() });
   expect(GenerateText.meta).toEqual({ checkRead: false, checkWrite: false });
   expect(GenerateText.schema).toBeDefined();
   expect(GenerateText.schema.title).toBe('Lowdefy Request Schema - GenerateText');
@@ -44,8 +44,8 @@ test('GenerateText resolver builds the provider from connection properties and d
   });
 
   const model = { modelId: 'test-model' };
-  const provider = jest.fn().mockReturnValue(model);
-  const createProvider = jest.fn().mockReturnValue(provider);
+  const provider = vi.fn().mockReturnValue(model);
+  const createProvider = vi.fn().mockReturnValue(provider);
   const GenerateText = createGenerateText({ createProvider });
 
   const connection = { apiKey: 'test-api-key' };
@@ -73,7 +73,7 @@ test('GenerateText resolver rejects when the model call rejects', async () => {
   const { default: createGenerateText } = await import('./createGenerateText.js');
   mockGenerateText.mockRejectedValue(new Error('API rate limit exceeded'));
   const GenerateText = createGenerateText({
-    createProvider: jest.fn().mockReturnValue(jest.fn().mockReturnValue({})),
+    createProvider: vi.fn().mockReturnValue(vi.fn().mockReturnValue({})),
   });
   await expect(
     GenerateText({ connection: { apiKey: 'k' }, request: { model: 'm', prompt: 'Hello' } })

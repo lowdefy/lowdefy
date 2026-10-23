@@ -15,17 +15,17 @@
 */
 
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  findWorkspacePackages: jest.fn(),
+vi.doMock('@lowdefy/node-utils', () => ({
+  findWorkspacePackages: vi.fn(),
 }));
 
 const workspaceRoot = '/repo';
 const packages = ['apps/*', 'plugins/*'];
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('resolveVersionReference returns specs that are not "$name" references unchanged', async () => {

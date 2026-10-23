@@ -16,6 +16,7 @@
 
 import createSearchMatcher from './createSearchMatcher.js';
 import getSearchColumns from './getSearchColumns.js';
+import { expect, test } from 'vitest';
 
 const name = { key: 'name', field: 'name', type: 'text', cell: {} };
 const amount = { key: 'amount', field: 'amount', type: 'number', cell: {} };

@@ -15,6 +15,7 @@
 */
 
 import _nunjucks from './nunjucks.js';
+import { expect, test } from 'vitest';
 
 test('_nunjucks with a string template reads the whole of state', () => {
   expect(_nunjucks.tracking({ params: 'Hello {{ name }}' })).toEqual({

@@ -17,6 +17,7 @@
 import normaliseRecords from './normaliseRecords.js';
 import parseTraceLines from './parseTraceLines.js';
 import traceRecord from './traceRecord.js';
+import { expect, test } from 'vitest';
 
 test('normaliseRecords groups by session, ordered by first time, records ordered by time', () => {
   const { sessions } = normaliseRecords({

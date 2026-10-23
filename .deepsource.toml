@@ -51,4 +51,4 @@ enabled = true
     "packages/shell/package.json",
     "package.json"
   ]
-  environment = ["nodejs","browser","jest"]
+  environment = ["nodejs","browser"]

@@ -20,6 +20,7 @@ import path from 'path';
 import { wait } from '@lowdefy/helpers';
 
 import withStartLock from './withStartLock.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let directory;
 let lockPath;

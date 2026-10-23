@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import upsertClaudeSettings from './upsertClaudeSettings.js';
 
@@ -35,7 +35,7 @@ function readSettings(fileName) {
 
 beforeEach(() => {
   projectDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-claude-settings-'));
-  context = { logger: { info: jest.fn(), warn: jest.fn() } };
+  context = { logger: { info: vi.fn(), warn: vi.fn() } };
 });
 
 afterEach(() => {

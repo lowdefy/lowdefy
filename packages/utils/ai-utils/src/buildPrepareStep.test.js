@@ -15,6 +15,7 @@
 */
 
 import buildPrepareStep from './buildPrepareStep.js';
+import { expect, test } from 'vitest';
 
 test('returns undefined when no rules provided', () => {
   expect(buildPrepareStep(undefined)).toBeUndefined();

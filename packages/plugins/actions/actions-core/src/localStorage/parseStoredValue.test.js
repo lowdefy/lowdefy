@@ -15,6 +15,7 @@
 */
 
 import parseStoredValue from './parseStoredValue.js';
+import { expect, test } from 'vitest';
 
 test('parseStoredValue deserializes serialized JSON', () => {
   expect(parseStoredValue('{"a":[1,2]}')).toEqual({ a: [1, 2] });

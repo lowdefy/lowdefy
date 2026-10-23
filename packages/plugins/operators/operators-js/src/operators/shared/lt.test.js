@@ -15,6 +15,7 @@
 */
 
 import lt from './lt.js';
+import { expect, test } from 'vitest';
 
 const location = 'locationId';
 

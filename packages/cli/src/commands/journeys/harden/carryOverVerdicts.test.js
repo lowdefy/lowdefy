@@ -15,6 +15,7 @@
 */
 
 import carryOverVerdicts from './carryOverVerdicts.js';
+import { expect, test } from 'vitest';
 
 function exercised(pageId) {
   return {

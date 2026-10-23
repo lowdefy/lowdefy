@@ -15,6 +15,7 @@
 */
 
 import isOnPath from './isOnPath.js';
+import { expect, test } from 'vitest';
 
 const exercised = {
   pages: ['tickets'],

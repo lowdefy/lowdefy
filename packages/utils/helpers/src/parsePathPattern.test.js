@@ -15,6 +15,7 @@
 */
 
 import parsePathPattern from './parsePathPattern.js';
+import { expect, test } from 'vitest';
 
 test('parsePathPattern splits fixed segments and placeholders', () => {
   expect(parsePathPattern('tickets/{space}/{ticket_id}')).toEqual([

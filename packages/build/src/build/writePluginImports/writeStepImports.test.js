@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import writeStepImports from './writeStepImports.js';
 
-const mockWriteBuildArtifact = jest.fn();
+const mockWriteBuildArtifact = vi.fn();
 
 beforeEach(() => {
   mockWriteBuildArtifact.mockReset();

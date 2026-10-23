@@ -15,12 +15,12 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { act, render } from '@testing-library/react';
 
 const categorySwitchLoading = [];
 
-jest.unstable_mockModule('./CategorySwitch.js', () => ({
+vi.doMock('./CategorySwitch.js', () => ({
   default: ({ loading }) => {
     categorySwitchLoading.push(loading);
     return <span>{loading ? 'loading' : 'ready'}</span>;
@@ -41,7 +41,7 @@ function createBlock({ events, triggerEvent }) {
 }
 
 function renderBlock({ block, renderHead }) {
-  const progress = { dispatch: jest.fn() };
+  const progress = { dispatch: vi.fn() };
   const lowdefy = { _internal: { progress } };
   const context = { _internal: { lowdefy, updaters: {} } };
   const result = render(
@@ -62,7 +62,7 @@ beforeEach(() => {
 });
 
 test('Block without an onMount event renders not loading on its first render', async () => {
-  const block = createBlock({ events: {}, triggerEvent: jest.fn(async () => {}) });
+  const block = createBlock({ events: {}, triggerEvent: vi.fn(async () => {}) });
   const { container } = renderBlock({ block });
   expect(categorySwitchLoading[0]).toBe(false);
   await act(async () => {});
@@ -72,7 +72,7 @@ test('Block without an onMount event renders not loading on its first render', a
 
 test('Block with an onMount event renders loading until the event finishes', async () => {
   let finishMount;
-  const triggerEvent = jest.fn(({ name }) => {
+  const triggerEvent = vi.fn(({ name }) => {
     if (name !== 'onMount') return Promise.resolve();
     return new Promise((resolve) => {
       finishMount = resolve;
@@ -90,7 +90,7 @@ test('Block with an onMount event renders loading until the event finishes', asy
 });
 
 test('Block renders the head again with the new properties when the block updates', async () => {
-  const block = createBlock({ events: {}, triggerEvent: jest.fn(async () => {}) });
+  const block = createBlock({ events: {}, triggerEvent: vi.fn(async () => {}) });
   block.eval = { loading: false, properties: { title: 'Task' } };
   const renderHead = ({ properties }) => <title>{properties.title}</title>;
   const { container, context } = renderBlock({ block, renderHead });

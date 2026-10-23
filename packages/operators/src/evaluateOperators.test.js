@@ -14,24 +14,24 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 
 import evaluateOperators from './evaluateOperators.js';
 
 const mockOperators = {
-  _sum: jest.fn(({ params }) => params.reduce((a, b) => a + b, 0)),
-  _if: jest.fn(({ params }) => (params.test ? params.then : params.else)),
-  _env: jest.fn(({ env, params }) => env[params.key] ?? null),
-  _app: jest.fn(({ lowdefyApp, params }) => lowdefyApp?.[params] ?? null),
-  _echo: jest.fn(({ params }) => params),
-  _error: jest.fn(() => {
+  _sum: vi.fn(({ params }) => params.reduce((a, b) => a + b, 0)),
+  _if: vi.fn(({ params }) => (params.test ? params.then : params.else)),
+  _env: vi.fn(({ env, params }) => env[params.key] ?? null),
+  _app: vi.fn(({ lowdefyApp, params }) => lowdefyApp?.[params] ?? null),
+  _echo: vi.fn(({ params }) => params),
+  _error: vi.fn(() => {
     throw new Error('Test error.');
   }),
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('passthrough — no operators, output equals input', () => {
@@ -76,7 +76,7 @@ test('nested operators — bottom-up evaluation', () => {
 });
 
 test('dynamic identifier — operator is not evaluated, gets ~dyn', () => {
-  const _state = jest.fn(() => 'state');
+  const _state = vi.fn(() => 'state');
   const ops = { ...mockOperators, _state };
   const dynamicIdentifiers = new Set(['_state']);
   const input = { a: { _state: 'value' } };
@@ -92,7 +92,7 @@ test('unknown operator — not in map gets ~dyn', () => {
 });
 
 test('type boundary — ~dyn does NOT propagate past type in typeNames', () => {
-  const _state = jest.fn(() => 'state');
+  const _state = vi.fn(() => 'state');
   const ops = { ...mockOperators, _state };
   const dynamicIdentifiers = new Set(['_state']);
   const typeNames = new Set(['Button']);
@@ -141,7 +141,7 @@ test('error collection — throwing operator produces OperatorError', () => {
 test('ConfigError from operator is preserved', () => {
   const ops = {
     ...mockOperators,
-    _configError: jest.fn(() => {
+    _configError: vi.fn(() => {
       throw new ConfigError('Invalid config value.');
     }),
   };
@@ -162,11 +162,11 @@ test('ConfigError from operator is preserved', () => {
 
 test('parser.parse is callable from within operators for recursive evaluation', () => {
   const ops = {
-    _wrap: jest.fn(({ parser, params }) => {
+    _wrap: vi.fn(({ parser, params }) => {
       const { output } = parser.parse({ input: params });
       return { wrapped: output };
     }),
-    _echo: jest.fn(({ params }) => params),
+    _echo: vi.fn(({ params }) => params),
   };
   const input = { result: { _wrap: { inner: { _echo: 'hello' } } } };
   const res = evaluateOperators({ input, operators: ops });
@@ -174,7 +174,7 @@ test('parser.parse is callable from within operators for recursive evaluation', 
 });
 
 test('_build.* operators ignore dynamicIdentifiers', () => {
-  const _state = jest.fn(() => 'state-result');
+  const _state = vi.fn(() => 'state-result');
   const ops = { _state };
   const dynamicIdentifiers = new Set(['_state']);
   const input = { a: { '_build.state': 'value' } };
@@ -189,7 +189,7 @@ test('_build.* operators ignore dynamicIdentifiers', () => {
 });
 
 test('_build.* operators ignore dynamic params — evaluates even with ~dyn in params', () => {
-  const _echo = jest.fn(({ params }) => params);
+  const _echo = vi.fn(({ params }) => params);
   const ops = { _echo };
   const input = { a: { '_build.echo': { nested: 'value' } } };
   // Manually set ~dyn on the params object (configurable so setDynamicMarker can redefine)
@@ -208,7 +208,7 @@ test('_build.* operators ignore dynamic params — evaluates even with ~dyn in p
 });
 
 test('lowdefyApp is passed to operators — _app resolves app metadata', () => {
-  const _app = jest.fn(({ lowdefyApp, params }) => lowdefyApp[params]);
+  const _app = vi.fn(({ lowdefyApp, params }) => lowdefyApp[params]);
   const ops = { _app };
   const input = { a: { '_build.app': 'version' } };
   const res = evaluateOperators({
@@ -235,7 +235,7 @@ test('unknown _build.* operator — pushes a ConfigError instead of ~dyn', () =>
 });
 
 test('escaped build prefix — dynamic identifier is evaluated, not deferred', () => {
-  const _function = jest.fn(() => 'evaluated');
+  const _function = vi.fn(() => 'evaluated');
   const ops = { _function };
   const dynamicIdentifiers = new Set(['_function']);
   const input = { a: { '__build.function': 'value' } };
@@ -251,7 +251,7 @@ test('escaped build prefix — dynamic identifier is evaluated, not deferred', (
 });
 
 test('escape depth 3 build prefix — dynamic identifier is evaluated, not deferred', () => {
-  const _function = jest.fn(() => 'evaluated');
+  const _function = vi.fn(() => 'evaluated');
   const ops = { _function };
   const dynamicIdentifiers = new Set(['_function']);
   const input = { a: { '___build.function': 'value' } };
@@ -267,7 +267,7 @@ test('escape depth 3 build prefix — dynamic identifier is evaluated, not defer
 });
 
 test('escaped build prefix — operator with ~dyn params still evaluates and does not bubble up', () => {
-  const _echo = jest.fn(({ params }) => params);
+  const _echo = vi.fn(({ params }) => params);
   const ops = { _echo };
   const input = { a: { '__build.echo': { nested: 'value' } } };
   // Manually set ~dyn on the params object (configurable so setDynamicMarker can redefine)
@@ -299,7 +299,7 @@ test('unknown operator under escaped build prefix — pushes a ConfigError inste
 });
 
 test('escaped runtime prefix — dynamic identifier still defers with ~dyn', () => {
-  const _state = jest.fn(() => 'state');
+  const _state = vi.fn(() => 'state');
   const ops = { ...mockOperators, _state };
   const dynamicIdentifiers = new Set(['_state']);
   const input = { a: { __state: 'value' } };
@@ -314,7 +314,7 @@ test('escaped runtime prefix — dynamic identifier still defers with ~dyn', () 
 });
 
 test('runtime operator inside an escaped build prefix parse is left untouched', () => {
-  const _state = jest.fn(() => 'state');
+  const _state = vi.fn(() => 'state');
   const ops = { ...mockOperators, _state };
   const dynamicIdentifiers = new Set(['_state']);
   const input = { a: { _state: 'value' } };
@@ -382,7 +382,7 @@ test('lowdefyApp is passed to operators', () => {
 });
 
 test('lowdefyApp is forwarded to nested parser.parse calls', () => {
-  const _passthrough = jest.fn(({ params, parser }) => parser.parse({ input: params }).output);
+  const _passthrough = vi.fn(({ params, parser }) => parser.parse({ input: params }).output);
   const ops = { ...mockOperators, _passthrough };
   const input = { result: { _passthrough: { nested: { _app: 'slug' } } } };
   const res = evaluateOperators({ input, operators: ops, lowdefyApp: { slug: 'my-app' } });
@@ -408,7 +408,7 @@ test('multi-key objects are not treated as operators', () => {
 });
 
 test('deeply nested dynamic in array bubbles up through entire tree', () => {
-  const _state = jest.fn(() => 'state');
+  const _state = vi.fn(() => 'state');
   const ops = { ...mockOperators, _state };
   const dynamicIdentifiers = new Set(['_state']);
   const input = {
@@ -423,7 +423,7 @@ test('deeply nested dynamic in array bubbles up through entire tree', () => {
 });
 
 test('operator with dynamic params is not evaluated', () => {
-  const _state = jest.fn(() => 'state');
+  const _state = vi.fn(() => 'state');
   const ops = { ...mockOperators, _state };
   const dynamicIdentifiers = new Set(['_state']);
   const input = {
@@ -435,7 +435,7 @@ test('operator with dynamic params is not evaluated', () => {
 });
 
 test('dynamic method is not evaluated and marked', () => {
-  const _math = jest.fn(() => 'math result');
+  const _math = vi.fn(() => 'math result');
   const ops = { _math };
   const dynamicIdentifiers = new Set(['_math.random']);
   const input = { a: { '_math.random': {} } };
@@ -455,7 +455,7 @@ test('operator result object inherits ~r and ~l from expression', () => {
 });
 
 test('operator result array inherits ~r and ~l from expression', () => {
-  const _concat = jest.fn(({ params }) => params.flat());
+  const _concat = vi.fn(({ params }) => params.flat());
   const ops = { ...mockOperators, _concat };
   const input = { blocks: { _concat: [[1], [2, 3]] } };
   input.blocks['~r'] = 'ref-xyz';
@@ -467,7 +467,7 @@ test('operator result array inherits ~r and ~l from expression', () => {
 });
 
 test('operator result does not overwrite existing ~r on result', () => {
-  const _echo = jest.fn(({ params }) => {
+  const _echo = vi.fn(({ params }) => {
     const result = { ...params };
     result['~r'] = 'result-ref';
     return result;
@@ -489,7 +489,7 @@ test('operator returning primitive does not receive markers', () => {
 });
 
 test('operator returning null does not receive markers', () => {
-  const _null = jest.fn(() => null);
+  const _null = vi.fn(() => null);
   const ops = { ...mockOperators, _null };
   const input = { a: { _null: true } };
   input.a['~r'] = 'ref-null';
@@ -498,7 +498,7 @@ test('operator returning null does not receive markers', () => {
 });
 
 test('nested type boundaries each reset independently', () => {
-  const _state = jest.fn(() => 'state');
+  const _state = vi.fn(() => 'state');
   const ops = { _state };
   const dynamicIdentifiers = new Set(['_state']);
   const typeNames = new Set(['Card', 'Button']);

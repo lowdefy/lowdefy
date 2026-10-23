@@ -17,6 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import cleanDirectory from './cleanDirectory.js';
+import { expect, test } from 'vitest';
 
 test('cleanDirectory', async () => {
   const dirPath = path.resolve(process.cwd(), 'test/cleanDirectory/');

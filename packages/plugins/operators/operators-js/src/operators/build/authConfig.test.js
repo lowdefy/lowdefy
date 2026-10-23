@@ -15,6 +15,7 @@
 */
 
 import _authConfig from './authConfig.js';
+import { expect, test } from 'vitest';
 
 const authConfig = {
   emailAndPassword: { enabled: true },

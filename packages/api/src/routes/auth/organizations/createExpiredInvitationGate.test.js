@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const betterAuthApi = await import('better-auth/api');
-const mockGetSessionFromCtx = jest.fn();
-jest.unstable_mockModule('better-auth/api', () => ({
+const mockGetSessionFromCtx = vi.fn();
+vi.doMock('better-auth/api', () => ({
   ...betterAuthApi,
   getSessionFromCtx: mockGetSessionFromCtx,
 }));
@@ -34,7 +34,7 @@ beforeEach(() => {
 });
 
 function createGate(invitation) {
-  const adapter = { findOne: jest.fn(async () => invitation) };
+  const adapter = { findOne: vi.fn(async () => invitation) };
   const auth = { $context: Promise.resolve({ adapter }) };
   return { gate: createExpiredInvitationGate({ getAuth: () => auth }), adapter };
 }
@@ -83,20 +83,32 @@ test('createExpiredInvitationGate lets the route answer a signed-out caller with
 // Expired strictly before now, as the accept route decides it.
 test('createExpiredInvitationGate lets BetterAuth answer an invitation expiring this instant', async () => {
   const now = new Date('2026-09-27T12:00:00.000Z');
-  jest.useFakeTimers({
-    now,
-    doNotFake: ['nextTick', 'setImmediate', 'queueMicrotask', 'performance'],
+  vi.useFakeTimers({
+    now: now,
+    toFake: [
+      'Date',
+      'hrtime',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
   });
   try {
     const { gate } = createGate({ id: 'inv_1', status: 'pending', expiresAt: now.toISOString() });
     expect(await gate({ body: { invitationId: 'inv_1' } })).toBeUndefined();
   } finally {
-    jest.useRealTimers();
+    vi.useRealTimers();
   }
 });
 
 test('createExpiredInvitationGate leaves a request without an invitation id to the route', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const gate = createExpiredInvitationGate({ getAuth });
 
   expect(await gate({ body: {} })).toBeUndefined();

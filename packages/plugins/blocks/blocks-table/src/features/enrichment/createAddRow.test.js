@@ -13,10 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 // The browser's crypto.randomUUID is not in the test environment.
-jest.unstable_mockModule('../editing/generateRowKey.js', () => ({
+vi.doMock('../editing/generateRowKey.js', () => ({
   default: () => 'k1',
 }));
 
@@ -26,7 +26,7 @@ const { default: createAddRow } = await import('./createAddRow.js');
 function createApi(triggerEvent) {
   const api = {
     properties: { rowKey: '_id' },
-    methods: { triggerEvent: jest.fn(triggerEvent) },
+    methods: { triggerEvent: vi.fn(triggerEvent) },
     enrichment: { pending: [] },
   };
   api.enrichment.setPending = (update) => {

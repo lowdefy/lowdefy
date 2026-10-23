@@ -21,6 +21,7 @@ import {
 } from '@lowdefy/errors';
 
 import authorizeWebsocket from './authorizeWebsocket.js';
+import { expect, test } from 'vitest';
 
 const logger = { debug: () => {} };
 const websocketConfig = { websocketId: 'ws', auth: { public: false } };

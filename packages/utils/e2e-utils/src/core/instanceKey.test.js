@@ -15,6 +15,7 @@
 */
 
 import pageContextExpression from './instanceKey.js';
+import { expect, test } from 'vitest';
 
 // The expression runs in the browser; here it is evaluated against a window holding what the
 // client sets on window.lowdefy.

@@ -15,6 +15,7 @@
 */
 import path from 'path';
 import readFile from './readFile.js';
+import { expect, test } from 'vitest';
 
 const baseDir = path.resolve(process.cwd(), 'test/readFile');
 

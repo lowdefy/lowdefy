@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ConfigWarning } from '@lowdefy/errors';
 
 import buildPages from '../full/buildPages.js';
@@ -27,7 +27,7 @@ const auth = {
 function createTestContext({ websocketIds = ['ws1'] } = {}) {
   const context = testContext();
   context.websocketIds = new Set(websocketIds);
-  context.handleWarning = jest.fn();
+  context.handleWarning = vi.fn();
   return context;
 }
 

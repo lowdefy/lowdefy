@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { getDevError } from '@lowdefy/engine';
 import {
   AuthenticationError,
@@ -34,7 +34,7 @@ function createLowdefy(user) {
 }
 
 function mockFetchResponse({ ok, status = ok ? 200 : 500, body, headers = {} }) {
-  global.fetch = jest.fn(() =>
+  global.fetch = vi.fn(() =>
     Promise.resolve({
       ok,
       status,
@@ -174,7 +174,7 @@ describe('build check', () => {
   beforeEach(() => {
     window.sessionStorage.clear();
     delete window.location;
-    window.location = { reload: jest.fn() };
+    window.location = { reload: vi.fn() };
   });
 
   afterEach(() => {
@@ -201,7 +201,7 @@ describe('build check', () => {
 
   test('request reloads and never settles when the server refuses a call from another build', async () => {
     mockFetchResponse({ ok: false, status: 409, body: refusal });
-    const settled = jest.fn();
+    const settled = vi.fn();
     request({
       lowdefy: createLowdefy(null),
       buildId: 'build-1',
@@ -251,7 +251,7 @@ describe('caller check', () => {
   beforeEach(() => {
     window.sessionStorage.clear();
     delete window.location;
-    window.location = { reload: jest.fn() };
+    window.location = { reload: vi.fn() };
   });
 
   afterEach(() => {
@@ -259,7 +259,7 @@ describe('caller check', () => {
   });
 
   async function expectReloadWithoutSettling(args) {
-    const settled = jest.fn();
+    const settled = vi.fn();
     request(args).then(settled, settled);
     await new Promise((resolve) => setTimeout(resolve, 20));
     expect(window.location.reload).toHaveBeenCalledTimes(1);

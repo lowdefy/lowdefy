@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import classifyOperatorCall from './classifyOperatorCall.js';
 import createOperatorCallClassifier from './createOperatorCallClassifier.js';
@@ -83,7 +83,7 @@ test('createOperatorCallClassifier resolves a static declaration once per method
 });
 
 test('createOperatorCallClassifier calls a function declaration on every call with the call info', () => {
-  const tracking = jest.fn(({ params }) => ({ kind: 'read', keys: [`state:${params}`] }));
+  const tracking = vi.fn(({ params }) => ({ kind: 'read', keys: [`state:${params}`] }));
   const classify = createOperatorCallClassifier({
     operatorFn: operator(tracking),
     operatorName: '_state',
@@ -95,7 +95,7 @@ test('createOperatorCallClassifier calls a function declaration on every call wi
 });
 
 test('createOperatorCallClassifier calls a read keys function on every call with the call info', () => {
-  const keys = jest.fn(({ params }) => [`state:${params}`]);
+  const keys = vi.fn(({ params }) => [`state:${params}`]);
   const classify = createOperatorCallClassifier({
     operatorFn: operator({ kind: 'read', keys }),
     operatorName: '_state',

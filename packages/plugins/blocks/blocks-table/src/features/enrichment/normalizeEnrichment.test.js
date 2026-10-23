@@ -18,6 +18,7 @@ import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 
 import getRunSelection from './getRunSelection.js';
 import normalizeEnrichment from './normalizeEnrichment.js';
+import { expect, test } from 'vitest';
 
 const { columns } = normalizeColumns({
   columns: [

@@ -15,6 +15,7 @@
 */
 
 import buildAdminPlugin from './buildAdminPlugin.js';
+import { expect, test } from 'vitest';
 
 test('buildAdminPlugin returns the admin plugin', () => {
   const plugin = buildAdminPlugin();

@@ -15,6 +15,7 @@
 */
 
 import isAuthConfigured from './isAuthConfigured.js';
+import { expect, test } from 'vitest';
 
 test('isAuthConfigured returns false when auth is undefined', () => {
   const components = {};

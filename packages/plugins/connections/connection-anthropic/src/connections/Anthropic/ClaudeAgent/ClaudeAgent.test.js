@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockHandleAgentChat = jest.fn();
+const mockHandleAgentChat = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
+vi.doMock('@lowdefy/ai-utils', () => ({
   handleAgentChat: mockHandleAgentChat,
 }));
 
@@ -30,7 +30,7 @@ test('ClaudeAgent resolver delegates to handleAgentChat', async () => {
   const { default: ClaudeAgent } = await import('./ClaudeAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: { agent: { properties: { model: 'claude-3-5-sonnet' } }, messages: [] },
     context: {},
   };
@@ -48,7 +48,7 @@ test('ClaudeAgent resolver maps thinking to providerOptions', async () => {
 
   const thinking = { type: 'enabled', budgetTokens: 10000 };
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: { properties: { model: 'claude-3-5-sonnet', thinking } },
       messages: [],
@@ -69,7 +69,7 @@ test('ClaudeAgent resolver maps effort to providerOptions', async () => {
   const { default: ClaudeAgent } = await import('./ClaudeAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: { properties: { model: 'claude-3-5-sonnet', effort: 'high' } },
       messages: [],
@@ -91,7 +91,7 @@ test('ClaudeAgent resolver merges sugar props with existing providerOptions', as
 
   const thinking = { type: 'enabled', budgetTokens: 5000 };
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: {
         properties: {
@@ -118,7 +118,7 @@ test('ClaudeAgent resolver does not set providerOptions when no sugar props', as
   const { default: ClaudeAgent } = await import('./ClaudeAgent.js');
 
   const args = {
-    connection: { provider: jest.fn() },
+    connection: { provider: vi.fn() },
     properties: {
       agent: { properties: { model: 'claude-3-5-sonnet' } },
       messages: [],

@@ -16,6 +16,7 @@
 
 import buildAuthPlugins from './buildAuthPlugins.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 test('buildAuthPlugins counts the database adapter type', () => {
   const context = testContext();

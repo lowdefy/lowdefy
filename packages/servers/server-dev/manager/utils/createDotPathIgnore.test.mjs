@@ -17,6 +17,7 @@
 import path from 'path';
 
 import createDotPathIgnore from './createDotPathIgnore.mjs';
+import { expect, test } from 'vitest';
 
 // setupWatcher hands the ignore function paths with the platform separator.
 const appRoot = path.join('/home/dev/repo/.claude/worktrees/feature/app');

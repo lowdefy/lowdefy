@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import getRequestConfig from './getRequestConfig.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const requestConfig = {
@@ -33,12 +33,12 @@ const requestConfig = {
   connectionId: 'con_1',
 };
 
-const readConfigFile = jest.fn((path) =>
+const readConfigFile = vi.fn((path) =>
   path === 'pages/page_1/requests/req_1.json' ? requestConfig : null
 );
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test("getRequestConfig returns the config for an existing request when unauthenticated on an auth'd app", async () => {

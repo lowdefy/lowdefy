@@ -13,13 +13,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 import { ActionError, UserError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
-const closeLoader = jest.fn();
-const displayMessage = jest.fn();
+const closeLoader = vi.fn();
+const displayMessage = vi.fn();
 const lowdefy = {
   _internal: {
     actions: {
@@ -39,8 +39,10 @@ const lowdefy = {
 };
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 // Comment out to use console
 console.log = () => {};
@@ -133,9 +135,9 @@ test('Validate required field', async () => {
     warnings: [],
   });
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "content": "Your input has 1 validation error.",
           "duration": 6,
           "status": "error",
@@ -267,9 +269,9 @@ test('Validate all fields', async () => {
     warnings: [],
   });
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "content": "Your input has 2 validation errors.",
           "duration": 6,
           "status": "error",
@@ -322,9 +324,9 @@ test('Validate all fields', async () => {
     warnings: [],
   });
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "content": "Your input has 1 validation error.",
           "duration": 6,
           "status": "error",
@@ -362,7 +364,7 @@ test('Validate all fields', async () => {
     status: 'success',
     warnings: [],
   });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`[]`);
 });
 
 test('Validate only one field', async () => {
@@ -462,9 +464,9 @@ test('Validate only one field', async () => {
     warnings: [],
   });
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "content": "Your input has 1 validation error.",
           "duration": 6,
           "status": "error",
@@ -502,7 +504,7 @@ test('Validate only one field', async () => {
     status: null,
     warnings: [],
   });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`[]`);
 });
 
 test('Validate list of fields', async () => {
@@ -614,9 +616,9 @@ test('Validate list of fields', async () => {
     'Your input has 1 validation error'
   );
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "content": "Your input has 1 validation error.",
           "duration": 6,
           "status": "error",
@@ -664,7 +666,7 @@ test('Validate list of fields', async () => {
     status: null,
     warnings: [],
   });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`[]`);
 });
 
 test('Invalid Validate params', async () => {
@@ -726,9 +728,9 @@ test('Invalid Validate params', async () => {
     'Invalid validate params.'
   );
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
+    [
+      [
+        {
           "content": "Invalid validate params.",
           "duration": 6,
           "status": "error",

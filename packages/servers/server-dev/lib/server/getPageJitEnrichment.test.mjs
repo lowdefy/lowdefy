@@ -15,6 +15,7 @@
 */
 
 import { getPageJitEnrichment } from './jitPageBuilder.js';
+import { expect, test } from 'vitest';
 
 // A stub of cachedBuildContext. getPageJitEnrichment reads jsMap.client and
 // dynamicIconData off it; production omits buildContext so it defaults to the

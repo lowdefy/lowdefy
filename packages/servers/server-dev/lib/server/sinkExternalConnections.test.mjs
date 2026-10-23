@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import sinkExternalConnections from './sinkExternalConnections.js';
 
-const realSend = jest.fn(async () => ({ sent: true }));
+const realSend = vi.fn(async () => ({ sent: true }));
 realSend.schema = { type: 'object' };
 realSend.meta = { checkWrite: true };
-const realGather = jest.fn(async () => ({ downloaded: true }));
+const realGather = vi.fn(async () => ({ downloaded: true }));
 realGather.schema = { type: 'object' };
 realGather.meta = { checkRead: true, dataSet: 'external' };
-const realRead = jest.fn(async () => ['doc']);
+const realRead = vi.fn(async () => ['doc']);
 realRead.meta = { checkRead: true };
-const realMongo = jest.fn(async () => ['row']);
+const realMongo = vi.fn(async () => ['row']);
 
 const connections = {
   SMTP: { schema: {}, meta: { dataSet: 'external' }, requests: { SMTPMailSend: realSend } },
@@ -38,7 +38,7 @@ const context = { scrubSecrets: (value) => value.replace('s3cret', '[REDACTED]')
 
 let session;
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   delete process.env.LOWDEFY_DEV_SMTP_PORT;
   session = { sunk: [] };
 });

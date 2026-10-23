@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -39,7 +39,7 @@ beforeEach(() => {
       info: (line) => logs.info.push(line),
       warn: (line) => logs.warn.push(line),
     },
-    sendTelemetry: jest.fn(),
+    sendTelemetry: vi.fn(),
   };
 });
 

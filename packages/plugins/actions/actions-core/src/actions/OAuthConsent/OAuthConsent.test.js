@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import OAuthConsent from './OAuthConsent.js';
 
-const mockOauth2Consent = jest.fn();
+const mockOauth2Consent = vi.fn();
 const methods = { oauth2Consent: mockOauth2Consent };
 
 test('OAuthConsent passes params to the oauth2Consent method', async () => {

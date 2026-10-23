@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockKnex = jest.fn((config) => ({
+const mockKnex = vi.fn((config) => ({
   client: {
     connectionSettings: typeof config.connection === 'object' ? { ...config.connection } : {},
   },
 }));
 
-jest.unstable_mockModule('knex', () => ({ default: mockKnex }));
+vi.doMock('knex', () => ({ default: mockKnex }));
 
 beforeEach(() => {
   mockKnex.mockClear();

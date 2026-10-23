@@ -17,6 +17,7 @@
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 import compileTooltip from './compileTooltip.js';
+import { expect, test } from 'vitest';
 
 test('compileTooltip returns null without a tooltip', () => {
   expect(compileTooltip({ tooltip: undefined, compileTemplate: nunjucksFunction })).toBeNull();

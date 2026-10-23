@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { createNodeLogger } from '@lowdefy/logger/node';
 import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 import { serializer } from '@lowdefy/helpers';
@@ -30,7 +30,7 @@ const destination = {
 
 // The CLI's dev terminal is parsed from this logger's output, so it must keep the full default
 // serialization; route the real logger to memory to read the exact emitted line.
-jest.unstable_mockModule('@lowdefy/logger/node', () => ({
+vi.doMock('@lowdefy/logger/node', () => ({
   createNodeLogger: (options) => createNodeLogger({ ...options, destination }),
 }));
 

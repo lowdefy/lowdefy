@@ -17,6 +17,7 @@
 import crypto from 'node:crypto';
 
 import verifyIntegrity from './verifyIntegrity.js';
+import { expect, test } from 'vitest';
 
 const data = Buffer.from('tarball');
 const other = Buffer.from('other');

@@ -15,6 +15,7 @@
 */
 
 import matchPagePath from './matchPagePath.js';
+import { expect, test } from 'vitest';
 
 function route(pageId, path = pageId) {
   return { pageId, path, auth: { public: true } };

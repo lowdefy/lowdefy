@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const { default: forwardScheduledEndpoint } = await import('./forwardScheduledEndpoint.js');
 const { default: testContext } = await import('../../test/testContext.js');
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const config = {
@@ -56,7 +56,7 @@ function makeContext({
   secrets = { STAGING_CRON_SECRET: 'staging-secret' },
   waitUntil,
 } = {}) {
-  const readConfigFile = jest.fn((path) => (path === 'api/jobs/purge.json' ? endpoint : null));
+  const readConfigFile = vi.fn((path) => (path === 'api/jobs/purge.json' ? endpoint : null));
   const context = testContext({ logger, readConfigFile, config: { ...config, basePath }, secrets });
   context.waitUntil = waitUntil;
   return context;
@@ -65,8 +65,8 @@ function makeContext({
 let fetchMock;
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  fetchMock = jest.fn(async () => ({
+  vi.clearAllMocks();
+  fetchMock = vi.fn(async () => ({
     ok: true,
     status: 200,
     arrayBuffer: async () => new ArrayBuffer(0),

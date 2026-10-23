@@ -18,7 +18,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import skipStaleMapWrites from './skipStaleMapWrites.js';
 
@@ -41,7 +41,7 @@ afterEach(() => {
 
 test('a page build writes its maps while its config build is the live one', async () => {
   publishBuild('a1b2_');
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
   skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
 
@@ -49,14 +49,14 @@ test('a page build writes its maps while its config build is the live one', asyn
   await context.writeBuildArtifact('refMap.json', '{}');
 
   expect(writeBuildArtifact.mock.calls).toEqual([
-    ['keyMap.json', '{}'],
-    ['refMap.json', '{}'],
+    ['keyMap.json', '{}', undefined],
+    ['refMap.json', '{}', undefined],
   ]);
 });
 
 test('a page build started before a config rebuild does not replace the new maps', async () => {
   publishBuild('a1b2_');
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
   skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
 
@@ -65,12 +65,12 @@ test('a page build started before a config rebuild does not replace the new maps
   await context.writeBuildArtifact('refMap.json', '{}');
   await context.writeBuildArtifact('pages/home.json', '{}');
 
-  expect(writeBuildArtifact.mock.calls).toEqual([['pages/home.json', '{}']]);
+  expect(writeBuildArtifact.mock.calls).toEqual([['pages/home.json', '{}', undefined]]);
 });
 
 test('a page build started before a config rebuild writes no jitMaps file', async () => {
   publishBuild('a1b2_');
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
   skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
 
@@ -78,12 +78,12 @@ test('a page build started before a config rebuild writes no jitMaps file', asyn
   publishBuild('c3d4_');
   await context.writeBuildArtifact('jitMaps/abc123-1-2.json', '{}');
 
-  expect(writeBuildArtifact.mock.calls).toEqual([['jitMaps/abc123-1-1.json', '{}']]);
+  expect(writeBuildArtifact.mock.calls).toEqual([['jitMaps/abc123-1-1.json', '{}', undefined]]);
 });
 
 test('a page build on a context that is no longer kept does not write the JS maps', async () => {
   publishBuild('a1b2_');
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
   let kept = true;
   skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => kept });
@@ -95,14 +95,14 @@ test('a page build on a context that is no longer kept does not write the JS map
   await context.writeBuildArtifact('pages/home.json', '{}');
 
   expect(writeBuildArtifact.mock.calls).toEqual([
-    ['plugins/operators/serverJsMap.js', 'a'],
-    ['pages/home.json', '{}'],
+    ['plugins/operators/serverJsMap.js', 'a', undefined],
+    ['pages/home.json', '{}', undefined],
   ]);
 });
 
 test('a page build started before a config rebuild does not write the JS maps', async () => {
   publishBuild('a1b2_');
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
   skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
 

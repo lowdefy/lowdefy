@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import writePages from './writePages.js';
 import testContext from '../../test-utils/testContext.js';
 
-const mockWriteBuildArtifact = jest.fn();
+const mockWriteBuildArtifact = vi.fn();
 
 const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
@@ -40,10 +40,7 @@ test('writePages write page', async () => {
   };
   await writePages({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'pages/page1.json',
-      '{"id":"page:page1","pageId":"page1","blockId":"page1","requests":[]}',
-    ],
+    ['pages/page1.json', '{"id":"page:page1","pageId":"page1","blockId":"page1","requests":[]}'],
   ]);
 });
 
@@ -66,14 +63,8 @@ test('writePages multiple pages', async () => {
   };
   await writePages({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'pages/page1.json',
-      '{"id":"page:page1","pageId":"page1","blockId":"page1","requests":[]}',
-    ],
-    [
-      'pages/page2.json',
-      '{"id":"page:page2","pageId":"page2","blockId":"page2","requests":[]}',
-    ],
+    ['pages/page1.json', '{"id":"page:page1","pageId":"page1","blockId":"page1","requests":[]}'],
+    ['pages/page2.json', '{"id":"page:page2","pageId":"page2","blockId":"page2","requests":[]}'],
   ]);
 });
 

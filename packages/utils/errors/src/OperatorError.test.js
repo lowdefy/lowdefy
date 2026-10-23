@@ -16,6 +16,7 @@
 
 import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
+import { expect, test } from 'vitest';
 
 test('OperatorError sets name and is instanceof PluginError', () => {
   const original = new Error('_if requires boolean test');
