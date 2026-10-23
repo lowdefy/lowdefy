@@ -1,0 +1,65 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# The raw result of one enrichment or ai cell, for the Table's `rawEndpoint`
+# (pages/enrichment_raw_endpoint.yaml). That page's rows leave every cell's raw result out, so a
+# page of rows stays small, and the details panel loads the one it shows from here. It reads
+# only `_enrich.<key>.raw` of one row; a multi-tenant app scopes the row by tenant too.
+id: leads_cell_raw
+type: Api
+payloadSchema:
+  type: object
+  required:
+    - rowKey
+    - key
+  additionalProperties: false
+  properties:
+    # The row's _id: a UUID, as every row has (leads_add, leads_import).
+    rowKey:
+      type: string
+      pattern: ^[A-Za-z0-9_-]{1,64}$
+    # The column key, one path segment under _enrich: never a dotted path or an operator.
+    key:
+      type: string
+      pattern: ^[A-Za-z0-9_-]{1,128}$
+routine:
+  - id: find_cell
+    type: MongoDBFindOne
+    connectionId: leads
+    properties:
+      query:
+        _id:
+          _payload: rowKey
+        # org_id:
+        #   _user: organization.id
+      options:
+        projection:
+          _object.fromEntries:
+            - - - _string.concat:
+                    - _enrich.
+                    - _payload: key
+                    - .raw
+                - 1
+  - :return:
+      raw:
+        _if_none:
+          - _get:
+              from:
+                _step: find_cell
+              key:
+                _string.concat:
+                  - _enrich.
+                  - _payload: key
+                  - .raw
+          - null

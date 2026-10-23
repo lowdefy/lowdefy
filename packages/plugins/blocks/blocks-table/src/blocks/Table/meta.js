@@ -328,8 +328,11 @@ export default {
       'Blocks in the bulk action bar, shown while rows are selected, side by side at the end of the bar like `toolbarStart`.',
     empty: 'Blocks shown instead of the empty state when there are no rows.',
   },
-  // Server mode fetches through an internal event running the Request action.
-  actions: ['Request'],
+  // Server mode fetches through an internal event running the Request action. The cell details
+  // panel loads a cell's raw result from `rawEndpoint` with CallAPI, whose payload reads the
+  // event with _event.
+  actions: ['Request', 'CallAPI'],
+  operators: ['_event'],
   cssKeys: {
     element: 'The table root element.',
     header: 'The header row group.',
@@ -1090,6 +1093,11 @@ export default {
         type: 'string',
         description:
           'Where user-defined input columns added in the picker or by a CSV import keep their values: under this path, then the column key (with `values`, a `notes` column stores at `values.notes`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, at the key.',
+      },
+      rawEndpoint: {
+        type: 'string',
+        description:
+          "The id of an API endpoint the details panel calls for a finished enrichment or ai cell's raw result when the row's `_enrich.<key>` carries none, so rows can leave the raw answers out. Its payload is `{ rowKey, key }` (the row's key and the column key); it returns `{ raw }`.",
       },
       importCsv: {
         type: 'boolean',
