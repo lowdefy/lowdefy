@@ -517,7 +517,7 @@ test('a failed openPage closes its context, so the idle browser still closes', a
     await expect(
       openPage({ browser: launched, origin: 'http://localhost:3001', pageId: 'home' })
     ).rejects.toThrow('net::ERR_CONNECTION_REFUSED');
-    vi.advanceTimersByTime(90_000);
+    vi.advanceTimersByTime(45_000);
     for (let i = 0; i < 5; i += 1) {
       await Promise.resolve();
     }

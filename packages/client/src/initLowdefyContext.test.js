@@ -193,3 +193,14 @@ test('initLowdefyContext keeps user storage of the person signed in', () => {
   initLowdefyContext(args);
   expect(window.localStorage.getItem('lowdefy:sales::lowdefy_user:u1:views')).toBe('{}');
 });
+
+test('initLowdefyContext leaves historyLimits undefined and keeps one set before it runs', () => {
+  const args = baseArgs();
+  initLowdefyContext(args);
+  expect(args.lowdefy._internal.historyLimits).toBeUndefined();
+
+  const dev = baseArgs();
+  dev.lowdefy._internal = { historyLimits: { events: 200, calls: 20 } };
+  initLowdefyContext(dev);
+  expect(dev.lowdefy._internal.historyLimits).toEqual({ events: 200, calls: 20 });
+});
