@@ -32,6 +32,13 @@ vi.doMock('../../test/startDevServer.js', () => ({
   default: mockStartDevServer,
 }));
 
+// The slot files live in LOWDEFY_HOME, shared by the machine; acquireJourneyRunSlots has its own tests.
+const mockReleaseSlots = vi.fn();
+const mockAcquireJourneyRunSlots = vi.fn();
+vi.doMock('../../test/acquireJourneyRunSlots.js', () => ({
+  default: mockAcquireJourneyRunSlots,
+}));
+
 const url = 'http://localhost:3229';
 let configDirectory;
 let context;
@@ -145,6 +152,9 @@ beforeEach(() => {
   onMutantRun = () => {};
   removedMutants = new Set();
   listingBodies = [];
+  mockReleaseSlots.mockReset();
+  mockAcquireJourneyRunSlots.mockReset();
+  mockAcquireJourneyRunSlots.mockResolvedValue({ release: mockReleaseSlots });
   context = {
     directories: {
       config: configDirectory,
@@ -644,4 +654,29 @@ test('journeysHarden --page says the config changed since the last test', async 
 test('journeysHarden without --page logs nothing about narrowing', async () => {
   await harden({ list: true });
   expect(logs.info.some((line) => line.startsWith('Baseline: '))).toBe(false);
+});
+
+test('journeysHarden exits 75 without running anything when no journey run slot frees', async () => {
+  mockAcquireJourneyRunSlots.mockRejectedValue(
+    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT' })
+  );
+  await harden();
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy journeys harden',
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([
+    'The machine is busy running other journeys. Try again later; do not start your own dev server.',
+  ]);
+  expect(process.exitCode).toBe(75);
+});
+
+test('journeysHarden frees the journey run slots after the run, and when the server fails to start', async () => {
+  await harden({ seed: '3' });
+  expect(mockReleaseSlots).toHaveBeenCalledTimes(1);
+  mockStartDevServer.mockRejectedValue(new Error('boot failed'));
+  await expect(harden({ url: undefined })).rejects.toThrow('boot failed');
+  expect(mockReleaseSlots).toHaveBeenCalledTimes(2);
 });

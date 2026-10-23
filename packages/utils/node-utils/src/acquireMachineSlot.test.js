@@ -138,3 +138,68 @@ test('acquireMachineSlot release is harmless twice and never removes a slot anot
   taken.release();
   expect(JSON.parse(fs.readFileSync(slotPath(0), 'utf8')).token).toBe('someone-else');
 });
+
+test('acquireMachineSlot writes describe into the slot file beside its own fields', async () => {
+  const slot = await acquireMachineSlot({
+    name: 'browser',
+    limit: 1,
+    describe: { command: 'lowdefy test', configDirectory: '/apps/foo', pid: 1 },
+  });
+  expect(JSON.parse(fs.readFileSync(slotPath(0), 'utf8'))).toMatchObject({
+    command: 'lowdefy test',
+    configDirectory: '/apps/foo',
+    pid: process.pid,
+  });
+  slot.release();
+});
+
+test('acquireMachineSlot calls onWait while it waits, with the live holders only', async () => {
+  const held = await acquireMachineSlot({
+    name: 'browser',
+    limit: 1,
+    describe: { command: 'lowdefy test' },
+  });
+  // Slots past the limit still count as running: a run took them at a higher limit.
+  writeHolder(1, { pid: await deadPid(), processStartTime: null, token: 'gone' });
+  writeHolder(2, { pid: process.pid, processStartTime: null, token: 'past-limit' });
+  const onWait = vi.fn();
+  await expect(
+    acquireMachineSlot({
+      name: 'browser',
+      limit: 1,
+      waitMs: 300,
+      intervalMs: 10,
+      onWait,
+      onWaitIntervalMs: 50,
+    })
+  ).rejects.toThrow('stayed busy');
+  expect(onWait).toHaveBeenCalled();
+  const [{ waitedMs, holders }] = onWait.mock.calls[0];
+  expect(waitedMs).toBeGreaterThanOrEqual(50);
+  expect(holders.map((holder) => holder.token)).toEqual([
+    JSON.parse(fs.readFileSync(slotPath(0), 'utf8')).token,
+    'past-limit',
+  ]);
+  expect(holders[0]).toMatchObject({ command: 'lowdefy test', pid: process.pid });
+  held.release();
+});
+
+test('acquireMachineSlot does not call onWait when a slot is free', async () => {
+  const onWait = vi.fn();
+  const slot = await acquireMachineSlot({ name: 'browser', limit: 1, onWait, onWaitIntervalMs: 0 });
+  expect(onWait).not.toHaveBeenCalled();
+  slot.release();
+});
+
+test('acquireMachineSlot timeout error carries its code, the slot name and the limit', async () => {
+  const held = await acquireMachineSlot({ name: 'browser', limit: 1 });
+  const error = await acquireMachineSlot({
+    name: 'browser',
+    limit: 1,
+    waitMs: 50,
+    intervalMs: 10,
+  }).catch((caught) => caught);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).toMatchObject({ code: 'MACHINE_SLOT_TIMEOUT', name: 'browser', limit: 1 });
+  held.release();
+});

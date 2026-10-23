@@ -33,6 +33,7 @@ import sampleMutants from './sampleMutants.js';
 import scopeMutants from './scopeMutants.js';
 import scoreMutants from './scoreMutants.js';
 import selectTests from '../../test/selectTests.js';
+import takeJourneyRunSlots from '../../test/takeJourneyRunSlots.js';
 import writeMutationReport from './writeMutationReport.js';
 
 function refuse({ context, message }) {
@@ -238,12 +239,23 @@ async function journeysHarden({ context }) {
     return;
   }
   selected.refusals.forEach((line) => context.logger.error(line));
-  const server = await resolveServer({ context });
+  const slots = await takeJourneyRunSlots({ context, command: 'lowdefy journeys harden' });
+  if (slots === null) {
+    return;
+  }
+  let server;
+  try {
+    server = await resolveServer({ context });
+  } catch (error) {
+    slots.release();
+    throw error;
+  }
   let interrupted = false;
   async function onSigint() {
     interrupted = true;
     context.logger.warn('Interrupted. Stopping development server.');
     await server.stop();
+    slots.release();
     process.exit(130);
   }
   process.once('SIGINT', onSigint);
@@ -261,6 +273,7 @@ async function journeysHarden({ context }) {
     process.removeListener('SIGINT', onSigint);
     if (!interrupted) {
       await server.stop();
+      slots.release();
     }
   }
   context.sendTelemetry();

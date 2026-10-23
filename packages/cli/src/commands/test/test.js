@@ -34,6 +34,7 @@ import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
 import selectTier from './selectTier.js';
 import summariseResults from './summariseResults.js';
+import takeJourneyRunSlots from './takeJourneyRunSlots.js';
 import writeExercised from './writeExercised.js';
 import writeTestRun from './writeTestRun.js';
 
@@ -127,7 +128,19 @@ async function test({ context }) {
     return;
   }
 
-  const server = await resolveServer({ context });
+  // The slots are held until the server stops, so a waiting run has nothing
+  // in memory yet.
+  const slots = await takeJourneyRunSlots({ context, command: 'lowdefy test' });
+  if (slots === null) {
+    return;
+  }
+  let server;
+  try {
+    server = await resolveServer({ context });
+  } catch (error) {
+    slots.release();
+    throw error;
+  }
   let interrupted = false;
   // The dev server runs in its own process group, out of reach of a signal to
   // this CLI's group, so every signal that ends the CLI stops it first.
@@ -139,6 +152,7 @@ async function test({ context }) {
       interrupted = true;
       context.logger.warn('Interrupted. Stopping development server.');
       await server.stop();
+      slots.release();
       process.exit(exitCode);
     }
     process.once(signal, onSignal);
@@ -189,6 +203,7 @@ async function test({ context }) {
     signalHandlers.forEach(([signal, onSignal]) => process.removeListener(signal, onSignal));
     if (!interrupted) {
       await server.stop();
+      slots.release();
     }
   }
 

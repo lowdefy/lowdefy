@@ -45,6 +45,13 @@ vi.doMock('./startDevServer.js', () => ({
   default: mockStartDevServer,
 }));
 
+// The slot files live in LOWDEFY_HOME, shared by the machine; acquireJourneyRunSlots has its own tests.
+const mockReleaseSlots = vi.fn();
+const mockAcquireJourneyRunSlots = vi.fn();
+vi.doMock('./acquireJourneyRunSlots.js', () => ({
+  default: mockAcquireJourneyRunSlots,
+}));
+
 let configDirectory;
 let context;
 let logs;
@@ -85,6 +92,9 @@ beforeEach(() => {
   mockReadConfigText.mockClear();
   mockStop.mockResolvedValue();
   mockStartDevServer.mockResolvedValue({ url: 'http://localhost:3228', stop: mockStop });
+  mockReleaseSlots.mockReset();
+  mockAcquireJourneyRunSlots.mockReset();
+  mockAcquireJourneyRunSlots.mockResolvedValue({ release: mockReleaseSlots });
   mockPost.mockResolvedValue({ data: { passed: true, steps: [] } });
   mockGet.mockResolvedValue({ data: { buildId: 'build-1' } });
 });
@@ -976,4 +986,78 @@ test('test skips a deprecated journey in every run, named or not, and a plain ru
     '0 passed, 0 failed of 0 journeys, 1 deprecated skipped',
   ]);
   expect(process.exitCode).toBeUndefined();
+});
+
+test('test exits 75 without starting a server when no journey run slot frees', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  mockAcquireJourneyRunSlots.mockRejectedValue(
+    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT' })
+  );
+  await test({ context });
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({ context, command: 'lowdefy test' });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([
+    'The machine is busy running other journeys. Try again later; do not start your own dev server.',
+  ]);
+  expect(process.exitCode).toBe(75);
+  expect(fs.existsSync(context.directories.test)).toBe(false);
+});
+
+test('test takes the journey run slots before the server and frees them after it stops', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  const order = [];
+  mockAcquireJourneyRunSlots.mockImplementation(async () => {
+    order.push('slots');
+    return { release: () => order.push('release') };
+  });
+  mockStartDevServer.mockImplementation(async () => {
+    order.push('server');
+    return { url: 'http://localhost:3228', stop: async () => order.push('stop') };
+  });
+  await test({ context });
+  expect(order).toEqual(['slots', 'server', 'stop', 'release']);
+});
+
+test('test frees the journey run slots when a journey fails', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'failing journey' }));
+  mockPost.mockResolvedValueOnce({
+    data: { passed: false, steps: [], failure: { index: 0, message: 'Block "submit" not found.' } },
+  });
+  await test({ context });
+  expect(process.exitCode).toBe(1);
+  expect(mockReleaseSlots).toHaveBeenCalledTimes(1);
+});
+
+test('test frees the journey run slots when the server fails to start', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  mockStartDevServer.mockRejectedValue(new Error('boot failed'));
+  await expect(test({ context })).rejects.toThrow('boot failed');
+  expect(mockReleaseSlots).toHaveBeenCalledTimes(1);
+});
+
+test('test frees the journey run slots when a signal stops the run', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  const exit = vi.spyOn(process, 'exit').mockImplementation(() => {});
+  // The handler is called directly: a real signal would reach the test runner too.
+  const once = vi.spyOn(process, 'once');
+  try {
+    mockPost.mockImplementationOnce(async () => {
+      const [, onSignal] = once.mock.calls.find(([signal]) => signal === 'SIGTERM');
+      await onSignal();
+      return { data: { passed: true, steps: [] } };
+    });
+    await test({ context });
+    expect(exit).toHaveBeenCalledWith(143);
+    expect(mockStop).toHaveBeenCalledTimes(1);
+    expect(mockReleaseSlots).toHaveBeenCalledTimes(1);
+  } finally {
+    exit.mockRestore();
+    once.mockRestore();
+  }
 });
