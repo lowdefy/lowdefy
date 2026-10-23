@@ -19,11 +19,11 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import runConfigTreeBuild from './runConfigTreeBuild.mjs';
 
-jest.setTimeout(120000);
+vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
 const serverDevDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 

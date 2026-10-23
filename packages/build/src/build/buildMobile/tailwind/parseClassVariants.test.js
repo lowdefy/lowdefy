@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import parseClassVariants from './parseClassVariants.js';
 
 test('parseClassVariants splits variants from the utility outside brackets', () => {

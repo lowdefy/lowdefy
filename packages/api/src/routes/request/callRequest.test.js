@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import callRequest from './callRequest.js';
@@ -30,10 +30,10 @@ const { _date, _payload, _secret, _user } = operatorsServer;
 
 console.error = () => {};
 
-const mockReadConfigFile = jest.fn();
-const mockTestRequest = jest.fn();
-const mockTestRequestCheckRead = jest.fn();
-const mockTestRequestCheckWrite = jest.fn();
+const mockReadConfigFile = vi.fn();
+const mockTestRequest = vi.fn();
+const mockTestRequestCheckRead = vi.fn();
+const mockTestRequestCheckWrite = vi.fn();
 
 mockTestRequest.schema = {
   type: 'object',

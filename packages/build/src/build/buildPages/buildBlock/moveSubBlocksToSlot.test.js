@@ -15,6 +15,7 @@
 */
 
 import moveSubBlocksToSlot from './moveSubBlocksToSlot.js';
+import { expect, test } from 'vitest';
 
 function createPageContext() {
   return { pageId: 'page1', context: {} };

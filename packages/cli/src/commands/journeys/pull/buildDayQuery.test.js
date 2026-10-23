@@ -16,6 +16,7 @@
 
 import buildChainCountQuery from './buildChainCountQuery.js';
 import buildDayQuery from './buildDayQuery.js';
+import { describe, expect, test } from 'vitest';
 
 describe('buildDayQuery', () => {
   test('buildDayQuery carries every value in placeholders, never in the query text', () => {

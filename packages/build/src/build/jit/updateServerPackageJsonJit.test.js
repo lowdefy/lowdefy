@@ -16,14 +16,14 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockReadFile = jest.fn();
-const mockWriteFile = jest.fn();
+const mockReadFile = vi.fn();
+const mockWriteFile = vi.fn();
 
-const mockLinkWorkspaceDependencies = jest.fn(async ({ dependencies }) => dependencies);
+const mockLinkWorkspaceDependencies = vi.fn(async ({ dependencies }) => dependencies);
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('@lowdefy/node-utils', () => ({
   linkWorkspaceDependencies: mockLinkWorkspaceDependencies,
   readFile: mockReadFile,
   writeFile: mockWriteFile,

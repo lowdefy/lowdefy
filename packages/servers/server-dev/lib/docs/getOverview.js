@@ -140,10 +140,6 @@ function getOverview() {
     "7. **State checkpoints**: `POST /lowdefy-docs/state-checkpoints/snapshot` `{pageId, name}` captures live page state + request responses into .lowdefy/state-checkpoints/<name>/ (gitignored — checkpoints contain user/session data); `POST /lowdefy-docs/state-checkpoints/load` `{name, mode}` restores it — 'registry-only' mode returns a ?_checkpoint URL a human can open to test the app in that exact state. `lowdefy_checkpoint_to_mocks` converts one into e2e mocks.yaml fixtures.",
     '8. **Restart the server**: `POST /lowdefy-docs/restart` `{reason}` — or `lowdefy_restart` (through `lowdefy mcp`: `lowdefy_dev_start` with `restart: true`, a full process restart when the hub runs the server). Only when the server seems stuck or build-status looks stale, or after secrets a wrapper (for example infisical) injects have changed. Answers before the restart lands: then call `GET /lowdefy-docs/build-status?wait=true`, which answers once the restarted server is ready. `.env` edits and local plugin code need no restart: `.env` is watched and restarts the server, and a local plugin change rebuilds, restarting the server when the plugin has server-side types.',
     '',
-    '## Visual feedback (annotation helper)',
-    '',
-    'The developer can press Cmd/Ctrl+/ in the running app to point at elements, draw, and comment; the helper copies an agent-readable feedback block to their clipboard which they paste into their agent session. Pasted blocks start with "Feedback:" and carry the blockId, resolved config file:line, drawn shapes (usable as screenshot clip geometry), and recent console entries — treat them as precise UI feedback.',
-    '',
     '## Routes',
     '',
     '| Route | Purpose |',
@@ -172,7 +168,6 @@ function getOverview() {
     '| `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints: list, create, revert |',
     '| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints: capture/restore live app state |',
     '| `POST /lowdefy-docs/restart` | Restart the dev server process (answers before the restart lands; then `build-status?wait=true` answers once it is back) |',
-    '| `POST /lowdefy-feedback` | Annotation helper: enrich + format a feedback batch (overlay → clipboard) |',
     '| `ALL /lowdefy-docs/mcp` | MCP endpoint (streamable HTTP) exposing all of the above as tools |',
   ];
   return lines.join('\n');

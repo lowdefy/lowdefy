@@ -15,6 +15,7 @@
 */
 
 import getActiveLocale from './getActiveLocale.js';
+import { expect, test } from 'vitest';
 
 test('getActiveLocale returns the app locale', () => {
   expect(getActiveLocale('en-ZA')).toBe('en-ZA');

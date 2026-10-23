@@ -23,6 +23,7 @@ import getProgressMode from './getProgressMode.js';
 import getProgressParts from './getProgressParts.js';
 import getRunState from './getRunState.js';
 import readServerRunCounts from './readServerRunCounts.js';
+import { expect, test } from 'vitest';
 
 const { columnsByKey } = normalizeColumns({
   columns: [

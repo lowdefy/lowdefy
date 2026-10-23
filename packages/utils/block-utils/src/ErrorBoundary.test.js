@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import { render } from '@testing-library/react';
 
 import ErrorBoundary from './ErrorBoundary.js';
@@ -129,7 +129,7 @@ test('wraps unknown error as LowdefyInternalError when no blockId', () => {
 });
 
 test('calls onError callback when error occurs', () => {
-  const onErrorMock = jest.fn();
+  const onErrorMock = vi.fn();
   const ProblemChild = () => {
     throw new Error('ErrorBoundary test error');
   };

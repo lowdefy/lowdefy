@@ -17,6 +17,7 @@
 import { APIError } from 'better-auth/api';
 
 import buildOauthPostLogin, { OAUTH_POST_LOGIN_CONFIRMED } from './buildOauthPostLogin.js';
+import { expect, test } from 'vitest';
 
 const baseUrlOrigin = 'https://app.example.com';
 

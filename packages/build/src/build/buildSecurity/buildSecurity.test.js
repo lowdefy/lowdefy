@@ -15,6 +15,7 @@
 */
 
 import buildSecurity from './buildSecurity.js';
+import { expect, test } from 'vitest';
 
 const defaultDirectives = {
   'default-src': ["'self'"],

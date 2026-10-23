@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import isNativeAuthRequest from './isNativeAuthRequest.js';
 
 function request(headers) {

@@ -17,6 +17,7 @@
 import assert from 'node:assert/strict';
 
 import getGroupLabel from './getGroupLabel.js';
+import { test } from 'vitest';
 
 test('getGroupLabel labels the empty group "(Empty)"', () => {
   const level = { column: { type: 'text', cell: {} }, options: undefined };

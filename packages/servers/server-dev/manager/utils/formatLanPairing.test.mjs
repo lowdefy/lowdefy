@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import formatLanPairing from './formatLanPairing.mjs';
 
 const lan = { name: 'en0', address: '192.168.1.20', token: 'tok_en-123' };

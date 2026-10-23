@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import validateMobilePageRefs from './validateMobilePageRefs.js';
 
 const pages = [

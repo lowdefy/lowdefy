@@ -16,28 +16,30 @@
 
 import { Socket } from 'node:net';
 import { Readable } from 'node:stream';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
-const mockSend = jest.fn();
-const mockPutObjectCommand = jest.fn();
-const mockFetchUrl = jest.fn();
-const undici = jest.requireActual('undici');
+const mockSend = vi.fn();
+const mockPutObjectCommand = vi.fn();
+const mockFetchUrl = vi.fn();
+const undici = await vi.importActual('undici');
 
 // fetch is mocked per test; a test that needs the real connection path hands it undici's fetch.
-jest.unstable_mockModule('undici', () => ({
+vi.doMock('undici', () => ({
   ...undici,
   fetch: (...fetchArgs) => mockFetchUrl(...fetchArgs),
 }));
 
 // Records every socket opened, whichever copy of undici built the connector: tls.connect and
 // net.connect both open theirs through Socket.prototype.connect.
-const socketConnect = jest.spyOn(Socket.prototype, 'connect');
+const socketConnect = vi.spyOn(Socket.prototype, 'connect');
 
-jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
-  S3Client: jest.fn().mockImplementation(() => ({
-    send: (...sendArgs) => mockSend(...sendArgs),
-  })),
-  PutObjectCommand: jest.fn().mockImplementation((params) => {
+vi.doMock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn().mockImplementation(function () {
+    return {
+      send: (...sendArgs) => mockSend(...sendArgs),
+    };
+  }),
+  PutObjectCommand: vi.fn().mockImplementation(function (params) {
     mockPutObjectCommand(params);
     return params;
   }),
@@ -83,9 +85,9 @@ function mockFetch({ chunks = ['hello'], status = 200, headers = {}, length = 'a
   } else if (length !== null) {
     allHeaders['content-length'] = String(length);
   }
-  mockFetchUrl.mockImplementation(
-    async () => new Response(bodyOf(chunks), { status, headers: allHeaders })
-  );
+  mockFetchUrl.mockImplementation(async function () {
+    return new Response(bodyOf(chunks), { status, headers: allHeaders });
+  });
 }
 
 async function refusal(request) {
@@ -103,7 +105,7 @@ beforeEach(() => {
   mockSend.mockReset();
   mockPutObjectCommand.mockReset();
   stored = null;
-  mockSend.mockImplementation(async (params) => {
+  mockSend.mockImplementation(async function (params) {
     stored = await readBody(params.Body);
     return {};
   });
@@ -188,7 +190,7 @@ test('AwsS3PutObject asks for the body uncompressed and follows no redirect on i
 });
 
 test('AwsS3PutObject follows a redirect to an https link', async () => {
-  mockFetchUrl.mockImplementation(async (link) => {
+  mockFetchUrl.mockImplementation(async function (link) {
     if (link === url) {
       return new Response(null, { status: 302, headers: { location: '/moved/shot.png' } });
     }
@@ -209,9 +211,9 @@ test('AwsS3PutObject follows a redirect to an https link', async () => {
 test.each([['http://169.254.169.254/latest/meta-data/'], ['file:///etc/passwd']])(
   'AwsS3PutObject refuses a redirect to %s before requesting it',
   async (location) => {
-    mockFetchUrl.mockImplementation(
-      async () => new Response(null, { status: 301, headers: { location } })
-    );
+    mockFetchUrl.mockImplementation(async function () {
+      return new Response(null, { status: 301, headers: { location } });
+    });
     const error = await refusal({ maxBytes: 100 });
     expect(error.code).toBe('url_not_https');
     expect(error.message).toBe('AwsS3PutObject "url" redirected to a link that is not https:.');
@@ -246,7 +248,7 @@ test.each([
 ])(
   'AwsS3PutObject refuses a redirect to %s with url_not_public before connecting',
   async (location) => {
-    mockFetchUrl.mockImplementation(async (link, options) => {
+    mockFetchUrl.mockImplementation(async function (link, options) {
       if (link === url) {
         return new Response(null, { status: 302, headers: { location } });
       }
@@ -270,9 +272,9 @@ test('AwsS3PutObject refuses a name that resolves to loopback with url_not_publi
 });
 
 test('AwsS3PutObject refuses a url that redirects more than 20 times', async () => {
-  mockFetchUrl.mockImplementation(
-    async () => new Response(null, { status: 307, headers: { location: url } })
-  );
+  mockFetchUrl.mockImplementation(async function () {
+    return new Response(null, { status: 307, headers: { location: url } });
+  });
   const error = await refusal({ maxBytes: 100 });
   expect(error.code).toBe('fetch_failed');
   expect(error.message).toBe('AwsS3PutObject url redirected more than 20 times.');
@@ -327,7 +329,7 @@ test('AwsS3PutObject refuses a body shorter than its Content-Length, storing not
 
 test('AwsS3PutObject reports the refusal when the S3 client wraps the failed body stream', async () => {
   mockFetch({ chunks: ['1234', '5678'], length: 4 });
-  mockSend.mockImplementation(async (params) => {
+  mockSend.mockImplementation(async function (params) {
     try {
       await readBody(params.Body);
     } catch {
@@ -362,7 +364,7 @@ test.each([
 );
 
 test('AwsS3PutObject refuses an answer with no Content-Type when contentTypes is given', async () => {
-  mockFetchUrl.mockImplementation(async () => {
+  mockFetchUrl.mockImplementation(async function () {
     const response = new Response(bodyOf(['x']), { headers: { 'content-length': '1' } });
     response.headers.delete('content-type');
     return response;
@@ -382,7 +384,7 @@ test('AwsS3PutObject refuses a non-2xx answer with fetch_failed and its status',
 });
 
 test('AwsS3PutObject refuses a network error with fetch_failed, leaving the url out', async () => {
-  mockFetchUrl.mockImplementation(async () => {
+  mockFetchUrl.mockImplementation(async function () {
     throw new TypeError('fetch failed', { cause: { code: 'ECONNREFUSED' } });
   });
   const error = await refusal({ maxBytes: 100 });
@@ -393,12 +395,11 @@ test('AwsS3PutObject refuses a network error with fetch_failed, leaving the url 
 });
 
 test('AwsS3PutObject refuses a fetch that outlasts timeout with code timeout', async () => {
-  mockFetchUrl.mockImplementation(
-    (link, { signal }) =>
-      new Promise((resolve, reject) => {
-        signal.addEventListener('abort', () => reject(signal.reason));
-      })
-  );
+  mockFetchUrl.mockImplementation(function (link, { signal }) {
+    return new Promise((resolve, reject) => {
+      signal.addEventListener('abort', () => reject(signal.reason));
+    });
+  });
   const error = await refusal({ maxBytes: 100, timeout: 20 });
   expect(error.code).toBe('timeout');
   expect(error.message).toBe('AwsS3PutObject did not copy the url within the 20 ms timeout.');
@@ -407,12 +408,11 @@ test('AwsS3PutObject refuses a fetch that outlasts timeout with code timeout', a
 
 test('AwsS3PutObject refuses an upload that outlasts timeout with code timeout', async () => {
   mockFetch();
-  mockSend.mockImplementation(
-    (params, { abortSignal }) =>
-      new Promise((resolve, reject) => {
-        abortSignal.addEventListener('abort', () => reject(new Error('Request aborted')));
-      })
-  );
+  mockSend.mockImplementation(function (params, { abortSignal }) {
+    return new Promise((resolve, reject) => {
+      abortSignal.addEventListener('abort', () => reject(new Error('Request aborted')));
+    });
+  });
   const error = await refusal({ maxBytes: 100, timeout: 20 });
   expect(error.code).toBe('timeout');
 });
@@ -423,7 +423,7 @@ test('AwsS3PutObject names url as a credential, so a refused copy keeps it out o
 
 test('AwsS3PutObject passes an S3 error through unchanged', async () => {
   mockFetch();
-  mockSend.mockImplementation(async () => {
+  mockSend.mockImplementation(async function () {
     throw new Error('Access Denied');
   });
   const error = await refusal({ maxBytes: 100 });

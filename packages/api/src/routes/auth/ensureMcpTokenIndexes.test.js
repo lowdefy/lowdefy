@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import ensureMcpTokenIndexes from './ensureMcpTokenIndexes.js';
 
@@ -23,11 +23,11 @@ function createAuth(options) {
 }
 
 function createLogger() {
-  return { error: jest.fn(), warn: jest.fn() };
+  return { error: vi.fn(), warn: vi.fn() };
 }
 
 test('ensureMcpTokenIndexes asks the adapter for a unique index on the token hash', async () => {
-  const ensureUniqueIndexes = jest.fn(async () => {});
+  const ensureUniqueIndexes = vi.fn(async () => {});
   await ensureMcpTokenIndexes({
     auth: createAuth({ ensureUniqueIndexes }),
     logger: createLogger(),
@@ -40,7 +40,7 @@ test('ensureMcpTokenIndexes asks the adapter for a unique index on the token has
 test('ensureMcpTokenIndexes logs a failure and does not throw', async () => {
   const logger = createLogger();
   const auth = createAuth({
-    ensureUniqueIndexes: jest.fn().mockRejectedValue(new Error('not authorized')),
+    ensureUniqueIndexes: vi.fn().mockRejectedValue(new Error('not authorized')),
   });
   await expect(ensureMcpTokenIndexes({ auth, logger })).resolves.toBeUndefined();
   expect(logger.error).toHaveBeenCalledTimes(1);

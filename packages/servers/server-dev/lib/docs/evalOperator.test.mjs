@@ -14,30 +14,30 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // evalOperator.js only chooses between the tab and headless sources - the
 // sources' own behavior is covered by evalOperatorHeadless.test.mjs and (once
 // written) evalOperatorInTab's own tests. Mock both, plus tabAvailable, so
 // only the fallback logic is under test here.
-const mockEvalOperatorInTab = jest.fn();
-const mockEvalOperatorHeadless = jest.fn();
-const mockTabAvailable = jest.fn();
+const mockEvalOperatorInTab = vi.fn();
+const mockEvalOperatorHeadless = vi.fn();
+const mockTabAvailable = vi.fn();
 
-jest.unstable_mockModule('./evalOperatorInTab.js', () => ({
+vi.doMock('./evalOperatorInTab.js', () => ({
   default: mockEvalOperatorInTab,
 }));
-jest.unstable_mockModule('./evalOperatorHeadless.js', () => ({
+vi.doMock('./evalOperatorHeadless.js', () => ({
   default: mockEvalOperatorHeadless,
 }));
-jest.unstable_mockModule('./tabAvailable.js', () => ({
+vi.doMock('./tabAvailable.js', () => ({
   default: mockTabAvailable,
 }));
 
 const { default: evalOperator } = await import('./evalOperator.js');
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 const expression = { _state: 'name' };

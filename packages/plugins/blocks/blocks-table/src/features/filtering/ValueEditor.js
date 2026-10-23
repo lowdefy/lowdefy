@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { DatePicker, Select, Space, Tag } from 'antd';
+import { DatePicker, Segmented, Select, Space, Tag } from 'antd';
 import { get, type } from '@lowdefy/helpers';
 import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 
@@ -24,8 +24,10 @@ import toSelectOptions from '../../core/toSelectOptions.js';
 
 import DraftInput from './DraftInput.js';
 import DraftInputNumber from './DraftInputNumber.js';
+import defaultRelativeDate from './defaultRelativeDate.js';
 import formatFilterDate from './formatFilterDate.js';
 import getValueShape from './getValueShape.js';
+import isRelativeBound from './isRelativeBound.js';
 import parseFilterDate from './parseFilterDate.js';
 import RelativeDateEditor from './RelativeDateEditor.js';
 
@@ -78,6 +80,43 @@ function RangeDates({ column, value, onChange, size }) {
       size={size}
       value={[parseFilterDate(from), parseFilterDate(to)]}
     />
+  );
+}
+
+const BOUND_MODES = [
+  { value: 'date', label: 'Date' },
+  { value: 'relative', label: 'Relative' },
+];
+
+// A `before` or `after` value: a picked date, or a relative date such as "3 months ago".
+function BoundDate({ column, op, value, onChange, size }) {
+  const relative = isRelativeBound(value);
+  return (
+    <Space size={4} wrap>
+      <Segmented
+        aria-label="Date or relative"
+        onChange={(mode) => onChange(mode === 'relative' ? defaultRelativeDate : undefined)}
+        options={BOUND_MODES}
+        size={size}
+        value={relative ? 'relative' : 'date'}
+      />
+      {relative ? (
+        <RelativeDateEditor bound onChange={onChange} size={size} value={value} />
+      ) : (
+        <DatePicker
+          aria-label="Value"
+          className="lf-filter-value"
+          onChange={(date) =>
+            onChange(
+              formatFilterDate({ column, date, edge: op === 'after' ? 'end' : 'start' }) ??
+                undefined
+            )
+          }
+          size={size}
+          value={parseFilterDate(value)}
+        />
+      )}
+    </Space>
   );
 }
 
@@ -174,6 +213,9 @@ function ValueEditor({ column, components, op, value, onChange, user, size = 'sm
         value={value}
       />
     );
+  }
+  if (family === 'date' && (op === 'before' || op === 'after')) {
+    return <BoundDate column={column} onChange={onChange} op={op} size={size} value={value} />;
   }
   if (family === 'date') {
     return (

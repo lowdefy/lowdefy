@@ -15,6 +15,7 @@
 */
 
 import createProgress from './createProgress.js';
+import { expect, test } from 'vitest';
 
 const format = ({ done, total }) => `${done}/${total}`;
 

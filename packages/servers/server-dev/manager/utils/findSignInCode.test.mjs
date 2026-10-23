@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import findSignInCode from './findSignInCode.mjs';
 
 test('findSignInCode reads the code from the stock sign-in email text', () => {

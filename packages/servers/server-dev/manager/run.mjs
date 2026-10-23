@@ -206,11 +206,7 @@ try {
         `Docs & MCP  ${docsUrl}`,
         '            run `lowdefy agent-setup` to connect your agent',
         '',
-        'Annotate    Press Cmd/Ctrl+/ in the browser to point, draw,',
-        '            and comment on the running app, then paste the',
-        '            copied feedback into your coding agent session.',
-        '',
-        'Open code   Cmd/Ctrl+click any element in the browser to open',
+        'Open code   Option/Alt+click any element in the browser to open',
         '            its yaml in VS Code at the defining line.',
       ],
     })

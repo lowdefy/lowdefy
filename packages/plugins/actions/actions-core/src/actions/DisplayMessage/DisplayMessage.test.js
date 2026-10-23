@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import DisplayMessage from './DisplayMessage.js';
 
-const mockDisplayMessage = jest.fn();
+const mockDisplayMessage = vi.fn();
 const methods = { displayMessage: mockDisplayMessage };
 
 console.log = () => {};

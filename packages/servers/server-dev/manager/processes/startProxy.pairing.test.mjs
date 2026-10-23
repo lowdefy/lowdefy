@@ -18,12 +18,12 @@ import dns from 'node:dns';
 import http from 'node:http';
 import net from 'node:net';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 // Every test request comes from this computer. Mocking the loopback check
 // makes the proxy treat it as a request from a phone on the network.
-const mockIsLoopbackAddress = jest.fn();
-jest.unstable_mockModule('../utils/isLoopbackAddress.mjs', () => ({
+const mockIsLoopbackAddress = vi.fn();
+vi.doMock('../utils/isLoopbackAddress.mjs', () => ({
   default: mockIsLoopbackAddress,
 }));
 
@@ -98,7 +98,7 @@ async function startChildAndProxy({ lan } = {}) {
     buildActivity: createBuildActivity({ onChange: () => {} }),
     internalPort,
     lan,
-    logger: { debug: jest.fn() },
+    logger: { debug: vi.fn() },
     options: { port: await getFreePort() },
     requestActivity: createRequestActivity({ onChange: () => {}, throttleMs: 0 }),
   };

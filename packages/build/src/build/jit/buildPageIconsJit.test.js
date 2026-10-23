@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { icons as lucideIcons } from 'lucide';
 
 import buildPageIconsJit from './buildPageIconsJit.js';

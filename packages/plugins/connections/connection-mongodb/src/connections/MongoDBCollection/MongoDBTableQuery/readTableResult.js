@@ -17,14 +17,17 @@
 import readAggregates from './readAggregates.js';
 
 // The response contract the Table block reads in server mode:
-// { rows, total, groups?, aggregates? }. total counts the groups when a group level is
-// returned, and the rows otherwise.
-function readTableResult({ result, grouped, specs }) {
+// { rows, total, groups?, aggregates?, sentence? }. total counts the groups when a group level is
+// returned, and the rows otherwise; sentence is the filter in words, when a filter is set.
+function readTableResult({ result, grouped, specs, sentence = null }) {
   const [facet] = result;
   const response = {
     rows: grouped ? [] : facet.rows,
     total: facet.total[0]?.count ?? 0,
   };
+  if (sentence !== null) {
+    response.sentence = sentence;
+  }
   if (grouped) {
     response.groups = facet.groups.map((doc) => ({
       key: doc._id,

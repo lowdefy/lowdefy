@@ -16,6 +16,7 @@
 
 import buildJs from './buildJs.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 test('buildJs default', async () => {
   const context = testContext();

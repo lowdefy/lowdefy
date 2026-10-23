@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test } from 'vitest';
 import createWebStore from './createWebStore.js';
 
 beforeEach(() => {

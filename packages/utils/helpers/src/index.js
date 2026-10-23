@@ -23,6 +23,7 @@ import callerHash from './callerHash.js';
 import callerStamp from './callerStamp.js';
 import cleanBuildArtifact from './cleanBuildArtifact.js';
 import createTraceId from './createTraceId.js';
+import describeCondition from './describeCondition.js';
 import extractErrorProps from './extractErrorProps.js';
 import filterElementsChain from './filterElementsChain.js';
 import findInteractiveControls from './findInteractiveControls.js';
@@ -31,6 +32,7 @@ import getKey from './getKey.js';
 import getLocaleDateFormat from './getLocaleDateFormat.js';
 import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
+import getOperatorLabel from './getOperatorLabel.js';
 import getOperatorType from './getOperatorType.js';
 import getSafeHref from './getSafeHref.js';
 import isInteractiveControl from './isInteractiveControl.js';
@@ -77,6 +79,7 @@ export {
   callerStamp,
   cleanBuildArtifact,
   createTraceId,
+  describeCondition,
   extractErrorProps,
   filterElementsChain,
   findInteractiveControls,
@@ -85,6 +88,7 @@ export {
   getLocaleDateFormat,
   getLocaleDecimalSeparator,
   getLocaleGroupSeparator,
+  getOperatorLabel,
   getOperatorType,
   getSafeHref,
   isInteractiveControl,

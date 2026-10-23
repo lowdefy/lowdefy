@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import getTargetTypeCounters from './getTargetTypeCounters.js';
 import testContext from '../../test-utils/testContext.js';
 

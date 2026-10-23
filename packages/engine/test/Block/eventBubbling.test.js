@@ -15,6 +15,7 @@
 */
 
 import testContext from '../testContext.js';
+import { expect, test } from 'vitest';
 
 const pageId = 'one';
 // The host globals every test context shares; dispatch fills them for the length of a DOM event.

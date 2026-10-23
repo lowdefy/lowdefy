@@ -18,12 +18,12 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 // Tracing the server's dependency closure is @vercel/nft's job and needs a real install; the
 // assembly around it is what these tests cover.
-jest.unstable_mockModule('../../utils/copyTracedFiles.js', () => ({
-  default: jest.fn(async () => 0),
+vi.doMock('../../utils/copyTracedFiles.js', () => ({
+  default: vi.fn(async () => 0),
 }));
 
 let root;
@@ -62,8 +62,8 @@ async function runVercelOutput({ config, schedules }) {
   await vercelOutput({
     context: {
       directories: { server: serverDirectory, build: path.join(serverDirectory, 'build') },
-      logger: { info: jest.fn(), debug: jest.fn() },
-      sendTelemetry: jest.fn(),
+      logger: { info: vi.fn(), debug: vi.fn() },
+      sendTelemetry: vi.fn(),
     },
   });
   const outputDirectory = path.join(serverDirectory, '.vercel/output');

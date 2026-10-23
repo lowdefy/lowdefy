@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, UserError } from '@lowdefy/errors';
 
 const compileCalls = [];
-jest.unstable_mockModule('@lowdefy/ajv', async () => {
+vi.doMock('@lowdefy/ajv', async () => {
   const actual = await import('../../../../utils/ajv/src/compile.js');
   return {
-    compile: jest.fn((args) => {
+    compile: vi.fn((args) => {
       compileCalls.push(args);
       return actual.default(args);
     }),

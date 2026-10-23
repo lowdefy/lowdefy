@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import collectPluginDefinitions from './collectPluginDefinitions.js';
 
 test('collectPluginDefinitions returns root plugins unchanged when no shell lists plugins', () => {

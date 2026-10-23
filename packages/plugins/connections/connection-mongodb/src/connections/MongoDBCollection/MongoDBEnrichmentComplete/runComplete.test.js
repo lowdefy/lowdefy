@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import compileEnrichmentComplete from './compileEnrichmentComplete.js';
 import runComplete from './runComplete.js';
@@ -29,8 +29,8 @@ const columnDefs = [
 function fakeCollection({ before, bulkResult, after }) {
   const reads = [before, after];
   return {
-    find: jest.fn(() => ({ toArray: async () => reads.shift() })),
-    bulkWrite: jest.fn(async () => bulkResult),
+    find: vi.fn(() => ({ toArray: async () => reads.shift() })),
+    bulkWrite: vi.fn(async () => bulkResult),
   };
 }
 

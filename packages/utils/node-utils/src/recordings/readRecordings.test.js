@@ -20,6 +20,7 @@ import path from 'path';
 
 import listRecordingFiles from './listRecordingFiles.js';
 import readRecordings from './readRecordings.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let configDirectory;
 

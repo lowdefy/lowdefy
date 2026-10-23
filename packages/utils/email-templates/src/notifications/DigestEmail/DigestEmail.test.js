@@ -16,6 +16,7 @@
 
 import renderEmail from '../../renderEmail.js';
 import DigestEmail from './DigestEmail.js';
+import { expect, test } from 'vitest';
 
 test('DigestEmail renders title, intro, items and button', async () => {
   const { html, text } = await renderEmail({

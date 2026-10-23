@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
 import buildProviders from './buildProviders.js';
@@ -101,7 +101,7 @@ test('maps a GenericOAuth provider into genericOAuthConfigs keyed by the Lowdefy
 });
 
 test('defaults provider properties to an empty object when not set', () => {
-  const providerPlugin = jest.fn(() => ({ kind: 'social', provider: 'google', options: {} }));
+  const providerPlugin = vi.fn(() => ({ kind: 'social', provider: 'google', options: {} }));
   const authConfig = { providers: [{ id: 'google', type: 'Google' }] };
   buildProviders({ authConfig, plugins: { providers: { Google: providerPlugin } } });
   expect(providerPlugin).toHaveBeenCalledWith({ id: 'google', properties: {} });

@@ -20,6 +20,8 @@ import { parseCallerStamp, translate, type } from '@lowdefy/helpers';
 
 import endBearerSession from './auth/endBearerSession.js';
 import getAuthorizationHeaders from './auth/getAuthorizationHeaders.js';
+import NonJsonResponseError from './NonJsonResponseError.js';
+import parseJsonObject from './parseJsonObject.js';
 import recordCallerStamp from './recordCallerStamp.js';
 import shouldReloadForAuthError from './shouldReloadForAuthError.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
@@ -82,7 +84,11 @@ async function request({
   }
   recordCallerStamp({ lowdefy, serverCaller });
   if (!res.ok) {
-    const body = await res.json();
+    const text = await res.text();
+    const body = parseJsonObject(text);
+    if (body === null) {
+      throw new NonJsonResponseError({ status: res.status, text });
+    }
     if (
       res.status === 409 &&
       shouldReloadForBuild({

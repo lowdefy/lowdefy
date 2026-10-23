@@ -23,6 +23,8 @@ const builtinMessages = {
   'client.popupBlocked':
     'A popup blocker may be preventing the application from opening the page. Approve the popup to continue.',
   'client.requestError': 'Request error',
+  'client.requestTimedOut': 'The request timed out. Try again.',
+  'client.serverUnavailable': 'The server could not answer (status {status}). Try again.',
   'client.backAriaLabel': 'back',
   'client.shortcutThen': 'then',
   'client.copy': 'Copy',

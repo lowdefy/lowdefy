@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -20,6 +20,7 @@
 import { pageInstanceKey } from '@lowdefy/helpers';
 
 import getTrace from './getTrace.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 function ordersPageConfig() {
   return {

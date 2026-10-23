@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockTool = jest.fn((def) => def);
-const mockJsonSchema = jest.fn((schema) => schema);
-const mockStepCountIs = jest.fn((n) => ({ type: 'stepCount', count: n }));
-const mockHasToolCall = jest.fn((name) => ({ type: 'hasToolCall', toolName: name }));
-const mockGenerateText = jest.fn();
-const mockGenerate = jest.fn();
+const mockTool = vi.fn((def) => def);
+const mockJsonSchema = vi.fn((schema) => schema);
+const mockStepCountIs = vi.fn((n) => ({ type: 'stepCount', count: n }));
+const mockHasToolCall = vi.fn((name) => ({ type: 'hasToolCall', toolName: name }));
+const mockGenerateText = vi.fn();
+const mockGenerate = vi.fn();
 
 let lastAgentConfig = null;
 
@@ -34,7 +34,7 @@ class MockToolLoopAgent {
   generate = mockGenerate;
 }
 
-jest.unstable_mockModule('ai', () => ({
+vi.doMock('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
@@ -43,8 +43,8 @@ jest.unstable_mockModule('ai', () => ({
   generateText: mockGenerateText,
 }));
 
-const mockCreateMCPClient = jest.fn();
-jest.unstable_mockModule('@ai-sdk/mcp', () => ({
+const mockCreateMCPClient = vi.fn();
+vi.doMock('@ai-sdk/mcp', () => ({
   createMCPClient: mockCreateMCPClient,
 }));
 
@@ -53,7 +53,7 @@ class MockStdioMCPTransport {
     this.config = config;
   }
 }
-jest.unstable_mockModule('@ai-sdk/mcp/mcp-stdio', () => ({
+vi.doMock('@ai-sdk/mcp/mcp-stdio', () => ({
   Experimental_StdioMCPTransport: MockStdioMCPTransport,
 }));
 
@@ -101,7 +101,7 @@ function mockGenerateSteps(result = GENERATE_RESULT) {
   });
 }
 
-const testLogger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const testLogger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 function createTestContext(overrides = {}) {
   return {
@@ -114,9 +114,9 @@ function createTestContext(overrides = {}) {
       urlQuery: {},
       userId: 'user_1',
     },
-    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: null }),
-    evaluateOperators: jest.fn((input) => input),
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    callEndpoint: vi.fn().mockResolvedValue({ success: true, response: null }),
+    evaluateOperators: vi.fn((input) => input),
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'Look up data',
       payloadSchema: { type: 'object' },
     }),
@@ -132,10 +132,10 @@ function createAgent(overrides = {}) {
   };
 }
 
-const connection = { provider: jest.fn((model) => ({ modelId: model })) };
+const connection = { provider: vi.fn((model) => ({ modelId: model })) };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   lastAgentConfig = null;
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockImplementation((schema) => schema);
@@ -261,7 +261,7 @@ test('handleAgentGenerate awaits onFinish hooks with the finish payload and igno
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
 
-  const callEndpoint = jest.fn().mockResolvedValue({
+  const callEndpoint = vi.fn().mockResolvedValue({
     success: true,
     response: { dataParts: [{ type: 'data-custom', data: {} }] },
   });
@@ -294,7 +294,7 @@ test('handleAgentGenerate logs an error and continues when an onFinish hook fail
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
 
-  const callEndpoint = jest.fn().mockRejectedValue(new Error('hook broke'));
+  const callEndpoint = vi.fn().mockRejectedValue(new Error('hook broke'));
   const { result } = await handleAgentGenerate({
     connection,
     properties: {
@@ -307,16 +307,19 @@ test('handleAgentGenerate logs an error and continues when an onFinish hook fail
 
   expect(result.text).toBe('Final answer');
   expect(testLogger.error).toHaveBeenCalledWith(
-    expect.objectContaining({ err: expect.any(Error) }),
+    expect.objectContaining({
+      endpointId: 'save-run',
+      error: { name: 'Error', message: 'hook broke' },
+    }),
     'onFinish hook "save-run" failed.'
   );
 });
 
 test('handleAgentGenerate closes MCP clients when generate rejects', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
-  const close = jest.fn().mockResolvedValue();
+  const close = vi.fn().mockResolvedValue();
   mockCreateMCPClient.mockResolvedValue({
-    tools: jest.fn().mockResolvedValue({}),
+    tools: vi.fn().mockResolvedValue({}),
     close,
   });
   mockGenerate.mockRejectedValue(new Error('model exploded'));
@@ -408,4 +411,63 @@ test('handleAgentGenerate never generates a conversation title', async () => {
   });
 
   expect(mockGenerateText).not.toHaveBeenCalled();
+});
+
+// An AI SDK error as the real TypeValidationError is: the marker AISDKError.isInstance reads,
+// its name, and a message that embeds the value it rejected (here the conversation).
+function chatTextError() {
+  const error = new Error(
+    `Type validation failed: Value: [{"role":"user","content":"My ID is 8001015009087"}].`
+  );
+  error.name = 'AI_TypeValidationError';
+  error[Symbol.for('vercel.ai.error')] = true;
+  return error;
+}
+
+test('a generate error that embeds the messages is thrown without them', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerate.mockRejectedValue(chatTextError());
+
+  const thrown = await handleAgentGenerate({
+    connection,
+    properties: { agent: createAgent(), prompt: 'My ID is 8001015009087', files: [] },
+    context: createTestContext(),
+  }).catch((error) => error);
+
+  expect(thrown.name).toBe('AI_TypeValidationError');
+  expect(JSON.stringify({ message: thrown.message, stack: thrown.stack })).not.toContain(
+    '8001015009087'
+  );
+});
+
+test('a generate error without an AI SDK error in its chain is thrown as it is', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  const error = new Error('model exploded');
+  mockGenerate.mockRejectedValue(error);
+
+  await expect(
+    handleAgentGenerate({
+      connection,
+      properties: { agent: createAgent(), prompt: 'Go.', files: [] },
+      context: createTestContext(),
+    })
+  ).rejects.toBe(error);
+});
+
+test('the agent logs a stream error by its summary, not the error', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerateSteps();
+  await handleAgentGenerate({
+    connection,
+    properties: { agent: createAgent(), prompt: 'Go.', files: [] },
+    context: createTestContext(),
+  });
+
+  lastAgentConfig.onError({ error: chatTextError() });
+
+  expect(testLogger.error).toHaveBeenCalledWith(
+    expect.objectContaining({ error: { name: 'AI_TypeValidationError' } }),
+    'Agent stream error.'
+  );
+  expect(JSON.stringify(testLogger.error.mock.calls)).not.toContain('8001015009087');
 });

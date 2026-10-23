@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import ListUsers from './ListUsers.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -22,7 +22,7 @@ import createMockAuth from '../../test/createMockAuth.js';
 const acting = { system: true, user: null };
 
 test('ListUsers passes properties through as query with headers to the admin listUsers endpoint', async () => {
-  const listUsers = jest.fn().mockResolvedValue({ users: [], total: 0 });
+  const listUsers = vi.fn().mockResolvedValue({ users: [], total: 0 });
   const { auth } = createMockAuth({ adminEndpoints: { listUsers } });
   const result = await ListUsers({
     acting,
@@ -58,7 +58,7 @@ test('ListUsers passes properties through as query with headers to the admin lis
 });
 
 test('ListUsers works with no properties set', async () => {
-  const listUsers = jest.fn().mockResolvedValue({ users: [] });
+  const listUsers = vi.fn().mockResolvedValue({ users: [] });
   const { auth } = createMockAuth({ adminEndpoints: { listUsers } });
   await ListUsers({ acting, auth, properties: {} });
   expect(listUsers).toHaveBeenCalledTimes(1);

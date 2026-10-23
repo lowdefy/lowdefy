@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -22,6 +22,7 @@ import { resolveTargetInDocument, targetFixtures } from '@lowdefy/e2e-utils/targ
 import { pageInstanceKey } from '@lowdefy/helpers';
 
 import getTrace from './getTrace.js';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 const TARGET_FIELDS = ['block_id', 'row', 'column', 'text', 'nth', 'option'];
 

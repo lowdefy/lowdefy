@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
@@ -61,7 +61,7 @@ test('getBuildContext restores the scoped connections, walled collections and sh
 });
 
 // A JIT page build loads the build package's plugins on first use.
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000, hookTimeout: 30000 });
 
 function writeJson(filePath, data) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -153,8 +153,8 @@ test('an error a failing JIT page build throws after its keys were added resolve
   const buildError = (error.buildErrors ?? [error]).find((item) => item.configKey);
   const context = {
     configDirectory,
-    logger: { error: jest.fn() },
-    readConfigFile: jest.fn(),
+    logger: { error: vi.fn() },
+    readConfigFile: vi.fn(),
     readMaps: () => readMergedMaps({ buildDirectory }),
   };
   // A fresh copy, as the request that logs it would see it.

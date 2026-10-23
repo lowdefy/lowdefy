@@ -18,6 +18,7 @@ import { compileSegments, profileProduction, validateTraceRecord } from '@lowdef
 
 import buildDayRecords from './buildDayRecords.js';
 import { chains, ORG_ID, PERSON_ID, row, SESSION_ID } from './tests/postHogRows.js';
+import { expect, test } from 'vitest';
 
 const salt = Buffer.alloc(32, 3);
 

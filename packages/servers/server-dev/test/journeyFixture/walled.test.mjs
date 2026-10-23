@@ -17,6 +17,7 @@
 import { MongoClient } from 'mongodb';
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // A walled-client plugin under a data set: the fixture app's local plugin type
 // declares meta.dataSet 'walled' and writes through the walled client to the

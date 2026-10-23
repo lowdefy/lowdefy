@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // What a journey's own pages observed (client/JourneyObserver.jsx): the
 // Lowdefy events that completed, from the engine's trace hook, and the blocks

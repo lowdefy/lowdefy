@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 // The built-in native types, which scripts/generateDefaultTypes.js writes at package build.
-jest.unstable_mockModule('../defaultTypesMapMobile.js', () => ({
+vi.doMock('../defaultTypesMapMobile.js', () => ({
   default: {
     actions: { SetState: { package: '@lowdefy/actions-core', version: '6.0.0' } },
     blockMetas: {},

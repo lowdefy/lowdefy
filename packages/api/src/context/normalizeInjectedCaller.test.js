@@ -15,6 +15,7 @@
 */
 
 import normalizeInjectedCaller from './normalizeInjectedCaller.js';
+import { expect, test } from 'vitest';
 
 test('normalizeInjectedCaller floors roles and attributes when absent', () => {
   expect(normalizeInjectedCaller({ id: 'x', name: 'X' })).toEqual({

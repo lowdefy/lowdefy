@@ -14,29 +14,29 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
 
 const mockPostHog = {
-  init: jest.fn(),
-  opt_in_capturing: jest.fn(),
+  init: vi.fn(),
+  opt_in_capturing: vi.fn(),
 };
 
-jest.unstable_mockModule('posthog-js', () => ({ default: mockPostHog }));
+vi.doMock('posthog-js', () => ({ default: mockPostHog }));
 
 let PostHogInit;
 let PostHogOptIn;
 
 beforeEach(async () => {
   resetPostHogState();
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogInit, PostHogOptIn } = await import('../actions.js'));
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('PostHogOptIn opts the person into capturing', async () => {

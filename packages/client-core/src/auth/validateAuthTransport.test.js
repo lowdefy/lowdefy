@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import validateAuthTransport from './validateAuthTransport.js';
 
 function createTokenStore() {
-  return { get: jest.fn(() => null), set: jest.fn(), clear: jest.fn() };
+  return { get: vi.fn(() => null), set: vi.fn(), clear: vi.fn() };
 }
 
 test('validateAuthTransport accepts a host that names no authTransport, as the web host', () => {

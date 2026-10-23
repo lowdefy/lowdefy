@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import { Hono } from 'hono';
+import { expect, test } from 'vitest';
 
 // The middleware reads build/buildStatus.json from process.cwd() via
 // readBuildArtifact — point it at a throwaway server directory before import.

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import os from 'node:os';

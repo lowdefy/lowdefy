@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import buildPages from '../full/buildPages.js';
 import testContext from '../../test-utils/testContext.js';
 
-const mockLogWarn = jest.fn();
-const mockLog = jest.fn();
+const mockLogWarn = vi.fn();
+const mockLog = vi.fn();
 
 const logger = {
   warn: mockLogWarn,
@@ -230,6 +230,7 @@ test('give request an id', () => {
             type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
+            readOnly: false,
             pageId: 'page_1',
             payload: {},
           },
@@ -279,6 +280,7 @@ test('request on a sub-block', () => {
             type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
+            readOnly: false,
             pageId: 'page_1',
             payload: {},
           },
@@ -337,6 +339,7 @@ test('multiple requests', () => {
             type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
+            readOnly: false,
             pageId: 'page_1',
             payload: {},
           },
@@ -345,6 +348,7 @@ test('multiple requests', () => {
             type: 'Request',
             auth: { public: true },
             requestId: 'request_2',
+            readOnly: false,
             pageId: 'page_1',
             payload: {},
           },
@@ -399,6 +403,7 @@ test('set auth to request', () => {
             type: 'Request',
             auth: { public: true },
             requestId: 'request_1',
+            readOnly: false,
             pageId: 'page_1',
             payload: {},
           },
@@ -419,6 +424,7 @@ test('set auth to request', () => {
             type: 'Request',
             auth: { public: false },
             requestId: 'request_2',
+            readOnly: false,
             pageId: 'page_2',
             payload: {},
           },
@@ -827,4 +833,32 @@ test('request with valid connectionId', () => {
   };
   const res = buildPages({ components, context: contextWithConnection });
   expect(res.pages[0].requests[0].connectionId).toBe('validConnection');
+});
+
+test('a request whose type its plugin says never writes is marked readOnly', () => {
+  const readContext = testContext({ logger });
+  readContext.typesMap = {
+    requestMetas: {
+      MongoDBFind: { checkRead: true, checkWrite: false },
+      MongoDBUpdateOne: { checkRead: false, checkWrite: true },
+    },
+  };
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          { id: 'find', type: 'MongoDBFind' },
+          { id: 'update', type: 'MongoDBUpdateOne' },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: readContext });
+  const readOnly = Object.fromEntries(
+    res.pages[0].requests.map((request) => [request.requestId, request.readOnly])
+  );
+  expect(readOnly).toEqual({ find: true, update: false });
 });

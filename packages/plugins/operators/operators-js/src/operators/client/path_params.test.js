@@ -15,6 +15,7 @@
 */
 
 import path_params from './path_params.js';
+import { expect, test } from 'vitest';
 
 const pathParams = { space: 'support', ticket_id: '1234' };
 const location = 'location';

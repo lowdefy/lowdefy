@@ -18,12 +18,12 @@ import { EventEmitter } from 'events';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockSpawn = jest.fn();
-const mockIsPortAvailable = jest.fn();
-jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn }));
-jest.unstable_mockModule('@lowdefy/node-utils/isPortAvailable.js', () => ({
+const mockSpawn = vi.fn();
+const mockIsPortAvailable = vi.fn();
+vi.doMock('child_process', () => ({ spawn: mockSpawn }));
+vi.doMock('@lowdefy/node-utils/isPortAvailable.js', () => ({
   default: mockIsPortAvailable,
 }));
 
@@ -57,7 +57,7 @@ function createChild({ exitOnSignal = true, exitCode } = {}) {
   child.exitCode = null;
   child.signalCode = null;
   child.exitOnSignal = exitOnSignal;
-  child.kill = jest.fn((signal) => receiveSignal({ pid: child.pid, signal }));
+  child.kill = vi.fn((signal) => receiveSignal({ pid: child.pid, signal }));
   if (exitCode !== undefined) {
     setImmediate(() => {
       child.exitCode = exitCode;
@@ -74,8 +74,8 @@ beforeEach(() => {
   mockSpawn.mockReset();
   mockIsPortAvailable.mockReset();
   mockIsPortAvailable.mockResolvedValue(true);
-  process.kill = jest.fn((pid, signal) => receiveSignal({ pid, signal }));
-  global.fetch = jest.fn().mockResolvedValue({ status: 200 });
+  process.kill = vi.fn((pid, signal) => receiveSignal({ pid, signal }));
+  global.fetch = vi.fn().mockResolvedValue({ status: 200 });
 });
 
 afterEach(() => {
@@ -158,7 +158,7 @@ test('startServer throws when the build fails, starting nothing', async () => {
 });
 
 test('startServer throws when lowdefy start exits before the server answers', async () => {
-  global.fetch = jest.fn().mockRejectedValue(new Error('ECONNREFUSED'));
+  global.fetch = vi.fn().mockRejectedValue(new Error('ECONNREFUSED'));
   mockSpawn.mockImplementationOnce(() => createChild({ exitCode: 1 }));
   await expect(startServer({ appDir: '/apps/shop', port: 3191, build: false })).rejects.toThrow(
     'lowdefy start exited with code 1 before the server was ready.'
@@ -166,7 +166,7 @@ test('startServer throws when lowdefy start exits before the server answers', as
 });
 
 test('startServer stops the server group when it is not ready in time', async () => {
-  global.fetch = jest.fn().mockRejectedValue(new Error('ECONNREFUSED'));
+  global.fetch = vi.fn().mockRejectedValue(new Error('ECONNREFUSED'));
   mockSpawn.mockImplementationOnce(() => createChild());
   await expect(
     startServer({ appDir: '/apps/shop', port: 3191, build: false, timeoutMs: 10 })

@@ -14,23 +14,22 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
-const mockBuild = jest.fn();
+const mockBuild = vi.fn();
 
-jest.unstable_mockModule('../index.js', () => ({ default: mockBuild }));
+vi.doMock('../index.js', () => ({ default: mockBuild }));
 
 const savedArgv = process.argv;
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
 const savedInstallFollows = process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS;
-let loadCount = 0;
 
 // run.js runs the build when imported, so each case loads a fresh module
-// instance and waits for the build call.
+// instance and waits for the build call. resetModules keeps the mock of ../index.js.
 async function runScript(args = []) {
   process.argv = [savedArgv[0], 'run.js', ...args];
-  loadCount += 1;
-  await import(`./run.js?case=${loadCount}`);
+  vi.resetModules();
+  await import('./run.js');
   await new Promise((resolve) => setImmediate(resolve));
 }
 

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import testSchema from './testSchema.js';
 import testContext from '../test-utils/testContext.js';
 
-const mockLogWarn = jest.fn();
+const mockLogWarn = vi.fn();
 const context = testContext({ logger: { warn: mockLogWarn } });
 
 beforeEach(() => {

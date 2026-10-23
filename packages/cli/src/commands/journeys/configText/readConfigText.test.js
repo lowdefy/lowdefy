@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import readConfigText from './readConfigText.js';
 
@@ -75,7 +75,7 @@ beforeEach(() => {
   context = {
     directories: { config, dev },
     options: {},
-    logger: { debug: jest.fn(), info: jest.fn() },
+    logger: { debug: vi.fn(), info: vi.fn() },
   };
 });
 afterEach(() => {

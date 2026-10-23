@@ -16,6 +16,7 @@
 
 import tenantPreflight from './tenantPreflight.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { expect, test } from 'vitest';
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';

@@ -15,6 +15,7 @@
 */
 
 import compareProcessStartTimes from './compareProcessStartTimes.js';
+import { expect, test } from 'vitest';
 
 test('compareProcessStartTimes tells the same process from another by epoch milliseconds', () => {
   expect(compareProcessStartTimes({ recorded: 1790000000000, current: 1790000000000 })).toEqual(

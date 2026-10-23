@@ -17,6 +17,7 @@
 import { parseDataSet } from '@lowdefy/node-utils';
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // A journey on a data set with a `generate` block, over the fixture app's
 // generated page: the session database holds the fixture and the generated

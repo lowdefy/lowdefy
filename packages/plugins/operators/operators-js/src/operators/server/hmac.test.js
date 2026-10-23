@@ -21,6 +21,7 @@ import { ServerParser } from '@lowdefy/operators';
 import hmac from './hmac.js';
 import * as operatorsClient from '../../operatorsClient.js';
 import * as operatorsServer from '../../operatorsServer.js';
+import { expect, test } from 'vitest';
 
 console.error = () => {};
 

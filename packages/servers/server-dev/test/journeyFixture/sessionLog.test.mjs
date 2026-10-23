@@ -17,6 +17,7 @@
 import { formatSessionLog, readRecordings } from '@lowdefy/node-utils';
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // The recorder and the session log over the real fixture app: what a browser
 // did, recorded as a test run records it, reads back as one line per

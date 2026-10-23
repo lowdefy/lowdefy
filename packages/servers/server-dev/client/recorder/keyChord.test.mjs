@@ -15,6 +15,7 @@
 */
 
 import keyChord from './keyChord.js';
+import { expect, test } from 'vitest';
 
 function key(init) {
   return { ctrlKey: false, metaKey: false, altKey: false, shiftKey: false, ...init };

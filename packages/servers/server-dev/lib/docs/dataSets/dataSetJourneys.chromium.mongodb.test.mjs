@@ -21,13 +21,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import { MongoClient } from 'mongodb';
 
 // Data set journeys end to end: a real Chromium drives journeys through the dev server's own
 // journey route, API context, endpoint, detached and websocket handlers and the MongoDB connection
 // plugin, over a build of the fixture app in test/app. Its connections, its module's connection and
-// its auth adapter read the MONGODB_URI secret, pointed at a database of its own on the jest-mongodb
+// its auth adapter read the MONGODB_URI secret, pointed at a database of its own on the suite's
 // memory server (MONGO_URL), which stands in for the developer's real database. Journeys on the
 // "shop" data set must reach the data store's session database for every request, module
 // connection, detached call and change stream, must never reach the auth engine, and must leave the
@@ -35,7 +35,7 @@ import { MongoClient } from 'mongodb';
 // small HTML stand-in for a Lowdefy page (window.lowdefy state, blocks as #bl-<id>), so no client
 // bundle is built. Skipped when no Chromium can be launched.
 
-jest.setTimeout(240000);
+vi.setConfig({ testTimeout: 240000, hookTimeout: 240000 });
 
 const execFileAsync = promisify(execFile);
 
@@ -100,11 +100,11 @@ const pluginModules = {
 };
 pluginFiles.forEach((filePath) => {
   const relative = path.relative(pluginsDirectory, filePath);
-  jest.unstable_mockModule(filePath, () => pluginModules[relative] ?? { default: {} });
+  vi.doMock(filePath, () => pluginModules[relative] ?? { default: {} });
 });
 // The journeys run on a stand-in page, not a built Lowdefy page, so there is no page build to
 // check their step references against; the fixture suite covers the checks.
-jest.unstable_mockModule('../checkStepReferences.js', () => ({
+vi.doMock('../checkStepReferences.js', () => ({
   default: async () => {},
 }));
 
@@ -131,7 +131,7 @@ const { default: websocketHandler } = await import('../../../src/routes/websocke
 const { handleWebSocketUpgrade } = await import('../../../src/websocket/devWebSocket.js');
 const { getBrowser } = await import('../getBrowser.js');
 // The connection plugin keeps one driver client per URI for the life of the process; the suite
-// closes them so jest can exit. Imported by file: the package does not export it.
+// closes them so the test worker can exit. Imported by file: the package does not export it.
 const { closeClients } = await import(
   path.join(
     serverDevDirectory,

@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
 // The production cache reader resolves tokens against a full config build;
 // these tests hand it the window's records instead.
-const mockReadProductionTrace = jest.fn();
-jest.unstable_mockModule('../readProductionTrace.js', () => ({
+const mockReadProductionTrace = vi.fn();
+vi.doMock('../readProductionTrace.js', () => ({
   default: mockReadProductionTrace,
 }));
 
@@ -156,13 +156,13 @@ beforeEach(() => {
     },
     options: {},
     logger: { info: (line) => logs.push(line) },
-    sendTelemetry: jest.fn(),
+    sendTelemetry: vi.fn(),
   };
-  jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-10-03T17:00:00.000Z'));
+  vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-10-03T17:00:00.000Z'));
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 
@@ -205,7 +205,7 @@ test('journeys session <id> prints the session as a log', async () => {
 test('journeys session --json prints the report on stdout', async () => {
   writeFixtures();
   context.options = { json: true };
-  const write = jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
+  const write = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
   const report = await journeysSession({ context, params: [OLD_SESSION] });
   expect(JSON.parse(write.mock.calls[0][0])).toEqual(report);
   expect(logs).toEqual([]);

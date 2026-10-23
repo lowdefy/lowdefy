@@ -17,6 +17,7 @@
 import { ConfigError, ServiceError } from '@lowdefy/errors';
 
 import mapMongoError from './mapMongoError.js';
+import { expect, test } from 'vitest';
 
 const connection = { collection: 'orders', databaseName: 'app' };
 

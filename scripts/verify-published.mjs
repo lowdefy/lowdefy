@@ -36,8 +36,9 @@
 
 import getPublishablePackages from './lib/getPublishablePackages.mjs';
 
-const RETRIES = 5;
-const RETRY_DELAY_MS = 5000;
+// About five minutes: npm took over 20 seconds to show 14 of 7.1.0's packages.
+const RETRIES = 20;
+const RETRY_DELAY_MS = 15000;
 const CONCURRENCY = 10;
 const REGISTRY = (process.env.npm_config_registry ?? 'https://registry.npmjs.org').replace(/\/$/, '');
 

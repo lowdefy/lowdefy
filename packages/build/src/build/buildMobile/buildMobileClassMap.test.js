@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import buildMobileClassMap from './buildMobileClassMap.js';
 import buildMobileTheme from './buildMobileTheme.js';
 import collectMobileClassCandidates from './collectMobileClassCandidates.js';

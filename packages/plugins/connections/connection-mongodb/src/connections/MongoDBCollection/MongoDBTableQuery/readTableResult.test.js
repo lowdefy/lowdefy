@@ -15,6 +15,7 @@
 */
 
 import readTableResult from './readTableResult.js';
+import { expect, test } from 'vitest';
 
 const specs = [
   { key: 'amount', fn: 'sum', name: 'a0' },
@@ -28,6 +29,13 @@ test('readTableResult returns rows and total', () => {
     rows: [{ _id: 1 }, { _id: 2 }],
     total: 12,
   });
+});
+
+test('readTableResult returns the filter sentence when there is one', () => {
+  const result = [{ rows: [{ _id: 1 }], total: [{ count: 1 }] }];
+  expect(
+    readTableResult({ result, grouped: false, specs: [], sentence: 'Name contains CX' })
+  ).toEqual({ rows: [{ _id: 1 }], total: 1, sentence: 'Name contains CX' });
 });
 
 test('readTableResult returns total 0 when nothing matched', () => {

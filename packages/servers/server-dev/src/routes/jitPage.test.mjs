@@ -18,38 +18,38 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 const BUILD_A = '2026-10-03T14:02:00.000Z';
 const BUILD_B = '2026-10-03T14:05:00.000Z';
 let mockBuildId = BUILD_A;
-jest.unstable_mockModule('../../lib/docs/getBuildId.js', () => ({
+vi.doMock('../../lib/docs/getBuildId.js', () => ({
   default: () => mockBuildId,
 }));
 
-const mockGetPageConfig = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
+const mockGetPageConfig = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
   getPageConfig: mockGetPageConfig,
 }));
 
 // No JIT build work in these tests — the route's build branch is exercised
 // elsewhere; here we only drive the getPageConfig status fork.
-const mockGetPageJitEnrichment = jest.fn(() => ({}));
+const mockGetPageJitEnrichment = vi.fn(() => ({}));
 const mockBuildContext = { jsMap: { client: {} } };
-const mockBuildPageWithContext = jest.fn(async () => ({
+const mockBuildPageWithContext = vi.fn(async () => ({
   result: true,
   buildContext: mockBuildContext,
 }));
-jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
+vi.doMock('../../lib/server/jitPageBuilder.js', () => ({
   buildPageWithContext: mockBuildPageWithContext,
   getPageJitEnrichment: mockGetPageJitEnrichment,
 }));
 
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({
+vi.doMock('../../lib/build/auth.js', () => ({
   default: { authPages: { signIn: '/auth/login', twoFactorEnrol: '/two-factor-enrol' } },
 }));
 
-jest.unstable_mockModule('../../lib/build/config.js', () => ({
+vi.doMock('../../lib/build/config.js', () => ({
   default: { basePath: '' },
 }));
 
@@ -69,8 +69,8 @@ function createApp() {
       buildDirectory: '/build',
       configDirectory: '/config',
       readConfigFile: async (file) => (file === 'routes.json' ? routes : null),
-      logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
-      handleError: jest.fn(),
+      logger: { debug: vi.fn(), info: vi.fn(), error: vi.fn() },
+      handleError: vi.fn(),
     });
     await next();
   });

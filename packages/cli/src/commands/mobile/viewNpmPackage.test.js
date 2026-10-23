@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const actualNodeUtils = await import('@lowdefy/node-utils');
-const mockSpawnProcess = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockSpawnProcess = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({
   ...actualNodeUtils,
   default: actualNodeUtils.default,
   spawnProcess: mockSpawnProcess,

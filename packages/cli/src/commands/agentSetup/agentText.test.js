@@ -16,6 +16,7 @@
 
 import agentsMd from './agentsMd.js';
 import skills from './skills/index.js';
+import { expect, test } from 'vitest';
 
 // Every app in a repository renders the same agent files, so the text names
 // no app: no `cd <app> &&` before a command and no app-specific dev command.

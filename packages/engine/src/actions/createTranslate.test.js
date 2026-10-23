@@ -13,13 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
 import testContext from '../../test/testContext.js';
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 console.log = () => {};
 console.error = () => {};

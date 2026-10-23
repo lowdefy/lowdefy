@@ -18,6 +18,7 @@ import lookupPath from '../src/lookupPath.js';
 import rememberPath from '../src/rememberPath.js';
 import rememberTarget from '../src/rememberTarget.js';
 import resolveTarget from '../src/resolveTarget.js';
+import { expect, test } from 'vitest';
 
 const pattern = 'tickets/{space}/{ticket_id}';
 

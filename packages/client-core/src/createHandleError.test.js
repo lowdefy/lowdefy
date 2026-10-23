@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { decodeServerError } from '@lowdefy/engine';
 import {
   AuthenticationError,
@@ -32,8 +32,8 @@ let fetchMock;
 
 function createLowdefy({ apiBase } = {}) {
   return {
-    _internal: { host: { fetch: fetchMock }, logger: { error: jest.fn() } },
-    _runtimeErrorCallback: jest.fn(),
+    _internal: { host: { fetch: fetchMock }, logger: { error: vi.fn() } },
+    _runtimeErrorCallback: vi.fn(),
     apiBase,
   };
 }
@@ -64,7 +64,7 @@ function mockResponse(body = {}) {
 }
 
 beforeEach(() => {
-  fetchMock = jest.fn().mockResolvedValue(mockResponse());
+  fetchMock = vi.fn().mockResolvedValue(mockResponse());
 });
 
 test('handleError does not POST a LowdefyInternalError that was already handled server-side (regression: internal errors were logged twice)', async () => {

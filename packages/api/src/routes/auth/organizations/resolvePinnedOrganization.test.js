@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import getOrganizationBinding, { registerOrganizationBinding } from './getOrganizationBinding.js';
 import OrganizationKeyError from './OrganizationKeyError.js';
 import resolvePinnedOrganization from './resolvePinnedOrganization.js';
 
-function createMockAuth({ create = jest.fn(), findOne = jest.fn() } = {}) {
+function createMockAuth({ create = vi.fn(), findOne = vi.fn() } = {}) {
   return {
     $context: Promise.resolve({ adapter: { create, findOne } }),
   };
 }
 
 test('resolvePinnedOrganization ensures and retains the pinned org for the binding', async () => {
-  const findOne = jest
+  const findOne = vi
     .fn()
     .mockResolvedValue({ id: 'org-a', slug: 'org-a', name: 'org-a', createdAt: new Date() });
   const auth = createMockAuth({ findOne });
@@ -45,7 +45,7 @@ test('resolvePinnedOrganization ensures and retains the pinned org for the bindi
 });
 
 test('resolvePinnedOrganization is a no-op once the pinned org is retained', async () => {
-  const findOne = jest
+  const findOne = vi
     .fn()
     .mockResolvedValue({ id: 'org-a', slug: 'org-a', name: 'org-a', createdAt: new Date() });
   const auth = createMockAuth({ findOne });
@@ -60,7 +60,7 @@ test('resolvePinnedOrganization is a no-op once the pinned org is retained', asy
 });
 
 test('resolvePinnedOrganization does nothing under the tenant policy', async () => {
-  const findOne = jest.fn();
+  const findOne = vi.fn();
   const auth = createMockAuth({ findOne });
   registerOrganizationBinding({
     auth,
@@ -73,7 +73,7 @@ test('resolvePinnedOrganization does nothing under the tenant policy', async () 
 });
 
 test('resolvePinnedOrganization does nothing without a database', async () => {
-  const findOne = jest.fn();
+  const findOne = vi.fn();
   const auth = createMockAuth({ findOne });
   registerOrganizationBinding({
     auth,
@@ -91,9 +91,9 @@ test('resolvePinnedOrganization does nothing for null or unregistered auth', asy
 });
 
 test('resolvePinnedOrganization logs an ensure failure and leaves the binding unresolved', async () => {
-  const findOne = jest.fn().mockRejectedValue(new Error('db down'));
+  const findOne = vi.fn().mockRejectedValue(new Error('db down'));
   const auth = createMockAuth({ findOne });
-  const logger = { warn: jest.fn() };
+  const logger = { warn: vi.fn() };
   registerOrganizationBinding({
     auth,
     database: true,
@@ -108,11 +108,11 @@ test('resolvePinnedOrganization logs an ensure failure and leaves the binding un
 });
 
 test('resolvePinnedOrganization rethrows a mis-keyed organization instead of warning', async () => {
-  const findOne = jest
+  const findOne = vi
     .fn()
     .mockResolvedValue({ id: '0f1b3a2c-5d6e-4f70-8a9b-1c2d3e4f5a6b', slug: 'org-a' });
   const auth = createMockAuth({ findOne });
-  const logger = { warn: jest.fn() };
+  const logger = { warn: vi.fn() };
   registerOrganizationBinding({
     auth,
     database: true,

@@ -15,6 +15,7 @@
 */
 
 import unescapeOperators from './unescapeOperators.js';
+import { expect, test } from 'vitest';
 
 const operators = new Set(['_args', '_if', '_state']);
 

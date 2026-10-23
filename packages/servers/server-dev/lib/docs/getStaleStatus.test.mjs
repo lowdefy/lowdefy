@@ -17,6 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { expect, test } from 'vitest';
 
 // getStaleStatus reads build/buildStatus.json from process.cwd() — point it at
 // a throwaway server directory before the module is imported.

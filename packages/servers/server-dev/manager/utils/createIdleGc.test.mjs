@@ -14,63 +14,79 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createIdleGc from './createIdleGc.mjs';
 
 beforeEach(() => {
   // performance is not redefinable on this Node, and nothing here reads it.
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('createIdleGc collects once 5 s after the last build ends', () => {
-  const gc = jest.fn();
+  const gc = vi.fn();
   const idleGc = createIdleGc({ gc });
 
   idleGc.onBuildingChange(true);
   idleGc.onBuildingChange(false);
-  jest.advanceTimersByTime(4999);
+  vi.advanceTimersByTime(4999);
   expect(gc).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
 
   expect(gc).toHaveBeenCalledTimes(1);
-  jest.advanceTimersByTime(60_000);
+  vi.advanceTimersByTime(60_000);
   expect(gc).toHaveBeenCalledTimes(1);
 });
 
 test('createIdleGc cancels the collection when a build starts within 5 s', () => {
-  const gc = jest.fn();
+  const gc = vi.fn();
   const idleGc = createIdleGc({ gc });
 
   idleGc.onBuildingChange(false);
-  jest.advanceTimersByTime(3000);
+  vi.advanceTimersByTime(3000);
   idleGc.onBuildingChange(true);
-  jest.advanceTimersByTime(60_000);
+  vi.advanceTimersByTime(60_000);
 
   expect(gc).not.toHaveBeenCalled();
 });
 
 test('createIdleGc collects once after several back-to-back builds', () => {
-  const gc = jest.fn();
+  const gc = vi.fn();
   const idleGc = createIdleGc({ gc });
 
   for (let i = 0; i < 4; i += 1) {
     idleGc.onBuildingChange(true);
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     idleGc.onBuildingChange(false);
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
   }
-  jest.advanceTimersByTime(5000);
+  vi.advanceTimersByTime(5000);
 
   expect(gc).toHaveBeenCalledTimes(1);
 });
 
 test('createIdleGc exposes a working gc in a process started without --expose-gc', () => {
-  jest.useRealTimers();
+  vi.useRealTimers();
   const idleGc = createIdleGc({ delayMs: 0 });
 
   expect(() => idleGc.onBuildingChange(true)).not.toThrow();

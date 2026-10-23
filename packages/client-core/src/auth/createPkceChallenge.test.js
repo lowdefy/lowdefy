@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { createHash, randomBytes } from 'node:crypto';
 
 import createPkceChallenge from './createPkceChallenge.js';

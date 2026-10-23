@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const pluginYaml = `
 plugins:
@@ -92,24 +92,27 @@ const pluginTypesEsm = {
 // export it uses, so the real module passes through and only file access is
 // replaced.
 const realNodeUtils = await import('@lowdefy/node-utils');
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
-  cleanDirectory: jest.fn(),
-  copyFileOrDirectory: jest.fn(),
-  getFileExtension: jest.fn(),
-  getFileSubExtension: jest.fn(),
-  getSecretsFromEnv: jest.fn(),
-  spawnProcess: jest.fn(),
-  readFile: jest.fn(async () => pluginYaml),
-  writeFile: jest.fn(),
-  writeFileIfChanged: jest.fn(),
-  installIfPackageJsonChanged: jest.fn(),
+  cleanDirectory: vi.fn(),
+  copyFileOrDirectory: vi.fn(),
+  getFileExtension: vi.fn(),
+  getFileSubExtension: vi.fn(),
+  getSecretsFromEnv: vi.fn(),
+  spawnProcess: vi.fn(),
+  readFile: vi.fn(async () => pluginYaml),
+  writeFile: vi.fn(),
+  writeFileIfChanged: vi.fn(),
+  installIfPackageJsonChanged: vi.fn(),
   // @example/lowdefy-mdm exports ./shell alone, a native-only shell plugin.
-  hasTypesExport: jest.fn(({ name }) => name !== '@example/lowdefy-mdm'),
+  hasTypesExport: vi.fn(({ name }) => name !== '@example/lowdefy-mdm'),
 }));
 
-jest.unstable_mockModule('node:module', () => ({
-  createRequire: () => (moduleName) => {
+// Modules the test does not fake (those @lowdefy/build loads, such as twrnc) load as usual.
+const realModule = await import('node:module');
+vi.doMock('node:module', () => ({
+  ...realModule,
+  createRequire: (from) => (moduleName) => {
     if (moduleName === 'fake-plugin/types') {
       return pluginTypesEsm;
     }
@@ -123,12 +126,12 @@ jest.unstable_mockModule('node:module', () => ({
       error.code = 'ERR_PACKAGE_PATH_NOT_EXPORTED';
       throw error;
     }
-    throw new Error(`Unexpected require: ${moduleName}`);
+    return realModule.createRequire(from)(moduleName);
   },
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('unwraps ESM default export when loading plugin types', async () => {

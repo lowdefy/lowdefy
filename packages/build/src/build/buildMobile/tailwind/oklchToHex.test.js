@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import oklchToHex from './oklchToHex.js';
 
 test('oklchToHex converts Tailwind 4 palette colours to sRGB hex', () => {

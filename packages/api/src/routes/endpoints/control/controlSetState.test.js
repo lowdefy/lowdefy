@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 import { ReservedKeyError } from '@lowdefy/helpers';
 
@@ -23,7 +23,7 @@ import runTest from '../test/runTest.js';
 
 function createDirectCallArgs({ setState }) {
   const context = {
-    logger: { debug: jest.fn() },
+    logger: { debug: vi.fn() },
     evaluateOperators: ({ input }) => input,
   };
   const routineContext = {
@@ -54,7 +54,7 @@ test('set_state sets simple value', async () => {
     {
       event: 'debug_control_set_state',
       input: { key: 'value' },
-      evaluated: { key: 'value' },
+      keys: ['key'],
     },
   ]);
 });
@@ -121,7 +121,7 @@ test('set_state with empty object', async () => {
     {
       event: 'debug_control_set_state',
       input: {},
-      evaluated: {},
+      keys: [],
     },
   ]);
 });

@@ -20,6 +20,7 @@ import getInputColumns from './getInputColumns.js';
 import getTextSimilarity from './getTextSimilarity.js';
 import matchCsvHeaders, { NEW_COLUMN, SKIP_COLUMN } from './matchCsvHeaders.js';
 import normalizeHeader from './normalizeHeader.js';
+import { expect, test } from 'vitest';
 
 const { columns } = normalizeColumns({
   columns: [

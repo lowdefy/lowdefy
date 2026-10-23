@@ -47,7 +47,9 @@ async function handleValidateDynamic(context, routineContext, { step }) {
       {
         path: 'blocks',
         rule: 'shape',
-        message: `Content should be an array of blocks. Received ${JSON.stringify(blocks)}.`,
+        message: `Content should be an array of blocks. Received a value of type "${
+          blocks === null ? 'null' : typeof blocks
+        }".`,
       },
     ];
   } else {

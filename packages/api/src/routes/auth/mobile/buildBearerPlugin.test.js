@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import buildBearerPlugin from './buildBearerPlugin.js';
 
 function ctxFor(headers) {

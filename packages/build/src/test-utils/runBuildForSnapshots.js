@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import path from 'path';
 
 /**
@@ -312,11 +312,11 @@ function createRunBuildForSnapshots(build, fixturesDir, mockWriteBuildArtifact) 
     });
 
     const logger = {
-      info: jest.fn(),
-      log: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-      succeed: jest.fn(),
+      info: vi.fn(),
+      log: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      succeed: vi.fn(),
     };
 
     await build({

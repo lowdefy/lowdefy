@@ -16,6 +16,7 @@
 
 // https://github.com/substack/json-stable-stringify
 import stableStringify from './stableStringify.js';
+import { expect, test } from 'vitest';
 
 test('sort keys', () => {
   let object = {
@@ -211,8 +212,8 @@ test('space parameter', () => {
   const obj = { one: 1, two: 2 };
   expect(stableStringify(obj, { space: '  ' })).toMatchInlineSnapshot(`
     "{
-      \\"one\\": 1,
-      \\"two\\": 2
+      "one": 1,
+      "two": 2
     }"
   `);
 });
@@ -221,8 +222,8 @@ test('space parameter (with tabs)', () => {
   const obj = { one: 1, two: 2 };
   expect(stableStringify(obj, { space: '\t' })).toMatchInlineSnapshot(`
     "{
-    	\\"one\\": 1,
-    	\\"two\\": 2
+    	"one": 1,
+    	"two": 2
     }"
   `);
 });
@@ -231,8 +232,8 @@ test('space parameter (with a number)', () => {
   const obj = { one: 1, two: 2 };
   expect(stableStringify(obj, { space: 3 })).toMatchInlineSnapshot(`
     "{
-       \\"one\\": 1,
-       \\"two\\": 2
+       "one": 1,
+       "two": 2
     }"
   `);
 });
@@ -241,13 +242,13 @@ test('space parameter (nested objects)', () => {
   const obj = { one: 1, two: { b: 4, a: [2, 3] } };
   expect(stableStringify(obj, { space: '  ' })).toMatchInlineSnapshot(`
     "{
-      \\"one\\": 1,
-      \\"two\\": {
-        \\"a\\": [
+      "one": 1,
+      "two": {
+        "a": [
           2,
           3
         ],
-        \\"b\\": 4
+        "b": 4
       }
     }"
   `);

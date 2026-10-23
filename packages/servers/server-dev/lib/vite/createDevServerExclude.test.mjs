@@ -15,6 +15,7 @@
 */
 
 import createDevServerExclude from './createDevServerExclude.js';
+import { expect, test } from 'vitest';
 
 function isExcluded(exclude, url) {
   return exclude.some((pattern) => pattern.test(url));

@@ -15,6 +15,7 @@
 */
 
 import extractBlockTypes from './extractBlockTypes.js';
+import { expect, test } from 'vitest';
 
 test('extractBlockTypes keeps the action and operator types a block registers itself', () => {
   const types = extractBlockTypes({

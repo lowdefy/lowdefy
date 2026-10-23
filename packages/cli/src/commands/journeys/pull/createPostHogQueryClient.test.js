@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 
-const mockPost = jest.fn();
-jest.unstable_mockModule('axios', () => ({ default: { post: mockPost } }));
+const mockPost = vi.fn();
+vi.doMock('axios', () => ({ default: { post: mockPost } }));
 
 const { default: createPostHogQueryClient } = await import('./createPostHogQueryClient.js');
 const { default: PullStoppedError } = await import('./PullStoppedError.js');
@@ -39,7 +39,7 @@ beforeEach(() => {
 });
 
 describe('createPostHogQueryClient', () => {
-  function createClient({ sleep = jest.fn(async () => {}) } = {}) {
+  function createClient({ sleep = vi.fn(async () => {}) } = {}) {
     const { lines, logger } = createLogger();
     const client = createPostHogQueryClient({
       projectId: '300001',

@@ -33,7 +33,6 @@ import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
 import devRecordingHandler from './routes/devRecording.js';
 import devToolsHandler from './routes/devTools.js';
-import feedbackHandler from './routes/feedback.js';
 import docsAppMapHandler from './routes/docs/appMap.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
 import docsCheckpointsCreateHandler from './routes/docs/checkpointsCreate.js';
@@ -118,12 +117,6 @@ function createApp() {
   // Dev tools, refused from other machines (localDevToolsOnly).
   app.use('/api/dev-tools', localDevToolsOnly());
   app.get('/api/dev-tools', devToolsHandler);
-  // Annotation helper: the in-page overlay (Cmd/Ctrl+/) POSTs annotation
-  // batches here and gets back the enriched agent-readable text, which the
-  // overlay copies to the clipboard. No api context needed.
-  // /lowdefy-feedback is a reserved page-path prefix in dev, like /lowdefy-docs.
-  app.use('/lowdefy-feedback', localDevToolsOnly());
-  app.post('/lowdefy-feedback', feedbackHandler);
 
   const mockUser = getMockUser();
   if (authJson.configured === true && !mockUser) {

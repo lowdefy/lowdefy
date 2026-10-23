@@ -16,6 +16,7 @@
 
 import createPageBuildContext from './createPageBuildContext.js';
 import pageBuildOwnedFields from './pageBuildOwnedFields.js';
+import { expect, test } from 'vitest';
 
 test('createPageBuildContext gives each page build its own empty pluginCheckSlugRefs', () => {
   const keptContext = {

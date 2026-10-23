@@ -16,6 +16,7 @@
 
 import path from 'path';
 import resolvePath from './resolvePath.js';
+import { expect, test } from 'vitest';
 
 const basePath = path.resolve('/test/knowledge-base');
 

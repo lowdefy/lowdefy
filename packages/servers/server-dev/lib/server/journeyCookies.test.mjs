@@ -25,6 +25,7 @@ import {
   readJourneyCookie,
   writeJourneyCookie,
 } from './journeyCookies.js';
+import { expect, test } from 'vitest';
 
 const origin = 'http://localhost:3111';
 const forgedToken = '0'.repeat(journeyActorToken.length);

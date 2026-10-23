@@ -15,6 +15,7 @@
 */
 
 import change_case from './change_case.js';
+import { expect, test } from 'vitest';
 
 const testString = 'test string';
 

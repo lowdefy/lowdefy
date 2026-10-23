@@ -14,31 +14,31 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockShallowBuild = jest.fn();
-const mockSerializeBuildException = jest.fn((exception) => ({ message: exception.message }));
-const mockWriteBuildStatus = jest.fn();
-const mockCreateCustomPluginTypesMap = jest
+const mockShallowBuild = vi.fn();
+const mockSerializeBuildException = vi.fn((exception) => ({ message: exception.message }));
+const mockWriteBuildStatus = vi.fn();
+const mockCreateCustomPluginTypesMap = vi
   .fn()
   .mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} });
-const mockCreateCustomPluginMessagesMap = jest.fn().mockResolvedValue({});
-const mockPublishBuildDirectory = jest.fn(async () => {});
+const mockCreateCustomPluginMessagesMap = vi.fn().mockResolvedValue({});
+const mockPublishBuildDirectory = vi.fn(async () => {});
 
-jest.unstable_mockModule('@lowdefy/build/dev', () => ({
+vi.doMock('@lowdefy/build/dev', () => ({
   shallowBuild: mockShallowBuild,
   serializeBuildException: mockSerializeBuildException,
 }));
-jest.unstable_mockModule('../utils/writeBuildStatus.mjs', () => ({
+vi.doMock('../utils/writeBuildStatus.mjs', () => ({
   default: mockWriteBuildStatus,
 }));
-jest.unstable_mockModule('../utils/createCustomPluginTypesMap.mjs', () => ({
+vi.doMock('../utils/createCustomPluginTypesMap.mjs', () => ({
   default: mockCreateCustomPluginTypesMap,
 }));
-jest.unstable_mockModule('../utils/createCustomPluginMessagesMap.mjs', () => ({
+vi.doMock('../utils/createCustomPluginMessagesMap.mjs', () => ({
   default: mockCreateCustomPluginMessagesMap,
 }));
-jest.unstable_mockModule('../utils/publishBuildDirectory.mjs', () => ({
+vi.doMock('../utils/publishBuildDirectory.mjs', () => ({
   default: mockPublishBuildDirectory,
 }));
 
@@ -47,7 +47,7 @@ const { default: lowdefyBuild } = await import('./lowdefyBuild.mjs');
 function createContext() {
   return {
     directories: { build: '/app/build', buildStaging: '/app/build-staging' },
-    logger: { info: jest.fn() },
+    logger: { info: vi.fn() },
     options: { refResolver: undefined },
   };
 }

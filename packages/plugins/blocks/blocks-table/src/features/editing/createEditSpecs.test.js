@@ -18,6 +18,7 @@ import createEditSpecs from './createEditSpecs.js';
 import findInvalidCells from './findInvalidCells.js';
 import isCellEditable from './isCellEditable.js';
 import validateCellValue from './validateCellValue.js';
+import { expect, test } from 'vitest';
 
 // Normalised columns as the column model hands them over (the local stand-in coerces
 // `editable` to a boolean, so the raw config is what carries `{ when }`).

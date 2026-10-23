@@ -18,7 +18,7 @@ import { execFileSync } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createCheckoutGuard from './createCheckoutGuard.js';
 import resolveApp from './resolveApp.js';
@@ -27,7 +27,7 @@ import trustRepository from '../hub/trustRepository.js';
 
 // Each test runs git several times; on a loaded machine that alone can take
 // seconds. Timing is not under test.
-jest.setTimeout(60000);
+vi.setConfig({ testTimeout: 60000, hookTimeout: 60000 });
 
 let base;
 const originalHome = process.env.LOWDEFY_HOME;
@@ -71,7 +71,7 @@ function makeApp(directory) {
 function createServer({ elicitation, answer, always } = {}) {
   return {
     getClientCapabilities: () => (elicitation ? { elicitation: { form: {} } } : {}),
-    elicitInput: jest.fn(async () =>
+    elicitInput: vi.fn(async () =>
       answer === 'accept' ? { action: answer, content: { always } } : { action: answer }
     ),
   };

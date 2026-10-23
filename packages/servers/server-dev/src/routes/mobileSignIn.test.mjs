@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const authJson = {};
-const handleMobileSignIn = jest.fn(() => new Response('mobile sign-in'));
+const handleMobileSignIn = vi.fn(() => new Response('mobile sign-in'));
 
-jest.unstable_mockModule('@lowdefy/api', () => ({ handleMobileSignIn }));
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: authJson }));
-jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/theme.js', () => ({
+vi.doMock('@lowdefy/api', () => ({ handleMobileSignIn }));
+vi.doMock('../../lib/build/auth.js', () => ({ default: authJson }));
+vi.doMock('../../lib/build/config.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/theme.js', () => ({
   default: { antd: { token: { colorPrimary: '#00aa55' } } },
 }));
-jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({ default: () => null }));
-jest.unstable_mockModule('../../lib/server/auth/getMockUser.js', () => ({ default: () => null }));
+vi.doMock('../../lib/server/auth/getAuth.js', () => ({ default: () => null }));
+vi.doMock('../../lib/server/auth/getMockUser.js', () => ({ default: () => null }));
 const { default: mobileSignInHandler } = await import('./mobileSignIn.js');
 
 function createContext() {
@@ -42,14 +42,14 @@ beforeEach(() => {
 });
 
 test('mobileSignInHandler falls through to the app pages when the app has no mobile section', async () => {
-  const next = jest.fn(() => 'page');
+  const next = vi.fn(() => 'page');
   expect(await mobileSignInHandler(createContext(), next)).toEqual('page');
   expect(handleMobileSignIn).not.toHaveBeenCalled();
 });
 
 test('mobileSignInHandler serves the mobile sign-in page when the app has a mobile section', async () => {
   authJson.mobile = { shells: [] };
-  const next = jest.fn();
+  const next = vi.fn();
   const res = await mobileSignInHandler(createContext(), next);
   expect(await res.text()).toEqual('mobile sign-in');
   expect(next).not.toHaveBeenCalled();

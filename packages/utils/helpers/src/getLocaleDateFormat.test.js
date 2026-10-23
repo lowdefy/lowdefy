@@ -15,6 +15,7 @@
 */
 
 import getLocaleDateFormat from './getLocaleDateFormat.js';
+import { expect, test } from 'vitest';
 
 test('en-US date format', () => {
   expect(getLocaleDateFormat('en-US')).toBe('MM/DD/YYYY');

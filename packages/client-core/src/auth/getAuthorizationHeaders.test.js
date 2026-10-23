@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import getAuthorizationHeaders from './getAuthorizationHeaders.js';
 
 function bearerHost(token) {

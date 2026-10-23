@@ -1247,6 +1247,7 @@
           "payload": {
             "~k": "1g"
           },
+          "readOnly": false,
           "requestId": "send-email",
           "pageId": "notify/inbox",
           "~k": "d"
@@ -1273,6 +1274,7 @@
       "public": true,
       "~k": "1h"
     },
+    "readOnly": false,
     "requestId": "send-email",
     "pageId": "notify/inbox",
     "~k": "d"

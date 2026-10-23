@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import getNextStoreVersion from './getNextStoreVersion.js';
 
 test('the next patch after the latest build on the same major.minor', () => {

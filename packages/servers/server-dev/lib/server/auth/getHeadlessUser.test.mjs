@@ -15,6 +15,7 @@
 */
 
 import getHeadlessUser from './getHeadlessUser.js';
+import { expect, test } from 'vitest';
 
 function contextWithCookie(cookie, headers = {}) {
   const all = { ...headers, cookie };

@@ -15,6 +15,7 @@
 */
 
 import buildGenerateCallOptions from './buildGenerateCallOptions.js';
+import { expect, test } from 'vitest';
 
 test('buildGenerateCallOptions throws when neither prompt nor messages is provided', () => {
   expect(() => buildGenerateCallOptions({ request: { model: 'test-model' } })).toThrow(

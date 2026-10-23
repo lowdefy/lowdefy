@@ -61,6 +61,9 @@ async function CreateOrganization({ acting, auth, properties }) {
     return organization;
   }
 
+  // The endpoint mints the creator as an owner member, and the engine's
+  // afterCreateOrganization hook gives that member the app roles
+  // auth.organizations.creatorAppRoles lists.
   const endpoint = getPluginEndpoint({
     authContext,
     endpointKey: 'createOrganization',

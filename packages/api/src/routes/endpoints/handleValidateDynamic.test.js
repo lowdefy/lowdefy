@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { UserError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -23,7 +23,7 @@ import resolveDynamicContent from '../page/dynamic/resolveDynamicContent.js';
 import runRoutine from './runRoutine.js';
 import testContext from '../../test/testContext.js';
 
-const logger = { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() };
+const logger = { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() };
 
 const policy = {
   id: 'form',
@@ -58,7 +58,7 @@ function createTestContext(files) {
   const context = testContext({
     operators: operatorsServer,
     logger,
-    readConfigFile: jest.fn((path) => files[path] ?? null),
+    readConfigFile: vi.fn((path) => files[path] ?? null),
     session: { user: { id: 'user_1' } },
   });
   context.endpointId = 'generate';
@@ -108,7 +108,7 @@ const invalidContent = [
 ];
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('ValidateDynamic records valid content as valid', async () => {

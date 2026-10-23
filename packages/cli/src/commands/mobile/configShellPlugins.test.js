@@ -18,19 +18,19 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 const actualNodeUtils = await import('@lowdefy/node-utils');
 
-const mockBuild = jest.fn();
-const mockGetServer = jest.fn();
-const mockSpawnProcess = jest.fn();
-const mockViewNpmPackage = jest.fn();
+const mockBuild = vi.fn();
+const mockGetServer = vi.fn();
+const mockSpawnProcess = vi.fn();
+const mockViewNpmPackage = vi.fn();
 
-jest.unstable_mockModule('../build/build.js', () => ({ default: mockBuild }));
-jest.unstable_mockModule('../../utils/getServer.js', () => ({ default: mockGetServer }));
-jest.unstable_mockModule('./viewNpmPackage.js', () => ({ default: mockViewNpmPackage }));
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('../build/build.js', () => ({ default: mockBuild }));
+vi.doMock('../../utils/getServer.js', () => ({ default: mockGetServer }));
+vi.doMock('./viewNpmPackage.js', () => ({ default: mockViewNpmPackage }));
+vi.doMock('@lowdefy/node-utils', () => ({
   ...actualNodeUtils,
   default: actualNodeUtils.default,
   spawnProcess: mockSpawnProcess,
@@ -105,7 +105,7 @@ function createContext(options = {}) {
   return {
     configDirectory: appDirectory,
     directories: { build: path.join(appDirectory, '.lowdefy', 'server', 'build') },
-    logger: { info: jest.fn(), warn: jest.fn(), debug: jest.fn() },
+    logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn() },
     lowdefyVersion: '7.1.0',
     options: { env: 'production', ...options },
     pnpmCmd: 'pnpm',

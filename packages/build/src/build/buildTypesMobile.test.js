@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import buildTypesMobile from './buildTypesMobile.js';
 import testContext from '../test-utils/testContext.js';
 

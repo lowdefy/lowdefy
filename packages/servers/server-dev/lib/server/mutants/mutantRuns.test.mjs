@@ -20,6 +20,7 @@ import createMutantReadConfigFile from './createMutantReadConfigFile.js';
 import { journeyActorToken } from '../auth/journeyActor.js';
 import { openMutantRun, readMutantRun } from './mutantRuns.js';
 import { pageFixture } from './test/fixtures.mjs';
+import { expect, test } from 'vitest';
 
 const ARTIFACT = 'pages/tickets.json';
 

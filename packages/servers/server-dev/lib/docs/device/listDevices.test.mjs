@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import listDevices from './listDevices.js';
 
 const SIMULATORS = JSON.stringify({

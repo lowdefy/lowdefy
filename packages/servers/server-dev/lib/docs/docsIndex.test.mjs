@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import { serializer } from '@lowdefy/helpers';
+import { afterAll, expect, test } from 'vitest';
 
 // A server directory whose build lists an installed plugin, a local plugin
 // linked from outside node_modules, one of Lowdefy's own plugins and a local

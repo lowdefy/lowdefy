@@ -17,6 +17,7 @@
 import buildRoutes from './buildRoutes.js';
 import validateAuthPagePaths from './validateAuthPagePaths.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 function run(components) {
   const context = testContext();

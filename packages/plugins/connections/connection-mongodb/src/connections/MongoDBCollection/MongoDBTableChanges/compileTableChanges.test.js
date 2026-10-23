@@ -16,6 +16,7 @@
 import { ObjectId } from 'mongodb';
 
 import compileTableChanges from './compileTableChanges.js';
+import { describe, expect, test } from 'vitest';
 
 const fields = {
   name: { type: 'text' },

@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import waitFor from '../../test-utils/waitFor.mjs';
@@ -25,7 +25,7 @@ import waitFor from '../../test-utils/waitFor.mjs';
 const { default: envWatcher } = await import('./envWatcher.mjs');
 
 // macOS can hold file events back for tens of seconds on a busy machine.
-jest.setTimeout(180000);
+vi.setConfig({ testTimeout: 180000, hookTimeout: 180000 });
 
 let configDir;
 let context;
@@ -38,11 +38,11 @@ beforeEach(async () => {
   await flushFsEvents();
   context = {
     directories: { config: configDir },
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
-    lowdefyBuild: jest.fn(async () => {}),
-    buildActivity: { setBusy: jest.fn() },
-    readDotEnv: jest.fn(),
-    syncServer: jest.fn(async () => {}),
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    lowdefyBuild: vi.fn(async () => {}),
+    buildActivity: { setBusy: vi.fn() },
+    readDotEnv: vi.fn(),
+    syncServer: vi.fn(async () => {}),
   };
 });
 
@@ -67,6 +67,9 @@ test.each([
   async (_, build) => {
     context.lowdefyBuild.mockImplementation(build);
     watcher = await envWatcher(context);
+    // chokidar 4 watches with fs.watch, which on macOS can miss a write made
+    // right after ready.
+    await flushFsEvents();
 
     fs.writeFileSync(path.join(configDir, '.env'), 'LOWDEFY_SECRET_A=two\n');
     await waitFor(() => context.syncServer.mock.calls.length > 0, {

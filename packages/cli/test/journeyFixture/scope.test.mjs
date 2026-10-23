@@ -19,6 +19,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // `lowdefy journeys scope` from the built CLI, end to end: a temporary git
 // repository holds a copy of the fixture app whose second commit fills in

@@ -15,6 +15,7 @@
 */
 
 import cn from './cn.js';
+import { expect, test } from 'vitest';
 
 test('cn returns the classes when given a string', () => {
   expect(cn('p-4 shadow-lg')).toBe('p-4 shadow-lg');

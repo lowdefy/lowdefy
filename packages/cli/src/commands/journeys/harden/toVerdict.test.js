@@ -15,6 +15,7 @@
 */
 
 import toVerdict from './toVerdict.js';
+import { expect, test } from 'vitest';
 
 const failure = { index: 2, message: 'Expected block "alert" to be visible.' };
 

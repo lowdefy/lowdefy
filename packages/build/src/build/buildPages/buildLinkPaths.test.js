@@ -17,6 +17,7 @@
 import buildPages from '../full/buildPages.js';
 import buildRoutes from '../buildRoutes/buildRoutes.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 const ticketPage = {
   id: 'ticket',

@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { Command, Option } from 'commander';
 
-jest.unstable_mockModule('../../utils/runCommand.js', () => ({
+vi.doMock('../../utils/runCommand.js', () => ({
   default: () => () => {},
 }));
 ['build', 'checklist', 'config', 'release', 'submit', 'update'].forEach((name) => {
-  jest.unstable_mockModule(`./${name}.js`, () => ({ default: () => {} }));
+  vi.doMock(`./${name}.js`, () => ({ default: () => {} }));
 });
 
 const { default: addMobileCommands } = await import('./addMobileCommands.js');

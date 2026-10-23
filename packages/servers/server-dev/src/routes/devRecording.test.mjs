@@ -19,11 +19,11 @@ import os from 'os';
 import path from 'path';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { buildSessionReport, readRecordings } from '@lowdefy/node-utils';
 import validateTraceRecord from '@lowdefy/node-utils/journeyTrace/validateTraceRecord.js';
 
-jest.unstable_mockModule('../../lib/docs/getBuildId.js', () => ({
+vi.doMock('../../lib/docs/getBuildId.js', () => ({
   default: () => '2026-10-03T14:02:00.000Z',
 }));
 

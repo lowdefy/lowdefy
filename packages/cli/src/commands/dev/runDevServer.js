@@ -51,6 +51,10 @@ async function runDevServer({ context, directory }) {
     env,
     stdOutLineHandler: createStdOutLineHandler({ context }),
   });
+  // The manager's last line on Ctrl+C starts the "Shutting down server..." spinner and it exits
+  // straight after, so nothing it sends can stop it. The spinner's timer would keep the CLI running
+  // until a second Ctrl+C.
+  context.logger.info({ spin: 'succeed' }, 'Development server stopped.');
 }
 
 export default runDevServer;

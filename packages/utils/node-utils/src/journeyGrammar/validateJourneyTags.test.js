@@ -15,6 +15,7 @@
 */
 
 import validateJourneyTags, { JOURNEY_TAG_PATTERN } from './validateJourneyTags.js';
+import { expect, test } from 'vitest';
 
 test('validateJourneyTags accepts an empty list and well-formed tags', () => {
   expect(validateJourneyTags({ tags: [] })).toEqual({});

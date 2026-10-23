@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { Validate } from '@lowdefy/actions-core/actions';
 import { serializer, translate } from '@lowdefy/helpers';
 
@@ -213,7 +213,7 @@ function countStateCopies({ copy, context }) {
 // without a state subscriber.
 test('state is copied for the trace only while a subscriber asks for state', async () => {
   const { button, context, payloads } = await setup({ onClick: [setState('set', { a: 1 })] });
-  const copy = jest.spyOn(serializer, 'copy');
+  const copy = vi.spyOn(serializer, 'copy');
   try {
     await button.triggerEvent({ name: 'onClick' });
     const statelessCopies = countStateCopies({ copy, context });
@@ -271,7 +271,7 @@ test('a parser error in an :if control carries a null action', async () => {
 });
 
 test('a throwing listener does not stop the next listener or the event', async () => {
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   try {
     const { button, context } = await setup({ onClick: [setState('set', { a: 1 })] });
     const trace = getTrace(context._internal.lowdefy);

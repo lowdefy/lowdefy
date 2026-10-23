@@ -16,6 +16,7 @@
 
 import createCounter from './createCounter.js';
 import createTeeCounter from './createTeeCounter.js';
+import { expect, test } from 'vitest';
 
 test('createTeeCounter increments both counters and keeps the app counter readable', () => {
   const counter = createCounter();

@@ -16,13 +16,13 @@
 
 import * as childProcess from 'child_process';
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockRunDeviceTool = jest.fn();
-const mockSpawn = jest.fn(() => ({ unref: jest.fn() }));
-jest.unstable_mockModule('./runDeviceTool.js', () => ({ default: mockRunDeviceTool }));
+const mockRunDeviceTool = vi.fn();
+const mockSpawn = vi.fn(() => ({ unref: vi.fn() }));
+vi.doMock('./runDeviceTool.js', () => ({ default: mockRunDeviceTool }));
 // @lowdefy/node-utils imports child_process too, so the rest of it stays real.
-jest.unstable_mockModule('child_process', () => ({ ...childProcess, spawn: mockSpawn }));
+vi.doMock('child_process', () => ({ ...childProcess, spawn: mockSpawn }));
 
 const { default: connectAndroidDevice } = await import('./connectAndroidDevice.js');
 
@@ -33,7 +33,7 @@ const device = {
   adb: '/sdk/platform-tools/adb',
   emulator: '/sdk/emulator/emulator',
 };
-const context = { logger: { info: jest.fn() } };
+const context = { logger: { info: vi.fn() } };
 
 function commands() {
   return mockRunDeviceTool.mock.calls.map(([{ command, args }]) => [command, ...args]);

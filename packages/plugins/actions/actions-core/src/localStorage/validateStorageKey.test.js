@@ -15,6 +15,7 @@
 */
 
 import validateStorageKey from './validateStorageKey.js';
+import { expect, test } from 'vitest';
 
 test('validateStorageKey accepts a non-empty key without a reserved prefix', () => {
   expect(() =>

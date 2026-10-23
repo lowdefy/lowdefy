@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import validateNativeIgnoredProperties from './validateNativeIgnoredProperties.js';
 import testContext from '../../test-utils/testContext.js';
 

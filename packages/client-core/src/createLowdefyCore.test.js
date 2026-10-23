@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { callerHash, callerStamp } from '@lowdefy/helpers';
 
 import createLowdefyCore, { HOST_KEYS } from './createLowdefyCore.js';
@@ -30,19 +30,20 @@ function response({ status = 200, body = {}, headers = {} } = {}) {
     status,
     headers: { get: (name) => headers[name] ?? null },
     json: async () => body,
+    text: async () => JSON.stringify(body),
   };
 }
 
 function createFakeHost() {
   return {
-    fetch: jest.fn(async () => response()),
+    fetch: vi.fn(async () => response()),
     globals: {},
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
+    router: { push: vi.fn(), replace: vi.fn(), back: vi.fn() },
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
-    WebSocket: jest.fn(),
+    WebSocket: vi.fn(),
     websocketUrl: (path) => `wss://app.example.com${path}`,
   };
 }
@@ -182,7 +183,7 @@ test('createLowdefyCore names every host member that is missing', () => {
   expect(() =>
     createLowdefyCore({
       basePath: '',
-      host: { fetch: jest.fn(), router: {} },
+      host: { fetch: vi.fn(), router: {} },
       lowdefy: {},
       rootConfig: {},
       types: {},
@@ -205,11 +206,11 @@ function createBearerHost(token) {
     ...createFakeHost(),
     authTransport: 'bearer',
     tokenStore: {
-      get: jest.fn(() => held),
-      set: jest.fn(async (value) => {
+      get: vi.fn(() => held),
+      set: vi.fn(async (value) => {
         held = value;
       }),
-      clear: jest.fn(async () => {
+      clear: vi.fn(async () => {
         held = null;
       }),
     },

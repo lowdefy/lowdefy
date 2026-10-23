@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import isWebSocketOriginAllowed from './isWebSocketOriginAllowed.js';
 
@@ -22,7 +22,7 @@ function createContext({ config = {}, trustedOrigins } = {}) {
   return {
     auth: { options: { trustedOrigins } },
     config,
-    logger: { warn: jest.fn() },
+    logger: { warn: vi.fn() },
   };
 }
 

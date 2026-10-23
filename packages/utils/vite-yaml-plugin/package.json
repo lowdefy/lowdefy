@@ -1,0 +1,46 @@
+{
+  "name": "@lowdefy/vite-yaml-plugin",
+  "version": "7.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "A Vite plugin that turns .yaml imports into modules.",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "yaml",
+    "vite",
+    "vite-plugin",
+    "vitest"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": "./dist/index.js",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json",
+    "clean": "rm -rf dist",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
+    "vitest": "4.1.12"
+  }
+}

@@ -19,14 +19,14 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 test('GET /api/e2e/identity names the e2e server and the real path of its build directory', async () => {
   const serverDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-e2e-identity-'));
   fs.mkdirSync(path.join(serverDirectory, 'build'));
   const linkedServerDirectory = `${serverDirectory}-link`;
   fs.symlinkSync(serverDirectory, linkedServerDirectory, 'junction');
-  jest.spyOn(process, 'cwd').mockReturnValue(linkedServerDirectory);
+  vi.spyOn(process, 'cwd').mockReturnValue(linkedServerDirectory);
 
   const { default: e2eIdentityHandler } = await import('./e2eIdentity.js');
   const app = new Hono();

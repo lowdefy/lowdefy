@@ -20,6 +20,7 @@ import path from 'path';
 
 import hashJourney from '../../test/hashJourney.js';
 import narrowBaseline from './narrowBaseline.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let directories;
 

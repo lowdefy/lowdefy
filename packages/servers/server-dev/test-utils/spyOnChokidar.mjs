@@ -15,23 +15,28 @@
 */
 
 import chokidar from 'chokidar';
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
+
+import flushFsEvents from './flushFsEvents.mjs';
 
 // Replaces chokidar with the real one plus a record of every watcher it
 // creates, so a test can reach a watcher the module under test starts
 // internally: wait for it to be ready, check what it watches, or listen to its
 // events. Call it before importing that module. Returns the live list of
-// { watcher, ready } entries, oldest first; ready resolves on the watcher's
-// ready event.
+// { watcher, ready } entries, oldest first; ready resolves once the watcher's
+// ready event has fired and the OS reports file events to it. chokidar 4 watches
+// with fs.watch, which on macOS can miss a write made right after ready.
 function spyOnChokidar() {
   const watchers = [];
   function watch(...args) {
     const watcher = chokidar.watch(...args);
-    const ready = new Promise((resolve) => watcher.once('ready', resolve));
+    const ready = new Promise((resolve) => watcher.once('ready', resolve)).then(() =>
+      flushFsEvents()
+    );
     watchers.push({ watcher, ready });
     return watcher;
   }
-  jest.unstable_mockModule('chokidar', () => ({
+  vi.doMock('chokidar', () => ({
     default: { ...chokidar, watch },
     FSWatcher: chokidar.FSWatcher,
     watch,

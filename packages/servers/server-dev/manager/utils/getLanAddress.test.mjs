@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import getLanAddress from './getLanAddress.mjs';
 
 const interfaces = {

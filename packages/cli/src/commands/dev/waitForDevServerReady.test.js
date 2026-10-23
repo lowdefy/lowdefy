@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockReadDevInstance = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({ readDevInstance: mockReadDevInstance }));
+const mockReadDevInstance = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({ readDevInstance: mockReadDevInstance }));
 
 const { default: waitForDevServerReady } = await import('./waitForDevServerReady.js');
 

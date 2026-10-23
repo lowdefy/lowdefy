@@ -22,6 +22,7 @@ import { MAX_CHECKPOINTS } from './checkpointPaths.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
 import listConfigCheckpoints from './listConfigCheckpoints.js';
 import revertConfigCheckpoint from './revertConfigCheckpoint.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let configDirectory;
 let previousConfigDirectory;

@@ -1167,6 +1167,7 @@
           "payload": {
             "~k": "1c"
           },
+          "readOnly": false,
           "requestId": "getUsers",
           "pageId": "home",
           "~k": "e"
@@ -1192,6 +1193,7 @@
       "public": true,
       "~k": "1d"
     },
+    "readOnly": false,
     "requestId": "getUsers",
     "pageId": "home",
     "~k": "e"

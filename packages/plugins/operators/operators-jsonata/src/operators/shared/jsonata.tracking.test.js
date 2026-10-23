@@ -15,6 +15,7 @@
 */
 
 import _jsonata from './jsonata.js';
+import { expect, test } from 'vitest';
 
 function kind(callInfo) {
   return _jsonata.tracking(callInfo).kind;

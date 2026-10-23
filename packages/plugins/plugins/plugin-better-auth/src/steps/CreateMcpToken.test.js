@@ -16,7 +16,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import CreateMcpToken from './CreateMcpToken.js';
 
@@ -24,8 +24,8 @@ const sessionCaller = { system: false, user: { id: 'user_1', organization_id: 'o
 
 function createAuth({ member = { id: 'member_1' }, tokenModel = true } = {}) {
   const adapter = {
-    findOne: jest.fn(async () => member),
-    create: jest.fn(async ({ data }) => ({ id: 'token_1', ...data })),
+    findOne: vi.fn(async () => member),
+    create: vi.fn(async ({ data }) => ({ id: 'token_1', ...data })),
   };
   const plugins = tokenModel
     ? [{ id: 'oauth-provider' }, { id: 'lowdefy-mcp-token', schema: { mcpToken: {} } }]
@@ -35,7 +35,7 @@ function createAuth({ member = { id: 'member_1' }, tokenModel = true } = {}) {
 
 test('CreateMcpToken writes a hashed token for the caller member and returns the token once', async () => {
   const { auth, adapter } = createAuth();
-  const markCredential = jest.fn();
+  const markCredential = vi.fn();
   const before = Date.now();
   const result = await CreateMcpToken({
     acting: sessionCaller,
@@ -80,7 +80,7 @@ test('CreateMcpToken with expiresInDays null makes a token that never expires', 
   const result = await CreateMcpToken({
     acting: sessionCaller,
     auth,
-    markCredential: jest.fn(),
+    markCredential: vi.fn(),
     properties: { name: 'build-01', expiresInDays: null },
   });
   expect(result.expiresAt).toBe(null);
@@ -89,7 +89,7 @@ test('CreateMcpToken with expiresInDays null makes a token that never expires', 
 
 test('CreateMcpToken makes a different token each time', async () => {
   const { auth } = createAuth();
-  const markCredential = jest.fn();
+  const markCredential = vi.fn();
   const properties = { name: 'build-01', expiresInDays: null };
   const first = await CreateMcpToken({ acting: sessionCaller, auth, markCredential, properties });
   const second = await CreateMcpToken({ acting: sessionCaller, auth, markCredential, properties });

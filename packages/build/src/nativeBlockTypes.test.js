@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 // The committed native block types must match the @lowdefy/blocks-native source: run
 // `pnpm --filter=@lowdefy/build native-block-types` after changing a blocks-native block or meta.
 import nativeBlockTypes from './nativeBlockTypes.js';

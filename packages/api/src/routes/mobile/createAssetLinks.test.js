@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import createAssetLinks from './createAssetLinks.js';
 
 test('createAssetLinks states every Android shell with its signing fingerprints', () => {

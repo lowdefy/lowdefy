@@ -20,21 +20,21 @@
 // head.html as a page-only change and never rebuilds the app artifact that
 // embeds it, so the served HTML goes stale until a manual restart.
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
 process.env.AUTH_SECRET = 'test-secret-for-integration-test';
 
-jest.unstable_mockModule('../full/updateServerPackageJson.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../full/updateServerPackageJson.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyPublicFolder.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyPublicFolder.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyAgentFileSystems.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyAgentFileSystems.js', () => ({
+  default: vi.fn(async () => {}),
 }));
 
 const { default: shallowBuild } = await import('./shallowBuild.js');

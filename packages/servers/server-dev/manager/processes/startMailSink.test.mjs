@@ -19,7 +19,7 @@ import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import nodemailer from 'nodemailer';
 
 import readMailOutbox from '../../lib/docs/readMailOutbox.js';
@@ -55,7 +55,7 @@ afterEach(async () => {
 function createContext() {
   return {
     directories: { config: configDirectory },
-    logger: { info: jest.fn(), error: jest.fn() },
+    logger: { info: vi.fn(), error: vi.fn() },
   };
 }
 

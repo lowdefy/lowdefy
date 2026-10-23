@@ -232,8 +232,7 @@ async function findConfig({ id, pageId }) {
   const buildDirectory = path.join(process.cwd(), 'build');
 
   // A page's root block renders with blockId === pageId, so open-in-editor
-  // and feedback enrichment hit this branch for it — they read
-  // matches[0].location.source, so the page result must carry a match, not
+  // hits this branch for it — it reads matches[0].location.source, so the page result must carry a match, not
   // just the file field the docs/MCP consumers use.
   if (pageRegistry[id]) {
     const refPath = pageRegistry[id].refPath;

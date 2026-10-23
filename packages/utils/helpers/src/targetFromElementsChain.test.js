@@ -15,6 +15,7 @@
 */
 
 import targetFromElementsChain from './targetFromElementsChain.js';
+import { expect, test } from 'vitest';
 
 const EMPTY = {
   block_id: null,

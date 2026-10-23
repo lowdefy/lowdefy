@@ -15,6 +15,7 @@
 */
 
 import runTest from '../test/runTest.js';
+import { expect, test } from 'vitest';
 
 test('single return', async () => {
   const routine = {
@@ -32,9 +33,7 @@ test('return null', async () => {
   const { res, context } = await runTest({ routine });
   expect(res.status).toBe('return');
   expect(res.response).toEqual(null);
-  expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_return', response: null }],
-  ]);
+  expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_return' }]]);
 });
 
 test('return at end of routine', async () => {
@@ -110,9 +109,6 @@ test('return at end of routine', async () => {
     [
       {
         event: 'debug_control_return',
-        response: {
-          message: 'Successful',
-        },
       },
     ],
   ]);
@@ -167,7 +163,7 @@ test('return in the middle of routine', async () => {
         id: 'request:test_endpoint:test_request_1',
       },
     ],
-    [{ event: 'debug_control_return', response: { message: 'Successful' } }],
+    [{ event: 'debug_control_return' }],
   ]);
   expect(res.response).toEqual({ message: 'Successful' });
 });
@@ -222,7 +218,7 @@ test('multiple returns in routine', async () => {
         id: 'request:test_endpoint:test_request_1',
       },
     ],
-    [{ event: 'debug_control_return', response: { message: 'First' } }],
+    [{ event: 'debug_control_return' }],
   ]);
   expect(res.response).toEqual({ message: 'First' });
 });
@@ -259,7 +255,7 @@ test('truthy guard statement return', async () => {
   expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'returned by guard statement' });
   expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if', condition: { input: true, result: true } }],
     [{ event: 'debug_control_if_run_then' }],
     [
       {
@@ -279,10 +275,9 @@ test('truthy guard statement return', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_guard_statement',
-        result: 'guard statement',
       },
     ],
-    [{ event: 'debug_control_return', response: { message: 'returned by guard statement' } }],
+    [{ event: 'debug_control_return' }],
   ]);
 });
 
@@ -318,7 +313,7 @@ test('falsy guard statement return', async () => {
   expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'made it to the end' });
   expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_if', condition: { input: false, evaluated: false } }],
+    [{ event: 'debug_control_if', condition: { input: false, result: false } }],
     [
       {
         event: 'debug_start_request',
@@ -337,10 +332,9 @@ test('falsy guard statement return', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
-        result: 'end',
       },
     ],
-    [{ event: 'debug_control_return', response: { message: 'made it to the end' } }],
+    [{ event: 'debug_control_return' }],
   ]);
 });
 
@@ -391,7 +385,7 @@ test('deep nested return', async () => {
   expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'returned by first if' });
   expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if', condition: { input: true, result: true } }],
     [{ event: 'debug_control_if_run_then' }],
     [
       {
@@ -411,10 +405,9 @@ test('deep nested return', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_first_if',
-        result: 'first if',
       },
     ],
-    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if', condition: { input: true, result: true } }],
     [{ event: 'debug_control_if_run_then' }],
     [
       {
@@ -434,10 +427,9 @@ test('deep nested return', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_second_if',
-        result: 'second if',
       },
     ],
-    [{ event: 'debug_control_return', response: { message: 'returned by first if' } }],
+    [{ event: 'debug_control_return' }],
   ]);
 });
 

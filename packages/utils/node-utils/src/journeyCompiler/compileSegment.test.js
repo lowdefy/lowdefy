@@ -17,6 +17,7 @@
 import compileSegment from './compileSegment.js';
 import traceRecord from './traceRecord.js';
 import validateJourneySteps from '../journeyGrammar/validateJourneySteps.js';
+import { expect, test } from 'vitest';
 
 const blockMetas = {
   Button: { category: 'button' },

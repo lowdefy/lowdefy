@@ -16,6 +16,7 @@
 // import { ServerParser } from '@lowdefy/operators';
 
 import _if from './if.js';
+import { expect, test } from 'vitest';
 
 const location = 'location';
 

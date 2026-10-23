@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockRunDeviceTool = jest.fn();
-jest.unstable_mockModule('./runDeviceTool.js', () => ({ default: mockRunDeviceTool }));
+const mockRunDeviceTool = vi.fn();
+vi.doMock('./runDeviceTool.js', () => ({ default: mockRunDeviceTool }));
 
 const { default: connectIosSimulator } = await import('./connectIosSimulator.js');
 
@@ -41,7 +41,7 @@ function commands() {
   return mockRunDeviceTool.mock.calls.map(([{ command, args }]) => [command, ...args]);
 }
 
-const context = { logger: { info: jest.fn() } };
+const context = { logger: { info: vi.fn() } };
 
 beforeEach(() => {
   mockRunDeviceTool.mockReset();

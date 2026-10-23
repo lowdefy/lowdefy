@@ -17,6 +17,7 @@
 import interpolateProperties from '../../interpolate/interpolateProperties.js';
 import renderEmail from '../../renderEmail.js';
 import NotificationEmail from './NotificationEmail.js';
+import { expect, test } from 'vitest';
 
 test('NotificationEmail renders all sections to html and text', async () => {
   const { html, text } = await renderEmail({

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError, RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
@@ -25,7 +25,7 @@ import testContext from '../../test/testContext.js';
 const operators = { ...operatorsServer };
 
 function createMockReadConfigFile(endpointConfigs = {}) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     const match = path.match(/^api\/(.+)\.json$/);
     if (match) {
       const key = match[1];
@@ -43,10 +43,10 @@ function createTestContext({ endpointConfigs = {} } = {}) {
   const context = testContext({
     operators,
     logger: {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
     },
     readConfigFile: createMockReadConfigFile(endpointConfigs),
     user: { id: 'user_1' },
@@ -67,13 +67,13 @@ const requestConfig = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('resolver argument bag includes callApi function', async () => {
   const context = createTestContext();
   let received;
-  const requestResolver = jest.fn((args) => {
+  const requestResolver = vi.fn((args) => {
     received = args;
     return 'ok';
   });
@@ -431,7 +431,11 @@ test('raw service-shaped error is wrapped into ServiceError', async () => {
     caught = e;
   }
   expect(caught).toBeInstanceOf(ServiceError);
-  expect(caught.cause).toBe(rawServiceErr);
+  expect(caught.message).toBe(
+    'conn1: Connection timed out. The service may be slow or unreachable. timeout'
+  );
+  expect(caught.cause).not.toBe(rawServiceErr);
+  expect(caught.cause).toMatchObject({ name: 'Error', message: 'timeout', code: 'ETIMEDOUT' });
 });
 
 test('configKey attached when missing', async () => {
@@ -455,58 +459,6 @@ test('configKey attached when missing', async () => {
   expect(caught.configKey).toBe('request_key');
 });
 
-test('a RequestError masks the properties its request type names as credentials in received', async () => {
-  const context = createTestContext();
-  const url = 'https://client.test/shot.png?X-Amz-Signature=abc';
-  const requestProperties = { key: 'copies/shot.png', url, maxBytes: 100 };
-  const requestResolver = async () => {
-    throw new Error('AwsS3PutObject url content type "text/html" is not one of image/*.');
-  };
-  requestResolver.meta = { checkRead: false, checkWrite: true, credentialProperties: ['url'] };
-  let caught;
-  try {
-    await callRequestResolver(context, {
-      connectionProperties: {},
-      endpointDepth: 0,
-      requestConfig,
-      requestProperties,
-      requestResolver,
-    });
-  } catch (e) {
-    caught = e;
-  }
-  expect(caught).toBeInstanceOf(RequestError);
-  expect(caught.received).toEqual({
-    key: 'copies/shot.png',
-    url: '[REDACTED]',
-    maxBytes: 100,
-  });
-  expect(JSON.stringify(caught.received)).not.toContain('X-Amz-Signature');
-  expect(requestProperties.url).toBe(url);
-});
-
-test('a RequestError keeps every request property in received when none is a credential', async () => {
-  const context = createTestContext();
-  const requestProperties = { url: 'https://example.test/', body: { a: 1 } };
-  const requestResolver = async () => {
-    throw new Error('raw');
-  };
-  requestResolver.meta = { checkRead: false, checkWrite: false };
-  let caught;
-  try {
-    await callRequestResolver(context, {
-      connectionProperties: {},
-      endpointDepth: 0,
-      requestConfig,
-      requestProperties,
-      requestResolver,
-    });
-  } catch (e) {
-    caught = e;
-  }
-  expect(caught.received).toBe(requestProperties);
-});
-
 // A resolver that runs until its signal aborts, then rejects with the abort reason,
 // as fetch and the AI SDK do.
 function resolverUntilAborted() {
@@ -519,7 +471,7 @@ function resolverUntilAborted() {
 test('the resolver receives the request signal from the context', async () => {
   const context = createTestContext();
   context.signal = new AbortController().signal;
-  const requestResolver = jest.fn(() => 'ok');
+  const requestResolver = vi.fn(() => 'ok');
   await callRequestResolver(context, {
     connectionProperties: {},
     endpointDepth: 0,
@@ -568,4 +520,117 @@ test('a resolver stopped by the request timeout fails with a ServiceError', asyn
   expect(error).toBeInstanceOf(ServiceError);
   expect(error.message).toBe('conn1: The request timeout of 30000ms was exceeded.');
   expect(error.configKey).toBe('request_key');
+});
+
+async function catchError(requestResolver, { context = createTestContext(), config } = {}) {
+  try {
+    await callRequestResolver(context, {
+      connectionProperties: {},
+      endpointDepth: 0,
+      requestConfig: config ?? requestConfig,
+      requestProperties: { message: 'My ID is 8001015009087' },
+      requestResolver,
+    });
+  } catch (e) {
+    return e;
+  }
+  throw new Error('Expected the resolver to fail.');
+}
+
+test('a failed request carries its ids, not its properties', async () => {
+  const caught = await catchError(async () => {
+    throw new Error('raw');
+  });
+  expect(caught.received).toBeUndefined();
+  expect(caught.endpointId).toBe('caller_endpoint');
+  expect(caught.stepId).toBe('req1');
+  expect(caught.connectionId).toBe('conn1');
+});
+
+test('an endpoint step names the endpoint it belongs to', async () => {
+  const caught = await catchError(
+    async () => {
+      throw new Error('raw');
+    },
+    {
+      config: {
+        '~k': 'step_key',
+        id: 'request:save_thread_endpoint:save',
+        stepId: 'save',
+        endpointId: 'save_thread_endpoint',
+        connectionId: 'conn1',
+        type: 'TestRequest',
+      },
+    }
+  );
+  expect(caught.message).toBe('raw at conn1/save.');
+  expect(caught.endpointId).toBe('save_thread_endpoint');
+  expect(caught.stepId).toBe('save');
+});
+
+test("a connection's error is kept as its name, code, status and message, not its other fields", async () => {
+  const caught = await catchError(async ({ request }) => {
+    const error = new Error('E11000 duplicate key error', {
+      cause: Object.assign(new Error('write concern'), { status: 409, op: request }),
+    });
+    error.name = 'MongoServerError';
+    error.code = 11000;
+    error.errInfo = { document: request };
+    throw error;
+  });
+  expect(caught).toBeInstanceOf(RequestError);
+  expect(caught.code).toBe(11000);
+  expect(caught.cause.name).toBe('MongoServerError');
+  expect(caught.cause.message).toBe('E11000 duplicate key error');
+  expect(caught.cause.stack).toMatch(/^MongoServerError: E11000 duplicate key error\n\s+at /);
+  expect(caught.cause.errInfo).toBeUndefined();
+  expect(caught.cause.cause).toMatchObject({
+    name: 'Error',
+    message: 'write concern',
+    statusCode: 409,
+  });
+  expect(caught.cause.cause.op).toBeUndefined();
+});
+
+test("a connection's error message is cut to 500 characters", async () => {
+  const caught = await catchError(async () => {
+    throw new Error('x'.repeat(600));
+  });
+  expect(caught.cause.message).toBe(`${'x'.repeat(499)}…`);
+  expect(caught.message).toBe(`${'x'.repeat(499)}… at conn1/req1.`);
+});
+
+test('a value thrown that is not an error is named by its type', async () => {
+  const caught = await catchError(async () => {
+    throw 'My ID is 8001015009087';
+  });
+  expect(caught).toBeInstanceOf(RequestError);
+  expect(caught.message).toBe(
+    'Request resolver threw a value of type string, not an error. at conn1/req1.'
+  );
+});
+
+test('a plain object thrown keeps its code, not its other fields', async () => {
+  const caught = await catchError(async () => {
+    throw { code: 'ECONNREFUSED', message: 'My ID is 8001015009087' };
+  });
+  expect(caught).toBeInstanceOf(ServiceError);
+  expect(caught.code).toBe('ECONNREFUSED');
+  expect(JSON.stringify([caught.message, caught.cause.message])).not.toContain('8001015009087');
+});
+
+test("a throttled request's ServiceError keeps the status and Retry-After its connection sent", async () => {
+  const caught = await catchError(async ({ request }) => {
+    const error = new Error('Request failed with status code 429');
+    error.response = { status: 429, headers: { 'retry-after': '30' }, data: request };
+    throw error;
+  });
+  expect(caught).toBeInstanceOf(ServiceError);
+  expect(caught.statusCode).toBe(429);
+  expect(caught.retryAfter).toBe('30');
+  expect(caught.message).toBe(
+    'conn1: Rate limited by the service (429 Too Many Requests). Retry after 30. Request failed with status code 429'
+  );
+  expect(caught.cause.response).toBeUndefined();
+  expect(caught.devCause.response.data).toEqual({ message: 'My ID is 8001015009087' });
 });

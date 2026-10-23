@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 
 import operators from '@lowdefy/operators-js/operators/build';
 import testContext from '../../test-utils/testContext.js';
@@ -26,7 +26,7 @@ import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 function createBuildContext() {
   const context = testContext({

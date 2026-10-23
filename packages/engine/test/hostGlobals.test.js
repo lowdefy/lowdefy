@@ -1,5 +1,5 @@
 /**
- * @jest-environment node
+ * @vitest-environment node
  */
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -20,7 +20,7 @@
 // The engine on a host with no browser: the host globals are plain objects, as a native shell
 // passes them, and there is no window or document anywhere.
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import getTrace from '../src/trace/getTrace.js';
 import resolveTarget from '../src/resolveTarget.js';
@@ -28,7 +28,7 @@ import testContext from './testContext.js';
 
 function createGlobals() {
   return {
-    fetch: jest.fn(),
+    fetch: vi.fn(),
     window: {
       location: {
         href: 'https://app.lowdefy.test/orders?status=open',
@@ -73,7 +73,7 @@ function createPageConfig() {
 
 async function setup() {
   const globals = createGlobals();
-  const callRequest = jest.fn(async ({ requestId }) => ({
+  const callRequest = vi.fn(async ({ requestId }) => ({
     id: requestId,
     success: true,
     response: [{ name: 'Order 1' }],
@@ -109,6 +109,7 @@ test('a page context, an action chain and a request run on plain host globals', 
     pageId: 'orders',
     requestId: 'get_orders',
     payload: { width: 390 },
+    readOnly: false,
   });
   expect(context.requests.get_orders[0].response).toEqual([{ name: 'Order 1' }]);
   expect(context.state).toEqual({ clicked: true, size: 'xs' });

@@ -15,6 +15,7 @@
 */
 
 import generatePageTypesModule from './generatePageTypesModule.js';
+import { expect, test } from 'vitest';
 
 test('generatePageTypesModule aliases imports so a block and an action can share a name', () => {
   const source = generatePageTypesModule({

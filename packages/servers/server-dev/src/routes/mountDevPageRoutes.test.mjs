@@ -15,12 +15,12 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('./mobileSignIn.js', () => ({
+vi.doMock('./mobileSignIn.js', () => ({
   default: (c) => c.text(`mobile sign-in ${c.req.method}`),
 }));
-jest.unstable_mockModule('./mobileSignInCallback.js', () => ({
+vi.doMock('./mobileSignInCallback.js', () => ({
   default: (c) => c.text('mobile sign-in callback'),
 }));
 

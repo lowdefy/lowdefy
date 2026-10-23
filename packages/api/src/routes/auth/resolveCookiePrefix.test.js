@@ -15,6 +15,7 @@
 */
 
 import resolveCookiePrefix from './resolveCookiePrefix.js';
+import { expect, test } from 'vitest';
 
 test('returns "lowdefy" in production regardless of appMeta', () => {
   expect(resolveCookiePrefix({ appMeta: { slug: 'my-app' }, dev: false })).toBe('lowdefy');

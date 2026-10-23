@@ -17,6 +17,7 @@
 import createTraceId from './createTraceId.js';
 import isTraceId from './isTraceId.js';
 import traceIdDate from './traceIdDate.js';
+import { expect, test } from 'vitest';
 
 test('createTraceId formats the UTC time and a six character base36 suffix', () => {
   const id = createTraceId({ now: Date.parse('2026-10-03T14:03:11.250Z') });

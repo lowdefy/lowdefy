@@ -15,6 +15,7 @@
 */
 
 import stabilizeData from './stabilizeData.js';
+import { expect, test } from 'vitest';
 
 const getKey = (row) => row.id;
 

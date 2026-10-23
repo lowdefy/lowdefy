@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import checkPairing from './checkPairing.mjs';
 
 const TOKEN = 'k'.repeat(43);

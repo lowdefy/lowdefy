@@ -17,6 +17,7 @@
 import { RequestError } from '@lowdefy/errors';
 
 import runTest from '../test/runTest.js';
+import { expect, test } from 'vitest';
 
 test('try catch with successful try', async () => {
   const routine = {
@@ -65,7 +66,6 @@ test('try catch with successful try', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_pass',
-        result: 'Success',
       },
     ],
   ]);
@@ -162,7 +162,6 @@ test('try catch with unsuccessful try', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:catch_error',
-        result: 'Fallback thing',
       },
     ],
   ]);
@@ -207,7 +206,6 @@ test('try only, success', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_pass',
-        result: 'Success',
       },
     ],
   ]);
@@ -312,7 +310,6 @@ test('try with finally, try pass', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_pass',
-        result: 'Success',
       },
     ],
     [
@@ -338,7 +335,6 @@ test('try with finally, try pass', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
-        result: 'Always do this',
       },
     ],
   ]);
@@ -423,7 +419,6 @@ test('try with finally, try fail', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
-        result: 'Always do this',
       },
     ],
   ]);
@@ -486,7 +481,6 @@ test('try catch finally, try pass', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_pass',
-        result: 'Success',
       },
     ],
     [
@@ -512,7 +506,6 @@ test('try catch finally, try pass', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
-        result: 'Always do this',
       },
     ],
   ]);
@@ -618,7 +611,6 @@ test('try catch finally, try fail', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:catch_error',
-        result: 'Fallback thing',
       },
     ],
     [
@@ -644,7 +636,6 @@ test('try catch finally, try fail', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
-        result: 'Always do this',
       },
     ],
   ]);
@@ -782,7 +773,6 @@ test('try catch finally, try and catch fail', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
-        result: 'Always do this',
       },
     ],
   ]);
@@ -835,7 +825,6 @@ test('try catch with throw in try', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:catch_error',
-        result: 'Fallback thing',
       },
     ],
   ]);

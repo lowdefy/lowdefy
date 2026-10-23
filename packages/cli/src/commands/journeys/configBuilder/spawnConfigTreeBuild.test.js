@@ -18,10 +18,10 @@ import { EventEmitter } from 'events';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockSpawnProcess = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockSpawnProcess = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({
   spawnProcess: mockSpawnProcess,
 }));
 
@@ -33,7 +33,7 @@ let outDirectory;
 function createContext(options) {
   return {
     directories: { dev: '/dev' },
-    logger: { debug: jest.fn() },
+    logger: { debug: vi.fn() },
     options,
   };
 }

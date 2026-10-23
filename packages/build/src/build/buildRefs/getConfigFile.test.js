@@ -16,11 +16,11 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
-jest.unstable_mockModule('../../utils/readConfigFile.js', () => ({
+vi.doMock('../../utils/readConfigFile.js', () => ({
   default: () => mockReadConfigFile,
 }));
 

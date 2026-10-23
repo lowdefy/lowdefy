@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createMobileSignInCsrfToken from './createMobileSignInCsrfToken.js';
 import getOneTimeTokenIdentifiers from './getOneTimeTokenIdentifiers.js';
@@ -47,20 +47,20 @@ function browserSession({ createdAt = new Date(Date.now() - 60 * 60 * 1000) } = 
 }
 
 function createAuth({ session = null, baseURL, appName = 'Field <App>' } = {}) {
-  const adapter = { update: jest.fn(), delete: jest.fn() };
+  const adapter = { update: vi.fn(), delete: vi.fn() };
   const internalAdapter = {
-    createSession: jest.fn(async () => ({
+    createSession: vi.fn(async () => ({
       id: 'phone-1',
       token: 'phone-token',
       activeOrganizationId: 'org-1',
     })),
-    createVerificationValue: jest.fn(),
+    createVerificationValue: vi.fn(),
   };
   return {
     adapter,
     internalAdapter,
     auth: {
-      api: { getSession: jest.fn(async () => session) },
+      api: { getSession: vi.fn(async () => session) },
       options: { appName, baseURL },
       $context: Promise.resolve({ adapter, internalAdapter, secret: SECRET }),
     },

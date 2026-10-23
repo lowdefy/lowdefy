@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import buildDeviceCommand from './buildDeviceCommand.js';
 
 function commandLine(params) {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createAuthFetchOptions from './createAuthFetchOptions.js';
 
@@ -28,13 +28,13 @@ function createBearerHost(token = null) {
   let held = token;
   return {
     authTransport: 'bearer',
-    onCallerChanged: jest.fn(),
+    onCallerChanged: vi.fn(),
     tokenStore: {
-      get: jest.fn(() => held),
-      set: jest.fn(async (value) => {
+      get: vi.fn(() => held),
+      set: vi.fn(async (value) => {
         held = value;
       }),
-      clear: jest.fn(async () => {
+      clear: vi.fn(async () => {
         held = null;
       }),
     },
@@ -92,8 +92,8 @@ test('createAuthFetchOptions ends the session on a 401 to a call that sent a tok
 test('createAuthFetchOptions clears the token before the host hears the session ended', async () => {
   const host = createBearerHost('session.sig');
   const order = [];
-  host.tokenStore.clear = jest.fn(async () => order.push('clear'));
-  host.onCallerChanged = jest.fn(() => order.push('onCallerChanged'));
+  host.tokenStore.clear = vi.fn(async () => order.push('clear'));
+  host.onCallerChanged = vi.fn(() => order.push('onCallerChanged'));
   const { onError } = createAuthFetchOptions({ host });
   await onError({
     request: requestContext({ authorization: 'Bearer session.sig' }),

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import matchesCodeChallenge from './matchesCodeChallenge.js';
 
 // RFC 7636 appendix B.

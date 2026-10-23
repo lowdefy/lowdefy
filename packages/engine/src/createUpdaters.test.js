@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createUpdaters from './createUpdaters.js';
 
 test('update calls every updater registered for the block', () => {
   const updaters = createUpdaters();
-  const onTab = jest.fn();
-  const onPushed = jest.fn();
-  const other = jest.fn();
+  const onTab = vi.fn();
+  const onPushed = vi.fn();
+  const other = vi.fn();
   updaters.register('title', onTab);
   updaters.register('title', onPushed);
   updaters.register('button', other);
@@ -34,7 +34,7 @@ test('update calls every updater registered for the block', () => {
 
 test('registering the same updater twice keeps one', () => {
   const updaters = createUpdaters();
-  const updater = jest.fn();
+  const updater = vi.fn();
   updaters.register('title', updater);
   updaters.register('title', updater);
   updaters.update('title');
@@ -43,8 +43,8 @@ test('registering the same updater twice keeps one', () => {
 
 test('an unregistered updater is not called, and the others still are', () => {
   const updaters = createUpdaters();
-  const onTab = jest.fn();
-  const onPushed = jest.fn();
+  const onTab = vi.fn();
+  const onPushed = vi.fn();
   updaters.register('title', onTab);
   const unregister = updaters.register('title', onPushed);
   unregister();

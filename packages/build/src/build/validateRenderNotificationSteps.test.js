@@ -15,6 +15,7 @@
 */
 
 import validateRenderNotificationSteps from './validateRenderNotificationSteps.js';
+import { expect, test } from 'vitest';
 
 function createTestContext({ notificationIds = [] } = {}) {
   return {

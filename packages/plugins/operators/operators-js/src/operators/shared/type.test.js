@@ -17,6 +17,7 @@
 import { ServerParser } from '@lowdefy/operators';
 import _type from './type.js';
 import _date from './date.js';
+import { expect, test } from 'vitest';
 
 const operators = {
   _date,

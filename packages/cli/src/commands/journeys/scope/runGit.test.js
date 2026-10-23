@@ -17,6 +17,7 @@
 import os from 'os';
 
 import runGit from './runGit.js';
+import { expect, test } from 'vitest';
 
 test('runGit passes env over the process environment to git', async () => {
   const value = await runGit({

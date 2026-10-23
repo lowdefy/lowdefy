@@ -3075,7 +3075,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "728858cf136d02962390690d1f32a3a9acb24d50854c595129498f0f2a2d96ba"
+      "hash": "c60bcec328cf5a615b5769c3c8d876c595559e97ccb9a991a5e9e29fddc54af6"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3106,14 +3106,14 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "baa0c0be42c9ececbf371bc6af85d6dd35441df3570c95ef53b154b792c5aa3c"
+      "hash": "272b0b89ee7569c8def7711e1b870aa96f6c78514923e21bd94bfe80eaee31e9"
     },
     "agents/agents-introduction": {
       "files": [
         "agents/introduction.yaml",
         "version.yaml"
       ],
-      "hash": "e703aea689fefce5cc1e21f83d1623f1df59c8dbd49c7ceeee3e4f642058c33b"
+      "hash": "07ddabb8514f5ec6b3085f3d8c49262794c04ec1417fc0b3e7b906743bfd050a"
     },
     "agents/agent-properties": {
       "files": [
@@ -3194,7 +3194,7 @@
       "files": [
         "deployment/vercel.yaml"
       ],
-      "hash": "666879f5b477199e5bfa89e1b34a96ced358633ce781cdde33e44451f8831a75"
+      "hash": "42dcf611ce291c27117b550a9050dc09c7f2a9e096c872efacd54499955a0bc0"
     },
     "deployment/deployment-environments": {
       "files": [
@@ -3287,13 +3287,13 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "4302765e3d22b3c654630d80925a8d0ed670abc3908eb532355813417a48dd3c"
+      "hash": "e1d8446b45156e25e7f1ccd778e89cdbf2303e2ae2797e07339c8bec750c9d31"
     },
     "user-authentication/auth-steps": {
       "files": [
         "users/auth-steps.yaml"
       ],
-      "hash": "1cfc00b1c65c62fbd5c0c3b2cd811f027cf9b19686cbaaef5c1b7552c350427a"
+      "hash": "eaaadb32226fde62767464bffa7829ad5a67eaacad86f5231e03d138ffd20348"
     },
     "user-authentication/mcp-oauth": {
       "files": [
@@ -3305,7 +3305,7 @@
       "files": [
         "users/user-object.yaml"
       ],
-      "hash": "b24e564b4abc1b91561def9d35b5278b526e54266d5766fa3e647bd0172c038a"
+      "hash": "8abd5b2a058647962e6bf8ea6e0a2deb64b369beb2a1bff8fe5aa79cb03dd06a"
     },
     "user-authentication/auth-configuration": {
       "files": [
@@ -3817,7 +3817,7 @@
         "blocks/input/TableInputGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9ff543ce367f20ed4f7812a3a44b3a58183a6ab472e305b2353913135da9fa08"
+      "hash": "9767ee5296aa0a112979e4e26e75fc5fdfa97b177be456f96de3810c3920fcaf"
     },
     "input-blocks/tagmultipleselector": {
       "files": [
@@ -3986,7 +3986,7 @@
         "blocks/display/AgGridGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "e91ba0de5022fa672b9aa1411ff2ad6b3f51867306e2d9f972a1e5529ad46309"
+      "hash": "71a3893e068c81688cadb65fd10f7abd5e7608301a7a1d5950308cb360cb65b5"
     },
     "display-blocks/anchor": {
       "files": [
@@ -4364,7 +4364,7 @@
         "blocks/display/TableGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "a69ac937fead06712c0ad4bd876fc2883a78f4494dc1aeb96a5d19dd54b7a835"
+      "hash": "b81ae793a73efadf229238477ffd76d47530ac90e654dacc01a26deb0610b75b"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -4377,7 +4377,7 @@
         "blocks/display/TableLightGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9a8a5631b556d7d8797b6f23464fcbbf34ba1f47dbadcfa7f21757cef061474e"
+      "hash": "e1de461f6c3b5220fc8bb835c215fbf01a91dbe70e542e12811ec78670d554c3"
     },
     "display-blocks/tag": {
       "files": [
@@ -4891,7 +4891,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "8568ced171e1b19fad78944bf0f94f80a1c8dc9f6c18d98953d2be6ffca139df"
+      "hash": "e3b57250865bdc78e88631c7da855e959b5bde8f0f0a3fddc1fe2aded583f45e"
     },
     "connections/mssql": {
       "files": [

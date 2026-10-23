@@ -15,6 +15,7 @@
 */
 
 import formatZeroBacked from './formatZeroBacked.js';
+import { expect, test } from 'vitest';
 
 function month(name, sessions) {
   return { month: name, days: 30, sessions, persons: sessions, orgs: 0, failures: 0 };

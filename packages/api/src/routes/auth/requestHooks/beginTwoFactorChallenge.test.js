@@ -15,14 +15,14 @@
 */
 
 import crypto from 'node:crypto';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // deleteSessionCookie walks ctx.context.authCookies, ctx.context.oauthConfig and
 // the session cookie store; mocking the two cookie helpers keeps the fake ctx to
 // the surface this helper is responsible for.
-const mockDeleteSessionCookie = jest.fn();
-const mockExpireCookie = jest.fn();
-jest.unstable_mockModule('better-auth/cookies', () => ({
+const mockDeleteSessionCookie = vi.fn();
+const mockExpireCookie = vi.fn();
+vi.doMock('better-auth/cookies', () => ({
   deleteSessionCookie: mockDeleteSessionCookie,
   expireCookie: mockExpireCookie,
 }));
@@ -43,20 +43,20 @@ function createCtx({ secret = SECRET, trustCookie, verificationRecord = null } =
   return {
     context: {
       secret,
-      createAuthCookie: jest.fn((name, options) => ({
+      createAuthCookie: vi.fn((name, options) => ({
         name: `better-auth.${name}`,
         attributes: { maxAge: options?.maxAge, path: '/' },
       })),
-      setNewSession: jest.fn(),
+      setNewSession: vi.fn(),
       internalAdapter: {
-        findVerificationValue: jest.fn(async () => verificationRecord),
-        createVerificationValue: jest.fn(async (data) => data),
-        deleteVerificationByIdentifier: jest.fn(async () => undefined),
-        deleteSession: jest.fn(async () => undefined),
+        findVerificationValue: vi.fn(async () => verificationRecord),
+        createVerificationValue: vi.fn(async (data) => data),
+        deleteVerificationByIdentifier: vi.fn(async () => undefined),
+        deleteSession: vi.fn(async () => undefined),
       },
     },
-    getSignedCookie: jest.fn(async () => trustCookie),
-    setSignedCookie: jest.fn(async () => undefined),
+    getSignedCookie: vi.fn(async () => trustCookie),
+    setSignedCookie: vi.fn(async () => undefined),
   };
 }
 

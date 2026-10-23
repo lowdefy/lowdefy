@@ -16,6 +16,7 @@
 
 import resolveUnwalledReach from './resolveUnwalledReach.js';
 import testContext from '../../test/testContext.js';
+import { expect, test } from 'vitest';
 
 const walledUri = 'mongodb://host-a:27017,host-b:27017/app?replicaSet=rs';
 const sessionUri = 'mongodb://127.0.0.1:5555/?replicaSet=testset';

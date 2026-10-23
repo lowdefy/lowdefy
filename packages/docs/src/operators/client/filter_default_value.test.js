@@ -15,6 +15,7 @@
 */
 
 import filter_default_value from './filter_default_value.js';
+import { expect, test } from 'vitest';
 
 test('no default value', () => {
   const value = { a: 1 };

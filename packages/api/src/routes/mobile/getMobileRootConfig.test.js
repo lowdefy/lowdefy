@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import getMobileRootConfig from './getMobileRootConfig.js';
 import testContext from '../../test/testContext.js';
 

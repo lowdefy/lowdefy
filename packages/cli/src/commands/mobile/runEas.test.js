@@ -16,10 +16,10 @@
 
 import { EventEmitter } from 'node:events';
 import { PassThrough } from 'node:stream';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
-const mockSpawn = jest.fn();
-jest.unstable_mockModule('node:child_process', () => ({ spawn: mockSpawn }));
+const mockSpawn = vi.fn();
+vi.doMock('node:child_process', () => ({ spawn: mockSpawn }));
 
 const { default: runEas } = await import('./runEas.js');
 const { default: EAS_CLI_VERSION } = await import('./easCliVersion.js');
@@ -27,7 +27,7 @@ const { default: EAS_CLI_VERSION } = await import('./easCliVersion.js');
 const npx = process.platform === 'win32' ? 'npx.cmd' : 'npx';
 
 function createContext() {
-  return { logger: { info: jest.fn(), debug: jest.fn() } };
+  return { logger: { info: vi.fn(), debug: vi.fn() } };
 }
 
 function mockChild({ code = 0, stdout = '' } = {}) {

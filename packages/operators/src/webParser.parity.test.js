@@ -17,6 +17,7 @@
 import { ConfigError } from '@lowdefy/errors';
 
 import WebParser from './webParser.js';
+import { expect, test } from 'vitest';
 
 // The compiled path must return exactly what the walker (serializer.copy with a
 // reviver) returns. toEqual cannot see array holes, undefined values, hidden

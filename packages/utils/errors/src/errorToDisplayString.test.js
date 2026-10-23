@@ -15,6 +15,7 @@
 */
 
 import errorToDisplayString from './errorToDisplayString.js';
+import { expect, test } from 'vitest';
 
 test('errorToDisplayString returns string messages unchanged', () => {
   expect(errorToDisplayString('something went wrong')).toBe('something went wrong');

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import buildOneTimeTokenPlugin from './buildOneTimeTokenPlugin.js';
 
 test('buildOneTimeTokenPlugin mints hashed one-minute tokens on the server only', () => {

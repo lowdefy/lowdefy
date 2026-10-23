@@ -18,7 +18,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import JourneyStepError from './JourneyStepError.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
@@ -53,7 +53,7 @@ function writeMessage({ id, subject, html = null, text = null }) {
   );
 }
 
-const page = { waitForTimeout: jest.fn(async () => {}) };
+const page = { waitForTimeout: vi.fn(async () => {}) };
 
 function read(params) {
   return readJourneyEmailMatch({

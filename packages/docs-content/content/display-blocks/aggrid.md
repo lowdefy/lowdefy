@@ -1384,7 +1384,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.zeroColor` | string | - | Number: CSS colour when value === 0 (requires `signColor: true`). |
 | `columnDefs.$.cell.color` | string | - | Number: CSS colour applied to all values (overridden by `signColor`). |
 | `columnDefs.$.cell.prefix` | string | - | Number: literal prefix (e.g. `Δ `, `~`). |
-| `columnDefs.$.cell.align` | string | - | Cell horizontal alignment. Defaults to `right` for `cell.type: number`. Sets `cellStyle.justifyContent` and `ag-*-aligned-header` on the header. Enum: `left`, `center`, `right`. |
+| `columnDefs.$.cell.align` | string | - | Cell horizontal alignment. Defaults to `right` for `cell.type: number`. Sets `cellStyle.justifyContent`, `cellStyle.textAlign` and `ag-*-aligned-header` on the header. Enum: `left`, `center`, `right`. |
 | `columnDefs.$.cell.buttons` | array | - | Buttons cell: list of buttons rendered per row. Each button triggers its own block-level event (declared in `events:`). Per-button properties mirror the `Button` block schema. `*Field` variants (`titleField`, `iconField`, `disabledField`, `hiddenField`) are row-data paths. |
 | `columnDefs.$.cell.buttons.$.eventName` | string | - | Block-level event name to trigger on click. |
 | `columnDefs.$.cell.buttons.$.title` | string | - | Title text on the button - supports html. |

@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { callerStamp } from '@lowdefy/helpers';
 
 // usePageConfig imports swr and useMutateCache only for the hook; the fetcher
 // under test needs neither. Mock them so the module loads in the node test env.
-jest.unstable_mockModule('swr', () => ({ default: jest.fn() }));
-jest.unstable_mockModule('./useMutateCache.js', () => ({
-  getNavVersion: jest.fn(),
-  getReloadVersion: jest.fn(),
+vi.doMock('swr', () => ({ default: vi.fn() }));
+vi.doMock('./useMutateCache.js', () => ({
+  getNavVersion: vi.fn(),
+  getReloadVersion: vi.fn(),
 }));
 
 const { getNavVersion, getReloadVersion } = await import('./useMutateCache.js');
@@ -40,7 +40,7 @@ function mockJsonResponse(body, { headers = {} } = {}) {
 beforeEach(() => {
   const stored = {};
   global.window = {
-    location: { reload: jest.fn() },
+    location: { reload: vi.fn() },
     sessionStorage: {
       getItem: (key) => stored[key] ?? null,
       setItem: (key, value) => {
@@ -56,7 +56,7 @@ afterEach(() => {
 });
 
 test('fetchPageConfig compiles inlined _jsEntries module text into a { hash: fn } object', async () => {
-  global.fetch = jest.fn(async () =>
+  global.fetch = vi.fn(async () =>
     mockJsonResponse({
       pageId: 'p',
       pathParams: {},
@@ -81,7 +81,7 @@ test('fetchPageConfig compiles inlined _jsEntries module text into a { hash: fn 
 });
 
 test('fetchPageConfig issues only the page-config request — no /api/js or /api/icons fetch', async () => {
-  global.fetch = jest.fn(async () =>
+  global.fetch = vi.fn(async () =>
     mockJsonResponse({
       pageId: 'p',
       pathParams: {},
@@ -155,7 +155,7 @@ test('getPageConfigKey returns to the static key when a dynamic page is no longe
 });
 
 test('fetchPageConfig returns the page a patterned path matched with its values', async () => {
-  global.fetch = jest.fn(async () =>
+  global.fetch = vi.fn(async () =>
     mockJsonResponse({
       pageId: 'ticket',
       pathParams: { space: 'a+b', ticket_id: '1' },
@@ -179,13 +179,13 @@ test('fetchPageConfig returns the page a patterned path matched with its values'
 });
 
 test('fetchPageConfig reloads instead of settling when the server answered as another caller', async () => {
-  global.fetch = jest.fn(async () =>
+  global.fetch = vi.fn(async () =>
     mockJsonResponse(
       { pageId: 'p', pathParams: {}, matchedPath: 'p', pageConfig: { id: 'page:p' } },
       { headers: { 'x-lowdefy-caller': 'aaaaaaaaaaaaaaaa' } }
     )
   );
-  const settled = jest.fn();
+  const settled = vi.fn();
   fetchPageConfig('http://localhost/api/page/p', {
     lowdefy: {},
     user: { id: 'user_1', organization_id: 'org_1' },
@@ -196,7 +196,7 @@ test('fetchPageConfig reloads instead of settling when the server answered as an
 });
 
 test('fetchPageConfig returns the page when the server answered as the rendered caller', async () => {
-  global.fetch = jest.fn(async () =>
+  global.fetch = vi.fn(async () =>
     mockJsonResponse(
       { pageId: 'p', pathParams: {}, matchedPath: 'p', pageConfig: { id: 'page:p' } },
       { headers: { 'x-lowdefy-caller': '' } }
@@ -209,13 +209,13 @@ test('fetchPageConfig returns the page when the server answered as the rendered 
 
 test('fetchPageConfig reloads when the server answered the rendered caller with other roles', async () => {
   const user = { id: 'user_1', organization_id: 'org_1', roles: ['editor', 'admin'] };
-  global.fetch = jest.fn(async () =>
+  global.fetch = vi.fn(async () =>
     mockJsonResponse(
       { pageId: 'p', pathParams: {}, matchedPath: 'p', pageConfig: { id: 'page:p' } },
       { headers: { 'x-lowdefy-caller': callerStamp({ user: { ...user, roles: ['editor'] } }) } }
     )
   );
-  const settled = jest.fn();
+  const settled = vi.fn();
   fetchPageConfig('http://localhost/api/page/p', { lowdefy: {}, user }).then(settled);
   await new Promise((resolve) => setTimeout(resolve, 20));
   expect(global.window.location.reload).toHaveBeenCalledTimes(1);
@@ -227,7 +227,7 @@ test('fetchPageConfig keeps the caller stamp of a page answered as the rendered 
   // The fixed vector callerStamp's own tests pin, so server and client agree.
   const header =
     '82e92667feb5824d; session=3a1d7b6848ba4816; roles=228d50a09b1b1e2b; memberships=476954726056d64d';
-  global.fetch = jest.fn(async () =>
+  global.fetch = vi.fn(async () =>
     mockJsonResponse(
       { pageId: 'p', pathParams: {}, matchedPath: 'p', pageConfig: { id: 'page:p' } },
       { headers: { 'x-lowdefy-caller': header } }

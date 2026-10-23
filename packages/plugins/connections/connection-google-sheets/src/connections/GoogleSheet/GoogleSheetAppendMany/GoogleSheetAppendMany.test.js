@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockAddRows = jest.fn();
-jest.unstable_mockModule('../getSheet', () => {
+const mockAddRows = vi.fn();
+vi.doMock('../getSheet', () => {
   return {
     default: () => ({
       addRows: mockAddRows,
@@ -39,10 +39,10 @@ test('googleSheetAppendMany, one row', async () => {
   });
   expect(res).toEqual({ insertedCount: 1 });
   expect(mockAddRows.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Array [
-          Object {
+    [
+      [
+        [
+          {
             "age": "34",
             "birth_date": "2020/04/26",
             "id": "1",
@@ -50,7 +50,7 @@ test('googleSheetAppendMany, one row', async () => {
             "name": "John",
           },
         ],
-        Object {
+        {
           "raw": undefined,
         },
       ],
@@ -72,17 +72,17 @@ test('googleSheetAppendMany, two rows', async () => {
   });
   expect(res).toEqual({ insertedCount: 2 });
   expect(mockAddRows.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Array [
-          Object {
+    [
+      [
+        [
+          {
             "age": "34",
             "birth_date": "2020/04/26",
             "id": "1",
             "married": "TRUE",
             "name": "John",
           },
-          Object {
+          {
             "age": "34",
             "birth_date": "2020/04/26",
             "id": "2",
@@ -90,7 +90,7 @@ test('googleSheetAppendMany, two rows', async () => {
             "name": "Peter",
           },
         ],
-        Object {
+        {
           "raw": undefined,
         },
       ],
@@ -109,10 +109,10 @@ test('googleSheetAppendMany, rows empty array', async () => {
   });
   expect(res).toEqual({ insertedCount: 0 });
   expect(mockAddRows.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Array [],
-        Object {
+    [
+      [
+        [],
+        {
           "raw": undefined,
         },
       ],
@@ -146,10 +146,10 @@ test('googleSheetAppendMany, transform types', async () => {
   });
   expect(res).toEqual({ insertedCount: 1 });
   expect(mockAddRows.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Array [
-          Object {
+    [
+      [
+        [
+          {
             "age": "34",
             "birth_date": "2020-04-26T00:00:00.000Z",
             "id": "1",
@@ -157,7 +157,7 @@ test('googleSheetAppendMany, transform types', async () => {
             "name": "John",
           },
         ],
-        Object {
+        {
           "raw": undefined,
         },
       ],
@@ -179,10 +179,10 @@ test('googleSheetAppendMany, one row, raw true', async () => {
   });
   expect(res).toEqual({ insertedCount: 1 });
   expect(mockAddRows.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Array [
-          Object {
+    [
+      [
+        [
+          {
             "age": "34",
             "birth_date": "2020/04/26",
             "id": "1",
@@ -190,7 +190,7 @@ test('googleSheetAppendMany, one row, raw true', async () => {
             "name": "John",
           },
         ],
-        Object {
+        {
           "raw": true,
         },
       ],

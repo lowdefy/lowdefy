@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { afterEach, expect, test } from 'vitest';
 import { Hono } from 'hono';
 
 const { closePolledTabs } = await import('../../lib/docs/pollTab.js');

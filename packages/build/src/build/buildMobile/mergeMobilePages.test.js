@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import mergeMobilePages from './mergeMobilePages.js';
 
 test('mergeMobilePages appends mobile pages with target mobile', () => {

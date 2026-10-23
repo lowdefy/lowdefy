@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import path from 'path';
 
 class MockConfigError extends Error {
@@ -28,10 +28,10 @@ class MockConfigError extends Error {
 }
 
 const { collectPluginDefinitions } = await import('@lowdefy/node-utils');
-jest.unstable_mockModule('@lowdefy/node-utils', () => {
+vi.doMock('@lowdefy/node-utils', () => {
   return {
     collectPluginDefinitions,
-    readFile: jest.fn(),
+    readFile: vi.fn(),
     ConfigError: MockConfigError,
   };
 });

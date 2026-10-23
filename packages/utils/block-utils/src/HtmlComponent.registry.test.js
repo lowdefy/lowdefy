@@ -15,12 +15,12 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 
-const cleanup = jest.fn();
-const onClick = jest.fn();
-const prepare = jest.fn(({ select }) => ({
+const cleanup = vi.fn();
+const onClick = vi.fn();
+const prepare = vi.fn(({ select }) => ({
   cleanup,
   portals: select('[data-probe]').map((element, index) => ({
     element,
@@ -30,7 +30,7 @@ const prepare = jest.fn(({ select }) => ({
   seen: select('[data-probe]').length,
 }));
 
-jest.unstable_mockModule('./htmlEnhancers/htmlEnhancers.js', () => ({
+vi.doMock('./htmlEnhancers/htmlEnhancers.js', () => ({
   default: [{ name: 'probe', attributes: ['data-probe'], prepare, onClick }],
 }));
 

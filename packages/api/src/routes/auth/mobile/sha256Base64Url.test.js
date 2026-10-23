@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import sha256Base64Url from './sha256Base64Url.js';
 
 test('sha256Base64Url matches the RFC 7636 appendix B S256 example', () => {

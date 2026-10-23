@@ -16,6 +16,7 @@
 
 import journeySequence from './journeySequence.js';
 import stepIdentity from './stepIdentity.js';
+import { expect, test } from 'vitest';
 
 const routeTable = {
   routes: [

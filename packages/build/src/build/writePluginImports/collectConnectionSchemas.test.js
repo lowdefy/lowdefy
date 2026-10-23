@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockResolve = jest.fn();
-const mockRunWorker = jest.fn();
-jest.unstable_mockModule('./resolveConnectionPackage.js', () => ({ default: mockResolve }));
-jest.unstable_mockModule('./runConnectionSchemaWorker.js', () => ({ default: mockRunWorker }));
+const mockResolve = vi.fn();
+const mockRunWorker = vi.fn();
+vi.doMock('./resolveConnectionPackage.js', () => ({ default: mockResolve }));
+vi.doMock('./runConnectionSchemaWorker.js', () => ({ default: mockRunWorker }));
 
 const { default: collectConnectionSchemas } = await import('./collectConnectionSchemas.js');
 const { default: connectionSchemaCache } = await import('./connectionSchemaCache.js');

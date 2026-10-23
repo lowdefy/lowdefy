@@ -18,40 +18,40 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // runEndpoint reads lowdefy.yaml, builds a Lowdefy context and calls into
 // @lowdefy/api - all of which only exist in a running server directory, so mock
 // them and leave runEndpoint's own validation, gating and pass-through under
 // test.
-const mockCallEndpoint = jest.fn();
-const mockRunDetachedEndpoint = jest.fn();
-const mockGetEndpointConfig = jest.fn();
-const mockIsWriteRequestsAllowed = jest.fn();
-const mockCreateLowdefyContext = jest.fn();
-const mockLoggerInfo = jest.fn();
+const mockCallEndpoint = vi.fn();
+const mockRunDetachedEndpoint = vi.fn();
+const mockGetEndpointConfig = vi.fn();
+const mockIsWriteRequestsAllowed = vi.fn();
+const mockCreateLowdefyContext = vi.fn();
+const mockLoggerInfo = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/api', () => ({
+vi.doMock('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
   getEndpointConfig: mockGetEndpointConfig,
   runDetachedEndpoint: mockRunDetachedEndpoint,
 }));
-jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
+vi.doMock('./isWriteRequestsAllowed.js', () => ({
   default: mockIsWriteRequestsAllowed,
 }));
-jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
+vi.doMock('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
 // A data set caller loads a data set into the dev server's memory store; both
 // are mocked so the test checks who the routine runs as and on which database.
-const mockReadDataSet = jest.fn();
-const mockOpenDataSession = jest.fn();
-jest.unstable_mockModule('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
-jest.unstable_mockModule('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
-jest.unstable_mockModule('./dataSets/openDataSession.js', () => ({
+const mockReadDataSet = vi.fn();
+const mockOpenDataSession = vi.fn();
+vi.doMock('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
+vi.doMock('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
+vi.doMock('./dataSets/openDataSession.js', () => ({
   default: mockOpenDataSession,
 }));
-jest.unstable_mockModule('./readDevAuthMode.js', () => ({
+vi.doMock('./readDevAuthMode.js', () => ({
   default: () => ({ authConfigured: true, mockUserActive: false }),
 }));
 
@@ -63,7 +63,7 @@ const honoContext = { req: { path: '/lowdefy-docs/run-endpoint' } };
 const context = { logger: { info: mockLoggerInfo } };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockIsWriteRequestsAllowed.mockResolvedValue(true);
   mockCreateLowdefyContext.mockResolvedValue(context);
   mockGetEndpointConfig.mockResolvedValue({ id: 'endpoint:create_order', type: 'Api' });
@@ -120,7 +120,7 @@ test("runEndpoint runs as a data set user, on the data set's own database", asyn
   const member = { id: 'u_member', roles: ['member'] };
   const dataSet = { name: 'crm', users: { member } };
   const session = { id: 'session1', state: 'open' };
-  const close = jest.fn(async () => {});
+  const close = vi.fn(async () => {});
   mockReadDataSet.mockResolvedValue(dataSet);
   mockOpenDataSession.mockResolvedValue({ cookie: 'session1', session, close });
 
@@ -143,7 +143,7 @@ test("runEndpoint runs as a data set user, on the data set's own database", asyn
 });
 
 test('runEndpoint closes the data session when the routine throws', async () => {
-  const close = jest.fn(async () => {});
+  const close = vi.fn(async () => {});
   mockReadDataSet.mockResolvedValue({ name: 'crm', users: { member: { id: 'u_member' } } });
   mockOpenDataSession.mockResolvedValue({ cookie: 'session1', session: {}, close });
   mockCallEndpoint.mockRejectedValue(new Error('boom'));

@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
-const mockSpawnServer = jest.fn();
-jest.unstable_mockModule('../../utils/spawnServer.js', () => ({
+const mockSpawnServer = vi.fn();
+vi.doMock('../../utils/spawnServer.js', () => ({
   default: mockSpawnServer,
 }));
-jest.unstable_mockModule('@lowdefy/logger/cli', () => ({
-  createStdOutLineHandler: jest.fn(() => 'lineHandler'),
+vi.doMock('@lowdefy/logger/cli', () => ({
+  createStdOutLineHandler: vi.fn(() => 'lineHandler'),
 }));
 
 const { default: runDevServer } = await import('./runDevServer.js');
@@ -31,7 +31,7 @@ const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
 function createContext(options) {
   return {
     directories: { config: '/app' },
-    logger: { info: jest.fn() },
+    logger: { info: vi.fn() },
     options: { refResolver: 'resolver.js', watch: [], watchIgnore: [], ...options },
   };
 }
@@ -79,4 +79,22 @@ test('runDevServer passes the --lan interface name as LOWDEFY_SERVER_DEV_LAN', a
 test('runDevServer leaves LOWDEFY_SERVER_DEV_LAN out without --lan', async () => {
   await runDevServer({ context: createContext({}), directory: '/dev' });
   expect('LOWDEFY_SERVER_DEV_LAN' in mockSpawnServer.mock.calls[0][0].env).toBe(false);
+});
+
+test('runDevServer ends the shutdown spinner once the manager exits', async () => {
+  const context = createContext({});
+  await runDevServer({ context, directory: '/dev' });
+  expect(context.logger.info).toHaveBeenCalledWith(
+    { spin: 'succeed' },
+    'Development server stopped.'
+  );
+});
+
+test('runDevServer does not report a stop when the manager fails', async () => {
+  mockSpawnServer.mockRejectedValue(new Error('Server exited with code 1.'));
+  const context = createContext({});
+  await expect(runDevServer({ context, directory: '/dev' })).rejects.toThrow(
+    'Server exited with code 1.'
+  );
+  expect(context.logger.info).not.toHaveBeenCalled();
 });

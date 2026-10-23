@@ -15,6 +15,7 @@
 */
 
 import normaliseClickText from './normaliseClickText.js';
+import { expect, test } from 'vitest';
 
 test('normaliseClickText collapses whitespace runs and trims', () => {
   expect(normaliseClickText('  Assign \n\t to   me ')).toEqual('Assign to me');

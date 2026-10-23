@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import writeFileAtomic from './writeFileAtomic.js';
 
@@ -43,7 +43,7 @@ test('writeFileAtomic never exposes the target before the whole content is writt
   const content = 'x'.repeat(1024 * 1024);
   const writeFile = fs.promises.writeFile;
   const seen = [];
-  const spy = jest.spyOn(fs.promises, 'writeFile').mockImplementation(async (...args) => {
+  const spy = vi.spyOn(fs.promises, 'writeFile').mockImplementation(async (...args) => {
     await writeFile(...args);
     seen.push(fs.existsSync(filePath));
   });

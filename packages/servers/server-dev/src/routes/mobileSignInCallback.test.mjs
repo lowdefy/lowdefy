@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const authJson = {};
 
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: authJson }));
-jest.unstable_mockModule('../../lib/build/theme.js', () => ({
+vi.doMock('../../lib/build/auth.js', () => ({ default: authJson }));
+vi.doMock('../../lib/build/theme.js', () => ({
   default: { antd: { token: { colorPrimary: '#00aa55' } } },
 }));
 const { default: mobileSignInCallbackHandler } = await import('./mobileSignInCallback.js');
@@ -29,13 +29,13 @@ beforeEach(() => {
 });
 
 test('mobileSignInCallbackHandler falls through to the app pages when the app has no mobile section', async () => {
-  const next = jest.fn(() => 'page');
+  const next = vi.fn(() => 'page');
   expect(await mobileSignInCallbackHandler({}, next)).toEqual('page');
 });
 
 test('mobileSignInCallbackHandler asks the person to return to the app and never echoes the token', async () => {
   authJson.mobile = { shells: [] };
-  const next = jest.fn();
+  const next = vi.fn();
   const res = await mobileSignInCallbackHandler(
     { req: { raw: new Request('http://localhost/auth/mobile/callback?token=ott-secret&state=s') } },
     next

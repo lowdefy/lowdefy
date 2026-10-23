@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import getTrace from './getTrace.js';
 
@@ -34,7 +34,7 @@ test('getTrace returns the same registry after lowdefy._internal is replaced', (
 
 test('getTrace accepts subscribers before lowdefy is initialised', () => {
   const lowdefy = {};
-  const listener = jest.fn();
+  const listener = vi.fn();
   getTrace(lowdefy).subscribe(listener);
   lowdefy._internal = { initialised: true };
   getTrace(lowdefy).emit({ blockId: 'button' });
@@ -52,7 +52,7 @@ test('trace emit calls listeners in subscription order', () => {
 
 test('trace unsubscribe stops a listener', () => {
   const trace = getTrace({});
-  const listener = jest.fn();
+  const listener = vi.fn();
   const unsubscribe = trace.subscribe(listener);
   unsubscribe();
   trace.emit({});
@@ -144,12 +144,12 @@ test('trace holds at most 20 failures and drops the 21st', () => {
 });
 
 test('trace throwing replay listener is warned once and does not stop subscribe', () => {
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   try {
     const trace = getTrace({});
     trace.emit({ success: false });
     trace.emit({ success: false });
-    const listener = jest.fn(() => {
+    const listener = vi.fn(() => {
       throw new Error('listener failed');
     });
     const unsubscribe = trace.subscribe(listener, { replay: true });
@@ -176,8 +176,8 @@ test('trace wantsState is true only while a state subscriber is subscribed', () 
 
 test('trace emit delivers stateBefore only to state subscribers', () => {
   const trace = getTrace({});
-  const stateful = jest.fn();
-  const stateless = jest.fn();
+  const stateful = vi.fn();
+  const stateless = vi.fn();
   trace.subscribe(stateful, { state: true });
   trace.subscribe(stateless);
   trace.emit({ blockId: 'button', stateBefore: { a: 1 } });
@@ -186,10 +186,10 @@ test('trace emit delivers stateBefore only to state subscribers', () => {
 });
 
 test('trace emit warns once for a throwing listener and runs the others', () => {
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   try {
     const trace = getTrace({});
-    const after = jest.fn();
+    const after = vi.fn();
     trace.subscribe(() => {
       throw new Error('listener failed');
     });
@@ -228,7 +228,7 @@ test('trace actionView has subscribe and the describe functions and no engine-on
 
 test('trace reportInteraction calls interaction listeners with the time it was reported', () => {
   const trace = getTrace({});
-  const listener = jest.fn();
+  const listener = vi.fn();
   const unsubscribe = trace.subscribeInteractions(listener);
   const before = Date.now();
   trace.reportInteraction({ kind: 'change', blockId: 'name', value: 'Ada' });
@@ -244,8 +244,8 @@ test('trace reportInteraction calls interaction listeners with the time it was r
 test('trace reportInteraction with no interaction listener does nothing, and a throwing listener does not stop the others', () => {
   const trace = getTrace({});
   expect(() => trace.reportInteraction({ kind: 'click', blockId: 'save' })).not.toThrow();
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  const second = jest.fn();
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  const second = vi.fn();
   trace.subscribeInteractions(() => {
     throw new Error('broken');
   });

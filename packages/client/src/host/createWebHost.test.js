@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createWebHost from './createWebHost.js';
 
 function createWindow({ protocol = 'https:' } = {}) {
   return {
     document: { title: 'doc' },
-    fetch: jest.fn(async () => 'response'),
-    location: { host: 'app.example.com', protocol, reload: jest.fn() },
+    fetch: vi.fn(async () => 'response'),
+    location: { host: 'app.example.com', protocol, reload: vi.fn() },
     localStorage: window.localStorage,
     sessionStorage: window.sessionStorage,
     WebSocket: function WebSocket() {},
@@ -38,7 +38,7 @@ test('createWebHost passes the browser objects as the engine globals', () => {
 test('createWebHost fetches with the window fetch at call time', async () => {
   const win = createWindow();
   const host = createWebHost({ router: {}, window: win });
-  win.fetch = jest.fn(async () => 'later');
+  win.fetch = vi.fn(async () => 'later');
   await expect(host.fetch('/api/x', { method: 'POST' })).resolves.toBe('later');
   expect(win.fetch).toHaveBeenCalledWith('/api/x', { method: 'POST' });
 });
@@ -53,7 +53,7 @@ test('createWebHost reloads the tab when the build or the caller changes', () =>
 
 test('createWebHost gives the router and the window WebSocket', () => {
   const win = createWindow();
-  const router = { push: jest.fn() };
+  const router = { push: vi.fn() };
   const host = createWebHost({ router, window: win });
   expect(host.router).toBe(router);
   expect(host.WebSocket).toBe(win.WebSocket);

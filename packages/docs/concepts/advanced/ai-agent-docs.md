@@ -126,26 +126,9 @@ A hazard is a behaviour of a type that its schema does not show, but that an age
 
 Hazards come from two places. Framework-level hazards ship with `@lowdefy/docs-content` (`hazards.json`). Type-attached hazards are declared by the plugin: a block sets `meta.hazards`, a request sets `meta.hazards` on the request function, and an operator package exports a `./metas` module with `{ hazards }` per operator — see [Plugins](/plugins-introduction). Local plugins in your project use the same channel, so your own blocks can warn an agent about their own surprises.
 
-## Annotate your app — point, draw, copy, paste
-
-Press **Cmd+/** (macOS) or **Ctrl+/** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, and batch several annotations. Hitting **Copy** (or just pressing Enter) puts an agent-readable feedback block on your clipboard — each annotation enriched with the **blockId and the exact yaml file and line** that defines it, plus **an annotated PNG screenshot of the page with your drawings on it** (saved under `.lowdefy/annotations/`, its path included in the block so the agent can view it; untick "Include annotated screenshot" to skip).
-
-Paste it into whichever agent session you want — that explicit paste is also what keeps feedback unambiguous when you run several Claude Code sessions against one dev server. A pasted block looks like:
-
-```
-Feedback: 1 annotation(s) on page "orders" (/orders) — viewport 1280x800 @2x, scrollY 340
-
-1. Element "submit_button" (pages/orders.yaml:42)
-   Ancestors: submit_button > order_form
-   Comment: Disable this while the form is submitting
-   Shapes: 1 rect around the element
-```
-
-Esc cancels; the overlay never ships to production servers. The `/lowdefy-feedback` route prefix is reserved in dev.
-
 ## Open code — Option/Alt+click jumps to the yaml
 
-Hold **Option** (macOS) or **Alt** (Windows/Linux) and click any element in your running dev app to open the yaml that defines its block in VS Code, at the exact line. While the modifier is held, the block under the cursor shows a blue highlight with its blockId — the same picking affordance as the annotation overlay — and the cursor becomes a pointer, so you see exactly what a click will open. The dev server resolves the clicked element to its block and looks up the config source the same way annotations do — blocks inside lists resolve to the item block that defines them (runtime array indices fold back to the config's `$` placeholder), other runtime-generated blocks resolve to their nearest configured ancestor, and blocks defined in modules open the module file that defines them. Plain clicks, Option/Alt+clicks outside any block, and Cmd/Ctrl+clicks (the browser's open-in-new-tab) keep their normal behaviour. Dev server only.
+Hold **Option** (macOS) or **Alt** (Windows/Linux) and click any element in your running dev app to open the yaml that defines its block in VS Code, at the exact line. While the modifier is held, the block under the cursor shows a blue highlight with its blockId — and the cursor becomes a pointer, so you see exactly what a click will open. The dev server resolves the clicked element to its block and looks up the config source of its block — blocks inside lists resolve to the item block that defines them (runtime array indices fold back to the config's `$` placeholder), other runtime-generated blocks resolve to their nearest configured ancestor, and blocks defined in modules open the module file that defines them. Plain clicks, Option/Alt+clicks outside any block, and Cmd/Ctrl+clicks (the browser's open-in-new-tab) keep their normal behaviour. Dev server only.
 
 ## The feedback loop
 
@@ -222,7 +205,6 @@ A page whose [`path`](/page-paths) has placeholders, such as `tickets/{space}/{t
 - **Your open tab** (`lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_snapshot_state`): with `pathParams`, the tool reads that instance. With only a `pageId`, it reads the instance your tab shows for that page, or the instance of that page most recently shown when no tab is on it.
 - **Checkpoints**: `lowdefy_snapshot_state` keeps the instance's `pathParams` next to `urlQuery`, and `lowdefy_load_state` opens that instance.
 - **Plain HTTP routes**: the screenshot, page-config and inspect-state routes take a page id with several segments, the GET routes take `pathParams` as JSON in the query (`?pathParams={"ticket_id":"1"}`), and the POST routes as an object in the body.
-- **Annotations** from the in-page feedback overlay carry the `pathParams` of the instance they were made on.
 
 A headless capture waits for the page's full async lifecycle before it reads anything: `onInit`, `onInitAsync`, `onMount` and `onMountAsync`, every in-flight request, and the first message on each websocket subscription. A page whose data arrives through an `onMountAsync` `Request` action is therefore captured with its data, not empty. If a page has not settled within 15 seconds the result is still returned, carrying `ready: false` and a note — read that result as a snapshot of a page that was still loading, not as the page's settled state. One case escapes the wait: an event with a `debounce` is not yet marked loading during its delay, so a debounced `onMountAsync` can be captured before it runs.
 

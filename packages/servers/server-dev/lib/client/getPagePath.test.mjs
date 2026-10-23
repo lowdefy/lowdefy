@@ -15,6 +15,7 @@
 */
 
 import getPagePath from './getPagePath.js';
+import { expect, test } from 'vitest';
 
 const rootConfig = {
   home: { configured: true, pageId: 'users', pathParams: {} },

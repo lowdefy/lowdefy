@@ -21,6 +21,7 @@ import { validate } from '@lowdefy/ajv';
 
 import coverageReportSchema from './coverageReportSchema.js';
 import writeCoverageReport from './writeCoverageReport.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let test_directory;
 

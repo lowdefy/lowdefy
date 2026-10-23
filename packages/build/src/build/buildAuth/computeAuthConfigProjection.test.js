@@ -15,6 +15,7 @@
 */
 
 import computeAuthConfigProjection from './computeAuthConfigProjection.js';
+import { expect, test } from 'vitest';
 
 test('computeAuthConfigProjection returns all defaults when auth is not configured', () => {
   expect(computeAuthConfigProjection()).toEqual({

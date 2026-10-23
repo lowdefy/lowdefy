@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import setupTestFixtures from '../setupTestFixtures.mjs';
 
@@ -27,10 +27,10 @@ const fixtureDir = setupTestFixtures();
 process.chdir(fixtureDir);
 process.env.LOWDEFY_DIRECTORY_CONFIG = fixtureDir;
 
-jest.unstable_mockModule('playwright-core', () => ({
-  chromium: { launch: jest.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
+vi.doMock('playwright-core', () => ({
+  chromium: { launch: vi.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
 }));
-jest.unstable_mockModule('../installHeadlessShell.js', () => ({ default: () => null }));
+vi.doMock('../installHeadlessShell.js', () => ({ default: () => null }));
 
 const { default: createFakePhoneTab, VIEW_PNG } = await import('./createFakePhoneTab.mjs');
 const { default: deviceAction } = await import('./deviceAction.js');

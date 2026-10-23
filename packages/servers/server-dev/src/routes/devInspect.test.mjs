@@ -17,7 +17,7 @@
 import fs from 'fs';
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 import { serializer } from '@lowdefy/helpers';
 
 const { listTabs, registerTab, requestFromTab, unregisterTab, updateTabPage } = await import(
@@ -70,7 +70,7 @@ afterEach(() => {
   listTabs().forEach((tab) => unregisterTab({ id: tab.id }));
 });
 
-function connectTab({ id, pageId, send = jest.fn() }) {
+function connectTab({ id, pageId, send = vi.fn() }) {
   registerTab({ id, send });
   updateTabPage({ id, pageId, pathParams: {}, instanceKey: `page:${pageId}` });
 }
@@ -160,7 +160,7 @@ test('POST /api/dev-inspect/page for a tab that already disconnected returns ok'
 });
 
 test('POST /api/dev-inspect resolves a pending tab request with the posted result', async () => {
-  const send = jest.fn();
+  const send = vi.fn();
   connectTab({ id: 'tab-1', pageId: 'home', send });
   const pending = requestFromTab({ pageId: 'home', event: 'inspect-request' });
   const [, { requestId }] = send.mock.calls[0];
@@ -190,7 +190,7 @@ function connectFixtureTab(send) {
 }
 
 test("an inspect-request carries the page instance, and a shell's answer reads as the browser tab's", async () => {
-  const send = jest.fn();
+  const send = vi.fn();
   connectFixtureTab(send);
   const pending = inspectStateFromTab({ pageId: fixtures.page.pageId });
   const [event, request] = send.mock.calls[0];
@@ -214,7 +214,7 @@ test("an inspect-request carries the page instance, and a shell's answer reads a
 });
 
 test("an eval-request carries the expression, and a shell's answer reads as the browser tab's", async () => {
-  const send = jest.fn();
+  const send = vi.fn();
   connectFixtureTab(send);
   const pending = evalOperatorInTab({
     pageId: fixtures.page.pageId,
@@ -243,7 +243,7 @@ test("an eval-request carries the expression, and a shell's answer reads as the 
 });
 
 test('a paired phone shell posts the page it shows', async () => {
-  connectFixtureTab(jest.fn());
+  connectFixtureTab(vi.fn());
   const res = await createApp().request('/api/dev-inspect/page', {
     method: 'POST',
     headers: pairedShellHeaders,

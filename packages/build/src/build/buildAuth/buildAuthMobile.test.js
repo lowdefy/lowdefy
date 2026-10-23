@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import buildAuthMobile from './buildAuthMobile.js';
 
 test('buildAuthMobile leaves auth alone for an app without a mobile key', () => {

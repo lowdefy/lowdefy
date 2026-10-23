@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 // A stand-in for the engine's trace registry (the `trace` action argument): emit plays the
 // engine, describeChain and pathEntryOf return what the test gives them, and isConfigText is
@@ -30,17 +30,17 @@ function createFakeTrace({
   let heldFailures = [];
   let holding = true;
   return {
-    describeChain: jest.fn(describeChain),
+    describeChain: vi.fn(describeChain),
     emit(payload) {
       if (holding && payload.success === false) {
         heldFailures.push(payload);
       }
       [...listeners].forEach((listener) => listener(payload));
     },
-    isConfigText: jest.fn(isConfigText),
+    isConfigText: vi.fn(isConfigText),
     listeners,
-    pathEntryOf: jest.fn(pathEntryOf),
-    subscribe: jest.fn((listener, { replay = false } = {}) => {
+    pathEntryOf: vi.fn(pathEntryOf),
+    subscribe: vi.fn((listener, { replay = false } = {}) => {
       listeners.push(listener);
       if (replay === true && holding) {
         const held = heldFailures;

@@ -15,6 +15,7 @@
 */
 
 import findConfigKey from './findConfigKey.js';
+import { expect, test } from 'vitest';
 
 test('returns root configKey when path is empty', () => {
   const components = {

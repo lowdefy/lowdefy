@@ -19,7 +19,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
 // A phone shell (Lowdefy Dev, or a shell paired with `lowdefy dev --lan`) calls /api/agent with
 // its session as a bearer, the x-lowdefy-shell header and no cookie. The route sits behind the
@@ -30,55 +30,55 @@ import { jest } from '@jest/globals';
 
 const sessions = { 'phone-session-token': { id: 'u-phone', roles: ['member'] } };
 
-const mockResolveAuthentication = jest.fn(async (context, { headers }) => {
+const mockResolveAuthentication = vi.fn(async (context, { headers }) => {
   const authorization = headers.get('authorization') ?? '';
   const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : null;
   context.user = sessions[token] ?? null;
 });
-const mockCallAgent = jest.fn(async () => ({
+const mockCallAgent = vi.fn(async () => ({
   response: new Response('data: {"type":"start"}\n\ndata: [DONE]\n\n'),
 }));
 
-jest.unstable_mockModule('@lowdefy/api', () => ({
+vi.doMock('@lowdefy/api', () => ({
   callAgent: mockCallAgent,
-  createApiContext: jest.fn(),
-  createRequestSignal: jest.fn(({ clientSignal }) => clientSignal),
-  ensureMcpOauthResource: jest.fn(async () => {}),
-  normalizeInjectedCaller: jest.fn((user) => user),
+  createApiContext: vi.fn(),
+  createRequestSignal: vi.fn(({ clientSignal }) => clientSignal),
+  ensureMcpOauthResource: vi.fn(async () => {}),
+  normalizeInjectedCaller: vi.fn((user) => user),
   parseRequestBody: ({ text }) => JSON.parse(text),
   resolveAuthentication: mockResolveAuthentication,
-  resolvePinnedOrganization: jest.fn(async () => {}),
-  resolveTenantPreflight: jest.fn(async () => {}),
+  resolvePinnedOrganization: vi.fn(async () => {}),
+  resolveTenantPreflight: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/i18n.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/server/log/createHandleError.js', () => ({
-  default: jest.fn(() => jest.fn()),
+vi.doMock('../../lib/build/appMeta.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/config.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/auth.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/i18n.js', () => ({ default: {} }));
+vi.doMock('../../lib/server/log/createHandleError.js', () => ({
+  default: vi.fn(() => vi.fn()),
 }));
-jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
-  default: jest.fn(() => ({
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+vi.doMock('../../lib/server/log/createLogger.js', () => ({
+  default: vi.fn(() => ({
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   })),
 }));
-jest.unstable_mockModule('../../lib/server/fileCache.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({
-  default: jest.fn(() => ({ api: {} })),
+vi.doMock('../../lib/server/fileCache.js', () => ({ default: {} }));
+vi.doMock('../../lib/server/auth/getAuth.js', () => ({
+  default: vi.fn(() => ({ api: {} })),
 }));
-jest.unstable_mockModule('../../lib/server/auth/getMockUser.js', () => ({
-  default: jest.fn(() => undefined),
+vi.doMock('../../lib/server/auth/getMockUser.js', () => ({
+  default: vi.fn(() => undefined),
 }));
-jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
-  default: jest.fn(() => null),
+vi.doMock('../../lib/server/auth/getStrategies.js', () => ({
+  default: vi.fn(() => null),
 }));
-jest.unstable_mockModule('../../lib/server/loadDynamicJsMap.js', () => ({
-  default: jest.fn(() => ({})),
+vi.doMock('../../lib/server/loadDynamicJsMap.js', () => ({
+  default: vi.fn(() => ({})),
 }));
-jest.unstable_mockModule('../../lib/server/log/logRequest.js', () => ({ default: jest.fn() }));
+vi.doMock('../../lib/server/log/logRequest.js', () => ({ default: vi.fn() }));
 
 // createLowdefyContext statically imports the app build's plugin artifacts, which only exist in a
 // built app (build/** is gitignored). The same fixtures as lib/server/createLowdefyContext.test.mjs.
@@ -106,7 +106,7 @@ fixtures.forEach((absolutePath) => {
   }
 });
 fixtures.forEach((absolutePath) => {
-  jest.unstable_mockModule(absolutePath, () => ({
+  vi.doMock(absolutePath, () => ({
     default: {},
     interpolateProperties: () => {},
     renderEmail: () => {},

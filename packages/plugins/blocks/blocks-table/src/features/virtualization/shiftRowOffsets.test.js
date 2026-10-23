@@ -16,6 +16,7 @@
 
 import computeRowOffsets from './computeRowOffsets.js';
 import shiftRowOffsets from './shiftRowOffsets.js';
+import { expect, test } from 'vitest';
 
 test('shiftRowOffsets moves the items after each changed item', () => {
   const offsets = Float64Array.from([0, 40, 80, 120, 160, 200]);

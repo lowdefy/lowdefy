@@ -14,30 +14,30 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { EventEmitter } from 'events';
 
-const mockFindAvailablePort = jest.fn();
-const mockReadDevInstance = jest.fn();
-const mockSpawnProcess = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockFindAvailablePort = vi.fn();
+const mockReadDevInstance = vi.fn();
+const mockSpawnProcess = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({
   findAvailablePort: mockFindAvailablePort,
   readDevInstance: mockReadDevInstance,
   spawnProcess: mockSpawnProcess,
 }));
 
-const mockGetServer = jest.fn();
-const mockAddCustomPluginsAsDeps = jest.fn();
-const mockEnsurePnpmWorkspaceYaml = jest.fn();
-const mockInstallServer = jest.fn();
-jest.unstable_mockModule('../../utils/getServer.js', () => ({ default: mockGetServer }));
-jest.unstable_mockModule('../../utils/addCustomPluginsAsDeps.js', () => ({
+const mockGetServer = vi.fn();
+const mockAddCustomPluginsAsDeps = vi.fn();
+const mockEnsurePnpmWorkspaceYaml = vi.fn();
+const mockInstallServer = vi.fn();
+vi.doMock('../../utils/getServer.js', () => ({ default: mockGetServer }));
+vi.doMock('../../utils/addCustomPluginsAsDeps.js', () => ({
   default: mockAddCustomPluginsAsDeps,
 }));
-jest.unstable_mockModule('../../utils/ensurePnpmWorkspaceYaml.js', () => ({
+vi.doMock('../../utils/ensurePnpmWorkspaceYaml.js', () => ({
   default: mockEnsurePnpmWorkspaceYaml,
 }));
-jest.unstable_mockModule('../../utils/installServer.js', () => ({ default: mockInstallServer }));
+vi.doMock('../../utils/installServer.js', () => ({ default: mockInstallServer }));
 
 const CHILD_PID = 4242;
 const isWindows = process.platform === 'win32';
@@ -54,7 +54,7 @@ function createChild() {
   child.pid = CHILD_PID;
   child.exitCode = null;
   child.signalCode = null;
-  child.kill = jest.fn((signal) => exitOnSignal(child, signal));
+  child.kill = vi.fn((signal) => exitOnSignal(child, signal));
   return child;
 }
 
@@ -78,13 +78,13 @@ beforeEach(() => {
     directories: { config: '/app', dev: '/app/.lowdefy/dev' },
     options: { port: 3000, logLevel: 'info', refResolver: undefined },
     pnpmCmd: 'pnpm',
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() },
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() },
   };
   child = createChild();
   killedGroups = [];
   // stop() signals the child's process group (a negative pid); intercept it instead of
   // sending a real signal.
-  process.kill = jest.fn((pid, signal) => {
+  process.kill = vi.fn((pid, signal) => {
     killedGroups.push({ pid, signal });
     exitOnSignal(child, signal);
   });

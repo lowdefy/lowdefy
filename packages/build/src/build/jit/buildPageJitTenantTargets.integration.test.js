@@ -23,13 +23,13 @@
 //   shallowBuild -> tenantTargets.json -> restoreTenantTargets (as server-dev
 //   getBuildContext does) -> buildPageJit -> buildRequests checks
 
-import { jest } from '@jest/globals';
+import { vi, beforeAll, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 
-jest.unstable_mockModule('../buildApp.js', () => ({
+vi.doMock('../buildApp.js', () => ({
   computeAppMeta: () => ({ slug: null, name: null, version: null, gitSha: 'test-git-sha' }),
   default: ({ components }) => {
     components.app = components.app ?? {};
@@ -38,14 +38,14 @@ jest.unstable_mockModule('../buildApp.js', () => ({
     return components;
   },
 }));
-jest.unstable_mockModule('../full/updateServerPackageJson.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../full/updateServerPackageJson.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyPublicFolder.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyPublicFolder.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyAgentFileSystems.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyAgentFileSystems.js', () => ({
+  default: vi.fn(async () => {}),
 }));
 
 const { default: shallowBuild } = await import('./shallowBuild.js');

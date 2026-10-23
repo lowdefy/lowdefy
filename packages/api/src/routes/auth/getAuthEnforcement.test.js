@@ -15,6 +15,7 @@
 */
 
 import getAuthEnforcement, { registerAuthEnforcement } from './getAuthEnforcement.js';
+import { expect, test } from 'vitest';
 
 test('getAuthEnforcement returns null when auth is null', () => {
   expect(getAuthEnforcement({ auth: null })).toBeNull();

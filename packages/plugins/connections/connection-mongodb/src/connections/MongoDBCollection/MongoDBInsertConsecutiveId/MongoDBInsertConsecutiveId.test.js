@@ -19,6 +19,7 @@ import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId.js';
 import clearTestMongoDb from '../../../../test/clearTestMongoDb.js';
 import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBInsertConsecutiveId.meta;
 const schema = MongoDBInsertConsecutiveId.schema;

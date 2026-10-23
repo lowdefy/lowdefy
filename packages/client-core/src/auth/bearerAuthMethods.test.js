@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { UserError } from '@lowdefy/errors';
 
 import createAuthFetchOptions from './createAuthFetchOptions.js';
@@ -33,14 +33,14 @@ function createBearerHost(token = null) {
   let held = token;
   return {
     authTransport: 'bearer',
-    fetch: jest.fn(),
-    onCallerChanged: jest.fn(),
+    fetch: vi.fn(),
+    onCallerChanged: vi.fn(),
     tokenStore: {
-      get: jest.fn(() => held),
-      set: jest.fn(async (value) => {
+      get: vi.fn(() => held),
+      set: vi.fn(async (value) => {
         held = value;
       }),
-      clear: jest.fn(async () => {
+      clear: vi.fn(async () => {
         held = null;
       }),
     },
@@ -74,7 +74,7 @@ function createServer() {
       jsonResponse({ user: { id: 'user-1', organization_id: 'org-2', roles: ['editor'] } }),
   };
   const calls = [];
-  const fetch = jest.fn(async (url, init) => {
+  const fetch = vi.fn(async (url, init) => {
     const { pathname } = new URL(url);
     calls.push({ pathname, headers: new Headers(init.headers) });
     return routes[pathname]();
@@ -119,7 +119,7 @@ function setup({ token = null } = {}) {
   // its Better Auth client.
   const auth = {
     authConfig: { providers: [] },
-    suppressSessionReload: jest.fn(),
+    suppressSessionReload: vi.fn(),
     acceptInvitation: (params) => callBetterAuth('/organization/accept-invitation', { params }),
     emailOtpSend: (params) => callBetterAuth('/email-otp/send-verification-otp', { params }),
     emailOtpVerify: (params) => callBetterAuth('/sign-in/email-otp', { params }),
@@ -133,14 +133,14 @@ function setup({ token = null } = {}) {
     refreshSession: () => callBetterAuth('/get-session', { method: 'GET' }),
     setActiveOrganization: (params) => callBetterAuth('/organization/set-active', { params }),
     signOut: () => callBetterAuth('/sign-out'),
-    updateResolvedUser: jest.fn(),
+    updateResolvedUser: vi.fn(),
   };
   const lowdefy = {
     _internal: {
       globals: {},
       host,
-      router: { basePath: '', push: jest.fn(), replace: jest.fn() },
-      storage: { clearUserStorage: jest.fn() },
+      router: { basePath: '', push: vi.fn(), replace: vi.fn() },
+      storage: { clearUserStorage: vi.fn() },
     },
     home: { configured: false, pageId: 'home-page' },
     linkPaths: {},

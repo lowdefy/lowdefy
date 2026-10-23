@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
 const realNodeUtils = await import('@lowdefy/node-utils');
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
-  writeFile: jest.fn().mockResolvedValue(undefined),
-  writeFileIfChanged: jest.fn().mockResolvedValue(true),
+  writeFile: vi.fn().mockResolvedValue(undefined),
+  writeFileIfChanged: vi.fn().mockResolvedValue(true),
 }));
 
 const { default: testContext } = await import('../../test-utils/testContext.js');
@@ -78,7 +78,7 @@ blocks:
             _state: flag
           else: No
 `,
-    writeBuildArtifact: jest.fn().mockResolvedValue(undefined),
+    writeBuildArtifact: vi.fn().mockResolvedValue(undefined),
   });
   context.directories.server = serverDir;
   context.errors = [];

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { callerHash, callerStamp } from '@lowdefy/helpers';
 import { AuthenticationError } from '@lowdefy/errors';
 

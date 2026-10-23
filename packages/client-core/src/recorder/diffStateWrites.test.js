@@ -15,6 +15,7 @@
 */
 
 import diffStateWrites from './diffStateWrites.js';
+import { expect, test } from 'vitest';
 
 test('diffStateWrites reports the path and JSON type of each changed leaf', () => {
   expect(diffStateWrites({ after: { a: 'x', n: 2, ok: true }, before: { a: 'x', n: 1 } })).toEqual([

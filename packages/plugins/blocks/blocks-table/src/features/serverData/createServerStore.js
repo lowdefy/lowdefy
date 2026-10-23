@@ -73,6 +73,7 @@ function createServerStore({ api, server }) {
     const isGroupLevel = groupPath.length < (store.view.group ?? []).length;
     store.requestCount += 1;
     const event = {
+      ...server.payload,
       startRow: index * blockSize,
       endRow: (index + 1) * blockSize,
       view: store.view,

@@ -16,10 +16,10 @@
 
 import { EventEmitter } from 'events';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockSpawnProcess = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockSpawnProcess = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({
   spawnProcess: mockSpawnProcess,
 }));
 
@@ -33,7 +33,7 @@ let listenerCounts;
 beforeEach(() => {
   process.env.LOWDEFY_HOME = '/tmp/lowdefy-home';
   child = new EventEmitter();
-  child.kill = jest.fn();
+  child.kill = vi.fn();
   mockSpawnProcess.mockReset();
   mockSpawnProcess.mockReturnValue(child);
   listenerCounts = Object.fromEntries(SIGNALS.map((s) => [s, process.listenerCount(s)]));
@@ -52,7 +52,7 @@ test('spawnServer starts the entry with node itself, holding its stdin, with the
     directory: '/app/.lowdefy/server',
     entry: 'src/index.js',
     env: { PORT: 3112 },
-    stdOutLineHandler: jest.fn(),
+    stdOutLineHandler: vi.fn(),
   });
   const { command, args, returnProcess, processOptions } = mockSpawnProcess.mock.calls[0][0];
   expect(command).toEqual(process.execPath);
@@ -76,7 +76,7 @@ test('spawnServer forwards SIGINT, SIGTERM and SIGHUP to the server until it exi
     directory: '/app',
     entry: 'src/index.js',
     env: {},
-    stdOutLineHandler: jest.fn(),
+    stdOutLineHandler: vi.fn(),
   });
   SIGNALS.forEach((signal) => {
     expect(process.listenerCount(signal)).toBe(listenerCounts[signal] + 1);
@@ -96,7 +96,7 @@ test('spawnServer rejects with the exit code when the server fails', async () =>
     directory: '/app',
     entry: 'src/index.js',
     env: {},
-    stdOutLineHandler: jest.fn(),
+    stdOutLineHandler: vi.fn(),
   });
   child.emit('exit', 1, null);
   await expect(promise).rejects.toThrow('Server exited with code 1.');
@@ -109,7 +109,7 @@ test('spawnServer returns the child, forwarding nothing, with returnProcess', ()
     env: {},
     detached: true,
     returnProcess: true,
-    stdOutLineHandler: jest.fn(),
+    stdOutLineHandler: vi.fn(),
   });
   expect(result).toBe(child);
   expect(mockSpawnProcess.mock.calls[0][0].processOptions.detached).toBe(true);

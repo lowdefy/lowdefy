@@ -15,6 +15,7 @@
 */
 
 import createRecordingSession from './createRecordingSession.js';
+import { expect, test } from 'vitest';
 
 const START = Date.parse('2026-10-03T14:03:11.000Z');
 

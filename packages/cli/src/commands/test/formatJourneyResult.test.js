@@ -15,6 +15,7 @@
 */
 
 import formatJourneyResult from './formatJourneyResult.js';
+import { expect, test } from 'vitest';
 
 test('formatJourneyResult prints a single PASS line with step count and duration', () => {
   expect(

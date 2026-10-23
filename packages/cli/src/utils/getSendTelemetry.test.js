@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('axios', () => ({
+vi.doMock('axios', () => ({
   default: {
-    request: jest.fn(),
+    request: vi.fn(),
   },
 }));
 

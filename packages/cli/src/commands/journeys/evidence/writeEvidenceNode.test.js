@@ -18,6 +18,7 @@ import YAML from 'yaml';
 
 import validateJourney from '../../test/validateJourney.js';
 import writeEvidenceNode from './writeEvidenceNode.js';
+import { expect, test } from 'vitest';
 
 const evidence = {
   production: {

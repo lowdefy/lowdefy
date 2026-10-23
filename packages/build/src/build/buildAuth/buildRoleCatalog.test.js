@@ -15,6 +15,7 @@
 */
 
 import buildRoleCatalog from './buildRoleCatalog.js';
+import { expect, test } from 'vitest';
 
 test('buildRoleCatalog normalizes an empty catalog to an empty array', () => {
   const components = {
@@ -280,4 +281,42 @@ test('buildRoleCatalog uses the role entry config key when an authored id is inv
   } catch (error) {
     expect(error.configKey).toEqual('role-key');
   }
+});
+
+test('buildRoleCatalog passes when every creatorAppRoles id is declared', () => {
+  const components = {
+    auth: {
+      roles: [{ id: 'owner' }, { id: 'admin' }],
+      organizations: { policy: 'tenant', creatorAppRoles: ['owner', 'admin'] },
+      pages: { roles: {} },
+      api: { roles: {} },
+      websockets: { roles: {} },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).not.toThrow();
+});
+
+test('buildRoleCatalog throws a located error when creatorAppRoles lists an undeclared role', () => {
+  const creatorAppRoles = ['owner', 'founder'];
+  Object.defineProperty(creatorAppRoles, '~k', { value: 'creator-app-roles-key' });
+  const components = {
+    auth: {
+      '~k': 'auth-key',
+      roles: [{ id: 'owner' }],
+      organizations: { policy: 'tenant', creatorAppRoles },
+      pages: { roles: {} },
+      api: { roles: {} },
+      websockets: { roles: {} },
+    },
+  };
+  let error;
+  try {
+    buildRoleCatalog({ components });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.message).toBe(
+    'Auth "organizations.creatorAppRoles" lists role "founder", which is not declared in auth.roles. List app roles declared in auth.roles.'
+  );
+  expect(error.configKey).toBe('creator-app-roles-key');
 });

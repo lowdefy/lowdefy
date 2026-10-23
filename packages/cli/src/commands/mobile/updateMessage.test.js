@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import createUpdateMessage from './createUpdateMessage.js';
 import parseShellVersion from './parseShellVersion.js';
 

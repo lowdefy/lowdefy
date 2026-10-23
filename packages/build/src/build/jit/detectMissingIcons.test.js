@@ -16,6 +16,7 @@
 
 import createIconContext from '../icons/createIconContext.js';
 import detectMissingIcons from './detectMissingIcons.js';
+import { expect, test } from 'vitest';
 
 const icons = await createIconContext({ context: { typesMap: { iconSets: {} } } });
 

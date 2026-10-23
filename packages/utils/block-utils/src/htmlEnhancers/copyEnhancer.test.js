@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import HtmlComponent from '../HtmlComponent.js';
@@ -42,7 +42,7 @@ const registration = {
   translate: (key, values) => MESSAGES[key].replace('{value}', values?.value ?? ''),
 };
 
-const writeText = jest.fn();
+const writeText = vi.fn();
 
 beforeEach(() => {
   writeText.mockReset();
@@ -89,8 +89,8 @@ test('a failed copy is announced', async () => {
 });
 
 test('a copy click does not reach data-event, links or row handlers around it', async () => {
-  const onDataEvent = jest.fn();
-  const onRowClick = jest.fn();
+  const onDataEvent = vi.fn();
+  const onRowClick = vi.fn();
   const { container } = render(
     <div onClick={onRowClick}>
       <HtmlComponent

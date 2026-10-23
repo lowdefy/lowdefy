@@ -15,6 +15,7 @@
 */
 
 import runInstance from './runInstance.js';
+import { expect, test } from 'vitest';
 
 const location = 'locationId';
 const operator = '_op';
@@ -128,7 +129,7 @@ test('nameAndSpread - spread args must be an array', () => {
       instanceType: 'object',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op.nameAndSpread takes an array as input argument for z."`
+    `[Error: _op.nameAndSpread takes an array as input argument for z.]`
   );
 });
 
@@ -168,7 +169,7 @@ test('error', () => {
       params: [functions],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"Function error."`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Function error.]`);
 });
 
 test('typeCheck', () => {
@@ -202,7 +203,7 @@ test('typeCheck', () => {
       instanceType: 'object',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op.typeCheck must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide an object instance as the first element in the operator argument array."`
+    `[Error: _op.typeCheck must be evaluated on an object instance. For named args provide an object instance to the "on" property, for listed args provide an object instance as the first element in the operator argument array.]`
   );
 });
 
@@ -236,7 +237,7 @@ test('combination', () => {
       params: 'x',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op.combination accepts one of the following types: array, object."`
+    `[Error: _op.combination accepts one of the following types: array, object.]`
   );
 });
 
@@ -251,7 +252,7 @@ test('undefined methodName throws with available methods', () => {
       instanceType: 'object',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op requires a method. Use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
+    `[Error: _op requires a method. Use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.]`
   );
 });
 
@@ -266,7 +267,7 @@ test('calling an undefined function', () => {
       instanceType: 'object',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
+    `[Error: _op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.]`
   );
 });
 
@@ -281,6 +282,6 @@ test('calling an undefined instance function', () => {
       instanceType: 'object',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_op must be evaluated using one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
+    `[Error: _op must be evaluated using one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.]`
   );
 });

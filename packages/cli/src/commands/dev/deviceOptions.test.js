@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { Command } from 'commander';
 
 import deviceOptions from './deviceOptions.js';

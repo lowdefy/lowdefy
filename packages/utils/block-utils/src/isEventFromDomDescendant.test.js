@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
@@ -30,7 +30,7 @@ function Clickable({ onClick, children }) {
 }
 
 test('isEventFromDomDescendant is true for a click on a DOM child', () => {
-  const onClick = jest.fn();
+  const onClick = vi.fn();
   render(
     <Clickable onClick={onClick}>
       <span>child</span>
@@ -41,7 +41,7 @@ test('isEventFromDomDescendant is true for a click on a DOM child', () => {
 });
 
 test('isEventFromDomDescendant is false for a click inside a portal rendered by a child', () => {
-  const onClick = jest.fn();
+  const onClick = vi.fn();
   render(
     <Clickable onClick={onClick}>{createPortal(<span>in portal</span>, document.body)}</Clickable>
   );

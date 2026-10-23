@@ -15,6 +15,7 @@
 */
 
 import buildDynamicBlocks from './buildDynamicBlocks.js';
+import { expect, test } from 'vitest';
 
 const types = {
   actions: {

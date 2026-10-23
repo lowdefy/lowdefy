@@ -19,6 +19,7 @@ import buildTestPage from '@lowdefy/build/buildTestPage';
 import getContext from '../src/getContext.js';
 import getContextGlobals from '../src/getContextGlobals.js';
 import rememberPath from '../src/rememberPath.js';
+import { expect, test } from 'vitest';
 
 const resetContext = { reset: false, setReset: () => {} };
 

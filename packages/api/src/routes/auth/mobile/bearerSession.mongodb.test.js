@@ -21,7 +21,7 @@
 // /api/endpoints and websocket call resolves it (resolveAuthentication).
 
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 import * as mongodb from 'mongodb';
 
 // The adapter keeps its client for the process lifetime, so the test records
@@ -34,15 +34,15 @@ class RecordingMongoClient extends mongodb.MongoClient {
   }
 }
 
-jest.unstable_mockModule('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
+vi.doMock('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
 
 // Every email the engine sends: the flow and its variables (the code), and the
 // address it went to.
 const sent = [];
-jest.unstable_mockModule('../../../email/renderAuthEmail.js', () => ({
-  default: jest.fn(async ({ flow, vars }) => ({ subject: flow, html: '', text: '', vars })),
+vi.doMock('../../../email/renderAuthEmail.js', () => ({
+  default: vi.fn(async ({ flow, vars }) => ({ subject: flow, html: '', text: '', vars })),
 }));
-jest.unstable_mockModule('../createSendEmail.js', () => ({
+vi.doMock('../createSendEmail.js', () => ({
   default: () =>
     async function sendEmail({ to, subject }) {
       sent.push({ to, flow: subject });
@@ -91,11 +91,11 @@ beforeEach(() => {
 
 function createLogger() {
   return {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    isLevelEnabled: jest.fn(() => false),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    isLevelEnabled: vi.fn(() => false),
   };
 }
 
@@ -1006,14 +1006,14 @@ test('a websocket opened with a bearer acts for its session and closes once the 
     'set-auth-token'
   );
   const headers = new Headers({ authorization: `Bearer ${token}` });
-  const context = { config: {}, logger: createLogger(), rid: 'ws-1', handleError: jest.fn() };
+  const context = { config: {}, logger: createLogger(), rid: 'ws-1', handleError: vi.fn() };
   await resolveAuthentication(context, { auth, headers, strategies: [] });
   expect(context.user).toMatchObject({ id: user.id });
   context.auth = auth;
 
-  const closeSocket = jest.fn();
-  const send = jest.fn();
-  const registry = { subscribe: jest.fn(), unsubscribeAll: jest.fn() };
+  const closeSocket = vi.fn();
+  const send = vi.fn();
+  const registry = { subscribe: vi.fn(), unsubscribeAll: vi.fn() };
   const connection = createWebSocketConnection(context, {
     closeSocket,
     headers,

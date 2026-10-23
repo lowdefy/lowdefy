@@ -42,7 +42,6 @@ Role-gated pages: the headless renderer signs in as a roleless user, so a page o
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
-Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
 
 Phones: an app's mobile pages run in Lowdefy Dev on a phone, an iOS simulator or an Android emulator, which joins this dev server as a tab. lowdefy_device with action "list" names each connected phone by its tab id; action "start" opens Lowdefy Dev on a simulator or emulator. Pass that id as device to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_snapshot_state and lowdefy_load_state to act on the phone instead of the headless browser: steps (click, fill, select, press, wait, screenshot, expect state) run on it by blockId, on the page it shows. lowdefy_device action "inject" fakes the phone's next scan, photo, NFC read, dictated transcript, location, permission answer, push or network state. Use lowdefy_list_types with target "mobile" for the blocks and actions a mobile page can use.
 
@@ -324,9 +323,7 @@ const devToolDefinitions = {
           height: z.number(),
         })
         .optional()
-        .describe(
-          "Crop to a viewport-relative region — pass an annotation's geometry from feedback."
-        ),
+        .describe('Crop to a viewport-relative region.'),
       scrollX: z.number().optional().describe('Scroll offset the clip was recorded at.'),
       scrollY: z.number().optional().describe('Scroll offset the clip was recorded at.'),
       width: z

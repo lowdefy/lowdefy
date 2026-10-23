@@ -15,18 +15,18 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockLogClientError = jest.fn();
-const mockPush = jest.fn();
+const mockLogClientError = vi.fn();
+const mockPush = vi.fn();
 
 // The same-origin rule is the real one from @lowdefy/api; only the logging is mocked.
 const api = await import('@lowdefy/api');
-jest.unstable_mockModule('@lowdefy/api', () => ({
+vi.doMock('@lowdefy/api', () => ({
   ...api,
   logClientError: mockLogClientError,
 }));
-jest.unstable_mockModule('../../lib/docs/clientErrorStore.js', () => ({
+vi.doMock('../../lib/docs/clientErrorStore.js', () => ({
   default: { push: mockPush },
 }));
 

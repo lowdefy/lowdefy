@@ -20,10 +20,16 @@ import GridLink from './GridLink.js';
 import NullCell from './NullCell.js';
 import { resolveLink } from './resolveFieldRefs.js';
 
+// GridLink's wrapper is display: contents, so the link is the cell's flex item and carries its
+// own ellipsis.
 const linkStyle = {
   color: 'var(--ant-color-link)',
   cursor: 'pointer',
   textDecoration: 'none',
+  minWidth: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 };
 
 function LinkCell(params) {

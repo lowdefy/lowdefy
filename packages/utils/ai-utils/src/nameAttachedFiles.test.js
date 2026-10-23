@@ -16,7 +16,7 @@
 
 import { convertToModelMessages, validateUIMessages } from 'ai';
 import { MockLanguageModelV4 } from 'ai/test';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createToolLoopAgent from './createToolLoopAgent.js';
 import nameAttachedFiles from './nameAttachedFiles.js';
@@ -122,8 +122,8 @@ test('the model gets each chat file named and without its storage key', async ()
     agent: { agentId: 'support_agent', properties: { model: 'mock' }, tools: [] },
     context: {
       agentContext: { sharedStateReadOnly: true },
-      callEndpoint: jest.fn(),
-      logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
+      callEndpoint: vi.fn(),
+      logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
     },
   });
 

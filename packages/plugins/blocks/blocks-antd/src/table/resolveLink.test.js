@@ -15,6 +15,7 @@
 */
 
 import resolveLink from './resolveLink.js';
+import { expect, test } from 'vitest';
 
 test('resolveLink reads urlQuery values from the row and keeps the rest', () => {
   expect(

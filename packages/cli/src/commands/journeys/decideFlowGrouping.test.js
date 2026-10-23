@@ -15,6 +15,7 @@
 */
 
 import decideFlowGrouping from './decideFlowGrouping.js';
+import { expect, test } from 'vitest';
 
 test('decideFlowGrouping groups from 100000 rows on', () => {
   expect(decideFlowGrouping({ rows: 99999 })).toEqual({

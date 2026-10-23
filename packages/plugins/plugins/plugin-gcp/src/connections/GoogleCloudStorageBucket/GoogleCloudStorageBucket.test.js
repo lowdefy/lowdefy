@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 
 import GoogleCloudStorageBucket from './GoogleCloudStorageBucket.js';
+import { expect, test } from 'vitest';
 
 const schema = GoogleCloudStorageBucket.schema;
 

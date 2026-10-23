@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockSave = jest.fn();
-const mockFile = jest.fn();
-const mockBucket = jest.fn();
-const mockStorageConstructor = jest.fn();
+const mockSave = vi.fn();
+const mockFile = vi.fn();
+const mockBucket = vi.fn();
+const mockStorageConstructor = vi.fn();
 
-jest.unstable_mockModule('@google-cloud/storage', () => ({
-  Storage: jest.fn().mockImplementation((...args) => {
+vi.doMock('@google-cloud/storage', () => ({
+  Storage: vi.fn().mockImplementation(function (...args) {
     mockStorageConstructor(...args);
     return { bucket: mockBucket };
   }),
@@ -39,8 +39,12 @@ beforeEach(() => {
   mockFile.mockReset();
   mockBucket.mockReset();
   mockStorageConstructor.mockReset();
-  mockBucket.mockImplementation(() => ({ file: mockFile }));
-  mockFile.mockImplementation(() => ({ save: mockSave }));
+  mockBucket.mockImplementation(function () {
+    return { file: mockFile };
+  });
+  mockFile.mockImplementation(function () {
+    return { save: mockSave };
+  });
 });
 
 test('GcsPutObject decodes base64 content and writes the object', async () => {
@@ -67,7 +71,7 @@ test('GcsPutObject sets contentType and public when provided', async () => {
 });
 
 test('Error from storage client', async () => {
-  mockSave.mockImplementation(() => {
+  mockSave.mockImplementation(function () {
     throw new Error('Test GCS client error.');
   });
   const request = { key: 'key', content: 'content' };

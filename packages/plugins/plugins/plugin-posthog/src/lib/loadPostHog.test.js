@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import postHogState from './postHogState.js';
 import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
 
-jest.unstable_mockModule('posthog-js', () => {
+vi.doMock('posthog-js', () => {
   throw new Error('Failed to fetch dynamically imported module.');
 });
 
@@ -30,12 +30,12 @@ let PostHogInit;
 
 beforeEach(async () => {
   resetPostHogState();
-  warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogCapture, PostHogInit } = await import('../actions.js'));
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('PostHogInit warns and turns the other actions into no-ops when posthog-js fails to load', async () => {

@@ -17,13 +17,13 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockConfig = jest.fn();
-const mockRunEas = jest.fn();
+const mockConfig = vi.fn();
+const mockRunEas = vi.fn();
 
-jest.unstable_mockModule('./config.js', () => ({ default: mockConfig }));
-jest.unstable_mockModule('./runEas.js', () => ({ default: mockRunEas }));
+vi.doMock('./config.js', () => ({ default: mockConfig }));
+vi.doMock('./runEas.js', () => ({ default: mockRunEas }));
 
 const { default: mobileBuild } = await import('./build.js');
 const { default: mobileSubmit } = await import('./submit.js');
@@ -32,7 +32,7 @@ let projectDirectory;
 
 function createContext(options = {}) {
   return {
-    logger: { info: jest.fn(), debug: jest.fn(), warn: jest.fn() },
+    logger: { info: vi.fn(), debug: vi.fn(), warn: vi.fn() },
     options: { env: 'production', platform: 'all', ...options },
   };
 }

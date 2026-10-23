@@ -1288,7 +1288,7 @@
     {
       "path": "jobs",
       "pageId": "jobs",
-      "hash": "9113f76ddc6324902775b701581e71193419123eea8c783f32002fca1a36e691",
+      "hash": "3f03735b7654569dd4c8ee0f297bfe1c355301636fa678149aefe415911b264c",
       "typesKey": "66d757a1410d"
     },
     {
@@ -2757,6 +2757,7 @@
           "payload": {
             "~k": "2q"
           },
+          "readOnly": false,
           "requestId": "get_jobs",
           "pageId": "jobs",
           "~k": "w"
@@ -2958,6 +2959,7 @@
       "public": true,
       "~k": "2r"
     },
+    "readOnly": false,
     "requestId": "get_jobs",
     "pageId": "jobs",
     "~k": "w"

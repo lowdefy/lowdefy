@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import net from 'net';
 import os from 'os';
@@ -55,7 +55,7 @@ beforeEach(() => {
 });
 
 afterEach(async () => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   sockets.forEach((socket) => socket.destroy());
   await new Promise((resolve) => (server ? server.close(resolve) : resolve()));
   server = null;
@@ -84,7 +84,7 @@ onPosix('connectHub refuses a hub socket that belongs to another user', async ()
   const { hubDirectory, socketPath } = getHubPaths();
   fs.mkdirSync(hubDirectory, { recursive: true });
   await listenAsHub(socketPath);
-  jest.spyOn(process, 'getuid').mockReturnValue(process.getuid() + 1);
+  vi.spyOn(process, 'getuid').mockReturnValue(process.getuid() + 1);
   await expect(connectHub({ autoStart: false })).rejects.toThrow('belongs to another user');
 });
 

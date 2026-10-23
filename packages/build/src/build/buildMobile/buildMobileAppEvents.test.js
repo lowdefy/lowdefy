@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import buildMobileAppEvents from './buildMobileAppEvents.js';
 import testContext from '../../test-utils/testContext.js';
 

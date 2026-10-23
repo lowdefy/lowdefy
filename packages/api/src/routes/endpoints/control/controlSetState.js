@@ -29,7 +29,7 @@ function controlSetState(context, routineContext, { control }) {
   logger.debug({
     event: 'debug_control_set_state',
     input: control[':set_state'],
-    evaluated: evaluatedSetState,
+    keys: Object.keys(evaluatedSetState ?? {}),
   });
 
   Object.entries(evaluatedSetState).forEach(([key, value]) => {

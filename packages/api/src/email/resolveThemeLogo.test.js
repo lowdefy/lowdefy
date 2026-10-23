@@ -15,6 +15,7 @@
 */
 
 import resolveThemeLogo from './resolveThemeLogo.js';
+import { expect, test } from 'vitest';
 
 test('resolveThemeLogo resolves a relative logo against serverUrl', () => {
   expect(

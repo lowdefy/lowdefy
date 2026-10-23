@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import { icons as lucideIcons } from 'lucide';
 
@@ -23,7 +23,7 @@ import createLucideIconLayer from './icons/createLucideIconLayer.js';
 import writeMobile from './writeMobile.js';
 import testContext from '../test-utils/testContext.js';
 
-const mockWriteBuildArtifact = jest.fn();
+const mockWriteBuildArtifact = vi.fn();
 
 function createContext() {
   const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });

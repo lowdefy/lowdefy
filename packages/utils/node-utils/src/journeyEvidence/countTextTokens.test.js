@@ -15,6 +15,7 @@
 */
 
 import countTextTokens from './countTextTokens.js';
+import { expect, test } from 'vitest';
 
 function click({ block = 'grid', column = 'name', token, config = false, person = 'p1' }) {
   return {

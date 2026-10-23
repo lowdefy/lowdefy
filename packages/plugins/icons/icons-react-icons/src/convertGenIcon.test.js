@@ -20,6 +20,7 @@ import { createRequire } from 'module';
 
 import convertGenIcon from './convertGenIcon.js';
 import parseGenIconSource from './parseGenIconSource.js';
+import { expect, test } from 'vitest';
 
 const require = createRequire(import.meta.url);
 const reactIconsDirectory = path.dirname(require.resolve('react-icons'));

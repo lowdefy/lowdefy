@@ -15,6 +15,7 @@
 */
 
 import authorizeRole from './authorizeRole.js';
+import { expect, test } from 'vitest';
 
 test('authorizeRole passes admin for member update', () => {
   expect(authorizeRole({ permissions: { member: ['update'] }, role: 'admin' })).toBe(true);

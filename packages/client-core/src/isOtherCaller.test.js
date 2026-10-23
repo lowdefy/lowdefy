@@ -17,6 +17,7 @@
 import { callerHash, parseCallerStamp } from '@lowdefy/helpers';
 
 import isOtherCaller from './isOtherCaller.js';
+import { expect, test } from 'vitest';
 
 const user = { id: 'user_1', organization_id: 'org_1', roles: ['editor'] };
 

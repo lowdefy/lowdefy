@@ -16,29 +16,29 @@
 
 import { Hono } from 'hono';
 import { etag } from 'hono/etag';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 // What a mobile shell and a browser each get from the dev server: the dev
 // mobile root and JIT pages behind the surface gate, with the real
 // @lowdefy/api and the middleware app.js puts on these routes. The JIT build
 // itself is stubbed.
 
-jest.unstable_mockModule('../../lib/docs/getBuildId.js', () => ({
+vi.doMock('../../lib/docs/getBuildId.js', () => ({
   default: () => 'build-a',
 }));
 
-const mockBuildPageWithContext = jest.fn(async () => ({ result: true, buildContext: {} }));
-jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
+const mockBuildPageWithContext = vi.fn(async () => ({ result: true, buildContext: {} }));
+vi.doMock('../../lib/server/jitPageBuilder.js', () => ({
   buildPageWithContext: mockBuildPageWithContext,
   getPageJitEnrichment: ({ pageConfig }) =>
     pageConfig.target === 'mobile' ? { jsEntries: 'export default {};' } : {},
 }));
 
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({
+vi.doMock('../../lib/build/auth.js', () => ({
   default: { authPages: { signIn: '/auth/login', twoFactorEnrol: '/two-factor-enrol' } },
 }));
 
-jest.unstable_mockModule('../../lib/build/config.js', () => ({
+vi.doMock('../../lib/build/config.js', () => ({
   default: { basePath: '' },
 }));
 
@@ -125,8 +125,8 @@ function createApp() {
       authorizeOutcome: authorizeOutcome(user),
       buildDirectory: '/build',
       configDirectory: '/config',
-      handleError: jest.fn(),
-      logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
+      handleError: vi.fn(),
+      logger: { debug: vi.fn(), info: vi.fn(), error: vi.fn() },
       readConfigFile: async (file) => {
         if (file.startsWith('pages/')) return pages[file.slice(6, -5)] ?? null;
         return configFiles[file];

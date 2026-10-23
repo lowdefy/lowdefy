@@ -15,6 +15,7 @@
 */
 
 import formatRunError from './formatRunError.js';
+import { expect, test } from 'vitest';
 
 test('formatRunError says how many attempts failed when the queue retried', () => {
   expect(formatRunError({ error: 'Provider error (500)', attempts: 3 })).toEqual({

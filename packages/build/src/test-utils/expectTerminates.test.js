@@ -15,6 +15,7 @@
 */
 
 import expectTerminates from './expectTerminates.js';
+import { expect, test } from 'vitest';
 
 test('passes the resolved value through when the promise settles in time', async () => {
   const result = await expectTerminates(Promise.resolve(42), 1000, 'should not fire');
@@ -29,7 +30,7 @@ test('passes the rejection through when the promise rejects in time', async () =
 
 test('rejects with the hint when the promise does not settle within ms', async () => {
   const never = new Promise(() => {});
-  await expect(
-    expectTerminates(never, 20, 'suspected cycle-detection regression')
-  ).rejects.toThrow('promise did not settle within 20ms — suspected cycle-detection regression');
+  await expect(expectTerminates(never, 20, 'suspected cycle-detection regression')).rejects.toThrow(
+    'promise did not settle within 20ms — suspected cycle-detection regression'
+  );
 });

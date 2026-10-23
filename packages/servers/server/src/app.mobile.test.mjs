@@ -18,7 +18,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 // The real app wiring with the real page, mobile root and well-known routes,
 // over a fake caller context: what a mobile shell and a browser each get.
@@ -100,7 +100,7 @@ function authorizeOutcome(user) {
   };
 }
 
-jest.unstable_mockModule('./middleware/apiContext.js', () => ({
+vi.doMock('./middleware/apiContext.js', () => ({
   default: () => async (c, next) => {
     const user = c.req.header('x-test-roles')
       ? { id: 'u1', roles: c.req.header('x-test-roles').split(',') }
@@ -110,7 +110,7 @@ jest.unstable_mockModule('./middleware/apiContext.js', () => ({
       authSession: null,
       authEnforcement: null,
       authorizeOutcome: authorizeOutcome(user),
-      logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
       readConfigFile: async (file) => {
         if (file.startsWith('pages/')) return pages[file.slice(6, -5)] ?? null;
         return configFiles[file];
@@ -119,37 +119,37 @@ jest.unstable_mockModule('./middleware/apiContext.js', () => ({
     await next();
   },
 }));
-jest.unstable_mockModule('./routes/agent.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/auth.js', () => ({ default: () => handler }));
-jest.unstable_mockModule('./routes/clientError.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/cron.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/cronForward.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/detached.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/endpoints.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/mcp.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/mountOauthDiscovery.js', () => ({ default: () => {} }));
-jest.unstable_mockModule('./routes/request.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/usage.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/user.js', () => ({ default: handler }));
-jest.unstable_mockModule('./routes/websocket.js', () => ({ default: handler }));
-jest.unstable_mockModule('./html/renderPage.js', () => ({
+vi.doMock('./routes/agent.js', () => ({ default: handler }));
+vi.doMock('./routes/auth.js', () => ({ default: () => handler }));
+vi.doMock('./routes/clientError.js', () => ({ default: handler }));
+vi.doMock('./routes/cron.js', () => ({ default: handler }));
+vi.doMock('./routes/cronForward.js', () => ({ default: handler }));
+vi.doMock('./routes/detached.js', () => ({ default: handler }));
+vi.doMock('./routes/endpoints.js', () => ({ default: handler }));
+vi.doMock('./routes/mcp.js', () => ({ default: handler }));
+vi.doMock('./routes/mountOauthDiscovery.js', () => ({ default: () => {} }));
+vi.doMock('./routes/request.js', () => ({ default: handler }));
+vi.doMock('./routes/usage.js', () => ({ default: handler }));
+vi.doMock('./routes/user.js', () => ({ default: handler }));
+vi.doMock('./routes/websocket.js', () => ({ default: handler }));
+vi.doMock('./html/renderPage.js', () => ({
   default: (c) => c.html('<html></html>'),
 }));
-jest.unstable_mockModule('./middleware/sentry.js', () => ({ default: passThrough }));
-jest.unstable_mockModule('./middleware/errorHandler.js', () => ({
+vi.doMock('./middleware/sentry.js', () => ({ default: passThrough }));
+vi.doMock('./middleware/errorHandler.js', () => ({
   default: () => (error, c) => c.json({ error: error.message }, 500),
 }));
-jest.unstable_mockModule('../lib/build/appMeta.js', () => ({ default: { buildId: 'build-1' } }));
-jest.unstable_mockModule('../lib/build/auth.js', () => ({
+vi.doMock('../lib/build/appMeta.js', () => ({ default: { buildId: 'build-1' } }));
+vi.doMock('../lib/build/auth.js', () => ({
   default: { configured: false, authPages: { signIn: '/auth/login' } },
 }));
-jest.unstable_mockModule('../lib/build/theme.js', () => ({ default: {} }));
-jest.unstable_mockModule('../lib/build/config.js', () => ({ default: {} }));
-jest.unstable_mockModule('../lib/build/mobileConfig.js', () => ({ default: mobileConfig }));
-jest.unstable_mockModule('../lib/server/auth/getAuth.js', () => ({ default: jest.fn() }));
-jest.unstable_mockModule('../lib/server/auth/getStrategies.js', () => ({ default: jest.fn() }));
-jest.unstable_mockModule('../lib/server/log/createLogger.js', () => ({
-  default: () => ({ info: jest.fn(), warn: jest.fn(), error: jest.fn() }),
+vi.doMock('../lib/build/theme.js', () => ({ default: {} }));
+vi.doMock('../lib/build/config.js', () => ({ default: {} }));
+vi.doMock('../lib/build/mobileConfig.js', () => ({ default: mobileConfig }));
+vi.doMock('../lib/server/auth/getAuth.js', () => ({ default: vi.fn() }));
+vi.doMock('../lib/server/auth/getStrategies.js', () => ({ default: vi.fn() }));
+vi.doMock('../lib/server/log/createLogger.js', () => ({
+  default: () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() }),
 }));
 
 const { default: createApp } = await import('./app.js');

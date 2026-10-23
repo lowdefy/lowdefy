@@ -14,17 +14,20 @@ You are a senior software engineer generating tests for the Lowdefy codebase. Fo
 ### Step 1: Identify Changed Files
 
 **If a PR number is provided ($ARGUMENTS):**
+
 ```bash
 gh pr diff $ARGUMENTS --name-only
 ```
 
 **If no PR number (uncommitted changes):**
+
 ```bash
 git diff --name-only HEAD
 git diff --cached --name-only
 ```
 
 Filter the results to only include `.js` files in `packages/*/src/` directories. Exclude:
+
 - `*.test.js` files (existing tests)
 - `packages/plugins/blocks/` (block testing is disabled)
 - `packages/docs/` (documentation)
@@ -68,7 +71,7 @@ For each changed file:
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 // ... imports
 
 // Tests here
@@ -79,6 +82,7 @@ import { jest } from '@jest/globals';
 Use descriptive names: `test('{functionName} {scenario}', () => { })`
 
 Examples:
+
 - `test('buildConnections no connections', ...)`
 - `test('buildConnections connections not an array', ...)`
 - `test('throw on missing id', ...)`
@@ -86,35 +90,46 @@ Examples:
 #### Package-Specific Patterns
 
 **Build Functions (`packages/build/`):**
+
 ```javascript
+import { expect, test } from 'vitest';
+
 import buildX from './buildX.js';
 import testContext from '../test/testContext.js';
 
 const context = testContext();
 
 test('buildX basic case', () => {
-  const components = { /* test data */ };
+  const components = {
+    /* test data */
+  };
   const res = buildX({ components, context });
   expect(res.property).toEqual(expected);
 });
 
 test('buildX throws on invalid input', () => {
-  const components = { /* invalid data */ };
+  const components = {
+    /* invalid data */
+  };
   expect(() => buildX({ components, context })).toThrow('Expected error message');
 });
 ```
 
 **API/Request Handlers (`packages/api/`):**
+
 ```javascript
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
+
 import functionName from './functionName.js';
 import testContext from '../../test/testContext.js';
 
-const mockFn = jest.fn();
+const mockFn = vi.fn();
 
 const context = testContext({
-  connections: { /* mock connections */ },
-  readConfigFile: jest.fn(),
+  connections: {
+    /* mock connections */
+  },
+  readConfigFile: vi.fn(),
 });
 
 test('functionName success case', async () => {
@@ -124,61 +139,82 @@ test('functionName success case', async () => {
 ```
 
 **Operators (`packages/operators/` or `packages/plugins/operators/`):**
+
 ```javascript
+import { expect, test } from 'vitest';
+
 import _operatorName from './_operatorName.js';
 
 test('_operatorName basic usage', () => {
   const result = _operatorName({
     location: 'test.location',
-    params: { /* operator params */ },
+    params: {
+      /* operator params */
+    },
   });
   expect(result).toEqual(expected);
 });
 
 test('_operatorName throws on invalid params', () => {
-  expect(() => _operatorName({
-    location: 'test.location',
-    params: 'invalid',
-  })).toThrow('_operatorName');
+  expect(() =>
+    _operatorName({
+      location: 'test.location',
+      params: 'invalid',
+    })
+  ).toThrow('_operatorName');
 });
 ```
 
 **Actions (`packages/plugins/actions/`):**
+
 ```javascript
+import { expect, test, vi } from 'vitest';
+
 import ActionName from './ActionName.js';
 
-const mockSetState = jest.fn();
+const mockSetState = vi.fn();
 
 test('ActionName executes correctly', async () => {
   await ActionName({
     methods: { setState: mockSetState },
-    params: { /* action params */ },
+    params: {
+      /* action params */
+    },
   });
   expect(mockSetState).toHaveBeenCalledWith(expected);
 });
 ```
 
 **Connections (`packages/plugins/connections/`):**
-```javascript
-import { jest } from '@jest/globals';
 
-// Mock external dependencies
-jest.unstable_mockModule('dependency', () => ({
-  client: jest.fn(),
+```javascript
+import { expect, test, vi } from 'vitest';
+
+// Mock external dependencies. A client the code calls with `new` needs a
+// function implementation, not an arrow function.
+vi.doMock('dependency', () => ({
+  client: vi.fn(),
 }));
 
 test('ConnectionRequest success', async () => {
   const { default: ConnectionRequest } = await import('./ConnectionRequest.js');
   const result = await ConnectionRequest({
-    request: { /* request config */ },
-    connection: { /* connection config */ },
+    request: {
+      /* request config */
+    },
+    connection: {
+      /* connection config */
+    },
   });
   expect(result).toEqual(expected);
 });
 ```
 
 **Utility Functions (`packages/utils/`, `packages/helpers/`):**
+
 ```javascript
+import { expect, test } from 'vitest';
+
 import utilityFunction from './utilityFunction.js';
 
 test('utilityFunction basic case', () => {
@@ -192,11 +228,11 @@ test('utilityFunction edge case', () => {
 
 #### ES Module Mocking Pattern
 
-Always use dynamic imports when mocking ES modules:
+`vi.doMock` is not hoisted, so import the module under test dynamically after it:
 
 ```javascript
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  readFile: jest.fn(),
+vi.doMock('@lowdefy/node-utils', () => ({
+  readFile: vi.fn(),
 }));
 
 test('function with mocked dependency', async () => {
@@ -218,13 +254,11 @@ For each function, generate tests for:
 
 ```javascript
 test('throw on missing required field', () => {
-  expect(() => fn({ })).toThrow('Field name missing.');
+  expect(() => fn({})).toThrow('Field name missing.');
 });
 
 test('throw on invalid field type', () => {
-  expect(() => fn({ field: 123 })).toThrow(
-    'Field is not a string. Received 123.'
-  );
+  expect(() => fn({ field: 123 })).toThrow('Field is not a string. Received 123.');
 });
 ```
 
@@ -250,12 +284,13 @@ Fix any failing tests before completing.
 2. **Use type helpers** - Use `type.isNone()`, `type.isObject()`, etc. from `@lowdefy/helpers`
 3. **Include license header** - Every test file must have the Apache 2.0 license header
 4. **Co-locate tests** - Test files go next to source files as `{name}.test.js`
-5. **Import jest explicitly** - Always `import { jest } from '@jest/globals';`
+5. **Import from vitest explicitly** - `import { expect, test, vi } from 'vitest';` (there are no globals)
 6. **Use .js extensions** - All imports must include `.js` extension
 
 ### Output
 
 Provide a summary of:
+
 - Files analyzed
 - Tests generated (new files created)
 - Tests updated (existing files modified)

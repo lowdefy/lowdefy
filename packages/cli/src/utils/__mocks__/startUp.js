@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
-const mockStartUp = jest.fn().mockImplementation(mockStartUpImp);
+import { vi } from 'vitest';
+
+const mockStartUp = vi.fn().mockImplementation(mockStartUpImp);
 
 async function mockStartUpImp({ context, options = {} }) {
   context.command = 'test';
@@ -23,9 +25,9 @@ async function mockStartUpImp({ context, options = {} }) {
 
   context.logger = {
     ui: {
-      info: jest.fn(),
-      succeed: jest.fn(),
-      log: jest.fn(),
+      info: vi.fn(),
+      succeed: vi.fn(),
+      log: vi.fn(),
     },
   };
 
@@ -40,7 +42,7 @@ async function mockStartUpImp({ context, options = {} }) {
   context.cacheDirectory = `${context.configDirectory}/cacheDirectory`;
   context.buildDirectory = `${context.configDirectory}/buildDirectory`;
 
-  context.sendTelemetry = jest.fn();
+  context.sendTelemetry = vi.fn();
 
   return context;
 }

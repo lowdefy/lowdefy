@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 import { getDevError } from '@lowdefy/engine';
 import {
   AuthenticationError,
@@ -22,8 +22,9 @@ import {
   TwoFactorEnrolmentRequiredError,
   UserError,
 } from '@lowdefy/errors';
-import { callerHash, callerStamp } from '@lowdefy/helpers';
+import { callerHash, callerStamp, type } from '@lowdefy/helpers';
 
+import NonJsonResponseError from './NonJsonResponseError.js';
 import request from './request.js';
 import createMemoryStore from './test/createMemoryStore.js';
 
@@ -31,9 +32,9 @@ let host;
 
 beforeEach(() => {
   host = {
-    fetch: jest.fn(),
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
+    fetch: vi.fn(),
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
     sessionStorage: createMemoryStore(),
   };
 });
@@ -45,12 +46,13 @@ function createLowdefy(user) {
 }
 
 function mockFetchResponse({ ok, status = ok ? 200 : 500, body, headers = {} }) {
-  host.fetch = jest.fn(() =>
+  host.fetch = vi.fn(() =>
     Promise.resolve({
       ok,
       status,
       headers: { get: (name) => headers[name] ?? null },
       json: () => Promise.resolve(body),
+      text: () => Promise.resolve(type.isString(body) ? body : JSON.stringify(body)),
     })
   );
 }
@@ -87,6 +89,40 @@ test('request throws the body message for a non-2xx response without an error pa
   mockFetchResponse({ ok: false, body: { message: 'Bad gateway.' } });
   await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toThrow(
     'Bad gateway.'
+  );
+});
+
+test('request throws a NonJsonResponseError with the status and body start for a plain-text error', async () => {
+  mockFetchResponse({
+    ok: false,
+    status: 500,
+    body: 'A server error has occurred\n\nFUNCTION_INVOCATION_FAILED\n\ncpt1::abc-123\n',
+  });
+  let thrown;
+  try {
+    await request({ lowdefy: createLowdefy(null), url: '/api/test', method: 'POST', body: {} });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(NonJsonResponseError);
+  expect(thrown.message).toBe('The server could not answer (status 500). Try again.');
+  expect(thrown.status).toBe(500);
+  expect(thrown.responseText).toBe(
+    'A server error has occurred\n\nFUNCTION_INVOCATION_FAILED\n\ncpt1::abc-123'
+  );
+});
+
+test('request says a 504 with a plain-text body timed out', async () => {
+  mockFetchResponse({ ok: false, status: 504, body: 'Gateway Timeout' });
+  await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toThrow(
+    'The request timed out. Try again.'
+  );
+});
+
+test('request treats a JSON error body that is not an object as a NonJsonResponseError', async () => {
+  mockFetchResponse({ ok: false, status: 502, body: '"Bad gateway"' });
+  await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toBeInstanceOf(
+    NonJsonResponseError
   );
 });
 
@@ -162,7 +198,7 @@ describe('build check', () => {
 
   test('request reloads and never settles when the server refuses a call from another build', async () => {
     mockFetchResponse({ ok: false, status: 409, body: refusal });
-    const settled = jest.fn();
+    const settled = vi.fn();
     request({
       lowdefy: createLowdefy(null),
       buildId: 'build-1',
@@ -209,7 +245,7 @@ describe('caller check', () => {
   const userA = { id: 'user_a', organization_id: 'org_1', roles: ['editor'] };
 
   async function expectReloadWithoutSettling(args) {
-    const settled = jest.fn();
+    const settled = vi.fn();
     request(args).then(settled, settled);
     await new Promise((resolve) => setTimeout(resolve, 20));
     expect(host.onCallerChanged).toHaveBeenCalledTimes(1);
@@ -423,9 +459,9 @@ describe('bearer transport', () => {
     let held = token;
     host.authTransport = 'bearer';
     host.tokenStore = {
-      get: jest.fn(() => held),
-      set: jest.fn(),
-      clear: jest.fn(async () => {
+      get: vi.fn(() => held),
+      set: vi.fn(),
+      clear: vi.fn(async () => {
         held = null;
       }),
     };
@@ -462,7 +498,7 @@ describe('bearer transport', () => {
       headers: { 'x-lowdefy-caller': '' },
     });
     const lowdefy = createBearerLowdefy({ token: 'session.sig', user: { id: 'user_a' } });
-    const settled = jest.fn();
+    const settled = vi.fn();
     request({ lowdefy, url: '/api/request/home/list', method: 'POST', body: {} }).then(
       settled,
       settled

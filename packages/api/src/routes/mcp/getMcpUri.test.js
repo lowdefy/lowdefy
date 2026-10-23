@@ -15,6 +15,7 @@
 */
 
 import { getAsIssuer, getMcpResourceMetadataUri, getMcpResourceUri } from './getMcpUri.js';
+import { afterEach, describe, expect, test } from 'vitest';
 
 const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
 

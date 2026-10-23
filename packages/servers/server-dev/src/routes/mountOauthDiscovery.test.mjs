@@ -15,25 +15,25 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockCreateAsMetadataHandler = jest.fn(
+const mockCreateAsMetadataHandler = vi.fn(
   () => async () =>
     new Response(JSON.stringify({ issuer: 'https://app.test.com/api/auth' }), {
       status: 200,
       headers: { 'content-type': 'application/json' },
     })
 );
-jest.unstable_mockModule('@lowdefy/api', () => ({
+vi.doMock('@lowdefy/api', () => ({
   createAsMetadataHandler: mockCreateAsMetadataHandler,
 }));
 
-jest.unstable_mockModule('./mcpProtectedResourceMetadata.js', () => ({
+vi.doMock('./mcpProtectedResourceMetadata.js', () => ({
   default: (c) => c.json({ resource: 'mcp' }),
 }));
 
 const mockAuthJson = { configured: true };
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({
+vi.doMock('../../lib/build/auth.js', () => ({
   default: mockAuthJson,
 }));
 

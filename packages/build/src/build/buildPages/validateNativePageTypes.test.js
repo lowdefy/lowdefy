@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import validateNativePageTypes from './validateNativePageTypes.js';
 import createCounter from '../../utils/createCounter.js';
 import testContext from '../../test-utils/testContext.js';

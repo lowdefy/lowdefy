@@ -17,6 +17,7 @@
 import changeLeafOperator from './changeLeafOperator.js';
 import createDefaultLeaf from './createDefaultLeaf.js';
 import toRootGroup from './toRootGroup.js';
+import { expect, test } from 'vitest';
 
 test('changeLeafOperator keeps a value of the same shape', () => {
   expect(changeLeafOperator({ leaf: { key: 'a', op: 'eq', value: 3 }, op: 'gt' })).toEqual({
@@ -69,4 +70,42 @@ test('toRootGroup wraps a leaf and treats no filter as an empty and', () => {
   expect(toRootGroup(null)).toEqual({ and: [] });
   expect(toRootGroup(leaf)).toEqual({ and: [leaf] });
   expect(toRootGroup({ or: [leaf] })).toEqual({ or: [leaf] });
+});
+
+test('changeLeafOperator keeps a relative date among within, before and after only', () => {
+  const relative = { last: 3, unit: 'month' };
+  expect(
+    changeLeafOperator({ leaf: { key: 'd', op: 'before', value: relative }, op: 'after' })
+  ).toEqual({
+    key: 'd',
+    op: 'after',
+    value: relative,
+  });
+  expect(
+    changeLeafOperator({ leaf: { key: 'd', op: 'within', value: relative }, op: 'before' })
+  ).toEqual({
+    key: 'd',
+    op: 'before',
+    value: relative,
+  });
+  expect(
+    changeLeafOperator({ leaf: { key: 'd', op: 'after', value: relative }, op: 'within' })
+  ).toEqual({
+    key: 'd',
+    op: 'within',
+    value: relative,
+  });
+  expect(
+    changeLeafOperator({ leaf: { key: 'd', op: 'before', value: relative }, op: 'eq' })
+  ).toEqual({
+    key: 'd',
+    op: 'eq',
+  });
+  expect(
+    changeLeafOperator({ leaf: { key: 'd', op: 'before', value: '2026-01-01' }, op: 'after' })
+  ).toEqual({
+    key: 'd',
+    op: 'after',
+    value: '2026-01-01',
+  });
 });

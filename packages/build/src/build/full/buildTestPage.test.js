@@ -15,6 +15,7 @@
 */
 
 import buildTestPage from './buildTestPage.js';
+import { expect, test } from 'vitest';
 
 test('buildTestPage', () => {
   const pageConfig = {
@@ -58,6 +59,7 @@ test('buildTestPage', () => {
         type: 'AxiosHttp',
         connectionId: 'axios',
         payload: {},
+        readOnly: false,
         auth: {
           public: true,
         },

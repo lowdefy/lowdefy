@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { Hono } from 'hono';
 
 import mountMobileWellKnown from './mountMobileWellKnown.js';

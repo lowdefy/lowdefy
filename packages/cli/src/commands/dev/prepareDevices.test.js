@@ -18,10 +18,10 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockRunDeviceTool = jest.fn();
-jest.unstable_mockModule('./runDeviceTool.js', () => ({ default: mockRunDeviceTool }));
+const mockRunDeviceTool = vi.fn();
+vi.doMock('./runDeviceTool.js', () => ({ default: mockRunDeviceTool }));
 
 const { default: checkIosTools } = await import('./checkIosTools.js');
 const { default: prepareDevices } = await import('./prepareDevices.js');

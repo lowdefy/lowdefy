@@ -15,6 +15,7 @@
 */
 
 import selectLegacyOrphans from './selectLegacyOrphans.js';
+import { expect, test } from 'vitest';
 
 const START = 'Fri Sep 25 10:00:00 2026';
 

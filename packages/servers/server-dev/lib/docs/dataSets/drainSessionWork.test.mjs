@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import drainSessionWork from './drainSessionWork.js';
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('drainSessionWork resolves true once every promise, including one added while waiting, settles', async () => {
@@ -49,16 +49,32 @@ test('drainSessionWork resolves true at once with no work', async () => {
 });
 
 test('drainSessionWork resolves false after the timeout when work never settles', async () => {
-  jest.useFakeTimers({ doNotFake: ['performance'] });
+  vi.useFakeTimers({
+    toFake: [
+      'Date',
+      'hrtime',
+      'queueMicrotask',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
   const work = new Set([new Promise(() => {})]);
   const draining = drainSessionWork({ work, timeoutMs: 30000 });
   let done = false;
   draining.then(() => {
     done = true;
   });
-  jest.advanceTimersByTime(29999);
+  vi.advanceTimersByTime(29999);
   await Promise.resolve();
   expect(done).toBe(false);
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   await expect(draining).resolves.toBe(false);
 });

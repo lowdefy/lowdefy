@@ -17,6 +17,7 @@
 */
 
 import type from './type.js';
+import { describe, expect, test } from 'vitest';
 
 test('type - isArray', () => {
   expect(type.isArray([])).toEqual(true);

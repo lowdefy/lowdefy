@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockLoadMobileShell = jest.fn();
-jest.unstable_mockModule('./loadMobileShell.js', () => ({ default: mockLoadMobileShell }));
+const mockLoadMobileShell = vi.fn();
+vi.doMock('./loadMobileShell.js', () => ({ default: mockLoadMobileShell }));
 
 const { default: createChecklist } = await import('./createChecklist.js');
 const { default: mobileChecklist } = await import('./checklist.js');
@@ -165,7 +165,7 @@ test('field-tracking adds the background-location declaration and basic does not
 test('lowdefy mobile checklist prints numbered steps with the shell values', async () => {
   const shell = createShell({ android: { package: 'com.example.field', sha256: ['AA'] } });
   mockLoadMobileShell.mockResolvedValue({ environment: 'production', profile: FIELD, shell });
-  const context = { logger: { info: jest.fn() }, options: { env: 'production' } };
+  const context = { logger: { info: vi.fn() }, options: { env: 'production' } };
   const steps = await mobileChecklist({ context });
   expect(steps).toHaveLength(6);
   const [output] = context.logger.info.mock.calls[0];

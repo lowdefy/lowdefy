@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import createAppleAppSiteAssociation from './createAppleAppSiteAssociation.js';
 
 test('createAppleAppSiteAssociation names every iOS shell and opens every path but the API', () => {

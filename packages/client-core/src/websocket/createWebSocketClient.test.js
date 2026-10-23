@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { getDevError } from '@lowdefy/engine';
 
 import createWebSocketClient from './createWebSocketClient.js';
@@ -28,10 +28,10 @@ const wireError = {
 
 function createHandlers() {
   return {
-    onConnected: jest.fn(),
-    onDisconnected: jest.fn(),
-    onError: jest.fn(),
-    onMessage: jest.fn(),
+    onConnected: vi.fn(),
+    onDisconnected: vi.fn(),
+    onError: vi.fn(),
+    onMessage: vi.fn(),
   };
 }
 
@@ -42,8 +42,8 @@ function createTestClient({ apiBase, host: hostMembers = {} } = {}) {
       this.args = args;
       [this.url] = args;
       this.readyState = 0;
-      this.send = jest.fn();
-      this.close = jest.fn();
+      this.send = vi.fn();
+      this.close = vi.fn();
       sockets.push(this);
     }
   }
@@ -56,7 +56,7 @@ function createTestClient({ apiBase, host: hostMembers = {} } = {}) {
         websocketUrl: (path) => `ws://localhost${path}`,
         ...hostMembers,
       },
-      logger: { warn: jest.fn() },
+      logger: { warn: vi.fn() },
     },
     apiBase,
   };
@@ -151,10 +151,10 @@ test('a dev error frame keeps devError off the rejected error and reachable thro
 test('a failed subscribe rejects with the decoded wire error', async () => {
   const { client, open, receive } = createTestClient();
   const handlers = {
-    onConnected: jest.fn(),
-    onDisconnected: jest.fn(),
-    onError: jest.fn(),
-    onMessage: jest.fn(),
+    onConnected: vi.fn(),
+    onDisconnected: vi.fn(),
+    onError: vi.fn(),
+    onMessage: vi.fn(),
   };
   const promise = client.subscribe({ handlers, payload: {}, websocketId: 'chat' });
   open();
@@ -167,10 +167,10 @@ test('a failed subscribe rejects with the decoded wire error', async () => {
 test('a broadcast error frame passes its message to the subscription onError handler as a WebSocket ServiceError', async () => {
   const { client, open, receive } = createTestClient();
   const handlers = {
-    onConnected: jest.fn(),
-    onDisconnected: jest.fn(),
-    onError: jest.fn(),
-    onMessage: jest.fn(),
+    onConnected: vi.fn(),
+    onDisconnected: vi.fn(),
+    onError: vi.fn(),
+    onMessage: vi.fn(),
   };
   const promise = client.subscribe({ handlers, payload: {}, websocketId: 'chat' });
   open();
@@ -190,14 +190,14 @@ test('an error frame without an error payload rejects with its message', async (
 
 describe('subscribe ack timers', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     // Reconnect backoff is random; zero makes the reconnect fire on the next timer tick.
-    jest.spyOn(Math, 'random').mockReturnValue(0);
+    vi.spyOn(Math, 'random').mockReturnValue(0);
   });
 
   afterEach(() => {
-    jest.useRealTimers();
-    jest.restoreAllMocks();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   test('a feed subscribed again after an unsubscribe is kept when the first subscribe would have timed out', async () => {
@@ -208,7 +208,7 @@ describe('subscribe ack timers', () => {
       client.subscribe({ handlers: firstHandlers, payload: {}, websocketId: 'chat' })
     );
     client.unsubscribe({ websocketId: 'chat' });
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     const second = track(
       client.subscribe({ handlers: secondHandlers, payload: {}, websocketId: 'chat' })
     );
@@ -218,13 +218,13 @@ describe('subscribe ack timers', () => {
     expect(second.state).toBe('resolved');
 
     // Past the first subscribe's ack deadline.
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     await flushPromises();
     expect(secondHandlers.onError).not.toHaveBeenCalled();
 
     // The feed is still in the set resubscribed when the connection reopens.
     close();
-    jest.advanceTimersByTime(0);
+    vi.advanceTimersByTime(0);
     expect(sockets).toHaveLength(2);
     const reopened = open();
     expect(sentFrames(reopened)).toEqual([
@@ -243,7 +243,7 @@ describe('subscribe ack timers', () => {
     client.unsubscribe({ websocketId: 'chat' });
     await flushPromises();
     expect(subscribed.state).toBe('resolved');
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     await flushPromises();
     expect(subscribed.state).toBe('resolved');
   });
@@ -255,14 +255,14 @@ describe('subscribe ack timers', () => {
     const first = track(
       client.subscribe({ handlers: firstHandlers, payload: {}, websocketId: 'chat' })
     );
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     const second = track(
       client.subscribe({ handlers: secondHandlers, payload: {}, websocketId: 'chat' })
     );
     await flushPromises();
     expect(first.state).toBe('resolved');
     open();
-    jest.advanceTimersByTime(6000);
+    vi.advanceTimersByTime(6000);
     await flushPromises();
     expect(second.state).toBe('pending');
     receive({ type: 'subscribed', websocketId: 'chat' });
@@ -287,7 +287,7 @@ describe('subscribe ack timers', () => {
     const subscribed = track(
       client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
     );
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     await flushPromises();
     expect(subscribed.state).toBe('rejected');
     expect(subscribed.error.message).toBe('WebSocket: Subscribe to "chat" timed out.');
@@ -300,14 +300,14 @@ describe('subscribe ack timers', () => {
     const subscribed = track(
       client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
     );
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     await flushPromises();
     expect(subscribed.state).toBe('rejected');
     expect(sentFrames(socket)).toEqual([
       { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's1' },
       { type: 'unsubscribe', websocketId: 'chat' },
     ]);
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     expect(socket.close).toHaveBeenCalledTimes(1);
   });
 
@@ -320,7 +320,7 @@ describe('subscribe ack timers', () => {
     receive({ type: 'error', websocketId: 'chat', requestId: 's1', error: { '~e': wireError } });
     await flushPromises();
     expect(subscribed.state).toBe('rejected');
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     expect(socket.close).toHaveBeenCalledTimes(1);
   });
 
@@ -331,9 +331,9 @@ describe('subscribe ack timers', () => {
     const subscribed = track(
       client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
     );
-    jest.advanceTimersByTime(6000);
+    vi.advanceTimersByTime(6000);
     close();
-    jest.advanceTimersByTime(2000);
+    vi.advanceTimersByTime(2000);
     expect(sockets).toHaveLength(2);
     const reopened = open();
     expect(sentFrames(reopened)).toEqual([
@@ -341,7 +341,7 @@ describe('subscribe ack timers', () => {
     ]);
 
     // Past the first send's ack deadline, inside the resend's.
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     await flushPromises();
     expect(subscribed.state).toBe('pending');
     receive({ type: 'subscribed', websocketId: 'chat' });
@@ -359,14 +359,14 @@ describe('subscribe ack timers', () => {
     expect(subscribed.state).toBe('resolved');
 
     close();
-    jest.advanceTimersByTime(0);
+    vi.advanceTimersByTime(0);
     open();
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     expect(handlers.onError).toHaveBeenCalledWith('WebSocket: Subscribe to "chat" timed out.');
 
     // The feed stays subscribed, so the next reconnect resubscribes it.
     close();
-    jest.advanceTimersByTime(0);
+    vi.advanceTimersByTime(0);
     open();
     receive({ type: 'subscribed', websocketId: 'chat' });
     expect(handlers.onConnected).toHaveBeenCalledTimes(2);
@@ -379,11 +379,11 @@ describe('subscribe ack timers', () => {
     open();
     receive({ type: 'subscribed', websocketId: 'chat' });
     close();
-    jest.advanceTimersByTime(0);
+    vi.advanceTimersByTime(0);
     open();
     close();
     // Keep the next connection attempt from opening.
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     expect(handlers.onError).not.toHaveBeenCalled();
   });
 
@@ -393,7 +393,7 @@ describe('subscribe ack timers', () => {
     const subscribed = track(client.subscribe({ handlers, payload: {}, websocketId: 'chat' }));
     open();
     receive({ type: 'subscribed', websocketId: 'chat' });
-    jest.advanceTimersByTime(20000);
+    vi.advanceTimersByTime(20000);
     await flushPromises();
     expect(subscribed.state).toBe('resolved');
     expect(handlers.onError).not.toHaveBeenCalled();
@@ -406,7 +406,7 @@ describe('subscribe ack timers', () => {
     const idle = open();
     receive({ type: 'subscribed', websocketId: 'chat' });
     client.unsubscribe({ websocketId: 'chat' });
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
 
     const subscribed = track(client.subscribe({ handlers, payload: {}, websocketId: 'chat' }));
     const replacement = open();
@@ -431,7 +431,7 @@ describe('subscribe ack timers', () => {
     client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
     const idle = open();
     client.unsubscribe({ websocketId: 'chat' });
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
 
     client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
     closeSocket(idle);
@@ -448,7 +448,7 @@ describe('subscribe ack timers', () => {
     const { client, close, open, receive, sentFrames } = createTestClient();
     const timedOut = track(client.publish({ payload: { n: 1 }, websocketId: 'chat' }));
     close();
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     await flushPromises();
     expect(timedOut.state).toBe('rejected');
     expect(timedOut.error.message).toBe('WebSocket: Publish to "chat" timed out.');
@@ -494,13 +494,13 @@ describe('subscribe ack timers', () => {
     receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
     const published = track(client.publish({ payload: {}, websocketId: 'chat' }));
     client.unsubscribe({ websocketId: 'chat' });
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     expect(socket.close).not.toHaveBeenCalled();
 
     receive({ type: 'published', websocketId: 'chat', requestId: 'p1' });
     await flushPromises();
     expect(published.state).toBe('resolved');
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     expect(socket.close).toHaveBeenCalledTimes(1);
   });
 
@@ -508,10 +508,10 @@ describe('subscribe ack timers', () => {
     const { client, open } = createTestClient();
     client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
     client.unsubscribe({ websocketId: 'chat' });
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     const socket = open();
     expect(socket.close).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
     expect(socket.close).toHaveBeenCalledTimes(1);
   });
 
@@ -523,19 +523,19 @@ describe('subscribe ack timers', () => {
     receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
     close();
     // First retry: up to 500 ms.
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(2);
     open();
     close();
     // A connection dropped straight after opening does not reset the backoff: up to 1000 ms.
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(2);
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(3);
     open();
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     close();
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(4);
   });
 
@@ -548,17 +548,17 @@ describe('subscribe ack timers', () => {
     receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
     // Two dropped connections build up the backoff to 2000 ms.
     close();
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     open();
     close();
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     expect(sockets).toHaveLength(3);
     open();
 
     close({ code: 4401 });
     expect(handlers.onDisconnected).toHaveBeenCalledTimes(3);
     // Within the first retry window, not the 4000 ms the backoff had reached.
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(4);
     const reopened = open();
     expect(sentFrames(reopened)).toEqual([
@@ -574,24 +574,24 @@ describe('subscribe ack timers', () => {
 
     close({ code: 4401 });
     // The first reconnect after a caller change: up to 500 ms.
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(2);
     open();
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
 
     close({ code: 4401 });
     // Closed again soon after opening: up to 1000 ms.
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(2);
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(3);
     open();
 
     close({ code: 4401 });
     // And up to 2000 ms after that.
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     expect(sockets).toHaveLength(3);
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     expect(sockets).toHaveLength(4);
   });
 
@@ -601,16 +601,16 @@ describe('subscribe ack timers', () => {
     client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
     open();
     close({ code: 4401 });
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     open();
     // Dropped straight after opening: up to 1000 ms.
     close();
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     expect(sockets).toHaveLength(3);
     open();
 
     close({ code: 4401 });
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(sockets).toHaveLength(4);
   });
 
@@ -622,7 +622,7 @@ describe('subscribe ack timers', () => {
     receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
 
     close({ code: 4401 });
-    jest.advanceTimersByTime(0);
+    vi.advanceTimersByTime(0);
     open();
     receive({
       type: 'error',
@@ -644,7 +644,7 @@ describe('auth transport', () => {
   function bearerHost(getToken) {
     return {
       authTransport: 'bearer',
-      tokenStore: { get: getToken, set: jest.fn(), clear: jest.fn() },
+      tokenStore: { get: getToken, set: vi.fn(), clear: vi.fn() },
     };
   }
 
@@ -673,7 +673,7 @@ describe('auth transport', () => {
   });
 
   test('a bearer host reconnecting after a caller change sends the token it holds then', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     let token = 'first.sig';
     const { client, close, currentSocket, open } = createTestClient({
       host: bearerHost(() => token),
@@ -682,8 +682,8 @@ describe('auth transport', () => {
     open();
     token = 'second.sig';
     close({ code: 4401 });
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     expect(currentSocket().args[2]).toEqual({ headers: { Authorization: 'Bearer second.sig' } });
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 });

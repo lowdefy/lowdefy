@@ -15,7 +15,7 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 const { default: getPageConfig } = await import('@lowdefy/api/routes/page/getPageConfig.js');
 const { default: createContentSecurityPolicy } = await import(
@@ -25,13 +25,13 @@ const { default: addNonceToElements } = await import('@lowdefy/api/csp/addNonceT
 
 const security = { contentSecurityPolicy: null };
 
-jest.unstable_mockModule('@lowdefy/api', () => ({
+vi.doMock('@lowdefy/api', () => ({
   addNonceToElements,
   createContentSecurityPolicy,
   getPageConfig,
   getRootConfig: async () => ({ home: { configured: true, pageId: 'home', pathParams: {} } }),
 }));
-jest.unstable_mockModule('../../lib/build/app.js', () => ({
+vi.doMock('../../lib/build/app.js', () => ({
   default: {
     html: {
       appendHead: '<script src="https://cdn.example.com/a.js"></script>',
@@ -39,23 +39,23 @@ jest.unstable_mockModule('../../lib/build/app.js', () => ({
     },
   },
 }));
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({
+vi.doMock('../../lib/build/auth.js', () => ({
   default: { authPages: { signIn: '/auth/login' } },
 }));
-jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: { basePath: '' } }));
-jest.unstable_mockModule('../../lib/build/security.js', () => ({ default: security }));
-jest.unstable_mockModule('../../lib/build/theme.js', () => ({ default: {} }));
-jest.unstable_mockModule('./getAssets.js', () => ({
+vi.doMock('../../lib/build/config.js', () => ({ default: { basePath: '' } }));
+vi.doMock('../../lib/build/security.js', () => ({ default: security }));
+vi.doMock('../../lib/build/theme.js', () => ({ default: {} }));
+vi.doMock('./getAssets.js', () => ({
   default: () => ({ js: 'assets/main.js', css: [], imports: [] }),
 }));
-jest.unstable_mockModule('./getPageAssets.js', () => ({
+vi.doMock('./getPageAssets.js', () => ({
   default: () => ({ js: [], css: [], prefetch: [] }),
 }));
 
 const { default: renderPage } = await import('./renderPage.js');
 // The mobile sign-in route reaches the auth engine, which these tests never start.
-jest.unstable_mockModule('../routes/mobileSignIn.js', () => ({ default: () => null }));
-jest.unstable_mockModule('../routes/mobileSignInCallback.js', () => ({ default: () => null }));
+vi.doMock('../routes/mobileSignIn.js', () => ({ default: () => null }));
+vi.doMock('../routes/mobileSignInCallback.js', () => ({ default: () => null }));
 const { default: mountPageRoutes } = await import('../routes/mountPageRoutes.js');
 
 const policy = {
@@ -76,7 +76,7 @@ function createApp() {
     c.set('lowdefyContext', {
       authEnforcement: { pagesProtectedByDefault: false },
       authorizeOutcome: () => 'allow',
-      logger: { info: jest.fn() },
+      logger: { info: vi.fn() },
       readConfigFile: async (file) => {
         if (file === 'routes.json') return [{ pageId: 'home', path: 'home' }];
         if (file === 'pages/home.json') return { id: 'home' };

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import handleMobileSignInCallback from './handleMobileSignInCallback.js';
 
 test('handleMobileSignInCallback asks the person to return to the app and never shows the token', async () => {

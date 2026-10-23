@@ -16,6 +16,7 @@
 
 import renderEmail from '../../renderEmail.js';
 import InvitationEmail from './InvitationEmail.js';
+import { expect, test } from 'vitest';
 
 test('InvitationEmail renders to html and text and includes the url', async () => {
   const { html, text } = await renderEmail({

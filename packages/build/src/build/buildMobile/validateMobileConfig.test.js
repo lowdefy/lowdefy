@@ -17,14 +17,14 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
 import validateMobileConfig from './validateMobileConfig.js';
 
 const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-mobile-shell-'));
 const context = {
   directories: { config: configDirectory },
-  handleWarning: jest.fn(),
+  handleWarning: vi.fn(),
 };
 
 function pngChunk(chunkType, data) {

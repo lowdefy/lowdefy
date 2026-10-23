@@ -24,6 +24,7 @@ import describePageRoles from './describePageRoles.js';
 import formatPageRoleLines from './formatPageRoleLines.js';
 import readDataSetUsers from './readDataSetUsers.js';
 import selectHeadPages from './selectHeadPages.js';
+import { expect, test } from 'vitest';
 
 const users = [
   { dataSet: 'default', user: 'admin', roles: ['admin'] },

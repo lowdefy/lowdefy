@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -17,7 +17,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createPageLifecycleManager from './createPageLifecycleManager.js';
 
@@ -39,12 +39,12 @@ const setVisibilityState = (state) => {
 const getContext = ({ events = allEvents, operators = {}, triggerPageEvent } = {}) => ({
   _internal: {
     rootBlock: { events },
-    triggerPageEvent: triggerPageEvent ?? jest.fn(() => Promise.resolve()),
-    updateMedia: jest.fn(),
+    triggerPageEvent: triggerPageEvent ?? vi.fn(() => Promise.resolve()),
+    updateMedia: vi.fn(),
     lowdefy: {
       _internal: {
         globals: { document, window },
-        handleError: jest.fn(),
+        handleError: vi.fn(),
         operators,
       },
     },
@@ -54,19 +54,19 @@ const getContext = ({ events = allEvents, operators = {}, triggerPageEvent } = {
 const mediaOperators = { _media: () => undefined };
 
 beforeEach(() => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   setVisibilityState('visible');
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('does not fire on init', () => {
   const context = getContext();
   const manager = createPageLifecycleManager();
   manager.init(context);
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
   manager.destroy();
 });
@@ -78,7 +78,7 @@ test('onVisible fires on visibilitychange to visible', () => {
   manager.init(context);
   setVisibilityState('visible');
   document.dispatchEvent(new Event('visibilitychange'));
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledTimes(1);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledWith({
     name: 'onVisible',
@@ -93,7 +93,7 @@ test('onVisible fires on window focus', () => {
   setVisibilityState('hidden');
   manager.init(context);
   window.dispatchEvent(new Event('focus'));
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledTimes(1);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledWith({
     name: 'onVisible',
@@ -110,7 +110,7 @@ test('a focus and visibilitychange pair is coalesced into one onVisible', () => 
   setVisibilityState('visible');
   document.dispatchEvent(new Event('visibilitychange'));
   window.dispatchEvent(new Event('focus'));
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledTimes(1);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledWith({
     name: 'onVisible',
@@ -127,7 +127,7 @@ test('visibility wins the reason when focus arrives first', () => {
   window.dispatchEvent(new Event('focus'));
   setVisibilityState('visible');
   document.dispatchEvent(new Event('visibilitychange'));
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledWith({
     name: 'onVisible',
     event: { visible: true, reason: 'visibility' },
@@ -140,7 +140,7 @@ test('a focus while the page is already visible does not fire onVisible', () => 
   const manager = createPageLifecycleManager();
   manager.init(context);
   window.dispatchEvent(new Event('focus'));
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
   manager.destroy();
 });
@@ -151,7 +151,7 @@ test('onHidden fires on visibilitychange to hidden', () => {
   manager.init(context);
   setVisibilityState('hidden');
   document.dispatchEvent(new Event('visibilitychange'));
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledTimes(1);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledWith({
     name: 'onHidden',
@@ -165,7 +165,7 @@ test('onHidden fires on window blur', () => {
   const manager = createPageLifecycleManager();
   manager.init(context);
   window.dispatchEvent(new Event('blur'));
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledWith({
     name: 'onHidden',
     event: { visible: false, reason: 'focus' },
@@ -199,14 +199,14 @@ test('onResize is debounced and carries the window size', () => {
   window.innerHeight = 600;
   window.dispatchEvent(new Event('resize'));
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(100);
+  vi.advanceTimersByTime(100);
   expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
   window.innerWidth = 1024;
   window.innerHeight = 768;
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(149);
+  vi.advanceTimersByTime(149);
   expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(1);
+  vi.advanceTimersByTime(1);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledTimes(1);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledWith({
     name: 'onResize',
@@ -217,18 +217,18 @@ test('onResize is debounced and carries the window size', () => {
 
 test('a page that can reach _media updates media once per settled resize', () => {
   const context = getContext({ events: {}, operators: mediaOperators });
-  const addEventListener = jest.spyOn(window, 'addEventListener');
+  const addEventListener = vi.spyOn(window, 'addEventListener');
   const manager = createPageLifecycleManager();
   manager.init(context);
   expect(addEventListener.mock.calls.map(([name]) => name)).toEqual(['resize']);
   addEventListener.mockRestore();
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(100);
+  vi.advanceTimersByTime(100);
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(100);
+  vi.advanceTimersByTime(100);
   window.dispatchEvent(new Event('resize'));
   expect(context._internal.updateMedia).not.toHaveBeenCalled();
-  jest.advanceTimersByTime(150);
+  vi.advanceTimersByTime(150);
   expect(context._internal.updateMedia).toHaveBeenCalledTimes(1);
   expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
   manager.destroy();
@@ -239,19 +239,19 @@ test('one resize listener serves both _media and onResize, updating media before
   const context = getContext({
     events: { onResize: [] },
     operators: mediaOperators,
-    triggerPageEvent: jest.fn(() => {
+    triggerPageEvent: vi.fn(() => {
       calls.push('onResize');
       return Promise.resolve();
     }),
   });
-  context._internal.updateMedia = jest.fn(() => calls.push('updateMedia'));
-  const addEventListener = jest.spyOn(window, 'addEventListener');
+  context._internal.updateMedia = vi.fn(() => calls.push('updateMedia'));
+  const addEventListener = vi.spyOn(window, 'addEventListener');
   const manager = createPageLifecycleManager();
   manager.init(context);
   expect(addEventListener.mock.calls.map(([name]) => name)).toEqual(['resize']);
   addEventListener.mockRestore();
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(150);
+  vi.advanceTimersByTime(150);
   expect(calls).toEqual(['updateMedia', 'onResize']);
   manager.destroy();
 });
@@ -261,7 +261,7 @@ test('a page that can not reach _media does not update media on resize', () => {
   const manager = createPageLifecycleManager();
   manager.init(context);
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(150);
+  vi.advanceTimersByTime(150);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledTimes(1);
   expect(context._internal.updateMedia).not.toHaveBeenCalled();
   manager.destroy();
@@ -274,7 +274,7 @@ test('a pending media update does not run after destroy', () => {
   window.dispatchEvent(new Event('resize'));
   manager.destroy();
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   expect(context._internal.updateMedia).not.toHaveBeenCalled();
 });
 
@@ -288,7 +288,7 @@ test('listeners are removed on destroy', () => {
   window.dispatchEvent(new Event('blur'));
   window.dispatchEvent(new Event('offline'));
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
 });
 
@@ -299,7 +299,7 @@ test('a pending event does not fire after destroy', () => {
   setVisibilityState('hidden');
   document.dispatchEvent(new Event('visibilitychange'));
   manager.destroy();
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
 });
 
@@ -310,17 +310,17 @@ test('listeners are only attached for configured events', () => {
   setVisibilityState('hidden');
   document.dispatchEvent(new Event('visibilitychange'));
   window.dispatchEvent(new Event('offline'));
-  jest.advanceTimersByTime(1000);
+  vi.advanceTimersByTime(1000);
   expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
   window.dispatchEvent(new Event('resize'));
-  jest.advanceTimersByTime(200);
+  vi.advanceTimersByTime(200);
   expect(context._internal.triggerPageEvent).toHaveBeenCalledTimes(1);
   manager.destroy();
 });
 
 test('no listeners are attached when the page has no lifecycle events', () => {
   const context = getContext({ events: { onMount: [] } });
-  const addEventListener = jest.spyOn(window, 'addEventListener');
+  const addEventListener = vi.spyOn(window, 'addEventListener');
   const manager = createPageLifecycleManager();
   manager.init(context);
   expect(addEventListener).not.toHaveBeenCalled();
@@ -330,7 +330,7 @@ test('no listeners are attached when the page has no lifecycle events', () => {
 
 test('an error in a lifecycle chain is handled', async () => {
   const error = new Error('Test error.');
-  const context = getContext({ triggerPageEvent: jest.fn(() => Promise.reject(error)) });
+  const context = getContext({ triggerPageEvent: vi.fn(() => Promise.reject(error)) });
   const manager = createPageLifecycleManager();
   manager.init(context);
   window.dispatchEvent(new Event('offline'));

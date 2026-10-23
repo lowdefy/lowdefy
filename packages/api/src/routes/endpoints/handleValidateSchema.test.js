@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { UserError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -23,10 +23,10 @@ import runRoutine from './runRoutine.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 function createTestContext() {
@@ -54,7 +54,7 @@ function createRoutineContext(overrides = {}) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('valid data continues and records valid step result', async () => {

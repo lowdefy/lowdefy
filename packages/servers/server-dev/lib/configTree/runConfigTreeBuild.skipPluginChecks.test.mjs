@@ -17,22 +17,22 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockBuild = jest.fn();
+const mockBuild = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/build', () => ({ default: mockBuild }));
-jest.unstable_mockModule('./collectConfigText.mjs', () => ({
-  default: jest.fn().mockResolvedValue({}),
+vi.doMock('@lowdefy/build', () => ({ default: mockBuild }));
+vi.doMock('./collectConfigText.mjs', () => ({
+  default: vi.fn().mockResolvedValue({}),
 }));
-jest.unstable_mockModule('./prepareScratchServer.mjs', () => ({
-  default: jest.fn().mockResolvedValue(),
+vi.doMock('./prepareScratchServer.mjs', () => ({
+  default: vi.fn().mockResolvedValue(),
 }));
-jest.unstable_mockModule('../../manager/utils/createCustomPluginTypesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
+vi.doMock('../../manager/utils/createCustomPluginTypesMap.mjs', () => ({
+  default: vi.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
-jest.unstable_mockModule('../../manager/utils/createCustomPluginMessagesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({}),
+vi.doMock('../../manager/utils/createCustomPluginMessagesMap.mjs', () => ({
+  default: vi.fn().mockResolvedValue({}),
 }));
 
 const { default: runConfigTreeBuild } = await import('./runConfigTreeBuild.mjs');

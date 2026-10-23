@@ -14,25 +14,25 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockShallowBuild = jest.fn();
+const mockShallowBuild = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/build/dev', () => ({
+vi.doMock('@lowdefy/build/dev', () => ({
   shallowBuild: mockShallowBuild,
-  serializeBuildException: jest.fn((exception) => ({ message: exception.message })),
+  serializeBuildException: vi.fn((exception) => ({ message: exception.message })),
 }));
-jest.unstable_mockModule('../utils/writeBuildStatus.mjs', () => ({
-  default: jest.fn(),
+vi.doMock('../utils/writeBuildStatus.mjs', () => ({
+  default: vi.fn(),
 }));
-jest.unstable_mockModule('../utils/createCustomPluginTypesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
+vi.doMock('../utils/createCustomPluginTypesMap.mjs', () => ({
+  default: vi.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
-jest.unstable_mockModule('../utils/createCustomPluginMessagesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({}),
+vi.doMock('../utils/createCustomPluginMessagesMap.mjs', () => ({
+  default: vi.fn().mockResolvedValue({}),
 }));
-jest.unstable_mockModule('../utils/publishBuildDirectory.mjs', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../utils/publishBuildDirectory.mjs', () => ({
+  default: vi.fn(async () => {}),
 }));
 
 const { default: lowdefyBuild } = await import('./lowdefyBuild.mjs');
@@ -40,7 +40,7 @@ const { default: lowdefyBuild } = await import('./lowdefyBuild.mjs');
 function createContext(options) {
   return {
     directories: { build: '/app/build', buildStaging: '/app/build-staging' },
-    logger: { info: jest.fn() },
+    logger: { info: vi.fn() },
     options,
   };
 }

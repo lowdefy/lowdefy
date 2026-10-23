@@ -71,6 +71,33 @@ blocks:
             tb_cause:
               _event: cause
 
+  # The openFilter method, from buttons outside the toolbar.
+  - id: tb_open_filter
+    type: Button
+    properties:
+      title: Edit filter
+    events:
+      onClick:
+        - id: call_open_filter
+          type: CallMethod
+          params:
+            blockId: tb
+            method: openFilter
+
+  - id: tb_open_filter_city
+    type: Button
+    properties:
+      title: Filter by city
+    events:
+      onClick:
+        - id: call_open_filter_city
+          type: CallMethod
+          params:
+            blockId: tb
+            method: openFilter
+            args:
+              - key: city
+
   - id: tb_value
     type: Span
     properties:
@@ -138,3 +165,54 @@ blocks:
             type: Paragraph
             properties:
               content: No people yet. Add the first one.
+
+  # A filter that hides every row shows the emptyFiltered slot, not "No matching rows".
+  - id: tb_empty_filtered
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+      defaultView:
+        filter:
+          key: name
+          op: eq
+          value: Nobody by this name
+    slots:
+      empty:
+        blocks:
+          - id: tb_empty_filtered_empty
+            type: Paragraph
+            properties:
+              content: No people yet.
+      emptyFiltered:
+        blocks:
+          - id: tb_empty_filtered_message
+            type: Paragraph
+            properties:
+              content: No people match this view right now.
+  # ============================================
+  # A QUICK FILTER OVER A LONG OPTION LIST
+  # ============================================
+
+  - id: tb_long_options
+    type: Table
+    properties:
+      toolbar:
+        quickFilters: [city]
+      columns:
+        - key: name
+        - key: city
+          options:
+            - Austin
+            - Berlin
+            - Cape Town
+            - Durban
+            - Lagos
+            - Lisbon
+            - Nairobi
+            - Oslo
+            - Paris
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml

@@ -17,6 +17,7 @@
 import { serializer } from '@lowdefy/helpers';
 
 import checkPolicy from './checkPolicy.js';
+import { expect, test } from 'vitest';
 
 const policy = {
   id: 'form',

@@ -15,6 +15,7 @@
 */
 
 import decodeServerError, { getDevError, isDecodedServerError } from '../src/decodeServerError.js';
+import { expect, test } from 'vitest';
 
 const wire = {
   name: 'RequestError',

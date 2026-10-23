@@ -15,6 +15,7 @@
 */
 
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
+import { expect, test } from 'vitest';
 
 test('validateOperatorsDynamic passes when all operators have dynamic property', () => {
   const staticOp = () => {};

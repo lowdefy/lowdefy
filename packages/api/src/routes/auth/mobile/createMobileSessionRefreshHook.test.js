@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createMobileSessionRefreshHook from './createMobileSessionRefreshHook.js';
 
 const NOW = new Date('2026-10-18T00:00:00Z').getTime();
 
 beforeEach(() => {
-  jest.spyOn(Date, 'now').mockReturnValue(NOW);
+  vi.spyOn(Date, 'now').mockReturnValue(NOW);
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 function ctxFor(session) {

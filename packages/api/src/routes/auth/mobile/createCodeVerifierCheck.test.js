@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createCodeVerifierCheck from './createCodeVerifierCheck.js';
 import getOneTimeTokenIdentifiers from './getOneTimeTokenIdentifiers.js';
@@ -26,7 +26,7 @@ const identifiers = getOneTimeTokenIdentifiers({ token: 'one-time' });
 
 function createCtx({ body, challenge = { value: codeChallenge } }) {
   const internalAdapter = {
-    consumeVerificationValue: jest.fn(async (identifier) =>
+    consumeVerificationValue: vi.fn(async (identifier) =>
       identifier === identifiers.challenge ? challenge : { value: 'session-token' }
     ),
   };

@@ -16,11 +16,11 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockSpawn = jest.fn();
+const mockSpawn = vi.fn();
 const { spawnSync, execSync, exec, execFile, fork } = await import('child_process');
-jest.unstable_mockModule('child_process', () => ({
+vi.doMock('child_process', () => ({
   spawn: mockSpawn,
   spawnSync,
   execSync,
@@ -28,9 +28,9 @@ jest.unstable_mockModule('child_process', () => ({
   execFile,
   fork,
 }));
-jest.unstable_mockModule('../utils/readBasePath.mjs', () => ({ default: () => '' }));
-const mockWaitForServer = jest.fn(async () => true);
-jest.unstable_mockModule('../utils/waitForServer.mjs', () => ({ default: mockWaitForServer }));
+vi.doMock('../utils/readBasePath.mjs', () => ({ default: () => '' }));
+const mockWaitForServer = vi.fn(async () => true);
+vi.doMock('../utils/waitForServer.mjs', () => ({ default: mockWaitForServer }));
 
 const { default: optimizeDependencies } = await import('./optimizeDependencies.mjs');
 const { default: restartServer } = await import('./restartServer.mjs');
@@ -49,14 +49,14 @@ function createContext() {
   const context = {
     bin: { vite: '/server/node_modules/vite/bin/vite.js' },
     directories: { config: '/apps/tenant', server: '/server' },
-    instance: { update: jest.fn() },
+    instance: { update: vi.fn() },
     internalPort: 3211,
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
     mailSink: null,
-    markServerReady: jest.fn(),
+    markServerReady: vi.fn(),
     options: { port: 3210 },
-    serverArtifacts: { record: jest.fn() },
-    shutdownServer: jest.fn(),
+    serverArtifacts: { record: vi.fn() },
+    shutdownServer: vi.fn(),
   };
   context.optimizeDependencies = optimizeDependencies(context);
   context.syncServer = syncServer(context);
@@ -69,10 +69,10 @@ function createContext() {
 function createTracker(files) {
   let started = {};
   return {
-    record: jest.fn(() => {
+    record: vi.fn(() => {
       started = { ...files };
     }),
-    check: jest.fn(() => {
+    check: vi.fn(() => {
       const changed = Object.keys(files).filter((file) => files[file] !== started[file]);
       return { install: changed.includes('package.json'), restart: changed.length > 0 };
     }),
@@ -164,7 +164,7 @@ test('the optimiser resolves the same environment as the child, apart from the b
 test('a watcher sync during the optimise waits for the first start and restarts nothing', async () => {
   const context = createContext();
   context.serverArtifacts = createTracker({ 'build/config.json': 'a', 'package.json': 'a' });
-  context.restartServer = jest.fn(async () => startServer(context));
+  context.restartServer = vi.fn(async () => startServer(context));
 
   const started = startFirstServer(context);
   await flush();
@@ -190,10 +190,10 @@ test('a config edit during the optimise is rebuilt at once, and its sync resolve
   const context = createContext();
   const files = { 'build/config.json': 'a', 'package.json': 'a' };
   context.serverArtifacts = createTracker(files);
-  context.lowdefyBuild = jest.fn(async () => {
+  context.lowdefyBuild = vi.fn(async () => {
     files['build/config.json'] = 'b';
   });
-  context.restartServer = jest.fn(async () => {
+  context.restartServer = vi.fn(async () => {
     context.serverArtifacts.record();
     startServer(context);
   });
@@ -225,11 +225,11 @@ test('a plugin package added during the optimise is installed by the queued sync
   context.serverArtifacts = createTracker(files);
   const events = [];
   context.buildActivity = { track: (task) => task() };
-  context.installPlugins = jest.fn(async () => events.push('install'));
-  context.lowdefyBuild = jest.fn(async () => events.push('build'));
-  context.restartServer = jest.fn(async () => events.push('restart'));
+  context.installPlugins = vi.fn(async () => events.push('install'));
+  context.lowdefyBuild = vi.fn(async () => events.push('build'));
+  context.restartServer = vi.fn(async () => events.push('restart'));
   let finishOptimise;
-  context.optimizeDependencies = jest.fn(async () => events.push('optimise'));
+  context.optimizeDependencies = vi.fn(async () => events.push('optimise'));
   context.optimizeDependencies.mockImplementationOnce(
     () =>
       new Promise((resolve) => {
@@ -257,7 +257,7 @@ test('startFirstServer resolves once the first child answers, before a queued sy
   const context = createContext();
   const files = { 'build/config.json': 'a', 'package.json': 'a' };
   context.serverArtifacts = createTracker(files);
-  context.restartServer = jest.fn(async () => {
+  context.restartServer = vi.fn(async () => {
     context.serverArtifacts.record();
     startServer(context);
   });

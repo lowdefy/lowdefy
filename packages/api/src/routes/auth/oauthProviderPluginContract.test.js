@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { betterAuth } from 'better-auth';
 
 import createAsMetadataHandler from './createAsMetadataHandler.js';
@@ -45,11 +45,11 @@ afterEach(() => {
 
 function createLogger() {
   return {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    isLevelEnabled: jest.fn(() => false),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    isLevelEnabled: vi.fn(() => false),
   };
 }
 

@@ -18,6 +18,7 @@ import fs from 'fs';
 import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
+import { beforeAll, expect, test } from 'vitest';
 
 // A block that registers its own events (methods.registerEvent) runs their
 // actions and operators on any page it is placed on, but only the types in its

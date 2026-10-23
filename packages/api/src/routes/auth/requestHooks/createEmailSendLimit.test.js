@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('better-auth/api', () => ({
+vi.doMock('better-auth/api', () => ({
   APIError: class APIError extends Error {
     constructor(status, body) {
       super(body.message);
@@ -29,9 +29,9 @@ const { default: createEmailSendLimit } = await import('./createEmailSendLimit.j
 
 function createAuth({ sent }) {
   const adapter = {
-    deleteMany: jest.fn(async () => 0),
-    count: jest.fn(async () => sent),
-    create: jest.fn(async ({ data }) => data),
+    deleteMany: vi.fn(async () => 0),
+    count: vi.fn(async () => sent),
+    create: vi.fn(async ({ data }) => data),
   };
   return { adapter, auth: { $context: Promise.resolve({ adapter }) } };
 }
@@ -62,7 +62,7 @@ test('createEmailSendLimit refuses a send past the cap and records nothing', asy
 });
 
 test('createEmailSendLimit leaves a body with no email to the route', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const limit = createEmailSendLimit({ getAuth, max: 5, windowSeconds: 900 });
   expect(await limit({ body: {} })).toBeUndefined();
   expect(getAuth).not.toHaveBeenCalled();

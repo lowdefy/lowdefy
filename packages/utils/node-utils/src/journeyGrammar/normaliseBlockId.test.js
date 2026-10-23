@@ -15,6 +15,7 @@
 */
 
 import normaliseBlockId from './normaliseBlockId.js';
+import { expect, test } from 'vitest';
 
 test.each([
   ['save', 'save'],

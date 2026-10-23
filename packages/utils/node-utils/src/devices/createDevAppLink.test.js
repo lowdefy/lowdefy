@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import createDevAppLink from './createDevAppLink.js';
 
 test('createDevAppLink encodes the dev server url into a connect link', () => {

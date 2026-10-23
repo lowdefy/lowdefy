@@ -14,35 +14,35 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import claimCallerReload from './claimCallerReload.js';
 import createMemoryStore from './test/createMemoryStore.js';
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('claimCallerReload allows the first reload and records when it happened', () => {
-  jest.useFakeTimers({ now: 1_000_000 });
+  vi.useFakeTimers({ now: 1_000_000 });
   const stored = {};
   expect(claimCallerReload({ sessionStorage: createMemoryStore({ stored }) })).toBe(true);
   expect(stored['lowdefy.reloadedForCaller']).toEqual('1000000');
 });
 
 test('claimCallerReload refuses a second reload within 10 seconds', () => {
-  jest.useFakeTimers({ now: 1_000_000 });
+  vi.useFakeTimers({ now: 1_000_000 });
   const sessionStorage = createMemoryStore();
   expect(claimCallerReload({ sessionStorage })).toBe(true);
-  jest.setSystemTime(1_009_999);
+  vi.setSystemTime(1_009_999);
   expect(claimCallerReload({ sessionStorage })).toBe(false);
 });
 
 test('claimCallerReload allows another reload once 10 seconds have passed', () => {
-  jest.useFakeTimers({ now: 1_000_000 });
+  vi.useFakeTimers({ now: 1_000_000 });
   const sessionStorage = createMemoryStore();
   expect(claimCallerReload({ sessionStorage })).toBe(true);
-  jest.setSystemTime(1_010_000);
+  vi.setSystemTime(1_010_000);
   expect(claimCallerReload({ sessionStorage })).toBe(true);
 });
 

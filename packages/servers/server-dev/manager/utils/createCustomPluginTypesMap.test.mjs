@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockImportFresh = jest.fn();
-jest.unstable_mockModule('./importFresh.mjs', () => ({ default: mockImportFresh }));
-const mockCreatePluginTypesMap = jest.fn();
-const mockCreatePluginTypesMapMobile = jest.fn();
-jest.unstable_mockModule('@lowdefy/build', () => ({
+const mockImportFresh = vi.fn();
+vi.doMock('./importFresh.mjs', () => ({ default: mockImportFresh }));
+const mockCreatePluginTypesMap = vi.fn();
+const mockCreatePluginTypesMapMobile = vi.fn();
+vi.doMock('@lowdefy/build', () => ({
   createPluginTypesMap: mockCreatePluginTypesMap,
   createPluginTypesMapMobile: mockCreatePluginTypesMapMobile,
 }));
@@ -28,15 +28,15 @@ jest.unstable_mockModule('@lowdefy/build', () => ({
 // export it uses, so the real module passes through and only readFile is
 // replaced.
 const realNodeUtils = await import('@lowdefy/node-utils');
-const mockReadFile = jest.fn(async () => 'plugins:\n  - name: plugin-a\n  - name: plugin-b\n');
+const mockReadFile = vi.fn(async () => 'plugins:\n  - name: plugin-a\n  - name: plugin-b\n');
 // @example/lowdefy-mdm exports ./shell alone, a native-only shell plugin.
-const mockHasTypesExport = jest.fn(({ name }) => name !== '@example/lowdefy-mdm');
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockHasTypesExport = vi.fn(({ name }) => name !== '@example/lowdefy-mdm');
+vi.doMock('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
   hasTypesExport: mockHasTypesExport,
   readFile: mockReadFile,
 }));
-jest.unstable_mockModule('node:module', () => ({
+vi.doMock('node:module', () => ({
   createRequire: () => ({ resolve: (name) => `/plugins/${name}.js` }),
 }));
 
@@ -45,7 +45,7 @@ const { default: createCustomPluginMessagesMap } = await import(
   './createCustomPluginMessagesMap.mjs'
 );
 
-const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn() };
+const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn() };
 const directories = { config: '/app' };
 
 // Holds every import open until release(), so a test can see which imports

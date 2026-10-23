@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigWarning } from '@lowdefy/errors';
 
 import validateDynamicBlockRefs from './validateDynamicBlockRefs.js';
 
-const mockHandleWarning = jest.fn();
+const mockHandleWarning = vi.fn();
 
 beforeEach(() => {
   mockHandleWarning.mockReset();

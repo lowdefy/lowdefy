@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockCreatePresignedPost = jest.fn();
-const mockS3ClientConstructor = jest.fn();
+const mockCreatePresignedPost = vi.fn();
+const mockS3ClientConstructor = vi.fn();
 
-jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
-  S3Client: jest.fn().mockImplementation((...args) => {
+vi.doMock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn().mockImplementation(function (...args) {
     mockS3ClientConstructor(...args);
     return {};
   }),
 }));
 
-jest.unstable_mockModule('@aws-sdk/s3-presigned-post', () => ({
+vi.doMock('@aws-sdk/s3-presigned-post', () => ({
   createPresignedPost: (...args) => mockCreatePresignedPost(...args),
 }));
 
@@ -197,7 +197,7 @@ test('AwsS3PresignedPostPolicy URL-encodes x-amz-meta-* fields but passes other 
 });
 
 test('Error from s3 client', async () => {
-  mockCreatePresignedPost.mockImplementation(() => {
+  mockCreatePresignedPost.mockImplementation(function () {
     throw new Error('Test S3 client error.');
   });
   const request = { key: 'key' };
