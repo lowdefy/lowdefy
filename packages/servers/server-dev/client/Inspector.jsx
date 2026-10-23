@@ -126,10 +126,33 @@ function evalExpression({ lowdefy, page, expression }) {
   // or (since it travels as a JSON string end-to-end from an MCP tool
   // argument) as a JSON string that needs one more parse.
   const input = type.isString(expression) ? JSON.parse(expression) : expression;
-  const { output, errors } = context._internal.parser.parse({ input, location: 'agent_eval' });
+  // A read recorder set while the expression is parsed collects the keys its
+  // operators read (the engine's block dependency tracking), e.g.
+  // "state:customer.name". Mirrors evaluateInPage in inspectStateHeadless.js.
+  const reads = new Set();
+  const recordRead = (key) => {
+    if (type.isString(key)) reads.add(key);
+  };
+  const ignore = () => {};
+  const previousRecorder = context._internal.readRecorder;
+  context._internal.readRecorder = {
+    read: recordRead,
+    engineRead: recordRead,
+    pure: ignore,
+    volatile: ignore,
+    untracked: ignore,
+  };
+  let parsed;
+  try {
+    parsed = context._internal.parser.parse({ input, location: 'agent_eval' });
+  } finally {
+    context._internal.readRecorder = previousRecorder;
+  }
+  const { output, errors } = parsed;
   return {
     value: serializer.serializeToString(output),
     errors: errors.map((error) => error.message),
+    reads: [...reads],
   };
 }
 

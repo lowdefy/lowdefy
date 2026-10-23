@@ -41,6 +41,8 @@ vi.doMock('./runJourney.js', () => ({
 }));
 const mockScreenshotPage = vi.fn();
 vi.doMock('./screenshotPage.js', () => ({ default: mockScreenshotPage }));
+const mockInspectState = vi.fn();
+vi.doMock('./inspectState.js', () => ({ default: mockInspectState }));
 
 const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
   './createDocsMcpServer.js'
@@ -61,7 +63,6 @@ const EXPECTED_TOOLS = [
   'lowdefy_screenshot_page',
   'lowdefy_run_journey',
   'lowdefy_inspect_state',
-  'lowdefy_eval_operator',
   'lowdefy_run_request',
   'lowdefy_run_endpoint',
   'lowdefy_restart',
@@ -174,7 +175,6 @@ test('MCP tools that render a page headless advertise an optional user parameter
     'lowdefy_screenshot_page',
     'lowdefy_run_journey',
     'lowdefy_inspect_state',
-    'lowdefy_eval_operator',
     'lowdefy_run_request',
     'lowdefy_run_endpoint',
   ].forEach((name) => {
@@ -196,7 +196,6 @@ test('MCP tools that act as someone take one user option and share one sentence 
     'lowdefy_screenshot_page',
     'lowdefy_run_journey',
     'lowdefy_inspect_state',
-    'lowdefy_eval_operator',
     'lowdefy_run_request',
     'lowdefy_run_endpoint',
   ].forEach((name) => {
@@ -258,6 +257,42 @@ test('MCP lowdefy_screenshot_page advertises steps and urlQuery, and passes them
     })
   );
   expect(result.content).toEqual([{ type: 'image', data: 'AAAA', mimeType: 'image/png' }]);
+  await client.close();
+});
+
+test('MCP lowdefy_inspect_state passes a null expression through as an expression', async () => {
+  mockInspectState.mockResolvedValue({ value: null, errors: [], reads: [], source: 'headless' });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_inspect_state',
+    arguments: { pageId: 'home', expression: null },
+  });
+
+  const params = mockInspectState.mock.calls.at(-1)[0];
+  expect(Object.hasOwn(params, 'expression')).toBe(true);
+  expect(params).toMatchObject({
+    pageId: 'home',
+    expression: null,
+    origin: 'http://localhost:3000',
+  });
+  expect(JSON.parse(result.content[0].text)).toEqual({
+    value: null,
+    errors: [],
+    reads: [],
+    source: 'headless',
+  });
+  await client.close();
+});
+
+test('MCP lowdefy_inspect_state without expression passes no expression key', async () => {
+  mockInspectState.mockResolvedValue({ state: { a: 1 }, source: 'headless' });
+  const client = await connectClient();
+
+  await client.callTool({ name: 'lowdefy_inspect_state', arguments: { pageId: 'home' } });
+
+  const params = mockInspectState.mock.calls.at(-1)[0];
+  expect(Object.hasOwn(params, 'expression')).toBe(false);
   await client.close();
 });
 

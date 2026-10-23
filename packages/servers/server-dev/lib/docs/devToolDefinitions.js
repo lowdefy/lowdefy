@@ -34,11 +34,11 @@ Push events: build results, server restarts and browser/server errors arrive as 
 
 Feedback loop: after EVERY config edit, call lowdefy_build_status with wait: true — the dev server rebuilds on file change, wait: true answers once your edit has been processed and the pages it touched have been built, and this returns build.status (ok when the config builds and no page failed its latest build; pages_failed, with failedPages naming them, when a page failed its latest build and has not changed since; error when the config build fails), the build errors/warnings and each failed page's errors (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Errors reported before your latest edit are listed apart under earlierErrors, since they may already be fixed. Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
-Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). A request or endpoint response too large to return inline is written in full to a file under .lowdefy/responses/ and the result gives its path as responseFile; pass saveResponse: true to always write it there. lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. Pass system: true to run a scheduled or detached-only InternalApi routine as a system context (no _user, auth not checked), exactly as cron would.
+Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. Pass it an expression to evaluate any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). A request or endpoint response too large to return inline is written in full to a file under .lowdefy/responses/ and the result gives its path as responseFile; pass saveResponse: true to always write it there. lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. Pass system: true to run a scheduled or detached-only InternalApi routine as a system context (no _user, auth not checked), exactly as cron would.
 
 Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, back, goto, email, as, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text, url or title. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. A large final state comes back as a summary of its keys; pass state with the paths you need. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated, or user "none" to test auth itself (sign-up, sign-in, invitations) through the app's own pages and sessions.
 
-Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller, in the same forms on every one: a user object (e.g. {"roles":["admin"]}), "none" to act signed out, or the name of a data set user together with data (e.g. user "member", data "crm"), which runs the call on that data set's own database. Vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.`;
+Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller, in the same forms on every one: a user object (e.g. {"roles":["admin"]}), "none" to act signed out, or the name of a data set user together with data (e.g. user "member", data "crm"), which runs the call on that data set's own database. Vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.`;
 
 const HAZARDS_NOTE =
   ' Results include `hazards`: behaviours of this type that its schema does not show. Read them before writing config.';
@@ -86,35 +86,23 @@ const saveResponseSchema = z
 const devToolDefinitions = {
   lowdefy_inspect_state: {
     description:
-      "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like." +
+      "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like. Pass expression to evaluate an operator expression against that live state instead, a REPL for config: the result is { value, errors, source, reads } with no snapshot, reads naming the state, request and other paths it read." +
       CALLER_NOTE,
     inputSchema: {
       pageId: z.string().describe('The page id to inspect.'),
       pathParams: pathParamsSchema.describe(
         'The page instance to inspect, for a page whose path has placeholders, e.g. {"ticket_id": "1"}. Without it a live tab is read at the instance it shows (or that page\'s most recently shown one); headless needs it to open the page.'
       ),
+      expression: z
+        .any()
+        .optional()
+        .describe(
+          'An operator expression to evaluate in the real browser runtime instead of returning the snapshot — any JSON value, e.g. {"_state": "customer.name"} or {"_if": {...}}. null is evaluated too.'
+        ),
       source: z
         .enum(['tab', 'headless'])
         .optional()
         .describe('Force a source. Default: live tab if connected, else headless.'),
-      user: userSchema,
-      data: dataSchema,
-    },
-  },
-
-  lowdefy_eval_operator: {
-    description:
-      'Evaluate a Lowdefy operator expression against the live state of a running page — a REPL for config. Pass the operator object in the "expression" argument — any JSON value, e.g. {"_state": "customer.name"} or {"_if": {...}}. Evaluates in the real browser runtime (live tab if connected, else headless).' +
-      CALLER_NOTE,
-    inputSchema: {
-      pageId: z.string().describe('The page id whose context to evaluate against.'),
-      pathParams: pathParamsSchema.describe(
-        "The page instance to evaluate against, for a page whose path has placeholders. Without it a live tab is read at the instance it shows (or that page's most recently shown one); headless needs it to open the page."
-      ),
-      expression: z
-        .any()
-        .describe('The operator expression — any JSON value, e.g. {"_state": "key"}.'),
-      source: z.enum(['tab', 'headless']).optional(),
       user: userSchema,
       data: dataSchema,
     },

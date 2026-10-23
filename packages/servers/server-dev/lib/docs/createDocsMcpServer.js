@@ -19,7 +19,6 @@ import { createTraceId, type } from '@lowdefy/helpers';
 import { validateJourneyUser } from '@lowdefy/node-utils';
 
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
-import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
@@ -119,32 +118,15 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     });
   }
 
-  registerDevTool('lowdefy_inspect_state', async ({ pageId, pathParams, source, user, data }) => {
-    const result = await inspectState({ origin, pageId, pathParams, source, user, data });
+  // inspectState reads whether an expression was passed from the key, since
+  // null is a valid expression, so the arguments go through as they came.
+  registerDevTool('lowdefy_inspect_state', async (args) => {
+    const result = await inspectState({ ...args, origin });
     if (result.error) {
       return notFoundResult(result.error);
     }
     return textResult(result);
   });
-
-  registerDevTool(
-    'lowdefy_eval_operator',
-    async ({ pageId, pathParams, expression, source, user, data }) => {
-      const result = await evalOperator({
-        origin,
-        pageId,
-        pathParams,
-        expression,
-        source,
-        user,
-        data,
-      });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
-    }
-  );
 
   registerDevTool(
     'lowdefy_run_request',

@@ -33,7 +33,6 @@ import devInspectHandler from './routes/devInspect.js';
 import devRecordingHandler from './routes/devRecording.js';
 import devToolsHandler from './routes/devTools.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
-import docsEvalOperatorHandler from './routes/docs/evalOperator.js';
 import docsEventsHandler from './routes/docs/events.js';
 import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
@@ -112,9 +111,7 @@ function createApp() {
   // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
   // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
   // prefix in dev. The handlers need no auth protection or api context —
-  // they read build artifacts and node_modules directly — but eval-operator
-  // builds a full Lowdefy context (createLowdefyContext), which resolves the
-  // caller from the request headers via resolveAuthentication.
+  // they read build artifacts and node_modules directly.
   // The MCP transport is registered before staleFlag on purpose: hono
   // dispatches in registration order, so the stale middleware never sees a
   // JSON-RPC envelope. MCP carries its own stale notice, prepended to each
@@ -138,7 +135,6 @@ function createApp() {
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.post('/lowdefy-docs/mutants', docsMutantsHandler);
-  app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/restart', docsRestartHandler);
   // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
   // targeted SSE events by posting results here; GET lists connected tabs.

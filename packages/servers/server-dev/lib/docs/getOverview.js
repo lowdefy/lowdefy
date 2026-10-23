@@ -57,7 +57,7 @@ function patternedPageLines() {
   return [
     '## Pages with path parameters',
     '',
-    'These pages are served at a URL pattern with placeholders. Pass `pathParams` with a value for each placeholder (e.g. `{"ticket_id": "1"}`) to `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator` and `lowdefy_run_journey`. A live tab is read at the instance it shows without them.',
+    'These pages are served at a URL pattern with placeholders. Pass `pathParams` with a value for each placeholder (e.g. `{"ticket_id": "1"}`) to `lowdefy_screenshot_page`, `lowdefy_inspect_state` and `lowdefy_run_journey`. A live tab is read at the instance it shows without them.',
     '',
     ...patterned.map((route) => `- \`${route.pageId}\`: \`${route.path}\``),
     '',
@@ -133,7 +133,7 @@ function getOverview() {
     '## Live state and testing',
     '',
     "1. **Inspect live state**: `lowdefy_inspect_state`. The actual state, request results, and event log of a running page. Reads the developer's open browser tab when connected (ask them to interact, then inspect), else runs the page headless.",
-    '2. **Evaluate operators**: `POST /lowdefy-docs/eval-operator` `{pageId, expression}` — or `lowdefy_eval_operator`. A REPL for config: run any operator expression against live page state.',
+    '2. **Evaluate operators**: `lowdefy_inspect_state` with `expression`. A REPL for config: run any operator expression against live page state; the result names the paths it read.',
     '3. **Run a request**: `lowdefy_run_request`. Verify the data shape a request returns. The page is rebuilt first when it changed since its last build. Read-only types always run; writes need `cli.agentTools.allowWriteRequests: true` in lowdefy.yaml. A response over 40,000 characters is written in full to `responseFile` under `.lowdefy/responses/`; add `saveResponse: true` to always write it there.',
     '4. **Run an endpoint**: `lowdefy_run_endpoint`. Run an Api routine headlessly and see what it returns, rejects or throws — a `:reject` comes back as `status: "reject"` with the routine\'s own error, not as a failure. Always needs `cli.agentTools.allowWriteRequests: true` (routines are not classified read-only). Add `system: true` to run a scheduled or detached-only `InternalApi` routine as a system context (no `_user`, auth not checked), the way cron does — not combinable with `user`.',
     '5. **Understand the app**: `lowdefy_app_map`. Every page, menu, connection, endpoint, agent, and websocket in one call.',
@@ -150,7 +150,6 @@ function getOverview() {
     '| `POST /lowdefy-docs/journey` | Drive a page headless through declarative steps (click, fill, select, press, back, goto, email, as, wait, screenshot, expect) and assert state, visibility, text, url or title; screenshots returned as base64 |',
     '| `POST /lowdefy-docs/mutants` | Config mutants on what journeys exercised `{pages, requests, endpoints, appEvents, operators}`: each with a stable `id`, its anchor and source line (for `lowdefy journeys harden`) |',
     '| `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined |',
-    '| `POST /lowdefy-docs/eval-operator` | Evaluate an operator expression against live page state |',
     '| `POST /lowdefy-docs/restart` | Restart the dev server process (answers before the restart lands; then `build-status?wait=true` answers once it is back) |',
     '| `ALL /lowdefy-docs/mcp` | MCP endpoint (streamable HTTP) exposing every dev tool |',
   ];
