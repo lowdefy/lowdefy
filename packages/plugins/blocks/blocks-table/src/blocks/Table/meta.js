@@ -618,7 +618,7 @@ export default {
       data: {
         type: ['array', 'object', 'null'],
         description:
-          'The rows, or `{ mode: server, request, blockSize }` to load rows from a request in blocks as the table scrolls. In server mode the table fires the request with the event `{ startRow, endRow, view: { sort, filter, search, group, aggregates }, groupPath, selected }` (read it in the request `payload` with `_event`) and expects `{ rows, total, groups?, aggregates? }`, the contract of `MongoDBTableQuery`. Sorting, filtering and grouping then run on the server. Rows need a `rowKey`. In place of `request`, `endpoint` names an API endpoint: the table calls it with the event as its payload, and its routine returns the same `{ rows, total }`.',
+          "The rows, or `{ mode: server, request, blockSize }` to load rows from a request in blocks as the table scrolls. In server mode the table fires the request with the event `{ startRow, endRow, view: { sort, filter, search, group, aggregates }, groupPath, selected }` (read it in the request `payload` with `_event`) and expects `{ rows, total, groups?, aggregates? }`, the contract of `MongoDBTableQuery`. Sorting, filtering and grouping then run on the server. Rows need a `rowKey`. In place of `request`, `endpoint` names an API endpoint: the table calls it with the event as its payload, and its routine returns the same `{ rows, total }`. `payload` adds the page's own fields to every fetch event.",
         items: { type: 'object' },
         additionalProperties: false,
         required: ['mode'],
@@ -637,6 +637,12 @@ export default {
             type: 'string',
             description:
               "Id of an API endpoint whose routine returns `{ rows, total }`, called with the fetch event as its payload. Give this or `request`; use it for rows a page request may not read, behind the endpoint's own checks.",
+          },
+          payload: {
+            type: 'object',
+            description:
+              "Fields added to every fetch event, beside `startRow`, `view` and the rest, for a filter the page keeps outside the table's view (a region picked above the table). The table's own fields win on a clash. A change starts the rows again from the top.",
+            docs: { displayType: 'yaml' },
           },
           blockSize: {
             type: 'integer',

@@ -19,9 +19,11 @@ import { type } from '@lowdefy/helpers';
 const DEFAULT_BLOCK_SIZE = 200;
 const DEFAULT_MAX_BLOCKS = 20;
 
-// `data: { mode: 'server', request | endpoint, blockSize, maxBlocks }`, or null for client rows.
-// `request` names a request on the page; `endpoint` an API endpoint the table calls with the
-// fetch event as its payload, for rows a page request may not read.
+// `data: { mode: 'server', request | endpoint, payload, blockSize, maxBlocks }`, or null for client
+// rows. `request` names a request on the page; `endpoint` an API endpoint the table calls with the
+// fetch event as its payload, for rows a page request may not read. `payload` adds fields to every
+// fetch event, for a filter the page holds outside the view (a new payload is a new config, so the
+// store starts again from the top).
 function normalizeServerData(data) {
   if (!type.isObject(data)) return null;
   if (data.mode !== 'server') {
@@ -35,6 +37,14 @@ function normalizeServerData(data) {
     throw new Error(
       `Table server data requires one of "request", the id of a request on the page, or "endpoint", the id of an API endpoint. Received ${JSON.stringify(
         { request: data.request, endpoint: data.endpoint }
+      )}.`
+    );
+  }
+  const payload = data.payload ?? null;
+  if (payload !== null && !type.isObject(payload)) {
+    throw new Error(
+      `Table "data.payload" must be an object of fields to add to the fetch event. Received ${JSON.stringify(
+        payload
       )}.`
     );
   }
@@ -52,7 +62,13 @@ function normalizeServerData(data) {
       )}.`
     );
   }
-  return { request: data.request ?? null, endpoint: data.endpoint ?? null, blockSize, maxBlocks };
+  return {
+    request: data.request ?? null,
+    endpoint: data.endpoint ?? null,
+    payload,
+    blockSize,
+    maxBlocks,
+  };
 }
 
 export default normalizeServerData;
