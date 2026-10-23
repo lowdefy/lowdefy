@@ -116,9 +116,11 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   // A sign-in refused at session creation (banned, or no membership) answers
   // the browser with a redirect to the error page rather than raw JSON.
   // Registered ahead of the magic-link two-factor challenge, which has no
-  // session to act on when the refusal fires. /verify-email with
-  // autoSignInAfterVerification has the same gap, but it redirects errors to
-  // callbackURL with its own query rules, so it needs its own handler.
+  // session to act on when the refusal fires. /verify-email and
+  // /email-otp/verify-email need no counterpart: they create a session only with
+  // emailVerification.autoSignInAfterVerification or user.changeEmail, and
+  // getBetterAuthConfig sets neither, so a verification link cannot be refused
+  // this way. Setting either one would open the same gap there.
   if (authConfig.magicLink?.enabled === true) {
     after.push({
       id: 'magicLinkSignInRefused',
