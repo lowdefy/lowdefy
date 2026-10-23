@@ -18,6 +18,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
+import { readDevInstanceRecord } from '@lowdefy/node-utils';
 
 const execFileAsync = promisify(execFile);
 
@@ -52,14 +53,30 @@ function readBuildFile(filePath) {
   }
 }
 
+// Whether the manager is handling a batch of watched changes. It sets
+// `building` in its instance record from the first change of a batch, while
+// buildStatus.json and build/invalidatePages change only once the batch is
+// done (after the watcher's debounce and any config build).
+function readManagerBuilding() {
+  try {
+    const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
+    return readDevInstanceRecord({ configDirectory })?.building === true;
+  } catch {
+    return false;
+  }
+}
+
 // What a check run must have seen to answer a later call: the last config
-// build (buildStatus.json) and the manager's count of watched-file changes
-// since (build/invalidatePages, rewritten on every batch of changes).
+// build (buildStatus.json), the manager's count of watched-file changes since
+// (build/invalidatePages, rewritten on every batch of changes), and whether a
+// batch is in progress, so a call made straight after an edit, before the
+// batch ends, does not join a run that started before the edit.
 function readBuildSignature({ serverDirectory }) {
   const buildDirectory = path.join(serverDirectory, 'build');
   return JSON.stringify([
     readBuildFile(path.join(buildDirectory, 'buildStatus.json')),
     readBuildFile(path.join(buildDirectory, 'invalidatePages')),
+    readManagerBuilding(),
   ]);
 }
 

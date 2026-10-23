@@ -23,7 +23,12 @@ vi.doMock('child_process', () => ({
   execFile: vi.fn(),
 }));
 
+vi.doMock('@lowdefy/node-utils', () => ({
+  readDevInstanceRecord: vi.fn(() => null),
+}));
+
 const { execFile } = await import('child_process');
+const { readDevInstanceRecord } = await import('@lowdefy/node-utils');
 const { default: runCheck } = await import('./runCheck.js');
 
 const locatedError = {
@@ -70,6 +75,7 @@ beforeEach(() => {
   fs.mkdirSync(path.join(serverDirectory, 'build'));
   writeBuildFile('buildStatus.json', JSON.stringify({ status: 'success', timestamp: 1 }));
   vi.spyOn(process, 'cwd').mockReturnValue(serverDirectory);
+  readDevInstanceRecord.mockReturnValue(null);
 });
 
 afterEach(() => {
@@ -139,6 +145,23 @@ test('runCheck starts its own child for a call made after a watched change durin
   children[1]({ errors: [], warnings: [] });
   expect((await first).ok).toBe(false);
   expect((await second).ok).toBe(true);
+  expect(await third).toBe(await second);
+});
+
+test('runCheck starts its own child for a call made while the manager handles an edit', async () => {
+  const children = holdChildren();
+  const first = runCheck();
+  // An edit was seen: the batch is in progress, invalidatePages not yet written.
+  readDevInstanceRecord.mockReturnValue({ building: true });
+  const second = runCheck();
+  expect(execFile).toHaveBeenCalledTimes(2);
+  // A third call during the same batch joins the second run.
+  const third = runCheck();
+  expect(execFile).toHaveBeenCalledTimes(2);
+  children[0]({ errors: [], warnings: [] });
+  children[1]({ errors: [locatedError], warnings: [] });
+  expect((await first).ok).toBe(true);
+  expect((await second).ok).toBe(false);
   expect(await third).toBe(await second);
 });
 
