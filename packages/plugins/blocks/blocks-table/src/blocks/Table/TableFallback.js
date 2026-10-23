@@ -26,6 +26,7 @@ import densityHeights from '../../core/densityHeights.js';
 import EmptyState from '../../core/EmptyState.js';
 import getColumnGroupRules from '../../core/getColumnGroupRules.js';
 import getDisplayedVisibility from '../../core/getDisplayedVisibility.js';
+import getHeaderAncestors from '../../core/getHeaderAncestors.js';
 import getHeaderLevels from '../../core/getHeaderLevels.js';
 import getRowControlsWidth from '../../features/editing/getRowControlsWidth.js';
 import getSortHeaderProps from '../../features/sorting/getSortHeaderProps.js';
@@ -170,7 +171,10 @@ function TableFallback({
     value,
     viewportWidth: viewport.width,
   });
-  const levels = getHeaderLevels({ headerGroups: normalized.headerGroups });
+  const levels = getHeaderLevels({
+    ancestorsByKey: getHeaderAncestors({ headerGroups: normalized.headerGroups }),
+    cols: layout.cols,
+  });
   const rowHeight = properties.rowHeight ?? densityHeights[getDensity({ properties, value })];
   const headerHeight = Math.min(Math.max(rowHeight, 32), 48);
   const headerRowsHeight = headerHeight * (levels.depth + 1);
