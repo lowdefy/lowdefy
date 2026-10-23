@@ -206,6 +206,7 @@
 - _ref: blocks/container/MobileMenu.yaml
 - _ref: blocks/container/Modal.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
+- _ref: blocks/container/PageRailLayout.yaml
 - _ref: blocks/container/PageSidebarLayout.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
 - _ref: blocks/container/Popover.yaml

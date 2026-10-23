@@ -482,4 +482,11 @@ function registerLocaleMethod(methods) {
   });
 }
 
-export { getDarkMode, renderHeaderActions, registerDarkModeMethod, registerLocaleMethod };
+export {
+  getDarkMode,
+  getDarkModeIcon,
+  getDarkModeLabel,
+  renderHeaderActions,
+  registerDarkModeMethod,
+  registerLocaleMethod,
+};

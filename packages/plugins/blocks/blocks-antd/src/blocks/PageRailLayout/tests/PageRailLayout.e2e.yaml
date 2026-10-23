@@ -1,0 +1,273 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: pagerail
+type: PageRailLayout
+properties:
+  menu:
+    selectedKeys:
+      - rail_controls
+    links:
+      - id: rail_controls
+        type: MenuLink
+        properties:
+          title: Controls
+          icon: ShieldCheck
+          tip: All controls
+      - id: rail_documents
+        type: MenuLink
+        properties:
+          title: Documents
+          icon: FileText
+      - id: rail_people
+        type: MenuLink
+        properties:
+          title: People
+          icon: Users
+      - id: rail_reports
+        type: MenuLink
+        properties:
+          title: Reports
+          icon: ChartBar
+      - id: rail_audit
+        type: MenuLink
+        properties:
+          title: Audit
+          icon: ClipboardList
+  badges:
+    rail_controls: 12
+    rail_documents:
+      count: 3
+      tone: error
+  footItems:
+    - id: search
+      icon: Search
+      title: Search
+      tip: Search everything
+  notifications:
+    count: 4
+  profile:
+    title: Account
+    name: Alex Brown
+    email: alex@example.com
+    avatar:
+      content: AB
+    links:
+      - id: rail_sign_out
+        type: MenuLink
+        properties:
+          title: Sign out
+  darkModeToggle: true
+  panel:
+    title: Controls
+    storageKey: pagerail-panel
+  crumbs:
+    - id: org
+      label: Northwind Holdings
+      mark:
+        text: NH
+        color: '#17b3a3'
+      switcher:
+        title: Organisations
+        options:
+          - id: nh
+            label: Northwind Holdings
+            description: Owner
+            selected: true
+            mark:
+              text: NH
+          - id: ag
+            label: Acme Group
+            description: Admin
+            extra: 5
+            mark:
+              text: AG
+          - id: ut
+            label: Ubuntu Trust
+            mark:
+              text: UT
+          - id: kp
+            label: Kestrel Partners
+            mark:
+              text: KP
+          - id: ms
+            label: Meridian Schools
+            mark:
+              text: MS
+          - id: lc
+            label: Lakeside Clinics
+            mark:
+              text: LC
+        actions:
+          - id: new
+            label: New organisation
+            icon: Plus
+    - id: lens
+      label: All frameworks
+      mark:
+        percent: 30
+      switcher:
+        options:
+          - id: all
+            label: All frameworks
+            selected: true
+            mark:
+              percent: 30
+          - id: popia
+            label: POPIA
+            mark:
+              percent: 27
+    - id: place
+      label: Controls
+    - id: record
+      label: Access control
+
+slots:
+  panelHeader:
+    blocks:
+      - id: rail_panel_header_text
+        type: Span
+        properties:
+          content: Panel Header
+  panel:
+    blocks:
+      - id: rail_panel_text
+        type: Span
+        properties:
+          content: Panel Content
+  header:
+    blocks:
+      - id: rail_header_button
+        type: Button
+        properties:
+          title: Comment
+          size: small
+  content:
+    blocks:
+      - id: rail_main_content
+        type: Title
+        properties:
+          content: Main Content Area
+          level: 3
+      - id: rail_foot_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: rail_foot_clicked
+                  - null
+              then:
+                _string.concat:
+                  - 'Foot clicked: '
+                  - _state: rail_foot_clicked
+              else: ''
+      - id: rail_place_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: rail_place_clicked
+                  - null
+              then:
+                _string.concat:
+                  - 'Place clicked: '
+                  - _state: rail_place_clicked
+              else: ''
+      - id: rail_switch_display
+        type: Span
+        properties:
+          content:
+            _string.concat:
+              - 'Switched: '
+              - _if_none:
+                  - _state: rail_switched
+                  - ''
+      - id: rail_toggle_display
+        type: Span
+        properties:
+          content:
+            _string.concat:
+              - 'Panel: '
+              - _if_none:
+                  - _state: rail_toggled
+                  - ''
+      - id: rail_resize_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: rail_resized
+                  - null
+              then:
+                _string.concat:
+                  - 'Resized: '
+                  - _state: rail_resized
+              else: ''
+
+events:
+  onSwitch:
+    - id: set_switched
+      type: SetState
+      params:
+        rail_switched:
+          _string.concat:
+            - _event: crumbId
+            - ':'
+            - _event: optionId
+  onSwitcherAction:
+    - id: set_switcher_action
+      type: SetState
+      params:
+        rail_switched:
+          _string.concat:
+            - _event: crumbId
+            - ' action '
+            - _event: actionId
+  onPanelToggle:
+    - id: set_toggled
+      type: SetState
+      params:
+        rail_toggled:
+          _string.concat:
+            - _if:
+                test:
+                  _event: open
+                then: open
+                else: closed
+            - ' by '
+            - _event: source
+  onFootItemClick:
+    - id: set_foot_clicked
+      type: SetState
+      params:
+        rail_foot_clicked:
+          _event: id
+  onMenuItemClick:
+    - id: set_place_clicked
+      type: SetState
+      params:
+        rail_place_clicked:
+          _event: key
+  onPanelResize:
+    - id: set_resized
+      type: SetState
+      params:
+        rail_resized:
+          _event: width

@@ -1,0 +1,53 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: PageRailLayout
+    pageTitle: PageRailLayout
+    section: Container Blocks
+    filePath: blocks/container/PageRailLayout.yaml
+    block_type: PageRailLayout
+    antd_component: Layout
+    antd_url: layout
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/PageRailLayout
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageRailLayout/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/PageRailLayout/gallery.yaml
+    fullWidthExamples: true
+    description: >
+      Full-page layout for apps whose places each have their own menu or list. A slim rail of
+      labelled places never expands; places carry badges, and its foot holds search, an
+      assistant, notifications and the profile. A bar over the page holds a panel toggle, a
+      breadcrumb whose leading crumbs can be switchers (an organisation, a workspace, a filter
+      that applies to every page), and the page's actions. Beside the rail, the `panel` slot holds
+      the page's own menu or list. On a desktop its edge drags between `panel.minWidth` and
+      `panel.maxWidth`, resisting below the smallest width and collapsing the panel when dragged
+      far past it; a click on the collapsed edge, the bar button, the active place in the rail or
+      Ctrl/Cmd with backslash opens it again, a double-click on the edge resets the width, and the
+      arrow keys, Home and End resize it from the keyboard. The width and the collapse are
+      remembered in the browser and shared by every page, so the content does not jump between
+      places. Below `panel.drawerBreakpoint` (1100px) the panel is a drawer over the content that
+      Escape, the scrim, a swipe or following a link inside it closes; `panel.startOpen` opens it
+      when a page has nothing picked yet. Below `mobileBreakpoint` (768px) the rail becomes a
+      bottom tab bar with More, the switchers move into a sheet behind a pill in the bar, and the
+      header slot is hidden unless `headerOnPhone` is set. The window scrolls the content and the
+      rail, bar and panel are sticky. Theme it with CSS variables, each defaulting to an antd
+      token, set on `:root` or any parent of the block: `--lf-rail-width`, `--lf-rail-bg`,
+      `--lf-rail-fg`, `--lf-rail-fg-active`, `--lf-rail-hover-bg`, `--lf-rail-active-bg`,
+      `--lf-rail-accent`, `--lf-rail-divider`, `--lf-rail-label-size`, `--lf-rail-badge-bg`,
+      `--lf-rail-badge-fg`, `--lf-rail-badge-error-bg`, `--lf-rail-bar-bg`,
+      `--lf-rail-bar-height`, `--lf-rail-panel-bg`, `--lf-rail-content-bg`,
+      `--lf-rail-handle-color`, `--lf-rail-handle-active`, `--lf-rail-scrim`, `--lf-rail-tab-bg`,
+      `--lf-rail-tab-height`, `--lf-rail-switcher-width` and `--lf-rail-motion-duration`. Set
+      `--lf-rail-viewport-height` to show the layout inside a box of fixed height.

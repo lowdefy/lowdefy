@@ -1414,6 +1414,14 @@
       "typeName": "PageHeaderMenu"
     },
     {
+      "slug": "container-blocks/pageraillayout",
+      "title": "PageRailLayout",
+      "section": "Container Blocks",
+      "path": "content/container-blocks/pageraillayout.md",
+      "kind": "block",
+      "typeName": "PageRailLayout"
+    },
+    {
       "slug": "container-blocks/pagesidebarlayout",
       "title": "PageSidebarLayout",
       "section": "Container Blocks",
@@ -4435,6 +4443,15 @@
         "templates/blocks/gallery.yaml.njk"
       ],
       "hash": "d65190a9436b9a86e6f72b41249292e4b6898b4c695588e0d204de72e8e7cda7"
+    },
+    "container-blocks/pageraillayout": {
+      "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/PageRailLayout/gallery.yaml",
+        "../plugins/blocks/blocks-antd/src/blocks/PageRailLayout/meta.js",
+        "blocks/container/PageRailLayout.yaml",
+        "templates/blocks/gallery.yaml.njk"
+      ],
+      "hash": "5d0656bb46f74fcd6ba98620e15939639d98b1665b0416d3d56a7aceaac351a2"
     },
     "container-blocks/pagesidebarlayout": {
       "files": [

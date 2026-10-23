@@ -847,6 +847,9 @@
         - id: PageHeaderMenu
           type: MenuLink
           pageId: PageHeaderMenu
+        - id: PageRailLayout
+          type: MenuLink
+          pageId: PageRailLayout
         - id: PageSidebarLayout
           type: MenuLink
           pageId: PageSidebarLayout

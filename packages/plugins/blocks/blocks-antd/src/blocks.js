@@ -60,6 +60,7 @@ export { default as MultipleSelector } from './blocks/MultipleSelector/MultipleS
 export { default as Notification } from './blocks/Notification/Notification.js';
 export { default as NumberInput } from './blocks/NumberInput/NumberInput.js';
 export { default as PageHeaderMenu } from './blocks/PageHeaderMenu/PageHeaderMenu.js';
+export { default as PageRailLayout } from './blocks/PageRailLayout/PageRailLayout.js';
 export { default as PageSidebarLayout } from './blocks/PageSidebarLayout/PageSidebarLayout.js';
 export { default as PageSiderMenu } from './blocks/PageSiderMenu/PageSiderMenu.js';
 export { default as Pagination } from './blocks/Pagination/Pagination.js';
