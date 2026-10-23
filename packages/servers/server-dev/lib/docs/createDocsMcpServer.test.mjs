@@ -48,34 +48,24 @@ const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await im
 const { publish } = await import('./devEventBus.js');
 
 const EXPECTED_TOOLS = [
-  'lowdefy_overview',
   'lowdefy_list_types',
-  'lowdefy_list_plugins',
   'lowdefy_get_schema',
   'lowdefy_get_examples',
   'lowdefy_get_doc',
   'lowdefy_search_docs',
   'lowdefy_search_icons',
-  'lowdefy_get_plugin_doc',
   'lowdefy_build_status',
   'lowdefy_check',
   'lowdefy_get_page_config',
   'lowdefy_find_config',
   'lowdefy_screenshot_page',
   'lowdefy_run_journey',
-  'lowdefy_scaffold_page',
   'lowdefy_inspect_state',
   'lowdefy_eval_operator',
   'lowdefy_run_request',
   'lowdefy_run_endpoint',
   'lowdefy_restart',
   'lowdefy_app_map',
-  'lowdefy_checkpoint',
-  'lowdefy_revert_checkpoint',
-  'lowdefy_snapshot_state',
-  'lowdefy_load_state',
-  'lowdefy_list_state_checkpoints',
-  'lowdefy_checkpoint_to_mocks',
   'lowdefy_journey_session',
 ];
 
@@ -185,7 +175,6 @@ test('MCP tools that render a page headless advertise an optional user parameter
     'lowdefy_run_journey',
     'lowdefy_inspect_state',
     'lowdefy_eval_operator',
-    'lowdefy_load_state',
     'lowdefy_run_request',
     'lowdefy_run_endpoint',
   ].forEach((name) => {
@@ -208,7 +197,6 @@ test('MCP tools that act as someone take one user option and share one sentence 
     'lowdefy_run_journey',
     'lowdefy_inspect_state',
     'lowdefy_eval_operator',
-    'lowdefy_load_state',
     'lowdefy_run_request',
     'lowdefy_run_endpoint',
   ].forEach((name) => {

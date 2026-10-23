@@ -28,22 +28,17 @@ import { MAX_VIEWPORT_SIZE } from './validateViewport.js';
 
 const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
 
-Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. Icons: use a semantic name (icon: edit); otherwise use a Lucide name in PascalCase (icon: Receipt) found with lowdefy_search_icons; never invent an icon name, never emoji; in any HTML string use <i data-icon="edit"></i>, data-tooltip="…" and data-popover="…", ClickableHtml with data-event for clicks (list each event in its dataEvents property; escape request and user data in the HTML), <a data-page-id="page" data-url-query="k=v"> for in-app links (never a hard-coded href; data-new-tab, not target), and data-tag="success" / data-status="success" for statuses (never inline-styled pills), <time datetime="…" data-time="relative">, data-format="currency" data-currency="USD" on raw numbers, data-avatar="Name" (never an avatar image service), data-copy, data-truncate="2", data-tone="secondary" (never inline grey colours) and, in ClickableHtml, confirm on destructive events in dataEvents ({ name: onDelete, confirm: "…" }); lowdefy_get_doc concepts/html-attributes lists them all. lowdefy_search_docs and lowdefy_get_doc also cover the docs this app's own plugins and modules ship (READMEs, docs/*.md, and modules/<id>/manifest for a module's components, exports and vars), so read those before reading plugin or module source.
+Discovery workflow: use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. Icons: use a semantic name (icon: edit); otherwise use a Lucide name in PascalCase (icon: Receipt) found with lowdefy_search_icons; never invent an icon name, never emoji; in any HTML string use <i data-icon="edit"></i>, data-tooltip="…" and data-popover="…", ClickableHtml with data-event for clicks (list each event in its dataEvents property; escape request and user data in the HTML), <a data-page-id="page" data-url-query="k=v"> for in-app links (never a hard-coded href; data-new-tab, not target), and data-tag="success" / data-status="success" for statuses (never inline-styled pills), <time datetime="…" data-time="relative">, data-format="currency" data-currency="USD" on raw numbers, data-avatar="Name" (never an avatar image service), data-copy, data-truncate="2", data-tone="secondary" (never inline grey colours) and, in ClickableHtml, confirm on destructive events in dataEvents ({ name: onDelete, confirm: "…" }); lowdefy_get_doc concepts/html-attributes lists them all. lowdefy_search_docs and lowdefy_get_doc also cover the docs this app's own plugins and modules ship (READMEs, docs/*.md, and modules/<id>/manifest for a module's components, exports and vars), so read those before reading plugin or module source.
 
 Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale, for the config build only: pages build on request and send no event). Act on them without polling — lowdefy_build_status remains the full picture, and the only one that reports pages that fail to build.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status with wait: true — the dev server rebuilds on file change, wait: true answers once your edit has been processed and the pages it touched have been built, and this returns build.status (ok when the config builds and no page failed its latest build; pages_failed, with failedPages naming them, when a page failed its latest build and has not changed since; error when the config build fails), the build errors/warnings and each failed page's errors (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Errors reported before your latest edit are listed apart under earlierErrors, since they may already be fixed. Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
+Feedback loop: after EVERY config edit, call lowdefy_build_status with wait: true — the dev server rebuilds on file change, wait: true answers once your edit has been processed and the pages it touched have been built, and this returns build.status (ok when the config builds and no page failed its latest build; pages_failed, with failedPages naming them, when a page failed its latest build and has not changed since; error when the config build fails), the build errors/warnings and each failed page's errors (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Errors reported before your latest edit are listed apart under earlierErrors, since they may already be fixed. Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). A request or endpoint response too large to return inline is written in full to a file under .lowdefy/responses/ and the result gives its path as responseFile; pass saveResponse: true to always write it there. lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. Pass system: true to run a scheduled or detached-only InternalApi routine as a system context (no _user, auth not checked), exactly as cron would.
 
 Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, back, goto, email, as, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text, url or title. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. A large final state comes back as a summary of its keys; pass state with the paths you need. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated, or user "none" to test auth itself (sign-up, sign-in, invitations) through the app's own pages and sessions.
 
-Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller, in the same forms on every one: a user object (e.g. {"roles":["admin"]}), "none" to act signed out, or the name of a data set user together with data (e.g. user "member", data "crm"), which runs the call on that data set's own database. Vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
-
-Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
-
-
-State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
+Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller, in the same forms on every one: a user object (e.g. {"roles":["admin"]}), "none" to act signed out, or the name of a data set user together with data (e.g. user "member", data "crm"), which runs the call on that data set's own database. Vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.`;
 
 const HAZARDS_NOTE =
   ' Results include `hazards`: behaviours of this type that its schema does not show. Read them before writing config.';
@@ -60,7 +55,7 @@ const userSchema = z
   .union([z.literal('none'), z.string().min(1), z.object({}).passthrough()])
   .optional()
   .describe(
-    'Who the call acts as. Omitted: the default roleless headless user. An object: that injected caller, e.g. {"roles":["user-admin"]}, merged over the default, so include email/profile/attributes fields too if the page reads them; no auth engine runs for an injected caller, so nothing derives them. "none": no injected caller, so the app\'s own auth decides and the call runs signed out. Any other string: the name of a user in the data set named by data, e.g. "member". Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role.'
+    'Who the call acts as. Omitted: the default roleless headless user. An object: that injected caller, e.g. {"roles":["user-admin"]}, merged over the default, so include email/profile/attributes fields too if the page reads them; no auth engine runs for an injected caller, so nothing derives them. "none": no injected caller, so the app\'s own auth decides and the call runs signed out. Any other string: the name of a user in the data set named by data, e.g. "member". Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" is an error rather than a silently dropped role.'
   );
 
 // Shared by every tool that takes userSchema.
@@ -170,62 +165,6 @@ const devToolDefinitions = {
     description:
       'The whole-app graph in one call: every page (with its source file and, when built, block/request summaries), menus, connections, api endpoints, agents, and websockets. Call this first when working in an existing app.',
     inputSchema: {},
-  },
-
-  lowdefy_snapshot_state: {
-    description:
-      "Capture the live state AND recorded request/api responses of a running page into a checkpoint folder (.lowdefy/state-checkpoints/<name>/, one file per part; gitignored — checkpoints contain user/session data). Snapshot the developer's open tab after they reproduce a scenario, or a headless run. Use for building test fixtures and reproducible app states.",
-    inputSchema: {
-      pageId: z.string().describe('The page to snapshot.'),
-      pathParams: pathParamsSchema.describe(
-        "The page instance to snapshot, for a page whose path has placeholders. The checkpoint keeps the instance's pathParams, and lowdefy_load_state opens that instance."
-      ),
-      name: z.string().describe('Checkpoint name (letters, numbers, - and _).'),
-      notes: z.string().optional().describe('What this checkpoint captures.'),
-      source: z.enum(['tab', 'headless']).optional(),
-      overwrite: z.boolean().optional(),
-    },
-  },
-
-  lowdefy_load_state: {
-    description:
-      "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' loads the recorded request data into the dev server and returns a ?_checkpoint URL the developer can open to manually test the app in that exact state." +
-      CALLER_NOTE,
-    inputSchema: {
-      name: z.string().describe('The checkpoint name.'),
-      mode: z.enum(['headless', 'registry-only']).optional(),
-      user: userSchema,
-      data: dataSchema,
-    },
-  },
-
-  lowdefy_list_state_checkpoints: {
-    description: 'List saved state checkpoints (name, page, captured time, notes).',
-    inputSchema: {},
-  },
-
-  lowdefy_checkpoint_to_mocks: {
-    description:
-      'Convert a state checkpoint into @lowdefy/e2e-utils mocks.yaml fixtures (requests/api entries plus rendered yaml). Use when writing e2e tests from a captured scenario.',
-    inputSchema: {
-      name: z.string().describe('The checkpoint name.'),
-    },
-  },
-
-  lowdefy_checkpoint: {
-    description:
-      'Snapshot all config files before risky changes. Returns a checkpoint id for lowdefy_revert_checkpoint. Use before multi-file edits so you can restore instantly.',
-    inputSchema: {
-      label: z.string().describe('Short label for the checkpoint, e.g. "before-refactor".'),
-    },
-  },
-
-  lowdefy_revert_checkpoint: {
-    description:
-      'Restore config files from a checkpoint made with lowdefy_checkpoint (restores changed files and removes files added since). Omit id to list available checkpoints.',
-    inputSchema: {
-      id: z.string().optional().describe('Checkpoint id. Omit to list checkpoints.'),
-    },
   },
 
   lowdefy_build_status: {
@@ -356,7 +295,7 @@ const devToolDefinitions = {
         .string()
         .optional()
         .describe(
-          'The name of a data set in tests/data/<name>.yaml. The journey then runs against a fresh in-memory MongoDB database of its own, loaded with the data set\'s fixtures and generated documents (generate: seeded background rows, the same on every machine), while the developer\'s own tabs keep the app\'s real database: it may write freely. user and "as" step names can name the data set\'s users ("as": "outsider" opens that actor as the data set user outsider). Values the journey types, selects or asserts should come from the data set\'s fixtures or users, not its generated documents. The data set format: GET /lowdefy-docs/content/testing/journey-data-sets. Refused while a dev mock user is active.'
+          'The name of a data set in tests/data/<name>.yaml. The journey then runs against a fresh in-memory MongoDB database of its own, loaded with the data set\'s fixtures and generated documents (generate: seeded background rows, the same on every machine), while the developer\'s own tabs keep the app\'s real database: it may write freely. user and "as" step names can name the data set\'s users ("as": "outsider" opens that actor as the data set user outsider). Values the journey types, selects or asserts should come from the data set\'s fixtures or users, not its generated documents. The data set format: lowdefy_get_doc testing/journey-data-sets. Refused while a dev mock user is active.'
         ),
       pathParams: z
         .record(z.string())
@@ -392,21 +331,6 @@ const devToolDefinitions = {
     },
   },
 
-  lowdefy_scaffold_page: {
-    description:
-      'Create a new page yaml file with a canonical minimal structure. Refuses if the page already exists. Returns the created file path and the lowdefy.yaml registration step you must do next.',
-    inputSchema: {
-      pageId: z.string().describe('The new page id (letters, numbers, - and _).'),
-      title: z.string().optional().describe('Page title. Defaults to the pageId.'),
-    },
-  },
-
-  lowdefy_overview: {
-    description:
-      'Start here. Overview of everything this Lowdefy project has available: counts of blocks/operators/actions/connections/requests, installed plugins, doc sections, and which tool to use next.',
-    inputSchema: {},
-  },
-
   lowdefy_list_types: {
     description:
       'List ALL available types of a kind — every block, operator, action, connection, or request type installed in this project (core and local plugins), whether used yet or not. Call this before writing any config to get exact type names.',
@@ -424,12 +348,6 @@ const devToolDefinitions = {
         ])
         .describe('The kind of types to list.'),
     },
-  },
-
-  lowdefy_list_plugins: {
-    description:
-      "List installed plugin packages (including this project's local custom plugins) and the type names each provides.",
-    inputSchema: {},
   },
 
   lowdefy_get_schema: {
@@ -496,14 +414,6 @@ const devToolDefinitions = {
         .positive()
         .optional()
         .describe('Max icon names (after semantic names). Default 30.'),
-    },
-  },
-
-  lowdefy_get_plugin_doc: {
-    description:
-      'Get all the markdown an installed plugin package ships (README, docs/*.md) as one page. lowdefy_search_docs and lowdefy_get_doc reach the same files page by page.',
-    inputSchema: {
-      package: z.string().describe('The package name, e.g. "@lowdefy/blocks-antd".'),
     },
   },
 

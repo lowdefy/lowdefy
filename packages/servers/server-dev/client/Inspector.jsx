@@ -117,57 +117,6 @@ function buildSnapshot({ lowdefy, page }) {
   });
 }
 
-// Dev-only agent-state-xray: puts a human tester's real browser tab into a
-// checkpoint's recorded state when it loads a page with `?_checkpoint=<name>`
-// in the URL. Fetches the checkpoint's state part from
-// GET <basePath>/api/dev-inspect/checkpoint/<name> (src/routes/devInspect.js
-// — that fetch also loads the checkpoint's recorded requests into
-// devMockRegistry server-side, so this tab's own requests replay recorded
-// data), then injects state the same way e2e-utils' setState does:
-// context._internal.State.set(...) + context._internal.update(). Polls
-// briefly for the page context to exist since this can run before the page
-// has finished mounting. Never lets a bad checkpoint or a missing context
-// break the app — every step is try/catch, and failures just leave the app
-// running unmodified.
-async function bootstrapFromCheckpoint({ basePath, instanceKey, checkpointName, isCancelled }) {
-  try {
-    const response = await fetch(
-      `${basePath}/api/dev-inspect/checkpoint/${encodeURIComponent(checkpointName)}`
-    );
-    const body = await response.json();
-    if (!response.ok || body?.error) {
-      // eslint-disable-next-line no-console
-      console.error(
-        `Failed to load checkpoint "${checkpointName}": ${body?.error ?? response.statusText}`
-      );
-      return;
-    }
-    const payload = serializer.deserialize(body);
-
-    const deadline = Date.now() + 5000;
-    let context;
-    while (!isCancelled() && Date.now() < deadline) {
-      context = window.lowdefy?.contexts?.[instanceKey];
-      if (context) {
-        break;
-      }
-      // eslint-disable-next-line no-await-in-loop
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-    if (isCancelled() || type.isNone(context)) {
-      return;
-    }
-
-    Object.entries(payload.state ?? {}).forEach(([key, value]) => {
-      context._internal.State.set(key, value);
-    });
-    context._internal.update();
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to load checkpoint "%s":', checkpointName, error);
-  }
-}
-
 function evalExpression({ lowdefy, page, expression }) {
   const { context, error } = findContext({ lowdefy, page });
   if (error) {
@@ -239,29 +188,6 @@ const Inspector = ({ basePath, lowdefy, page }) => {
     }
     postTabPage({ basePath, tabId, page });
   }, [basePath, tabId, page]);
-
-  const instanceKey = page?.instanceKey;
-  useEffect(() => {
-    if (type.isNone(instanceKey)) {
-      return undefined;
-    }
-    const checkpointName = new URLSearchParams(window.location.search).get('_checkpoint');
-    if (type.isNone(checkpointName)) {
-      return undefined;
-    }
-
-    let cancelled = false;
-    bootstrapFromCheckpoint({
-      basePath,
-      instanceKey,
-      checkpointName,
-      isCancelled: () => cancelled,
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [basePath, instanceKey]);
 
   return null;
 };

@@ -18,8 +18,6 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { createTraceId, type } from '@lowdefy/helpers';
 import { validateJourneyUser } from '@lowdefy/node-utils';
 
-import checkpointToMocks from './checkpointToMocks.js';
-import createConfigCheckpoint from './createConfigCheckpoint.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
@@ -30,17 +28,11 @@ import readJourneySession from './readJourneySession.js';
 import readProxyBuildWait from './readProxyBuildWait.js';
 import getDoc from './getDoc.js';
 import getExamples from './getExamples.js';
-import getOverview from './getOverview.js';
 import getPageConfig from './getPageConfig.js';
-import getPluginDoc from './getPluginDoc.js';
 import getSchema from './getSchema.js';
 import getStaleStatus from './getStaleStatus.js';
 import inspectState from './inspectState.js';
-import listConfigCheckpoints from './listConfigCheckpoints.js';
-import listPlugins from './listPlugins.js';
 import listTypes from './listTypes.js';
-import loadState from './loadState.js';
-import revertConfigCheckpoint from './revertConfigCheckpoint.js';
 import requestRestart from './requestRestart.js';
 import runCheck from './runCheck.js';
 import runEndpoint from './runEndpoint.js';
@@ -48,12 +40,9 @@ import runJourney from './runJourney.js';
 import runJourneyAsUsers from './runJourneyAsUsers.js';
 import selectExercised from './selectExercised.js';
 import runRequest from './runRequest.js';
-import snapshotState from './snapshotState.js';
-import { listStateCheckpoints } from './checkpointStore.js';
 import createLogger from '../server/log/createLogger.js';
 import lowdefyConfig from '../build/config.js';
 import devToolDefinitions, { INSTRUCTIONS } from './devToolDefinitions.js';
-import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
 import searchIcons from './searchIcons.js';
@@ -182,54 +171,6 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool('lowdefy_app_map', () => textResult(getAppMap()));
 
-  registerDevTool(
-    'lowdefy_snapshot_state',
-    async ({ pageId, pathParams, name, notes, source, overwrite }) => {
-      const result = await snapshotState({
-        origin,
-        pageId,
-        pathParams,
-        name,
-        notes,
-        source,
-        overwrite,
-      });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
-    }
-  );
-
-  registerDevTool('lowdefy_load_state', async ({ name, mode, user, data }) => {
-    const result = await loadState({ origin, name, mode, user, data });
-    if (result.error) {
-      return notFoundResult(result.error);
-    }
-    return textResult(result);
-  });
-
-  registerDevTool('lowdefy_list_state_checkpoints', () => textResult(listStateCheckpoints()));
-
-  registerDevTool('lowdefy_checkpoint_to_mocks', ({ name }) => {
-    const result = checkpointToMocks({ name });
-    if (result.error) {
-      return notFoundResult(result.error);
-    }
-    return textResult(result);
-  });
-
-  registerDevTool('lowdefy_checkpoint', ({ label }) =>
-    textResult(createConfigCheckpoint({ label }))
-  );
-
-  registerDevTool('lowdefy_revert_checkpoint', ({ id }) => {
-    if (!id) {
-      return textResult(listConfigCheckpoints());
-    }
-    return textResult(revertConfigCheckpoint({ id }));
-  });
-
   registerDevTool('lowdefy_check', async () => textResult(await runCheck()));
 
   registerDevTool('lowdefy_build_status', async ({ wait }) => {
@@ -245,9 +186,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
   registerDevTool('lowdefy_get_page_config', async ({ pageId }) => {
     const result = await getPageConfig({ pageId });
     if (result === null) {
-      return notFoundResult(
-        `Page "${pageId}" not found. Use lowdefy_overview or check pageRegistry for valid page ids.`
-      );
+      return notFoundResult(`Page "${pageId}" not found. Use lowdefy_app_map for valid page ids.`);
     }
     return textResult(result);
   });
@@ -391,19 +330,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     }
   );
 
-  registerDevTool('lowdefy_scaffold_page', ({ pageId, title }) => {
-    const result = scaffoldPage({ pageId, title });
-    if (result.error) {
-      return notFoundResult(result.error);
-    }
-    return textResult(result);
-  });
-
-  registerDevTool('lowdefy_overview', () => textResult(getOverview()));
-
   registerDevTool('lowdefy_list_types', ({ kind }) => textResult(listTypes({ kind })));
-
-  registerDevTool('lowdefy_list_plugins', () => textResult(listPlugins()));
 
   registerDevTool('lowdefy_get_schema', ({ kind, type }) => {
     const schema = getSchema({ kind, type });
@@ -444,16 +371,6 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
   registerDevTool('lowdefy_search_icons', async ({ query, limit }) =>
     textResult(await searchIcons({ query, limit }))
   );
-
-  registerDevTool('lowdefy_get_plugin_doc', ({ package: packageName }) => {
-    const doc = getPluginDoc({ packageName });
-    if (doc === null) {
-      return notFoundResult(
-        `Package "${packageName}" ships no markdown docs. Use lowdefy_list_types and lowdefy_get_schema for its types.`
-      );
-    }
-    return textResult(doc.markdown);
-  });
 
   registerDevTool('lowdefy_journey_session', ({ id, since }) => {
     const result = readJourneySession({ id, since });
