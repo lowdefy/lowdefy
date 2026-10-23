@@ -139,3 +139,65 @@ test('syncServer still runs queued syncs when the first child start fails', asyn
 
   expect(context.events).toEqual(['restart']);
 });
+
+function stopChild(context) {
+  context.idleChild = {
+    isStopped: vi.fn(() => true),
+    markRestartPending: vi.fn(() => context.events.push('pending')),
+  };
+}
+
+test.each([
+  ['a server artifact changed', { install: false, restart: true }, {}],
+  ['asked to restart', { install: false, restart: false }, { restart: true }],
+])(
+  'syncServer marks a restart pending instead of starting an idle-stopped child when %s',
+  async (_, changes, options) => {
+    const context = createContext(changes);
+    stopChild(context);
+
+    await createStartedSync(context)(options);
+
+    expect(context.events).toEqual(['pending']);
+  }
+);
+
+test('syncServer installs, rebuilds and optimises for an idle-stopped child without starting it', async () => {
+  const context = createContext({ install: true, restart: true });
+  stopChild(context);
+
+  await createStartedSync(context)();
+
+  expect(context.events).toEqual(['shutdown', 'install', 'build', 'track', 'optimize', 'pending']);
+});
+
+test('syncServer restarts a child that is running again', async () => {
+  const context = createContext({ install: false, restart: true });
+  context.idleChild = { isStopped: () => false, markRestartPending: vi.fn() };
+
+  await createStartedSync(context)();
+
+  expect(context.events).toEqual(['restart']);
+  expect(context.idleChild.markRestartPending).not.toHaveBeenCalled();
+});
+
+test('syncServer runs queued lifecycle tasks one at a time with the syncs', async () => {
+  const context = createContext({ install: false, restart: true });
+  let finishRestart;
+  context.restartServer.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        context.events.push('restart');
+        finishRestart = resolve;
+      })
+  );
+  const sync = createStartedSync(context);
+  const synced = sync();
+  const task = sync.run(async () => context.events.push('task'));
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  expect(context.events).toEqual(['restart']);
+  finishRestart();
+  await Promise.all([synced, task]);
+
+  expect(context.events).toEqual(['restart', 'task']);
+});
