@@ -19,6 +19,7 @@ import createClearFilters from './createClearFilters.js';
 import createCloseColumnFilter from './createCloseColumnFilter.js';
 import createConditionFilteredRowModel from './createConditionFilteredRowModel.js';
 import createOpenColumnFilter from './createOpenColumnFilter.js';
+import createOpenFilter from './createOpenFilter.js';
 import createSetFilter from './createSetFilter.js';
 import createSetSearch from './createSetSearch.js';
 import createUpdateColumnFilter from './createUpdateColumnFilter.js';
@@ -59,6 +60,7 @@ const filteringFeature = {
     setFilter: createSetFilter,
     clearFilters: createClearFilters,
     setSearch: createSetSearch,
+    openFilter: createOpenFilter,
   },
   headerParts: [FilterIndicator],
   headerCellProps: getFilteringHeaderProps,
