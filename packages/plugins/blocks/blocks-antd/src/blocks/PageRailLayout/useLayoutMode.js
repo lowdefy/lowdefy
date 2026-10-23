@@ -16,7 +16,8 @@
 
 import { useEffect, useState } from 'react';
 
-import getLayoutMode, { getLayoutQueries } from './getLayoutMode.js';
+import getLayoutMode from './getLayoutMode.js';
+import getLayoutQueries from './getLayoutQueries.js';
 
 function browserMatchMedia() {
   return typeof window !== 'undefined' && typeof window.matchMedia === 'function'

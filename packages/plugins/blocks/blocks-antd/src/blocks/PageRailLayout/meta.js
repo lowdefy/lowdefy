@@ -149,7 +149,7 @@ export default {
         open: 'Whether the panel is now open.',
         mode: '`desktop`, `tablet` or `phone`.',
         source:
-          'What opened or closed it: `button`, `rail`, `shortcut`, `drag`, `keyboard`, `swipe`, `scrim`, `escape`, `navigate` or `method`.',
+          "What opened or closed it: `button`, `rail`, `shortcut`, `drag`, `edge` (a click or double-click on the collapsed panel's edge), `keyboard`, `swipe`, `scrim`, `escape`, `navigate` or `method`.",
       },
     },
     onPanelResize: {
@@ -201,7 +201,7 @@ export default {
           links: {
             ...menuLinks,
             description:
-              "Menu links. Compatible with `_menu` operator output. A link's `properties.tip` is added to its hover tip, and `properties.shortcut` (such as `g c` or `mod+1`) opens it from the keyboard.",
+              "Menu links. Compatible with `_menu` operator output. A link's `properties.tip` is added to its hover tip, and `properties.shortcut` (modifiers and one key joined by `+`, such as `mod+1`) opens it from the keyboard.",
           },
           menuId: {
             type: 'string',

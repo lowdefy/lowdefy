@@ -14,15 +14,17 @@
   limitations under the License.
 */
 
-import {
-  COLLAPSE_DISTANCE,
-  clampPanelWidth,
-  getDragWidth,
-  getPanelLimits,
-} from './clampPanelWidth.js';
+import clampPanelWidth from './clampPanelWidth.js';
 import getBadge from './getBadge.js';
+import getDragWidth, { COLLAPSE_DISTANCE } from './getDragWidth.js';
+import getFlickVelocity from './getFlickVelocity.js';
 import getLayoutMode from './getLayoutMode.js';
-import { getPlaceBadge, getPlaceKey } from './placeKeys.js';
+import getPanelLimits from './getPanelLimits.js';
+import getPlaceBadge from './getPlaceBadge.js';
+import getPlaceKey from './getPlaceKey.js';
+import getPlaceSelectKey from './getPlaceSelectKey.js';
+import getShortcutLabel from './getShortcutLabel.js';
+import isPlainClick from './isPlainClick.js';
 
 const limits = getPanelLimits({});
 
@@ -36,6 +38,16 @@ describe('getPanelLimits', () => {
       minWidth: 200,
       maxWidth: 400,
       initialWidth: 260,
+    });
+  });
+
+  test('holds the initial width to the range', () => {
+    expect(getPanelLimits({ maxWidth: 280 }).initialWidth).toBe(280);
+    expect(getPanelLimits({ minWidth: 320 }).initialWidth).toBe(320);
+    expect(getPanelLimits({ minWidth: 200, maxWidth: 400, initialWidth: 600 })).toEqual({
+      minWidth: 200,
+      maxWidth: 400,
+      initialWidth: 400,
     });
   });
 
@@ -177,5 +189,80 @@ describe('getPlaceBadge', () => {
 
   test('is undefined when neither matches', () => {
     expect(getPlaceBadge({}, { id: 'menuitem:default:controls' })).toBe(undefined);
+  });
+});
+
+describe('getPlaceSelectKey', () => {
+  test('is the page id of a page link', () => {
+    expect(getPlaceSelectKey({ id: 'menuitem:default:controls', pageId: 'control-list' })).toBe(
+      'control-list'
+    );
+  });
+
+  test("is the id the app wrote for a link with no page, without the build's prefix", () => {
+    expect(getPlaceSelectKey({ id: 'menuitem:default:docs', url: 'https://example.com' })).toBe(
+      'docs'
+    );
+  });
+});
+
+describe('getFlickVelocity', () => {
+  test('measures the last moves, not the whole drag', () => {
+    const samples = [
+      { offset: -10, t: 0 },
+      { offset: -20, t: 400 },
+      { offset: -40, t: 920 },
+      { offset: -100, t: 1000 },
+    ];
+    expect(getFlickVelocity({ samples, now: 1000 })).toBe(-0.75);
+  });
+
+  test('is 0 when the finger stopped before letting go', () => {
+    const samples = [
+      { offset: -10, t: 0 },
+      { offset: -200, t: 50 },
+    ];
+    expect(getFlickVelocity({ samples, now: 500 })).toBe(0);
+  });
+
+  test('is 0 with fewer than two recent moves', () => {
+    expect(getFlickVelocity({ samples: [], now: 10 })).toBe(0);
+    expect(getFlickVelocity({ samples: [{ offset: -50, t: 5 }], now: 10 })).toBe(0);
+  });
+});
+
+describe('getShortcutLabel', () => {
+  test('writes modifiers as symbols on a Mac', () => {
+    expect(getShortcutLabel('mod+\\', true)).toBe('⌘\\');
+    expect(getShortcutLabel('mod+shift+k', true)).toBe('⇧⌘K');
+    expect(getShortcutLabel('ctrl+alt+1', true)).toBe('⌃⌥1');
+  });
+
+  test('writes modifiers as words elsewhere', () => {
+    expect(getShortcutLabel('mod+\\', false)).toBe('Ctrl+\\');
+    expect(getShortcutLabel('mod+shift+k', false)).toBe('Ctrl+Shift+K');
+    expect(getShortcutLabel('alt+1', false)).toBe('Alt+1');
+  });
+
+  test('is null with no shortcut', () => {
+    expect(getShortcutLabel(undefined, true)).toBeNull();
+    expect(getShortcutLabel(null, false)).toBeNull();
+  });
+});
+
+describe('isPlainClick', () => {
+  test('is true for a main-button click with no modifier', () => {
+    expect(isPlainClick({ button: 0 })).toBe(true);
+  });
+
+  test('is false for a click with any modifier key', () => {
+    expect(isPlainClick({ button: 0, metaKey: true })).toBe(false);
+    expect(isPlainClick({ button: 0, ctrlKey: true })).toBe(false);
+    expect(isPlainClick({ button: 0, shiftKey: true })).toBe(false);
+    expect(isPlainClick({ button: 0, altKey: true })).toBe(false);
+  });
+
+  test('is false for a middle click', () => {
+    expect(isPlainClick({ button: 1 })).toBe(false);
   });
 });

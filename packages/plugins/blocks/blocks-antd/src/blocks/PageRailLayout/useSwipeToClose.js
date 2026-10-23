@@ -16,7 +16,9 @@
 
 import { useRef } from 'react';
 
-import { capture, release } from './pointerCapture.js';
+import capturePointer from './capturePointer.js';
+import getFlickVelocity from './getFlickVelocity.js';
+import releasePointer from './releasePointer.js';
 
 // A horizontal move this far, and clearly more horizontal than vertical, starts a swipe.
 const START_DISTANCE = 10;
@@ -41,7 +43,7 @@ function useSwipeToClose({ direction = -1, enabled, onClose, rootRef, target }) 
   return {
     onPointerDown: (event) => {
       if (!enabled || event.pointerType === 'mouse') return;
-      swipe.current = { x: event.clientX, y: event.clientY, t: event.timeStamp, active: false };
+      swipe.current = { x: event.clientX, y: event.clientY, active: false, samples: [] };
     },
     onPointerMove: (event) => {
       const current = swipe.current;
@@ -58,14 +60,13 @@ function useSwipeToClose({ direction = -1, enabled, onClose, rootRef, target }) 
         if (dx * direction < START_DISTANCE || Math.abs(dx) < Math.abs(dy) * 1.2) return;
         current.active = true;
         current.width = element.getBoundingClientRect().width;
-        capture(element, event.pointerId);
+        capturePointer(element, event.pointerId);
         element.style.transition = 'none';
         rootRef.current?.setAttribute('data-swiping', 'true');
       }
       const offset = direction < 0 ? Math.min(0, dx) : Math.max(0, dx);
       current.offset = offset;
-      current.lastX = event.clientX;
-      current.lastT = event.timeStamp;
+      current.samples.push({ offset, t: event.timeStamp });
       element.style.transform = `translateX(${offset}px)`;
       rootRef.current?.style.setProperty(
         '--lf-rail-scrim-progress',
@@ -77,9 +78,8 @@ function useSwipeToClose({ direction = -1, enabled, onClose, rootRef, target }) 
       swipe.current = null;
       const element = target.current;
       if (!current?.active || !element) return;
-      release(element, event.pointerId);
-      const elapsed = Math.max(1, event.timeStamp - current.t);
-      const velocity = (current.offset ?? 0) / elapsed;
+      releasePointer(element, event.pointerId);
+      const velocity = getFlickVelocity({ samples: current.samples, now: event.timeStamp });
       const close =
         Math.abs(current.offset ?? 0) > current.width * CLOSE_SHARE ||
         velocity * direction > CLOSE_VELOCITY;

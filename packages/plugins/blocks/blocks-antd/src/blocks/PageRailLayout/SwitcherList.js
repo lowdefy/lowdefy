@@ -15,6 +15,7 @@
 */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { type } from '@lowdefy/helpers';
 
 import Mark from './Mark.js';
 
@@ -120,7 +121,7 @@ function SwitcherList({
             <span className="lf-rail-switcher-description">{row.description}</span>
           )}
         </span>
-        {row.extra !== undefined && row.extra !== null && row.extra !== '' && (
+        {!type.isNone(row.extra) && row.extra !== '' && (
           <span className="lf-rail-switcher-extra">{row.extra}</span>
         )}
         {kind === 'option' && row.selected && (

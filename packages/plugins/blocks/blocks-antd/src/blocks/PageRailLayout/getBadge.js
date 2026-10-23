@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // A badge is a number, or { count, tone, dot }. A count of 0 shows nothing unless it is a dot.
 function getBadge(value) {
-  if (value === undefined || value === null) return null;
+  if (type.isNone(value)) return null;
   const badge = typeof value === 'object' ? value : { count: value };
   const count = Number(badge.count) || 0;
   if (!badge.dot && count <= 0) return null;

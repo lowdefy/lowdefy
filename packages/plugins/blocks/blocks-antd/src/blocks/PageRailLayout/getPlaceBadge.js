@@ -14,14 +14,10 @@
   limitations under the License.
 */
 
-// The build renames menu link ids to `menuitem:<menuId>:<id>`; an app keys badges by the id it
-// wrote, or by the page id.
-function getPlaceKey(link) {
-  return String(link.id ?? link.pageId).replace(/^menuitem:[^:]*:/, '');
-}
+import getPlaceKey from './getPlaceKey.js';
 
 function getPlaceBadge(badges, link) {
   return badges[getPlaceKey(link)] ?? (link.pageId ? badges[link.pageId] : undefined);
 }
 
-export { getPlaceBadge, getPlaceKey };
+export default getPlaceBadge;

@@ -17,8 +17,10 @@
 import React, { useRef, useState } from 'react';
 import { Tooltip } from 'antd';
 
-import { clampPanelWidth, getDragWidth } from './clampPanelWidth.js';
-import { capture, release as releaseCapture } from './pointerCapture.js';
+import capturePointer from './capturePointer.js';
+import clampPanelWidth from './clampPanelWidth.js';
+import getDragWidth from './getDragWidth.js';
+import releasePointer from './releasePointer.js';
 
 const KEY_STEP = 16;
 const KEY_STEP_LARGE = 64;
@@ -53,7 +55,7 @@ function PanelResizeHandle({
   }
 
   function release(event) {
-    releaseCapture(event.currentTarget, event.pointerId);
+    releasePointer(event.currentTarget, event.pointerId);
     document.body.style.removeProperty('user-select');
     document.body.style.removeProperty('cursor');
     rootRef.current?.removeAttribute('data-resizing');
@@ -69,7 +71,7 @@ function PanelResizeHandle({
     if (current.cancelled) return;
     if (current.distance < CLICK_SLOP) {
       // A click: on a collapsed panel it opens the panel; on an open one it does nothing.
-      if (!open) onCommit(width, { expand: true });
+      if (!open) onCommit(width, { expand: true, source: 'edge' });
       setLiveWidth(open ? width : 0);
       return;
     }
@@ -79,7 +81,7 @@ function PanelResizeHandle({
       return;
     }
     setLiveWidth(current.width);
-    onCommit(current.width, { expand: !open });
+    onCommit(current.width, { expand: !open, source: 'drag' });
   }
 
   return (
@@ -108,7 +110,7 @@ function PanelResizeHandle({
           if (event.button !== 0) return;
           setQuiet(true);
           event.preventDefault();
-          capture(event.currentTarget, event.pointerId);
+          capturePointer(event.currentTarget, event.pointerId);
           const start = open ? width : 0;
           const onEscape = (keyEvent) => {
             if (keyEvent.key !== 'Escape' || !drag.current) return;
@@ -149,7 +151,7 @@ function PanelResizeHandle({
         }}
         onDoubleClick={() => {
           setLiveWidth(limits.initialWidth);
-          onCommit(limits.initialWidth, { expand: true });
+          onCommit(limits.initialWidth, { expand: true, source: 'edge' });
         }}
         onKeyDown={(event) => {
           const large = event.shiftKey ? KEY_STEP_LARGE : KEY_STEP;
@@ -161,7 +163,7 @@ function PanelResizeHandle({
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             if (open) onCollapse('keyboard');
-            else onCommit(width, { expand: true });
+            else onCommit(width, { expand: true, source: 'keyboard' });
             return;
           }
           if (next === null) return;
@@ -172,7 +174,10 @@ function PanelResizeHandle({
             else onCommit(limits.minWidth);
             return;
           }
-          onCommit(clampPanelWidth({ width: next, ...limits }), { expand: !open });
+          onCommit(clampPanelWidth({ width: next, ...limits }), {
+            expand: !open,
+            source: 'keyboard',
+          });
         }}
       />
     </Tooltip>

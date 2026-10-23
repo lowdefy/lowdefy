@@ -16,7 +16,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { clampPanelWidth } from './clampPanelWidth.js';
+import clampPanelWidth from './clampPanelWidth.js';
 
 function getStorageKey({ methods, panel }) {
   return methods.getAppStorageKey(`lf-${panel?.storageKey ?? 'rail-panel'}`);
@@ -86,14 +86,15 @@ function usePanelState({ methods, panel, limits, mode }) {
     });
   }
 
-  function commitWidth(width, { expand = false } = {}) {
+  // `source` says what expanded a collapsed panel, for onPanelToggle.
+  function commitWidth(width, { expand = false, source } = {}) {
     const next = {
       width: clampPanelWidth({ width, ...limits }),
       collapsed: expand ? false : stored.collapsed,
     };
     save(next);
     if (expand && stored.collapsed) {
-      methods.triggerEvent({ name: 'onPanelToggle', event: { open: true, mode, source: 'drag' } });
+      methods.triggerEvent({ name: 'onPanelToggle', event: { open: true, mode, source } });
     }
     methods.triggerEvent({ name: 'onPanelResize', event: { width: next.width } });
   }

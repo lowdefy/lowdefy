@@ -134,6 +134,19 @@ test.describe('PageRailLayout Block', () => {
     await handle(page).click();
     await expect(layout(page)).toHaveAttribute('data-panel', 'open');
     await expect(handle(page)).toHaveAttribute('aria-valuenow', '300');
+    await expect(getBlock(page, 'rail_toggle_display')).toContainText('Panel: open by edge');
+  });
+
+  test('Enter on the edge collapses and opens the panel, reported as the keyboard', async ({
+    page,
+  }) => {
+    await handle(page).focus();
+    await page.keyboard.press('Enter');
+    await expect(layout(page)).toHaveAttribute('data-panel', 'closed');
+    await expect(getBlock(page, 'rail_toggle_display')).toContainText('Panel: closed by keyboard');
+    await page.keyboard.press('Enter');
+    await expect(layout(page)).toHaveAttribute('data-panel', 'open');
+    await expect(getBlock(page, 'rail_toggle_display')).toContainText('Panel: open by keyboard');
   });
 
   test('a double-click on the edge puts the width back', async ({ page }) => {
@@ -183,6 +196,13 @@ test.describe('PageRailLayout Block', () => {
     await expect(sheet).toContainText('Audit');
     await expect(sheet).toContainText('Alerts');
     await expect(sheet).toContainText('Alex Brown');
+  });
+
+  test("a place's shortcut opens it on a phone when it is in the More sheet", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 800 });
+    await expect(page.locator('#pagerail_tab_bar')).not.toContainText('Audit');
+    await page.keyboard.press('Alt+5');
+    await expect(getBlock(page, 'rail_place_display')).toContainText('Place clicked: rail_audit');
   });
 
   test('puts the switchers in a sheet on a phone', async ({ page }) => {

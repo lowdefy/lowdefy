@@ -14,24 +14,10 @@
   limitations under the License.
 */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-const isMac =
-  typeof navigator !== 'undefined' &&
-  (navigator.userAgentData?.platform === 'macOS' ||
-    /Mac|iPhone|iPad|iPod/.test(navigator.platform ?? ''));
-
-function parseShortcut(shortcut) {
-  if (!shortcut) return null;
-  const parts = shortcut.toLowerCase().split('+');
-  return {
-    mod: parts.includes('mod'),
-    ctrl: parts.includes('ctrl'),
-    shift: parts.includes('shift'),
-    alt: parts.includes('alt'),
-    key: parts[parts.length - 1],
-  };
-}
+import isMac from './isMac.js';
+import parseShortcut from './parseShortcut.js';
 
 function matchesShortcut(e, parsed) {
   if (!parsed) return false;
@@ -46,6 +32,10 @@ function matchesShortcut(e, parsed) {
 
 function useItemShortcuts({ items, onMatch }) {
   const itemsKey = JSON.stringify(items);
+  // The listener reads the latest onMatch, so a caller passing a new function each render does
+  // not re-register it on the document every render.
+  const onMatchRef = useRef(onMatch);
+  onMatchRef.current = onMatch;
   useEffect(() => {
     const parsedItems = (items ?? [])
       .filter((item) => item.shortcut && !item.disabled)
@@ -61,7 +51,7 @@ function useItemShortcuts({ items, onMatch }) {
       for (const { key, parsed } of parsedItems) {
         if (matchesShortcut(e, parsed)) {
           e.preventDefault();
-          onMatch(key);
+          onMatchRef.current(key);
           return;
         }
       }
@@ -69,7 +59,7 @@ function useItemShortcuts({ items, onMatch }) {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [itemsKey, onMatch]);
+  }, [itemsKey]);
 }
 
 export default useItemShortcuts;
