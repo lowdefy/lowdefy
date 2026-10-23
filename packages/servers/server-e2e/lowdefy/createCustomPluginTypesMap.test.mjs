@@ -130,12 +130,14 @@ vi.doMock('node:module', () => ({
   },
 }));
 
+// Imported once, after the mocks: it loads @lowdefy/build, which takes seconds.
+const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
+
 beforeEach(() => {
   vi.clearAllMocks();
 });
 
 test('unwraps ESM default export when loading plugin types', async () => {
-  const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
   const { customTypesMap: result } = await createCustomPluginTypesMap({
     directories: { config: '/config' },
   });
@@ -157,7 +159,6 @@ test('unwraps ESM default export when loading plugin types', async () => {
 });
 
 test('populates blockMetas from plugin types', async () => {
-  const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
   const { customTypesMap: result } = await createCustomPluginTypesMap({
     directories: { config: '/config' },
   });
@@ -167,7 +168,6 @@ test('populates blockMetas from plugin types', async () => {
 });
 
 test('populates icons from plugin types', async () => {
-  const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
   const { customTypesMap: result } = await createCustomPluginTypesMap({
     directories: { config: '/config' },
   });
@@ -179,7 +179,6 @@ test('populates icons from plugin types', async () => {
 test('returns empty typesMap when neither lowdefy.yaml nor lowdefy.yml exists', async () => {
   const { readFile } = await import('@lowdefy/node-utils');
   readFile.mockResolvedValue(undefined);
-  const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
   const { customTypesMap: result } = await createCustomPluginTypesMap({
     directories: { config: '/config' },
   });
@@ -194,7 +193,6 @@ test('returns empty typesMap when neither lowdefy.yaml nor lowdefy.yml exists', 
 test('registers shell plugin native types in the mobile map and web types in the web map', async () => {
   const { readFile } = await import('@lowdefy/node-utils');
   readFile.mockResolvedValue(shellPluginYaml);
-  const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
   const { customTypesMap, customTypesMapMobile } = await createCustomPluginTypesMap({
     directories: { config: '/config' },
   });
@@ -230,7 +228,6 @@ test('registers shell plugin native types in the mobile map and web types in the
 test('a shell-only plugin without ./types adds no types and stays listed in the mobile map', async () => {
   const { readFile } = await import('@lowdefy/node-utils');
   readFile.mockResolvedValue(nativeOnlyYaml);
-  const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
   const { customTypesMap, customTypesMapMobile } = await createCustomPluginTypesMap({
     directories: { config: '/config' },
   });
@@ -246,7 +243,6 @@ test('a shell-only plugin without ./types adds no types and stays listed in the 
 test('a root plugin without ./types still fails', async () => {
   const { readFile } = await import('@lowdefy/node-utils');
   readFile.mockResolvedValue(rootNativeOnlyYaml);
-  const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
   await expect(createCustomPluginTypesMap({ directories: { config: '/config' } })).rejects.toThrow(
     'Package subpath \'./types\' is not defined by "exports"'
   );
