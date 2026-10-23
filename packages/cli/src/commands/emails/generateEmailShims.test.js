@@ -14,23 +14,23 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('fs', () => {
+vi.doMock('fs', () => {
   const promises = {
-    rm: jest.fn(),
-    mkdir: jest.fn(),
-    symlink: jest.fn(),
-    writeFile: jest.fn(),
+    rm: vi.fn(),
+    mkdir: vi.fn(),
+    symlink: vi.fn(),
+    writeFile: vi.fn(),
   };
   return { default: { promises }, promises };
 });
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const context = {
@@ -50,7 +50,7 @@ const notificationTypes = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('generateEmailShims recreates the emails directory and links node_modules', async () => {

@@ -16,10 +16,10 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 
-jest.unstable_mockModule('./fetchModules.js', () => ({
-  default: jest.fn(),
+vi.doMock('./fetchModules.js', () => ({
+  default: vi.fn(),
 }));
 
 let buildModuleDefs;
@@ -36,7 +36,7 @@ import testContext from '../test-utils/testContext.js';
 import expectTerminates from '../test-utils/expectTerminates.js';
 import { resolveModuleManifests } from './registerModules.js';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 function createTestContext(overrides = {}) {
   const context = testContext({

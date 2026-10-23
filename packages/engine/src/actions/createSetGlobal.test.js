@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import testContext from '../../test/testContext.js';
 
@@ -70,7 +70,7 @@ test('SetGlobal data to global', async () => {
 
 test('SetGlobal calls context update', async () => {
   const lowdefy = getLowdefy({ x: 'old', init: 'init' });
-  const updateFunction = jest.fn();
+  const updateFunction = vi.fn();
   const pageConfig = {
     id: 'root',
     type: 'Box',

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockTool = jest.fn();
-const mockJsonSchema = jest.fn();
+const mockTool = vi.fn();
+const mockJsonSchema = vi.fn();
 
 let lastAgentConfig = null;
-const mockGenerate = jest.fn().mockResolvedValue({ text: 'Sub-agent result' });
+const mockGenerate = vi.fn().mockResolvedValue({ text: 'Sub-agent result' });
 
 class MockToolLoopAgent {
   constructor(config) {
@@ -32,20 +32,20 @@ class MockToolLoopAgent {
   }
 }
 
-jest.unstable_mockModule('ai', () => ({
+vi.doMock('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
-  isStepCount: jest.fn((n) => ({ type: 'stepCount', count: n })),
-  hasToolCall: jest.fn((name) => ({ type: 'hasToolCall', toolName: name })),
+  isStepCount: vi.fn((n) => ({ type: 'stepCount', count: n })),
+  hasToolCall: vi.fn((name) => ({ type: 'hasToolCall', toolName: name })),
 }));
 
-const mockCreateMCPClient = jest.fn();
-jest.unstable_mockModule('@ai-sdk/mcp', () => ({
+const mockCreateMCPClient = vi.fn();
+vi.doMock('@ai-sdk/mcp', () => ({
   createMCPClient: mockCreateMCPClient,
 }));
 
-jest.unstable_mockModule('@ai-sdk/mcp/mcp-stdio', () => ({
+vi.doMock('@ai-sdk/mcp/mcp-stdio', () => ({
   Experimental_StdioMCPTransport: class MockStdio {
     constructor(config) {
       this.config = config;
@@ -54,13 +54,13 @@ jest.unstable_mockModule('@ai-sdk/mcp/mcp-stdio', () => ({
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   lastAgentConfig = null;
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockImplementation((schema) => schema);
 });
 
-const testLogger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const testLogger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 test('buildAgentTools creates sub-agent tools from agent.agents references', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
@@ -77,7 +77,7 @@ test('buildAgentTools creates sub-agent tools from agent.agents references', asy
     },
   };
 
-  const mockSubConnection = { provider: jest.fn().mockReturnValue('sub-model') };
+  const mockSubConnection = { provider: vi.fn().mockReturnValue('sub-model') };
 
   const agent = {
     tools: [],
@@ -87,12 +87,12 @@ test('buildAgentTools creates sub-agent tools from agent.agents references', asy
 
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest.fn().mockResolvedValue(mockSubConnection),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi.fn().mockResolvedValue(mockSubConnection),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -122,12 +122,12 @@ test('buildAgentTools sub-agent tool uses custom description when provided', asy
 
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn().mockReturnValue({}) }),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi.fn().mockResolvedValue({ provider: vi.fn().mockReturnValue({}) }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -154,12 +154,12 @@ test('buildAgentTools sub-agent tool execute calls generate and returns text', a
 
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn().mockReturnValue({}) }),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi.fn().mockResolvedValue({ provider: vi.fn().mockReturnValue({}) }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -198,12 +198,12 @@ test('buildAgentTools sub-agent tool uses custom inputSchema', async () => {
 
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn().mockReturnValue({}) }),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi.fn().mockResolvedValue({ provider: vi.fn().mockReturnValue({}) }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -231,12 +231,12 @@ test('buildAgentTools throws when sub-agent nesting exceeds max depth', async ()
 
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn().mockReturnValue({}) }),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi.fn().mockResolvedValue({ provider: vi.fn().mockReturnValue({}) }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   await expect(buildAgentTools({ agent, context, depth: 5 })).rejects.toThrow(
@@ -263,12 +263,12 @@ test('buildAgentTools sub-agent tool has toModelOutput that returns text type', 
 
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn().mockReturnValue({}) }),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi.fn().mockResolvedValue({ provider: vi.fn().mockReturnValue({}) }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -290,9 +290,9 @@ test('buildAgentTools with no agents property returns only endpoint tools', asyn
 
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -309,12 +309,12 @@ test('buildAgentTools keys endpoint tools by name and executes by endpointId', a
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'Query data',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: { rows: [] } }),
-    evaluateOperators: jest.fn((x) => x),
+    callEndpoint: vi.fn().mockResolvedValue({ success: true, response: { rows: [] } }),
+    evaluateOperators: vi.fn((x) => x),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -343,12 +343,12 @@ test('endpoint tool gives the model its payloadSchema without a top-level oneOf'
   const agent = { tools: [{ endpointId: 'tasks/write_task', name: 'write_task' }], mcp: [] };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'Create or update a task.',
       payloadSchema,
     }),
-    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: { id: 't1' } }),
-    evaluateOperators: jest.fn((x) => x),
+    callEndpoint: vi.fn().mockResolvedValue({ success: true, response: { id: 't1' } }),
+    evaluateOperators: vi.fn((x) => x),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -395,14 +395,14 @@ test('buildAgentTools keys sub-agent tools by name', async () => {
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi
       .fn()
-      .mockResolvedValue({ provider: jest.fn().mockReturnValue('sub-model') }),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+      .mockResolvedValue({ provider: vi.fn().mockReturnValue('sub-model') }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -418,11 +418,11 @@ test('buildAgentTools throws ConfigError when endpoint tool name collides with r
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'custom',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn(),
+    callEndpoint: vi.fn(),
   };
 
   await expect(buildAgentTools({ agent, context })).rejects.toThrow(/reserved platform tool name/i);
@@ -436,9 +436,9 @@ test('buildAgentTools throws ConfigError when sub-agent id collides with reserve
   };
   const context = {
     logger: testLogger,
-    getAgentConfig: jest.fn(),
-    getConnectionForAgent: jest.fn(),
-    resolveMcpSources: jest.fn(),
+    getAgentConfig: vi.fn(),
+    getConnectionForAgent: vi.fn(),
+    resolveMcpSources: vi.fn(),
   };
 
   await expect(buildAgentTools({ agent, context })).rejects.toThrow(/reserved platform tool name/i);
@@ -464,12 +464,12 @@ test('endpoint tool returns top-level marker-wrapped array as a plain array', as
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'Search HR policies.',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: wrappedResponse }),
-    evaluateOperators: jest.fn((x) => x),
+    callEndpoint: vi.fn().mockResolvedValue({ success: true, response: wrappedResponse }),
+    evaluateOperators: vi.fn((x) => x),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -498,13 +498,13 @@ test('endpoint tool fallback error message translates per i18n.active locale', a
         'de-DE': { 'agent.runtime.toolExecutionFailed': 'Endpunktausführung fehlgeschlagen' },
       },
     },
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'broken endpoint',
       payloadSchema: { type: 'object' },
     }),
     // success: false with no error message forces the translated fallback path
-    callEndpoint: jest.fn().mockResolvedValue({ success: false, error: undefined }),
-    evaluateOperators: jest.fn((x) => x),
+    callEndpoint: vi.fn().mockResolvedValue({ success: false, error: undefined }),
+    evaluateOperators: vi.fn((x) => x),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -536,12 +536,12 @@ test.each(['dev', 'prod'])(
     }
     const agent = { tools: [{ endpointId: 'query' }], mcp: [] };
     const context = {
-      getEndpointConfig: jest.fn().mockResolvedValue({
+      getEndpointConfig: vi.fn().mockResolvedValue({
         description: 'Query',
         payloadSchema: { type: 'object' },
       }),
-      callEndpoint: jest.fn().mockResolvedValue({ success: false, error }),
-      evaluateOperators: jest.fn((x) => x),
+      callEndpoint: vi.fn().mockResolvedValue({ success: false, error }),
+      evaluateOperators: vi.fn((x) => x),
     };
 
     const { tools } = await buildAgentTools({ agent, context });
@@ -593,11 +593,11 @@ test('buildAgentTools translates reserved-tool-name error per i18n.active locale
         },
       },
     },
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'custom',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn(),
+    callEndpoint: vi.fn(),
   };
 
   await expect(buildAgentTools({ agent, context })).rejects.toThrow(
@@ -625,12 +625,12 @@ test('endpoint tool unwraps a marker-wrapped array nested under an object key', 
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'Search products.',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: wrappedResponse }),
-    evaluateOperators: jest.fn((x) => x),
+    callEndpoint: vi.fn().mockResolvedValue({ success: true, response: wrappedResponse }),
+    evaluateOperators: vi.fn((x) => x),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -648,11 +648,11 @@ test('buildAgentTools asks for user approval of confirm endpoint tools by defaul
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'Create a ticket',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn(),
+    callEndpoint: vi.fn(),
   };
 
   const { toolApproval } = await buildAgentTools({ agent, context });
@@ -670,11 +670,11 @@ test('buildAgentTools autoApprove asks no approval for confirm endpoint tools', 
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'Create a ticket',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn(),
+    callEndpoint: vi.fn(),
   };
 
   const { toolApproval } = await buildAgentTools({ agent, context, autoApprove: true });
@@ -685,10 +685,10 @@ test('buildAgentTools autoApprove asks no approval for confirm endpoint tools', 
 test('buildAgentTools asks approval for confirm MCP tools unless autoApprove', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 
-  const mcpTool = { description: 'External tool', execute: jest.fn() };
+  const mcpTool = { description: 'External tool', execute: vi.fn() };
   mockCreateMCPClient.mockResolvedValue({
-    tools: jest.fn().mockResolvedValue({ 'ext-tool': mcpTool }),
-    close: jest.fn(),
+    tools: vi.fn().mockResolvedValue({ 'ext-tool': mcpTool }),
+    close: vi.fn(),
   });
 
   const agent = {
@@ -696,9 +696,9 @@ test('buildAgentTools asks approval for confirm MCP tools unless autoApprove', a
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
   };
 
   const withApproval = await buildAgentTools({ agent, context });
@@ -726,14 +726,14 @@ test('buildAgentTools propagates autoApprove into recursive sub-agent tool build
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'Sub tool',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn(),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn() }),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    callEndpoint: vi.fn(),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi.fn().mockResolvedValue({ provider: vi.fn() }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   await buildAgentTools({ agent, context, autoApprove: true });
@@ -752,13 +752,13 @@ test('buildAgentTools throws a LowdefyInternalError for an endpoint tool named w
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
+    getEndpointConfig: vi.fn().mockResolvedValue({
       description: 'an endpoint',
       payloadSchema: { type: 'object' },
     }),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   await expect(buildAgentTools({ agent, context })).rejects.toThrow(
@@ -784,12 +784,12 @@ test('buildAgentTools throws a LowdefyInternalError for a sub-agent tool named w
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
-    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn() }),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi.fn().mockResolvedValue({ provider: vi.fn() }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   await expect(buildAgentTools({ agent, context })).rejects.toThrow(
@@ -802,7 +802,7 @@ test('buildAgentTools warns and skips an MCP tool whose name is a reserved key',
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 
   mockCreateMCPClient.mockResolvedValue({
-    tools: jest.fn().mockResolvedValue({ constructor: { description: 'polluting' } }),
+    tools: vi.fn().mockResolvedValue({ constructor: { description: 'polluting' } }),
   });
 
   const agent = {
@@ -812,10 +812,10 @@ test('buildAgentTools warns and skips an MCP tool whose name is a reserved key',
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   const { tools } = await buildAgentTools({ agent, context });
@@ -829,7 +829,7 @@ test('buildAgentTools registers an MCP tool named after an inherited Object prot
 
   const mcpTool = { description: 'stringify things' };
   mockCreateMCPClient.mockResolvedValue({
-    tools: jest.fn().mockResolvedValue({ toString: mcpTool }),
+    tools: vi.fn().mockResolvedValue({ toString: mcpTool }),
   });
 
   const agent = {
@@ -839,10 +839,10 @@ test('buildAgentTools registers an MCP tool named after an inherited Object prot
   };
   const context = {
     logger: testLogger,
-    getEndpointConfig: jest.fn(),
-    callEndpoint: jest.fn(),
-    evaluateOperators: jest.fn((x) => x),
-    resolveMcpSources: jest.fn().mockResolvedValue([]),
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
   };
 
   const { tools } = await buildAgentTools({ agent, context });

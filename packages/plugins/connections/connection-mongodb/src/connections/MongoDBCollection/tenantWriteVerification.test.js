@@ -19,19 +19,19 @@
 // (as a bug would), so what reaches the database is an org-less row - the
 // verification must delete it and fail the request with TenantIntegrityError.
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { TenantIntegrityError } from '@lowdefy/errors';
 
-jest.unstable_mockModule('./tenant/stampTenantOnDoc.js', () => ({
+vi.doMock('./tenant/stampTenantOnDoc.js', () => ({
   default: ({ doc }) => doc,
 }));
-jest.unstable_mockModule('./tenant/applyTenantToBulkOperations.js', () => ({
+vi.doMock('./tenant/applyTenantToBulkOperations.js', () => ({
   default: ({ operations }) => operations,
 }));
-jest.unstable_mockModule('./tenant/applyTenantToFilter.js', () => ({
+vi.doMock('./tenant/applyTenantToFilter.js', () => ({
   default: ({ filter }) => filter,
 }));
-jest.unstable_mockModule('./tenant/applyTenantToUpdate.js', () => ({
+vi.doMock('./tenant/applyTenantToUpdate.js', () => ({
   default: ({ update }) => update,
 }));
 

@@ -15,6 +15,7 @@
 */
 
 import addNonceToElements from './addNonceToElements.js';
+import { expect, test } from 'vitest';
 
 test('addNonceToElements adds the nonce to every script and style element', () => {
   const html = `<script src="https://cdn.example.com/a.js"></script>

@@ -15,6 +15,7 @@
 */
 
 import if_none from './if_none.js';
+import { expect, test } from 'vitest';
 
 test('_if_none evaluates true for null and undefined', () => {
   expect(if_none({ params: [null, 'default'], location: 'locationId' })).toEqual('default');

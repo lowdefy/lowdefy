@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 
 import AwsS3Bucket from './AwsS3Bucket.js';
+import { expect, test } from 'vitest';
 
 const schema = AwsS3Bucket.schema;
 

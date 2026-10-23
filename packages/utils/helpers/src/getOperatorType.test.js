@@ -15,6 +15,7 @@
 */
 
 import getOperatorType from './getOperatorType.js';
+import { expect, test } from 'vitest';
 
 test('getOperatorType returns the operator name for an operator object', () => {
   expect(getOperatorType({ _state: 'key' })).toBe('_state');

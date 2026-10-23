@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const mockClient = {
-  db: jest.fn((name) => ({ collection: jest.fn((model) => ({ name, model })) })),
+  db: vi.fn((name) => ({ collection: vi.fn((model) => ({ name, model })) })),
 };
-const mockGetClient = jest.fn();
-const mockMongodbAdapter = jest.fn(() => 'betterAuthAdapter');
+const mockGetClient = vi.fn();
+const mockMongodbAdapter = vi.fn(() => 'betterAuthAdapter');
 
-jest.unstable_mockModule('../../../connections/MongoDBCollection/getClient.js', () => ({
+vi.doMock('../../../connections/MongoDBCollection/getClient.js', () => ({
   default: mockGetClient,
 }));
 
-jest.unstable_mockModule('../mongodbAdapter/mongodbAdapter.js', () => ({
+vi.doMock('../mongodbAdapter/mongodbAdapter.js', () => ({
   default: mockMongodbAdapter,
 }));
 

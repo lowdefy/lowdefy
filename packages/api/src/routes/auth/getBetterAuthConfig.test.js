@@ -14,27 +14,27 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
-const mockSendEmail = jest.fn(async () => ({ messageId: 'msg_1' }));
-const mockCreateSendEmail = jest.fn(() => mockSendEmail);
-const mockRenderAuthEmail = jest.fn(async () => ({
+const mockSendEmail = vi.fn(async () => ({ messageId: 'msg_1' }));
+const mockCreateSendEmail = vi.fn(() => mockSendEmail);
+const mockRenderAuthEmail = vi.fn(async () => ({
   subject: 'Rendered subject',
   html: '<p>Rendered</p>',
   text: 'Rendered text',
 }));
 
-jest.unstable_mockModule('./createSendEmail.js', () => ({ default: mockCreateSendEmail }));
-jest.unstable_mockModule('../../email/renderAuthEmail.js', () => ({
+vi.doMock('./createSendEmail.js', () => ({ default: mockCreateSendEmail }));
+vi.doMock('../../email/renderAuthEmail.js', () => ({
   default: mockRenderAuthEmail,
 }));
 
 // The challenge sequence walks endpoint-context internals a plain object cannot
 // supply, and has its own test; stub it so the two-factor interception's wiring
 // can be driven with a fake context.
-const mockBeginTwoFactorChallenge = jest.fn(async () => 'challenged');
-jest.unstable_mockModule('./requestHooks/beginTwoFactorChallenge.js', () => ({
+const mockBeginTwoFactorChallenge = vi.fn(async () => 'challenged');
+vi.doMock('./requestHooks/beginTwoFactorChallenge.js', () => ({
   default: mockBeginTwoFactorChallenge,
 }));
 
@@ -98,17 +98,17 @@ const getAuth = () => ({});
 
 function createLogger() {
   return {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    isLevelEnabled: jest.fn(() => false),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    isLevelEnabled: vi.fn(() => false),
   };
 }
 
 function createPlugins(overrides = {}) {
   return {
-    adapters: { MongoDBAuthAdapter: jest.fn(() => 'adapter-instance') },
+    adapters: { MongoDBAuthAdapter: vi.fn(() => 'adapter-instance') },
     providers: {},
     ...overrides,
   };
@@ -342,7 +342,7 @@ describe('base URL resolution', () => {
 });
 
 test('resolves the database adapter using the matching plugin and resolved secrets', () => {
-  const adapterPlugin = jest.fn(() => 'adapter-instance');
+  const adapterPlugin = vi.fn(() => 'adapter-instance');
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -356,7 +356,7 @@ test('resolves the database adapter using the matching plugin and resolved secre
 });
 
 test('constructs a stateless instance without a database for a strategies-only app', () => {
-  const adapterPlugin = jest.fn(() => 'adapter-instance');
+  const adapterPlugin = vi.fn(() => 'adapter-instance');
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({
@@ -608,7 +608,7 @@ test('does not add emailVerification when email is not configured', () => {
 describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
   const sentinelContext = { system: true };
-  const createSystemContext = jest.fn(() => sentinelContext);
+  const createSystemContext = vi.fn(() => sentinelContext);
 
   afterEach(() => {
     createSystemContext.mockClear();
@@ -895,7 +895,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   // One email carries both when magicLink and emailOTP are enabled together -
   // link-scanning mail security burns the link, and the typed code survives it.
   test('sendMagicLink mints the code through api.createVerificationOTP and adds otp and expiresIn to the vars when emailOTP is enabled', async () => {
-    const createVerificationOTP = jest.fn(async () => '482913');
+    const createVerificationOTP = vi.fn(async () => '482913');
     const options = getBetterAuthConfig({
       appMeta,
       dev: true,
@@ -1336,7 +1336,7 @@ test('assembles databaseHooks from auth.hooks bindings', () => {
         { id: 'audit', point: 'session.create.after', endpointId: 'auth/audit' },
       ],
     }),
-    createSystemContext: jest.fn(),
+    createSystemContext: vi.fn(),
     getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
@@ -1351,7 +1351,7 @@ test('always sets the engine session.create.before and user.create.before slots 
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({ hooks: [] }),
-    createSystemContext: jest.fn(),
+    createSystemContext: vi.fn(),
     getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
@@ -1372,7 +1372,7 @@ test('an email.verified hook sets emailVerification.afterEmailVerification and p
       },
       hooks: [{ id: 'on-verified', point: 'email.verified', endpointId: 'auth/on-verified' }],
     }),
-    createSystemContext: jest.fn(),
+    createSystemContext: vi.fn(),
     getAuth,
     logger: createLogger(),
     plugins: createPlugins(),

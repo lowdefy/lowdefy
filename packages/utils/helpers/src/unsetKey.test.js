@@ -16,6 +16,7 @@
 
 import unsetKey from './unsetKey.js';
 import { ReservedKeyError } from './ReservedKeyError.js';
+import { expect, test } from 'vitest';
 
 test('unsetKey deletes the key and returns the mutated target', () => {
   const target = { a: 1, b: 2 };

@@ -17,6 +17,7 @@
 import createAuthorizeOutcome from './createAuthorizeOutcome.js';
 
 import { ConfigError } from '@lowdefy/errors';
+import { expect, test } from 'vitest';
 
 test('authorizeOutcome public object', () => {
   const auth = { public: true };

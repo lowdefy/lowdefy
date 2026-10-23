@@ -15,6 +15,7 @@
 */
 
 import readErrorCodes from './readErrorCodes.js';
+import { expect, test } from 'vitest';
 
 test('readErrorCodes reads statusCode from an axios-shaped response status', () => {
   expect(readErrorCodes({ response: { status: 404 } })).toEqual({

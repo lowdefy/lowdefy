@@ -15,6 +15,7 @@
 */
 
 import clearUserStorageOnOwnerChange from './clearUserStorageOnOwnerChange.js';
+import { beforeEach, expect, test } from 'vitest';
 
 const scope = { basePath: '', slug: 'sales' };
 

@@ -16,17 +16,17 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, beforeAll, beforeEach, expect, test } from 'vitest';
 
-const mockExistsSync = jest.fn();
-const mockWriteFile = jest.fn();
+const mockExistsSync = vi.fn();
+const mockWriteFile = vi.fn();
 
-jest.unstable_mockModule('fs', () => ({
+vi.doMock('fs', () => ({
   default: { existsSync: mockExistsSync },
   existsSync: mockExistsSync,
 }));
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('@lowdefy/node-utils', () => ({
   writeFile: mockWriteFile,
 }));
 
@@ -45,8 +45,8 @@ beforeEach(() => {
 function createContext() {
   return {
     directories: { config: '/app', build: '/app/build', server: '/app' },
-    handleWarning: jest.fn(),
-    writeBuildArtifact: jest.fn(),
+    handleWarning: vi.fn(),
+    writeBuildArtifact: vi.fn(),
   };
 }
 

@@ -13,14 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import { getFileExtension } from '@lowdefy/node-utils';
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => {
+vi.doMock('@lowdefy/node-utils', () => {
   return {
     getFileExtension,
-    readFile: jest.fn(),
+    readFile: vi.fn(),
   };
 });
 

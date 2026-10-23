@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 // BetterAuth loads @opentelemetry/api lazily on its first request. Through
 // jest's ESM loader that costs most of a second (seconds with every worker
 // busy) inside the first test; importing it here loads it before any test runs.
@@ -48,7 +48,7 @@ afterAll(() => {
 
 // BetterAuth runs a full scrypt hash on every sign-in for an unknown user, to
 // keep its timing the same as a wrong password. That hash is CPU-bound and, with
-// every jest worker busy, stretches each sign-in to most of a second - enough
+// every test worker busy, stretches each sign-in to most of a second - enough
 // to push these tests past the default timeout. The contract here does not
 // depend on how passwords hash, so the instance hashes them cheaply instead.
 const cheapPasswordHasher = {
@@ -85,7 +85,7 @@ function createAuth() {
       roles: [],
     },
     getAuth: () => ({}),
-    logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+    logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
     plugins: { adapters: {}, providers: {} },
     secrets: { BETTER_AUTH_SECRET: 'x'.repeat(32) },
   });

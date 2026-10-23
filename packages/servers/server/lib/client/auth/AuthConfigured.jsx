@@ -28,10 +28,11 @@ import { oauthProviderClient } from '@better-auth/oauth-provider/client';
 import { passkeyClient } from '@better-auth/passkey/client';
 
 import claimCallerReload from '@lowdefy/client/claimCallerReload.js';
-import { normalizeCaller, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
 import bundleBuildId from '../bundleBuildId.js';
 import createFetchCheckingBuild from './createFetchCheckingBuild.js';
+import sessionCaller from './sessionCaller.js';
 
 // The app basePath, from Vite's BASE_URL (`${config.basePath}/`, set in
 // vite.config.js). build/config.json is server-only - it carries every
@@ -78,8 +79,8 @@ const sessionScoped = (params) => ({
 });
 
 // The server-resolved caller - roles from the active member row and the
-// merged attributes bag - or null when the server admits no caller.
-async function getResolvedUser() {
+// merged attributes bag - as { user }.
+async function fetchResolvedUser() {
   const response = await fetchCheckingBuild(`${basePath}/api/user`, {
     credentials: 'same-origin',
   });
@@ -95,13 +96,7 @@ async function getResolvedUser() {
 
 // The server resolves the caller per request and embeds it in the page
 // config, so the first render never flashes unauthenticated. The BetterAuth
-// client store then tracks the session, but the caller this page renders is
-// always one the server resolved. A live session is not a caller: the server
-// can refuse one (a pinned invitee whose invitation was cancelled or expired,
-// a member removed mid-session), and it stamps every response it answers that
-// session with as nobody. Rendering a caller built from the session would then
-// disagree with every stamped response, and shouldReloadForCaller would reload
-// and fail the page.
+// client store takes over once its session fetch settles.
 //
 // Roles and merged attributes resolve server-side from the active member row
 // - the base session carries neither. The last server-resolved caller is
@@ -109,40 +104,42 @@ async function getResolvedUser() {
 // for the fields the session does not carry, and UpdateSession refreshes it
 // from /api/user after a change (e.g. SetActiveOrganization). Holding it in
 // state, not a ref, re-renders Session when it changes so _user recomputes -
-// the same reactive footing the session half already stands on.
-//
-// Only the session half is passed through normalizeCaller. BetterAuth's store
-// returns camelCase keys whatever the columns are named, so untransformed it
-// would sit emailVerified beside the resolved caller's email_verified on one
-// object; anything arriving from the server is already snake_case.
+// the same reactive footing the session half already stands on. sessionCaller
+// picks the caller rendered from the two.
 function Session({ children, reloadSuppressedRef, serverUser }) {
   const { data: session, isPending } = authClient.useSession();
   const [resolvedUser, setResolvedUser] = useState(serverUser);
   const wasAuthenticated = useRef(Boolean(serverUser));
-  const sessionUserId = session?.user?.id;
+  const sessionId = session?.session?.id;
+  const sessionIdRef = useRef(sessionId);
+  sessionIdRef.current = sessionId;
+  const askedSessionIdRef = useRef(null);
 
-  // A session the page resolved no caller for - a sign-in in another tab, or
-  // one the server refused when it served the page - asks the server who it
-  // is. A sign-in on this page never needs it: one with a destination
-  // hard-reloads, and one without (callbackUrl: false) renders the caller the
-  // server resolves before the Login action returns (settleSignIn). While the
-  // server answers nobody, the page keeps rendering nobody.
+  // A session with no server-resolved caller renders as no caller
+  // (sessionCaller). Most often it is one a client-side sign-in just created
+  // with no navigation to follow, so /api/user is asked once per session for
+  // the caller the server resolves it to. A null answer - a session the server
+  // refuses - leaves the page rendering no caller, matching every response.
+  // An answer is dropped once the session changed or UpdateSession set a
+  // caller in the meantime. A failed ask is left: the page renders no caller,
+  // and if the server does resolve one, the next response reloads the page.
   useEffect(() => {
-    if (type.isNone(sessionUserId) || !type.isNone(resolvedUser)) {
-      return undefined;
+    if (isPending || type.isNone(sessionId) || !type.isNone(resolvedUser)) {
+      return;
     }
-    // A session that changed before the answer arrived asks again; the
-    // previous answer is for a session this page no longer holds.
-    let current = true;
-    getResolvedUser().then(({ user }) => {
-      if (current && !type.isNone(user)) {
-        setResolvedUser(user);
-      }
-    });
-    return () => {
-      current = false;
-    };
-  }, [sessionUserId, resolvedUser]);
+    if (askedSessionIdRef.current === sessionId) {
+      return;
+    }
+    askedSessionIdRef.current = sessionId;
+    fetchResolvedUser()
+      .then(({ user }) => {
+        if (type.isNone(user) || sessionIdRef.current !== sessionId) {
+          return;
+        }
+        setResolvedUser((current) => current ?? user);
+      })
+      .catch(() => {});
+  }, [sessionId, isPending, resolvedUser]);
 
   useEffect(() => {
     if (session) {
@@ -176,34 +173,7 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
     }
   }, [session, isPending, resolvedUser]);
 
-  if (isPending) {
-    return children(resolvedUser, setResolvedUser);
-  }
-  if (!session?.user) {
-    return children(null, setResolvedUser);
-  }
-  const resolved = resolvedUser;
-  if (!resolved) {
-    // The server has not resolved a caller for this session (see the effect
-    // above), so the page renders nobody, as the server answers it.
-    return children(null, setResolvedUser);
-  }
-  if (resolved.id !== session.user.id) {
-    // The session names another person than the resolved caller; the effect
-    // above reloads the page. Until it unloads, render the last resolved
-    // caller whole rather than mixing the new session user with the previous
-    // person's resolved fields, or falling back to a caller with no roles -
-    // blocks re-evaluate operators on render, so a role-guarded page would act
-    // on an empty role list.
-    return children(resolved, setResolvedUser);
-  }
-  // _user is one object with one meaning on both sides: the resolved caller is
-  // spread whole, so every field resolveAuthentication emits is readable in app
-  // config without this file naming it. session.user is the floor - the client
-  // store may hold a fresher one than the resolved state, and the resolved
-  // object wins wherever both carry a key.
-  const user = { ...normalizeCaller(session.user), ...resolved };
-  return children(user, setResolvedUser);
+  return children(sessionCaller({ isPending, resolvedUser, session }), setResolvedUser);
 }
 
 function AuthConfigured({ authConfig, children, serverUser }) {
@@ -226,7 +196,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
       return { data, error };
     },
     // For re-syncing after session changes.
-    getResolvedUser,
+    getResolvedUser: fetchResolvedUser,
     suppressSessionReload: () => {
       reloadSuppressedRef.current = true;
     },

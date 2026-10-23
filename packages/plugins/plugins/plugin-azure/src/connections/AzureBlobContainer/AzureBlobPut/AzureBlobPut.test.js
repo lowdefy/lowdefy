@@ -14,21 +14,21 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockUpload = jest.fn();
-const mockGetBlockBlobClient = jest.fn();
-const mockGetContainerClient = jest.fn();
-const mockBlobServiceClientConstructor = jest.fn();
-const mockStorageSharedKeyCredentialConstructor = jest.fn();
+const mockUpload = vi.fn();
+const mockGetBlockBlobClient = vi.fn();
+const mockGetContainerClient = vi.fn();
+const mockBlobServiceClientConstructor = vi.fn();
+const mockStorageSharedKeyCredentialConstructor = vi.fn();
 
-jest.unstable_mockModule('@azure/storage-blob', () => ({
-  StorageSharedKeyCredential: jest.fn().mockImplementation((...args) => {
+vi.doMock('@azure/storage-blob', () => ({
+  StorageSharedKeyCredential: vi.fn().mockImplementation(function (...args) {
     mockStorageSharedKeyCredentialConstructor(...args);
     return { type: 'credential' };
   }),
-  BlobServiceClient: jest.fn().mockImplementation((...args) => {
+  BlobServiceClient: vi.fn().mockImplementation(function (...args) {
     mockBlobServiceClientConstructor(...args);
     return { getContainerClient: mockGetContainerClient };
   }),
@@ -45,10 +45,14 @@ beforeEach(() => {
   mockGetContainerClient.mockReset();
   mockBlobServiceClientConstructor.mockReset();
   mockStorageSharedKeyCredentialConstructor.mockReset();
-  mockGetContainerClient.mockImplementation(() => ({
-    getBlockBlobClient: mockGetBlockBlobClient,
-  }));
-  mockGetBlockBlobClient.mockImplementation(() => ({ upload: mockUpload }));
+  mockGetContainerClient.mockImplementation(function () {
+    return {
+      getBlockBlobClient: mockGetBlockBlobClient,
+    };
+  });
+  mockGetBlockBlobClient.mockImplementation(function () {
+    return { upload: mockUpload };
+  });
 });
 
 test('AzureBlobPut decodes base64 content and writes the blob', async () => {
@@ -90,7 +94,7 @@ test('AzureBlobPut sets blobContentType when contentType is provided', async () 
 });
 
 test('Error from azure client', async () => {
-  mockUpload.mockImplementation(() => {
+  mockUpload.mockImplementation(function () {
     throw new Error('Test Azure client error.');
   });
   const request = { key: 'key', content: 'content' };

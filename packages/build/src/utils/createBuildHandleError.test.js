@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
 import createBuildHandleError from './createBuildHandleError.js';
@@ -100,9 +100,9 @@ test('handleError still logs when resolveErrorLocation throws', () => {
 });
 
 test('handleError falls back to console.error when logger also throws', () => {
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   const throwingLogger = {
-    error: jest.fn(() => {
+    error: vi.fn(() => {
       throw new Error('logger broken');
     }),
   };

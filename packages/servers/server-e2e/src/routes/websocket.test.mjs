@@ -19,6 +19,7 @@ import { serve } from '@hono/node-server';
 import WebSocket, { WebSocketServer } from 'ws';
 
 import websocketHandler from './websocket.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 let server;
 let port;

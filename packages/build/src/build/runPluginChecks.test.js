@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -60,7 +60,7 @@ function addPlugin(serverDir, { checks } = {}) {
 }
 
 function createTestContext({ serverDir, typesMap, skipPluginChecks, pluginInstallFollows }) {
-  const logger = { warn: jest.fn(), error: jest.fn(), info: jest.fn(), log: jest.fn() };
+  const logger = { warn: vi.fn(), error: vi.fn(), info: vi.fn(), log: vi.fn() };
   return createContext({
     customTypesMap: typesMap,
     directories: {
@@ -519,7 +519,7 @@ export default {
   const context = createTestContext({ serverDir, typesMap: { blocks: { Box: { package: pkg } } } });
   context.typeCounters.blocks.increment('Box', 'b', keyed(context, 'b', { blockId: 'box' }));
   // Both warnings resolve to the same source line.
-  context.handleWarning = jest.fn();
+  context.handleWarning = vi.fn();
 
   await runPluginChecks({ context });
 

@@ -18,6 +18,7 @@ import assert from 'node:assert/strict';
 
 import findNextRowId from './findNextRowId.js';
 import findRowAction from './findRowAction.js';
+import { test } from 'vitest';
 
 const columns = [
   { key: 'name', field: 'name', type: 'text', cell: {} },

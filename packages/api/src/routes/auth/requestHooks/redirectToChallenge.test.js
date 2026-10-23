@@ -15,6 +15,7 @@
 */
 
 import redirectToChallenge from './redirectToChallenge.js';
+import { expect, test } from 'vitest';
 
 // ctx.redirect returns an APIError carrying the location header; the caller
 // throws it and runAfterHooks turns it into the response. The fake returns a

@@ -16,18 +16,18 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const mockSpawn = jest.fn();
-jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn, spawnSync: jest.fn() }));
+const mockSpawn = vi.fn();
+vi.doMock('child_process', () => ({ spawn: mockSpawn, spawnSync: vi.fn() }));
 
 // A file of its own: installHeadlessShell keeps its one install per process
 // in module state.
 const { default: installHeadlessShell } = await import('./installHeadlessShell.js');
 
 test('installHeadlessShell logs a failed install once and does not retry it in this process', async () => {
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  jest.spyOn(console, 'info').mockImplementation(() => {});
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  vi.spyOn(console, 'info').mockImplementation(() => {});
   const installer = Object.assign(new EventEmitter(), { stderr: new EventEmitter() });
   mockSpawn.mockReturnValue(installer);
 

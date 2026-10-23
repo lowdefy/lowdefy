@@ -15,6 +15,7 @@
 */
 
 import createCheckDuplicateId from './createCheckDuplicateId.js';
+import { expect, test } from 'vitest';
 
 test('checkDuplicateId return value', async () => {
   const checkDuplicateId = createCheckDuplicateId({

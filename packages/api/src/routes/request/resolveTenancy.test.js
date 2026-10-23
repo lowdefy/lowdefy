@@ -17,6 +17,7 @@
 import { AuthenticationError, ConfigError, TenantIntegrityError } from '@lowdefy/errors';
 
 import resolveTenancy from './resolveTenancy.js';
+import { expect, test } from 'vitest';
 
 // Connection type capability: true implements the scoping contract, false is
 // non-scopable, absent means the type declares neither (a build error under

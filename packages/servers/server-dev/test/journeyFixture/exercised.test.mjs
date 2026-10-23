@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // What a journey exercised, measured over the real fixture app: the network
 // path its browser took, and the endpoints its routines reached through

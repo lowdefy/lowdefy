@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
 // The pin check runs npx; no test reaches npm.
-const spawnSync = jest.fn();
+const spawnSync = vi.fn();
 const childProcess = await import('child_process');
-jest.unstable_mockModule('child_process', () => ({ ...childProcess, spawnSync }));
+vi.doMock('child_process', () => ({ ...childProcess, spawnSync }));
 
 const { default: agentSetup } = await import('./agentSetup.js');
 
@@ -41,8 +41,8 @@ beforeEach(() => {
     cliVersion: '6.0.0',
     directories: { config: configDirectory },
     options: {},
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
-    sendTelemetry: jest.fn(),
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    sendTelemetry: vi.fn(),
   };
 });
 

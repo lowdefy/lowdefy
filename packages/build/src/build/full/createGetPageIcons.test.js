@@ -15,6 +15,7 @@
 */
 
 import createGetPageIcons from './createGetPageIcons.js';
+import { expect, test } from 'vitest';
 
 // The app's icons as buildIconImports finds them: every name that resolves,
 // from all pages, menus, global, endpoints, _js, meta.icons and include.

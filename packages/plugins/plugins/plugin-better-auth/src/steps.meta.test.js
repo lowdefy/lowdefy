@@ -15,6 +15,7 @@
 */
 
 import * as steps from './steps.js';
+import { expect, test } from 'vitest';
 
 // The whole authority map, written out so a new step arrives with a declaration
 // or fails here - the floor that reads meta.authority has no fallback for a step

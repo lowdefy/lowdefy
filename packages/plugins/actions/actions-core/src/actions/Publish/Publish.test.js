@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import Publish from './Publish.js';
 
-const mockPublish = jest.fn();
+const mockPublish = vi.fn();
 const methods = { publish: mockPublish };
 
 test('Publish calls publish with payload and websocketId', () => {

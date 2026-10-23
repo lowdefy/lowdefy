@@ -15,6 +15,7 @@
 */
 
 import getContextKey from './getContextKey.js';
+import { expect, test } from 'vitest';
 
 test('getContextKey gives one context the same key every time', () => {
   const context = {};

@@ -79,21 +79,23 @@ function JsonNode({ depth, label, onAdd, path, value }) {
             {formatJsonPreview(value)}
           </span>
         )}
-        <button
-          aria-label={`Add ${label} as column`}
-          className="lf-enrich-json-add"
-          data-lf-json-add={path}
-          disabled={adding}
-          onClick={add}
-          title="Add as column"
-          type="button"
-        >
-          {adding ? (
-            <span aria-hidden="true" className="lf-enrich-spinner" />
-          ) : (
-            <RunIcon name="add" />
-          )}
-        </button>
+        {onAdd ? (
+          <button
+            aria-label={`Add ${label} as column`}
+            className="lf-enrich-json-add"
+            data-lf-json-add={path}
+            disabled={adding}
+            onClick={add}
+            title="Add as column"
+            type="button"
+          >
+            {adding ? (
+              <span aria-hidden="true" className="lf-enrich-spinner" />
+            ) : (
+              <RunIcon name="add" />
+            )}
+          </button>
+        ) : null}
       </div>
       {open && children.length > 0 ? (
         <ul className="lf-enrich-json-children" role="group">
@@ -126,8 +128,8 @@ function JsonNode({ depth, label, onAdd, path, value }) {
 }
 
 // A cell's raw provider result as a collapsible tree (the details panel). The root, named
-// `label` (the column's title), is open; every node, leaf or object, can be added as an extract
-// column. Keys, strings, numbers and booleans each have their colour.
+// `label` (the column's title), is open; with `onAdd`, every node, leaf or object, can be added
+// as an extract column. Keys, strings, numbers and booleans each have their colour.
 function JsonTree({ label, onAdd, value }) {
   return (
     <ul

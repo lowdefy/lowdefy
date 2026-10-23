@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import ensureOrganization from './ensureOrganization.js';
 import getOrganizationBinding, { registerOrganizationBinding } from './getOrganizationBinding.js';
@@ -28,8 +28,8 @@ function createMockAuth({ findOne, create }) {
 
 test('ensureOrganization returns the existing org and creates nothing', async () => {
   const existing = { id: 'team-portal', slug: 'team-portal' };
-  const findOne = jest.fn(async () => existing);
-  const create = jest.fn();
+  const findOne = vi.fn(async () => existing);
+  const create = vi.fn();
   const auth = createMockAuth({ findOne, create });
 
   const org = await ensureOrganization({ auth, slug: 'team-portal' });
@@ -43,8 +43,8 @@ test('ensureOrganization returns the existing org and creates nothing', async ()
 });
 
 test('ensureOrganization creates the org keyed by its slug when none exists with that slug', async () => {
-  const findOne = jest.fn(async () => null);
-  const create = jest.fn(async ({ data }) => ({ ...data }));
+  const findOne = vi.fn(async () => null);
+  const create = vi.fn(async ({ data }) => ({ ...data }));
   const auth = createMockAuth({ findOne, create });
 
   const org = await ensureOrganization({ auth, slug: 'fresh-app' });
@@ -65,8 +65,8 @@ test('ensureOrganization creates the org keyed by its slug when none exists with
 });
 
 test('ensureOrganization memoizes per auth instance and slug', async () => {
-  const findOne = jest.fn(async () => ({ id: 'team-portal', slug: 'team-portal' }));
-  const auth = createMockAuth({ findOne, create: jest.fn() });
+  const findOne = vi.fn(async () => ({ id: 'team-portal', slug: 'team-portal' }));
+  const auth = createMockAuth({ findOne, create: vi.fn() });
 
   const first = await ensureOrganization({ auth, slug: 'team-portal' });
   const second = await ensureOrganization({ auth, slug: 'team-portal' });
@@ -77,8 +77,8 @@ test('ensureOrganization memoizes per auth instance and slug', async () => {
 
 test('ensureOrganization reads the winning row when a racing instance created the org first', async () => {
   const winner = { id: 'team-portal', slug: 'team-portal' };
-  const findOne = jest.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(winner);
-  const create = jest.fn(async () => {
+  const findOne = vi.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(winner);
+  const create = vi.fn(async () => {
     throw new Error('E11000 duplicate key error');
   });
   const auth = createMockAuth({ findOne, create });
@@ -89,11 +89,11 @@ test('ensureOrganization reads the winning row when a racing instance created th
 });
 
 test('ensureOrganization does not memoize a failure', async () => {
-  const findOne = jest
+  const findOne = vi
     .fn()
     .mockRejectedValueOnce(new Error('connection refused'))
     .mockResolvedValueOnce({ id: 'team-portal', slug: 'team-portal' });
-  const auth = createMockAuth({ findOne, create: jest.fn() });
+  const auth = createMockAuth({ findOne, create: vi.fn() });
 
   await expect(ensureOrganization({ auth, slug: 'team-portal' })).rejects.toThrow(
     'connection refused'
@@ -104,8 +104,8 @@ test('ensureOrganization does not memoize a failure', async () => {
 
 test('ensureOrganization pins the resolved organization on the binding after a successful ensure', async () => {
   const existing = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' };
-  const findOne = jest.fn(async () => existing);
-  const auth = createMockAuth({ findOne, create: jest.fn() });
+  const findOne = vi.fn(async () => existing);
+  const auth = createMockAuth({ findOne, create: vi.fn() });
   registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
 
   await ensureOrganization({ auth, slug: 'team-portal' });
@@ -117,11 +117,11 @@ test('ensureOrganization pins the resolved organization on the binding after a s
 });
 
 test('ensureOrganization throws when the existing org is keyed by an id that is not its slug', async () => {
-  const findOne = jest.fn(async () => ({
+  const findOne = vi.fn(async () => ({
     id: '0f1b3a2c-5d6e-4f70-8a9b-1c2d3e4f5a6b',
     slug: 'team-portal',
   }));
-  const create = jest.fn();
+  const create = vi.fn();
   const auth = createMockAuth({ findOne, create });
 
   const promise = ensureOrganization({ auth, slug: 'team-portal' });
@@ -138,11 +138,11 @@ test('ensureOrganization throws when the existing org is keyed by an id that is 
 });
 
 test('ensureOrganization throws when the racing winner is keyed by an id that is not its slug', async () => {
-  const findOne = jest
+  const findOne = vi
     .fn()
     .mockResolvedValueOnce(null)
     .mockResolvedValueOnce({ id: '0f1b3a2c-5d6e-4f70-8a9b-1c2d3e4f5a6b', slug: 'team-portal' });
-  const create = jest.fn(async () => {
+  const create = vi.fn(async () => {
     throw new Error('E11000 duplicate key error');
   });
   const auth = createMockAuth({ findOne, create });
@@ -153,11 +153,11 @@ test('ensureOrganization throws when the racing winner is keyed by an id that is
 });
 
 test('ensureOrganization retries the adapter after a mis-keyed row is re-keyed', async () => {
-  const findOne = jest
+  const findOne = vi
     .fn()
     .mockResolvedValueOnce({ id: '0f1b3a2c-5d6e-4f70-8a9b-1c2d3e4f5a6b', slug: 'team-portal' })
     .mockResolvedValueOnce({ id: 'team-portal', slug: 'team-portal' });
-  const auth = createMockAuth({ findOne, create: jest.fn() });
+  const auth = createMockAuth({ findOne, create: vi.fn() });
 
   await expect(ensureOrganization({ auth, slug: 'team-portal' })).rejects.toThrow(
     OrganizationKeyError

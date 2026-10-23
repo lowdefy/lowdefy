@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 import tryBuildStep from './tryBuildStep.js';
 
 const mockLogger = {
-  error: jest.fn(),
+  error: vi.fn(),
 };
 
 beforeEach(() => {
@@ -27,7 +27,7 @@ beforeEach(() => {
 });
 
 test('tryBuildStep executes function successfully', () => {
-  const stepFn = jest.fn(({ components }) => {
+  const stepFn = vi.fn(({ components }) => {
     components.modified = true;
     return components;
   });
@@ -44,7 +44,7 @@ test('tryBuildStep executes function successfully', () => {
 });
 
 test('tryBuildStep collects error when function throws', () => {
-  const stepFn = jest.fn(() => {
+  const stepFn = vi.fn(() => {
     throw new Error('Build step failed');
   });
 
@@ -61,11 +61,11 @@ test('tryBuildStep collects error when function throws', () => {
 });
 
 test('tryBuildStep collects multiple errors from different steps', () => {
-  const firstStep = jest.fn(() => {
+  const firstStep = vi.fn(() => {
     throw new Error('First error');
   });
 
-  const secondStep = jest.fn(() => {
+  const secondStep = vi.fn(() => {
     throw new Error('Second error');
   });
 
@@ -82,7 +82,7 @@ test('tryBuildStep collects multiple errors from different steps', () => {
 });
 
 test('tryBuildStep returns result from successful function', () => {
-  const stepFn = jest.fn(() => ({ result: 'success' }));
+  const stepFn = vi.fn(() => ({ result: 'success' }));
 
   const components = {};
   const context = { errors: [], logger: mockLogger };
@@ -94,7 +94,7 @@ test('tryBuildStep returns result from successful function', () => {
 });
 
 test('tryBuildStep returns undefined when function throws', () => {
-  const stepFn = jest.fn(() => {
+  const stepFn = vi.fn(() => {
     throw new Error('Build failed');
   });
 
@@ -108,7 +108,7 @@ test('tryBuildStep returns undefined when function throws', () => {
 });
 
 test('tryBuildStep works with synchronous function', () => {
-  const stepFn = jest.fn(({ components }) => {
+  const stepFn = vi.fn(({ components }) => {
     components.processed = true;
     return components;
   });
@@ -123,7 +123,7 @@ test('tryBuildStep works with synchronous function', () => {
 });
 
 test('tryBuildStep passes components and context to function', () => {
-  const stepFn = jest.fn();
+  const stepFn = vi.fn();
 
   const components = { test: 'data' };
   const context = { errors: [], logger: mockLogger, stage: 'test' };
@@ -134,7 +134,7 @@ test('tryBuildStep passes components and context to function', () => {
 });
 
 test('tryBuildStep catches errors with detailed messages', () => {
-  const stepFn = jest.fn(() => {
+  const stepFn = vi.fn(() => {
     throw new Error('Invalid configuration at pages.0.blocks.0');
   });
 
@@ -148,11 +148,11 @@ test('tryBuildStep catches errors with detailed messages', () => {
 });
 
 test('tryBuildStep continues after error', () => {
-  const failingStep = jest.fn(() => {
+  const failingStep = vi.fn(() => {
     throw new Error('Step 1 failed');
   });
 
-  const successfulStep = jest.fn(({ components }) => {
+  const successfulStep = vi.fn(({ components }) => {
     components.completed = true;
     return components;
   });
@@ -168,7 +168,7 @@ test('tryBuildStep continues after error', () => {
 });
 
 test('tryBuildStep uses stepName parameter', () => {
-  const stepFn = jest.fn();
+  const stepFn = vi.fn();
 
   const components = {};
   const context = { errors: [], logger: mockLogger };
@@ -196,7 +196,7 @@ test('tryBuildStep ignores suppressed ConfigError', () => {
     directories: { config: '/app' },
   };
 
-  const stepFn = jest.fn(() => {
+  const stepFn = vi.fn(() => {
     throw new ConfigError('This error should be suppressed.', {
       configKey: 'suppressedKey',
     });
@@ -227,7 +227,7 @@ test('tryBuildStep collects non-suppressed ConfigError', () => {
     directories: { config: '/app' },
   };
 
-  const stepFn = jest.fn(() => {
+  const stepFn = vi.fn(() => {
     throw new ConfigError('This error should be collected.', {
       configKey: 'normalKey',
     });

@@ -19,6 +19,7 @@ import http from 'node:http';
 import sendgrid from '@sendgrid/mail';
 
 import send from './send.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // The real SendGrid client against a local endpoint (the other send tests mock it), so
 // a client upgrade is checked for the request it sends and the errors it throws.

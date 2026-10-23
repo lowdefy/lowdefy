@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import setupLink from './setupLink.js';
 
@@ -47,11 +47,11 @@ function createFakeLowdefy({ popupBlocked = false } = {}) {
     _internal: {
       globals: { window },
       router: {
-        back: jest.fn(),
+        back: vi.fn(),
         push: (args) => calls.push.push(args),
         replace: (args) => calls.replace.push(args),
       },
-      displayMessage: jest.fn(),
+      displayMessage: vi.fn(),
       translate: (key) => key,
     },
     calls,

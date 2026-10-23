@@ -15,6 +15,7 @@
 */
 
 import product from './product.js';
+import { expect, test } from 'vitest';
 
 test('_product number parameters', () => {
   expect(product({ params: [1, 3], location: 'locationId' })).toBe(3);

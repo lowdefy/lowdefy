@@ -15,6 +15,7 @@
 */
 
 import deriveAreaStyle from './deriveAreaStyle.js';
+import { expect, test } from 'vitest';
 
 test('empty area returns empty style', () => {
   expect(deriveAreaStyle({})).toEqual({});

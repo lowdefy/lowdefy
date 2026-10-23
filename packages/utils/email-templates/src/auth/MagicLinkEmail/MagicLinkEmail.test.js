@@ -16,6 +16,7 @@
 
 import renderEmail from '../../renderEmail.js';
 import MagicLinkEmail from './MagicLinkEmail.js';
+import { expect, test } from 'vitest';
 
 test('MagicLinkEmail renders to html and text and includes the url', async () => {
   const { html, text } = await renderEmail({

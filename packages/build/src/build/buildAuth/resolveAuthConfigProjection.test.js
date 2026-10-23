@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import testContext from '../../test-utils/testContext.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import resolveAuthConfigProjection from './resolveAuthConfigProjection.js';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 function createTestContext({ lowdefyConfig, files = [] }) {
   const context = testContext({ readConfigFile: mockReadConfigFile });

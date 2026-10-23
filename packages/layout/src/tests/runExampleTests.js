@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
+import { expect, test } from 'vitest';
 
 import AutoBlockSim from './blocks/AutoBlockSim.js';
 
@@ -26,9 +27,7 @@ global.Math = mockMath;
 const runExampleTests = (examples) => {
   examples.forEach((ex) => {
     test(ex.id, () => {
-      const { container } = render(
-        <AutoBlockSim block={ex} state={{}} areaKey="content" />
-      );
+      const { container } = render(<AutoBlockSim block={ex} state={{}} areaKey="content" />);
       expect(container).toMatchSnapshot();
     });
   });

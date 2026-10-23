@@ -20,6 +20,7 @@ import { fireEvent, render } from '@testing-library/react';
 import avatarColor from '../format/avatarColor.js';
 import HtmlComponent from '../HtmlComponent.js';
 import registerHtmlEnhancements from '../registerHtmlEnhancements.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const MESSAGES = {
   'client.copy': 'Copy',

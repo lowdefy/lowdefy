@@ -18,6 +18,7 @@ import { ObjectId } from 'mongodb';
 
 import createConvertWhereClause from './createConvertWhereClause.js';
 import createSerializeId from './createSerializeId.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   member: {

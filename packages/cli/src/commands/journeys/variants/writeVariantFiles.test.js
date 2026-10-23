@@ -20,6 +20,7 @@ import path from 'path';
 
 import generators from './generators/index.js';
 import writeVariantFiles from './writeVariantFiles.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const journey = {
   name: 'member assigns an open ticket',

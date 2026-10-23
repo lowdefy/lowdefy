@@ -18,6 +18,7 @@ import { buildBlockSchema } from '@lowdefy/block-utils';
 import { getConfigSchemaErrors } from '@lowdefy/ajv';
 
 import * as metas from './metas.js';
+import { expect, test } from 'vitest';
 
 // The errors the build's schema check reports for a block's properties.
 function getErrors(meta, properties) {

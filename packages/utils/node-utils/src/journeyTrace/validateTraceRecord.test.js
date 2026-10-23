@@ -15,6 +15,7 @@
 */
 
 import validateTraceRecord from './validateTraceRecord.js';
+import { expect, test } from 'vitest';
 
 // The sample record of the trace format, with its comments removed.
 const sample = {

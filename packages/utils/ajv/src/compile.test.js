@@ -16,6 +16,7 @@
 
 import ajv from './ajvInstance.js';
 import compile from './compile.js';
+import { expect, test } from 'vitest';
 
 test('compile returns a validator function that returns valid:true on success', () => {
   const validator = compile({

@@ -20,6 +20,7 @@ import loaderTypes from '@lowdefy/blocks-loaders/types';
 import buildTypes from './buildTypes.js';
 import jsAccessorOperators from './jsAccessorOperators.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 // buildTypes always registers mandatory framework types (form validation
 // operators, basic/loader blocks, the dark mode action) before resolving

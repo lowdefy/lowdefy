@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -35,16 +36,16 @@ const schema = {
 
 test('array propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
+    [
+      {
+        "blocks": [
+          {
             "id": "block.properties.options.$",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "label": Object {
+            "properties": {
+              "label": {
                 "disabled": true,
               },
               "size": "small",
@@ -55,11 +56,11 @@ test('array propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.options",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "itemStyle": Object {
+        "properties": {
+          "itemStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -73,12 +74,12 @@ test('array propertiesFormTransformer', () => {
 
 test('array propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
@@ -89,8 +90,8 @@ test('array propertiesGetterTransformer', () => {
 
 test('array defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
-    Object {
-      "options": Array [],
+    {
+      "options": [],
     }
   `);
   const schemaDV = {
@@ -109,8 +110,8 @@ test('array defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
-      "options": Array [
+    {
+      "options": [
         "a",
       ],
     }
@@ -143,18 +144,18 @@ const schemaArrayObject = {
 
 test('array schemaArrayObject propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaArrayObject)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
-            "blocks": Array [
-              Object {
+    [
+      {
+        "blocks": [
+          {
+            "blocks": [
+              {
                 "id": "block.properties.options.$.num",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "label": Object {
+                "properties": {
+                  "label": {
                     "align": "right",
                     "extra": "number description",
                     "span": 8,
@@ -166,13 +167,13 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
                 "required": false,
                 "type": "NumberInput",
               },
-              Object {
+              {
                 "id": "block.properties.options.$.str",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "label": Object {
+                "properties": {
+                  "label": {
                     "align": "right",
                     "extra": "string description",
                     "span": 8,
@@ -185,11 +186,11 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
               },
             ],
             "id": "block.properties.options.$",
-            "layout": Object {
+            "layout": {
               "gap": 0,
             },
-            "properties": Object {
-              "bodyStyle": Object {
+            "properties": {
+              "bodyStyle": {
                 "padding": 0,
               },
               "size": "small",
@@ -199,11 +200,11 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.options",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "itemStyle": Object {
+        "properties": {
+          "itemStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -218,54 +219,54 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
 test('array schemaArrayObject propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaArrayObject, { block_type: 'Block' }))
     .toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
-            "contextId": "Block:Block:{}",
-            "default": Object {},
-            "key": "block.properties",
+      {
+        "_object.assign": [
+          {
+            "_state": {
+              "contextId": "Block:Block:{}",
+              "default": {},
+              "key": "block.properties",
+            },
           },
-        },
-        Object {
-          "options": Object {
-            "_array.map": Object {
-              "callback": Object {
-                "_function": Object {
-                  "__object.assign": Array [
-                    Object {
-                      "__args": Object {
-                        "contextId": undefined,
-                        "default": Object {},
-                        "key": "0",
+          {
+            "options": {
+              "_array.map": {
+                "callback": {
+                  "_function": {
+                    "__object.assign": [
+                      {
+                        "__args": {
+                          "contextId": undefined,
+                          "default": {},
+                          "key": "0",
+                        },
+                      },
+                    ],
+                  },
+                },
+                "on": {
+                  "_if_none": [
+                    {
+                      "_state": {
+                        "contextId": "Block:Block:{}",
+                        "key": "block.properties.options",
                       },
                     },
+                    [],
                   ],
                 },
               },
-              "on": Object {
-                "_if_none": Array [
-                  Object {
-                    "_state": Object {
-                      "contextId": "Block:Block:{}",
-                      "key": "block.properties.options",
-                    },
-                  },
-                  Array [],
-                ],
-              },
             },
           },
-        },
-      ],
-    }
-  `);
+        ],
+      }
+    `);
 });
 
 test('array schemaArrayObject defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaArrayObject)).toMatchInlineSnapshot(`
-    Object {
-      "options": Array [],
+    {
+      "options": [],
     }
   `);
   const schemaArrayObjectDV = {
@@ -293,9 +294,9 @@ test('array schemaArrayObject defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaArrayObjectDV)).toMatchInlineSnapshot(`
-    Object {
-      "options": Array [
-        Object {
+    {
+      "options": [
+        {
           "str": "a",
         },
       ],
@@ -328,19 +329,19 @@ const schemaOneOfPrimitive = {
 
 test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaOneOfPrimitive)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
+    [
+      {
+        "blocks": [
+          {
             "id": "$",
-            "layout": Object {
+            "layout": {
               "gap": 0,
             },
-            "properties": Object {
-              "bodyStyle": Object {
+            "properties": {
+              "bodyStyle": {
                 "padding": 0,
               },
-              "headerStyle": Object {
+              "headerStyle": {
                 "background": "rgba(0, 0, 0, 0.06)",
                 "color": "rgba(0, 0, 0, 0.45)",
               },
@@ -348,16 +349,16 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
               "size": "small",
               "title": "Select $ type",
             },
-            "slots": Object {
-              "content": Object {
-                "blocks": Array [
-                  Object {
+            "slots": {
+              "content": {
+                "blocks": [
+                  {
                     "id": "__string_block.properties.options.$",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "label": Object {
+                    "properties": {
+                      "label": {
                         "align": "right",
                         "extra": "string description",
                         "span": 8,
@@ -367,12 +368,12 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
                     },
                     "required": false,
                     "type": "TextInput",
-                    "visible": Object {
-                      "_if": Object {
+                    "visible": {
+                      "_if": {
                         "else": false,
-                        "test": Object {
-                          "_eq": Array [
-                            Object {
+                        "test": {
+                          "_eq": [
+                            {
                               "_state": "__type_block.properties.options.$",
                             },
                             "string",
@@ -382,13 +383,13 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
                       },
                     },
                   },
-                  Object {
+                  {
                     "id": "__number_block.properties.options.$",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "label": Object {
+                    "properties": {
+                      "label": {
                         "align": "right",
                         "extra": "number description",
                         "span": 8,
@@ -399,12 +400,12 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
                     },
                     "required": false,
                     "type": "NumberInput",
-                    "visible": Object {
-                      "_if": Object {
+                    "visible": {
+                      "_if": {
                         "else": false,
-                        "test": Object {
-                          "_eq": Array [
-                            Object {
+                        "test": {
+                          "_eq": [
+                            {
                               "_state": "__type_block.properties.options.$",
                             },
                             "number",
@@ -416,17 +417,17 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
                   },
                 ],
               },
-              "extra": Object {
-                "blocks": Array [
-                  Object {
+              "extra": {
+                "blocks": [
+                  {
                     "id": "__type_block.properties.options.$",
-                    "properties": Object {
+                    "properties": {
                       "buttonStyle": "outlined",
                       "color": "rgba(0, 0, 0, 0.1)",
-                      "label": Object {
+                      "label": {
                         "disabled": true,
                       },
-                      "options": Array [
+                      "options": [
                         "string",
                         "number",
                       ],
@@ -441,11 +442,11 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.options",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "itemStyle": Object {
+        "properties": {
+          "itemStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -460,87 +461,87 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
 test('array schemaOneOfPrimitive propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaOneOfPrimitive, { block_type: 'Block' }))
     .toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
-            "contextId": "Block:Block:{}",
-            "default": Object {},
-            "key": "block.properties",
+      {
+        "_object.assign": [
+          {
+            "_state": {
+              "contextId": "Block:Block:{}",
+              "default": {},
+              "key": "block.properties",
+            },
           },
-        },
-        Object {
-          "options": Object {
-            "_array.map": Object {
-              "callback": Object {
-                "_function": Object {
-                  "_mql.expr": Object {
-                    "expr": Object {
-                      "$switch": Object {
-                        "branches": Array [
-                          Object {
-                            "case": Object {
-                              "_eq": Array [
-                                Object {
-                                  "_state": "__type_0",
+          {
+            "options": {
+              "_array.map": {
+                "callback": {
+                  "_function": {
+                    "_mql.expr": {
+                      "expr": {
+                        "$switch": {
+                          "branches": [
+                            {
+                              "case": {
+                                "_eq": [
+                                  {
+                                    "_state": "__type_0",
+                                  },
+                                  "string",
+                                ],
+                              },
+                              "then": {
+                                "_state": {
+                                  "contextId": undefined,
+                                  "key": "__string_0",
                                 },
-                                "string",
-                              ],
-                            },
-                            "then": Object {
-                              "_state": Object {
-                                "contextId": undefined,
-                                "key": "__string_0",
                               },
                             },
-                          },
-                          Object {
-                            "case": Object {
-                              "_eq": Array [
-                                Object {
-                                  "_state": "__type_0",
+                            {
+                              "case": {
+                                "_eq": [
+                                  {
+                                    "_state": "__type_0",
+                                  },
+                                  "number",
+                                ],
+                              },
+                              "then": {
+                                "_state": {
+                                  "contextId": undefined,
+                                  "key": "__number_0",
                                 },
-                                "number",
-                              ],
-                            },
-                            "then": Object {
-                              "_state": Object {
-                                "contextId": undefined,
-                                "key": "__number_0",
                               },
                             },
-                          },
-                        ],
-                        "default": null,
+                          ],
+                          "default": null,
+                        },
                       },
+                      "on": {},
                     },
-                    "on": Object {},
                   },
                 },
-              },
-              "on": Object {
-                "_if_none": Array [
-                  Object {
-                    "_state": Object {
-                      "contextId": "Block:Block:{}",
-                      "key": "block.properties.options",
+                "on": {
+                  "_if_none": [
+                    {
+                      "_state": {
+                        "contextId": "Block:Block:{}",
+                        "key": "block.properties.options",
+                      },
                     },
-                  },
-                  Array [],
-                ],
+                    [],
+                  ],
+                },
               },
             },
           },
-        },
-      ],
-    }
-  `);
+        ],
+      }
+    `);
 });
 
 test('array schemaOneOfPrimitive defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaOneOfPrimitive)).toMatchInlineSnapshot(`
-    Object {
-      "options": Array [],
+    {
+      "options": [],
     }
   `);
   const schemaOneOfPrimitiveDV = {
@@ -567,8 +568,8 @@ test('array schemaOneOfPrimitive defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaOneOfPrimitiveDV)).toMatchInlineSnapshot(`
-    Object {
-      "options": Array [
+    {
+      "options": [
         "a",
         "b",
       ],
@@ -604,17 +605,17 @@ const schemaPrimitiveOneOf = {
 
 test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaPrimitiveOneOf)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "options",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
-          "headerStyle": Object {
+          "headerStyle": {
             "background": "rgba(0, 0, 0, 0.06)",
             "color": "rgba(0, 0, 0, 0.45)",
           },
@@ -622,18 +623,18 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
           "size": "small",
           "title": "Select options type",
         },
-        "slots": Object {
-          "content": Object {
-            "blocks": Array [
-              Object {
-                "blocks": Array [
-                  Object {
+        "slots": {
+          "content": {
+            "blocks": [
+              {
+                "blocks": [
+                  {
                     "id": "__string_arr_block.properties.options.$",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "label": Object {
+                    "properties": {
+                      "label": {
                         "disabled": true,
                       },
                       "size": "small",
@@ -644,23 +645,23 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
                   },
                 ],
                 "id": "__string_arr_block.properties.options",
-                "layout": Object {
+                "layout": {
                   "gap": 0,
                 },
-                "properties": Object {
-                  "itemStyle": Object {
+                "properties": {
+                  "itemStyle": {
                     "padding": 0,
                   },
                   "size": "small",
                   "title": "options:",
                 },
                 "type": "ControlledList",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.options",
                         },
                         "string[]",
@@ -670,15 +671,15 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
                   },
                 },
               },
-              Object {
-                "blocks": Array [
-                  Object {
+              {
+                "blocks": [
+                  {
                     "id": "__number_arr_block.properties.options.$",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "label": Object {
+                    "properties": {
+                      "label": {
                         "disabled": true,
                       },
                       "size": "small",
@@ -690,23 +691,23 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
                   },
                 ],
                 "id": "__number_arr_block.properties.options",
-                "layout": Object {
+                "layout": {
                   "gap": 0,
                 },
-                "properties": Object {
-                  "itemStyle": Object {
+                "properties": {
+                  "itemStyle": {
                     "padding": 0,
                   },
                   "size": "small",
                   "title": "options:",
                 },
                 "type": "ControlledList",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.options",
                         },
                         "number[]",
@@ -718,17 +719,17 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
               },
             ],
           },
-          "extra": Object {
-            "blocks": Array [
-              Object {
+          "extra": {
+            "blocks": [
+              {
                 "id": "__type_block.properties.options",
-                "properties": Object {
+                "properties": {
                   "buttonStyle": "outlined",
                   "color": "rgba(0, 0, 0, 0.1)",
-                  "label": Object {
+                  "label": {
                     "disabled": true,
                   },
-                  "options": Array [
+                  "options": [
                     "string[]",
                     "number[]",
                   ],
@@ -748,69 +749,69 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
 test('array schemaPrimitiveOneOf propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaPrimitiveOneOf, { block_type: 'Block' }))
     .toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
-            "contextId": "Block:Block:{}",
-            "default": Object {},
-            "key": "block.properties",
-          },
-        },
-        Object {
-          "options": Object {
-            "_mql.expr": Object {
-              "expr": Object {
-                "$switch": Object {
-                  "branches": Array [
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
-                            "_state": "__type_block.properties.options",
-                          },
-                          "string[]",
-                        ],
-                      },
-                      "then": Object {
-                        "_state": Object {
-                          "contextId": "Block:Block:{}",
-                          "key": "__string_arr_block.properties.options",
-                        },
-                      },
-                    },
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
-                            "_state": "__type_block.properties.options",
-                          },
-                          "number[]",
-                        ],
-                      },
-                      "then": Object {
-                        "_state": Object {
-                          "contextId": "Block:Block:{}",
-                          "key": "__number_arr_block.properties.options",
-                        },
-                      },
-                    },
-                  ],
-                  "default": null,
-                },
-              },
-              "on": Object {},
+      {
+        "_object.assign": [
+          {
+            "_state": {
+              "contextId": "Block:Block:{}",
+              "default": {},
+              "key": "block.properties",
             },
           },
-        },
-      ],
-    }
-  `);
+          {
+            "options": {
+              "_mql.expr": {
+                "expr": {
+                  "$switch": {
+                    "branches": [
+                      {
+                        "case": {
+                          "_eq": [
+                            {
+                              "_state": "__type_block.properties.options",
+                            },
+                            "string[]",
+                          ],
+                        },
+                        "then": {
+                          "_state": {
+                            "contextId": "Block:Block:{}",
+                            "key": "__string_arr_block.properties.options",
+                          },
+                        },
+                      },
+                      {
+                        "case": {
+                          "_eq": [
+                            {
+                              "_state": "__type_block.properties.options",
+                            },
+                            "number[]",
+                          ],
+                        },
+                        "then": {
+                          "_state": {
+                            "contextId": "Block:Block:{}",
+                            "key": "__number_arr_block.properties.options",
+                          },
+                        },
+                      },
+                    ],
+                    "default": null,
+                  },
+                },
+                "on": {},
+              },
+            },
+          },
+        ],
+      }
+    `);
 });
 
 test('array schemaPrimitiveOneOf defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaPrimitiveOneOf)).toMatchInlineSnapshot(`
-    Object {
+    {
       "options": null,
     }
   `);
@@ -841,8 +842,8 @@ test('array schemaPrimitiveOneOf defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaPrimitiveOneOfDV)).toMatchInlineSnapshot(`
-    Object {
-      "options": Array [
+    {
+      "options": [
         "a",
         "b",
       ],
@@ -881,17 +882,17 @@ const schemaOneOfArrayStrArrayYaml = {
 
 test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaOneOfArrayStrArrayYaml)).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "options",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
-          "headerStyle": Object {
+          "headerStyle": {
             "background": "rgba(0, 0, 0, 0.06)",
             "color": "rgba(0, 0, 0, 0.45)",
           },
@@ -899,18 +900,18 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
           "size": "small",
           "title": "Select options type",
         },
-        "slots": Object {
-          "content": Object {
-            "blocks": Array [
-              Object {
-                "blocks": Array [
-                  Object {
+        "slots": {
+          "content": {
+            "blocks": [
+              {
+                "blocks": [
+                  {
                     "id": "__string_arr_block.properties.options.$",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "label": Object {
+                    "properties": {
+                      "label": {
                         "disabled": true,
                       },
                       "size": "small",
@@ -921,23 +922,23 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
                   },
                 ],
                 "id": "__string_arr_block.properties.options",
-                "layout": Object {
+                "layout": {
                   "gap": 0,
                 },
-                "properties": Object {
-                  "itemStyle": Object {
+                "properties": {
+                  "itemStyle": {
                     "padding": 0,
                   },
                   "size": "small",
                   "title": "options:",
                 },
                 "type": "ControlledList",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.options",
                         },
                         "string[]",
@@ -947,18 +948,18 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
                   },
                 },
               },
-              Object {
-                "blocks": Array [
-                  Object {
+              {
+                "blocks": [
+                  {
                     "id": "__object_arr_block.properties.options.$",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "autoSize": Object {
+                    "properties": {
+                      "autoSize": {
                         "minRows": 2,
                       },
-                      "label": Object {
+                      "label": {
                         "disabled": true,
                       },
                       "placeholder": "Type YAML here",
@@ -970,23 +971,23 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
                   },
                 ],
                 "id": "__object_arr_block.properties.options",
-                "layout": Object {
+                "layout": {
                   "gap": 0,
                 },
-                "properties": Object {
-                  "itemStyle": Object {
+                "properties": {
+                  "itemStyle": {
                     "padding": 0,
                   },
                   "size": "small",
                   "title": "options:",
                 },
                 "type": "ControlledList",
-                "visible": Object {
-                  "_if": Object {
+                "visible": {
+                  "_if": {
                     "else": false,
-                    "test": Object {
-                      "_eq": Array [
-                        Object {
+                    "test": {
+                      "_eq": [
+                        {
                           "_state": "__type_block.properties.options",
                         },
                         "object[]",
@@ -998,17 +999,17 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
               },
             ],
           },
-          "extra": Object {
-            "blocks": Array [
-              Object {
+          "extra": {
+            "blocks": [
+              {
                 "id": "__type_block.properties.options",
-                "properties": Object {
+                "properties": {
                   "buttonStyle": "outlined",
                   "color": "rgba(0, 0, 0, 0.1)",
-                  "label": Object {
+                  "label": {
                     "disabled": true,
                   },
-                  "options": Array [
+                  "options": [
                     "string[]",
                     "object[]",
                   ],
@@ -1028,90 +1029,90 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
 test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaOneOfArrayStrArrayYaml, { block_type: 'Block' }))
     .toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
-            "contextId": "Block:Block:{}",
-            "default": Object {},
-            "key": "block.properties",
+      {
+        "_object.assign": [
+          {
+            "_state": {
+              "contextId": "Block:Block:{}",
+              "default": {},
+              "key": "block.properties",
+            },
           },
-        },
-        Object {
-          "options": Object {
-            "_mql.expr": Object {
-              "expr": Object {
-                "$switch": Object {
-                  "branches": Array [
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
-                            "_state": "__type_block.properties.options",
+          {
+            "options": {
+              "_mql.expr": {
+                "expr": {
+                  "$switch": {
+                    "branches": [
+                      {
+                        "case": {
+                          "_eq": [
+                            {
+                              "_state": "__type_block.properties.options",
+                            },
+                            "string[]",
+                          ],
+                        },
+                        "then": {
+                          "_state": {
+                            "contextId": "Block:Block:{}",
+                            "key": "__string_arr_block.properties.options",
                           },
-                          "string[]",
-                        ],
-                      },
-                      "then": Object {
-                        "_state": Object {
-                          "contextId": "Block:Block:{}",
-                          "key": "__string_arr_block.properties.options",
                         },
                       },
-                    },
-                    Object {
-                      "case": Object {
-                        "_eq": Array [
-                          Object {
-                            "_state": "__type_block.properties.options",
-                          },
-                          "object[]",
-                        ],
-                      },
-                      "then": Object {
-                        "_array.map": Object {
-                          "callback": Object {
-                            "_function": Object {
-                              "__yaml.parse": Array [
-                                Object {
-                                  "__if_none": Array [
-                                    Object {
-                                      "__args": Object {
-                                        "contextId": undefined,
-                                        "key": "0",
+                      {
+                        "case": {
+                          "_eq": [
+                            {
+                              "_state": "__type_block.properties.options",
+                            },
+                            "object[]",
+                          ],
+                        },
+                        "then": {
+                          "_array.map": {
+                            "callback": {
+                              "_function": {
+                                "__yaml.parse": [
+                                  {
+                                    "__if_none": [
+                                      {
+                                        "__args": {
+                                          "contextId": undefined,
+                                          "key": "0",
+                                        },
                                       },
-                                    },
-                                    "",
-                                  ],
+                                      "",
+                                    ],
+                                  },
+                                ],
+                              },
+                            },
+                            "on": {
+                              "_if_none": [
+                                {
+                                  "_state": {
+                                    "contextId": "Block:Block:{}",
+                                    "key": "__object_arr_block.properties.options",
+                                  },
                                 },
+                                [],
                               ],
                             },
                           },
-                          "on": Object {
-                            "_if_none": Array [
-                              Object {
-                                "_state": Object {
-                                  "contextId": "Block:Block:{}",
-                                  "key": "__object_arr_block.properties.options",
-                                },
-                              },
-                              Array [],
-                            ],
-                          },
                         },
                       },
-                    },
-                  ],
-                  "default": null,
+                    ],
+                    "default": null,
+                  },
                 },
+                "on": {},
               },
-              "on": Object {},
             },
           },
-        },
-      ],
-    }
-  `);
+        ],
+      }
+    `);
 });
 
 const schemaNestedArray = {
@@ -1149,23 +1150,23 @@ const schemaNestedArray = {
 
 test('array propertiesFormTransformer schemaNestedArray', () => {
   expect(propertiesFormTransformer(schemaNestedArray)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
-            "blocks": Array [
-              Object {
-                "blocks": Array [
-                  Object {
+    [
+      {
+        "blocks": [
+          {
+            "blocks": [
+              {
+                "blocks": [
+                  {
                     "id": "block.properties.arr1.$.arr2.$",
-                    "layout": Object {
+                    "layout": {
                       "_global": "settings_input_layout",
                     },
-                    "properties": Object {
-                      "autoSize": Object {
+                    "properties": {
+                      "autoSize": {
                         "minRows": 2,
                       },
-                      "label": Object {
+                      "label": {
                         "disabled": true,
                       },
                       "placeholder": "Type YAML here",
@@ -1177,11 +1178,11 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
                   },
                 ],
                 "id": "block.properties.arr1.$.arr2",
-                "layout": Object {
+                "layout": {
                   "gap": 0,
                 },
-                "properties": Object {
-                  "itemStyle": Object {
+                "properties": {
+                  "itemStyle": {
                     "padding": 0,
                   },
                   "size": "small",
@@ -1189,16 +1190,16 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
                 },
                 "type": "ControlledList",
               },
-              Object {
+              {
                 "id": "block.properties.arr1.$.obj",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "autoSize": Object {
+                "properties": {
+                  "autoSize": {
                     "minRows": 2,
                   },
-                  "label": Object {
+                  "label": {
                     "align": "right",
                     "extra": undefined,
                     "span": 8,
@@ -1212,11 +1213,11 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
               },
             ],
             "id": "block.properties.arr1.$",
-            "layout": Object {
+            "layout": {
               "gap": 0,
             },
-            "properties": Object {
-              "bodyStyle": Object {
+            "properties": {
+              "bodyStyle": {
                 "padding": 0,
               },
               "size": "small",
@@ -1226,11 +1227,11 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
           },
         ],
         "id": "block.properties.arr1",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "itemStyle": Object {
+        "properties": {
+          "itemStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -1245,97 +1246,97 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
 test('array propertiesGetterTransformer schemaNestedArray', () => {
   expect(propertiesGetterTransformer(schemaNestedArray, { block_type: 'Block' }))
     .toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
-            "contextId": "Block:Block:{}",
-            "default": Object {},
-            "key": "block.properties",
+      {
+        "_object.assign": [
+          {
+            "_state": {
+              "contextId": "Block:Block:{}",
+              "default": {},
+              "key": "block.properties",
+            },
           },
-        },
-        Object {
-          "arr1": Object {
-            "_array.map": Object {
-              "callback": Object {
-                "_function": Object {
-                  "__object.assign": Array [
-                    Object {
-                      "__args": Object {
-                        "contextId": undefined,
-                        "default": Object {},
-                        "key": "0",
+          {
+            "arr1": {
+              "_array.map": {
+                "callback": {
+                  "_function": {
+                    "__object.assign": [
+                      {
+                        "__args": {
+                          "contextId": undefined,
+                          "default": {},
+                          "key": "0",
+                        },
                       },
-                    },
-                    Object {
-                      "obj": Object {
-                        "__yaml.parse": Array [
-                          Object {
-                            "__if_none": Array [
-                              Object {
-                                "__args": Object {
-                                  "contextId": undefined,
-                                  "key": "0.obj",
+                      {
+                        "obj": {
+                          "__yaml.parse": [
+                            {
+                              "__if_none": [
+                                {
+                                  "__args": {
+                                    "contextId": undefined,
+                                    "key": "0.obj",
+                                  },
                                 },
-                              },
-                              "",
-                            ],
-                          },
-                        ],
+                                "",
+                              ],
+                            },
+                          ],
+                        },
                       },
-                    },
-                    Object {
-                      "arr2": Object {
-                        "__array.map": Object {
-                          "callback": Object {
-                            "__function": Object {
-                              "___yaml.parse": Array [
-                                Object {
-                                  "___if_none": Array [
-                                    Object {
-                                      "___args": Object {
-                                        "contextId": undefined,
-                                        "key": "0",
+                      {
+                        "arr2": {
+                          "__array.map": {
+                            "callback": {
+                              "__function": {
+                                "___yaml.parse": [
+                                  {
+                                    "___if_none": [
+                                      {
+                                        "___args": {
+                                          "contextId": undefined,
+                                          "key": "0",
+                                        },
                                       },
-                                    },
-                                    "",
-                                  ],
+                                      "",
+                                    ],
+                                  },
+                                ],
+                              },
+                            },
+                            "on": {
+                              "__if_none": [
+                                {
+                                  "__args": {
+                                    "contextId": undefined,
+                                    "key": "0.arr2",
+                                  },
                                 },
+                                [],
                               ],
                             },
                           },
-                          "on": Object {
-                            "__if_none": Array [
-                              Object {
-                                "__args": Object {
-                                  "contextId": undefined,
-                                  "key": "0.arr2",
-                                },
-                              },
-                              Array [],
-                            ],
-                          },
                         },
                       },
+                    ],
+                  },
+                },
+                "on": {
+                  "_if_none": [
+                    {
+                      "_state": {
+                        "contextId": "Block:Block:{}",
+                        "key": "block.properties.arr1",
+                      },
                     },
+                    [],
                   ],
                 },
               },
-              "on": Object {
-                "_if_none": Array [
-                  Object {
-                    "_state": Object {
-                      "contextId": "Block:Block:{}",
-                      "key": "block.properties.arr1",
-                    },
-                  },
-                  Array [],
-                ],
-              },
             },
           },
-        },
-      ],
-    }
-  `);
+        ],
+      }
+    `);
 });

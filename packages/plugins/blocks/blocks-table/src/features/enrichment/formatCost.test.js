@@ -15,6 +15,7 @@
 */
 
 import formatCost from './formatCost.js';
+import { expect, test } from 'vitest';
 
 test('formatCost shows micro-USD as dollars', () => {
   expect(formatCost(4000)).toBe('$0.004');

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // Each slot is wrapped in createAuthMiddleware; mock it to identity so the unit
 // test can invoke a slot with a plain endpoint context.
-const mockGetSessionFromCtx = jest.fn();
-jest.unstable_mockModule('better-auth/api', () => ({
+const mockGetSessionFromCtx = vi.fn();
+vi.doMock('better-auth/api', () => ({
   // The post-login hook's module graph reaches buildOauthPostLogin, which
   // imports APIError; the post-login and expired-invitation hooks read the
   // session through getSessionFromCtx.
@@ -30,8 +30,8 @@ jest.unstable_mockModule('better-auth/api', () => ({
 
 // beginTwoFactorChallenge is exercised against a fake endpoint context in its
 // own test; here the interest is only which paths reach it.
-const mockBeginTwoFactorChallenge = jest.fn(async () => 'challenged');
-jest.unstable_mockModule('./beginTwoFactorChallenge.js', () => ({
+const mockBeginTwoFactorChallenge = vi.fn(async () => 'challenged');
+vi.doMock('./beginTwoFactorChallenge.js', () => ({
   default: mockBeginTwoFactorChallenge,
 }));
 
@@ -42,19 +42,19 @@ const organizations = { policy: 'pinned', org: 'team-portal', signup: 'invite-on
 
 function createMockAuth({ invitations = [] } = {}) {
   const adapter = {
-    findOne: jest.fn(async ({ model }) => (model === 'organization' ? pinnedOrg : null)),
-    findMany: jest.fn(async () => invitations),
-    create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    findOne: vi.fn(async ({ model }) => (model === 'organization' ? pinnedOrg : null)),
+    findMany: vi.fn(async () => invitations),
+    create: vi.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
   };
   const internalAdapter = {
-    findUserById: jest.fn(async () => null),
-    findUserByEmail: jest.fn(async () => null),
+    findUserById: vi.fn(async () => null),
+    findUserByEmail: vi.fn(async () => null),
   };
   return { $context: Promise.resolve({ adapter, internalAdapter }) };
 }
 
 test('buildRequestHooks returns a before and an after slot with no magic link configured', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth });
   expect(typeof hooks.before).toBe('function');
   expect(typeof hooks.after).toBe('function');
@@ -79,7 +79,7 @@ test('buildRequestHooks routes /sign-in/magic-link into the send gate when magic
 });
 
 test('buildRequestHooks leaves paths other than /sign-in/magic-link alone when magicLink is enabled', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const hooks = buildRequestHooks({
     authConfig: { magicLink: { enabled: true }, organizations },
     getAuth,
@@ -95,7 +95,7 @@ test('buildRequestHooks leaves paths other than /sign-in/magic-link alone when m
 
 test('buildRequestHooks routes /organization/accept-invitation into the expired invitation gate', async () => {
   const adapter = {
-    findOne: jest.fn(async () => ({
+    findOne: vi.fn(async () => ({
       id: 'inv_1',
       status: 'pending',
       expiresAt: new Date(Date.now() - 1000).toISOString(),
@@ -115,7 +115,7 @@ test('buildRequestHooks routes /organization/accept-invitation into the expired 
 });
 
 test('buildRequestHooks does not resolve the BetterAuth instance while assembling', () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   buildRequestHooks({ authConfig: { magicLink: { enabled: true }, organizations }, getAuth });
   expect(getAuth).not.toHaveBeenCalled();
 });
@@ -160,7 +160,7 @@ test('buildRequestHooks challenges an enrolled user on /magic-link/verify when t
     authConfig: twoFactorAuthConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   const { thrown } = await catchAfter(hooks, createEnrolledCtx());
@@ -174,7 +174,7 @@ test('buildRequestHooks threads the 30-day trust lifetime into the challenge whe
     authConfig: twoFactorAuthConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   await catchAfter(hooks, createEnrolledCtx());
@@ -187,7 +187,7 @@ test('buildRequestHooks threads trustDeviceMaxAge 0 into the challenge when trus
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: true, trustDevice: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   await catchAfter(hooks, createEnrolledCtx());
@@ -199,7 +199,7 @@ test('buildRequestHooks does not challenge on a path no registration claims', as
   const hooks = buildRequestHooks({
     authConfig: twoFactorAuthConfig,
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   const ctx = createEnrolledCtx();
@@ -213,7 +213,7 @@ test('buildRequestHooks registers no two factor challenge when twoFactor is disa
   const hooks = buildRequestHooks({
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
@@ -224,7 +224,7 @@ test('buildRequestHooks registers no two factor challenge when magicLink is disa
   const hooks = buildRequestHooks({
     authConfig: { ...twoFactorAuthConfig, magicLink: { enabled: false } },
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
@@ -235,7 +235,7 @@ test('buildRequestHooks registers no two factor challenge when authPages.twoFact
   const hooks = buildRequestHooks({
     authConfig: { ...twoFactorAuthConfig, authPages: {} },
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
@@ -250,7 +250,7 @@ function createOAuthHooks(mfaTrustedProviderKeys) {
     },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 }
 
@@ -313,7 +313,7 @@ test('buildRequestHooks challenges an OAuth callback with magicLink disabled', a
     authConfig: { ...twoFactorAuthConfig, magicLink: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect((await catchAfter(hooks, createOAuthCtx('google'))).thrown.redirectTo).toBe(
@@ -327,7 +327,7 @@ test('buildRequestHooks challenges no OAuth callback when twoFactor is disabled'
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createOAuthCtx('google'))).toBeUndefined();
@@ -360,7 +360,7 @@ function createPhoneHooks(authConfig) {
     authConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 }
 
@@ -406,7 +406,7 @@ test('buildRequestHooks does not challenge an id token sign-in when twoFactor is
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createIdTokenCtx('google'))).toBeUndefined();
@@ -517,7 +517,7 @@ function createEmailOtpHooks(authConfig) {
     authConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 }
 
@@ -560,7 +560,7 @@ test('buildRequestHooks lets an admitted email through the OTP send gate', async
 });
 
 test('buildRequestHooks registers no OTP send gate when emailOTP is disabled', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth });
   expect(
     await hooks.before({

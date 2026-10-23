@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import writeRoutes from './writeRoutes.js';
 import testContext from '../test-utils/testContext.js';
 
 test('writeRoutes writes each route with its page auth', async () => {
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   const context = testContext({ writeBuildArtifact });
   context.routes = [
     { pageId: 'ticket', path: 'tickets/{space}/{ticket_id}', segments: [], configKey: 'a' },

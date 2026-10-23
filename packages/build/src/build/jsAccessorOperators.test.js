@@ -18,6 +18,7 @@ import { _js as clientJs } from '@lowdefy/operators-js/operators/client';
 import { _js as serverJs } from '@lowdefy/operators-js/operators/server';
 
 import jsAccessorOperators from './jsAccessorOperators.js';
+import { expect, test } from 'vitest';
 
 // Runs the real _js operator with a function that calls every accessor it is
 // given, and records which operators those accessors reach.

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import findPendingInvitation from './findPendingInvitation.js';
 
@@ -22,7 +22,7 @@ const future = new Date(Date.now() + 3600 * 1000).toISOString();
 const past = new Date(Date.now() - 3600 * 1000).toISOString();
 
 test('findPendingInvitation queries by lowercased email and pending status', async () => {
-  const findMany = jest.fn(async () => []);
+  const findMany = vi.fn(async () => []);
   await findPendingInvitation({ adapter: { findMany }, email: 'User@Example.COM' });
   expect(findMany).toHaveBeenCalledWith({
     model: 'invitation',
@@ -34,7 +34,7 @@ test('findPendingInvitation queries by lowercased email and pending status', asy
 });
 
 test('findPendingInvitation narrows to one organization when organizationId is given', async () => {
-  const findMany = jest.fn(async () => []);
+  const findMany = vi.fn(async () => []);
   await findPendingInvitation({
     adapter: { findMany },
     email: 'a@b.c',
@@ -51,7 +51,7 @@ test('findPendingInvitation narrows to one organization when organizationId is g
 });
 
 test('findPendingInvitation returns the first unexpired invitation', async () => {
-  const findMany = jest.fn(async () => [
+  const findMany = vi.fn(async () => [
     { id: 'inv_expired', expiresAt: past },
     { id: 'inv_live', expiresAt: future },
   ]);
@@ -60,7 +60,7 @@ test('findPendingInvitation returns the first unexpired invitation', async () =>
 });
 
 test('findPendingInvitation returns null when every invitation is expired', async () => {
-  const findMany = jest.fn(async () => [{ id: 'inv_expired', expiresAt: past }]);
+  const findMany = vi.fn(async () => [{ id: 'inv_expired', expiresAt: past }]);
   const invitation = await findPendingInvitation({ adapter: { findMany }, email: 'a@b.c' });
   expect(invitation).toBe(null);
 });

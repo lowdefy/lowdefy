@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, describe, expect, test } from 'vitest';
 import {
   ActionError,
   AuthorizationError,
@@ -37,36 +37,38 @@ const timeout = (ms) => {
 const pageId = 'one';
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 const getActions = () => {
   return {
-    ActionSync: jest.fn(({ params }) => params),
-    ActionAsync: jest.fn(async ({ params }) => {
+    ActionSync: vi.fn(({ params }) => params),
+    ActionAsync: vi.fn(async ({ params }) => {
       await timeout(params.ms ?? 1);
       return params;
     }),
-    ActionError: jest.fn(() => {
+    ActionError: vi.fn(() => {
       throw new Error('Test error');
     }),
-    CatchActionError: jest.fn(() => {
+    CatchActionError: vi.fn(() => {
       throw new Error('Test catch error');
     }),
-    ActionAsyncError: jest.fn(async ({ params }) => {
+    ActionAsyncError: vi.fn(async ({ params }) => {
       await timeout(params.ms ?? 1);
       throw new Error('Test error');
     }),
-    ActionStopChain: jest.fn(() => stopChain({ ok: true })),
-    ActionStopChainAsync: jest.fn(async ({ params }) => {
+    ActionStopChain: vi.fn(() => stopChain({ ok: true })),
+    ActionStopChainAsync: vi.fn(async ({ params }) => {
       await timeout(params.ms ?? 1);
       return stopChain({ ok: true });
     }),
   };
 };
 
-const closeLoader = jest.fn();
-const displayMessage = jest.fn();
+const closeLoader = vi.fn();
+const displayMessage = vi.fn();
 const lowdefy = {
   _internal: {
     displayMessage,
@@ -1670,7 +1672,7 @@ test('a plugin ConfigError without a configKey is located at the action config k
     type: 'Box',
   };
   const actions = getActions();
-  actions.ActionConfigError = jest.fn(() => {
+  actions.ActionConfigError = vi.fn(() => {
     throw new ConfigError('Action config is wrong.');
   });
   lowdefy._internal.actions = actions;
@@ -1697,7 +1699,7 @@ test('a plugin ConfigError that carries its own configKey keeps it', async () =>
     type: 'Box',
   };
   const actions = getActions();
-  actions.ActionConfigError = jest.fn(() => {
+  actions.ActionConfigError = vi.fn(() => {
     throw new ConfigError('Action config is wrong.', { configKey: 'own_key' });
   });
   lowdefy._internal.actions = actions;
@@ -1722,10 +1724,10 @@ test('a UserError logs to the browser console only, never through handleError', 
     id: 'root',
     type: 'Box',
   };
-  const handleError = jest.fn();
-  const loggerError = jest.fn();
+  const handleError = vi.fn();
+  const loggerError = vi.fn();
   const actions = getActions();
-  actions.ActionUserError = jest.fn(() => {
+  actions.ActionUserError = vi.fn(() => {
     throw new UserError('Not allowed.');
   });
   lowdefy._internal.actions = actions;
@@ -1764,7 +1766,7 @@ test('a revived generic server error passes through callAction unwrapped and kee
   });
   lowdefy._internal.actions = {
     ...getActions(),
-    ActionServerError: jest.fn(() => {
+    ActionServerError: vi.fn(() => {
       throw revived;
     }),
   };
@@ -1788,8 +1790,8 @@ test('a revived generic server error passes through callAction unwrapped and kee
 });
 
 test('a repeated UserError from the same action logs to the console once', async () => {
-  const logger = { error: jest.fn(), warn: jest.fn(), log: jest.fn(), debug: jest.fn() };
-  const handleError = jest.fn();
+  const logger = { error: vi.fn(), warn: vi.fn(), log: vi.fn(), debug: vi.fn() };
+  const handleError = vi.fn();
   const context = await testContext({
     lowdefy: {
       _internal: {
@@ -1797,7 +1799,7 @@ test('a repeated UserError from the same action logs to the console once', async
         handleError,
         logger,
         actions: {
-          ActionUserError: jest.fn(() => {
+          ActionUserError: vi.fn(() => {
             throw new UserError('Please enter a valid email address.');
           }),
         },
@@ -1825,7 +1827,7 @@ test('a repeated UserError from the same action logs to the console once', async
 });
 
 test('repeated server errors from the same action each call handleError', async () => {
-  const handleError = jest.fn();
+  const handleError = vi.fn();
   function createServerError() {
     // A decoded server error: same generic message on every failure.
     const error = new Error('Something went wrong.');
@@ -1842,7 +1844,7 @@ test('repeated server errors from the same action each call handleError', async 
         displayMessage,
         handleError,
         actions: {
-          ActionServerError: jest.fn(() => {
+          ActionServerError: vi.fn(() => {
             throw errors.shift();
           }),
         },
@@ -1873,7 +1875,7 @@ test('repeated server errors from the same action each call handleError', async 
 test.each(['error', 'success'])(
   'an action result stands when its %s message fails to display',
   async (status) => {
-    const handleError = jest.fn();
+    const handleError = vi.fn();
     const displayFailure = new TypeError('message.error is not a function');
     const actionError = new Error('Test error');
     const context = await testContext({
@@ -1885,10 +1887,10 @@ test.each(['error', 'success'])(
           },
           handleError,
           actions: {
-            Fails: jest.fn(() => {
+            Fails: vi.fn(() => {
               throw actionError;
             }),
-            Succeeds: jest.fn(() => 'ok'),
+            Succeeds: vi.fn(() => 'ok'),
           },
         },
         pageId,
@@ -1917,7 +1919,7 @@ test.each(['error', 'success'])(
 test('an action succeeds when its loading message returns no close function', async () => {
   const context = await testContext({
     lowdefy: {
-      _internal: { displayMessage: () => undefined, actions: { Succeeds: jest.fn(() => 'ok') } },
+      _internal: { displayMessage: () => undefined, actions: { Succeeds: vi.fn(() => 'ok') } },
       pageId,
     },
     pageConfig: { id: 'root', type: 'Box' },
@@ -1935,16 +1937,16 @@ test('an action succeeds when its loading message returns no close function', as
 
 test('a failure to report a message that did not display is logged', async () => {
   const reportFailure = new Error('client-error route unreachable');
-  const logger = { error: jest.fn(), warn: () => {}, log: () => {}, debug: () => {} };
+  const logger = { error: vi.fn(), warn: () => {}, log: () => {}, debug: () => {} };
   const context = await testContext({
     lowdefy: {
       _internal: {
         displayMessage: () => {
           throw new TypeError('message.success is not a function');
         },
-        handleError: jest.fn(() => Promise.reject(reportFailure)),
+        handleError: vi.fn(() => Promise.reject(reportFailure)),
         logger,
-        actions: { Succeeds: jest.fn(() => 'ok') },
+        actions: { Succeeds: vi.fn(() => 'ok') },
       },
       pageId,
     },

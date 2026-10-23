@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -32,7 +32,7 @@ afterEach(() => {
 });
 
 test('writePluginChecksPending writes the pending packages', async () => {
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   await writePluginChecksPending({
     context: { directories: { build: buildDir }, writeBuildArtifact },
     packages: [
@@ -60,7 +60,7 @@ test('writePluginChecksPending writes the pending packages', async () => {
 test('writePluginChecksPending removes the file when no package is pending', async () => {
   const filePath = path.join(buildDir, 'plugin-checks-pending.json');
   fs.writeFileSync(filePath, '{ "packages": ["@lowdefy/a"] }');
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   await writePluginChecksPending({
     context: { directories: { build: buildDir }, writeBuildArtifact },
     packages: [],

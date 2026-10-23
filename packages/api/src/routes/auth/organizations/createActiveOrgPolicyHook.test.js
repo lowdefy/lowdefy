@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { APIError } from 'better-auth/api';
 
 import createActiveOrgPolicyHook from './createActiveOrgPolicyHook.js';
@@ -34,7 +34,7 @@ function createMockAuth({
   user = { id: 'user_1', email: 'User@Example.com', name: 'User One' },
 } = {}) {
   const adapter = {
-    findOne: jest.fn(async ({ model, where }) => {
+    findOne: vi.fn(async ({ model, where }) => {
       if (model === 'organization') {
         return organization;
       }
@@ -43,7 +43,7 @@ function createMockAuth({
       }
       throw new Error(`Unexpected findOne model ${model} ${JSON.stringify(where)}.`);
     }),
-    findMany: jest.fn(async ({ model }) => {
+    findMany: vi.fn(async ({ model }) => {
       if (model === 'member') {
         return members;
       }
@@ -52,21 +52,21 @@ function createMockAuth({
       }
       throw new Error(`Unexpected findMany model ${model}.`);
     }),
-    count: jest.fn(async ({ model, where }) => {
+    count: vi.fn(async ({ model, where }) => {
       if (model === 'member') {
         return organizationMemberCounts[where[0].value] ?? 0;
       }
       throw new Error(`Unexpected count model ${model}.`);
     }),
-    create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    create: vi.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
   };
   const internalAdapter = {
-    findUserById: jest.fn(async () => user),
+    findUserById: vi.fn(async () => user),
   };
   const auth = {
     $context: Promise.resolve({ adapter, internalAdapter }),
     api: {
-      addMember: jest.fn(async () => ({ id: 'member_new' })),
+      addMember: vi.fn(async () => ({ id: 'member_new' })),
     },
     options: { plugins: [{ id: 'organization', options: {} }] },
   };
@@ -184,17 +184,17 @@ function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexe
   }
   const adapter = {
     options: {
-      ensureUniqueIndexes: ensureUniqueIndexes ?? jest.fn(async () => {}),
+      ensureUniqueIndexes: ensureUniqueIndexes ?? vi.fn(async () => {}),
     },
-    findOne: jest.fn(async ({ model, where }) => {
+    findOne: vi.fn(async ({ model, where }) => {
       await pause('findOne', { model, where });
       return db[model].find((row) => matches(row, where)) ?? null;
     }),
-    findMany: jest.fn(async ({ model, where }) => {
+    findMany: vi.fn(async ({ model, where }) => {
       if (model === 'invitation') return [];
       return db[model].filter((row) => matches(row, where));
     }),
-    create: jest.fn(async ({ model, data }) => {
+    create: vi.fn(async ({ model, data }) => {
       await pause('create', { model, data });
       const duplicate =
         model === 'organization'
@@ -210,17 +210,15 @@ function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexe
       db[model].push(row);
       return { ...row };
     }),
-    count: jest.fn(
-      async ({ model, where }) => db[model].filter((row) => matches(row, where)).length
-    ),
-    update: jest.fn(async ({ model, where, update }) => {
+    count: vi.fn(async ({ model, where }) => db[model].filter((row) => matches(row, where)).length),
+    update: vi.fn(async ({ model, where, update }) => {
       const row = db[model].find((candidate) => matches(candidate, where));
       Object.assign(row, update);
       return { ...row };
     }),
   };
   const internalAdapter = {
-    findUserById: jest.fn(async (id) => ({ id, email: `${id}@example.com`, name: 'User One' })),
+    findUserById: vi.fn(async (id) => ({ id, email: `${id}@example.com`, name: 'User One' })),
   };
   const auth = { $context: Promise.resolve({ adapter, internalAdapter }) };
   // Pause the next operation matching `match` until release() is called;
@@ -243,7 +241,7 @@ function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexe
 function mintHook(auth) {
   return createActiveOrgPolicyHook({
     getAuth: () => auth,
-    logger: { error: jest.fn(), warn: jest.fn() },
+    logger: { error: vi.fn(), warn: vi.fn() },
     organizations: tenant,
   });
 }
@@ -373,9 +371,9 @@ test('tenant: a mint losing the unique slug race joins the winning organization'
 });
 
 test('tenant: while the unique indexes can not be ensured, repeated sign-ins are refused without retrying the index build until the cool-down passes', async () => {
-  const now = jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
+  const now = vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
   try {
-    const ensureUniqueIndexes = jest.fn(async () => {
+    const ensureUniqueIndexes = vi.fn(async () => {
       throw new Error('E11000 duplicate key error collection: user-members');
     });
     const { auth, db } = createMemoryAuth({ ensureUniqueIndexes });

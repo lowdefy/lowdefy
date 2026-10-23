@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import createTrackedOperators from './createTrackedOperators.js';
 
@@ -36,7 +36,7 @@ function createRecorder() {
 
 function createSetup() {
   const holder = { recorder: null };
-  const _state = jest.fn(({ params }) => `state ${params}`);
+  const _state = vi.fn(({ params }) => `state ${params}`);
   _state.tracking = { kind: 'read', keys: ({ params }) => [`state:${params}`] };
   const operators = { _state };
   const tracked = createTrackedOperators({ getRecorder: () => holder.recorder, operators });

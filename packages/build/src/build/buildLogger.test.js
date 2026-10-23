@@ -15,6 +15,7 @@
 */
 
 import buildLogger from './buildLogger.js';
+import { expect, test } from 'vitest';
 
 test('buildLogger no logger defined', () => {
   const components = { config: {} };

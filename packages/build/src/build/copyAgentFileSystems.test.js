@@ -16,12 +16,12 @@
 
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, beforeAll, beforeEach, expect, test } from 'vitest';
 import { LowdefyInternalError } from '@lowdefy/errors';
 
-const mockCopyFileOrDirectory = jest.fn();
+const mockCopyFileOrDirectory = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+vi.doMock('@lowdefy/node-utils', () => ({
   copyFileOrDirectory: mockCopyFileOrDirectory,
 }));
 
@@ -38,7 +38,7 @@ beforeEach(() => {
 function createContext({ config = '/app', server = '/app/.lowdefy/server' } = {}) {
   return {
     directories: { config, server },
-    writeBuildArtifact: jest.fn(),
+    writeBuildArtifact: vi.fn(),
   };
 }
 

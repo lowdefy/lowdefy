@@ -1,7 +1,0 @@
-{
-  "exclude": [".*.test.js$", ".*/tests/.*", ".*/__mocks__/.*"],
-  "$schema": "http://json.schemastore.org/swcrc",
-  "module": {
-    "type": "commonjs"
-  }
-}

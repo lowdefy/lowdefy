@@ -24,6 +24,7 @@ import positionFreePath from './positionFreePath.js';
 import collectSharedIds from './collectSharedIds.js';
 import keyArtifact from './test/keyArtifact.mjs';
 import { pageFixture } from './test/fixtures.mjs';
+import { expect, test } from 'vitest';
 
 function reader(artifacts) {
   return async (name) => artifacts[name] ?? null;

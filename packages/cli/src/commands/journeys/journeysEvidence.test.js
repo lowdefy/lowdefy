@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -28,7 +28,7 @@ import readTraceSalt from './pull/readTraceSalt.js';
 // The config text set comes from a full build by the dev server's builder;
 // these tests hold it fixed.
 const CONFIG_TEXTS = new Set(['Assign', 'Delete']);
-jest.unstable_mockModule('./configText/readConfigText.js', () => ({
+vi.doMock('./configText/readConfigText.js', () => ({
   default: async () => ({ texts: CONFIG_TEXTS, isConfigText: (text) => CONFIG_TEXTS.has(text) }),
 }));
 
@@ -159,7 +159,7 @@ beforeEach(() => {
     options: {},
     sendTelemetry: async () => {},
   };
-  jest.spyOn(Date, 'now').mockReturnValue(NOW);
+  vi.spyOn(Date, 'now').mockReturnValue(NOW);
   // A session that starts on the last day of September and ends in October.
   writeDay('2026-09-30', [
     record({ session: 's0', t: Date.parse('2026-09-30T23:59:00Z'), kind: 'pageview' }),
@@ -191,7 +191,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 

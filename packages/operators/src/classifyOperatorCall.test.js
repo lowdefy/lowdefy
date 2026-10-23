@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import classifyOperatorCall from './classifyOperatorCall.js';
 
@@ -56,7 +56,7 @@ test('classifyOperatorCall returns pure and volatile object declarations', () =>
 });
 
 test('classifyOperatorCall calls a read declaration keys function with the call info', () => {
-  const keys = jest.fn(({ params, arrayIndices }) => [`state:${params}:${arrayIndices[0]}`]);
+  const keys = vi.fn(({ params, arrayIndices }) => [`state:${params}:${arrayIndices[0]}`]);
   const result = classifyOperatorCall({
     callInfo,
     operatorFn: operator({ kind: 'read', keys }),

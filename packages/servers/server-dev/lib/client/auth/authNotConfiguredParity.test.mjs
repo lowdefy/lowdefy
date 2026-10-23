@@ -19,6 +19,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import AuthNotConfigured from './AuthNotConfigured.js';
+import { expect, test } from 'vitest';
 
 const authDir = path.dirname(fileURLToPath(import.meta.url));
 

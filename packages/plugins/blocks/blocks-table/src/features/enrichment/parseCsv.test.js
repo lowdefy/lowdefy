@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 
 import detectCsvDelimiter from './detectCsvDelimiter.js';
 import parseCsv from './parseCsv.js';
@@ -117,7 +117,7 @@ test('parseCsv parses 100,000 records in well under a second', () => {
 
 describe('readCsvFile', () => {
   function csvFile(text, size = text.length) {
-    return { size, text: jest.fn(async () => text) };
+    return { size, text: vi.fn(async () => text) };
   }
 
   test('readCsvFile refuses a file larger than the size limit without reading it', async () => {
@@ -138,7 +138,7 @@ describe('readCsvFile', () => {
   test('readCsvFile reads the records, pausing between slices so the page stays responsive', async () => {
     const lines = ['name'];
     for (let i = 0; i < 5000; i++) lines.push(`Person ${i}`);
-    const pause = jest.fn(async () => {});
+    const pause = vi.fn(async () => {});
     const records = await readCsvFile({ file: csvFile(lines.join('\n')), sliceMs: 0, pause });
     expect(records).toHaveLength(5001);
     expect(records[5000]).toEqual(['Person 4999']);

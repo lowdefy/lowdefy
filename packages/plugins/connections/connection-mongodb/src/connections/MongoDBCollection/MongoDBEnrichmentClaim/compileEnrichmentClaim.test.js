@@ -19,6 +19,7 @@ import hashEnrichmentInputs from '../enrichment/hashEnrichmentInputs.js';
 import compileEnrichmentClaim from './compileEnrichmentClaim.js';
 import planClaimCell from './planClaimCell.js';
 import schema from './schema.js';
+import { describe, expect, test } from 'vitest';
 
 const now = new Date('2026-09-29T10:00:00.000Z');
 

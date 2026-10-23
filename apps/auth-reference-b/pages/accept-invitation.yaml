@@ -13,21 +13,28 @@ properties:
     margin: 60px auto
 events:
   onInit:
+    # The emailed link names the invitation. Set first, so a failed caller read
+    # below still leaves it filled.
+    - id: set_invitation_id
+      type: SetState
+      params:
+        invitationId:
+          _url_query: invitationId
     - id: read_caller
       type: CallAPI
       params:
         endpointId: invitation-caller
-    # The emailed link names the invitation. Without it - an invitee who signed
-    # up directly and lost the email - the server still knows their pending
-    # invitation and hands its id to this page.
-    - id: set_invitation_id
+    # Without the link - an invitee who signed up directly and lost the email -
+    # the server still knows their pending invitation and hands its id to this
+    # page.
+    - id: set_caller
       type: SetState
       params:
         caller:
           _api: invitation-caller.response
         invitationId:
           _if_none:
-            - _url_query: invitationId
+            - _state: invitationId
             - _api: invitation-caller.response.pending_invitation_id
 blocks:
   - id: accept_title

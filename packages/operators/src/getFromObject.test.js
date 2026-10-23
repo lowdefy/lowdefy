@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import getFromObject from './getFromObject.js';
 // eslint-disable-next-line no-unused-vars
@@ -340,8 +340,8 @@ test('reserved key as shorthand params returns null', () => {
 });
 
 test('reserved key does not log a warning or error', () => {
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  const error = vi.spyOn(console, 'error').mockImplementation(() => {});
   getFromObject({
     params: { key: '__proto__' },
     object: defaultObject,

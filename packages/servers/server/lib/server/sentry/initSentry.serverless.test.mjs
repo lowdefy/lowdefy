@@ -16,7 +16,7 @@
 
 import http from 'node:http';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import * as RealLight from '@sentry/node-core/light';
 
 const envelopes = [];
@@ -31,16 +31,16 @@ function createStubTransport() {
 }
 
 const imported = { node: false, light: false };
-const nodeInit = jest.fn();
-const nodeHttpIntegration = jest.fn(() => ({ name: 'Http' }));
+const nodeInit = vi.fn();
+const nodeHttpIntegration = vi.fn(() => ({ name: 'Http' }));
 
 // @sentry/node is a stub that records its import, so a test can tell which SDK started. The light
 // SDK is real, with its network transport swapped for memory.
-jest.unstable_mockModule('@sentry/node', () => {
+vi.doMock('@sentry/node', () => {
   imported.node = true;
   return { init: nodeInit, httpIntegration: nodeHttpIntegration };
 });
-jest.unstable_mockModule('@sentry/node-core/light', () => {
+vi.doMock('@sentry/node-core/light', () => {
   imported.light = true;
   return {
     ...RealLight,
@@ -48,7 +48,7 @@ jest.unstable_mockModule('@sentry/node-core/light', () => {
   };
 });
 const loggerConfig = { sentry: {} };
-jest.unstable_mockModule('../../build/logger.js', () => ({ default: loggerConfig }));
+vi.doMock('../../build/logger.js', () => ({ default: loggerConfig }));
 
 const { default: initSentryServer } = await import('./initSentry.js');
 const { default: sentrySdk } = await import('./sentrySdk.js');

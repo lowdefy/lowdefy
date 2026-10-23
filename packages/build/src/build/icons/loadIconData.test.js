@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { icons as lucideIcons } from 'lucide';
 
 import createIconSemanticMap from './createIconSemanticMap.js';
@@ -48,7 +48,7 @@ test('loadIconData calls each layer once with the icons it draws, and applies la
     icons: { Fill: { node: fillNode, size: 256 }, Other: { node: fillNode } },
     attrs: { fill: 'currentColor', stroke: 'none' },
   });
-  const loadIcons = jest.fn(layer.loadIcons);
+  const loadIcons = vi.fn(layer.loadIcons);
   layer.loadIcons = loadIcons;
   const data = await loadIconData({
     names: ['acme:Fill', 'acme:Other', 'Pencil'],

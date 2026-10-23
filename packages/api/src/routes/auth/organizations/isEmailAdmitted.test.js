@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import isEmailAdmitted from './isEmailAdmitted.js';
 
@@ -31,7 +31,7 @@ function createMocks({
   userByEmail = null,
 } = {}) {
   const adapter = {
-    findOne: jest.fn(async ({ model }) => {
+    findOne: vi.fn(async ({ model }) => {
       if (model === 'organization') {
         return organization;
       }
@@ -40,17 +40,17 @@ function createMocks({
       }
       throw new Error(`Unexpected findOne model ${model}.`);
     }),
-    findMany: jest.fn(async ({ model }) => {
+    findMany: vi.fn(async ({ model }) => {
       if (model === 'invitation') {
         return invitations;
       }
       throw new Error(`Unexpected findMany model ${model}.`);
     }),
-    create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    create: vi.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
   };
   const internalAdapter = {
-    findUserById: jest.fn(async () => userById),
-    findUserByEmail: jest.fn(async () => userByEmail),
+    findUserById: vi.fn(async () => userById),
+    findUserByEmail: vi.fn(async () => userByEmail),
   };
   const auth = { $context: Promise.resolve({ adapter, internalAdapter }) };
   return { auth, adapter, internalAdapter };

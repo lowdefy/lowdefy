@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { render } from '@testing-library/react';
 
 import HtmlComponent from '../HtmlComponent.js';
@@ -44,7 +44,7 @@ const registration = {
 
 beforeEach(() => {
   registerHtmlEnhancements(registration);
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 });
 
 afterEach(() => {

@@ -15,6 +15,7 @@
 */
 
 import normalizeColumns from './normalizeColumns.js';
+import { expect, test } from 'vitest';
 
 test('normalizeColumns fills every leaf default from the key', () => {
   const { columns } = normalizeColumns({ columns: [{ key: 'first_name' }] });

@@ -17,6 +17,7 @@
 import { createHash } from 'node:crypto';
 
 import callerHash from './callerHash.js';
+import { expect, test } from 'vitest';
 
 // Fixed vectors: the same values are asserted by the server's stampCaller and
 // the client's isOtherCaller tests, so both sides are pinned to one hash.

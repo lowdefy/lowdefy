@@ -15,6 +15,7 @@
 */
 
 import findOperatorInData from './findOperatorInData.js';
+import { expect, test } from 'vitest';
 
 test('findOperatorInData returns null for data without operators', () => {
   expect(findOperatorInData({ value: { a: [1, 'two', { b: null }], _id: 'x' } })).toBe(null);

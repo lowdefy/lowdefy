@@ -16,6 +16,7 @@
 
 import normalizeOptions from './normalizeOptions.js';
 import resolveOption from './resolveOption.js';
+import { expect, test } from 'vitest';
 
 test('resolveOption finds an option by value, and by string form for map options', () => {
   const options = normalizeOptions({ 1: 'One', true: 'Yes' });

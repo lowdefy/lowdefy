@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
@@ -30,7 +30,7 @@ import testContext from '../../test/testContext.js';
 // apiKey/jwt strategy credential authenticate elsewhere but resolve anonymous
 // here, which the per-request MCP server then limits to public tools.
 
-const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 const issuer = 'https://app.test.com/api/auth';
 const resourceUri = 'https://app.test.com/api/mcp';
@@ -87,7 +87,7 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   process.env.BETTER_AUTH_URL = 'https://app.test.com';
 });
 
@@ -100,7 +100,7 @@ afterAll(() => {
 });
 
 function mockAuth({ consent = { id: 'consent_1' }, member, session, user } = {}) {
-  const findOne = jest.fn(async ({ model }) => {
+  const findOne = vi.fn(async ({ model }) => {
     if (model === 'user') {
       return user ?? null;
     }
@@ -112,10 +112,10 @@ function mockAuth({ consent = { id: 'consent_1' }, member, session, user } = {})
     }
     return null;
   });
-  const findMany = jest.fn(async ({ model }) => (model === 'jwks' ? jwksRows : []));
-  const count = jest.fn().mockResolvedValue(0);
+  const findMany = vi.fn(async ({ model }) => (model === 'jwks' ? jwksRows : []));
+  const count = vi.fn().mockResolvedValue(0);
   return {
-    api: { getSession: jest.fn().mockResolvedValue(session ?? null) },
+    api: { getSession: vi.fn().mockResolvedValue(session ?? null) },
     $context: Promise.resolve({ adapter: { count, findMany, findOne } }),
   };
 }
@@ -213,7 +213,7 @@ test('an apiKey strategy credential does not authenticate the MCP surface', asyn
     type: 'apiKey',
     roles: ['partner'],
     attributes: {},
-    verify: jest.fn().mockResolvedValue({ user: { id: 'apiKey:partner-access:acme' } }),
+    verify: vi.fn().mockResolvedValue({ user: { id: 'apiKey:partner-access:acme' } }),
   };
   const context = await createMcpContext({
     auth,

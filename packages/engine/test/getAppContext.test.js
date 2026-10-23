@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import buildTestPage from '@lowdefy/build/buildTestPage';
 import { translate } from '@lowdefy/helpers';
 
@@ -45,7 +45,7 @@ function getLowdefy({ actions = {}, lowdefyGlobal = {} } = {}) {
         Paragraph: { category: 'display' },
       },
       displayMessage: () => () => {},
-      handleError: jest.fn(),
+      handleError: vi.fn(),
       logger: { error: () => {}, warn: () => {}, log: () => {}, debug: () => {} },
       operators: testOperators,
       translate: (key, values) => translate({ key, values }),
@@ -85,7 +85,7 @@ test('app onInit sets global before it resolves', async () => {
 });
 
 test('app onInit runs once when every page mount asks for it', async () => {
-  const Count = jest.fn();
+  const Count = vi.fn();
   const lowdefy = getLowdefy({ actions: { Count } });
   const appContext = getAppContext({
     events: { onInit: event([{ id: 'count', type: 'Count' }]) },

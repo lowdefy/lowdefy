@@ -17,6 +17,7 @@
 import findTemplateRefs from './findTemplateRefs.js';
 import normalizeColumns from './normalizeColumns.js';
 import resolveEnrichmentInputs from './resolveEnrichmentInputs.js';
+import { expect, test } from 'vitest';
 
 const { columnsByKey } = normalizeColumns({
   columns: [

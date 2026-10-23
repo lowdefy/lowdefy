@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import RevokeOtherSessions from './RevokeOtherSessions.js';
 
-const mockRevokeOtherSessions = jest.fn();
+const mockRevokeOtherSessions = vi.fn();
 const methods = { revokeOtherSessions: mockRevokeOtherSessions };
 
 test('RevokeOtherSessions calls the revokeOtherSessions method with no params', async () => {

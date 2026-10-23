@@ -17,6 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import { expect, test } from 'vitest';
 
 const baseDir = path.resolve(process.cwd(), 'test/writeFileIfChanged');
 

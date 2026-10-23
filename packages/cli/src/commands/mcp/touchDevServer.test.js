@@ -17,6 +17,7 @@
 import http from 'http';
 
 import touchDevServer from './touchDevServer.js';
+import { expect, test } from 'vitest';
 
 async function listen(handler) {
   const server = http.createServer(handler);

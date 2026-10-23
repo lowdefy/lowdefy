@@ -16,6 +16,7 @@
 
 import freezeColumns from './freezeColumns.js';
 import pinColumn from './pinColumn.js';
+import { expect, test } from 'vitest';
 
 test('pinColumn pins to the inner edge of a region and moves between regions', () => {
   const pinning = { start: ['a'], end: ['z'] };

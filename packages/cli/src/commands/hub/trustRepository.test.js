@@ -20,14 +20,14 @@ import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { promisify } from 'util';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import getHubPaths from './getHubPaths.js';
 import readTrustedRepositories from './readTrustedRepositories.js';
 import trustRepository from './trustRepository.js';
 import untrustRepository from './untrustRepository.js';
 
-jest.setTimeout(60000);
+vi.setConfig({ testTimeout: 60000, hookTimeout: 60000 });
 
 const execFileAsync = promisify(execFile);
 const trustRepositoryUrl = new URL('./trustRepository.js', import.meta.url).href;

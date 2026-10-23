@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import PasskeyUpdate from './PasskeyUpdate.js';
 
 test('PasskeyUpdate passes params to the passkeyUpdate method', async () => {
-  const mockPasskeyUpdate = jest.fn();
+  const mockPasskeyUpdate = vi.fn();
   const methods = { passkeyUpdate: mockPasskeyUpdate };
   await PasskeyUpdate({ methods, params: { passkeyId: 'passkey-1', name: 'MacBook Touch ID' } });
   expect(mockPasskeyUpdate.mock.calls).toEqual([
@@ -28,7 +28,7 @@ test('PasskeyUpdate passes params to the passkeyUpdate method', async () => {
 
 test('PasskeyUpdate returns the updated passkey from the method', async () => {
   const passkey = { id: 'passkey-1', name: 'MacBook Touch ID' };
-  const methods = { passkeyUpdate: jest.fn(() => Promise.resolve(passkey)) };
+  const methods = { passkeyUpdate: vi.fn(() => Promise.resolve(passkey)) };
   const result = await PasskeyUpdate({
     methods,
     params: { passkeyId: 'passkey-1', name: 'MacBook Touch ID' },

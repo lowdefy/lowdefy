@@ -15,6 +15,7 @@
 */
 
 import fitChips from './fitChips.js';
+import { expect, test } from 'vitest';
 
 const moreWidth = (hidden) => 10 + String(hidden).length * 7;
 

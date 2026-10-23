@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import MagicLinkVerify from './MagicLinkVerify.js';
 
-const mockMagicLinkVerify = jest.fn();
+const mockMagicLinkVerify = vi.fn();
 const methods = { magicLinkVerify: mockMagicLinkVerify };
 
 beforeEach(() => {

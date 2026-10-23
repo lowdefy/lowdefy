@@ -17,13 +17,10 @@
 import { type } from '@lowdefy/helpers';
 import isEmptyValue from '@lowdefy/blocks-antd/table/isEmptyValue.js';
 
-const NO_VALUE_OPS = new Set(['empty', 'notEmpty', 'isTrue', 'isFalse']);
-const WITHIN_UNITS = new Set(['day', 'week', 'month', 'year']);
+import isRelativeBound from './isRelativeBound.js';
+import isRelativeDate from './isRelativeDate.js';
 
-function isCompleteWithin(value) {
-  if (!type.isObject(value) || !WITHIN_UNITS.has(value.unit)) return false;
-  return type.isNumber(value.last) || type.isNumber(value.next);
-}
+const NO_VALUE_OPS = new Set(['empty', 'notEmpty', 'isTrue', 'isFalse']);
 
 // A view filter leaf someone is still building (no column, or an operator without its value yet)
 // constrains nothing: the filter builder writes the condition to the view while it is edited, and
@@ -31,7 +28,10 @@ function isCompleteWithin(value) {
 function isCompleteLeaf(leaf) {
   if (type.isNone(leaf.key) || !type.isString(leaf.op)) return false;
   if (NO_VALUE_OPS.has(leaf.op)) return true;
-  if (leaf.op === 'within') return isCompleteWithin(leaf.value);
+  if (leaf.op === 'within') return isRelativeDate(leaf.value);
+  if ((leaf.op === 'before' || leaf.op === 'after') && isRelativeBound(leaf.value)) {
+    return isRelativeDate(leaf.value);
+  }
   if (leaf.op === 'between') {
     return (
       type.isArray(leaf.value) &&

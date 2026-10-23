@@ -16,6 +16,7 @@
 
 import createHtmlCss from './createHtmlCss.js';
 import TAG_TONES from './format/tagTones.js';
+import { expect, test } from 'vitest';
 
 test('createHtmlCss scopes every rule to enhanced HTML with no specificity', () => {
   const css = createHtmlCss();

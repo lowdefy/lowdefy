@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import path from 'path';
 
-jest.unstable_mockModule('fs', () => {
+vi.doMock('fs', () => {
   const promises = {
-    readdir: jest.fn(),
-    readFile: jest.fn(),
+    readdir: vi.fn(),
+    readFile: vi.fn(),
   };
-  return { default: { existsSync: jest.fn(), promises }, existsSync: jest.fn(), promises };
+  return { default: { existsSync: vi.fn(), promises }, existsSync: vi.fn(), promises };
 });
 
 const buildDirectory = path.join('/test', '.lowdefy', 'server', 'build');
@@ -45,7 +45,7 @@ const buildFiles = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('readNotificationArtifacts reads flat and nested notification artifacts', async () => {

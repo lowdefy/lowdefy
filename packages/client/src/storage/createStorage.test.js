@@ -15,6 +15,7 @@
 */
 
 import createStorage from './createStorage.js';
+import { beforeEach, expect, test } from 'vitest';
 
 beforeEach(() => {
   window.localStorage.clear();

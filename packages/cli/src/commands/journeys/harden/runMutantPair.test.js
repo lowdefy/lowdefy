@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const runJourney = jest.fn();
-jest.unstable_mockModule('../../test/runJourney.js', () => ({ default: runJourney }));
-jest.unstable_mockModule('../../test/fetchBuildId.js', () => ({
+const runJourney = vi.fn();
+vi.doMock('../../test/runJourney.js', () => ({ default: runJourney }));
+vi.doMock('../../test/fetchBuildId.js', () => ({
   default: async () => 'build-1',
 }));
 

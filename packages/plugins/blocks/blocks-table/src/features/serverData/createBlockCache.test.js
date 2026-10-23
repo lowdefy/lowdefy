@@ -15,6 +15,7 @@
 */
 
 import createBlockCache from './createBlockCache.js';
+import { expect, test } from 'vitest';
 
 function rows(start, count) {
   return Array.from({ length: count }, (_, i) => ({ id: start + i }));

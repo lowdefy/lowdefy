@@ -14,32 +14,32 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import syncServer from './syncServer.mjs';
 
 function createContext(changes) {
   const events = [];
   const record = (name, implementation = async () => {}) =>
-    jest.fn(async () => {
+    vi.fn(async () => {
       events.push(name);
       return implementation();
     });
   return {
     events,
     buildActivity: {
-      track: jest.fn(async (task) => {
+      track: vi.fn(async (task) => {
         events.push('track');
         return task();
       }),
     },
     installPlugins: record('install'),
-    logger: { warn: jest.fn() },
+    logger: { warn: vi.fn() },
     lowdefyBuild: record('build'),
     optimizeDependencies: record('optimize'),
     restartServer: record('restart'),
-    serverArtifacts: { check: jest.fn(() => changes) },
-    shutdownServer: jest.fn(() => events.push('shutdown')),
+    serverArtifacts: { check: vi.fn(() => changes) },
+    shutdownServer: vi.fn(() => events.push('shutdown')),
   };
 }
 

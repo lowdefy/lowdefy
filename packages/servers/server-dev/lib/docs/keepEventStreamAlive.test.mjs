@@ -15,6 +15,7 @@
 */
 
 import keepEventStreamAlive from './keepEventStreamAlive.js';
+import { expect, test } from 'vitest';
 
 const encoder = new TextEncoder();
 const answer = 'event: message\ndata: {"jsonrpc":"2.0","id":1,"result":{}}\n\n';

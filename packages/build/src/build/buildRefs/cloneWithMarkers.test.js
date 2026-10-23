@@ -16,6 +16,7 @@
 
 import cloneWithMarkers from './cloneWithMarkers.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
+import { expect, test } from 'vitest';
 
 test('deep-clones objects and arrays preserving ~r/~l/~k/~arr non-enumerably', () => {
   const inner = { type: 'Box' };

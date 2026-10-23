@@ -15,7 +15,7 @@
 */
 
 import fs from 'node:fs';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -33,7 +33,7 @@ const { default: buildEditedPages } = await import('./buildEditedPages.js');
 const { default: reviewPageBuilds } = await import('./reviewPageBuilds.js');
 
 // A JIT page build loads the build package's plugins on first use.
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000, hookTimeout: 30000 });
 
 const longAgo = new Date('2000-01-01T00:00:00.000Z');
 let lastSignal = 0;

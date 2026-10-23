@@ -15,6 +15,7 @@
 */
 
 import buildTraceEvent from './buildTraceEvent.js';
+import { expect, test } from 'vitest';
 
 function payload({ responses, requests = {}, apiResponses = {} }) {
   return {

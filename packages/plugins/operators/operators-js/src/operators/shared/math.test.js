@@ -15,16 +15,17 @@
 */
 
 import _math from './math.js';
+import { expect, test } from 'vitest';
 
 test('_math called with no method or params', () => {
   expect(() => _math({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(
-    `"_math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
+    `[Error: _math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.]`
   );
 });
 
 test('_math invalid method or params', () => {
   expect(() => _math({ params: 'X', location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(
-    `"_math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
+    `[Error: _math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.]`
   );
 });
 
@@ -32,18 +33,20 @@ test('_math invalid method', () => {
   expect(() =>
     _math({ params: [1], methodName: 'X', location: 'locationId' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_math.X is not supported, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
+    `[Error: _math.X is not supported, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.]`
   );
 });
 
 test('_math invalid method args', () => {
   expect(() =>
     _math({ params: 'X', methodName: 'min', location: 'locationId' })
-  ).toThrowErrorMatchingInlineSnapshot(`"_math.min accepts one of the following types: array."`);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `[Error: _math.min accepts one of the following types: array.]`
+  );
   expect(() =>
     _math({ params: 'X', methodName: 'pow', location: 'locationId' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_math.pow accepts one of the following types: object, array."`
+    `[Error: _math.pow accepts one of the following types: object, array.]`
   );
 });
 

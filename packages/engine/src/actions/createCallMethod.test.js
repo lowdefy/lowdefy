@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import { ActionError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
@@ -21,8 +21,10 @@ import testContext from '../../test/testContext.js';
 const lowdefy = {};
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 // Comment out to use console
 console.log = () => {};
@@ -37,7 +39,7 @@ afterAll(() => {
 });
 
 test('CallMethod with no args, synchronous method', async () => {
-  const blockMethod = jest.fn((...args) => ({ args }));
+  const blockMethod = vi.fn((...args) => ({ args }));
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -175,7 +177,7 @@ test('CallMethod method return a promise', async () => {
 });
 
 test('CallMethod with args not an array', async () => {
-  const blockMethod = jest.fn((...args) => ({ args }));
+  const blockMethod = vi.fn((...args) => ({ args }));
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -258,7 +260,7 @@ test('CallMethod with args not an array', async () => {
 });
 
 test('CallMethod with multiple positional args, synchronous method', async () => {
-  const blockMethod = jest.fn((...args) => ({ args }));
+  const blockMethod = vi.fn((...args) => ({ args }));
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -325,8 +327,8 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
 });
 
 test('CallMethod of block in array by explicit id', async () => {
-  const blockMethod0 = jest.fn((...args) => ({ args }));
-  const blockMethod1 = jest.fn((...args) => ({ args }));
+  const blockMethod0 = vi.fn((...args) => ({ args }));
+  const blockMethod1 = vi.fn((...args) => ({ args }));
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -384,8 +386,8 @@ test('CallMethod of block in array by explicit id', async () => {
 });
 
 test('CallMethod of block in array by block with same indices and id pattern', async () => {
-  const blockMethod0 = jest.fn((...args) => ({ args }));
-  const blockMethod1 = jest.fn((...args) => ({ args }));
+  const blockMethod0 = vi.fn((...args) => ({ args }));
+  const blockMethod1 = vi.fn((...args) => ({ args }));
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -447,7 +449,7 @@ test('CallMethod of block in array by block with same indices and id pattern', a
 });
 
 test('CallMethod with method does not exist', async () => {
-  const blockMethod = jest.fn((...args) => ({ args }));
+  const blockMethod = vi.fn((...args) => ({ args }));
   const pageConfig = {
     id: 'root',
     type: 'Box',

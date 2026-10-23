@@ -15,6 +15,7 @@
 */
 
 import htmlToText from './htmlToText.js';
+import { expect, test } from 'vitest';
 
 test('htmlToText drops tags and decodes escaped characters', () => {
   expect(htmlToText('<b>A &amp; B</b><br/>&lt;c&gt; &quot;d&quot; &#39;e&#39;')).toBe(

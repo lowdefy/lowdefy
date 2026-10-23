@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { exportJWK, generateKeyPair, jwtVerify, SignJWT } from 'jose';
 
 import getMcpJwks from './getMcpJwks.js';
@@ -47,7 +47,7 @@ async function sign({ kid, privateKey }) {
 
 test('verifies against the cached key set without re-reading the adapter', async () => {
   const keyA = await generateJwksRow({ kid: 'kid_a' });
-  const findMany = jest.fn().mockResolvedValue([keyA.row]);
+  const findMany = vi.fn().mockResolvedValue([keyA.row]);
   const auth = mockAuth({ findMany });
 
   const tokenOne = await sign({ kid: 'kid_a', privateKey: keyA.privateKey });
@@ -62,7 +62,7 @@ test('verifies against the cached key set without re-reading the adapter', async
 test('refetches the key set once when a token presents an unknown kid after rotation', async () => {
   const keyA = await generateJwksRow({ kid: 'kid_a' });
   const keyB = await generateJwksRow({ kid: 'kid_b' });
-  const findMany = jest
+  const findMany = vi
     .fn()
     .mockResolvedValueOnce([keyA.row])
     .mockResolvedValue([keyA.row, keyB.row]);
@@ -78,7 +78,7 @@ test('refetches the key set once when a token presents an unknown kid after rota
 test('a kid unknown after the refetch still fails verification', async () => {
   const keyA = await generateJwksRow({ kid: 'kid_a' });
   const forged = await generateJwksRow({ kid: 'kid_z' });
-  const findMany = jest.fn().mockResolvedValue([keyA.row]);
+  const findMany = vi.fn().mockResolvedValue([keyA.row]);
   const auth = mockAuth({ findMany });
 
   await expect(
@@ -89,7 +89,7 @@ test('a kid unknown after the refetch still fails verification', async () => {
 
 test('a failed key set load is not cached - the next verification retries the adapter', async () => {
   const keyA = await generateJwksRow({ kid: 'kid_a' });
-  const findMany = jest
+  const findMany = vi
     .fn()
     .mockRejectedValueOnce(new Error('database unavailable'))
     .mockResolvedValue([keyA.row]);
@@ -103,7 +103,7 @@ test('a failed key set load is not cached - the next verification retries the ad
 test('a key expired beyond the rotation grace window is excluded from the key set', async () => {
   const keyA = await generateJwksRow({ kid: 'kid_a' });
   keyA.row.expiresAt = new Date(Date.now() - 31 * 24 * 3600 * 1000);
-  const findMany = jest.fn().mockResolvedValue([keyA.row]);
+  const findMany = vi.fn().mockResolvedValue([keyA.row]);
   const auth = mockAuth({ findMany });
 
   await expect(

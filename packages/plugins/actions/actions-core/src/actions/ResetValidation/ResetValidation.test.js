@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import ResetValidation from './ResetValidation.js';
 
-const mockResetValidation = jest.fn();
+const mockResetValidation = vi.fn();
 const methods = { resetValidation: mockResetValidation };
 
 test('ResetValidation action invocation', () => {

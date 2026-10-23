@@ -16,6 +16,7 @@
 
 import getPagePaths from './getPagePaths.js';
 import testContext from '../../test/testContext.js';
+import { expect, test } from 'vitest';
 
 const routes = [
   { pageId: 'home', path: 'home', auth: { public: true } },

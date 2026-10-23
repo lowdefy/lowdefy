@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockRunEndpoint = jest.fn();
+const mockRunEndpoint = vi.fn();
 
-jest.unstable_mockModule('../../../lib/docs/runEndpoint.js', () => ({
+vi.doMock('../../../lib/docs/runEndpoint.js', () => ({
   default: mockRunEndpoint,
 }));
 
@@ -31,12 +31,12 @@ function createContext(body) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
   });
-  const json = jest.fn((data, status) => ({ data, status: status ?? 200 }));
+  const json = vi.fn((data, status) => ({ data, status: status ?? 200 }));
   return { req: { raw: request }, json };
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockRunEndpoint.mockResolvedValue({ refused: false, status: 'success', response: { ok: true } });
 });
 

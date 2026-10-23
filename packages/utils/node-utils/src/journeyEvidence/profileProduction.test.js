@@ -15,6 +15,7 @@
 */
 
 import profileProduction from './profileProduction.js';
+import { expect, test } from 'vitest';
 
 function segment({
   hash,

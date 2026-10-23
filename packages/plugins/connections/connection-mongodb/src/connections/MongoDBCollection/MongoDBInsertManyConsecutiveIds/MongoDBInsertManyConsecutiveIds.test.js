@@ -18,6 +18,7 @@ import { validate } from '@lowdefy/ajv';
 import MongoDBInsertManyConsecutiveIds from './MongoDBInsertManyConsecutiveIds.js';
 import clearTestMongoDb from '../../../../test/clearTestMongoDb.js';
 import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBInsertManyConsecutiveIds.meta;
 const schema = MongoDBInsertManyConsecutiveIds.schema;

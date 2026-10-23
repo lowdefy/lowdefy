@@ -16,6 +16,7 @@
 
 import skills from './index.js';
 import journeysFromPr from './journeysFromPr.js';
+import { expect, test } from 'vitest';
 
 const DESCRIPTION =
   'Use when the developer wants a pull request explored before it merges, wants journeys for what a PR changed, or wants a bug bash. Looks at each changed page as each role, writes a journey for every path a user can take, keeps the ones that pass and reports the ones that fail as findings with their journey.';

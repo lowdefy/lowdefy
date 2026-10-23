@@ -25,6 +25,7 @@ const TABLE_ONLY_KEYS = {
     toolbar: 'the toolbar',
     views: 'saved views',
     activeView: 'saved views',
+    viewMenu: 'saved views',
     defaultView: 'views',
     persist: 'view persistence',
     virtual: 'virtualisation',
@@ -45,6 +46,7 @@ const TABLE_ONLY_KEYS = {
     importCsv: 'CSV import',
     summaryRow: 'a summary row from data',
     inputFieldPrefix: 'adding columns',
+    rawEndpoint: 'enrichment cell details',
   },
   columns: {
     filterable: 'column filters',

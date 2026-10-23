@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { Actions } from '@lowdefy/engine';
 import { UserError } from '@lowdefy/errors';
 import createAuthMethods from './createAuthMethods.js';
 import { createUrl } from '../adapters/url.js';
 
 function setup({ signInResult, signUpResult } = {}) {
-  const assign = jest.fn();
+  const assign = vi.fn();
   const lowdefy = {
     _internal: {
       globals: {
         window: { location: { assign, origin: 'https://app.lowdefy.test', search: '' } },
       },
-      storage: { clearUserStorage: jest.fn() },
+      storage: { clearUserStorage: vi.fn() },
     },
     home: { configured: false, pageId: 'home-page' },
     linkPaths: {},
@@ -39,36 +39,34 @@ function setup({ signInResult, signUpResult } = {}) {
   // mirrors that: it records the un-prefixed push args for direct assertion and
   // composes the final URL through the same createUrl the real router uses, so
   // the existing URL-shape assertions on `assign` keep exercising the composition.
-  const push = jest.fn(({ pathname, query }) =>
+  const push = vi.fn(({ pathname, query }) =>
     assign(createUrl({ basePath: lowdefy.basePath ?? '', pathname, query }))
   );
-  lowdefy._internal.router = { basePath: '', push, replace: jest.fn() };
+  lowdefy._internal.router = { basePath: '', push, replace: vi.fn() };
   const auth = {
     authConfig: { providers: [] },
-    suppressSessionReload: jest.fn(),
-    acceptInvitation: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
-    addPasskey: jest.fn(() => Promise.resolve({ data: { id: 'passkey-1' }, error: null })),
-    changePassword: jest.fn(() =>
-      Promise.resolve({ data: { token: null, user: {} }, error: null })
-    ),
-    deletePasskey: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
-    updatePasskey: jest.fn(() =>
+    suppressSessionReload: vi.fn(),
+    acceptInvitation: vi.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
+    addPasskey: vi.fn(() => Promise.resolve({ data: { id: 'passkey-1' }, error: null })),
+    changePassword: vi.fn(() => Promise.resolve({ data: { token: null, user: {} }, error: null })),
+    deletePasskey: vi.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    updatePasskey: vi.fn(() =>
       Promise.resolve({
         data: { passkey: { id: 'passkey-1', name: 'MacBook Touch ID' } },
         error: null,
       })
     ),
-    getResolvedUser: jest.fn(() =>
+    getResolvedUser: vi.fn(() =>
       Promise.resolve({ user: { id: 'user-1', roles: ['admin'], attributes: {} } })
     ),
-    getSession: jest.fn(() =>
+    getSession: vi.fn(() =>
       Promise.resolve({
         data: { session: { activeOrganizationId: 'org-1' }, user: {} },
         error: null,
       })
     ),
-    leaveOrganization: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
-    listOrganizations: jest.fn(() =>
+    leaveOrganization: vi.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
+    listOrganizations: vi.fn(() =>
       Promise.resolve({
         data: [
           { id: 'org-1', name: 'Org One', slug: 'org-one' },
@@ -77,63 +75,61 @@ function setup({ signInResult, signUpResult } = {}) {
         error: null,
       })
     ),
-    oauth2Consent: jest.fn(() =>
+    oauth2Consent: vi.fn(() =>
       Promise.resolve({
         data: { redirect: true, url: 'https://client.example.com/callback?code=auth-code' },
         error: null,
       })
     ),
-    oauth2Continue: jest.fn(() =>
+    oauth2Continue: vi.fn(() =>
       Promise.resolve({
         data: { redirect: true, url: 'https://app.example.com/oauth-consent?client_id=abc' },
         error: null,
       })
     ),
-    emailOtpSend: jest.fn(() => Promise.resolve({ data: { success: true }, error: null })),
-    emailOtpVerify: jest.fn(() => Promise.resolve({ data: { token: 't', user: {} }, error: null })),
-    phoneNumberRequestPasswordReset: jest.fn(() =>
+    emailOtpSend: vi.fn(() => Promise.resolve({ data: { success: true }, error: null })),
+    emailOtpVerify: vi.fn(() => Promise.resolve({ data: { token: 't', user: {} }, error: null })),
+    phoneNumberRequestPasswordReset: vi.fn(() =>
       Promise.resolve({ data: { status: true }, error: null })
     ),
-    phoneNumberResetPassword: jest.fn(() =>
-      Promise.resolve({ data: { status: true }, error: null })
-    ),
-    phoneNumberSendOtp: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
-    phoneNumberVerify: jest.fn(() =>
+    phoneNumberResetPassword: vi.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    phoneNumberSendOtp: vi.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    phoneNumberVerify: vi.fn(() =>
       Promise.resolve({ data: { token: 't', user: {} }, error: null })
     ),
-    refreshSession: jest.fn(() =>
+    refreshSession: vi.fn(() =>
       Promise.resolve({ data: { session: {}, user: { id: 'user-1' } }, error: null })
     ),
-    requestPasswordReset: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
-    resetPassword: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
-    revokeOtherSessions: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
-    sendVerificationEmail: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
-    signInEmail: jest.fn(() =>
+    requestPasswordReset: vi.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    resetPassword: vi.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    revokeOtherSessions: vi.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    sendVerificationEmail: vi.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    signInEmail: vi.fn(() =>
       Promise.resolve({ data: signInResult ?? { token: 't' }, error: null })
     ),
-    signInPasskey: jest.fn(() =>
+    signInPasskey: vi.fn(() =>
       Promise.resolve({ data: signInResult ?? { session: {}, user: {} }, error: null })
     ),
-    signInPhoneNumber: jest.fn(() =>
+    signInPhoneNumber: vi.fn(() =>
       Promise.resolve({ data: signInResult ?? { token: 't' }, error: null })
     ),
-    signUpEmail: jest.fn(() =>
+    signUpEmail: vi.fn(() =>
       Promise.resolve({ data: signUpResult ?? { token: null, user: {} }, error: null })
     ),
-    twoFactorDisable: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
-    twoFactorEnable: jest.fn(() =>
+    twoFactorDisable: vi.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    twoFactorEnable: vi.fn(() =>
       Promise.resolve({
         data: { totpURI: 'otpauth://totp/app', backupCodes: ['code-1'] },
         error: null,
       })
     ),
-    twoFactorVerifyBackupCode: jest.fn(() =>
+    twoFactorVerifyBackupCode: vi.fn(() =>
       Promise.resolve({ data: { token: 't', user: {} }, error: null })
     ),
-    twoFactorVerifyTotp: jest.fn(() =>
+    twoFactorVerifyTotp: vi.fn(() =>
       Promise.resolve({ data: { token: 't', user: {} }, error: null })
     ),
-    updateResolvedUser: jest.fn(),
+    updateResolvedUser: vi.fn(),
   };
   return { auth, lowdefy, assign, push };
 }
@@ -225,7 +221,7 @@ test('login suppresses the session reload before navigating to its callback', as
 
 test('login does not suppress the session reload when the sign-in fails', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInEmail = jest.fn(() =>
+  auth.signInEmail = vi.fn(() =>
     Promise.resolve({ data: null, error: { message: 'Invalid email or password' } })
   );
   const { login } = createAuthMethods(lowdefy, auth);
@@ -243,8 +239,8 @@ test('signUp passes through rest params to signUpEmail', async () => {
 test('logout prefixes basePath onto a relative callbackUrl and suppresses the sign-out reload', async () => {
   const { auth, lowdefy, assign } = setup();
   lowdefy.basePath = '/base';
-  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSessionReload = jest.fn();
+  auth.signOut = vi.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.suppressSessionReload = vi.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout({ callbackUrl: { pageId: 'goodbye' } });
   expect(auth.suppressSessionReload.mock.invocationCallOrder[0]).toBeLessThan(
@@ -256,7 +252,7 @@ test('logout prefixes basePath onto a relative callbackUrl and suppresses the si
 test('logout navigates to an absolute callbackUrl without prefixing basePath', async () => {
   const { auth, lowdefy, assign } = setup();
   lowdefy.basePath = '/base';
-  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.signOut = vi.fn(() => Promise.resolve({ data: { success: true }, error: null }));
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout({ callbackUrl: { url: 'https://example.com/logged-out' } });
   expect(assign.mock.calls).toEqual([['https://example.com/logged-out']]);
@@ -264,8 +260,8 @@ test('logout navigates to an absolute callbackUrl without prefixing basePath', a
 
 test('logout without a callbackUrl signs out without navigating or suppressing the reload', async () => {
   const { auth, lowdefy, assign } = setup();
-  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSessionReload = jest.fn();
+  auth.signOut = vi.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.suppressSessionReload = vi.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout();
   expect(auth.suppressSessionReload).not.toHaveBeenCalled();
@@ -275,11 +271,11 @@ test('logout without a callbackUrl signs out without navigating or suppressing t
 test('logout clears user storage after signing out and before navigating', async () => {
   const { auth, lowdefy, assign } = setup();
   const order = [];
-  auth.signOut = jest.fn(() => {
+  auth.signOut = vi.fn(() => {
     order.push('signOut');
     return Promise.resolve({ data: { success: true }, error: null });
   });
-  lowdefy._internal.storage.clearUserStorage = jest.fn(() => order.push('clearUserStorage'));
+  lowdefy._internal.storage.clearUserStorage = vi.fn(() => order.push('clearUserStorage'));
   assign.mockImplementation(() => order.push('navigate'));
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout({ callbackUrl: { pageId: 'goodbye' } });
@@ -289,7 +285,7 @@ test('logout clears user storage after signing out and before navigating', async
 
 test('logout keeps user storage when signing out fails', async () => {
   const { auth, lowdefy } = setup();
-  auth.signOut = jest.fn(() =>
+  auth.signOut = vi.fn(() =>
     Promise.resolve({ data: null, error: { message: 'Sign out failed.' } })
   );
   const { logout } = createAuthMethods(lowdefy, auth);
@@ -559,7 +555,7 @@ test('twoFactorVerify with callbackUrl false stays put and does not throw', asyn
 
 test('twoFactorVerify does not navigate on a response carrying no session', async () => {
   const { auth, lowdefy, assign } = setup();
-  auth.twoFactorVerifyTotp = jest.fn(() => Promise.resolve({ data: { token: null }, error: null }));
+  auth.twoFactorVerifyTotp = vi.fn(() => Promise.resolve({ data: { token: null }, error: null }));
   const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
   await twoFactorVerify({ code: '012345', callbackUrl: { url: '/reports' } });
   expect(assign).not.toHaveBeenCalled();
@@ -679,7 +675,7 @@ test('passkeyRegister calls auth.addPasskey and returns the registered passkey',
 
 test('passkeyRegister surfaces a cancelled WebAuthn ceremony as an error', async () => {
   const { auth, lowdefy } = setup();
-  auth.addPasskey = jest.fn(() =>
+  auth.addPasskey = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: { message: 'Registration cancelled.', code: 'ERROR_CEREMONY_ABORTED', status: 400 },
@@ -693,7 +689,7 @@ test('passkeyRegister surfaces a DOMException from the WebAuthn ceremony as a Us
   const { auth, lowdefy } = setup();
   const domError = new Error('The operation either timed out or was not allowed.');
   domError.name = 'NotAllowedError';
-  auth.addPasskey = jest.fn(() => Promise.reject(domError));
+  auth.addPasskey = vi.fn(() => Promise.reject(domError));
   const { passkeyRegister } = createAuthMethods(lowdefy, auth);
   await expect(passkeyRegister()).rejects.toMatchObject({
     name: 'UserError',
@@ -705,7 +701,7 @@ test('passkeyRegister surfaces a DOMException from the WebAuthn ceremony as a Us
 test('passkeyRegister propagates a non-ceremony rejection unchanged', async () => {
   const { auth, lowdefy } = setup();
   const networkError = new Error('Network down.');
-  auth.addPasskey = jest.fn(() => Promise.reject(networkError));
+  auth.addPasskey = vi.fn(() => Promise.reject(networkError));
   const { passkeyRegister } = createAuthMethods(lowdefy, auth);
   await expect(passkeyRegister()).rejects.toBe(networkError);
 });
@@ -714,7 +710,7 @@ test('passkeySignIn surfaces a DOMException from the WebAuthn ceremony as a User
   const { auth, lowdefy } = setup();
   const domError = new Error('The operation was aborted.');
   domError.name = 'AbortError';
-  auth.signInPasskey = jest.fn(() => Promise.reject(domError));
+  auth.signInPasskey = vi.fn(() => Promise.reject(domError));
   const { passkeySignIn } = createAuthMethods(lowdefy, auth);
   await expect(passkeySignIn()).rejects.toMatchObject({
     name: 'UserError',
@@ -739,7 +735,7 @@ test('passkeySignIn calls auth.signInPasskey with no forwarded params', async ()
 
 test('passkeySignIn surfaces a failed ceremony or walled-out response as an error', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInPasskey = jest.fn(() =>
+  auth.signInPasskey = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: { message: 'Membership required.', code: 'MEMBERSHIP_REQUIRED', status: 403 },
@@ -813,7 +809,7 @@ test('acceptInvitation throws when invitationId is missing', async () => {
 
 test('acceptInvitation surfaces the error returned by the endpoint', async () => {
   const { auth, lowdefy } = setup();
-  auth.acceptInvitation = jest.fn(() =>
+  auth.acceptInvitation = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: { message: 'Invitation not found.', code: 'INVITATION_NOT_FOUND', status: 400 },
@@ -838,7 +834,7 @@ test('listOrganizations calls auth.listOrganizations with no params and returns 
 
 test('listOrganizations surfaces the error returned by the endpoint', async () => {
   const { auth, lowdefy } = setup();
-  auth.listOrganizations = jest.fn(() =>
+  auth.listOrganizations = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: { message: 'Endpoint disabled.', code: 'NOT_FOUND', status: 404 },
@@ -872,7 +868,7 @@ test('oauth2Continue confirms the post-login choice and returns the next redirec
 
 test('oauth2Continue surfaces a stale authorization query (4xx) as a UserError carrying code and status', async () => {
   const { auth, lowdefy } = setup();
-  auth.oauth2Continue = jest.fn(() =>
+  auth.oauth2Continue = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: {
@@ -897,7 +893,7 @@ test('oauth2Continue surfaces a stale authorization query (4xx) as a UserError c
 
 test('login surfaces a rejected password (401) as a UserError, not a plain error', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInEmail = jest.fn(() =>
+  auth.signInEmail = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: {
@@ -913,7 +909,7 @@ test('login surfaces a rejected password (401) as a UserError, not a plain error
 
 test('a 5xx or network failure from the auth server is thrown plain so the action runner reports it', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInEmail = jest.fn(() =>
+  auth.signInEmail = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: { message: 'Internal Server Error', status: 500, statusText: 'Internal Server Error' },
@@ -930,7 +926,7 @@ test('a 5xx or network failure from the auth server is thrown plain so the actio
   expect(thrown.message).toBe('Internal Server Error');
   expect(thrown.status).toBe(500);
 
-  auth.signInEmail = jest.fn(() =>
+  auth.signInEmail = vi.fn(() =>
     Promise.resolve({ data: null, error: { message: 'Failed to fetch', status: 0 } })
   );
   await expect(login({ email: 'a@b.c', password: 'pw' })).rejects.not.toBeInstanceOf(UserError);
@@ -947,7 +943,7 @@ test('oauth2Consent passes narrowing params through to the consent call', async 
 
 test('oauth2Consent propagates a deny as the OAuth error redirect URI', async () => {
   const { auth, lowdefy } = setup();
-  auth.oauth2Consent = jest.fn(() =>
+  auth.oauth2Consent = vi.fn(() =>
     Promise.resolve({
       data: {
         redirect: true,
@@ -976,7 +972,7 @@ test('oauth2Consent throws when accept is not a boolean', async () => {
 
 test('oauth2Consent surfaces the error returned by the endpoint', async () => {
   const { auth, lowdefy } = setup();
-  auth.oauth2Consent = jest.fn(() =>
+  auth.oauth2Consent = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: { message: 'invalid_signature', code: 'BAD_REQUEST', status: 400 },
@@ -995,9 +991,7 @@ test('leaveOrganization resolves the active organization from the session', asyn
 
 test('leaveOrganization throws when the session has no active organization', async () => {
   const { auth, lowdefy } = setup();
-  auth.getSession = jest.fn(() =>
-    Promise.resolve({ data: { session: {}, user: {} }, error: null })
-  );
+  auth.getSession = vi.fn(() => Promise.resolve({ data: { session: {}, user: {} }, error: null }));
   const { leaveOrganization } = createAuthMethods(lowdefy, auth);
   await expect(leaveOrganization()).rejects.toMatchObject({
     name: 'UserError',
@@ -1008,7 +1002,7 @@ test('leaveOrganization throws when the session has no active organization', asy
 
 test('leaveOrganization surfaces the error returned by the endpoint', async () => {
   const { auth, lowdefy } = setup();
-  auth.leaveOrganization = jest.fn(() =>
+  auth.leaveOrganization = vi.fn(() =>
     Promise.resolve({
       data: null,
       error: {
@@ -1062,7 +1056,7 @@ test('login with phoneNumber throws when password is missing', async () => {
 test('login with phoneNumber does not auto-pick a sole configured provider', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
-  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = vi.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ phoneNumber: '+27831234567', password: 'password123' });
   expect(auth.signInSocial).not.toHaveBeenCalled();
@@ -1163,7 +1157,7 @@ test('phoneNumberVerify throws when phoneNumber or code is missing', async () =>
 
 test('phoneNumberVerify rethrows the BetterAuth error so onError chains fire', async () => {
   const { auth, lowdefy } = setup();
-  auth.phoneNumberVerify = jest.fn(() =>
+  auth.phoneNumberVerify = vi.fn(() =>
     Promise.resolve({ data: null, error: { message: 'Invalid OTP', code: 'INVALID_OTP' } })
   );
   const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
@@ -1206,7 +1200,7 @@ test('phoneNumberVerify with callbackUrl false stays put and does not throw', as
 
 test('phoneNumberVerify does not navigate with disableSession, which mints no session', async () => {
   const { auth, lowdefy, assign } = setup();
-  auth.phoneNumberVerify = jest.fn(() =>
+  auth.phoneNumberVerify = vi.fn(() =>
     Promise.resolve({ data: { token: null, user: {} }, error: null })
   );
   const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
@@ -1236,7 +1230,7 @@ test('phoneNumberVerify does not navigate when a signed-in user confirms a new p
 test('phoneNumberVerify navigates to the challenge on a phone-number change that is challenged', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
-  auth.phoneNumberVerify = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
+  auth.phoneNumberVerify = vi.fn(() => Promise.resolve({ data: challenge, error: null }));
   const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
   await phoneNumberVerify({
     phoneNumber: '+27831234567',
@@ -1264,7 +1258,7 @@ test('login threads captchaToken as the x-captcha-response header, never the bod
 
 test('login with magicLink threads captchaToken into the magic-link call', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', magicLink: true, captchaToken: 'tok-2' });
   expect(auth.signInMagicLink.mock.calls[0][0].fetchOptions).toEqual({
@@ -1275,7 +1269,7 @@ test('login with magicLink threads captchaToken into the magic-link call', async
 
 test('login with magicLink forwards newUserCallbackUrl and errorCallbackUrl as resolved targets', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     email: 'user@example.com',
@@ -1299,7 +1293,7 @@ test('login with magicLink forwards newUserCallbackUrl and errorCallbackUrl as r
 test('login with magicLink basePath-prefixes newUserCallbackUrl and errorCallbackUrl like callbackUrl', async () => {
   const { auth, lowdefy } = setup();
   lowdefy.basePath = '/base';
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     email: 'user@example.com',
@@ -1315,7 +1309,7 @@ test('login with magicLink basePath-prefixes newUserCallbackUrl and errorCallbac
 test('login with magicLink passes an absolute url target through unchanged, without basePath', async () => {
   const { auth, lowdefy } = setup();
   lowdefy.basePath = '/base';
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     email: 'user@example.com',
@@ -1330,7 +1324,7 @@ test('login with magicLink passes an absolute url target through unchanged, with
 
 test('login names the offending param when an errorCallbackUrl target is ambiguous', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await expect(
     login({
@@ -1345,7 +1339,7 @@ test('login names the offending param when an errorCallbackUrl target is ambiguo
 
 test('login with magicLink omits newUserCallbackURL and errorCallbackURL when the params are absent', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', magicLink: true, callbackUrl: { pageId: 'dashboard' } });
   const call = auth.signInMagicLink.mock.calls[0][0];
@@ -1356,7 +1350,7 @@ test('login with magicLink omits newUserCallbackURL and errorCallbackURL when th
 test('login does not read the ?callbackUrl= query fallback for newUserCallbackUrl or errorCallbackUrl', async () => {
   const { auth, lowdefy } = setup();
   lowdefy._internal.globals.window.location.search = '?callbackUrl=/from-query';
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', magicLink: true });
   const call = auth.signInMagicLink.mock.calls[0][0];
@@ -1370,7 +1364,7 @@ test('login does not read the ?callbackUrl= query fallback for newUserCallbackUr
 test('login with a social provider forwards newUserCallbackUrl and errorCallbackUrl', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
-  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = vi.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     providerId: 'google',
@@ -1393,7 +1387,7 @@ test('login with a social provider forwards newUserCallbackUrl and errorCallback
 test('login with a GenericOAuth provider signs in through signInSocial keyed by the provider id', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.providers = [{ id: 'keycloak', type: 'GenericOAuth' }];
-  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = vi.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     providerId: 'keycloak',
@@ -1415,7 +1409,7 @@ test('login with a GenericOAuth provider signs in through signInSocial keyed by 
 test('login with magicLink defaults errorCallbackURL to authPages.error when no errorCallbackUrl is given', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.authPages = { error: '/auth/error' };
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', magicLink: true });
   expect(auth.signInMagicLink.mock.calls[0][0].errorCallbackURL).toEqual('/auth/error');
@@ -1425,7 +1419,7 @@ test('login with magicLink basePath-prefixes the defaulted authPages.error', asy
   const { auth, lowdefy } = setup();
   lowdefy.basePath = '/base';
   auth.authConfig.authPages = { error: '/auth/error' };
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', magicLink: true });
   expect(auth.signInMagicLink.mock.calls[0][0].errorCallbackURL).toEqual('/base/auth/error');
@@ -1434,7 +1428,7 @@ test('login with magicLink basePath-prefixes the defaulted authPages.error', asy
 test('login with magicLink honors a caller errorCallbackUrl over the authPages.error default', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.authPages = { error: '/auth/error' };
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     email: 'user@example.com',
@@ -1446,7 +1440,7 @@ test('login with magicLink honors a caller errorCallbackUrl over the authPages.e
 
 test('login with magicLink omits errorCallbackURL when authPages.error is unset and no param is given', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', magicLink: true });
   expect('errorCallbackURL' in auth.signInMagicLink.mock.calls[0][0]).toBe(false);
@@ -1455,7 +1449,7 @@ test('login with magicLink omits errorCallbackURL when authPages.error is unset 
 test('the authPages.error default does not leak into newUserCallbackURL', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.authPages = { error: '/auth/error' };
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', magicLink: true });
   expect('newUserCallbackURL' in auth.signInMagicLink.mock.calls[0][0]).toBe(false);
@@ -1465,7 +1459,7 @@ test('login with a social provider carries the same defaulted authPages.error er
   const { auth, lowdefy } = setup();
   auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
   auth.authConfig.authPages = { error: '/auth/error' };
-  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = vi.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ providerId: 'google' });
   expect(auth.signInSocial.mock.calls[0][0].errorCallbackURL).toEqual('/auth/error');
@@ -1659,7 +1653,7 @@ test('login with magicLink defaults callbackURL to the home page inside the app'
   const { auth, lowdefy } = setup();
   lowdefy.basePath = '/app';
   lowdefy.home = { configured: true, pageId: 'dashboard' };
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', magicLink: true });
   expect(auth.signInMagicLink.mock.calls[0][0].callbackURL).toEqual('/app/');
@@ -1670,7 +1664,7 @@ test('login with a social provider defaults callbackURL to the home page inside 
   lowdefy.basePath = '/app';
   lowdefy.home = { configured: true, pageId: 'dashboard' };
   auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
-  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = vi.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ providerId: 'google' });
   expect(auth.signInSocial.mock.calls[0][0].callbackURL).toEqual('/app/');
@@ -1713,8 +1707,8 @@ test('an explicit callbackUrl home target throws instead of resolving to /undefi
 test('logout with a home callbackUrl does not navigate when the home config names no page', async () => {
   const { auth, lowdefy, assign } = setup();
   lowdefy.home = { configured: false, pageId: null };
-  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSessionReload = jest.fn();
+  auth.signOut = vi.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.suppressSessionReload = vi.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   // logout gains no default and no throw, but inherits the correctness fix -
   // the post-sign-out reload takes over instead of navigating to /undefined.
@@ -1738,7 +1732,7 @@ test('login with email and callbackUrl false mints the session without navigatin
 test('login with callbackUrl false syncs the session and renders the server-resolved caller before it returns', async () => {
   const { auth, lowdefy } = setup({ signInResult: { token: 't', user: {} } });
   const resolved = { id: 'user-1', organization_id: 'org-1', roles: ['admin'] };
-  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: resolved }));
+  auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: resolved }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', password: 'password123', callbackUrl: false });
   expect(auth.refreshSession.mock.calls).toEqual([[{ disableCookieCache: true }]]);
@@ -1748,7 +1742,7 @@ test('login with callbackUrl false syncs the session and renders the server-reso
 
 test('login with callbackUrl false fails when the server admits no caller for the new session', async () => {
   const { auth, lowdefy } = setup({ signInResult: { token: 't', user: {} } });
-  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: null }));
+  auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await expect(
     login({ email: 'user@example.com', password: 'password123', callbackUrl: false })
@@ -1799,7 +1793,7 @@ test('callbackUrl false wins over a present ?callbackUrl= query', async () => {
 
 test('login with magicLink and callbackUrl false throws - the redirect hop is not ours to suppress', async () => {
   const { auth, lowdefy } = setup();
-  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  auth.signInMagicLink = vi.fn(() => Promise.resolve({ data: { status: true }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await expect(
     login({ email: 'user@example.com', magicLink: true, callbackUrl: false })
@@ -1812,7 +1806,7 @@ test('login with magicLink and callbackUrl false throws - the redirect hop is no
 test('login with a provider and callbackUrl false throws', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
-  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = vi.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await expect(login({ providerId: 'google', callbackUrl: false })).rejects.toThrow(
     'Invalid callbackUrl: "false" is not valid for Login with a provider, which redirects through an external hop. Give a destination.'
@@ -1845,8 +1839,8 @@ test('sendVerificationEmail with callbackUrl false throws', async () => {
 test('logout with an empty url callbackUrl neither navigates nor suppresses the reload', async () => {
   const { auth, lowdefy, assign } = setup();
   lowdefy.basePath = '/base';
-  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
-  auth.suppressSessionReload = jest.fn();
+  auth.signOut = vi.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.suppressSessionReload = vi.fn();
   const { logout } = createAuthMethods(lowdefy, auth);
   // The one input where resolving through resolveTargetURL changes when the
   // basePath prefix is applied - willNavigate must stay false either way.
@@ -1905,7 +1899,7 @@ test('a null callbackUrl falls through to the home default instead of throwing a
 
 test('a null callbackUrl on logout neither navigates nor throws', async () => {
   const { auth, lowdefy, assign } = setup();
-  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.signOut = vi.fn(() => Promise.resolve({ data: { success: true }, error: null }));
   const { logout } = createAuthMethods(lowdefy, auth);
   await logout({ callbackUrl: null });
   expect(assign).not.toHaveBeenCalled();
@@ -1940,7 +1934,7 @@ test('a string callbackUrl leaves a present ?callbackUrl= query to answer, un-pr
 test('a non-object newUserCallbackUrl is omitted so BetterAuth defaults it to callbackUrl', async () => {
   const { auth, lowdefy } = setup();
   auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
-  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  auth.signInSocial = vi.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ providerId: 'google', newUserCallbackUrl: '/welcome' });
   expect(auth.signInSocial.mock.calls[0][0].newUserCallbackURL).toBeUndefined();
@@ -1957,7 +1951,7 @@ test('sendVerificationEmail reports a missing email before judging the callbackU
 test('updateSession awaits the store refetch, with disableCookieCache, before resolving the user', async () => {
   const { auth, lowdefy } = setup();
   const order = [];
-  auth.refreshSession = jest.fn(
+  auth.refreshSession = vi.fn(
     () =>
       new Promise((resolve) => {
         setTimeout(() => {
@@ -1966,7 +1960,7 @@ test('updateSession awaits the store refetch, with disableCookieCache, before re
         }, 0);
       })
   );
-  auth.getResolvedUser = jest.fn(() => {
+  auth.getResolvedUser = vi.fn(() => {
     order.push('getResolvedUser called');
     return Promise.resolve({ user: { id: 'user-1', roles: ['admin'], attributes: {} } });
   });
@@ -1979,7 +1973,7 @@ test('updateSession awaits the store refetch, with disableCookieCache, before re
 test('updateSession updates the resolved user ref and lowdefy.user from /api/user', async () => {
   const { auth, lowdefy } = setup();
   const resolved = { id: 'user-1', roles: ['admin'], attributes: { plan: 'pro' } };
-  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: resolved }));
+  auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: resolved }));
   const { updateSession } = createAuthMethods(lowdefy, auth);
   await updateSession();
   expect(auth.updateResolvedUser.mock.calls).toEqual([[resolved]]);
@@ -1992,7 +1986,7 @@ test('updateSession drops CallAPI results when the organization changes', async 
   lowdefy.apiResponses = { list: [{ response: ['org one'] }] };
   lowdefy.lowdefyGlobal = { theme: 'dark' };
   const resolved = { id: 'user-1', organization_id: 'org-2', roles: [] };
-  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: resolved }));
+  auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: resolved }));
   const { updateSession } = createAuthMethods(lowdefy, auth);
   await updateSession();
   expect(lowdefy.apiResponses).toEqual({});
@@ -2002,7 +1996,7 @@ test('updateSession drops CallAPI results when the organization changes', async 
 
 test('updateSession throws when the session refresh fails and never reaches /api/user', async () => {
   const { auth, lowdefy } = setup();
-  auth.refreshSession = jest.fn(() =>
+  auth.refreshSession = vi.fn(() =>
     Promise.resolve({ data: null, error: { message: 'Failed to fetch the session.', status: 500 } })
   );
   lowdefy.user = { id: 'user-1' };
@@ -2014,7 +2008,7 @@ test('updateSession throws when the session refresh fails and never reaches /api
 
 test('updateSession throws when a session is present but no user resolves, instead of nulling', async () => {
   const { auth, lowdefy } = setup();
-  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: null }));
+  auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: null }));
   lowdefy.user = { id: 'user-1' };
   const { updateSession } = createAuthMethods(lowdefy, auth);
   await expect(updateSession()).rejects.toThrow(
@@ -2026,8 +2020,8 @@ test('updateSession throws when a session is present but no user resolves, inste
 
 test('updateSession nulls the user when the session is genuinely absent', async () => {
   const { auth, lowdefy } = setup();
-  auth.refreshSession = jest.fn(() => Promise.resolve({ data: null, error: null }));
-  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: null }));
+  auth.refreshSession = vi.fn(() => Promise.resolve({ data: null, error: null }));
+  auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: null }));
   lowdefy.user = { id: 'user-1' };
   const { updateSession } = createAuthMethods(lowdefy, auth);
   await updateSession();
@@ -2046,7 +2040,7 @@ const challenge = { twoFactorRedirect: true, twoFactorMethods: ['totp'] };
 // PhoneNumberVerify action plugins do, with a following step whose recorded
 // response says whether it ran.
 function callActionChain({ actions, auth, lowdefy }) {
-  const next = jest.fn(() => 'next');
+  const next = vi.fn(() => 'next');
   const context = {
     _internal: {
       lowdefy: {
@@ -2105,7 +2099,7 @@ test('login with a provider and an idToken navigates to authPages.twoFactor on a
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
   auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
-  auth.signInSocial = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
+  auth.signInSocial = vi.fn(() => Promise.resolve({ data: challenge, error: null }));
   const { login } = createAuthMethods(lowdefy, auth);
   await login({
     providerId: 'google-sign-in',
@@ -2122,7 +2116,7 @@ test('login with a provider and an idToken navigates to authPages.twoFactor on a
 test('login with a provider and an idToken navigates to the callback when the sign-in completes', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
-  auth.signInSocial = jest.fn(() =>
+  auth.signInSocial = vi.fn(() =>
     Promise.resolve({ data: { redirect: false, token: 't', url: undefined }, error: null })
   );
   const { login } = createAuthMethods(lowdefy, auth);
@@ -2137,7 +2131,7 @@ test('login with a provider and an idToken navigates to the callback when the si
 test('login with a provider leaves the redirect to the IdP to BetterAuth', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.providers = [{ id: 'google-sign-in', type: 'Google' }];
-  auth.signInSocial = jest.fn(() =>
+  auth.signInSocial = vi.fn(() =>
     Promise.resolve({ data: { redirect: true, url: 'https://idp.test/authorize' }, error: null })
   );
   const { login } = createAuthMethods(lowdefy, auth);
@@ -2303,7 +2297,7 @@ test('a login that returns a session navigates to the callbackUrl and does not e
 test('phoneNumberVerify carries the resolved callbackUrl onto the two-factor challenge and ends the chain', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
-  auth.phoneNumberVerify = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
+  auth.phoneNumberVerify = vi.fn(() => Promise.resolve({ data: challenge, error: null }));
   const res = await callActionChain({
     actions: [
       {
@@ -2413,7 +2407,7 @@ test('emailOtpVerify throws when email or otp is missing', async () => {
 
 test('emailOtpVerify rethrows the BetterAuth error so onError chains fire', async () => {
   const { auth, lowdefy } = setup();
-  auth.emailOtpVerify = jest.fn(() =>
+  auth.emailOtpVerify = vi.fn(() =>
     Promise.resolve({ data: null, error: { message: 'Invalid OTP', code: 'INVALID_OTP' } })
   );
   const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
@@ -2459,7 +2453,7 @@ test('emailOtpVerify with callbackUrl false stays put and does not throw', async
 test('emailOtpVerify navigates an enrolled user to the two factor challenge carrying the callbackUrl', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig = { providers: [], authPages: { twoFactor: '/two-factor' } };
-  auth.emailOtpVerify = jest.fn(() =>
+  auth.emailOtpVerify = vi.fn(() =>
     Promise.resolve({
       data: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
       error: null,

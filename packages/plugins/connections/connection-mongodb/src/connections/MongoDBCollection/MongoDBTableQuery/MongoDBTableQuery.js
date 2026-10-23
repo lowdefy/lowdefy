@@ -45,7 +45,14 @@ async function MongoDBTableQuery({ request, connection, tenant, tenantGuard }) {
   } catch (error) {
     throw mapMongoError(error, { connection, requestType: 'MongoDBTableQuery' });
   }
-  return serialize(readTableResult({ result, grouped: compiled.grouped, specs: compiled.specs }));
+  return serialize(
+    readTableResult({
+      result,
+      grouped: compiled.grouped,
+      specs: compiled.specs,
+      sentence: compiled.sentence,
+    })
+  );
 }
 
 MongoDBTableQuery.schema = schema;

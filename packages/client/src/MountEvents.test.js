@@ -15,14 +15,14 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { act, render } from '@testing-library/react';
 
 import MountEvents from './MountEvents.js';
 
 function renderMountEvents({ triggerEvent, waitForMount }) {
   const renders = [];
-  const triggerEventAsync = jest.fn();
+  const triggerEventAsync = vi.fn();
   const result = render(
     <MountEvents
       context={{}}
@@ -40,7 +40,7 @@ function renderMountEvents({ triggerEvent, waitForMount }) {
 }
 
 test('MountEvents never renders loading when it does not wait for the mount event', async () => {
-  const triggerEvent = jest.fn(async () => {});
+  const triggerEvent = vi.fn(async () => {});
   const { renders, triggerEventAsync, container } = renderMountEvents({
     triggerEvent,
     waitForMount: false,
@@ -55,7 +55,7 @@ test('MountEvents never renders loading when it does not wait for the mount even
 
 test('MountEvents renders loading until the mount event finishes when it waits for it', async () => {
   let finishMount;
-  const triggerEvent = jest.fn(
+  const triggerEvent = vi.fn(
     () =>
       new Promise((resolve) => {
         finishMount = resolve;

@@ -22,7 +22,7 @@
 // dev: the client never operator-evaluates id positions, so a _string.concat
 // block id works in prod and breaks in dev.
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -30,7 +30,7 @@ import { serializer } from '@lowdefy/helpers';
 
 process.env.AUTH_SECRET = 'test-secret-for-integration-test';
 
-jest.unstable_mockModule('../buildApp.js', () => ({
+vi.doMock('../buildApp.js', () => ({
   default: ({ components }) => {
     components.app = components.app ?? {};
     components.app.html = components.app.html ?? {};
@@ -48,14 +48,14 @@ jest.unstable_mockModule('../buildApp.js', () => ({
     return components;
   },
 }));
-jest.unstable_mockModule('../full/updateServerPackageJson.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../full/updateServerPackageJson.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyPublicFolder.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyPublicFolder.js', () => ({
+  default: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../copyAgentFileSystems.js', () => ({
-  default: jest.fn(async () => {}),
+vi.doMock('../copyAgentFileSystems.js', () => ({
+  default: vi.fn(async () => {}),
 }));
 
 const { default: shallowBuild } = await import('./shallowBuild.js');
@@ -106,7 +106,7 @@ pages:
     logger: {
       info: () => {},
       log: () => {},
-      warn: (arg) => warnings.push(typeof arg === 'string' ? arg : (arg?.msg ?? '')),
+      warn: (arg) => warnings.push(typeof arg === 'string' ? arg : arg?.msg ?? ''),
       error: () => {},
       succeed: () => {},
     },

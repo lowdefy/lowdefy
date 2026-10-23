@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { webcrypto } from 'crypto';
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import generateRowKey from './generateRowKey.js';
 
@@ -28,7 +28,7 @@ test('generateRowKey returns crypto.randomUUID when the browser has it', () => {
   global.window = {
     crypto: {
       randomUUID: () => '1b4e28ba-2fa1-41d2-883f-0016d3cca427',
-      getRandomValues: jest.fn(),
+      getRandomValues: vi.fn(),
     },
   };
   expect(generateRowKey()).toBe('1b4e28ba-2fa1-41d2-883f-0016d3cca427');

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import LeaveOrganization from './LeaveOrganization.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -33,7 +33,7 @@ const acting = {
 };
 
 test('LeaveOrganization calls the org leaveOrganization endpoint with the named organization', async () => {
-  const leaveOrganization = jest
+  const leaveOrganization = vi
     .fn()
     .mockResolvedValue({ id: 'member-1', userId: 'user_1', organizationId: 'org-2' });
   const { auth } = createMockAuth({ organizationEndpoints: { leaveOrganization } });
@@ -50,7 +50,7 @@ test('LeaveOrganization calls the org leaveOrganization endpoint with the named 
 });
 
 test('LeaveOrganization throws when the organizationId property is missing', async () => {
-  const leaveOrganization = jest.fn();
+  const leaveOrganization = vi.fn();
   const { auth } = createMockAuth({ organizationEndpoints: { leaveOrganization } });
   await expect(
     LeaveOrganization({ acting, auth, organizationId: null, properties: {} })
@@ -67,7 +67,7 @@ test('LeaveOrganization throws the engine refusal message for the only owner', a
       message: 'You cannot leave the organization as the only owner',
     },
   });
-  const leaveOrganization = jest.fn().mockRejectedValue(refusal);
+  const leaveOrganization = vi.fn().mockRejectedValue(refusal);
   const { auth } = createMockAuth({ organizationEndpoints: { leaveOrganization } });
   await expect(
     LeaveOrganization({

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import DeleteUser from './DeleteUser.js';
 import LeaveOrganization from './LeaveOrganization.js';
@@ -31,10 +31,8 @@ function withTokenModel(auth) {
 }
 
 test('RemoveMember deletes the removed member tokens', async () => {
-  const removeMember = jest
-    .fn()
-    .mockResolvedValue({ member: { id: 'member_1', userId: 'user_9' } });
-  const deleteMany = jest.fn(async () => 2);
+  const removeMember = vi.fn().mockResolvedValue({ member: { id: 'member_1', userId: 'user_9' } });
+  const deleteMany = vi.fn(async () => 2);
   const { auth } = createMockAuth({
     adapter: { deleteMany },
     organizationEndpoints: { removeMember },
@@ -53,8 +51,8 @@ test('RemoveMember deletes the removed member tokens', async () => {
 });
 
 test('RemoveMember touches no token model in an app without one', async () => {
-  const removeMember = jest.fn().mockResolvedValue({ member: { id: 'member_1' } });
-  const deleteMany = jest.fn();
+  const removeMember = vi.fn().mockResolvedValue({ member: { id: 'member_1' } });
+  const deleteMany = vi.fn();
   const { auth } = createMockAuth({
     adapter: { deleteMany },
     organizationEndpoints: { removeMember },
@@ -69,8 +67,8 @@ test('RemoveMember touches no token model in an app without one', async () => {
 });
 
 test('LeaveOrganization deletes the leaving member tokens', async () => {
-  const leaveOrganization = jest.fn().mockResolvedValue({ id: 'member_1', userId: 'user_1' });
-  const deleteMany = jest.fn(async () => 1);
+  const leaveOrganization = vi.fn().mockResolvedValue({ id: 'member_1', userId: 'user_1' });
+  const deleteMany = vi.fn(async () => 1);
   const { auth } = createMockAuth({
     adapter: { deleteMany },
     organizationEndpoints: { leaveOrganization },
@@ -88,12 +86,12 @@ test('LeaveOrganization deletes the leaving member tokens', async () => {
 });
 
 test('DeleteUser deletes the user tokens in every organization', async () => {
-  const removeUser = jest.fn().mockResolvedValue({ success: true });
+  const removeUser = vi.fn().mockResolvedValue({ success: true });
   const adapter = {
-    findOne: jest.fn(async () => ({ id: 'user_9', email: 'user9@example.com' })),
-    findMany: jest.fn(async () => []),
-    delete: jest.fn(),
-    deleteMany: jest.fn(async () => 1),
+    findOne: vi.fn(async () => ({ id: 'user_9', email: 'user9@example.com' })),
+    findMany: vi.fn(async () => []),
+    delete: vi.fn(),
+    deleteMany: vi.fn(async () => 1),
   };
   const { auth } = createMockAuth({ adapter, adminEndpoints: { removeUser } });
   withTokenModel(auth);
@@ -109,7 +107,7 @@ test('DeleteUser deletes the user tokens in every organization', async () => {
 });
 
 test('RevokeMcpGrant refuses a member token caller - there is no grant to revoke', async () => {
-  const deleteMany = jest.fn();
+  const deleteMany = vi.fn();
   const auth = { $context: Promise.resolve({ adapter: { deleteMany } }) };
   await expect(
     RevokeMcpGrant({

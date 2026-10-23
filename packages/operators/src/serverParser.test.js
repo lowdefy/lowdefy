@@ -15,7 +15,7 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
@@ -31,14 +31,14 @@ import ServerParser from './serverParser.js';
 const args = [{ args: true }];
 
 const operators = {
-  _test: jest.fn(() => 'test'),
-  _error: jest.fn(() => {
+  _test: vi.fn(() => 'test'),
+  _error: vi.fn(() => {
     throw new Error('Test error.');
   }),
-  _init: jest.fn(),
+  _init: vi.fn(),
 };
 
-operators._init.init = jest.fn();
+operators._init.init = vi.fn();
 
 const location = 'location';
 
@@ -219,7 +219,7 @@ test('operator errors preserve existing configKey', () => {
   errorWithConfigKey.configKey = 'existing-key';
   const operatorsWithPreConfiguredError = {
     ...operators,
-    _errorWithKey: jest.fn(() => {
+    _errorWithKey: vi.fn(() => {
       throw errorWithConfigKey;
     }),
   };
@@ -244,7 +244,7 @@ test('operator errors preserve existing configKey', () => {
 test('ConfigError from operator is preserved', () => {
   const operatorsWithConfigError = {
     ...operators,
-    _configError: jest.fn(() => {
+    _configError: vi.fn(() => {
       throw new ConfigError('Invalid config value.');
     }),
   };
@@ -306,10 +306,10 @@ test('parse forwards agent to operators', () => {
 test('operator parser re-enters parse with the calling agent', () => {
   const agent = { id: 'support_agent', conversationId: 'conv_1' };
   const frameOperators = {
-    _nested: jest.fn(({ parser }) =>
+    _nested: vi.fn(({ parser }) =>
       parser.parse({ input: { __frame: true }, operatorPrefix: '__' })
     ),
-    _frame: jest.fn(() => null),
+    _frame: vi.fn(() => null),
   };
   const parser = new ServerParser({ operators: frameOperators, secrets, user });
   parser.parse({ agent, input: { _nested: true }, location });
@@ -319,10 +319,10 @@ test('operator parser re-enters parse with the calling agent', () => {
 test('operator parser re-enters parse with the calling error', () => {
   const error = new Error('Caught error.');
   const frameOperators = {
-    _nested: jest.fn(({ parser }) =>
+    _nested: vi.fn(({ parser }) =>
       parser.parse({ input: { __frame: true }, operatorPrefix: '__' })
     ),
-    _frame: jest.fn(() => null),
+    _frame: vi.fn(() => null),
   };
   const parser = new ServerParser({ operators: frameOperators, secrets, user });
   parser.parse({ error, input: { _nested: true }, location });
@@ -331,10 +331,10 @@ test('operator parser re-enters parse with the calling error', () => {
 
 test('operator parser re-enters parse with the calling frame', () => {
   const frameOperators = {
-    _nested: jest.fn(({ parser }) =>
+    _nested: vi.fn(({ parser }) =>
       parser.parse({ args: ['nestedArg'], input: { __frame: true }, operatorPrefix: '__' })
     ),
-    _frame: jest.fn(({ args, arrayIndices, items, location, payload, state, steps }) => ({
+    _frame: vi.fn(({ args, arrayIndices, items, location, payload, state, steps }) => ({
       args,
       arrayIndices,
       items,
@@ -370,10 +370,10 @@ test('operator parser re-enters parse with the calling frame', () => {
 
 test('operator parser call options override the calling frame', () => {
   const frameOperators = {
-    _nested: jest.fn(({ parser }) =>
+    _nested: vi.fn(({ parser }) =>
       parser.parse({ input: { __frame: true }, operatorPrefix: '__', state: { override: true } })
     ),
-    _frame: jest.fn(({ state }) => state),
+    _frame: vi.fn(({ state }) => state),
   };
   const parser = new ServerParser({ operators: frameOperators, secrets, user });
   const res = parser.parse({ input: { _nested: true }, location, state });
@@ -382,9 +382,9 @@ test('operator parser call options override the calling frame', () => {
 
 function createDataOperators(data) {
   return {
-    _data: jest.fn(() => data),
-    _get: jest.fn(() => data),
-    _object: jest.fn(() => data),
+    _data: vi.fn(() => data),
+    _get: vi.fn(() => data),
+    _object: vi.fn(() => data),
   };
 }
 
@@ -650,7 +650,7 @@ function deepRows() {
 // with the data's size times its depth.
 test('parse with literalData marks deeply nested data in linear work', () => {
   const once = JSON.stringify(deepRows()).length;
-  const stringify = jest.spyOn(JSON, 'stringify');
+  const stringify = vi.spyOn(JSON, 'stringify');
   let result;
   let serialized = 0;
   try {

@@ -15,6 +15,7 @@
 */
 
 import hashJourney from './hashJourney.js';
+import { expect, test } from 'vitest';
 
 const journey = {
   name: 'Save an order',

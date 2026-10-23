@@ -15,6 +15,7 @@
 */
 
 import validateJourneyTimeout from './validateJourneyTimeout.js';
+import { expect, test } from 'vitest';
 
 test.each([undefined, 1, 5000, 60000])('validateJourneyTimeout accepts %j', (timeout) => {
   expect(validateJourneyTimeout({ timeout })).toBeUndefined();

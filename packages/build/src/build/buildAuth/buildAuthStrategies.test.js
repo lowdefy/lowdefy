@@ -17,6 +17,7 @@
 import { ConfigError } from '@lowdefy/errors';
 
 import buildAuthStrategies from './buildAuthStrategies.js';
+import { expect, test } from 'vitest';
 
 test('buildAuthStrategies returns components unchanged when strategies is undefined', () => {
   const components = {

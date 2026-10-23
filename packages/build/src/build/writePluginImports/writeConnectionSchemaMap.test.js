@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import writeConnectionSchemaMap from './writeConnectionSchemaMap.js';
 
-const mockWriteBuildArtifact = jest.fn();
+const mockWriteBuildArtifact = vi.fn();
 
 function makeContext({ connections = {}, requests = {}, schemas, installedPackages } = {}) {
   const packages = new Set(

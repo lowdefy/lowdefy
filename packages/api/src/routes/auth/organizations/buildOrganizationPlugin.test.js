@@ -15,6 +15,7 @@
 */
 
 import buildOrganizationPlugin from './buildOrganizationPlugin.js';
+import { expect, test } from 'vitest';
 
 const authConfig = {
   organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },

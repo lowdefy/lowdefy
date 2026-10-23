@@ -17,6 +17,7 @@
 import filterElementsChain from './filterElementsChain.js';
 import parseElementsChain from './parseElementsChain.js';
 import targetFromElementsChain from './targetFromElementsChain.js';
+import { expect, test } from 'vitest';
 
 function escape(value) {
   return String(value).replace(/"|\\"/g, '\\"');

@@ -16,7 +16,7 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import waitForChildExit from './waitForChildExit.mjs';
 
@@ -24,7 +24,7 @@ function createChild({ exitOn = [] } = {}) {
   const child = Object.assign(new EventEmitter(), {
     exitCode: null,
     signalCode: null,
-    kill: jest.fn((signal) => {
+    kill: vi.fn((signal) => {
       if (exitOn.includes(signal)) {
         setImmediate(() => {
           child.signalCode = signal;

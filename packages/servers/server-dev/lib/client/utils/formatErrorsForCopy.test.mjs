@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import formatErrorsForCopy from './formatErrorsForCopy.js';
+import { expect, test } from 'vitest';
 
 test('formatErrorsForCopy marks a prod-gated warning after the type prefix', () => {
   expect(

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { operatorsServer } from '@lowdefy/operators-js';
@@ -29,10 +29,10 @@ import runScheduledEndpoint from '../endpoints/runScheduledEndpoint.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 // What each endpoint below returns: the calling agent as the endpoint sees it.
@@ -52,7 +52,7 @@ const spoofPayload = {
   agent: { id: 'intruder_agent', conversationId: 'conv_intruder' },
 };
 
-const callInnerResolver = jest.fn(({ callApi }) => callApi({ endpointId: 'whoami' }));
+const callInnerResolver = vi.fn(({ callApi }) => callApi({ endpointId: 'whoami' }));
 callInnerResolver.schema = {};
 callInnerResolver.meta = { checkRead: false, checkWrite: false };
 
@@ -143,7 +143,7 @@ const agentConfig = {
 // Stands in for the agent plugin: runs one tool call, the endpoint and input the test sets, the
 // way buildAgentTools' execute calls resolverContext.callEndpoint.
 let toolCall = { endpointId: 'whoami', input: {} };
-const agentResolver = jest.fn(async ({ context: resolverContext }) => {
+const agentResolver = vi.fn(async ({ context: resolverContext }) => {
   const result = await resolverContext.callEndpoint(toolCall.endpointId, {
     payload: toolCall.input,
   });
@@ -173,7 +173,7 @@ function createContext({ user = { id: 'user_1', sub: 'user_1' } } = {}) {
       endpoints: [{ id: 'whoami', scope: 'mcp:read' }],
     },
   };
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (files[path]) return files[path];
     const match = path.match(/^api\/(.+)\.json$/);
     if (match && endpointConfigs[match[1]]) {
@@ -183,7 +183,7 @@ function createContext({ user = { id: 'user_1', sub: 'user_1' } } = {}) {
   });
   const context = testContext({
     connections: {
-      Anthropic: { create: jest.fn(() => ({ provider: 'mock-provider' })), requests: {} },
+      Anthropic: { create: vi.fn(() => ({ provider: 'mock-provider' })), requests: {} },
       TestConnection: { schema: {}, requests: { CallInner: callInnerResolver } },
     },
     logger,
@@ -259,7 +259,7 @@ const chatFiles = [
 ];
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('an endpoint called as an agent tool from a chat reads the agent and its conversation', async () => {
@@ -390,7 +390,7 @@ test('a scheduled endpoint reads no agent', async () => {
 
 test('a detached CallApi from a tool endpoint carries the agent to the detached run', async () => {
   process.env.CRON_SECRET = 'cron-secret';
-  const fetchMock = jest.fn(async () => ({ status: 200 }));
+  const fetchMock = vi.fn(async () => ({ status: 200 }));
   global.fetch = fetchMock;
   toolCall = { endpointId: 'detached_dispatch', input: {} };
   const context = createContext();

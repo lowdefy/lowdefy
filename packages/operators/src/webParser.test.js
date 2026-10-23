@@ -16,7 +16,7 @@
 
 /* eslint-disable max-classes-per-file */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import WebParser from './webParser.js';
 
 console.error = () => {};
@@ -73,14 +73,14 @@ const event = { event: true };
 const location = 'location';
 
 const operators = {
-  _test: jest.fn(() => 'test'),
-  _error: jest.fn(() => {
+  _test: vi.fn(() => 'test'),
+  _error: vi.fn(() => {
     throw new Error('Test error.');
   }),
-  _init: jest.fn(),
+  _init: vi.fn(),
 };
 
-operators._init.init = jest.fn();
+operators._init.init = vi.fn();
 
 test('parse input undefined', () => {
   const parser = new WebParser({ context, operators });
@@ -119,36 +119,36 @@ test('operator returns value with ~k present', () => {
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.output).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "actions": Array [
-            Object {
+    [
+      [
+        {
+          "actions": [
+            {
               "actions": true,
             },
           ],
-          "apiResponses": Object {},
-          "args": Array [
-            Object {
+          "apiResponses": {},
+          "args": [
+            {
               "args": true,
             },
           ],
-          "arrayIndices": Array [
+          "arrayIndices": [
             1,
           ],
           "basePath": "basePath",
           "error": undefined,
-          "event": Object {
+          "event": {
             "event": true,
           },
-          "eventLog": Array [
-            Object {
+          "eventLog": [
+            {
               "eventLog": true,
             },
           ],
-          "globals": Object {
-            "window": Object {
-              "location": Object {
+          "globals": {
+            "window": {
+              "location": {
                 "hash": "window.location.hash",
                 "host": "window.location.host",
                 "hostname": "window.location.hostname",
@@ -161,7 +161,7 @@ test('operator returns value with ~k present', () => {
               },
             },
           },
-          "home": Object {
+          "home": {
             "configured": false,
             "pageId": "home.pageId",
           },
@@ -169,26 +169,26 @@ test('operator returns value with ~k present', () => {
           "input": true,
           "jsMap": undefined,
           "location": "location.1",
-          "lowdefyApp": Object {
+          "lowdefyApp": {
             "app": true,
           },
-          "lowdefyGlobal": Object {
+          "lowdefyGlobal": {
             "global": true,
           },
-          "menus": Array [
-            Object {
+          "menus": [
+            {
               "menus": true,
             },
           ],
           "methodName": undefined,
           "operatorPrefix": "_",
-          "operators": Object {
+          "operators": {
             "_error": [MockFunction],
             "_init": [MockFunction],
             "_test": [MockFunction] {
               "calls": [Circular],
-              "results": Array [
-                Object {
+              "results": [
+                {
                   "type": "return",
                   "value": "test",
                 },
@@ -196,26 +196,26 @@ test('operator returns value with ~k present', () => {
             },
           },
           "pageId": undefined,
-          "params": Object {
+          "params": {
             "params": true,
           },
-          "parser": Object {
+          "parser": {
             "parse": [Function],
           },
-          "pathParams": Object {
+          "pathParams": {
             "ticket_id": "1234",
           },
-          "requests": Array [
-            Object {
+          "requests": [
+            {
               "requests": true,
             },
           ],
           "runtime": "browser",
-          "state": Object {
+          "state": {
             "state": true,
           },
           "theme": undefined,
-          "user": Object {
+          "user": {
             "user": true,
           },
           "websockets": undefined,
@@ -303,7 +303,7 @@ test('operator errors preserve existing configKey', () => {
   errorWithConfigKey.configKey = 'existing-key';
   const operatorsWithPreConfiguredError = {
     ...operators,
-    _errorWithKey: jest.fn(() => {
+    _errorWithKey: vi.fn(() => {
       throw errorWithConfigKey;
     }),
   };
@@ -322,10 +322,10 @@ test('operator errors preserve existing configKey', () => {
 
 test('operator parser re-enters parse with the calling frame', () => {
   const frameOperators = {
-    _nested: jest.fn(({ parser }) =>
+    _nested: vi.fn(({ parser }) =>
       parser.parse({ args: ['nestedArg'], input: { __frame: true }, operatorPrefix: '__' })
     ),
-    _frame: jest.fn(({ actions, args, arrayIndices, error, event, location }) => ({
+    _frame: vi.fn(({ actions, args, arrayIndices, error, event, location }) => ({
       actions,
       args,
       arrayIndices,

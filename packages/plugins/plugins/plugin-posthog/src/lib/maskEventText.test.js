@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { targetFromElementsChain } from '@lowdefy/helpers';
 
 import maskEventText from './maskEventText.js';
@@ -335,7 +335,7 @@ test('maskEventText strips every text and non-structural attribute and still ret
 });
 
 test('maskEventText does not call a throwing isConfigText again after it failed', () => {
-  const isConfigText = jest.fn(() => {
+  const isConfigText = vi.fn(() => {
     throw new Error('config text failed');
   });
   const trace = createFakeTrace({ isConfigText });

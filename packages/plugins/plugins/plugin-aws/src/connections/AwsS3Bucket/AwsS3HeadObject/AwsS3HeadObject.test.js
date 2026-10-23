@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockSend = jest.fn();
-const mockS3ClientConstructor = jest.fn();
-const mockHeadObjectCommand = jest.fn();
+const mockSend = vi.fn();
+const mockS3ClientConstructor = vi.fn();
+const mockHeadObjectCommand = vi.fn();
 
-jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
-  S3Client: jest.fn().mockImplementation((...args) => {
+vi.doMock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn().mockImplementation(function (...args) {
     mockS3ClientConstructor(...args);
     return { send: (...sendArgs) => mockSend(...sendArgs) };
   }),
-  HeadObjectCommand: jest.fn().mockImplementation((params) => {
+  HeadObjectCommand: vi.fn().mockImplementation(function (params) {
     mockHeadObjectCommand(params);
     return params;
   }),
@@ -57,12 +57,14 @@ beforeEach(() => {
   mockSend.mockReset();
   mockS3ClientConstructor.mockReset();
   mockHeadObjectCommand.mockReset();
-  mockSend.mockImplementation(() => ({
-    ContentLength: 2048,
-    ContentType: 'image/png',
-    ETag: '"etag"',
-    LastModified: lastModified,
-  }));
+  mockSend.mockImplementation(function () {
+    return {
+      ContentLength: 2048,
+      ContentType: 'image/png',
+      ETag: '"etag"',
+      LastModified: lastModified,
+    };
+  });
 });
 
 test('AwsS3HeadObject returns the metadata of an object that exists', async () => {
@@ -81,13 +83,15 @@ test('AwsS3HeadObject returns the metadata of an object that exists', async () =
 });
 
 test('AwsS3HeadObject passes versionId when provided and returns the version', async () => {
-  mockSend.mockImplementation(() => ({
-    ContentLength: 2048,
-    ContentType: 'image/png',
-    ETag: '"etag"',
-    LastModified: lastModified,
-    VersionId: 'versionId',
-  }));
+  mockSend.mockImplementation(function () {
+    return {
+      ContentLength: 2048,
+      ContentType: 'image/png',
+      ETag: '"etag"',
+      LastModified: lastModified,
+      VersionId: 'versionId',
+    };
+  });
   const request = { key: 'key', versionId: 'versionId' };
   const res = await AwsS3HeadObject({ request, connection });
   expect(mockHeadObjectCommand.mock.calls).toEqual([
@@ -106,11 +110,13 @@ test('AwsS3HeadObject passes versionId when provided and returns the version', a
 });
 
 test('AwsS3HeadObject omits contentType when the response has none', async () => {
-  mockSend.mockImplementation(() => ({
-    ContentLength: 1,
-    ETag: '"etag"',
-    LastModified: lastModified,
-  }));
+  mockSend.mockImplementation(function () {
+    return {
+      ContentLength: 1,
+      ETag: '"etag"',
+      LastModified: lastModified,
+    };
+  });
   const request = { key: 'key' };
   const res = await AwsS3HeadObject({ request, connection });
   expect(res).toEqual({
@@ -124,7 +130,7 @@ test('AwsS3HeadObject omits contentType when the response has none', async () =>
 });
 
 test('AwsS3HeadObject returns exists false when S3 answers not found', async () => {
-  mockSend.mockImplementation(() => {
+  mockSend.mockImplementation(function () {
     throw createS3Error({ name: 'NotFound', httpStatusCode: 404 });
   });
   const request = { key: 'missing' };
@@ -133,7 +139,7 @@ test('AwsS3HeadObject returns exists false when S3 answers not found', async () 
 });
 
 test('AwsS3HeadObject returns exists false when a provider names the 404 NoSuchKey', async () => {
-  mockSend.mockImplementation(() => {
+  mockSend.mockImplementation(function () {
     throw createS3Error({ name: 'NoSuchKey', httpStatusCode: 404 });
   });
   const request = { key: 'missing' };
@@ -142,7 +148,7 @@ test('AwsS3HeadObject returns exists false when a provider names the 404 NoSuchK
 });
 
 test('AwsS3HeadObject throws S3 errors other than not found', async () => {
-  mockSend.mockImplementation(() => {
+  mockSend.mockImplementation(function () {
     throw createS3Error({ name: 'Forbidden', httpStatusCode: 403 });
   });
   const request = { key: 'key' };
@@ -150,7 +156,7 @@ test('AwsS3HeadObject throws S3 errors other than not found', async () => {
 });
 
 test('AwsS3HeadObject throws errors that carry no S3 metadata', async () => {
-  mockSend.mockImplementation(() => {
+  mockSend.mockImplementation(function () {
     throw new Error('Test S3 client error.');
   });
   const request = { key: 'key' };

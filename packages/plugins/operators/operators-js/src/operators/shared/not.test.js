@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import _not from './not.js';
+import { expect, test } from 'vitest';
 
 const location = 'location';
 

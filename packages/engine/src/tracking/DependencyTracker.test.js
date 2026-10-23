@@ -15,6 +15,7 @@
 */
 
 import DependencyTracker from './DependencyTracker.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // These tests are about the tracker itself, so they hold when the suite runs with test:full.
 let trackerEnabled;

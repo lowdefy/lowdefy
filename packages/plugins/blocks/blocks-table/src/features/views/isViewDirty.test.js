@@ -17,6 +17,7 @@
 import assert from 'node:assert/strict';
 
 import isViewDirty from './isViewDirty.js';
+import { test } from 'vitest';
 
 const defaults = {
   sort: [],

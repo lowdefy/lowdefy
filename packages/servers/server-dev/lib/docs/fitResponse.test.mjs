@@ -19,6 +19,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import fitResponse, { MAX_INLINE_RESPONSE_CHARS, MAX_SAVED_RESPONSES } from './fitResponse.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let configDirectory;
 

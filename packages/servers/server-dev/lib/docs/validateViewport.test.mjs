@@ -15,6 +15,7 @@
 */
 
 import validateViewport from './validateViewport.js';
+import { expect, test } from 'vitest';
 
 test('validateViewport accepts no options and every valid option', () => {
   expect(validateViewport({})).toBeUndefined();

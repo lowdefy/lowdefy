@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import statFile from './statFile.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 let basePath;
 

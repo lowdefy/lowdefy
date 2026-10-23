@@ -20,6 +20,7 @@ import os from 'os';
 import path from 'path';
 
 import materialiseTree from './materialiseTree.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 function git(args, cwd) {
   return execFileSync(

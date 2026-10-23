@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { ReservedKeyError } from '@lowdefy/helpers';
 
 import getKey from './getKey.js';
+import { describe, expect, test } from 'vitest';
 
 describe('getKey', () => {
   test('returns input unchanged when refDef.key is absent', () => {

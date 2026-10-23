@@ -17,10 +17,10 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockInstallDevServer = jest.fn();
-jest.unstable_mockModule('../../../utils/installDevServer.js', () => ({
+const mockInstallDevServer = vi.fn();
+vi.doMock('../../../utils/installDevServer.js', () => ({
   default: mockInstallDevServer,
 }));
 
@@ -34,7 +34,7 @@ beforeEach(() => {
   context = {
     lowdefyVersion: '6.1.0',
     directories: { config: root, dev: path.join(root, '.lowdefy', 'dev') },
-    logger: { info: jest.fn() },
+    logger: { info: vi.fn() },
   };
 });
 afterEach(() => {

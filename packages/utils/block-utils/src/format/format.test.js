@@ -27,6 +27,7 @@ import seededTagColor from './seededTagColor.js';
 import tagStyle from './tagStyle.js';
 import TAG_TONES from './tagTones.js';
 import TONE_COLORS from './toneColors.js';
+import { expect, test } from 'vitest';
 
 test('hashSeed is stable and treats null and undefined as 0', () => {
   expect(hashSeed('Approved')).toBe(hashSeed('Approved'));

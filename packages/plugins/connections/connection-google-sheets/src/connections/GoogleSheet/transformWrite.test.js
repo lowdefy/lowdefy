@@ -15,6 +15,7 @@
 */
 
 import { transformWrite } from './transformTypes.js';
+import { expect, test } from 'vitest';
 
 test('transformWrite invalid input', () => {
   expect(() => transformWrite({ input: 1 })).toThrow(

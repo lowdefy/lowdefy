@@ -15,6 +15,7 @@
 */
 
 import traceIdDate from './traceIdDate.js';
+import { expect, test } from 'vitest';
 
 test('traceIdDate throws on an invalid id', () => {
   expect(() => traceIdDate('../x')).toThrow('Invalid trace id. Received "../x".');

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import runTest from './test/runTest.js';
 
@@ -350,7 +350,7 @@ test('handleError skipped when error.handled is already true', async () => {
   const { default: runRoutine } = await import('./runRoutine.js');
   // The real sink (servers' createHandleError) marks the error handled once it
   // has logged it; runRoutine's guard reads that flag rather than setting it.
-  const handleError = jest.fn(async (error) => {
+  const handleError = vi.fn(async (error) => {
     error.handled = true;
   });
   const context = { handleError };
@@ -365,7 +365,7 @@ test('handleError skipped when error.handled is already true', async () => {
 
 test('an invalid routine throws a LowdefyInternalError', async () => {
   const { default: runRoutine } = await import('./runRoutine.js');
-  const handleError = jest.fn();
+  const handleError = vi.fn();
   const res = await runRoutine({ handleError }, {}, { routine: null });
   expect(res.status).toBe('error');
   expect(res.error.name).toBe('LowdefyInternalError');
@@ -380,7 +380,7 @@ test.each([
   async (_, handled, warnings) => {
     const { default: runRoutine } = await import('./runRoutine.js');
     const { UserError } = await import('@lowdefy/errors');
-    const handleError = jest.fn();
+    const handleError = vi.fn();
     const error = new UserError('Nested payload refused.');
     error.handled = handled || undefined;
     const routine = {
@@ -389,7 +389,7 @@ test.each([
     };
     const context = {
       handleError,
-      logger: { debug: jest.fn(), warn: jest.fn() },
+      logger: { debug: vi.fn(), warn: vi.fn() },
       evaluateOperators: () => {
         throw error;
       },

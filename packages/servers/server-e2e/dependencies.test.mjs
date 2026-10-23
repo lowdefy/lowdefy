@@ -18,6 +18,7 @@ import fs from 'node:fs';
 import { builtinModules } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { expect, test } from 'vitest';
 
 // The CLI installs this server on its own, outside the monorepo, so a package
 // its files import resolves only when package.json declares it.

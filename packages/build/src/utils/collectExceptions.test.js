@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
 import collectExceptions from './collectExceptions.js';
 
 const mockLogger = {
-  error: jest.fn(),
+  error: vi.fn(),
 };
 
 beforeEach(() => {
@@ -68,15 +68,9 @@ test('collectExceptions collects multiple errors', () => {
     directories: { config: '/app' },
   };
 
-  collectExceptions(
-    context,
-    new ConfigError('First error', { configKey: 'abc123' })
-  );
+  collectExceptions(context, new ConfigError('First error', { configKey: 'abc123' }));
 
-  collectExceptions(
-    context,
-    new ConfigError('Second error', { configKey: 'def456' })
-  );
+  collectExceptions(context, new ConfigError('Second error', { configKey: 'def456' }));
 
   expect(context.errors).toHaveLength(2);
   expect(context.errors[0].message).toBe('First error');

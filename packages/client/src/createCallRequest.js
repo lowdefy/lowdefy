@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
+import NonJsonResponseError from './NonJsonResponseError.js';
 import request from './request.js';
 
+// A read-only request (the build marks one whose type only reads) is sent once
+// more when the host fails it before the app answers. A write is never sent
+// again: the host's failure can come after the app wrote.
 function createCallRequest(lowdefy) {
   const { basePath, buildId } = lowdefy;
-  function callRequest({ actionId, blockId, pageId, payload, requestId }) {
+  function send({ actionId, blockId, pageId, payload, requestId }) {
     return request({
       buildId,
       url: `${basePath}/api/request/${pageId}/${requestId}`,
@@ -27,6 +31,19 @@ function createCallRequest(lowdefy) {
       reloadOnAuthorizationError: true,
       lowdefy,
     });
+  }
+  async function callRequest({ actionId, blockId, pageId, payload, readOnly, requestId }) {
+    try {
+      return await send({ actionId, blockId, pageId, payload, requestId });
+    } catch (error) {
+      if (readOnly !== true || !(error instanceof NonJsonResponseError)) {
+        throw error;
+      }
+      lowdefy._internal.logger.warn(
+        `Request "${requestId}" on page "${pageId}" failed with status ${error.status} before the app answered. Sending it again. ${error.responseText}`
+      );
+      return send({ actionId, blockId, pageId, payload, requestId });
+    }
   }
   return callRequest;
 }

@@ -15,15 +15,15 @@
 */
 
 import { spawn } from 'child_process';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
 // A start time read is a PowerShell process on Windows, slow enough cold to outrun a test's
 // timeout. These tests are about the slots, so this process's start time is a fixed value.
-jest.unstable_mockModule('./getProcessStartTime.js', () => ({
-  default: jest.fn(() => 'Mon Jan  5 09:00:00 2026'),
+vi.doMock('./getProcessStartTime.js', () => ({
+  default: vi.fn(() => 'Mon Jan  5 09:00:00 2026'),
 }));
 
 const { default: acquireMachineSlot } = await import('./acquireMachineSlot.js');
@@ -113,7 +113,7 @@ test('acquireMachineSlot states a wait of whole minutes in minutes', async () =>
   await acquireMachineSlot({ name: 'browser', limit: 3 });
   // The clock jumps past the deadline after it is set.
   const start = Date.now();
-  const now = jest
+  const now = vi
     .spyOn(Date, 'now')
     .mockReturnValueOnce(start)
     .mockReturnValue(start + 6 * 60000);

@@ -15,19 +15,19 @@
 */
 
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  findPnpmWorkspaceRoot: jest.fn(),
-  readFile: jest.fn(),
-  spawnProcess: jest.fn(),
+vi.doMock('@lowdefy/node-utils', () => ({
+  findPnpmWorkspaceRoot: vi.fn(),
+  readFile: vi.fn(),
+  spawnProcess: vi.fn(),
 }));
 
 const workspaceRoot = path.resolve('/repo');
 const directory = path.join(workspaceRoot, 'apps', 'web', 'deploy');
 
 const context = {
-  logger: { debug: jest.fn(), info: jest.fn() },
+  logger: { debug: vi.fn(), info: vi.fn() },
   pnpmCmd: 'pnpm',
 };
 
@@ -38,7 +38,7 @@ async function setup({ dependencies, root = workspaceRoot }) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('installWorkspacePlugins installs the linked workspace plugins in the parent workspace', async () => {

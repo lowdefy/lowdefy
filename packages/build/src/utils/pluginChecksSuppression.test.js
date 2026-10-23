@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import collectExceptions from './collectExceptions.js';
@@ -73,7 +73,7 @@ test('collectExceptions skips a plugin rule error under its own slug only', () =
 
 test('tryBuildStep ignores a thrown plugin rule error under plugin-checks', () => {
   const { context } = createContext(['plugin-checks']);
-  const stepFn = jest.fn(() => {
+  const stepFn = vi.fn(() => {
     throw ruleError();
   });
   tryBuildStep(stepFn, 'testStep', { components: {}, context });

@@ -15,23 +15,23 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 
 import { isSameOriginRequest, parseRequestBody } from '@lowdefy/api';
 
-const mockCallEndpoint = jest.fn();
-const mockGetEndpointConfig = jest.fn().mockRejectedValue(new Error('not found'));
-const mockRunWebhookEndpoint = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  acceptDetachedEndpoint: jest.fn(),
-  callAgent: jest.fn(),
+const mockCallEndpoint = vi.fn();
+const mockGetEndpointConfig = vi.fn().mockRejectedValue(new Error('not found'));
+const mockRunWebhookEndpoint = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
+  acceptDetachedEndpoint: vi.fn(),
+  callAgent: vi.fn(),
   callEndpoint: mockCallEndpoint,
-  callRequest: jest.fn(),
+  callRequest: vi.fn(),
   getEndpointConfig: mockGetEndpointConfig,
-  logClientError: jest.fn(),
+  logClientError: vi.fn(),
   isSameOriginRequest,
   parseRequestBody,
-  redactErrorResponse: jest.fn(),
+  redactErrorResponse: vi.fn(),
   runWebhookEndpoint: mockRunWebhookEndpoint,
 }));
 
@@ -45,12 +45,12 @@ const routes = {
   '/api/usage': (await import('./usage.js')).default,
 };
 
-const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 function createApp() {
   const app = new Hono();
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { logger, handleError: jest.fn() });
+    c.set('lowdefyContext', { logger, handleError: vi.fn() });
     await next();
   });
   Object.entries(routes).forEach(([path, handler]) => app.all(path, handler));

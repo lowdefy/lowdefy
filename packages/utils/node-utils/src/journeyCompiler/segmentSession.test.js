@@ -16,6 +16,7 @@
 
 import segmentSession from './segmentSession.js';
 import traceRecord from './traceRecord.js';
+import { expect, test } from 'vitest';
 
 function pageview({ at, url, ...rest }) {
   return traceRecord({ at, kind: 'pageview', url, ...rest });

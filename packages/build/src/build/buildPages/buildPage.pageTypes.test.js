@@ -16,6 +16,7 @@
 
 import buildPages from '../full/buildPages.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 test('buildPages records the client types each page uses, including subscriptions', () => {
   const context = testContext({ logger: { warn: () => {}, log: () => {} } });

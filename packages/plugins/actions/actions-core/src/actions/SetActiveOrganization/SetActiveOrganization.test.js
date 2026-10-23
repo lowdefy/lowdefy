@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import SetActiveOrganization from './SetActiveOrganization.js';
 
-const mockSetActiveOrganization = jest.fn();
+const mockSetActiveOrganization = vi.fn();
 const methods = { setActiveOrganization: mockSetActiveOrganization };
 
 test('SetActiveOrganization passes params to the setActiveOrganization method', async () => {

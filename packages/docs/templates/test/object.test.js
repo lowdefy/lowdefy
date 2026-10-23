@@ -17,6 +17,7 @@
 import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
 import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
 import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
+import { expect, test } from 'vitest';
 
 const schema = {
   properties: {
@@ -43,16 +44,16 @@ const schema = {
 
 test('object propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
+    [
+      {
+        "blocks": [
+          {
             "id": "block.properties.field.num",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "label": Object {
+            "properties": {
+              "label": {
                 "align": "right",
                 "extra": "num description",
                 "span": 8,
@@ -64,13 +65,13 @@ test('object propertiesFormTransformer', () => {
             "required": false,
             "type": "NumberInput",
           },
-          Object {
+          {
             "id": "block.properties.field.str",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "label": Object {
+            "properties": {
+              "label": {
                 "align": "right",
                 "extra": "str description",
                 "span": 8,
@@ -83,11 +84,11 @@ test('object propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.field",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -101,22 +102,22 @@ test('object propertiesFormTransformer', () => {
 
 test('object propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
-        Object {
-          "field": Object {
-            "_object.assign": Array [
-              Object {
-                "_state": Object {
+        {
+          "field": {
+            "_object.assign": [
+              {
+                "_state": {
                   "contextId": "Block:Block:{}",
-                  "default": Object {},
+                  "default": {},
                   "key": "block.properties.field",
                 },
               },
@@ -130,8 +131,8 @@ test('object propertiesGetterTransformer', () => {
 
 test('object defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
-    Object {
-      "field": Object {
+    {
+      "field": {
         "num": null,
         "str": null,
       },
@@ -163,8 +164,8 @@ test('object defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
-      "field": Object {
+    {
+      "field": {
         "num": 1,
         "str": null,
       },
@@ -215,16 +216,16 @@ const schemaNested = {
 
 test('object schemaNested propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaNested)).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "blocks": Array [
-          Object {
+    [
+      {
+        "blocks": [
+          {
             "id": "block.properties.field.bool",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "label": Object {
+            "properties": {
+              "label": {
                 "align": "right",
                 "extra": "bool description",
                 "span": 8,
@@ -235,13 +236,13 @@ test('object schemaNested propertiesFormTransformer', () => {
             "required": false,
             "type": "Switch",
           },
-          Object {
+          {
             "id": "block.properties.field.num",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "label": Object {
+            "properties": {
+              "label": {
                 "align": "right",
                 "extra": "num description",
                 "span": 8,
@@ -253,15 +254,15 @@ test('object schemaNested propertiesFormTransformer', () => {
             "required": false,
             "type": "NumberInput",
           },
-          Object {
-            "blocks": Array [
-              Object {
+          {
+            "blocks": [
+              {
                 "id": "block.properties.field.obj.str",
-                "layout": Object {
+                "layout": {
                   "_global": "settings_input_layout",
                 },
-                "properties": Object {
-                  "label": Object {
+                "properties": {
+                  "label": {
                     "align": "right",
                     "extra": "obj.str description",
                     "span": 8,
@@ -274,11 +275,11 @@ test('object schemaNested propertiesFormTransformer', () => {
               },
             ],
             "id": "block.properties.field.obj",
-            "layout": Object {
+            "layout": {
               "gap": 0,
             },
-            "properties": Object {
-              "bodyStyle": Object {
+            "properties": {
+              "bodyStyle": {
                 "padding": 0,
               },
               "size": "small",
@@ -286,13 +287,13 @@ test('object schemaNested propertiesFormTransformer', () => {
             },
             "type": "Card",
           },
-          Object {
+          {
             "id": "block.properties.field.str",
-            "layout": Object {
+            "layout": {
               "_global": "settings_input_layout",
             },
-            "properties": Object {
-              "label": Object {
+            "properties": {
+              "label": {
                 "align": "right",
                 "extra": "str description",
                 "span": 8,
@@ -305,11 +306,11 @@ test('object schemaNested propertiesFormTransformer', () => {
           },
         ],
         "id": "block.properties.field",
-        "layout": Object {
+        "layout": {
           "gap": 0,
         },
-        "properties": Object {
-          "bodyStyle": Object {
+        "properties": {
+          "bodyStyle": {
             "padding": 0,
           },
           "size": "small",
@@ -323,32 +324,32 @@ test('object schemaNested propertiesFormTransformer', () => {
 
 test('object schemaNested propertiesGetterTransformer', () => {
   expect(propertiesGetterTransformer(schemaNested, { block_type: 'Block' })).toMatchInlineSnapshot(`
-    Object {
-      "_object.assign": Array [
-        Object {
-          "_state": Object {
+    {
+      "_object.assign": [
+        {
+          "_state": {
             "contextId": "Block:Block:{}",
-            "default": Object {},
+            "default": {},
             "key": "block.properties",
           },
         },
-        Object {
-          "field": Object {
-            "_object.assign": Array [
-              Object {
-                "_state": Object {
+        {
+          "field": {
+            "_object.assign": [
+              {
+                "_state": {
                   "contextId": "Block:Block:{}",
-                  "default": Object {},
+                  "default": {},
                   "key": "block.properties.field",
                 },
               },
-              Object {
-                "obj": Object {
-                  "_object.assign": Array [
-                    Object {
-                      "_state": Object {
+              {
+                "obj": {
+                  "_object.assign": [
+                    {
+                      "_state": {
                         "contextId": "Block:Block:{}",
-                        "default": Object {},
+                        "default": {},
                         "key": "block.properties.field.obj",
                       },
                     },
@@ -365,11 +366,11 @@ test('object schemaNested propertiesGetterTransformer', () => {
 
 test('object schemaNested defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`
-    Object {
-      "field": Object {
+    {
+      "field": {
         "bool": true,
         "num": 1,
-        "obj": Object {
+        "obj": {
           "str": null,
         },
         "str": null,
@@ -420,11 +421,11 @@ test('object schemaNested defaultValueTransformer', () => {
     },
   };
   expect(defaultValueTransformer(schemaDVNested)).toMatchInlineSnapshot(`
-    Object {
-      "field": Object {
+    {
+      "field": {
         "bool": true,
         "num": 1,
-        "obj": Object {
+        "obj": {
           "str": "a",
         },
         "str": null,

@@ -14,38 +14,38 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 const calls = [];
-const info = jest.fn();
+const info = vi.fn();
 const guards = { env: { BETTER_AUTH_URL: '^https://app\\.example\\.com$' } };
 
-const checkEnvironmentGuards = jest.fn(() => {
+const checkEnvironmentGuards = vi.fn(() => {
   calls.push('checkEnvironmentGuards');
 });
-const captureException = jest.fn();
-const flush = jest.fn(async () => true);
+const captureException = vi.fn();
+const flush = vi.fn(async () => true);
 const sentry = { captureException, flush };
-const initSentryServer = jest.fn(async () => {
+const initSentryServer = vi.fn(async () => {
   calls.push('initSentryServer');
   return null;
 });
-const createApp = jest.fn();
+const createApp = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/node-utils/checkEnvironmentGuards.js', () => ({
+vi.doMock('@lowdefy/node-utils/checkEnvironmentGuards.js', () => ({
   default: checkEnvironmentGuards,
 }));
-jest.unstable_mockModule('../lib/server/sentry/initSentry.js', () => ({
+vi.doMock('../lib/server/sentry/initSentry.js', () => ({
   default: initSentryServer,
 }));
-jest.unstable_mockModule('./app.js', () => {
+vi.doMock('./app.js', () => {
   calls.push('import app');
   return { default: createApp };
 });
-jest.unstable_mockModule('../lib/server/log/createLogger.js', () => ({
+vi.doMock('../lib/server/log/createLogger.js', () => ({
   default: () => ({ info }),
 }));
-jest.unstable_mockModule('../lib/build/config.js', () => ({
+vi.doMock('../lib/build/config.js', () => ({
   default: { environment: 'prod', environments: { prod: { guards } } },
 }));
 

@@ -22,6 +22,7 @@ import getEditorKind from './getEditorKind.js';
 import toDateValue from './toDateValue.js';
 import toEditorDraft from './toEditorDraft.js';
 import valuesEqual from './valuesEqual.js';
+import { describe, expect, test } from 'vitest';
 
 function spec(type) {
   return { type, kind: getEditorKind(type) };

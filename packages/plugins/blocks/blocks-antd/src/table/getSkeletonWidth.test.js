@@ -15,6 +15,7 @@
 */
 
 import getSkeletonWidth from './getSkeletonWidth.js';
+import { expect, test } from 'vitest';
 
 test('getSkeletonWidth is stable for the same row and column', () => {
   expect(getSkeletonWidth({ rowIndex: 3, columnKey: 'name' })).toBe(

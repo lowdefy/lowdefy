@@ -16,6 +16,7 @@
 
 import { ObjectId } from 'mongodb';
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
+import { expect, test } from 'vitest';
 
 const field = 'organization_id';
 const position = 'a query';

@@ -16,6 +16,7 @@
 
 import buildAuth from './buildAuth.js';
 import testContext from '../../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 const validSecret = { _secret: 'BETTER_AUTH_SECRET' };
 const validDatabase = { id: 'auth_db', type: 'MongoDBAuthAdapter', properties: {} };

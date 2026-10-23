@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // An action step's text or containing target must name exactly one visible
 // element; an expectation accepts any match. Run by the real runner over the

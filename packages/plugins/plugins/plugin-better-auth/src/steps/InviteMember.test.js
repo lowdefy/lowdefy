@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import InviteMember from './InviteMember.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -25,7 +25,7 @@ const acting = { system: true, user: null };
 const organizationId = 'org-1';
 
 test('InviteMember passes properties including profile and contactId through as body to createInvitation', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   const result = await InviteMember({
     acting,
@@ -53,7 +53,7 @@ test('InviteMember passes properties including profile and contactId through as 
 });
 
 test('InviteMember sends role "member" when orgRole is omitted', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -74,7 +74,7 @@ test('InviteMember sends role "member" when orgRole is omitted', async () => {
 });
 
 test('InviteMember sends the authored orgRole as the invitation role', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -86,7 +86,7 @@ test('InviteMember sends the authored orgRole as the invitation role', async () 
 });
 
 test('InviteMember forwards appRoles in the createInvitation body', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -101,7 +101,7 @@ test('InviteMember forwards appRoles in the createInvitation body', async () => 
 });
 
 test('InviteMember carries appRoles as undefined in the body when omitted', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -137,7 +137,7 @@ test('InviteMember throws when orgRole is not a string', async () => {
 });
 
 test('InviteMember scopes the invitation to the organizationId passed by the floor', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -156,7 +156,7 @@ test('InviteMember throws when email property is missing', async () => {
 });
 
 test('InviteMember forwards attributes in the createInvitation body', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -171,7 +171,7 @@ test('InviteMember forwards attributes in the createInvitation body', async () =
 });
 
 test('InviteMember carries attributes as undefined in the body when omitted', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -198,7 +198,7 @@ test('InviteMember throws when attributes is not a plain object', async () => {
 });
 
 test('InviteMember carries profile as undefined in the body when omitted', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -225,7 +225,7 @@ test('InviteMember throws when profile is not a plain object', async () => {
 });
 
 test('InviteMember forwards contactId in the createInvitation body', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
@@ -237,7 +237,7 @@ test('InviteMember forwards contactId in the createInvitation body', async () =>
 });
 
 test('InviteMember carries contactId as undefined in the body when omitted', async () => {
-  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const createInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   await InviteMember({
     acting,
