@@ -1740,14 +1740,33 @@ test('login with callbackUrl false syncs the session and renders the server-reso
   expect(lowdefy.user).toEqual(resolved);
 });
 
-test('login with callbackUrl false fails when the server admits no caller for the new session', async () => {
+test('login with callbackUrl false reloads the page in place when the server admits no caller for the new session', async () => {
   const { auth, lowdefy } = setup({ signInResult: { token: 't', user: {} } });
   auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: null }));
+  const reload = vi.fn();
+  lowdefy._internal.globals.window.location.reload = reload;
   const { login } = createAuthMethods(lowdefy, auth);
-  await expect(
-    login({ email: 'user@example.com', password: 'password123', callbackUrl: false })
-  ).rejects.toThrow('UpdateSession failed: a session is active but the server resolved no user.');
+  const data = await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: false,
+  });
+  expect(data).toEqual({ token: 't', user: {} });
   expect(auth.updateResolvedUser).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalled();
+  expect(reload).toHaveBeenCalledTimes(1);
+});
+
+test('login with callbackUrl false reloads the page in place when fetching the resolved user fails', async () => {
+  const { auth, lowdefy } = setup({ signInResult: { token: 't', user: {} } });
+  auth.getResolvedUser = vi.fn(() =>
+    Promise.reject(new Error('Failed to fetch the resolved user (HTTP 502).'))
+  );
+  const reload = vi.fn();
+  lowdefy._internal.globals.window.location.reload = reload;
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: false });
+  expect(reload).toHaveBeenCalledTimes(1);
 });
 
 test('login with a destination navigates and leaves the caller to the reloaded page', async () => {

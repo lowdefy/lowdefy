@@ -78,6 +78,26 @@ const sessionScoped = (params) => ({
   fetchOptions: { ...params?.fetchOptions, disableSignal: true },
 });
 
+// Resolves once no refetch is writing the session atom. The atom writes only
+// its latest refetch's answer, and a sign-in fires its own refetch through the
+// session signal 10 ms after the call. A refetch started before that one has
+// its answer dropped, and the atom still holds the session from before the
+// sign-in until the later refetch lands.
+async function sessionAtomSettled(sessionAtom) {
+  if (!sessionAtom.get().isRefetching) {
+    return;
+  }
+  await new Promise((resolve) => {
+    const unlisten = sessionAtom.listen((value) => {
+      if (value.isRefetching) {
+        return;
+      }
+      unlisten();
+      resolve();
+    });
+  });
+}
+
 // The server-resolved caller - roles from the active member row and the
 // merged attributes bag - as { user }.
 async function fetchResolvedUser() {
@@ -116,9 +136,10 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
   const askedSessionIdRef = useRef(null);
 
   // A session with no server-resolved caller renders as no caller
-  // (sessionCaller). Most often it is one a client-side sign-in just created
-  // with no navigation to follow, so /api/user is asked once per session for
-  // the caller the server resolves it to. A null answer - a session the server
+  // (sessionCaller). It is a sign-in in another tab, a session the server
+  // refused when it served this page, or a sign-in on this page whose Login has
+  // not set the caller yet (settleSignIn), so /api/user is asked once per
+  // session for the caller the server resolves it to. A null answer - a session the server
   // refuses - leaves the page rendering no caller, matching every response.
   // An answer is dropped once the session changed or UpdateSession set a
   // caller in the meantime. A failed ask is left: the page renders no caller,
@@ -192,6 +213,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
       await sessionAtom
         .get()
         .refetch(disableCookieCache ? { query: { disableCookieCache: true } } : undefined);
+      await sessionAtomSettled(sessionAtom);
       const { data, error } = sessionAtom.get();
       return { data, error };
     },
