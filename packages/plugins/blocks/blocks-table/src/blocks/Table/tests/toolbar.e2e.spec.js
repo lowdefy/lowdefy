@@ -142,6 +142,45 @@ test.describe('Table toolbar', () => {
     );
   });
 
+  test('a quick filter over eight options or fewer has no search', async ({ page }) => {
+    await toolbar(page, 'tb').locator('[data-lf-quick-filter="team"]').click();
+    const panel = page.locator('[data-lf-quick-filter-options="team"]');
+    await expect(panel.getByLabel('Red')).toBeVisible();
+    await expect(panel.getByLabel('Search options')).toHaveCount(0);
+  });
+
+  test('a quick filter over more than eight options searches them', async ({ page }) => {
+    await toolbar(page, 'tb_long_options').locator('[data-lf-quick-filter="city"]').click();
+    const panel = page.locator('[data-lf-quick-filter-options="city"]');
+    const search = panel.getByLabel('Search options');
+    await expect(search).toBeFocused();
+    await panel.getByLabel('Berlin').check();
+    await expect(bodyRow(page, 'tb_long_options', '2')).toBeVisible();
+    await expect(bodyRow(page, 'tb_long_options', '1')).toHaveCount(0);
+
+    await search.fill('LIS');
+    await expect(panel.getByLabel('Lisbon')).toBeVisible();
+    await expect(panel.getByLabel('Berlin')).toBeChecked();
+    await expect(panel.getByLabel('Austin')).toHaveCount(0);
+    await expect(panel.getByLabel('Oslo')).toHaveCount(0);
+
+    await search.fill('zzz');
+    await expect(panel.getByLabel('Berlin')).toBeVisible();
+    await expect(panel).not.toContainText('No matches');
+    await search.fill('');
+    await panel.getByLabel('Berlin').uncheck();
+    await expect(bodyRow(page, 'tb_long_options', '1')).toBeVisible();
+    await search.fill('zzz');
+    await expect(panel.getByLabel('Berlin')).toHaveCount(0);
+    await expect(panel).toContainText('No matches');
+
+    await search.press('Escape');
+    await expect(search).toHaveValue('');
+    await expect(panel.getByLabel('Paris')).toBeVisible();
+    await search.press('Escape');
+    await expect(panel).toBeHidden();
+  });
+
   test('a quick filter on a column without options opens its column filter', async ({ page }) => {
     await toolbar(page, 'tb').locator('[data-lf-quick-filter="city"]').click();
     await expect(page.locator('[data-lf-column-filter][data-col-key="city"]')).toBeVisible();

@@ -985,7 +985,7 @@ export default {
             type: 'array',
             items: { type: 'string' },
             description:
-              'Column keys to show as quick filter chips. Columns with `options` get a checkbox list (an `in` condition); others open the column filter.',
+              'Column keys to show as quick filter chips. Columns with `options` get a checkbox list (an `in` condition), with a search box over its labels when it has more than 8 options; others open the column filter.',
           },
           filter: toolbarItem('A Filter button that edits the whole `view.filter`.'),
           sort: toolbarItem('A Sort button to add, remove, reorder and flip sort levels.'),

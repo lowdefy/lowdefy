@@ -165,3 +165,27 @@ blocks:
             type: Paragraph
             properties:
               content: No people match this view right now.
+  # ============================================
+  # A QUICK FILTER OVER A LONG OPTION LIST
+  # ============================================
+
+  - id: tb_long_options
+    type: Table
+    properties:
+      toolbar:
+        quickFilters: [city]
+      columns:
+        - key: name
+        - key: city
+          options:
+            - Austin
+            - Berlin
+            - Cape Town
+            - Durban
+            - Lagos
+            - Lisbon
+            - Nairobi
+            - Oslo
+            - Paris
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml

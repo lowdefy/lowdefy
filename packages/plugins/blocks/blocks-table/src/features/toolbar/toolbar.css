@@ -70,12 +70,24 @@
     border-radius: 8px;
   }
 
+  .lf-table-quick-filter-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 200px;
+  }
+
   .lf-table-quick-filter-options {
     display: flex;
     flex-direction: column;
     gap: 4px;
     max-height: 320px;
     overflow: auto;
+  }
+
+  .lf-table-quick-filter-empty {
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    font-size: var(--ant-font-size-sm, 12px);
   }
 
   .lf-table-record-count {
