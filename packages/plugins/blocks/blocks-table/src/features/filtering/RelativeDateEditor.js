@@ -24,6 +24,12 @@ const DIRECTIONS = [
   { value: 'next', label: 'Next' },
 ];
 
+// For `before` and `after` the direction follows the amount: "before 3 months ago".
+const BOUND_DIRECTIONS = [
+  { value: 'last', label: 'ago' },
+  { value: 'next', label: 'from now' },
+];
+
 const UNITS = [
   { value: 'day', label: 'days' },
   { value: 'week', label: 'weeks' },
@@ -31,21 +37,25 @@ const UNITS = [
   { value: 'year', label: 'years' },
 ];
 
-// `within` values: `{ last: n, unit }` or `{ next: n, unit }`, resolved against today where the
-// filter runs, so a saved "last 30 days" view keeps meaning the last 30 days.
-function RelativeDateEditor({ value, onChange, size }) {
+// Relative date values: `{ last: n, unit }` or `{ next: n, unit }`, resolved against today where
+// the filter runs, so a saved "last 30 days" view keeps meaning the last 30 days. `within` reads
+// "Last 3 months"; `before` and `after` (`bound`) read "3 months ago".
+function RelativeDateEditor({ value, onChange, size, bound = false }) {
   const current = value ?? defaultRelativeDate;
   const direction = typeof current.next === 'number' ? 'next' : 'last';
   const amount = current[direction];
+  const directionSelect = (
+    <Select
+      aria-label="Direction"
+      onChange={(next) => onChange({ [next]: amount, unit: current.unit })}
+      options={bound ? BOUND_DIRECTIONS : DIRECTIONS}
+      popupMatchSelectWidth={false}
+      value={direction}
+    />
+  );
   return (
     <Space.Compact className="lf-filter-relative" data-lf-relative-date="" size={size}>
-      <Select
-        aria-label="Direction"
-        onChange={(next) => onChange({ [next]: amount, unit: current.unit })}
-        options={DIRECTIONS}
-        popupMatchSelectWidth={false}
-        value={direction}
-      />
+      {bound ? null : directionSelect}
       <InputNumber
         aria-label="Amount"
         min={1}
@@ -63,6 +73,7 @@ function RelativeDateEditor({ value, onChange, size }) {
         popupMatchSelectWidth={false}
         value={current.unit}
       />
+      {bound ? directionSelect : null}
     </Space.Compact>
   );
 }

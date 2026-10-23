@@ -27,7 +27,7 @@ function buildNumber({ key, min, max }) {
 }
 
 function buildDate({ key, state }) {
-  if (state.mode === 'relative') return { key, op: 'within', value: state.relative };
+  if (state.mode === 'relative') return { key, op: state.op ?? 'within', value: state.relative };
   if (isEmptyValue(state.from) && isEmptyValue(state.to)) return null;
   // An open end stays null: `between` treats a missing bound as unbounded.
   return { key, op: 'between', value: [state.from ?? null, state.to ?? null] };

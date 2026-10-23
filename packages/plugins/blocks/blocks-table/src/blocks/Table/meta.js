@@ -693,7 +693,7 @@ export default {
           filter: {
             type: ['object', 'null'],
             description:
-              'Filter condition: `{ and: [...] }` / `{ or: [...] }` groups of `{ key, op, value }` leaves. Operators depend on the column type; `{ $user: path }` values read the `user` property.',
+              'Filter condition: `{ and: [...] }` / `{ or: [...] }` groups of `{ key, op, value }` leaves. Operators depend on the column type; `{ $user: path }` values read the `user` property. Date `within` takes a relative date `{ last | next: n, unit: day | week | month | year }`, and `before` and `after` take a date or a relative date, so `{ op: before, value: { last: 3, unit: month } }` keeps meaning "before 3 months ago".',
           },
           search: {
             type: ['string', 'null'],
