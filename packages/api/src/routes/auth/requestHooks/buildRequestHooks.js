@@ -21,6 +21,7 @@ import createAcceptExistingMemberHook from '../organizations/createAcceptExistin
 import createEmailSendGate from '../organizations/createEmailSendGate.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
+import createSignInRefusedRedirectHook from './createSignInRefusedRedirectHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
 import redirectToChallenge from './redirectToChallenge.js';
@@ -109,6 +110,18 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
       id: 'oauthPostLogin',
       matches: (path) => path === '/oauth2/continue',
       handler: createOauthPostLoginHook(),
+    });
+  }
+
+  // A sign-in refused at session creation (banned, or no membership) answers
+  // the browser with a redirect to the error page rather than raw JSON.
+  // Registered ahead of the magic-link two-factor challenge, which has no
+  // session to act on when the refusal fires.
+  if (authConfig.magicLink?.enabled === true) {
+    after.push({
+      id: 'magicLinkSignInRefused',
+      matches: (path) => path === '/magic-link/verify',
+      handler: createSignInRefusedRedirectHook(),
     });
   }
 
