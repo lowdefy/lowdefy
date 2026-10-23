@@ -81,6 +81,19 @@ test('normalizeEnrichment validates providers', () => {
   ).toThrow('Table provider "a" "inputs" must be a list of objects with a "key" string.');
 });
 
+test('normalizeEnrichment takes rawEndpoint as an endpoint id, or null when unset', () => {
+  expect(normalizeEnrichment({ properties: {}, columns }).rawEndpoint).toBeNull();
+  expect(
+    normalizeEnrichment({ properties: { rawEndpoint: 'leads_cell_raw' }, columns }).rawEndpoint
+  ).toBe('leads_cell_raw');
+  expect(() => normalizeEnrichment({ properties: { rawEndpoint: 42 }, columns })).toThrow(
+    'Table "rawEndpoint" must be the id of an API endpoint. Received 42.'
+  );
+  expect(() => normalizeEnrichment({ properties: { rawEndpoint: '' }, columns })).toThrow(
+    'Table "rawEndpoint" must be the id of an API endpoint.'
+  );
+});
+
 test('getRunSelection is the selection value when rows are selected', () => {
   const api = { getValue: () => ({ selected: [1, 2], view: { filter: null, search: null } }) };
   expect(getRunSelection({ api })).toEqual([1, 2]);

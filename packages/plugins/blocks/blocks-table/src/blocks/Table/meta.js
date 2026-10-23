@@ -326,10 +326,16 @@ export default {
     toolbarEnd: 'Blocks at the end of the toolbar, side by side like `toolbarStart`.',
     bulkActions:
       'Blocks in the bulk action bar, shown while rows are selected, side by side at the end of the bar like `toolbarStart`.',
-    empty: 'Blocks shown instead of the empty state when there are no rows.',
+    empty:
+      'Blocks shown instead of the empty state when there are no rows and no filter or search.',
+    emptyFiltered:
+      'Blocks shown instead of "No matching rows" and Clear filters when a filter or search hides every row, for example "No deals match this view right now." with an Edit filter button, so the view keeps its filter.',
   },
-  // Server mode fetches through an internal event running the Request action.
-  actions: ['Request'],
+  // Server mode fetches through an internal event running the Request action, or CallAPI for
+  // `data.endpoint`. The cell details panel loads a cell's raw result from `rawEndpoint` with
+  // CallAPI. Both payloads read the event with _event.
+  actions: ['Request', 'CallAPI'],
+  operators: ['_event'],
   cssKeys: {
     element: 'The table root element.',
     header: 'The header row group.',
@@ -413,7 +419,7 @@ export default {
     },
     onViewSave: {
       description:
-        'Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view). The app stores views; update `views` (and `activeView`) with the result.',
+        'Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view), unless the block has `onViewSaveAs` actions. The app stores views; update `views` (and `activeView`) with the result.',
       event: {
         view: 'The current view.',
         id: 'The id of the view to overwrite. Missing for Save as.',
@@ -421,8 +427,24 @@ export default {
         shared: 'Whether the view is shared.',
       },
     },
+    onViewSaveAs: {
+      description:
+        'Trigger when the user clicks Save as, in place of the built-in title and Shared popover, when the block has actions on it. Open your own dialog (for example a modal asking for a name and description), store the view, then update `views` and `activeView` as after `onViewSave`.',
+      event: {
+        view: 'The current view.',
+      },
+    },
+    onViewMenu: {
+      description:
+        'Trigger when the user picks a `viewMenu` item on a saved view tab, after its confirmation when the item has `confirm`.',
+      event: {
+        key: 'The item key.',
+        id: 'The id of the view the menu belongs to.',
+      },
+    },
     onViewDelete: {
-      description: 'Trigger when the user deletes a saved view from its tab menu.',
+      description:
+        'Trigger when the user deletes a saved view from its tab menu (the default menu, without `viewMenu`).',
       event: {
         id: 'The id of the view to delete.',
       },
@@ -588,6 +610,8 @@ export default {
     openImport: 'Open the CSV import dialog (`importCsv: true`).',
     openColumnManager:
       'Open the column manager: show, hide, reorder and pin columns, or reset them to the default view.',
+    openFilter:
+      "Open the filter builder, anchored to the toolbar's Filter button as when it is clicked, for an Edit filter button elsewhere on the page. Accepts `{ key }` to add an empty condition on that column (a filterable column key) and focus it. Needs `toolbar.filter`; without it the method logs a warning and does nothing.",
   },
   properties: {
     type: 'object',
@@ -616,10 +640,10 @@ export default {
       data: {
         type: ['array', 'object', 'null'],
         description:
-          'The rows, or `{ mode: server, request, blockSize }` to load rows from a request in blocks as the table scrolls. In server mode the table fires the request with the event `{ startRow, endRow, view: { sort, filter, search, group, aggregates }, groupPath, selected }` (read it in the request `payload` with `_event`) and expects `{ rows, total, groups?, aggregates? }`, the contract of `MongoDBTableQuery`. Sorting, filtering and grouping then run on the server. Rows need a `rowKey`.',
+          "The rows, or `{ mode: server, request, blockSize }` to load rows from a request in blocks as the table scrolls. In server mode the table fires the request with the event `{ startRow, endRow, view: { sort, filter, search, group, aggregates }, groupPath, selected }` (read it in the request `payload` with `_event`) and expects `{ rows, total, groups?, aggregates? }`, the contract of `MongoDBTableQuery`. Sorting, filtering and grouping then run on the server. Rows need a `rowKey`. In place of `request`, `endpoint` names an API endpoint: the table calls it with the event as its payload, and its routine returns the same `{ rows, total }`. `payload` adds the page's own fields to every fetch event.",
         items: { type: 'object' },
         additionalProperties: false,
-        required: ['mode', 'request'],
+        required: ['mode'],
         properties: {
           mode: {
             type: 'string',
@@ -628,7 +652,19 @@ export default {
           },
           request: {
             type: 'string',
-            description: 'Id of the request on the page that returns `{ rows, total }`.',
+            description:
+              'Id of the request on the page that returns `{ rows, total }`. Give this or `endpoint`.',
+          },
+          endpoint: {
+            type: 'string',
+            description:
+              "Id of an API endpoint whose routine returns `{ rows, total }`, called with the fetch event as its payload. Give this or `request`; use it for rows a page request may not read, behind the endpoint's own checks.",
+          },
+          payload: {
+            type: 'object',
+            description:
+              "Fields added to every fetch event, beside `startRow`, `view` and the rest, for a filter the page keeps outside the table's view (a region picked above the table). The table's own fields win on a clash. A change starts the rows again from the top.",
+            docs: { displayType: 'yaml' },
           },
           blockSize: {
             type: 'integer',
@@ -952,7 +988,7 @@ export default {
             type: 'array',
             items: { type: 'string' },
             description:
-              'Column keys to show as quick filter chips. Columns with `options` get a checkbox list (an `in` condition); others open the column filter.',
+              'Column keys to show as quick filter chips. Columns with `options` get a checkbox list (an `in` condition), with a search box over its labels when it has more than 8 options; others open the column filter.',
           },
           filter: toolbarItem('A Filter button that edits the whole `view.filter`.'),
           sort: toolbarItem('A Sort button to add, remove, reorder and flip sort levels.'),
@@ -982,9 +1018,30 @@ export default {
             shared: { type: 'boolean', description: 'Whether the view is shared.' },
             locked: {
               type: 'boolean',
-              description: 'Hide Save and Delete, so the view is only changed on purpose.',
+              description:
+                'Hide Save and disable the default Delete view, so the view is only changed on purpose. `viewMenu` items stay enabled.',
             },
             count: { type: 'number', description: 'A count shown on the tab (queue tabs).' },
+          },
+        },
+      },
+      viewMenu: {
+        type: 'array',
+        description:
+          "The items of the active view tab's menu, in place of Delete view: for example Rename, Duplicate and Archive. Clicking one fires `onViewMenu` with its `key` and the view `id`. Without it the menu has Delete view, firing `onViewDelete` (disabled on a `locked` view).",
+        items: {
+          type: 'object',
+          required: ['key'],
+          additionalProperties: false,
+          properties: {
+            key: { type: 'string', description: 'The item key `onViewMenu` receives.' },
+            label: { type: 'string', description: 'The item text. Defaults to the key.' },
+            danger: { type: 'boolean', description: 'Show the item in the danger colour.' },
+            confirm: {
+              type: ['boolean', 'string'],
+              description:
+                'Ask before firing: `true` asks "Are you sure?", a string asks that message.',
+            },
           },
         },
       },
@@ -1090,6 +1147,11 @@ export default {
         type: 'string',
         description:
           'Where user-defined input columns added in the picker or by a CSV import keep their values: under this path, then the column key (with `values`, a `notes` column stores at `values.notes`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, at the key.',
+      },
+      rawEndpoint: {
+        type: 'string',
+        description:
+          "The id of an API endpoint the details panel calls for a finished enrichment or ai cell's raw result when the row's `_enrich.<key>` carries none, so rows can leave the raw answers out. Its payload is `{ rowKey, key }` (the row's key and the column key); it returns `{ raw }`.",
       },
       importCsv: {
         type: 'boolean',

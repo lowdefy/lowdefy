@@ -84,6 +84,16 @@ test.describe('Table toolbar', () => {
     await expect(getBlock(page, 'tb_empty').locator('.ant-empty')).toHaveCount(0);
   });
 
+  test('the emptyFiltered slot replaces No matching rows when a filter hides every row', async ({
+    page,
+  }) => {
+    const empty = getBlock(page, 'tb_empty_filtered').locator('[data-lf-empty]');
+    await expect(empty).toHaveAttribute('data-lf-empty', 'filtered');
+    await expect(empty).toContainText('No people match this view right now.');
+    await expect(empty).not.toContainText('No people yet.');
+    await expect(empty.locator('[data-lf-clear-filters]')).toHaveCount(0);
+  });
+
   test('the record count shows the rows the view matches', async ({ page }) => {
     await expect(toolbar(page, 'tb').locator('[data-lf-record-count]')).toHaveText('5 rows');
   });
@@ -132,6 +142,45 @@ test.describe('Table toolbar', () => {
     );
   });
 
+  test('a quick filter over eight options or fewer has no search', async ({ page }) => {
+    await toolbar(page, 'tb').locator('[data-lf-quick-filter="team"]').click();
+    const panel = page.locator('[data-lf-quick-filter-options="team"]');
+    await expect(panel.getByLabel('Red')).toBeVisible();
+    await expect(panel.getByLabel('Search options')).toHaveCount(0);
+  });
+
+  test('a quick filter over more than eight options searches them', async ({ page }) => {
+    await toolbar(page, 'tb_long_options').locator('[data-lf-quick-filter="city"]').click();
+    const panel = page.locator('[data-lf-quick-filter-options="city"]');
+    const search = panel.getByLabel('Search options');
+    await expect(search).toBeFocused();
+    await panel.getByLabel('Berlin').check();
+    await expect(bodyRow(page, 'tb_long_options', '2')).toBeVisible();
+    await expect(bodyRow(page, 'tb_long_options', '1')).toHaveCount(0);
+
+    await search.fill('LIS');
+    await expect(panel.getByLabel('Lisbon')).toBeVisible();
+    await expect(panel.getByLabel('Berlin')).toBeChecked();
+    await expect(panel.getByLabel('Austin')).toHaveCount(0);
+    await expect(panel.getByLabel('Oslo')).toHaveCount(0);
+
+    await search.fill('zzz');
+    await expect(panel.getByLabel('Berlin')).toBeVisible();
+    await expect(panel).not.toContainText('No matches');
+    await search.fill('');
+    await panel.getByLabel('Berlin').uncheck();
+    await expect(bodyRow(page, 'tb_long_options', '1')).toBeVisible();
+    await search.fill('zzz');
+    await expect(panel.getByLabel('Berlin')).toHaveCount(0);
+    await expect(panel).toContainText('No matches');
+
+    await search.press('Escape');
+    await expect(search).toHaveValue('');
+    await expect(panel.getByLabel('Paris')).toBeVisible();
+    await search.press('Escape');
+    await expect(panel).toBeHidden();
+  });
+
   test('a quick filter on a column without options opens its column filter', async ({ page }) => {
     await toolbar(page, 'tb').locator('[data-lf-quick-filter="city"]').click();
     await expect(page.locator('[data-lf-column-filter][data-col-key="city"]')).toBeVisible();
@@ -141,6 +190,20 @@ test.describe('Table toolbar', () => {
     await expect(button(page, 'tb', 'filter').locator('xpath=..')).toContainText('1');
     await button(page, 'tb', 'filter').click();
     await expect(page.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]')).toBeVisible();
+  });
+
+  test('the openFilter method opens the filter builder', async ({ page }) => {
+    await page.locator('#tb_open_filter').click();
+    await expect(page.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]')).toBeVisible();
+  });
+
+  test('openFilter with a key adds an empty condition on that column', async ({ page }) => {
+    await page.locator('#tb_open_filter_city').click();
+    const builder = page.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]');
+    await expect(builder).toBeVisible();
+    const leaf = builder.locator('[data-lf-filter-leaf]').last();
+    await expect(leaf).toHaveAttribute('data-col-key', 'city');
+    await expect(leaf).toContainText('City');
   });
 
   // ============================================
@@ -203,5 +266,21 @@ test.describe('Table toolbar', () => {
     const download = page.waitForEvent('download');
     await button(page, 'tb', 'export').click();
     expect((await download).suggestedFilename()).toBe('tb.csv');
+  });
+});
+
+test.describe('Table toolbar on a phone', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('below 768px the Filter button opens the builder as a full-height sheet', async ({
+    page,
+  }) => {
+    await openTablePage(page, 'toolbar');
+    await button(page, 'tb', 'filter').click();
+    const sheet = page.locator('.lf-table-filter-sheet');
+    await expect(sheet.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]')).toBeVisible();
+    await expect(sheet.locator('[data-lf-record-count]')).toHaveText('5 rows');
+    const box = await sheet.boundingBox();
+    expect(box.height).toBeGreaterThan(800);
   });
 });

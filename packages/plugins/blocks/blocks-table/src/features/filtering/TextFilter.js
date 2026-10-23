@@ -16,9 +16,9 @@
 
 import React from 'react';
 import { Select } from 'antd';
+import { getOperatorLabel } from '@lowdefy/helpers';
 
 import DraftInput from './DraftInput.js';
-import getOperatorLabel from './getOperatorLabel.js';
 import textFilterOperators from './textFilterOperators.js';
 
 function TextFilter({ state, onChange }) {

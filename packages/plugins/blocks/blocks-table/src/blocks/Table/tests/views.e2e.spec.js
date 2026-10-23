@@ -109,6 +109,18 @@ test.describe('Table saved views', () => {
     await expect(events(page)).not.toContainText('"id"');
   });
 
+  test('with onViewSaveAs actions, Save as fires onViewSaveAs with the view and no popover', async ({
+    page,
+  }) => {
+    const table = getBlock(page, 'vw_save_as');
+    await density(page, 'vw_save_as', 'Comfortable').click();
+    await table.locator('[data-lf-view-actions] [data-lf-view-action="save-as"]').click();
+    await expect(getBlock(page, 'vw_save_as_events')).toContainText('save_as={"view":{');
+    await expect(getBlock(page, 'vw_save_as_events')).toContainText('"density":"comfortable"');
+    await expect(getBlock(page, 'vw_save_as_events')).toContainText('save=none');
+    await expect(page.locator('[data-lf-save-view]')).toHaveCount(0);
+  });
+
   test('a locked view hides Save but keeps Save as', async ({ page }) => {
     await tab(page, 'fixed').click();
     await expect(value(page)).toContainText('density=compact');
@@ -122,6 +134,28 @@ test.describe('Table saved views', () => {
     await tab(page, 'all').locator('[data-lf-view-menu]').click();
     await page.locator('.ant-dropdown-menu-item', { hasText: 'Delete view' }).click();
     await expect(events(page)).toContainText('delete={"id":"all"}');
+  });
+
+  test('viewMenu items replace Delete view and fire onViewMenu, after a confirm when asked', async ({
+    page,
+  }) => {
+    const menuTab = getBlock(page, 'vw_menu').locator('[data-lf-view-tab="all"]');
+    const menuEvents = getBlock(page, 'vw_menu_events');
+    await menuTab.locator('[data-lf-view-menu]').click();
+    const items = page.locator('.ant-dropdown:visible .ant-dropdown-menu-item');
+    await expect(items).toHaveText(['Rename', 'Archive']);
+    await items.filter({ hasText: 'Rename' }).click();
+    await expect(menuEvents).toHaveText('menu={"key":"rename","id":"all"}');
+
+    await menuTab.locator('[data-lf-view-menu]').click();
+    await items.filter({ hasText: 'Archive' }).click();
+    await expect(page.locator('[data-lf-view-menu-confirm-message]')).toHaveText(
+      'Archive this view?'
+    );
+    // Nothing fires until the dialog is confirmed.
+    await expect(menuEvents).toHaveText('menu={"key":"rename","id":"all"}');
+    await page.locator('[data-lf-view-menu-confirm]').click();
+    await expect(menuEvents).toHaveText('menu={"key":"archive","id":"all"}');
   });
 
   test('changing activeView selects and loads that view', async ({ page }) => {
@@ -202,5 +236,23 @@ test.describe('Table view persistence', () => {
     await getBlock(page, 'persist_url').locator('[data-lf-header][data-col-key="age"]').click();
     await expect(getBlock(page, 'persist_url_value')).toHaveText('sort=[]');
     await expect(page).not.toHaveURL(/[?&]pv=/);
+  });
+});
+
+test.describe('Table saved views on a phone', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('below 768px the tabs are one select, and picking a view loads it', async ({ page }) => {
+    await openTablePage(page, 'views');
+    const select = getBlock(page, 'vw').locator('[data-lf-view-select]');
+    await expect(select).toBeVisible();
+    await expect(getBlock(page, 'vw').locator('.ant-tabs')).toHaveCount(0);
+    await expect(select).toContainText('All');
+    await select.locator('.ant-select').click();
+    await page.locator('.ant-select-item-option', { hasText: 'Oldest' }).click();
+    await expect(select).toContainText('Oldest');
+    await expect(value(page)).toHaveText(
+      'sort=[{"key":"age","desc":true}] density=default cause=view'
+    );
   });
 });

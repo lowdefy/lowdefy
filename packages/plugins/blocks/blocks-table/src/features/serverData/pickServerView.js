@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import pruneCondition from '../filtering/pruneCondition.js';
 import resolveAggregates from '../grouping/resolveAggregates.js';
 
 const EMPTY_VIEW = { sort: [], filter: null, search: null, group: [], aggregates: {} };
@@ -23,11 +24,13 @@ const EMPTY_VIEW = { sort: [], filter: null, search: null, group: [], aggregates
 // The parts of the view the server request reads (D9). The rest (columns, density, ...) never
 // changes what the server returns, so it never refetches. `aggregates` is the aggregates in
 // effect (the view's over each column's `aggregate` default, without the ones turned off), the
-// ones the group rows and summary show.
+// ones the group rows and summary show. The filter goes without the conditions still being built
+// (a new condition with no value yet), as the browser filters rows, so adding one never sends
+// the server a leaf it refuses.
 function pickServerView({ view, columns }) {
   return {
     sort: type.isArray(view.sort) ? view.sort : EMPTY_VIEW.sort,
-    filter: view.filter ?? EMPTY_VIEW.filter,
+    filter: pruneCondition(view.filter ?? EMPTY_VIEW.filter),
     search: type.isString(view.search) && view.search !== '' ? view.search : EMPTY_VIEW.search,
     group: type.isArray(view.group) ? view.group : EMPTY_VIEW.group,
     aggregates: Object.fromEntries(

@@ -17,6 +17,7 @@
 import dayjs from 'dayjs';
 
 import createRowTest from './createRowTest.js';
+import { expect, test } from 'vitest';
 
 const columnsByKey = {
   d: { key: 'd', field: 'd', type: 'date' },
