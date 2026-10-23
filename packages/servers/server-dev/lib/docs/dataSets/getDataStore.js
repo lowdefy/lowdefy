@@ -40,12 +40,18 @@ async function announceDownload() {
   }
 }
 
+// WiredTiger's cache otherwise grows to half of (RAM - 1 GB), several GB on a laptop. Data sets
+// are small capped snapshots, so a quarter of a GB holds them.
+const CACHE_SIZE_GB = '0.25';
+
 // A replica set, not a standalone server: transactions and change streams need one, and the app's
 // own cluster is one. MONGOMS_VERSION, read by mongodb-memory-server, pins the MongoDB version.
 async function startDataStore() {
   await announceDownload();
   const replSet = await MongoMemoryReplSet.create({
-    instanceOpts: [{ port: await pickDataStorePort() }],
+    instanceOpts: [
+      { port: await pickDataStorePort(), args: ['--wiredTigerCacheSizeGB', CACHE_SIZE_GB] },
+    ],
     replSet: { count: 1, storageEngine: 'wiredTiger' },
   });
   const uri = replSet.getUri();

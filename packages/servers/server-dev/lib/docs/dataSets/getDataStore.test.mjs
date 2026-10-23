@@ -98,7 +98,7 @@ test('getDataStore starts one replica set and returns the same store on every ca
   expect(first.uri).toEqual('mongodb://127.0.0.1:50001/?replicaSet=x');
   expect(create).toHaveBeenCalledTimes(1);
   expect(create).toHaveBeenCalledWith({
-    instanceOpts: [{ port: expect.any(Number) }],
+    instanceOpts: [{ port: expect.any(Number), args: ['--wiredTigerCacheSizeGB', '0.25'] }],
     replSet: { count: 1, storageEngine: 'wiredTiger' },
   });
 });

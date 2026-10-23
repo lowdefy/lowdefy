@@ -39,6 +39,10 @@ vi.doMock('../../utils/ensurePnpmWorkspaceYaml.js', () => ({
 }));
 vi.doMock('../../utils/installServer.js', () => ({ default: mockInstallServer }));
 
+const mockStopSampler = vi.fn();
+const mockSampleServerResources = vi.fn();
+vi.doMock('./sampleServerResources.js', () => ({ default: mockSampleServerResources }));
+
 const CHILD_PID = 4242;
 const isWindows = process.platform === 'win32';
 const realProcessKill = process.kill;
@@ -90,6 +94,9 @@ beforeEach(() => {
   });
   mockFindAvailablePort.mockResolvedValue(3228);
   mockSpawnProcess.mockReturnValue(child);
+  mockStopSampler.mockReset();
+  mockStopSampler.mockResolvedValue(null);
+  mockSampleServerResources.mockReturnValue({ stop: mockStopSampler });
 });
 
 afterEach(() => {
@@ -186,4 +193,41 @@ test('startDevServer throws when the server process exits before it is ready', a
   await expect(startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 1000 })).rejects.toThrow(
     'Development server exited with code 1 before it was ready.'
   );
+});
+
+test('startDevServer samples the server from its spawn and ends stop() with the resource line', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockReadDevInstance.mockReturnValue({ state: 'ready', url: 'http://localhost:3228' });
+  mockStopSampler.mockImplementation(async () => {
+    // The last sample is taken before the server is signalled.
+    expect(child.signalCode).toBeNull();
+    return { peakBytes: 0.71 * 1024 ** 3, cpuSeconds: 94.4 };
+  });
+  const server = await startDevServer({ context, pollIntervalMs: 1 });
+  expect(mockSampleServerResources).toHaveBeenCalledWith({ pid: CHILD_PID });
+  await server.stop();
+  expect(mockStopSampler).toHaveBeenCalledTimes(1);
+  expectStoppedOnce();
+  expect(context.logger.info).toHaveBeenLastCalledWith(
+    'Resources (approximate): server peak 0.71 GB, CPU 94 s, including data store and browsers.'
+  );
+});
+
+test('startDevServer logs no resource line when nothing was measured', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockReadDevInstance.mockReturnValue({ state: 'ready', url: 'http://localhost:3228' });
+  const server = await startDevServer({ context, pollIntervalMs: 1 });
+  await server.stop();
+  expect(context.logger.info.mock.calls.flat().some((line) => line.startsWith('Resources'))).toBe(
+    false
+  );
+});
+
+test('startDevServer stops the sampler when the server never becomes ready', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockReadDevInstance.mockReturnValue(null);
+  await expect(startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 20 })).rejects.toThrow(
+    'Development server was not ready within 20ms.'
+  );
+  expect(mockStopSampler).toHaveBeenCalledTimes(1);
 });
