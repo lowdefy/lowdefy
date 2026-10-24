@@ -159,11 +159,12 @@ const PROFILES = {
       // an endpoint runs without opening the app.
       ['expo-notifications', { enableBackgroundRemoteNotifications: true }],
       // Library mode only: the system photo picker needs no permission, and field adds the camera.
-      // Its microphone text is speech's: `false` would remove the key speech needs.
+      // Its photo library and microphone texts are expo-image's and speech's: `false` would remove
+      // the keys App Store Connect (ITMS-90683) and speech need.
       [
         'expo-image-picker',
         {
-          photosPermission: false,
+          photosPermission: PHOTO_LIBRARY_PERMISSION,
           cameraPermission: false,
           microphonePermission: MICROPHONE_PERMISSION,
         },
@@ -239,7 +240,7 @@ const PROFILES = {
       [
         'expo-image-picker',
         {
-          photosPermission: false,
+          photosPermission: PHOTO_LIBRARY_PERMISSION,
           cameraPermission: CAMERA_PERMISSION,
           microphonePermission: FIELD_MICROPHONE_PERMISSION,
         },
