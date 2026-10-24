@@ -1,5 +1,18 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- Updated dependencies [c6d665a]
+- Updated dependencies [3df29f3]
+  - @lowdefy/blocks-antd@7.1.0
+  - @lowdefy/blocks-files@7.1.0
+  - @lowdefy/block-utils@7.1.0
+  - @lowdefy/errors@7.1.0
+  - @lowdefy/helpers@7.1.0
+  - @lowdefy/node-utils@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

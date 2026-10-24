@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/layout",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,14 +41,14 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "7.0.0",
-    "@lowdefy/helpers": "7.0.0",
+    "@lowdefy/block-utils": "7.1.0",
+    "@lowdefy/helpers": "7.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@lowdefy/block-dev": "7.0.0",
-    "@lowdefy/vite-yaml-plugin": "7.0.0",
+    "@lowdefy/block-dev": "7.1.0",
+    "@lowdefy/vite-yaml-plugin": "7.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "@testing-library/dom": "8.19.1",

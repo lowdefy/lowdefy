@@ -1,5 +1,11 @@
 # @lowdefy/blocks-captcha
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/block-utils@7.1.0
+
 ## 7.0.0
 
 ### Patch Changes
