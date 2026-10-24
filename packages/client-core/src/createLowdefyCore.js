@@ -77,6 +77,9 @@ function createLowdefyCore({ apiBase, auth, basePath, host, lowdefy, rootConfig,
     // and the dev server records the first page config's before this runs.
     callerStamp: lowdefy._internal?.callerStamp ?? null,
     components: {},
+    // Caps for the engine's event and call histories. Unset in production; the dev client
+    // entry sets it before this runs, so it outlives a dev config reload like callerStamp.
+    historyLimits: lowdefy._internal?.historyLimits,
     displayMessage: ({ content }) => {
       console.log(content);
       return () => undefined;

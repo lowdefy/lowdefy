@@ -61,7 +61,11 @@ function createBuildActivity({ onChange }) {
     return { settled: true, sawBuild, waitedMs: Date.now() - start };
   }
 
-  return { setBusy, track, waitForIdle };
+  function isBusy() {
+    return active > 0;
+  }
+
+  return { isBusy, setBusy, track, waitForIdle };
 }
 
 export default createBuildActivity;

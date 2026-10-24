@@ -717,3 +717,15 @@ test('callRequest stores a decoded server error without its dev error, which get
   expect(Object.getOwnPropertyNames(storedError)).not.toContain('devError');
   expect(getDevError(storedError).message).toBe('connect ECONNREFUSED');
 });
+
+test('callRequest keeps only historyLimits.calls responses per request id', async () => {
+  const context = await testContext({
+    lowdefy: { ...lowdefy, _internal: { ...lowdefy._internal, historyLimits: { calls: 2 } } },
+    pageConfig: getPageConfig(),
+  });
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  for (let i = 0; i < 4; i += 1) {
+    await context._internal.Requests.callRequest({ requestId: 'req_one', blockId });
+  }
+  expect(context.requests.req_one).toHaveLength(2);
+});

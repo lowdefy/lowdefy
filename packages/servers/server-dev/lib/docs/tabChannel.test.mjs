@@ -298,3 +298,16 @@ test('requestFromTab finds no tab when only an automated tab is on the page', as
       'No browser tab connected on page "tickets". Ask the developer to open the page, or use source: "headless".',
   });
 });
+
+test('updateTabPage keeps the 10 most recent instances per page, as the engine does', () => {
+  connectTab({ id: 'tab-cap', pageId: 'home' });
+  for (let i = 0; i < 12; i += 1) {
+    updateTabPage({ id: 'tab-cap', ...ticket({ ticketId: String(i) }) });
+  }
+  expect(findPageInstance({ pageId: 'ticket', pathParams: { space: 's', ticket_id: '0' } })).toBe(
+    undefined
+  );
+  expect(
+    findPageInstance({ pageId: 'ticket', pathParams: { space: 's', ticket_id: '11' } })
+  ).toBeDefined();
+});

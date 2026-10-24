@@ -23,6 +23,7 @@ import getLowdefyVersion from './utils/getLowdefyVersion.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import createBuildActivity from './utils/createBuildActivity.mjs';
 import createLanPairing from './utils/createLanPairing.mjs';
+import createIdleChild from './processes/createIdleChild.mjs';
 import createIdleGc from './utils/createIdleGc.mjs';
 import createRequestActivity from './utils/createRequestActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
@@ -99,9 +100,10 @@ if (instance.acquired === false) {
 process.on('exit', () => instance.release());
 startRecordingPruner({ configDirectory: context.directories.config, logger: context.logger });
 
-// Requests through the proxy and finished builds are use of the server; the
-// hub stops a server nobody has used for its idle limit (see
-// createRequestActivity).
+// Requests through the proxy, finished builds and open tabs are use of the
+// server; the manager stops its Vite child after a few minutes unused
+// (createIdleChild), and the hub stops a server nobody has used for its idle
+// limit (see createRequestActivity).
 context.requestActivity = createRequestActivity({
   onChange: (fields) => instance.update(fields),
 });
@@ -190,6 +192,9 @@ try {
   // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
   // on ECONNREFUSED.
   context.lan = createLanPairing({ lan: context.options.lan });
+  // Stops the Vite child after a few minutes unused and starts it on the next
+  // request that is use; the proxy asks it whether the child is stopped.
+  context.idleChild = createIdleChild(context, { idleMs: context.options.childIdleMs });
   await startProxy(context);
   context.mailSink = await startMailSink(context);
 
@@ -197,6 +202,14 @@ try {
   if (!(await startFirstServer(context))) {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
   }
+  // The initial build runs outside buildActivity, so no idle GC followed it:
+  // without this the manager holds that build's heap (about 130 MB of
+  // footprint) for 20 s or more after ready, until V8 shrinks it on its own.
+  // A batch busy now gets its own GC when it ends.
+  if (!context.buildActivity.isBusy()) {
+    idleGc.onBuildingChange(false);
+  }
+  context.idleChild.start();
   const docsUrl = `${context.url}/lowdefy-docs`;
   context.logger.info(
     { color: 'blue' },

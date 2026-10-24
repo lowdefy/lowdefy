@@ -28,10 +28,10 @@ import recordingCookiePayload from '../server/recording/recordingCookiePayload.j
 
 // Module-level singleton, shared by every headless caller (screenshots,
 // journeys, state inspection, operator evaluation, state loads) and closed
-// after 90 s unused. See createBrowserLifecycle.js.
+// after 45 s unused. See createBrowserLifecycle.js.
 const { getBrowser, trackContext } = createBrowserLifecycle({
   launch: launchBrowser,
-  idleTimeout: 90_000,
+  idleTimeout: 45_000,
 });
 
 // `origin` should already include any configured basePath prefix that the

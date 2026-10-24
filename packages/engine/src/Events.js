@@ -20,6 +20,15 @@ import claimDomEvent from './claimDomEvent.js';
 import createTracePayload from './trace/createTracePayload.js';
 import getTrace from './trace/getTrace.js';
 
+// Dev only: lowdefy._internal.historyLimits is unset in production, so nothing is trimmed.
+function trimHistory({ lowdefy, lists }) {
+  const limit = lowdefy._internal?.historyLimits?.events;
+  if (!limit) return;
+  lists.forEach((list) => {
+    if (list.length > limit) list.length = limit;
+  });
+}
+
 class Events {
   constructor({ arrayIndices, block, context }) {
     this.defaultDebounceMs = 300;
@@ -122,6 +131,10 @@ class Events {
       });
       eventDescription.history.unshift(res);
       this.context.eventLog.unshift(res);
+      trimHistory({
+        lowdefy: this.context._internal.lowdefy,
+        lists: [eventDescription.history, this.context.eventLog],
+      });
       // Only completed events reach here: bounced events, handledBy returns and events with
       // no actions never emit, so subscribers need not filter them. An app with no analytics
       // and no dev recorder has no subscribers, so it builds no payload for a successful event;
@@ -154,6 +167,10 @@ class Events {
       result.bounced = true;
       eventDescription.history.unshift(result);
       this.context.eventLog.unshift(result);
+      trimHistory({
+        lowdefy: this.context._internal.lowdefy,
+        lists: [eventDescription.history, this.context.eventLog],
+      });
       this.context._internal.DependencyTracker.reportChange('eventLog');
       return result;
     }
@@ -181,6 +198,10 @@ class Events {
         result.bounced = true;
         eventDescription.history.unshift(result);
         this.context.eventLog.unshift(result);
+        trimHistory({
+          lowdefy: this.context._internal.lowdefy,
+          lists: [eventDescription.history, this.context.eventLog],
+        });
         this.context._internal.DependencyTracker.reportChange('eventLog');
         resolve(result);
       };

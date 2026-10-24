@@ -126,6 +126,7 @@ server-dev/
 │   │   ├── optimizeDependencies.mjs  # `vite optimize` in a short-lived process
 │   │   ├── restartServer.mjs # Restart and wait until the new child answers
 │   │   ├── syncServer.mjs    # After a build: install new plugins, restart when needed
+│   │   ├── createIdleChild.mjs  # Stops the unused Vite child, starts it on the next use
 │   │   ├── startProxy.mjs    # Public port; holds requests across restarts and build-status waits
 │   │   ├── shutdownServer.mjs
 │   │   ├── readDotEnv.mjs
@@ -681,6 +682,32 @@ forwarding them to whichever child is current. The result travels in the
 `x-lowdefy-build-wait` header (`readProxyBuildWait`), so the child reports it and does not
 wait again. A request that reaches the child without the header (a direct call to the internal
 port) still waits on `building` itself.
+
+### Idle Child Stop
+
+**File:** `manager/processes/createIdleChild.mjs`
+
+The Vite child holds most of an idle server's memory (360 to 720 MB measured in LDF-799). The
+manager stops it after 3 minutes with no request in flight, no build, no open tab and nothing
+counted as activity (`LOWDEFY_SERVER_DEV_CHILD_IDLE_MS` sets the limit, for tests). It keeps its
+port, watchers and build state. The stop goes through `shutdownServer`; stop and wake run in
+`syncServer`'s queue (`syncServer.run`), so neither interleaves with a restart or an install.
+
+- **Open tabs.** The proxy counts open `GET <basePath>/api/reload` streams, headless journey tabs
+  included, from response start to close (`requestActivity.trackTab`). A tab closing counts as
+  use, so the 3 minutes start then.
+- **Waking.** Only a request for which `isActivity` is true wakes the child and is held as for a
+  restart. Passive reads, event-stream GETs and websocket upgrades get `503` at once with
+  `Retry-After: 5`, `x-lowdefy-child: stopped` and `{ "message": "Lowdefy dev server is idle." }`.
+- **Builds.** While stopped, `syncServer` marks a restart pending instead of restarting; the
+  install path still installs, rebuilds and optimises. The wake runs `restartServer`, which
+  records the server artifacts.
+- **Record.** `state` stays `ready` (the hub treats any other state as busy, and waits on
+  `ready`). `child` is `stopped` or `running`, and `openTabs` is the tab count. The hub reads
+  `openTabs` instead of polling `/api/dev-inspect`, and `lowdefy_dev_status` reports `idle`.
+
+A wake costs a child start and a JIT build of each page as it is first requested, and loses the
+child's error stores, `servedBuilds` and MCP sessions, as any restart does.
 
 ### syncServer
 

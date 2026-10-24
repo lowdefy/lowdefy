@@ -223,6 +223,17 @@ test('initLowdefyContext builds the context on the browser host', () => {
   expect(result._internal.components.handleError).toBe(result._internal.handleError);
 });
 
+test('initLowdefyContext leaves historyLimits undefined and keeps one set before it runs', () => {
+  const args = baseArgs();
+  initLowdefyContext(args);
+  expect(args.lowdefy._internal.historyLimits).toBeUndefined();
+
+  const dev = baseArgs();
+  dev.lowdefy._internal = { historyLimits: { events: 200, calls: 20 } };
+  initLowdefyContext(dev);
+  expect(dev.lowdefy._internal.historyLimits).toEqual({ events: 200, calls: 20 });
+});
+
 test('initLowdefyContext watches the page unload once across renders', () => {
   const args = baseArgs();
   initLowdefyContext(args);
