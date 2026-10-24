@@ -19,11 +19,19 @@ import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { type } from '@lowdefy/helpers';
 
+// The last segment of a name from page data, so "../" cannot write outside the cache.
+function toFileName(name) {
+  const base = String(name ?? '')
+    .split(/[\\/]/)
+    .pop();
+  return base === '' || base === '.' || base === '..' ? 'shared-file' : base;
+}
+
 // The file to share: a file on the phone as it is, an https file downloaded to the cache first, or
 // base64 content written to the cache under its name.
 async function toLocalFile({ base64, name, uri }) {
   if (type.isString(base64)) {
-    const file = new File(Paths.cache, name);
+    const file = new File(Paths.cache, toFileName(name));
     if (file.exists) file.delete();
     file.create();
     file.write(base64, { encoding: 'base64' });
