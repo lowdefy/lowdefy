@@ -121,14 +121,20 @@ test.describe('Table collapsible column groups', () => {
   test('collapsing an outer group hides an inner group shown only while it is open', async ({
     page,
   }) => {
+    // The header takes a group row per level of the groups displayed: the hidden inner group
+    // leaves no empty row while the outer group is collapsed.
+    const groupRows = getBlock(page, 'cg_nested').locator('.lf-table-header .lf-table-group-row');
     await expect.poll(() => headerKeys(page, 'cg_nested')).toEqual(['name', 'sum']);
+    await expect(groupRows).toHaveCount(1);
     await toggle(page, 'cg_nested', 'all').click();
     await expect
       .poll(() => headerKeys(page, 'cg_nested'))
       .toEqual(['name', 'detail_total', 'detail_a']);
+    await expect(groupRows).toHaveCount(2);
     await toggle(page, 'cg_nested', 'detail').click();
     await expect.poll(() => headerKeys(page, 'cg_nested')).toEqual(['name', 'detail_total']);
     await toggle(page, 'cg_nested', 'all').click();
     await expect.poll(() => headerKeys(page, 'cg_nested')).toEqual(['name', 'sum']);
+    await expect(groupRows).toHaveCount(1);
   });
 });
