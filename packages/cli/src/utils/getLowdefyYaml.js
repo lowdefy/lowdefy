@@ -17,7 +17,7 @@
 import path from 'path';
 import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
-import { readFile } from '@lowdefy/node-utils';
+import { collectPluginDefinitions, readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 
 async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
@@ -52,10 +52,20 @@ async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
     });
   }
   // TODO: Validate plugins
+  // The server installs root plugins and every shell plugin, once each, so the
+  // build can read their types (collectPluginDefinitions).
+  // The experimental opt-ins, when config is written in lowdefy.yaml itself. A config behind a
+  // _ref is read only by the build, so they are unknown (null) here.
+  const config = lowdefy.config ?? {};
+  const experimental =
+    type.isObject(config) && type.isUndefined(config._ref)
+      ? get(config, 'experimental', { default: {} })
+      : null;
   return {
+    experimental,
     lowdefyVersion: lowdefy.lowdefy,
     cliConfig: get(lowdefy, 'cli', { default: {} }),
-    plugins: get(lowdefy, 'plugins', { default: [] }),
+    plugins: collectPluginDefinitions({ lowdefy }).plugins,
   };
 }
 

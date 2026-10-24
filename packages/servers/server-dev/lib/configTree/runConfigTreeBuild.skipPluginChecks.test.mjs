@@ -29,7 +29,7 @@ vi.doMock('./prepareScratchServer.mjs', () => ({
   default: vi.fn().mockResolvedValue(),
 }));
 vi.doMock('../../manager/utils/createCustomPluginTypesMap.mjs', () => ({
-  default: vi.fn().mockResolvedValue({}),
+  default: vi.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 vi.doMock('../../manager/utils/createCustomPluginMessagesMap.mjs', () => ({
   default: vi.fn().mockResolvedValue({}),

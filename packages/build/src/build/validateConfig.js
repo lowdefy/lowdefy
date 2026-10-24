@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import buildDependencyTracking from './buildDependencyTracking.js';
 import buildEnvironments from './buildEnvironments.js';
+import buildExperimental from './buildExperimental.js';
 import validateTrustedProxies from './validateTrustedProxies.js';
 
 function validateConfig({ components, context }) {
@@ -41,6 +42,7 @@ function validateConfig({ components, context }) {
   validateTrustedProxies({ components, context });
   buildEnvironments({ components, context });
   buildDependencyTracking({ components });
+  buildExperimental({ components, context });
   return components;
 }
 

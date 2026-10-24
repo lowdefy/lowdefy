@@ -28,6 +28,7 @@ const trackedFiles = [
   'build/app.json',
   'build/auth.json',
   'build/config.json',
+  'build/mobile/config.json',
   'build/plugins/auth/adapters.js',
   'build/plugins/auth/providers.js',
   'build/plugins/connections.js',

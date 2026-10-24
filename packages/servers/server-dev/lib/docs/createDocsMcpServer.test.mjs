@@ -50,6 +50,7 @@ const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await im
   './createDocsMcpServer.js'
 );
 const { publish } = await import('./devEventBus.js');
+const { default: createFakePhoneTab, VIEW_PNG } = await import('./device/createFakePhoneTab.mjs');
 const { INSTRUCTIONS } = await import('./devToolDefinitions.js');
 
 const EXPECTED_TOOLS = [
@@ -71,6 +72,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_restart',
   'lowdefy_app_map',
   'lowdefy_journey_session',
+  'lowdefy_device',
 ];
 
 async function connectClient() {
@@ -266,11 +268,12 @@ test('MCP lowdefy_screenshot_page advertises steps and urlQuery, and passes them
 });
 
 // Every agent session pays for the tool list and the instructions before it
-// does any work, so growing either past these is a deliberate change.
-test('MCP tools/list stays at most 25,000 characters and the instructions at most 2,500', async () => {
+// does any work, so growing either past these is a deliberate change. The
+// phone tools (lowdefy_device and the device parameters) take about 1,900 of it.
+test('MCP tools/list stays at most 25,500 characters and the instructions at most 2,500', async () => {
   const client = await connectClient();
   const { tools } = await client.listTools();
-  expect(JSON.stringify(tools).length).toBeLessThanOrEqual(25000);
+  expect(JSON.stringify(tools).length).toBeLessThanOrEqual(25500);
   expect(INSTRUCTIONS.length).toBeLessThanOrEqual(2500);
   expect(client.getInstructions()).toEqual(INSTRUCTIONS);
   await client.close();
@@ -900,4 +903,152 @@ test('MCP tools/call lowdefy_journey_session lists dev sessions and prints one a
     }
     fs.rmSync(configDirectory, { recursive: true, force: true });
   }
+});
+
+test('MCP the device tool adds one tool to the 18 the dev server has', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  expect(tools).toHaveLength(19);
+  const device = tools.find((tool) => tool.name === 'lowdefy_device');
+  expect(device.inputSchema.properties.action.enum).toEqual(['list', 'start', 'inject']);
+  expect(device.inputSchema.properties.inject.properties.kind.enum).toEqual([
+    'scan',
+    'photo',
+    'nfc',
+    'transcript',
+    'location',
+    'permission',
+    'network',
+    'push',
+    'share',
+    'clear',
+  ]);
+  expect(device.inputSchema.required).toEqual(['action']);
+  await client.close();
+});
+
+test('MCP tools that can act on a phone advertise an optional device parameter', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  ['lowdefy_screenshot_page', 'lowdefy_run_journey', 'lowdefy_inspect_state'].forEach((name) => {
+    const tool = tools.find((candidate) => candidate.name === name);
+    expect(tool.inputSchema.properties.device.type).toEqual('string');
+    expect(tool.inputSchema.required ?? []).not.toContain('device');
+  });
+  const listTypesTool = tools.find((tool) => tool.name === 'lowdefy_list_types');
+  expect(listTypesTool.inputSchema.properties.target.enum).toEqual(['web', 'mobile']);
+  await client.close();
+});
+
+test('MCP lowdefy_screenshot_page with device captures the phone, not the headless browser', async () => {
+  const phone = createFakePhoneTab({
+    id: 'mcp-phone',
+    device: { shell: '7.1.0', platform: 'ios', app: 'com.lowdefy.dev', paired: true },
+    page: { pageId: 'ticket', pathParams: {}, instanceKey: 'page:ticket' },
+  });
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_screenshot_page',
+    arguments: { pageId: 'ticket', device: 'mcp-phone', steps: [{ click: 'save' }] },
+  });
+  expect(mockScreenshotPage).not.toHaveBeenCalled();
+  expect(phone.requests.map(({ event, data }) => [event, data.step])).toEqual([
+    ['step-request', { click: 'save' }],
+    ['step-request', { screenshot: null }],
+  ]);
+  const summary = JSON.parse(result.content[0].text);
+  expect(summary).toMatchObject({ passed: true, device: 'mcp-phone', capture: 'view' });
+  expect(result.content[1]).toEqual({ type: 'image', data: VIEW_PNG, mimeType: 'image/png' });
+  phone.close();
+  await client.close();
+});
+
+test('MCP lowdefy_screenshot_page with device refuses the headless-only params', async () => {
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_screenshot_page',
+    arguments: { pageId: 'ticket', device: 'mcp-phone', width: 390, user: 'member' },
+  });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toContain('width, user apply to the headless browser only');
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey with device runs on the phone and returns the journey shape', async () => {
+  const phone = createFakePhoneTab({
+    id: 'mcp-phone',
+    device: { shell: '7.1.0', platform: 'android', app: 'com.lowdefy.dev', paired: true },
+    page: { pageId: 'ticket', pathParams: {}, instanceKey: 'page:ticket' },
+  });
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      pageId: 'ticket',
+      device: 'mcp-phone',
+      steps: [
+        { fill: { blockId: 'title', value: 'Leak' } },
+        { screenshot: 'filled' },
+        { expect: { state: { path: 'title', equals: 'Leak' } } },
+      ],
+    },
+  });
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  const summary = JSON.parse(result.content[0].text);
+  expect(summary).toMatchObject({
+    pageId: 'ticket',
+    device: 'mcp-phone',
+    passed: true,
+    state: { title: 'Leak' },
+    screenshots: [{ name: 'filled' }],
+  });
+  expect(result.content[1]).toEqual({ type: 'image', data: VIEW_PNG, mimeType: 'image/png' });
+  phone.close();
+  await client.close();
+});
+
+test('MCP lowdefy_inspect_state passes the phone to inspectState', async () => {
+  mockInspectState.mockResolvedValue({
+    state: { title: 'Quarterly' },
+    source: 'tab',
+    device: 'mcp-phone',
+  });
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_inspect_state',
+    arguments: { pageId: 'ticket', device: 'mcp-phone', source: 'tab' },
+  });
+  expect(mockInspectState.mock.calls.at(-1)[0]).toMatchObject({
+    pageId: 'ticket',
+    device: 'mcp-phone',
+    source: 'tab',
+  });
+  expect(JSON.parse(result.content[0].text)).toMatchObject({ source: 'tab', device: 'mcp-phone' });
+  await client.close();
+});
+
+test('MCP lowdefy_device inject forwards the injection to the phone', async () => {
+  const phone = createFakePhoneTab({
+    id: 'mcp-phone',
+    device: { shell: '7.1.0', platform: 'android', app: 'com.lowdefy.dev', paired: true },
+  });
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_device',
+    arguments: {
+      action: 'inject',
+      device: 'mcp-phone',
+      inject: { kind: 'scan', value: { data: 'JOB-42' } },
+    },
+  });
+  expect(phone.requests.map(({ event, data }) => [event, data.inject])).toEqual([
+    ['inject', { kind: 'scan', value: { data: 'JOB-42' } }],
+  ]);
+  expect(JSON.parse(result.content[0].text)).toEqual({
+    device: 'mcp-phone',
+    kind: 'scan',
+    app: { ok: true, kind: 'scan' },
+  });
+  phone.close();
+  await client.close();
 });

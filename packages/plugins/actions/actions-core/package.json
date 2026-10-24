@@ -41,7 +41,8 @@
   "exports": {
     "./actions": "./dist/actions.js",
     "./schemas": "./dist/schemas.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.js",
+    "./localStorage/*": "./dist/localStorage/*"
   },
   "files": [
     "dist/*"

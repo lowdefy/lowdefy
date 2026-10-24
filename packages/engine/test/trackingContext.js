@@ -166,7 +166,10 @@ function countEvaluations(context) {
 // Records the ids of blocks whose updater fires, the blocks React would re-render.
 function captureRenders(context) {
   const rendered = new Set();
-  context._internal.updaters = new Proxy({}, { get: (_, id) => () => rendered.add(id) });
+  context._internal.updaters = {
+    register: () => () => undefined,
+    update: (id) => rendered.add(id),
+  };
   return rendered;
 }
 

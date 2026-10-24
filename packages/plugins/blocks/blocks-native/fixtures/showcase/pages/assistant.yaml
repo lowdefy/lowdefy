@@ -1,0 +1,37 @@
+# Assistant: the agent chat's welcome screen, drawn without a server. The conversation is the
+# Screen's content and the composer sits in its footer with the welcome prompts as chips above it.
+# The app defines no agent, so sending a message shows the chat's error row: this tab is for the
+# empty state.
+id: assistant
+type: Screen
+properties:
+  title: Assistant
+  headerActions:
+    - id: new_chat
+      icon: SquarePen
+      sfSymbol: square.and.pencil
+      title: New chat
+events:
+  onHeaderAction:
+    - id: start_new_chat
+      type: CallMethod
+      params:
+        blockId: chat
+        method: newChat
+blocks:
+  - id: chat
+    type: AgentChat
+    properties:
+      agentId: acme
+      welcome:
+        title: Hi Ada
+        description: Ask where things stand, or have me draft an issue from a few words.
+        prompts:
+          - label: What needs me today?
+            description: Reviews, mentions and questions waiting on you
+          - label: Summarise ACME-142
+            description: The sync fix, its thread and what is left
+          - label: Draft an issue
+            description: From a sentence or a screenshot
+      sender:
+        placeholder: Ask Acme

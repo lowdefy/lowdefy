@@ -28,7 +28,7 @@ The OpenIDConnectProvider can be used to authenticate with a OpenID Connect comp
 Usually only the `wellKnown`, `clientId` and `clientSecret` properties need to be configured:
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 providers:
   - id: my_provider
     type: OpenIDConnectProvider

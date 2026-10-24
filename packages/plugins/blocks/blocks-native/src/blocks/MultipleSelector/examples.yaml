@@ -1,0 +1,117 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only.
+
+# Mobile only.
+
+# A property row in an inset card that opens a sheet of checkable options. The row shows the
+# chosen labels, "agent-rules, ui +2" once they overflow, and onChange fires once as the sheet
+# closes, with the new list.
+- title: Labels row with a picker sheet
+  blocks:
+    - id: labels_card
+      type: Card
+      properties:
+        padding: none
+      blocks:
+        - id: labels
+          type: MultipleSelector
+          properties:
+            title: Labels
+            variant: sheet
+            menuTitle: Labels
+            options:
+              - agent-rules
+              - api
+              - docs
+              - mobile
+              - ui
+
+# New values can be typed into the search and added, when they match createPattern. An added
+# value is chosen, and stays an option while the page is shown.
+- title: Labels that can be added
+  blocks:
+    - id: tags_card
+      type: Card
+      properties:
+        padding: none
+      blocks:
+        - id: tags
+          type: MultipleSelector
+          properties:
+            title: Tags
+            variant: sheet
+            menuTitle: Tags
+            allowCreate: true
+            createPattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+            createPatternMessage: Use lowercase letters, digits and hyphens.
+            options:
+              - bug
+              - feature
+              - needs-design
+
+# Options with glyphs and descriptions, at most two chosen, and onChange on each toggle.
+- title: Reviewers with avatars, a limit and immediate changes
+  blocks:
+    - id: reviewers_card
+      type: Card
+      properties:
+        padding: none
+      blocks:
+        - id: reviewers
+          type: MultipleSelector
+          properties:
+            title: Reviewers
+            variant: sheet
+            menuTitle: Request review
+            changeOn: toggle
+            maxCount: 2
+            options:
+              - label: Ada Lovelace
+                value: ada
+                description: ada@example.com
+                avatar:
+                  name: Ada Lovelace
+              - label: Grace Hopper
+                value: grace
+                description: grace@example.com
+                avatar:
+                  name: Grace Hopper
+              - label: Alan Turing
+                value: alan
+                description: alan@example.com
+                avatar:
+                  name: Alan Turing
+
+# Without the sheet variant, the field is an input box under its title that opens the same sheet.
+- title: Platforms field
+  blocks:
+    - id: platforms
+      type: MultipleSelector
+      properties:
+        title: Platforms
+        placeholder: Pick platforms
+        options:
+          - label: iOS
+            value: ios
+            symbol: apple.logo
+            icon: Smartphone
+          - label: Android
+            value: android
+            icon: Smartphone
+          - label: Web
+            value: web
+            symbol: globe
+            icon: Globe

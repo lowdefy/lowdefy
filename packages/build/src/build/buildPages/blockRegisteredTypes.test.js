@@ -275,14 +275,18 @@ test('the scan reads the events blocks register themselves', () => {
   const registering = Object.fromEntries(
     scan.blocks
       .filter(({ found }) => found.actions.size > 0)
-      .map(({ blockType, found }) => [blockType, [...found.actions].sort()])
+      .map(({ blockType, found, packageName }) => [
+        `${packageName}/${blockType}`,
+        [...found.actions].sort(),
+      ])
   );
   expect(registering).toMatchObject({
-    AgentChat: ['Request', 'SetState'],
-    Download: ['Request'],
-    Header: ['SetDarkMode'],
-    PageHeaderMenu: ['SetDarkMode', 'SetLocale'],
-    TiptapMentionInput: ['Request'],
+    'blocks-antd-x/AgentChat': ['Request', 'SetState'],
+    'blocks-native/AgentChat': ['CallAPI', 'CopyToClipboard', 'Link', 'SetState'],
+    'blocks-files/Download': ['Request'],
+    'blocks-antd/Header': ['SetDarkMode'],
+    'blocks-antd/PageHeaderMenu': ['SetDarkMode', 'SetLocale'],
+    'blocks-tiptap/TiptapMentionInput': ['Request'],
   });
 });
 

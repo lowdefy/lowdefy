@@ -57,10 +57,13 @@ The `data list` command prints each [journey data set](/journey-data-sets) in `t
 
 The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory. The `dev` command should not be used to serve a production app, the `build` and `start` commands should be used instead.
 
+- `--android`: Open the app in Lowdefy Dev on an Android emulator, or on a phone connected by USB with USB debugging on. Starts the first virtual device when no device is connected, installs Lowdefy Dev, and connects it to the dev server through `adb reverse`, so the phone reaches it on `localhost`. Needs `adb` from the Android SDK (on your `PATH`, or under `ANDROID_HOME`). Until Lowdefy Dev builds are released, set `LOWDEFY_DEV_APP_ANDROID` to the path of a Lowdefy Dev `.apk`.
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
 - `--exit-with-pid <pid>`: Stop the server when the process with this id exits. For test runners and scripts that start the server. The `LOWDEFY_EXIT_WITH_PID` environment variable does the same, and passes through wrappers such as `pnpm exec` or a secrets manager.
+- `--ios`: Open the app in Lowdefy Dev on an iPhone simulator. Uses a booted simulator, or boots the newest iPhone, installs Lowdefy Dev and opens the dev server in it. Needs macOS with Xcode. Until Lowdefy Dev builds are released, set `LOWDEFY_DEV_APP_IOS` to the path of a Lowdefy Dev simulator build (`.app`).
+- `--lan [interface]`: Let a phone on the local network connect. The server also listens on the first private network address, or on the network interface you name (for example `--lan en0`), and prints the interface it chose with a QR code to scan with Lowdefy Dev. The code carries a pairing token that lasts until the server stops; a request from another machine without it is refused. The dev tools and the headless user of the [agent tools](/ai-agent-docs) answer only on your own computer, even with the token.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--mock-user [user]`: Start the dev server authenticated as a mock user, bypassing the login flow. Pass a JSON user object to set the identity and roles (e.g. `--mock-user '{"sub":"dev","roles":["admin"]}'`), or use the bare flag for a default user with no roles. This is the same mechanism as `auth.dev.mockUser`. Dev server only. See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
 - `--no-open`: Do not open a new tab in the default browser.
@@ -286,6 +289,165 @@ The `journeys coverage` command reports what real use no journey in `tests/journ
 - `--source <source>`: Where use is read from. Only `production` for now, the default.
 - `--since <since>`, `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: The production window, as for [`journeys pull posthog`](#journeys-pull-posthog), at most 30 days.
 - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys session`](#journeys-session).
+
+## mobile
+
+The `mobile` commands build, submit and update the app's phone shells with [EAS](https://expo.dev/eas), from your own Expo, Apple and Google accounts. A shell is declared under `mobile.shells` in `lowdefy.yaml`. Each command builds the app, then writes the shell's Expo project to `.lowdefy/mobile/<shell>/project`: a copy of the published `@lowdefy/shell` at the app's Lowdefy version, with its own install, plus `shell.json`, `eas.json` (a build and submit profile per environment in `config.environments` that has a `url`, and a `development` profile) and the icon. Each build profile pins EAS to the pnpm version that installed the project, and reads EAS's `production` environment variables for an environment named `prod` or `production`, `preview` for any other. Each submit profile carries the shell's `ios.ascAppId`, the App Store Connect app id, so `submit` and `release` run without asking for it. The folder is generated; do not commit it. Every EAS command runs from it, through `npx eas-cli@<pinned version>` with `EAS_NO_VCS=1`, so nothing needs to be installed globally.
+
+```
+lowdefy mobile config    [--shell <id>] [--env <environment>] [--dry-run]
+lowdefy mobile build     [--shell <id>] [--env <environment>] [--platform ios|android|all] [--profile development] [--non-interactive] [--local] [--dry-run]
+lowdefy mobile submit    [--shell <id>] [--env <environment>] [--platform ios|android|all] [--non-interactive] [--dry-run]
+lowdefy mobile update    [--shell <id>] [--env <environment>] [--platform ios|android|all] [--rollout <percent> | --promote | --rollback] [--dry-run]
+lowdefy mobile release   [--shell <id>] [--env <environment>] [--platform ios|android|all] [--non-interactive] [--no-wait --auto-submit] [--rollout <percent>] [--dry-run]
+lowdefy mobile checklist [--shell <id>] [--env <environment>]
+```
+
+Every `mobile` command takes:
+
+- `--shell <id>`: The shell to work on, a `mobile.shells` id. Needed when the app declares more than one.
+- `--env <environment>`: The environment, a key of `config.environments`. The binary opens its `url` and listens on the EAS channel of the same name. The default is `production`.
+- `--dry-run`: Print the EAS commands, with their working directory and environment variables, and run none. The project is still written.
+- `--config-directory`, `--disable-telemetry`, `--log-level`, `--ref-resolver`, `--server-directory`, `--skip-plugin-checks`: As for [`build`](#build).
+
+### mobile config
+
+Writes the shell's project and prints its runtime version, `<nativeVersion>-<profile>`, or `<nativeVersion>-<profile>-<plugins hash>` for a shell with [plugins](#shell-plugins). Over-the-air updates reach only binaries with the same runtime version, so it changes only when the shell's native code, capability profile or plugins do.
+
+For a shell with plugins, it first reads each plugin's published `package.json` (`pnpm view`, from the app's directory, so the registries in the app's `.npmrc` apply) and checks its peers. It then adds each plugin and its native peers to the project's dependencies, writes the plugins into `shell.json`, and, after the install, refuses plugins the shell's profile must not take and type names that clash. Removing a plugin from `lowdefy.yaml` removes it from the project on the next run.
+
+- `--dry-run`: Read and check the plugins, print the dependencies it would add and the install, and run nothing.
+
+### mobile build
+
+Raises the store version, then runs `eas build --profile <environment>`. The shell's `version` gives the major and minor; each build reads the latest finished build on the channel for each store and uses the next patch, or `<major>.<minor>.0` for a first build or a new `version`. Both stores get the same version. Build numbers are kept by EAS.
+
+- `--platform <platform>`: `ios`, `android` or `all`. The default is `all`.
+- `--non-interactive`: Run without prompts, with the credentials stored in EAS, and queue the build without waiting for it. For CI. Without it the build is interactive, as the first build of a shell must be.
+- `--local`: Build on this machine (`eas build --local`; a Mac for iOS).
+- `--profile development`: Build a development client of the shell, for internal distribution, which connects to `lowdefy dev`. It takes no store version.
+
+### mobile submit
+
+Uploads the latest build to TestFlight and Google Play internal testing (`eas submit --latest`), and nothing more. Review and promotion are steps for a person (see [`mobile checklist`](#mobile-checklist)).
+
+- `--platform <platform>`, `--non-interactive`: As for `mobile build`.
+
+### mobile update
+
+Sends the shell's JavaScript to installed binaries on the environment's channel as an over-the-air update (`eas update`). Only `@lowdefy/shell` code travels this way; the app's pages always come from its server. The update's message records the shell version, profile and runtime version: `lowdefy-shell@<version> profile=<profile> runtime=<runtime version>`.
+
+- `--rollout <percent>`: Send the update to this percentage of devices.
+- `--promote`: Roll the latest update for this runtime version out to every device.
+- `--rollback`: Republish the update before the latest one for this runtime version. A later `release` of the same Lowdefy version sends the newer shell again, so roll back while you fix forward.
+- `--platform <platform>`: As for `mobile build`.
+
+### mobile release
+
+What CI runs. For each store it reads the latest finished build on the channel and compares its runtime version with the shell's:
+
+- No build, or a different runtime version: raise the store version, build and submit.
+- The same runtime version, and the latest update carries a different shell version, or none: send an update.
+- Otherwise: nothing.
+
+It prints one line per store saying which and why, and exits with 0. Any EAS failure exits with 1. Release always runs EAS without prompts, so the first build and submission of a shell are done by hand first.
+
+- `--no-wait --auto-submit`: Queue each build and let EAS submit it when it finishes, so the CI job does not wait. `--no-wait` needs `--auto-submit`; without them release waits for each build, then submits it.
+- `--rollout <percent>`: Passed to the update.
+- `--platform <platform>`: As for `mobile build`. `--non-interactive` is accepted and changes nothing.
+- `--dry-run`: Print the reads, and for each store both paths with the condition that picks each.
+
+### mobile checklist
+
+Prints, filled in with the shell's own ids, the steps the stores still need a person for: creating the store records, the first build and submission, making a `private` app private, copying the Play app signing key into `android.sha256`, the privacy questions for the shell's profile and plugins, what each shell plugin declares, and, for `private` and `store` shells, review and promotion of each native release. It runs no EAS command.
+
+### Environment variables
+
+- `EXPO_TOKEN`: Signs EAS in without `eas login`, for CI.
+- `SENTRY_AUTH_TOKEN`: Optional. Uploads source maps on `build` and `update`.
+
+Both pass through from your environment and are never written into the project.
+
+### Shell plugins
+
+A shell can carry native code its capability profile does not, such as a Bluetooth printer or a device-management SDK, by listing Lowdefy shell plugins under `mobile.shells[].plugins`. Each is an npm package that declares the native modules, config plugins, permissions, privacy reasons and collected data it brings.
+
+```yaml
+plugins:
+  - name: '@example/lowdefy-printer'
+    version: 2.1.0
+mobile:
+  shells:
+    - id: field
+      profile: field
+      plugins:
+        - name: '@example/lowdefy-printer'
+          version: 2.1.0
+          typePrefix: Printer
+        - name: '@example/lowdefy-mdm'
+          version: 1.0.3
+          options:
+            tenant: field-team
+```
+
+Each entry takes:
+
+- `name: string`: __Required__ - The npm package name, from the public registry or one set in the app's `.npmrc`.
+- `version: string`: __Required__ - An exact version, like `2.1.0` or `2.1.0-beta.1`. Ranges, dist-tags, git, `file:` and `workspace:` are refused, so one name and version is always the same native code.
+- `typePrefix: string`: A prefix added to the plugin's type names, as for app [plugins](/lowdefy-schema).
+- `options: object`: Passed to the plugin's config plugins. Options are baked into the binary and uploaded to EAS, so they never hold secrets.
+
+The build checks that:
+
+- A shell lists each plugin once.
+- A package has one version across root `plugins` and every shell's `plugins`, since the app runs one version of a plugin.
+- A mobile page uses a plugin's native blocks and actions only when every shell lists that plugin, since every shell opens every mobile page. The error names the page, the block or action and the shell that lacks the plugin.
+- A plugin's native block or action type is not named like a built-in native type, such as `Box` or `SetState`. Set a `typePrefix`.
+
+A shell with plugins gets its own runtime version, so it builds and updates on its own instead of sharing its profile's builds and updates. A change of a plugin's version or options needs a native build.
+
+`mobile config` installs the plugins into the shell's project. It fails, naming the shell and plugin, when:
+
+- The package or version is not on the registry.
+- The plugin's `expo` peer range does not include the shell's Expo version.
+- A native peer is not an exact version, or a peer (`expo` included) is not marked optional.
+- The plugin links a native module the shell already carries in a capability profile, such as `expo-camera`. Pick the profile that carries it.
+- The plugin asks for a permission the shell's profile leaves out, such as the camera on `basic`. The error names the profile to pick.
+- A plugin type name clashes with a built-in native type or another plugin's. Set a `typePrefix`.
+
+`mobile checklist` lists each plugin with the permissions, privacy reasons and data it declares, and joins its data to the privacy answers. It reads the plugins from the configured project, so run `mobile config` first.
+
+#### Writing a shell plugin
+
+A Lowdefy shell plugin is an npm package that exports:
+
+- `./shell`: CommonJS, an object with the native code it brings: `capabilities`, `modules` (`{ [package]: nativeModuleName }`), `plugins` (Expo config plugin entries, or a function of the entry's `options` that returns them), `permissions` (iOS `Info.plist` keys and Android permissions), `privacyReasons` (`{ category, reasons }` for each required-reason API) and `dataCollected` (`{ type, purpose }`).
+- `./native`: Optional. Its native block and action types, as named exports `blocks` and `actions`.
+- `./types`: Optional. Its type names, with the native ones under `native: { blocks, actions, blockMetas, icons }`, so the build knows them. A native-only plugin, such as a wrapped device-management SDK, leaves it out and adds no types. A plugin in root `plugins` must export it.
+
+Its native modules are `peerDependencies` at exact versions, beside an `expo` peer range, and every peer is marked optional in `peerDependenciesMeta`, so the web server's install leaves the native code out:
+
+```json
+{
+  "name": "@example/lowdefy-printer",
+  "version": "2.1.0",
+  "exports": {
+    "./shell": "./shell.cjs",
+    "./native": "./native.js",
+    "./types": "./types.js"
+  },
+  "peerDependencies": {
+    "expo": ">=58.0.0 <59.0.0",
+    "react-native-ble-plx": "3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "expo": { "optional": true },
+    "react-native-ble-plx": { "optional": true }
+  }
+}
+```
+
+`options` are written into `shell.json`, uploaded to EAS and baked into the binary, so they never hold secrets. A plugin that needs a secret reads an EAS environment variable in its config plugin. An SDK on Apple's list of commonly used SDKs also needs its own signed privacy manifest inside the SDK.
 
 ## upgrade
 

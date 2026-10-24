@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import createAcceptExistingMemberHook from '../organizations/createAcceptExistingMemberHook.js';
 import createEmailSendGate from '../organizations/createEmailSendGate.js';
+import createEmailSendLimit from './createEmailSendLimit.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
@@ -78,6 +79,16 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   // the code is minted inside sendMagicLink, which only runs after the
   // magic-link gate has already admitted the address.
   if (authConfig.emailOTP?.enabled === true) {
+    // Apps with phones sign in by email code by default, so each address is
+    // sent at most 5 codes in 15 minutes. Registered ahead of the gate - see
+    // createEmailSendLimit.
+    if (!type.isNone(authConfig.mobile)) {
+      before.push({
+        id: 'emailOtpSendLimit',
+        matches: (path) => path === '/email-otp/send-verification-otp',
+        handler: createEmailSendLimit({ getAuth, max: 5, windowSeconds: 900 }),
+      });
+    }
     before.push({
       id: 'emailOtpSendGate',
       matches: (path) => path === '/email-otp/send-verification-otp',

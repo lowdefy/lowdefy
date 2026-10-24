@@ -170,6 +170,8 @@ The plugins section is used to configure which plugin packages should be used in
 - `version: string`: An npm or pnpm version specifier of the package to use.
 - `typePrefix: string`: A prefix to append to all types exported by the package to prevent type name clashes.
 
+A phone app's shell lists the plugins that add native code to it under `mobile.shells[].plugins`, each at an exact version. A package in both lists must have the same version. See [Shell plugins](/cli#shell-plugins).
+
 ## Menus
 
 Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or [role based access controlled (RBAC)](/roles) pages. Blocks such as [PageSiderMenu](/PageSiderMenu) render menu links. If no menu defined, a default menu is created, containing links to all pages defined in the app.
@@ -395,6 +397,7 @@ Every build error or warning from a check that the build prints shows its slug a
 | `websocket-refs` | Invalid websocket action reference warnings |
 | `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
 | `icons` | Unresolvable icon name warnings |
+| `native-ignored` | Properties set on a mobile page that the native block ignores |
 | `types` | All type validation (blocks, operators, actions, requests, connections) |
 | `schema` | JSON schema validation errors |
 | `secrets` | Environment variable names that are not set in the build environment |

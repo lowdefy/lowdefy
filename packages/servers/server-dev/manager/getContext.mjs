@@ -67,6 +67,8 @@ async function getContext() {
       internalPort: env.LOWDEFY_SERVER_DEV_INTERNAL_PORT
         ? Number(env.LOWDEFY_SERVER_DEV_INTERNAL_PORT)
         : undefined,
+      // "true" or a network interface name: lowdefy dev --lan [interface].
+      lan: env.LOWDEFY_SERVER_DEV_LAN || undefined,
       owner: env.LOWDEFY_DEV_OWNER === 'hub' ? 'hub' : 'terminal',
       port: Number(argv.port ?? env.PORT ?? 3000),
       refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,

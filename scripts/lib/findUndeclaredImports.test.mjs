@@ -143,6 +143,23 @@ cases.forEach(({ name, files, expected }) => {
   });
 });
 
+test('allows devDependencies in a file the package leaves out with a ! files entry', () => {
+  const problems = findUndeclaredImports({
+    files: {
+      'packages/example/package.json': JSON.stringify({
+        name: '@lowdefy/example',
+        files: ['scripts/*', '!scripts/ci.mjs'],
+        devDependencies: { devdep: '1.0.0' },
+      }),
+      'packages/example/scripts/ci.mjs': "import devdep from 'devdep';",
+      'packages/example/scripts/published.mjs': "import devdep from 'devdep';",
+    },
+  }).map(({ filePath, name, problem }) => [filePath, name, problem]);
+  assert.deepEqual(problems, [
+    ['packages/example/scripts/published.mjs', 'devdep', 'devDependency'],
+  ]);
+});
+
 test('allows devDependencies anywhere in a private package', () => {
   const problems = findUndeclaredImports({
     files: {

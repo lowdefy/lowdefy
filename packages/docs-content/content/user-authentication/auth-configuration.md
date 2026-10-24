@@ -11,7 +11,7 @@ For a login method to work you must configure **at least one mechanism** (`email
 A required signing secret, given as a `_secret` reference:
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   secret:
     _secret: BETTER_AUTH_SECRET
@@ -24,7 +24,7 @@ Also pin the app's canonical origin — the `url` of the current environment in 
 Sessions, users, accounts and organizations are stored through an adapter:
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   database:
     id: auth_db
@@ -46,7 +46,7 @@ See the [MongoDBAuthAdapter](/MongoDBAuthAdapter) reference. Collection names fo
 - **Passkeys** — `auth.passkey` (`enabled`, `rpId`, `rpName`).
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   emailAndPassword:
     enabled: true
@@ -58,7 +58,7 @@ auth:
 `auth.email` references an **SMTP connection** by id — the connection owns `from`, `replyTo`, the transport and the delivery filter, and is shared by every auth email flow. There is no inline transport shape. Optionally map individual flows to your own notification templates:
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   email:
     connectionId: email   # an SMTP connection in connections[]
@@ -94,7 +94,7 @@ BetterAuth ships no UI — your app owns its auth pages, and `auth.authPages` po
 | `magicLink` | — | landing page for the sign-in email (opt-in; see below) |
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   authPages:
     signIn: /login
@@ -113,7 +113,7 @@ A verification email links to Better Auth's verify endpoint, which confirms the 
 Set the key and the sign-in email links to a page of your own instead, with the token and the callback destinations carried on its URL query. Fetching a Lowdefy page is harmless, so the token stays unspent until a real click runs [`MagicLinkVerify`](/MagicLinkVerify):
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   magicLink:
     enabled: true
@@ -161,7 +161,7 @@ See [Two-Factor Authentication](/two-factor) for the two-factor pages, and the [
 Database sessions. Length is `expiresIn` (seconds, default 604800 = 7 days); `updateAge` (default 86400) is how often an active session's expiry is refreshed:
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   session:
     expiresIn: 43200 # 12 hours in seconds
@@ -177,7 +177,7 @@ auth:
 - **API strategies** — `auth.strategies` authenticates non-session callers (server-to-server) with an `apiKey` or a `jwt`:
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   strategies:
     - id: service-key
@@ -231,7 +231,7 @@ Add the `auth.dev.mockUser` section to your `lowdefy.yaml`:
 
 ###### Configure a mock user for development
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 
 auth:
   providers:

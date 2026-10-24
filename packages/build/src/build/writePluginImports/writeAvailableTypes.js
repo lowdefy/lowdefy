@@ -31,7 +31,7 @@ function filterInstalled({ store, installedPackages }) {
 // a developer could use. Dev-only — context.installedPackages is set by the
 // dev shallow build (addInstalledTypes); production builds skip it.
 async function writeAvailableTypes({ context }) {
-  const { typesMap, installedPackages } = context;
+  const { typesMap, typesMapMobile, installedPackages } = context;
   if (!installedPackages) {
     return;
   }
@@ -58,6 +58,20 @@ async function writeAvailableTypes({ context }) {
   };
 
   await context.writeBuildArtifact('plugins/availableTypes.json', JSON.stringify(availableTypes));
+
+  // The client types a native shell carries, for lowdefy_list_types with target
+  // mobile. A shell carries its own packages (defaultPackagesMobile), not the
+  // app's installed ones, so the map is not filtered.
+  const availableTypesMobile = {
+    actions: typesMapMobile.actions,
+    blockMetas: typesMapMobile.blockMetas ?? {},
+    blocks: typesMapMobile.blocks,
+    operators: { client: typesMapMobile.operators.client },
+  };
+  await context.writeBuildArtifact(
+    'plugins/availableTypesMobile.json',
+    JSON.stringify(availableTypesMobile)
+  );
 }
 
 export default writeAvailableTypes;

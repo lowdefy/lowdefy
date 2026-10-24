@@ -1,0 +1,4 @@
+{
+  "app": "\nexport default {\n  'yHZGzdxAuSQ8P5USi0AFFY81iNg=': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) => { return 'Hello from Lowdefy'; },\n  };",
+  "today": "\nexport default {\n  'HorPchxU3cTNYhB6dbx9DFcepx4=': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) => { return lowdefyGlobal('greeting'); },\n  'b+IYcPY3kW9J7YdZ4RyICtelfz8=': Object.assign(({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) => { return String(new Date().getFullYear()); }, { volatile: true }),\n  };"
+}

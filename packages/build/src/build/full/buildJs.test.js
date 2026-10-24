@@ -172,3 +172,38 @@ test('buildJs hashes fn only and preserves args for object form', async () => {
   expect(context.jsMap.client[page.style._js.fn]).toBe(fnSource);
   expect(context.jsMap.server).toEqual({});
 });
+
+test('buildJs gives a mobile page its client _js as _jsEntries and keeps it out of the web map', async () => {
+  const context = testContext();
+  const components = {
+    pages: [{ id: 'a', target: 'mobile', style: { _js: 'return 1;' }, requests: [] }],
+  };
+
+  buildJs({ components, context });
+  expect(components.pages[0].style).toEqual({ _js: 'tjmrJIhufQzEpj/iGu5AumDcrBQ=' });
+  expect(components.pages[0]._jsEntries).toContain(
+    "'tjmrJIhufQzEpj/iGu5AumDcrBQ=': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, pathParams, request, state, urlQuery, user }) => { return 1; },"
+  );
+  expect(context.jsMap.client ?? {}).toEqual({});
+});
+
+test('buildJs gives a shared page _jsEntries and adds its _js to the web map', async () => {
+  const context = testContext();
+  const components = {
+    pages: [{ id: 'a', target: 'both', style: { _js: 'return 1;' }, requests: [] }],
+  };
+
+  buildJs({ components, context });
+  expect(components.pages[0]._jsEntries).toContain("'tjmrJIhufQzEpj/iGu5AumDcrBQ='");
+  expect(context.jsMap.client).toEqual({ 'tjmrJIhufQzEpj/iGu5AumDcrBQ=': 'return 1;' });
+});
+
+test('buildJs leaves _jsEntries off a mobile page without _js', async () => {
+  const context = testContext();
+  const components = {
+    pages: [{ id: 'a', target: 'mobile', requests: [] }],
+  };
+
+  buildJs({ components, context });
+  expect(components.pages[0]).toEqual({ id: 'a', target: 'mobile', requests: [] });
+});

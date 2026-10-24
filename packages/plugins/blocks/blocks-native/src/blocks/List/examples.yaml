@@ -1,0 +1,103 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only. List draws an array in state, its content slot once per item.
+
+- title: Inset grouped sections with counts and stage dots
+  blocks:
+    - id: tasks
+      type: List
+      properties:
+        sectionKey: state
+        showCount: true
+        sections:
+          - key: in_progress
+            title: In progress
+            status: inProgress
+          - key: needs_input
+            title: Needs input
+            status: needsInput
+          - key: todo
+            title: Up next
+            status: todo
+      events:
+        onRefresh:
+          - id: reload
+            type: Request
+            params: get_tasks
+      blocks:
+        - id: tasks.$.row
+          type: ListItem
+          properties:
+            title:
+              _state: tasks.$.title
+            subtitle:
+              _string.concat:
+                - _state: tasks.$.key
+                - ' · '
+                - _state: tasks.$.design
+            leading:
+              status:
+                _state: tasks.$.status
+            trailing:
+              status:
+                _state: tasks.$.priority
+              avatar:
+                name:
+                  _state: tasks.$.assignee
+          events:
+            onClick:
+              - id: open_task
+                type: Link
+                params:
+                  pageId: task
+                  urlQuery:
+                    key:
+                      _state: tasks.$.key
+
+- title: One titled section
+  blocks:
+    - id: members
+      type: List
+      properties:
+        header:
+          title: Members
+          count: 3
+      blocks:
+        - id: members.$.row
+          type: ListItem
+          properties:
+            title:
+              _state: members.$.name
+            leading:
+              avatar:
+                name:
+                  _state: members.$.name
+
+- title: Plain list with sticky Headline headers
+  blocks:
+    - id: contacts
+      type: List
+      style:
+        height: 480
+      properties:
+        variant: plain
+        scroll: true
+        sectionKey: initial
+      blocks:
+        - id: contacts.$.row
+          type: ListItem
+          properties:
+            title:
+              _state: contacts.$.name

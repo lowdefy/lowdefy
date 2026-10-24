@@ -23,8 +23,16 @@ import keepPageInstance from './keepPageInstance.js';
 // A page with placeholders in its path has one context per set of values (pathParams, as the
 // server matched them from the URL), stored under its instance key. A page without placeholders
 // has one context, under `page:{pageId}`.
+//
+// A host that shows several screens of one page at once (a native stack: task A, then task B
+// pushed on it) names each screen with an instanceId, so each screen has its own context, under
+// `{pageKey}@{instanceId}`. A screen's first visit takes the input a Link left under the page's
+// key. Such a host also gives each screen its own globals, whose location is that screen's route,
+// so _url_query and _location read the screen the context runs in, not the one on top.
 function getContext({
   config,
+  globals,
+  instanceId,
   jsMap = {},
   lowdefy,
   pathParams = {},
@@ -34,7 +42,8 @@ function getContext({
     throw new LowdefyInternalError('A page must be provided to get context.');
   }
   const { pageId } = config;
-  const instanceKey = pageInstanceKey({ pageId, path: config.path, pathParams });
+  const pageKey = pageInstanceKey({ pageId, path: config.path, pathParams });
+  const instanceKey = type.isNone(instanceId) ? pageKey : `${pageKey}@${instanceId}`;
   keepPageInstance({ lowdefy, pageId, instanceKey });
   // A page instance belongs to the organization its caller acted in: after an
   // organization switch it is rebuilt, never rendered with the previous
@@ -74,9 +83,17 @@ function getContext({
     resetContext.setReset(false);
   }
   if (!lowdefy.inputs[instanceKey]) {
-    lowdefy.inputs[instanceKey] = {};
+    lowdefy.inputs[instanceKey] = lowdefy.inputs[pageKey] ?? {};
   }
-  const ctx = createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pathParams });
+  const ctx = createContext({
+    config,
+    globals,
+    instanceKey,
+    jsMap,
+    lowdefy,
+    organizationId,
+    pathParams,
+  });
   lowdefy.contexts[instanceKey] = ctx;
   return ctx;
 }

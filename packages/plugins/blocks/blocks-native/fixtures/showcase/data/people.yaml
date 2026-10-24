@@ -1,0 +1,18 @@
+# The team, as the Composer and ActivityTimeline take people: an id, a name and a picture. Ada is
+# the viewer.
+- value: ada
+  label: Ada Lovelace
+  picture: https://i.pravatar.cc/96?img=47
+  sees: true
+- value: grace
+  label: Grace Hopper
+  picture: https://i.pravatar.cc/96?img=32
+  sees: true
+- value: alan
+  label: Alan Turing
+  picture: https://i.pravatar.cc/96?img=12
+  sees: true
+- value: katherine
+  label: Katherine Johnson
+  picture: https://i.pravatar.cc/96?img=45
+  sees: true

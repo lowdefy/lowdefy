@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errorContains": [
+        "App \"config.experimental.offline\" is not an experimental feature. The experimental features are \"mobile\"."
+      ]
+    }
+  ]
+}

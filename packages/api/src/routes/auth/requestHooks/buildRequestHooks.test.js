@@ -45,6 +45,8 @@ function createMockAuth({ invitations = [] } = {}) {
     findOne: vi.fn(async ({ model }) => (model === 'organization' ? pinnedOrg : null)),
     findMany: vi.fn(async () => invitations),
     create: vi.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    count: vi.fn(async () => 0),
+    deleteMany: vi.fn(async () => 0),
   };
   const internalAdapter = {
     findUserById: vi.fn(async () => null),
@@ -617,4 +619,36 @@ test('buildRequestHooks leaves an unenrolled user on /sign-in/email-otp untouche
   expect(thrown).toBeUndefined();
   expect(returned).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks caps code sends per address only for apps with a mobile section', async () => {
+  const web = createMockAuth();
+  const webHooks = buildRequestHooks({
+    authConfig: { emailOTP: { enabled: true }, organizations },
+    getAuth: () => web,
+  });
+  await webHooks.before({
+    path: '/email-otp/send-verification-otp',
+    body: { email: 'stranger@example.com' },
+  });
+  const webAdapter = (await web.$context).adapter;
+  expect(webAdapter.count).not.toHaveBeenCalled();
+
+  const phone = createMockAuth();
+  const phoneHooks = buildRequestHooks({
+    authConfig: { emailOTP: { enabled: true }, organizations, mobile: { shells: [] } },
+    getAuth: () => phone,
+  });
+  // Counted ahead of the send gate, which then answers for the unknown address.
+  expect(
+    await phoneHooks.before({
+      path: '/email-otp/send-verification-otp',
+      body: { email: 'stranger@example.com' },
+    })
+  ).toEqual({ success: true });
+  const phoneAdapter = (await phone.$context).adapter;
+  expect(phoneAdapter.count).toHaveBeenCalledTimes(1);
+  expect(phoneAdapter.create).toHaveBeenCalledWith(
+    expect.objectContaining({ model: 'verification' })
+  );
 });

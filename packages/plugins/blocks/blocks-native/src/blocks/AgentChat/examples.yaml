@@ -1,0 +1,163 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile. The web block takes the same agentId, welcome, sharedState and messageDisplay.
+
+- title: An agent chat screen that keeps its threads through the ai-assistant module
+  description: >-
+    The conversation is the Screen's content and the composer sits in its footer, above the tab
+    bar and the keyboard. A header action opens the sheet of recent chats; the block resumes the
+    chat last opened, saves each one and names it from its first exchange.
+  page:
+    id: atlas
+    type: Screen
+    properties:
+      title:
+        _if_none:
+          - _state: atlas_title
+          - Atlas
+      headerActions:
+        - id: chats
+          sfSymbol: clock.arrow.circlepath
+          icon: History
+          title: Chats
+          placement: right
+        - id: new_chat
+          sfSymbol: square.and.pencil
+          icon: SquarePen
+          title: New chat
+          placement: right
+    events:
+      onHeaderAction:
+        - id: open_chats
+          type: CallMethod
+          skip:
+            _ne:
+              - _event: id
+              - chats
+          params:
+            blockId: atlas_chat
+            method: openThreads
+        - id: start_new_chat
+          type: CallMethod
+          skip:
+            _ne:
+              - _event: id
+              - new_chat
+          params:
+            blockId: atlas_chat
+            method: newChat
+    blocks:
+      - id: atlas_chat
+        type: AgentChat
+        properties:
+          agentId: atlas
+          threads:
+            module: ai-assistant
+            scope: acme
+          sharedState:
+            now:
+              _date: now
+          welcome:
+            title: Hi, I'm Atlas
+            description: I can log a task or a ticket, or tell you where things stand.
+            prompts:
+              - label: What is waiting on me?
+                description: Questions, reviews and tasks that need you
+              - label: I want to log a task
+          sender:
+            placeholder: Ask Atlas
+          messageDisplay:
+            thinkingMessages:
+              - Reading the space
+              - Checking what is already logged
+            thinkingMessageDelay: 1200
+        events:
+          onThreadChange:
+            - id: set_title
+              type: SetState
+              params:
+                atlas_title:
+                  _event: title
+
+- title: A chat whose app keeps its conversation, in a sheet
+  description: >-
+    Without `threads` the app keeps the conversation through conversationId and messages, as on
+    the web. In a Sheet the composer sits under the conversation (sender.sticky false).
+  blocks:
+    - id: help_sheet
+      type: Sheet
+      properties:
+        title: Ask about this task
+      slots:
+        content:
+          blocks:
+            - id: task_chat
+              type: AgentChat
+              properties:
+                agentId: assistant
+                conversationId:
+                  _state: task_chat_id
+                messages:
+                  _state: task_chat_messages
+                sharedState:
+                  task:
+                    _state: task
+                sharedStateReadOnly: true
+                sender:
+                  sticky: false
+                  newChat: false
+                messageDisplay:
+                  toolResultDisplay: none
+
+- title: A record page that starts a chat about its record
+  description: >-
+    The Ask button calls newChat with a seed: the welcome names the task, the composer holds a
+    first question to edit or send, and the task is shared with the agent for this conversation.
+    The thread is saved with the task's key as its tag and named after it.
+  blocks:
+    - id: ask_about_task
+      type: Button
+      properties:
+        title: Ask about this task
+      events:
+        onClick:
+          - id: start_task_chat
+            type: CallMethod
+            params:
+              blockId: task_chat
+              method: newChat
+              args:
+                - sharedState:
+                    task:
+                      key: ACME-12
+                      title: Fix the menu
+                  welcome:
+                    title: ACME-12 Fix the menu
+                    description: Ask what is left, who is on it or what it blocks.
+                  input: What is left on ACME-12?
+                  tag: ACME-12
+                  title: ACME-12 Fix the menu
+    - id: task_chat
+      type: AgentChat
+      properties:
+        agentId: assistant
+        threads:
+          module: ai-assistant
+          scope: acme
+          resume: false
+        seed:
+          welcome:
+            title: Ask about ACME-12
+          input: What is left on ACME-12?

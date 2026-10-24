@@ -1,0 +1,12 @@
+{
+  "bg-primary": { "backgroundColor": "#6366f1" },
+  "bg-white": { "backgroundColor": "#fff" },
+  "dark:bg-gray-900": { "backgroundColor": "#101828" },
+  "dark:bg-primary": { "backgroundColor": "#575ad0" },
+  "md:p-8": { "paddingTop": 32, "paddingRight": 32, "paddingBottom": 32, "paddingLeft": 32 },
+  "p-2": { "paddingTop": 8, "paddingRight": 8, "paddingBottom": 8, "paddingLeft": 8 },
+  "p-4": { "paddingTop": 16, "paddingRight": 16, "paddingBottom": 16, "paddingLeft": 16 },
+  "rounded-lg": { "borderRadius": 8 },
+  "sm:p-6": { "paddingTop": 24, "paddingRight": 24, "paddingBottom": 24, "paddingLeft": 24 },
+  "text-lg": { "fontSize": 18, "lineHeight": 28 }
+}

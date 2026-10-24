@@ -20,6 +20,7 @@ import appMeta from '../../lib/build/appMeta.js';
 import authJson from '../../lib/build/auth.js';
 import lowdefyConfig from '../../lib/build/config.js';
 import getRequestPath from '../lib/getRequestPath.js';
+import getRequestSurface from '../lib/getRequestSurface.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
 
@@ -34,7 +35,11 @@ async function apiPageHandler(c) {
   const callbackUrl = `${basePath}/${path}${new URL(c.req.url).search}`;
   // The client forwards its current query string on the fetch so Dynamic block
   // resolution sees the same urlQuery as an initial HTML load.
-  const result = await getPageConfig(context, { path, urlQuery: c.req.query() });
+  const result = await getPageConfig(context, {
+    path,
+    urlQuery: c.req.query(),
+    surface: getRequestSurface(c),
+  });
   const { pageId, pathParams } = result;
   if (result.status === 'unauthenticated') {
     // The client follows this redirect with a full page load, so the login
@@ -62,6 +67,12 @@ async function apiPageHandler(c) {
       },
       403
     );
+  }
+  if (result.status === 'wrong_surface') {
+    // The page is for the other surface: a shell opens a web page in the
+    // browser, and a browser shows its 404.
+    context.logger.info({ event: 'api_page_wrong_surface', pageId, path, surface: result.surface });
+    return c.json({ pageConfig: null, surface: result.surface }, 404);
   }
   if (result.status !== 'ok') {
     context.logger.info({ event: 'api_page_not_found', pageId, path });

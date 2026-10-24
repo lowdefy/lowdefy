@@ -35,16 +35,16 @@ import getPathIndex from './getPathIndex.js';
 //   Button in a Table's bulk action slot clearing the Table's selection.
 // - An internal event (registered by the block itself, like a Table's row fetch). It still claims
 //   an unclaimed DOM event, as the block's own handler would.
-function claimDomEvent({ blockId, bubble, hasActions, internal }) {
-  const domEvent = getDomEvent();
+function claimDomEvent({ blockId, bubble, hasActions, internal, lowdefy }) {
+  const domEvent = getDomEvent({ lowdefy });
   if (domEvent === null) return null;
   const path = domEvent.composedPath();
-  const index = getPathIndex({ blockId, path });
+  const index = getPathIndex({ blockId, lowdefy, path });
   if (index === -1) return null;
   if (domEventClaims.exempt.get(domEvent)?.has(blockId)) return null;
   const handledBy = domEventClaims.handledBy.get(domEvent);
   if (handledBy !== undefined && handledBy !== blockId) {
-    const handledByIsInner = getPathIndex({ blockId: handledBy, path }) < index;
+    const handledByIsInner = getPathIndex({ blockId: handledBy, lowdefy, path }) < index;
     if (handledByIsInner) {
       return internal === true ? null : handledBy;
     }

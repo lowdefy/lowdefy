@@ -43,6 +43,13 @@ import buildImports from '../buildImports/buildImports.js';
 import buildIconContext from '../icons/buildIconContext.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
+import buildMobile from '../buildMobile/buildMobile.js';
+import buildMobileAppEvents from '../buildMobile/buildMobileAppEvents.js';
+import buildMobileAppJs from '../buildMobile/buildMobileAppJs.js';
+import buildMobileClassMap from '../buildMobile/buildMobileClassMap.js';
+import buildMobilePageIcons from '../buildMobile/buildMobilePageIcons.js';
+import buildMobileTheme from '../buildMobile/buildMobileTheme.js';
+import validateMobileMenuIcons from '../buildMobile/validateMobileMenuIcons.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import { resolveModuleManifests } from '../registerModules.js';
 import buildModules from '../buildModules.js';
@@ -88,6 +95,7 @@ import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
+import writeMobile from '../writeMobile.js';
 import writeRoutes from '../writeRoutes.js';
 import writeTypes from '../full/writeTypes.js';
 import writePageRegistry from './writePageRegistry.js';
@@ -96,6 +104,7 @@ import writePluginImports from '../writePluginImports/writePluginImports.js';
 
 import addInstalledTypes from './addInstalledTypes.js';
 import buildJsShallow from './buildJsShallow.js';
+import buildMobilePageIndexShallow from './buildMobilePageIndexShallow.js';
 import buildShallowPages from './buildShallowPages.js';
 import collectPageContent from '../collectPageContent.js';
 import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
@@ -189,6 +198,9 @@ async function shallowBuild(options) {
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    // Mobile pages join components.pages here, as in the full build, so routes,
+    // auth and the page registry cover them.
+    tryBuildStep(buildMobile, 'buildMobile', { components, context });
     tryBuildStep(buildRoutes, 'buildRoutes', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(validateAuthPagePaths, 'validateAuthPagePaths', { components, context });
@@ -214,10 +226,20 @@ async function shallowBuild(options) {
     // buildImports resolves every icon name, against context.icons.
     await buildIconContext({ components, context });
     logCollectedErrors(context);
+    tryBuildStep(validateMobileMenuIcons, 'validateMobileMenuIcons', { components, context });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
+    // Inline mobile pages carry their icons' data, as page builds' do.
+    await buildMobilePageIcons({
+      components: {
+        global: components.global,
+        pages: sourcelessPageArtifacts.map((artifact) => artifact.page),
+      },
+      context,
+    });
     // After buildShallowPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
+    tryBuildStep(buildMobileAppEvents, 'buildMobileAppEvents', { components, context });
     // App-level config and inline pages; page builds check their own pages.
     const { pending: pluginChecksPending } = await runPluginChecks({
       components,
@@ -229,10 +251,22 @@ async function shallowBuild(options) {
     await writePluginChecksPending({ context, packages: pluginChecksPending });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
 
+    tryBuildStep(buildMobileAppJs, 'buildMobileAppJs', { components, context });
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
 
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
+    tryBuildStep(buildMobilePageIndexShallow, 'buildMobilePageIndexShallow', {
+      components,
+      context,
+    });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    // writeMobile writes mobile/theme.json and mobile/classMap.json from these.
+    // The class map covers the class candidates buildShallowPages collected
+    // from sourceless pages.
+    buildMobileTheme({ components, context });
+    // Async (Tailwind's compiler), so it runs outside tryBuildStep; config
+    // faults are collected, not thrown.
+    await buildMobileClassMap({ components, context });
 
     // Update server package.json before addInstalledTypes so that addInstalledTypes
     // sees the full set of dependencies on every run (not just after the first build).
@@ -285,6 +319,7 @@ async function shallowBuild(options) {
     );
     await writeMenus({ components, context });
     await writeRoutes({ components, context });
+    await writeMobile({ components, context });
     // The dev client bundle imports every installed type (addInstalledTypes),
     // so types.json here describes that full bundle — dynamic page content
     // resolution validates fragment types against it at page get.
@@ -301,6 +336,18 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact(
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})
+    );
+    // JIT page builds resolve mobile pages against the same shell plugin
+    // types as this build.
+    await context.writeBuildArtifact(
+      'customTypesMapMobile.json',
+      JSON.stringify(options.customTypesMapMobile ?? {})
+    );
+    // Which shells carry which shell plugins (validateMobileConfig), so a
+    // dev page build refuses a plugin type some shell lacks, as this build does.
+    await context.writeBuildArtifact(
+      'mobileShells.json',
+      JSON.stringify(context.mobileShells ?? [])
     );
     await context.writeBuildArtifact(
       'customMessagesMap.json',

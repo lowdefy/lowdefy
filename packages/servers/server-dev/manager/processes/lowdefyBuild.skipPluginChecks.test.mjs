@@ -26,7 +26,7 @@ vi.doMock('../utils/writeBuildStatus.mjs', () => ({
   default: vi.fn(),
 }));
 vi.doMock('../utils/createCustomPluginTypesMap.mjs', () => ({
-  default: vi.fn().mockResolvedValue({}),
+  default: vi.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 vi.doMock('../utils/createCustomPluginMessagesMap.mjs', () => ({
   default: vi.fn().mockResolvedValue({}),

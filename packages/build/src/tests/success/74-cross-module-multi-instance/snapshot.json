@@ -1115,6 +1115,15 @@
     ],
     "~k": "31"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
+  "mobile/classMap.json": {},
+  "mobile/config.json": {},
+  "mobile/events.json": {},
+  "mobile/pageIndex.json": [],
+  "mobile/theme.json": {},
+  "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
       "actions": [
@@ -1457,6 +1466,7 @@
     },
     "pageId": "404",
     "blockId": "404",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "2n"
@@ -1511,6 +1521,7 @@
       },
       "~k": "2d"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "2f"
@@ -1565,6 +1576,7 @@
       },
       "~k": "21"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "23"
@@ -1588,6 +1600,7 @@
     },
     "pageId": "home",
     "blockId": "home",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "1r"
@@ -1642,6 +1655,7 @@
       },
       "~k": "27"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "29"
@@ -1696,6 +1710,7 @@
       },
       "~k": "1v"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "1x"

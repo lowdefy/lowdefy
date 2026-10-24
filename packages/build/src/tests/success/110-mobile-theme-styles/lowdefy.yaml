@@ -1,0 +1,53 @@
+# 110: Mobile Theme, Styles and Class Map
+# The build computes light and dark antd tokens into build/mobile/theme.json,
+# converts literal styles on mobile-only pages to React Native values, leaves
+# shared pages and operator slots for the shell, and compiles every class on
+# mobile pages into build/mobile/classMap.json. Prose in properties is skipped.
+lowdefy: local
+
+theme:
+  darkMode: system
+  antd:
+    token:
+      colorPrimary: '#6366f1'
+  tailwind:
+    color:
+      brand: '#ff6600'
+
+pages:
+  - id: home
+    type: Box
+    class: hover:bg-gray-100 grid
+  - _ref: shared.yaml
+
+mobile:
+  pages:
+    - _ref: shared.yaml
+    - id: today
+      type: Box
+      style:
+        padding: 8px 24px
+        fontSize: 1rem
+        border: '1px solid #eee'
+      blocks:
+        - id: card
+          type: Box
+          class:
+            _if:
+              test:
+                _state: active
+              then: p-4 bg-white dark:bg-gray-900
+              else: p-2 sm:flex-row
+          style:
+            .element:
+              color:
+                _state: color
+              margin: 4px 8px
+        - id: heading
+          type: Title
+          properties:
+            content: Show the grid table on hover
+          class: text-brand bg-primary rounded-lg
+config:
+  experimental:
+    mobile: true

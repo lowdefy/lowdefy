@@ -41,6 +41,7 @@ vi.doMock('./routes/cronForward.js', () => ({ default: handler }));
 vi.doMock('./routes/detached.js', () => ({ default: handler }));
 vi.doMock('./routes/endpoints.js', () => ({ default: throwingHandler }));
 vi.doMock('./routes/mcp.js', () => ({ default: handler }));
+vi.doMock('./routes/mobileRoot.js', () => ({ default: handler }));
 vi.doMock('./routes/mountOauthDiscovery.js', () => ({ default: () => {} }));
 vi.doMock('./routes/request.js', () => ({ default: handler }));
 vi.doMock('./routes/usage.js', () => ({ default: handler }));
@@ -57,7 +58,9 @@ vi.doMock('./middleware/errorHandler.js', () => ({
 }));
 vi.doMock('../lib/build/appMeta.js', () => ({ default: { buildId: 'build-1' } }));
 vi.doMock('../lib/build/auth.js', () => ({ default: { configured: false } }));
+vi.doMock('../lib/build/theme.js', () => ({ default: {} }));
 vi.doMock('../lib/build/config.js', () => ({ default: {} }));
+vi.doMock('../lib/build/mobileConfig.js', () => ({ default: {} }));
 vi.doMock('../lib/server/auth/getAuth.js', () => ({ default: vi.fn() }));
 vi.doMock('../lib/server/auth/getStrategies.js', () => ({ default: vi.fn() }));
 vi.doMock('../lib/server/log/createLogger.js', () => ({
@@ -87,6 +90,7 @@ test.each([
   ['GET', '/'],
   ['GET', '/404'],
   ['GET', '/api/page/home'],
+  ['GET', '/api/mobile/root'],
   ['GET', '/api/user'],
   ['POST', '/api/request/home/get_data'],
   ['POST', '/api/endpoints/my_endpoint'],

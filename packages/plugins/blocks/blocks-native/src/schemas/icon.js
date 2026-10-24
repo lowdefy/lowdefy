@@ -1,0 +1,67 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+export default {
+  type: ['string', 'object'],
+  description:
+    'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon.',
+  docs: {
+    displayType: 'icon',
+  },
+  properties: {
+    name: {
+      type: 'string',
+      description:
+        'Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`.',
+    },
+    color: {
+      type: 'string',
+      description:
+        'Icon color. On mobile a palette hue (`blue`, `amber`), a theme token (`colorPrimary`, `colorTint`) or a colour value.',
+    },
+    size: {
+      type: ['string', 'number'],
+      description: 'Size of the icon. Defaults to `theme.icons.size`.',
+    },
+    rotate: {
+      type: 'number',
+      description: 'Number of degrees to rotate the icon.',
+    },
+    spin: {
+      type: 'boolean',
+      description: 'Continuously spin the icon with animation.',
+    },
+    strokeWidth: {
+      type: 'number',
+      description:
+        'Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2).',
+    },
+    nonScalingStroke: {
+      type: 'boolean',
+      description:
+        'Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`.',
+    },
+    title: {
+      type: 'string',
+      description:
+        'Icon hover title for accessibility. An empty string marks the icon as decorative.',
+    },
+    disableLoadingIcon: {
+      type: 'boolean',
+      description: "While loading after the icon has been clicked, don't render the loading icon.",
+    },
+  },
+};

@@ -1,0 +1,358 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/*
+  The release check: a shell carries only its capability profile's native modules (profiles.js),
+  and a customer shell none of Lowdefy Dev's developer features, in its JavaScript or in its native
+  projects. A shell's release build runs it before a store build.
+
+  For each release profile (basic, field, field-nfc, field-tracking; --profile names one) and each
+  platform, with LOWDEFY_SHELL_VARIANT=release and the shell config LOWDEFY_SHELL_CONFIG names
+  (Lowdefy Dev's shell.dev.json without it) set to that profile:
+
+  1. Bundle: exports the JavaScript bundle and fails when any file of it holds the dev-tab client's
+     marker (src/dev/tab/devClientMarker.js) or the native module name of a module the profile
+     leaves out (getExclusions in shellVariant.js).
+  2. Prebuild: runs `expo prebuild` in a copy of the shell and fails when
+     - Expo autolinking, run with the exclusions the generated Podfile and settings.gradle pass it,
+       still links a module the profile leaves out; or
+     - the native project asks for a permission only a left-out module needs
+       (NSCameraUsageDescription and android.permission.CAMERA without the camera,
+       NSMotionUsageDescription in any release shell).
+
+  With --control it first runs both on the dev variant (profile `dev`) and fails when the marker,
+  the module names or the modules any release profile leaves out are missing there, which shows the
+  check can see them.
+
+    node scripts/checkReleaseBundle.mjs [--platform ios|android] [--profile <name>] [--control]
+*/
+
+import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
+import { createRequire } from 'node:module';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const shellRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const require = createRequire(import.meta.url);
+const { RELEASE_PROFILES } = require('../profiles.js');
+const readShellConfig = require('../readShellConfig.js');
+const { DEV_CLIENT_MARKER, getExclusions } = require('../shellVariant.js');
+
+// The modules some release profile leaves out, which the dev variant links, for the --control run.
+const RELEASE_EXCLUDED_MODULES = Object.assign(
+  {},
+  ...RELEASE_PROFILES.map(
+    (profile) => getExclusions({ shell: { profile }, variant: 'release' }).modules
+  )
+);
+
+// The native module names a bundle that carries a module's JavaScript holds. A module with no
+// JavaScript of its own in the bundle (null) is checked by autolinking only.
+function nativeNames(modules) {
+  return Object.values(modules).filter((name) => name !== null);
+}
+
+// Copied into each prebuild's temporary project; node_modules is linked, not copied.
+const SKIPPED_IN_COPY = new Set(['android', 'coverage', 'dist', 'ios', 'node_modules', '.expo']);
+
+const AUTOLINKING_PLATFORMS = { ios: 'apple', android: 'android' };
+
+function readOption(argv, option) {
+  const index = argv.indexOf(option);
+  return index === -1 ? undefined : argv[index + 1];
+}
+
+function readArgs(argv) {
+  const platform = readOption(argv, '--platform');
+  const profile = readOption(argv, '--profile');
+  if (profile !== undefined && !RELEASE_PROFILES.includes(profile)) {
+    throw new Error(
+      `--profile should be one of ${RELEASE_PROFILES.join(', ')}. Received ${JSON.stringify(
+        profile
+      )}.`
+    );
+  }
+  return {
+    control: argv.includes('--control'),
+    platforms: platform === undefined ? ['ios', 'android'] : [platform],
+    profiles: profile === undefined ? RELEASE_PROFILES : [profile],
+  };
+}
+
+// The environment of a check of the shell built on one profile and variant: the shell config, set
+// to that profile, written to a temporary shell.json, its icon still found where it is.
+function withShellEnv({ configPath: shellConfigPath, profile, shell, variant }, callback) {
+  return withTemporaryDirectory(`lowdefy-shell-config-${profile}-`, (directory) => {
+    const configPath = path.join(directory, 'shell.json');
+    const icon =
+      shell.icon === undefined
+        ? undefined
+        : path.resolve(path.dirname(shellConfigPath), shell.icon);
+    fs.writeFileSync(configPath, JSON.stringify({ ...shell, icon, profile }, null, 2));
+    return callback({
+      ...process.env,
+      CI: '1',
+      LOWDEFY_SHELL_CONFIG: configPath,
+      LOWDEFY_SHELL_VARIANT: variant,
+    });
+  });
+}
+
+function listFiles(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = path.join(directory, entry.name);
+    return entry.isDirectory() ? listFiles(entryPath) : [entryPath];
+  });
+}
+
+function withTemporaryDirectory(prefix, callback) {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+  try {
+    return callback(directory);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+}
+
+// The files of the exported bundle that hold each string, as { [string]: [file] }. Hermes bytecode
+// keeps string literals as plain bytes, so they are found in .hbc files too.
+function findInBundle({ env, platform, strings }) {
+  return withTemporaryDirectory(`lowdefy-shell-bundle-${platform}-`, (outputDir) => {
+    execFileSync(
+      path.join(shellRoot, 'node_modules', '.bin', 'expo'),
+      ['export', '--platform', platform, '--output-dir', outputDir, '--clear'],
+      { cwd: shellRoot, env, stdio: ['ignore', 'ignore', 'inherit'] }
+    );
+    const files = listFiles(outputDir).map((file) => ({
+      name: path.relative(outputDir, file),
+      bytes: fs.readFileSync(file),
+    }));
+    return Object.fromEntries(
+      strings.map((string) => [
+        string,
+        files.filter(({ bytes }) => bytes.includes(Buffer.from(string))).map(({ name }) => name),
+      ])
+    );
+  });
+}
+
+function readList(text) {
+  return [...text.matchAll(/'([^']+)'/g)].map((match) => match[1]);
+}
+
+// The exclusions a generated native project passes to Expo autolinking: [expo modules, react-native
+// config]. iOS: the Podfile's `use_expo_modules!(exclude: [...])` and its react-native-config
+// command's `--exclude` pairs. Android: settings.gradle's `expoAutolinking.exclude` and the list
+// added to `rnConfigCommand`.
+function readExclusions({ platform, projectDir }) {
+  if (platform === 'ios') {
+    const podfile = fs.readFileSync(path.join(projectDir, 'ios', 'Podfile'), 'utf8');
+    const expoModules = /use_expo_modules!\(exclude: \[([^\]]*)\]\)/.exec(podfile);
+    const reactNative = [...podfile.matchAll(/'--exclude', '([^']+)'/g)].map((match) => match[1]);
+    return { expo: expoModules ? readList(expoModules[1]) : [], reactNative };
+  }
+  const settings = fs.readFileSync(path.join(projectDir, 'android', 'settings.gradle'), 'utf8');
+  const expoModules = /expoAutolinking\.exclude = \[([^\]]*)\]/.exec(settings);
+  const reactNative = /rnConfigCommand \+ \[([^\]]*)\]/.exec(settings);
+  return {
+    expo: expoModules ? readList(expoModules[1]) : [],
+    reactNative: reactNative ? readList(reactNative[1]).filter((item) => item !== '--exclude') : [],
+  };
+}
+
+function runAutolinking({ args, exclude, projectDir }) {
+  const output = execFileSync(
+    process.execPath,
+    [
+      '--no-warnings',
+      '--eval',
+      "require('expo/bin/autolinking')",
+      'expo-modules-autolinking',
+      ...args,
+      ...exclude.flatMap((name) => ['--exclude', name]),
+    ],
+    { cwd: projectDir, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }
+  );
+  return JSON.parse(output);
+}
+
+// The packages the native build links: Expo modules and react-native-config dependencies.
+function readLinkedModules({ platform, projectDir }) {
+  const exclusions = readExclusions({ platform, projectDir });
+  const resolved = runAutolinking({
+    args: ['resolve', '--json', '--platform', AUTOLINKING_PLATFORMS[platform]],
+    exclude: exclusions.expo,
+    projectDir,
+  });
+  const reactNative = runAutolinking({
+    args: ['react-native-config', '--json', '--platform', platform],
+    exclude: exclusions.reactNative,
+    projectDir,
+  });
+  return new Set([
+    ...resolved.modules.map((module) => module.packageName),
+    ...Object.keys(reactNative.dependencies),
+  ]);
+}
+
+// The permissions the native project asks for, of those every profile's modules ask for: iOS
+// Info.plist usage keys and Android permissions not removed by `blockedPermissions`.
+function readPermissions({ platform, projectDir }) {
+  if (platform === 'ios') {
+    const iosDir = path.join(projectDir, 'ios');
+    const plist = fs
+      .readdirSync(iosDir)
+      .map((name) => path.join(iosDir, name, 'Info.plist'))
+      .find((file) => fs.existsSync(file));
+    const text = fs.readFileSync(plist, 'utf8');
+    return new Set(
+      [...text.matchAll(/<key>(NS[A-Za-z]+UsageDescription)<\/key>/g)].map((m) => m[1])
+    );
+  }
+  const manifest = fs.readFileSync(
+    path.join(projectDir, 'android', 'app', 'src', 'main', 'AndroidManifest.xml'),
+    'utf8'
+  );
+  return new Set(
+    [...manifest.matchAll(/<uses-permission [^>]*android:name="([^"]+)"[^>]*>/g)]
+      .filter((match) => !match[0].includes('tools:node="remove"'))
+      .map((match) => match[1])
+  );
+}
+
+function prebuild({ env, platform }) {
+  return withTemporaryDirectory(`lowdefy-shell-prebuild-${platform}-`, (projectDir) => {
+    fs.readdirSync(shellRoot)
+      .filter((name) => !SKIPPED_IN_COPY.has(name))
+      .forEach((name) => {
+        fs.cpSync(path.join(shellRoot, name), path.join(projectDir, name), { recursive: true });
+      });
+    fs.symlinkSync(path.join(shellRoot, 'node_modules'), path.join(projectDir, 'node_modules'));
+    execFileSync(
+      path.join(projectDir, 'node_modules', '.bin', 'expo'),
+      ['prebuild', '--no-install', '--platform', platform],
+      { cwd: projectDir, env, stdio: ['ignore', 'ignore', 'inherit'] }
+    );
+    return {
+      linked: readLinkedModules({ platform, projectDir }),
+      permissions: readPermissions({ platform, projectDir }),
+    };
+  });
+}
+
+function checkControl({ configPath, platform, shell }) {
+  return withShellEnv({ configPath, profile: 'dev', shell, variant: 'dev' }, (env) => {
+    const problems = [];
+    const found = findInBundle({
+      env,
+      platform,
+      strings: [DEV_CLIENT_MARKER, ...nativeNames(RELEASE_EXCLUDED_MODULES)],
+    });
+    Object.entries(found)
+      .filter(([, files]) => files.length === 0)
+      .forEach(([string]) => problems.push(`the dev bundle does not hold "${string}"`));
+    const { linked } = prebuild({ env, platform });
+    Object.keys(RELEASE_EXCLUDED_MODULES)
+      .filter((name) => !linked.has(name))
+      .forEach((name) => problems.push(`the dev prebuild does not link ${name}`));
+    return problems;
+  });
+}
+
+// iOS asks for permissions with Info.plist usage keys, Android with android.permission names.
+function onPlatform({ permissions, platform }) {
+  return permissions.filter(
+    (permission) => permission.startsWith('android.permission.') === (platform === 'android')
+  );
+}
+
+function checkRelease({ configPath, platform, profile, shell }) {
+  const exclusions = getExclusions({ shell: { ...shell, profile }, variant: 'release' });
+  const excluded = {
+    modules: exclusions.modules,
+    permissions: onPlatform({ permissions: exclusions.permissions, platform }),
+  };
+  return withShellEnv({ configPath, profile, shell, variant: 'release' }, (env) => {
+    const problems = [];
+    const found = findInBundle({
+      env,
+      platform,
+      strings: [DEV_CLIENT_MARKER, ...nativeNames(excluded.modules)],
+    });
+    Object.entries(found)
+      .filter(([, files]) => files.length > 0)
+      .forEach(([string, files]) =>
+        problems.push(`the release bundle holds "${string}" (${files.join(', ')})`)
+      );
+    const { linked, permissions } = prebuild({ env, platform });
+    Object.keys(excluded.modules)
+      .filter((name) => linked.has(name))
+      .forEach((name) => problems.push(`the release prebuild links ${name}`));
+    excluded.permissions
+      .filter((permission) => permissions.has(permission))
+      .forEach((permission) =>
+        problems.push(`the release prebuild asks for ${permission}, which no module it links needs`)
+      );
+    return { excluded, problems };
+  });
+}
+
+function main() {
+  const { control, platforms, profiles } = readArgs(process.argv.slice(2));
+  const { configPath, shell } = readShellConfig();
+  let failed = false;
+  platforms.forEach((platform) => {
+    if (control) {
+      const problems = checkControl({ configPath, platform, shell });
+      if (problems.length > 0) {
+        problems.forEach((problem) => console.error(`${platform}: ${problem}.`));
+        failed = true;
+        return;
+      }
+      console.log(
+        `${platform}: the dev variant holds the dev-tab client and links ${Object.keys(
+          RELEASE_EXCLUDED_MODULES
+        ).join(', ')}.`
+      );
+    }
+    profiles.forEach((profile) => {
+      const { excluded, problems } = checkRelease({ configPath, platform, profile, shell });
+      if (problems.length > 0) {
+        problems.forEach((problem) => console.error(`${platform} ${profile}: ${problem}.`));
+        failed = true;
+        return;
+      }
+      const permissions =
+        excluded.permissions.length === 0
+          ? 'asks for no permission of a left-out module'
+          : `asks for none of ${excluded.permissions.join(', ')}`;
+      console.log(
+        `${platform} ${profile}: the release shell "${
+          shell.id
+        }" holds no dev-tab client, links none of ${Object.keys(excluded.modules).join(
+          ', '
+        )}, and ${permissions}.`
+      );
+    });
+  });
+  if (failed) {
+    process.exit(1);
+  }
+}
+
+main();

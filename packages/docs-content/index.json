@@ -1,5 +1,5 @@
 {
-  "version": "7.0.0",
+  "version": "7.1.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -2929,7 +2929,7 @@
       "files": [
         "concepts/core/lowdefy-schema.yaml"
       ],
-      "hash": "07740570ecf48abb36652a1b3bd9f06ac773d0689a7080cf850010926f6c0ad1"
+      "hash": "443e7b01806e39b6f91a75bef897ab1dba90b2634710aa33774d31f5e0bc117c"
     },
     "concepts/menus": {
       "files": [
@@ -3000,7 +3000,7 @@
       "files": [
         "concepts/core/events-and-actions.yaml"
       ],
-      "hash": "7eedc6d4ddd784cac10404d15849fc6b7e6581eee1370ec35bc64eaf7b766e3a"
+      "hash": "a8b0c1eb2ac8b9edcd0147ff46626070efe29ff0db71bd747153d2f2b4408968"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
@@ -3075,7 +3075,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "46602ff87ff00ffb129234873030a99171e6d9779999296ad5be6520b7ccb86e"
+      "hash": "c60bcec328cf5a615b5769c3c8d876c595559e97ccb9a991a5e9e29fddc54af6"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3106,7 +3106,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "788ce9f3a31b6cf157023a9f72dab04264a3a79e81b66b8ad84706759c6a0097"
+      "hash": "272b0b89ee7569c8def7711e1b870aa96f6c78514923e21bd94bfe80eaee31e9"
     },
     "agents/agents-introduction": {
       "files": [
@@ -4891,7 +4891,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "e8b01fcbdcee058f34dcfce8354e46b41542ee891d0a54121ffdf371c8a91bc2"
+      "hash": "e3b57250865bdc78e88631c7da855e959b5bde8f0f0a3fddc1fe2aded583f45e"
     },
     "connections/mssql": {
       "files": [

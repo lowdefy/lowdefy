@@ -17,8 +17,9 @@
 import getHeadlessUser from './getHeadlessUser.js';
 import { expect, test } from 'vitest';
 
-function contextWithCookie(cookie) {
-  return { req: { header: (name) => (name === 'cookie' ? cookie : undefined) } };
+function contextWithCookie(cookie, headers = {}) {
+  const all = { ...headers, cookie };
+  return { req: { header: (name) => all[name] } };
 }
 
 function encode(value) {
@@ -39,4 +40,13 @@ test('getHeadlessUser returns null with no headless cookie', () => {
 
 test('getHeadlessUser returns null for a cookie that is not base64 JSON', () => {
   expect(getHeadlessUser(contextWithCookie('lowdefy_headless_user=%%%'))).toBeNull();
+});
+
+test('getHeadlessUser ignores the headless cookie on a request from another machine', () => {
+  const caller = { user: { id: 'agent', roles: ['admin'] }, explicit: true };
+  expect(
+    getHeadlessUser(
+      contextWithCookie(`lowdefy_headless_user=${encode(caller)}`, { 'x-lowdefy-dev-remote': '1' })
+    )
+  ).toBeNull();
 });

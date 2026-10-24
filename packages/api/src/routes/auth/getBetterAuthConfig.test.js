@@ -2059,3 +2059,45 @@ describe('oauthProvider authorization server plugins', () => {
     expect(options.plugins.some((p) => p.id === 'cimd')).toBe(true);
   });
 });
+
+describe('mobile', () => {
+  const mobile = { shells: [{ id: 'field', scheme: 'com.example.field' }], sessionExpiresIn: null };
+
+  function build(authJsonOverrides) {
+    return getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(authJsonOverrides),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+  }
+
+  test('adds no bearer or one-time-token plugin for an app without a mobile section', () => {
+    const ids = build().plugins.map((plugin) => plugin.id);
+    expect(ids).not.toContain('bearer');
+    expect(ids).not.toContain('one-time-token');
+  });
+
+  test('adds the bearer and one-time-token plugins for an app with a mobile section', () => {
+    const options = build({ mobile });
+    const ids = options.plugins.map((plugin) => plugin.id);
+    expect(ids).toContain('bearer');
+    expect(ids).toContain('one-time-token');
+    expect(options.plugins.find((plugin) => plugin.id === 'bearer').options).toEqual({
+      requireSignature: true,
+    });
+    // customSession stays last, so its token strip sees every session field.
+    expect(ids.at(-1)).toBe('custom-session');
+  });
+
+  test('marks phone sessions only when mobile.auth.sessionExpiresIn is set', () => {
+    expect(build({ mobile }).session.additionalFields).toBeUndefined();
+    const options = build({ mobile: { ...mobile, sessionExpiresIn: 2592000 } });
+    expect(options.session.additionalFields).toEqual({
+      mobile: { type: 'boolean', required: false, input: false },
+    });
+    expect(options.session.expiresIn).toBe(604800);
+  });
+});

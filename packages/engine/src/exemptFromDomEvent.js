@@ -20,8 +20,8 @@ import getDomEvent from './getDomEvent.js';
 // A block an action calls a method on acts for that action, not for the DOM event being
 // dispatched: the events it fires for it (at once, or from the effects the method causes) are
 // never skipped as copies of the DOM event bubbling through it. See claimDomEvent.
-function exemptFromDomEvent({ blockId }) {
-  const domEvent = getDomEvent();
+function exemptFromDomEvent({ blockId, lowdefy }) {
+  const domEvent = getDomEvent({ lowdefy });
   if (domEvent === null) return;
   const exempt = domEventClaims.exempt.get(domEvent) ?? new Set();
   exempt.add(blockId);

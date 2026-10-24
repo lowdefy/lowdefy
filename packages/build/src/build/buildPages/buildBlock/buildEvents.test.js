@@ -1309,3 +1309,63 @@ test('event shortcut that only contains a reserved name as a modified key is acc
   };
   expect(() => buildPages({ components, context })).not.toThrow();
 });
+
+test('throw on a list of actions placed as one item of an action list', () => {
+  const nested = [
+    { id: 'action_2', type: 'Reset' },
+    { id: 'action_3', type: 'Reset' },
+  ];
+  nested['~k'] = 'nested_key';
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: [{ id: 'action_1', type: 'Reset' }, nested],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  let thrown;
+  try {
+    buildPages({ components, context });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.message).toEqual(
+    'Action list on event "onClick" on block "block_1" on page "page_1" holds a list at item 1, which is a list of actions, not an action. Use the _ref as the whole list, or join the lists with _build.array.concat.'
+  );
+  expect(thrown.configKey).toEqual('nested_key');
+});
+
+test('throw on a list of actions placed as one item of a control branch', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: [{ ':if': true, ':then': [[{ id: 'action_1', type: 'Reset' }]] }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Action list on event "onClick" on block "block_1" on page "page_1" holds a list at item 0, which is a list of actions, not an action.'
+  );
+});

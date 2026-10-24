@@ -1,0 +1,18 @@
+# MB9: Shell Plugin Version Range
+# A shell plugin's version must be exact, so one name@version is always the
+# same native code. A range fails the build, naming the shell and plugin.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  shells:
+    - id: field
+      plugins:
+        - name: '@example/lowdefy-printer'
+          version: ^2.1.0
+config:
+  experimental:
+    mobile: true

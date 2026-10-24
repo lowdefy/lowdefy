@@ -110,11 +110,11 @@ Every error is one of two things, and the class says which:
 
 The test when classifying: _would a developer need to change config to stop this from happening?_ If not, it is not an `ActionError`/`RequestError`/`ConfigError`.
 
-`expectedErrorNames` (`@lowdefy/errors`) is the set of these four names, and every consumer that tells the two apart reads it: the client `handleError` (console only, no POST, no dev error bar) and the dev server's `evaluateInvariants` (never an `action-error` for a journey). The servers' error handlers answer an expected outcome themselves as `{ name, message }` with a 400, 401 or 403 and no `~e` marker, so `client/src/request.js` rebuilds its class from `name`; without that the client threw a plain `Error`, the action runner wrapped it as an `ActionError`, and a role refusal was reported and failed journeys as a fault.
+`expectedErrorNames` (`@lowdefy/errors`) is the set of these four names, and every consumer that tells the two apart reads it: the client `handleError` (console only, no POST, no dev error bar) and the dev server's `evaluateInvariants` (never an `action-error` for a journey). The servers' error handlers answer an expected outcome themselves as `{ name, message }` with a 400, 401 or 403 and no `~e` marker, so `client-core/src/request.js` rebuilds its class from `name`; without that the client threw a plain `Error`, the action runner wrapped it as an `ActionError`, and a role refusal was reported and failed journeys as a fault.
 
 **A refused endpoint payload is classified by who built it.** `validatePayload` (`packages/api/src/routes/endpoints/`) throws a `ConfigError` carrying the endpoint's `configKey` when the app's own config built the payload: a page's `CallAPI` (a call that names its page), a `CallApi` step, a detached target, a Dynamic block's endpoint, an auth or agent hook, a `schedule.payload`. Only an outside caller's payload (`outsideCaller`: an API client that names no page, an MCP tool call, an agent tool call, whose model wrote the input) is refused with a `UserError`. A page sending a payload its own endpoint refuses is a config fault, so it is logged as one and fails a journey.
 
-**Auth server rejections are expected outcomes.** BetterAuth's client resolves `{ data, error }`; `unwrap` in `packages/client/src/auth/createAuthMethods.js` rethrows an `error.status` in the 4xx range as a `UserError` (with `metaData: { code, status }` for page config to branch on) and anything else — a 5xx or network failure — as a plain `Error`, which the action runner wraps as an `ActionError` and reports. Server-side, `options.onAPIError.onError` (`packages/api/src/routes/auth/createOnAPIError.js`) owns BetterAuth's API-error logging: a 4xx `APIError` is one warn line, everything else is `logger.error(error)`. Without it BetterAuth's router logged every 4xx at error level whenever the logger level was `warn` or `debug`, so a wrong password or an expired magic link produced an `ERROR [Better Auth]` line on every attempt.
+**Auth server rejections are expected outcomes.** BetterAuth's client resolves `{ data, error }`; `unwrap` in `packages/client-core/src/auth/createAuthMethods.js` rethrows an `error.status` in the 4xx range as a `UserError` (with `metaData: { code, status }` for page config to branch on) and anything else — a 5xx or network failure — as a plain `Error`, which the action runner wraps as an `ActionError` and reports. Server-side, `options.onAPIError.onError` (`packages/api/src/routes/auth/createOnAPIError.js`) owns BetterAuth's API-error logging: a 4xx `APIError` is one warn line, everything else is `logger.error(error)`. Without it BetterAuth's router logged every 4xx at error level whenever the logger level was `warn` or `debug`, so a wrong password or an expired magic link produced an `ERROR [Better Auth]` line on every attempt.
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution.
 
@@ -213,7 +213,7 @@ Three-layer safety net: resolve + log → log without resolve → console.error.
 
 Per-request, async. Reads keyMap/refMap from build artifacts (in dev, merged with the JIT page builds' `jitMaps/` files through the context's `readMaps`), resolves location, logs with request metadata (user, URL, headers), captures to Sentry. It also sets `error.handled = true` — the signal the browser reads to know this error was already logged server-side. Once `handleError` has run, the error crosses the wire under the wire policy in [Readers and their policies](#readers-and-their-policies).
 
-**Browser handleError** (`packages/client/src/createHandleError.js`):
+**Browser handleError** (`packages/client-core/src/createHandleError.js`):
 
 Deduplicates by `message:configKey`, where the message is the dev error's in dev (see [Dev tools](#dev-tools)) — which is why the wire keeps `configKey`. Two paths:
 
@@ -339,7 +339,7 @@ BetterAuth's own route bodies (`/api/auth/*`) are outside this policy: the auth 
 
 `devError` sits beside `~e`, not inside it, because the serializer's reviver replaces any object holding `~e` with its error: a plain `serializer.deserialize` of the payload drops `devError`, so no decode path that forgets about it can hand it to config. `buildEndpointResult`'s `error` field is `redactErrorResponse`'s payload, so it carries `devError` in dev; its `response` field never does — an Error in a response value is data the routine returned, not a failure of the request.
 
-**The client decodes server errors in one function.** `decodeServerError(payload)` (`packages/engine/src/decodeServerError.js`) deserializes the wire error and, when the payload has `devError`, records the deserialized dev error in a module-level `WeakMap` keyed by the decoded error. `getDevError(error)` reads it back. Every decode site calls it: `client/src/request.js` for non-2xx responses, `engine/src/callAPIHandler.js` for endpoint results (decoded once, so the stored `api.error` and the thrown error are the same object and the key matches), and `client/src/websocket/createWebSocketClient.js` for reply error frames. The engine owns the module and exports both functions because `@lowdefy/client` depends on `@lowdefy/engine`, not the reverse, and one module keeps every decode site and the error handler on the same `WeakMap`.
+**The client decodes server errors in one function.** `decodeServerError(payload)` (`packages/engine/src/decodeServerError.js`) deserializes the wire error and, when the payload has `devError`, records the deserialized dev error in a module-level `WeakMap` keyed by the decoded error. `getDevError(error)` reads it back. Every decode site calls it: `client-core/src/request.js` for non-2xx responses, `engine/src/callAPIHandler.js` for endpoint results (decoded once, so the stored `api.error` and the thrown error are the same object and the key matches), and `client-core/src/websocket/createWebSocketClient.js` for reply error frames. The engine owns the module and exports both functions because `@lowdefy/client` depends on `@lowdefy/engine`, not the reverse, and one module keeps every decode site and the error handler on the same `WeakMap`.
 
 The `WeakMap` is the guarantee that config never reads `devError`. The decoded error is stored as `request.error` / `api.error`, rethrown, and read by config through `_actions`, `_request_details` and `_error`, so any property on it — enumerable or not — is one operator change away from config. The error handler calls `getDevError(error)` instead and shows the dev error when there is one; every other decision (the `UserError` branch, the `handled` gate, the POST to `/api/client-error`) stays on the error config sees. The module also records each decoded error in a `WeakSet` (`isDecodedServerError`), which the action runner uses to pass a server error to a `catch` list's `_error` as decoded.
 
@@ -625,7 +625,7 @@ File "components/header.yaml" references itself through:
 
 ### Browser handleError
 
-Located at `packages/client/src/createHandleError.js`. Single mechanism for all browser error handling:
+Located at `packages/client-core/src/createHandleError.js`. Single mechanism for all browser error handling:
 
 ```javascript
 function createHandleError(lowdefy) {
@@ -873,11 +873,11 @@ traverseConfig({
 
 ### Client Integration
 
-- `packages/client/src/request.js` — Decodes typed errors from non-2xx responses
-- `packages/client/src/websocket/createWebSocketClient.js` — Decodes websocket reply error frames
+- `packages/client-core/src/request.js` — Decodes typed errors from non-2xx responses
+- `packages/client-core/src/websocket/createWebSocketClient.js` — Decodes websocket reply error frames
 - `packages/engine/src/decodeServerError.js` — `decodeServerError`, `getDevError`, `isDecodedServerError`; the dev error `WeakMap`
 - `packages/engine/src/Actions.js` — `parseScope` for catch lists, the client `_error` value, the `UserError` console dedup
-- `packages/client/src/createHandleError.js` — Browser error handler
+- `packages/client-core/src/createHandleError.js` — Browser error handler
 - `packages/client/src/initLowdefyContext.js` — Wires `lowdefy._internal.handleError`
 
 ### Server Integration

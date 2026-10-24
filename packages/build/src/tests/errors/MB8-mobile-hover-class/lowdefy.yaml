@@ -1,0 +1,20 @@
+# MB8: Mobile Page With A Hover Class
+# A Tailwind class with no native form fails the build, naming the page, block
+# and class.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  pages:
+    - id: jobs
+      type: Box
+      blocks:
+        - id: save
+          type: Button
+          class: p-4 hover:bg-blue-500
+config:
+  experimental:
+    mobile: true

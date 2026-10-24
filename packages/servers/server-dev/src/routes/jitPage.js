@@ -21,6 +21,7 @@ import authJson from '../../lib/build/auth.js';
 import { buildPageWithContext, getPageJitEnrichment } from '../../lib/server/jitPageBuilder.js';
 import getBuildId from '../../lib/docs/getBuildId.js';
 import getRequestPath from '../lib/getRequestPath.js';
+import getRequestSurface from '../lib/getRequestSurface.js';
 import lowdefyConfig from '../../lib/build/config.js';
 import servedBuilds from '../../lib/server/recording/servedBuilds.js';
 
@@ -33,6 +34,8 @@ const basePath = lowdefyConfig.basePath ?? '';
 //   401 { redirect }  — logged-out navigation to a protected page
 //   403 { redirect }  — authorised but second factor not yet enrolled
 //   404 'Page not found.'
+//   404 { pageConfig: null, surface }  — the page is for the other surface
+//       (x-lowdefy-shell marks a mobile shell)
 //   200 { pageId, pathParams, matchedPath, pageConfig } (pageConfig + _buildId,
 //       + _warnings, + _jsEntries module text, + _dynamicIcons data)
 //
@@ -87,7 +90,11 @@ async function jitPageHandler(c) {
     });
   }
 
-  const result = await getPageConfig(context, { path, urlQuery: c.req.query() });
+  const result = await getPageConfig(context, {
+    path,
+    urlQuery: c.req.query(),
+    surface: getRequestSurface(c),
+  });
   if (result.status === 'unauthenticated') {
     // The client follows this redirect with a full page load, so the login
     // page can return to the requested page after sign-in.
@@ -118,6 +125,11 @@ async function jitPageHandler(c) {
       },
       403
     );
+  }
+  if (result.status === 'wrong_surface') {
+    // The page is for the other surface: a shell opens a web page in the
+    // browser, and a browser shows its 404.
+    return c.json({ pageConfig: null, surface: result.surface }, 404);
   }
   if (result.status !== 'ok') {
     return c.text('Page not found.', 404);
