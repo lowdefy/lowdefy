@@ -23,22 +23,27 @@ import startBackgroundFetch from './backgroundFetch.js';
 import startNotifications from '../notifications/startNotifications.js';
 import startShareIn from './startShareIn.js';
 import startShortcuts from './startShortcuts.js';
+import whenAppReady from './whenAppReady.js';
 
 /**
- * Starts the native work of the open app once its auth and session exist: it becomes the current
- * app (currentApp.js) for work started outside React, and notifications, the offline request
- * queue, quick actions and App Shortcuts, share-in, background fetch and the widgets follow it.
- * When the app goes to the background, a scan screen's brightness goes back to the system.
+ * Starts the native work of the open app once its auth and session exist: notifications, quick
+ * actions and App Shortcuts, share-in and background fetch listen at once, and their launch work
+ * waits on `app.ready` (whenAppReady: the token read and a root held). Once ready, the app becomes
+ * the current app (currentApp.js) for work started outside React, the offline request queue starts
+ * and the widgets refresh. When the app goes to the background, a scan screen's brightness goes
+ * back to the system.
  *
  * @param {Object} params
  * @param {Object} params.app { apiBase, auth, host, requestQueue, session, shell, triggerAppEvent }.
  * @returns {{ app: Object, shareIn: Object, stop: () => void }}
  */
 function startAppServices({ app: opened }) {
+  const ready = whenAppReady({ auth: opened.auth, session: opened.session });
   const app = {
     apiBase: opened.apiBase,
     auth: opened.auth,
     fetch: opened.auth.fetch,
+    ready: ready.promise,
     requestQueue: opened.requestQueue,
     router: opened.host.router,
     session: opened.session,
@@ -49,15 +54,20 @@ function startAppServices({ app: opened }) {
   const shareIn = startShareIn({ app });
   // Lowdefy Dev's share injection hands payloads to it (src/dev/inject/injectShare.js).
   app.receiveShare = shareIn.receive;
-  setCurrentApp(app);
+  let stopped = false;
   const stops = [
+    ready.stop,
     startNotifications({ app }),
-    app.requestQueue.start(),
     startShortcuts({ app }),
     startBackgroundFetch({ app }),
     shareIn.stop,
   ];
-  refreshWidgets().catch(() => {});
+  ready.promise.then(() => {
+    if (stopped) return;
+    setCurrentApp(app);
+    stops.push(app.requestQueue.start());
+    refreshWidgets().catch(() => {});
+  });
   const appState = AppState.addEventListener('change', (state) => {
     if (state === 'active') {
       refreshWidgets().catch(() => {});
@@ -74,6 +84,7 @@ function startAppServices({ app: opened }) {
     app,
     shareIn,
     stop: () => {
+      stopped = true;
       setCurrentApp(null);
       stops.forEach((stop) => stop());
     },

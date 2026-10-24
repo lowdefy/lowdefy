@@ -37,6 +37,8 @@ function startShareIn({ app }) {
     const payloads = injected ?? (await Sharing.getResolvedSharedPayloadsAsync());
     if (injected === undefined) Sharing.clearSharedPayloads();
     if (payloads.length === 0) return;
+    // The share page's path comes from the root.
+    await app.ready;
     const shared = toSharePayload(payloads);
     const { root } = app.session.getState();
     if (root?.share !== null && root?.share !== undefined) {

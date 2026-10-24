@@ -45,7 +45,9 @@ function startShortcuts({ app }) {
       }))
     ).catch(() => {});
   }
-  function run(id) {
+  // A quick action that launched the app waits for the root that names its path.
+  async function run(id) {
+    await app.ready;
     const shortcut = (app.session.getState().root?.shortcuts ?? []).find((item) => item.id === id);
     if (shortcut === undefined) return;
     openPath({ app, path: shortcut.path });
@@ -53,15 +55,17 @@ function startShortcuts({ app }) {
   }
   function onUrl(url) {
     const link = parseShellLink(url);
-    if (link?.kind === 'shortcut') run(link.id);
+    if (link?.kind === 'shortcut') run(link.id).catch(() => {});
   }
 
   const unsubscribe = app.session.subscribe(applyRoot);
   applyRoot();
-  const quickAction = QuickActions.addListener((action) => run(action.id));
+  const quickAction = QuickActions.addListener((action) => {
+    run(action.id).catch(() => {});
+  });
   const urls = Linking.addEventListener('url', ({ url }) => onUrl(url));
   if (QuickActions.initial !== undefined) {
-    run(QuickActions.initial.id);
+    run(QuickActions.initial.id).catch(() => {});
   }
   Linking.getInitialURL()
     .then(onUrl)

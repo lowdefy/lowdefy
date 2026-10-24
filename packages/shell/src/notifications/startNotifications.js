@@ -43,7 +43,8 @@ function startNotifications({ app }) {
     const key = `${response.notification.request.identifier}:${response.actionIdentifier}`;
     if (handled.has(key)) return;
     handled.add(key);
-    handleNotificationResponse({ app, response }).catch(() => {});
+    // A button's endpoint call and the path it opens need the token and the root.
+    app.ready.then(() => handleNotificationResponse({ app, response })).catch(() => {});
   }
 
   function applyRoot() {
