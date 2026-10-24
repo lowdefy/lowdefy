@@ -75,6 +75,21 @@ test('a page request carries the build of the root the shell holds', async () =>
   expect(header(server.fetch.mock.calls.at(-1)[1], 'x-lowdefy-build')).toBe('build-1');
 });
 
+test('a request sent with keepBuild keeps its build, so an older build gets the 409 and its retry', async () => {
+  const { server, shellFetch } = await setup();
+  deploy({ server, todayHash: 'h-today-1' });
+  server.fetch.mockClear();
+  const res = await shellFetch(`${apiBase}/api/request/jobs/get_jobs`, {
+    ...requestInit,
+    headers: { ...requestInit.headers, 'x-lowdefy-build': 'build-0' },
+    keepBuild: true,
+  });
+  expect(res.status).toBe(200);
+  expect(header(server.fetch.mock.calls[0][1], 'x-lowdefy-build')).toBe('build-0');
+  expect(server.fetch.mock.calls[0][1].keepBuild).toBeUndefined();
+  expect(header(server.fetch.mock.calls.at(-1)[1], 'x-lowdefy-build')).toBe('build-2');
+});
+
 test('a 409 syncs the root and changed pages, then retries the request once on the new build', async () => {
   const { server, session, shellFetch } = await setup();
   deploy({ server, todayHash: 'h-today-2' });

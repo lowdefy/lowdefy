@@ -26,16 +26,18 @@ const BUILD_HEADER = 'x-lowdefy-build';
  *   build, its payload is still the shape the new build expects, so the request is retried once,
  *   stamped with the new build. When the page changed, the 409 goes to the core, which hands it to
  *   onBuildChanged: the screen is rebuilt on the new page and runs its requests again.
+ * - A request sent with `keepBuild: true` (the offline queue's, stamped with the build it was
+ *   queued under) keeps its stamp, so a request from an older build gets the 409 and its check.
  *
  * @param {Object} params
  * @param {Function} params.fetch The Fetch API, sending the shell header (withShellHeader).
  * @param {Object} params.session The app session (createAppSession).
  */
 function createShellFetch({ fetch, session }) {
-  return async function shellFetch(url, init = {}) {
+  return async function shellFetch(url, { keepBuild = false, ...init } = {}) {
     const headers = { ...init.headers };
     const stamped = headers[BUILD_HEADER] !== undefined;
-    if (stamped) {
+    if (stamped && !keepBuild) {
       headers[BUILD_HEADER] = session.getState().buildId ?? headers[BUILD_HEADER];
     }
     const res = await fetch(url, { ...init, headers });

@@ -130,6 +130,8 @@ test('the queue replays in order when the phone comes back online, with the stor
   expect(fetch.mock.calls[0][1].headers).toEqual(
     expect.objectContaining({ Authorization: 'Bearer token', 'x-lowdefy-build': 'b1' })
   );
+  // The shell's fetch keeps the queued build instead of stamping the current one.
+  expect(fetch.mock.calls[0][1].keepBuild).toBe(true);
   expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({ payload: { id: 'first' } });
   expect(await queue.get()).toEqual({ pending: 0, failed: 0, items: [] });
   expect(triggerAppEvent).toHaveBeenLastCalledWith({

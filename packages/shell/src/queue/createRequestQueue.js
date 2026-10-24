@@ -98,7 +98,13 @@ function createRequestQueue({
     }
     let res;
     try {
-      res = await fetch(item.url, { method: 'POST', headers, body: JSON.stringify(item.body) });
+      // keepBuild: the item's build is checked, not replaced by the build the shell holds now.
+      res = await fetch(item.url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(item.body),
+        keepBuild: true,
+      });
     } catch (error) {
       if (isNetworkError(error)) return 'stop';
       throw error;
