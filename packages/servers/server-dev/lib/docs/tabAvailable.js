@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import { findPageInstance } from './tabChannel.js';
 
-// Shared by inspectState.js and evalOperator.js to decide, when no explicit
+// Used by inspectState.js (through resolveSource.js) to decide, when no explicit
 // `source` is requested, whether a live browser tab holds the requested page
 // instance, to prefer over a fresh headless one. A tab the dev server's own
 // headless browser opened is not one to prefer (findPageInstance never picks it).

@@ -79,6 +79,23 @@ test('fitResponse writes an oversized response to a file and returns its path in
   expect(result.response).toBe(rows);
 });
 
+test('fitResponse fits the field it is given, naming the file after the field', () => {
+  const page = { id: 'big', blocks: 'x'.repeat(MAX_INLINE_RESPONSE_CHARS) };
+
+  const fitted = fitResponse({ result: { page }, name: 'big', field: 'page' });
+
+  expect(fitted.page).toBeUndefined();
+  expect(fitted.pageChars).toBe(JSON.stringify(page).length);
+  expect(fitted.note).toContain('The page is');
+  expect(fitted.note).toContain('written in full to pageFile');
+  expect(JSON.parse(fs.readFileSync(fitted.pageFile, 'utf8'))).toEqual(page);
+});
+
+test('fitResponse returns a small field untouched', () => {
+  const result = { page: { id: 'small' } };
+  expect(fitResponse({ result, name: 'small', field: 'page' })).toBe(result);
+});
+
 test('fitResponse writes a small response to a file when saveResponse is set', () => {
   const result = { response: { total: 3 }, status: 'success' };
 

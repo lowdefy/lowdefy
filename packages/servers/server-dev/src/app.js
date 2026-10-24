@@ -32,35 +32,15 @@ import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
 import devRecordingHandler from './routes/devRecording.js';
 import devToolsHandler from './routes/devTools.js';
-import docsAppMapHandler from './routes/docs/appMap.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
-import docsCheckpointsCreateHandler from './routes/docs/checkpointsCreate.js';
-import docsCheckpointsListHandler from './routes/docs/checkpointsList.js';
-import docsCheckpointsRevertHandler from './routes/docs/checkpointsRevert.js';
-import docsContentHandler from './routes/docs/content.js';
-import docsEvalOperatorHandler from './routes/docs/evalOperator.js';
 import docsEventsHandler from './routes/docs/events.js';
-import docsExamplesHandler from './routes/docs/examples.js';
 import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
-import docsInspectStateHandler from './routes/docs/inspectState.js';
 import docsJourneyHandler from './routes/docs/journey.js';
 import docsMutantsHandler from './routes/docs/mutants.js';
-import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
 import docsRestartHandler from './routes/docs/restart.js';
-import docsRunEndpointHandler from './routes/docs/runEndpoint.js';
-import docsRunRequestHandler from './routes/docs/runRequest.js';
-import docsSnapshotStateHandler from './routes/docs/snapshotState.js';
-import docsStateCheckpointsListHandler from './routes/docs/stateCheckpointsList.js';
-import docsPluginDocHandler from './routes/docs/pluginDoc.js';
-import docsPluginsHandler from './routes/docs/plugins.js';
-import docsSchemaHandler from './routes/docs/schema.js';
-import docsScreenshotHandler from './routes/docs/screenshot.js';
-import docsIconsHandler from './routes/docs/icons.js';
-import docsSearchHandler from './routes/docs/search.js';
-import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
@@ -131,9 +111,7 @@ function createApp() {
   // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
   // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
   // prefix in dev. The handlers need no auth protection or api context —
-  // they read build artifacts and node_modules directly — but run-request,
-  // run-endpoint and eval-operator build a full Lowdefy context (createLowdefyContext),
-  // which resolves the caller from the request headers via resolveAuthentication.
+  // they read build artifacts and node_modules directly.
   // The MCP transport is registered before staleFlag on purpose: hono
   // dispatches in registration order, so the stale middleware never sees a
   // JSON-RPC envelope. MCP carries its own stale notice, prepended to each
@@ -151,31 +129,17 @@ function createApp() {
   app.use('/lowdefy-docs/*', staleFlag());
   app.get('/lowdefy-docs', docsIndexHandler);
   app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
-  // Push channel for non-MCP clients. Must sit above the `/lowdefy-docs/:kind`
-  // catch-all, which would otherwise treat "events" as a type kind.
+  // Push channel for non-MCP clients.
   app.get('/lowdefy-docs/events', docsEventsHandler);
   app.get('/lowdefy-docs/page-config/:pageId{.+}', docsPageConfigHandler);
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
-  app.get('/lowdefy-docs/screenshot/:pageId{.+}', docsScreenshotHandler);
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.post('/lowdefy-docs/mutants', docsMutantsHandler);
-  app.get('/lowdefy-docs/inspect-state/:pageId{.+}', docsInspectStateHandler);
-  app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
-  app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
-  app.post('/lowdefy-docs/run-endpoint', docsRunEndpointHandler);
-  app.get('/lowdefy-docs/app-map', docsAppMapHandler);
-  app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
-  app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
-  app.post('/lowdefy-docs/checkpoints/revert', docsCheckpointsRevertHandler);
-  app.get('/lowdefy-docs/state-checkpoints', docsStateCheckpointsListHandler);
-  app.post('/lowdefy-docs/state-checkpoints/snapshot', docsSnapshotStateHandler);
-  app.post('/lowdefy-docs/state-checkpoints/load', docsLoadStateHandler);
   app.post('/lowdefy-docs/restart', docsRestartHandler);
   // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
-  // targeted SSE events by posting results here; GET lists connected tabs
-  // and serves checkpoint parts for the ?_checkpoint bootstrap.
-  // The live-tab channel acts on the developer's open tabs and loads recorded
-  // request mocks - the same cross-site guard as the docs tools.
+  // targeted SSE events by posting results here; GET lists connected tabs.
+  // The live-tab channel acts on the developer's open tabs - the same
+  // cross-site guard as the docs tools.
   app.use('/api/dev-inspect', localDevToolsOnly());
   app.use('/api/dev-inspect/*', localDevToolsOnly());
   app.all('/api/dev-inspect', devInspectHandler);
@@ -188,14 +152,6 @@ function createApp() {
   // Built now so the first doc search does not pay for reading every plugin
   // and module's docs.
   getDocsIndex();
-  app.get('/lowdefy-docs/plugins', docsPluginsHandler);
-  app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
-  app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);
-  app.get('/lowdefy-docs/search', docsSearchHandler);
-  app.get('/lowdefy-docs/icons', docsIconsHandler);
-  app.get('/lowdefy-docs/plugin-doc/:package{.+}', docsPluginDocHandler);
-  app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
-  app.get('/lowdefy-docs/:kind', docsTypesHandler);
 
   // Only the routes that run app logic: JIT page builds, the docs/MCP routes and the SSE streams
   // are dev-only and can legitimately run longer than any production request.

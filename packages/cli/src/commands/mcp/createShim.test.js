@@ -183,6 +183,23 @@ async function listenFakeHub({ configDirectory, start = {} }) {
   };
 }
 
+test('lowdefy mcp logs each tool call to tool-calls.jsonl in the Lowdefy home, without arguments', async () => {
+  makeApp('app');
+  await connect({ cwd: root });
+  await client.callTool({ name: 'lowdefy_dev_list', arguments: {} });
+  await client.callTool({ name: 'lowdefy_nope', arguments: { secret: 'value' } });
+  const text = fs.readFileSync(path.join(home, 'tool-calls.jsonl'), 'utf8');
+  const lines = text
+    .trim()
+    .split('\n')
+    .map((line) => JSON.parse(line));
+  expect(lines.map((line) => [line.tool, line.ok])).toEqual([
+    ['lowdefy_dev_list', true],
+    ['lowdefy_nope', false],
+  ]);
+  expect(text).not.toContain('secret');
+});
+
 test('lowdefy_dev_start counts as use and says the hub stops the server once it has been idle', async () => {
   const app = makeApp('apps/main');
   const hub = await listenFakeHub({ configDirectory: app });

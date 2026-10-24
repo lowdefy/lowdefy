@@ -14,20 +14,8 @@
   limitations under the License.
 */
 
-import getExamples from '../../../lib/docs/getExamples.js';
-
-function docsExamplesHandler(c) {
-  const type = c.req.param('type');
-  const examples = getExamples({ type });
-  if (examples === null) {
-    return c.json(
-      {
-        error: `No examples shipped for block type "${type}". Use GET /lowdefy-docs/schema/blocks/${type} for its schema.`,
-      },
-      404
-    );
-  }
-  return c.json(examples);
+function getConfigDirectory() {
+  return process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
 }
 
-export default docsExamplesHandler;
+export default getConfigDirectory;
