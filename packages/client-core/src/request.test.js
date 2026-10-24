@@ -540,6 +540,9 @@ describe('bearer transport', () => {
       request({ lowdefy: createBearerLowdefy({ token: 'session.sig' }), url: '/api/test' })
     ).rejects.toBeInstanceOf(AuthorizationError);
     expect(host.tokenStore.clear).not.toHaveBeenCalled();
+  });
+});
+
 describe('page unload', () => {
   test('request never settles when the browser cancels its fetch as the page leaves', async () => {
     host.fetch = vi.fn(() => Promise.reject(new TypeError('Failed to fetch')));
