@@ -30,7 +30,10 @@ function toAppLinkPath({ appUrl, path }) {
   const app = new URL(appUrl);
   const link = new URL(path);
   const basePath = app.pathname.replace(/\/$/, '');
-  if (link.host !== app.host || !link.pathname.startsWith(basePath)) {
+  // Under the base path itself: /acme or /acme/..., not /acmeevil/...
+  const underBasePath =
+    link.pathname === basePath || link.pathname.startsWith(`${basePath}/`) || basePath === '';
+  if (link.host !== app.host || !underBasePath) {
     return path;
   }
   const pagePath = link.pathname.slice(basePath.length) || '/';

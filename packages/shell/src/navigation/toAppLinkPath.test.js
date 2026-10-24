@@ -36,3 +36,18 @@ test('toAppLinkPath leaves other links alone', () => {
     'acme://tasks/1'
   );
 });
+
+test('toAppLinkPath leaves a link that only starts like the base path alone', () => {
+  expect(
+    toAppLinkPath({
+      appUrl: 'https://field.example.com/acme',
+      path: 'https://field.example.com/acmeevil/tasks/1',
+    })
+  ).toBe('https://field.example.com/acmeevil/tasks/1');
+  expect(
+    toAppLinkPath({
+      appUrl: 'https://field.example.com/acme/',
+      path: 'https://field.example.com/acme',
+    })
+  ).toBe('/');
+});

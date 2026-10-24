@@ -16,9 +16,23 @@
 
 import { type } from '@lowdefy/helpers';
 
+// A path inside the app: one leading slash. "//evil.com/x" and "/\evil.com/x" are links to another
+// host (the router opens them as external URLs), and a control character can hide either (a URL
+// parser drops tabs and newlines). A scheme cannot start a path that starts with "/".
+function isAppPath(path) {
+  return (
+    type.isString(path) &&
+    path.startsWith('/') &&
+    !/^\/[/\\]/.test(path) &&
+    // eslint-disable-next-line no-control-regex
+    !/[\u0000-\u001f]/.test(path)
+  );
+}
+
 /**
  * Opens one of the app's pages by path, as a notification tap, a shortcut, a widget or a share
- * does: "/tasks/42?tab=notes", with a query object merged into the path's own.
+ * does: "/tasks/42?tab=notes", with a query object merged into the path's own. Anything that is not
+ * a path inside the app is ignored.
  *
  * @param {Object} params
  * @param {Object} params.app The open app (currentApp.js).
@@ -26,7 +40,7 @@ import { type } from '@lowdefy/helpers';
  * @param {Object} [params.query]
  */
 function openPath({ app, path, query }) {
-  if (!type.isString(path) || !path.startsWith('/')) {
+  if (!isAppPath(path)) {
     return;
   }
   const [pathname, search = ''] = path.split('?');
