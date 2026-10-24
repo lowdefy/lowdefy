@@ -45,8 +45,8 @@ function isAppRelativePath(value) {
 function resolveCallbackURL({ lowdefy, callbackUrl }) {
   // An explicit refusal to navigate, above the ladder so a bounced sign-in
   // honors it too. Absence means "go home" below, so "stay put" needs its own
-  // spelling - a login form in a modal or an embedded panel relies on the
-  // session store re-rendering the tree with the new user in place.
+  // spelling - a login form in a modal or an embedded panel stays put, and
+  // settleSignIn renders the new caller in place.
   if (callbackUrl === false) {
     return undefined;
   }
@@ -190,6 +190,31 @@ function createAuthMethods(lowdefy, auth) {
     }
     rememberTarget({ lowdefy, target });
     router.push({ pathname: target.pathname, query: target.query, forceReload: true });
+  }
+
+  // Where a sign-in that minted a session leaves the page. A destination
+  // navigates with a full reload, and the reloaded page carries the new caller.
+  // With none (callbackUrl: false) the page stays, so nothing brings it the
+  // caller - and the next action in the chain may make a stamped request, which
+  // the server answers as the new caller. updateSession syncs the page before
+  // the sign-in action returns, so the request is answered as the caller the
+  // page shows: the session store first, since the page renders no caller for
+  // a session the store does not hold yet, then the server-resolved caller.
+  // The session exists once the sign-in answered, so a failed sync (a 5xx from
+  // /api/user, or a session the server admits no caller for) does not fail the
+  // action: the page reloads in place, as a destination would, and the server
+  // renders whichever caller it resolves.
+  async function settleSignIn(callbackTarget) {
+    if (!type.isNone(callbackTarget)) {
+      navigateToTarget(callbackTarget);
+      return;
+    }
+    try {
+      await updateSession();
+    } catch {
+      auth.suppressSessionReload();
+      lowdefy._internal.globals.window.location.reload();
+    }
   }
 
   // The wire form of a target: a string BetterAuth performs a later redirect hop
@@ -372,8 +397,8 @@ function createAuthMethods(lowdefy, auth) {
       // IdP; a completed id token sign-in answers redirect: false with no url,
       // so navigate to the callback as the password paths do.
       const window = lowdefy._internal?.globals?.window;
-      if (data?.redirect === false && callbackTarget && window) {
-        navigateToTarget(callbackTarget);
+      if (data?.redirect === false && window) {
+        await settleSignIn(callbackTarget);
       }
       return data;
     }
@@ -403,8 +428,8 @@ function createAuthMethods(lowdefy, auth) {
         return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
       }
       const window = lowdefy._internal?.globals?.window;
-      if (callbackTarget && window) {
-        navigateToTarget(callbackTarget);
+      if (window) {
+        await settleSignIn(callbackTarget);
       }
       return data;
     }
@@ -424,8 +449,8 @@ function createAuthMethods(lowdefy, auth) {
         return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
       }
       const window = lowdefy._internal?.globals?.window;
-      if (callbackTarget && window) {
-        navigateToTarget(callbackTarget);
+      if (window) {
+        await settleSignIn(callbackTarget);
       }
       return data;
     }
@@ -459,8 +484,8 @@ function createAuthMethods(lowdefy, auth) {
     // With requireEmailVerification the response carries no session - do not
     // navigate; the page shows a "verify your email" message instead.
     const window = lowdefy._internal?.globals?.window;
-    if (data?.token && callbackTarget && window) {
-      navigateToTarget(callbackTarget);
+    if (data?.token && window) {
+      await settleSignIn(callbackTarget);
     }
     return data;
   }
@@ -634,8 +659,8 @@ function createAuthMethods(lowdefy, auth) {
     const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await runWebAuthnCeremony(unwrap(auth.signInPasskey()));
     const window = lowdefy._internal?.globals?.window;
-    if (callbackTarget && window) {
-      navigateToTarget(callbackTarget);
+    if (window) {
+      await settleSignIn(callbackTarget);
     }
     return data;
   }
@@ -753,8 +778,8 @@ function createAuthMethods(lowdefy, auth) {
       return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
     }
     const window = lowdefy._internal?.globals?.window;
-    if (data?.token && callbackTarget && window) {
-      navigateToTarget(callbackTarget);
+    if (data?.token && window) {
+      await settleSignIn(callbackTarget);
     }
     return data;
   }
@@ -799,8 +824,8 @@ function createAuthMethods(lowdefy, auth) {
     // come from the request, and updatePhoneNumber is still in rest because
     // BetterAuth needs it.
     const window = lowdefy._internal?.globals?.window;
-    if (data?.token && rest.updatePhoneNumber !== true && callbackTarget && window) {
-      navigateToTarget(callbackTarget);
+    if (data?.token && rest.updatePhoneNumber !== true && window) {
+      await settleSignIn(callbackTarget);
     }
     return data;
   }
@@ -925,8 +950,8 @@ function createAuthMethods(lowdefy, auth) {
     // session-less mode, so a successful challenge always mints one and a failed
     // one throws to the action's catch.
     const window = lowdefy._internal?.globals?.window;
-    if (data?.token && callbackTarget && window) {
-      navigateToTarget(callbackTarget);
+    if (data?.token && window) {
+      await settleSignIn(callbackTarget);
     }
     return data;
   }
