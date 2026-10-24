@@ -1,5 +1,11 @@
 # @lowdefy/connection-anthropic
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/ai-utils@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

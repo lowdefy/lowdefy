@@ -1,5 +1,12 @@
 # @lowdefy/e2e-utils
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/helpers@7.1.0
+- @lowdefy/node-utils@7.1.0
+
 ## 7.0.0
 
 ### Minor Changes

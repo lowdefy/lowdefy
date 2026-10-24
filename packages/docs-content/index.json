@@ -3287,13 +3287,13 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "4302765e3d22b3c654630d80925a8d0ed670abc3908eb532355813417a48dd3c"
+      "hash": "e1d8446b45156e25e7f1ccd778e89cdbf2303e2ae2797e07339c8bec750c9d31"
     },
     "user-authentication/auth-steps": {
       "files": [
         "users/auth-steps.yaml"
       ],
-      "hash": "1cfc00b1c65c62fbd5c0c3b2cd811f027cf9b19686cbaaef5c1b7552c350427a"
+      "hash": "eaaadb32226fde62767464bffa7829ad5a67eaacad86f5231e03d138ffd20348"
     },
     "user-authentication/mcp-oauth": {
       "files": [

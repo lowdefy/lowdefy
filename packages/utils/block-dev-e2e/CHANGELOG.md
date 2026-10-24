@@ -1,5 +1,11 @@
 # @lowdefy/block-dev-e2e
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/e2e-utils@7.1.0
+
 ## 7.0.0
 
 ### Minor Changes
