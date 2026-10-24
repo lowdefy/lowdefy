@@ -24,3 +24,6 @@ mobile:
       blocks:
         - id: label
           type: PrinterLabel
+config:
+  experimental:
+    mobile: true

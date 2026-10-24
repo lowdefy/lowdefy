@@ -13,3 +13,6 @@ mobile:
   pages:
     - id: today
       type: Box
+config:
+  experimental:
+    mobile: true

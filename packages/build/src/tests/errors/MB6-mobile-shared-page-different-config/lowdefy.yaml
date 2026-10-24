@@ -15,3 +15,6 @@ mobile:
       type: Box
       properties:
         title: Mobile
+config:
+  experimental:
+    mobile: true

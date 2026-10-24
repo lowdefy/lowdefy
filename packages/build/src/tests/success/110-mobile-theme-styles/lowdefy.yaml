@@ -48,3 +48,6 @@ mobile:
           properties:
             content: Show the grid table on hover
           class: text-brand bg-primary rounded-lg
+config:
+  experimental:
+    mobile: true

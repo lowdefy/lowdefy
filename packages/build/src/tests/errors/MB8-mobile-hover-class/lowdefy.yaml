@@ -15,3 +15,6 @@ mobile:
         - id: save
           type: Button
           class: p-4 hover:bg-blue-500
+config:
+  experimental:
+    mobile: true

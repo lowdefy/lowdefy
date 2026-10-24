@@ -61,3 +61,6 @@ mobile:
           type: Box
           properties:
             content: A Lowdefy app on a phone.
+config:
+  experimental:
+    mobile: true

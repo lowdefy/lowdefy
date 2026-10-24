@@ -1,0 +1,18 @@
+# MB12: Offline Request Without The Experimental Opt-In
+# offline: queue is part of experimental mobile apps, so it needs config.experimental.mobile.
+lowdefy: local
+
+connections:
+  - id: api
+    type: AxiosHttp
+    properties:
+      baseURL: https://example.com
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: save
+        type: AxiosHttp
+        connectionId: api
+        offline: queue

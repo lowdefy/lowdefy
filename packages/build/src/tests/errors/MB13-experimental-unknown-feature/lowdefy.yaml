@@ -1,0 +1,11 @@
+# MB13: Unknown Experimental Feature
+# config.experimental accepts only the features Lowdefy has marked experimental.
+lowdefy: local
+
+config:
+  experimental:
+    offline: true
+
+pages:
+  - id: home
+    type: Box

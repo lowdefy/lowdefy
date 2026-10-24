@@ -96,3 +96,6 @@ mobile:
                 onClick:
                   - id: validate
                     type: Validate
+config:
+  experimental:
+    mobile: true

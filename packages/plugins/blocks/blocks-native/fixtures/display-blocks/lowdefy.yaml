@@ -37,3 +37,6 @@ mobile:
                   type: Paragraph
                   properties:
                     content: Orders you create show here.
+config:
+  experimental:
+    mobile: true

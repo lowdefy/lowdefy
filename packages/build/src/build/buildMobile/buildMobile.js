@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import mergeMobilePages from './mergeMobilePages.js';
@@ -23,10 +24,17 @@ import validateShellPluginsListed from './validateShellPluginsListed.js';
 
 // Runs once the web page list is complete (after addDefaultPages) and before
 // buildRoutes and buildAuth, so mobile pages get routes and auth like any page.
-// An app without a mobile key is left exactly as it was.
+// An app without a mobile key is left exactly as it was. Mobile is experimental: the key builds
+// only when the app opts in with config.experimental.mobile (buildExperimental).
 function buildMobile({ components, context }) {
   if (type.isNone(components.mobile)) {
     return components;
+  }
+  if (context.experimental?.mobile !== true) {
+    throw new ConfigError(
+      'Mobile apps are experimental. Set "config.experimental.mobile: true" in lowdefy.yaml to build the "mobile" section.',
+      { configKey: components.mobile['~k'] }
+    );
   }
   validateMobileConfig({ mobile: components.mobile, context });
   validateShellPluginsListed({ mobile: components.mobile, context });

@@ -2876,7 +2876,7 @@ export default {
         offline: {
           enum: ['queue'],
           description:
-            'On a mobile shell, keep the request while the phone has no signal and send it when it comes back (the request queue). The payload is evaluated once, when queued; the action resolves { queued: true, id }. Ignored on the web.',
+            'Experimental, needs "config.experimental.mobile: true". On a mobile shell, keep the request while the phone has no signal and send it when it comes back (the request queue). The payload is evaluated once, when queued; the action resolves { queued: true, id }. Ignored on the web.',
           errorMessage: {
             enum: 'Request "offline" only accepts "queue".',
           },
@@ -3272,6 +3272,27 @@ export default {
           description: 'App base path to apply to all routes. Base path must start with "/".',
           errorMessage: {
             type: 'App "config.basePath" should be a string.',
+          },
+        },
+        experimental: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Opt in to features that are not yet stable. An experimental feature may change in a minor release.',
+          errorMessage: {
+            type: 'App "config.experimental" should be an object.',
+            additionalProperties:
+              'App "config.experimental" contains an unknown property. The known properties are "mobile".',
+          },
+          properties: {
+            mobile: {
+              type: 'boolean',
+              description:
+                'Build the "mobile" section, so the app runs in native iOS and Android shells, and allow "offline" on requests. Defaults to false.',
+              errorMessage: {
+                type: 'App "config.experimental.mobile" should be a boolean.',
+              },
+            },
           },
         },
         dependencyTracking: {
@@ -3845,7 +3866,7 @@ export default {
       type: 'object',
       additionalProperties: false,
       description:
-        'The mobile surface of the app: the pages, menus and home page a native shell shows.',
+        'Experimental, needs "config.experimental.mobile: true". The mobile surface of the app: the pages, menus and home page a native shell shows.',
       properties: {
         '~ignoreBuildChecks': ignoreBuildChecksSchema,
         '~r': {},

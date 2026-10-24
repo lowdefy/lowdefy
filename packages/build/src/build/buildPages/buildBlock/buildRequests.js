@@ -109,6 +109,12 @@ function buildRequest(request, pageContext) {
       { received: request.offline, configKey }
     );
   }
+  if (!type.isUndefined(request.offline) && context.experimental?.mobile !== true) {
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" "offline" is part of experimental mobile apps. Set "config.experimental.mobile: true" in lowdefy.yaml to use it.`,
+      { configKey }
+    );
+  }
 
   if (type.isUndefined(request.payload)) request.payload = {};
 

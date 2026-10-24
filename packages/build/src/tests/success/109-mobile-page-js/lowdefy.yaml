@@ -21,3 +21,6 @@ mobile:
           properties:
             content:
               _js: return 'Today';
+config:
+  experimental:
+    mobile: true

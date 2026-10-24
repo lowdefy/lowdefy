@@ -144,6 +144,9 @@ function createBuildContext(buildDirectory, configDirectory) {
   for (const id of websocketIds) {
     context.websocketIds.add(id);
   }
+  // The app's experimental opt-ins (buildExperimental), so a page's requests get the same checks.
+  const config = readJsonFile(path.join(buildDirectory, 'config.json')) ?? {};
+  context.experimental = { mobile: config.experimental?.mobile === true };
   // The scoped connections, walled collections and shared connections, so a
   // page's requests get the same tenant pipeline checks as in a full build.
   const tenantTargets = readJsonFile(path.join(buildDirectory, 'tenantTargets.json'));

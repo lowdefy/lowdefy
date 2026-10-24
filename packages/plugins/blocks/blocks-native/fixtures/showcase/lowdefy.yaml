@@ -47,3 +47,6 @@ mobile:
     - _ref: pages/issue.yaml
     - _ref: pages/assistant.yaml
     - _ref: pages/search.yaml
+config:
+  experimental:
+    mobile: true

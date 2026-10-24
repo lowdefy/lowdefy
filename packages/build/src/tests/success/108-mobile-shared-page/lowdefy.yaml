@@ -14,3 +14,6 @@ mobile:
     stack: true
   pages:
     - _ref: pages/about.yaml
+config:
+  experimental:
+    mobile: true

@@ -9,3 +9,6 @@ pages:
 mobile:
   pages:
     - _ref: pages/form.yaml
+config:
+  experimental:
+    mobile: true

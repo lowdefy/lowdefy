@@ -13,3 +13,6 @@ mobile:
       plugins:
         - name: '@example/lowdefy-printer'
           version: ^2.1.0
+config:
+  experimental:
+    mobile: true

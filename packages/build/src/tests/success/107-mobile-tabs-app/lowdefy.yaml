@@ -48,3 +48,6 @@ connections:
     type: AxiosHttp
     properties:
       baseURL: https://example.com
+config:
+  experimental:
+    mobile: true

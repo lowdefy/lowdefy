@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Mobile apps are experimental. Set \"config.experimental.mobile: true\" in lowdefy.yaml to build the \"mobile\" section."
+      ],
+      "errorContains": [
+        "Mobile apps are experimental. Set \"config.experimental.mobile: true\" in lowdefy.yaml to build the \"mobile\" section.",
+        "{{fixturesDir}}/MB11-mobile-not-experimental/lowdefy.yaml:9"
+      ]
+    }
+  ]
+}

@@ -51,6 +51,9 @@ function createContext({
     walledTargets: new Map(),
     sharedTargets: new Map(),
     notificationIds: new Set(),
+    // config.experimental opt-ins, set by buildExperimental (validateConfig), or restored onto a
+    // dev page build. Empty until then: no experimental feature is on.
+    experimental: {},
     websocketIds: new Set(),
     directories,
     // Null prototype: policy ids come from app config.
