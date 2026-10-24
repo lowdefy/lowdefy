@@ -27,6 +27,7 @@ import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
 import createStorage from './storage/createStorage.js';
 import createLinkComponent from './createLinkComponent.js';
+import createPageUnload from './createPageUnload.js';
 import createHandleError from './createHandleError.js';
 import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
@@ -59,6 +60,11 @@ function initLowdefyContext({
   // the same pages, and the page response it fetches next rewrites its own.
   if (type.isUndefined(lowdefy.pathMemory)) {
     lowdefy.pathMemory = new Map();
+  }
+  // Watched once per tab: this runs on every render, and a dev config reload
+  // does not unload the page.
+  if (type.isUndefined(lowdefy.pageUnload)) {
+    lowdefy.pageUnload = createPageUnload({ window });
   }
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {

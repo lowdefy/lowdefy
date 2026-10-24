@@ -30,11 +30,12 @@ import createHandleError from './createHandleError.js';
 
 let fetchMock;
 
-function createLowdefy({ basePath } = {}) {
+function createLowdefy({ basePath, leaving = false } = {}) {
   return {
     _internal: { logger: { error: vi.fn() } },
     _runtimeErrorCallback: vi.fn(),
     basePath,
+    pageUnload: { isLeaving: () => leaving },
   };
 }
 
@@ -121,6 +122,18 @@ test('handleError POSTs a client-originated Lowdefy error to /api/client-error a
   expect(body['~e'].configKey).toBe('op:7');
 
   expect(error.source).toBe('pages/home.yaml:42');
+  expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(1);
+  expect(lowdefy._internal.logger.error).toHaveBeenCalledWith(error);
+});
+
+test('handleError logs a client-originated Lowdefy error locally without POSTing it while the page is leaving', async () => {
+  const lowdefy = createLowdefy({ leaving: true });
+  const handleError = createHandleError(lowdefy);
+  const error = new ConfigError('Failed to fetch', { configKey: 'action:3' });
+
+  await handleError(error);
+
+  expect(fetchMock).not.toHaveBeenCalled();
   expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(1);
   expect(lowdefy._internal.logger.error).toHaveBeenCalledWith(error);
 });

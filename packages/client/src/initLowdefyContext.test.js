@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
+import { vi, expect, test } from 'vitest';
 import { getHtmlEnhancements } from '@lowdefy/block-utils/registerHtmlEnhancements.js';
 
 import initLowdefyContext from './initLowdefyContext.js';
-import { expect, test } from 'vitest';
 
 function baseArgs(overrides = {}) {
   const lowdefy = {};
@@ -38,7 +38,7 @@ function baseArgs(overrides = {}) {
     router: { basePath: '' },
     stage: 'production',
     types: { actions: {}, blocks: {}, icons: {}, operators: {} },
-    window: { document: {}, fetch: () => undefined },
+    window: { addEventListener: vi.fn(), document: {}, fetch: () => undefined },
   };
 }
 
@@ -192,4 +192,13 @@ test('initLowdefyContext keeps user storage of the person signed in', () => {
   args.window = window;
   initLowdefyContext(args);
   expect(window.localStorage.getItem('lowdefy:sales::lowdefy_user:u1:views')).toBe('{}');
+});
+
+test('initLowdefyContext watches the page unload once across renders', () => {
+  const args = baseArgs();
+  initLowdefyContext(args);
+  initLowdefyContext(args);
+  expect(args.lowdefy.pageUnload.isLeaving()).toBe(false);
+  const events = args.window.addEventListener.mock.calls.map(([name]) => name);
+  expect(events).toEqual(['beforeunload', 'pagehide', 'pageshow']);
 });
