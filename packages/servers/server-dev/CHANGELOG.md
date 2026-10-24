@@ -1,5 +1,70 @@
 # Change Log
 
+## 7.1.0
+
+### Minor Changes
+
+- ffc060c: feat(server-dev): A journey data set run gives each database your connections name a database of its own
+
+  An app that reads several MongoDB databases can now seed a collection name in each of them. Connections with the same `databaseUri` secret (or literal) and `databaseName` share one run database, and connections that differ in either read different ones, as they do outside the run. Before, every connection read one run database, so a data set that seeded `users` in the app's database could not also seed `users` in an auth database: the journey was refused. That refusal and its warning are gone. A connection whose `databaseUri` or `databaseName` is computed per request reads the run's first database. The run still drops all its databases when the journey ends.
+
+### Patch Changes
+
+- d197cb4: fix(server-dev): Build status no longer says ok while a page fails to build
+
+  The dev server builds each page when it is first requested, after the config build. `lowdefy_build_status` and `GET /lowdefy-docs/build-status` took their top-level `build.status` from the config build alone, so it read `ok` while a page failed, and the failure showed only in `pages.failed` further down. Agents that read the top line moved on with a broken page.
+
+  `build.status` now reads `pages_failed` when the config builds but a page failed its latest build and has not changed since, and `build.failedPages` names those pages. A failed page that changed after that build is not counted until it is rebuilt, since its failure may already be fixed. Each page's errors stay under `pages.failed`. `error` still means the config build itself failed and the dev server is serving the previous build; it names no failed pages. `build.configStatus` is the config build's own status, and `lowdefy journeys harden`, which waits for a successful config build after an edit, reads it. `lowdefy_dev_status` reports the number of failed pages as `failedPageCount`.
+
+- 3408010: fix: `lowdefy build` no longer warns `Plugin checks for <package> did not run: package not installed.` for plugins that have nothing to check.
+
+  A clean build warned for every plugin the server had not installed yet, including connection plugins like `@lowdefy/connection-mongodb` that ship no build check rules. The warning now names only plugins that own a block, action or operator type, and `lowdefy build` gives it only from the build after it installs the app's plugins, so it shows a plugin that is still missing rather than one it was about to install. `lowdefy dev` does the same when it starts. Journeys and dev page builds still warn for a missing block, action or operator plugin. `--skip-plugin-checks` no longer gives this warning.
+
+- Updated dependencies [96d6f1c]
+- Updated dependencies [b1d58df]
+- Updated dependencies [d197cb4]
+- Updated dependencies [c6d665a]
+- Updated dependencies [3408010]
+- Updated dependencies [3df29f3]
+- Updated dependencies [1e614fc]
+- Updated dependencies [a589bb1]
+  - @lowdefy/blocks-aggrid@7.1.0
+  - @lowdefy/docs-content@7.1.0
+  - @lowdefy/blocks-antd@7.1.0
+  - @lowdefy/build@7.1.0
+  - @lowdefy/engine@7.1.0
+  - @lowdefy/blocks-table@7.1.0
+  - @lowdefy/blocks-tiptap@7.1.0
+  - @lowdefy/api@7.1.0
+  - @lowdefy/client@7.1.0
+  - @lowdefy/blocks-antd-x@7.1.0
+  - @lowdefy/layout@7.1.0
+  - @lowdefy/actions-core@7.1.0
+  - @lowdefy/blocks-basic@7.1.0
+  - @lowdefy/blocks-captcha@7.1.0
+  - @lowdefy/blocks-echarts@7.1.0
+  - @lowdefy/blocks-loaders@7.1.0
+  - @lowdefy/blocks-markdown@7.1.0
+  - @lowdefy/connection-axios-http@7.1.0
+  - @lowdefy/connection-mongodb@7.1.0
+  - @lowdefy/operators-change-case@7.1.0
+  - @lowdefy/operators-cron@7.1.0
+  - @lowdefy/operators-dayjs@7.1.0
+  - @lowdefy/operators-diff@7.1.0
+  - @lowdefy/operators-js@7.1.0
+  - @lowdefy/operators-mql@7.1.0
+  - @lowdefy/operators-nunjucks@7.1.0
+  - @lowdefy/operators-uuid@7.1.0
+  - @lowdefy/operators-yaml@7.1.0
+  - @lowdefy/plugin-better-auth@7.1.0
+  - @lowdefy/websockets-core@7.1.0
+  - @lowdefy/block-utils@7.1.0
+  - @lowdefy/e2e-utils@7.1.0
+  - @lowdefy/errors@7.1.0
+  - @lowdefy/helpers@7.1.0
+  - @lowdefy/logger@7.1.0
+  - @lowdefy/node-utils@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

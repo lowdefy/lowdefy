@@ -906,6 +906,20 @@ test('validateAuthConfig throws when organizations.membershipLimit is under 1', 
   );
 });
 
+test('validateAuthConfig throws when organizations.creatorAppRoles lists a role id more than once', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'tenant', creatorAppRoles: ['workspace-admin', 'workspace-admin'] },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "organizations.creatorAppRoles" should not list a role id more than once.'
+  );
+});
+
 test('validateAuthConfig throws when organizations contains an unknown property', () => {
   const components = {
     auth: {

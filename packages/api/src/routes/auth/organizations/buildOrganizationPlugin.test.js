@@ -15,10 +15,15 @@
 */
 
 import buildOrganizationPlugin from './buildOrganizationPlugin.js';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 
 const authConfig = {
-  organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
+  organizations: {
+    policy: 'pinned',
+    org: 'default',
+    signup: 'invite-only',
+    creatorAppRoles: [],
+  },
   roles: [{ id: 'auditor' }, { id: 'branch-manager' }],
 };
 
@@ -98,6 +103,29 @@ test('buildOrganizationPlugin does not mention $lowdefy-system anywhere in the b
     });
   }
   walk(plugin);
+});
+
+test('buildOrganizationPlugin binds the afterCreateOrganization hook that grants creatorAppRoles', async () => {
+  const update = vi.fn(async () => ({}));
+  const auth = { $context: Promise.resolve({ adapter: { update } }) };
+  const plugin = buildOrganizationPlugin({
+    authConfig: {
+      ...authConfig,
+      organizations: { ...authConfig.organizations, creatorAppRoles: ['auditor'] },
+    },
+    getAuth: () => auth,
+    sendInvitationEmail: async () => {},
+  });
+  await plugin.options.organizationHooks.afterCreateOrganization({
+    organization: { id: 'org_1' },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+  });
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { appRoles: ['auditor'] },
+  });
 });
 
 test('buildOrganizationPlugin blocks client-driven organization creation', () => {
@@ -218,8 +246,9 @@ test('buildOrganizationPlugin passes auth.organizations.membershipLimit through'
   expect(plugin.options.membershipLimit).toBe(10000);
 });
 
-test('buildOrganizationPlugin tolerates a missing authConfig', () => {
+test('buildOrganizationPlugin uses the plugin defaults when organizations sets no expiry or limit', () => {
   const plugin = buildOrganizationPlugin({
+    authConfig: { organizations: { creatorAppRoles: [] } },
     getAuth: () => ({}),
     sendInvitationEmail: async () => {},
   });

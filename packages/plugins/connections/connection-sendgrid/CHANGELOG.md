@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- 7274ca1: fix: Long crafted recipient addresses no longer stall the server in the SMTP and SendGridMail connections.
+
+  Reading recipient addresses used regular expressions that slow down with the square of the input length, so a recipient of a few hundred kilobytes (for example an email address a user typed into a form) could block the server for seconds to minutes. Recipients are now read in linear time, with the same results.
+
+  - @lowdefy/helpers@7.1.0
+
 ## 7.0.0
 
 ### Minor Changes

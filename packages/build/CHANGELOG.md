@@ -1,5 +1,26 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- 3408010: fix: `lowdefy build` no longer warns `Plugin checks for <package> did not run: package not installed.` for plugins that have nothing to check.
+
+  A clean build warned for every plugin the server had not installed yet, including connection plugins like `@lowdefy/connection-mongodb` that ship no build check rules. The warning now names only plugins that own a block, action or operator type, and `lowdefy build` gives it only from the build after it installs the app's plugins, so it shows a plugin that is still missing rather than one it was about to install. `lowdefy dev` does the same when it starts. Journeys and dev page builds still warn for a missing block, action or operator plugin. `--skip-plugin-checks` no longer gives this warning.
+
+  - @lowdefy/codemods@7.1.0
+  - @lowdefy/operators@7.1.0
+  - @lowdefy/blocks-basic@7.1.0
+  - @lowdefy/blocks-loaders@7.1.0
+  - @lowdefy/operators-js@7.1.0
+  - @lowdefy/ai-utils@7.1.0
+  - @lowdefy/ajv@7.1.0
+  - @lowdefy/block-utils@7.1.0
+  - @lowdefy/errors@7.1.0
+  - @lowdefy/helpers@7.1.0
+  - @lowdefy/node-utils@7.1.0
+  - @lowdefy/nunjucks@7.1.0
+
 ## 7.0.0
 
 ### Major Changes
