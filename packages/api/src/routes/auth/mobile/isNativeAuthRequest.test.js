@@ -21,16 +21,27 @@ function request(headers) {
   return new Request('http://localhost/api/auth/sign-in/email-otp', { headers });
 }
 
-test('isNativeAuthRequest is true for an HTTP request with no Origin and no Cookie', () => {
-  expect(isNativeAuthRequest({ request: request({ authorization: 'Bearer abc.def' }) })).toBe(true);
+const shell = { 'x-lowdefy-shell': '7.1.0' };
+
+test('isNativeAuthRequest is true for a shell request with no Origin and no Cookie', () => {
+  expect(
+    isNativeAuthRequest({ request: request({ ...shell, authorization: 'Bearer abc.def' }) })
+  ).toBe(true);
+});
+
+test('isNativeAuthRequest is false for a request that does not name a shell', () => {
+  // A top-level navigation in a browser with no cookies for the site.
+  expect(isNativeAuthRequest({ request: request({}) })).toBe(false);
 });
 
 test('isNativeAuthRequest is false for a request with an Origin', () => {
-  expect(isNativeAuthRequest({ request: request({ origin: 'http://localhost' }) })).toBe(false);
+  expect(isNativeAuthRequest({ request: request({ ...shell, origin: 'http://localhost' }) })).toBe(
+    false
+  );
 });
 
 test('isNativeAuthRequest is false for a request with cookies', () => {
-  expect(isNativeAuthRequest({ request: request({ cookie: 'a=b' }) })).toBe(false);
+  expect(isNativeAuthRequest({ request: request({ ...shell, cookie: 'a=b' }) })).toBe(false);
 });
 
 test('isNativeAuthRequest is false for a server-side auth.api call, which has no request', () => {

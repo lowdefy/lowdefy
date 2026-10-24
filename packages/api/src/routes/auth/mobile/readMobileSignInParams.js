@@ -36,9 +36,14 @@ const PLATFORMS = new Set(['android', 'ios']);
 //   shell's scheme only to the app that opened it, while on Android any app can
 //   register a scheme, so an Android shell gets the token by its verified app
 //   link and must have one (an android package and sha256 in mobile.shells).
+//   The query is the caller's to choose, so an Android browser asking for the
+//   iOS (scheme) return is refused: an app on Android could otherwise open a
+//   Custom Tab, which shares the browser's session, and take the token by the
+//   shell's scheme. A Custom Tab's user agent is the browser's own, which the
+//   app cannot set.
 //
 // Returns { params } or { error } (the 400 message).
-function readMobileSignInParams({ authJson, url }) {
+function readMobileSignInParams({ authJson, url, userAgent = '' }) {
   const { searchParams } = url;
   const shellId = searchParams.get('shell');
   const state = searchParams.get('state');
@@ -57,6 +62,9 @@ function readMobileSignInParams({ authJson, url }) {
   }
   if (!PLATFORMS.has(platform)) {
     return { error: 'The shell must send its platform, ios or android.' };
+  }
+  if (platform === 'ios' && /\bAndroid\b/i.test(userAgent)) {
+    return { error: 'An Android browser must ask for the android return.' };
   }
   if (platform === 'android' && shell.androidAppLink !== true) {
     return {

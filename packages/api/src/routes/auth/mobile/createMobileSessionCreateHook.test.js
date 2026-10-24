@@ -31,7 +31,11 @@ afterEach(() => {
 const session = { userId: 'user_1', expiresAt: new Date(NOW + 1000), token: 'tok' };
 
 function ctxFor(headers) {
-  return { request: new Request('http://localhost/api/auth/sign-in/email-otp', { headers }) };
+  return {
+    request: new Request('http://localhost/api/auth/sign-in/email-otp', {
+      headers: { 'x-lowdefy-shell': '7.1.0', ...headers },
+    }),
+  };
 }
 
 test('a session created by a native sign-in is marked mobile with the phone lifetime', async () => {

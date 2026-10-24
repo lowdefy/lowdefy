@@ -22,7 +22,9 @@ function ctxFor(headers) {
     'set-cookie': 'better-auth.session_token=tok.sig; Path=/',
   });
   return {
-    request: new Request('http://localhost/api/auth/sign-in/email-otp', { headers }),
+    request: new Request('http://localhost/api/auth/sign-in/email-otp', {
+      headers: { 'x-lowdefy-shell': '7.1.0', ...headers },
+    }),
     context: { responseHeaders },
   };
 }

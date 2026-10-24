@@ -402,3 +402,17 @@ test('handleMobileSignIn leaves a browser session made before this sign-in alone
   });
   expect(adapter.delete).not.toHaveBeenCalled();
 });
+
+test('handleMobileSignIn refuses the iOS return to an Android browser', async () => {
+  const { auth } = createAuth();
+  const response = await call({
+    auth,
+    request: getRequest(`/auth/mobile?${query}`, {
+      'user-agent':
+        'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Mobile Safari/537.36',
+    }),
+  });
+  expect(response.status).toBe(400);
+  expect(await response.text()).toBe('An Android browser must ask for the android return.');
+  expect(auth.api.getSession).not.toHaveBeenCalled();
+});

@@ -185,7 +185,7 @@ async function createMember({ adapter, internalAdapter, email, orgNames = ['Acme
 
 // A phone's request: no Origin, no cookies, the session as a bearer.
 function nativeRequest({ path, method = 'POST', body, token }) {
-  const headers = { 'content-type': 'application/json' };
+  const headers = { 'content-type': 'application/json', 'x-lowdefy-shell': '7.1.0' };
   if (token) {
     headers.authorization = `Bearer ${token}`;
   }

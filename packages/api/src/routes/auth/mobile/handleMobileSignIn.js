@@ -196,7 +196,11 @@ async function handleMobileSignIn({ auth, authJson, basePath, primaryColor, requ
     return textResponse({ message: 'Auth is not configured.', status: 404 });
   }
   const url = new URL(request.url);
-  const { error, params } = readMobileSignInParams({ authJson, url });
+  const { error, params } = readMobileSignInParams({
+    authJson,
+    url,
+    userAgent: request.headers.get('user-agent') ?? '',
+  });
   if (!type.isNone(error)) {
     return textResponse({ message: error, status: 400 });
   }

@@ -16,17 +16,24 @@
 
 import { type } from '@lowdefy/helpers';
 
-// A request from a phone shell's own code: an HTTP request carrying neither an
-// Origin nor a Cookie header. A browser sends Origin on every fetch that can
-// change state and its cookies on every same-origin request, and page script
-// can remove neither, so a browser's script never counts as native. Shells
-// keep no cookie jar (they send the session as a bearer), so their requests
-// carry no Cookie.
+// A request from a phone shell's own code: an HTTP request that names the shell
+// (x-lowdefy-shell, sent on every shell call by withShellHeader) and carries
+// neither an Origin nor a Cookie header. A browser sends Origin on every fetch
+// that can change state and its cookies on every same-origin request, and page
+// script can remove neither, so a browser's script never counts as native.
+// A top-level navigation (a magic link opened in a browser with no cookies for
+// the site) sends neither either, but cannot add a header, so it never counts.
+// Shells keep no cookie jar (they send the session as a bearer), so their
+// requests carry no Cookie.
 function isNativeAuthRequest({ request }) {
   if (type.isNone(request)) {
     return false;
   }
-  return !request.headers.has('origin') && !request.headers.has('cookie');
+  return (
+    request.headers.has('x-lowdefy-shell') &&
+    !request.headers.has('origin') &&
+    !request.headers.has('cookie')
+  );
 }
 
 export default isNativeAuthRequest;
