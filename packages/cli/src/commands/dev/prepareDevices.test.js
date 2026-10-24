@@ -129,3 +129,23 @@ onMac('prepareDevices returns the iOS build when xcrun finds simctl', async () =
     { platform: 'ios', appPath: app },
   ]);
 });
+
+test('prepareDevices refuses the phone flags for an app that has not opted in to mobile', async () => {
+  for (const options of [{ ios: true }, { android: true }, { lan: true }, { lan: 'en0' }]) {
+    await expect(prepareDevices({ context: { options, experimental: {} } })).rejects.toThrow(
+      'Set "config.experimental.mobile: true" in lowdefy.yaml to use them.'
+    );
+  }
+});
+
+test('prepareDevices leaves the opt-in to the build when config is behind a _ref', async () => {
+  await expect(
+    prepareDevices({ context: { options: { lan: true }, experimental: null } })
+  ).resolves.toEqual([]);
+});
+
+test('prepareDevices lets --lan through for an app that opted in to mobile', async () => {
+  await expect(
+    prepareDevices({ context: { options: { lan: true }, experimental: { mobile: true } } })
+  ).resolves.toEqual([]);
+});

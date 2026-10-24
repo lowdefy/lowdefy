@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { readDevAppPath } from '@lowdefy/node-utils';
 
 import checkAndroidTools from './checkAndroidTools.js';
@@ -23,6 +24,18 @@ import checkIosTools from './checkIosTools.js';
 // build stops `lowdefy dev` at once with the step that fixes it.
 async function prepareDevices({ context }) {
   const devices = [];
+  // The phone flags are for experimental mobile apps. A config behind a _ref is checked by the
+  // build instead (context.experimental is null), which refuses a mobile section without it.
+  const { android, ios, lan } = context.options;
+  if (
+    (ios || android || !type.isUndefined(lan)) &&
+    type.isObject(context.experimental) &&
+    context.experimental.mobile !== true
+  ) {
+    throw new Error(
+      'lowdefy dev --ios, --android and --lan are for mobile apps, which are experimental. Set "config.experimental.mobile: true" in lowdefy.yaml to use them.'
+    );
+  }
   if (context.options.ios) {
     await checkIosTools();
     devices.push({ platform: 'ios', appPath: readDevAppPath({ platform: 'ios' }) });

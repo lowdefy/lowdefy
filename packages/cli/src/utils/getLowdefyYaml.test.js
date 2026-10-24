@@ -50,7 +50,12 @@ test('get version from yaml file', async () => {
     return null;
   });
   const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
-  expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {}, plugins: [] });
+  expect(config).toEqual({
+    experimental: {},
+    lowdefyVersion: '1.0.0',
+    cliConfig: {},
+    plugins: [],
+  });
 });
 
 test('get version from yaml file, config dir specified', async () => {
@@ -68,7 +73,12 @@ test('get version from yaml file, config dir specified', async () => {
     configDirectory: path.resolve(process.cwd(), './configDir'),
     requiresLowdefyYaml: true,
   });
-  expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {}, plugins: [] });
+  expect(config).toEqual({
+    experimental: {},
+    lowdefyVersion: '1.0.0',
+    cliConfig: {},
+    plugins: [],
+  });
 });
 
 test('could not find lowdefy.yaml in cwd', async () => {
@@ -181,6 +191,7 @@ test('get cliConfig', async () => {
   });
   const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   expect(config).toEqual({
+    experimental: {},
     lowdefyVersion: '1.0.0',
     cliConfig: { disableTelemetry: true, watch: ['a'] },
     plugins: [],
@@ -204,6 +215,7 @@ test('get plugins', async () => {
   });
   const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   expect(config).toEqual({
+    experimental: {},
     lowdefyVersion: '1.0.0',
     cliConfig: {},
     plugins: [{ name: 'plugin1', version: '1.0.0', typePrefix: 'Plugin1' }],
@@ -232,7 +244,12 @@ test('support yml extension', async () => {
     return null;
   });
   const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
-  expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {}, plugins: [] });
+  expect(config).toEqual({
+    experimental: {},
+    lowdefyVersion: '1.0.0',
+    cliConfig: {},
+    plugins: [],
+  });
 });
 
 test('get plugins lists a plugin in root and in two shells once, then shell-only plugins', async () => {
@@ -295,4 +312,23 @@ test('get plugins throws when a shell lists a plugin at another version than roo
   await expect(getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true })).rejects.toThrow(
     'Plugin "@example/lowdefy-printer" is listed at version "2.1.0" in root plugins and "2.2.0" in shell "field".'
   );
+});
+
+test('getLowdefyYaml reads the experimental opt-ins, or null when config is behind a _ref', async () => {
+  const { readFile } = await import('@lowdefy/node-utils');
+  const { default: getLowdefyYaml } = await import('./getLowdefyYaml.js');
+  readFile.mockImplementation((filePath) =>
+    filePath === path.resolve(process.cwd(), 'lowdefy.yaml')
+      ? 'lowdefy: 1.0.0\nconfig:\n  experimental:\n    mobile: true\n'
+      : null
+  );
+  expect((await getLowdefyYaml({ configDirectory: process.cwd() })).experimental).toEqual({
+    mobile: true,
+  });
+  readFile.mockImplementation((filePath) =>
+    filePath === path.resolve(process.cwd(), 'lowdefy.yaml')
+      ? 'lowdefy: 1.0.0\nconfig:\n  _ref: config.yaml\n'
+      : null
+  );
+  expect((await getLowdefyYaml({ configDirectory: process.cwd() })).experimental).toBe(null);
 });
