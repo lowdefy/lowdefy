@@ -29,6 +29,7 @@ import resolveJourneyPaths from '../../test/resolveJourneyPaths.js';
 import resolveServer from '../../test/resolveServer.js';
 import runJourney from '../../test/runJourney.js';
 import runRepeated from '../../test/runRepeated.js';
+import takeJourneyRunSlots from '../../test/takeJourneyRunSlots.js';
 import validateJourney from '../../test/validateJourney.js';
 import writeExercised from '../../test/writeExercised.js';
 import writeVariantFiles from './writeVariantFiles.js';
@@ -218,7 +219,17 @@ async function journeysVariants({ context }) {
     refuse({ context, message: dataSetError.message });
     return;
   }
-  const server = await resolveServer({ context });
+  const slots = await takeJourneyRunSlots({ context, command: 'lowdefy journeys variants' });
+  if (slots === null) {
+    return;
+  }
+  let server;
+  try {
+    server = await resolveServer({ context });
+  } catch (error) {
+    slots.release();
+    throw error;
+  }
   try {
     const measured = await readOrMeasure({ context, item, url: server.url });
     if (measured.error) {
@@ -251,6 +262,7 @@ async function journeysVariants({ context }) {
     }
   } finally {
     await server.stop();
+    slots.release();
   }
   context.sendTelemetry();
 }

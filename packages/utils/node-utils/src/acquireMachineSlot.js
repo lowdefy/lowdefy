@@ -90,6 +90,35 @@ function describeWait(waitMs) {
   return `${waitMs / 1000} seconds`;
 }
 
+// The live holders of every numbered slot in directory, read for a waiter's
+// progress note. A slot past the current limit counts too: a run that took
+// slot 1 when the limit was 2 is still running when a later caller's limit is 1.
+function readLiveHolders(directory) {
+  let entries;
+  try {
+    entries = fs.readdirSync(directory);
+  } catch {
+    return [];
+  }
+  return entries
+    .filter((entry) => /^\d+$/.test(entry))
+    .sort((a, b) => Number(a) - Number(b))
+    .map((entry) => path.join(directory, entry))
+    .filter((slotPath) => !isStale(slotPath))
+    .map(readHolder)
+    .filter((holder) => holder !== null);
+}
+
+function timeoutError({ name, limit, waitMs }) {
+  const error = new Error(
+    `All ${limit} ${name} slots on this machine stayed busy for ${describeWait(waitMs)}. Try again.`
+  );
+  error.code = 'MACHINE_SLOT_TIMEOUT';
+  error.name = name;
+  error.limit = limit;
+  return error;
+}
+
 /*
 Takes one of limit slots named name, shared by every process of this user on
 the machine, waiting up to waitMs for one to free. A slot is a file
@@ -97,14 +126,29 @@ the machine, waiting up to waitMs for one to free. A slot is a file
 time, so it is held by the process doing the work, whichever route the work
 came in by, and a process that dies frees its slots. Returns { release }.
 
+describe adds fields to the slot file, so a waiter can say who holds a slot.
+onWait({ waitedMs, holders }) is called every onWaitIntervalMs while the
+caller waits, with the live holders' slot files. A wait that runs out throws
+an error with code MACHINE_SLOT_TIMEOUT and the slot's name and limit.
+Waiters are not served in order.
+
 Two processes reclaiming the same stale slot at once can briefly let one
 more holder through. The bound is about memory, not correctness, so that is
 accepted rather than locked against.
 */
-async function acquireMachineSlot({ name, limit, waitMs = 5 * 60 * 1000, intervalMs = 250 }) {
+async function acquireMachineSlot({
+  name,
+  limit,
+  waitMs = 5 * 60 * 1000,
+  intervalMs = 250,
+  describe = {},
+  onWait,
+  onWaitIntervalMs = 30 * 1000,
+}) {
   const directory = path.join(getLowdefyHome(), 'slots', name);
   fs.mkdirSync(directory, { recursive: true });
   const holder = {
+    ...describe,
     pid: process.pid,
     processStartTime: readOwnStartTime(),
     token: crypto.randomUUID(),
@@ -140,18 +184,21 @@ async function acquireMachineSlot({ name, limit, waitMs = 5 * 60 * 1000, interva
     return null;
   }
 
-  const deadline = Date.now() + waitMs;
+  const started = Date.now();
+  const deadline = started + waitMs;
+  let nextNote = started + onWaitIntervalMs;
   for (;;) {
     const slotPath = tryTake();
     if (slotPath !== null) {
       return { release: release(slotPath) };
     }
-    if (Date.now() >= deadline) {
-      throw new Error(
-        `All ${limit} ${name} slots on this machine stayed busy for ${describeWait(
-          waitMs
-        )}. Try again.`
-      );
+    const now = Date.now();
+    if (now >= deadline) {
+      throw timeoutError({ name, limit, waitMs });
+    }
+    if (type.isFunction(onWait) && now >= nextNote) {
+      nextNote = now + onWaitIntervalMs;
+      onWait({ waitedMs: now - started, holders: readLiveHolders(directory) });
     }
     await wait(intervalMs);
   }
