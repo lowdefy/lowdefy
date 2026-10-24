@@ -35,3 +35,12 @@ test('a backlog sends its posts oldest first and keeps the rest after a failure'
   expect(sent).toEqual([1]);
   expect(backlog.size()).toBe(2);
 });
+
+test('a post added while the backlog flushes is kept', async () => {
+  const backlog = createBacklog({ key: 'k', kv: memoryKv() });
+  backlog.add({ endpointId: 'a', payload: 1 });
+  await backlog.flush(async () => {
+    backlog.add({ endpointId: 'a', payload: 2 });
+  });
+  expect(backlog.size()).toBe(1);
+});

@@ -51,12 +51,26 @@ function writeConfig(update) {
   getStores().kv.set(CONFIG_KEY, JSON.stringify({ ...readConfig(), ...update }));
 }
 
+// A refusal the server will repeat however often the post is sent (bad payload, missing endpoint,
+// forbidden): the post is dropped, so one bad post does not hold up the backlog behind it. A lost
+// session (401), a timeout or rate limit, and server errors stay for the next wake.
+function isRefused(error) {
+  const { status } = error ?? {};
+  return status >= 400 && status < 500 && ![401, 408, 429].includes(status);
+}
+
 // Posts to an endpoint with the open app's session; on failure the post waits in the backlog for
 // the next wake. Kept posts go first, so the endpoint sees them in order.
 async function post({ endpointId, payload }) {
   const app = await getCurrentApp();
-  const send = (entry) =>
-    callEndpoint({ app, endpointId: entry.endpointId, payload: entry.payload });
+  const { backlog } = getStores();
+  const send = async (entry) => {
+    try {
+      await callEndpoint({ app, endpointId: entry.endpointId, payload: entry.payload });
+    } catch (error) {
+      if (!isRefused(error)) throw error;
+    }
+  };
   await backlog.flush(send);
   try {
     await send({ endpointId, payload });

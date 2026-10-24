@@ -21,8 +21,8 @@ import { serializer, type } from '@lowdefy/helpers';
  * Calls one of the app's API endpoints from the shell itself, with the session token: push token
  * registration, notification buttons, uploads, widget sources, background fetch and background
  * location. No page is involved, so no build id is sent (endpoints are the stable contract across
- * builds). Returns the endpoint's response; throws when the server refuses the call or the
- * endpoint rejects or errors.
+ * builds). Returns the endpoint's response; throws when the server refuses the call (the error
+ * carries the HTTP `status`) or the endpoint rejects or errors.
  *
  * @param {Object} params
  * @param {Object} params.app The open app ({ apiBase, fetch, tokenStore }, currentApp.js).
@@ -40,7 +40,10 @@ async function callEndpoint({ app, endpointId, payload = {} }) {
   });
   const body = await res.json();
   if (!res.ok) {
-    throw new Error(body?.message ?? `Endpoint "${endpointId}" answered ${res.status}.`);
+    const error = new Error(body?.message ?? `Endpoint "${endpointId}" answered ${res.status}.`);
+    // The HTTP status, so background posts can tell a refusal that will not change from an outage.
+    error.status = res.status;
+    throw error;
   }
   if (body.success === false) {
     throw new Error(

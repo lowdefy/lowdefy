@@ -49,7 +49,8 @@ function createBacklog({ key, kv }) {
         }
         sent += 1;
       }
-      write(entries.slice(sent));
+      // Read again: a post added while these were sending stays behind them.
+      write(read().slice(sent));
       return sent;
     },
     size: () => read().length,
