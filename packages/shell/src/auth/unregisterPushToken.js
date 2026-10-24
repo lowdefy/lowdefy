@@ -15,14 +15,31 @@
 */
 
 import { Platform } from 'react-native';
+import * as Notifications from 'expo-notifications';
 
 import callEndpoint from '../native/callEndpoint.js';
 
+// This phone's native push token (APNs or FCM), as registerPushToken sent it; null when the phone
+// has none (never allowed to notify, no signal).
+async function getDeviceToken() {
+  try {
+    const { data } = await Notifications.getDevicePushTokenAsync();
+    return data ?? null;
+  } catch (error) {
+    return null;
+  }
+}
+
 /**
  * Tells the app's mobile.notifications.unregister endpoint that this phone signs out, so no
- * notification for the person reaches it afterwards: { platform, shellId }, with the session that
- * is ending. Called before the token is removed, and never waited on: offline, the sign-out still
- * ends on the phone, and the app drops the token when a push to it fails.
+ * notification for the person reaches it afterwards: { token, platform, shellId }, with the session
+ * that is ending, so the app drops this phone's token and keeps the person's other phones. Called
+ * before the token is removed, and never waited on: offline, the sign-out still ends on the phone,
+ * and the app drops the token when a push to it fails.
+ *
+ * A session the server already ended (a 401 clears the token, createAppAuth handleTokenChange)
+ * has no session left to call with, so nothing is unregistered: the push token stays with the app
+ * until a push to it fails or the phone registers for someone else.
  *
  * @param {Object} params
  * @param {Object} params.app { apiBase, fetch, session, shell, tokenStore }.
@@ -35,7 +52,7 @@ async function unregisterPushToken({ app }) {
   await callEndpoint({
     app,
     endpointId,
-    payload: { platform: Platform.OS, shellId: app.shell.id },
+    payload: { token: await getDeviceToken(), platform: Platform.OS, shellId: app.shell.id },
   });
 }
 

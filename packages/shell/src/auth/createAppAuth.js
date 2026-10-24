@@ -221,6 +221,8 @@ function createAppAuth({
     }
   }
 
+  // The server ended the session (a 401 cleared the token): with no session to call with, the push
+  // token is not unregistered (unregisterPushToken).
   function handleTokenChange(token) {
     if (token === null) {
       endSession({ callServer: false });
