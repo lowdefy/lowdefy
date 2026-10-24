@@ -23,6 +23,7 @@ import Body from './Body.js';
 import computeLayout from './computeLayout.js';
 import dispatchGridEvent from './dispatchGridEvent.js';
 import EmptyState from './EmptyState.js';
+import getHeaderLevels from './getHeaderLevels.js';
 import getRecordCount from './getRecordCount.js';
 import getTableSkeletonCount from './getTableSkeletonCount.js';
 import HeaderRow from './HeaderRow.js';
@@ -83,7 +84,6 @@ function Grid({
   trailingColumns,
 }) {
   const { rootRef, scrollerRef } = api;
-  const levels = config.headerLevels;
   const viewport = useViewportSize(scrollerRef);
   const layout = useMemo(
     () =>
@@ -106,6 +106,10 @@ function Grid({
       state.collapsedColumnGroups,
       viewport.width,
     ]
+  );
+  const levels = useMemo(
+    () => getHeaderLevels({ ancestorsByKey: config.headerAncestors, cols: layout.cols }),
+    [config, layout]
   );
   // Header group rows stack above the leaf header row, each one header row high.
   const headerRowsHeight = headerHeight * (levels.depth + 1);

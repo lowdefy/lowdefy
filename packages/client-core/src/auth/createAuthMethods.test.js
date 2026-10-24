@@ -1731,6 +1731,64 @@ test('login with email and callbackUrl false mints the session without navigatin
   expect(data).toEqual({ token: 't', user: {} });
 });
 
+test('login with callbackUrl false syncs the session and renders the server-resolved caller before it returns', async () => {
+  const { auth, lowdefy } = setup({ signInResult: { token: 't', user: {} } });
+  const resolved = { id: 'user-1', organization_id: 'org-1', roles: ['admin'] };
+  auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: resolved }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: false });
+  expect(auth.refreshSession.mock.calls).toEqual([[{ disableCookieCache: true }]]);
+  expect(auth.updateResolvedUser.mock.calls).toEqual([[resolved]]);
+  expect(lowdefy.user).toEqual(resolved);
+});
+
+test('login with callbackUrl false reloads the page in place when the server admits no caller for the new session', async () => {
+  const { auth, lowdefy } = setup({ signInResult: { token: 't', user: {} } });
+  auth.getResolvedUser = vi.fn(() => Promise.resolve({ user: null }));
+  const reload = vi.fn();
+  lowdefy._internal.globals.window.location.reload = reload;
+  const { login } = createAuthMethods(lowdefy, auth);
+  const data = await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: false,
+  });
+  expect(data).toEqual({ token: 't', user: {} });
+  expect(auth.updateResolvedUser).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalled();
+  expect(reload).toHaveBeenCalledTimes(1);
+});
+
+test('login with callbackUrl false reloads the page in place when fetching the resolved user fails', async () => {
+  const { auth, lowdefy } = setup({ signInResult: { token: 't', user: {} } });
+  auth.getResolvedUser = vi.fn(() =>
+    Promise.reject(new Error('Failed to fetch the resolved user (HTTP 502).'))
+  );
+  const reload = vi.fn();
+  lowdefy._internal.globals.window.location.reload = reload;
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: false });
+  expect(reload).toHaveBeenCalledTimes(1);
+});
+
+test('login with a destination navigates and leaves the caller to the reloaded page', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: { url: '/x' } });
+  expect(assign).toHaveBeenCalled();
+  expect(auth.getResolvedUser).not.toHaveBeenCalled();
+  expect(auth.updateResolvedUser).not.toHaveBeenCalled();
+});
+
+test('passkeySignIn with callbackUrl false renders the server-resolved caller', async () => {
+  const { auth, lowdefy } = setup();
+  const { passkeySignIn } = createAuthMethods(lowdefy, auth);
+  await passkeySignIn({ callbackUrl: false });
+  expect(auth.updateResolvedUser.mock.calls).toEqual([
+    [{ id: 'user-1', roles: ['admin'], attributes: {} }],
+  ]);
+});
+
 test('login with phoneNumber and callbackUrl false does not navigate', async () => {
   const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
   const { login } = createAuthMethods(lowdefy, auth);

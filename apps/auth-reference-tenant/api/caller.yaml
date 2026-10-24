@@ -1,0 +1,10 @@
+# Who the server answers this request as. Ungated, like the caller page that
+# reads it: a caller the server resolves as nobody is answered too, with nulls.
+id: caller
+type: Api
+routine:
+  - ':return':
+      email:
+        _user: email
+      organization_id:
+        _user: organization_id
