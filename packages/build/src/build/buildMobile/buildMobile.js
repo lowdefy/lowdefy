@@ -30,11 +30,17 @@ function buildMobile({ components, context }) {
   if (type.isNone(components.mobile)) {
     return components;
   }
+  // The error is collected, not thrown, so ~ignoreBuildChecks can never turn mobile on, and the
+  // section is dropped so no later step (buildAuthMobile, writeMobile) builds any of it.
   if (context.experimental?.mobile !== true) {
-    throw new ConfigError(
-      'Mobile apps are experimental. Set "config.experimental.mobile: true" in lowdefy.yaml to build the "mobile" section.',
-      { configKey: components.mobile['~k'] }
+    context.errors.push(
+      new ConfigError(
+        'Mobile apps are experimental. Set "config.experimental.mobile: true" in lowdefy.yaml to build the "mobile" section.',
+        { configKey: components.mobile['~k'] }
+      )
     );
+    delete components.mobile;
+    return components;
   }
   validateMobileConfig({ mobile: components.mobile, context });
   validateShellPluginsListed({ mobile: components.mobile, context });
