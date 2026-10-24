@@ -262,6 +262,11 @@
           pageId: modules
           properties:
             title: Modules
+        - id: mobile-apps
+          type: MenuLink
+          pageId: mobile-apps
+          properties:
+            title: Mobile Apps (Experimental)
         - id: module-authoring
           type: MenuLink
           pageId: module-authoring
