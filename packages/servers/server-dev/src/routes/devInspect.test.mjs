@@ -24,7 +24,6 @@ const { listTabs, registerTab, requestFromTab, unregisterTab, updateTabPage } = 
   '../../lib/docs/tabChannel.js'
 );
 const { default: devInspectHandler } = await import('./devInspect.js');
-const { default: evalOperatorInTab } = await import('../../lib/docs/evalOperatorInTab.js');
 const { default: inspectStateFromTab } = await import('../../lib/docs/inspectStateFromTab.js');
 const { default: isTabAnswer } = await import('../lib/isTabAnswer.js');
 const { default: localDevToolsOnly } = await import('../middleware/localDevToolsOnly.js');
@@ -216,8 +215,9 @@ test("an inspect-request carries the page instance, and a shell's answer reads a
 test("an eval-request carries the expression, and a shell's answer reads as the browser tab's", async () => {
   const send = vi.fn();
   connectFixtureTab(send);
-  const pending = evalOperatorInTab({
+  const pending = inspectStateFromTab({
     pageId: fixtures.page.pageId,
+    evaluate: true,
     expression: fixtures.evalRequest.payload.expression,
   });
   const [event, request] = send.mock.calls[0];

@@ -39,7 +39,6 @@ const { default: inspectState } = await import('../inspectState.js');
 const { default: runDeviceJourney } = await import('./runDeviceJourney.js');
 const { default: screenshotDevice } = await import('./screenshotDevice.js');
 const { default: startDevice } = await import('./startDevice.js');
-const { writeCheckpoint } = await import('../checkpointStore.js');
 const { registerTab, unregisterTab, updateTabPage } = await import('../tabChannel.js');
 
 const TICKET = { pageId: 'ticket', pathParams: {}, instanceKey: 'page:ticket' };

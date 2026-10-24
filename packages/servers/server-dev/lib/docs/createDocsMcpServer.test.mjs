@@ -268,11 +268,12 @@ test('MCP lowdefy_screenshot_page advertises steps and urlQuery, and passes them
 });
 
 // Every agent session pays for the tool list and the instructions before it
-// does any work, so growing either past these is a deliberate change.
-test('MCP tools/list stays at most 25,000 characters and the instructions at most 2,500', async () => {
+// does any work, so growing either past these is a deliberate change. The
+// phone tools (lowdefy_device and the device parameters) take about 1,900 of it.
+test('MCP tools/list stays at most 25,500 characters and the instructions at most 2,500', async () => {
   const client = await connectClient();
   const { tools } = await client.listTools();
-  expect(JSON.stringify(tools).length).toBeLessThanOrEqual(25000);
+  expect(JSON.stringify(tools).length).toBeLessThanOrEqual(25500);
   expect(INSTRUCTIONS.length).toBeLessThanOrEqual(2500);
   expect(client.getInstructions()).toEqual(INSTRUCTIONS);
   await client.close();
@@ -904,10 +905,10 @@ test('MCP tools/call lowdefy_journey_session lists dev sessions and prints one a
   }
 });
 
-test('MCP the device tool adds one tool to the 29 the dev server had', async () => {
+test('MCP the device tool adds one tool to the 18 the dev server has', async () => {
   const client = await connectClient();
   const { tools } = await client.listTools();
-  expect(tools).toHaveLength(30);
+  expect(tools).toHaveLength(19);
   const device = tools.find((tool) => tool.name === 'lowdefy_device');
   expect(device.inputSchema.properties.action.enum).toEqual(['list', 'start', 'inject']);
   expect(device.inputSchema.properties.inject.properties.kind.enum).toEqual([
@@ -929,13 +930,7 @@ test('MCP the device tool adds one tool to the 29 the dev server had', async () 
 test('MCP tools that can act on a phone advertise an optional device parameter', async () => {
   const client = await connectClient();
   const { tools } = await client.listTools();
-  [
-    'lowdefy_screenshot_page',
-    'lowdefy_run_journey',
-    'lowdefy_inspect_state',
-    'lowdefy_snapshot_state',
-    'lowdefy_load_state',
-  ].forEach((name) => {
+  ['lowdefy_screenshot_page', 'lowdefy_run_journey', 'lowdefy_inspect_state'].forEach((name) => {
     const tool = tools.find((candidate) => candidate.name === name);
     expect(tool.inputSchema.properties.device.type).toEqual('string');
     expect(tool.inputSchema.required ?? []).not.toContain('device');
@@ -1012,24 +1007,23 @@ test('MCP lowdefy_run_journey with device runs on the phone and returns the jour
   await client.close();
 });
 
-test('MCP lowdefy_inspect_state reads a phone by its tab id', async () => {
-  const phone = createFakePhoneTab({
-    id: 'mcp-phone',
-    device: { shell: '7.1.0', platform: 'ios', app: 'com.lowdefy.dev', paired: false },
-    page: { pageId: 'ticket', pathParams: {}, instanceKey: 'page:ticket' },
+test('MCP lowdefy_inspect_state passes the phone to inspectState', async () => {
+  mockInspectState.mockResolvedValue({
     state: { title: 'Quarterly' },
+    source: 'tab',
+    device: 'mcp-phone',
   });
   const client = await connectClient();
   const result = await client.callTool({
     name: 'lowdefy_inspect_state',
     arguments: { pageId: 'ticket', device: 'mcp-phone', source: 'tab' },
   });
-  expect(JSON.parse(result.content[0].text)).toMatchObject({
-    source: 'tab',
+  expect(mockInspectState.mock.calls.at(-1)[0]).toMatchObject({
+    pageId: 'ticket',
     device: 'mcp-phone',
-    state: { title: 'Quarterly' },
+    source: 'tab',
   });
-  phone.close();
+  expect(JSON.parse(result.content[0].text)).toMatchObject({ source: 'tab', device: 'mcp-phone' });
   await client.close();
 });
 

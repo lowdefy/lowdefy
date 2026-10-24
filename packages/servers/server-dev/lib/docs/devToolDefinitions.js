@@ -80,7 +80,7 @@ const deviceSchema = z
   .string()
   .optional()
   .describe(
-    'A phone to act on instead of the headless browser: its tab id from lowdefy_device with action "list". The phone runs the app in Lowdefy Dev (a simulator, an emulator or a real phone) and is used as it is: on the page it shows, with its own signed-in user and the app\'s real database, so user and data do not apply.'
+    'A phone in Lowdefy Dev, by its tab id from lowdefy_device list. It is used as it is: the page it shows, its own user and the real database.'
   );
 
 // Shared by the request and endpoint runners.
@@ -114,7 +114,7 @@ const devToolDefinitions = {
           "Force a source. Default: live tab if connected, else headless. With device, the phone's tab."
         ),
       device: deviceSchema.describe(
-        "Read a phone's live state: its tab id from lowdefy_device list. The phone must show, or have shown, the page. Never falls back to headless."
+        'A phone to read instead, by tab id. Never falls back to headless.'
       ),
       user: userSchema,
       data: dataSchema,
@@ -213,7 +213,7 @@ const devToolDefinitions = {
 
   lowdefy_screenshot_page: {
     description:
-      'Screenshot a page of the running dev server (headless Chromium) to verify layout and rendering. Returns a PNG. Set width (e.g. 390 for a phone) and colorScheme "dark" to check those layouts. Pass steps to capture a state beyond the loaded page, such as an open dropdown or a modal; portal popups are included. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders. Pass device (a tab id from lowdefy_device list) to capture a phone in Lowdefy Dev instead; its steps run on the phone (no open).' +
+      'Screenshot a page of the running dev server (headless Chromium) to verify layout and rendering. Returns a PNG. Set width (e.g. 390 for a phone) and colorScheme "dark" to check those layouts. Pass steps to capture a state beyond the loaded page, such as an open dropdown or a modal; portal popups are included. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders.' +
       CALLER_NOTE,
     inputSchema: {
       pageId: z
@@ -270,9 +270,7 @@ const devToolDefinitions = {
         .describe(
           'The colour scheme the page\'s prefers-color-scheme reports. Default "light". An app that follows the system theme renders dark with "dark"; a darkMode fixed in the app config wins.'
         ),
-      device: deviceSchema.describe(
-        'Capture a phone instead of the headless browser: its tab id from lowdefy_device list. urlQuery, fullPage, clip, scrollX, scrollY, width, height, colorScheme, user and data apply to the headless browser only.'
-      ),
+      device: deviceSchema.describe('A phone to capture instead, by tab id.'),
       user: userSchema,
       data: dataSchema,
     },
@@ -287,11 +285,9 @@ const devToolDefinitions = {
       steps: z
         .array(z.record(z.any()))
         .describe(
-          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. With device, a phone runs click, fill, select, press, wait, screenshot and expect state, each by blockId; any other step is refused.'
+          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
         ),
-      device: deviceSchema.describe(
-        'Run the journey on a phone instead of the headless browser: its tab id from lowdefy_device list. It starts on the page the phone shows, which must be pageId; urlQuery, user, data and exercised do not apply.'
-      ),
+      device: deviceSchema.describe('A phone to run on instead, by tab id.'),
       user: z
         .union([
           z.literal('none'),
@@ -363,7 +359,7 @@ const devToolDefinitions = {
         .enum(['web', 'mobile'])
         .optional()
         .describe(
-          'Which pages the types are for. Default "web": the types of the installed plugins. "mobile": the blocks, actions and client operators a native shell carries, for pages with target mobile; kinds that run on the server (connections, requests, server operators) are the same for both. Shell types carry no used flag.'
+          'Default "web". "mobile": the blocks, actions and client operators a native shell carries, for mobile pages.'
         ),
     },
   },
@@ -437,14 +433,11 @@ const devToolDefinitions = {
 
   lowdefy_device: {
     description:
-      'Phones for the app\'s mobile pages, which run in Lowdefy Dev. action "list": the phones connected to this dev server, each with the tab id the other tools take as device, the page it shows and whether it is paired over the network; plus the booted iOS simulators and the Android devices on this computer. action "start" with platform "ios" or "android": boot a simulator or emulator (or use a booted one or a USB phone), install Lowdefy Dev from LOWDEFY_DEV_APP_IOS or LOWDEFY_DEV_APP_ANDROID and open it on this dev server, as `lowdefy dev --ios` or `--android` does; returns the new phone\'s device id once it joins. action "inject" with device and inject {kind, value, name}: fake the phone\'s next device result through Lowdefy Dev - kind "scan" {data}, "photo" {base64}, "nfc" (the tag read), "transcript" {partials, final} or {error} (what the next dictation session in a Composer or AgentChat hears), "location" {latitude, longitude} or a list of them as a route, "permission" with name and value "granted" or "denied", "network" "online" or "offline", "push" {title, body, data, categoryId?, open?, actionId?, text?} (shown by Lowdefy Dev; open taps it, actionId presses that button), or an APNs payload with aps (delivered by xcrun simctl push on an iOS simulator), "share" {text?, url?, files?} (as if shared into the app from another app), or "clear". On an iOS simulator a location and a permission are also set with xcrun simctl location and simctl privacy.',
+      'Phones in Lowdefy Dev. "list": connected phones (their tab ids are the device other tools take) and booted simulators. "start" with platform: open Lowdefy Dev on a simulator or emulator. "inject" with device: fake the phone\'s next device result. lowdefy_get_doc "ai-agent-docs" has the shapes.',
     inputSchema: {
       action: z.enum(['list', 'start', 'inject']).describe('What to do.'),
-      platform: z
-        .enum(['ios', 'android'])
-        .optional()
-        .describe('For start: the iOS simulator or an Android emulator or USB phone.'),
-      device: deviceSchema.describe('For inject: the phone, its tab id from action "list".'),
+      platform: z.enum(['ios', 'android']).optional().describe('For start.'),
+      device: deviceSchema.describe('For inject: the phone.'),
       inject: z
         .object({
           kind: z
@@ -461,16 +454,8 @@ const devToolDefinitions = {
               'clear',
             ])
             .describe('What to fake.'),
-          value: z
-            .any()
-            .optional()
-            .describe(
-              'scan {"data": "ABC-123"}, photo {"base64": "..."}, nfc the tag read as an object, transcript {"partials": ["for Sam"], "final": "for Sam, can you look"} or {"error": "not-allowed"}, location {"latitude": -33.92, "longitude": 18.42} or a list of them, permission "granted" | "denied", network "online" | "offline", push {"title", "body", "data": {"path": "/tasks/7"}, "categoryId"?, "open": true?, "actionId"?, "text"?} (shown now; open taps it, actionId presses a button) or an APNs payload {"aps": {...}} delivered by simctl on an iOS simulator, share {"text"?, "url"?, "files"?: [{"uri", "name", "mimeType"}]} (as if shared into the app).'
-            ),
-          name: z
-            .string()
-            .optional()
-            .describe('For permission: the permission, e.g. "location", "camera" or "microphone".'),
+          value: z.any().optional().describe('The faked result, shaped per kind (see the docs).'),
+          name: z.string().optional().describe('For permission: e.g. "camera".'),
         })
         .optional()
         .describe('For inject: the device result to fake.'),
