@@ -89,7 +89,11 @@ function apiContext() {
     // the tenant wall's policy gate still engages for a tenant app; pinned
     // stays null (no engine means no seeded organization row).
     if (authJson.organizations) {
-      context.organization = { policy: authJson.organizations.policy, pinned: null };
+      context.organization = {
+        creatorAppRoles: authJson.organizations.creatorAppRoles,
+        policy: authJson.organizations.policy,
+        pinned: null,
+      };
     }
     logRequest({ context });
     c.set('lowdefyContext', context);

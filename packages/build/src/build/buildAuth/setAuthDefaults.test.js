@@ -216,11 +216,11 @@ test('setAuthDefaults does not overwrite explicit organizations creatorAppRoles'
   const components = {
     auth: {
       configured: true,
-      organizations: { policy: 'tenant', creatorAppRoles: ['owner'] },
+      organizations: { policy: 'tenant', creatorAppRoles: ['workspace-admin'] },
     },
   };
   const res = setAuthDefaults({ components });
-  expect(res.auth.organizations.creatorAppRoles).toEqual(['owner']);
+  expect(res.auth.organizations.creatorAppRoles).toEqual(['workspace-admin']);
 });
 
 test('setAuthDefaults does not add emailAndPassword or magicLink blocks when absent', () => {

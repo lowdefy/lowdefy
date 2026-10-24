@@ -27,6 +27,20 @@ test('getOrganizationBinding returns the registered policy with no pinned org ye
   expect(getOrganizationBinding({ auth })).toEqual({ policy: 'pinned', pinned: null });
 });
 
+test('getOrganizationBinding returns the registered creatorAppRoles', () => {
+  const auth = {};
+  registerOrganizationBinding({
+    auth,
+    organizations: { policy: 'tenant', creatorAppRoles: ['workspace-admin'] },
+  });
+
+  expect(getOrganizationBinding({ auth })).toEqual({
+    creatorAppRoles: ['workspace-admin'],
+    policy: 'tenant',
+    pinned: null,
+  });
+});
+
 test('setPinnedOrganization retains the id, slug and name of the ensured organization', () => {
   const auth = {};
   registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'default' } });
