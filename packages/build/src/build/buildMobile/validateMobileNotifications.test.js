@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import validateMobileNotifications from './validateMobileNotifications.js';
 
 test('validateMobileNotifications accepts endpoints, foreground and categories of buttons', () => {

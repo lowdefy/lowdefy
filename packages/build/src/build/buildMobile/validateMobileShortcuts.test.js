@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import validateMobileShortcuts from './validateMobileShortcuts.js';
 
 test('validateMobileShortcuts accepts up to four shortcuts', () => {

@@ -102,6 +102,10 @@ beforeAll(async () => {
     `lowdefy: local
 name: Mobile
 
+config:
+  experimental:
+    mobile: true
+
 pages:
   - _ref: pages/home.yaml
   - _ref: pages/about.yaml

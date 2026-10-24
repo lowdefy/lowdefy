@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import validateMobileEndpointRefs from './validateMobileEndpointRefs.js';
 
 test('validateMobileEndpointRefs refuses an endpoint mobile config names that does not exist', () => {

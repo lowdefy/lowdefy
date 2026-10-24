@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import validateMobileWidgets from './validateMobileWidgets.js';
 
 test('validateMobileWidgets accepts count and list sources', () => {

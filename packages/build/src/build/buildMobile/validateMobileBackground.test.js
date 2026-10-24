@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import validateMobileBackground from './validateMobileBackground.js';
 import validateMobileShare from './validateMobileShare.js';
 
