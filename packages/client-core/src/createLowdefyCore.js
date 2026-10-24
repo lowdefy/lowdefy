@@ -40,7 +40,9 @@ const HOST_KEYS = [
   'websocketUrl', // (path) the socket URL for an API path such as `${apiBase}/api/websocket`.
 ];
 // A host may also give authTransport ('cookie', the default, or 'bearer') and,
-// for bearer, tokenStore: see validateAuthTransport.
+// for bearer, tokenStore: see validateAuthTransport. A host that keeps calls
+// while offline gives requestQueue, { send({ body, buildId, pageId, requestId,
+// send, url }) }, which `offline: queue` requests go through (createCallRequest).
 
 // Builds lowdefy._internal and the app-level state of the lowdefy object for a
 // renderer: requests, endpoint calls, the websocket client, auth methods,

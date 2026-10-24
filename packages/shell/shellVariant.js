@@ -14,7 +14,15 @@
   limitations under the License.
 */
 
-const { DEV_ENTRY, PROFILES, mergeProfiles, pluginName, resolveProfile } = require('./profiles.js');
+const {
+  applyExtensions,
+  DEV_ENTRY,
+  EXTENSIONS,
+  PROFILES,
+  mergeProfiles,
+  pluginName,
+  resolveProfile,
+} = require('./profiles.js');
 
 const VARIANTS = ['dev', 'release'];
 
@@ -22,10 +30,14 @@ const VARIANTS = ['dev', 'release'];
 // release bundle holds it. Keep it in step with src/dev/tab/devClientMarker.js.
 const DEV_CLIENT_MARKER = 'lowdefy-dev-tab-client';
 
-// Everything any profile carries: every module, entry and permission a build can leave out.
-const EVERYTHING = Object.keys(PROFILES).reduce(
-  (all, name) => mergeProfiles(all, resolveProfile(name)),
-  resolveProfile('basic')
+// Everything any profile or extension carries: every module, entry and permission a build can
+// leave out.
+const EVERYTHING = applyExtensions(
+  Object.keys(PROFILES).reduce(
+    (all, name) => mergeProfiles(all, resolveProfile(name)),
+    resolveProfile('basic')
+  ),
+  Object.keys(EXTENSIONS)
 );
 
 // What the `dev` profile adds itself: the developer features, which a release build never carries.
@@ -38,12 +50,15 @@ function getProfileName({ shell, variant }) {
 }
 
 /**
- * What a shell build of this variant carries: its profile, resolved (profiles.js). The dev variant
- * also carries Lowdefy Dev's developer features, whatever the profile; a release build carries
- * none of them.
+ * What a shell build of this variant carries: its profile, resolved (profiles.js), with its
+ * extensions (shell.json `extensions`). The dev variant also carries Lowdefy Dev's developer
+ * features, whatever the profile; a release build carries none of them.
  */
 function getShellProfile({ shell, variant }) {
-  const profile = resolveProfile(getProfileName({ shell, variant }));
+  const profile = applyExtensions(
+    resolveProfile(getProfileName({ shell, variant })),
+    shell.extensions
+  );
   if (variant === 'dev') {
     return mergeProfiles(profile, { ...resolveProfile('dev'), name: profile.name });
   }

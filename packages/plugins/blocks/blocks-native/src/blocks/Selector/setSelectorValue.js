@@ -15,6 +15,7 @@
 */
 
 import getOptionValue from './getOptionValue.js';
+import playFeedback from '../../device/playFeedback.js';
 
 /**
  * Sets the value a Selector's menu or sheet picked and fires its events: onChange with the new
@@ -29,6 +30,7 @@ import getOptionValue from './getOptionValue.js';
  */
 function setSelectorValue({ index, methods, options, selectedIndex }) {
   if (index === selectedIndex) return;
+  playFeedback();
   if (index === null) {
     methods.setValue(null);
     methods.triggerEvent({ name: 'onChange', event: { value: null } });

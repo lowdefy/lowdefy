@@ -18,6 +18,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Linking, LogBox, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { Accelerometer } from 'expo-sensors';
+import { installDevice } from '@lowdefy/blocks-native/device';
 import { installDictationSource } from '@lowdefy/blocks-native/dictation';
 
 import AppProvider from '../components/AppProvider.js';
@@ -33,7 +34,9 @@ import DevMenu from './menu/DevMenu.js';
 import DevTabClient from './tab/DevTabClient.js';
 import Frame from '../components/Frame.js';
 import getShellConfig from '../config/getShellConfig.js';
+import device from '../device/device.js';
 import injected, { installInjector } from '../device/injected.js';
+import withInjectedDevice from './inject/withInjectedDevice.js';
 import isLoopbackHost from './connection/isLoopbackHost.js';
 import networkStatus from '../host/networkStatus.js';
 import parseDevLink from './connection/parseDevLink.js';
@@ -121,6 +124,14 @@ function DevShell({
 
   // The native inputs' dictation plays injected transcripts, and uses the microphone otherwise.
   useEffect(() => installDictationSource(injected), []);
+
+  // ScanCode, QRScanner, PickImage, TakePhoto and ReadNfc answer injected results first.
+  useEffect(() => {
+    installDevice(withInjectedDevice({ features: device.features, read: injected }));
+    return () => {
+      installDevice(device.features);
+    };
+  }, []);
 
   useEffect(() => {
     linking.getInitialURL().then((link) => link && handleLink(link));

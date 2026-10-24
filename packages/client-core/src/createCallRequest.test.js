@@ -116,3 +116,71 @@ test('callRequest does not send a read-only request again after a JSON error fro
   await expect(callRequest({ ...call, readOnly: true })).rejects.toThrow('Query failed.');
   expect(host.fetch).toHaveBeenCalledTimes(1);
 });
+
+function createQueueLowdefy(host) {
+  return { apiBase: 'https://acme.example.com', buildId: 'b1', _internal: { host }, user: null };
+}
+
+function createQueueHost() {
+  return {
+    fetch: vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      headers: { get: () => null },
+      json: async () => ({ response: 'sent' }),
+    })),
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
+    sessionStorage: createMemoryStore(),
+  };
+}
+
+test('callRequest sends a request to its page and request route', async () => {
+  const host = createQueueHost();
+  const callRequest = createCallRequest(createQueueLowdefy(host));
+  await expect(
+    callRequest({
+      actionId: 'a',
+      blockId: 'b',
+      pageId: 'jobs',
+      payload: { x: 1 },
+      requestId: 'save',
+    })
+  ).resolves.toEqual({ response: 'sent' });
+  expect(host.fetch.mock.calls[0][0]).toBe('https://acme.example.com/api/request/jobs/save');
+});
+
+test('callRequest hands an offline: queue request to the host request queue', async () => {
+  const host = createQueueHost();
+  host.requestQueue = { send: vi.fn(async () => ({ response: { queued: true, id: 'q1' } })) };
+  const callRequest = createCallRequest(createQueueLowdefy(host));
+  await expect(
+    callRequest({
+      actionId: 'a',
+      blockId: 'b',
+      offline: 'queue',
+      pageId: 'jobs',
+      payload: {},
+      requestId: 'save',
+    })
+  ).resolves.toEqual({ response: { queued: true, id: 'q1' } });
+  const [queued] = host.requestQueue.send.mock.calls[0];
+  expect(queued).toEqual(
+    expect.objectContaining({
+      body: { actionId: 'a', blockId: 'b', payload: {} },
+      buildId: 'b1',
+      pageId: 'jobs',
+      requestId: 'save',
+      url: 'https://acme.example.com/api/request/jobs/save',
+    })
+  );
+  await expect(queued.send()).resolves.toEqual({ response: 'sent' });
+});
+
+test('callRequest sends an offline: queue request as usual on a host without a queue', async () => {
+  const host = createQueueHost();
+  const callRequest = createCallRequest(createQueueLowdefy(host));
+  await expect(
+    callRequest({ offline: 'queue', pageId: 'jobs', payload: {}, requestId: 'save' })
+  ).resolves.toEqual({ response: 'sent' });
+});

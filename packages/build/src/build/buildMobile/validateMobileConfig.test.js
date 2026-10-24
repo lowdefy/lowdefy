@@ -114,7 +114,7 @@ test('validateMobileConfig throws on an unknown key', () => {
   expect(() =>
     validateMobileConfig({ context, mobile: { serverUrl: 'https://example.com' } })
   ).toThrow(
-    'App "mobile" has unknown key "serverUrl". Allowed keys: homePageId, minShellVersion, menus, pages, events, shells, auth.'
+    'App "mobile" has unknown key "serverUrl". Allowed keys: homePageId, minShellVersion, menus, pages, events, shells, auth, notifications, share, widgets, shortcuts, background.'
   );
 });
 
@@ -425,7 +425,7 @@ test.each([
   [
     'an extra key',
     { bundleId: 'com.example.field' },
-    'App "mobile.shells[0]" has unknown key "bundleId". Allowed keys: id, name, icon, color, profile, version, scheme, distribution, eas, ios, android, plugins.',
+    'App "mobile.shells[0]" has unknown key "bundleId". Allowed keys: id, name, icon, color, profile, version, scheme, distribution, eas, ios, android, plugins, extensions.',
   ],
 ])('validateMobileConfig refuses a shell with %s', (_, fields, message) => {
   expect(() => validateShells([{ ...storeShell, ...fields }])).toThrow(message);

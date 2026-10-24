@@ -35,6 +35,22 @@ test('the runtime version is nativeVersion and profile', () => {
   assert.equal(getRuntimeVersion({ nativeVersion: 3, profile: 'field', plugins: [] }), '3-field');
 });
 
+test('shell extensions join the runtime version in a fixed order', () => {
+  assert.equal(
+    getRuntimeVersion({ nativeVersion: 3, profile: 'field', extensions: ['widgets', 'share'] }),
+    '3-field+share+widgets'
+  );
+  assert.equal(
+    getRuntimeVersion({
+      nativeVersion: 3,
+      profile: 'basic',
+      extensions: ['share'],
+      plugins: [{ name: '@example/lowdefy-printer', version: '1.0.0' }],
+    }).startsWith('3-basic+share-'),
+    true
+  );
+});
+
 test('the module names getRuntimeVersion too', () => {
   assert.equal(require('./runtimeVersion.js').getRuntimeVersion, getRuntimeVersion);
 });

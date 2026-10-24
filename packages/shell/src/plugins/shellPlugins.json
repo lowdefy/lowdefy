@@ -1,5 +1,6 @@
 [
   { "category": "actions", "package": "@lowdefy/actions-core" },
+  { "category": "actions", "package": "@lowdefy/blocks-native" },
   { "category": "blocks", "package": "@lowdefy/blocks-native" },
   { "category": "operators", "package": "@lowdefy/operators-js" },
   { "category": "operators", "package": "@lowdefy/operators-change-case" },

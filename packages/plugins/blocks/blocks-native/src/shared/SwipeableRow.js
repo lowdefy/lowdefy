@@ -19,6 +19,7 @@ import { Animated, PanResponder, Pressable, StyleSheet, Text, View } from 'react
 import { type } from '@lowdefy/helpers';
 
 import getToneColor from './getToneColor.js';
+import playFeedback from '../device/playFeedback.js';
 
 const ACTION_WIDTH = 74;
 // A horizontal drag this far, and clearly more horizontal than vertical, swipes the row rather
@@ -201,6 +202,7 @@ function SwipeableRow({
     function release(x, velocity) {
       const { leading: start, trailing: end } = latest.current;
       if (isFullSwipe(x)) {
+        playFeedback('medium');
         runAction(x > 0 ? start[0] : end[0]);
         return;
       }

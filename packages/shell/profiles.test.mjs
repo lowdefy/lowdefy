@@ -21,9 +21,13 @@ import test from 'node:test';
 
 const require = createRequire(import.meta.url);
 const {
+  applyExtensions,
+  DEV_ENTRY,
+  FIELD_MICROPHONE_PERMISSION,
   MICROPHONE_PERMISSION,
   PHOTO_LIBRARY_PERMISSION,
   PROFILES,
+  pluginName,
   RELEASE_PROFILES,
   SPEECH_RECOGNITION_PERMISSION,
   resolveProfile,
@@ -37,7 +41,10 @@ test('field carries everything basic does, and the camera', () => {
   Object.keys(basic.modules).forEach((name) => assert.ok(name in field.modules, name));
   basic.capabilities.forEach((capability) => assert.ok(field.capabilities.includes(capability)));
   basic.permissions.forEach((permission) => assert.ok(field.permissions.includes(permission)));
-  basic.plugins.forEach((plugin) => assert.ok(field.plugins.includes(plugin)));
+  // field gives some of basic's plugins other options (the microphone text, the camera picker), so
+  // it carries each by name.
+  const fieldPluginNames = field.plugins.map(pluginName);
+  basic.plugins.forEach((plugin) => assert.ok(fieldPluginNames.includes(pluginName(plugin))));
   assert.deepEqual(
     field.privacyReasons.slice(0, basic.privacyReasons.length),
     basic.privacyReasons
@@ -97,16 +104,54 @@ test('every profile carries speech', () => {
   });
 });
 
-test('every expo-camera entry gives the speech microphone text and keeps RECORD_AUDIO off', () => {
+test('every plugin that writes the microphone text in a profile writes the same one', () => {
   Object.keys(PROFILES).forEach((name) => {
-    resolveProfile(name)
-      .plugins.filter((plugin) => Array.isArray(plugin) && plugin[0] === 'expo-camera')
-      .forEach(([, props]) => {
-        assert.equal(props.microphonePermission, MICROPHONE_PERMISSION, name);
-        assert.equal(props.recordAudioAndroid, false, name);
-      });
+    const profile = resolveProfile(name);
+    const texts = new Set(
+      profile.plugins
+        // `false` turns a plugin's microphone text off (the photo picker on basic).
+        .filter(
+          (plugin) => Array.isArray(plugin) && typeof plugin[1]?.microphonePermission === 'string'
+        )
+        .map(([, props]) => props.microphonePermission)
+    );
+    const expected =
+      'expo-audio' in profile.modules ? FIELD_MICROPHONE_PERMISSION : MICROPHONE_PERMISSION;
+    assert.deepEqual([...texts], [expected], name);
+    profile.plugins
+      .filter((plugin) => Array.isArray(plugin) && plugin[0] === 'expo-camera')
+      .forEach(([, props]) => assert.equal(props.recordAudioAndroid, false, name));
   });
   assert.match(SPEECH_RECOGNITION_PERMISSION, /not recorded or sent anywhere/);
+});
+
+test('field-nfc carries NFC and field-tracking background location', () => {
+  assert.equal(resolveProfile('field-nfc').modules['react-native-nfc-manager'], 'NfcManager');
+  const tracking = resolveProfile('field-tracking');
+  const location = tracking.plugins.find(
+    (plugin) => Array.isArray(plugin) && plugin[0] === 'expo-location'
+  );
+  assert.equal(location[1].isIosBackgroundLocationEnabled, true);
+  assert.ok(tracking.permissions.includes('android.permission.ACCESS_BACKGROUND_LOCATION'));
+  assert.equal(
+    resolveProfile('field').plugins.find(
+      (plugin) => Array.isArray(plugin) && plugin[0] === 'expo-location'
+    )[1].isIosBackgroundLocationEnabled,
+    false
+  );
+});
+
+test('extensions fold into a profile and an unknown one throws', () => {
+  const shell = applyExtensions(resolveProfile('basic'), ['contacts', 'widgets']);
+  assert.equal(shell.name, 'basic');
+  assert.equal(shell.modules['expo-contacts'], 'ExpoContacts');
+  assert.equal(shell.modules['expo-widgets'], 'ExpoWidgets');
+  assert.ok(shell.permissions.includes('NSContactsUsageDescription'));
+  assert.throws(() => applyExtensions(resolveProfile('basic'), ['bluetooth']), /does not exist/);
+  const sharing = applyExtensions(resolveProfile('basic'), ['share']).plugins.find(
+    (plugin) => Array.isArray(plugin) && plugin[0] === 'expo-sharing'
+  );
+  assert.equal(sharing[1].ios.enabled, true);
 });
 
 test('field-nfc and field-tracking extend field', () => {
@@ -124,8 +169,20 @@ test('the dev and development profiles carry the developer features', () => {
     ['expo-camera', 'expo-dev-client', 'expo-sensors', 'react-native-view-shot'].forEach((module) =>
       assert.ok(module in profile.modules, `${name} ${module}`)
     );
-    assert.equal(profile.jsEntries.length, 1);
+    assert.ok(profile.jsEntries.includes(DEV_ENTRY), name);
   });
+});
+
+test("Lowdefy Dev carries every profile's modules, and contacts and calendar", () => {
+  const dev = resolveProfile('dev');
+  ['field', 'field-nfc', 'field-tracking'].forEach((name) =>
+    Object.keys(resolveProfile(name).modules).forEach((module) =>
+      assert.ok(module in dev.modules, `${name} ${module}`)
+    )
+  );
+  assert.ok('expo-contacts' in dev.modules);
+  assert.ok('expo-calendar' in dev.modules);
+  assert.equal('expo-widgets' in dev.modules, false);
 });
 
 test('expo-dev-client is in the dev and development profiles only', () => {

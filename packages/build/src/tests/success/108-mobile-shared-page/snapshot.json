@@ -1061,7 +1061,17 @@
       "unlockAfter": 300,
       "sharedDevice": false,
       "sessionExpiresIn": null
-    }
+    },
+    "notifications": {
+      "register": null,
+      "unregister": null,
+      "foreground": "banner",
+      "categories": []
+    },
+    "share": null,
+    "widgets": [],
+    "shortcuts": [],
+    "background": null
   },
   "mobile/events.json": {
     "~k": "25"

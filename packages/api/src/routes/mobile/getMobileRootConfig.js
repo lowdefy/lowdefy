@@ -51,6 +51,10 @@ function getShellAuth({ auth, config }) {
 // unlockAfter, sharedDevice), or null for an app without auth, which a shell
 // opens with no sign-in screen. sessionExpiresIn is the server's alone.
 //
+// notifications, share, widgets, shortcuts and background drive the shell's
+// native features: push registration endpoints and notification categories,
+// the share page, widget sources, icon quick actions and background fetch.
+//
 // Returns null for an app without a mobile key: no shell opens it.
 async function getMobileRootConfig(context) {
   const [
@@ -100,6 +104,11 @@ async function getMobileRootConfig(context) {
     typeSets: openableTypeSets,
     theme,
     classMap,
+    notifications: config.notifications,
+    share: config.share,
+    widgets: config.widgets,
+    shortcuts: config.shortcuts,
+    background: config.background,
   };
 }
 

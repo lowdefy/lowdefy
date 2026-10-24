@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+const { EXTENSIONS } = require('./profiles.js');
+
 function isObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
@@ -94,6 +96,21 @@ function checkShellConfig({ configPath, shell }) {
     if (shell.eas.owner !== undefined && typeof shell.eas.owner !== 'string') {
       throw new Error(
         `${where} "eas.owner" should be a string. Received ${JSON.stringify(shell.eas.owner)}.`
+      );
+    }
+  }
+  // The opt-in extensions (EXTENSIONS in profiles.js), each named once.
+  if (shell.extensions !== undefined) {
+    const known = Object.keys(EXTENSIONS);
+    if (
+      !Array.isArray(shell.extensions) ||
+      !shell.extensions.every((name) => known.includes(name)) ||
+      new Set(shell.extensions).size !== shell.extensions.length
+    ) {
+      throw new Error(
+        `${where} "extensions" should list each of ${known.join(
+          ', '
+        )} at most once. Received ${JSON.stringify(shell.extensions)}.`
       );
     }
   }

@@ -21,19 +21,22 @@ import getLastCacheKeyName from '../cache/getLastCacheKeyName.js';
 /**
  * Removes everything the shell keeps for one app's signed-in person: the session token, every
  * cached root and page of the app (all its callers), the last cache key, and the person's keys in
- * the device store (SetLocalStorage's user keys, which the core puts under one prefix per app).
+ * the device store (SetLocalStorage's user keys, which the core puts under one prefix per app),
+ * and the requests the offline queue still held for them.
  * Device preferences stay. Nothing a person saw outlives their sign-out.
  *
  * @param {Object} params
  * @param {string} params.appId The app.
  * @param {Object} params.cacheStore The page cache.
  * @param {{ keys, remove }} params.kv The device store.
+ * @param {{ removeApp }} params.queueStore The offline request queue.
  * @param {string|null} params.slug The app's slug (lowdefyApp.slug), which names its storage keys.
  * @param {{ clear }} params.tokenStore The session token store.
  */
-async function purgeAppData({ appId, cacheStore, kv, slug, tokenStore }) {
+async function purgeAppData({ appId, cacheStore, kv, queueStore, slug, tokenStore }) {
   await tokenStore.clear();
   await cacheStore.removeApp({ appId });
+  await queueStore.removeApp({ appId });
   kv.remove(getLastCacheKeyName(appId));
   // The shell renders every page with basePath '' (PageScreen).
   const userPrefix = appStorageKey({ basePath: '', name: 'lowdefy_user:', slug });

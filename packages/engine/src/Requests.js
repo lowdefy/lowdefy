@@ -120,6 +120,9 @@ class Requests {
       const response = await this.context._internal.lowdefy._internal.callRequest({
         actionId: request.actionId,
         blockId: request.blockId,
+        // offline: queue lets a host with a request queue (a native shell) keep the call while
+        // it has no signal; the response is then { queued: true, id }.
+        offline: this.requestConfig[request.requestId]?.offline,
         pageId: this.context.pageId,
         payload: serializer.serialize(request.payload),
         readOnly: this.requestConfig[request.requestId].readOnly,

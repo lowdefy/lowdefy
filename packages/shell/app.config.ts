@@ -22,6 +22,7 @@ import path from 'node:path';
 
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
+import { getAppLinkIntentFilters, getAssociatedDomains } from './appLinks.js';
 import applyShellPlugins from './applyShellPlugins.js';
 import { getAuthCallbackIntentFilters } from './authCallbackIntentFilters.js';
 import checkShellPlugins from './checkShellPlugins.js';
@@ -115,6 +116,7 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       nativeVersion,
       profile: profile.name,
       plugins: shell.plugins,
+      extensions: shell.extensions,
     }),
     platforms: ['ios', 'android'],
     scheme: shell.scheme,
@@ -131,6 +133,8 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       // expo-dev-menu's floating tools button sits over the header's trailing actions in a
       // development build; the dev menu stays a shake away (DevMenuPreferences.swift reads this).
       infoPlist: { ...profile.infoPlist, EXDevMenuShowFloatingActionButton: false },
+      // Links to the app's pages open in the shell (appLinks.js).
+      associatedDomains: getAssociatedDomains({ shell }),
       privacyManifests: getPrivacyManifest({ privacyReasons: profile.privacyReasons }),
     },
     android: {
@@ -139,7 +143,16 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
         ? { adaptiveIcon: { foregroundImage: icons.adaptiveForeground, backgroundColor: color } }
         : {}),
       // The sign-in sheet returns by a verified app link on Android (src/auth/signInWithSheet.js).
-      intentFilters: getAuthCallbackIntentFilters({ shell }),
+      // Links to the app's pages open in the shell too (appLinks.js).
+      intentFilters: [
+        ...getAuthCallbackIntentFilters({ shell }),
+        ...getAppLinkIntentFilters({ shell }),
+      ],
+      // Google Maps draws the Map block on Android. Its key is a build secret, never in
+      // lowdefy.yaml or the bundle.
+      ...(profile.capabilities.includes('maps') && process.env.LOWDEFY_GOOGLE_MAPS_API_KEY
+        ? { config: { googleMaps: { apiKey: process.env.LOWDEFY_GOOGLE_MAPS_API_KEY } } }
+        : {}),
       blockedPermissions: excluded.permissions.filter((permission) =>
         permission.startsWith('android.permission.')
       ),
@@ -160,7 +173,8 @@ export default function appConfig({ config }: ConfigContext): ExpoConfig {
       shell: {
         ...shellExtra,
         profile: profile.name,
-        capabilities: shell.capabilities ?? profile.capabilities,
+        // The profile's and its extensions' capabilities, with any shell.json lists beside them.
+        capabilities: [...new Set([...(shell.capabilities ?? []), ...profile.capabilities])],
         variant,
       },
     },

@@ -36,7 +36,7 @@ names more than one app, or has no url for the shell's `environment`; `app.confi
 
 `profile` names the shell's capability profile, one row of the table in `profiles.js`: `basic`,
 `field`, `field-nfc`, `field-tracking`, and `dev` and `development` for Lowdefy Dev and development
-builds. Each lists the native modules, config plugins, permissions, JavaScript entry modules,
+builds (see Native features for what each carries). Each lists the native modules, config plugins, permissions, JavaScript entry modules,
 required-reason APIs and collected data it carries, and may extend another (`field` is `basic` and
 the camera). `basic`, and so every profile, carries on-device dictation (`expo-speech-recognition`)
 with its microphone and speech purpose texts; `expo-camera` is given the same microphone text, so
@@ -55,6 +55,62 @@ shell registers (`src/plugins/types.js`, listed in
 `pnpm --filter=@lowdefy/shell type-manifest` rewrites it (`scripts/createTypeManifest.mjs`) after
 a change to the plugin maps, `src/plugins/types.test.js` fails when it is stale, and
 `pnpm release:version` rewrites it after the version bump.
+
+## Native features
+
+What each profile carries (`profiles.js`), with its permissions, purpose texts, privacy reasons and
+collected data:
+
+| Profile          | Adds                                                                                                                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `basic`          | push and local notifications, haptics, share out, Photos and Files pickers (system pickers, no permission), read aloud, keep awake, icon quick actions and App Shortcuts, background fetch |
+| `field`          | the camera (photos, code and document scanning), location in use, maps (expo-maps), voice notes, screen brightness                                                                         |
+| `field-nfc`      | NFC read and write (react-native-nfc-manager)                                                                                                                                              |
+| `field-tracking` | background location and geofences (expo-location, expo-task-manager)                                                                                                                       |
+
+Lowdefy Dev (`dev`, `development`) carries `field`, `field-nfc`, `field-tracking`, `contacts` and
+`calendar` (`includes` and `extensions` in its row), so any app's pages can be tried in it; it
+leaves out only the widget extension.
+
+`extensions` in `shell.json` (from `mobile.shells[].extensions`) adds opt-in rows on top of any
+profile (`EXTENSIONS` in `profiles.js`): `share` (receiving shared items, expo-sharing's share
+extension), `widgets` (iOS Home Screen and Lock Screen widgets, expo-widgets), `contacts` and
+`calendar`. They need an extension target, an App Group or a heavily reviewed permission, so no
+profile carries them. `getShellProfile` folds them in, the runtime version names them
+(`3-field+share+widgets`), and `check:native-version` fingerprints each on `basic`.
+
+- **Device registry.** `src/device/device.js` builds the features the shell carries
+  (`createDevice.js`: the `basic` ones in `src/device/basic`, and each profile's or extension's
+  entry module, `src/device/<field|nfc|tracking|contacts|calendar>/index.js` and
+  `src/widgets/index.js`, which a shell without it resolves to an empty module) and installs them in
+  blocks-native's registry (`installDevice`) when the bundle loads. blocks-native's native actions
+  and blocks call them; a missing feature throws naming its profile. `DeviceHosts` mounts the views
+  features open over the app (the ScanCode sheet).
+- **App services.** `src/native/startAppServices.js` starts once the app's auth and session exist:
+  it sets the current app (`currentApp.js`) that work started outside React reaches (notification
+  buttons, background tasks), and starts notifications, the request queue, quick actions, share-in,
+  background fetch and widget refreshes. App events (`onNotification`, `onNotificationAction`,
+  `onShare`, `onShortcut`, `onGeofence`, `onRequestQueue`) run on the app context
+  (`createAppEventTrigger.js`), waiting for the first page when they come before it.
+- **Notifications** (`src/notifications`). Categories from `mobile.notifications` are registered;
+  the token is posted to its `register` endpoint once signed in (`registerPushToken.js`) and to
+  `unregister` at sign-out, before the token is removed. A tap opens `data.path` and fires
+  `onNotificationAction`; a button with `endpointId` calls it in the background; `snooze` shows the
+  notification again later; a push with `data.refreshWidgets` refreshes the widgets.
+- **Offline request queue** (`src/queue`). `offline: queue` requests go through the host's
+  `requestQueue` (client-core `createCallRequest`): kept in SQLite while offline, replayed in order
+  on reconnect and launch, a 2xx removes, any other answer marks failed. Sign-out clears it.
+- **Links.** `<scheme>://shortcut/<id>` (App Shortcuts) and `<scheme>://expo-sharing` (the share
+  extension) go to their services; `https://<app url>/<path>` opens its page (universal links and
+  App Links: `appLinks.js` writes the associated domain and the Android filter).
+- **Background.** Background fetch (`src/native/backgroundFetch.js`) and tracking
+  (`src/device/tracking`) define their tasks when the bundle loads and post to the app's endpoints
+  with the session token; tracking keeps failed posts for the next wake (`createBacklog.js`).
+- **App Shortcuts.** `native/withAppShortcuts.js` adds `LowdefyAppShortcuts.swift` to the iOS app:
+  one App Intent whose options are the quick actions the shell set, opening
+  `<scheme>://shortcut/<id>`.
+- **Maps.** On Android the Map block draws Google Maps, whose key comes from
+  `LOWDEFY_GOOGLE_MAPS_API_KEY` when the shell is built.
 
 ## Shell plugins
 
@@ -106,8 +162,9 @@ runs it again at prebuild. `fixtures/printer-plugin` is the test plugin.
   which `pnpm --filter=@lowdefy/shell shell-version` rewrites (`scripts/createShellVersion.mjs`) and
   `pnpm release:version` rewrites after the version bump; `src/version/shellVersion.test.js` fails
   when it is stale.
-- `runtimeVersion` is `<nativeVersion>-<profile>`, with `-<hash>` of the shell's `plugins` when it
-  lists any (`runtimeVersion.js`, a pure function `lowdefy mobile` reuses). Each plugin is keyed on
+- `runtimeVersion` is `<nativeVersion>-<profile>`, with `+<extension>` for each of its
+  `extensions` and `-<hash>` of the shell's `plugins` when it lists any (`runtimeVersion.js`, a
+  pure function `lowdefy mobile` reuses). Each plugin is keyed on
   `name@version` and its `options` as JSON with keys sorted, so a new plugin version or option is a
   new runtime version and a native build. An over-the-air update reaches only binaries with the same runtime version. Shell
   identity is not part of it, so every shell on one `nativeVersion` and profile shares it.
@@ -288,7 +345,9 @@ permissions. `--control` first checks that the `dev` variant holds and links the
     changed; `network` `'offline' | 'online'`, which fails the app's every fetch as offline (the tab
     client keeps its own) and takes the shell's online state offline (`src/host/networkStatus.js`,
     which expo-network also feeds), so the NoConnection banner shows and the app's `offline` events
-    fire; `clear`. `push` is refused until the shell carries expo-notifications.
+    fire; `push` `{ title, body, data, categoryId?, open?, actionId?, text? }`, shown now and,
+    with `open` or `actionId`, tapped or answered (`injectPush.js`); `share` `{ text?, url?,
+files? }`, as if shared into the app (`injectShare.js`); `clear`.
     Device actions read these with `injected(name)` (`src/device/injected.js`), which returns
     nothing in a release shell; `GeolocationCurrentPosition` answers with an injected location.
 - **Recorder** (`src/dev/recorder`). What the developer does is recorded as the web recorder records

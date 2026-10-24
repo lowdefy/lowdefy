@@ -120,6 +120,7 @@ async function config({ context }) {
     nativeVersion: shellPackage.nativeVersion,
     profile: profile.name,
     plugins: shellJson.plugins ?? [],
+    extensions: shellJson.extensions ?? [],
   });
   context.logger.info(
     `Shell "${shell.id}" for ${environment} written to ${projectDirectory}: @lowdefy/shell@${shellPackage.version}, profile ${profile.name}, runtime version ${runtimeVersion}.`

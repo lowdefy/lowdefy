@@ -43,7 +43,7 @@ Role-gated pages: the headless renderer signs in as a roleless user, so a page o
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
 
-Phones: an app's mobile pages run in Lowdefy Dev on a phone, an iOS simulator or an Android emulator, which joins this dev server as a tab. lowdefy_device with action "list" names each connected phone by its tab id; action "start" opens Lowdefy Dev on a simulator or emulator. Pass that id as device to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_snapshot_state and lowdefy_load_state to act on the phone instead of the headless browser: steps (click, fill, select, press, wait, screenshot, expect state) run on it by blockId, on the page it shows. lowdefy_device action "inject" fakes the phone's next scan, photo, NFC read, dictated transcript, location, permission answer, push or network state. Use lowdefy_list_types with target "mobile" for the blocks and actions a mobile page can use.
+Phones: an app's mobile pages run in Lowdefy Dev on a phone, an iOS simulator or an Android emulator, which joins this dev server as a tab. lowdefy_device with action "list" names each connected phone by its tab id; action "start" opens Lowdefy Dev on a simulator or emulator. Pass that id as device to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_snapshot_state and lowdefy_load_state to act on the phone instead of the headless browser: steps (click, fill, select, press, wait, screenshot, expect state) run on it by blockId, on the page it shows. lowdefy_device action "inject" fakes the phone's next scan, photo, NFC read, dictated transcript, location, permission answer, push, shared item or network state. Use lowdefy_list_types with target "mobile" for the blocks and actions a mobile page can use.
 
 State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
 
@@ -546,7 +546,7 @@ const devToolDefinitions = {
 
   lowdefy_device: {
     description:
-      'Phones for the app\'s mobile pages, which run in Lowdefy Dev. action "list": the phones connected to this dev server, each with the tab id the other tools take as device, the page it shows and whether it is paired over the network; plus the booted iOS simulators and the Android devices on this computer. action "start" with platform "ios" or "android": boot a simulator or emulator (or use a booted one or a USB phone), install Lowdefy Dev from LOWDEFY_DEV_APP_IOS or LOWDEFY_DEV_APP_ANDROID and open it on this dev server, as `lowdefy dev --ios` or `--android` does; returns the new phone\'s device id once it joins. action "inject" with device and inject {kind, value, name}: fake the phone\'s next device result through Lowdefy Dev - kind "scan" {data}, "photo" {base64}, "nfc" (the tag read), "transcript" {partials, final} or {error} (what the next dictation session in a Composer or AgentChat hears), "location" {latitude, longitude} or a list of them as a route, "permission" with name and value "granted" or "denied", "network" "online" or "offline", "push" (an APNs payload with aps; delivered by xcrun simctl push on an iOS simulator, refused elsewhere), or "clear". On an iOS simulator a location and a permission are also set with xcrun simctl location and simctl privacy.',
+      'Phones for the app\'s mobile pages, which run in Lowdefy Dev. action "list": the phones connected to this dev server, each with the tab id the other tools take as device, the page it shows and whether it is paired over the network; plus the booted iOS simulators and the Android devices on this computer. action "start" with platform "ios" or "android": boot a simulator or emulator (or use a booted one or a USB phone), install Lowdefy Dev from LOWDEFY_DEV_APP_IOS or LOWDEFY_DEV_APP_ANDROID and open it on this dev server, as `lowdefy dev --ios` or `--android` does; returns the new phone\'s device id once it joins. action "inject" with device and inject {kind, value, name}: fake the phone\'s next device result through Lowdefy Dev - kind "scan" {data}, "photo" {base64}, "nfc" (the tag read), "transcript" {partials, final} or {error} (what the next dictation session in a Composer or AgentChat hears), "location" {latitude, longitude} or a list of them as a route, "permission" with name and value "granted" or "denied", "network" "online" or "offline", "push" {title, body, data, categoryId?, open?, actionId?, text?} (shown by Lowdefy Dev; open taps it, actionId presses that button), or an APNs payload with aps (delivered by xcrun simctl push on an iOS simulator), "share" {text?, url?, files?} (as if shared into the app from another app), or "clear". On an iOS simulator a location and a permission are also set with xcrun simctl location and simctl privacy.',
     inputSchema: {
       action: z.enum(['list', 'start', 'inject']).describe('What to do.'),
       platform: z
@@ -566,6 +566,7 @@ const devToolDefinitions = {
               'permission',
               'network',
               'push',
+              'share',
               'clear',
             ])
             .describe('What to fake.'),
@@ -573,7 +574,7 @@ const devToolDefinitions = {
             .any()
             .optional()
             .describe(
-              'scan {"data": "ABC-123"}, photo {"base64": "..."}, nfc the tag read as an object, transcript {"partials": ["for Sam"], "final": "for Sam, can you look"} or {"error": "not-allowed"}, location {"latitude": -33.92, "longitude": 18.42} or a list of them, permission "granted" | "denied", network "online" | "offline", push {"aps": {"alert": {"title", "body"}}}.'
+              'scan {"data": "ABC-123"}, photo {"base64": "..."}, nfc the tag read as an object, transcript {"partials": ["for Sam"], "final": "for Sam, can you look"} or {"error": "not-allowed"}, location {"latitude": -33.92, "longitude": 18.42} or a list of them, permission "granted" | "denied", network "online" | "offline", push {"title", "body", "data": {"path": "/tasks/7"}, "categoryId"?, "open": true?, "actionId"?, "text"?} (shown now; open taps it, actionId presses a button) or an APNs payload {"aps": {...}} delivered by simctl on an iOS simulator, share {"text"?, "url"?, "files"?: [{"uri", "name", "mimeType"}]} (as if shared into the app).'
             ),
           name: z
             .string()

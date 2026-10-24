@@ -29,6 +29,7 @@ import meta from './meta.js';
 import SelectorMenu from './SelectorMenu.js';
 import SelectorSheet from './SelectorSheet.js';
 import useBlockTokens from '../../shared/useBlockTokens.js';
+import playFeedback from '../../device/playFeedback.js';
 
 // The picker item that stands for no value: shown while nothing is chosen, and kept when the
 // input can be cleared.
@@ -87,6 +88,7 @@ function SelectorPicker({
             enabled={!disabled}
             onValueChange={(index) => {
               const next = index === NO_VALUE ? null : getOptionValue({ option: options[index] });
+              playFeedback();
               methods.setValue(next);
               methods.triggerEvent({ name: 'onChange', event: { value: next } });
               if (index === NO_VALUE) {

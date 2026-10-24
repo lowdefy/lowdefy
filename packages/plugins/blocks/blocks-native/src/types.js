@@ -16,6 +16,9 @@
 
 import extractBlockTypes from '@lowdefy/block-utils/extractBlockTypes.js';
 
+import * as actions from './actions.js';
 import * as metas from './metas.js';
 
-export default extractBlockTypes(metas);
+// The block types, icons and metas, and the native-only action types the shell registers from
+// ./actions. The build reads them from its committed copy (@lowdefy/build src/nativeBlockTypes.js).
+export default { ...extractBlockTypes(metas), actions: Object.keys(actions).sort() };

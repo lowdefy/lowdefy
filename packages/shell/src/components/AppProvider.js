@@ -20,11 +20,13 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AuthGate from '../auth/AuthGate.js';
 import createShellApp from '../createShellApp.js';
+import DeviceHosts from '../device/DeviceHosts.js';
 import LoadingScreen from './LoadingScreen.js';
 import MessageScreen from './MessageScreen.js';
 import NoConnectionBanner from './NoConnectionBanner.js';
 import ShellContext, { useSessionState } from '../ShellContext.js';
 import ShellThemeProvider from './ShellThemeProvider.js';
+import startAppServices from '../native/startAppServices.js';
 
 function AppGate({ children }) {
   const { status, error } = useSessionState();
@@ -62,16 +64,20 @@ function AppProvider({ children, shell }) {
   useEffect(() => {
     let active = true;
     let opened = null;
+    let services = null;
     setValue(null);
     const onSignedOut = () => setOpenings((count) => count + 1);
-    createShellApp({ onSignedOut, shell }).then(({ auth, host, locale, session }) => {
+    createShellApp({ onSignedOut, shell }).then((created) => {
       if (!active) return;
+      const { auth, host, locale, session } = created;
       opened = auth;
-      setValue({ auth, host, locale, session, shell });
+      services = startAppServices({ app: { ...created, shell } });
+      setValue({ auth, host, locale, services, session, shell });
       auth.start({ session });
     });
     return () => {
       active = false;
+      services?.stop();
       opened?.dispose();
     };
   }, [openings, shell]);
@@ -83,6 +89,7 @@ function AppProvider({ children, shell }) {
       <AuthGate>
         <AppGate>{children}</AppGate>
       </AuthGate>
+      <DeviceHosts />
     </ShellContext.Provider>
   );
 }

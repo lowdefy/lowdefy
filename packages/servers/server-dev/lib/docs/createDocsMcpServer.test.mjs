@@ -797,6 +797,7 @@ test('MCP the device tool adds one tool to the 29 the dev server had', async () 
     'permission',
     'network',
     'push',
+    'share',
     'clear',
   ]);
   expect(device.inputSchema.required).toEqual(['action']);
