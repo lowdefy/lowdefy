@@ -233,127 +233,127 @@ const typeManifest = {
     },
     AddCalendarEvent: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     AddContact: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     CancelNotification: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     DiscardQueuedRequest: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     GetCalendarEvents: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     GetRequestQueue: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Haptic: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     KeepAwake: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     PickContact: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     PickFile: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     PickImage: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     ReadNfc: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     RefreshWidgets: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     RequestNotificationPermission: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     RetryRequestQueue: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     ScanCode: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     ScanDocument: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     ScheduleNotification: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     SetBadgeCount: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     SetBrightness: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Share: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Speak: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     StartGeofencing: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     StartLocationTracking: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     StartRecording: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     StopGeofencing: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     StopLocationTracking: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     StopRecording: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     StopSpeaking: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     TakePhoto: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     WriteNfc: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
   },
   blocks: {
@@ -407,7 +407,7 @@ const typeManifest = {
     },
     FileInput: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Icon: {
       package: '@lowdefy/blocks-native',
@@ -427,7 +427,7 @@ const typeManifest = {
     },
     Map: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Markdown: {
       package: '@lowdefy/blocks-native',
@@ -455,7 +455,7 @@ const typeManifest = {
     },
     QRScanner: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Screen: {
       package: '@lowdefy/blocks-native',
@@ -475,7 +475,7 @@ const typeManifest = {
     },
     SignaturePad: {
       package: '@lowdefy/blocks-native',
-      version: 6,
+      version: 7,
     },
     Skeleton: {
       package: '@lowdefy/blocks-native',
