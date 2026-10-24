@@ -125,7 +125,7 @@ Each schedule item has:
 
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
-To test a scheduled routine locally, run it as a system context with the dev server's `lowdefy_run_endpoint` MCP tool (or `POST /lowdefy-docs/run-endpoint`) with `system: true` — see [Docs for AI Agents](/ai-agent-docs#running-endpoints).
+To test a scheduled routine locally, run it as a system context with the dev server's `lowdefy_run_endpoint` MCP tool with `system: true` — see [Docs for AI Agents](/ai-agent-docs#running-endpoints).
 
 See [Deploy with Vercel](/vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
 
@@ -338,15 +338,15 @@ routine:
 
 A webhook endpoint answers with an HTTP status that says how the run ended, so the sender can tell its own mistake from an outage:
 
-| Outcome | Status | Body |
-| --- | --- | --- |
-| The routine finished | `200` | Its `:return` value, or `{ "ok": true }` when it returned nothing |
-| A [`:return`](/:return) with `:content_type: text/plain` | `200` | The returned string as plain text (see [Answering with plain text](#answering-with-plain-text)) |
-| A [`:reject`](/:reject) with `:status` | That status (400 to 499) | `:body` as given, or the error body below |
-| A [`:reject`](/:reject) without `:status` | `400` | `{ "error": { "code": "rejected", "message": <the reject message> } }`, or `:body` when given |
-| A failed [`ValidateSchema` step](#validating-data-as-a-routine-step) (with `throwOnInvalid` on) | `400` | `{ "error": { "code": "invalid_request", "message": <names the failing path> } }` |
-| The `verify` request did not pass | `401` | `{ "error": { "code": "unauthorized", "message": "Webhook verification failed." } }` |
-| Any other uncaught error | `500` | `{ "error": { "code": "internal_error", "message": "Webhook failed." } }`, with nothing from the error itself |
+| Outcome                                                                                         | Status                   | Body                                                                                                          |
+| ----------------------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| The routine finished                                                                            | `200`                    | Its `:return` value, or `{ "ok": true }` when it returned nothing                                             |
+| A [`:return`](/:return) with `:content_type: text/plain`                                        | `200`                    | The returned string as plain text (see [Answering with plain text](#answering-with-plain-text))               |
+| A [`:reject`](/:reject) with `:status`                                                          | That status (400 to 499) | `:body` as given, or the error body below                                                                     |
+| A [`:reject`](/:reject) without `:status`                                                       | `400`                    | `{ "error": { "code": "rejected", "message": <the reject message> } }`, or `:body` when given                 |
+| A failed [`ValidateSchema` step](#validating-data-as-a-routine-step) (with `throwOnInvalid` on) | `400`                    | `{ "error": { "code": "invalid_request", "message": <names the failing path> } }`                             |
+| The `verify` request did not pass                                                               | `401`                    | `{ "error": { "code": "unauthorized", "message": "Webhook verification failed." } }`                          |
+| Any other uncaught error                                                                        | `500`                    | `{ "error": { "code": "internal_error", "message": "Webhook failed." } }`, with nothing from the error itself |
 
 A `:reject` or a failed `ValidateSchema` step in an endpoint the routine calls with `CallApi` sets the answer the same way, so the work can live in an `InternalApi` endpoint the webhook calls. `:status` and `:body` are accepted only on a `:reject` in a webhook endpoint or an `InternalApi` endpoint; on any other endpoint they are a build error. An error a `:catch` handles does not change the answer. A `:reject` is never caught, so it always sets it.
 

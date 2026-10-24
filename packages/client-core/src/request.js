@@ -18,6 +18,7 @@ import { decodeServerError } from '@lowdefy/engine';
 import { expectedErrorNames, lowdefyErrorTypes } from '@lowdefy/errors';
 import { parseCallerStamp, translate, type } from '@lowdefy/helpers';
 
+import awaitUnlessUnloading from './awaitUnlessUnloading.js';
 import endBearerSession from './auth/endBearerSession.js';
 import getAuthorizationHeaders from './auth/getAuthorizationHeaders.js';
 import NonJsonResponseError from './NonJsonResponseError.js';
@@ -35,7 +36,8 @@ import shouldReloadForCaller from './shouldReloadForCaller.js';
 // page is being replaced, and a rejection would run the action's catch actions
 // and report the refusal as an error. Only the production client carries a
 // build id; the server lets a call naming none through (dev and e2e pages,
-// third-party webhooks).
+// third-party webhooks). A fetch the browser cancels as the page unloads is
+// held instead of thrown (awaitUnlessUnloading).
 //
 // lowdefy.user is the caller the page renders. The host also moves onto the
 // server's caller (host.onCallerChanged; a reload on the web) when the server
@@ -68,10 +70,13 @@ async function request({
   if (!type.isNone(buildId)) {
     headers['x-lowdefy-build'] = buildId;
   }
-  const res = await host.fetch(url, {
-    method,
-    headers,
-    body: JSON.stringify(body),
+  const res = await awaitUnlessUnloading({
+    lowdefy,
+    promise: host.fetch(url, {
+      method,
+      headers,
+      body: JSON.stringify(body),
+    }),
   });
   const serverCaller = res.headers.get('x-lowdefy-caller');
   if (res.status === 401 && !type.isNone(authorizationHeaders.Authorization)) {
@@ -84,7 +89,7 @@ async function request({
   }
   recordCallerStamp({ lowdefy, serverCaller });
   if (!res.ok) {
-    const text = await res.text();
+    const text = await awaitUnlessUnloading({ lowdefy, promise: res.text() });
     const body = parseJsonObject(text);
     if (body === null) {
       throw new NonJsonResponseError({ status: res.status, text });
@@ -125,7 +130,7 @@ async function request({
     }
     throw new Error(body.message || translate({ key: 'client.requestError' }));
   }
-  return res.json();
+  return awaitUnlessUnloading({ lowdefy, promise: res.json() });
 }
 
 export default request;

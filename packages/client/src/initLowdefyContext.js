@@ -22,6 +22,7 @@ import { resolveTarget } from '@lowdefy/engine';
 import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
 import createLinkComponent from './createLinkComponent.js';
+import createPageUnload from './createPageUnload.js';
 import createWebHost from './host/createWebHost.js';
 import setupLink from './setupLink.js';
 import { createUrl } from './adapters/url.js';
@@ -49,6 +50,11 @@ function initLowdefyContext({
   types,
   window,
 }) {
+  // Watched once per tab: this runs on every render, and a dev config reload
+  // does not unload the page.
+  if (lowdefy.pageUnload === undefined) {
+    lowdefy.pageUnload = createPageUnload({ window });
+  }
   if (!lowdefy._internal?.initialised) {
     createLowdefyCore({
       apiBase,

@@ -51,6 +51,14 @@ function createHandleError(lowdefy) {
       return;
     }
 
+    // A fetch the browser cancels as the page leaves fails like a network
+    // failure; the Fetch action and other direct fetches see it too. It logs to
+    // the browser console only, not to the server log.
+    if (lowdefy.pageUnload?.isLeaving() === true) {
+      logError(shown);
+      return;
+    }
+
     // Send known error types to server for logging with location resolution
     if (error.isLowdefyError) {
       // The server already logged this one — just display locally. Keyed on

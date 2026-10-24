@@ -50,9 +50,6 @@ function createFakePhoneTab({ id, device, page, state = {}, answer }) {
         return { ok: true, settled: true };
       case 'inject':
         return { ok: true, kind: data.inject.kind };
-      case 'load-state-request':
-        Object.assign(pageState, data.state);
-        return { verifiedKeys: data.state };
       default:
         return { error: `Unknown event ${event}.` };
     }

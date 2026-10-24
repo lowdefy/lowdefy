@@ -24,7 +24,17 @@ import resolveSource from './resolveSource.js';
 // `device` names a phone's tab (lowdefy_device list): its live state is read,
 // as `source: 'tab'` reads a browser tab, and never falls back to headless,
 // which would answer for a different screen than the one asked about.
-async function inspectDevice({ name, pageId, pathParams, device, source, user, data }) {
+async function inspectDevice({
+  name,
+  pageId,
+  pathParams,
+  device,
+  evaluate,
+  expression,
+  source,
+  user,
+  data,
+}) {
   if (source === 'headless') {
     return {
       error: `${name} reads a phone's live tab when "device" is given; "source" "headless" contradicts it. Leave "source" out, or pass "tab".`,
@@ -43,20 +53,42 @@ async function inspectDevice({ name, pageId, pathParams, device, source, user, d
   if (!type.isUndefined(error)) {
     return { error, invalidInput: true };
   }
-  const result = await inspectStateFromTab({ tabId: tab.id, pageId, pathParams });
+  const result = await inspectStateFromTab({
+    tabId: tab.id,
+    pageId,
+    pathParams,
+    evaluate,
+    expression,
+  });
   if (!type.isUndefined(result?.error)) {
     return { error: result.error };
   }
   return { ...result, source: 'tab', device: tab.id };
 }
 
+// Reads a running page: its state snapshot, or, when an expression is passed,
+// the value of that operator expression against its live state.
 // resolveSource picks the tab or headless — including why `user` is
 // headless-only. Falls back to headless whenever the tab path isn't usable
 // (no tab connected, or `source: 'tab'` was requested but it errored) so
 // agents always get an answer.
-async function inspectState({ origin, pageId, pathParams, source, user, data, device }) {
+async function inspectState(params) {
+  const { origin, pageId, pathParams, expression, source, user, data } = params;
+  // null is a valid expression, so whether one was passed is read from the key.
+  const evaluate = Object.hasOwn(params, 'expression');
+  const { device } = params;
   if (!type.isNone(device)) {
-    return inspectDevice({ name: 'inspectState', pageId, pathParams, device, source, user, data });
+    return inspectDevice({
+      name: 'inspectState',
+      pageId,
+      pathParams,
+      device,
+      evaluate,
+      expression,
+      source,
+      user,
+      data,
+    });
   }
   const { tryTab, error, invalidInput } = resolveSource({
     name: 'inspectState',
@@ -71,13 +103,21 @@ async function inspectState({ origin, pageId, pathParams, source, user, data, de
   }
 
   if (tryTab) {
-    const result = await inspectStateFromTab({ pageId, pathParams });
+    const result = await inspectStateFromTab({ pageId, pathParams, evaluate, expression });
     if (!result?.error) {
       return { ...result, source: 'tab' };
     }
   }
 
-  const result = await inspectStateHeadless({ origin, pageId, pathParams, user, data });
+  const result = await inspectStateHeadless({
+    origin,
+    pageId,
+    pathParams,
+    evaluate,
+    expression,
+    user,
+    data,
+  });
   return { ...result, source: 'headless' };
 }
 

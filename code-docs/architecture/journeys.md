@@ -21,7 +21,7 @@ The designs behind it are in Pelican, under the LDF-133 (Journey loop) project.
 One grammar, in `node-utils/src/journeyGrammar/`. Everything that checks a step imports it, so the CLI, the dev server's runner, `screenshotPage`, the journey REST route, lint and variants agree.
 
 - `validateJourneySteps.js` exports `validateJourneySteps`, `STEP_KEYS`, `TARGET_KEYS`, `INTERACTION_STEP_KEYS` and `getStepKey`. Interaction steps are click, open, fill, select, press and back. `expect.error` and `expect.effect` must directly follow one (`validatePlacement`).
-- `journeyStepSchema.js` holds the same grammar as JSON Schema (`journeyStepSchema`, `JOURNEY_STEP_SCHEMAS`). The dev server serves it at `GET /lowdefy-docs/schema/journey-step/<step|all>` and through `lowdefy_get_schema` with `kind: "journey-step"` (`server-dev/lib/docs/getSchema.js`).
+- `journeyStepSchema.js` holds the same grammar as JSON Schema (`journeyStepSchema`, `JOURNEY_STEP_SCHEMAS`). The dev server serves it through `lowdefy_get_schema` with `kind: "journey-step"` (`server-dev/lib/docs/getSchema.js`).
 - `journeyStepExamples.js` ends every step error with an `Example: ...` line.
 - `normaliseJourneySteps.js` expands shorthands (`wait: 3000` becomes `{ wait: { ms: 3000 } }`). `runJourney` and `screenshotPage` call it after validation.
 - `validateJourneyTags.js` (`JOURNEY_TAG_PATTERN`, the data set name pattern) and `validateJourneyUser.js` check `tags` and `user`. `findPlaceholderStep.js` finds a `from: shape` placeholder. `normaliseBlockId.js` turns list indices into `$`.
@@ -100,7 +100,7 @@ The file format and its rules are in `journey-data-sets.md`. `parseDataSet` (nod
 
 The dev server reads a data set through `lib/docs/dataSets/readDataSet.js`, which adds the checks that need the build, among them `checkSharedCollectionIds.js` for connections that share a collection. `openDataSession` opens a database on the dev server's own data store, and `loadDataSetCollection` loads indexes, then generated documents, then fixtures. A result's `data` is `{ name, loadMs, documents }`.
 
-The agent dev tools take `user` and `data` in the journey forms, without lists: `resolveToolCaller` and `withDataSession` (`lib/docs/`) give `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_load_state`, `lowdefy_run_request` and `lowdefy_run_endpoint` a data session.
+The agent dev tools take `user` and `data` in the journey forms, without lists: `resolveToolCaller` and `withDataSession` (`lib/docs/`) give `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_run_request` and `lowdefy_run_endpoint` a data session.
 
 ### Data-set modes
 

@@ -19,7 +19,6 @@ import devPassiveHeader from '@lowdefy/node-utils/devPassiveHeader.js';
 
 import answerEval from './answerEval.js';
 import answerInspect from './answerInspect.js';
-import answerLoadState from './answerLoadState.js';
 import DEV_CLIENT_MARKER from './devClientMarker.js';
 import getShownPage from './getShownPage.js';
 import readEventStream from './readEventStream.js';
@@ -68,8 +67,7 @@ function requestedPage({ request, shownPage }) {
  * - It posts the page instance on screen to /api/dev-inspect/page whenever it changes.
  * - It names the phone's platform and app id (`device`) when it registers, for the device tools.
  * - `reload` runs onReload. `inspect-request` and `eval-request` are answered on /api/dev-inspect
- *   with the payloads a browser tab posts; `load-state-request` sets a state checkpoint on the page
- *   (`{ requestId, state, verify }`); `step-request` runs a journey step (onStep), and
+ *   with the payloads a browser tab posts; `step-request` runs a journey step (onStep), and
  *   `inject` fakes the next device result (onInject: `{ requestId, inject: { kind, value, name } }`).
  *
  * @param {Object} params
@@ -139,9 +137,6 @@ function createDevTabClient({
     if (event === 'eval-request') {
       return answerEval({ expression: request.expression, lowdefy, page });
     }
-    if (event === 'load-state-request') {
-      return answerLoadState({ lowdefy, page, state: request.state, verify: request.verify });
-    }
     if (event === 'inject') {
       return onInject({ injection: request.inject });
     }
@@ -174,7 +169,6 @@ function createDevTabClient({
         return;
       case 'inspect-request':
       case 'eval-request':
-      case 'load-state-request':
       case 'step-request':
       case 'inject':
         await answer({ event, data });

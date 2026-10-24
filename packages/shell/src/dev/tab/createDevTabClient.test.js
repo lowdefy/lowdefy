@@ -172,20 +172,6 @@ test('the stream names the phone platform and app id for the device tools', asyn
   );
 });
 
-test('a load-state-request sets the checkpoint state on the page and answers the keys it verified', async () => {
-  running = setup();
-  running.stream.send(fixtures.loadStateRequest.event, {
-    requestId: 'r-load',
-    ...fixtures.page,
-    ...fixtures.loadStateRequest.payload,
-  });
-  await waitFor(() => expect(posts(running.fetch, '')).toHaveLength(1));
-  expect(posts(running.fetch, '')[0]).toEqual({
-    requestId: 'r-load',
-    result: fixtures.loadStateResult,
-  });
-});
-
 test('a reload event reloads the app', async () => {
   running = setup();
   running.stream.send('reload', {});

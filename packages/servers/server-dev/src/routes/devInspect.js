@@ -15,39 +15,11 @@
 */
 
 import { parseRequestBody } from '@lowdefy/api';
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-import { readCheckpoint } from '../../lib/docs/checkpointStore.js';
-import { loadMocks } from '../../lib/docs/devMockRegistry.js';
 import getPathSegments from '../lib/getPathSegments.js';
 import isTabChannelCaller from '../lib/isTabChannelCaller.js';
 import { listTabs, resolveTabRequest, updateTabPage } from '../../lib/docs/tabChannel.js';
-
-// Dev-only agent-state-xray: a human tab bootstrapping from a
-// `?_checkpoint=<name>` URL (client/Inspector.jsx) fetches this. It returns
-// the checkpoint's state part + manifest for the tab to inject client-side,
-// and — as a side effect — loads the checkpoint's recorded requests into
-// devMockRegistry server-side, so that tab's own requests (src/routes/
-// request.js) replay recorded data instead of hitting real connections.
-function handleCheckpointBootstrap(c, { name }) {
-  let checkpoint;
-  try {
-    checkpoint = readCheckpoint({ name });
-  } catch (error) {
-    return c.json({ error: error.message }, 404);
-  }
-  loadMocks({ pageId: checkpoint.checkpoint.pageId, mocks: checkpoint.requests });
-  return c.json(
-    serializer.serialize({
-      checkpoint: checkpoint.checkpoint,
-      state: checkpoint.state,
-      urlQuery: checkpoint.urlQuery,
-      input: checkpoint.input,
-      user: checkpoint.user,
-      global: checkpoint.global,
-    })
-  );
-}
 
 // Inspector.jsx posts { tabId, pageId, pathParams, instanceKey } here whenever
 // the page instance on screen in its tab changes, so the tab registry
@@ -67,17 +39,12 @@ async function handleTabPage(c) {
   return c.json({ ok: true });
 }
 
-// GET lists connected tabs for diagnostics (or, under /checkpoint/<name>,
-// bootstraps a human tab from a state checkpoint); POST /page updates the
+// GET lists connected tabs for diagnostics; POST /page updates the
 // page a connected tab is on; POST at the root is the answer leg of the SSE
 // request/response round trip (Inspector.jsx posts back {requestId, result}
 // after handling an inspect-request/eval-request event).
 async function devInspectHandler(c) {
   if (c.req.method === 'GET') {
-    const segments = getPathSegments(c, '/api/dev-inspect/');
-    if (segments[0] === 'checkpoint' && segments[1]) {
-      return handleCheckpointBootstrap(c, { name: segments[1] });
-    }
     return c.json({ tabs: listTabs() });
   }
 

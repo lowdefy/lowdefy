@@ -21,7 +21,7 @@ import { vi, afterEach, expect, test } from 'vitest';
 
 import setupTestFixtures from '../setupTestFixtures.mjs';
 
-// inspectState and loadState import getBrowser, which reads build/config.json from the working
+// inspectState imports getBrowser, which reads build/config.json from the working
 // directory at import; checkpoints are stored under LOWDEFY_DIRECTORY_CONFIG.
 const fixtureDir = setupTestFixtures();
 process.chdir(fixtureDir);
@@ -36,12 +36,10 @@ const { default: createFakePhoneTab, VIEW_PNG } = await import('./createFakePhon
 const { default: deviceAction } = await import('./deviceAction.js');
 const { default: injectDevice } = await import('./injectDevice.js');
 const { default: inspectState } = await import('../inspectState.js');
-const { default: loadState } = await import('../loadState.js');
 const { default: runDeviceJourney } = await import('./runDeviceJourney.js');
 const { default: screenshotDevice } = await import('./screenshotDevice.js');
 const { default: startDevice } = await import('./startDevice.js');
 const { writeCheckpoint } = await import('../checkpointStore.js');
-const { getMock } = await import('../devMockRegistry.js');
 const { registerTab, unregisterTab, updateTabPage } = await import('../tabChannel.js');
 
 const TICKET = { pageId: 'ticket', pathParams: {}, instanceKey: 'page:ticket' };
@@ -474,38 +472,6 @@ test('runDeviceJourney fails at an expect state that does not hold, with expecte
     message: 'Expected state "n" to equal 2 but found 1.',
   });
   expect(result.steps.map(({ status }) => status)).toEqual(['failed', 'skipped']);
-});
-
-test('loadState with device sets the checkpoint state on the phone and serves its requests', async () => {
-  writeCheckpoint({
-    name: 'phone-ticket',
-    overwrite: true,
-    snapshot: {
-      pageId: 'ticket',
-      pathParams: {},
-      state: { title: 'Annual', priority: 'low' },
-      requests: { get_ticket: [{ response: { id: 7 } }] },
-    },
-  });
-  phone = createFakePhoneTab({ id: 'phone-1', device: SIMULATOR, page: TICKET });
-  const result = await loadState({ name: 'phone-ticket', device: 'phone-1' });
-  expect(phone.requests.map(({ event, data }) => [event, data.state, data.instanceKey])).toEqual([
-    ['load-state-request', { title: 'Annual', priority: 'low' }, 'page:ticket'],
-  ]);
-  expect(result).toMatchObject({
-    loaded: true,
-    mode: 'device',
-    device: 'phone-1',
-    verifiedKeys: { title: 'Annual', priority: 'low' },
-  });
-  expect(getMock({ pageId: 'ticket', requestId: 'get_ticket' })).toBeDefined();
-});
-
-test('loadState with device refuses a mode', async () => {
-  phone = createFakePhoneTab({ id: 'phone-1', device: SIMULATOR, page: TICKET });
-  const result = await loadState({ name: 'phone-ticket', device: 'phone-1', mode: 'headless' });
-  expect(result).toMatchObject({ invalidInput: true });
-  expect(phone.requests).toEqual([]);
 });
 
 test('startDevice boots a simulator, installs Lowdefy Dev and opens it on this server', async () => {

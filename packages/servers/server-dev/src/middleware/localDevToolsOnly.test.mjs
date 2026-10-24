@@ -22,8 +22,8 @@ import { expect, test } from 'vitest';
 function request({ headers, method = 'POST' }) {
   const app = new Hono();
   app.use('/lowdefy-docs/*', localDevToolsOnly());
-  app.all('/lowdefy-docs/run-endpoint', (c) => c.json({ allowed: true }));
-  return app.request('/lowdefy-docs/run-endpoint', { headers, method });
+  app.all('/lowdefy-docs/journey', (c) => c.json({ allowed: true }));
+  return app.request('/lowdefy-docs/journey', { headers, method });
 }
 
 test.each([

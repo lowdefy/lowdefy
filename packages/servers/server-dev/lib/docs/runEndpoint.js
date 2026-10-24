@@ -146,7 +146,7 @@ async function runEndpointInContext({
       refused: true,
       reason:
         `Endpoint "${endpointId}" was not found. ` +
-        `See GET /lowdefy-docs/app-map for the endpoints that exist.`,
+        `See lowdefy_app_map for the endpoints that exist.`,
     };
   }
 

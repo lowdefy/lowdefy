@@ -95,21 +95,5 @@
   "evalResult": {
     "value": "Quarterly",
     "errors": []
-  },
-  "loadStateRequest": {
-    "event": "load-state-request",
-    "payload": {
-      "state": {
-        "title": "Annual",
-        "priority": "low"
-      },
-      "verify": 3
-    }
-  },
-  "loadStateResult": {
-    "verifiedKeys": {
-      "title": "Annual",
-      "priority": "low"
-    }
   }
 }
