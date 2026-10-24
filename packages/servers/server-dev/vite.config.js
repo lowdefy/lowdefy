@@ -21,6 +21,7 @@ import devServer from '@hono/vite-dev-server';
 import { WebSocketServer } from 'ws';
 import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 
+import { createBuildWatchIgnore } from './lib/vite/createBuildWatchIgnore.js';
 import createDevServerExclude from './lib/vite/createDevServerExclude.js';
 
 const devServerEntry = './src/app.js';
@@ -135,7 +136,14 @@ export default defineConfig(({ mode }) => ({
       // sole recompile trigger — see writeGlobalsCss in @lowdefy/build).
       // The config build writes into build-staging and then moves each file
       // into build, so only build is watched.
-      ignored: ['**/lowdefy-build/tailwind/**', '**/build-staging/**'],
+      //
+      // build/ holds thousands of page, request, api and map files no module
+      // imports, so Vite only watches the build files the source imports.
+      ignored: [
+        '**/lowdefy-build/tailwind/**',
+        '**/build-staging/**',
+        createBuildWatchIgnore({ root: process.cwd() }),
+      ],
     },
   },
 }));
