@@ -79,6 +79,9 @@ function withDirectory(tool) {
   };
 }
 
+const IDLE_NOTE =
+  'Idle: the web server stopped after 3 minutes unused. The next tool call or page request starts it again, which takes a few seconds.';
+
 function describeNotReady({ label, status }) {
   // A hub from another Lowdefy version may answer without a status.
   if (type.isNone(status)) {
@@ -353,6 +356,21 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
       startedAt: record?.startedAt,
       version: record?.version,
     };
+    // A manager stops its Vite child after a few minutes unused and keeps
+    // `state: ready`. The record says so too, so an older hub that drops the
+    // field still reads as idle here. The build summary would only get the
+    // idle answer, so it is not asked for.
+    const child = current.child ?? (record?.pid === current.pid ? record?.child : undefined);
+    if (current.state === 'ready' && child === 'stopped') {
+      return {
+        app: app.label,
+        ...current,
+        state: 'idle',
+        child,
+        build: null,
+        note: IDLE_NOTE,
+      };
+    }
     const build = current.state === 'ready' ? await fetchBuildSummary({ url: current.url }) : null;
     return { app: app.label, ...current, build };
   }

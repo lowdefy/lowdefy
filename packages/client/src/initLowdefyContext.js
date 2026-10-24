@@ -79,6 +79,9 @@ function initLowdefyContext({
         Icon: createIcon({ icons: types.icons, loadAllIcons }),
         ShortcutBadge: createShortcutBadge(lowdefy),
       },
+      // Caps for the engine's event and call histories. Unset in production; the dev client
+      // entry sets it before this runs, so it outlives a dev config reload like callerStamp.
+      historyLimits: lowdefy._internal?.historyLimits,
       displayMessage: ({ content }) => {
         console.log(content);
         return () => undefined;
