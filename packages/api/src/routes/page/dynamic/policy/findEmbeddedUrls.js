@@ -17,10 +17,12 @@
 import normalizeUrlText from './normalizeUrlText.js';
 
 // Returns every URL a string can make the client load or navigate to that is
-// not given by its key: a scheme or protocol-relative value (read as the URL
-// parser reads it), markdown link and image targets, and CSS
-// url()/image-set()/src() arguments after unescaping.
-const SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:\S/;
+// not given by its key: a whole value with a scheme the browser loads or runs,
+// or a protocol-relative one (read as the URL parser reads it), markdown link
+// and image targets, and CSS url()/image-set()/src() arguments after
+// unescaping. A word such as "INC:42" or "HH:mm" has the shape of a scheme but
+// names none the browser acts on, so it is text.
+const LOADED_SCHEME = /^(https?|ftp|wss?|file|blob|filesystem|data):\S/i;
 // Script schemes run whatever follows them, spaces included.
 const SCRIPT_SCHEME = /^(javascript|vbscript):/i;
 const MARKDOWN_INLINE = /\]\(\s*<?([^)\s>]+)/g;
@@ -38,7 +40,8 @@ function findEmbeddedUrls(value) {
   const urls = [];
   const text = normalizeUrlText(value);
   const isUrlText =
-    !/\s/.test(text) && (SCHEME.test(text) || text.startsWith('//') || text.startsWith('/\\'));
+    !/\s/.test(text) &&
+    (LOADED_SCHEME.test(text) || text.startsWith('//') || text.startsWith('/\\'));
   if (isUrlText || SCRIPT_SCHEME.test(text)) {
     urls.push(text);
   }

@@ -324,6 +324,52 @@ test('checkPolicy leaves plain text with colons alone', () => {
   ).toEqual([]);
 });
 
+test.each([
+  ['a reference', 'INC:42'],
+  ['a short reference', 'R:1'],
+  ['a time format', 'HH:mm'],
+  ['a labelled word', 'Note:see'],
+])('checkPolicy leaves a one-word value with %s alone in unmarked values', (_, text) => {
+  expect(
+    check([
+      { id: 'a', type: 'Paragraph', properties: { content: text } },
+      { id: 'b', type: 'Box', properties: { items: [{ label: 'Ref', value: text }] } },
+      { id: 'c', type: 'Box', properties: { timeFormat: text } },
+    ])
+  ).toEqual([]);
+});
+
+test.each([
+  ['a script scheme', 'javascript:alert(1)'],
+  ['an upper-case script scheme', 'JavaScript:alert(1)'],
+  ['a vbscript scheme', 'vbscript:msgbox(1)'],
+  ['a data scheme', 'data:text/html;base64,PHNjcmlwdD4='],
+  ['an off-site URL', 'https://evil.example'],
+  ['an upper-case off-site URL', 'HTTPS://evil.example'],
+  ['a blob URL', 'blob:https://evil.example/1'],
+])('checkPolicy still finds a whole value with %s in unmarked values', (_, text) => {
+  expect(
+    rules(check([{ id: 'b', type: 'Box', properties: { items: [{ label: 'Ref', value: text }] } }]))
+  ).toEqual(['policy.urls blocks.0.properties.items.0.value']);
+});
+
+test('checkPolicy still refuses off-site URLs in URL properties, markdown and CSS url()', () => {
+  const errors = check([
+    { id: 'a', type: 'Anchor', properties: { href: 'https://evil.example' } },
+    { id: 'b', type: 'Paragraph', properties: { content: 'see [here](https://evil.example)' } },
+    { id: 'c', type: 'Box', style: { background: 'url(https://evil.example/p.gif)' } },
+    { id: 'd', type: 'Anchor', properties: { href: 'INC:42' } },
+    { id: 'e', type: 'Paragraph', properties: { content: '[x](javascript:alert(1))' } },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.href',
+    'policy.urls blocks.1.properties.content',
+    'policy.urls blocks.2.style.background',
+    'policy.urls blocks.3.properties.href',
+    'policy.urls blocks.4.properties.content',
+  ]);
+});
+
 test('checkPolicy allows duplicate ids on blocks that do not bind state', () => {
   expect(
     check([
