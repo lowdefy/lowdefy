@@ -19,18 +19,22 @@ import { runClass } from '@lowdefy/operators';
 // atob and btoa work on Latin-1 characters, one byte each. Encode the UTF-8 bytes instead, like the
 // server and build _base64, so any string encodes and decodes to the same value everywhere.
 function decode(input) {
-  const binary = atob(input);
+  // Buffer.from(input, 'base64') on the server also accepts base64url and missing padding.
+  const base64 = input.replace(/-/g, '+').replace(/_/g, '/').replace(/=+$/, '');
+  const binary = atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '='));
   const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
+  // Throw on bytes that are not valid UTF-8 instead of replacing them with U+FFFD, so data that is
+  // not UTF-8 text, such as Latin-1 values encoded by earlier versions, surfaces as an error.
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    throw new Error('_base64.decode received base64 that does not decode to valid UTF-8 text.');
+  }
 }
 
 function encode(input) {
   const bytes = new TextEncoder().encode(input);
-  let binary = '';
-  bytes.forEach((byte) => {
-    binary += String.fromCharCode(byte);
-  });
-  return btoa(binary);
+  return btoa(Array.from(bytes, (byte) => String.fromCharCode(byte)).join(''));
 }
 
 const functions = { encode, decode };

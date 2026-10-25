@@ -31,6 +31,21 @@ test('_base64.decode a UTF-8 string', () => {
   ).toEqual('café 日本😂');
 });
 
+test('_base64.decode a base64url string without padding', () => {
+  expect(base64({ params: 'PDw_Pz8-Pg', location: 'locationId', methodName: 'decode' })).toEqual(
+    '<<???>>'
+  );
+  expect(
+    base64({ params: 'Y2Fmw6kg5pel5pys8J-Ygg', location: 'locationId', methodName: 'decode' })
+  ).toEqual('café 日本😂');
+});
+
+test('_base64.decode throws when the decoded bytes are not valid UTF-8', () => {
+  expect(() =>
+    base64({ params: 'Y2Fm6Q==', location: 'locationId', methodName: 'decode' })
+  ).toThrow('_base64.decode received base64 that does not decode to valid UTF-8 text.');
+});
+
 test('_base64.decode a number', () => {
   expect(() =>
     base64({ params: 10, location: 'locationId', methodName: 'decode' })
