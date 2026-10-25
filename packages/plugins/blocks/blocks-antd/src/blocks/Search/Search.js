@@ -22,33 +22,13 @@ import withTheme from '../withTheme.js';
 import SearchModal from './SearchModal.js';
 import useSearchIndex from './useSearchIndex.js';
 import useRecentSearches from './useRecentSearches.js';
+import useRecentResults from './useRecentResults.js';
+import matchesShortcut from './matchesShortcut.js';
+import parseShortcut from '../parseShortcut.js';
 
 import './style.css';
 
 const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
-
-function parseShortcut(shortcut) {
-  if (!shortcut) return null;
-  const parts = shortcut.toLowerCase().split('+');
-  return {
-    mod: parts.includes('mod'),
-    ctrl: parts.includes('ctrl'),
-    shift: parts.includes('shift'),
-    alt: parts.includes('alt'),
-    key: parts[parts.length - 1],
-  };
-}
-
-function matchesShortcut(e, parsed) {
-  if (!parsed) return false;
-  const modPressed = parsed.mod ? (isMac ? e.metaKey : e.ctrlKey) : true;
-  const ctrlPressed = parsed.ctrl ? e.ctrlKey : true;
-  const shiftPressed = parsed.shift ? e.shiftKey : !e.shiftKey;
-  const altPressed = parsed.alt ? e.altKey : !e.altKey;
-  return (
-    modPressed && ctrlPressed && shiftPressed && altPressed && e.key.toLowerCase() === parsed.key
-  );
-}
 
 function SearchBlock({
   blockId,
@@ -73,6 +53,13 @@ function SearchBlock({
     getUserStorageKey: methods.getUserStorageKey,
     storageKey: properties.recentSearchesKey,
     maxCount: properties.recentSearchesCount,
+  });
+
+  const recentResults = useRecentResults({
+    enabled: properties.recentResults === true,
+    getUserStorageKey: methods.getUserStorageKey,
+    storageKey: properties.recentSearchesKey,
+    maxCount: properties.recentResultsCount,
   });
 
   const handleOpen = useCallback(async () => {
@@ -106,7 +93,7 @@ function SearchBlock({
   useEffect(() => {
     const parsed = parseShortcut(properties.shortcut ?? 'mod+k');
     function handleKeyDown(e) {
-      if (matchesShortcut(e, parsed)) {
+      if (matchesShortcut(e, parsed, isMac)) {
         e.preventDefault();
         if (open) {
           handleClose();
@@ -137,7 +124,7 @@ function SearchBlock({
       </Button>
       <SearchModal
         blockId={blockId}
-        components={{ Icon }}
+        components={{ Icon, ShortcutBadge }}
         open={open}
         onClose={handleClose}
         properties={properties}
@@ -146,6 +133,7 @@ function SearchBlock({
         styles={styles}
         searchIndex={searchIndex}
         recentSearches={recentSearches}
+        recentResults={recentResults}
       />
     </div>
   );
