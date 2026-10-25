@@ -8,3 +8,4 @@ The `Search` block can show a few best results per group, keep one action row la
 - `pinned: { title, icon, shortcut, event }` adds a row after the list while a query is typed. `{query}` in the title is the typed text. It is selected when nothing matches, reachable with the arrow keys, and its shortcut (for example `mod+enter`) works from any row. It fires `onPinned` with `{ query }`.
 - `recentResults: true` lists the last `recentResultsCount` (default 4) selected results when the input is empty, kept per app and signed-in user like recent searches.
 - Below 576px the modal is a full-screen sheet with the pinned row kept in view. `footer` adds a line of key hints.
+- `result.icon` now draws each result's icon: the field holds an icon name, or Icon properties such as `{ name, color }` to colour it by the result's state. Before, every result showed the document icon.

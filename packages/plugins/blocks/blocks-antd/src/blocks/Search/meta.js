@@ -198,7 +198,8 @@ export default {
           },
           icon: {
             type: 'string',
-            description: 'Field name for result icon name.',
+            description:
+              'Field name for the result icon. The field holds an icon name, or Icon properties such as `{ name, color }`. Results without it show the document icon.',
           },
           pageId: {
             type: 'string',
