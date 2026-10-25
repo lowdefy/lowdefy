@@ -318,8 +318,8 @@ A **target** is a `blockId` string, or an object that narrows the search to a co
 | Target key | Meaning                                                                                                                              |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `blockId`  | The block to search inside                                                                                                           |
-| `row`      | A grid row, zero-based as displayed (`AgGrid*` blocks, `.ag-row[row-index]`); needs `blockId`                                        |
-| `column`   | A grid cell in that row, by the column's `field` or `colId` (`.ag-cell[col-id]`); needs `blockId`                                    |
+| `row`      | A grid row, zero-based as displayed (`AgGrid*`, `Table`, `TableInput`); needs `blockId`                                              |
+| `column`   | A grid cell in that row, by the column's `field`, `colId` or `key`; needs `blockId`                                                  |
 | `text`     | The visible interactive control whose text is exactly this — a button label, a tab, a menu item (`"Cat"` never matches `"Category"`) |
 | `nth`      | When several elements match, the zero-based one to use                                                                               |
 

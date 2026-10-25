@@ -23,12 +23,18 @@ import {
 
 import isElementVisible from './isElementVisible.js';
 
-const { blockWrapperPrefix, cellAttribute, dropdownOption, layers, rowAttribute } =
+const { blockWrapperPrefix, cellSelector, dropdownOption, gridRules, layers, rowSelector } =
   journeyTargetSelectors;
 
 function textOf(element) {
   const text = element.textContent.replace(/\s+/g, ' ').trim();
   return text === '' ? null : text;
+}
+
+// The row index or column key a matched row or cell element carries, by the grid it belongs to.
+function attributeOf(element, kind) {
+  const rule = gridRules.find((candidate) => element.classList.contains(candidate[`${kind}Class`]));
+  return element.getAttribute(rule[`${kind}Attribute`]);
 }
 
 function ancestorsOf(element) {
@@ -89,8 +95,8 @@ function createDescribeElement({ findBlockType, pathEntryOf }) {
     const blockIds = wrappers.map((node) => node.id.slice(blockWrapperPrefix.length));
     const wrapper = wrappers[0] ?? null;
     const inner = wrapper === null ? path : path.slice(0, path.indexOf(wrapper));
-    const rowElement = inner.find((node) => node.matches(`.ag-row[${rowAttribute}]`)) ?? null;
-    const cellElement = inner.find((node) => node.matches(`.ag-cell[${cellAttribute}]`)) ?? null;
+    const rowElement = inner.find((node) => node.matches(rowSelector())) ?? null;
+    const cellElement = inner.find((node) => node.matches(cellSelector())) ?? null;
     const scope = cellElement ?? rowElement ?? wrapper;
     const scopePath = scope === null ? path : path.slice(0, path.indexOf(scope) + 1);
     const control = scopePath.find(isInteractiveControl) ?? null;
@@ -111,8 +117,8 @@ function createDescribeElement({ findBlockType, pathEntryOf }) {
       page_id: entry?.pageId ?? null,
       block_id: blockId,
       block_type: findBlockType({ blockId, instanceKey: entry?.instanceKey }),
-      row: rowElement === null ? null : parseRowIndex(rowElement.getAttribute(rowAttribute)),
-      column: cellElement === null ? null : cellElement.getAttribute(cellAttribute),
+      row: rowElement === null ? null : parseRowIndex(attributeOf(rowElement, 'row')),
+      column: cellElement === null ? null : attributeOf(cellElement, 'cell'),
       text,
       nth,
       option: optionElement !== null,

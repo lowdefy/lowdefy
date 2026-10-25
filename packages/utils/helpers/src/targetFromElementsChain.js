@@ -19,8 +19,7 @@ import parseElementsChain from './parseElementsChain.js';
 import parseRowIndex from './parseRowIndex.js';
 import type from './type.js';
 
-const { blockWrapperPrefix, cellAttribute, interactiveRoles, rowAttribute } =
-  journeyTargetSelectors;
+const { blockWrapperPrefix, gridRules, interactiveRoles } = journeyTargetSelectors;
 
 function blockIdOf(entry) {
   const id = entry.attributes.attr__id;
@@ -85,6 +84,19 @@ function textOf(scope) {
   return null;
 }
 
+// The row index or column key of the innermost row or cell element of any grid, as the class and
+// attribute that grid renders them with. Null when the click was in no row or cell.
+function findGridAttribute({ inner, kind }) {
+  for (const entry of inner) {
+    const rule = gridRules.find((candidate) => entry.classes.includes(candidate[`${kind}Class`]));
+    const value = rule && entry.attributes[`attr__${rule[`${kind}Attribute`]}`];
+    if (value !== undefined && rule) {
+      return value;
+    }
+  }
+  return null;
+}
+
 // The journey target a posthog-js `$elements_chain` describes: the block wrappers the click
 // passed through (innermost first), the grid row and column, the control's text, and whether it
 // was a dropdown option. Pure, so the production pull runs it in Node on captured events. Total:
@@ -95,12 +107,12 @@ function targetFromElementsChain(chain) {
   const blockIndex = entries.findIndex((entry) => blockIdOf(entry) !== null);
   const inner = blockIndex === -1 ? entries : entries.slice(0, blockIndex);
   const scope = blockIndex === -1 ? entries : entries.slice(0, blockIndex + 1);
-  const rowEntry = inner.find((entry) => `attr__${rowAttribute}` in entry.attributes);
-  const cellEntry = inner.find((entry) => `attr__${cellAttribute}` in entry.attributes);
+  const row = findGridAttribute({ inner, kind: 'row' });
+  const column = findGridAttribute({ inner, kind: 'cell' });
   return {
     block_id: blockIds[0] ?? null,
-    row: rowEntry ? parseRowIndex(rowEntry.attributes[`attr__${rowAttribute}`]) : null,
-    column: cellEntry ? cellEntry.attributes[`attr__${cellAttribute}`] : null,
+    row: row === null ? null : parseRowIndex(row),
+    column,
     text: textOf(scope),
     option: inner.some(isOption),
     block_ids: blockIds,

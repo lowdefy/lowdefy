@@ -474,7 +474,9 @@ test('runJourney clicks a cell button by row and exact text inside a grid block'
   });
 
   expect(result.passed).toBe(true);
-  expect(page.clicks).toEqual([`#bl-grid .ag-row[row-index="1"] ${CONTROLS}`]);
+  expect(page.clicks).toEqual([
+    `#bl-grid .ag-row[row-index="1"], .lf-table-row[data-row-index="1"] ${CONTROLS}`,
+  ]);
   // An action target with text and no nth is located twice, before and after
   // waiting for a first match, and acted on once it is the only one.
   expect(filters).toHaveLength(4);
@@ -515,7 +517,7 @@ test('runJourney clicks the control inside a grid cell addressed by row and colu
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([
-    `#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="actions"] ${CONTROLS}`,
+    `#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="actions"], .lf-table-gridcell[data-col-key="actions"] ${CONTROLS}`,
   ]);
 });
 
@@ -532,7 +534,7 @@ test('runJourney clicks the nth control in a grid cell when several have no text
   });
 
   expect(result.passed).toBe(true);
-  const selector = `#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="actions"] ${CONTROLS}`;
+  const selector = `#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="actions"], .lf-table-gridcell[data-col-key="actions"] ${CONTROLS}`;
   expect(page.clicks).toEqual([selector]);
   expect(page.nths).toEqual([{ selector, index: 1 }]);
 });
@@ -740,7 +742,9 @@ test('runJourney escapes quotes in a column id', async () => {
     steps: [{ click: { blockId: 'grid', row: 0, column: 'a"b' } }],
   });
 
-  expect(page.clicks).toEqual(['#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="a\\"b"]']);
+  expect(page.clicks).toEqual([
+    '#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="a\\"b"], .lf-table-gridcell[data-col-key="a\\"b"]',
+  ]);
 });
 
 test('runJourney describes a failed target by block, row, column and text', async () => {
@@ -819,20 +823,24 @@ test('runJourney fills and selects inside a grid cell addressed by row and colum
   expect(result.passed).toBe(true);
   expect(page.fills).toEqual([
     {
-      selector: '#bl-grid .ag-row[row-index="1"] .ag-cell[col-id="name"] input, textarea',
+      selector:
+        '#bl-grid .ag-row[row-index="1"], .lf-table-row[data-row-index="1"] .ag-cell[col-id="name"], .lf-table-gridcell[data-col-key="name"] input, textarea',
       value: 'Ada',
     },
   ]);
   expect(page.clicks).toEqual([
-    '#bl-grid .ag-row[row-index="1"] .ag-cell[col-id="status"]',
+    '#bl-grid .ag-row[row-index="1"], .lf-table-row[data-row-index="1"] .ag-cell[col-id="status"], .lf-table-gridcell[data-col-key="status"]',
     '.ant-select-item-option, [role="option"]',
   ]);
 });
 
 test('runJourney checks visibility and text of a grid row and cell', async () => {
   const page = createPage();
-  page.texts['#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="title"]'] = 'Access reviews';
-  page.texts['#bl-grid .ag-row[row-index="0"]'] = 'Access reviews open Edit';
+  page.texts[
+    '#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="title"], .lf-table-gridcell[data-col-key="title"]'
+  ] = 'Access reviews';
+  page.texts['#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"]'] =
+    'Access reviews open Edit';
   openWith(page);
   const spy = advanceClockOnEveryRead();
 

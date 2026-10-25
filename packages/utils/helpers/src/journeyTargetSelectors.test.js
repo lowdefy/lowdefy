@@ -40,11 +40,19 @@ test('journeyTargetSelectors interactiveControl lists every control the journey 
 test('journeyTargetSelectors names the wrapper prefix, grid attributes, layers and options', () => {
   expect(journeyTargetSelectors).toMatchObject({
     blockWrapperPrefix: 'bl-',
-    cellAttribute: 'col-id',
     dropdownOption: '.ant-select-item-option, [role="option"]',
     layers: ['[role="menu"]', '[role="dialog"]'],
-    rowAttribute: 'row-index',
   });
+});
+
+test('rowSelector and cellSelector cover ag-grid and Table, never their headers', () => {
+  const { cellSelector, rowSelector } = journeyTargetSelectors;
+  expect(rowSelector(1)).toBe('.ag-row[row-index="1"], .lf-table-row[data-row-index="1"]');
+  expect(rowSelector()).toBe('.ag-row[row-index], .lf-table-row[data-row-index]');
+  expect(cellSelector('a"b')).toBe(
+    '.ag-cell[col-id="a\\"b"], .lf-table-gridcell[data-col-key="a\\"b"]'
+  );
+  expect(cellSelector()).toBe('.ag-cell[col-id], .lf-table-gridcell[data-col-key]');
 });
 
 test('portalClass names a block in a class safe for a CSS selector', () => {

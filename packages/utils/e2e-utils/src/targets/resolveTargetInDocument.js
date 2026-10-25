@@ -16,7 +16,7 @@
 
 import { findInteractiveControls, journeyTargetSelectors, type } from '@lowdefy/helpers';
 
-const { blockWrapperPrefix, cellAttribute, layers, rowAttribute } = journeyTargetSelectors;
+const { blockWrapperPrefix, cellSelector, layers, rowSelector } = journeyTargetSelectors;
 
 function textOf(element) {
   return element.textContent.replace(/\s+/g, ' ').trim();
@@ -30,10 +30,6 @@ function controlsWithText(roots, text) {
   return controlsIn(roots).filter((control) => textOf(control) === text);
 }
 
-function attributeSelector(value) {
-  return `"${String(value).replace(/["\\]/g, '\\$&')}"`;
-}
-
 // The roots the target's scope keys name: the block wrapper, narrowed to every grid row with the
 // row index (ag-grid renders a row once per pinned and centre container) and to the cells with
 // the column id inside them. Null for a page-wide target.
@@ -44,14 +40,10 @@ function resolveScope({ document, target }) {
   const wrapper = document.getElementById(`${blockWrapperPrefix}${target.block_id}`);
   let roots = wrapper ? [wrapper] : [];
   if (!type.isNone(target.row)) {
-    roots = roots.flatMap((root) => [
-      ...root.querySelectorAll(`.ag-row[${rowAttribute}=${attributeSelector(target.row)}]`),
-    ]);
+    roots = roots.flatMap((root) => [...root.querySelectorAll(rowSelector(target.row))]);
   }
   if (!type.isNone(target.column)) {
-    roots = roots.flatMap((root) => [
-      ...root.querySelectorAll(`.ag-cell[${cellAttribute}=${attributeSelector(target.column)}]`),
-    ]);
+    roots = roots.flatMap((root) => [...root.querySelectorAll(cellSelector(target.column))]);
   }
   return roots;
 }
