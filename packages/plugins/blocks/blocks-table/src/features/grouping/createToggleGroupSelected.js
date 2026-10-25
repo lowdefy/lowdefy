@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import isRowSelectable from '../selection/isRowSelectable.js';
 import countGroupSelection from './countGroupSelection.js';
 
 // The group checkbox selects every leaf row of the group, or clears them when all are selected.
@@ -24,7 +25,9 @@ function createToggleGroupSelected(api) {
     if (!api.grouping?.tree) return false;
     const group = api.grouping.tree.groupsByKey.get(key);
     const { leaves } = api.grouping.tree;
+    const isSelectable = (leaf) => isRowSelectable({ api, original: leaf.original });
     const { selected, total } = countGroupSelection({
+      isSelectable,
       leaves,
       start: group.start,
       end: group.end,
@@ -37,7 +40,7 @@ function createToggleGroupSelected(api) {
         const next = { ...previous };
         for (let i = group.start; i < group.end; i++) {
           if (select) {
-            next[leaves[i].id] = true;
+            if (isSelectable(leaves[i])) next[leaves[i].id] = true;
           } else {
             delete next[leaves[i].id];
           }

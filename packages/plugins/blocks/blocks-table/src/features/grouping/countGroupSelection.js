@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-// How many of a group's leaf rows are selected, for its checkbox (checked, indeterminate).
-function countGroupSelection({ leaves, start, end, selection }) {
+// How many of a group's selectable leaf rows are selected, for its checkbox (checked,
+// indeterminate). `isSelectable` tests a leaf row; every leaf counts when it is not given.
+function countGroupSelection({ leaves, start, end, selection, isSelectable = () => true }) {
   let selected = 0;
+  let total = 0;
   for (let i = start; i < end; i++) {
+    if (!isSelectable(leaves[i])) continue;
+    total += 1;
     if (selection[leaves[i].id] === true) selected += 1;
   }
-  return { selected, total: end - start };
+  return { selected, total };
 }
 
 export default countGroupSelection;

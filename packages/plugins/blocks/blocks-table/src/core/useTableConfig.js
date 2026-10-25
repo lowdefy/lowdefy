@@ -16,6 +16,7 @@
 
 import { useMemo } from 'react';
 import { type } from '@lowdefy/helpers';
+import compileCondition from '@lowdefy/blocks-antd/table/compileCondition.js';
 import compileColumns from '@lowdefy/blocks-antd/table/compileColumns.js';
 import compileRules from '@lowdefy/blocks-antd/table/compileRules.js';
 import createRowKeyGetter from '@lowdefy/blocks-antd/table/createRowKeyGetter.js';
@@ -39,13 +40,28 @@ import useStableConfig from './useStableConfig.js';
 const DEFAULT_PAGE_SIZE = 50;
 
 // In server mode rows leave the block cache while they stay selected, so selection is always
-// preserved there.
-function normalizeRowSelection({ rowSelection, server }) {
+// preserved there. `selectable` is a table condition tested against the row; `isSelectable` is null when every row
+// can be selected.
+function normalizeRowSelection({ rowSelection, server, columns, user }) {
   if (!type.isObject(rowSelection)) return null;
+  if (!type.isNone(rowSelection.selectable) && !type.isObject(rowSelection.selectable)) {
+    throw new Error(
+      `Table "rowSelection.selectable" must be a condition. Received ${JSON.stringify(
+        rowSelection.selectable
+      )}.`
+    );
+  }
   return {
     type: rowSelection.type === 'radio' ? 'radio' : 'checkbox',
     preserve: rowSelection.preserve === true || Boolean(server),
     cascade: rowSelection.cascade === true,
+    isSelectable: type.isNone(rowSelection.selectable)
+      ? null
+      : compileCondition({
+          condition: rowSelection.selectable,
+          columnsByKey: Object.fromEntries(columns.map((column) => [column.key, column])),
+          user,
+        }),
   };
 }
 
@@ -165,7 +181,12 @@ function useTableConfig({ methods, properties }) {
       reorderable: properties.reorderable !== false,
       rowHeight: properties.rowHeight,
       rowLink: type.isObject(rowLink) ? rowLink : null,
-      rowSelection: normalizeRowSelection({ rowSelection, server }),
+      rowSelection: normalizeRowSelection({
+        rowSelection,
+        server,
+        columns: columnModel.columns,
+        user: user ?? {},
+      }),
       rowVersionField: properties.rowVersionField,
       server,
       stickyHeader: properties.stickyHeader !== false,

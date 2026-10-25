@@ -16,17 +16,20 @@
 
 import React from 'react';
 
+import isRowSelectable from './isRowSelectable.js';
+
 function ignoreChange() {}
 
 // A native input styled with antd tokens: an antd Checkbox per row would mount a CSS-in-JS hook
 // per visible row (tier-0 rule, D4/D10.4). The delegated click handler does the toggling.
-function SelectCell({ api, selected }) {
+function SelectCell({ api, original, selected }) {
   const inputType = api.config.rowSelection.type === 'radio' ? 'radio' : 'checkbox';
   return (
     <input
       aria-label="Select row"
       checked={selected}
       className="lf-table-checkbox"
+      disabled={!isRowSelectable({ api, original })}
       onChange={ignoreChange}
       tabIndex={-1}
       type={inputType}
