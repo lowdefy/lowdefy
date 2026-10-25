@@ -570,8 +570,22 @@ async function readSessionScopeRoles(context, { adapter, auth, session }) {
   ) {
     context.logger.debug(
       { event: 'auth_session_scope_token_gone', scope: scopeName },
-      `Session for user "${session.user.id}" carries scope "${scopeName}", but the sign-in token it was opened with is revoked, expired or gone - resolved unauthenticated.`
+      `Session for user "${session.user.id}" carries scope "${scopeName}", but the sign-in token it was opened with is revoked, expired or gone - resolved unauthenticated, and the session deleted.`
     );
+    // BetterAuth's own session refresh can carry the row past the token's
+    // expiry, and /get-session reads only the row. Deleting it makes the
+    // browser see the signed-out state too, not only this resolution.
+    try {
+      await adapter.delete({
+        model: 'session',
+        where: [{ field: 'id', value: session.session.id }],
+      });
+    } catch (error) {
+      context.logger.warn(
+        { err: error, event: 'auth_session_scope_delete_failed' },
+        `Could not delete the dead scoped session for user "${session.user.id}": ${error.message}`
+      );
+    }
     return null;
   }
   return sessionScopes[scopeName].roles;
@@ -610,9 +624,10 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     return;
   }
   // Read ahead of the organization checks: a scoped session whose token is gone
-  // is refused whatever else is true of it. Its roles replace the member's
-  // below - least privilege, so an administrator's emailed link opens only what
-  // the scope names.
+  // is refused whatever else is true of it. Its roles become the scope's roles
+  // the member also holds, below - least privilege both ways: an
+  // administrator's emailed link opens only what the scope names, and a scope
+  // never grants a role the member lacks.
   const sessionScope = session.session.sessionScope;
   const scoped = !type.isNone(sessionScope);
   let scopeRoles;
@@ -732,10 +747,17 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     return;
   }
   if (scoped) {
-    // roles is the only source of page and endpoint role gates, so replacing it
-    // here limits every gate. session_scope lets config and the step floor tell
-    // such a caller from an ordinary one.
-    context.user = { ...context.user, roles: scopeRoles, session_scope: sessionScope };
+    // roles is the only source of page and endpoint role gates, so narrowing it
+    // here limits every gate. The org tier is cleared too: no gate reads it,
+    // but an app's own checks might. session_scope lets config and the step
+    // floor tell such a caller from an ordinary one.
+    const memberRoles = new Set(context.user.roles ?? []);
+    context.user = {
+      ...context.user,
+      roles: scopeRoles.filter((role) => memberRoles.has(role)),
+      org_roles: [],
+      session_scope: sessionScope,
+    };
   }
   // A pinned app serves one organization, and this caller reached here as a
   // member of it, so that is the one membership its stamp names: rows the same

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 // "/tasks/1" is a path in this app. "//host" and "/\host" start with a slash
 // too, but a browser reads both as another host. Whitespace and control
@@ -23,11 +23,23 @@ import { type } from '@lowdefy/helpers';
 const appPathPattern = /^\/(?![/\\])/;
 const whitespaceOrControlPattern = /[\s\p{Cc}]/u;
 
-// The landing a sign-in token is bound to: the one place its exchange lands.
-// Either a page ({ pageId, urlQuery?, pathParams? }) or a path in this app
-// ({ url }), never another site - a sign-in link must not double as an open
-// redirect. Returns the landing with only the known keys, as stored.
-function normalizeSignInTokenLanding({ landing }) {
+function assertAppPath({ url }) {
+  if (!type.isString(url) || !appPathPattern.test(url) || whitespaceOrControlPattern.test(url)) {
+    throw new Error(
+      `CreateSignInToken "landing.url" must be a path in this app, starting with a single "/". Received ${JSON.stringify(
+        url
+      )}.`
+    );
+  }
+}
+
+// The landing a sign-in token is bound to: the one place its exchange lands,
+// stored as a path in this app ({ url }) - never another site, so a sign-in
+// link can not double as an open redirect. A page landing ({ pageId,
+// urlQuery?, pathParams? }) is built into its path here, from the build's
+// route table: the landing page that runs the exchange is public, and the
+// browser there knows no path of a page the anonymous visitor may not see.
+function normalizeSignInTokenLanding({ landing, routes }) {
   if (!type.isObject(landing)) {
     throw new Error(
       `CreateSignInToken requires a "landing" object - { pageId, urlQuery?, pathParams? } or { url }. Received ${JSON.stringify(
@@ -40,13 +52,7 @@ function normalizeSignInTokenLanding({ landing }) {
     throw new Error('CreateSignInToken "landing" takes "pageId" or "url", not both.');
   }
   if (!type.isNone(url)) {
-    if (!type.isString(url) || !appPathPattern.test(url) || whitespaceOrControlPattern.test(url)) {
-      throw new Error(
-        `CreateSignInToken "landing.url" must be a path in this app, starting with a single "/". Received ${JSON.stringify(
-          url
-        )}.`
-      );
-    }
+    assertAppPath({ url });
     return { url };
   }
   if (!type.isString(pageId) || pageId === '') {
@@ -61,14 +67,15 @@ function normalizeSignInTokenLanding({ landing }) {
       );
     }
   });
-  const normalized = { pageId };
-  if (!type.isNone(urlQuery)) {
-    normalized.urlQuery = urlQuery;
+  const route = (routes ?? []).find((candidate) => candidate.pageId === pageId);
+  if (type.isNone(route)) {
+    throw new Error(`CreateSignInToken "landing.pageId" "${pageId}" is not a page in this app.`);
   }
-  if (!type.isNone(pathParams)) {
-    normalized.pathParams = pathParams;
-  }
-  return normalized;
+  const pagePath = buildPagePath({ pageId, path: route.path, pathParams });
+  const query = urlQueryFn.stringify(urlQuery ?? {});
+  const built = `/${pagePath}${query === '' ? '' : `?${query}`}`;
+  assertAppPath({ url: built });
+  return { url: built };
 }
 
 export default normalizeSignInTokenLanding;

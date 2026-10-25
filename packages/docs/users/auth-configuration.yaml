@@ -205,15 +205,15 @@ _ref:
 
                 - **One use.** A token is spent on its first successful exchange, atomically: of two taps racing for one link, one opens a session and the other is refused. An email with several links mints one token per link.
                 - **Bound at mint.** A token names its user, organization, scope and landing. The exchange always lands on that landing; the action takes no destination of its own, so a link cannot be pointed somewhere its email did not.
-                - **Short-lived.** `expiresIn` is in seconds, one hour by default and seven days at most. Only the token's SHA-256 is stored. The session it opens ends when the token expires.
-                - **Revocable.** [`RevokeSignInTokens`](/auth-steps#step-reference) revokes a user's tokens, optionally one organization's or one scope's, and ends the sessions they opened.
+                - **Short-lived.** `expiresIn` is in seconds, one hour by default and seven days at most. Only the token's SHA-256 is stored. The session it opens ends when the token expires: the engine refuses it from then on and deletes it, so the browser sees the signed-out state too.
+                - **Revocable.** [`RevokeSignInTokens`](/auth-steps#step-reference) revokes a user's tokens, optionally one organization's or one scope's, and deletes the sessions they opened.
                 - **Never spent on a GET.** The exchange is a `POST` made by the action, so a mail scanner that fetches the link spends nothing and gets no session. Bind the action to a click, as with the [magic link landing page](#the-magic-link-landing-page).
 
                 A token is refused, with no session, when it is unknown or altered, already used, expired or revoked, when its user is banned, has a second factor enrolled, or is no longer the member it was minted for, and when its scope is no longer declared. Every refusal gets the same answer, so the action fails with a user error that the page catches to offer an ordinary sign-in.
 
                 ### Session scopes
 
-                `auth.sessionScopes` declares the scopes a token may carry, and the roles a session opened with each scope has. A scoped session's `_user.roles` is the scope's list **in place of** the member's own, so every page and endpoint role gate applies to it, and `_user.session_scope` names the scope so pages and routines can tell such a session apart. Each role must be declared in `auth.roles`. The next ordinary sign-in opens an unscoped session with the member's own roles.
+                `auth.sessionScopes` declares the scopes a token may carry, and the roles a session opened with each scope has. A scoped session's `_user.roles` is the scope's roles **that the member also holds**: an administrator's link reaches only what the scope names, and a scope never grants a role the member lacks. Every page and endpoint role gate applies to that list, `_user.org_roles` is empty, and `_user.session_scope` names the scope so pages and routines can tell such a session apart. Each role must be declared in `auth.roles`. The next ordinary sign-in opens an unscoped session with the member's own roles.
 
                 ```yaml
                 lowdefy: {{ version }}
@@ -236,7 +236,7 @@ _ref:
                         - settings
                 ```
 
-                A scoped session may not run auth steps, and it may call only the auth routes that read or end the session or start an ordinary sign-in: it can not add a passkey, enrol a second factor, change the password or email, or switch organization. Sign-in tokens need `auth.database`.
+                A scoped session may not run auth steps, and it may call only the auth routes that read or end the session or start an ordinary sign-in (password, magic link, email or phone code, passkey, social, password reset): it can not add a passkey, enrol a second factor, change the password or email, put a phone number on the account, or switch organization. Sign-in tokens need `auth.database`.
 
                 ### Minting a link
 
@@ -260,7 +260,7 @@ _ref:
                           _payload: task_id
                 ```
 
-                `landing` is a page (`pageId`, with optional `urlQuery` and `pathParams`) or a path in this app (`url: /tasks/7`). The step refuses another site, a banned user, a user with a second factor enrolled, and a user with no membership in the organization. It returns `{ token, expiresAt }`; the token appears nowhere else and is kept out of the logs.
+                `landing` is a page (`pageId`, with optional `urlQuery` and `pathParams`) or a path in this app (`url: /tasks/7`). A page landing is built into its path at mint, from the app's page paths. The step refuses another site, an unknown page, a banned user, a user with a second factor enrolled, a user with no membership in the organization, and, under `pinned`, another organization. It returns `{ token, expiresAt }`; the token appears nowhere else and is kept out of the logs.
 
                 ### The landing page
 

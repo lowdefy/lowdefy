@@ -52,9 +52,10 @@ function isBanned({ user }) {
 // ignored - so a link cannot be pointed somewhere its email did not.
 //
 // The session the exchange mints carries the token's scope and the token's id.
-// resolveAuthentication reads both: the scope replaces the caller's roles with
-// the roles auth.sessionScopes declares, and the token row must still stand, so
-// revoking a token or reaching its expiry ends every session it opened.
+// resolveAuthentication reads both: the scope narrows the caller's roles to the
+// scope's roles in auth.sessionScopes, and the token row must still stand, so
+// revoking a token or reaching its expiry ends (and deletes) every session it
+// opened.
 //
 // The plugin declares the model and the endpoint; the steps create and revoke
 // the rows.

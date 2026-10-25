@@ -158,7 +158,7 @@ _ref:
             | `CreateOrganization` | system | — | — | Create an organization (tenant provisioning). Needs `userId`, or `name`+`slug` for creator-less provisioning. |
             | `ListUsers` | system | — | — | List every user in the deployment. |
             | `CreateSignInToken` | system | — | — | Mint a single-use [sign-in link token](/auth-configuration#sign-in-links-in-app-emails) for a member to put into an app email (`userId`, `organizationId`, `scope`, `landing`, `expiresIn` seconds, default 3600, at most 604800). Returns `{ token, expiresAt }`. |
-            | `RevokeSignInTokens` | system | — | — | Revoke a user's [sign-in link tokens](/auth-configuration#sign-in-links-in-app-emails), spent or not, and end the sessions they opened (`userId`, optional `organizationId` and `scope`). Returns `{ revoked }`. |
+            | `RevokeSignInTokens` | system | — | — | Revoke a user's [sign-in link tokens](/auth-configuration#sign-in-links-in-app-emails), spent or not, and delete the sessions they opened (`userId`, optional `organizationId` and `scope`). Returns `{ revoked }`. |
             | `LeaveOrganization` | caller | — | — | End the caller's own membership of the named organization (`organizationId`, required). [Leaving from a routine](#leaving-an-organization-from-a-routine). |
             | `RevokeMcpGrant` | caller | — | — | Revoke the calling assistant's own [MCP grant](/mcp-oauth#switching-organization-from-the-assistant). |
             | `CreateMcpToken` | caller | — | — | Create a [member token](/mcp-oauth#tokens-for-scripts) for the caller in their active organization (`name`, `expiresInDays` or `null`). Session callers only. |

@@ -769,7 +769,7 @@ export default {
         sessionScopes: {
           type: 'object',
           description:
-            'Sign-in token scopes mapped to the roles a session opened with that scope has. A scoped session\'s "_user.roles" is the scope\'s role list in place of the member\'s own, so every page and endpoint role gate applies to the scope\'s roles. Each role must be declared in "auth.roles". A sign-in token is minted for one scope (CreateSignInToken), and a scope that is not declared here is refused at mint and at exchange.',
+            'Sign-in token scopes mapped to the roles a session opened with that scope has. A scoped session\'s "_user.roles" is the scope\'s roles that the member also holds, so every page and endpoint role gate applies to that narrower list. Each role must be declared in "auth.roles". A sign-in token is minted for one scope (CreateSignInToken), and a scope that is not declared here is refused at mint and at exchange.',
           patternProperties: {
             '^.*$': {
               type: 'object',

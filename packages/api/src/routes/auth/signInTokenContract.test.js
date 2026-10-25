@@ -110,7 +110,10 @@ function createAuth({ organizations }) {
 const pinned = { policy: 'pinned', org: 'default', signup: 'invite-only' };
 const tenant = { policy: 'tenant', signup: 'open', create: 'operator' };
 
-async function seed({ auth, memberships = [{ organizationId: 'default', appRoles: ['admin'] }] }) {
+async function seed({
+  auth,
+  memberships = [{ organizationId: 'default', appRoles: ['admin', 'control-owner'] }],
+}) {
   const { adapter } = await auth.$context;
   // Written through the raw adapter: the internal adapter's user.create hooks
   // would apply the admission gate to a user that is about to be made a member.
@@ -168,6 +171,15 @@ async function seed({ auth, memberships = [{ organizationId: 'default', appRoles
 }
 
 const LANDING = { pageId: 'task', urlQuery: { id: 'task-1' } };
+const LANDING_URL = { url: '/task?id=task-1' };
+const routes = [
+  { pageId: 'task', path: 'task' },
+  { pageId: 'ticket', path: 'tickets/{ticket_id}' },
+];
+
+async function readConfigFile(filePath) {
+  return filePath === 'routes.json' ? routes : null;
+}
 
 function mint({
   auth,
@@ -176,12 +188,15 @@ function mint({
   expiresIn = 3600,
   scope = 'email-link',
   landing = LANDING,
+  organization = null,
 }) {
   return CreateSignInToken({
     acting: { system: true, user: null },
     auth,
     markCredential: jest.fn(),
+    organization,
     properties: { userId, organizationId, expiresIn, scope, landing },
+    readConfigFile,
   });
 }
 
@@ -192,7 +207,7 @@ function seedTokenRow({ adapter, token, ...fields }) {
     data: {
       organizationId: 'default',
       scope: 'email-link',
-      landing: JSON.stringify(LANDING),
+      landing: JSON.stringify(LANDING_URL),
       state: 'issued',
       hash: crypto.createHash('sha256').update(token).digest('hex'),
       createdAt: new Date(),
@@ -269,7 +284,7 @@ describe('pinned organization', () => {
     const { token } = await mint({ auth, userId: seeded.user.id });
     const response = await exchange({ auth, token });
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ status: true, landing: LANDING });
+    expect(await response.json()).toEqual({ status: true, landing: LANDING_URL });
     const cookie = cookieFrom(response);
     expect(cookie).not.toBe('');
 
@@ -280,8 +295,22 @@ describe('pinned organization', () => {
     const caller = await resolveCaller({ auth, cookie });
     expect(caller.id).toBe(seeded.user.id);
     expect(caller.roles).toEqual(['control-owner']);
+    expect(caller.org_roles).toEqual([]);
     expect(caller.session_scope).toBe('email-link');
     expect(caller.organization_id).toBe('default');
+  });
+
+  test('a scope never grants a role the member does not hold', async () => {
+    const viewer = await seed({
+      auth,
+      memberships: [{ organizationId: 'default', appRoles: ['viewer'] }],
+    });
+    const { token } = await mint({ auth, userId: viewer.user.id });
+    const cookie = cookieFrom(await exchange({ auth, token }));
+    const caller = await resolveCaller({ auth, cookie });
+    expect(caller.id).toBe(viewer.user.id);
+    expect(caller.roles).toEqual([]);
+    expect(caller.session_scope).toBe('email-link');
   });
 
   test('the token is spent on its first exchange, and a second exchange is refused', async () => {
@@ -324,6 +353,22 @@ describe('pinned organization', () => {
     expect((await response.json()).landing).toEqual({ url: '/tasks/7?tab=1' });
   });
 
+  test('a page landing is built into its path at mint, placeholders included', async () => {
+    const { token } = await mint({
+      auth,
+      userId: seeded.user.id,
+      landing: { pageId: 'ticket', pathParams: { ticket_id: 7 }, urlQuery: { tab: 'notes' } },
+    });
+    const response = await exchange({ auth, token });
+    expect((await response.json()).landing).toEqual({ url: '/tickets/7?tab=notes' });
+    await expect(
+      mint({ auth, userId: seeded.user.id, landing: { pageId: 'ticket' } })
+    ).rejects.toThrow('missing a value for path placeholder "ticket_id"');
+    await expect(
+      mint({ auth, userId: seeded.user.id, landing: { pageId: 'no-such-page' } })
+    ).rejects.toThrow('is not a page in this app');
+  });
+
   test('the mint refuses a landing that is not in this app', async () => {
     for (const landing of [
       { url: 'https://evil.example.com/' },
@@ -353,6 +398,7 @@ describe('pinned organization', () => {
         scope: 'email-link',
         landing: LANDING,
       },
+      readConfigFile,
     });
     expect(expiresAt.getTime() - before).toBeGreaterThanOrEqual(3600 * 1000 - 1000);
     expect(expiresAt.getTime() - before).toBeLessThanOrEqual(3600 * 1000 + 1000);
@@ -366,9 +412,10 @@ describe('pinned organization', () => {
 
   test('the session ends when the token does', async () => {
     const { token, expiresAt } = await mint({ auth, userId: seeded.user.id, expiresIn: 600 });
-    await exchange({ auth, token });
+    const cookie = cookieFrom(await exchange({ auth, token }));
     const [session] = await seeded.adapter.findMany({ model: 'session' });
     expect(new Date(session.expiresAt).getTime()).toBe(expiresAt.getTime());
+    expect(await resolveCaller({ auth, cookie })).not.toBeNull();
   });
 
   test('only the hash is stored', async () => {
@@ -473,6 +520,8 @@ describe('pinned organization', () => {
       properties: { userId: seeded.user.id },
     });
     expect(result).toEqual({ revoked: 1 });
+    expect(await seeded.adapter.count({ model: 'session' })).toBe(0);
+    expect(await (await get({ auth, path: '/get-session', cookie })).json()).toBeNull();
     expect(await resolveCaller({ auth, cookie })).toBeNull();
   });
 
@@ -484,7 +533,16 @@ describe('pinned organization', () => {
       where: [{ field: 'userId', value: seeded.user.id }],
       update: { expiresAt: new Date(Date.now() - 1000) },
     });
+    // BetterAuth's session refresh may have moved the row's own expiry on; the
+    // token's is the one that counts, and the dead row is deleted.
+    await seeded.adapter.updateMany({
+      model: 'session',
+      where: [{ field: 'userId', value: seeded.user.id }],
+      update: { expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000) },
+    });
     expect(await resolveCaller({ auth, cookie })).toBeNull();
+    expect(await seeded.adapter.count({ model: 'session' })).toBe(0);
+    expect(await (await get({ auth, path: '/get-session', cookie })).json()).toBeNull();
   });
 
   test('a banned user is refused at the exchange and at the mint', async () => {
@@ -547,6 +605,17 @@ describe('pinned organization', () => {
     );
   });
 
+  test('the mint refuses an organization other than the pinned one', async () => {
+    await expect(
+      mint({
+        auth,
+        userId: seeded.user.id,
+        organizationId: 'other',
+        organization: { policy: 'pinned', pinned: { id: 'default', slug: 'default' } },
+      })
+    ).rejects.toThrow("is not this app's pinned organization");
+  });
+
   test('the mint refuses a user with no membership in the organization', async () => {
     await expect(mint({ auth, userId: seeded.user.id, organizationId: 'other' })).rejects.toThrow(
       'no member row'
@@ -600,7 +669,7 @@ describe('pinned organization', () => {
     const session = await (await get({ auth, path: '/get-session', cookie })).json();
     expect(session.session.sessionScope ?? null).toBeNull();
     const caller = await resolveCaller({ auth, cookie });
-    expect(caller.roles).toEqual(['admin']);
+    expect(caller.roles).toEqual(['admin', 'control-owner']);
     expect(caller.session_scope).toBeUndefined();
   });
 });
@@ -612,7 +681,7 @@ describe('tenant organizations', () => {
       auth,
       memberships: [
         { organizationId: 'org_a', appRoles: ['viewer'] },
-        { organizationId: 'org_b', appRoles: ['admin'] },
+        { organizationId: 'org_b', appRoles: ['admin', 'control-owner'] },
       ],
     });
     const { token } = await mint({ auth, userId: seeded.user.id, organizationId: 'org_b' });

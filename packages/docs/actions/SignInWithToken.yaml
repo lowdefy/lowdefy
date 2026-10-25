@@ -33,7 +33,7 @@ _ref:
 
       ## Where it lands
 
-      A token is bound when it is minted to its user, organization, scope and landing. The server answers a successful exchange with that landing, and the action navigates there with a full page load, so the page renders with the scoped session's roles. The action takes no destination of its own: a link lands only where its email said.
+      A token is bound when it is minted to its user, organization, scope and landing, and a page landing is built into its path then. The server answers a successful exchange with that path, and the action navigates there with a full page load, so the page renders with the scoped session's roles. The action takes no destination of its own: a link lands only where its email said.
 
       ## When the token is refused
 

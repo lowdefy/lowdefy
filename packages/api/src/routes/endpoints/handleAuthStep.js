@@ -221,6 +221,8 @@ async function handleAuthStep(context, routineContext, { step }) {
   // caller-scoped grant steps read it to find the grant behind the call.
   // markCredential lets a step that makes a credential (a member token) keep
   // it out of every log line for the rest of the request.
+  // readConfigFile reads a build artifact - CreateSignInToken builds a page
+  // landing's path from routes.json.
   const result = await stepFn({
     acting,
     auth: context.auth,
@@ -229,6 +231,7 @@ async function handleAuthStep(context, routineContext, { step }) {
     organization: context.organization ?? null,
     organizationId,
     properties: evaluatedProperties,
+    readConfigFile: context.readConfigFile,
   });
 
   addStepResult(context, routineContext, {

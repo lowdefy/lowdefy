@@ -92,7 +92,7 @@ test('a sign-in token is stored hashed, and of many concurrent exchanges exactly
       userId: user.id,
       organizationId: 'org_1',
       scope: 'email-link',
-      landing: { pageId: 'task', urlQuery: { id: 'task-1' } },
+      landing: { url: '/task?id=task-1' },
     },
   });
 

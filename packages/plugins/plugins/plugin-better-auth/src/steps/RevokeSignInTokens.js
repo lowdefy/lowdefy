@@ -21,8 +21,9 @@ import getSignInTokenScopes from './support/getSignInTokenScopes.js';
 // Revokes a person's sign-in tokens, optionally only one scope's or one
 // organization's - spent ones included, since a spent token's session lives on
 // until the token expires. A revoked token opens no new session, and the
-// sessions it already opened stop resolving on their next request. Rows are
-// kept, with revokedAt set once, as the record of what was issued.
+// sessions it already opened are deleted, so the browser holding one sees the
+// signed-out state on its next session read. Token rows are kept, with
+// revokedAt set once, as the record of what was issued.
 //
 // Caller-less, like CreateSignInToken: an app revokes from a trusted routine
 // (a person left, a link was forwarded) rather than letting a caller revoke
@@ -54,6 +55,14 @@ async function RevokeSignInTokens({ auth, properties }) {
         model: 'signInToken',
         where: [{ field: 'id', value: row.id }],
         update: { state: 'revoked', revokedAt },
+      })
+    )
+  );
+  await Promise.all(
+    standing.map((row) =>
+      adapter.deleteMany({
+        model: 'session',
+        where: [{ field: 'signInTokenId', value: row.id }],
       })
     )
   );

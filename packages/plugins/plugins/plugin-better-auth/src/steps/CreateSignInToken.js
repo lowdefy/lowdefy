@@ -37,8 +37,8 @@ const MAX_EXPIRES_IN_SECONDS = 7 * 24 * 60 * 60;
 // landing - the exchange always lands on that landing, whatever the caller asks.
 // An email with several links mints one token per link. It is spent only by a
 // POST to the exchange endpoint (the SignInWithToken action), never by a GET.
-// The session it opens carries the scope, and the roles auth.sessionScopes
-// declares for that scope replace the person's own.
+// The session it opens carries the scope, and its roles narrow to the roles
+// auth.sessionScopes declares for that scope that the person also holds.
 //
 // A caller-less step: it mints a credential for someone else, so it runs only
 // where the run itself is trusted (a cron or an InternalApi routine with
@@ -46,7 +46,13 @@ const MAX_EXPIRES_IN_SECONDS = 7 * 24 * 60 * 60;
 //
 // The token records the member row it was made for: the exchange accepts it only
 // while that row stands, so leaving, removal or deletion ends it.
-async function CreateSignInToken({ auth, markCredential, properties }) {
+async function CreateSignInToken({
+  auth,
+  markCredential,
+  organization,
+  properties,
+  readConfigFile,
+}) {
   const scopes = getSignInTokenScopes({ auth });
   if (type.isNone(scopes)) {
     throw new Error(
@@ -79,7 +85,19 @@ async function CreateSignInToken({ auth, markCredential, properties }) {
       )}.`
     );
   }
-  const boundLanding = normalizeSignInTokenLanding({ landing });
+  // Under pinned, the exchange accepts only the pinned organization's tokens,
+  // so a token for another one would go out in an email and never work.
+  if (
+    organization?.policy === 'pinned' &&
+    !type.isNone(organization.pinned) &&
+    organizationId !== organization.pinned.id
+  ) {
+    throw new Error(
+      `CreateSignInToken refused - organization "${organizationId}" is not this app's pinned organization "${organization.pinned.id}".`
+    );
+  }
+  const routes = type.isNone(landing?.pageId) ? null : await readConfigFile('routes.json');
+  const boundLanding = normalizeSignInTokenLanding({ landing, routes });
   const { adapter } = await auth.$context;
   const user = await adapter.findOne({ model: 'user', where: [{ field: 'id', value: userId }] });
   if (type.isNone(user)) {

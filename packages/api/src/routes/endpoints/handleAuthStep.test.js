@@ -154,6 +154,7 @@ test('AuthStep step does not pass a userAdminRole key to the step function', asy
     'organization',
     'organizationId',
     'properties',
+    'readConfigFile',
   ]);
 });
 

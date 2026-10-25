@@ -38,7 +38,20 @@ const ALLOWED_PATHS = new Set([
   '/reset-password',
   '/send-verification-email',
   '/verify-email',
+  '/email-otp/request-password-reset',
+  '/email-otp/reset-password',
+  '/forget-password/email-otp',
+  '/phone-number/send-otp',
+  '/phone-number/request-password-reset',
+  '/phone-number/reset-password',
 ]);
+
+// Phone-number verify signs in by a one-time code, unless it is asked to put
+// the number on the session's own user (updatePhoneNumber) - that one acts
+// through the session.
+function isPhoneSignIn(path, ctx) {
+  return path === '/phone-number/verify' && ctx.body?.updatePhoneNumber !== true;
+}
 
 const ALLOWED_PREFIXES = ['/sign-in/', '/sign-up/', '/callback/', '/reset-password/'];
 
@@ -52,7 +65,12 @@ function isAllowedPath(path) {
 // resolved (resolveAuthentication, handleAuthStep), not here. A serverOnly
 // endpoint has no path.
 function matchesScopedSessionGate(path, ctx) {
-  return type.isString(path) && !type.isNone(ctx.request) && !isAllowedPath(path);
+  return (
+    type.isString(path) &&
+    !type.isNone(ctx.request) &&
+    !isAllowedPath(path) &&
+    !isPhoneSignIn(path, ctx)
+  );
 }
 
 function createScopedSessionGate() {
