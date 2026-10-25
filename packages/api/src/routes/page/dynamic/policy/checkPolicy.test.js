@@ -329,6 +329,8 @@ test.each([
   ['a short reference', 'R:1'],
   ['a time format', 'HH:mm'],
   ['a labelled word', 'Note:see'],
+  ['a mail address', 'mailto:ops@example.com'],
+  ['a phone number', 'tel:+27215550000'],
 ])('checkPolicy leaves a one-word value with %s alone in unmarked values', (_, text) => {
   expect(
     check([
@@ -347,6 +349,10 @@ test.each([
   ['an off-site URL', 'https://evil.example'],
   ['an upper-case off-site URL', 'HTTPS://evil.example'],
   ['a blob URL', 'blob:https://evil.example/1'],
+  ['a file URL', 'file:///etc/passwd'],
+  ['a websocket URL', 'wss://evil.example'],
+  ['a control character and a tab inside the scheme', '\u0001 JaVa\tScript:alert(1)'],
+  ['a tab inside an http scheme', 'ht\ttps://evil.example'],
 ])('checkPolicy still finds a whole value with %s in unmarked values', (_, text) => {
   expect(
     rules(check([{ id: 'b', type: 'Box', properties: { items: [{ label: 'Ref', value: text }] } }]))

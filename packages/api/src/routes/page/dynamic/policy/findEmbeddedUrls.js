@@ -22,6 +22,7 @@ import normalizeUrlText from './normalizeUrlText.js';
 // and image targets, and CSS url()/image-set()/src() arguments after
 // unescaping. A word such as "INC:42" or "HH:mm" has the shape of a scheme but
 // names none the browser acts on, so it is text.
+// An allowlist of schemes, not a scheme-shaped pattern: any word may hold a colon.
 const LOADED_SCHEME = /^(https?|ftp|wss?|file|blob|filesystem|data):\S/i;
 // Script schemes run whatever follows them, spaces included.
 const SCRIPT_SCHEME = /^(javascript|vbscript):/i;
