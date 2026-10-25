@@ -222,6 +222,7 @@ async function setup({ organizations, twoFactor, trustEmail, database: reuse }) 
       api: { roles: {} },
       pages: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
       organizations,
       roles: [],
     },

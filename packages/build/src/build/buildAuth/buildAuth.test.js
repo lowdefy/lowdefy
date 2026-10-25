@@ -38,6 +38,7 @@ test('buildAuth returns unconfigured defaults when auth is absent', () => {
       pages: { roles: {} },
       pagesProtectedByDefault: false,
       providers: [],
+      sessionScopes: {},
       roles: [],
     },
     pages: [
@@ -60,6 +61,7 @@ test('buildAuth returns unconfigured defaults when there are no pages', () => {
       pages: { roles: {} },
       pagesProtectedByDefault: false,
       providers: [],
+      sessionScopes: {},
       roles: [],
     },
   });
@@ -123,6 +125,7 @@ test('buildAuth fills in configured defaults for a minimal valid auth config', (
     pages: { roles: {} },
     pagesProtectedByDefault: false,
     providers: [],
+    sessionScopes: {},
     roles: [],
     hooks: [],
     strategies: [],

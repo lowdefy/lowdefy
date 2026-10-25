@@ -1387,3 +1387,70 @@ test('validateAuthConfig does not require oauthProvider.postLoginPage under the 
   };
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
+
+test('validateAuthConfig accepts session scopes', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      sessionScopes: { 'email-link': { roles: ['control-owner'] } },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when a session scope has no roles', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      sessionScopes: { 'email-link': {} },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "sessionScopes.[scope]" should have required property "roles".'
+  );
+});
+
+test('validateAuthConfig throws when a session scope roles is not an array of strings', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      sessionScopes: { 'email-link': { roles: 'control-owner' } },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "sessionScopes.[scope].roles" should be an array of role ids.'
+  );
+});
+
+test('validateAuthConfig throws when a session scope has an unknown property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      sessionScopes: { 'email-link': { roles: [], expiresIn: 60 } },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "sessionScopes.[scope]" has an unknown property.'
+  );
+});
+
+test('validateAuthConfig throws when session scopes are set without a database', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      strategies: [{ id: 'key', type: 'apiKey', properties: {} }],
+      sessionScopes: { 'email-link': { roles: [] } },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "database" is required when "sessionScopes" is configured.'
+  );
+});

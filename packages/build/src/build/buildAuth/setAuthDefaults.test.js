@@ -30,6 +30,7 @@ test('setAuthDefaults sets only authorization defaults when auth is not configur
       pages: { roles: {} },
       websockets: { roles: {} },
       providers: [],
+      sessionScopes: {},
     },
   });
 });
@@ -59,6 +60,7 @@ test('setAuthDefaults sets full defaults when auth is configured', () => {
       pages: { roles: {} },
       websockets: { roles: {} },
       providers: [],
+      sessionScopes: {},
       hooks: [],
       strategies: [],
       organizations: {

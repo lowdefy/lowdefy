@@ -281,6 +281,12 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   }
 
   return async function activeOrgPolicyHook(session, ctx) {
+    // A session opened by a sign-in token is created in the organization the
+    // token was minted for, after the exchange checked the membership there.
+    // The policy would pick the oldest membership (tenant) instead.
+    if (!type.isNone(session.sessionScope)) {
+      return undefined;
+    }
     const auth = getAuth();
     const { adapter, internalAdapter } = await auth.$context;
     if (organizations.policy === 'tenant') {

@@ -794,3 +794,37 @@ test('AuthStep step authorizes an owner through the comma-separated member role'
 
   expect(res).toEqual({ status: 'continue' });
 });
+
+test.each([['org'], ['caller']])(
+  'AuthStep step refuses a %s-scope step for a session opened from an emailed link',
+  async (scope) => {
+    const stepFn = createStepFn(
+      scope === 'org' ? { scope: 'org', permissions: { member: ['update'] } } : { scope: 'caller' }
+    );
+    const { context } = createTestContext({
+      steps: { TestAuthStep: stepFn },
+      user: { id: 'user_1', session_scope: 'email-link' },
+    });
+
+    const res = await runRoutine(context, createRoutineContext(), {
+      routine: createStepRoutine(),
+    });
+
+    expect(res.error.name).toBe('AuthorizationError');
+    expect(res.error.message).toContain('opened from an emailed link');
+    expect(stepFn).not.toHaveBeenCalled();
+  }
+);
+
+test('AuthStep step lets a system-scoped step run in a system context a scoped session triggered', async () => {
+  const stepFn = createStepFn({ scope: 'system' });
+  const { context } = createTestContext({
+    steps: { TestAuthStep: stepFn },
+    user: { id: 'user_1', session_scope: 'email-link' },
+  });
+  context.system = true;
+
+  await runRoutine(context, createRoutineContext(), { routine: createStepRoutine() });
+
+  expect(stepFn).toHaveBeenCalledTimes(1);
+});

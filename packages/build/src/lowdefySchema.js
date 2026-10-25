@@ -766,6 +766,43 @@ export default {
             },
           },
         },
+        sessionScopes: {
+          type: 'object',
+          description:
+            'Sign-in token scopes mapped to the roles a session opened with that scope has. A scoped session\'s "_user.roles" is the scope\'s role list in place of the member\'s own, so every page and endpoint role gate applies to the scope\'s roles. Each role must be declared in "auth.roles". A sign-in token is minted for one scope (CreateSignInToken), and a scope that is not declared here is refused at mint and at exchange.',
+          patternProperties: {
+            '^.*$': {
+              type: 'object',
+              additionalProperties: false,
+              required: ['roles'],
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                roles: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  errorMessage: {
+                    type: 'Auth "sessionScopes.[scope].roles" should be an array of role ids.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "sessionScopes.[scope]" should be an object.',
+                additionalProperties:
+                  'Auth "sessionScopes.[scope]" has an unknown property. The only known property is "roles".',
+                required: {
+                  roles: 'Auth "sessionScopes.[scope]" should have required property "roles".',
+                },
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "sessionScopes" should be an object.',
+          },
+        },
         session: {
           type: 'object',
           additionalProperties: false,

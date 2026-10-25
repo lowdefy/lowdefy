@@ -1136,6 +1136,9 @@
         - id: SetState
           type: MenuLink
           pageId: SetState
+        - id: SignInWithToken
+          type: MenuLink
+          pageId: SignInWithToken
         - id: Throw
           type: MenuLink
           pageId: Throw

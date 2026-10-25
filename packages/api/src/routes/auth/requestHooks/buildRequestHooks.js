@@ -21,6 +21,7 @@ import createAcceptExistingMemberHook from '../organizations/createAcceptExistin
 import createEmailSendGate from '../organizations/createEmailSendGate.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
+import createScopedSessionGate, { matchesScopedSessionGate } from './createScopedSessionGate.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
 import redirectToChallenge from './redirectToChallenge.js';
@@ -37,7 +38,13 @@ import resolveTwoFactorPageUrl from './resolveTwoFactorPageUrl.js';
 // for every path. Whether a registration is added stays conditional on config,
 // and those conditions live here so there is one place to read what the engine
 // hooks into.
-function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }) {
+function buildRequestHooks({
+  authConfig,
+  basePath = '',
+  baseUrlOrigin,
+  getAuth,
+  sessionScopesDeclared = false,
+}) {
   const before = [];
   const after = [];
 
@@ -88,6 +95,18 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         // magic-link route's, and the suppressed response has to match it.
         successBody: { success: true },
       }),
+    });
+  }
+
+  // A session opened by a sign-in token is limited to its scope's roles, and
+  // BetterAuth's own session-bound endpoints (enrol a passkey or a second factor,
+  // consent an MCP grant, change the email) know nothing of roles. The gate
+  // closes them to such a session.
+  if (sessionScopesDeclared) {
+    before.push({
+      id: 'scopedSessionGate',
+      matches: matchesScopedSessionGate,
+      handler: createScopedSessionGate(),
     });
   }
 

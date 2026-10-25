@@ -39,6 +39,7 @@ function setAuthDefaults({ components }) {
   setDefault(auth, 'websockets', {});
   setDefault(auth.websockets, 'roles', {});
   setDefault(auth, 'providers', []);
+  setDefault(auth, 'sessionScopes', {});
 
   if (auth.configured !== true) {
     return components;

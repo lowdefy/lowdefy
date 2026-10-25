@@ -28,6 +28,7 @@ const modelNames = {
   twoFactor: 'user-two-factors',
   passkey: 'user-passkeys',
   mcpToken: 'user-mcp-tokens',
+  signInToken: 'user-sign-in-tokens',
 };
 
 export default modelNames;

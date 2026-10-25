@@ -23,6 +23,7 @@ test('buildRoleCatalog normalizes an empty catalog to an empty array', () => {
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   const res = buildRoleCatalog({ components });
@@ -35,6 +36,7 @@ test('buildRoleCatalog treats an absent catalog as empty', () => {
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   const res = buildRoleCatalog({ components });
@@ -51,6 +53,7 @@ test('buildRoleCatalog defaults label to id and passes description through', () 
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   const res = buildRoleCatalog({ components });
@@ -67,6 +70,7 @@ test('buildRoleCatalog does not auto-inject gate role names into the catalog', (
       pages: { roles: { admin: ['admin-*'], auditor: ['reports'] } },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   const res = buildRoleCatalog({ components });
@@ -83,6 +87,7 @@ test('buildRoleCatalog passes when every gate reference is declared under pinned
       pages: { roles: { admin: ['admin-*'], auditor: ['reports'] } },
       api: { roles: { admin: ['admin-api'], 'branch-manager': ['branches'] } },
       websockets: { roles: { operator: ['live-feed'] } },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).not.toThrow();
@@ -96,6 +101,7 @@ test('buildRoleCatalog passes when every gate reference is declared under tenant
       pages: { roles: { admin: ['admin-*'] } },
       api: { roles: { 'branch-manager': ['branches'] } },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).not.toThrow();
@@ -109,6 +115,7 @@ test('buildRoleCatalog throws when a gate references an undeclared role under pi
       pages: { roles: { auditor: ['reports'] } },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
@@ -125,6 +132,7 @@ test('buildRoleCatalog throws when a gate references an undeclared role under pi
       pages: { roles: {} },
       api: { roles: { auditor: ['reports'] } },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
@@ -141,6 +149,7 @@ test('buildRoleCatalog throws for an undeclared built-in tier gate reference und
       pages: { roles: { owner: ['page-a'] } },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
@@ -157,6 +166,7 @@ test('buildRoleCatalog throws for an undeclared built-in tier gate reference und
       pages: { roles: { owner: ['page-a'] } },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
@@ -173,6 +183,7 @@ test('buildRoleCatalog throws for an undeclared custom gate reference under tena
       pages: { roles: { auditor: ['reports'] } },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
@@ -188,6 +199,7 @@ test('buildRoleCatalog accepts an authored id containing a comma', () => {
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   const res = buildRoleCatalog({ components });
@@ -204,6 +216,7 @@ test('buildRoleCatalog accepts an authored id beginning with "$"', () => {
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   const res = buildRoleCatalog({ components });
@@ -220,6 +233,7 @@ test('buildRoleCatalog throws a located error when an authored id is a reserved 
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
@@ -242,6 +256,7 @@ test('buildRoleCatalog rejects a gate reference to a reserved role name as undec
       pages: { roles: { constructor: ['reports'] } },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
@@ -257,6 +272,7 @@ test('buildRoleCatalog throws when an authored id is declared more than once', (
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
@@ -272,6 +288,7 @@ test('buildRoleCatalog uses the role entry config key when an authored id is inv
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
     },
   };
   try {
@@ -280,4 +297,45 @@ test('buildRoleCatalog uses the role entry config key when an authored id is inv
   } catch (error) {
     expect(error.configKey).toEqual('role-key');
   }
+});
+
+test('buildRoleCatalog passes when every session scope role is declared', () => {
+  const components = {
+    auth: {
+      roles: [{ id: 'control-owner' }, { id: 'admin' }],
+      pages: { roles: {} },
+      api: { roles: {} },
+      websockets: { roles: {} },
+      sessionScopes: { 'email-link': { roles: ['control-owner'] }, empty: { roles: [] } },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).not.toThrow();
+});
+
+test('buildRoleCatalog throws when a session scope names a role that is not declared', () => {
+  const components = {
+    auth: {
+      roles: [{ id: 'admin' }],
+      pages: { roles: {} },
+      api: { roles: {} },
+      websockets: { roles: {} },
+      sessionScopes: { 'email-link': { roles: ['control-owner'] } },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).toThrow(
+    'Auth session scope "email-link" references role "control-owner", which is not declared in auth.roles.'
+  );
+});
+
+test('buildRoleCatalog throws when a session scope has a reserved name', () => {
+  const components = {
+    auth: {
+      roles: [],
+      pages: { roles: {} },
+      api: { roles: {} },
+      websockets: { roles: {} },
+      sessionScopes: { constructor: { roles: [] } },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).toThrow('is a reserved name');
 });

@@ -290,6 +290,7 @@
 - _ref: actions/SetLocale.yaml
 - _ref: actions/SetLocalStorage.yaml
 - _ref: actions/SetState.yaml
+- _ref: actions/SignInWithToken.yaml
 - _ref: actions/Throw.yaml
 - _ref: actions/UpdateSession.yaml
 - _ref: actions/Validate.yaml

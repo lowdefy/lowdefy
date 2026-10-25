@@ -24,6 +24,7 @@ const authorities = {
   CancelInvitation: { scope: 'org', permissions: { invitation: ['cancel'] } },
   CreateMcpToken: { scope: 'caller' },
   CreateOrganization: { scope: 'system' },
+  CreateSignInToken: { scope: 'system' },
   DeleteUser: { scope: 'org', permissions: { user: ['delete'] }, targetUser: 'userId' },
   InviteMember: { scope: 'org', permissions: { invitation: ['create'] } },
   LeaveOrganization: { scope: 'caller' },
@@ -32,6 +33,7 @@ const authorities = {
   RemoveMember: { scope: 'org', permissions: { member: ['delete'] } },
   RevokeMcpGrant: { scope: 'caller' },
   RevokeMcpToken: { scope: 'caller' },
+  RevokeSignInTokens: { scope: 'system' },
   RevokeOrgMcpToken: { scope: 'org', permissions: { member: ['update'] } },
   ResetUserTwoFactor: {
     scope: 'org',

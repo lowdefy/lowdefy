@@ -1,0 +1,71 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: SignInWithToken
+    pageTitle: SignInWithToken
+    filePath: actions/SignInWithToken.yaml
+    types: |
+      ```
+      (params: {
+        token: string
+      }): void
+      ```
+    description: |
+      The `SignInWithToken` action trades a sign-in token from an app email for a session, then lands on the page the token was minted for. A routine mints the token with the [`CreateSignInToken`](/auth-steps#step-reference) step and puts it on a link to a public landing page; this action runs on that page. See [Sign-in links in app emails](/auth-configuration#sign-in-links-in-app-emails) for the whole flow and the `auth.sessionScopes` config it needs.
+
+      ## Bind it to a click
+
+      The exchange is a `POST` this action makes, so a mail scanner that fetches the link spends nothing and gets no session. Run the action from a button's `onClick`, never from `onMount` or an automatic redirect: a scanning sandbox that renders the page and runs its JavaScript would spend the token.
+
+      ## Where it lands
+
+      A token is bound when it is minted to its user, organization, scope and landing. The server answers a successful exchange with that landing, and the action navigates there with a full page load, so the page renders with the scoped session's roles. The action takes no destination of its own: a link lands only where its email said.
+
+      ## When the token is refused
+
+      A token works once. It is refused when it is unknown or altered, already used, expired or revoked, when its user is banned, has a second factor enrolled or is no longer a member of the token's organization, and when its scope is no longer declared. Every refusal gets the same answer and opens no session. The action then fails with a user error: catch it (`catch` on the event, or `onError`) and offer an ordinary sign-in.
+
+      The event chain ends after a successful exchange, like every other action that navigates the browser away.
+
+    params: |
+      ###### object
+      - `token: string`: __Required__ - The sign-in token from the email link, usually read with `_url_query`.
+
+    examples: |
+      ###### The landing page, falling back to the sign-in page when the token is refused:
+      ```yaml
+      id: email-sign-in
+      type: PageHeaderMenu
+      blocks:
+        - id: continue
+          type: Button
+          properties:
+            title: Continue
+          events:
+            onClick:
+              try:
+                - id: sign_in
+                  type: SignInWithToken
+                  params:
+                    token:
+                      _url_query: token
+              catch:
+                - id: sign_in_instead
+                  type: Link
+                  params:
+                    pageId: login
+      ```

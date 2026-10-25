@@ -59,6 +59,7 @@ import createSendVerificationEmail from './createSendVerificationEmail.js';
 import createSetActiveOrganization from './createSetActiveOrganization.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
+import createSignInWithToken from './createSignInWithToken.js';
 import createSignUp from './createSignUp.js';
 import createSubscribe from './createSubscribe.js';
 import createTranslate from './createTranslate.js';
@@ -117,6 +118,7 @@ function getActionMethods(props) {
     setActiveOrganization: createSetActiveOrganization(props),
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
+    signInWithToken: createSignInWithToken(props),
     signUp: createSignUp(props),
     subscribe: createSubscribe(props),
     translate: createTranslate(props),

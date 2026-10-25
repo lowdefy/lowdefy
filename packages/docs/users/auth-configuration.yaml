@@ -199,6 +199,94 @@ _ref:
 
                 `session.cookieCache` (off by default) trades a short window of stale session reads for fewer database lookups — leave it off unless you understand the [revocation-latency trade](/two-factor#recovering-a-user-who-has-lost-their-factor).
 
+                ## Sign-in links in app emails
+
+                An app email (a daily to-do list, a notification) can carry a link that signs its recipient in, so a tap on a phone lands on the item instead of asking for a second sign-in email. A routine mints a token for each link with the [`CreateSignInToken`](/auth-steps#step-reference) step, and the landing page trades it for a session with the [`SignInWithToken`](/SignInWithToken) action. The link is short-lived and single-purpose:
+
+                - **One use.** A token is spent on its first successful exchange, atomically: of two taps racing for one link, one opens a session and the other is refused. An email with several links mints one token per link.
+                - **Bound at mint.** A token names its user, organization, scope and landing. The exchange always lands on that landing; the action takes no destination of its own, so a link cannot be pointed somewhere its email did not.
+                - **Short-lived.** `expiresIn` is in seconds, one hour by default and seven days at most. Only the token's SHA-256 is stored. The session it opens ends when the token expires.
+                - **Revocable.** [`RevokeSignInTokens`](/auth-steps#step-reference) revokes a user's tokens, optionally one organization's or one scope's, and ends the sessions they opened.
+                - **Never spent on a GET.** The exchange is a `POST` made by the action, so a mail scanner that fetches the link spends nothing and gets no session. Bind the action to a click, as with the [magic link landing page](#the-magic-link-landing-page).
+
+                A token is refused, with no session, when it is unknown or altered, already used, expired or revoked, when its user is banned, has a second factor enrolled, or is no longer the member it was minted for, and when its scope is no longer declared. Every refusal gets the same answer, so the action fails with a user error that the page catches to offer an ordinary sign-in.
+
+                ### Session scopes
+
+                `auth.sessionScopes` declares the scopes a token may carry, and the roles a session opened with each scope has. A scoped session's `_user.roles` is the scope's list **in place of** the member's own, so every page and endpoint role gate applies to it, and `_user.session_scope` names the scope so pages and routines can tell such a session apart. Each role must be declared in `auth.roles`. The next ordinary sign-in opens an unscoped session with the member's own roles.
+
+                ```yaml
+                lowdefy: {{ version }}
+                auth:
+                  roles:
+                    - id: task-owner
+                    - id: admin
+                  sessionScopes:
+                    email-link:
+                      roles:
+                        - task-owner
+                  pages:
+                    public:
+                      - email-sign-in
+                    roles:
+                      task-owner:
+                        - task
+                      admin:
+                        - task
+                        - settings
+                ```
+
+                A scoped session may not run auth steps, and it may call only the auth routes that read or end the session or start an ordinary sign-in: it can not add a passkey, enrol a second factor, change the password or email, or switch organization. Sign-in tokens need `auth.database`.
+
+                ### Minting a link
+
+                The routine that sends the email mints one token per link and puts it on the URL of a public landing page. It runs caller-less (`system: true`), since it mints a credential for someone else:
+
+                ```yaml
+                - id: link_token
+                  type: CreateSignInToken
+                  system: true
+                  properties:
+                    userId:
+                      _payload: user_id
+                    organizationId:
+                      _payload: organization_id
+                    scope: email-link
+                    expiresIn: 172800 # 48 hours
+                    landing:
+                      pageId: task
+                      urlQuery:
+                        id:
+                          _payload: task_id
+                ```
+
+                `landing` is a page (`pageId`, with optional `urlQuery` and `pathParams`) or a path in this app (`url: /tasks/7`). The step refuses another site, a banned user, a user with a second factor enrolled, and a user with no membership in the organization. It returns `{ token, expiresAt }`; the token appears nowhere else and is kept out of the logs.
+
+                ### The landing page
+
+                ```yaml
+                id: email-sign-in
+                type: PageHeaderMenu
+                blocks:
+                  - id: continue
+                    type: Button
+                    properties:
+                      title: Continue
+                    events:
+                      onClick:
+                        try:
+                          - id: sign_in
+                            type: SignInWithToken
+                            params:
+                              token:
+                                _url_query: token
+                        catch:
+                          - id: sign_in_instead
+                            type: Link
+                            params:
+                              pageId: login
+                ```
+
                 ## Roles, organizations, and API strategies
 
                 - **Roles** — declare app role names in `auth.roles` and gate pages/endpoints with `auth.pages.roles` / `auth.api.roles`. See [Roles](/roles).

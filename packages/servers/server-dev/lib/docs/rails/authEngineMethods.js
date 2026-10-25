@@ -41,6 +41,7 @@ const authEngineMethods = {
   revokeOtherSessions: 'RevokeOtherSessions',
   sendVerificationEmail: 'SendVerificationEmail',
   setActiveOrganization: 'SetActiveOrganization',
+  signInWithToken: 'SignInWithToken',
   signUp: 'SignUp',
   twoFactorDisable: 'TwoFactorDisable',
   twoFactorEnable: 'TwoFactorEnable',

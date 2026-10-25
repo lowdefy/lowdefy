@@ -56,6 +56,7 @@ export { default as SetGlobal } from './actions/SetGlobal/SetGlobal.js';
 export { default as SetLocale } from './actions/SetLocale/SetLocale.js';
 export { default as SetLocalStorage } from './actions/SetLocalStorage/SetLocalStorage.js';
 export { default as SetState } from './actions/SetState/SetState.js';
+export { default as SignInWithToken } from './actions/SignInWithToken/SignInWithToken.js';
 export { default as SignUp } from './actions/SignUp/SignUp.js';
 export { default as Subscribe } from './actions/Subscribe/Subscribe.js';
 export { default as Throw } from './actions/Throw/Throw.js';

@@ -21,6 +21,7 @@ import { createHash } from 'node:crypto';
 import { decodeJwt, jwtVerify } from 'jose';
 import { normalizeCaller, type } from '@lowdefy/helpers';
 
+import getAuthEnforcement from '../routes/auth/getAuthEnforcement.js';
 import findPendingInvitation from '../routes/auth/organizations/findPendingInvitation.js';
 import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
 import { getAsIssuer, getMcpResourceUri } from '../routes/mcp/getMcpUri.js';
@@ -539,6 +540,43 @@ async function resolveMcpCaller(context, { auth, headers }) {
   context.user = { ...member, auth_method: 'mcp' };
 }
 
+// A session opened by a sign-in token (CreateSignInToken, then the exchange
+// endpoint) carries the token's scope and id. The scope must still be declared
+// in auth.sessionScopes, and the token must still stand: revoking it or reaching
+// its expiry ends every session it opened, so a cookie outlives neither. Returns
+// the scope's roles, or null when the session is no longer good - resolved
+// unauthenticated, like a session whose member row is gone.
+async function readSessionScopeRoles(context, { adapter, auth, session }) {
+  const scopeName = session.session.sessionScope;
+  const { sessionScopes } = getAuthEnforcement({ auth });
+  if (!Object.hasOwn(sessionScopes, scopeName)) {
+    context.logger.debug(
+      { event: 'auth_session_scope_undeclared', scope: scopeName },
+      `Session for user "${session.user.id}" carries scope "${scopeName}", which auth.sessionScopes does not declare - resolved unauthenticated.`
+    );
+    return null;
+  }
+  const tokenId = session.session.signInTokenId;
+  const token = type.isString(tokenId)
+    ? await adapter.findOne({ model: 'signInToken', where: [{ field: 'id', value: tokenId }] })
+    : null;
+  if (
+    type.isNone(token) ||
+    !type.isNone(token.revokedAt) ||
+    new Date(token.expiresAt) <= new Date() ||
+    token.userId !== session.user.id ||
+    token.organizationId !== session.session.activeOrganizationId ||
+    token.scope !== scopeName
+  ) {
+    context.logger.debug(
+      { event: 'auth_session_scope_token_gone', scope: scopeName },
+      `Session for user "${session.user.id}" carries scope "${scopeName}", but the sign-in token it was opened with is revoked, expired or gone - resolved unauthenticated.`
+    );
+    return null;
+  }
+  return sessionScopes[scopeName].roles;
+}
+
 // context.authSession is the session the caller was resolved from, for the
 // response's caller stamp: { id, memberOrganizationIds }. memberOrganizationIds
 // is every organization the person belongs to under tenant, this app's
@@ -570,6 +608,24 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
       strategies,
     });
     return;
+  }
+  // Read ahead of the organization checks: a scoped session whose token is gone
+  // is refused whatever else is true of it. Its roles replace the member's
+  // below - least privilege, so an administrator's emailed link opens only what
+  // the scope names.
+  const sessionScope = session.session.sessionScope;
+  const scoped = !type.isNone(sessionScope);
+  let scopeRoles;
+  if (scoped) {
+    scopeRoles = await readSessionScopeRoles(context, {
+      adapter: (await auth.$context).adapter,
+      auth,
+      session,
+    });
+    if (scopeRoles === null) {
+      context.user = null;
+      return;
+    }
   }
   const activeOrganizationId = session.session.activeOrganizationId;
   if (type.isNone(activeOrganizationId)) {
@@ -674,6 +730,12 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
   });
   if (type.isNone(context.user)) {
     return;
+  }
+  if (scoped) {
+    // roles is the only source of page and endpoint role gates, so replacing it
+    // here limits every gate. session_scope lets config and the step floor tell
+    // such a caller from an ordinary one.
+    context.user = { ...context.user, roles: scopeRoles, session_scope: sessionScope };
   }
   // A pinned app serves one organization, and this caller reached here as a
   // member of it, so that is the one membership its stamp names: rows the same

@@ -869,6 +869,32 @@ function createAuthMethods(lowdefy, auth) {
     return stopChain({ url });
   }
 
+  // Trades a sign-in token from an app email (CreateSignInToken) for a session,
+  // then lands where the token was minted to land. The token is spent by a POST
+  // on a real tap: the landing page that calls this action is inert to a mail
+  // scanner's GET, so bind the action to a click. The token is single-use, and
+  // the server answers with the landing bound to it at mint - the caller names
+  // no destination, so a link lands only where its email said. The session is
+  // in the token's organization and carries the token's scope, so its roles are
+  // the scope's, not the person's own; a full page load applies them.
+  //
+  // A refused token (unknown, spent, expired, revoked, wrong organization,
+  // banned) opens no session and throws a UserError, so the page catches it and
+  // falls back to an ordinary sign-in. Success navigates away, so the chain ends
+  // here like every other navigating method.
+  async function signInWithToken({ token } = {}) {
+    if (!type.isString(token) || token === '') {
+      throw new Error('SignInWithToken requires a "token" param.');
+    }
+    const data = await unwrap(auth.signInWithToken({ token }));
+    const landing = resolveTarget({ lowdefy, target: data.landing, name: 'landing' });
+    if (type.isNone(landing) || landing.kind !== 'page') {
+      throw new Error('SignInWithToken received no landing in this app from the server.');
+    }
+    navigateToTarget(landing);
+    return stopChain(data);
+  }
+
   async function twoFactorDisable({ password, ...rest } = {}) {
     if (!type.isString(password)) {
       throw new Error('TwoFactorDisable requires a "password" param.');
@@ -954,6 +980,7 @@ function createAuthMethods(lowdefy, auth) {
     revokeOtherSessions,
     sendVerificationEmail,
     setActiveOrganization,
+    signInWithToken,
     signUp,
     twoFactorDisable,
     twoFactorEnable,

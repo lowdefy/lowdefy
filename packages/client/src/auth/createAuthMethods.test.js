@@ -2434,3 +2434,53 @@ test('emailOtpVerify navigates an enrolled user to the two factor challenge carr
   });
   expect(assign.mock.calls).toEqual([['/two-factor?callbackUrl=%2Freports']]);
 });
+
+test('signInWithToken posts only the token and lands on the landing the server returns', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.signInWithToken = jest.fn(() =>
+    Promise.resolve({
+      data: { status: true, landing: { pageId: 'task', urlQuery: { id: 't-1' } } },
+      error: null,
+    })
+  );
+  const { signInWithToken } = createAuthMethods(lowdefy, auth);
+  await signInWithToken({ token: 'ldf_sit_abc', callbackUrl: { url: '/admin' } });
+  expect(auth.signInWithToken.mock.calls).toEqual([[{ token: 'ldf_sit_abc' }]]);
+  expect(auth.suppressSessionReload).toHaveBeenCalled();
+  expect(assign.mock.calls).toEqual([['/task?id=t-1']]);
+});
+
+test('signInWithToken refuses a landing that is not a page in this app', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.signInWithToken = jest.fn(() =>
+    Promise.resolve({ data: { status: true, landing: { url: 'https://evil.test/' } }, error: null })
+  );
+  const { signInWithToken } = createAuthMethods(lowdefy, auth);
+  await expect(signInWithToken({ token: 'ldf_sit_abc' })).rejects.toThrow('no landing in this app');
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('signInWithToken throws a UserError when the server refuses the token, and does not navigate', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.signInWithToken = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: {
+        status: 401,
+        code: 'INVALID_SIGN_IN_TOKEN',
+        message: 'This sign-in link is no longer valid.',
+      },
+    })
+  );
+  const { signInWithToken } = createAuthMethods(lowdefy, auth);
+  await expect(signInWithToken({ token: 'ldf_sit_abc' })).rejects.toBeInstanceOf(UserError);
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('signInWithToken throws when the token is missing', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInWithToken = jest.fn();
+  const { signInWithToken } = createAuthMethods(lowdefy, auth);
+  await expect(signInWithToken({})).rejects.toThrow('requires a "token" param');
+  expect(auth.signInWithToken).not.toHaveBeenCalled();
+});

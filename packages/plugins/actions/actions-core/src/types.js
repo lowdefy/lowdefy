@@ -58,6 +58,7 @@ export default {
     'SetLocale',
     'SetLocalStorage',
     'SetState',
+    'SignInWithToken',
     'SignUp',
     'Subscribe',
     'Throw',

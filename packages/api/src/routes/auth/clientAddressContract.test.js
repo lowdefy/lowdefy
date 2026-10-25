@@ -76,6 +76,7 @@ function createAuth() {
         crossSubDomainCookies: { enabled: false },
       },
       account: { accountLinking: { enabled: true, trustedProviders: [] } },
+      sessionScopes: {},
       rateLimit: { enabled: true, window: 60, max: 100 },
       authPages: { signIn: '/login', verifyEmail: '/verify-email' },
       api: { roles: {} },

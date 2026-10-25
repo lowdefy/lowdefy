@@ -106,6 +106,17 @@ async function handleAuthStep(context, routineContext, { step }) {
     );
   }
 
+  // A session opened by a sign-in token is limited to its scope's roles. The
+  // step floor reads the caller's organization tier and member rows, not those
+  // roles, so an administrator's emailed link would otherwise run the
+  // administrator's steps from any endpoint it can reach. No auth step runs for
+  // such a caller; a system routine it triggers still can.
+  if (acting.system !== true && !type.isNone(context.user?.session_scope)) {
+    throw new AuthorizationError(
+      `Auth step "${step.stepId}" refused - the session was opened from an emailed link (scope "${context.user.session_scope}") and may not run auth steps.`
+    );
+  }
+
   // A system-scoped step has no organization to be authorized in, so a caller
   // can never satisfy it - it runs only where the run itself is trusted.
   if (authority.scope === 'system' && acting.system !== true) {

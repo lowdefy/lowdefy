@@ -42,6 +42,7 @@ const authEngineActions = new Set([
   'RevokeOtherSessions',
   'SendVerificationEmail',
   'SetActiveOrganization',
+  'SignInWithToken',
   'SignUp',
   'TwoFactorDisable',
   'TwoFactorEnable',

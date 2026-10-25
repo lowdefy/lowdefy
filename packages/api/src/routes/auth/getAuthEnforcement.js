@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 // The build-time auth facts the request-time authorization layers read. The gate
 // is built synchronously (createApiContext, applySystemTrust), so it cannot read
 // a build artifact - the servers hand auth.json to getBetterAuth, which retains
-// the three values it needs here, keyed on the auth instance exactly as the
+// the values it needs here, keyed on the auth instance exactly as the
 // organizations binding is.
 const enforcementByAuth = new WeakMap();
 
@@ -34,6 +34,7 @@ function toPageId(pagePath) {
 function registerAuthEnforcement({ auth, authJson }) {
   enforcementByAuth.set(auth, {
     pagesProtectedByDefault: authJson.pagesProtectedByDefault === true,
+    sessionScopes: authJson.sessionScopes,
     twoFactorEnrolPageId: toPageId(authJson.authPages?.twoFactorEnrol),
     twoFactorRequired: authJson.twoFactor?.required === true,
   });

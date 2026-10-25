@@ -236,6 +236,10 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signInPasskey: (params) => authClient.signIn.passkey(params),
     signInPhoneNumber: (params) => authClient.signIn.phoneNumber(params),
     signInSocial: (params) => authClient.signIn.social(params),
+    // POST /sign-in-token/exchange - the sign-in token plugin's route, which the
+    // client plugins above do not cover, so it goes through the client's fetch.
+    signInWithToken: (params) =>
+      authClient.$fetch('/sign-in-token/exchange', { method: 'POST', body: params }),
     signOut: () => authClient.signOut(),
     signUpEmail: (params) => authClient.signUp.email(params),
     twoFactorDisable: (params) => authClient.twoFactor.disable(sessionScoped(params)),

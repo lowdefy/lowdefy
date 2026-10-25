@@ -100,6 +100,7 @@ async function setup({ organizations, cookieCache = false }) {
       api: { roles: {} },
       pages: { roles: {} },
       websockets: { roles: {} },
+      sessionScopes: {},
       organizations,
       roles: [],
     },

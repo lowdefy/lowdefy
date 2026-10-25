@@ -42,6 +42,7 @@ import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js'
 import buildOauthPostLogin from './buildOauthPostLogin.js';
 import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
+import buildSignInTokenPlugin from './buildSignInTokenPlugin.js';
 import buildRequestHooks from './requestHooks/buildRequestHooks.js';
 import createAuthLogger from './createAuthLogger.js';
 import createMcpAccessTokenClaims from './createMcpAccessTokenClaims.js';
@@ -604,6 +605,14 @@ function getBetterAuthConfig({
     );
   }
 
+  // Sign-in tokens exist only when the app declares a session scope: the scope
+  // is what a token's session is limited to, so without one there is nothing to
+  // mint. The model and the exchange endpoint arrive together.
+  const sessionScopeNames = Object.keys(authConfig.sessionScopes);
+  if (sessionScopeNames.length > 0) {
+    options.plugins.push(buildSignInTokenPlugin({ getAuth, logger, scopes: sessionScopeNames }));
+  }
+
   // The admin plugin is framework-controlled - it owns the user row's ban fields
   // and the endpoints the ban, delete and revoke-sessions steps call. Its whole
   // HTTP surface is disabled (see ADMIN_PATHS_DISABLED).
@@ -640,6 +649,7 @@ function getBetterAuthConfig({
     basePath: config.basePath ?? '',
     baseUrlOrigin,
     getAuth,
+    sessionScopesDeclared: sessionScopeNames.length > 0,
   });
 
   // Phone login sends SMS through the "phone.otp.send" hook binding - there

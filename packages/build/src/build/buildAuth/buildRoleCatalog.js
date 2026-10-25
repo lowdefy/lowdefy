@@ -64,6 +64,25 @@ function buildRoleCatalog({ components }) {
     });
   });
 
+  // A scope's roles replace the member's own, so a scope naming a role the app
+  // never declared would grant nothing anyone can see or gate on.
+  Object.entries(components.auth.sessionScopes).forEach(([scope, definition]) => {
+    if (isReserved(scope)) {
+      throw new ConfigError(
+        `Auth session scope "${scope}" is a reserved name and cannot be used as a scope name.`,
+        { configKey: definition['~k'] ?? components.auth['~k'] }
+      );
+    }
+    definition.roles.forEach((roleName) => {
+      if (!authoredIds.has(roleName)) {
+        throw new ConfigError(
+          `Auth session scope "${scope}" references role "${roleName}", which is not declared in auth.roles.`,
+          { configKey: definition['~k'] ?? components.auth['~k'] }
+        );
+      }
+    });
+  });
+
   components.auth.roles = normalizeRoleCatalog(authoredRoles);
 
   return components;

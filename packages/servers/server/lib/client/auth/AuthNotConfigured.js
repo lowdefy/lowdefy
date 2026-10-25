@@ -56,6 +56,7 @@ function AuthNotConfigured({ authConfig, children, user = null }) {
     signInPasskey: authNotConfigured,
     signInPhoneNumber: authNotConfigured,
     signInSocial: authNotConfigured,
+    signInWithToken: authNotConfigured,
     signOut: authNotConfigured,
     signUpEmail: authNotConfigured,
     suppressSessionReload: authNotConfigured,

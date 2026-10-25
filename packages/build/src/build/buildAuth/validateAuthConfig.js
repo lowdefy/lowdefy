@@ -125,6 +125,15 @@ function validateAuthConfig({ components }) {
     );
   }
 
+  // Sign-in tokens are rows in the auth database, and the session they open is
+  // a database session.
+  if (Object.keys(auth.sessionScopes ?? {}).length > 0 && type.isNone(auth.database)) {
+    throw new ConfigError(
+      'Auth "database" is required when "sessionScopes" is configured. Sign-in tokens are stored in the auth database.',
+      { configKey: auth.sessionScopes['~k'] ?? configKey }
+    );
+  }
+
   // Duplicate ids silently last-win in downstream maps (trustedProviders,
   // runtime provider construction) - fail at build instead. Built-in
   // provider types allow one configuration each in BetterAuth; GenericOAuth
