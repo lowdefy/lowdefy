@@ -16,12 +16,21 @@
 
 import { runClass } from '@lowdefy/operators';
 
+// atob and btoa work on Latin-1 characters, one byte each. Encode the UTF-8 bytes instead, like the
+// server and build _base64, so any string encodes and decodes to the same value everywhere.
 function decode(input) {
-  return atob(input);
+  const binary = atob(input);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
 }
 
 function encode(input) {
-  return btoa(input);
+  const bytes = new TextEncoder().encode(input);
+  let binary = '';
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
 }
 
 const functions = { encode, decode };

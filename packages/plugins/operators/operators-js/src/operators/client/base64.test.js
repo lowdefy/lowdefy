@@ -25,6 +25,12 @@ test('_base64.decode a string', () => {
   ).toEqual('A string value');
 });
 
+test('_base64.decode a UTF-8 string', () => {
+  expect(
+    base64({ params: 'Y2Fmw6kg5pel5pys8J+Ygg==', location: 'locationId', methodName: 'decode' })
+  ).toEqual('café 日本😂');
+});
+
 test('_base64.decode a number', () => {
   expect(() =>
     base64({ params: 10, location: 'locationId', methodName: 'decode' })
@@ -77,6 +83,12 @@ test('_base64.encode a string', () => {
   expect(
     base64({ params: 'A string value', location: 'locationId', methodName: 'encode' })
   ).toEqual('QSBzdHJpbmcgdmFsdWU=');
+});
+
+test('_base64.encode a UTF-8 string', () => {
+  expect(base64({ params: 'café 日本😂', location: 'locationId', methodName: 'encode' })).toEqual(
+    'Y2Fmw6kg5pel5pys8J+Ygg=='
+  );
 });
 
 test('_base64.encode a number', () => {
