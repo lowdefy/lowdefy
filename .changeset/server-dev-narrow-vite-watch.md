@@ -2,6 +2,6 @@
 '@lowdefy/server-dev': patch
 ---
 
-perf(server-dev): Vite watches only the build files the source imports, and the editor hover resolves once per frame.
+perf(server-dev): Vite skips the build artifact folders no module imports, and the editor hover resolves once per frame.
 
-Vite no longer crawls the page, request, api and map files under `build/` that no module imports; it watches the build files the client and server code import, found from their imports, plus the CSS in `build/`. The Option/Alt hover in the editor-link overlay now calls `elementFromPoint` and `getBoundingClientRect` at most once per animation frame instead of on every pointer move.
+Vite no longer watches `build/pages`, `build/api`, `build/connections`, `build/agents` and `build/jitMaps`, which hold thousands of files in a large app that the server reads from disk and no module imports. The Option/Alt hover in the editor-link overlay now calls `elementFromPoint` and `getBoundingClientRect` at most once per animation frame instead of on every pointer move.
