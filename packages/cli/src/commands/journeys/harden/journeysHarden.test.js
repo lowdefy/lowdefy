@@ -658,7 +658,7 @@ test('journeysHarden without --page logs nothing about narrowing', async () => {
 
 test('journeysHarden exits 75 without running anything when no journey run slot frees', async () => {
   mockAcquireJourneyRunSlots.mockRejectedValue(
-    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT' })
+    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
   );
   await harden();
   expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({

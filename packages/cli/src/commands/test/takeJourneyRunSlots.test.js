@@ -40,13 +40,28 @@ test('takeJourneyRunSlots returns the slots it took', async () => {
   expect(process.exitCode).toBeUndefined();
 });
 
-test('takeJourneyRunSlots says the machine is busy and sets exit code 75 when the wait runs out', async () => {
+test('takeJourneyRunSlots says the machine is busy and sets exit code 75 when the machine wait runs out', async () => {
   const acquire = vi.fn(async () => {
-    throw Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT' });
+    throw Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' });
   });
   expect(await takeJourneyRunSlots({ context, command: 'lowdefy test', acquire })).toBeNull();
   expect(errors).toEqual([
     'The machine is busy running other journeys. Try again later; do not start your own dev server.',
+  ]);
+  expect(process.exitCode).toBe(75);
+  expect(context.sendTelemetry).toHaveBeenCalled();
+});
+
+test('takeJourneyRunSlots says this worktree is busy and sets exit code 75 when the worktree wait runs out', async () => {
+  const acquire = vi.fn(async () => {
+    throw Object.assign(new Error('busy'), {
+      code: 'MACHINE_SLOT_TIMEOUT',
+      slot: 'journey-run-0123456789ab',
+    });
+  });
+  expect(await takeJourneyRunSlots({ context, command: 'lowdefy test', acquire })).toBeNull();
+  expect(errors).toEqual([
+    'Another journey run in this worktree is still going. Wait for it to finish; do not start your own dev server.',
   ]);
   expect(process.exitCode).toBe(75);
   expect(context.sendTelemetry).toHaveBeenCalled();

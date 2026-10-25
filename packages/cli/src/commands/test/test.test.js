@@ -992,7 +992,7 @@ test('test exits 75 without starting a server when no journey run slot frees', a
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   mockAcquireJourneyRunSlots.mockRejectedValue(
-    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT' })
+    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
   );
   await test({ context });
   expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({ context, command: 'lowdefy test' });

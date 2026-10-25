@@ -413,7 +413,7 @@ test('journeysVariants replays a granted role variant, whose comment is no place
 
 test('journeysVariants exits 75 without measuring or writing when no journey run slot frees', async () => {
   mockAcquireJourneyRunSlots.mockRejectedValue(
-    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT' })
+    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
   );
   await variants({ run: false });
   expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
