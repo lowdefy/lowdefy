@@ -93,9 +93,10 @@ function collectSchemaKinds({ value, schema, path, keyword }) {
         )
       );
     } else if (type.isObject(item.value)) {
-      // An object under a branch that marks strings (an option that is a string
-      // or a { label, value } object) holds an operator, which the policy judges
-      // by this mark, or properties its other branches mark.
+      // An object under a branch that marks strings is an operator, which the
+      // policy judges by a urlKind mark (it must be literal), or an object
+      // whose properties other branches mark (an option that is a string or a
+      // { label, value } object), so it is walked too.
       if (type.isString(kind)) {
         kinds.set(item.path, kind);
       }

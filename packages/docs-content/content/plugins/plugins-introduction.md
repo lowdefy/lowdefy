@@ -53,3 +53,14 @@ properties: {
   },
 },
 ```
+
+A block also marks how it draws a string with `textKind`: `html` for a property it renders with `renderHtml` (sanitised HTML), `text` for one it renders as escaped text. The policy then reads markdown links and words starting with `//` in such a property as words, and with `text` tag syntax too. Leave a property that renders markdown, CSS or a URL unmarked.
+
+```js
+properties: {
+  type: 'object',
+  properties: {
+    content: { type: 'string', textKind: 'html', description: 'Text content - supports html.' },
+  },
+},
+```
