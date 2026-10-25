@@ -91,8 +91,9 @@ function describeWait(waitMs) {
 }
 
 // The live holders of every numbered slot in directory, read for a waiter's
-// progress note. A slot past the current limit counts too: a run that took
-// slot 1 when the limit was 2 is still running when a later caller's limit is 1.
+// progress note and before taking a slot. A slot past the current limit counts
+// too: a run that took slot 1 when the limit was 2 is still running when a
+// later caller's limit is 1.
 function readLiveHolders(directory) {
   let entries;
   try {
@@ -114,7 +115,7 @@ function timeoutError({ name, limit, waitMs }) {
     `All ${limit} ${name} slots on this machine stayed busy for ${describeWait(waitMs)}. Try again.`
   );
   error.code = 'MACHINE_SLOT_TIMEOUT';
-  error.name = name;
+  error.slot = name;
   error.limit = limit;
   return error;
 }
@@ -129,7 +130,7 @@ came in by, and a process that dies frees its slots. Returns { release }.
 describe adds fields to the slot file, so a waiter can say who holds a slot.
 onWait({ waitedMs, holders }) is called every onWaitIntervalMs while the
 caller waits, with the live holders' slot files. A wait that runs out throws
-an error with code MACHINE_SLOT_TIMEOUT and the slot's name and limit.
+an error with code MACHINE_SLOT_TIMEOUT, the slot's name as slot, and limit.
 Waiters are not served in order.
 
 Two processes reclaiming the same stale slot at once can briefly let one
@@ -169,6 +170,11 @@ async function acquireMachineSlot({
   }
 
   function tryTake() {
+    // A caller with a lower limit than earlier holders had waits until they
+    // drop below it, rather than taking a free low-numbered slot beside them.
+    if (readLiveHolders(directory).length >= limit) {
+      return null;
+    }
     for (let index = 0; index < limit; index += 1) {
       const slotPath = path.join(directory, String(index));
       if (tryCreate({ slotPath, holder })) {

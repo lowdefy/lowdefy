@@ -160,7 +160,7 @@ test('acquireJourneyRunSlots says which runs hold the slots while it waits', asy
   ]);
 });
 
-test('acquireJourneyRunSlots at one slot leaves a run already holding slot 1 alone', async () => {
+test('acquireJourneyRunSlots at one slot waits for a run already holding slot 1 and leaves it alone', async () => {
   const originalHome = process.env.LOWDEFY_HOME;
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-slots-home-'));
   process.env.LOWDEFY_HOME = home;
@@ -169,9 +169,12 @@ test('acquireJourneyRunSlots at one slot leaves a run already holding slot 1 alo
     fs.mkdirSync(slotDirectory, { recursive: true });
     const other = { pid: process.pid, processStartTime: null, token: 'other-run' };
     fs.writeFileSync(path.join(slotDirectory, '1'), JSON.stringify(other));
-    const slots = await take({ acquire: acquireMachineSlot, readPressure: () => 'critical' });
-    expect(fs.readdirSync(slotDirectory).sort()).toEqual(['0', '1']);
-    slots.release();
+    function acquireBriefly(options) {
+      return acquireMachineSlot({ ...options, waitMs: 50, intervalMs: 10 });
+    }
+    await expect(
+      take({ acquire: acquireBriefly, readPressure: () => 'critical' })
+    ).rejects.toMatchObject({ code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' });
     expect(fs.readdirSync(slotDirectory)).toEqual(['1']);
     expect(JSON.parse(fs.readFileSync(path.join(slotDirectory, '1'), 'utf8'))).toEqual(other);
   } finally {

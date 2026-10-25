@@ -200,6 +200,14 @@ test('acquireMachineSlot timeout error carries its code, the slot name and the l
     intervalMs: 10,
   }).catch((caught) => caught);
   expect(error).toBeInstanceOf(Error);
-  expect(error).toMatchObject({ code: 'MACHINE_SLOT_TIMEOUT', name: 'browser', limit: 1 });
+  expect(error).toMatchObject({ code: 'MACHINE_SLOT_TIMEOUT', slot: 'browser', limit: 1 });
   held.release();
+});
+
+test('acquireMachineSlot waits while a holder past a lowered limit still runs', async () => {
+  writeHolder(1, { pid: process.pid, processStartTime: null, token: 'took-at-limit-2' });
+  await expect(
+    acquireMachineSlot({ name: 'browser', limit: 1, waitMs: 50, intervalMs: 10 })
+  ).rejects.toThrow('stayed busy');
+  expect(fs.existsSync(slotPath(0))).toBe(false);
 });

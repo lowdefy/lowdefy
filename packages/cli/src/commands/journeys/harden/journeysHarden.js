@@ -254,8 +254,11 @@ async function journeysHarden({ context }) {
   async function onSigint() {
     interrupted = true;
     context.logger.warn('Interrupted. Stopping development server.');
-    await server.stop();
-    slots.release();
+    try {
+      await server.stop();
+    } finally {
+      slots.release();
+    }
     process.exit(130);
   }
   process.once('SIGINT', onSigint);
@@ -272,8 +275,11 @@ async function journeysHarden({ context }) {
   } finally {
     process.removeListener('SIGINT', onSigint);
     if (!interrupted) {
-      await server.stop();
-      slots.release();
+      try {
+        await server.stop();
+      } finally {
+        slots.release();
+      }
     }
   }
   context.sendTelemetry();

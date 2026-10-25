@@ -151,8 +151,11 @@ async function test({ context }) {
       }
       interrupted = true;
       context.logger.warn('Interrupted. Stopping development server.');
-      await server.stop();
-      slots.release();
+      try {
+        await server.stop();
+      } finally {
+        slots.release();
+      }
       process.exit(exitCode);
     }
     process.once(signal, onSignal);
@@ -202,8 +205,11 @@ async function test({ context }) {
   } finally {
     signalHandlers.forEach(([signal, onSignal]) => process.removeListener(signal, onSignal));
     if (!interrupted) {
-      await server.stop();
-      slots.release();
+      try {
+        await server.stop();
+      } finally {
+        slots.release();
+      }
     }
   }
 

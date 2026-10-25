@@ -261,8 +261,11 @@ async function journeysVariants({ context }) {
       await replay({ context, written: candidates, url: server.url });
     }
   } finally {
-    await server.stop();
-    slots.release();
+    try {
+      await server.stop();
+    } finally {
+      slots.release();
+    }
   }
   context.sendTelemetry();
 }
