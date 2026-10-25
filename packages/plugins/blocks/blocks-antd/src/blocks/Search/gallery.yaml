@@ -204,7 +204,7 @@
             limit: 3
         pinned:
           title: 'Ask the assistant: {query}'
-          icon: sparkles
+          icon: Sparkles
           shortcut: mod+enter
       events:
         onSelect:
