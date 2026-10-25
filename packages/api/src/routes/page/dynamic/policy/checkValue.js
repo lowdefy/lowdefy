@@ -22,7 +22,7 @@ import isAllowedUrl from './isAllowedUrl.js';
 import isUnderState from './isUnderState.js';
 
 // How the client uses a URL value, for values no schema marks. A block schema
-// marks its URL-valued properties with urlKind (collectUrlKinds), whatever they
+// marks its URL-valued properties with urlKind (collectSchemaKinds), whatever they
 // are called, and opts a URL-named property out with urlKind: false; every
 // other value (action params, style, unmarked properties, including every
 // property of a block that marks none) is judged by these key names. url and
@@ -57,9 +57,27 @@ function listUrls({ value, urlKind }) {
   return [value];
 }
 
+// Which embedded URLs a string can carry depends on how its block draws it
+// (textKind, from the block schema). Text and HTML render no markdown and are
+// no link, so a markdown target or a protocol-relative word in them is words;
+// HTML can carry a style attribute only when the policy allows tags. A whole
+// value with a scheme the browser loads or runs is always judged, since a block
+// may still link it.
+function getUrlScans({ textKind, policy }) {
+  if (textKind === 'text') {
+    return { markdown: false, css: false, protocolRelative: false };
+  }
+  if (textKind === 'html') {
+    return { markdown: false, css: policy.html === true, protocolRelative: false };
+  }
+  return { markdown: true, css: true, protocolRelative: true };
+}
+
 function checkString({ value, key, path, walk }) {
   const { errors, policy, routes } = walk;
-  if (!policy.html && HTML_TAG.test(value)) {
+  const textKind = walk.textKinds?.get(path) ?? null;
+  // A string drawn as escaped text shows tag syntax as written.
+  if (!policy.html && textKind !== 'text' && HTML_TAG.test(value)) {
     errors.push({
       path,
       rule: 'policy.html',
@@ -96,7 +114,7 @@ function checkString({ value, key, path, walk }) {
     return;
   }
   // A URL value was judged whole above; other strings are searched.
-  findEmbeddedUrls(value).forEach((url) => {
+  findEmbeddedUrls({ value, ...getUrlScans({ textKind, policy }) }).forEach((url) => {
     if (!isAllowedUrl({ value: url, policy, navigation: false, schemeless: false, routes })) {
       errors.push({
         path,
@@ -162,7 +180,7 @@ function checkOperators({ value, key, path, walk }) {
 // under the policy's state, URL-valued and pageId values must be literal and
 // allowed, and strings must obey the html rule. walk carries the policy, the
 // app's client operators, the error list and, inside block properties, the URL
-// kinds the block's schema marks (by path).
+// and text kinds the block's schema marks (by path).
 function checkValue({ value, key = null, path, walk }) {
   if (type.isString(value)) {
     checkString({ value, key, path, walk });

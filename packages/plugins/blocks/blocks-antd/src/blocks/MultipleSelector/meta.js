@@ -114,6 +114,7 @@ export default {
               'Options can either be an array of primitive values, on an array of label, value pairs - supports html.',
             items: {
               type: 'string',
+              textKind: 'html',
             },
           },
           {
@@ -141,6 +142,7 @@ export default {
               properties: {
                 label: {
                   type: 'string',
+                  textKind: 'html',
                   description: 'Value label shown to user - supports html.',
                 },
                 value: {
@@ -272,6 +274,7 @@ export default {
       },
       title: {
         type: 'string',
+        textKind: 'html',
         description: 'Multiple selector label title - supports html.',
       },
       variant: {

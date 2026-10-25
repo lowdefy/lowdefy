@@ -108,6 +108,7 @@ const column = {
     },
     title: {
       type: 'string',
+      textKind: 'html',
       description: 'The header - supports html. Defaults to the key in sentence case.',
     },
     type: {
@@ -166,6 +167,7 @@ const column = {
     },
     headerTooltip: {
       type: 'string',
+      textKind: 'html',
       description: 'A tooltip on the header - supports html.',
     },
     rules: {
@@ -1072,6 +1074,7 @@ export default {
       },
       emptyText: {
         type: 'string',
+        textKind: 'html',
         default: 'No rows',
         description: 'What to show when there are no rows - supports html.',
       },

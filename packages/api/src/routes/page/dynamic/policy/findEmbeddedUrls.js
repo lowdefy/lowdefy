@@ -22,6 +22,12 @@ import normalizeUrlText from './normalizeUrlText.js';
 // and image targets, and CSS url()/image-set()/src() arguments after
 // unescaping. A word such as "INC:42" or "HH:mm" has the shape of a scheme but
 // names none the browser acts on, so it is text.
+//
+// The caller turns off the scans that cannot apply to how the value is drawn: a
+// property drawn as text or HTML renders no markdown, and is no link, so neither
+// a markdown target nor a protocol-relative word in it is a URL; CSS url() only
+// loads in text that can carry a style.
+
 // An allowlist of schemes, not a scheme-shaped pattern: any word may hold a colon.
 const LOADED_SCHEME = /^(https?|ftp|wss?|file|blob|filesystem|data):\S/i;
 // Script schemes run whatever follows them, spaces included.
@@ -37,18 +43,20 @@ function unescapeCss(value) {
     .replace(/\\(.)/g, '$1');
 }
 
-function findEmbeddedUrls(value) {
+function findEmbeddedUrls({ value, markdown = true, css = true, protocolRelative = true }) {
   const urls = [];
   const text = normalizeUrlText(value);
+  const isProtocolRelative = text.startsWith('//') || text.startsWith('/\\');
   const isUrlText =
-    !/\s/.test(text) &&
-    (LOADED_SCHEME.test(text) || text.startsWith('//') || text.startsWith('/\\'));
+    !/\s/.test(text) && (LOADED_SCHEME.test(text) || (protocolRelative && isProtocolRelative));
   if (isUrlText || SCRIPT_SCHEME.test(text)) {
     urls.push(text);
   }
-  for (const match of value.matchAll(MARKDOWN_INLINE)) urls.push(match[1]);
-  for (const match of value.matchAll(MARKDOWN_REFERENCE)) urls.push(match[1]);
-  if (value.includes('(')) {
+  if (markdown) {
+    for (const match of value.matchAll(MARKDOWN_INLINE)) urls.push(match[1]);
+    for (const match of value.matchAll(MARKDOWN_REFERENCE)) urls.push(match[1]);
+  }
+  if (css && value.includes('(')) {
     for (const match of unescapeCss(value).matchAll(CSS_FUNCTION)) {
       const argument = match[2].trim();
       const quoted = [...argument.matchAll(QUOTED)].map((quote) => quote[2]);

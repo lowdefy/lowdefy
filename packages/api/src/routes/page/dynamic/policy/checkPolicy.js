@@ -20,7 +20,7 @@ import { getPossibleOperators, isNestedDeeperThan, MAX_DATA_DEPTH } from '@lowde
 import getPropertiesSchemaErrors from '../getPropertiesSchemaErrors.js';
 import checkEvents from './checkEvents.js';
 import checkValue from './checkValue.js';
-import collectUrlKinds from './collectUrlKinds.js';
+import collectSchemaKinds from './collectSchemaKinds.js';
 import findSerializerKeys from './findSerializerKeys.js';
 import isUnderState from './isUnderState.js';
 
@@ -131,15 +131,29 @@ function checkBlock({ block, path, depth, walk }) {
       });
     }
   });
-  // The block schema marks which properties hold URLs.
-  const urlKinds = collectUrlKinds({
+  // The block schema marks which properties hold URLs and how it draws text.
+  const propertiesSchema = blockSchemas[block.type]?.properties?.properties;
+  const propertiesPath = `${path}.properties`;
+  const urlKinds = collectSchemaKinds({
     value: block.properties,
-    schema: blockSchemas[block.type]?.properties?.properties,
-    path: `${path}.properties`,
+    schema: propertiesSchema,
+    path: propertiesPath,
+    keyword: 'urlKind',
+  });
+  const textKinds = collectSchemaKinds({
+    value: block.properties,
+    schema: propertiesSchema,
+    path: propertiesPath,
+    keyword: 'textKind',
   });
   Object.keys(block).forEach((key) => {
     if (key.startsWith('~') || STRUCTURAL_KEYS.has(key)) return;
-    checkValue({ value: block[key], key, path: `${path}.${key}`, walk: { ...walk, urlKinds } });
+    checkValue({
+      value: block[key],
+      key,
+      path: `${path}.${key}`,
+      walk: { ...walk, urlKinds, textKinds },
+    });
   });
   if (!type.isUndefined(block.events)) {
     checkEvents({ events: block.events, path: `${path}.events`, walk });

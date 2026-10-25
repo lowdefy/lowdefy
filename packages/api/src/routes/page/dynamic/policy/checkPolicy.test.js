@@ -621,6 +621,183 @@ test('checkPolicy leaves a property the schema opts out with urlKind false to th
   ).toEqual([]);
 });
 
+// A block schema marks how it draws a string with textKind: 'html' through
+// renderHtml, 'text' as escaped text. Markdown and style are never marked.
+const textSchemas = {
+  Descriptions: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          title: { type: 'string', textKind: 'html' },
+          items: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                label: { type: 'string', textKind: 'html' },
+                value: { oneOf: [{ type: 'string', textKind: 'html' }, { type: 'number' }] },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Selector: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          options: {
+            anyOf: [
+              { type: 'array', items: { type: 'string', textKind: 'html' } },
+              {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: { label: { type: 'string', textKind: 'html' }, value: {} },
+                },
+              },
+            ],
+          },
+          placeholder: { type: 'string', textKind: 'text' },
+        },
+      },
+    },
+  },
+  Markdown: {
+    properties: {
+      properties: { type: 'object', properties: { content: { type: 'string' } } },
+    },
+  },
+};
+
+function checkText(blocks, overrides = {}) {
+  return checkPolicy({
+    routes,
+    blocks,
+    policy: { ...policy, blocks: ['Descriptions', 'Selector', 'Markdown'], ...overrides },
+    blockMetas: { ...blockMetas, Selector: { valueType: 'any' } },
+    blockSchemas: textSchemas,
+  });
+}
+
+const writtenText = [
+  'A <b>b</b> and [n](https://x.example)',
+  'See [notes](https://x.example)',
+  'background: url(https://x.example/p.gif)',
+  '//x.example',
+];
+
+test('checkPolicy reads markdown targets, CSS url() and protocol-relative words in an html-drawn property as words', () => {
+  const errors = checkText([
+    {
+      id: 'd',
+      type: 'Descriptions',
+      properties: { items: writtenText.slice(1).map((value) => ({ label: 'What', value })) },
+    },
+    {
+      id: 'form.s',
+      type: 'Selector',
+      properties: { options: [{ label: 'See [notes](https://x.example)', value: 'notes' }] },
+    },
+    {
+      id: 'form.t',
+      type: 'Selector',
+      properties: { options: ['//x.example', 'url(https://x.example/p.gif)'] },
+    },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy keeps the html rule on an html-drawn property', () => {
+  const errors = checkText([
+    {
+      id: 'd',
+      type: 'Descriptions',
+      properties: { title: 'A <b>b</b>', items: [{ label: 'What', value: writtenText[0] }] },
+    },
+    { id: 'form.s', type: 'Selector', properties: { options: [{ label: '<i>x</i>', value: 1 }] } },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.properties.title',
+    'policy.html blocks.0.properties.items.0.value',
+    'policy.html blocks.1.properties.options.0.label',
+  ]);
+  // The markdown target in the same value is words.
+  expect(
+    checkText(
+      [
+        {
+          id: 'd',
+          type: 'Descriptions',
+          properties: { items: [{ label: 'What', value: writtenText[0] }] },
+        },
+      ],
+      { html: true }
+    )
+  ).toEqual([]);
+});
+
+test('checkPolicy checks CSS url() in an html-drawn property when the policy allows tags', () => {
+  const errors = checkText(
+    [
+      {
+        id: 'd',
+        type: 'Descriptions',
+        properties: {
+          title: '<span style="background: url(https://tracker.test/p.gif)">x</span>',
+        },
+      },
+    ],
+    { html: true }
+  );
+  expect(rules(errors)).toEqual(['policy.urls blocks.0.properties.title']);
+});
+
+test('checkPolicy shows tag syntax, markdown, CSS url() and protocol-relative words in a text-drawn property as written', () => {
+  const errors = checkText(
+    writtenText.map((placeholder, index) => ({
+      id: `form.s${index}`,
+      type: 'Selector',
+      properties: { placeholder },
+    }))
+  );
+  expect(errors).toEqual([]);
+});
+
+test.each([
+  ['a script scheme', 'javascript:alert(1)'],
+  ['a script scheme with a space', 'javascript: alert(1)'],
+  ['an off-site URL', 'https://tracker.test/p.gif'],
+  ['a data URL', 'data:text/html,<b>x</b>'],
+])('checkPolicy still refuses %s as a whole marked value', (_, value) => {
+  const errors = checkText([
+    { id: 'd', type: 'Descriptions', properties: { items: [{ label: 'What', value }] } },
+    { id: 'form.s', type: 'Selector', properties: { placeholder: value } },
+  ]);
+  expect(errors.filter(({ rule }) => rule === 'policy.urls').map(({ path }) => path)).toEqual([
+    'blocks.0.properties.items.0.value',
+    'blocks.1.properties.placeholder',
+  ]);
+});
+
+test('checkPolicy keeps every check on the same text in an unmarked property or a style', () => {
+  const errors = checkText([
+    { id: 'm', type: 'Markdown', properties: { content: writtenText[0] } },
+    { id: 'n', type: 'Markdown', properties: { content: writtenText[3] } },
+    { id: 'd', type: 'Descriptions', style: { background: writtenText[2].slice(12) } },
+    { id: 'e', type: 'Descriptions', properties: { items: [{ label: 'n', value: 3 }] } },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.properties.content',
+    'policy.urls blocks.0.properties.content',
+    'policy.urls blocks.1.properties.content',
+    'policy.urls blocks.2.style.background',
+  ]);
+});
+
 // A block that marks nothing (any block without urlKind marks) is judged by key name.
 const unmarkedSchemas = {
   Card: {

@@ -45,45 +45,46 @@ function childSchemas({ schemas, key }) {
   });
 }
 
-// The urlKind the schemas give a value: a string when one marks it as a URL,
-// null when one opts it out with urlKind: false, undefined when none says.
-function findUrlKind(schemas) {
-  const marked = schemas.find((candidate) => type.isString(candidate.urlKind));
+// The kind the schemas give a value under keyword: a string when one marks it,
+// null when one opts it out with false, undefined when none says.
+function findKind({ schemas, keyword }) {
+  const marked = schemas.find((candidate) => type.isString(candidate[keyword]));
   if (marked) {
-    return marked.urlKind;
+    return marked[keyword];
   }
-  if (schemas.some((candidate) => candidate.urlKind === false)) {
+  if (schemas.some((candidate) => candidate[keyword] === false)) {
     return null;
   }
   return undefined;
 }
 
-// Records, by path, the urlKind a block schema gives the value there. A block
-// marks each URL-valued property with urlKind ('url' and 'href' navigate, 'url'
-// the way the engine's link resolver does; 'src' loads; 'srcSet' lists
-// sources), so the policy judges URLs by what a property is, not by what it is
-// called; a marked array holds one URL per item. urlKind: false records null,
-// for a property whose name looks like a URL key but whose value is not a URL.
-// A value no schema marks either way is not recorded, so the policy falls back
-// to judging it by its key name.
-function collectUrlKinds({ value, schema, path }) {
+// Records, by path, the kind a block schema gives the value there under one
+// keyword, so the policy judges a value by what its property is, not by what it
+// is called. A marked array holds one value of that kind per item; false records
+// null; a value no schema marks either way is not recorded.
+//
+// urlKind marks URL-valued properties ('url' and 'href' navigate, 'url' the way
+// the engine's link resolver does; 'src' loads; 'srcSet' lists sources), and
+// urlKind: false a property whose name looks like a URL key but whose value is
+// not a URL. textKind marks how a block draws a string: 'html' through
+// renderHtml (sanitised HTML, never markdown or a link), 'text' as escaped
+// text. Values neither marks fall back to the key-name and text rules.
+function collectSchemaKinds({ value, schema, path, keyword }) {
   const kinds = new Map();
   const pending = [{ value, schema, path }];
   while (pending.length > 0) {
     const item = pending.pop();
     const schemas = expandSchema(item.schema);
-    const urlKind = findUrlKind(schemas);
-    if (urlKind === null) {
-      // Another schema branch may already have marked it as a URL.
+    const kind = findKind({ schemas, keyword });
+    if (kind === null) {
+      // Another schema branch may already have marked it.
       if (!kinds.has(item.path)) {
         kinds.set(item.path, null);
       }
-    } else if (type.isString(urlKind)) {
-      if (type.isArray(item.value)) {
-        item.value.forEach((_, index) => kinds.set(`${item.path}.${index}`, urlKind));
-      } else {
-        kinds.set(item.path, urlKind);
-      }
+    } else if (type.isString(kind) && type.isArray(item.value)) {
+      item.value.forEach((_, index) => kinds.set(`${item.path}.${index}`, kind));
+    } else if (type.isString(kind) && !type.isObject(item.value)) {
+      kinds.set(item.path, kind);
     } else if (type.isArray(item.value)) {
       const itemSchemas = schemas.map((candidate) => candidate.items).filter(type.isObject);
       item.value.forEach((child, index) =>
@@ -92,6 +93,12 @@ function collectUrlKinds({ value, schema, path }) {
         )
       );
     } else if (type.isObject(item.value)) {
+      // An object under a branch that marks strings (an option that is a string
+      // or a { label, value } object) holds an operator, which the policy judges
+      // by this mark, or properties its other branches mark.
+      if (type.isString(kind)) {
+        kinds.set(item.path, kind);
+      }
       Object.keys(item.value).forEach((key) => {
         childSchemas({ schemas, key }).forEach((childSchema) =>
           pending.push({ value: item.value[key], schema: childSchema, path: `${item.path}.${key}` })
@@ -102,4 +109,4 @@ function collectUrlKinds({ value, schema, path }) {
   return kinds;
 }
 
-export default collectUrlKinds;
+export default collectSchemaKinds;
