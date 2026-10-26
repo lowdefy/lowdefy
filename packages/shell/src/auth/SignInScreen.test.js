@@ -18,6 +18,7 @@ import React from 'react';
 import { jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
+import createNetworkError from '../test/createNetworkError.js';
 import SignInScreen from './SignInScreen.js';
 
 const NEUTRAL = 'If this email can sign in, a code is on its way.';
@@ -177,7 +178,7 @@ test('too many codes asks for the newest code already sent', async () => {
 });
 
 test('no connection says so', async () => {
-  const sendCode = jest.fn().mockRejectedValueOnce(new TypeError('Network request failed'));
+  const sendCode = jest.fn().mockRejectedValueOnce(createNetworkError());
   await renderScreen({ auth: createAuth({ sendCode }) });
   await enterEmail();
   expect(screen.getByTestId('sign-in-error')).toHaveTextContent(

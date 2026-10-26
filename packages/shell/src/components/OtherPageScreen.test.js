@@ -31,6 +31,7 @@ function renderScreen(result = { surface: 'web' }) {
   const session = {
     apiBase: 'https://app.test',
     fetchOtherPage: jest.fn().mockResolvedValue(result),
+    getState: () => ({ lowdefy: { buildId: 'b1' } }),
   };
   return render(
     <ShellContext.Provider value={{ session }}>
@@ -63,8 +64,11 @@ test('with history it goes back after opening the browser', async () => {
   expect(router.replace).not.toHaveBeenCalled();
 });
 
-test('a failed openURL shows the not-found message, not a spinner', async () => {
+test('a failed openURL says the page could not be opened, not that it was not found', async () => {
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
   Linking.openURL.mockRejectedValue(new Error('no browser'));
   await renderScreen();
-  expect(await screen.findByTestId('shell-not-found')).toBeTruthy();
+  expect(await screen.findByTestId('shell-other-page-error')).toBeTruthy();
+  expect(screen.getByText('no browser')).toBeTruthy();
+  consoleError.mockRestore();
 });

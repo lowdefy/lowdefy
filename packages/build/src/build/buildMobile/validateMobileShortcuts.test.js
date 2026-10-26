@@ -17,9 +17,13 @@
 import { expect, test } from 'vitest';
 import validateMobileShortcuts from './validateMobileShortcuts.js';
 
+// No errors array: collectExceptions throws the first error, as a build without one would.
+const context = {};
+
 test('validateMobileShortcuts accepts up to four shortcuts', () => {
   expect(() =>
     validateMobileShortcuts({
+      context,
       shortcuts: [
         { id: 'new-job', title: 'New job', icon: 'plus', path: '/jobs/new' },
         { id: 'scan', title: 'Scan asset', subtitle: 'Read a tag' },
@@ -30,13 +34,13 @@ test('validateMobileShortcuts accepts up to four shortcuts', () => {
 
 test('validateMobileShortcuts refuses more than four shortcuts', () => {
   const shortcuts = [1, 2, 3, 4, 5].map((n) => ({ id: `s${n}`, title: `S${n}` }));
-  expect(() => validateMobileShortcuts({ shortcuts })).toThrow(
+  expect(() => validateMobileShortcuts({ context, shortcuts })).toThrow(
     'App "mobile.shortcuts" should have at most 4 shortcuts. Received 5.'
   );
 });
 
 test('validateMobileShortcuts refuses a shortcut without a title', () => {
-  expect(() => validateMobileShortcuts({ shortcuts: [{ id: 'a' }] })).toThrow(
+  expect(() => validateMobileShortcuts({ context, shortcuts: [{ id: 'a' }] })).toThrow(
     'App "mobile.shortcuts[0].title" should be a non-empty string.'
   );
 });

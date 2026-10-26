@@ -18,6 +18,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../../utils/collectExceptions.js';
 import readPngInfo from './readPngInfo.js';
 
 const ICON_SIZE = 1024;
@@ -26,31 +27,46 @@ const OPAQUE_COLOR_TYPES = [0, 2];
 
 // The App Store refuses an icon with an alpha channel or of the wrong size,
 // and only after a cloud build and an upload. Checking here fails in seconds.
-function validateShellIcon({ icon, path: configPath, configDirectory, configKey }) {
+// The size and alpha checks read the PNG, so a missing file or another format stops there.
+function validateShellIcon({ icon, path: configPath, configDirectory, configKey, context }) {
   const iconPath = path.resolve(configDirectory, icon);
   if (!fs.existsSync(iconPath) || !fs.statSync(iconPath).isFile()) {
-    throw new ConfigError(
-      `App "${configPath}" file "${icon}" does not exist. The path is relative to the config directory.`,
-      { received: icon, configKey }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "${configPath}" file "${icon}" does not exist. The path is relative to the config directory.`,
+        { received: icon, configKey }
+      )
     );
+    return;
   }
   const info = readPngInfo(fs.readFileSync(iconPath));
   if (info === null) {
-    throw new ConfigError(`App "${configPath}" file "${icon}" should be a PNG.`, {
-      received: icon,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${configPath}" file "${icon}" should be a PNG.`, {
+        received: icon,
+        configKey,
+      })
+    );
+    return;
   }
   if (info.width !== ICON_SIZE || info.height !== ICON_SIZE) {
-    throw new ConfigError(
-      `App "${configPath}" file "${icon}" should be ${ICON_SIZE}×${ICON_SIZE} pixels. Received ${info.width}×${info.height}.`,
-      { received: icon, configKey }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "${configPath}" file "${icon}" should be ${ICON_SIZE}×${ICON_SIZE} pixels. Received ${info.width}×${info.height}.`,
+        { received: icon, configKey }
+      )
     );
   }
   if (!OPAQUE_COLOR_TYPES.includes(info.colorType) || info.hasTransparencyChunk) {
-    throw new ConfigError(
-      `App "${configPath}" file "${icon}" should have no alpha channel or transparency. Save it as an RGB PNG without alpha.`,
-      { received: icon, configKey }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "${configPath}" file "${icon}" should have no alpha channel or transparency. Save it as an RGB PNG without alpha.`,
+        { received: icon, configKey }
+      )
     );
   }
 }

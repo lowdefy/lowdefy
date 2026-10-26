@@ -17,13 +17,15 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../../utils/collectExceptions.js';
+
 function getMenuItems(menus) {
   return [...(menus?.tabs ?? []), ...(menus?.drawer ?? [])];
 }
 
 // The home page, every menu item and the share page must open a page a shell
 // can show: a mobile page, or a page shared by web and mobile.
-function validateMobilePageRefs({ components }) {
+function validateMobilePageRefs({ components, context }) {
   const { mobile } = components;
   const mobilePageIds = new Set(
     components.pages
@@ -32,22 +34,31 @@ function validateMobilePageRefs({ components }) {
   );
   getMenuItems(mobile.menus).forEach((item) => {
     if (!mobilePageIds.has(item.pageId)) {
-      throw new ConfigError(
-        `Mobile menu item links to page "${item.pageId}", which is not a mobile page. List it in "mobile.pages".`,
-        { configKey: item['~k'] }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Mobile menu item links to page "${item.pageId}", which is not a mobile page. List it in "mobile.pages".`,
+          { configKey: item['~k'] }
+        )
       );
     }
   });
   if (!type.isUndefined(mobile.homePageId) && !mobilePageIds.has(mobile.homePageId)) {
-    throw new ConfigError(
-      `App "mobile.homePageId" is "${mobile.homePageId}", which is not a mobile page. List it in "mobile.pages".`,
-      { configKey: mobile['~k'] }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "mobile.homePageId" is "${mobile.homePageId}", which is not a mobile page. List it in "mobile.pages".`,
+        { configKey: mobile['~k'] }
+      )
     );
   }
   if (!type.isUndefined(mobile.share) && !mobilePageIds.has(mobile.share.pageId)) {
-    throw new ConfigError(
-      `App "mobile.share.pageId" is "${mobile.share.pageId}", which is not a mobile page. List it in "mobile.pages".`,
-      { configKey: mobile.share['~k'] ?? mobile['~k'] }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "mobile.share.pageId" is "${mobile.share.pageId}", which is not a mobile page. List it in "mobile.pages".`,
+        { configKey: mobile.share['~k'] ?? mobile['~k'] }
+      )
     );
   }
 }

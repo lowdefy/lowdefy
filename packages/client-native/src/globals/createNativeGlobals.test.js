@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { AppState, Dimensions } from 'react-native';
+import { LowdefyInternalError } from '@lowdefy/errors';
 
 import createNativeGlobals from './createNativeGlobals.js';
 
@@ -58,10 +59,11 @@ test('location.assign goes to the host and fetch is the host fetch', () => {
   expect(globals.fetch).toBe(fetch);
 });
 
-test('createNativeGlobals throws on an origin that is not a URL origin', () => {
-  expect(() =>
-    createNativeGlobals({ assign: jest.fn(), fetch: jest.fn(), getPath: () => '/', origin: 'app' })
-  ).toThrow('Native host origin is not a URL origin. Received "app".');
+test('createNativeGlobals throws a LowdefyInternalError on an origin that is not a URL origin', () => {
+  const create = () =>
+    createNativeGlobals({ assign: jest.fn(), fetch: jest.fn(), getPath: () => '/', origin: 'app' });
+  expect(create).toThrow('Native host origin is not a URL origin. Received "app".');
+  expect(create).toThrow(LowdefyInternalError);
 });
 
 test('the window size comes from Dimensions, and resize follows Dimensions changes', () => {

@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import readServerError from '../host/readServerError.js';
+
 /**
  * The app server's Better Auth routes the shell signs in and out with. Calls carry no cookie
  * (withoutCookies) and no Origin, so the server answers a sign-in with the session token in the
@@ -54,7 +56,10 @@ function createAuthApi({ apiBase, fetch, getDeviceKey, tokenStore }) {
   }
 
   function unexpected(res, what) {
-    return new Error(`The app's server answered ${res.status} to the ${what}.`);
+    return readServerError({
+      res,
+      message: `The app's server answered ${res.status} to the ${what}.`,
+    });
   }
 
   async function deviceKeyHeader() {
@@ -70,7 +75,7 @@ function createAuthApi({ apiBase, fetch, getDeviceKey, tokenStore }) {
     if (res.ok) return { status: 'sent' };
     if (res.status === 404) return { status: 'unavailable' };
     if (res.status === 429) return { status: 'rateLimited' };
-    throw unexpected(res, 'sign-in code request');
+    throw await unexpected(res, 'sign-in code request');
   }
 
   async function signInWithCode({ email, otp }) {
@@ -81,7 +86,7 @@ function createAuthApi({ apiBase, fetch, getDeviceKey, tokenStore }) {
     });
     if (res.status === 429) return { status: 'rateLimited' };
     if (res.status >= 400 && res.status < 500) return { status: 'invalid' };
-    if (!res.ok) throw unexpected(res, 'sign-in');
+    if (!res.ok) throw await unexpected(res, 'sign-in');
     const body = await res.json();
     if (body?.twoFactorRedirect === true) return { status: 'twoFactor' };
     await keepSessionToken(res);
@@ -94,7 +99,7 @@ function createAuthApi({ apiBase, fetch, getDeviceKey, tokenStore }) {
       body: { token, code_verifier: codeVerifier },
     });
     if (res.status >= 400 && res.status < 500) return { status: 'failed' };
-    if (!res.ok) throw unexpected(res, 'sign-in');
+    if (!res.ok) throw await unexpected(res, 'sign-in');
     await keepSessionToken(res);
     return { status: 'signedIn' };
   }

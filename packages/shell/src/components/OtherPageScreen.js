@@ -20,15 +20,24 @@ import { router } from 'expo-router';
 
 import LoadingScreen from './LoadingScreen.js';
 import MessageScreen from './MessageScreen.js';
+import reportShellError from '../host/reportShellError.js';
 import { useShell } from '../ShellContext.js';
 
 // A path no mobile page has. When the server has a web page there (it answers the shell with
-// { surface: 'web' }), the page opens in the system browser; otherwise it is not found.
+// { surface: 'web' }), the page opens in the system browser; otherwise it is not found. A request
+// or browser that failed is not "not found": it says so, and the fault is reported.
 function OtherPageScreen({ path, query = '' }) {
   const { session } = useShell();
   const [view, setView] = useState('loading');
+  const [loadError, setLoadError] = useState(null);
   useEffect(() => {
     let active = true;
+    function fail(error) {
+      if (!active) return;
+      reportShellError({ error, session });
+      setLoadError(error);
+      setView('failed');
+    }
     session
       .fetchOtherPage(path)
       .then((result) => {
@@ -47,16 +56,12 @@ function OtherPageScreen({ path, query = '' }) {
               // would open the browser again when the home page is itself web-only.
               setView('opened');
             })
-            .catch(() => {
-              if (active) setView('notFound');
-            });
+            .catch(fail);
           return;
         }
         setView('notFound');
       })
-      .catch(() => {
-        if (active) setView('notFound');
-      });
+      .catch(fail);
     return () => {
       active = false;
     };
@@ -68,6 +73,16 @@ function OtherPageScreen({ path, query = '' }) {
         body="This page is on the web, not in the app."
         testID="shell-opened-in-browser"
         title="Opened in your browser"
+      />
+    );
+  }
+  if (view === 'failed') {
+    return (
+      <MessageScreen
+        action={{ title: 'Go home', onPress: () => router.replace('/') }}
+        body={loadError?.message}
+        testID="shell-other-page-error"
+        title="This page could not be opened"
       />
     );
   }

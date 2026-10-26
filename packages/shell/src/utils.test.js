@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
+
 import checkTypeSet from './types/checkTypeSet.js';
 import compareVersions from './version/compareVersions.js';
 import getAppApiBase from './config/getAppApiBase.js';
@@ -60,11 +62,13 @@ test('getAppApiBase reads the url for the shell environment', () => {
   expect(() => getAppApiBase({ app, environment: 'staging' })).toThrow(
     'Shell app "field" has no url for environment "staging". Received {"production":"https://field.example.com/"}.'
   );
+  expect(() => getAppApiBase({ app, environment: 'staging' })).toThrow(LowdefyInternalError);
 });
 
 test('getOrigin reads the origin of the app url', () => {
   expect(getOrigin('http://192.168.1.4:3000/app')).toBe('http://192.168.1.4:3000');
   expect(() => getOrigin('field.example.com')).toThrow('Shell app url is not an absolute URL.');
+  expect(() => getOrigin('field.example.com')).toThrow(LowdefyInternalError);
 });
 
 test('isOnline treats unknown reachability as online', () => {

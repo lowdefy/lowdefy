@@ -18,10 +18,12 @@ import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
 import callEndpoint from '../native/callEndpoint.js';
+import reportShellError from '../host/reportShellError.js';
 
 // The Expo push token, for an app that sends through Expo's push service. A shell without an EAS
-// project has none.
-async function getExpoToken(projectId) {
+// project has none. Without it the native token is still registered, so a failure is reported and
+// the registration goes on.
+async function getExpoToken({ projectId, session }) {
   if (typeof projectId !== 'string') {
     return null;
   }
@@ -29,6 +31,7 @@ async function getExpoToken(projectId) {
     const { data } = await Notifications.getExpoPushTokenAsync({ projectId });
     return data;
   } catch (error) {
+    reportShellError({ error, session });
     return null;
   }
 }
@@ -55,7 +58,7 @@ async function registerPushToken({ app, token }) {
   const nativeToken = token ?? (await Notifications.getDevicePushTokenAsync()).data;
   const registration = {
     token: nativeToken,
-    expoToken: await getExpoToken(app.shell.easProjectId),
+    expoToken: await getExpoToken({ projectId: app.shell.easProjectId, session: app.session }),
     platform: Platform.OS,
     provider: Platform.OS === 'ios' ? 'apns' : 'fcm',
     shellId: app.shell.id,

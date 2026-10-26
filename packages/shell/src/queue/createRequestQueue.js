@@ -16,19 +16,12 @@
 
 import { getAuthorizationHeaders } from '@lowdefy/client-core';
 
-import isNetworkError from './isNetworkError.js';
+import isNetworkError from '../host/isNetworkError.js';
+import readServerError from '../host/readServerError.js';
+import reportShellError from '../host/reportShellError.js';
 import summarizeQueue from './summarizeQueue.js';
 
 const QUEUED_MESSAGE = 'Queued until the phone is back online.';
-
-async function readError(res) {
-  try {
-    const body = await res.json();
-    return body?.message ?? body?.error?.message ?? `The server answered ${res.status}.`;
-  } catch (error) {
-    return `The server answered ${res.status}.`;
-  }
-}
 
 /**
  * The offline request queue: the host's `requestQueue`, which `offline: queue` requests go through
@@ -119,7 +112,8 @@ function createRequestQueue({
     await queueStore.update({
       id: item.id,
       status: 'failed',
-      error: await readError(res),
+      error: (await readServerError({ res, message: `The server answered ${res.status}.` }))
+        .message,
       attempts: item.attempts + 1,
     });
     return 'failed';
@@ -190,9 +184,11 @@ function createRequestQueue({
 
   // Replays at launch and whenever the shell comes back online. Returns the function that stops it.
   function start() {
-    replay().catch(() => {});
+    // No action waits on these replays: a fault (a store that cannot be read) is reported.
+    const report = (error) => reportShellError({ error });
+    replay().catch(report);
     return networkStatus.subscribe((online) => {
-      if (online) replay().catch(() => {});
+      if (online) replay().catch(report);
     });
   }
 

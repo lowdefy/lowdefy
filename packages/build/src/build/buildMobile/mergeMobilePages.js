@@ -17,6 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../../utils/collectExceptions.js';
+
 // The page config without build markers (~k, ~r, ~l), which differ between two
 // _refs to the same file.
 function pageConfigSignature(page) {
@@ -28,7 +30,7 @@ function pageConfigSignature(page) {
 // with a target, so routes, auth, requests and page writes treat it as any
 // other page. A mobile page with the id of a web page is that page shared: it
 // is built once, with target "both", and must be the same config.
-function mergeMobilePages({ components }) {
+function mergeMobilePages({ components, context }) {
   const webPages = new Map();
   components.pages.forEach((page) => {
     if (type.isString(page.id) && !webPages.has(page.id)) {
@@ -43,10 +45,14 @@ function mergeMobilePages({ components }) {
       return;
     }
     if (pageConfigSignature(webPage) !== pageConfigSignature(page)) {
-      throw new ConfigError(
-        `Page "${page.id}" is in both "pages" and "mobile.pages" with different config. A page shared by web and mobile must be the same config, for example the same _ref.`,
-        { configKey: page['~k'] }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Page "${page.id}" is in both "pages" and "mobile.pages" with different config. A page shared by web and mobile must be the same config, for example the same _ref.`,
+          { configKey: page['~k'] }
+        )
       );
+      return;
     }
     webPage.target = 'both';
   });

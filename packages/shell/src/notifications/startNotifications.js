@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import handleNotificationResponse from './handleNotificationResponse.js';
 import refreshWidgets from '../widgets/refreshWidgets.js';
 import registerPushToken from './registerPushToken.js';
+import reportShellError from '../host/reportShellError.js';
 import toCategoryActions from './toCategoryActions.js';
 import toNotificationEvent from './toNotificationEvent.js';
 
@@ -39,12 +40,15 @@ function startNotifications({ app }) {
   let registeredCategories = null;
   // The response that launched the app can also reach the listener: each is handled once.
   const handled = new Set();
+  function report(error) {
+    reportShellError({ error, session: app.session });
+  }
   function respond(response) {
     const key = `${response.notification.request.identifier}:${response.actionIdentifier}`;
     if (handled.has(key)) return;
     handled.add(key);
     // A button's endpoint call and the path it opens need the token and the root.
-    app.ready.then(() => handleNotificationResponse({ app, response })).catch(() => {});
+    app.ready.then(() => handleNotificationResponse({ app, response })).catch(report);
   }
 
   function applyRoot() {
@@ -59,7 +63,7 @@ function startNotifications({ app }) {
         toCategoryActions(category.actions)
       ).catch(() => {});
     });
-    registerPushToken({ app }).catch(() => {});
+    registerPushToken({ app }).catch(report);
   }
 
   Notifications.setNotificationHandler({
@@ -84,14 +88,14 @@ function startNotifications({ app }) {
     }),
     Notifications.addNotificationResponseReceivedListener(respond),
     Notifications.addPushTokenListener(({ data }) => {
-      registerPushToken({ app, token: data }).catch(() => {});
+      registerPushToken({ app, token: data }).catch(report);
     })
   );
   const unsubscribe = app.session.subscribe(applyRoot);
   applyRoot();
   // A sign-in after the app opened registers the token for the person who signed in.
   const unsubscribeToken = app.tokenStore.subscribe((token) => {
-    if (token !== null) registerPushToken({ app }).catch(() => {});
+    if (token !== null) registerPushToken({ app }).catch(report);
   });
 
   const launching = Notifications.getLastNotificationResponse();

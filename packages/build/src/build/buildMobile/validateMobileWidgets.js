@@ -29,26 +29,40 @@ const LAYOUTS = ['count', 'list'];
 
 // mobile.widgets: the sources a shell's Home Screen and Lock Screen widgets show. The person picks
 // one when adding a widget; the shell fetches its endpoint and hands the answer to the layout.
-function validateMobileWidgets({ widgets, configKey }) {
+function validateMobileWidgets({ widgets, configKey, context }) {
   const path = 'mobile.widgets';
-  checkArray({ value: widgets, path, configKey });
+  if (!checkArray({ value: widgets, path, configKey, context })) {
+    return;
+  }
+  let itemsAreObjects = true;
   widgets.forEach((widget, index) => {
     const widgetPath = `${path}[${index}]`;
-    checkObject({ value: widget, path: widgetPath, configKey });
+    if (!checkObject({ value: widget, path: widgetPath, configKey, context })) {
+      itemsAreObjects = false;
+      return;
+    }
     const key = widget['~k'] ?? configKey;
-    checkKeys({ object: widget, allowed: WIDGET_KEYS, path: widgetPath, configKey: key });
-    checkString({ value: widget.id, path: `${widgetPath}.id`, configKey: key });
-    checkString({ value: widget.title, path: `${widgetPath}.title`, configKey: key });
-    checkString({ value: widget.endpointId, path: `${widgetPath}.endpointId`, configKey: key });
+    checkKeys({ object: widget, allowed: WIDGET_KEYS, path: widgetPath, configKey: key, context });
+    checkString({ value: widget.id, path: `${widgetPath}.id`, configKey: key, context });
+    checkString({ value: widget.title, path: `${widgetPath}.title`, configKey: key, context });
+    checkString({
+      value: widget.endpointId,
+      path: `${widgetPath}.endpointId`,
+      configKey: key,
+      context,
+    });
     checkOptionalEnum({
       value: widget.layout,
       allowed: LAYOUTS,
       path: `${widgetPath}.layout`,
       configKey: key,
+      context,
     });
-    checkOptionalPath({ value: widget.path, path: `${widgetPath}.path`, configKey: key });
+    checkOptionalPath({ value: widget.path, path: `${widgetPath}.path`, configKey: key, context });
   });
-  checkUniqueIds({ items: widgets, path, configKey });
+  if (itemsAreObjects) {
+    checkUniqueIds({ items: widgets, path, configKey, context });
+  }
 }
 
 export default validateMobileWidgets;

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import reportShellError from '../../host/reportShellError.js';
+
 // The most posts the backlog keeps; older ones are dropped first, so a phone left offline for days
 // does not fill its store.
 const MAX_ENTRIES = 500;
@@ -37,7 +39,7 @@ function createBacklog({ key, kv }) {
     add(entry) {
       write([...read(), entry]);
     },
-    // Sends every kept post with `send`, stopping at the first failure; the rest stay.
+    // Sends every kept post with `send`, stopping at the first failure (reported); the rest stay.
     async flush(send) {
       const entries = read();
       let sent = 0;
@@ -45,6 +47,7 @@ function createBacklog({ key, kv }) {
         try {
           await send(entry);
         } catch (error) {
+          reportShellError({ error });
           break;
         }
         sent += 1;

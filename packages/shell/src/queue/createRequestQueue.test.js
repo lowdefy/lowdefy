@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import createNetworkError from '../test/createNetworkError.js';
 import createRequestQueue from './createRequestQueue.js';
 
 function createMemoryQueueStore() {
@@ -107,13 +108,27 @@ test('an online request sends at once, and is kept when the send fails for the n
     queue.send({
       ...call('b'),
       send: async () => {
-        throw new TypeError('Network request failed');
+        throw createNetworkError();
       },
     })
   ).resolves.toEqual(
     expect.objectContaining({ response: expect.objectContaining({ queued: true }) })
   );
   expect((await queue.get()).pending).toBe(1);
+});
+
+test('a fault in the send path is thrown, not queued as waiting for the network', async () => {
+  const { queue } = setup();
+  const fault = new TypeError("Cannot read properties of undefined (reading 'json')");
+  await expect(
+    queue.send({
+      ...call('b'),
+      send: async () => {
+        throw fault;
+      },
+    })
+  ).rejects.toBe(fault);
+  expect((await queue.get()).pending).toBe(0);
 });
 
 test('the queue replays in order when the phone comes back online, with the stored body and build', async () => {
@@ -158,9 +173,24 @@ test('a refused request is marked failed with the server message, and the replay
   );
 });
 
+test('a refused request keeps the message of the server error it carries', async () => {
+  const fetch = jest.fn().mockResolvedValueOnce(
+    response(400, {
+      '~e': { name: 'RequestError', message: 'The job is closed.', isLowdefyError: true },
+    })
+  );
+  const { networkStatus, queue } = setup({ online: false, fetch });
+  await queue.send({ ...call('close'), send: jest.fn() });
+  networkStatus.set(true);
+  await queue.replay();
+  expect((await queue.get()).items[0]).toEqual(
+    expect.objectContaining({ status: 'failed', error: 'The job is closed.' })
+  );
+});
+
 test('a network failure during the replay stops it and keeps the request pending', async () => {
   const fetch = jest.fn(async () => {
-    throw new TypeError('Network request failed');
+    throw createNetworkError();
   });
   const { networkStatus, queue } = setup({ online: false, fetch });
   await queue.send({ ...call('save'), send: jest.fn() });

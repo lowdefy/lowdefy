@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import { getCurrentApp } from '../native/currentApp.js';
 import registerPushToken from './registerPushToken.js';
+import reportShellError from '../host/reportShellError.js';
 import toScheduleRequest from './toScheduleRequest.js';
 
 /**
@@ -47,7 +48,10 @@ function createNotificationsFeature() {
     async requestPermission() {
       const { granted, status } = await Notifications.requestPermissionsAsync();
       if (granted) {
-        registerPushToken({ app: await getCurrentApp() }).catch(() => {});
+        const app = await getCurrentApp();
+        registerPushToken({ app }).catch((error) =>
+          reportShellError({ error, session: app.session })
+        );
       }
       return { granted, status };
     },

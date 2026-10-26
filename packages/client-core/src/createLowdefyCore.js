@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { translate, type } from '@lowdefy/helpers';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 
@@ -55,11 +56,13 @@ const HOST_KEYS = [
 // basePath keeps its routing meaning (history URLs and storage keys).
 function createLowdefyCore({ apiBase, auth, basePath, host, lowdefy, rootConfig, types }) {
   if (!type.isObject(host)) {
-    throw new Error(`Lowdefy client host is not an object. Received ${JSON.stringify(host)}.`);
+    throw new LowdefyInternalError(
+      `Lowdefy client host is not an object. Received ${JSON.stringify(host)}.`
+    );
   }
   const missing = HOST_KEYS.filter((key) => !(key in host));
   if (missing.length > 0) {
-    throw new Error(`Lowdefy client host is missing ${missing.join(', ')}.`);
+    throw new LowdefyInternalError(`Lowdefy client host is missing ${missing.join(', ')}.`);
   }
   validateAuthTransport({ host });
   // The path memory lasts the session. A dev config reload clears initialised

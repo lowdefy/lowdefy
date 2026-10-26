@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
+
 // The parts of an origin ('https://app.example.com:8443') the _location operator reads.
 function parseOrigin(origin) {
   const match = /^([a-z][a-z0-9+.-]*:)\/\/(([^:/]+)(?::(\d+))?)$/i.exec(origin);
   if (match === null) {
-    throw new Error(`Native host origin is not a URL origin. Received ${JSON.stringify(origin)}.`);
+    throw new LowdefyInternalError(
+      `Native host origin is not a URL origin. Received ${JSON.stringify(origin)}.`
+    );
   }
   return { host: match[2], hostname: match[3], port: match[4] ?? '', protocol: match[1] };
 }

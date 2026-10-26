@@ -18,17 +18,31 @@ import { checkKeys, checkObject, checkOptionalNumber, checkString } from './mobi
 
 // mobile.background: the endpoint a shell calls from background fetch while the app is closed, and
 // the shortest interval between runs in minutes (the phone decides the real timing; at least 15).
-function validateMobileBackground({ background, configKey }) {
+function validateMobileBackground({ background, configKey, context }) {
   const path = 'mobile.background';
-  checkObject({ value: background, path, configKey });
+  if (!checkObject({ value: background, path, configKey, context })) {
+    return;
+  }
   const key = background['~k'] ?? configKey;
-  checkKeys({ object: background, allowed: ['endpointId', 'interval'], path, configKey: key });
-  checkString({ value: background.endpointId, path: `${path}.endpointId`, configKey: key });
+  checkKeys({
+    object: background,
+    allowed: ['endpointId', 'interval'],
+    path,
+    configKey: key,
+    context,
+  });
+  checkString({
+    value: background.endpointId,
+    path: `${path}.endpointId`,
+    configKey: key,
+    context,
+  });
   checkOptionalNumber({
     value: background.interval,
     minimum: 15,
     path: `${path}.interval`,
     configKey: key,
+    context,
   });
 }
 

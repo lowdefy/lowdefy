@@ -18,12 +18,14 @@ import { checkKeys, checkObject, checkString } from './mobileChecks.js';
 
 // mobile.share: the page a shell with the share extension opens when text, links, images or files
 // are shared into it.
-function validateMobileShare({ share, configKey }) {
+function validateMobileShare({ share, configKey, context }) {
   const path = 'mobile.share';
-  checkObject({ value: share, path, configKey });
+  if (!checkObject({ value: share, path, configKey, context })) {
+    return;
+  }
   const key = share['~k'] ?? configKey;
-  checkKeys({ object: share, allowed: ['pageId'], path, configKey: key });
-  checkString({ value: share.pageId, path: `${path}.pageId`, configKey: key });
+  checkKeys({ object: share, allowed: ['pageId'], path, configKey: key, context });
+  checkString({ value: share.pageId, path: `${path}.pageId`, configKey: key, context });
 }
 
 export default validateMobileShare;

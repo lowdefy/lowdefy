@@ -15,8 +15,13 @@
 */
 
 import { getDevError } from '@lowdefy/engine';
-import { expectedErrorNames } from '@lowdefy/errors';
+import { isExpectedError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
+
+// A native core lives for the whole app session, and every server failure adds
+// its own requestId to the key, so the set is cleared once it holds this many.
+// An error logged again after that is shown again, never lost.
+const LOGGED_ERRORS_LIMIT = 500;
 
 function createHandleError(lowdefy) {
   const loggedErrors = new Set();
@@ -40,13 +45,16 @@ function createHandleError(lowdefy) {
     if (loggedErrors.has(errorKey)) {
       return;
     }
+    if (loggedErrors.size >= LOGGED_ERRORS_LIMIT) {
+      loggedErrors.clear();
+    }
     loggedErrors.add(errorKey);
 
     // An expected outcome - a UserError, or an auth gate's refusal the server
     // already logged as one warning line - logs to the browser console only,
     // never sent to the server or the error bar. Matched by name, not
     // instanceof: plugins bundle their own @lowdefy/errors copy.
-    if (expectedErrorNames.has(error?.name)) {
+    if (isExpectedError(error)) {
       logger.error(shown);
       return;
     }

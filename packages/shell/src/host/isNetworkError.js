@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-// A send that never reached the server: fetch rejects with a TypeError ("Network request failed")
-// when there is no connection, and Lowdefy Dev's offline injection does the same.
+// A call that never reached the server: the platform's fetch rejected (no connection, a DNS or TLS
+// failure, Lowdefy Dev's offline injection), which every shell call marks at the one fetch it goes
+// through (withNetworkErrors). A TypeError thrown after a response arrived is a fault, not this.
 function isNetworkError(error) {
-  return error instanceof TypeError;
+  return error?.isNetworkError === true;
 }
 
 export default isNetworkError;

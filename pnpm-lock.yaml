@@ -3099,6 +3099,9 @@ importers:
       '@lowdefy/engine':
         specifier: 7.1.0
         version: link:../engine
+      '@lowdefy/errors':
+        specifier: 7.1.0
+        version: link:../utils/errors
       '@lowdefy/helpers':
         specifier: 7.1.0
         version: link:../utils/helpers
