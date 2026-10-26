@@ -32,6 +32,13 @@ async function fileUpload({ file, methods, hasDownloadRequest, imageSrc }) {
   if (type.isNone(file)) {
     return;
   }
+  if (!type.isNone(imageSrc) && !type.isFunction(imageSrc)) {
+    throw new Error(
+      `Tiptap "imageSrc" must be a function, such as a _function operator. Received ${JSON.stringify(
+        imageSrc
+      )}.`
+    );
+  }
   const descriptor = await getUploadPolicy({ methods, file });
   file.bucket = descriptor.bucket;
   file.key = descriptor.key;

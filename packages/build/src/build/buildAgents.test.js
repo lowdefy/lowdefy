@@ -312,6 +312,36 @@ test('buildAgents throws when tool endpoint does not exist', () => {
   );
 });
 
+test('buildAgents throws when a tool endpoint is a link endpoint', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:files',
+        endpointId: 'files',
+        type: 'Api',
+        link: true,
+        description: 'A file link',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['files'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Endpoint "files" is a link endpoint. A link endpoint answers only a GET with a redirect, so it cannot be an agent tool.'
+  );
+});
+
 test('buildAgents matches connectionId against connection.connectionId (post-buildConnections)', () => {
   const context = testContext();
   // After buildConnections, connections have both id (prefixed) and connectionId (original)

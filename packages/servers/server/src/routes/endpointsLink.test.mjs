@@ -104,3 +104,9 @@ test('any method but GET and POST answers 405', async () => {
   expect(res.status).toBe(405);
   expect(mockRunLinkEndpoint).not.toHaveBeenCalled();
 });
+
+test('a GET with a malformed percent escape answers 400 without running the link', async () => {
+  const res = await createApp().request('/api/endpoints/files/100%ZZ.png');
+  expect(res.status).toBe(400);
+  expect(mockRunLinkEndpoint).not.toHaveBeenCalled();
+});

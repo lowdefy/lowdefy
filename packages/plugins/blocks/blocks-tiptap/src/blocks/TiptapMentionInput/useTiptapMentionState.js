@@ -30,7 +30,10 @@ function useTiptapMentionState({ value, methods, hasDownloadRequest, imageSrc })
     filter: 'img',
     replacement: (content, node) => {
       const src = node.getAttribute('src');
-      return `![${content}](${encodeURI(src)})`;
+      // encodeURI escapes the spaces and brackets markdown cannot hold, but also the % of an
+      // escape already in the src (an imageSrc built with __uri.encode), so restore those.
+      const markdownSrc = encodeURI(src).replace(/%25([0-9A-Fa-f]{2})/g, '%$1');
+      return `![${content}](${markdownSrc})`;
     },
   });
 

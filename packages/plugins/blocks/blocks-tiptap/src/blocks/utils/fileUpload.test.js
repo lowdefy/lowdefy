@@ -87,3 +87,14 @@ test('with neither imageSrc nor a download request the legacy object URL is used
   expect(src).toBe('https://files.s3.amazonaws.com/log-events/2024/x y+z.png');
   expect(methods.triggerEvent).not.toHaveBeenCalled();
 });
+
+test('imageSrc that is not a function throws before the upload', async () => {
+  mockUploadFile.mockClear();
+  const methods = createMethods();
+  const file = { name: 'x.png', type: 'image/png' };
+  await expect(
+    fileUpload({ file, methods, hasDownloadRequest: true, imageSrc: '/api/endpoints/files/x.png' })
+  ).rejects.toThrow('Tiptap "imageSrc" must be a function');
+  expect(mockUploadFile).not.toHaveBeenCalled();
+  expect(methods.triggerEvent).not.toHaveBeenCalled();
+});

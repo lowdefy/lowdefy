@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // Finds the link endpoint a GET path names. linkEndpoints is the build's linkEndpoints.json,
 // longest id first, so a nested id ("a/b") wins over a shorter id it starts with ("a"). The
 // segments after the id, joined with "/", are the path the routine receives; it may be empty.
@@ -22,7 +24,7 @@ function matchLinkEndpoint({ linkEndpoints, segments }) {
   const match = linkEndpoints.find((linkEndpoint) =>
     linkEndpoint.segments.every((segment, index) => segments[index] === segment)
   );
-  if (match === undefined) {
+  if (type.isNone(match)) {
     return null;
   }
   return {
