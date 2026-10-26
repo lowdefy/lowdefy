@@ -651,7 +651,7 @@ const textSchemas = {
         properties: {
           options: {
             anyOf: [
-              { type: 'array', items: { type: 'string', textKind: 'html' } },
+              { type: 'array', items: { type: 'string' } },
               {
                 type: 'array',
                 items: {
@@ -702,13 +702,22 @@ test('checkPolicy reads markdown targets, CSS url() and protocol-relative words 
       type: 'Selector',
       properties: { options: [{ label: 'See [notes](https://x.example)', value: 'notes' }] },
     },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy keeps every check on a string option, since it is also the value written to state', () => {
+  const errors = checkText([
     {
       id: 'form.t',
       type: 'Selector',
       properties: { options: ['//x.example', 'url(https://x.example/p.gif)'] },
     },
   ]);
-  expect(errors).toEqual([]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.options.0',
+    'policy.urls blocks.0.properties.options.1',
+  ]);
 });
 
 test('checkPolicy keeps the html rule on an html-drawn property', () => {

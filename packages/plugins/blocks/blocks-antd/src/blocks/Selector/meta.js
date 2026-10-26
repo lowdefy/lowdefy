@@ -106,7 +106,6 @@ export default {
               'Options can either be an array of primitive values, on an array of label, value pairs - supports html.',
             items: {
               type: 'string',
-              textKind: 'html',
             },
           },
           {
