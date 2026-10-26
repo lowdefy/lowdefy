@@ -37,10 +37,13 @@ const webPattern = /^https?:\/\//i;
  *
  * Every pressed link, link chips included, runs `onLinkPress` when the host block gives one.
  * Without it a web link opens in the in-app browser (expo-web-browser, its controls in the tint)
- * and any other link (mail, phone) through the system, and a chip is not pressable.
+ * and any other link (mail, phone) through the system, and a chip is not pressable. A path, in a
+ * link or an image, is taken against the app server as a browser on the app's page would
+ * (components.resolveUrl).
  *
  * @param {Object} props
- * @param {Object} props.components The host block's components (components.Icon for chip icons).
+ * @param {Object} props.components The host block's components (components.Icon for chip icons,
+ *   components.resolveUrl for paths).
  * @param {string} props.content
  * @param {Object[]} [props.linkChips] Links drawn as inline chips, by scheme or pattern
  *   (schemas/linkChips).
@@ -64,19 +67,22 @@ function MarkdownContent({
     theme,
   } = useMemo(() => getMarkdownStyles({ isDark, tokens }), [isDark, tokens]);
   const tokenizer = useMemo(() => new MarkdownTokenizer(), []);
+  const { resolveUrl } = components;
   const openLink = useCallback(
     (href) => {
       if (onLinkPress !== null) {
         onLinkPress(href);
         return;
       }
-      if (webPattern.test(href)) {
-        WebBrowser.openBrowserAsync(href, { controlsColor: tokens.colorTint });
+      const url = resolveUrl(href);
+      if (webPattern.test(url)) {
+        WebBrowser.openBrowserAsync(url, { controlsColor: tokens.colorTint });
         return;
       }
-      Linking.openURL(href);
+      // A scheme no app on the phone opens (an unknown `slack:`) rejects; the press does nothing.
+      Linking.openURL(url).catch(() => {});
     },
-    [onLinkPress, tokens.colorTint]
+    [onLinkPress, resolveUrl, tokens.colorTint]
   );
   const renderer = useMemo(
     () =>
@@ -86,9 +92,10 @@ function MarkdownContent({
         onChipPress: onLinkPress === null ? null : openLink,
         onLinkPress: openLink,
         palette,
+        resolveUrl,
         skipHtml,
       }),
-    [components.Icon, linkChips, onLinkPress, openLink, palette, skipHtml]
+    [components.Icon, linkChips, onLinkPress, openLink, palette, resolveUrl, skipHtml]
   );
   const elements = useMarkdown(content ?? '', {
     colorScheme: isDark ? 'dark' : 'light',

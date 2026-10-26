@@ -21,6 +21,7 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `globals/createNativeGlobals.js`                                 | Host globals: route `location`, `Dimensions`, `AppState`, network events     |
 | `globals/createScreenGlobals.js`                                 | One screen's globals: the app's, with `location` the screen's own route      |
 | `link/setupLink.js`                                              | Page links through the host router, others through `Linking`                 |
+| `link/createResolveUrl.js`                                       | `components.resolveUrl`: a path taken against the app server, as a browser   |
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
 | `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                |
 | `screen/HeaderBottom.js`, `getHeaderBottomMotion.js`             | A Screen's headerBottom, pinned under the header by the page's scroll offset |

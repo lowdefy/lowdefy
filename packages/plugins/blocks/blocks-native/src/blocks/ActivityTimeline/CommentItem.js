@@ -222,6 +222,7 @@ function CommentItem({ comment, ctx, first, thread }) {
             onRecordPress={ctx.onRecordPress}
             pattern={ctx.pattern}
             people={ctx.people}
+            resolveUrl={ctx.resolveUrl}
             tokens={tokens}
           />
         </Pressable>

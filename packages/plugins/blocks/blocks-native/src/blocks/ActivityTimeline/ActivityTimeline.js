@@ -183,13 +183,14 @@ function ActivityTimeline({
           trigger('onLinkPress', { href });
           return;
         }
-        Linking.openURL(href);
+        Linking.openURL(components.resolveUrl(href)).catch(() => {});
       },
       onRecordPress: (key) => trigger('onOpenRecord', { key }),
       pattern,
       people,
       reactions: properties.reactions ?? REACTIONS,
       repliesShown: properties.repliesShown ?? 3,
+      resolveUrl: components.resolveUrl,
       tokens,
       trigger,
       user: properties.user,
@@ -197,6 +198,7 @@ function ActivityTimeline({
     [
       colors,
       components.Icon,
+      components.resolveUrl,
       hasLinkPress,
       isDark,
       mentionFormat,

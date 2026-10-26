@@ -127,6 +127,79 @@ test('a Markdown without onLinkPress opens a mail link through the system', asyn
   expect(WebBrowser.openBrowserAsync).not.toHaveBeenCalled();
 });
 
+test('a Markdown without onLinkPress opens an app path in the in-app browser on the app server', async () => {
+  const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  await renderPage({
+    pageConfig: page([
+      { id: 'body', type: 'Markdown', properties: { content: '[Orders](/orders/42)' } },
+    ]),
+  });
+  await press(await screen.findByText('Orders'));
+  expect(WebBrowser.openBrowserAsync).toHaveBeenCalledWith('https://app.lowdefy.test/orders/42', {
+    controlsColor: theme.light.colorPrimary,
+  });
+  expect(openURL).not.toHaveBeenCalled();
+});
+
+test('a Markdown draws an image from the app server, sized to the image once it loads', async () => {
+  await renderPage({
+    pageConfig: page([
+      {
+        id: 'body',
+        type: 'Markdown',
+        properties: {
+          content:
+            'Before ![Site plan](/public/plan.png) after\n\n![Logo](https://cdn.test/logo.svg)',
+        },
+      },
+    ]),
+  });
+  const [plan, logo] = await screen.findAllByTestId('markdown-image');
+  expect(plan.props.source).toEqual({ uri: 'https://app.lowdefy.test/public/plan.png' });
+  expect(plan.props.accessibilityLabel).toBe('Site plan');
+  expect(logo.props.source).toEqual({ uri: 'https://cdn.test/logo.svg' });
+  expect(styleOf(plan).height).toBeGreaterThan(0);
+  await act(async () => {
+    fireEvent(plan, 'load', { cacheType: 'none', source: { height: 300, width: 600 } });
+  });
+  expect(styleOf(screen.getAllByTestId('markdown-image')[0])).toMatchObject({
+    aspectRatio: 2,
+    maxWidth: 600,
+    width: '100%',
+  });
+  expect(screen.getByText(/Before/)).toBeTruthy();
+  expect(screen.getByText(/after/)).toBeTruthy();
+});
+
+test('a Markdown image that fails to load shows its alt text', async () => {
+  await renderPage({
+    pageConfig: page([
+      { id: 'body', type: 'Markdown', properties: { content: '![Site plan](/missing.png)' } },
+    ]),
+  });
+  const image = await screen.findByTestId('markdown-image');
+  await act(async () => {
+    fireEvent(image, 'error', { error: 'not found' });
+  });
+  expect(screen.queryByTestId('markdown-image')).toBeNull();
+  expect(styleOf(screen.getByText('Site plan')).color).toBe(ios.light.colorSecondaryLabel);
+});
+
+test('a Markdown linked image presses through onLinkPress', async () => {
+  const { calls } = await renderPage({
+    pageConfig: page([
+      {
+        id: 'body',
+        type: 'Markdown',
+        properties: { content: '[![Site plan](/plan.png)](https://a.test/plan)' },
+        events: { onLinkPress: record('link') },
+      },
+    ]),
+  });
+  await press(await screen.findByRole('link', { name: 'Site plan' }));
+  expect(calls.map((call) => call.event.href)).toContain('https://a.test/plan');
+});
+
 test('a Markdown fires onLinkPress for every link, wherever it sits', async () => {
   const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
   const { calls } = await renderPage({

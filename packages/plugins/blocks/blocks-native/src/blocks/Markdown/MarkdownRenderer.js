@@ -24,6 +24,7 @@ import getNodeText from './getNodeText.js';
 import layoutLinkChips from './layoutLinkChips.js';
 import LinkChip from './LinkChip.js';
 import MarkdownCode from './MarkdownCode.js';
+import MarkdownImage from './MarkdownImage.js';
 import MarkdownList from './MarkdownList.js';
 import MarkdownTable from './MarkdownTable.js';
 import restyleText from './restyleText.js';
@@ -38,16 +39,18 @@ const QUOTE_PADDING = 12;
 // rounded card, quotes with a tint bar, tables in a rounded box and links in the tint. A link
 // that matches one of `linkChips` (by scheme or pattern) is a chip (LinkChip), laid out with its
 // line as a word of it (layoutLinkChips). Every link is pressed through onLinkPress; chips only
-// when onChipPress is given. Raw html is drawn as its source text, as the web block escapes it,
-// or dropped with skipHtml.
+// when onChipPress is given. Images load through MarkdownImage, their url taken against the app
+// server (resolveUrl). Raw html is drawn as its source text, as the web block escapes it, or
+// dropped with skipHtml.
 class MarkdownRenderer extends Renderer {
-  constructor({ Icon, linkChips = [], onChipPress, onLinkPress, palette, skipHtml }) {
+  constructor({ Icon, linkChips = [], onChipPress, onLinkPress, palette, resolveUrl, skipHtml }) {
     super();
     this.Icon = Icon;
     this.linkChips = linkChips;
     this.onChipPress = onChipPress;
     this.onLinkPress = onLinkPress;
     this.palette = palette;
+    this.resolveUrl = resolveUrl;
     this.skipHtml = skipHtml;
   }
 
@@ -185,12 +188,10 @@ class MarkdownRenderer extends Renderer {
   }
 
   image(uri, alt, style, title) {
+    const resolved = this.resolveUrl(uri);
     return (
-      <View
-        key={this.getKey()}
-        style={{ borderRadius: 10, marginBottom: this.palette.blockSpace, overflow: 'hidden' }}
-      >
-        {super.image(uri, alt, style, title)}
+      <View key={this.getKey()} style={{ marginBottom: this.palette.blockSpace }}>
+        <MarkdownImage alt={alt || title} key={resolved} palette={this.palette} uri={resolved} />
       </View>
     );
   }
@@ -198,6 +199,7 @@ class MarkdownRenderer extends Renderer {
   linkImage(href, imageUrl, alt, style, title) {
     return (
       <Pressable
+        accessibilityLabel={alt || title}
         accessibilityRole="link"
         key={this.getKey()}
         onPress={() => this.onLinkPress(href)}
