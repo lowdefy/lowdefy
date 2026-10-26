@@ -16,47 +16,9 @@
 
 import React, { useEffect, useRef } from 'react';
 import { cn } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
 import SearchHighlight from './SearchHighlight.js';
-
-function groupResults(results, groups, resultMapping) {
-  if (!groups || groups.length === 0) return [{ label: null, items: results }];
-
-  const categoryField = resultMapping?.category;
-  const grouped = new Map();
-  const other = [];
-
-  for (const result of results) {
-    const value = categoryField ? result[categoryField] : null;
-    let matched = false;
-    for (const group of groups) {
-      const matchEntries = Object.entries(group.match ?? {});
-      if (matchEntries.every(([field, val]) => result[field] === val)) {
-        if (!grouped.has(group.label)) {
-          grouped.set(group.label, { ...group, items: [] });
-        }
-        grouped.get(group.label).items.push(result);
-        matched = true;
-        break;
-      }
-    }
-    if (!matched) {
-      other.push(result);
-    }
-  }
-
-  const result = [];
-  for (const group of groups) {
-    const entry = grouped.get(group.label);
-    if (entry && entry.items.length > 0) {
-      result.push(entry);
-    }
-  }
-  if (other.length > 0) {
-    result.push({ label: 'Other', items: other });
-  }
-  return result;
-}
 
 function SearchResults({
   blockId,
@@ -67,6 +29,7 @@ function SearchResults({
   highlightTerms,
   highlightMatches,
   onSelect,
+  onSeeAll,
   classNames = {},
   styles = {},
 }) {
@@ -83,6 +46,15 @@ function SearchResults({
   const iconField = resultMapping?.icon;
   const breadcrumbField = resultMapping?.breadcrumb;
 
+  // A result's icon field holds an icon name or Icon properties ({ name, color }), so an app can
+  // show what each result is and colour it by its state.
+  function itemIconProperties(item) {
+    const value = iconField ? item[iconField] : null;
+    if (type.isString(value) && value !== '') return { name: value, title: '' };
+    if (type.isObject(value) && !type.isNone(value.name)) return { title: '', ...value };
+    return { name: 'document', title: '' };
+  }
+
   let flatIndex = 0;
 
   return (
@@ -95,6 +67,11 @@ function SearchResults({
               style={styles.groupHeading}
             >
               {group.label}
+              {group.limit > 0 && (
+                <span className={cn('lf-search-group-count', classNames.groupCount)}>
+                  {group.total}
+                </span>
+              )}
             </div>
           )}
           {group.items.map((item) => {
@@ -121,10 +98,7 @@ function SearchResults({
                   className={classNames.itemIcon}
                   style={{ color: 'var(--ant-color-text-secondary)', ...styles.itemIcon }}
                 >
-                  <Icon
-                    blockId={`${blockId}_item_icon`}
-                    properties={{ name: 'document', title: '' }}
-                  />
+                  <Icon blockId={`${blockId}_item_icon`} properties={itemIconProperties(item)} />
                 </span>
                 <div className="lf-search-item-content">
                   {Array.isArray(breadcrumb) && breadcrumb.length > 1 && (
@@ -175,6 +149,16 @@ function SearchResults({
               </div>
             );
           })}
+          {group.seeAll && group.total > group.items.length && (
+            <div
+              role="button"
+              className={cn('lf-search-see-all', classNames.seeAll)}
+              style={styles.seeAll}
+              onClick={() => onSeeAll(group)}
+            >
+              {`${group.seeAll.label ?? 'See all'} ${group.total}`}
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -182,4 +166,3 @@ function SearchResults({
 }
 
 export default SearchResults;
-export { groupResults };

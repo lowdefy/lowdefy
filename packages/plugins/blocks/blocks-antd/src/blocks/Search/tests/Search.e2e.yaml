@@ -138,3 +138,68 @@ blocks:
         - title
       theme:
         borderRadius: 2
+
+  # ============================================
+  # CAPPED GROUPS, PINNED ROW, RECENT RESULTS
+  # ============================================
+
+  - id: search_sections
+    type: Search
+    properties:
+      label: Search Sections
+      shortcut: mod+;
+      recentResults: true
+      recentResultsCount: 2
+      footer: Enter to open
+      documents:
+        - { id: n1, title: Note one, category: Notes }
+        - { id: n2, title: Note two, category: Notes }
+        - { id: n3, title: Note three, category: Notes }
+        - { id: n4, title: Note four, category: Notes }
+        - { id: p1, title: Note person, category: People }
+      fields: [title]
+      storeFields: [title, category, id]
+      result:
+        title: title
+        category: category
+      groups:
+        - label: Notes
+          match: { category: Notes }
+          limit: 2
+          seeAll: { label: See all, pageId: notes, urlQuery: { q: '{query}' } }
+        - label: People
+          match: { category: People }
+          limit: 2
+      pinned:
+        title: 'Ask: {query}'
+        icon: search
+        shortcut: mod+enter
+    events:
+      onSelect:
+        - id: set_selected
+          type: SetState
+          params:
+            sections_selected:
+              _event: title
+      onPinned:
+        - id: set_pinned
+          type: SetState
+          params:
+            sections_pinned:
+              _event: query
+
+  - id: search_sections_selected_display
+    type: Title
+    properties:
+      content:
+        _if_none:
+          - _state: sections_selected
+          - ''
+
+  - id: search_sections_pinned_display
+    type: Title
+    properties:
+      content:
+        _if_none:
+          - _state: sections_pinned
+          - ''

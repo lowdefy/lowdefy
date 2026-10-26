@@ -29,6 +29,10 @@ export default {
     results: 'The scrollable results list.',
     group: 'A result group container.',
     groupHeading: 'A group heading label.',
+    groupCount: 'The match count in a group heading (shown when the group has a limit).',
+    seeAll: 'A group\'s "See all N" row.',
+    pinned: 'The pinned last row.',
+    footer: 'The footer line of key hints.',
     item: 'A result item row.',
     itemIcon: 'The icon in a result item.',
     itemTitle: 'The title in a result item.',
@@ -50,6 +54,22 @@ export default {
     onSearch: {
       description: 'Trigger actions when the search query changes.',
       event: { value: 'The search term.', resultCount: 'Number of matching results.' },
+    },
+    onPinned: {
+      description:
+        'Trigger actions when the pinned row is selected, by click, Enter or its shortcut. Fires the event named by `pinned.event` instead when that is set.',
+      event: { query: 'The typed search term.' },
+    },
+    onSeeAll: {
+      description:
+        'Trigger actions when a group\'s "See all" row is clicked and the group\'s `seeAll` is an object. When `seeAll` is a string, the event of that name fires instead.',
+      event: {
+        group: 'The group label.',
+        count: 'The full number of matches in the group.',
+        query: 'The typed search term.',
+        pageId: 'The `seeAll.pageId`.',
+        urlQuery: 'The `seeAll.urlQuery`, with `{query}` replaced by the typed search term.',
+      },
     },
     onOpen: 'Trigger actions when the search modal opens.',
     onClose: 'Trigger actions when the search modal closes.',
@@ -152,7 +172,8 @@ export default {
       },
       maxResults: {
         type: 'number',
-        description: 'Maximum number of results displayed.',
+        description:
+          'Maximum number of results displayed. When any group sets a `limit`, it instead caps each group that sets none, and "Other".',
         default: 20,
       },
       result: {
@@ -177,7 +198,8 @@ export default {
           },
           icon: {
             type: 'string',
-            description: 'Field name for result icon name.',
+            description:
+              'Field name for the result icon. The field holds an icon name, or Icon properties such as `{ name, color }`. Results without it show the document icon.',
           },
           pageId: {
             type: 'string',
@@ -211,8 +233,67 @@ export default {
               type: 'string',
               description: 'Icon for the group header.',
             },
+            limit: {
+              type: 'number',
+              description:
+                'Number of results shown for the group. The heading then shows the number of matches, and a "See all N" row follows the shown rows when there are more.',
+            },
+            seeAll: {
+              type: ['object', 'string'],
+              description:
+                'The "See all N" row of a group with a `limit`. An object fires `onSeeAll` with `{ group, count, query, pageId, urlQuery }`; a string is the name of the event to fire instead, with the same payload.',
+              properties: {
+                label: {
+                  type: 'string',
+                  description: 'Row text before the count.',
+                  default: 'See all',
+                },
+                pageId: {
+                  type: 'string',
+                  description: 'Page id sent in the event, for a Link action.',
+                },
+                urlQuery: {
+                  type: 'object',
+                  description:
+                    'Url query sent in the event. `{query}` in a string is replaced by the typed search term.',
+                  docs: {
+                    displayType: 'yaml',
+                  },
+                },
+              },
+            },
           },
         },
+      },
+      pinned: {
+        type: 'object',
+        description:
+          'An action row kept last in the list while a query is typed. It is selected when nothing matches, reached with the arrow keys, and fires `onPinned` with `{ query }`.',
+        properties: {
+          title: {
+            type: 'string',
+            description: 'Row text. `{query}` is replaced by the typed search term.',
+          },
+          icon: {
+            ...icon,
+            default: 'search',
+            description:
+              'Row icon: a semantic name, a Lucide icon name, or properties of an Icon block.',
+          },
+          shortcut: {
+            type: 'string',
+            description:
+              'Keyboard shortcut that selects the row from any row, such as `mod+enter`. Shown as a badge on the row.',
+          },
+          event: {
+            type: 'string',
+            description: 'Name of the event to fire instead of `onPinned`.',
+          },
+        },
+      },
+      footer: {
+        type: 'string',
+        description: 'A line of key hints shown below the results.',
       },
       noResultsMessage: {
         type: 'string',
@@ -239,6 +320,17 @@ export default {
         type: 'number',
         description: 'Maximum number of recent searches stored.',
         default: 5,
+      },
+      recentResults: {
+        type: 'boolean',
+        description:
+          'Remember the results a person selects and list them when the input is empty, in place of recent searches. Kept per app and per signed-in user, like recent searches, and cleared at sign-out.',
+        default: false,
+      },
+      recentResultsCount: {
+        type: 'number',
+        description: 'Maximum number of recent results stored and listed.',
+        default: 4,
       },
       theme: {
         type: 'object',

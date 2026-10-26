@@ -14,17 +14,21 @@
   limitations under the License.
 */
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Empty, Input, Modal, Spin } from 'antd';
 import { cn } from '@lowdefy/block-utils';
 import { journeyTargetSelectors } from '@lowdefy/helpers';
 
-import SearchResults, { groupResults } from './SearchResults.js';
+import SearchResults from './SearchResults.js';
+import buildSections from './buildSections.js';
+import fillQuery from './fillQuery.js';
+import matchesShortcut from '../matchesShortcut.js';
+import parseShortcut from '../parseShortcut.js';
 import useListKeyboardNav from './useListKeyboardNav.js';
 
 function SearchModal({
   blockId,
-  components: { Icon },
+  components: { Icon, ShortcutBadge },
   open,
   onClose,
   properties,
@@ -33,9 +37,12 @@ function SearchModal({
   styles = {},
   searchIndex,
   recentSearches,
+  recentResults,
 }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+  // The query `results` answer. While a typed query waits on the debounce it differs from `query`.
+  const [resultsQuery, setResultsQuery] = useState('');
   const debounceRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -43,42 +50,110 @@ function SearchModal({
     ...(searchIndex.resultDefaults ?? {}),
     ...(properties.result ?? {}),
   };
-  const groups = properties.groups ?? searchIndex.groups ?? [];
+  const groupsProperty = properties.groups ?? searchIndex.groups;
   const maxResults = properties.maxResults ?? 20;
 
-  const flatResults = results.slice(0, maxResults);
-  const highlightTerms = flatResults.length > 0 ? flatResults[0].terms : [];
+  const pinned = properties.pinned;
+  const pinnedShortcut = useMemo(() => parseShortcut(pinned?.shortcut), [pinned?.shortcut]);
 
-  // Build display-ordered array (grouped order) for keyboard navigation.
-  // groupResults reorders items by group — the keyboard index must match display order.
-  const grouped = groupResults(flatResults, groups, resultMapping);
-  const displayOrderResults = grouped.flatMap((group) => group.items);
+  const highlightTerms = results.length > 0 ? results[0].terms : [];
+
+  // With an empty input the list is the recent results. Items are in display (grouped) order, so
+  // the keyboard index matches what is on screen.
+  const showRecentResults = !query && recentResults.recentResults.length > 0;
+  const sections = useMemo(() => {
+    if (showRecentResults) {
+      return [
+        {
+          label: 'Recent',
+          items: recentResults.recentResults,
+          total: recentResults.recentResults.length,
+        },
+      ];
+    }
+    return buildSections({ results, groups: groupsProperty ?? [], maxResults });
+  }, [showRecentResults, recentResults.recentResults, results, groupsProperty, maxResults]);
+  const displayOrderResults = useMemo(
+    () => sections.flatMap((section) => section.items),
+    [sections]
+  );
+  const hasResults = displayOrderResults.length > 0;
+  // While a typed query waits on the debounce the list still shows the previous query's results.
+  // Enter then selects nothing, so it never acts on results the person did not search for.
+  const resultsCurrent = !query || resultsQuery === query;
+  // Not before the typed query is searched: Enter would fire the pinned row because the results
+  // are not in yet, not because nothing matches.
+  const showPinned = !!pinned && !!query.trim() && !searchIndex.loading && resultsCurrent;
+  const pinnedIndex = displayOrderResults.length;
 
   const handleSelect = useCallback(
     (item) => {
       recentSearches.addSearch(query);
+      recentResults.addResult(item);
       methods.triggerEvent({
         name: 'onSelect',
         event: { ...item, query, resultCount: results.length },
       });
       onClose();
     },
-    [query, results, methods, onClose, recentSearches]
+    [query, results, methods, onClose, recentSearches, recentResults]
+  );
+
+  const handlePinned = useCallback(() => {
+    methods.triggerEvent({ name: pinned?.event ?? 'onPinned', event: { query } });
+    onClose();
+  }, [query, methods, onClose, pinned]);
+
+  const handleSeeAll = useCallback(
+    (section) => {
+      const seeAll = section.seeAll;
+      const event = {
+        group: section.label,
+        count: section.total,
+        query,
+        ...(typeof seeAll === 'object'
+          ? { pageId: seeAll.pageId, urlQuery: fillQuery(seeAll.urlQuery, query) }
+          : {}),
+      };
+      methods.triggerEvent({
+        name: typeof seeAll === 'string' ? seeAll : 'onSeeAll',
+        event,
+      });
+      onClose();
+    },
+    [query, methods, onClose]
   );
 
   const handleSelectByIndex = useCallback(
     (index) => {
-      if (displayOrderResults[index]) {
+      if (!resultsCurrent) return;
+      if (showPinned && index === pinnedIndex) {
+        handlePinned();
+      } else if (displayOrderResults[index]) {
         handleSelect(displayOrderResults[index]);
       }
     },
-    [displayOrderResults, handleSelect]
+    [displayOrderResults, handleSelect, handlePinned, resultsCurrent, showPinned, pinnedIndex]
   );
 
-  const { selectedIndex, onKeyDown } = useListKeyboardNav({
-    itemCount: displayOrderResults.length,
+  const { selectedIndex, onKeyDown: onNavKeyDown } = useListKeyboardNav({
+    itemCount: displayOrderResults.length + (showPinned ? 1 : 0),
     onSelect: handleSelectByIndex,
   });
+
+  // The pinned row's shortcut works from any row, so it is checked before list navigation. While
+  // the row is hidden the shortcut does nothing, rather than reaching the list as a plain Enter.
+  const onKeyDown = useCallback(
+    (e) => {
+      if (matchesShortcut(e, pinnedShortcut)) {
+        e.preventDefault();
+        if (showPinned) handlePinned();
+        return;
+      }
+      onNavKeyDown(e);
+    },
+    [showPinned, pinnedShortcut, handlePinned, onNavKeyDown]
+  );
 
   const handleInputChange = useCallback(
     (e) => {
@@ -89,10 +164,12 @@ function SearchModal({
       debounceRef.current = setTimeout(() => {
         if (!value) {
           setResults([]);
+          setResultsQuery('');
           return;
         }
         const searchResults = searchIndex.search(value);
         setResults(searchResults);
+        setResultsQuery(value);
         methods.triggerEvent({
           name: 'onSearch',
           event: { value, resultCount: searchResults.length },
@@ -107,6 +184,7 @@ function SearchModal({
       setQuery(recentQuery);
       const searchResults = searchIndex.search(recentQuery);
       setResults(searchResults);
+      setResultsQuery(recentQuery);
     },
     [searchIndex]
   );
@@ -115,6 +193,7 @@ function SearchModal({
     if (!open) {
       setQuery('');
       setResults([]);
+      setResultsQuery('');
     }
   }, [open]);
 
@@ -124,6 +203,7 @@ function SearchModal({
   useEffect(() => {
     if (!open || !query) return;
     setResults(searchIndex.search(query));
+    setResultsQuery(query);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchIndex.version]);
 
@@ -133,8 +213,11 @@ function SearchModal({
     }
   }, [open]);
 
+  // Recent results, when there are any, take the place of recent searches: one list under one
+  // "Recent" heading, all of it reachable from the keyboard.
   const showRecent =
     !query &&
+    !showRecentResults &&
     !searchIndex.loading &&
     properties.recentSearches !== false &&
     recentSearches.recentSearches.length > 0;
@@ -146,80 +229,111 @@ function SearchModal({
       closable={false}
       width={properties.width ?? 640}
       onCancel={onClose}
-      className={cn(classNames.modal)}
+      className={cn('lf-search-modal', classNames.modal)}
       style={styles.modal}
       destroyOnHidden
       rootClassName={journeyTargetSelectors.portalClass(blockId)}
     >
-      <Input
-        ref={inputRef}
-        className={cn(classNames.input)}
-        style={styles.input}
-        prefix={
-          <Icon blockId={`${blockId}_input_icon`} properties={{ name: 'search', title: '' }} />
-        }
-        placeholder={properties.placeholder ?? 'Search...'}
-        allowClear={{
-          clearIcon: (
-            <Icon blockId={`${blockId}_clearIcon`} properties={{ name: 'clear', title: '' }} />
-          ),
-        }}
-        value={query}
-        onChange={handleInputChange}
-        onKeyDown={onKeyDown}
-      />
-      {searchIndex.loading && (
-        <div
-          className={cn('lf-search-loading', classNames.loading)}
-          style={{ display: 'flex', justifyContent: 'center', padding: 32, ...styles.loading }}
-        >
-          <Spin />
-        </div>
-      )}
-      {!searchIndex.loading && query && flatResults.length === 0 && (
-        <Empty
-          className={cn(classNames.empty)}
-          style={{ padding: 32, ...styles.empty }}
-          description={properties.noResultsMessage ?? 'No results found.'}
+      <div onKeyDown={onKeyDown}>
+        <Input
+          ref={inputRef}
+          className={cn(classNames.input)}
+          style={styles.input}
+          prefix={
+            <Icon blockId={`${blockId}_input_icon`} properties={{ name: 'search', title: '' }} />
+          }
+          placeholder={properties.placeholder ?? 'Search...'}
+          allowClear={{
+            clearIcon: (
+              <Icon blockId={`${blockId}_clearIcon`} properties={{ name: 'clear', title: '' }} />
+            ),
+          }}
+          value={query}
+          onChange={handleInputChange}
         />
-      )}
-      {!searchIndex.loading && flatResults.length > 0 && (
-        <SearchResults
-          blockId={blockId}
-          components={{ Icon }}
-          grouped={grouped}
-          resultMapping={resultMapping}
-          selectedIndex={selectedIndex}
-          highlightTerms={properties.highlightMatches !== false ? highlightTerms : null}
-          highlightMatches={properties.highlightMatches !== false}
-          onSelect={handleSelect}
-          classNames={classNames}
-          styles={styles}
-        />
-      )}
-      {showRecent && (
-        <div>
-          <div className="lf-search-recent-header">
-            <span>Recent</span>
+        {searchIndex.loading && (
+          <div
+            className={cn('lf-search-loading', classNames.loading)}
+            style={{ display: 'flex', justifyContent: 'center', padding: 32, ...styles.loading }}
+          >
+            <Spin />
           </div>
-          {recentSearches.recentSearches.map((item) => (
-            <div
-              key={item.query}
-              role="button"
-              className={cn('lf-search-item', classNames.item)}
-              style={styles.item}
-              onClick={() => handleRecentClick(item.query)}
-            >
-              <Icon
-                blockId={`${blockId}_recent_icon`}
-                properties={{ name: 'history', title: '' }}
-                styles={{ element: { color: 'var(--ant-color-text-quaternary)' } }}
-              />
-              <span>{item.query}</span>
+        )}
+        {!searchIndex.loading && query && results.length === 0 && (
+          <Empty
+            className={cn(classNames.empty)}
+            style={{ padding: 32, ...styles.empty }}
+            description={properties.noResultsMessage ?? 'No results found.'}
+          />
+        )}
+        {!searchIndex.loading && hasResults && (
+          <SearchResults
+            blockId={blockId}
+            components={{ Icon }}
+            grouped={sections}
+            resultMapping={resultMapping}
+            selectedIndex={selectedIndex}
+            highlightTerms={
+              properties.highlightMatches !== false && !showRecentResults ? highlightTerms : null
+            }
+            highlightMatches={properties.highlightMatches !== false}
+            onSelect={handleSelect}
+            onSeeAll={handleSeeAll}
+            classNames={classNames}
+            styles={styles}
+          />
+        )}
+        {showPinned && (
+          <div
+            role="button"
+            className={cn(
+              'lf-search-item',
+              'lf-search-pinned',
+              selectedIndex === pinnedIndex && 'lf-search-item-selected',
+              classNames.pinned
+            )}
+            style={styles.pinned}
+            onClick={handlePinned}
+          >
+            <Icon
+              blockId={`${blockId}_pinned_icon`}
+              properties={pinned.icon ?? { name: 'search', title: '' }}
+            />
+            <span className="lf-search-item-content">
+              {fillQuery(pinned.title ?? '{query}', query)}
+            </span>
+            {pinned.shortcut && <ShortcutBadge shortcut={pinned.shortcut} />}
+          </div>
+        )}
+        {showRecent && (
+          <div>
+            <div className="lf-search-recent-header">
+              <span>Recent</span>
             </div>
-          ))}
-        </div>
-      )}
+            {recentSearches.recentSearches.map((item) => (
+              <div
+                key={item.query}
+                role="button"
+                className={cn('lf-search-item', classNames.item)}
+                style={styles.item}
+                onClick={() => handleRecentClick(item.query)}
+              >
+                <Icon
+                  blockId={`${blockId}_recent_icon`}
+                  properties={{ name: 'history', title: '' }}
+                  styles={{ element: { color: 'var(--ant-color-text-quaternary)' } }}
+                />
+                <span>{item.query}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {properties.footer && (
+          <div className={cn('lf-search-footer', classNames.footer)} style={styles.footer}>
+            {properties.footer}
+          </div>
+        )}
+      </div>
     </Modal>
   );
 }
