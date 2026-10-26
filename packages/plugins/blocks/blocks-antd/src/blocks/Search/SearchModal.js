@@ -14,18 +14,17 @@
   limitations under the License.
 */
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Empty, Input, Modal, Spin } from 'antd';
 import { cn } from '@lowdefy/block-utils';
 import { journeyTargetSelectors } from '@lowdefy/helpers';
 
 import SearchResults from './SearchResults.js';
-import matchesShortcut from './matchesShortcut.js';
+import buildSections from './buildSections.js';
+import fillQuery from './fillQuery.js';
+import matchesShortcut from '../matchesShortcut.js';
 import parseShortcut from '../parseShortcut.js';
 import useListKeyboardNav from './useListKeyboardNav.js';
-import { buildSections, fillQuery } from './searchSections.js';
-
-const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
 
 function SearchModal({
   blockId,
@@ -51,31 +50,40 @@ function SearchModal({
     ...(searchIndex.resultDefaults ?? {}),
     ...(properties.result ?? {}),
   };
-  const groups = properties.groups ?? searchIndex.groups ?? [];
+  const groupsProperty = properties.groups ?? searchIndex.groups;
   const maxResults = properties.maxResults ?? 20;
 
   const pinned = properties.pinned;
-  const pinnedShortcut = parseShortcut(pinned?.shortcut);
+  const pinnedShortcut = useMemo(() => parseShortcut(pinned?.shortcut), [pinned?.shortcut]);
 
   const highlightTerms = results.length > 0 ? results[0].terms : [];
 
   // With an empty input the list is the recent results. Items are in display (grouped) order, so
   // the keyboard index matches what is on screen.
   const showRecentResults = !query && recentResults.recentResults.length > 0;
-  const sections = showRecentResults
-    ? [
+  const sections = useMemo(() => {
+    if (showRecentResults) {
+      return [
         {
           label: 'Recent',
           items: recentResults.recentResults,
           total: recentResults.recentResults.length,
         },
-      ]
-    : buildSections({ results, groups, resultMapping, maxResults });
-  const displayOrderResults = sections.flatMap((section) => section.items);
+      ];
+    }
+    return buildSections({ results, groups: groupsProperty ?? [], maxResults });
+  }, [showRecentResults, recentResults.recentResults, results, groupsProperty, maxResults]);
+  const displayOrderResults = useMemo(
+    () => sections.flatMap((section) => section.items),
+    [sections]
+  );
   const hasResults = displayOrderResults.length > 0;
+  // While a typed query waits on the debounce the list still shows the previous query's results.
+  // Enter then selects nothing, so it never acts on results the person did not search for.
+  const resultsCurrent = !query || resultsQuery === query;
   // Not before the typed query is searched: Enter would fire the pinned row because the results
   // are not in yet, not because nothing matches.
-  const showPinned = !!pinned && !!query.trim() && !searchIndex.loading && resultsQuery === query;
+  const showPinned = !!pinned && !!query.trim() && !searchIndex.loading && resultsCurrent;
   const pinnedIndex = displayOrderResults.length;
 
   const handleSelect = useCallback(
@@ -118,13 +126,14 @@ function SearchModal({
 
   const handleSelectByIndex = useCallback(
     (index) => {
+      if (!resultsCurrent) return;
       if (showPinned && index === pinnedIndex) {
         handlePinned();
       } else if (displayOrderResults[index]) {
         handleSelect(displayOrderResults[index]);
       }
     },
-    [displayOrderResults, handleSelect, handlePinned, showPinned, pinnedIndex]
+    [displayOrderResults, handleSelect, handlePinned, resultsCurrent, showPinned, pinnedIndex]
   );
 
   const { selectedIndex, onKeyDown: onNavKeyDown } = useListKeyboardNav({
@@ -132,12 +141,13 @@ function SearchModal({
     onSelect: handleSelectByIndex,
   });
 
-  // The pinned row's shortcut works from any row, so it is checked before list navigation.
+  // The pinned row's shortcut works from any row, so it is checked before list navigation. While
+  // the row is hidden the shortcut does nothing, rather than reaching the list as a plain Enter.
   const onKeyDown = useCallback(
     (e) => {
-      if (showPinned && matchesShortcut(e, pinnedShortcut, isMac)) {
+      if (matchesShortcut(e, pinnedShortcut)) {
         e.preventDefault();
-        handlePinned();
+        if (showPinned) handlePinned();
         return;
       }
       onNavKeyDown(e);
@@ -203,8 +213,11 @@ function SearchModal({
     }
   }, [open]);
 
+  // Recent results, when there are any, take the place of recent searches: one list under one
+  // "Recent" heading, all of it reachable from the keyboard.
   const showRecent =
     !query &&
+    !showRecentResults &&
     !searchIndex.loading &&
     properties.recentSearches !== false &&
     recentSearches.recentSearches.length > 0;

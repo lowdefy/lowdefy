@@ -173,7 +173,7 @@ export default {
       maxResults: {
         type: 'number',
         description:
-          'Maximum number of results displayed. Ignored when any group sets a `limit`: the groups then cap themselves.',
+          'Maximum number of results displayed. When any group sets a `limit`, it instead caps each group that sets none, and "Other".',
         default: 20,
       },
       result: {
@@ -324,7 +324,7 @@ export default {
       recentResults: {
         type: 'boolean',
         description:
-          'Remember the results a person selects and list them when the input is empty. Kept per app and per signed-in user, like recent searches, and cleared at sign-out.',
+          'Remember the results a person selects and list them when the input is empty, in place of recent searches. Kept per app and per signed-in user, like recent searches, and cleared at sign-out.',
         default: false,
       },
       recentResultsCount: {

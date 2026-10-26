@@ -23,12 +23,10 @@ import SearchModal from './SearchModal.js';
 import useSearchIndex from './useSearchIndex.js';
 import useRecentSearches from './useRecentSearches.js';
 import useRecentResults from './useRecentResults.js';
-import matchesShortcut from './matchesShortcut.js';
+import matchesShortcut from '../matchesShortcut.js';
 import parseShortcut from '../parseShortcut.js';
 
 import './style.css';
-
-const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
 
 function SearchBlock({
   blockId,
@@ -93,7 +91,7 @@ function SearchBlock({
   useEffect(() => {
     const parsed = parseShortcut(properties.shortcut ?? 'mod+k');
     function handleKeyDown(e) {
-      if (matchesShortcut(e, parsed, isMac)) {
+      if (matchesShortcut(e, parsed)) {
         e.preventDefault();
         if (open) {
           handleClose();

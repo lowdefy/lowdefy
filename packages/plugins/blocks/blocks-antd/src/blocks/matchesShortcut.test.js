@@ -17,7 +17,7 @@
 import { describe, expect, test } from 'vitest';
 
 import matchesShortcut from './matchesShortcut.js';
-import parseShortcut from '../parseShortcut.js';
+import parseShortcut from './parseShortcut.js';
 
 const press = (key, flags = {}) => ({
   key,

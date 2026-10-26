@@ -16,33 +16,8 @@
 
 import { useEffect } from 'react';
 
-const isMac =
-  typeof navigator !== 'undefined' &&
-  (navigator.userAgentData?.platform === 'macOS' ||
-    /Mac|iPhone|iPad|iPod/.test(navigator.platform ?? ''));
-
-function parseShortcut(shortcut) {
-  if (!shortcut) return null;
-  const parts = shortcut.toLowerCase().split('+');
-  return {
-    mod: parts.includes('mod'),
-    ctrl: parts.includes('ctrl'),
-    shift: parts.includes('shift'),
-    alt: parts.includes('alt'),
-    key: parts[parts.length - 1],
-  };
-}
-
-function matchesShortcut(e, parsed) {
-  if (!parsed) return false;
-  const modPressed = parsed.mod ? (isMac ? e.metaKey : e.ctrlKey) : true;
-  const ctrlPressed = parsed.ctrl ? e.ctrlKey : true;
-  const shiftPressed = parsed.shift ? e.shiftKey : !e.shiftKey;
-  const altPressed = parsed.alt ? e.altKey : !e.altKey;
-  return (
-    modPressed && ctrlPressed && shiftPressed && altPressed && e.key.toLowerCase() === parsed.key
-  );
-}
+import matchesShortcut from './matchesShortcut.js';
+import parseShortcut from './parseShortcut.js';
 
 function useItemShortcuts({ items, onMatch }) {
   const itemsKey = JSON.stringify(items);

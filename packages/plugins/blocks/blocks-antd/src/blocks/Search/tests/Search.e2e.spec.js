@@ -135,20 +135,25 @@ test.describe('Search Block', () => {
     await expect(getBlock(page, 'search_sections_pinned_display')).toContainText('zzzz');
   });
 
-  test('Enter before the typed query is searched does not fire the pinned row', async ({
+  test('Enter before the typed query is searched selects nothing', async ({ page }) => {
+    const modal = await openSections(page);
+    await modal.locator('input').fill('note');
+    await page.keyboard.press('Enter');
+    await expect(modal.locator('.lf-search-results .lf-search-item').first()).toBeVisible();
+    await expect(getBlock(page, 'search_sections_pinned_display')).toHaveText('');
+    await expect(getBlock(page, 'search_sections_selected_display')).toHaveText('');
+  });
+
+  test('Enter while a new query waits on the search does not select the old results', async ({
     page,
   }) => {
     const modal = await openSections(page);
     await modal.locator('input').fill('note');
+    await expect(modal.locator('.lf-search-results .lf-search-item').first()).toBeVisible();
+    await modal.locator('input').fill('zzzz');
     await page.keyboard.press('Enter');
-    // Either the results arrive after the Enter, or (on a slow run) the Enter selected the first
-    // of them; the pinned row never fired.
-    const resultsShown = modal.locator('.lf-search-results .lf-search-item').first();
-    const resultSelected = getBlock(page, 'search_sections_selected_display').filter({
-      hasText: 'Note',
-    });
-    await expect(resultsShown.or(resultSelected)).toBeVisible();
-    await expect(getBlock(page, 'search_sections_pinned_display')).toHaveText('');
+    await expect(modal.locator('.lf-search-pinned')).toContainText('Ask: zzzz');
+    await expect(getBlock(page, 'search_sections_selected_display')).toHaveText('');
   });
 
   test('the pinned shortcut works from a result row', async ({ page }) => {

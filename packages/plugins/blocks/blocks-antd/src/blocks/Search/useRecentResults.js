@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import { type } from '@lowdefy/helpers';
 
 // The index adds match data to each hit; only the stored fields are kept.
 const SEARCH_ONLY_FIELDS = ['score', 'terms', 'queryTerms', 'match'];
@@ -26,7 +27,7 @@ function toStoredResult(item) {
 }
 
 function sameResult(a, b) {
-  if (a.id !== undefined && a.id !== null) return a.id === b.id;
+  if (!type.isNone(a.id)) return a.id === b.id;
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
@@ -57,21 +58,38 @@ function writeStored(key, items) {
 // user key: cleared at sign-out and never read by the next person on the browser.
 function useRecentResults({ enabled, getUserStorageKey, storageKey = 'search', maxCount = 4 }) {
   const key = getUserStorageKey(`lf-${storageKey}-recent-results`);
-  const [recentResults, setRecentResults] = useState(() => (enabled ? readStored(key) : []));
+  const [stored, setStored] = useState(() => ({
+    key,
+    enabled,
+    items: enabled ? readStored(key) : [],
+  }));
+
+  // The signed-in user, and so the key, can change without a remount (a persistent layout). Read
+  // the new user's list then, so one person's results are never shown to or written for another.
+  let current = stored;
+  if (stored.key !== key || stored.enabled !== enabled) {
+    current = { key, enabled, items: enabled ? readStored(key) : [] };
+    setStored(current);
+  }
 
   const addResult = useCallback(
     (item) => {
       if (!enabled || !item) return;
-      setRecentResults((prev) => {
-        const updated = addRecentResult(prev, item, maxCount);
-        writeStored(key, updated);
-        return updated;
+      setStored((prev) => {
+        const items = addRecentResult(prev.items, item, maxCount);
+        writeStored(prev.key, items);
+        return { ...prev, items };
       });
     },
-    [enabled, key, maxCount]
+    [enabled, maxCount]
   );
 
-  return { recentResults: enabled ? recentResults.slice(0, maxCount) : [], addResult };
+  const recentResults = useMemo(
+    () => (enabled ? current.items.slice(0, maxCount) : []),
+    [enabled, current.items, maxCount]
+  );
+
+  return { recentResults, addResult };
 }
 
 export default useRecentResults;

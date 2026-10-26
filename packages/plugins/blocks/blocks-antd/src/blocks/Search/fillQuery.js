@@ -13,17 +13,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { type } from '@lowdefy/helpers';
 
-// `parsed` comes from parseShortcut. `mod` is Cmd on a Mac and Ctrl elsewhere.
-function matchesShortcut(e, parsed, isMac) {
-  if (!parsed || !e.key) return false;
-  const modPressed = parsed.mod ? (isMac ? e.metaKey : e.ctrlKey) : true;
-  const ctrlPressed = parsed.ctrl ? e.ctrlKey : true;
-  const shiftPressed = parsed.shift ? e.shiftKey : !e.shiftKey;
-  const altPressed = parsed.alt ? e.altKey : !e.altKey;
-  return (
-    modPressed && ctrlPressed && shiftPressed && altPressed && e.key.toLowerCase() === parsed.key
-  );
+// `{query}` in a string, at any depth, becomes the typed query. The replacement is a function so
+// `$&` and the like in the typed text stay literal.
+function fillQuery(value, query) {
+  if (type.isString(value)) return value.replaceAll('{query}', () => query);
+  if (type.isArray(value)) return value.map((item) => fillQuery(item, query));
+  if (type.isObject(value)) {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, fillQuery(v, query)]));
+  }
+  return value;
 }
 
-export default matchesShortcut;
+export default fillQuery;
