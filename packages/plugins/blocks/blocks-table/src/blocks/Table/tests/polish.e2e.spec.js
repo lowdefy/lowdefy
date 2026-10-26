@@ -311,30 +311,21 @@ test.describe('Table visual polish', () => {
     expect(cells.some((cell) => cell.hidden > 0)).toBe(true);
   });
 
-  test('stacked avatars leave the initials of every avatar uncovered', async ({ page }) => {
-    const overlaps = await table(page, 'crm').evaluate((root) => {
+  test('a group of avatars sits side by side, no avatar covering another', async ({ page }) => {
+    const gaps = await table(page, 'crm').evaluate((root) => {
       const result = [];
-      root.querySelectorAll('.lf-table-body .lf-table-people').forEach((stack) => {
-        const avatars = Array.from(stack.children);
+      root.querySelectorAll('.lf-table-body .lf-table-people').forEach((group) => {
+        const avatars = Array.from(group.children);
         for (let i = 0; i < avatars.length - 1; i++) {
-          const text = avatars[i].firstChild;
-          if (!text || text.nodeType !== Node.TEXT_NODE) continue;
-          const range = document.createRange();
-          range.selectNodeContents(avatars[i]);
-          const glyphs = range.getBoundingClientRect();
-          const next = avatars[i + 1];
-          const ring = Number.parseFloat(getComputedStyle(next).boxShadow.split(' ').at(-1)) || 0;
-          result.push({
-            initials: text.textContent,
-            covered: glyphs.right - (next.getBoundingClientRect().left - ring),
-          });
+          result.push(
+            avatars[i + 1].getBoundingClientRect().left - avatars[i].getBoundingClientRect().right
+          );
         }
       });
       return result;
     });
-    expect(overlaps.length).toBeGreaterThan(5);
-    // The text box includes the glyphs' side bearings, so half a pixel of it may sit under the ring.
-    overlaps.forEach(({ covered }) => expect(covered).toBeLessThanOrEqual(0.5));
+    expect(gaps.length).toBeGreaterThan(5);
+    gaps.forEach((gap) => expect(gap).toBe(2));
   });
 
   test('a single person shows the full name as a title when it is cut', async ({ page }) => {
@@ -396,12 +387,13 @@ test.describe('Table visual polish', () => {
             height: box.height,
             cutHeight: box.height - (visible.bottom - visible.top),
             radius: getComputedStyle(avatar).borderRadius,
+            fontSize: getComputedStyle(avatar).fontSize,
           };
         })
       );
       expect(avatars.length).toBeGreaterThan(1);
       avatars.forEach((avatar) => {
-        expect(avatar).toMatchObject({ width: 24, height: 24, radius: '50%' });
+        expect(avatar).toMatchObject({ width: 24, height: 24, radius: '50%', fontSize: '10px' });
         expect(avatar.cutHeight).toBeLessThanOrEqual(0.5);
       });
     }
