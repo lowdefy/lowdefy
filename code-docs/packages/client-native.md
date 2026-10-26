@@ -5,40 +5,41 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 
 ## Shape
 
-| File                                                             | Does                                                                         |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `LowdefyPage.js`                                                 | One page: deserializes config, builds the core once, ScrollView, context     |
-| `initNativeLowdefy.js`                                           | `createLowdefyCore` with the native host, Link, Screen; `updateLowdefyPage`  |
-| `Context.js`, `MountEvents.js`                                   | Engine page context, app and page onInit, lifecycle and websocket effects    |
-| `block/Block.js`                                                 | Updater, parse-error logging, error boundary, onMount, category switch       |
-| `block/Container.js`, `List.js`, `Display.js`, `LoadingBlock.js` | Mirror the web block containers                                              |
-| `block/BlockLayout.js`, `Area.js`                                | Views styled by `layoutStyles`; `testID` and `accessibilityLabel` = block id |
-| `layout/layoutStyles.js`                                         | `layoutStyles(layout, breakpoint, columnGap)`, from `@lowdefy/layout-native` |
-| `style/useBlockStyles.js`, `getBlockStyles.js`                   | Each slot's classes (from the class map) with its `style` over them          |
-| `style/classStyle.js`                                            | Class lookup: `dark:` and breakpoint variants, `dark:<class>` entries        |
-| `style/slotStyle.js`                                             | Converts shared-page and operator styles with `@lowdefy/style-native`        |
-| `theme/ThemeProvider.js`, `useTheme.js`                          | Theme mode and the computed antd tokens of that mode                         |
-| `globals/createNativeGlobals.js`                                 | Host globals: route `location`, `Dimensions`, `AppState`, network events     |
-| `globals/createScreenGlobals.js`                                 | One screen's globals: the app's, with `location` the screen's own route      |
-| `link/setupLink.js`                                              | Page links through the host router, others through `Linking`                 |
-| `link/createResolveUrl.js`                                       | `components.resolveUrl`: a path taken against the app server, as a browser   |
-| `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`          |
-| `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                |
-| `screen/HeaderBottom.js`, `getHeaderBottomMotion.js`             | A Screen's headerBottom, pinned under the header by the page's scroll offset |
-| `screen/HeaderBackdrop.js`                                       | A Screen's headerBackdrop, lifted above the content behind the large title   |
-| `screen/useScreenFocused.js`                                     | Whether the block's screen is shown, for work that runs only while it is     |
-| `screen/ScreenTint.js`, `createTintStore.js`                     | A Screen's backgroundTint, a gradient fixed behind the page, cross-faded     |
-| `screen/getBackgroundTint.js`, `getTintStops.js`                 | The tint's colour and opacity in the mode showing; its eased gradient stops  |
-| `layout/EdgeInsetContext.js`                                     | An area's horizontal padding, which an edge-to-edge block cancels            |
-| `motion/FadeInView.js`, `useReduceMotion.js`                     | Content fading in after a skeleton; the system Reduce Motion setting         |
-| `trace/describeBlock.js`                                         | The trace's element description, by block id                                 |
-| `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions   |
-| `block/createStreamFetch.js`                                     | `methods.streamFetch`: a block's streamed server call, with the bearer token |
-| `screen/useScreenFooter.js`                                      | A block draws its own chrome in the page footer (AgentChat's composer)       |
-| `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`            |
-| `icon/createIcon.js`                                             | `components.Icon`: an icon by name from `types.icons`, drawn with `Icon`     |
-| `theme/resolveColor.js`                                          | A configured colour (palette hue, token name, hex) as the theme draws it     |
-| `icon/getSfSymbol.js`, `sfSymbolNames.js`                        | The SF Symbol of a Lucide or semantic icon name, for iOS tab and bar buttons |
+| File                                                             | Does                                                                           |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `LowdefyPage.js`                                                 | One page: deserializes config, builds the core once, ScrollView, context       |
+| `initNativeLowdefy.js`                                           | `createLowdefyCore` with the native host, Link, Screen; `updateLowdefyPage`    |
+| `Context.js`, `MountEvents.js`                                   | Engine page context, app and page onInit, lifecycle and websocket effects      |
+| `block/Block.js`                                                 | Updater, parse-error logging, error boundary, onMount, category switch         |
+| `block/Container.js`, `List.js`, `Display.js`, `LoadingBlock.js` | Mirror the web block containers                                                |
+| `block/BlockLayout.js`, `Area.js`                                | Views styled by `layoutStyles`; `testID` and `accessibilityLabel` = block id   |
+| `layout/layoutStyles.js`                                         | `layoutStyles(layout, breakpoint, columnGap)`, from `@lowdefy/layout-native`   |
+| `style/useBlockStyles.js`, `getBlockStyles.js`                   | Each slot's classes (from the class map) with its `style` over them            |
+| `style/classStyle.js`                                            | Class lookup: `dark:` and breakpoint variants, `dark:<class>` entries          |
+| `style/slotStyle.js`                                             | Converts shared-page and operator styles with `@lowdefy/style-native`          |
+| `theme/ThemeProvider.js`, `useTheme.js`                          | Theme mode and the computed antd tokens of that mode                           |
+| `globals/createNativeGlobals.js`                                 | Host globals: route `location`, `Dimensions`, `AppState`, network events       |
+| `globals/createScreenGlobals.js`                                 | One screen's globals: the app's, with `location` the screen's own route        |
+| `link/setupLink.js`                                              | Page links through the host router, others through `Linking`                   |
+| `link/createResolveUrl.js`                                       | `components.resolveUrl`: a path taken against the app server, as a browser     |
+| `screen/useKeyboardWindowOffset.js`                              | Android: a KeyboardAvoidingView's distance from the window top, for its offset |
+| `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`            |
+| `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                  |
+| `screen/HeaderBottom.js`, `getHeaderBottomMotion.js`             | A Screen's headerBottom, pinned under the header by the page's scroll offset   |
+| `screen/HeaderBackdrop.js`                                       | A Screen's headerBackdrop, lifted above the content behind the large title     |
+| `screen/useScreenFocused.js`                                     | Whether the block's screen is shown, for work that runs only while it is       |
+| `screen/ScreenTint.js`, `createTintStore.js`                     | A Screen's backgroundTint, a gradient fixed behind the page, cross-faded       |
+| `screen/getBackgroundTint.js`, `getTintStops.js`                 | The tint's colour and opacity in the mode showing; its eased gradient stops    |
+| `layout/EdgeInsetContext.js`                                     | An area's horizontal padding, which an edge-to-edge block cancels              |
+| `motion/FadeInView.js`, `useReduceMotion.js`                     | Content fading in after a skeleton; the system Reduce Motion setting           |
+| `trace/describeBlock.js`                                         | The trace's element description, by block id                                   |
+| `elements/createElementRegistry.js`, `useElementRef.js`          | Native views by page and block id (`globals.elements`), for native actions     |
+| `block/createStreamFetch.js`                                     | `methods.streamFetch`: a block's streamed server call, with the bearer token   |
+| `screen/useScreenFooter.js`                                      | A block draws its own chrome in the page footer (AgentChat's composer)         |
+| `icon/Icon.js`                                                   | Draws IconData (the web's icon node data) with `react-native-svg`              |
+| `icon/createIcon.js`                                             | `components.Icon`: an icon by name from `types.icons`, drawn with `Icon`       |
+| `theme/resolveColor.js`                                          | A configured colour (palette hue, token name, hex) as the theme draws it       |
+| `icon/getSfSymbol.js`, `sfSymbolNames.js`                        | The SF Symbol of a Lucide or semantic icon name, for iOS tab and bar buttons   |
 
 ## Differences from the web renderer
 

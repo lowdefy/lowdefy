@@ -37,6 +37,7 @@ export { default as ThemeContext } from './theme/ThemeContext.js';
 export { default as ThemeProvider } from './theme/ThemeProvider.js';
 export { default as toPixels } from './style/toPixels.js';
 export { default as useElementRef } from './elements/useElementRef.js';
+export { default as useKeyboardWindowOffset } from './screen/useKeyboardWindowOffset.js';
 export { default as useReduceMotion } from './motion/useReduceMotion.js';
 export { default as useScreenFocused } from './screen/useScreenFocused.js';
 export { default as useScreenFooter } from './screen/useScreenFooter.js';

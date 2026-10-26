@@ -24,7 +24,7 @@ import {
   View,
 } from 'react-native';
 import { type } from '@lowdefy/helpers';
-import { useElementRef } from '@lowdefy/client-native';
+import { useElementRef, useKeyboardWindowOffset } from '@lowdefy/client-native';
 
 import DictationButton from '../../shared/dictation/DictationButton.js';
 import DictationWarning from '../../shared/dictation/DictationWarning.js';
@@ -137,6 +137,7 @@ function Composer({
   const { isDark, tokens } = useComponentTokens(properties.theme);
   const colors = useMemo(() => getTimelineColors({ isDark, tokens }), [isDark, tokens]);
   const { Icon } = components;
+  const windowOffset = useKeyboardWindowOffset();
   const maxLength = properties.maxLength ?? DEFAULT_MAX_LENGTH;
   const disabled = loading === true || properties.disabled === true;
   const [sending, setSending] = useState(false);
@@ -367,15 +368,19 @@ function Composer({
   if (properties.sticky === false) {
     return bar;
   }
+  // Android apps are edge-to-edge, so the window no longer resizes for the keyboard; padding by
+  // the keyboard's overlap keeps the composer above it on both platforms. On Android the overlap
+  // also counts the composer's distance from the top of the window, as a page sits below an
+  // opaque header (useKeyboardWindowOffset).
   return (
-    <KeyboardAvoidingView
-      // Android apps are edge-to-edge, so the window no longer resizes for the keyboard; padding
-      // by the keyboard's overlap keeps the composer above it on both platforms.
-      behavior="padding"
-      keyboardVerticalOffset={properties.keyboardOffset ?? 0}
-    >
-      {bar}
-    </KeyboardAvoidingView>
+    <View collapsable={false} onLayout={windowOffset.onLayout} ref={windowOffset.ref}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={windowOffset.offset + (properties.keyboardOffset ?? 0)}
+      >
+        {bar}
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
