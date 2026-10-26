@@ -22,7 +22,7 @@ import getSfSymbol from './getSfSymbol.js';
 /**
  * iOS's native context menu around a row: a long press lifts the row and shows its items, as
  * Mail and Linear rows do. The row is React Native content hosted in the SwiftUI menu's trigger.
- * iOS only; other platforms show the items in an alert on long press (showContextMenuAlert).
+ * iOS only; Android shows a Material menu on long press (NativeMenu).
  *
  * @param {Object} props
  * @param {boolean} props.isDark

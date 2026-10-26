@@ -25,9 +25,9 @@ import getListItemParts, { GAP, ICON_BOX, ROW_PADDING } from './getListItemParts
 import getSemanticColors from '../../shared/getSemanticColors.js';
 import iosTextStyles from '../../shared/iosTextStyles.js';
 import ListItemContextMenu from './ListItemContextMenu.js';
+import NativeMenu from '../../shared/NativeMenu.js';
 import ListRowContext from '../List/ListRowContext.js';
 import meta from './meta.js';
-import showContextMenuAlert from './showContextMenuAlert.js';
 import StatusMark from '../StatusIcon/StatusMark.js';
 import SwipeableRow from '../../shared/SwipeableRow.js';
 import SystemIcon from '../../shared/SystemIcon.js';
@@ -235,11 +235,6 @@ function ListItem({ blockId, components, content, events, methods, properties, s
     }
   }
   const nativeMenu = menuItems.length > 0 && Platform.OS === 'ios';
-  const onLongPress =
-    menuItems.length > 0 && !nativeMenu
-      ? () => showContextMenuAlert({ items: menuItems, onSelect: fireContextMenu, title })
-      : undefined;
-
   let item = (
     <Pressable
       accessibilityActions={accessibilityActions.length > 0 ? accessibilityActions : undefined}
@@ -248,7 +243,6 @@ function ListItem({ blockId, components, content, events, methods, properties, s
       accessibilityState={checked ? { selected: true } : undefined}
       disabled={disabled}
       onAccessibilityAction={onAccessibilityAction}
-      onLongPress={onLongPress}
       onPress={pressable ? () => methods.triggerEvent({ name: 'onClick' }) : undefined}
       style={({ pressed }) => [
         {
@@ -350,6 +344,25 @@ function ListItem({ blockId, components, content, events, methods, properties, s
       >
         {item}
       </ListItemContextMenu>
+    );
+  }
+  if (menuItems.length > 0 && !nativeMenu) {
+    // Android's Material dropdown on long press: every item shows and a back or outside tap
+    // dismisses it, which Alert.alert cannot do (it keeps three buttons and is not cancelable).
+    item = (
+      <NativeMenu
+        actions={menuItems.map((menuItem) => ({
+          id: menuItem.id,
+          title: menuItem.title,
+          attributes: { destructive: menuItem.destructive === true },
+        }))}
+        fullWidth
+        onSelect={(id) => fireContextMenu({ id })}
+        openOnLongPress
+        testID={`${blockId}_menu`}
+      >
+        {item}
+      </NativeMenu>
     );
   }
   if (leadingActions.length > 0 || trailingActions.length > 0) {

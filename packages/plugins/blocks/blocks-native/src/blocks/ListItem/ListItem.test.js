@@ -15,6 +15,7 @@
 */
 
 import { act, fireEvent, screen } from '@testing-library/react-native';
+import { Platform } from 'react-native';
 
 import { renderPage, styleOf, theme } from '../../test/renderPage.js';
 
@@ -248,4 +249,47 @@ test('trailing.check draws the tinted checkmark where the chevron goes, with no 
   expect(screen.getByTestId('bug_item').props.accessibilityState).toMatchObject({ selected: true });
   expect(screen.getAllByTestId('expo-ui-icon-checkmark')).toHaveLength(1);
   expect(screen.getByTestId('docs_chevron', { includeHiddenElements: true })).toBeTruthy();
+});
+
+test('a ListItem context menu on Android offers every item and runs nothing until one is picked', async () => {
+  const os = Platform.OS;
+  Platform.OS = 'android';
+  const record = [];
+  try {
+    await renderPage({
+      actions: { Record: ({ params }) => record.push(params) },
+      pageConfig: itemPage({
+        id: 'task',
+        type: 'ListItem',
+        properties: {
+          title: 'Fix sign in',
+          contextMenu: [
+            { id: 'edit', title: 'Edit' },
+            { id: 'share', title: 'Share' },
+            { id: 'archive', title: 'Archive' },
+            { id: 'delete', title: 'Delete', destructive: true },
+          ],
+        },
+        events: { onContextMenu: [{ id: 'record', type: 'Record', params: { _event: 'id' } }] },
+      }),
+    });
+    await screen.findByText('Fix sign in');
+    const menu = screen.getByTestId('task_menu');
+    expect(menu.props.shouldOpenOnLongPress).toBe(true);
+    expect(menu.props.actions.map((action) => action.title)).toEqual([
+      'Edit',
+      'Share',
+      'Archive',
+      'Delete',
+    ]);
+    expect(menu.props.actions[3].attributes.destructive).toBe(true);
+    // Dismissing the menu reports no action, so nothing runs.
+    expect(record).toEqual([]);
+    await act(async () => {
+      fireEvent(menu, 'pressAction', { nativeEvent: { event: 'archive' } });
+    });
+    expect(record).toEqual(['archive']);
+  } finally {
+    Platform.OS = os;
+  }
 });
