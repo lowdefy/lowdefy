@@ -63,6 +63,7 @@ const rule = {
 
 export default {
   category: 'display',
+  actions: ['Link'],
   icons: [
     'ChevronDown',
     'ChevronRight',
@@ -108,7 +109,7 @@ export default {
     },
     onLinkPress: {
       description:
-        'Trigger actions when a link in a comment is pressed, instead of opening it in the system browser.',
+        'Trigger actions when a link in a comment is pressed, instead of opening it. Without this event an app path (`/orders/42`) opens as a page and any other link through the system.',
       event: { href: 'The link’s href.' },
     },
     onLoadReplies: {

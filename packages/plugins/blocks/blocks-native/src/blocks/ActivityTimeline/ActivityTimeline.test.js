@@ -16,6 +16,8 @@
 
 import { act, fireEvent, screen } from '@testing-library/react-native';
 
+import { Link } from '@lowdefy/actions-core/actions';
+
 import { page, record, renderPage } from '../../test/renderPage.js';
 
 const sam = { id: 'u1', name: 'Sam Taylor' };
@@ -218,6 +220,36 @@ test('an ActivityTimeline cuts a long event line and note short with an ellipsis
     fireEvent.press(screen.getByText(title));
   });
   expect(lineOf(screen.getByText(title)).props.numberOfLines).toEqual(2);
+});
+
+test('an ActivityTimeline without onLinkPress opens an app path in a comment as a page', async () => {
+  const { host } = await renderPage({
+    actions: { Link },
+    pageConfig: page([
+      {
+        id: 'activity',
+        type: 'ActivityTimeline',
+        properties: {
+          entries: [
+            {
+              id: 'c10',
+              type: 'comment',
+              at: minutesAgo(5),
+              by: ada,
+              body: 'Raised on [the order](/orders/42).',
+            },
+          ],
+          user: { id: 'u1' },
+        },
+      },
+    ]),
+  });
+  await act(async () => {
+    fireEvent.press(await screen.findByText('the order'));
+  });
+  expect(host.router.push).toHaveBeenCalledWith(
+    expect.objectContaining({ pathname: '/orders/42' })
+  );
 });
 
 test('an ActivityTimeline draws linkChips links in comment bodies as chips that fire onLinkPress', async () => {

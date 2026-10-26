@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { type } from '@lowdefy/helpers';
 
@@ -32,6 +32,7 @@ import ThreadCard from './ThreadCard.js';
 import useComponentTokens from '../../useComponentTokens.js';
 import useNow from './useNow.js';
 
+const appPathPattern = /^\/(?!\/)/;
 const REACTIONS = ['👍', '👎', '❤️', '🎉', '😄', '👀', '🙏', '✅'];
 const LINE_MARKER_TOP = 6;
 
@@ -166,6 +167,13 @@ function ActivityTimeline({
   const hasLinkPress = !type.isNone(events.onLinkPress);
 
   const trigger = useCallback((name, event) => methods.triggerEvent({ name, event }), [methods]);
+  // An app path in a comment opens as a page through the Link action, as the Markdown block's do.
+  useEffect(() => {
+    methods.registerEvent({
+      name: '__link',
+      actions: [{ id: 'link', type: 'Link', params: { url: { _event: 'href' } } }],
+    });
+  }, [methods]);
   const ctx = useMemo(
     () => ({
       colors,
@@ -181,6 +189,10 @@ function ActivityTimeline({
       onLinkPress: (href) => {
         if (hasLinkPress) {
           trigger('onLinkPress', { href });
+          return;
+        }
+        if (appPathPattern.test(href)) {
+          trigger('__link', { href });
           return;
         }
         Linking.openURL(components.resolveUrl(href)).catch(() => {});

@@ -184,6 +184,9 @@ const nativeBlockTypes = {
       "category": "display",
       "cssKeys": [
         "element"
+      ],
+      "actions": [
+        "Link"
       ]
     },
     "AgentChat": {
