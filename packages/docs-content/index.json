@@ -1,5 +1,5 @@
 {
-  "version": "7.0.0",
+  "version": "7.1.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -210,6 +210,12 @@
       "title": "Lowdefy APIs",
       "section": "Concepts",
       "path": "content/concepts/lowdefy-api.md"
+    },
+    {
+      "slug": "concepts/mobile-apps",
+      "title": "Mobile Apps (Experimental)",
+      "section": "Concepts",
+      "path": "content/concepts/mobile-apps.md"
     },
     {
       "slug": "concepts/notifications",
@@ -2929,7 +2935,7 @@
       "files": [
         "concepts/core/lowdefy-schema.yaml"
       ],
-      "hash": "07740570ecf48abb36652a1b3bd9f06ac773d0689a7080cf850010926f6c0ad1"
+      "hash": "28537260c8bfa4ef068dada587f5585d1dd0397c3ff5401a1bce4cb3537766db"
     },
     "concepts/menus": {
       "files": [
@@ -3000,7 +3006,7 @@
       "files": [
         "concepts/core/events-and-actions.yaml"
       ],
-      "hash": "7eedc6d4ddd784cac10404d15849fc6b7e6581eee1370ec35bc64eaf7b766e3a"
+      "hash": "09eeb0fca318b32a1cda09f6c2af809100db50151e79028d04a79610b470a277"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
@@ -3075,7 +3081,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "46602ff87ff00ffb129234873030a99171e6d9779999296ad5be6520b7ccb86e"
+      "hash": "2d8a2b03ae7b1a4d640223f23bebea31ef5d3c052652f566aa0b68adff4933da"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3083,7 +3089,15 @@
         "concepts/advanced/api.yaml",
         "version.yaml"
       ],
-      "hash": "b144aabdc3888c74d30e6bf65beb57c28ff1ef01b9b60ba7505846fcda464a07"
+      "hash": "4d39c5137867fc430b39a57ad1e230d831ba4f2f50a2e1750fe73a635d11acc7"
+    },
+    "concepts/mobile-apps": {
+      "files": [
+        "concepts/advanced/mobile-apps.md",
+        "concepts/advanced/mobile-apps.yaml",
+        "version.yaml"
+      ],
+      "hash": "705c7e2fa78c8d5076e656a14f4a5528863f804c0a2d270d333e1677415855d2"
     },
     "concepts/notifications": {
       "files": [
@@ -3106,7 +3120,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "ad2788cb8f88d5cd6352c08b986b91ed4488b9b87e45877463324363676e7491"
+      "hash": "1873730b81d22282eeec3ba15ea034117cf501c67c621a3bacf66ed89b8057cf"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3206,7 +3220,7 @@
       "files": [
         "plugins/plugins-introduction.yaml"
       ],
-      "hash": "451ac10c70e26c3282a1ad769c770f7929c4f430f3e478f0db7cf078d4961ea9"
+      "hash": "b5ea2b592145a9fec38bfd7cbf255d6673dadb7c8bf18169fc9f6afb45e1d0f5"
     },
     "plugins/plugins-dev": {
       "files": [
@@ -3436,7 +3450,7 @@
         "blocks/input/ButtonSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "fabb293fb572478c04c7fec8b926b16dea87a28698147157fc743ceb1e682414"
+      "hash": "4cba50cdc7b586735ae7a06d4af0d531938929df080b9711970f1ea4bac12b2f"
     },
     "input-blocks/captcha": {
       "files": [
@@ -3461,7 +3475,7 @@
         "blocks/input/CheckboxSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6083244d16e683dee07b90ddbee3660e3306e9a34406fe4d546093825e00ff5b"
+      "hash": "a678b0f54da6d150a0367940d65fd7a24c4ce1378d19f5e735922826587fe065"
     },
     "input-blocks/checkboxswitch": {
       "files": [
@@ -3590,7 +3604,7 @@
         "blocks/input/MultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "cfa727b05704daeace3eb63e698c7ae450dff1552dc17e91e2d9907da71841a4"
+      "hash": "eacf4eed58ad5de7f5f00b1db7b757074d522356d21ffdeb548fc438785a4bbe"
     },
     "input-blocks/numberinput": {
       "files": [
@@ -3680,7 +3694,7 @@
         "blocks/input/RadioSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c9f3f2ce1ee3628099a26c3ff28342097aca9b910fc605b84a9707c5b1a7e3a6"
+      "hash": "d5941c2c6430d03365b1c82cf863165b4fa4adf65c88917c4c175ce365e94995"
     },
     "input-blocks/ratingslider": {
       "files": [
@@ -3711,7 +3725,7 @@
         "blocks/input/SegmentedSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "65f87a0aa4c5c42eee5d27950e71353d4bad4e3ca3a7e045f86bc3e98e52e945"
+      "hash": "b1403207dc83dc9369d3c6249d2eeb14e8c955b13db66eafc536d1f4c220f353"
     },
     "input-blocks/s3uploadbutton": {
       "files": [
@@ -3791,7 +3805,7 @@
         "blocks/input/Selector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "3a9cec614213a4b2aeb70a21d2843c405ad072abe6d9fef13ebbb7a392febaf4"
+      "hash": "b2e6df0f9f7be0c2a2239f973cc09fafd511dcfd0f14d21464db2c8dae7bb703"
     },
     "input-blocks/switch": {
       "files": [
@@ -3817,7 +3831,7 @@
         "blocks/input/TableInputGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "d9ccee0b6b48a49df3fcfe80b5d2c9bb4899d65c4688552ccbe6328de40f1970"
+      "hash": "f01bf21c6e8ad0d7d57856ae3c7629fbfd14e46b6d499027b3060d536b454c4a"
     },
     "input-blocks/tagmultipleselector": {
       "files": [
@@ -3916,7 +3930,7 @@
         "blocks/input/TreeInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0899ca075863f2b57211b89f85876d1cd2c4965b37cd8d92c1a0e97166dde075"
+      "hash": "3de7437ad30adb484e4f6d2f872d1b7b2143973c759c0346dd05c991cd319e47"
     },
     "input-blocks/treemultipleselector": {
       "files": [
@@ -3936,7 +3950,7 @@
         "blocks/input/TreeMultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0e1bea6c4469eb7d73c0114b92d440d0d7b589fe1c288cd1d8f6bffea9494d95"
+      "hash": "c221f8838ea7d54f5b938b685500b573df1ca371c2b87fa593c4d10113abbb85"
     },
     "input-blocks/treeselector": {
       "files": [
@@ -3956,7 +3970,7 @@
         "blocks/input/TreeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "386063be0288f56d1f6f730f57477bcfbc7a3f2ddcbc1d894a8c02cea3f65045"
+      "hash": "c41617d01d25a5d50d5e43c934142aa3954dc61c8e9311bbf1991e8fcf6a0f47"
     },
     "input-blocks/weekselector": {
       "files": [
@@ -4289,7 +4303,7 @@
         "blocks/display/SearchGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "25a5f09fa80ef195d1f66a7390d8d3715814d928fda926f3c141541cbc85bfc9"
+      "hash": "33f19679dc0505ff0c93ccac828b008d8bc24509cb92178a6921a5640dff8e91"
     },
     "display-blocks/skeleton": {
       "files": [
@@ -4364,7 +4378,7 @@
         "blocks/display/TableGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c563c910e0052af6f900574b94093fe51bbf1a956db19ad0656507b485f2e0aa"
+      "hash": "527b3d8015993dca32fe3acea720436e1f70369ce7101c8990f5beec29c761b7"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -4373,11 +4387,12 @@
         "../plugins/blocks/blocks-antd/src/blocks/TableLight/tableOnlyKeys.js",
         "../plugins/blocks/blocks-antd/src/table/aggregateLabels.js",
         "../plugins/blocks/blocks-antd/src/table/cellTypeFamilies.js",
+        "../plugins/blocks/blocks-antd/src/table/rowsKind.js",
         "blocks/display/TableLight.yaml",
         "blocks/display/TableLightGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "e1de461f6c3b5220fc8bb835c215fbf01a91dbe70e542e12811ec78670d554c3"
+      "hash": "fac67fba91a6fbec2b0439ee6c05b83eb2b078371d2bb30aab1638b9e0384edd"
     },
     "display-blocks/tag": {
       "files": [
@@ -4891,7 +4906,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "e8b01fcbdcee058f34dcfce8354e46b41542ee891d0a54121ffdf371c8a91bc2"
+      "hash": "e3b57250865bdc78e88631c7da855e959b5bde8f0f0a3fddc1fe2aded583f45e"
     },
     "connections/mssql": {
       "files": [
