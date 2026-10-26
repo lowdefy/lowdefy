@@ -95,18 +95,66 @@ test('pluginSourceWatcher watches nothing when lowdefy.yaml lists no local plugi
   await expect(pluginSourceWatcher(context)).resolves.toBeUndefined();
 });
 
+// The server imports a plugin's server-side types through the build's plugin
+// import files, here src/connections.js, which imports src/find.js.
+function writeServerImports(dir) {
+  fs.writeFileSync(
+    path.join(dir, 'package.json'),
+    JSON.stringify({
+      name: '@app/plugin',
+      type: 'module',
+      exports: { './connections': './src/connections.js', './blocks': './src/blocks.js' },
+    })
+  );
+  fs.writeFileSync(
+    path.join(dir, 'src', 'connections.js'),
+    "export { default as Find } from './find.js';\n"
+  );
+  fs.writeFileSync(path.join(dir, 'src', 'blocks.js'), "export { default } from './Fancy.js';\n");
+  fs.writeFileSync(path.join(dir, 'src', 'find.js'), 'export default 1;');
+  fs.writeFileSync(path.join(dir, 'src', 'Fancy.js'), 'export default 1;');
+  fs.mkdirSync(path.join(context.directories.build, 'plugins'), { recursive: true });
+  fs.writeFileSync(
+    path.join(context.directories.build, 'plugins', 'connections.js'),
+    "import { Find as Find } from '@app/plugin/connections';\nexport default { Find };\n"
+  );
+  fs.writeFileSync(
+    path.join(context.directories.build, 'plugins', 'blocks.js'),
+    "import Fancy from '@app/plugin/blocks';\nexport default { Fancy };\n"
+  );
+}
+
 test.each([
   ['a server-side plugin rebuilds and restarts the server', 'requests', 'src/find.js', true],
   ['a block-only plugin rebuilds without a restart', 'blocks', 'src/Fancy.js', false],
   ['a plugin imported from its build output rebuilds', 'blocks', 'dist/Fancy.js', false],
+  [
+    'a block in a plugin with server-side types rebuilds without a restart',
+    'requests',
+    'src/Fancy.js',
+    false,
+  ],
+  [
+    'the package.json of a plugin with server-side types rebuilds and restarts',
+    'requests',
+    'package.json',
+    true,
+  ],
 ])('editing %s', async (_, kind, file, restart) => {
   const dir = addLinkedPackage('@app/plugin');
-  fs.writeFileSync(path.join(dir, file), 'export default 1;');
+  writeServerImports(dir);
+  if (file !== 'package.json') {
+    fs.writeFileSync(path.join(dir, file), 'export default 1;');
+  }
   writeLowdefyYaml(['@app/plugin']);
   writeCustomTypesMap({ [kind]: { Type: { package: '@app/plugin', version: '1.0.0' } } });
 
   await startWatcher();
-  fs.writeFileSync(path.join(dir, file), 'export default 2;');
+  if (file === 'package.json') {
+    fs.appendFileSync(path.join(dir, file), '\n');
+  } else {
+    fs.writeFileSync(path.join(dir, file), 'export default 2;');
+  }
   await waitFor(() => context.reloadClients.mock.calls.length > 0, {
     description: 'clients to reload',
   });
@@ -114,6 +162,26 @@ test.each([
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
   expect(context.syncServer).toHaveBeenCalledWith({ restart });
   expect(context.buildActivity.setBusy.mock.calls[0]).toEqual([true]);
+});
+
+test('editing a server-side plugin whose server code imports a computed path restarts the server', async () => {
+  const dir = addLinkedPackage('@app/plugin');
+  writeServerImports(dir);
+  fs.writeFileSync(
+    path.join(dir, 'src', 'find.js'),
+    'export default (name) => import(`./handlers/${name}.js`);'
+  );
+  fs.writeFileSync(path.join(dir, 'src', 'Fancy.js'), 'export default 1;');
+  writeLowdefyYaml(['@app/plugin']);
+  writeCustomTypesMap({ requests: { Find: { package: '@app/plugin', version: '1.0.0' } } });
+
+  await startWatcher();
+  fs.writeFileSync(path.join(dir, 'src', 'Fancy.js'), 'export default 2;');
+  await waitFor(() => context.reloadClients.mock.calls.length > 0, {
+    description: 'clients to reload',
+  });
+
+  expect(context.syncServer).toHaveBeenCalledWith({ restart: true });
 });
 
 test('a fix to a plugin whose edit failed the build rebuilds again', async () => {

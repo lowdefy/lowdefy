@@ -147,7 +147,7 @@ server-dev/
 │   └── watchers/
 │       ├── lowdefyBuildWatcher.mjs   # Config, local modules and ref map files: skeleton vs page
 │       ├── envWatcher.mjs
-│       ├── pluginSourceWatcher.mjs   # Local plugin packages → rebuild (+ restart if server-side)
+│       ├── pluginSourceWatcher.mjs   # Local plugin packages → rebuild (+ restart if server code)
 │       ├── restartRequestWatcher.mjs # build/.restart from the dev tools → rebuild + restart
 │       └── serverPackageWatcher.mjs  # Server package.json from a page build → install + restart
 ├── vite.config.js
@@ -762,9 +762,17 @@ Published packages cannot change under a running server. The whole package is wa
 `node_modules` and dot-folders, since a plugin may be imported from its sources or from a build
 output its own watcher writes. Any change rebuilds the config — which reads each plugin's type
 list, so a new type is defined and a build a broken plugin failed clears once it is fixed — and
-reloads the clients. A change to a plugin with server-side types (per the last build's
-`customTypesMap.json`) also restarts the server, whose ESM cache holds the old modules; block,
-action and client-operator code is Vite's to hot-replace.
+reloads the clients. A change to a file the server imports also restarts the server, whose ESM
+cache holds the old modules; block, action and client-operator code is Vite's to hot-replace, and
+a restart would only drop the requests in flight. Only plugins with server-side types (per the
+build's `customTypesMap.json`) can restart it. After the build, `listServerPluginFiles` follows
+the imports of the build's server-side plugin import files (`build/plugins/*.js`, less the client
+bundle's `actions.js`, `blocks.js`, `icons.js`, `operators/client.js` and
+`operators/clientJsMap.js`) through the local packages' own files. A changed file in that set,
+or a changed `package.json`, restarts. When the walk cannot be sure (an import it cannot resolve,
+or a dynamic import of a computed path) it returns `null` and any change in the package restarts,
+as before. Imports are found by patterns over comment-stripped source, not a parser: a stray
+match only adds a file, which errs towards a restart.
 
 ### Publishing a Build
 
@@ -1146,7 +1154,7 @@ export default defineConfig(({ mode }) => ({
 | Client plugin code / CSS change                                      | Vite                  | HMR module replacement                   | In-place update (~hundreds of ms, no restart)    |
 | Server artifact change (auth, connections, server operators, config) | syncServer            | Restart child                            | Hard restart                                     |
 | `package.json` change                                                | syncServer            | Install + lowdefy build + restart        | Hard restart                                     |
-| Local plugin package change                                          | pluginSourceWatcher   | Lowdefy build (+ restart if server-side) | Soft reload or hard restart                      |
+| Local plugin package change                                          | pluginSourceWatcher   | Lowdefy build (+ restart if server code) | Soft reload or hard restart                      |
 | `.env` change                                                        | envWatcher            | Read env + lowdefy build + restart       | Hard restart                                     |
 
 ## Mock User for Testing

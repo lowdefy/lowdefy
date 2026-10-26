@@ -17,6 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import createPluginSourceIgnore from './createPluginSourceIgnore.mjs';
+import listServerPluginFiles from './listServerPluginFiles.mjs';
 import listServerSidePackages from './listServerSidePackages.mjs';
 import readPluginDefinitions from '../utils/readPluginDefinitions.mjs';
 import selectLocalPluginPackages from './selectLocalPluginPackages.mjs';
@@ -27,13 +28,41 @@ function isInside({ filePath, dir }) {
   return !relative.startsWith('..') && !path.isAbsolute(relative);
 }
 
+// The server process caches the modules of server-side types (requests,
+// connections, operators, ...), so a change to one of the files it imports
+// restarts it. Any other file of the package - a block, an action, a client
+// operator - is Vite's to hot-replace, and a restart would only drop the page
+// loads and tool calls in flight for the length of a child start. The import
+// graph is walked after the build, which rewrites the server's plugin import
+// files when a type is added or removed.
+function isServerCodeChange({ changedFiles, context, packages }) {
+  const customTypesMap = JSON.parse(
+    fs.readFileSync(path.join(context.directories.build, 'customTypesMap.json'), 'utf8')
+  );
+  const serverSide = listServerSidePackages({ customTypesMap });
+  const changedServerPackageFiles = changedFiles.filter((filePath) =>
+    packages.some(
+      ({ package: packageName, dir }) => serverSide.has(packageName) && isInside({ filePath, dir })
+    )
+  );
+  if (changedServerPackageFiles.length === 0) {
+    return false;
+  }
+  const serverFiles = listServerPluginFiles({ directories: context.directories, packages });
+  if (serverFiles === null) {
+    return true;
+  }
+  return changedServerPackageFiles.some(
+    (filePath) => path.basename(filePath) === 'package.json' || serverFiles.has(filePath)
+  );
+}
+
 // A local plugin's code can change while the dev server runs, and nothing
 // else watches it when it lives outside the config directory. The config
-// build reads each plugin's type list, so any change rebuilds - which also
-// clears a build a broken plugin failed. The server process caches the
-// modules of server-side types (requests, connections, operators, ...), so a
-// change to a plugin that has them also restarts the server; client code
-// is Vite's to hot-replace. Only code files anywhere in the package are
+// build reads each plugin's type list, and block source for the page CSS, so
+// any change rebuilds - which also clears a build a broken plugin failed.
+// Only a change to code the server imports restarts it (see
+// isServerCodeChange). Only code files anywhere in the package are
 // watched: a plugin may be imported from its sources or from a build output
 // its own watcher writes, but non-code files (public/, YAML, Markdown) are
 // never plugin code, and a package that is also the config directory writes
@@ -50,19 +79,13 @@ async function pluginSourceWatcher(context) {
 
   const callback = async (filePaths) => {
     const changedFiles = filePaths.flat();
-    const customTypesMap = JSON.parse(
-      fs.readFileSync(path.join(context.directories.build, 'customTypesMap.json'), 'utf8')
-    );
-    const serverSide = listServerSidePackages({ customTypesMap });
-    const restart = packages.some(
-      ({ package: packageName, dir }) =>
-        serverSide.has(packageName) && changedFiles.some((filePath) => isInside({ filePath, dir }))
-    );
     context.logger.info({ spin: 'start' }, 'Local plugin source changed, rebuilding.');
     try {
       await context.lowdefyBuild();
     } finally {
-      await context.syncServer({ restart });
+      await context.syncServer({
+        restart: isServerCodeChange({ changedFiles, context, packages }),
+      });
       await context.reloadClients();
     }
   };
