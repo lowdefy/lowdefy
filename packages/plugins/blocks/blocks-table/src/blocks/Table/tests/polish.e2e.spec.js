@@ -359,12 +359,58 @@ test.describe('Table visual polish', () => {
         descriptionTop: description.top,
       };
     });
-    expect(boxes.avatar.height).toBe(32);
+    expect(boxes.avatar.height).toBe(24);
     expect(isInsideBox(boxes.avatar, boxes.cell)).toBe(true);
     expect(boxes.descriptionTop).toBeGreaterThanOrEqual(boxes.nameBottom - 0.5);
     await expect(
       row(page, 'members', 2).locator('[data-col-key="name"] .lf-table-person-description')
     ).toHaveCount(0);
+  });
+
+  test('every avatar is one size and a whole circle, with or without a description', async ({
+    page,
+  }) => {
+    for (const id of ['members', 'crm']) {
+      const avatars = await table(page, id).evaluate((root) =>
+        Array.from(root.querySelectorAll('.lf-table-body .lf-table-avatar')).map((avatar) => {
+          const box = avatar.getBoundingClientRect();
+          // The avatar's visible box: its own box cut by every ancestor up to the body that clips.
+          const visible = { top: box.top, bottom: box.bottom, left: box.left, right: box.right };
+          let node = avatar.parentElement;
+          while (node && !node.classList.contains('lf-table-body')) {
+            const style = getComputedStyle(node);
+            if (style.overflowY !== 'visible') {
+              const clip = node.getBoundingClientRect();
+              visible.top = Math.max(visible.top, clip.top);
+              visible.bottom = Math.min(visible.bottom, clip.bottom);
+            }
+            if (style.overflowX !== 'visible') {
+              const clip = node.getBoundingClientRect();
+              visible.left = Math.max(visible.left, clip.left);
+              visible.right = Math.min(visible.right, clip.right);
+            }
+            node = node.parentElement;
+          }
+          return {
+            width: box.width,
+            height: box.height,
+            cutHeight: box.height - (visible.bottom - visible.top),
+            radius: getComputedStyle(avatar).borderRadius,
+          };
+        })
+      );
+      expect(avatars.length).toBeGreaterThan(1);
+      avatars.forEach((avatar) => {
+        expect(avatar).toMatchObject({ width: 24, height: 24, radius: '50%' });
+        expect(avatar.cutHeight).toBeLessThanOrEqual(0.5);
+      });
+    }
+    const nameLefts = await table(page, 'members').evaluate((root) =>
+      Array.from(root.querySelectorAll('.lf-table-body .lf-table-person-name')).map(
+        (name) => name.getBoundingClientRect().left
+      )
+    );
+    expect(nameLefts).toEqual([nameLefts[0], nameLefts[0]]);
   });
 
   test('row separators run the full width of a table wider than its columns', async ({ page }) => {

@@ -198,12 +198,17 @@
     white-space: nowrap;
   }
 
-  /* With a description the person is two lines: a larger avatar beside the name and the
-     description under it. It needs a default or comfortable row to fit. */
+  /* An avatar overhangs its one-line box by a pixel or two, so a cell holding avatars never clips:
+     a single-line wrapper clipped them flat at the top and bottom. The name and the +N group
+     truncate on their own. */
+  .lf-table-cell-avatars {
+    overflow: visible;
+  }
+
+  /* With a description the person is two lines: the name and the description under it, beside an
+     avatar of the same size and gap as every other avatar in the table, so names line up. It
+     needs a default or comfortable row to fit. */
   .lf-table-person-stacked {
-    --lf-avatar-size: 32px;
-    --lf-avatar-font-size: 12px;
-    gap: var(--ant-margin-xs, 8px);
     height: auto;
     vertical-align: middle;
   }
