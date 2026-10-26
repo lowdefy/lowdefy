@@ -77,3 +77,15 @@ test('inspectStateHeadless returns the error naming a missing placeholder before
   expect(result.invalidInput).toBe(true);
   expect(result.error).toMatch(/missing a value for path placeholder "ticket_id"/);
 });
+
+test('inspectStateHeadless returns an actionable error when no browser is available to evaluate an expression', async () => {
+  const result = await inspectStateHeadless({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    evaluate: true,
+    expression: { _state: 'x' },
+  });
+  expect(result.error).toMatch(
+    /No Chromium available. Run: npx playwright install chromium-headless-shell/
+  );
+});

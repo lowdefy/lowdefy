@@ -22,7 +22,7 @@ import {
 } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
-import { getConfigDirectory } from './checkpointPaths.js';
+import getConfigDirectory from './getConfigDirectory.js';
 import readBuildArtifact from './readBuildArtifact.js';
 
 function describeEmpty() {

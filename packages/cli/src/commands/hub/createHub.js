@@ -187,6 +187,9 @@ function createHub({
         configDirectory,
         owner: record.owner,
         state: record.state,
+        // `stopped` while the manager has stopped its idle Vite child; the
+        // next request starts it. Absent from an older server-dev.
+        child: record.child,
         url: record.url,
         pid: record.pid,
         startedAt: record.startedAt,
@@ -623,8 +626,16 @@ function createHub({
         return false;
       }
     }
-    // A tab poll that fails counts as no tabs: the record already said idle.
-    return record === null || (await openTabs({ url: record.url })) === 0;
+    if (record === null) {
+      return true;
+    }
+    // The manager counts the tabs holding its reload stream; only an older
+    // server-dev, whose record does not, is asked. A tab poll that fails
+    // counts as no tabs: the record already said idle.
+    if (type.isNumber(record.openTabs)) {
+      return record.openTabs === 0;
+    }
+    return (await openTabs({ url: record.url })) === 0;
   }
 
   // Whether a server was used after the reaper judged it idle: the tab poll

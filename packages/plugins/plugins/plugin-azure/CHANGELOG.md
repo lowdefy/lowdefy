@@ -1,5 +1,11 @@
 # @lowdefy/plugin-azure
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/helpers@7.1.0
+
 ## 7.0.0
 
 ### Minor Changes

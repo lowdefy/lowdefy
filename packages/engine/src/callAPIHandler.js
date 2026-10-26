@@ -45,6 +45,10 @@ async function callAPIHandler(context, { actionId, blockId, params }) {
     api.response = previousResponse;
   }
   context._internal.lowdefy.apiResponses[api.endpointId].unshift(api);
+  const callLimit = context._internal.lowdefy._internal?.historyLimits?.calls;
+  if (callLimit && context._internal.lowdefy.apiResponses[api.endpointId].length > callLimit) {
+    context._internal.lowdefy.apiResponses[api.endpointId].length = callLimit;
+  }
   reportAppChange({ context, key: `api:${api.endpointId}` });
 
   let apiResponse;

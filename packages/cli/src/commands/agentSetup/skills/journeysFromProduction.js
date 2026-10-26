@@ -55,8 +55,8 @@ the app's config (a button label, a menu item, an option label, a message). Ever
 customer's name in a grid cell or a label built from values, stays a token.
 
 Read: the day files and manifests in \`.lowdefy/traces/production/\` (tokens), the session logs,
-\`.lowdefy/test/coverage.json\`, command output, the app's config and code, and the dev server's
-\`/lowdefy-docs\` routes when one is running.
+\`.lowdefy/test/coverage.json\`, command output, the app's config and code, and what the dev server's
+\`lowdefy_\` tools (\`lowdefy_app_map\`, \`lowdefy_get_page_config\`) report when one is running.
 
 Never:
 

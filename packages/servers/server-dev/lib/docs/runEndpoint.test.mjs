@@ -59,7 +59,7 @@ const { ConfigError } = await import('@lowdefy/errors');
 const { MAX_INLINE_RESPONSE_CHARS } = await import('./fitResponse.js');
 const { default: runEndpoint } = await import('./runEndpoint.js');
 
-const honoContext = { req: { path: '/lowdefy-docs/run-endpoint' } };
+const honoContext = { req: { path: '/lowdefy-docs/mcp' } };
 const context = { logger: { info: mockLoggerInfo } };
 
 beforeEach(() => {
@@ -227,7 +227,7 @@ test('runEndpoint returns a not-found refusal when the endpoint does not exist',
   expect(result).toEqual({
     refused: true,
     reason:
-      'Endpoint "missing_endpoint" was not found. See GET /lowdefy-docs/app-map for the endpoints that exist.',
+      'Endpoint "missing_endpoint" was not found. See lowdefy_app_map for the endpoints that exist.',
   });
   expect(mockGetEndpointConfig).toHaveBeenCalledWith(context, { endpointId: 'missing_endpoint' });
   expect(mockCallEndpoint).not.toHaveBeenCalled();

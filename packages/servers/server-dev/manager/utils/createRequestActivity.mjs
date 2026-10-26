@@ -17,7 +17,8 @@
 /*
 Whether anyone is using this dev server, for readers in other processes: the
 hub stops a server nobody has used for a while, judged from the fields this
-writes into the instance record (lastActivityAt, activeRequests). The manager
+writes into the instance record (lastActivityAt, activeRequests, openTabs).
+The manager
 counts here because it owns the public port and outlives every child restart,
 so it sees every caller (agents, lowdefy test, curl, the browser) and keeps
 its count across restarts.
@@ -28,9 +29,16 @@ record is then never more than throttleMs behind, far inside the shortest
 idle limit. A request starting while the record last said 0 in flight is
 written at once, so a reader never sees a busy server as idle-with-nothing-
 in-flight longer than it takes to write.
+
+openTabs counts the browser tabs (headless journey tabs included) holding a
+reload stream open. Streams are not activity, but an open tab is use: it
+keeps the Vite child up (createIdleChild) and the hub reads it here instead
+of asking the child. A tab opening or closing is rare, so it is written at
+once; a tab closing counts as use, so the idle count starts then.
 */
 function createRequestActivity({ onChange, throttleMs = 5000, now = Date.now }) {
   let activeRequests = 0;
+  let openTabs = 0;
   let lastActivityAt = now();
   let lastWriteAt = -Infinity;
   let writtenActiveRequests = 0;
@@ -43,7 +51,11 @@ function createRequestActivity({ onChange, throttleMs = 5000, now = Date.now }) 
     }
     lastWriteAt = now();
     writtenActiveRequests = activeRequests;
-    onChange({ lastActivityAt: new Date(lastActivityAt).toISOString(), activeRequests });
+    onChange({
+      lastActivityAt: new Date(lastActivityAt).toISOString(),
+      activeRequests,
+      openTabs,
+    });
   }
 
   function schedule() {
@@ -92,9 +104,24 @@ function createRequestActivity({ onChange, throttleMs = 5000, now = Date.now }) 
     res.once('close', onEnd);
   }
 
+  // Counts one open tab from its reload stream's response start until it closes.
+  function trackTab(res) {
+    openTabs += 1;
+    write();
+    res.once('close', () => {
+      openTabs -= 1;
+      lastActivityAt = now();
+      write();
+    });
+  }
+
+  function snapshot() {
+    return { activeRequests, lastActivityAt, openTabs };
+  }
+
   write();
 
-  return { begin, end, touch, trackResponse };
+  return { begin, end, snapshot, touch, trackResponse, trackTab };
 }
 
 export default createRequestActivity;

@@ -564,6 +564,32 @@ test('hub reap keeps an unused server that a browser tab has open', async () => 
   expect((await adopting.list()).instances).toEqual([expect.objectContaining({ configDirectory })]);
 });
 
+test('hub reap reads open tabs from the record instead of asking the server', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 60, openTabs: 1 });
+  const openTabs = vi.fn(async () => 0);
+  const adopting = createTestHub({ openTabs });
+  await adopting.reap();
+  expect(openTabs).not.toHaveBeenCalled();
+  expect((await adopting.list()).instances).toEqual([expect.objectContaining({ configDirectory })]);
+});
+
+test('hub reap stops an unused server whose record counts no open tabs, without asking it', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 60, openTabs: 0, child: 'stopped' });
+  const openTabs = vi.fn(async () => 1);
+  const adopting = createTestHub({ openTabs });
+  await adopting.reap();
+  expect(openTabs).not.toHaveBeenCalled();
+  expect((await adopting.list()).instances).toEqual([]);
+});
+
+test('hub status passes through whether the manager has stopped its idle child', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 4, child: 'stopped' });
+  expect(await hub.status({ configDirectory })).toMatchObject({ state: 'ready', child: 'stopped' });
+});
+
 test.each([
   ['warn', 6],
   ['critical', 3],

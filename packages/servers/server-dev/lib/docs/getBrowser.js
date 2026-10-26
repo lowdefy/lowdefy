@@ -28,10 +28,10 @@ import recordingCookiePayload from '../server/recording/recordingCookiePayload.j
 
 // Module-level singleton, shared by every headless caller (screenshots,
 // journeys, state inspection, operator evaluation, state loads) and closed
-// after 90 s unused. See createBrowserLifecycle.js.
+// after 45 s unused. See createBrowserLifecycle.js.
 const { getBrowser, trackContext } = createBrowserLifecycle({
   launch: launchBrowser,
-  idleTimeout: 90_000,
+  idleTimeout: 45_000,
 });
 
 // `origin` should already include any configured basePath prefix that the
@@ -165,7 +165,7 @@ async function openPage({
     await page.goto(url, { waitUntil: 'load', timeout });
     // The engine builds the page context (and runs onInit + initial requests)
     // after the bundle loads — 'load' fires before that. Every caller
-    // (screenshot, inspect, eval, checkpoint load, journeys) needs the app's
+    // (screenshot, inspect, eval, journeys) needs the app's
     // async lifecycle to have settled, not just the bundle to have loaded, so
     // wait on isPageReady - for the instance the app shows, which is not the
     // one asked for when the app redirects, as a protected page does for a

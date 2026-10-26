@@ -136,7 +136,7 @@ test('lowdefy mcp lists the lifecycle tools and every dev tool with a directory 
 // Stands in for the per-user hub on its socket: answers each request with what
 // a hub that has started the app would. The app's dev server is a local
 // server that records the paths asked of it.
-async function listenFakeHub({ configDirectory, start = {} }) {
+async function listenFakeHub({ configDirectory, start = {}, status }) {
   const devRequests = [];
   const devServer = http.createServer((req, res) => {
     devRequests.push(req.url);
@@ -157,6 +157,7 @@ async function listenFakeHub({ configDirectory, start = {} }) {
       managed: true,
       ...start,
     },
+    status,
   };
   const server = net.createServer((socket) => {
     socket.setEncoding('utf8');
@@ -182,6 +183,23 @@ async function listenFakeHub({ configDirectory, start = {} }) {
     },
   };
 }
+
+test('lowdefy mcp logs each tool call to tool-calls.jsonl in the Lowdefy home, without arguments', async () => {
+  makeApp('app');
+  await connect({ cwd: root });
+  await client.callTool({ name: 'lowdefy_dev_list', arguments: {} });
+  await client.callTool({ name: 'lowdefy_nope', arguments: { secret: 'value' } });
+  const text = fs.readFileSync(path.join(home, 'tool-calls.jsonl'), 'utf8');
+  const lines = text
+    .trim()
+    .split('\n')
+    .map((line) => JSON.parse(line));
+  expect(lines.map((line) => [line.tool, line.ok])).toEqual([
+    ['lowdefy_dev_list', true],
+    ['lowdefy_nope', false],
+  ]);
+  expect(text).not.toContain('secret');
+});
 
 test('lowdefy_dev_start counts as use and says the hub stops the server once it has been idle', async () => {
   const app = makeApp('apps/main');
@@ -263,6 +281,60 @@ test('lowdefy_dev_status reports a terminal dev server from its instance record 
   });
   expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
 });
+
+function writeIdleRecord(app) {
+  fs.mkdirSync(path.join(app, '.lowdefy'));
+  fs.writeFileSync(
+    path.join(app, '.lowdefy', 'instance.json'),
+    JSON.stringify({
+      pid: process.pid,
+      configDirectory: app,
+      owner: 'hub',
+      state: 'ready',
+      child: 'stopped',
+      url: 'http://localhost:3999',
+      version: '6.0.0',
+    })
+  );
+}
+
+test.each([
+  ['a hub that passes the child through', { child: 'stopped' }],
+  ['an older hub that drops the child field', {}],
+])(
+  'lowdefy_dev_status reports idle for a server whose child is stopped, with %s',
+  async (_, fields) => {
+    const app = makeApp('apps/main');
+    writeIdleRecord(app);
+    const hub = await listenFakeHub({
+      configDirectory: app,
+      status: {
+        configDirectory: app,
+        owner: 'hub',
+        state: 'ready',
+        url: 'http://localhost:3999',
+        pid: process.pid,
+        version: '6.0.0',
+        managed: true,
+        ...fields,
+      },
+    });
+    try {
+      await connect({ cwd: root });
+      const result = await client.callTool({ name: 'lowdefy_dev_status', arguments: {} });
+      const status = JSON.parse(text(result));
+      expect(status).toMatchObject({ state: 'idle', child: 'stopped', build: null });
+      expect(status.note).toContain('The next tool call or page request starts it again');
+      expect(hub.devRequests).toEqual([]);
+    } finally {
+      await client.close();
+      await shim.close();
+      client = undefined;
+      shim = undefined;
+      await hub.close();
+    }
+  }
+);
 
 test('lowdefy_run_tests reports that there are no tests without starting anything', async () => {
   const app = makeApp('.');

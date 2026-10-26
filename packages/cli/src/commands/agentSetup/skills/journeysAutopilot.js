@@ -60,7 +60,11 @@ you open pull requests and never merge, and how to run you unattended:
 - **One agent.** Spawn no sub-agents and fan out nothing. One server and one \`lowdefy test\` run at
   a time. Start a dev server (\`lowdefy_dev_start({ directory })\`) only to look at a page, and stop
   it (\`lowdefy_dev_stop\`) before the cycle ends; \`lowdefy test\` starts and stops its own. Never
-  run \`lowdefy dev\`, choose a port or kill a process by port or name. Run only your own worktree's
+  run \`lowdefy dev\`, choose a port or kill a process by port or name. \`lowdefy test\` waits for a journey run
+  slot; exit code 75 means the machine stayed busy for 20 minutes and nothing ran, so wait a few minutes,
+  retry once, then write \`blocked:\` and stop. Never loop. To rerun one journey while you fix it, run
+  \`lowdefy hub start .\` in the app folder once, then \`lowdefy test\` as often as needed, then
+  \`lowdefy hub stop .\` before the cycle ends. Run only your own worktree's
   commands; never touch the developer's checkout or another worktree.
 - **Data sets only.** Every journey names a data set (\`data:\`), so it runs on an in-memory
   database loaded from \`tests/data/\`. Never run anything against production, a staging database

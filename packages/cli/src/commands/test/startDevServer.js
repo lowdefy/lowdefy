@@ -20,12 +20,20 @@ import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
+import sampleServerResources from './sampleServerResources.js';
 import spawnServer from '../../utils/spawnServer.js';
 
 const CAPTURED_LINES = 40;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function formatResources({ peakBytes, cpuSeconds }) {
+  const gigabytes = (peakBytes / 1024 ** 3).toFixed(2);
+  return `Resources (approximate): server peak ${gigabytes} GB, CPU ${Math.round(
+    cpuSeconds
+  )} s, including data store and browsers.`;
 }
 
 function waitForExit(child) {
@@ -39,6 +47,7 @@ function waitForExit(child) {
 // without opening a browser, and resolves once the server's .lowdefy/instance.json record
 // is ready. The manager flips the record to ready once <basePath>/api/ping answers, and
 // its url carries the app's basePath, which the CLI cannot know without building.
+// stop() ends with the server's resource line: its peak memory and CPU time.
 async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 120000 }) {
   const directory = context.directories.dev;
   const port = await findAvailablePort({ port: context.options.port ?? 3000 });
@@ -78,7 +87,10 @@ async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 1
     },
   });
 
-  async function stop() {
+  // Sampled from the spawn, so the boot counts, and stopped with the server.
+  const resources = sampleServerResources({ pid: child.pid });
+
+  async function stopServer() {
     if (child.exitCode !== null || child.signalCode !== null) {
       return;
     }
@@ -90,9 +102,19 @@ async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 1
     await waitForExit(child);
   }
 
+  async function stop() {
+    // The last sample is taken while the server's processes still run.
+    const measured = await resources.stop();
+    await stopServer();
+    if (measured !== null) {
+      context.logger.info(formatResources(measured));
+    }
+  }
+
   const deadline = Date.now() + bootTimeoutMs;
   while (Date.now() < deadline) {
     if (child.exitCode !== null || child.signalCode !== null) {
+      await resources.stop();
       const error = new Error(
         `Development server exited with code ${child.exitCode} before it was ready.`
       );
@@ -105,7 +127,8 @@ async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 1
     }
     await sleep(pollIntervalMs);
   }
-  await stop();
+  await resources.stop();
+  await stopServer();
   const error = new Error(`Development server was not ready within ${bootTimeoutMs}ms.`);
   error.serverOutput = capturedLines;
   throw error;

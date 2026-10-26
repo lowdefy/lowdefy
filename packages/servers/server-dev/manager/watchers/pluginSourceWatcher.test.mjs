@@ -22,6 +22,10 @@ import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import waitFor from '../../test-utils/waitFor.mjs';
 
+const mockClearPluginTypeCache = vi.fn();
+vi.doMock('../utils/pluginTypeCache.mjs', () => ({
+  clearPluginTypeCache: mockClearPluginTypeCache,
+}));
 const { default: pluginSourceWatcher } = await import('./pluginSourceWatcher.mjs');
 
 // macOS can hold file events back for tens of seconds on a busy machine.
@@ -65,6 +69,7 @@ function addLinkedPackage(name) {
 }
 
 beforeEach(() => {
+  mockClearPluginTypeCache.mockClear();
   root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-plugin-watcher-test-'));
   const config = path.join(root, 'app');
   const server = path.join(config, '.lowdefy', 'dev');
@@ -160,6 +165,10 @@ test.each([
   });
 
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
+  expect(mockClearPluginTypeCache).toHaveBeenCalledTimes(1);
+  expect(mockClearPluginTypeCache.mock.invocationCallOrder[0]).toBeLessThan(
+    context.lowdefyBuild.mock.invocationCallOrder[0]
+  );
   expect(context.syncServer).toHaveBeenCalledWith({ restart });
   expect(context.buildActivity.setBusy.mock.calls[0]).toEqual([true]);
 });
