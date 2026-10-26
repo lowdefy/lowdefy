@@ -45,15 +45,25 @@ test('journeyTargetSelectors names the wrapper prefix, grid attributes, layers a
   });
 });
 
-test('rowSelector and cellSelector cover ag-grid and Table, never their headers', () => {
-  const { cellSelector, rowSelector } = journeyTargetSelectors;
-  expect(rowSelector(1)).toBe('.ag-row[row-index="1"], .lf-table-row[data-row-index="1"]');
-  expect(rowSelector()).toBe('.ag-row[row-index], .lf-table-row[data-row-index]');
-  expect(cellSelector('a"b')).toBe(
+test('gridSelector covers ag-grid and Table rows and cells, never their headers', () => {
+  const { gridSelector } = journeyTargetSelectors;
+  expect(gridSelector({ kind: 'row', value: 1 })).toBe(
+    '.ag-row[row-index="1"], .lf-table-row[data-row-index="1"]'
+  );
+  expect(gridSelector({ kind: 'row' })).toBe(
+    '.ag-row[row-index], .lf-table-row[data-row-index]:not([data-row-index="-1"])'
+  );
+  expect(gridSelector({ kind: 'cell', value: 'a"b' })).toBe(
     '.ag-cell[col-id="a\\"b"], .lf-table-gridcell[data-col-key="a\\"b"][role="gridcell"]'
   );
-  expect(cellSelector()).toBe(
+  expect(gridSelector({ kind: 'cell' })).toBe(
     '.ag-cell[col-id], .lf-table-gridcell[data-col-key][role="gridcell"]'
+  );
+});
+
+test('gridSelector matches every row when the value is null', () => {
+  expect(journeyTargetSelectors.gridSelector({ kind: 'row', value: null })).toBe(
+    '.ag-row[row-index], .lf-table-row[data-row-index]:not([data-row-index="-1"])'
   );
 });
 

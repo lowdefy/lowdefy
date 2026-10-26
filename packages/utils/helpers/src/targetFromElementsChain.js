@@ -84,23 +84,23 @@ function textOf(scope) {
   return null;
 }
 
-// Whether a chain entry is a row or cell element of the grid the rule describes: its class, its
-// attribute and, when the rule names one, its role (a Table header cell has a body cell's class
-// and column key, but the role `columnheader`).
-function matchesGridRule({ entry, kind, rule }) {
-  if (!entry.classes.includes(rule[`${kind}Class`])) return false;
-  if (!(`attr__${rule[`${kind}Attribute`]}` in entry.attributes)) return false;
-  const role = rule[`${kind}Role`];
-  return role === undefined || entry.attributes.attr__role === role;
+// The chain form of the grid part selector: the entry has the part's class and attribute, the
+// part's role when it names one (a Table header cell has a body cell's class and column key, but
+// the role `columnheader`), and is not the part's header (the Table header row's index -1).
+function matchesGridPart({ entry, part }) {
+  const value = entry.attributes[`attr__${part.attribute}`];
+  if (!entry.classes.includes(part.className) || type.isNone(value)) return false;
+  if (!type.isNone(part.role) && entry.attributes.attr__role !== part.role) return false;
+  return type.isNone(part.header) || value !== part.header;
 }
 
-// The row index or column key of the innermost row or cell element of any grid, as the class and
-// attribute that grid renders them with. Null when the click was in no row or cell.
-function findGridAttribute({ inner, kind }) {
-  for (const entry of inner) {
-    const rule = gridRules.find((candidate) => matchesGridRule({ entry, kind, rule: candidate }));
+// The innermost row or cell entry of any grid and the row index or column key it carries, else
+// null.
+function findGridPart({ entries, kind }) {
+  for (const [index, entry] of entries.entries()) {
+    const rule = gridRules.find((candidate) => matchesGridPart({ entry, part: candidate[kind] }));
     if (rule) {
-      return entry.attributes[`attr__${rule[`${kind}Attribute`]}`];
+      return { index, value: entry.attributes[`attr__${rule[kind].attribute}`] };
     }
   }
   return null;
@@ -116,12 +116,14 @@ function targetFromElementsChain(chain) {
   const blockIndex = entries.findIndex((entry) => blockIdOf(entry) !== null);
   const inner = blockIndex === -1 ? entries : entries.slice(0, blockIndex);
   const scope = blockIndex === -1 ? entries : entries.slice(0, blockIndex + 1);
-  const row = findGridAttribute({ inner, kind: 'row' });
-  const column = findGridAttribute({ inner, kind: 'cell' });
+  const row = findGridPart({ entries: inner, kind: 'row' });
+  // A cell counts only inside a row: a Table summary row's cells sit in a row with no index.
+  const cell =
+    row === null ? null : findGridPart({ entries: inner.slice(0, row.index), kind: 'cell' });
   return {
     block_id: blockIds[0] ?? null,
-    row: row === null ? null : parseRowIndex(row),
-    column,
+    row: row === null ? null : parseRowIndex(row.value),
+    column: cell === null ? null : cell.value,
     text: textOf(scope),
     option: inner.some(isOption),
     block_ids: blockIds,

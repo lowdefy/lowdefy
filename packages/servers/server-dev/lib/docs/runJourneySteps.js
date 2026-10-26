@@ -97,13 +97,12 @@ function capitalise(text) {
 // Playwright would never find it visible. The selectors live in
 // @lowdefy/helpers, where the engine's describe functions read them too.
 const {
-  cellSelector,
   checkboxOption: CHECKBOX_OPTION,
   dropdownOption: DROPDOWN_OPTION,
+  gridSelector,
   interactiveControl: INTERACTIVE_CONTROL,
   layers: LAYERS,
   radioOption: RADIO_OPTION,
-  rowSelector,
 } = journeyTargetSelectors;
 
 // A lazy block (createLazyBlock in @lowdefy/block-utils) shows its wrapper and
@@ -203,10 +202,10 @@ function resolveScope({ page, target }) {
   }
   let scope = getBlock(page, target.blockId);
   if (!type.isUndefined(target.row)) {
-    scope = scope.locator(rowSelector(target.row));
+    scope = scope.locator(gridSelector({ kind: 'row', value: target.row }));
   }
   if (!type.isUndefined(target.column)) {
-    scope = scope.locator(cellSelector(target.column));
+    scope = scope.locator(gridSelector({ kind: 'cell', value: target.column }));
   }
   return scope;
 }

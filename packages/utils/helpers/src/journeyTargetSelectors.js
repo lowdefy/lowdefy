@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import type from './type.js';
+
 // The rules a journey target is resolved by. The journey runner resolves targets with them, and
 // the engine's describe functions read the same rules in reverse, so the two cannot drift apart.
 
@@ -58,23 +60,18 @@ const interactiveControlRules = [
 // The grids a journey target's `row` and `column` reach, as a displayed row and a cell inside it.
 // A row's attribute holds its zero-based displayed index and a cell's holds the column key.
 // Header rows and header cells are not matched: ag-grid's header cells are `.ag-header-cell`, and
-// the Table header row's index is -1, which is no journey row. A Table header cell carries the
-// same class and column key as a body cell, so a Table cell must also be a `gridcell` (header
-// cells are `columnheader`). A row keyed by pinned position (ag-grid `t-0`) is no journey row
-// either.
+// the Table header row carries the index `header` (-1), which is no journey row. A Table header
+// cell carries the same class and column key as a body cell, so a Table cell must also be a
+// `gridcell` (header cells are `columnheader`). A row keyed by pinned position (ag-grid `t-0`) is
+// no journey row either.
 const gridRules = [
   {
-    cellAttribute: 'col-id',
-    cellClass: 'ag-cell',
-    rowAttribute: 'row-index',
-    rowClass: 'ag-row',
+    row: { attribute: 'row-index', className: 'ag-row' },
+    cell: { attribute: 'col-id', className: 'ag-cell' },
   },
   {
-    cellAttribute: 'data-col-key',
-    cellClass: 'lf-table-gridcell',
-    cellRole: 'gridcell',
-    rowAttribute: 'data-row-index',
-    rowClass: 'lf-table-row',
+    row: { attribute: 'data-row-index', className: 'lf-table-row', header: '-1' },
+    cell: { attribute: 'data-col-key', className: 'lf-table-gridcell', role: 'gridcell' },
   },
 ];
 
@@ -82,29 +79,20 @@ function quoted(value) {
   return `"${String(value).replace(/["\\]/g, '\\$&')}"`;
 }
 
-// The selector for a row of any grid: with a value, the row at that displayed index; without,
-// every row.
-function rowSelector(value) {
-  return gridRules
-    .map(({ rowAttribute, rowClass }) =>
-      value === undefined
-        ? `.${rowClass}[${rowAttribute}]`
-        : `.${rowClass}[${rowAttribute}=${quoted(value)}]`
-    )
-    .join(', ');
+// The selector for one grid's row or cell (a part of a rule): with a value, the row at that
+// displayed index or the cell of that column; without, every row or cell but a header.
+function gridPartSelector({ part, value }) {
+  const role = type.isNone(part.role) ? '' : `[role="${part.role}"]`;
+  if (!type.isNone(value)) {
+    return `.${part.className}[${part.attribute}=${quoted(value)}]${role}`;
+  }
+  const header = type.isNone(part.header) ? '' : `:not([${part.attribute}="${part.header}"])`;
+  return `.${part.className}[${part.attribute}]${role}${header}`;
 }
 
-// The selector for a cell of any grid: with a value, the cell of that column; without, every cell.
-function cellSelector(value) {
-  return gridRules
-    .map(({ cellAttribute, cellClass, cellRole }) => {
-      const role = cellRole === undefined ? '' : `[role="${cellRole}"]`;
-      if (value === undefined) {
-        return `.${cellClass}[${cellAttribute}]${role}`;
-      }
-      return `.${cellClass}[${cellAttribute}=${quoted(value)}]${role}`;
-    })
-    .join(', ');
+// The selector for a row (kind `row`) or a cell (kind `cell`) of any grid.
+function gridSelector({ kind, value }) {
+  return gridRules.map((rule) => gridPartSelector({ part: rule[kind], value })).join(', ');
 }
 
 // A block that renders into a portal (Modal, Drawer) puts this class on the portal's root, so a
@@ -117,11 +105,12 @@ function portalClass(blockId) {
 const journeyTargetSelectors = {
   // Every block renders a wrapper with id `bl-<blockId>`.
   blockWrapperPrefix: 'bl-',
-  cellSelector,
   checkboxOption,
   // The options of a dropdown, the elements a `select` step clicks.
   dropdownOption: '.ant-select-item-option, [role="option"]',
+  gridPartSelector,
   gridRules,
+  gridSelector,
   interactiveControl: interactiveControlRules.map(selectorOf).join(', '),
   interactiveControlRules,
   interactiveRoles,
@@ -130,7 +119,6 @@ const journeyTargetSelectors = {
   layers: ['[role="menu"]', '[role="dialog"]'],
   portalClass,
   radioOption,
-  rowSelector,
 };
 
 export default journeyTargetSelectors;

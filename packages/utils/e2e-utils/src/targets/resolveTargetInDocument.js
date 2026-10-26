@@ -16,7 +16,7 @@
 
 import { findInteractiveControls, journeyTargetSelectors, type } from '@lowdefy/helpers';
 
-const { blockWrapperPrefix, cellSelector, layers, rowSelector } = journeyTargetSelectors;
+const { blockWrapperPrefix, gridSelector, layers } = journeyTargetSelectors;
 
 function textOf(element) {
   return element.textContent.replace(/\s+/g, ' ').trim();
@@ -40,10 +40,14 @@ function resolveScope({ document, target }) {
   const wrapper = document.getElementById(`${blockWrapperPrefix}${target.block_id}`);
   let roots = wrapper ? [wrapper] : [];
   if (!type.isNone(target.row)) {
-    roots = roots.flatMap((root) => [...root.querySelectorAll(rowSelector(target.row))]);
+    roots = roots.flatMap((root) => [
+      ...root.querySelectorAll(gridSelector({ kind: 'row', value: target.row })),
+    ]);
   }
   if (!type.isNone(target.column)) {
-    roots = roots.flatMap((root) => [...root.querySelectorAll(cellSelector(target.column))]);
+    roots = roots.flatMap((root) => [
+      ...root.querySelectorAll(gridSelector({ kind: 'cell', value: target.column })),
+    ]);
   }
   return roots;
 }
