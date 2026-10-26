@@ -42,7 +42,7 @@ blocks:
             type: SetState
             params:
               login_error_code:
-                _actions: login.error.cause.code
+                _actions: login.error.metaData.code
               login_error_message:
                 _actions: login.error.message
   - id: membership_required_html
