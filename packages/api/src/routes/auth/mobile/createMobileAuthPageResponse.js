@@ -44,10 +44,13 @@ button.secondary { background: transparent; color: var(--primary); }
 // nothing: a strict Content-Security-Policy allows only the page's own style
 // and script, by a nonce made for each response, and no site may frame them,
 // so no other page can overlay or click the confirmation. They are never
-// stored by a cache, and send no Referer.
+// stored by a cache, and send no Referer by default. A page that posts a form
+// to its own origin takes `same-origin`: under `no-referrer` a browser sends
+// that post with `Origin: null`, which isSameOriginRequest refuses.
 function createMobileAuthPageResponse({
   content,
   primaryColor,
+  referrerPolicy = 'no-referrer',
   script = null,
   status = 200,
   title,
@@ -61,7 +64,7 @@ function createMobileAuthPageResponse({
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="referrer" content="no-referrer" />
+<meta name="referrer" content="${referrerPolicy}" />
 <title>${title}</title>
 <style nonce="${nonce}">${createStyle({ primaryColor: color })}</style>
 ${scriptElement}
@@ -79,7 +82,7 @@ ${content}
       'cache-control': 'no-store',
       'content-type': 'text/html; charset=utf-8',
       'content-security-policy': `default-src 'none'; style-src 'nonce-${nonce}'; script-src 'nonce-${nonce}'; base-uri 'none'; frame-ancestors 'none'`,
-      'referrer-policy': 'no-referrer',
+      'referrer-policy': referrerPolicy,
       'x-content-type-options': 'nosniff',
       'x-frame-options': 'DENY',
     },

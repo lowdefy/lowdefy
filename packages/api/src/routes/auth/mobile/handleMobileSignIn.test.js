@@ -194,7 +194,7 @@ test('handleMobileSignIn shows a signed-in person a confirmation page and mints 
   expect(response.status).toBe(200);
   expect(response.headers.get('content-type')).toBe('text/html; charset=utf-8');
   expect(response.headers.get('cache-control')).toBe('no-store');
-  expect(response.headers.get('referrer-policy')).toBe('no-referrer');
+  expect(response.headers.get('referrer-policy')).toBe('same-origin');
   expect(response.headers.get('x-frame-options')).toBe('DENY');
   const csp = response.headers.get('content-security-policy');
   const nonce = csp.match(/style-src 'nonce-([^']+)'/)[1];
@@ -202,6 +202,7 @@ test('handleMobileSignIn shows a signed-in person a confirmation page and mints 
   expect(csp).toContain("default-src 'none'");
 
   const html = await response.text();
+  expect(html).toContain('<meta name="referrer" content="same-origin" />');
   expect(html).toContain('Sign in to Field &lt;App&gt; on this device?');
   expect(html).toContain('The field app is asking to sign in as ana@example.com.');
   expect(html).toContain(`<style nonce="${nonce}">`);
@@ -312,6 +313,7 @@ test('handleMobileSignIn on Cancel returns error=cancelled and mints nothing', a
 test.each([
   ['no Origin', { origin: '' }],
   ['a foreign Origin', { origin: 'https://evil.example.com' }],
+  ['an opaque Origin, as a no-referrer page posts', { origin: 'null' }],
   ['a cross-site fetch', { 'sec-fetch-site': 'cross-site' }],
 ])('handleMobileSignIn refuses a confirmation post with %s', async (_, headers) => {
   const { auth, internalAdapter } = createAuth({ session: browserSession() });

@@ -95,6 +95,9 @@ function renderConfirmation({ appName, csrfToken, params, primaryColor, session,
   return createMobileAuthPageResponse({
     title: `Sign in to ${app}`,
     primaryColor,
+    // Its url carries no secret (the shell, state and code challenge), and
+    // the Continue post must carry the page's real Origin.
+    referrerPolicy: 'same-origin',
     content: `<h1>Sign in to ${app} on this device?</h1>
 <p>The ${escapeHtml(
       params.shell.id
