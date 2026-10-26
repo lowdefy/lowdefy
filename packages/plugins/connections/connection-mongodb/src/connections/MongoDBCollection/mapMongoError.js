@@ -21,6 +21,10 @@ import { type } from '@lowdefy/helpers';
 // the document values like any other server error.
 const DRIVER_ERROR_NAMES = new Set(['MongoServerError', 'MongoError', 'MongoBulkWriteError']);
 
+// Time and memory limits pass with load and are not fixed by changing the request, so they are
+// service failures. Every other code is MongoDB refusing this request.
+const SERVICE_LIMIT_CODES = new Set([50, 89, 292]);
+
 // The keys of keyPattern name the indexed fields. keyValue is never read here -
 // it holds the caller's document values, which must not reach the browser.
 function duplicateKeyFields(error) {
@@ -85,16 +89,18 @@ function mapByCode({ code, collectionName, error, requestType }) {
 }
 
 /**
- * Translates a MongoDB driver error into a ServiceError with a message that names the
- * collection and the operation, and a hint that says what to do about it. The driver's
- * own message is never quoted - it can carry document values - but it is preserved as
- * the cause, so the server log still shows it.
+ * Translates a MongoDB driver error into an error with a message that names the collection
+ * and the operation, and a hint that says what to do about it. A time or memory limit is a
+ * ServiceError; any other code is MongoDB refusing the request, a plain Error with `code`
+ * and `hint` that the request interface layer wraps as a RequestError. The driver's own
+ * message is never quoted - it can carry document values - but it is preserved as the
+ * cause, so the dev server log still shows it.
  *
  * @param {Error} error - The error the driver threw.
  * @param {Object} options
  * @param {Object} options.connection - The resolved connection properties.
  * @param {string} options.requestType - The request type name, e.g. 'MongoDBInsertOne'.
- * @returns {Error} A ServiceError, or the error unchanged when it is not a driver error.
+ * @returns {Error} The mapped error, or the error unchanged when it is not a driver error.
  */
 function mapMongoError(error, { connection, requestType }) {
   // Network, DNS, TLS and server-selection failures are already classified one layer
@@ -106,12 +112,18 @@ function mapMongoError(error, { connection, requestType }) {
 
   const collectionName = type.isString(connection?.collection) ? connection.collection : 'unknown';
   const { message, hint } = mapByCode({ code: error.code, collectionName, error, requestType });
-  return new ServiceError(message, {
-    cause: error,
-    service: 'MongoDB',
-    code: error.code,
-    hint,
-  });
+  if (SERVICE_LIMIT_CODES.has(error.code)) {
+    return new ServiceError(message, {
+      cause: error,
+      service: 'MongoDB',
+      code: error.code,
+      hint,
+    });
+  }
+  const rejected = new Error(message, { cause: error });
+  rejected.code = error.code;
+  rejected.hint = hint;
+  return rejected;
 }
 
 export default mapMongoError;

@@ -162,6 +162,7 @@ test('while loop throws when :do is missing', async () => {
   };
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('error');
+  expect(res.error.name).toEqual('ConfigError');
   expect(res.error.message).toContain(':while');
   expect(res.error.message).toContain('missing :do');
   // The guard runs before the first condition evaluation.

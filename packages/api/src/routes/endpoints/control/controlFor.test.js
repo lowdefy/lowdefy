@@ -120,6 +120,7 @@ test('missing :for variable name', async () => {
   const { res } = await runTest({ routine });
   expect(res.status).toEqual('error');
   expect(res.error.message).toContain(':for');
+  expect(res.error.name).toEqual('ConfigError');
   expect(res.error.message).toContain('missing variable name');
 });
 
@@ -151,6 +152,7 @@ test('missing :do', async () => {
   };
   const { res } = await runTest({ routine });
   expect(res.status).toEqual('error');
+  expect(res.error.name).toEqual('ConfigError');
   expect(res.error.message).toContain('missing :do');
 });
 

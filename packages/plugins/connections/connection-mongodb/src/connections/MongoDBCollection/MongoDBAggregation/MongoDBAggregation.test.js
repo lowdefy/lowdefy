@@ -83,7 +83,7 @@ test('aggregation mongodb error', async () => {
     read: true,
   };
   await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBAggregation command on collection "aggregate" as malformed.'
+    'MongoDB rejected the MongoDBAggregation command on collection "aggregate" as malformed.'
   );
 });
 

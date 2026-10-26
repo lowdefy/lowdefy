@@ -98,8 +98,9 @@ test('invalid log level', async () => {
   const { res, context } = await runTest({ routine });
 
   expect(res.status).toEqual('error');
-  expect(res.error).toEqual(
-    new Error('Invalid :log in endpoint "endpointId" - unrecognised log level. Received "none".')
+  expect(res.error.name).toEqual('ConfigError');
+  expect(res.error.message).toEqual(
+    'Invalid :log in endpoint "endpointId" - unrecognised log level. Received "none".'
   );
   expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
 });

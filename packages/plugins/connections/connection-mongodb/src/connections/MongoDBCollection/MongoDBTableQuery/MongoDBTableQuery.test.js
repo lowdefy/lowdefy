@@ -585,7 +585,7 @@ describe('errors', () => {
 
   test('a base pipeline MongoDB rejects is mapped', async () => {
     await expect(query({ pipeline: [{ $badStage: {} }] })).rejects.toThrow(
-      'MongoDB: MongoDB rejected the MongoDBTableQuery command on collection "tableQuery" as malformed.'
+      'MongoDB rejected the MongoDBTableQuery command on collection "tableQuery" as malformed.'
     );
   });
 });

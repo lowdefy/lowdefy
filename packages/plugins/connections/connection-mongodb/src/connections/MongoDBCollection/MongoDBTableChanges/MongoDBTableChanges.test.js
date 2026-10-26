@@ -384,8 +384,9 @@ describe('collection mode', () => {
       fields: { ...lineFields, _id: { type: 'text' } },
       changes: { added: [{ rowKey: 'a', _id: 'a', item: 'Duplicate' }] },
     }).catch((caught) => caught);
-    expect(error.name).toBe('ServiceError');
-    expect(error.message).toBe(`MongoDB: Duplicate key on collection "${connection.collection}".`);
+    expect(error.name).toBe('Error');
+    expect(error.code).toBe(11000);
+    expect(error.message).toBe(`Duplicate key on collection "${connection.collection}".`);
   });
 });
 

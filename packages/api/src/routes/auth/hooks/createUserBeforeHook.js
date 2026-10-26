@@ -16,7 +16,7 @@
 
 import { APIError } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, isExpectedError } from '@lowdefy/errors';
 
 // Translates the routine's terminal control into BetterAuth's before-hook
 // contract. The routine `:return`s plain data - the ceremony lives here:
@@ -27,11 +27,12 @@ function createUserBeforeHook({ dispatch, hook }) {
     const result = await dispatch(data, ctx);
     if (result.status === 'return') {
       if (!type.isObject(result.response)) {
+        // The type, not the value: the value is a user record being written.
         throw new ConfigError(
           `Auth hook "${hook.id}" at point "${hook.point}" returned a ${type.typeOf(
             result.response
           )}. A before hook ":return" value replaces the record being written, so it should be an object.`,
-          { received: result.response }
+          { configKey: hook['~k'] }
         );
       }
       return { data: result.response };
@@ -45,6 +46,16 @@ function createUserBeforeHook({ dispatch, hook }) {
       });
     }
     if (result.status === 'error') {
+      // An expected outcome (a :throw, a nested call's refusal) refuses the write as
+      // :reject does - a 400, not a 500. runRoutine has logged it as a warning.
+      if (isExpectedError(result.error)) {
+        throw new APIError('BAD_REQUEST', {
+          cause: result.error,
+          message: result.error.message,
+        });
+      }
+      // A fault runRoutine has already reported (handled), so createOnAPIError does not
+      // log it again.
       throw result.error;
     }
     // The routine fell through without a terminal control - record unchanged.

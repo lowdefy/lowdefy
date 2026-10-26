@@ -15,6 +15,7 @@
 */
 
 import { vi, expect, test } from 'vitest';
+import { APIError } from 'better-auth/api';
 
 import createMobileSignInCsrfToken from './createMobileSignInCsrfToken.js';
 import getOneTimeTokenIdentifiers from './getOneTimeTokenIdentifiers.js';
@@ -61,7 +62,7 @@ function createAuth({ session = null, baseURL, appName = 'Field <App>' } = {}) {
     internalAdapter,
     auth: {
       api: { getSession: vi.fn(async () => session) },
-      options: { appName, baseURL },
+      options: { appName, baseURL, onAPIError: { onError: vi.fn() } },
       $context: Promise.resolve({ adapter, internalAdapter, secret: SECRET }),
     },
   };
@@ -263,6 +264,20 @@ test('handleMobileSignIn on Continue creates a new phone session with the browse
   expect(response.headers.get('set-cookie')).toMatch(
     /^lowdefy_mobile_sign_in_started=; .*Max-Age=0/
   );
+});
+
+test('handleMobileSignIn answers an organization policy refusal with its status and logs it through onAPIError', async () => {
+  const { auth, internalAdapter } = createAuth({ session: browserSession() });
+  const refusal = new APIError('FORBIDDEN', {
+    message: 'You are not a member of an organization.',
+  });
+  internalAdapter.createSession.mockRejectedValueOnce(refusal);
+  const response = await call({ auth, request: postRequest() });
+
+  expect(response.status).toBe(403);
+  expect(await response.text()).toContain('You are not a member of an organization.');
+  expect(auth.options.onAPIError.onError).toHaveBeenCalledWith(refusal);
+  expect(internalAdapter.createVerificationValue).not.toHaveBeenCalled();
 });
 
 test('handleMobileSignIn gives the phone session the phone lifetime and mark when one is set', async () => {

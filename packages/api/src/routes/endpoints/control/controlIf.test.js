@@ -487,5 +487,6 @@ test('missing :then', async () => {
   };
   const { res } = await runTest({ routine });
   expect(res.status).toBe('error');
+  expect(res.error.name).toBe('ConfigError');
   expect(res.error.message).toEqual('Invalid :if in endpoint "endpointId" - missing :then.');
 });

@@ -15,7 +15,7 @@
 */
 
 import { vi, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest';
-import { AuthorizationError } from '@lowdefy/errors';
+import { AuthorizationError, UserError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 const mockPrepareChannel = vi.fn();
@@ -216,6 +216,21 @@ test('an authorization refusal warns and answers the client without reporting an
     requestId: 'r',
     isLowdefyError: true,
   });
+});
+
+test('a UserError in a frame warns and answers the client without reporting an error', async () => {
+  const { connection, context, registry } = setup();
+  registry.subscribe.mockRejectedValue(new UserError('Pick a room first.'));
+
+  await connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 'req-4' })
+  );
+
+  expect(context.handleError).not.toHaveBeenCalled();
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    { event: 'ws_refused', frameType: 'subscribe' },
+    'Pick a room first.'
+  );
 });
 
 function setupPublishFailure({ mode }) {

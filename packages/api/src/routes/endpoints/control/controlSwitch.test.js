@@ -212,9 +212,11 @@ test('switch case with missing :then', async () => {
     ],
   };
   const { res, context } = await runTest({ routine });
-  const error = new Error('Invalid :switch :case in endpoint "endpointId" - missing :then.');
   expect(res.status).toEqual('error');
-  expect(res.error).toEqual(error);
+  expect(res.error.name).toEqual('ConfigError');
+  expect(res.error.message).toEqual(
+    'Invalid :switch :case in endpoint "endpointId" - missing :then.'
+  );
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_switch' }],
     [{ event: 'debug_control_switch_case', case: { input: false, result: false } }],
@@ -222,5 +224,5 @@ test('switch case with missing :then', async () => {
     [{ event: 'debug_control_switch_case', case: { input: true, result: true } }],
     [{ event: 'debug_control_switch_run_then' }],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[error]]);
+  expect(context.logger.error.mock.calls).toEqual([[res.error]]);
 });

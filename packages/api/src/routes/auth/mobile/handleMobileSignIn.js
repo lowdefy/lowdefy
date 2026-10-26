@@ -157,8 +157,12 @@ async function confirmMobileSignIn({ auth, authJson, params, request, session, u
   try {
     phoneSession = await createPhoneSession({ auth, authJson, browserSession: session, request });
   } catch (error) {
+    // The organization policy refused the person (or could not decide). Logged and answered as
+    // BetterAuth's own routes answer an APIError: through onAPIError.onError (createOnAPIError),
+    // one warn line for a refusal, an error line for anything else, with the error's status.
     if (error instanceof APIError) {
-      return textResponse({ message: error.message, status: 403 });
+      auth.options.onAPIError.onError(error);
+      return textResponse({ message: error.message, status: error.statusCode });
     }
     throw error;
   }

@@ -21,7 +21,12 @@ import createUserAfterHook from './createUserAfterHook.js';
 import createUserBeforeHook from './createUserBeforeHook.js';
 import { expect, test } from 'vitest';
 
-const hook = { id: 'test-hook', point: 'user.create.before', endpointId: 'auth/test' };
+const hook = {
+  id: 'test-hook',
+  point: 'user.create.before',
+  endpointId: 'auth/test',
+  '~k': 'hook_key',
+};
 
 test('before hook wraps :return data as { data }', async () => {
   const userHook = createUserBeforeHook({
@@ -48,6 +53,34 @@ test('before hook throws a ConfigError when :return data is not an object', asyn
   await expect(userHook({ name: 'A' })).rejects.toThrow(
     'Auth hook "test-hook" at point "user.create.before" returned a number.'
   );
+});
+
+test('before hook names the hook config and leaves out the record it returned', async () => {
+  const userHook = createUserBeforeHook({
+    dispatch: async () => ({ status: 'return', response: ['planted@example.com'] }),
+    hook,
+  });
+  const error = await userHook({ name: 'A' }).catch((caught) => caught);
+  expect(error.configKey).toBe('hook_key');
+  expect(error.received).toBeUndefined();
+  expect(error.message).toContain('returned a array.');
+  expect(JSON.stringify(error)).not.toContain('planted@example.com');
+});
+
+test.each([
+  ['before', () => createUserBeforeHook],
+  ['after', () => createUserAfterHook],
+])('%s hook turns an expected routine error into a 400 APIError', async (_, getFactory) => {
+  const routineError = new UserError('Sign-ups are closed.');
+  const userHook = getFactory()({
+    dispatch: async () => ({ status: 'error', error: routineError }),
+    hook,
+  });
+  const error = await userHook({ name: 'A' }).catch((caught) => caught);
+  expect(error).toBeInstanceOf(APIError);
+  expect(error.statusCode).toBe(400);
+  expect(error.message).toBe('Sign-ups are closed.');
+  expect(error.cause).toBe(routineError);
 });
 
 test('before hook maps :reject to an APIError with the reject message', async () => {

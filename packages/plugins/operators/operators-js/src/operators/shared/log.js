@@ -14,7 +14,14 @@
   limitations under the License.
 */
 
-function _log({ params }) {
+function _log({ logger, params }) {
+  // On the server the line goes through the request's logger, so the secret
+  // scrub and _credential apply to it as to every other log line. The browser
+  // has no server logger and writes to its console.
+  if (logger) {
+    logger.info({ event: 'operator_log', value: params }, '_log');
+    return params;
+  }
   // eslint-disable-next-line no-console
   console.log(params);
   return params;

@@ -29,7 +29,7 @@ function driverError({ code, message = 'raw driver text', name = 'MongoServerErr
   return error;
 }
 
-test('mapMongoError maps a duplicate key error to a ServiceError naming the indexed fields', () => {
+test('mapMongoError maps a duplicate key error to a plain Error naming the indexed fields', () => {
   const cause = driverError({
     code: 11000,
     message:
@@ -38,11 +38,11 @@ test('mapMongoError maps a duplicate key error to a ServiceError naming the inde
     keyValue: { ref: 'ORD-1' },
   });
   const mapped = mapMongoError(cause, { connection, requestType: 'MongoDBInsertOne' });
-  expect(mapped).toBeInstanceOf(ServiceError);
-  expect(mapped.name).toBe('ServiceError');
-  expect(mapped.message).toBe('MongoDB: Duplicate key on collection "orders".');
+  expect(mapped).not.toBeInstanceOf(ServiceError);
+  expect(mapped.name).toBe('Error');
+  expect(mapped.isLowdefyError).toBeUndefined();
+  expect(mapped.message).toBe('Duplicate key on collection "orders".');
   expect(mapped.code).toBe(11000);
-  expect(mapped.service).toBe('MongoDB');
   expect(mapped.hint).toBe(
     'A unique index on ref already has a document with these values. Insert with MongoDBUpdateOne and upsert: true, or remove the existing document first.'
   );
@@ -72,8 +72,8 @@ test('mapMongoError maps a bulk write error by the code of its first failed writ
     message: 'E11000 duplicate key error collection: app.orders index: _id_ dup key: { _id: "a" }',
   });
   const mapped = mapMongoError(cause, { connection, requestType: 'MongoDBTableChanges' });
-  expect(mapped).toBeInstanceOf(ServiceError);
-  expect(mapped.message).toBe('MongoDB: Duplicate key on collection "orders".');
+  expect(mapped).not.toBeInstanceOf(ServiceError);
+  expect(mapped.message).toBe('Duplicate key on collection "orders".');
   expect(mapped.cause).toBe(cause);
 });
 
@@ -92,7 +92,7 @@ test.each([2, 9, 16, 40323])('mapMongoError maps code %s to a malformed command 
     requestType: 'MongoDBAggregation',
   });
   expect(mapped.message).toBe(
-    'MongoDB: MongoDB rejected the MongoDBAggregation command on collection "orders" as malformed.'
+    'MongoDB rejected the MongoDBAggregation command on collection "orders" as malformed.'
   );
   expect(mapped.hint).toBe(
     'A pipeline stage object must contain exactly one operator key, and every operator must be spelled with its leading $. Check the stage the message names.'
@@ -105,7 +105,7 @@ test.each([31254, 40415])('mapMongoError maps code %s to an unknown field error'
     requestType: 'MongoDBFind',
   });
   expect(mapped.message).toBe(
-    'MongoDB: MongoDB rejected an unknown field in the MongoDBFind command on collection "orders".'
+    'MongoDB rejected an unknown field in the MongoDBFind command on collection "orders".'
   );
   expect(mapped.hint).toContain('Remove the field or check its spelling');
 });
@@ -115,9 +115,8 @@ test.each([13, 18])('mapMongoError maps code %s to a not authorized error', (cod
     connection,
     requestType: 'MongoDBDeleteMany',
   });
-  expect(mapped.message).toBe(
-    'MongoDB: Not authorized to run MongoDBDeleteMany on collection "orders".'
-  );
+  expect(mapped).not.toBeInstanceOf(ServiceError);
+  expect(mapped.message).toBe('Not authorized to run MongoDBDeleteMany on collection "orders".');
   expect(mapped.hint).toContain('does not have permission for this operation');
 });
 
@@ -126,26 +125,30 @@ test('mapMongoError maps code 26 to a missing collection error', () => {
     connection,
     requestType: 'MongoDBFind',
   });
-  expect(mapped.message).toBe('MongoDB: Collection "orders" does not exist.');
+  expect(mapped.message).toBe('Collection "orders" does not exist.');
   expect(mapped.hint).toContain("Check the connection's properties.collection");
 });
 
-test.each([50, 89])('mapMongoError maps code %s to a time limit error', (code) => {
+test.each([50, 89])('mapMongoError maps code %s to a time limit ServiceError', (code) => {
   const mapped = mapMongoError(driverError({ code }), {
     connection,
     requestType: 'MongoDBFind',
   });
+  expect(mapped).toBeInstanceOf(ServiceError);
+  expect(mapped.service).toBe('MongoDB');
+  expect(mapped.code).toBe(code);
   expect(mapped.message).toBe(
     'MongoDB: The MongoDBFind on collection "orders" exceeded its time limit.'
   );
   expect(mapped.hint).toContain('Add an index covering the filter and sort fields');
 });
 
-test('mapMongoError maps code 292 to a memory limit error', () => {
+test('mapMongoError maps code 292 to a memory limit ServiceError', () => {
   const mapped = mapMongoError(driverError({ code: 292 }), {
     connection,
     requestType: 'MongoDBAggregation',
   });
+  expect(mapped).toBeInstanceOf(ServiceError);
   expect(mapped.message).toBe(
     'MongoDB: The aggregation on collection "orders" exceeded MongoDB\'s memory limit.'
   );
@@ -157,18 +160,21 @@ test('mapMongoError maps an unlisted code to a generic error naming the code', (
     connection,
     requestType: 'MongoDBUpdateMany',
   });
+  expect(mapped).not.toBeInstanceOf(ServiceError);
   expect(mapped.message).toBe(
-    'MongoDB: MongoDB rejected the MongoDBUpdateMany on collection "orders" (code 123456).'
+    'MongoDB rejected the MongoDBUpdateMany on collection "orders" (code 123456).'
   );
   expect(mapped.hint).toContain('Look up the code in the MongoDB error reference');
 });
 
 test('mapMongoError maps a MongoError as well as a MongoServerError', () => {
-  const mapped = mapMongoError(driverError({ code: 26, name: 'MongoError' }), {
+  const cause = driverError({ code: 26, name: 'MongoError' });
+  const mapped = mapMongoError(cause, {
     connection,
     requestType: 'MongoDBFind',
   });
-  expect(mapped).toBeInstanceOf(ServiceError);
+  expect(mapped.code).toBe(26);
+  expect(mapped.cause).toBe(cause);
 });
 
 test('mapMongoError returns a service error unchanged', () => {
@@ -191,5 +197,5 @@ test('mapMongoError falls back to "unknown" when the connection has no collectio
     connection: {},
     requestType: 'MongoDBFind',
   });
-  expect(mapped.message).toBe('MongoDB: Collection "unknown" does not exist.');
+  expect(mapped.message).toBe('Collection "unknown" does not exist.');
 });

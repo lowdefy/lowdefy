@@ -652,3 +652,49 @@ test('a timed-out request carries no status in its summarised cause, so the 500 
   expect(caught.cause.statusCode).toBeUndefined();
   expect(caught.cause.cause.name).toBe('TimeoutError');
 });
+
+test("a typed connection error leaves with the step's ids and its cause summarised", async () => {
+  const driverError = new Error('E11000 duplicate key error');
+  driverError.name = 'MongoBulkWriteError';
+  driverError.code = 292;
+  driverError.writeErrors = [{ op: { email: 'planted@example.com' } }];
+  const typed = new ServiceError('Memory limit.', { cause: driverError, service: 'MongoDB' });
+  const caught = await catchError(async () => {
+    throw typed;
+  });
+  expect(caught).toBe(typed);
+  expect(caught.endpointId).toBe('caller_endpoint');
+  expect(caught.stepId).toBe('req1');
+  expect(caught.connectionId).toBe('conn1');
+  expect(caught.cause).not.toBe(driverError);
+  expect(caught.cause).toMatchObject({ name: 'MongoBulkWriteError', code: 292 });
+  expect(caught.cause.writeErrors).toBeUndefined();
+  expect(caught.devCause).toBe(driverError);
+  expect(Object.keys(caught)).not.toContain('devCause');
+});
+
+test('a typed error keeps the ids and the summary an inner step gave it', async () => {
+  const inner = new RequestError('inner failure', { cause: new Error('driver') });
+  Object.assign(inner, { endpointId: 'inner_endpoint', stepId: 'inner_step' });
+  const innerCause = inner.cause;
+  Object.defineProperty(inner, 'devCause', { value: new Error('driver'), configurable: true });
+  const caught = await catchError(async () => {
+    throw inner;
+  });
+  expect(caught.endpointId).toBe('inner_endpoint');
+  expect(caught.stepId).toBe('inner_step');
+  expect(caught.connectionId).toBe('conn1');
+  expect(caught.cause).toBe(innerCause);
+});
+
+test('a refused request keeps the hint its connection gave', async () => {
+  const caught = await catchError(async () => {
+    const error = new Error('Duplicate key on collection "orders".');
+    error.code = 11000;
+    error.hint = 'Insert with MongoDBUpdateOne and upsert: true.';
+    throw error;
+  });
+  expect(caught).toBeInstanceOf(RequestError);
+  expect(caught.code).toBe(11000);
+  expect(caught.hint).toBe('Insert with MongoDBUpdateOne and upsert: true.');
+});

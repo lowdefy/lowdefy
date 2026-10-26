@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
+import { UserError } from '@lowdefy/errors';
 
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import createWalledResolver from './createWalledResolver.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
-import summarisedError from './summarisedError.js';
+import stampTypedError from './stampTypedError.js';
+import wrapResolverError from './wrapResolverError.js';
 
 async function callRequestResolver(
   context,
@@ -112,9 +113,18 @@ async function callRequestResolver(
       error.configKey = requestConfig['~k'];
     }
 
-    // Lowdefy errors pass through unchanged — re-wrapping every boundary would
-    // nest causes and truncate the deepest (most informative) frame.
+    // stepId, not requestId: on an error requestId is the HTTP request's id (context.rid)
+    // everywhere else.
+    const fields = {
+      endpointId: requestConfig.endpointId ?? endpointId,
+      stepId: stepOrRequestId,
+      connectionId: requestConfig.connectionId,
+    };
+
+    // Lowdefy errors are not re-wrapped - re-wrapping every boundary would nest causes and
+    // truncate the deepest (most informative) frame.
     if (error?.isLowdefyError) {
+      stampTypedError(error, { fields });
       logger.debug(
         { params: { id: stepOrRequestId, type: requestConfig.type }, err: error },
         error.message
@@ -133,59 +143,19 @@ async function callRequestResolver(
       throw cancelled;
     }
 
-    // The error that leaves here is logged whole at error level by the server's error handler
-    // and sent to Sentry, so it carries ids and the resolver's error summarised - never the
-    // request's evaluated properties (an agent chat's save-thread step holds the whole thread
-    // there) or the connection's error itself, which can embed the document it rejected. The dev
-    // tools still show that error: it is kept as devCause, which is not enumerable, so no log or
-    // error report walks it, and only the dev error payload reads it. stepId, not requestId: on
-    // an error requestId is the HTTP request's id (context.rid) everywhere else.
-    const cause = summarisedError(error);
-    const addFields = (wrapped) => {
-      Object.assign(wrapped, {
-        endpointId: requestConfig.endpointId ?? endpointId,
-        stepId: stepOrRequestId,
-        connectionId: requestConfig.connectionId,
-      });
-      Object.defineProperty(wrapped, 'devCause', { value: error, configurable: true });
-    };
-
-    // Check if this is a service error (network, timeout, 5xx, 429)
-    if (ServiceError.isServiceError(error)) {
-      // ServiceError reads the code, HTTP status, Retry-After and hint from its cause, wherever
-      // the client put them, so it is built over the connection's error with only the message
-      // cut, then given the summary as its cause. A Proxy, not a copy: a DOMException's fields
-      // are getters that only work on the exception itself.
-      const serviceError = new ServiceError(undefined, {
-        cause: new Proxy(error, {
-          get: (target, key) => (key === 'message' ? cause.message : target[key]),
-        }),
-        service: requestConfig.connectionId,
-        configKey: requestConfig['~k'],
-      });
-      serviceError.cause = cause;
-      addFields(serviceError);
-      logger.debug(
-        { params: { id: stepOrRequestId, type: requestConfig.type }, err: serviceError },
-        serviceError.message
-      );
-      throw serviceError;
-    }
-
-    // Wrap other errors in RequestError (request/connection logic error)
-    const requestError = new RequestError(cause.message, {
-      cause,
-      typeName: requestConfig.type,
-      location: `${requestConfig.connectionId}/${stepOrRequestId}`,
+    // A ServiceError for a network failure, timeout, 5xx or 429; a RequestError otherwise.
+    const wrapped = wrapResolverError(error, {
       configKey: requestConfig['~k'],
+      fields,
+      location: `${requestConfig.connectionId}/${stepOrRequestId}`,
+      service: requestConfig.connectionId,
+      typeName: requestConfig.type,
     });
-    addFields(requestError);
-
     logger.debug(
-      { params: { id: stepOrRequestId, type: requestConfig.type }, err: requestError },
-      requestError.message
+      { params: { id: stepOrRequestId, type: requestConfig.type }, err: wrapped },
+      wrapped.message
     );
-    throw requestError;
+    throw wrapped;
   }
 }
 
