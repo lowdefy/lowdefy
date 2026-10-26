@@ -15,7 +15,7 @@
 */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, Text, TextInput, View } from 'react-native';
 
 import AuthButton from './AuthButton.js';
 import AuthLink from './AuthLink.js';
@@ -222,7 +222,9 @@ function SignInScreen({ appName, auth, settings }) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      // Android apps are edge-to-edge, so the window no longer resizes for the keyboard; padding
+      // by the keyboard's overlap keeps the form above it on both platforms.
+      behavior="padding"
       style={{ backgroundColor: tokens.colorGroupedBackground, flex: 1 }}
     >
       <ScrollView contentContainerStyle={styles.screen} keyboardShouldPersistTaps="handled">

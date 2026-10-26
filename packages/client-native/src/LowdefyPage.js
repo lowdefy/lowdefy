@@ -172,10 +172,12 @@ const Page = ({
                 grouped sections is, with a Screen's backgroundTint over it (PageTint). Its offset
                 drives the tint and a Screen's headerBottom on the native driver. It is keyed by
                 the route instance, so a position is kept only for the instance it was scrolled
-                on: another instance starts at the top. Dragging it dismisses the keyboard, and a
-                tap on a row works while the keyboard is up. */}
+                on: another instance starts at the top. Dragging it dismisses the keyboard, a tap
+                on a row works while the keyboard is up, and on iOS the keyboard's height is added
+                to its insets, so a focused input low on a long form can scroll above it. */}
             <Animated.ScrollView
               key={screenKey}
+              automaticallyAdjustKeyboardInsets
               contentInsetAdjustmentBehavior="automatic"
               keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="handled"

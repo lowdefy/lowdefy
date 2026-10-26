@@ -798,6 +798,8 @@ test('a Screen footer is drawn below the scroll view, above the bottom inset', a
   expect(findAll(scrollView, (node) => node.props?.children === 'Body')).not.toHaveLength(0);
   expect(StyleSheet.flatten(footer.props.style).borderTopWidth).toBe(StyleSheet.hairlineWidth);
   expect(findAll(footer, (node) => node.props?.style?.paddingBottom === 83)).not.toHaveLength(0);
+  // On iOS the page's insets grow by the keyboard, so a focused input can scroll above it.
+  expect(scrollView.props.automaticallyAdjustKeyboardInsets).toBe(true);
   // The footer's blocks update with the page's state.
   await act(async () => {
     fireEvent.press(screen.getByText('Send'));

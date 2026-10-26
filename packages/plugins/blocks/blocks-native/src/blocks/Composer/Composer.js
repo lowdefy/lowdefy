@@ -18,7 +18,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -370,7 +369,9 @@ function Composer({
   }
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      // Android apps are edge-to-edge, so the window no longer resizes for the keyboard; padding
+      // by the keyboard's overlap keeps the composer above it on both platforms.
+      behavior="padding"
       keyboardVerticalOffset={properties.keyboardOffset ?? 0}
     >
       {bar}

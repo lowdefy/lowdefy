@@ -15,7 +15,7 @@
 */
 
 import React, { useSyncExternalStore } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 
 import useTheme from '../theme/useTheme.js';
 
@@ -40,7 +40,9 @@ function ScreenFooter({ bottomInset, footer }) {
   }
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      // Android apps are edge-to-edge, so the window no longer resizes for the keyboard; padding
+      // by the keyboard's overlap keeps the footer above it on both platforms.
+      behavior="padding"
       keyboardVerticalOffset={-bottomInset}
       style={{
         backgroundColor: tokens.colorBar,
