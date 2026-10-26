@@ -23,7 +23,6 @@ function createGetLineNumber(content) {
     newlineOffsets.push(index);
   }
   return function getLineNumber(offset) {
-    if (offset == null || offset < 0) return null;
     let low = 0;
     let high = newlineOffsets.length;
     while (low < high) {

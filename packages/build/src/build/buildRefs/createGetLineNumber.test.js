@@ -34,13 +34,6 @@ test('createGetLineNumber counts a newline at the offset as part of the line it 
   expect(getLineNumber(5)).toBe(2);
 });
 
-test('createGetLineNumber returns null for a missing or negative offset', () => {
-  const getLineNumber = createGetLineNumber('a: 1\n');
-  expect(getLineNumber(undefined)).toBe(null);
-  expect(getLineNumber(null)).toBe(null);
-  expect(getLineNumber(-1)).toBe(null);
-});
-
 test('createGetLineNumber matches counting newlines for every offset of mixed content', () => {
   const content = '\n\nid: page\r\nblocks:\n  - id: a\n\n    type: Box\n    text: |\n      x\n\n      y\n';
   const getLineNumber = createGetLineNumber(content);
