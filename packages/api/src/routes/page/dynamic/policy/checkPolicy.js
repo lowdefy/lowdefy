@@ -20,9 +20,11 @@ import { getPossibleOperators, isNestedDeeperThan, MAX_DATA_DEPTH } from '@lowde
 import getPropertiesSchemaErrors from '../getPropertiesSchemaErrors.js';
 import checkEvents from './checkEvents.js';
 import checkValue from './checkValue.js';
-import collectUrlKinds from './collectUrlKinds.js';
+import collectSchemaKinds from './collectSchemaKinds.js';
+import findDataRows from './findDataRows.js';
 import findSerializerKeys from './findSerializerKeys.js';
 import isUnderState from './isUnderState.js';
+import overlapsStatePath from './overlapsStatePath.js';
 
 // Block keys walked by a dedicated rule rather than checkValue.
 const STRUCTURAL_KEYS = new Set(['areas', 'blocks', 'events', 'skeleton', 'slots']);
@@ -131,15 +133,39 @@ function checkBlock({ block, path, depth, walk }) {
       });
     }
   });
-  // The block schema marks which properties hold URLs.
-  const urlKinds = collectUrlKinds({
+  // The block schema marks which properties hold URLs and how it draws text.
+  const propertiesSchema = blockSchemas[block.type]?.properties?.properties;
+  const propertiesPath = `${path}.properties`;
+  const urlKinds = collectSchemaKinds({
     value: block.properties,
-    schema: blockSchemas[block.type]?.properties?.properties,
-    path: `${path}.properties`,
+    schema: propertiesSchema,
+    path: propertiesPath,
+    keyword: 'urlKind',
   });
+  const textKinds = collectSchemaKinds({
+    value: block.properties,
+    schema: propertiesSchema,
+    path: propertiesPath,
+    keyword: 'textKind',
+  });
+  findDataRows({
+    properties: block.properties,
+    schema: propertiesSchema,
+    path: propertiesPath,
+  }).forEach((rowsPath) => textKinds.set(rowsPath, 'data'));
+  // An input whose properties hold data (option values, rows) can put that
+  // data in state at its id.
+  if (bindsState({ block, blockMetas }) && [...textKinds.values()].includes('data')) {
+    walk.dataStateKeys.push(block.id);
+  }
   Object.keys(block).forEach((key) => {
     if (key.startsWith('~') || STRUCTURAL_KEYS.has(key)) return;
-    checkValue({ value: block[key], key, path: `${path}.${key}`, walk: { ...walk, urlKinds } });
+    checkValue({
+      value: block[key],
+      key,
+      path: `${path}.${key}`,
+      walk: { ...walk, urlKinds, textKinds },
+    });
   });
   if (!type.isUndefined(block.events)) {
     checkEvents({ events: block.events, path: `${path}.events`, walk });
@@ -155,6 +181,44 @@ function checkBlock({ block, path, depth, walk }) {
   childBlockLists(block).forEach((list) => {
     // eslint-disable-next-line no-use-before-define
     checkBlockList({ blocks: list.blocks, path: `${path}.${list.path}`, depth: depth + 1, walk });
+  });
+}
+
+// The ids of content inputs whose value is an object, such as a rich text
+// editor, an upload or a table input: they draw parts of their value as markup,
+// links or images, so a SetState value bound to one keeps every check.
+function collectObjectValueIds({ blocks, blockMetas, ids = [] }) {
+  if (!type.isArray(blocks)) return ids;
+  blocks.forEach((block) => {
+    if (!type.isObject(block) || !type.isString(block.id)) return;
+    if (blockMetas[block.type]?.valueType === 'object') {
+      ids.push(block.id);
+    }
+    if (type.isObject(block.skeleton)) {
+      collectObjectValueIds({ blocks: [block.skeleton], blockMetas, ids });
+    }
+    childBlockLists(block).forEach((list) => {
+      collectObjectValueIds({ blocks: list.blocks, blockMetas, ids });
+    });
+  });
+  return ids;
+}
+
+// A _state read the content may draw must not name state the content fills
+// with data (SetState values, input option values and rows), which no rule
+// checked. A read with no literal key may name any of it.
+function checkDrawnStateReads({ walk }) {
+  const { dataStateKeys, drawnStateReads, errors, policy } = walk;
+  drawnStateReads.forEach(({ path, key }) => {
+    const dataKey = dataStateKeys.find(
+      (dataStateKey) => key === null || overlapsStatePath({ key, id: dataStateKey })
+    );
+    if (type.isUndefined(dataKey)) return;
+    errors.push({
+      path,
+      rule: 'policy.state',
+      message: `_state reads "${dataKey}", which the content fills with data, where the content may draw it. Under dynamic blocks policy "${policy.id}", read it only in a CallAPI payload, a SetState value or a condition.`,
+    });
   });
 }
 
@@ -202,12 +266,16 @@ function checkPolicy({ blocks, policy, blockMetas, blockSchemas, clientOperators
     blockSchemas,
     clientOperators,
     count: 0,
+    dataStateKeys: [],
+    drawnStateReads: [],
     errors: [],
     ids: new Set(),
+    objectValueIds: collectObjectValueIds({ blocks: content, blockMetas }),
     policy,
     routes,
   };
   checkBlockList({ blocks: content, path: 'blocks', depth: 1, walk });
+  checkDrawnStateReads({ walk });
   findSerializerKeys({ value: content, path: 'blocks' }).forEach((path) => {
     walk.errors.push(
       structureError({

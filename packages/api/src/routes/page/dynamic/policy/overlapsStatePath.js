@@ -14,9 +14,18 @@
   limitations under the License.
 */
 
-function getLineNumber(content, offset) {
-  if (offset == null || offset < 0) return null;
-  return content.substring(0, offset).split('\n').length;
+// Whether two state paths name the same value or one holds the other. A "$"
+// segment (an id inside a list) matches any segment.
+function overlapsStatePath({ key, id }) {
+  const keyParts = key.split('.');
+  const idParts = id.split('.');
+  const length = Math.min(keyParts.length, idParts.length);
+  for (let index = 0; index < length; index += 1) {
+    const keyPart = keyParts[index];
+    const idPart = idParts[index];
+    if (keyPart !== idPart && keyPart !== '$' && idPart !== '$') return false;
+  }
+  return true;
 }
 
-export default getLineNumber;
+export default overlapsStatePath;

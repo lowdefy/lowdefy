@@ -154,12 +154,14 @@ export default {
                 },
                 label: {
                   type: 'string',
+                  textKind: 'html',
                   description: 'Item label - supports html.',
                 },
                 value: {
                   oneOf: [
                     {
                       type: 'string',
+                      textKind: 'html',
                       description: 'Value of item - supports html.',
                     },
                     {
@@ -209,6 +211,7 @@ export default {
       },
       title: {
         type: 'string',
+        textKind: 'html',
         description: 'The title of the description block, placed at the top - supports html.',
       },
       theme: {

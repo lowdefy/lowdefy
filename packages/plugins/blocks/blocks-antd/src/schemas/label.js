@@ -36,10 +36,12 @@ export default {
     },
     extra: {
       type: 'string',
+      textKind: 'html',
       description: 'Extra text to display beneath the content - supports html.',
     },
     title: {
       type: 'string',
+      textKind: 'html',
       description: 'Label title - supports html.',
     },
     tooltip,

@@ -63,6 +63,7 @@ export default {
       },
       content: {
         type: 'string',
+        textKind: 'html',
         description: 'Title text content - supports html.',
       },
       copyable: {
