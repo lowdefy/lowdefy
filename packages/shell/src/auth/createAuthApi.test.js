@@ -20,6 +20,7 @@ import createAuthApi from './createAuthApi.js';
 import withoutCookies from './withoutCookies.js';
 
 const apiBase = 'https://field.example.com';
+const DEVICE_KEY = 'a1'.repeat(32);
 
 function response({ body = {}, headers = {}, status = 200 }) {
   return {
@@ -33,7 +34,8 @@ function response({ body = {}, headers = {}, status = 200 }) {
 function setup(answer) {
   const fetch = jest.fn(async () => response(answer));
   const tokenStore = { set: jest.fn(async () => undefined) };
-  return { api: createAuthApi({ apiBase, fetch, tokenStore }), fetch, tokenStore };
+  const getDeviceKey = async () => DEVICE_KEY;
+  return { api: createAuthApi({ apiBase, fetch, getDeviceKey, tokenStore }), fetch, tokenStore };
 }
 
 function sent(fetch) {
@@ -47,7 +49,7 @@ test('sendCode asks Better Auth for a sign-in code', async () => {
   expect(sent(fetch)).toEqual({
     path: '/api/auth/email-otp/send-verification-otp',
     body: { email: 'ana@example.com', type: 'sign-in' },
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-lowdefy-device-key': DEVICE_KEY },
   });
 });
 
@@ -69,6 +71,7 @@ test('signInWithCode keeps the session token from set-auth-token', async () => {
     status: 'signedIn',
   });
   expect(sent(fetch).path).toBe('/api/auth/sign-in/email-otp');
+  expect(sent(fetch).headers['x-lowdefy-device-key']).toBe(DEVICE_KEY);
   expect(tokenStore.set).toHaveBeenCalledWith('token-1');
 });
 

@@ -232,6 +232,15 @@ Handles Auth.js configuration retrieval.
 | `callbacks/addUserFieldsToToken.js`   | Maps provider fields to JWT token via `auth.userFields`     |
 | `callbacks/createCallbackPlugins.js`  | Filters callback plugins by type                            |
 
+**Email-code send cap (apps with a mobile section).** `requestHooks/createEmailSendLimit.js` caps sign-in and password-reset codes at 5 per 15 minutes. It counts in the auth database's verification records, so every instance shares the count. Each send takes a slot (`reserveSendSlot`): the record is written first and the count read after, so parallel sends never pass the cap. A per-address cap alone lets anyone who knows an address keep its person out of code sign-in. So:
+
+- A phone sends its device key (`x-lowdefy-device-key`, a random secret in the shell's secure storage that survives sign-out).
+- A send with a key counts against its own (address, device) cap.
+- A phone that signed in by code with the address before skips the address's cap. `mobile/createKnownDeviceHook.js` records it, hashed, for 90 days.
+- Browsers, new phones and made-up keys count against the address cap, so a stranger can still hold off a new phone or a browser for up to 15 minutes, but not a known phone.
+- On a 429 the shell's sign-in screen moves to the code step, so a code already sent can still be used.
+- The server stores only the key's SHA-256 (`mobile/readDeviceKeyHash.js`), and only for requests that are a shell's own (`isNativeAuthRequest`).
+
 ### `/routes/auth/organizations/`
 
 | Module                              | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |

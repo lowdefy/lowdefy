@@ -26,39 +26,178 @@ vi.doMock('better-auth/api', () => ({
 }));
 
 const { default: createEmailSendLimit } = await import('./createEmailSendLimit.js');
+const { default: sha256Base64Url } = await import('../mobile/sha256Base64Url.js');
 
-function createAuth({ sent }) {
+const DEVICE_KEY = 'k'.repeat(43);
+const OTHER_KEY = 'o'.repeat(43);
+
+function matches(record, where) {
+  return where.every(({ field, operator, value }) => {
+    if (operator === 'lt') return record[field] < value;
+    if (operator === 'gt') return record[field] > value;
+    return record[field] === value;
+  });
+}
+
+// The verification table in memory. Every call waits a turn first, so parallel sends interleave
+// the way they do against a database.
+function createAuth() {
+  const records = [];
+  let nextId = 0;
+  const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
   const adapter = {
-    deleteMany: vi.fn(async () => 0),
-    count: vi.fn(async () => sent),
-    create: vi.fn(async ({ data }) => data),
+    records,
+    async create({ data }) {
+      await tick();
+      const record = { ...data, id: String((nextId += 1)) };
+      records.push(record);
+      return record;
+    },
+    async count({ where }) {
+      await tick();
+      return records.filter((record) => matches(record, where)).length;
+    },
+    async delete({ where }) {
+      await tick();
+      const index = records.findIndex((record) => matches(record, where));
+      if (index !== -1) records.splice(index, 1);
+    },
+    async deleteMany({ where }) {
+      await tick();
+      const keep = records.filter((record) => !matches(record, where));
+      records.splice(0, records.length, ...keep);
+    },
   };
   return { adapter, auth: { $context: Promise.resolve({ adapter }) } };
 }
 
-test('createEmailSendLimit records a send under the address and lets it through', async () => {
-  const { adapter, auth } = createAuth({ sent: 4 });
-  const limit = createEmailSendLimit({ getAuth: () => auth, max: 5, windowSeconds: 900 });
-  expect(await limit({ body: { email: ' Ana@Example.com ' } })).toBeUndefined();
-  expect(adapter.deleteMany).toHaveBeenCalledWith({
-    model: 'verification',
-    where: [
-      { field: 'identifier', value: 'email-send-limit:ana@example.com' },
-      { field: 'expiresAt', operator: 'lt', value: expect.any(Date) },
-    ],
+function nativeRequest(key) {
+  const headers = { 'x-lowdefy-shell': '7.1.0' };
+  if (key !== undefined) headers['x-lowdefy-device-key'] = key;
+  return new Request('http://localhost/api/auth/email-otp/send-verification-otp', { headers });
+}
+
+function browserRequest(key) {
+  return new Request('http://localhost/api/auth/email-otp/send-verification-otp', {
+    headers: {
+      origin: 'http://localhost',
+      'x-lowdefy-shell': '7.1.0',
+      'x-lowdefy-device-key': key,
+    },
   });
-  const { data } = adapter.create.mock.calls[0][0];
-  expect(data.identifier).toBe('email-send-limit:ana@example.com');
-  expect(data.expiresAt.getTime() - data.createdAt.getTime()).toBe(900 * 1000);
+}
+
+function identifiers(adapter) {
+  return adapter.records.map(({ identifier }) => identifier);
+}
+
+function addRecords({ adapter, identifier, count, expiresAt = new Date(Date.now() + 60000) }) {
+  for (let index = 0; index < count; index += 1) {
+    adapter.records.push({ id: `seed-${identifier}-${index}`, identifier, expiresAt });
+  }
+}
+
+function createLimit(auth) {
+  return createEmailSendLimit({ getAuth: () => auth, max: 5, windowSeconds: 900 });
+}
+
+test('createEmailSendLimit takes a slot under the address and lets the send through', async () => {
+  const { adapter, auth } = createAuth();
+  expect(await createLimit(auth)({ body: { email: ' Ana@Example.com ' } })).toBeUndefined();
+  expect(identifiers(adapter)).toEqual(['email-send-limit:ana@example.com']);
+  const [record] = adapter.records;
+  expect(record.expiresAt.getTime() - record.createdAt.getTime()).toBe(900 * 1000);
 });
 
-test('createEmailSendLimit refuses a send past the cap and records nothing', async () => {
-  const { adapter, auth } = createAuth({ sent: 5 });
-  const limit = createEmailSendLimit({ getAuth: () => auth, max: 5, windowSeconds: 900 });
-  await expect(limit({ body: { email: 'ana@example.com' } })).rejects.toMatchObject({
+test('createEmailSendLimit refuses a send past the cap and keeps no slot for it', async () => {
+  const { adapter, auth } = createAuth();
+  addRecords({ adapter, identifier: 'email-send-limit:ana@example.com', count: 5 });
+  await expect(createLimit(auth)({ body: { email: 'ana@example.com' } })).rejects.toMatchObject({
     status: 'TOO_MANY_REQUESTS',
   });
-  expect(adapter.create).not.toHaveBeenCalled();
+  expect(adapter.records).toHaveLength(5);
+});
+
+test('createEmailSendLimit lets no more than the cap through when sends race', async () => {
+  const { adapter, auth } = createAuth();
+  const limit = createLimit(auth);
+  const results = await Promise.allSettled(
+    Array.from({ length: 10 }, () => limit({ body: { email: 'ana@example.com' } }))
+  );
+  const allowed = results.filter(({ status }) => status === 'fulfilled').length;
+  expect(allowed).toBeLessThanOrEqual(5);
+  expect(adapter.records.length).toBe(allowed);
+});
+
+test('createEmailSendLimit does not count expired slots', async () => {
+  const { adapter, auth } = createAuth();
+  addRecords({
+    adapter,
+    identifier: 'email-send-limit:ana@example.com',
+    count: 5,
+    expiresAt: new Date(Date.now() - 1000),
+  });
+  expect(await createLimit(auth)({ body: { email: 'ana@example.com' } })).toBeUndefined();
+  expect(adapter.records).toHaveLength(1);
+});
+
+test('createEmailSendLimit counts a phone send against its own and the address cap, by the key hash', async () => {
+  const { adapter, auth } = createAuth();
+  await createLimit(auth)({
+    body: { email: 'ana@example.com' },
+    request: nativeRequest(DEVICE_KEY),
+  });
+  expect(identifiers(adapter)).toEqual([
+    `email-send-limit:ana@example.com:${sha256Base64Url(DEVICE_KEY)}`,
+    'email-send-limit:ana@example.com',
+  ]);
+  expect(identifiers(adapter).join()).not.toContain(DEVICE_KEY);
+});
+
+test('createEmailSendLimit lets a known phone send while the address cap is full', async () => {
+  const { adapter, auth } = createAuth();
+  const hash = sha256Base64Url(DEVICE_KEY);
+  addRecords({ adapter, identifier: 'email-send-limit:ana@example.com', count: 5 });
+  addRecords({ adapter, identifier: `email-known-device:ana@example.com:${hash}`, count: 1 });
+  expect(
+    await createLimit(auth)({
+      body: { email: 'ana@example.com' },
+      request: nativeRequest(DEVICE_KEY),
+    })
+  ).toBeUndefined();
+  expect(
+    identifiers(adapter).filter((id) => id === 'email-send-limit:ana@example.com')
+  ).toHaveLength(5);
+  expect(identifiers(adapter)).toContain(`email-send-limit:ana@example.com:${hash}`);
+});
+
+test('createEmailSendLimit still caps a known phone at its own cap', async () => {
+  const { adapter, auth } = createAuth();
+  const hash = sha256Base64Url(DEVICE_KEY);
+  addRecords({ adapter, identifier: `email-known-device:ana@example.com:${hash}`, count: 1 });
+  addRecords({ adapter, identifier: `email-send-limit:ana@example.com:${hash}`, count: 5 });
+  await expect(
+    createLimit(auth)({ body: { email: 'ana@example.com' }, request: nativeRequest(DEVICE_KEY) })
+  ).rejects.toMatchObject({ status: 'TOO_MANY_REQUESTS' });
+});
+
+test('createEmailSendLimit refuses an unknown phone when the address cap is full and gives its own slot back', async () => {
+  const { adapter, auth } = createAuth();
+  addRecords({ adapter, identifier: 'email-send-limit:ana@example.com', count: 5 });
+  await expect(
+    createLimit(auth)({ body: { email: 'ana@example.com' }, request: nativeRequest(OTHER_KEY) })
+  ).rejects.toMatchObject({ status: 'TOO_MANY_REQUESTS' });
+  expect(identifiers(adapter).every((id) => id === 'email-send-limit:ana@example.com')).toBe(true);
+  expect(adapter.records).toHaveLength(5);
+});
+
+test('createEmailSendLimit ignores a device key from a browser or a malformed one', async () => {
+  const { adapter, auth } = createAuth();
+  const limit = createLimit(auth);
+  await limit({ body: { email: 'ana@example.com' }, request: browserRequest(DEVICE_KEY) });
+  await limit({ body: { email: 'ana@example.com' }, request: nativeRequest('short') });
+  await limit({ body: { email: 'ana@example.com' }, request: nativeRequest() });
+  expect(identifiers(adapter)).toEqual(Array(3).fill('email-send-limit:ana@example.com'));
 });
 
 test('createEmailSendLimit leaves a body with no email to the route', async () => {

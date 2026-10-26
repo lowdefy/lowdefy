@@ -79,13 +79,15 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   // the code is minted inside sendMagicLink, which only runs after the
   // magic-link gate has already admitted the address.
   if (authConfig.emailOTP?.enabled === true) {
-    // Apps with phones sign in by email code by default, so each address is
-    // sent at most 5 codes in 15 minutes. Registered ahead of the gate - see
-    // createEmailSendLimit.
+    // Apps with phones sign in by email code by default, so codes are capped at
+    // 5 in 15 minutes, per phone and per address (createEmailSendLimit). The
+    // password reset code is another unauthenticated send to the same address.
+    // Registered ahead of the gate.
     if (!type.isNone(authConfig.mobile)) {
       before.push({
         id: 'emailOtpSendLimit',
-        matches: (path) => path === '/email-otp/send-verification-otp',
+        matches: (path) =>
+          path === '/email-otp/send-verification-otp' || path === '/forget-password/email-otp',
         handler: createEmailSendLimit({ getAuth, max: 5, windowSeconds: 900 }),
       });
     }

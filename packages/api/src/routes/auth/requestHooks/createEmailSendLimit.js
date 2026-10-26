@@ -17,54 +17,71 @@
 import { APIError } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
+import getKnownDeviceIdentifier from '../mobile/getKnownDeviceIdentifier.js';
+import readDeviceKeyHash from '../mobile/readDeviceKeyHash.js';
+import reserveSendSlot from './reserveSendSlot.js';
+
 const IDENTIFIER_PREFIX = 'email-send-limit:';
 
-// The engine-tier request hooks.before that caps how many codes one address
-// can be sent: max sends per windowSeconds, counted in the auth database's
-// verification records so every server instance shares the count. BetterAuth's
-// own rate limiter counts per client address and per instance, which a phone
-// network's shared addresses and several instances both defeat.
+// The engine-tier request hooks.before that caps how many codes are sent: max
+// per windowSeconds, counted in the auth database's verification records so
+// every server instance shares the count. BetterAuth's own rate limiter counts
+// per client address and per instance, which a phone network's shared
+// addresses and several instances both defeat.
+//
+// A per-address cap alone lets anyone who knows an address keep its person
+// out of code sign-in. So a phone that sends its device key (a secret only it
+// holds, x-lowdefy-device-key) counts against its own cap for the address,
+// and a phone that has signed in with the address before (createKnownDeviceHook)
+// skips the address's cap. Every other send - a browser, a new phone, a guess
+// at a key - counts against the address's cap.
 //
 // Registered ahead of the send gate, so an address the app would not mail
 // counts and is refused the same way as one it would: the refusal never tells
-// whether an account exists. A refused send records nothing, so the window
-// runs from the sends that went through.
+// whether an account exists. A refused send keeps no slot, so the window runs
+// from the sends that went through.
 function createEmailSendLimit({ getAuth, max, windowSeconds }) {
   return async function emailSendLimit(ctx) {
-    const email = ctx.body?.email;
+    const rawEmail = ctx.body?.email;
     // No email is the route's own validation error.
-    if (!type.isString(email)) {
+    if (!type.isString(rawEmail)) {
       return undefined;
     }
-    const identifier = `${IDENTIFIER_PREFIX}${email.trim().toLowerCase()}`;
+    const email = rawEmail.trim().toLowerCase();
+    const deviceKeyHash = readDeviceKeyHash({ request: ctx.request });
     const { adapter } = await getAuth().$context;
     const now = new Date();
-    await adapter.deleteMany({
-      model: 'verification',
-      where: [
-        { field: 'identifier', value: identifier },
-        { field: 'expiresAt', operator: 'lt', value: now },
-      ],
-    });
-    const sent = await adapter.count({
-      model: 'verification',
-      where: [{ field: 'identifier', value: identifier }],
-    });
-    if (sent >= max) {
-      throw new APIError('TOO_MANY_REQUESTS', {
-        message: 'Too many sign-in codes were requested for this email. Try again later.',
-      });
+    const identifiers = [];
+    if (deviceKeyHash !== null) {
+      identifiers.push(`${IDENTIFIER_PREFIX}${email}:${deviceKeyHash}`);
     }
-    await adapter.create({
-      model: 'verification',
-      data: {
-        identifier,
-        value: 'sent',
-        expiresAt: new Date(now.getTime() + windowSeconds * 1000),
-        createdAt: now,
-        updatedAt: now,
-      },
-    });
+    const known =
+      deviceKeyHash !== null &&
+      (await adapter.count({
+        model: 'verification',
+        where: [
+          { field: 'identifier', value: getKnownDeviceIdentifier({ deviceKeyHash, email }) },
+          { field: 'expiresAt', operator: 'gt', value: now },
+        ],
+      })) > 0;
+    if (!known) {
+      identifiers.push(`${IDENTIFIER_PREFIX}${email}`);
+    }
+    const taken = [];
+    for (const identifier of identifiers) {
+      const record = await reserveSendSlot({ adapter, identifier, max, now, windowSeconds });
+      if (record === null) {
+        await Promise.all(
+          taken.map(({ id }) =>
+            adapter.delete({ model: 'verification', where: [{ field: 'id', value: id }] })
+          )
+        );
+        throw new APIError('TOO_MANY_REQUESTS', {
+          message: 'Too many sign-in codes were requested for this email. Try again later.',
+        });
+      }
+      taken.push(record);
+    }
     return undefined;
   };
 }

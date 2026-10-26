@@ -29,6 +29,8 @@ const MESSAGES = {
   sent: 'If this email can sign in, a code is on its way.',
   invalid: 'That code is not right, or it has expired.',
   rateLimited: 'Too many tries. Wait a minute, then try again.',
+  tooManyCodes:
+    'Too many codes were sent to this email. Use the newest code in your email, or try again later.',
   sheetFailed: 'Sign-in did not finish. Try again.',
   unreachable: "Could not reach the app's server. Check your connection and try again.",
 };
@@ -101,14 +103,12 @@ function SignInScreen({ appName, auth, settings }) {
         await openSheet();
         return;
       }
-      if (result.status === 'rateLimited') {
-        setError(MESSAGES.rateLimited);
-        return;
-      }
       setStep('code');
       setCode('');
-      setMessage(MESSAGES.sent);
       setResendIn(RESEND_SECONDS);
+      // The address's cap is full, which anyone who knows it can do. A code it was sent while
+      // filling still works, so the person is asked for it rather than kept on the email step.
+      setMessage(result.status === 'rateLimited' ? MESSAGES.tooManyCodes : MESSAGES.sent);
     });
   }
 

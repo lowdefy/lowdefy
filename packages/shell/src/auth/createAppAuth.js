@@ -18,6 +18,7 @@ import { AppState } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 import createAuthApi from './createAuthApi.js';
+import createDeviceKey from './createDeviceKey.js';
 import createCoreAuth from './createCoreAuth.js';
 import createSessionStores from './createSessionStores.js';
 import createTokenStore from './createTokenStore.js';
@@ -93,7 +94,12 @@ function createAppAuth({
     getBiometric: () => usesBiometricUnlock(state.settings),
     kv,
   });
-  const authApi = createAuthApi({ apiBase, fetch, tokenStore });
+  const authApi = createAuthApi({
+    apiBase,
+    fetch,
+    getDeviceKey: createDeviceKey({ appId: app.id }),
+    tokenStore,
+  });
 
   function getState() {
     return state;

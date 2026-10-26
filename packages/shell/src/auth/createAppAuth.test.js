@@ -27,7 +27,7 @@ import { createPages, createRoot } from '../test/fixtures.js';
 jest.mock('expo-secure-store', () =>
   jest.requireActual('../test/createFakeSecureStore.js').default()
 );
-jest.mock('expo-crypto', () => ({}));
+jest.mock('expo-crypto', () => ({ getRandomBytes: (count) => new Uint8Array(count).fill(7) }));
 jest.mock('expo-web-browser', () => ({}));
 jest.mock('expo-local-authentication', () => ({}));
 
@@ -201,9 +201,17 @@ function keepPersonData(kv) {
   kv.set('lowdefy:field::theme', 'dark');
 }
 
+// Only the phone's device key outlives a sign-out: it marks this phone, not the person.
+function expectOnlyDeviceKey() {
+  const left = [...SecureStore.items.keys()].filter(
+    (key) => !key.startsWith('lowdefy-device-key.')
+  );
+  expect(left).toEqual([]);
+}
+
 function expectPurged(context) {
   expect(context.auth.tokenStore.get()).toBeNull();
-  expect(SecureStore.items.size).toBe(0);
+  expectOnlyDeviceKey();
   expect([...context.cacheStore.roots.keys()]).toEqual([]);
   expect(context.kv.get('lowdefy-shell:last-cache-key:field')).toBeNull();
   expect(context.kv.get('lowdefy:field::lowdefy_user:ana:draft')).toBeNull();
@@ -401,7 +409,7 @@ test('a shared device signs out on start when its token was stored behind biomet
   });
   expect(context.onSignedOut).toHaveBeenCalledTimes(1);
   expect(context.localAuthentication.authenticateAsync).not.toHaveBeenCalled();
-  expect(SecureStore.items.size).toBe(0);
+  expectOnlyDeviceKey();
 });
 
 test('a shared device signs out on start when the app was closed without going to the background', async () => {
@@ -412,5 +420,5 @@ test('a shared device signs out on start when the app was closed without going t
   first.auth.dispose();
   const context = await setup({ kv, server });
   expect(context.onSignedOut).toHaveBeenCalledTimes(1);
-  expect(SecureStore.items.size).toBe(0);
+  expectOnlyDeviceKey();
 });

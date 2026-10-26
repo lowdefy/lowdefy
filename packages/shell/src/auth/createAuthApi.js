@@ -32,9 +32,11 @@ import { type } from '@lowdefy/helpers';
  * @param {Object} params
  * @param {string} params.apiBase The app server's URL.
  * @param {Function} params.fetch The shell's fetch, without the session watch.
+ * @param {() => Promise<string>} params.getDeviceKey This phone's device key (createDeviceKey),
+ *   sent on the email-code calls so the server can tell this phone from a stranger.
  * @param {{ set }} params.tokenStore The session token store.
  */
-function createAuthApi({ apiBase, fetch, tokenStore }) {
+function createAuthApi({ apiBase, fetch, getDeviceKey, tokenStore }) {
   function post({ body, headers = {}, path }) {
     return fetch(`${apiBase}/api/auth${path}`, {
       method: 'POST',
@@ -55,10 +57,15 @@ function createAuthApi({ apiBase, fetch, tokenStore }) {
     return new Error(`The app's server answered ${res.status} to the ${what}.`);
   }
 
+  async function deviceKeyHeader() {
+    return { 'x-lowdefy-device-key': await getDeviceKey() };
+  }
+
   async function sendCode({ email }) {
     const res = await post({
       path: '/email-otp/send-verification-otp',
       body: { email, type: 'sign-in' },
+      headers: await deviceKeyHeader(),
     });
     if (res.ok) return { status: 'sent' };
     if (res.status === 404) return { status: 'unavailable' };
@@ -67,7 +74,11 @@ function createAuthApi({ apiBase, fetch, tokenStore }) {
   }
 
   async function signInWithCode({ email, otp }) {
-    const res = await post({ path: '/sign-in/email-otp', body: { email, otp } });
+    const res = await post({
+      path: '/sign-in/email-otp',
+      body: { email, otp },
+      headers: await deviceKeyHeader(),
+    });
     if (res.status === 429) return { status: 'rateLimited' };
     if (res.status >= 400 && res.status < 500) return { status: 'invalid' };
     if (!res.ok) throw unexpected(res, 'sign-in');

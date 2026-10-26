@@ -137,10 +137,14 @@ async function setup({ cookieCache = false, mobile, twoFactor } = {}) {
     websockets: { roles: {} },
     organizations,
     roles: [],
-    mobile: mobile ?? {
-      shells: [{ id: 'field', scheme: 'com.example.field' }],
-      sessionExpiresIn: null,
-    },
+    // mobile: false builds an app with no mobile section.
+    mobile:
+      mobile === false
+        ? undefined
+        : mobile ?? {
+            shells: [{ id: 'field', scheme: 'com.example.field' }],
+            sessionExpiresIn: null,
+          },
   };
   let auth;
   auth = betterAuth(
@@ -183,11 +187,15 @@ async function createMember({ adapter, internalAdapter, email, orgNames = ['Acme
   return { user, organizationIds };
 }
 
-// A phone's request: no Origin, no cookies, the session as a bearer.
-function nativeRequest({ path, method = 'POST', body, token }) {
+// A phone's request: no Origin, no cookies, the session as a bearer, and the phone's device key
+// on its email-code calls.
+function nativeRequest({ path, method = 'POST', body, deviceKey, token }) {
   const headers = { 'content-type': 'application/json', 'x-lowdefy-shell': '7.1.0' };
   if (token) {
     headers.authorization = `Bearer ${token}`;
+  }
+  if (deviceKey) {
+    headers['x-lowdefy-device-key'] = deviceKey;
   }
   return new Request(`${ORIGIN}/api/auth${path}`, {
     method,
@@ -452,6 +460,108 @@ test('the send cap counts only the last 15 minutes', async () => {
     where: [{ field: 'identifier', value: 'email-send-limit:old@example.com' }],
   });
   expect(left).toBe(1);
+});
+
+test('a phone that signed in by code before still gets codes while a stranger fills the address cap', async () => {
+  const { adapter, auth, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'kim@example.com' });
+  const deviceKey = randomBytes(32).toString('base64url');
+
+  async function send(key) {
+    const response = await auth.handler(
+      nativeRequest({
+        path: '/email-otp/send-verification-otp',
+        body: { email: 'kim@example.com', type: 'sign-in' },
+        deviceKey: key,
+      })
+    );
+    return response.status;
+  }
+
+  expect(await send(deviceKey)).toBe(200);
+  const signedIn = await auth.handler(
+    nativeRequest({
+      path: '/sign-in/email-otp',
+      body: { email: 'kim@example.com', otp: lastCode() },
+      deviceKey,
+    })
+  );
+  expect(signedIn.status).toBe(200);
+  const deviceKeyHash = createHash('sha256').update(deviceKey).digest('base64url');
+  expect(
+    await adapter.count({
+      model: 'verification',
+      where: [
+        { field: 'identifier', value: `email-known-device:kim@example.com:${deviceKeyHash}` },
+      ],
+    })
+  ).toBe(1);
+
+  // A stranger with no key, or a made-up one, fills the address cap.
+  const statuses = [];
+  for (let index = 0; index < 5; index += 1) {
+    statuses.push(await send(index % 2 === 0 ? undefined : randomBytes(32).toString('base64url')));
+  }
+  expect(statuses).toContain(429);
+  expect(await send(undefined)).toBe(429);
+
+  // The phone that signed in before is let through, and the code reaches the address.
+  const before = sent.length;
+  expect(await send(deviceKey)).toBe(200);
+  expect(sent.slice(before)).toEqual([{ to: 'kim@example.com', flow: 'emailOTP' }]);
+});
+
+test('password reset codes are capped like sign-in codes', async () => {
+  const { adapter, auth, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'rex@example.com' });
+  const statuses = [];
+  for (let index = 0; index < 6; index += 1) {
+    const response = await auth.handler(
+      nativeRequest({ path: '/forget-password/email-otp', body: { email: 'rex@example.com' } })
+    );
+    statuses.push(response.status);
+  }
+  expect(statuses.slice(0, 5).every((status) => status !== 429)).toBe(true);
+  expect(statuses[5]).toBe(429);
+});
+
+test('a signed session token sent as a bearer resolves no caller in an app with no mobile section', async () => {
+  const { adapter, auth, internalAdapter } = await setup({ mobile: false });
+  await createMember({ adapter, internalAdapter, email: 'una@example.com' });
+  const response = await signInByCode({ auth, email: 'una@example.com', request: browserRequest });
+  expect(response.status).toBe(200);
+  const cookie = cookieOf(response);
+  const sessionToken = decodeURIComponent(
+    cookie
+      .split('; ')
+      .find((pair) => pair.split('=')[0].endsWith('session_token'))
+      .split('=')
+      .slice(1)
+      .join('=')
+  );
+  expect((await resolveCaller({ auth, cookie })).user).not.toBeNull();
+  expect((await resolveCaller({ auth, token: sessionToken })).user).toBeNull();
+});
+
+test('a browser exchanging a one-time token never gets the session token header', async () => {
+  const { adapter, auth, authJson, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'vic@example.com' });
+  const { codeVerifier, oneTimeToken } = await handOffToShell({
+    auth,
+    authJson,
+    email: 'vic@example.com',
+  });
+  const cookie = cookieOf(
+    await signInByCode({ auth, email: 'vic@example.com', request: browserRequest })
+  );
+  const response = await auth.handler(
+    browserRequest({
+      path: '/one-time-token/verify',
+      body: { token: oneTimeToken, code_verifier: codeVerifier },
+      cookie,
+    })
+  );
+  expect(response.headers.get('set-auth-token')).toBeNull();
 });
 
 // What a shell does before it opens the sheet (RFC 7636): a random verifier it

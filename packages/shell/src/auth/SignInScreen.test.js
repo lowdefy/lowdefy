@@ -165,17 +165,21 @@ test('a server without the email code route sends the person to the sheet', asyn
   expect(auth.signInWithSheet).toHaveBeenCalledTimes(1);
 });
 
-test('too many codes, or no connection, say so', async () => {
-  const sendCode = jest
-    .fn()
-    .mockResolvedValueOnce({ status: 'rateLimited' })
-    .mockRejectedValueOnce(new TypeError('Network request failed'));
+test('too many codes asks for the newest code already sent', async () => {
+  const sendCode = jest.fn().mockResolvedValueOnce({ status: 'rateLimited' });
   await renderScreen({ auth: createAuth({ sendCode }) });
   await enterEmail();
-  expect(screen.getByTestId('sign-in-error')).toHaveTextContent(
-    'Too many tries. Wait a minute, then try again.'
+  expect(screen.getByTestId('sign-in-code')).toBeTruthy();
+  expect(screen.getByTestId('sign-in-message')).toHaveTextContent(
+    'Too many codes were sent to this email. Use the newest code in your email, or try again later.'
   );
-  await fireEvent.press(screen.getByTestId('sign-in-continue'));
+  expect(screen.queryByTestId('sign-in-error')).toBeNull();
+});
+
+test('no connection says so', async () => {
+  const sendCode = jest.fn().mockRejectedValueOnce(new TypeError('Network request failed'));
+  await renderScreen({ auth: createAuth({ sendCode }) });
+  await enterEmail();
   expect(screen.getByTestId('sign-in-error')).toHaveTextContent(
     "Could not reach the app's server. Check your connection and try again."
   );
