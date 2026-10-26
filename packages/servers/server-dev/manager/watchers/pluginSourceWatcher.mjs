@@ -14,11 +14,9 @@
   limitations under the License.
 */
 
-import fs from 'fs';
 import path from 'path';
 import createPluginSourceIgnore from './createPluginSourceIgnore.mjs';
 import listServerPluginFiles from './listServerPluginFiles.mjs';
-import listServerSidePackages from './listServerSidePackages.mjs';
 import { clearPluginTypeCache } from '../utils/pluginTypeCache.mjs';
 import readPluginDefinitions from '../utils/readPluginDefinitions.mjs';
 import selectLocalPluginPackages from './selectLocalPluginPackages.mjs';
@@ -35,27 +33,31 @@ function isInside({ filePath, dir }) {
 // operator - is Vite's to hot-replace, and a restart would only drop the page
 // loads and tool calls in flight for the length of a child start. The import
 // graph is walked after the build, which rewrites the server's plugin import
-// files when a type is added or removed.
+// files when a type is added or removed. The graph alone decides, so a
+// server file in a plugin that only holds steps, or a helper a connection
+// imports from another local plugin, restarts too. A package.json can change
+// what the server's imports resolve to, so it restarts for a package the
+// server imports from.
 function isServerCodeChange({ changedFiles, context, packages }) {
-  const customTypesMap = JSON.parse(
-    fs.readFileSync(path.join(context.directories.build, 'customTypesMap.json'), 'utf8')
-  );
-  const serverSide = listServerSidePackages({ customTypesMap });
-  const changedServerPackageFiles = changedFiles.filter((filePath) =>
-    packages.some(
-      ({ package: packageName, dir }) => serverSide.has(packageName) && isInside({ filePath, dir })
-    )
-  );
-  if (changedServerPackageFiles.length === 0) {
-    return false;
-  }
-  const serverFiles = listServerPluginFiles({ directories: context.directories, packages });
-  if (serverFiles === null) {
-    return true;
-  }
-  return changedServerPackageFiles.some(
-    (filePath) => path.basename(filePath) === 'package.json' || serverFiles.has(filePath)
-  );
+  const { files, unsureDirs } = listServerPluginFiles({
+    directories: context.directories,
+    packages,
+  });
+  const serverDirs = packages
+    .map(({ dir }) => dir)
+    .filter(
+      (dir) => unsureDirs.has(dir) || [...files].some((filePath) => isInside({ filePath, dir }))
+    );
+  return changedFiles.some((filePath) => {
+    if (files.has(filePath)) {
+      return true;
+    }
+    const dir = serverDirs.find((serverDir) => isInside({ filePath, dir: serverDir }));
+    if (dir === undefined) {
+      return false;
+    }
+    return unsureDirs.has(dir) || path.basename(filePath) === 'package.json';
+  });
 }
 
 // A local plugin's code can change while the dev server runs, and nothing

@@ -35,6 +35,13 @@ function relativeFiles(files) {
   return [...files].map((filePath) => path.relative(pluginDir, filePath)).sort();
 }
 
+function writePackageJson(packageJson) {
+  write(
+    path.join(pluginDir, 'package.json'),
+    JSON.stringify({ name: '@app/plugin', type: 'module', ...packageJson })
+  );
+}
+
 beforeEach(() => {
   root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-server-files-test-')));
   const server = path.join(root, 'app', '.lowdefy', 'dev');
@@ -90,7 +97,9 @@ test('listServerPluginFiles lists the files reachable from server-side plugin im
   write(path.join(pluginDir, 'dist', 'Api', 'data.json'), '{}');
   write(path.join(pluginDir, 'dist', 'Api', 'lazy.js'), 'export default 1;\n');
 
-  expect(relativeFiles(listServerPluginFiles({ directories, packages }))).toEqual([
+  const { files, unsureDirs } = listServerPluginFiles({ directories, packages });
+
+  expect(relativeFiles(files)).toEqual([
     'dist/Api/Api.js',
     'dist/Api/data.json',
     'dist/Api/lazy.js',
@@ -98,31 +107,114 @@ test('listServerPluginFiles lists the files reachable from server-side plugin im
     'dist/connections.js',
     'dist/shared/format.js',
   ]);
+  expect(unsureDirs.size).toBe(0);
 });
 
 test('listServerPluginFiles resolves a directory import to its index file', () => {
   write(path.join(pluginDir, 'dist', 'connections.js'), "export * from './Api';\n");
   write(path.join(pluginDir, 'dist', 'Api', 'index.js'), 'export const Api = 1;\n');
 
-  expect(relativeFiles(listServerPluginFiles({ directories, packages }))).toEqual([
+  expect(relativeFiles(listServerPluginFiles({ directories, packages }).files)).toEqual([
     'dist/Api/index.js',
     'dist/connections.js',
   ]);
 });
 
-test('listServerPluginFiles returns null when server code imports a computed path', () => {
+test('listServerPluginFiles resolves a TypeScript import of an output name to its source', () => {
+  writePackageJson({ exports: { './connections': './src/connections.ts' } });
   write(
-    path.join(pluginDir, 'dist', 'connections.js'),
-    'export const Api = (name) => import(`./handlers/${name}.js`);\n'
+    path.join(pluginDir, 'src', 'connections.ts'),
+    "export { default as Api } from './Api.js';\n"
   );
+  write(path.join(pluginDir, 'src', 'Api.ts'), 'export default 1;\n');
 
-  expect(listServerPluginFiles({ directories, packages })).toBe(null);
+  const { files, unsureDirs } = listServerPluginFiles({ directories, packages });
+
+  expect(relativeFiles(files)).toEqual(['src/Api.ts', 'src/connections.ts']);
+  expect(unsureDirs.size).toBe(0);
 });
 
-test('listServerPluginFiles returns null when a server import cannot be resolved', () => {
+test('listServerPluginFiles follows the ES module export of a package that also exports CommonJS', () => {
+  writePackageJson({
+    exports: {
+      './connections': { require: './cjs/connections.cjs', import: './esm/connections.js' },
+    },
+  });
+  write(
+    path.join(pluginDir, 'esm', 'connections.js'),
+    "export { default as Api } from './Api.js';\n"
+  );
+  write(path.join(pluginDir, 'esm', 'Api.js'), 'export default 1;\n');
+  write(path.join(pluginDir, 'cjs', 'connections.cjs'), "module.exports = require('./Api.cjs');\n");
+  write(path.join(pluginDir, 'cjs', 'Api.cjs'), 'module.exports = 1;\n');
+
+  expect(relativeFiles(listServerPluginFiles({ directories, packages }).files)).toEqual([
+    'esm/Api.js',
+    'esm/connections.js',
+  ]);
+});
+
+test('listServerPluginFiles follows subpath imports through the package imports field', () => {
+  writePackageJson({
+    exports: { './connections': './src/connections.js' },
+    imports: { '#lib/*': './src/lib/*', '#lodash': 'lodash' },
+  });
+  write(
+    path.join(pluginDir, 'src', 'connections.js'),
+    "import query from '#lib/query.js';\nimport lodash from '#lodash';\nexport const Api = query;\n"
+  );
+  write(path.join(pluginDir, 'src', 'lib', 'query.js'), 'export default 1;\n');
+
+  const { files, unsureDirs } = listServerPluginFiles({ directories, packages });
+
+  expect(relativeFiles(files)).toEqual(['src/connections.js', 'src/lib/query.js']);
+  expect(unsureDirs.size).toBe(0);
+});
+
+test('listServerPluginFiles follows server imports into another local package', () => {
+  const helpersDir = path.join(root, 'plugins', 'helpers');
+  write(
+    path.join(helpersDir, 'package.json'),
+    JSON.stringify({ name: '@app/helpers', type: 'module', exports: { './query': './query.js' } })
+  );
+  write(path.join(helpersDir, 'query.js'), 'export default 1;\n');
+  write(path.join(helpersDir, 'Card.js'), 'export default 1;\n');
+  write(
+    path.join(pluginDir, 'dist', 'connections.js'),
+    "import query from '@app/helpers/query';\nexport const Api = query;\n"
+  );
+
+  const { files } = listServerPluginFiles({
+    directories,
+    packages: [...packages, { package: '@app/helpers', dir: helpersDir }],
+  });
+
+  expect(files.has(path.join(helpersDir, 'query.js'))).toBe(true);
+  expect(files.has(path.join(helpersDir, 'Card.js'))).toBe(false);
+});
+
+test('listServerPluginFiles marks a package unsure when server code imports a computed path', () => {
+  write(
+    path.join(pluginDir, 'dist', 'connections.js'),
+    "import format from './shared/format.js';\nexport const Api = (name) => import(`./handlers/${name}.js`);\n"
+  );
+
+  const { files, unsureDirs } = listServerPluginFiles({ directories, packages });
+
+  expect([...unsureDirs]).toEqual([pluginDir]);
+  expect(relativeFiles(files)).toEqual(['dist/connections.js', 'dist/shared/format.js']);
+});
+
+test('listServerPluginFiles marks a package unsure when a server import cannot be resolved', () => {
   write(path.join(pluginDir, 'dist', 'connections.js'), "export { Api } from './missing.js';\n");
 
-  expect(listServerPluginFiles({ directories, packages })).toBe(null);
+  expect([...listServerPluginFiles({ directories, packages }).unsureDirs]).toEqual([pluginDir]);
+});
+
+test('listServerPluginFiles marks a package unsure when it does not export a server import', () => {
+  writePackageJson({ exports: { './blocks': './dist/blocks.js' } });
+
+  expect([...listServerPluginFiles({ directories, packages }).unsureDirs]).toEqual([pluginDir]);
 });
 
 test('listServerPluginFiles ignores imports written in comments', () => {
@@ -136,13 +228,30 @@ test('listServerPluginFiles ignores imports written in comments', () => {
     ].join('\n')
   );
 
-  expect(relativeFiles(listServerPluginFiles({ directories, packages }))).toEqual([
-    'dist/connections.js',
-  ]);
+  const { files, unsureDirs } = listServerPluginFiles({ directories, packages });
+
+  expect(relativeFiles(files)).toEqual(['dist/connections.js']);
+  expect(unsureDirs.size).toBe(0);
 });
 
-test('listServerPluginFiles returns an empty set when the build has no plugin import files', () => {
+test('listServerPluginFiles reads comment markers inside strings as text', () => {
+  write(
+    path.join(pluginDir, 'dist', 'connections.js'),
+    [
+      "const pattern = 'handlers/*';",
+      'export const Api = (name) => import(`./handlers/${name}.js`);',
+      '/** A later comment. */',
+    ].join('\n')
+  );
+
+  expect([...listServerPluginFiles({ directories, packages }).unsureDirs]).toEqual([pluginDir]);
+});
+
+test('listServerPluginFiles lists nothing when the build has no plugin import files', () => {
   fs.rmSync(path.join(directories.build, 'plugins'), { recursive: true });
 
-  expect(listServerPluginFiles({ directories, packages }).size).toBe(0);
+  const { files, unsureDirs } = listServerPluginFiles({ directories, packages });
+
+  expect(files.size).toBe(0);
+  expect(unsureDirs.size).toBe(0);
 });

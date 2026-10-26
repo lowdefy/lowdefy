@@ -15,11 +15,15 @@
 */
 
 import fs from 'fs';
-import { createRequire } from 'module';
 import path from 'path';
+import { type } from '@lowdefy/helpers';
+
+import resolveFile from './resolveFile.mjs';
+import resolvePackageSpecifier from './resolvePackageSpecifier.mjs';
 
 // The build's plugin import files the client bundles. Every other file under
 // build/plugins is imported by the server process, which caches the modules.
+// A file missing here is walked as server code, which errs towards a restart.
 const CLIENT_IMPORT_FILES = new Set([
   'actions.js',
   'blocks.js',
@@ -28,11 +32,10 @@ const CLIENT_IMPORT_FILES = new Set([
   path.join('operators', 'clientJsMap.js'),
 ]);
 
-const RESOLVE_EXTENSIONS = ['', '.js', '.mjs', '.cjs', '.jsx', '.ts', '.tsx', '.json'];
-
 // Static imports and re-exports, side-effect imports, and literal dynamic
-// imports and requires. A match inside a comment or string only adds a file,
-// which at worst restarts the server when it did not need to.
+// imports and requires. A match inside a string adds a file, or marks its
+// package unsure when it names none, so at worst the server restarts when it
+// did not need to.
 const SPECIFIER_PATTERNS = [
   /\bfrom\s*['"]([^'"]+)['"]/g,
   /\bimport\s*['"]([^'"]+)['"]/g,
@@ -40,9 +43,18 @@ const SPECIFIER_PATTERNS = [
   /\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
 ];
 const DYNAMIC_IMPORT = /\b(import|require)\s*\(/g;
-// Block comments, and line comments not inside a URL such as 'https://...'.
-const COMMENTS = /\/\*[\s\S]*?\*\/|(^|[^:'"\w])\/\/[^\n]*/g;
 const LITERAL_DYNAMIC_IMPORT = /^\s*['"][^'"]+['"]\s*[,)]/;
+// String literals are matched so the comment markers inside them ('**/*.js',
+// 'https://...') stay text; only the comments are removed. Quoted strings end
+// at a line end, so a quote misread as one (an apostrophe in a regular
+// expression) cannot swallow the lines after it.
+const STRINGS_AND_COMMENTS =
+  /('(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*"|`(?:\\[\s\S]|[^`\\])*`)|\/\*[\s\S]*?\*\/|\/\/[^\n]*/g;
+
+function isInside({ filePath, dir }) {
+  const relative = path.relative(dir, filePath);
+  return !relative.startsWith('..') && !path.isAbsolute(relative);
+}
 
 function listFiles(dir) {
   if (!fs.existsSync(dir)) {
@@ -52,6 +64,10 @@ function listFiles(dir) {
     const full = path.join(dir, entry.name);
     return entry.isDirectory() ? listFiles(full) : [full];
   });
+}
+
+function stripComments(source) {
+  return source.replace(STRINGS_AND_COMMENTS, (_, string) => string ?? '');
 }
 
 function readSpecifiers(source) {
@@ -74,34 +90,50 @@ function hasNonLiteralDynamicImport(source) {
   return false;
 }
 
-function findPackage({ packages, specifier }) {
+function findPackageByName({ packages, specifier }) {
   return packages.find(
     ({ package: name }) => specifier === name || specifier.startsWith(`${name}/`)
   );
 }
 
-function resolveRelative({ from, specifier }) {
-  const base = path.resolve(path.dirname(from), specifier);
-  const candidates = [
-    ...RESOLVE_EXTENSIONS.map((extension) => `${base}${extension}`),
-    ...RESOLVE_EXTENSIONS.slice(1).map((extension) => path.join(base, `index${extension}`)),
-  ];
-  const found = candidates.find((candidate) =>
-    fs.statSync(candidate, { throwIfNoEntry: false })?.isFile()
-  );
-  return found ? fs.realpathSync(found) : null;
+function findPackageByFile({ packages, filePath }) {
+  return packages.find(({ dir }) => isInside({ filePath, dir }));
+}
+
+// Where a specifier leads, and the local package it resolves in, or null for
+// a published dependency, which cannot change under a running dev server.
+// Relative and subpath ('#lib/query.js') imports resolve in the importer's
+// own package.
+function resolveSpecifier({ packages, specifier, from }) {
+  if (specifier.startsWith('.')) {
+    const filePath = resolveFile(path.resolve(path.dirname(from), specifier));
+    return {
+      owner: findPackageByFile({ packages, filePath: from }),
+      resolved: filePath === null ? null : { filePath },
+    };
+  }
+  const owner = specifier.startsWith('#')
+    ? findPackageByFile({ packages, filePath: from })
+    : findPackageByName({ packages, specifier });
+  if (owner === undefined) {
+    return null;
+  }
+  return {
+    owner,
+    resolved: resolvePackageSpecifier({ dir: owner.dir, packageName: owner.package, specifier }),
+  };
 }
 
 // The files of the local plugin packages the server process imports: walked
 // from the build's server-side plugin import files through each module's
-// imports, staying inside the local packages (published dependencies cannot
-// change under a running dev server). Returns null when the walk cannot be
-// sure - an import it cannot resolve, or a dynamic import of a computed path -
-// so the caller restarts as it would without the walk.
+// imports, staying inside the local packages. A package where the walk cannot
+// be sure - an import it cannot resolve, or a dynamic import of a computed
+// path - is listed in unsureDirs, and any change to it restarts the server as
+// it would without the walk.
 function listServerPluginFiles({ directories, packages }) {
-  const requireFromServer = createRequire(path.join(directories.server, 'package.json'));
   const pluginsDir = path.join(directories.build, 'plugins');
   const files = new Set();
+  const unsureDirs = new Set();
   const queue = [];
 
   for (const importFile of listFiles(pluginsDir)) {
@@ -110,7 +142,7 @@ function listServerPluginFiles({ directories, packages }) {
       continue;
     }
     for (const specifier of readSpecifiers(fs.readFileSync(importFile, 'utf8'))) {
-      if (findPackage({ packages, specifier })) {
+      if (findPackageByName({ packages, specifier })) {
         queue.push({ specifier, from: null });
       }
     }
@@ -118,37 +150,39 @@ function listServerPluginFiles({ directories, packages }) {
 
   while (queue.length > 0) {
     const { specifier, from } = queue.shift();
-    let filePath;
-    if (specifier.startsWith('.')) {
-      filePath = resolveRelative({ from, specifier });
-    } else if (findPackage({ packages, specifier })) {
-      try {
-        filePath = fs.realpathSync(requireFromServer.resolve(specifier));
-      } catch {
-        filePath = null;
-      }
-    } else {
+    const result = resolveSpecifier({ packages, specifier, from });
+    if (result === null) {
       continue;
     }
-    if (filePath === null) {
-      return null;
+    const { owner, resolved } = result;
+    if (resolved === null) {
+      unsureDirs.add(owner.dir);
+      continue;
     }
-    if (files.has(filePath)) {
+    if (!type.isNone(resolved.specifier)) {
+      queue.push({ specifier: resolved.specifier, from });
+      continue;
+    }
+    const { filePath } = resolved;
+    const filePackage = findPackageByFile({ packages, filePath });
+    // A file outside every local package is not watched, so it cannot
+    // restart the server either way.
+    if (filePackage === undefined || files.has(filePath)) {
       continue;
     }
     files.add(filePath);
     if (path.extname(filePath) === '.json') {
       continue;
     }
-    const source = fs.readFileSync(filePath, 'utf8').replace(COMMENTS, '$1');
+    const source = stripComments(fs.readFileSync(filePath, 'utf8'));
     if (hasNonLiteralDynamicImport(source)) {
-      return null;
+      unsureDirs.add(filePackage.dir);
     }
     for (const next of readSpecifiers(source)) {
       queue.push({ specifier: next, from: filePath });
     }
   }
-  return files;
+  return { files, unsureDirs };
 }
 
 export default listServerPluginFiles;

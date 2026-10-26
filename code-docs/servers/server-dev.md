@@ -788,15 +788,22 @@ output its own watcher writes. Any change rebuilds the config — which reads ea
 list, so a new type is defined and a build a broken plugin failed clears once it is fixed — and
 reloads the clients. A change to a file the server imports also restarts the server, whose ESM
 cache holds the old modules; block, action and client-operator code is Vite's to hot-replace, and
-a restart would only drop the requests in flight. Only plugins with server-side types (per the
-build's `customTypesMap.json`) can restart it. After the build, `listServerPluginFiles` follows
+a restart would only drop the requests in flight. After the build, `listServerPluginFiles` follows
 the imports of the build's server-side plugin import files (`build/plugins/*.js`, less the client
 bundle's `actions.js`, `blocks.js`, `icons.js`, `operators/client.js` and
-`operators/clientJsMap.js`) through the local packages' own files. A changed file in that set,
-or a changed `package.json`, restarts. When the walk cannot be sure (an import it cannot resolve,
-or a dynamic import of a computed path) it returns `null` and any change in the package restarts,
-as before. Imports are found by patterns over comment-stripped source, not a parser: a stray
-match only adds a file, which errs towards a restart.
+`operators/clientJsMap.js`) through the files of every local package, so a plugin that only holds
+steps, or a helper a connection imports from another local plugin, counts too. Package
+specifiers and `#` subpath imports resolve through the package's `exports` and `imports` with
+the conditions Vite's SSR resolver matches (`import`, `module`, `node`, `development`,
+`default`), so a package that also exports CommonJS is walked through the modules the server
+loads (`resolvePackageSpecifier`); file imports try Vite's extensions and index files, and a
+TypeScript import of an output name (`./find.js`) its source (`resolveFile`). A changed file in
+the walked set restarts, as does a changed `package.json` of a package the server imports from.
+Where the walk cannot be sure (an import it cannot resolve, or a dynamic import of a computed
+path) it lists the package in `unsureDirs`, and any change in that package restarts, as before.
+Imports are found by patterns over source with its comments removed (string literals are kept
+whole, so a `/*` or `//` inside one stays text), not a parser: a stray match in a string adds a
+file or marks its package unsure, which errs towards a restart.
 
 ### Publishing a Build
 
