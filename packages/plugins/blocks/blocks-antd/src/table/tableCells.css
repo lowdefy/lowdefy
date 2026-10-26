@@ -198,12 +198,17 @@
     white-space: nowrap;
   }
 
-  /* With a description the person is two lines: a larger avatar beside the name and the
-     description under it. It needs a default or comfortable row to fit. */
+  /* An avatar overhangs its one-line box by a pixel or two, so a cell holding avatars never clips:
+     a single-line wrapper clipped them flat at the top and bottom. The name and the +N group
+     truncate on their own. */
+  .lf-table-cell-avatars {
+    overflow: visible;
+  }
+
+  /* With a description the person is two lines: the name and the description under it, beside an
+     avatar of the same size and gap as every other avatar in the table, so names line up. It
+     needs a default or comfortable row to fit. */
   .lf-table-person-stacked {
-    --lf-avatar-size: 32px;
-    --lf-avatar-font-size: 12px;
-    gap: var(--ant-margin-xs, 8px);
     height: auto;
     vertical-align: middle;
   }
@@ -234,7 +239,7 @@
     border-radius: 50%;
     background: var(--lf-table-tone, var(--ant-color-fill-secondary));
     color: var(--ant-color-text-light-solid, #fff);
-    font-size: var(--lf-avatar-font-size, 11px);
+    font-size: var(--lf-avatar-font-size, 10px);
     font-weight: 600;
     line-height: 1;
     object-fit: cover;
@@ -245,22 +250,14 @@
     border-radius: var(--ant-border-radius-sm, 4px);
   }
 
-  /* Stacked avatars overlap by a few pixels only, and their initials are a size smaller, so the
-     next avatar and its ring never cover the initials before it. */
+  /* A group of avatars sits side by side with a small gap: overlapping them cut into the
+     initials of the avatar before, and the ring of the next one read as a stray line. */
   .lf-table-people {
-    --lf-avatar-font-size: 10px;
     display: inline-flex;
     align-items: center;
+    gap: 2px;
     height: 1lh;
     vertical-align: top;
-  }
-
-  .lf-table-people > .lf-table-avatar {
-    box-shadow: 0 0 0 1px var(--ant-color-bg-container);
-  }
-
-  .lf-table-people > .lf-table-avatar + .lf-table-avatar {
-    margin-inline-start: -3px;
   }
 
   .lf-table-people-more {
