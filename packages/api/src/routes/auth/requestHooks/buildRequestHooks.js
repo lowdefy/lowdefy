@@ -19,8 +19,10 @@ import { type } from '@lowdefy/helpers';
 
 import createAcceptExistingMemberHook from '../organizations/createAcceptExistingMemberHook.js';
 import createEmailSendGate from '../organizations/createEmailSendGate.js';
+import createEmailCodeHolderGate from './createEmailCodeHolderGate.js';
 import createEmailSendLimit from './createEmailSendLimit.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
+import createKnownDeviceHook from '../mobile/createKnownDeviceHook.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
@@ -88,7 +90,18 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         id: 'emailOtpSendLimit',
         matches: (path) =>
           path === '/email-otp/send-verification-otp' || path === '/forget-password/email-otp',
-        handler: createEmailSendLimit({ getAuth, max: 5, windowSeconds: 900 }),
+        handler: createEmailSendLimit({
+          codeSeconds: authConfig.emailOTP.expiresIn,
+          getAuth,
+          max: 5,
+          windowSeconds: 900,
+        }),
+      });
+      // Only the known phone holding the live code may try it (holdEmailCode).
+      before.push({
+        id: 'emailOtpCodeHolderGate',
+        matches: (path) => path === '/sign-in/email-otp',
+        handler: createEmailCodeHolderGate({ getAuth }),
       });
     }
     before.push({
@@ -285,6 +298,16 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         exit: (ctx) => ctx.json({ twoFactorRedirect: true, twoFactorMethods: ['totp'] }),
       })
     );
+  }
+
+  // After the two-factor challenge, which answers first when a second factor is
+  // needed: only a sign-in that kept its session records a known phone.
+  if (!type.isNone(authConfig.mobile) && authConfig.emailOTP?.enabled === true) {
+    after.push({
+      id: 'emailOtpKnownDevice',
+      matches: (path) => path === '/sign-in/email-otp',
+      handler: createKnownDeviceHook({ getAuth }),
+    });
   }
 
   return {

@@ -511,6 +511,61 @@ test('a phone that signed in by code before still gets codes while a stranger fi
   expect(sent.slice(before)).toEqual([{ to: 'kim@example.com', flow: 'emailOTP' }]);
 });
 
+test('a stranger can neither replace nor use up the code a known phone asked for', async () => {
+  const { adapter, auth, internalAdapter } = await setup();
+  await createMember({ adapter, internalAdapter, email: 'lou@example.com' });
+  const deviceKey = randomBytes(32).toString('base64url');
+
+  function send(key) {
+    return auth.handler(
+      nativeRequest({
+        path: '/email-otp/send-verification-otp',
+        body: { email: 'lou@example.com', type: 'sign-in' },
+        deviceKey: key,
+      })
+    );
+  }
+  function signIn({ otp, key }) {
+    return auth.handler(
+      nativeRequest({
+        path: '/sign-in/email-otp',
+        body: { email: 'lou@example.com', otp },
+        deviceKey: key,
+      })
+    );
+  }
+
+  // The phone signs in once, so it is known.
+  await send(deviceKey);
+  expect((await signIn({ otp: lastCode(), key: deviceKey })).status).toBe(200);
+
+  // It asks for a new code.
+  expect((await send(deviceKey)).status).toBe(200);
+  const code = lastCode();
+
+  // A stranger asks again: the same code is resent, not replaced.
+  expect((await send(undefined)).status).toBe(200);
+  expect(lastCode()).toBe(code);
+
+  // The stranger's wrong tries, with no key or with a made-up one, are refused without counting.
+  for (let index = 0; index < 5; index += 1) {
+    const key = index % 2 === 0 ? undefined : randomBytes(32).toString('base64url');
+    expect((await signIn({ otp: '000000', key })).status).toBe(400);
+  }
+
+  // The phone still signs in with the code.
+  const response = await signIn({ otp: code, key: deviceKey });
+  expect(response.status).toBe(200);
+  expect(typeof response.headers.get('set-auth-token')).toBe('string');
+  // The used code's hold is gone.
+  expect(
+    await adapter.count({
+      model: 'verification',
+      where: [{ field: 'identifier', value: 'email-code-holder:lou@example.com' }],
+    })
+  ).toBe(0);
+});
+
 test('password reset codes are capped like sign-in codes', async () => {
   const { adapter, auth, internalAdapter } = await setup();
   await createMember({ adapter, internalAdapter, email: 'rex@example.com' });

@@ -480,6 +480,10 @@ function getBetterAuthConfig({
         expiresIn: authConfig.emailOTP.expiresIn,
         allowedAttempts: authConfig.emailOTP.allowedAttempts,
         disableSignUp: authConfig.emailOTP.disableSignUp,
+        // With phones, a resend keeps the live code rather than replacing it, so
+        // a stranger's send cannot take a known phone's code away
+        // (holdEmailCode). Web-only apps keep BetterAuth's default.
+        ...(type.isNone(authConfig.mobile) ? {} : { resendStrategy: 'reuse' }),
         sendVerificationOTP: async ({ email, otp, type: otpType }) => {
           if (otpType !== 'sign-in') {
             throw new ConfigError(

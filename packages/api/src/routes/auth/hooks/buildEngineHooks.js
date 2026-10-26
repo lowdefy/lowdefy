@@ -20,7 +20,6 @@ import createAcceptActiveOrgGuardHook from '../organizations/createAcceptActiveO
 import createActiveOrgPolicyHook from '../organizations/createActiveOrgPolicyHook.js';
 import createAdmissionGateHook from '../organizations/createAdmissionGateHook.js';
 import createAutoJoinHook from '../organizations/createAutoJoinHook.js';
-import createKnownDeviceHook from '../mobile/createKnownDeviceHook.js';
 import createMobileSessionCreateHook from '../mobile/createMobileSessionCreateHook.js';
 import createMobileSessionRefreshHook from '../mobile/createMobileSessionRefreshHook.js';
 
@@ -57,12 +56,6 @@ function buildEngineHooks({ authConfig, getAuth, logger }) {
 
   // Phone sessions get their own lifetime. After the organization policy hook,
   // which picks the session's organization and leaves its expiry alone.
-  // A phone that signs in by email code is recorded as known for the address
-  // (createEmailSendLimit).
-  if (!type.isNone(authConfig.mobile) && authConfig.emailOTP?.enabled === true) {
-    engineHooks['session.create.before'].push(createKnownDeviceHook({ getAuth }));
-  }
-
   const sessionExpiresIn = authConfig.mobile?.sessionExpiresIn;
   if (type.isNumber(sessionExpiresIn)) {
     engineHooks['session.create.before'].push(createMobileSessionCreateHook({ sessionExpiresIn }));

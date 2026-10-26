@@ -62,6 +62,16 @@ function createAuth() {
       const index = records.findIndex((record) => matches(record, where));
       if (index !== -1) records.splice(index, 1);
     },
+    async findOne({ where }) {
+      await tick();
+      return records.find((record) => matches(record, where)) ?? null;
+    },
+    async update({ where, update }) {
+      await tick();
+      const record = records.find((each) => matches(each, where));
+      Object.assign(record, update);
+      return record;
+    },
     async deleteMany({ where }) {
       await tick();
       const keep = records.filter((record) => !matches(record, where));
@@ -98,7 +108,20 @@ function addRecords({ adapter, identifier, count, expiresAt = new Date(Date.now(
 }
 
 function createLimit(auth) {
-  return createEmailSendLimit({ getAuth: () => auth, max: 5, windowSeconds: 900 });
+  return createEmailSendLimit({
+    codeSeconds: 300,
+    getAuth: () => auth,
+    max: 5,
+    windowSeconds: 900,
+  });
+}
+
+function signInSend({ email = 'ana@example.com', key } = {}) {
+  return {
+    body: { email, type: 'sign-in' },
+    path: '/email-otp/send-verification-otp',
+    request: nativeRequest(key),
+  };
 }
 
 test('createEmailSendLimit takes a slot under the address and lets the send through', async () => {
@@ -205,4 +228,44 @@ test('createEmailSendLimit leaves a body with no email to the route', async () =
   const limit = createEmailSendLimit({ getAuth, max: 5, windowSeconds: 900 });
   expect(await limit({ body: {} })).toBeUndefined();
   expect(getAuth).not.toHaveBeenCalled();
+});
+
+test('createEmailSendLimit holds the sign-in code a known phone asked for until the code expires', async () => {
+  const { adapter, auth } = createAuth();
+  const hash = sha256Base64Url(DEVICE_KEY);
+  addRecords({ adapter, identifier: `email-known-device:ana@example.com:${hash}`, count: 1 });
+  await createLimit(auth)(signInSend({ key: DEVICE_KEY }));
+  const hold = adapter.records.find(
+    ({ identifier }) => identifier === 'email-code-holder:ana@example.com'
+  );
+  expect(hold.value).toBe(hash);
+  expect(hold.expiresAt.getTime() - hold.createdAt.getTime()).toBe(300 * 1000);
+});
+
+test('createEmailSendLimit moves a live hold on when anyone else sends, and never takes it', async () => {
+  const { adapter, auth } = createAuth();
+  const hash = sha256Base64Url(DEVICE_KEY);
+  const soon = new Date(Date.now() + 1000);
+  adapter.records.push({
+    id: 'hold',
+    identifier: 'email-code-holder:ana@example.com',
+    value: hash,
+    expiresAt: soon,
+  });
+  await createLimit(auth)(signInSend({ key: OTHER_KEY }));
+  const hold = adapter.records.find(({ id }) => id === 'hold');
+  expect(hold.value).toBe(hash);
+  expect(hold.expiresAt.getTime()).toBeGreaterThan(soon.getTime());
+});
+
+test('createEmailSendLimit holds no code for a password reset send', async () => {
+  const { adapter, auth } = createAuth();
+  const hash = sha256Base64Url(DEVICE_KEY);
+  addRecords({ adapter, identifier: `email-known-device:ana@example.com:${hash}`, count: 1 });
+  await createLimit(auth)({
+    body: { email: 'ana@example.com' },
+    path: '/forget-password/email-otp',
+    request: nativeRequest(DEVICE_KEY),
+  });
+  expect(identifiers(adapter)).not.toContain('email-code-holder:ana@example.com');
 });

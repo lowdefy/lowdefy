@@ -18,6 +18,7 @@ import { APIError } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
 import getKnownDeviceIdentifier from '../mobile/getKnownDeviceIdentifier.js';
+import holdEmailCode from './holdEmailCode.js';
 import readDeviceKeyHash from '../mobile/readDeviceKeyHash.js';
 import reserveSendSlot from './reserveSendSlot.js';
 
@@ -34,13 +35,15 @@ const IDENTIFIER_PREFIX = 'email-send-limit:';
 // holds, x-lowdefy-device-key) counts against its own cap for the address,
 // and a phone that has signed in with the address before (createKnownDeviceHook)
 // skips the address's cap. Every other send - a browser, a new phone, a guess
-// at a key - counts against the address's cap.
+// at a key - counts against the address's cap. A known phone's sign-in code is
+// then held for it (holdEmailCode), so a stranger can neither replace the code
+// nor use it up with wrong tries.
 //
 // Registered ahead of the send gate, so an address the app would not mail
 // counts and is refused the same way as one it would: the refusal never tells
 // whether an account exists. A refused send keeps no slot, so the window runs
 // from the sends that went through.
-function createEmailSendLimit({ getAuth, max, windowSeconds }) {
+function createEmailSendLimit({ codeSeconds, getAuth, max, windowSeconds }) {
   return async function emailSendLimit(ctx) {
     const rawEmail = ctx.body?.email;
     // No email is the route's own validation error.
@@ -81,6 +84,9 @@ function createEmailSendLimit({ getAuth, max, windowSeconds }) {
         });
       }
       taken.push(record);
+    }
+    if (ctx.path === '/email-otp/send-verification-otp' && ctx.body?.type === 'sign-in') {
+      await holdEmailCode({ adapter, codeSeconds, deviceKeyHash, email, known, now });
     }
     return undefined;
   };

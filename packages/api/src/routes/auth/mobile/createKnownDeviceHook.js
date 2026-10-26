@@ -16,30 +16,28 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getCodeHolderIdentifier from './getCodeHolderIdentifier.js';
 import getKnownDeviceIdentifier from './getKnownDeviceIdentifier.js';
 import readDeviceKeyHash from './readDeviceKeyHash.js';
 
 const KNOWN_DEVICE_SECONDS = 90 * 24 * 60 * 60;
 
-// session.create.before, bound for apps with a mobile section: a phone that
-// signs in natively by email code, sending its device key, is recorded as
-// known for that address for 90 days, so createEmailSendLimit lets it past the
-// address's send cap. The code it signed in with proves it can read the
-// address's email. Changes nothing about the session.
+// The engine-tier request hooks.after on /sign-in/email-otp for apps with a
+// mobile section, registered after the two-factor challenge: a phone that
+// signed in by code, sending its device key, is recorded as known for the
+// address for 90 days, so createEmailSendLimit lets it past the address's send
+// cap. It runs only when the request created a session and no second factor
+// stopped it (the challenge answers first and ends the slot). The code is used,
+// so its hold goes too.
 function createKnownDeviceHook({ getAuth }) {
-  return async function knownDevice(session, ctx) {
-    if (ctx?.path !== '/sign-in/email-otp') {
-      return undefined;
-    }
-    const deviceKeyHash = readDeviceKeyHash({ request: ctx.request });
+  return async function knownDevice(ctx) {
     const rawEmail = ctx.body?.email;
-    if (deviceKeyHash === null || !type.isString(rawEmail)) {
+    const deviceKeyHash = readDeviceKeyHash({ request: ctx.request });
+    if (type.isNone(ctx.context.newSession) || deviceKeyHash === null || !type.isString(rawEmail)) {
       return undefined;
     }
-    const identifier = getKnownDeviceIdentifier({
-      deviceKeyHash,
-      email: rawEmail.trim().toLowerCase(),
-    });
+    const email = rawEmail.trim().toLowerCase();
+    const identifier = getKnownDeviceIdentifier({ deviceKeyHash, email });
     const { adapter } = await getAuth().$context;
     const now = new Date();
     await adapter.deleteMany({
@@ -55,6 +53,10 @@ function createKnownDeviceHook({ getAuth }) {
         createdAt: now,
         updatedAt: now,
       },
+    });
+    await adapter.deleteMany({
+      model: 'verification',
+      where: [{ field: 'identifier', value: getCodeHolderIdentifier({ email }) }],
     });
     return undefined;
   };
