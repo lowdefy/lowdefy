@@ -112,3 +112,88 @@ test('Block unregisters its updater when it unmounts', async () => {
   context._internal.updaters.update('button');
   expect(categorySwitchLoading).toHaveLength(renders);
 });
+
+function trackRegistrations(updaters) {
+  const live = new Set();
+  const { register } = updaters;
+  updaters.register = (blockId, updater) => {
+    const entry = { blockId, updater };
+    live.add(entry);
+    const unregister = register(blockId, updater);
+    return () => {
+      live.delete(entry);
+      unregister();
+    };
+  };
+  return live;
+}
+
+class Catch extends React.Component {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? <span>failed</span> : this.props.children;
+  }
+}
+
+function Thrower() {
+  throw new Error('discarded');
+}
+
+test('Block that renders but never commits does not keep its updater', async () => {
+  vi.useFakeTimers();
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+  try {
+    const block = createBlock({ events: {}, triggerEvent: vi.fn(async () => {}) });
+    const progress = { dispatch: vi.fn() };
+    const lowdefy = { _internal: { progress } };
+    const updaters = createUpdaters();
+    const live = trackRegistrations(updaters);
+    const context = { _internal: { lowdefy, updaters } };
+    const { container } = render(
+      <Catch>
+        <Block
+          block={block}
+          Blocks={{}}
+          context={context}
+          lowdefy={lowdefy}
+          parentLoading={false}
+        />
+        <Thrower />
+      </Catch>
+    );
+    expect(container.textContent).toBe('failed');
+    // React retries a failed render once, so more than one discarded render can register.
+    expect(live.size).toBeGreaterThan(0);
+    vi.advanceTimersByTime(5000);
+    expect(live.size).toBe(0);
+  } finally {
+    consoleError.mockRestore();
+    vi.useRealTimers();
+  }
+});
+
+test('Block keeps one updater after it commits and removes it on unmount', async () => {
+  vi.useFakeTimers();
+  try {
+    const block = createBlock({ events: {}, triggerEvent: vi.fn(async () => {}) });
+    const { context, unmount } = renderBlock({ block });
+    const live = trackRegistrations(context._internal.updaters);
+    vi.advanceTimersByTime(5000);
+    // The render registration happened before tracking; the committed copy is the same updater
+    // in the engine's set, and an update still reaches it after the timer passed.
+    await act(async () => {
+      context._internal.updaters.update('button');
+    });
+    expect(categorySwitchLoading.length).toBeGreaterThan(1);
+    unmount();
+    categorySwitchLoading.length = 0;
+    context._internal.updaters.update('button');
+    expect(categorySwitchLoading).toEqual([]);
+    expect(live.size).toBeLessThanOrEqual(1);
+  } finally {
+    vi.useRealTimers();
+  }
+});
