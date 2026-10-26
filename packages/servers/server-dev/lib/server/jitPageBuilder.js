@@ -112,11 +112,14 @@ function createBuildContext(buildDirectory, configDirectory) {
   const websocketIds = readJsonFile(path.join(buildDirectory, 'websocketIds.json')) ?? [];
 
   const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
+  const customTypesMapMobile =
+    readJsonFile(path.join(buildDirectory, 'customTypesMapMobile.json')) ?? {};
   const customMessagesMap = readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
 
   const context = createContext({
     customMessagesMap,
     customTypesMap,
+    customTypesMapMobile,
     directories: {
       build: buildDirectory,
       config: configDirectory,
@@ -141,6 +144,9 @@ function createBuildContext(buildDirectory, configDirectory) {
   for (const id of websocketIds) {
     context.websocketIds.add(id);
   }
+  // The app's experimental opt-ins (buildExperimental), so a page's requests get the same checks.
+  const config = readJsonFile(path.join(buildDirectory, 'config.json')) ?? {};
+  context.experimental = { mobile: config.experimental?.mobile === true };
   // The scoped connections, walled collections and shared connections, so a
   // page's requests get the same tenant pipeline checks as in a full build.
   const tenantTargets = readJsonFile(path.join(buildDirectory, 'tenantTargets.json'));
@@ -176,6 +182,11 @@ function createBuildContext(buildDirectory, configDirectory) {
   // Restore app metadata so JIT page builds resolve _app / _build.app against
   // the same metadata the skeleton build computed.
   context.appMeta = readJsonFile(path.join(buildDirectory, 'appMeta.json')) ?? null;
+
+  // The shells and the shell plugins each carries, so a mobile page that uses
+  // a plugin type some shell lacks fails here as in the full build
+  // (validateNativePageTypes).
+  context.mobileShells = readJsonFile(path.join(buildDirectory, 'mobileShells.json')) ?? [];
 
   // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
   // buildPageJit) can resolve endpointIds. Without this the dev context has no

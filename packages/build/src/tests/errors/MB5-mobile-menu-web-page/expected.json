@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Mobile menu item links to page \"home\", which is not a mobile page. List it in \"mobile.pages\"."
+      ],
+      "errorContains": [
+        "Mobile menu item links to page \"home\", which is not a mobile page. List it in \"mobile.pages\"."
+      ]
+    }
+  ]
+}

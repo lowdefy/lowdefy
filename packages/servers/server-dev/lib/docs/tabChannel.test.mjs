@@ -156,6 +156,18 @@ test('findPageInstance without a pageId reads the most recently connected tab on
   expect(instance).toEqual({ pageId: 'about', pathParams: {}, instanceKey: 'page:about' });
 });
 
+test('findPageInstance skips a phone on the page for the browser tab', () => {
+  connectTab({ id: 'browser', pageId: 'home' });
+  connectTab({ id: 'phone', pageId: 'home', device: { shell: 'lowdefy-dev', platform: 'ios' } });
+  expect(findPageInstance({ pageId: 'home' }).tab.id).toBe('browser');
+  expect(findPageInstance().tab.id).toBe('browser');
+});
+
+test('findPageInstance finds no instance when only a phone shows the page', () => {
+  connectTab({ id: 'phone', pageId: 'home', device: { shell: 'lowdefy-dev', platform: 'ios' } });
+  expect(findPageInstance({ pageId: 'home' })).toBeUndefined();
+});
+
 test('findPageInstance forgets the instances of a tab that disconnected', () => {
   registerTab({ id: 'tab-1', send: vi.fn() });
   updateTabPage({ id: 'tab-1', ...ticket({ ticketId: '1' }) });

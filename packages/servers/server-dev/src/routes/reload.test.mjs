@@ -16,7 +16,7 @@
 import { EventEmitter } from 'node:events';
 
 import { Hono } from 'hono';
-import { vi, expect, test } from 'vitest';
+import { vi, afterEach, expect, test } from 'vitest';
 
 const watchers = [];
 
@@ -34,9 +34,18 @@ vi.doMock('chokidar', () => ({
 
 const { default: reloadHandler } = await import('./reload.js');
 const { listTabs } = await import('../../lib/docs/tabChannel.js');
+const { closePolledTabs } = await import('../../lib/docs/pollTab.js');
 
 const app = new Hono();
 app.get('/api/reload', reloadHandler);
+
+function poll({ query, headers }) {
+  return app.request(`/api/reload?transport=poll&${query}`, { headers });
+}
+
+afterEach(() => {
+  closePolledTabs();
+});
 
 const decoder = new TextDecoder();
 
@@ -103,4 +112,42 @@ test('reload streams share one watcher, each gets a reload once, and the last to
   expect(watchers).toHaveLength(2);
   await next.reader.cancel();
   await vi.waitFor(() => expect(watchers[1].close).toHaveBeenCalledTimes(1));
+});
+
+test('a phone shell registers as a device tab with its shell version, platform and app id', async () => {
+  const res = await poll({
+    query: 'client=lowdefy-dev-tab-client&platform=ios&app=com.lowdefy.dev',
+    headers: { 'x-lowdefy-shell': '7.1.0' },
+  });
+  expect(res.status).toBe(200);
+  const { tabId } = await res.json();
+  expect(listTabs()).toEqual([
+    expect.objectContaining({
+      id: tabId,
+      device: { shell: '7.1.0', platform: 'ios', app: 'com.lowdefy.dev', paired: false },
+    }),
+  ]);
+});
+
+test('a phone paired over the network is marked paired', async () => {
+  await poll({
+    query: 'platform=android',
+    headers: { 'x-lowdefy-shell': '7.1.0', 'x-lowdefy-dev-remote': '1' },
+  });
+  expect(listTabs()[0].device).toEqual({
+    shell: '7.1.0',
+    platform: 'android',
+    app: null,
+    paired: true,
+  });
+});
+
+test('a browser tab is no device, whatever its query says', async () => {
+  await poll({ query: 'platform=ios', headers: {} });
+  expect(listTabs()[0].device).toBeNull();
+});
+
+test('an unknown platform is recorded as none', async () => {
+  await poll({ query: 'platform=watchos', headers: { 'x-lowdefy-shell': '7.1.0' } });
+  expect(listTabs()[0].device.platform).toBeNull();
 });

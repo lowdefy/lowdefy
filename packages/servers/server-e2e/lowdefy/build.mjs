@@ -38,7 +38,9 @@ async function run() {
     server: serverDirectory,
   };
 
-  const customTypesMap = await createCustomPluginTypesMap({ directories });
+  const { customTypesMap, customTypesMapMobile } = await createCustomPluginTypesMap({
+    directories,
+  });
 
   const logger = createNodeLogger({
     name: 'lowdefy_build',
@@ -48,6 +50,7 @@ async function run() {
 
   await build({
     customTypesMap,
+    customTypesMapMobile,
     directories,
     logger,
     pluginInstallFollows: process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS === 'true',

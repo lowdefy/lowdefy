@@ -75,7 +75,7 @@ The providers that can be used are:
 ###### Auth0 configuration:
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   providers:
     - id: auth0
@@ -94,7 +94,7 @@ In Auth0, the callback URL should be configured to `https://example.com/api/auth
 ###### GitHub configuration:
 
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 auth:
   providers:
     - id: github

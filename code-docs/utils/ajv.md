@@ -92,11 +92,13 @@ AJV is configured with:
 
 ```javascript
 const ajv = new Ajv({
-  allErrors: true, // Collect all errors, not just first
-  verbose: true, // Include schema in errors
-  $data: true, // Enable $data reference
+  allErrors: true, // Collect all errors, not just first (ajv-errors needs it)
+  strict: false,
+  code: { process: capErrors },
 });
 ```
+
+**Error cap.** `capErrors` rewrites each compiled validator so it keeps at most `MAX_VALIDATION_ERRORS` (20) error objects: it truncates the array after every `errors++;`, and leaves the count alone, so validity (`_errs === errors`) is still decided by the count. Past the cap the count runs ahead of the array, so the two places generated code reads the array by the count are rewritten to read it by its length: ajv's branch reset (`vErrors.length = _errsN;`, after an `anyOf`/`oneOf`/`if` branch passes) only shrinks the array, and ajv-errors' path fix on a property message (`vErrors[errors-1].instancePath = …;`) is skipped when that message was not kept. Without these, a passing branch after the cap grew the array with holes, which ajv-errors read as errors (`Cannot read properties of undefined (reading 'keyword')`), as a page whose events hold several nested action lists did.
 
 ## Error Format
 

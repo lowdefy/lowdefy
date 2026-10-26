@@ -16,6 +16,7 @@
 
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
+import { etag } from 'hono/etag';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { runInCredentialScope } from '@lowdefy/node-utils';
 
@@ -36,11 +37,16 @@ import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import getMockUser from '../lib/server/auth/getMockUser.js';
+import isTabAnswer from './lib/isTabAnswer.js';
+import getRequestSurface from './lib/getRequestSurface.js';
 import jitPageHandler from './routes/jitPage.js';
 import loadDocsRoutes from './routes/docs/loadDocsRoutes.js';
 import localDevToolsOnly from './middleware/localDevToolsOnly.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
+import mobileConfig from '../lib/build/mobileConfig.js';
+import mobileRootHandler from './routes/mobileRoot.js';
+import mountMobileWellKnown from './routes/mountMobileWellKnown.js';
 import mountDevPageRoutes from './routes/mountDevPageRoutes.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import noStore from './middleware/noStore.js';
@@ -111,6 +117,8 @@ function createApp() {
   // No api context: SSE/health routes had no apiWrapper before.
   app.get('/api/reload', reloadHandler);
   app.get('/api/ping', pingAndWarmUpDocs);
+  // Dev tools, refused from other machines (localDevToolsOnly).
+  app.use('/api/dev-tools', localDevToolsOnly());
   app.get('/api/dev-tools', devToolsHandler);
 
   const mockUser = getMockUser();
@@ -127,6 +135,7 @@ function createApp() {
     app,
     auth: authJson.configured === true && !mockUser ? getAuth({ logger }) : null,
   });
+  mountMobileWellKnown({ app, basePath, mobileConfig });
   app.all('/.well-known/*', wellKnownFallbackHandler);
 
   // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
@@ -162,15 +171,19 @@ function createApp() {
   // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
   // targeted SSE events by posting results here; GET lists connected tabs.
   // The live-tab channel acts on the developer's open tabs - the same
-  // cross-site guard as the docs tools.
-  app.use('/api/dev-inspect', localDevToolsOnly());
-  app.use('/api/dev-inspect/*', localDevToolsOnly());
+  // cross-site guard as the docs tools. A phone paired with `lowdefy dev --lan`
+  // is a dev tab too: it may answer what it is asked and post the page it
+  // shows (isTabAnswer), nothing else.
+  const tabChannelOnly = localDevToolsOnly({ allowPaired: isTabAnswer });
+  app.use('/api/dev-inspect', tabChannelOnly);
+  app.use('/api/dev-inspect/*', tabChannelOnly);
   app.all('/api/dev-inspect', devInspectHandler);
   app.all('/api/dev-inspect/*', devInspectHandler);
   // The dev recorder (client/Recorder.jsx) posts interaction records here.
   // It needs no Lowdefy context, and registering it before apiContext keeps
   // it out of the request timeout list.
-  app.use('/api/dev-recording', localDevToolsOnly());
+  // A paired phone's recorder may post too: the route only writes records.
+  app.use('/api/dev-recording', localDevToolsOnly({ allowPaired: (c) => c.req.method === 'POST' }));
   app.post('/api/dev-recording', bodyLimit({ maxSize: 1024 * 1024 }), devRecordingHandler);
   // Only the routes that run app logic: JIT page builds, the docs/MCP routes and the SSE streams
   // are dev-only and can legitimately run longer than any production request.
@@ -190,9 +203,14 @@ function createApp() {
   // as in the production server. /api/root is the dev form of the root config the
   // production page embeds. The page routes use the same middleware.
   const noStoreMiddleware = noStore();
-  ['/api/root', '/api/page/*', '/api/user', '/api/request/*', '/api/endpoints/*'].forEach((route) =>
-    app.use(route, noStoreMiddleware)
-  );
+  [
+    '/api/root',
+    '/api/mobile/root',
+    '/api/page/*',
+    '/api/user',
+    '/api/request/*',
+    '/api/endpoints/*',
+  ].forEach((route) => app.use(route, noStoreMiddleware));
   // Unified dev get-session: createLowdefyContext resolves the mock or headless
   // caller into context.user on every path, so read it here rather than
   // re-deriving the precedence. context.user is only absent in the real-engine
@@ -210,7 +228,18 @@ function createApp() {
   app.use('/api/request/*', stampCaller());
   app.use('/api/endpoints/*', stampCaller());
   app.use('/api/page/*', stampCaller());
+  app.use('/api/mobile/root', stampCaller());
+  // A shell revalidates the pages and root config it keeps with If-None-Match.
+  // Registered inside noStore and stampCaller, so a 304 still carries both.
+  // Browsers never revalidate a no-store page, so their page responses are
+  // left as they were, with no ETag.
+  const etagMiddleware = etag();
+  app.use('/api/page/*', (c, next) =>
+    getRequestSurface(c) === 'mobile' ? etagMiddleware(c, next) : next()
+  );
+  app.use('/api/mobile/root', etagMiddleware);
   app.get('/api/root', rootHandler);
+  app.get('/api/mobile/root', mobileRootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);

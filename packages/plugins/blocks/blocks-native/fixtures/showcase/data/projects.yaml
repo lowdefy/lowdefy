@@ -1,0 +1,38 @@
+# The three projects, by id: the chip label, its icon and its mark (fg on bg, with dark mode
+# variants), and the Tag colour the issue page names it in.
+web:
+  label: Web app
+  icon: Globe
+  tag: blue
+  color:
+    fg: '#0A6BC9'
+    bg: '#E2EDF9'
+    fgDark: '#85B5E4'
+    bgDark: '#1E3B59'
+  next: ios
+  previous: web
+  index: 0
+ios:
+  label: iOS app
+  icon: Smartphone
+  tag: orange
+  color:
+    fg: '#B85A0D'
+    bg: '#F6EBE2'
+    fgDark: '#DCAD86'
+    bgDark: '#4F3724'
+  next: api
+  previous: web
+  index: 1
+api:
+  label: Platform API
+  icon: Server
+  tag: purple
+  color:
+    fg: '#7250CC'
+    bg: '#EEEAF9'
+    fgDark: '#B9A8E6'
+    bgDark: '#3B345A'
+  next: api
+  previous: ios
+  index: 2

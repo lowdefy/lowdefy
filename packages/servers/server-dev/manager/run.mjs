@@ -22,6 +22,7 @@ import getContext from './getContext.mjs';
 import getLowdefyVersion from './utils/getLowdefyVersion.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import createBuildActivity from './utils/createBuildActivity.mjs';
+import createLanPairing from './utils/createLanPairing.mjs';
 import createIdleChild from './processes/createIdleChild.mjs';
 import createIdleGc from './utils/createIdleGc.mjs';
 import createRequestActivity from './utils/createRequestActivity.mjs';
@@ -29,6 +30,7 @@ import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startFirstServer from './processes/startFirstServer.mjs';
 import startRecordingPruner from './utils/startRecordingPruner.mjs';
+import formatLanPairing from './utils/formatLanPairing.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 import resolvePorts from './utils/resolvePorts.mjs';
 
@@ -189,6 +191,7 @@ try {
   // or .env change) then never drops the listener, so long-lived clients (MCP
   // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
   // on ECONNREFUSED.
+  context.lan = createLanPairing({ lan: context.options.lan });
   // Stops the Vite child after a few minutes unused and starts it on the next
   // request that is use; the proxy asks it whether the child is stopped.
   context.idleChild = createIdleChild(context, { idleMs: context.options.childIdleMs });
@@ -228,6 +231,11 @@ try {
       ],
     })
   );
+  if (context.lan) {
+    context.logger.info(
+      formatLanPairing({ lan: context.lan, port: context.options.port, basePath: context.basePath })
+    );
+  }
   // Lowdefy's agent block: missing, from another version, or not imported by
   // CLAUDE.md. Build status reports the same notices to agents on every read.
   const agentFiles = checkAgentFiles({

@@ -28,7 +28,7 @@ function stripDotPrefix(key) {
 }
 
 function getCssKeyNames(block, pageContext) {
-  const blockMeta = pageContext?.context?.blockMetas?.[block.type];
+  const blockMeta = pageContext.blockMetas[block.type];
   if (!blockMeta?.cssKeys) return new Set();
   return new Set(Object.keys(blockMeta.cssKeys));
 }
@@ -51,7 +51,9 @@ function normalizeStyle(block, pageContext) {
     );
     if (invalidKeys.length > 0) {
       throw new ConfigError(
-        `Block "${block.blockId}": Responsive breakpoint keys (${invalidKeys.join(', ')}) in "style" are no longer supported. Use CSS classes instead:\n  class: "p-16 sm:p-8"`,
+        `Block "${block.blockId}": Responsive breakpoint keys (${invalidKeys.join(
+          ', '
+        )}) in "style" are no longer supported. Use CSS classes instead:\n  class: "p-16 sm:p-8"`,
         { configKey: block['~k'] }
       );
     }

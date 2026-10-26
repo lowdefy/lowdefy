@@ -1,0 +1,51 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { vi, expect, test } from 'vitest';
+import awaitUnlessUnloading from './awaitUnlessUnloading.js';
+
+function createLowdefy(leaving) {
+  return { pageUnload: { isLeaving: () => leaving, hold: () => new Promise(() => {}) } };
+}
+
+test('awaitUnlessUnloading resolves with the value of a fulfilled promise', async () => {
+  await expect(
+    awaitUnlessUnloading({ lowdefy: createLowdefy(false), promise: Promise.resolve(1) })
+  ).resolves.toBe(1);
+});
+
+test('awaitUnlessUnloading rethrows a rejection while the page stays open', async () => {
+  const error = new TypeError('Failed to fetch');
+  await expect(
+    awaitUnlessUnloading({ lowdefy: createLowdefy(false), promise: Promise.reject(error) })
+  ).rejects.toBe(error);
+});
+
+test('awaitUnlessUnloading holds a rejection while the page is leaving', async () => {
+  const settled = vi.fn();
+  awaitUnlessUnloading({
+    lowdefy: createLowdefy(true),
+    promise: Promise.reject(new TypeError('Failed to fetch')),
+  }).then(settled, settled);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(settled).not.toHaveBeenCalled();
+});
+
+test('awaitUnlessUnloading rethrows a rejection on a host that does not watch the page unload', async () => {
+  await expect(
+    awaitUnlessUnloading({ lowdefy: {}, promise: Promise.reject(new Error('Network down.')) })
+  ).rejects.toThrow('Network down.');
+});

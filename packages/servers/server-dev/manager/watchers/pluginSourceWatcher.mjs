@@ -71,7 +71,7 @@ function isServerCodeChange({ changedFiles, context, packages }) {
 // never plugin code, and a package that is also the config directory writes
 // some of them on every build (see createPluginSourceIgnore).
 async function pluginSourceWatcher(context) {
-  const plugins = await readPluginDefinitions({ directories: context.directories });
+  const { plugins } = await readPluginDefinitions({ directories: context.directories });
   const packages = selectLocalPluginPackages({
     directories: context.directories,
     packageNames: plugins.map((plugin) => plugin.name),

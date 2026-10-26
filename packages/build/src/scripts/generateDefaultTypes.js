@@ -20,10 +20,11 @@ import { readFile, writeFile } from '@lowdefy/node-utils';
 
 import createPluginTypesMap from '../utils/createPluginTypesMap.js';
 import defaultPackages from '../defaultPackages.js';
+import defaultPackagesMobile from '../defaultPackagesMobile.js';
+import nativeBlockTypes from '../nativeBlockTypes.js';
 
-async function generateDefaultTypesMap() {
-  const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
-  const defaultTypesMap = {
+function createEmptyTypesMap() {
+  return {
     actions: {},
     agents: {},
     auth: {
@@ -47,16 +48,88 @@ async function generateDefaultTypesMap() {
     steps: {},
     websockets: {},
   };
+}
+
+function getPackageVersion({ packageFile, packageName }) {
+  return packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
+}
+
+// The per-target type classes of the native shell: blocks and actions from the
+// native packages only, and the client operators of every default package.
+function getMobilePackageTypes({ packageName, types }) {
+  const packageTypes = {
+    operators: { client: types.operators?.client ?? [] },
+  };
+  if (defaultPackagesMobile.blocks.includes(packageName)) {
+    packageTypes.blocks = types.blocks;
+    packageTypes.blockMetas = types.blockMetas;
+    packageTypes.icons = types.icons;
+  }
+  if (defaultPackagesMobile.actions.includes(packageName)) {
+    packageTypes.actions = types.actions;
+  }
+  return packageTypes;
+}
+
+// The native block packages' types are committed (src/nativeBlockTypes.js) rather than imported,
+// so build does not depend on them: blocks-native depends on client-native, which depends on
+// engine, whose tests depend on build. All @lowdefy packages share one version.
+const nativeBlockPackageTypes = {
+  '@lowdefy/blocks-native': nativeBlockTypes,
+};
+
+async function getTypes({ packageFile, packageName }) {
+  if (nativeBlockPackageTypes[packageName]) {
+    return { types: nativeBlockPackageTypes[packageName], version: packageFile.version };
+  }
+  const { default: types } = await import(`${packageName}/types`);
+  return { types, version: getPackageVersion({ packageFile, packageName }) };
+}
+
+async function generateDefaultTypesMapMobile({ packageFile }) {
+  const typesMap = createEmptyTypesMap();
+  const packageNames = [...new Set([...defaultPackages, ...defaultPackagesMobile.blocks])];
+  for (const packageName of packageNames) {
+    const { types, version } = await getTypes({ packageFile, packageName });
+    createPluginTypesMap({
+      packageTypes: getMobilePackageTypes({ packageName, types }),
+      typesMap,
+      packageName,
+      version,
+    });
+  }
+  const defaultTypesMapMobile = {
+    actions: typesMap.actions,
+    blockMetas: typesMap.blockMetas,
+    blocks: typesMap.blocks,
+    icons: typesMap.icons,
+    operators: {
+      client: typesMap.operators.client,
+    },
+    // Shell plugins add their package names (createCustomPluginTypesMap).
+    plugins: [],
+  };
+
+  await writeFile(
+    path.resolve(process.cwd(), './dist/defaultTypesMapMobile.js'),
+    `const defaultTypesMapMobile = ${JSON.stringify(defaultTypesMapMobile, null, 2)};
+
+export default defaultTypesMapMobile;
+`
+  );
+}
+
+async function generateDefaultTypesMap() {
+  const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
+  const defaultTypesMap = createEmptyTypesMap();
 
   for (const packageName of defaultPackages) {
     const { default: types } = await import(`${packageName}/types`);
-    const version =
-      packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
     createPluginTypesMap({
       packageTypes: types,
       typesMap: defaultTypesMap,
       packageName,
-      version,
+      version: getPackageVersion({ packageFile, packageName }),
     });
   }
 
@@ -67,6 +140,8 @@ async function generateDefaultTypesMap() {
 export default defaultTypesMap;
 `
   );
+
+  await generateDefaultTypesMapMobile({ packageFile });
 }
 
 generateDefaultTypesMap();

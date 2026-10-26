@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-// The DOM event whose listeners are running: window.event is set while a listener runs, including
-// the microtasks that run before the listener returns (React flushes discrete updates and their
-// effects there), and undefined outside a DOM dispatch.
-function getDomEvent() {
-  // The engine's unit tests run without a window.
-  if (typeof window === 'undefined') return null;
-  const domEvent = window.event;
-  if (!(domEvent instanceof Event)) return null;
+import getGlobals from './getGlobals.js';
+
+// The DOM event whose listeners are running: the browser sets window.event while a listener runs,
+// including the microtasks that run before the listener returns (React flushes discrete updates and
+// their effects there), and leaves it undefined outside a DOM dispatch. Hosts without DOM events
+// (engine harnesses, native) have no window.event.
+function getDomEvent({ lowdefy }) {
+  const domEvent = getGlobals(lowdefy).window?.event;
+  if (typeof domEvent?.composedPath !== 'function') return null;
   return domEvent;
 }
 

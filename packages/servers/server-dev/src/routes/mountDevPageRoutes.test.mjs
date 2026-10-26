@@ -15,9 +15,16 @@
 */
 
 import { Hono } from 'hono';
+import { vi, expect, test } from 'vitest';
 
-import mountDevPageRoutes from './mountDevPageRoutes.js';
-import { expect, test } from 'vitest';
+vi.doMock('./mobileSignIn.js', () => ({
+  default: (c) => c.text(`mobile sign-in ${c.req.method}`),
+}));
+vi.doMock('./mobileSignInCallback.js', () => ({
+  default: (c) => c.text('mobile sign-in callback'),
+}));
+
+const { default: mountDevPageRoutes } = await import('./mountDevPageRoutes.js');
 
 test.each([
   ['/app', '/app'],
@@ -29,3 +36,19 @@ test.each([
   const res = await app.request(path);
   expect(await res.text()).toEqual('shell');
 });
+
+test.each([[''], ['/app']])(
+  'with basePath "%s", /auth/mobile is the mobile sign-in route, not the dev shell',
+  async (basePath) => {
+    const app = basePath === '' ? new Hono() : new Hono().basePath(basePath);
+    mountDevPageRoutes({ app, renderPage: (c) => c.text('shell') });
+    const res = await app.request(`${basePath}/auth/mobile?shell=field&state=s`);
+    expect(await res.text()).toEqual('mobile sign-in GET');
+    const posted = await app.request(`${basePath}/auth/mobile?shell=field&state=s`, {
+      method: 'POST',
+    });
+    expect(await posted.text()).toEqual('mobile sign-in POST');
+    const callback = await app.request(`${basePath}/auth/mobile/callback?state=s`);
+    expect(await callback.text()).toEqual('mobile sign-in callback');
+  }
+);

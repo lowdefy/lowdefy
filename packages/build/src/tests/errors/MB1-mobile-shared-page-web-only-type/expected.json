@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Block type \"TextInput\" on block \"name\" on page \"form\" has no native version, so a mobile shell cannot render it. The page is in both \"pages\" and \"mobile.pages\", so each type it uses must exist on web and on mobile."
+      ],
+      "errorContains": [
+        "Block type \"TextInput\" on block \"name\" on page \"form\" has no native version, so a mobile shell cannot render it. The page is in both \"pages\" and \"mobile.pages\", so each type it uses must exist on web and on mobile.",
+        "{{fixturesDir}}/MB1-mobile-shared-page-web-only-type/pages/form.yaml:4"
+      ]
+    }
+  ]
+}

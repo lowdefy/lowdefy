@@ -71,12 +71,12 @@ function controlsWithText(root, text) {
 
 // With no block, a control is found by text in the front-most open layer that holds one with
 // that text, else on the page, as the journey runner resolves a page-wide text target.
-function pageWideRoot({ document, text }) {
+function pageWideRoot({ ownerDocument, text }) {
   if (text === null) {
-    return document;
+    return ownerDocument;
   }
   for (const layer of layers) {
-    const open = [...document.querySelectorAll(layer)].filter(isElementVisible);
+    const open = [...ownerDocument.querySelectorAll(layer)].filter(isElementVisible);
     if (open.length > 0) {
       const root = open[open.length - 1];
       if (controlsWithText(root, text).length > 0) {
@@ -84,7 +84,7 @@ function pageWideRoot({ document, text }) {
       }
     }
   }
-  return document;
+  return ownerDocument;
 }
 
 // The control's index among the controls the runner would match in the scope: those with the
@@ -104,10 +104,10 @@ function nthOf({ control, root, text }) {
 // by the same rules (journeyTargetSelectors), in canonical form. The control is the nearest
 // interactive control inside the scope (cell, row, block, else page); a dropdown option stands
 // in for one and folds into a select step. An element that reached no control has no text: its
-// block alone targets it.
+// block alone targets it. It reads the element and the element's own document, never a global.
 function createDescribeElement({ findBlockType, pathEntryOf }) {
   return function describeElement(element) {
-    const document = element.ownerDocument;
+    const { ownerDocument } = element;
     const path = ancestorsOf(element);
     const wrappers = path.filter((node) => node.id.startsWith(blockWrapperPrefix));
     const blockIds = wrappers.map((node) => node.id.slice(blockWrapperPrefix.length));
@@ -132,8 +132,8 @@ function createDescribeElement({ findBlockType, pathEntryOf }) {
     const nth =
       control === null
         ? null
-        : nthOf({ control, root: scope ?? pageWideRoot({ document, text }), text });
-    const entry = pathEntryOf(document.location.href);
+        : nthOf({ control, root: scope ?? pageWideRoot({ ownerDocument, text }), text });
+    const entry = pathEntryOf(ownerDocument.location.href);
     const blockId = blockIds[0] ?? null;
     return {
       page_id: entry?.pageId ?? null,

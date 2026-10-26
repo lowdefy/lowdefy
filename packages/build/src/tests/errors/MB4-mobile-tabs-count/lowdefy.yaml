@@ -1,0 +1,18 @@
+# MB4: Too Few Tabs
+# A tab bar has 2 to 5 items.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  menus:
+    tabs:
+      - pageId: today
+  pages:
+    - id: today
+      type: Box
+config:
+  experimental:
+    mobile: true

@@ -66,6 +66,21 @@ test('runDevServer leaves LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS out when skipPluginCh
   expect(env.LOWDEFY_BUILD_REF_RESOLVER).toEqual('resolver.js');
 });
 
+test('runDevServer passes a bare --lan as LOWDEFY_SERVER_DEV_LAN "true"', async () => {
+  await runDevServer({ context: createContext({ lan: true }), directory: '/dev' });
+  expect(mockSpawnServer.mock.calls[0][0].env.LOWDEFY_SERVER_DEV_LAN).toEqual('true');
+});
+
+test('runDevServer passes the --lan interface name as LOWDEFY_SERVER_DEV_LAN', async () => {
+  await runDevServer({ context: createContext({ lan: 'en0' }), directory: '/dev' });
+  expect(mockSpawnServer.mock.calls[0][0].env.LOWDEFY_SERVER_DEV_LAN).toEqual('en0');
+});
+
+test('runDevServer leaves LOWDEFY_SERVER_DEV_LAN out without --lan', async () => {
+  await runDevServer({ context: createContext({}), directory: '/dev' });
+  expect('LOWDEFY_SERVER_DEV_LAN' in mockSpawnServer.mock.calls[0][0].env).toBe(false);
+});
+
 test('runDevServer ends the shutdown spinner once the manager exits', async () => {
   const context = createContext({});
   await runDevServer({ context, directory: '/dev' });

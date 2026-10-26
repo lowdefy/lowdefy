@@ -16,7 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import createJitMaps from './createJitMaps.js';
 import parsePageRoute from '../buildRoutes/parsePageRoute.js';
@@ -55,6 +55,37 @@ function readRoutes({ directories }) {
   );
 }
 
+// The mobile theme ({ darkMode, light, dark }) and theme.tailwind the skeleton
+// build wrote, which a mobile page's class map is compiled with
+// (buildPageClassMapJit).
+function readThemeArtifacts({ directories }) {
+  try {
+    const mobileTheme = JSON.parse(
+      fs.readFileSync(path.join(directories.build, 'mobile/theme.json'), 'utf8')
+    );
+    const theme = serializer.deserialize(
+      JSON.parse(fs.readFileSync(path.join(directories.build, 'theme.json'), 'utf8'))
+    );
+    return { mobileTheme, tailwindConfig: theme.tailwind };
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    return { mobileTheme: undefined, tailwindConfig: undefined };
+  }
+}
+
+// The app's global the skeleton build wrote: a mobile page carries the data of
+// the icons global names (buildPageIconsJit), as in the full build.
+function readGlobal({ directories }) {
+  try {
+    return serializer.deserialize(
+      JSON.parse(fs.readFileSync(path.join(directories.build, 'global.json'), 'utf8'))
+    );
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    return {};
+  }
+}
+
 // Fills, on the context JIT page builds share, every field build code would
 // otherwise fill on first use. Each page build runs on a shallow copy of this
 // context (createPageBuildContext), so a field first set during a build would
@@ -68,6 +99,13 @@ function prepareJitContext(context) {
     context.routes = readRoutes({ directories: context.directories });
   }
   context.routes ??= [];
+  if (type.isUndefined(context.tailwindConfig) && type.isString(context.directories?.build)) {
+    const { mobileTheme, tailwindConfig } = readThemeArtifacts({
+      directories: context.directories,
+    });
+    context.mobileTheme ??= mobileTheme;
+    context.tailwindConfig = tailwindConfig ?? null;
+  }
 
   // A context made without jitMaps (a test, or buildPageJit's minimal
   // context) starts its log here, before its first page build adds an entry.
@@ -76,6 +114,14 @@ function prepareJitContext(context) {
     refMap: context.refMap,
     name: 'jit',
   });
+
+  if (type.isUndefined(context.global)) {
+    context.global =
+      context.components?.global ??
+      (type.isString(context.directories?.build)
+        ? readGlobal({ directories: context.directories })
+        : {});
+  }
 
   context.deferred ??= {};
   context.unresolvedRefVars ??= {};

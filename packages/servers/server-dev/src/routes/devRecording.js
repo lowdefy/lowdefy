@@ -20,24 +20,10 @@ import appendRecords from '../../lib/server/recording/appendRecords.js';
 import getBuildId from '../../lib/docs/getBuildId.js';
 import readRecordingCookie from '../../lib/server/recording/readRecordingCookie.js';
 import servedBuilds from '../../lib/server/recording/servedBuilds.js';
+import isTabChannelCaller from '../lib/isTabChannelCaller.js';
 import getConfigDirectory from '../../lib/docs/getConfigDirectory.js';
 
 const MAX_RECORDS = 500;
-
-// This route writes to disk, so unlike localDevToolsOnly it does not let a
-// request with no Origin through: only the recorder in a same-origin dev tab
-// posts here. Agents and curl have no reason to.
-function isSameOrigin(c) {
-  const origin = c.req.header('origin');
-  if (!origin) {
-    return false;
-  }
-  try {
-    return new URL(origin).host === c.req.header('host');
-  } catch {
-    return false;
-  }
-}
 
 async function readBody(c) {
   try {
@@ -77,7 +63,10 @@ function stampRecord({ record, currentBuild, cookie }) {
 // (or the build served now) and is appended to the trace file of its tab
 // session (dev) or run (journey).
 async function devRecordingHandler(c) {
-  if (!isSameOrigin(c)) {
+  // This route writes to disk, so unlike the dev tools it does not let any
+  // request with no Origin through: only a dev tab's recorder posts here, a
+  // browser tab's (same origin) or a phone shell's.
+  if (!isTabChannelCaller(c)) {
     return c.json({ error: 'Forbidden' }, 403);
   }
   if (process.env.LOWDEFY_DEV_RECORD === 'false') {

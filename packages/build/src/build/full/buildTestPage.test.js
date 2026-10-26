@@ -42,6 +42,7 @@ test('buildTestPage', () => {
   const res = buildTestPage({ pageConfig });
   expect(res).toEqual({
     id: 'page:page',
+    target: 'web',
     linkPaths: {},
     pageId: 'page',
     blockId: 'page',

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { vi, beforeEach, expect, test } from 'vitest';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -363,4 +363,74 @@ test('getPageConfig, dynamic page passes pathParams to the Dynamic endpoint payl
   expect(res.status).toBe('ok');
   const dynamicBlock = res.pageConfig.slots.content.blocks[0];
   expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('1234');
+});
+
+describe('surface gate', () => {
+  const surfaceRoutes = [
+    { pageId: 'web', path: 'web', auth: { public: true } },
+    { pageId: 'mobile', path: 'mobile', auth: { public: true } },
+    { pageId: 'shared', path: 'shared', auth: { public: true } },
+    { pageId: 'private-mobile', path: 'private-mobile', auth: { public: false } },
+  ];
+  const surfacePages = {
+    'pages/web.json': { id: 'page:web', target: 'web', auth: { public: true } },
+    'pages/mobile.json': { id: 'page:mobile', target: 'mobile', auth: { public: true } },
+    'pages/shared.json': { id: 'page:shared', target: 'both', auth: { public: true } },
+    'pages/private-mobile.json': {
+      id: 'page:private-mobile',
+      target: 'mobile',
+      auth: { public: false },
+    },
+  };
+
+  beforeEach(() => {
+    mockReadConfigFile.mockImplementation((path) => {
+      if (path === 'routes.json') return surfaceRoutes;
+      return surfacePages[path] ?? null;
+    });
+  });
+
+  test('getPageConfig serves a web page and a shared page to the web surface', async () => {
+    expect((await getPageConfig(context, { path: 'web' })).status).toEqual('ok');
+    expect((await getPageConfig(context, { path: 'shared', surface: 'web' })).status).toEqual('ok');
+  });
+
+  test('getPageConfig refuses a mobile page to the web surface, naming its surface', async () => {
+    expect(await getPageConfig(context, { path: 'mobile' })).toEqual({
+      status: 'wrong_surface',
+      pageId: 'mobile',
+      pathParams: {},
+      surface: 'mobile',
+    });
+  });
+
+  test('getPageConfig serves a mobile page and a shared page to the mobile surface', async () => {
+    const mobile = await getPageConfig(context, { path: 'mobile', surface: 'mobile' });
+    expect(mobile).toEqual({
+      status: 'ok',
+      pageId: 'mobile',
+      pathParams: {},
+      pageConfig: { id: 'page:mobile', target: 'mobile' },
+    });
+    expect((await getPageConfig(context, { path: 'shared', surface: 'mobile' })).status).toEqual(
+      'ok'
+    );
+  });
+
+  test('getPageConfig refuses a web page to the mobile surface, naming its surface', async () => {
+    expect(await getPageConfig(context, { path: 'web', surface: 'mobile' })).toEqual({
+      status: 'wrong_surface',
+      pageId: 'web',
+      pathParams: {},
+      surface: 'web',
+    });
+  });
+
+  test('getPageConfig checks access before the surface, so a signed-out browser learns nothing', async () => {
+    expect(await getPageConfig(context, { path: 'private-mobile' })).toEqual({
+      status: 'unauthenticated',
+      pageId: 'private-mobile',
+      pathParams: {},
+    });
+  });
 });

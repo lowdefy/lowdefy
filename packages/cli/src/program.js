@@ -22,6 +22,7 @@ import agentSetupUser from './commands/agentSetup/agentSetupUser.js';
 import build from './commands/build/build.js';
 import dataList from './commands/data/list.js';
 import dev from './commands/dev/dev.js';
+import deviceOptions from './commands/dev/deviceOptions.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import hubLogs from './commands/hub/hubLogs.js';
@@ -47,6 +48,7 @@ import journeysUsage from './commands/journeys/journeysUsage.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import journeysScope from './commands/journeys/scope/journeysScope.js';
 import mcp from './commands/mcp/mcp.js';
+import addMobileCommands from './commands/mobile/addMobileCommands.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
 import upgrade from './commands/upgrade/upgrade.js';
@@ -204,6 +206,9 @@ program
   .addOption(options.skipPluginChecks)
   .addOption(options.watch)
   .addOption(options.watchIgnore)
+  .addOption(deviceOptions.ios)
+  .addOption(deviceOptions.android)
+  .addOption(deviceOptions.lan)
   .action(runCommand({ cliVersion, handler: dev }));
 
 program
@@ -309,6 +314,8 @@ hub
   .command('serve', { hidden: true })
   .description('Run the hub in the foreground. Started automatically when needed.')
   .action(runHubCommand({ cliVersion, handler: hubServe }));
+
+addMobileCommands({ cliVersion, options, program });
 
 const journeys = program
   .command('journeys')

@@ -18,11 +18,12 @@
 */
 
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
+import createPairingBuffer, { HOLD_MS } from '@lowdefy/client-core/recorder/createPairingBuffer.js';
+import createPasswordRedactor from '@lowdefy/client-core/recorder/createPasswordRedactor.js';
 // Only the validator: the package index loads undici, which needs Node globals jsdom lacks.
 import validateTraceRecord from '@lowdefy/node-utils/journeyTrace/validateTraceRecord.js';
 
-import createPairingBuffer, { HOLD_MS } from './createPairingBuffer.js';
-import createPasswordRedactor from './createPasswordRedactor.js';
+import isPasswordElement from './isPasswordElement.js';
 
 const START = Date.parse('2026-10-03T14:00:00.000Z');
 const SESSION = '20261003T140000Z-k3x9qa';
@@ -131,7 +132,7 @@ beforeEach(() => {
     getSession: () => SESSION,
     getRoles: () => ['support'],
     getBuild: () => build,
-    redactor: createPasswordRedactor(),
+    redactor: createPasswordRedactor({ isPassword: isPasswordElement }),
   });
   build = BUILD_A;
   document.body.innerHTML = `

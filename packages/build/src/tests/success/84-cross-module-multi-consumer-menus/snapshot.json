@@ -1099,6 +1099,15 @@
     ],
     "~k": "9"
   },
+  "mobile/appJs.json": {
+    "jsEntries": null
+  },
+  "mobile/classMap.json": {},
+  "mobile/config.json": {},
+  "mobile/events.json": {},
+  "mobile/pageIndex.json": [],
+  "mobile/theme.json": {},
+  "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
       "actions": [
@@ -1489,6 +1498,7 @@
     },
     "pageId": "404",
     "blockId": "404",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "2p"
@@ -1533,6 +1543,7 @@
       },
       "~k": "21"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "23"
@@ -1556,6 +1567,7 @@
     },
     "pageId": "app-a/settings",
     "blockId": "app-a/settings",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "27"
@@ -1600,6 +1612,7 @@
       },
       "~k": "2b"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "2d"
@@ -1623,6 +1636,7 @@
     },
     "pageId": "app-b/reports",
     "blockId": "app-b/reports",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "2h"
@@ -1646,6 +1660,7 @@
     },
     "pageId": "home",
     "blockId": "home",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "1t"
@@ -1669,6 +1684,7 @@
     },
     "pageId": "nav/dashboard",
     "blockId": "nav/dashboard",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
       "~k": "1x"

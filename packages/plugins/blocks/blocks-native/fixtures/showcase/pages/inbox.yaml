@@ -1,0 +1,276 @@
+# Inbox, the first tab: a large title with the viewer's avatar at the left of the header and a
+# paper plane drawn beside the title (an Illustration in headerBackdrop, bobbing on the native
+# driver). Under the date line, two inset grouped sections: what needs the viewer, then what is
+# up next. The page fakes a 600ms load to show the lists' insetGroup skeleton, and pull to refresh
+# runs a short Wait. A row opens its issue; a long press shows its context menu.
+id: inbox
+type: Screen
+properties:
+  title: Inbox
+  largeTitle: true
+events:
+  onInit:
+    - id: seed
+      type: SetState
+      params:
+        needs_you:
+          _ref:
+            path: data/inbox.yaml
+            key: needs_you
+        up_next:
+          _ref:
+            path: data/inbox.yaml
+            key: up_next
+  onMountAsync:
+    - id: fake_load
+      type: Wait
+      params:
+        ms: 600
+    - id: loaded
+      type: SetState
+      params:
+        loaded: true
+  onRefresh:
+    - id: refresh
+      type: Wait
+      params:
+        ms: 900
+slots:
+  headerLeft:
+    blocks:
+      - id: viewer
+        type: Avatar
+        properties:
+          name: Ada Lovelace
+          src: https://i.pravatar.cc/96?img=47
+          size: 32
+  headerBackdrop:
+    blocks:
+      - id: plane_art
+        type: Illustration
+        style:
+          .element:
+            alignSelf: flex-end
+            marginRight: 12
+            marginBottom: -22
+        properties:
+          width: 128
+          height: 96
+          svg: |
+            <svg viewBox="0 0 120 90">
+              <circle cx="78" cy="42" r="30" fill="var(--halo)"/>
+              <g id="cloud_back">
+                <rect x="8" y="24" width="30" height="9" rx="4.5" fill="var(--cloud)"/>
+                <rect x="16" y="18" width="14" height="10" rx="5" fill="var(--cloud)"/>
+              </g>
+              <path d="M6 78 C 20 84, 30 66, 44 63 S 57 56, 59 51" fill="none" stroke="var(--trail)"
+                stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 5"/>
+              <g id="plane">
+                <path d="M60 46 L104 22 L76 50 Z" fill="var(--wing)"/>
+                <path d="M76 50 L104 22 L82 64 Z" fill="var(--keel)"/>
+                <path d="M76 50 L82 64 L72 57 Z" fill="var(--tuck)"/>
+              </g>
+              <g id="cloud_front">
+                <rect x="88" y="72" width="24" height="8" rx="4" fill="var(--cloud)"/>
+              </g>
+              <path id="spark_a" d="M106 6 l1.5 3.5 3.5 1.5 -3.5 1.5 -1.5 3.5 -1.5 -3.5 -3.5 -1.5 3.5 -1.5 z"
+                fill="var(--spark)"/>
+              <path id="spark_b" d="M46 34 l1 2.5 2.5 1 -2.5 1 -1 2.5 -1 -2.5 -2.5 -1 2.5 -1 z"
+                fill="var(--spark)"/>
+            </svg>
+          colors:
+            halo: '#ECEBFD'
+            cloud: '#FFFFFF'
+            trail: '#A9A8F2'
+            wing: '#8D8BF5'
+            keel: '#5E5CE6'
+            tuck: '#3F3DB8'
+            spark: '#FFB800'
+          colorsDark:
+            halo: '#232247'
+            cloud: '#2C2C2E'
+            trail: '#5B5AA8'
+            wing: '#A3A1FF'
+            keel: '#6E6CF0'
+            tuck: '#4B49C9'
+            spark: '#FFD60A'
+          animations:
+            # The plane bobs and tips with one clock.
+            - target: plane
+              property: translateY
+              duration: 3600
+              keyframes:
+                - at: 0
+                  value: 0
+                - at: 0.5
+                  value: -3.5
+                - at: 1
+                  value: 0
+            - target: plane
+              property: rotate
+              duration: 3600
+              origin: [82, 43]
+              keyframes:
+                - at: 0
+                  value: 0
+                - at: 0.5
+                  value: -4
+                - at: 1
+                  value: 0
+            - target: cloud_back
+              property: translateX
+              duration: 7000
+              keyframes:
+                - at: 0
+                  value: 0
+                - at: 0.5
+                  value: 4
+                - at: 1
+                  value: 0
+            - target: cloud_front
+              property: translateX
+              duration: 5600
+              keyframes:
+                - at: 0
+                  value: 0
+                - at: 0.5
+                  value: -3
+                - at: 1
+                  value: 0
+            - target: spark_a
+              property: opacity
+              duration: 2400
+              keyframes:
+                - at: 0
+                  value: 1
+                - at: 0.5
+                  value: 0.25
+                - at: 1
+                  value: 1
+            - target: spark_b
+              property: opacity
+              duration: 2400
+              delay: 1200
+              keyframes:
+                - at: 0
+                  value: 1
+                - at: 0.5
+                  value: 0.25
+                - at: 1
+                  value: 1
+  content:
+    blocks:
+      - id: date_line
+        type: Paragraph
+        style:
+          .element:
+            paddingHorizontal: 20
+            marginTop: -4
+            marginBottom: 4
+        properties:
+          content: Acme · Monday 19 Oct
+          type: secondary
+          textStyle: subheadline
+      - id: needs_you
+        type: List
+        loading:
+          _not:
+            _state: loaded
+        skeleton:
+          type: Skeleton
+          properties:
+            variant: insetGroup
+            count: 3
+            trailing: true
+        properties:
+          header:
+            title: Needs you
+            count: 3
+        blocks:
+          - id: needs_you.$.row
+            type: ListItem
+            properties:
+              title:
+                _state: needs_you.$.title
+              subtitle:
+                _string.concat:
+                  - _state: needs_you.$.key
+                  - ' · '
+                  - _state: needs_you.$.time
+              leading:
+                status:
+                  _state: needs_you.$.glyph
+              trailing:
+                avatar:
+                  name:
+                    _state: needs_you.$.name
+                  src:
+                    _state: needs_you.$.picture
+                  size: 24
+              contextMenu:
+                - id: open
+                  title: Open
+                  icon: arrow.up.right
+                - id: copy_key
+                  title: Copy key
+                  icon: doc.on.doc
+                - id: mute
+                  title: Mute thread
+                  icon: bell.slash
+            events:
+              onClick:
+                - id: open_issue
+                  type: Link
+                  params:
+                    pageId: issue
+                    urlQuery:
+                      key:
+                        _state: needs_you.$.key
+      - id: up_next
+        type: List
+        loading:
+          _not:
+            _state: loaded
+        skeleton:
+          type: Skeleton
+          properties:
+            variant: insetGroup
+            count: 4
+            trailing: true
+        properties:
+          header:
+            title: Up next
+            count: 4
+            footer: Assigned to you, by due date.
+        blocks:
+          - id: up_next.$.row
+            type: ListItem
+            properties:
+              title:
+                _state: up_next.$.title
+              subtitle:
+                _string.concat:
+                  - _state: up_next.$.key
+                  - ' · '
+                  - _state: up_next.$.project
+              leading:
+                status:
+                  _state: up_next.$.glyph
+              trailing:
+                text:
+                  _state: up_next.$.due
+                textColor:
+                  _if_none:
+                    - _state: up_next.$.dueColor
+                    - colorSecondaryLabel
+                status:
+                  _state: up_next.$.priorityGlyph
+            events:
+              onClick:
+                - id: open_issue
+                  type: Link
+                  params:
+                    pageId: issue
+                    urlQuery:
+                      key:
+                        _state: up_next.$.key

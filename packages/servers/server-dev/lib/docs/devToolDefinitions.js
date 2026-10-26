@@ -39,7 +39,9 @@ If a tool result begins with "STALE:", the last build FAILED and the answer come
 
 Build results, restarts and browser and server errors also arrive as notifications/message from logger "lowdefy". lowdefy_build_status stays the full picture, and the only one that reports pages that fail to build.
 
-Acting as someone: the headless renderer signs in as a roleless user, so a role-gated page or request renders empty or refused. Every tool that takes user takes it in the same forms: a user object such as {"roles":["admin"]}, merged over the default user (add the email or profile fields the page reads, since no auth engine derives them); "none" to act signed out, so the app's own auth decides; or the name of a user in the data set that data names (tests/data/<name>.yaml), which also runs the call on that data set's own in-memory database. user and data are headless only, so combining them with source "tab" is an error. A request run without user runs as a roleless anonymous caller, so a tenant-walled request returns empty rather than an error.`;
+Acting as someone: the headless renderer signs in as a roleless user, so a role-gated page or request renders empty or refused. Every tool that takes user takes it in the same forms: a user object such as {"roles":["admin"]}, merged over the default user (add the email or profile fields the page reads, since no auth engine derives them); "none" to act signed out, so the app's own auth decides; or the name of a user in the data set that data names (tests/data/<name>.yaml), which also runs the call on that data set's own in-memory database. user and data are headless only, so combining them with source "tab" is an error. A request run without user runs as a roleless anonymous caller, so a tenant-walled request returns empty rather than an error.
+
+Phones: mobile pages run in Lowdefy Dev on a phone, simulator or emulator, which joins this server as a tab. lowdefy_device lists them (action "list"), starts one ("start") and fakes a device result ("inject"); pass its tab id as device to lowdefy_screenshot_page, lowdefy_run_journey or lowdefy_inspect_state to act on the phone.`;
 
 const HAZARDS_NOTE =
   ' Results include `hazards`: behaviours of this type that its schema does not show. Read them before writing config.';
@@ -73,6 +75,14 @@ const pathParamsSchema = z
     'Values for the placeholders of a page whose path has them, read by _path_params, e.g. {"space": "support", "ticket_id": "1234"} for path "tickets/{space}/{ticket_id}" (lowdefy_app_map shows each page\'s path). Required to open such a page headless; a missing placeholder is an error naming it.'
   );
 
+// Shared by every tool that can act on a phone instead of the headless browser.
+const deviceSchema = z
+  .string()
+  .optional()
+  .describe(
+    'A phone in Lowdefy Dev, by its tab id from lowdefy_device list. It is used as it is: the page it shows, its own user and the real database.'
+  );
+
 // Shared by the request and endpoint runners.
 const saveResponseSchema = z
   .boolean()
@@ -100,7 +110,12 @@ const devToolDefinitions = {
       source: z
         .enum(['tab', 'headless'])
         .optional()
-        .describe('Force a source. Default: live tab if connected, else headless.'),
+        .describe(
+          "Force a source. Default: live tab if connected, else headless. With device, the phone's tab."
+        ),
+      device: deviceSchema.describe(
+        'A phone to read instead, by tab id. Never falls back to headless.'
+      ),
       user: userSchema,
       data: dataSchema,
     },
@@ -155,7 +170,7 @@ const devToolDefinitions = {
 
   lowdefy_build_status: {
     description:
-      'Call after every config edit, with wait: true. build.status is ok when the config builds and no page failed its latest build, pages_failed (build.failedPages names them) when a page failed and has not changed since, and error when the config build fails. Then the located errors and warnings of the config build and of each failed page, pages changed since they were built, and recent browser and server errors. Errors from before your latest edit come apart under earlierErrors.',
+      'Call after every config edit, with wait: true. build.status is ok when the config builds and no page failed its latest build, pages_failed (build.failedPages names them) when a page failed and has not changed since, and error when the config build fails. Then the located errors and warnings of the config build and of each failed page, pages changed since they were built, and recent browser, phone (surface "mobile") and server errors. Errors from before your latest edit come apart under earlierErrors.',
     inputSchema: {
       wait: z
         .boolean()
@@ -201,7 +216,11 @@ const devToolDefinitions = {
       'Screenshot a page of the running dev server (headless Chromium) to verify layout and rendering. Returns a PNG. Set width (e.g. 390 for a phone) and colorScheme "dark" to check those layouts. Pass steps to capture a state beyond the loaded page, such as an open dropdown or a modal; portal popups are included. Pass urlQuery for a page that reads _url_query, and pathParams for a page whose path has placeholders.' +
       CALLER_NOTE,
     inputSchema: {
-      pageId: z.string().describe('The page id to screenshot.'),
+      pageId: z
+        .string()
+        .describe(
+          'The page id to screenshot. With device, the page the phone must show; a phone is not navigated.'
+        ),
       pathParams: pathParamsSchema,
       urlQuery: z
         .record(z.any())
@@ -251,6 +270,7 @@ const devToolDefinitions = {
         .describe(
           'The colour scheme the page\'s prefers-color-scheme reports. Default "light". An app that follows the system theme renders dark with "dark"; a darkMode fixed in the app config wins.'
         ),
+      device: deviceSchema.describe('A phone to capture instead, by tab id.'),
       user: userSchema,
       data: dataSchema,
     },
@@ -265,8 +285,9 @@ const devToolDefinitions = {
       steps: z
         .array(z.record(z.any()))
         .describe(
-          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs.'
+          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
         ),
+      device: deviceSchema.describe('A phone to run on instead, by tab id.'),
       user: z
         .union([
           z.literal('none'),
@@ -334,6 +355,12 @@ const devToolDefinitions = {
           'websockets',
         ])
         .describe('The kind of types to list.'),
+      target: z
+        .enum(['web', 'mobile'])
+        .optional()
+        .describe(
+          'Default "web". "mobile": the blocks, actions and client operators a native shell carries, for mobile pages.'
+        ),
     },
   },
 
@@ -401,6 +428,37 @@ const devToolDefinitions = {
         .positive()
         .optional()
         .describe('Max icon names (after semantic names). Default 30.'),
+    },
+  },
+
+  lowdefy_device: {
+    description:
+      'Phones in Lowdefy Dev. "list": connected phones (their tab ids are the device other tools take) and booted simulators. "start" with platform: open Lowdefy Dev on a simulator or emulator. "inject" with device: fake the phone\'s next device result. lowdefy_get_doc "ai-agent-docs" has the shapes.',
+    inputSchema: {
+      action: z.enum(['list', 'start', 'inject']).describe('What to do.'),
+      platform: z.enum(['ios', 'android']).optional().describe('For start.'),
+      device: deviceSchema.describe('For inject: the phone.'),
+      inject: z
+        .object({
+          kind: z
+            .enum([
+              'scan',
+              'photo',
+              'nfc',
+              'transcript',
+              'location',
+              'permission',
+              'network',
+              'push',
+              'share',
+              'clear',
+            ])
+            .describe('What to fake.'),
+          value: z.any().optional().describe('The faked result, shaped per kind (see the docs).'),
+          name: z.string().optional().describe('For permission: e.g. "camera".'),
+        })
+        .optional()
+        .describe('For inject: the device result to fake.'),
     },
   },
 

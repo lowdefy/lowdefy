@@ -66,6 +66,29 @@ function createTraceRegistry({ lowdefy }) {
     };
   }
 
+  // A renderer with no DOM for a recorder to listen on (the native one) reports here what a person
+  // did to a block: `{ kind: 'click' | 'change' | 'key', blockId, value?, key? }`, stamped with
+  // the time. Only Lowdefy Dev's recorder listens, so with no listener a report does nothing.
+  const interactionListeners = [];
+
+  function subscribeInteractions(listener) {
+    interactionListeners.push(listener);
+    return function unsubscribe() {
+      const index = interactionListeners.indexOf(listener);
+      if (index !== -1) {
+        interactionListeners.splice(index, 1);
+      }
+    };
+  }
+
+  function reportInteraction(interaction) {
+    if (interactionListeners.length === 0) {
+      return;
+    }
+    const stamped = { ...interaction, t: Date.now() };
+    [...interactionListeners].forEach((listener) => callListener(listener, stamped));
+  }
+
   function canHoldFailure() {
     return holding && heldFailures.length < HELD_FAILURES_LIMIT;
   }
@@ -93,7 +116,7 @@ function createTraceRegistry({ lowdefy }) {
   const pathEntryOf = createPathEntryOf({ lowdefy });
   const pageIdOf = createPageIdOf({ pathEntryOf });
   const describeElement = createDescribeElement({ findBlockType, pathEntryOf });
-  const describeChain = createDescribeChain({ findBlockType, pathEntryOf });
+  const describeChain = createDescribeChain({ findBlockType, lowdefy, pathEntryOf });
   const isConfigText = createIsConfigText({ lowdefy, pathEntryOf });
 
   return {
@@ -103,7 +126,9 @@ function createTraceRegistry({ lowdefy }) {
     isConfigText,
     pageIdOf,
     pathEntryOf,
+    reportInteraction,
     subscribe,
+    subscribeInteractions,
     wantsPayload,
     wantsState,
     actionView: {

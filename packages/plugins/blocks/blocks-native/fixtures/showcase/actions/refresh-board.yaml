@@ -1,0 +1,42 @@
+# Sets `board`, the Projects list, to the issues of the picked project that the scope and the
+# search let through. The body of a _function reads with double underscore operators.
+id: refresh_board
+type: SetState
+params:
+  board:
+    _array.filter:
+      on:
+        _state: issues
+      callback:
+        _function:
+          __and:
+            - __eq:
+                - __args: 0.project
+                - __state: project
+            - __or:
+                - __eq:
+                    - __state: scope
+                    - all
+                - __and:
+                    - __eq:
+                        - __state: scope
+                        - mine
+                    - __eq:
+                        - __args: 0.assignee
+                        - ada
+                - __and:
+                    - __eq:
+                        - __state: scope
+                        - open
+                    - __ne:
+                        - __args: 0.status
+                        - done
+            - __string.includes:
+                on:
+                  __string.toLowerCase:
+                    __args: 0.title
+                searchString:
+                  __string.toLowerCase:
+                    __if_none:
+                      - __state: search
+                      - ''

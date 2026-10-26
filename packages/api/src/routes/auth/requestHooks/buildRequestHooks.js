@@ -19,7 +19,10 @@ import { type } from '@lowdefy/helpers';
 
 import createAcceptExistingMemberHook from '../organizations/createAcceptExistingMemberHook.js';
 import createEmailSendGate from '../organizations/createEmailSendGate.js';
+import createEmailCodeHolderGate from './createEmailCodeHolderGate.js';
+import createEmailSendLimit from './createEmailSendLimit.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
+import createKnownDeviceHook from '../mobile/createKnownDeviceHook.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
@@ -78,6 +81,29 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   // the code is minted inside sendMagicLink, which only runs after the
   // magic-link gate has already admitted the address.
   if (authConfig.emailOTP?.enabled === true) {
+    // Apps with phones sign in by email code by default, so codes are capped at
+    // 5 in 15 minutes, per phone and per address (createEmailSendLimit). The
+    // password reset code is another unauthenticated send to the same address.
+    // Registered ahead of the gate.
+    if (!type.isNone(authConfig.mobile)) {
+      before.push({
+        id: 'emailOtpSendLimit',
+        matches: (path) =>
+          path === '/email-otp/send-verification-otp' || path === '/forget-password/email-otp',
+        handler: createEmailSendLimit({
+          codeSeconds: authConfig.emailOTP.expiresIn,
+          getAuth,
+          max: 5,
+          windowSeconds: 900,
+        }),
+      });
+      // Only the known phone holding the live code may try it (holdEmailCode).
+      before.push({
+        id: 'emailOtpCodeHolderGate',
+        matches: (path) => path === '/sign-in/email-otp',
+        handler: createEmailCodeHolderGate({ getAuth }),
+      });
+    }
     before.push({
       id: 'emailOtpSendGate',
       matches: (path) => path === '/email-otp/send-verification-otp',
@@ -272,6 +298,16 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         exit: (ctx) => ctx.json({ twoFactorRedirect: true, twoFactorMethods: ['totp'] }),
       })
     );
+  }
+
+  // After the two-factor challenge, which answers first when a second factor is
+  // needed: only a sign-in that kept its session records a known phone.
+  if (!type.isNone(authConfig.mobile) && authConfig.emailOTP?.enabled === true) {
+    after.push({
+      id: 'emailOtpKnownDevice',
+      matches: (path) => path === '/sign-in/email-otp',
+      handler: createKnownDeviceHook({ getAuth }),
+    });
   }
 
   return {

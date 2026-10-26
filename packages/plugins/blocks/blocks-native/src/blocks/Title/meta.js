@@ -1,0 +1,326 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import textStyle from '../../schemas/textStyle.js';
+
+export default {
+  category: 'display',
+  icons: [],
+  valueType: null,
+  cssKeys: {
+    element: 'The Title element.',
+    copyableIcon: 'The copyable icon in the Title. Not drawn on mobile.',
+    actions: 'The expand button next to the text.',
+  },
+  events: {
+    onExpand: {
+      description: 'Trigger action when the ellipsis expand or collapse button is clicked.',
+      event: {
+        expanded: 'True when the text was expanded, false when it was collapsed.',
+      },
+    },
+    onCopy: 'Trigger action when copy text is clicked. Never fires on mobile.',
+  },
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      actions: {
+        nativeIgnored: true,
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'Configure the bar of action buttons, such as copy and expand. Ignored on mobile.',
+        properties: {
+          placement: {
+            type: 'string',
+            enum: ['start', 'end'],
+            default: 'end',
+            description: 'Place the action buttons before or after the text.',
+          },
+        },
+      },
+      code: {
+        type: 'boolean',
+        default: false,
+        description: 'Apply code style.',
+      },
+      color: {
+        type: 'string',
+        description: 'Title color.',
+        docs: {
+          displayType: 'color',
+        },
+      },
+      content: {
+        type: 'string',
+        description:
+          'Title text content - supports html. On mobile, tags are removed and the text is shown plain.',
+      },
+      copyable: {
+        nativeIgnored: true,
+        default: false,
+        oneOf: [
+          {
+            type: 'boolean',
+            description: 'Provide copy text button. Ignored on mobile.',
+          },
+          {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              text: {
+                type: 'string',
+                description: 'Paragraph text to copy when clicked.',
+              },
+              icon: {
+                type: ['string', 'object', 'array'],
+                description:
+                  'Copy icon, can be an array or two icons for before and after clicked.',
+                docs: {
+                  displayType: 'icon',
+                },
+              },
+              tooltips: {
+                type: ['string', 'array'],
+                description:
+                  'Tooltip text, can be an array or two strings for before and after clicked.',
+                docs: {
+                  displayType: 'string',
+                },
+              },
+            },
+          },
+        ],
+      },
+      delete: {
+        type: 'boolean',
+        default: false,
+        description: 'Apply deleted (strikethrough) style.',
+      },
+      disabled: {
+        type: 'boolean',
+        default: false,
+        description: 'Apply disabled style.',
+      },
+      ellipsis: {
+        default: false,
+        oneOf: [
+          {
+            type: 'boolean',
+            description: 'Display ellipsis when text overflows a single line.',
+          },
+          {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              rows: {
+                type: 'number',
+                description: 'Max rows of content.',
+              },
+              expandable: {
+                type: ['boolean', 'string'],
+                enum: [true, false, 'collapsible'],
+                description:
+                  "Show a button that expands the hidden content. Set to 'collapsible' to also allow collapsing it again.",
+              },
+              defaultExpanded: {
+                type: 'boolean',
+                default: false,
+                description: 'Start with the content expanded.',
+              },
+              suffix: {
+                type: 'string',
+                description: 'Suffix of ellipses content.',
+              },
+              symbol: {
+                type: ['string', 'array'],
+                items: {
+                  type: 'string',
+                },
+                description:
+                  'Text of the expand button, or an array of two strings for the expand and collapse buttons.',
+                docs: {
+                  displayType: 'string',
+                },
+              },
+              tooltip: {
+                type: ['boolean', 'string'],
+                nativeIgnored: true,
+                description:
+                  'Show a tooltip when the text is truncated. true shows the full text, a string shows that text. Ignored on mobile.',
+                docs: {
+                  displayType: 'string',
+                },
+              },
+            },
+          },
+        ],
+      },
+      italic: {
+        type: 'boolean',
+        default: false,
+        description: 'Apply italic style.',
+      },
+      keyboard: {
+        type: 'boolean',
+        default: false,
+        description: 'Apply keyboard key style.',
+      },
+      level: {
+        type: 'number',
+        default: 1,
+        enum: [1, 2, 3, 4, 5],
+        description:
+          'Set title type. Matches with h1, h2, h3 and h4. On mobile the levels take the iOS text styles largeTitle (1), title1 (2), title2 (3), title3 (4) and headline (5).',
+      },
+      mark: {
+        type: 'boolean',
+        default: false,
+        description: 'Apply marked (highlighted) style.',
+      },
+      type: {
+        type: 'string',
+        default: 'default',
+        enum: ['default', 'secondary', 'warning', 'danger', 'success'],
+        description: "Additional types. Don't specify for default.",
+      },
+      underline: {
+        type: 'boolean',
+        default: false,
+        description: 'Apply underline style.',
+      },
+      textStyle: {
+        ...textStyle,
+        description: `${textStyle.description} Defaults to the style of the level.`,
+      },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+          link: 'https://ant.design/components/typography#design-token',
+        },
+        properties: {
+          titleMarginBottom: {
+            type: ['string', 'number'],
+            default: '0.5em',
+            description: 'Margin bottom of title, as a CSS length or a number of pixels.',
+            docs: {
+              displayType: 'string',
+            },
+          },
+          titleMarginTop: {
+            type: ['string', 'number'],
+            default: '1.2em',
+            description: 'Margin top of title, as a CSS length or a number of pixels.',
+            docs: {
+              displayType: 'string',
+            },
+          },
+          fontSizeHeading1: {
+            type: 'number',
+            default: 38,
+            description: 'Font size of h1 heading.',
+          },
+          fontSizeHeading2: {
+            type: 'number',
+            default: 30,
+            description: 'Font size of h2 heading.',
+          },
+          fontSizeHeading3: {
+            type: 'number',
+            default: 24,
+            description: 'Font size of h3 heading.',
+          },
+          fontSizeHeading4: {
+            type: 'number',
+            default: 20,
+            description: 'Font size of h4 heading.',
+          },
+          fontSizeHeading5: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of h5 heading.',
+          },
+          lineHeightHeading1: {
+            type: 'number',
+            default: 1.2105,
+            description: 'Line height of h1 heading.',
+          },
+          lineHeightHeading2: {
+            type: 'number',
+            default: 1.2667,
+            description: 'Line height of h2 heading.',
+          },
+          lineHeightHeading3: {
+            type: 'number',
+            default: 1.3333,
+            description: 'Line height of h3 heading.',
+          },
+          lineHeightHeading4: {
+            type: 'number',
+            default: 1.4,
+            description: 'Line height of h4 heading.',
+          },
+          lineHeightHeading5: {
+            type: 'number',
+            default: 1.5,
+            description: 'Line height of h5 heading.',
+          },
+          fontWeightStrong: {
+            type: 'number',
+            default: 600,
+            description: 'Font weight for strong text.',
+          },
+          fontFamilyCode: {
+            type: 'string',
+            description: 'Font family for code style text.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Default text color.',
+          },
+          colorTextSecondary: {
+            type: 'string',
+            description: 'Secondary text color.',
+          },
+          colorSuccess: {
+            type: 'string',
+            description: 'Success text color.',
+          },
+          colorWarning: {
+            type: 'string',
+            description: 'Warning text color.',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Danger/error text color.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Disabled text color.',
+          },
+          colorLink: {
+            type: 'string',
+            description: 'Link color.',
+          },
+        },
+      },
+    },
+  },
+};

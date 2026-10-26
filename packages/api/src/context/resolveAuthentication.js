@@ -540,6 +540,20 @@ async function resolveMcpCaller(context, { auth, headers }) {
   context.user = { ...member, auth_method: 'mcp' };
 }
 
+// A phone shell sends its session as a bearer (the bearer plugin, on for apps
+// with a mobile section) and the same session branch below resolves it. The
+// cookie cache is skipped for any bearer: a phone never holds the cache cookie,
+// and reading the session row on every call is what makes signing out, an
+// admin ending sessions or removing a member take effect on its next call. A
+// bearer that is not a session token (an API strategy's) resolves no session,
+// and the strategies run as before.
+function getSessionInput({ headers }) {
+  if (readBearerToken({ headers }) === null) {
+    return { headers };
+  }
+  return { headers, query: { disableCookieCache: true } };
+}
+
 // context.authSession is the session the caller was resolved from, for the
 // response's caller stamp: { id, memberOrganizationIds }. memberOrganizationIds
 // is every organization the person belongs to under tenant, this app's
@@ -559,7 +573,7 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     await resolveMcpCaller(context, { auth, headers });
     return;
   }
-  const session = await auth.api.getSession({ headers });
+  const session = await auth.api.getSession(getSessionInput({ headers }));
   if (type.isNone(session)) {
     if (hasMcpAudienceBearer({ context, headers })) {
       context.user = null;

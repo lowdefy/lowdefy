@@ -15,11 +15,18 @@
 */
 
 import { Hono } from 'hono';
+import { vi, expect, test } from 'vitest';
 
-import mountPageRoutes from './mountPageRoutes.js';
-import { expect, test } from 'vitest';
+vi.doMock('./mobileSignIn.js', () => ({
+  default: (c) => c.json({ mobileSignIn: c.req.query('shell'), method: c.req.method }),
+}));
+vi.doMock('./mobileSignInCallback.js', () => ({
+  default: (c) => c.json({ mobileSignInCallback: true }),
+}));
 
-function request({ basePath, path }) {
+const { default: mountPageRoutes } = await import('./mountPageRoutes.js');
+
+function request({ basePath, path, method = 'GET' }) {
   const app = basePath === '' ? new Hono() : new Hono().basePath(basePath);
   mountPageRoutes({
     app,
@@ -27,7 +34,7 @@ function request({ basePath, path }) {
     renderPage: (c, { path: pagePath, matchedPath, status = 200 }) =>
       c.json({ path: pagePath, matchedPath }, status),
   });
-  return app.request(path);
+  return app.request(path, { method });
 }
 
 test.each([
@@ -53,5 +60,27 @@ test.each([[''], ['/app']])(
     const res = await request({ basePath, path: `${basePath}/404` });
     expect(res.status).toEqual(404);
     expect(await res.json()).toEqual({ path: '404', matchedPath: '404' });
+  }
+);
+
+test.each([[''], ['/app']])(
+  'with basePath "%s", /auth/mobile is the mobile sign-in route, not a page',
+  async (basePath) => {
+    const res = await request({ basePath, path: `${basePath}/auth/mobile?shell=field&state=s` });
+    expect(await res.json()).toEqual({ mobileSignIn: 'field', method: 'GET' });
+    const posted = await request({
+      basePath,
+      path: `${basePath}/auth/mobile?shell=field&state=s`,
+      method: 'POST',
+    });
+    expect(await posted.json()).toEqual({ mobileSignIn: 'field', method: 'POST' });
+  }
+);
+
+test.each([[''], ['/app']])(
+  'with basePath "%s", /auth/mobile/callback is the sign-in app link route, not a page',
+  async (basePath) => {
+    const res = await request({ basePath, path: `${basePath}/auth/mobile/callback?state=s` });
+    expect(await res.json()).toEqual({ mobileSignInCallback: true });
   }
 );

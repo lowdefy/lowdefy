@@ -15,14 +15,21 @@
 */
 
 import getRequestPath from '../lib/getRequestPath.js';
+import mobileSignInCallbackHandler from './mobileSignInCallback.js';
+import mobileSignInHandler from './mobileSignIn.js';
 
-// `/` (home) and `/404` are fixed routes ahead of the page matcher; every other
-// path renders the page it matches. `.*`, not `.+`: under a basePath,
+// `/` (home), `/404`, `/auth/mobile` (the sign-in page a phone shell opens, and
+// its confirmation post) and `/auth/mobile/callback` (its Android app link) are
+// fixed routes ahead of the page matcher; every other path renders the page
+// it matches. `.*`, not `.+`: under a basePath,
 // `<basePath>/` arrives with an empty rest, and is the app root like
 // `<basePath>` itself.
 function mountPageRoutes({ app, basePath, renderPage }) {
   app.get('/', (c) => renderPage(c, { path: '', matchedPath: '' }));
   app.get('/404', (c) => renderPage(c, { path: '404', matchedPath: '404', status: 404 }));
+  app.get('/auth/mobile', mobileSignInHandler);
+  app.post('/auth/mobile', mobileSignInHandler);
+  app.get('/auth/mobile/callback', mobileSignInCallbackHandler);
   app.get('/:rest{.*}', (c) => renderPage(c, getRequestPath({ c, basePath, prefix: '/' })));
 }
 

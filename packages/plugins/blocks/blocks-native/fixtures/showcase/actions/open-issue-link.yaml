@@ -1,0 +1,19 @@
+# Opens the issue a pressed `/ACME/issues/ACME-123` link names. Other links (the @mention chips)
+# open nothing.
+id: open_issue_link
+type: Link
+skip:
+  _not:
+    _string.startsWith:
+      on:
+        _event: href
+      searchString: /ACME/issues/
+params:
+  pageId: issue
+  urlQuery:
+    key:
+      _string.replace:
+        on:
+          _event: href
+        regex: '^/ACME/issues/'
+        newSubstr: ''

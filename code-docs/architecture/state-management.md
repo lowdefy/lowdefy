@@ -430,13 +430,17 @@ requests:
 const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
 
-  // Register updater in lowdefy context
-  lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
+  // One updater for the component's life, registered on the page context while mounted
+  const updater = useRef(() => setUpdate((count) => count + 1)).current;
+  context._internal.updaters.register(block.id, updater);
+  useEffect(() => context._internal.updaters.register(block.id, updater), [block.id, context, updater]);
 
   // Re-render when state changes trigger update
   return <CategorySwitch ... />;
 };
 ```
+
+`context._internal.updaters` (`packages/engine/src/createUpdaters.js`) keeps a set of updaters per block id, so every mounted copy of a block re-renders. The web shows one page tree at a time, but a native shell can show one page instance on two screens (in two tabs' stacks, or pushed again over itself); both copies share the page's context.
 
 ### Update Trigger Chain
 
@@ -449,9 +453,7 @@ Areas.updateStateFromRoot()
         ↓
 Block.evaluate() computes new values
         ↓
-lowdefy._internal.updateBlock(blockId)
-        ↓
-lowdefy._internal.updaters[blockId]()
+context._internal.updaters.update(blockId)
         ↓
 React useState triggers re-render
 ```

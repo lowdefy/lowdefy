@@ -31,6 +31,49 @@ import Client from '@lowdefy/client';
 />;
 ```
 
+## Client core
+
+The platform-free half of the client lives in `@lowdefy/client-core` (`packages/client-core`):
+the request layer (`request.js`, `createCallRequest.js`, `createCallAPI.js`,
+`createHandleError.js`), the build and caller stamp checks (`shouldReloadForBuild.js`,
+`shouldReloadForCaller.js`, `shouldReloadForAuthError.js`, `claimCallerReload.js`,
+`recordCallerStamp.js`), the websocket client, the auth methods, `storage/`, the page lifecycle
+manager, `getActiveLocale.js` and `getContextKey.js`. A native renderer shares it with the web one.
+
+`createLowdefyCore({ apiBase, auth, basePath, host, lowdefy, rootConfig, types })` builds
+`lowdefy._internal` and the app-level state; `updateLowdefyPage` points it at the shown page on
+every render. The core reaches the platform only through `host` (`HOST_KEYS` in
+`createLowdefyCore.js`): `fetch`, `globals`, `onBuildChanged`, `onCallerChanged`, `router`,
+`storage` and `sessionStorage` (stores of `{ get, set, remove, keys }`), `WebSocket` and
+`websocketUrl(path)`. Its source reads no bare `window` or `document`, and it depends on no web
+renderer package; `src/platformFree.test.js` enforces both.
+
+`apiBase` prefixes every API call (requests, endpoints, `/api/client-error`, the websocket). It
+defaults to `basePath`; a native shell passes its server's origin while `basePath` keeps its
+routing meaning.
+
+A host may also name its auth transport (`auth/validateAuthTransport.js`). The web host names
+none and is a cookie host: the browser sends the session cookie, and calls go out as they always
+have. A native shell passes `authTransport: 'bearer'` and a `tokenStore` of `{ get, set, clear }`
+holding its Better Auth session token. Then:
+
+- requests, endpoint calls and the websocket upgrade send `Authorization: Bearer <token>`
+  (`auth/getAuthorizationHeaders.js`);
+- `createAuthFetchOptions({ host })` gives the shell's Better Auth client the same header, keeps
+  the token the bearer plugin returns in `set-auth-token`, and ends the session on a 401;
+- a 401 to any call that sent the token clears the store and calls `onCallerChanged`
+  (`auth/endBearerSession.js`), and `Logout` clears it after sign-out;
+- endpoint calls send no `x-lowdefy-build`, so a server build change never refuses them; page
+  requests still do.
+
+On the web, `initLowdefyContext.js` builds the browser host (`host/createWebHost.js`): the
+window's `fetch`, `localStorage` and `sessionStorage`, the page origin for the websocket URL, and
+`window.location.reload()` for a build or caller change. It then adds the web renderer's parts:
+`Icon`, `ShortcutBadge`, `Link`, `setupLink` and the HTML enhancements. The server templates
+import `claimCallerReload`, `recordCallerStamp`, `shouldReloadForBuild`, `shouldReloadForCaller`
+and `adapters/url.js` from `@lowdefy/client`, which binds the first three to
+`window.sessionStorage`.
+
 ## Architecture
 
 ```
@@ -91,6 +134,8 @@ from the path memory. The auth callbacks resolve their targets with `resolveTarg
 | `createCallAPI.js`     | Creates function to call custom endpoints |
 | `request.js`           | HTTP request utilities                    |
 
+These live in `@lowdefy/client-core` (see Client core).
+
 ### Keyboard Shortcuts
 
 | Module                     | Purpose                                                 |
@@ -106,13 +151,13 @@ See [keyboard-shortcuts.md](../architecture/keyboard-shortcuts.md) for the full 
 
 ### Context Initialization
 
-| Module                   | Purpose                                                      |
-| ------------------------ | ------------------------------------------------------------ |
-| `initLowdefyContext.js`  | Sets up the global lowdefy context                           |
-| `createHandleError.js`   | Creates error handler with dedup, server round-trip, display |
-| `setupLink.js`           | Configures navigation links                                  |
-| `createLinkComponent.js` | Creates the Link component for navigation                    |
-| `createIcon.js`          | Creates the `Icon` component that renders `IconData`         |
+| Module                   | Purpose                                                   |
+| ------------------------ | --------------------------------------------------------- |
+| `initLowdefyContext.js`  | Sets up the global lowdefy context                        |
+| `createHandleError.js`   | Error handler with dedup, server round-trip (client-core) |
+| `setupLink.js`           | Configures navigation links                               |
+| `createLinkComponent.js` | Creates the Link component for navigation                 |
+| `createIcon.js`          | Creates the `Icon` component that renders `IconData`      |
 
 ### Authentication (`/auth/`)
 
@@ -177,7 +222,7 @@ lowdefy = {
 
 ## Browser Storage
 
-Every key Lowdefy writes to `localStorage` is namespaced by app, because storage is shared by every app on an origin: `appStorageKey({ basePath, name, slug })` (`@lowdefy/helpers`) gives `lowdefy:<slug>:<basePath>:<name>`. The server templates use it for the pre-hydration dark mode script, `App.jsx` for the dark mode and locale preferences, and `src/storage/createStorage.js` for `lowdefy._internal.storage`.
+Every key Lowdefy writes to `localStorage` is namespaced by app, because storage is shared by every app on an origin: `appStorageKey({ basePath, name, slug })` (`@lowdefy/helpers`) gives `lowdefy:<slug>:<basePath>:<name>`. The server templates use it for the pre-hydration dark mode script, `App.jsx` for the dark mode and locale preferences, and `src/storage/createStorage.js` in `@lowdefy/client-core` for `lowdefy._internal.storage`, over the host's `storage` store.
 
 A person's data (Search recent searches, Table persisted views) goes under a user key: `lowdefy:<slug>:<basePath>:lowdefy_user:<encoded user id>:<name>`, with an empty id for an anonymous visitor. `lowdefy_` is a reserved prefix for `SetLocalStorage` keys, so no author key reads as a user key. User keys are removed:
 

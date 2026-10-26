@@ -101,6 +101,21 @@ function buildRequest(request, pageContext) {
     configKey,
   });
 
+  // offline: queue lets a mobile shell keep the call while it has no signal and send it later
+  // (the shell's request queue). It stays on the client request config; the web sends as usual.
+  if (!type.isUndefined(request.offline) && request.offline !== 'queue') {
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" "offline" only accepts "queue".`,
+      { received: request.offline, configKey }
+    );
+  }
+  if (!type.isUndefined(request.offline) && context.experimental?.mobile !== true) {
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" "offline" is part of experimental mobile apps. Set "config.experimental.mobile: true" in lowdefy.yaml to use it.`,
+      { configKey }
+    );
+  }
+
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {

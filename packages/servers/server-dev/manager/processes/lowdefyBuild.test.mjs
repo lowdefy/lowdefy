@@ -19,7 +19,9 @@ import { vi, expect, test } from 'vitest';
 const mockShallowBuild = vi.fn();
 const mockSerializeBuildException = vi.fn((exception) => ({ message: exception.message }));
 const mockWriteBuildStatus = vi.fn();
-const mockCreateCustomPluginTypesMap = vi.fn().mockResolvedValue({});
+const mockCreateCustomPluginTypesMap = vi
+  .fn()
+  .mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} });
 const mockCreateCustomPluginMessagesMap = vi.fn().mockResolvedValue({});
 const mockPublishBuildDirectory = vi.fn(async () => {});
 

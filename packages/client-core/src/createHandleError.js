@@ -1,0 +1,109 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { getDevError } from '@lowdefy/engine';
+import { expectedErrorNames } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
+
+function createHandleError(lowdefy) {
+  const loggedErrors = new Set();
+  const logger = lowdefy._internal.logger;
+
+  function logError(error) {
+    lowdefy._runtimeErrorCallback?.(error);
+    logger.error(error);
+  }
+
+  return async function handleError(error) {
+    // The dev tools show the dev server's full error; every decision below stays on
+    // the error config sees. Keying on the shown message means two different dev
+    // failures of one action both display. Every server failure carries its own
+    // requestId, and prod gives them all one generic message, so the requestId in
+    // the key is what lets a later failure - and the ID support asks for - log at
+    // all; one failure reaching here twice still logs once.
+    const devError = getDevError(error);
+    const shown = devError ?? error;
+    const errorKey = `${shown.message}:${error.configKey ?? ''}:${error.requestId ?? ''}`;
+    if (loggedErrors.has(errorKey)) {
+      return;
+    }
+    loggedErrors.add(errorKey);
+
+    // An expected outcome - a UserError, or an auth gate's refusal the server
+    // already logged as one warning line - logs to the browser console only,
+    // never sent to the server or the error bar. Matched by name, not
+    // instanceof: plugins bundle their own @lowdefy/errors copy.
+    if (expectedErrorNames.has(error?.name)) {
+      logger.error(shown);
+      return;
+    }
+
+    // A fetch the browser cancels as the page leaves fails like a network
+    // failure; the Fetch action and other direct fetches see it too. It logs to
+    // the browser console only, not to the server log.
+    if (lowdefy.pageUnload?.isLeaving() === true) {
+      logError(shown);
+      return;
+    }
+
+    // Send known error types to server for logging with location resolution
+    if (error.isLowdefyError) {
+      // The server already logged this one — just display locally. Keyed on
+      // `handled`, not on `source`: a LowdefyInternalError is logged server-side
+      // but never gets a source (location resolution is skipped for it), so
+      // keying on source POSTed it back and had it logged twice.
+      if (error.handled) {
+        logError(shown);
+        return;
+      }
+      // Client-originated errors — send to server for logging + location resolution
+      try {
+        const serialized = serializer.serialize(error);
+        const response = await lowdefy._internal.host.fetch(
+          `${lowdefy.apiBase ?? ''}/api/client-error`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(serialized),
+            credentials: 'same-origin',
+          }
+        );
+        if (response.ok) {
+          const { source: resolvedSource, configError: serializedConfigError } =
+            await response.json();
+          if (resolvedSource) {
+            error.source = resolvedSource;
+          }
+          // If server produced a consolidated ConfigError, log it and return early
+          // (cause chain includes original error)
+          if (serializedConfigError) {
+            logError(serializer.deserialize(serializedConfigError));
+            return;
+          }
+        }
+      } catch {
+        // Server logging failed - continue with local console
+      }
+      logError(shown);
+      return;
+    }
+
+    // Other errors - just log locally
+    logError(shown);
+  };
+}
+
+export default createHandleError;

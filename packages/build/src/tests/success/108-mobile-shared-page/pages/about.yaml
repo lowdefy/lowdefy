@@ -1,0 +1,21 @@
+id: about
+type: Box
+blocks:
+  - id: heading
+    type: Title
+    properties:
+      content: About
+  - id: body
+    type: Paragraph
+    properties:
+      content: Shared by web and mobile.
+  - id: back
+    type: Button
+    properties:
+      title: Back
+    events:
+      onClick:
+        - id: set
+          type: SetState
+          params:
+            seen: true

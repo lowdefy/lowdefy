@@ -1,0 +1,11 @@
+{
+  "id": "lowdefy-dev",
+  "name": "Lowdefy Dev",
+  "profile": "dev",
+  "scheme": "lowdefy-dev",
+  "environment": "dev",
+  "ios": { "bundleIdentifier": "com.lowdefy.dev" },
+  "android": { "package": "com.lowdefy.dev" },
+  "store": {},
+  "app": { "id": "dev", "name": "Lowdefy Dev", "urls": { "dev": "http://localhost:3000" } }
+}

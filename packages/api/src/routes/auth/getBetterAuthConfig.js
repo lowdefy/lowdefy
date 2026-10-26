@@ -35,8 +35,10 @@ import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import getCanonicalUrl from '../../context/getCanonicalUrl.js';
 import buildAdminPlugin from './buildAdminPlugin.js';
+import buildBearerPlugin from './mobile/buildBearerPlugin.js';
 import buildCaptchaPlugin from './buildCaptchaPlugin.js';
 import buildMcpTokenPlugin from './buildMcpTokenPlugin.js';
+import buildOneTimeTokenPlugin from './mobile/buildOneTimeTokenPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
 import buildOauthPostLogin from './buildOauthPostLogin.js';
@@ -366,6 +368,15 @@ function getBetterAuthConfig({
     options.database = database;
   }
 
+  // Phone sessions are marked so they can be given their own lifetime
+  // (mobile.auth.sessionExpiresIn) - see createMobileSessionCreateHook. input:
+  // false keeps the mark out of every client-writable body.
+  if (type.isNumber(authConfig.mobile?.sessionExpiresIn)) {
+    options.session.additionalFields = {
+      mobile: { type: 'boolean', required: false, input: false },
+    };
+  }
+
   if (authConfig.session.crossSubDomainCookies.enabled === true) {
     options.advanced.crossSubDomainCookies = {
       enabled: true,
@@ -469,6 +480,10 @@ function getBetterAuthConfig({
         expiresIn: authConfig.emailOTP.expiresIn,
         allowedAttempts: authConfig.emailOTP.allowedAttempts,
         disableSignUp: authConfig.emailOTP.disableSignUp,
+        // With phones, a resend keeps the live code rather than replacing it, so
+        // a stranger's send cannot take a known phone's code away
+        // (holdEmailCode). Web-only apps keep BetterAuth's default.
+        ...(type.isNone(authConfig.mobile) ? {} : { resendStrategy: 'reuse' }),
         sendVerificationOTP: async ({ email, otp, type: otpType }) => {
           if (otpType !== 'sign-in') {
             throw new ConfigError(
@@ -602,6 +617,15 @@ function getBetterAuthConfig({
       // it the route authenticates nobody.
       buildMcpTokenPlugin()
     );
+  }
+
+  // Phones hold ordinary sessions and send them as bearers. Both plugins are on
+  // only when the app has a mobile section, and neither changes what a browser
+  // sends or receives: the session token header goes to native requests only
+  // (buildBearerPlugin), and only the server mints one-time tokens
+  // (buildOneTimeTokenPlugin, minted by the mobile sign-in page).
+  if (!type.isNone(authConfig.mobile)) {
+    options.plugins.push(buildBearerPlugin(), buildOneTimeTokenPlugin());
   }
 
   // The admin plugin is framework-controlled - it owns the user row's ban fields
