@@ -103,12 +103,15 @@ function mapByCode({ code, collectionName, error, requestType }) {
  * @returns {Error} The mapped error, or the error unchanged when it is not a driver error.
  */
 function mapMongoError(error, { connection, requestType }) {
-  // Network, DNS, TLS and server-selection failures are already classified one layer
-  // up; wrapping twice would bury the code.
-  if (ServiceError.isServiceError(error)) return error;
   // A ConfigError or other Lowdefy error the request threw itself.
   if (error.isLowdefyError === true) return error;
+  // Network, DNS, TLS and server-selection failures have their own driver classes and are
+  // classified one layer up; wrapping twice would bury the code.
   if (!DRIVER_ERROR_NAMES.has(error.name)) return error;
+  // A numeric code is the server's own answer and says what happened. Its message quotes
+  // document values, so only an error without a code is checked for a connection failure: a
+  // duplicate key whose value says "network" is still a duplicate key.
+  if (!type.isNumber(error.code) && ServiceError.isServiceError(error)) return error;
 
   const collectionName = type.isString(connection?.collection) ? connection.collection : 'unknown';
   const { message, hint } = mapByCode({ code: error.code, collectionName, error, requestType });
