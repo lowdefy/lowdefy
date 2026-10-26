@@ -781,6 +781,51 @@ test('checkPolicy checks CSS url() in an html-drawn property when the policy all
   expect(rules(errors)).toEqual(['policy.urls blocks.0.properties.title']);
 });
 
+test('checkPolicy checks link and source attributes in HTML when the policy allows tags', () => {
+  const errors = checkText(
+    [
+      {
+        id: 'd',
+        type: 'Descriptions',
+        properties: { title: '<a href="https://evil.example">x</a>' },
+      },
+      { id: 'e', type: 'Descriptions', properties: { title: '<img src="//tracker.test/p.gif">' } },
+      {
+        id: 'f',
+        type: 'Descriptions',
+        properties: { title: `<a title=">" href='https&#58;//evil.example'>x</a>` },
+      },
+      {
+        id: 'g',
+        type: 'Descriptions',
+        properties: { title: '<img srcset="/a.png 1x, https://tracker.test/b.png 2x">' },
+      },
+      { id: 'h', type: 'Descriptions', properties: { title: '<a href="/admin">x</a>' } },
+      {
+        id: 'i',
+        type: 'Markdown',
+        properties: { content: '<img src=https://tracker.test/p.gif>' },
+      },
+      {
+        id: 'j',
+        type: 'Descriptions',
+        properties: {
+          title: '<a href="/thanks">x</a> <a href="https://example.com/a">y</a> <img src="/a.png">',
+        },
+      },
+    ],
+    { html: true }
+  );
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.title',
+    'policy.urls blocks.1.properties.title',
+    'policy.urls blocks.2.properties.title',
+    'policy.urls blocks.3.properties.title',
+    'policy.urls blocks.4.properties.title',
+    'policy.urls blocks.5.properties.content',
+  ]);
+});
+
 test('checkPolicy shows tag syntax, markdown, CSS url() and protocol-relative words in a text-drawn property as written', () => {
   const errors = checkText(
     writtenText.map((placeholder, index) => ({
