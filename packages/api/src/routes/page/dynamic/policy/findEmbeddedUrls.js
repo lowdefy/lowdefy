@@ -43,18 +43,11 @@ function unescapeCss(value) {
     .replace(/\\(.)/g, '$1');
 }
 
-function findEmbeddedUrls({
-  value,
-  wholeValue = true,
-  markdown = true,
-  css = true,
-  protocolRelative = true,
-}) {
+function findEmbeddedUrls({ value, wholeValue = true, markdown = true, css = true }) {
   const urls = [];
   const text = normalizeUrlText(value);
   const isProtocolRelative = text.startsWith('//') || text.startsWith('/\\');
-  const isUrlText =
-    !/\s/.test(text) && (LOADED_SCHEME.test(text) || (protocolRelative && isProtocolRelative));
+  const isUrlText = !/\s/.test(text) && (LOADED_SCHEME.test(text) || isProtocolRelative);
   if (wholeValue && (isUrlText || SCRIPT_SCHEME.test(text))) {
     urls.push(text);
   }

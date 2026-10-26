@@ -66,17 +66,12 @@ function listUrls({ value, urlKind }) {
 // markdown, a style or a link the schema does not mark, so every scan applies.
 function getUrlScans({ textKind, policy }) {
   if (textKind === 'text') {
-    return { wholeValue: false, markdown: false, css: false, protocolRelative: false };
+    return { wholeValue: false, markdown: false, css: false };
   }
   if (textKind === 'html') {
-    return {
-      wholeValue: false,
-      markdown: false,
-      css: policy.html === true,
-      protocolRelative: false,
-    };
+    return { wholeValue: false, markdown: false, css: policy.html === true };
   }
-  return { wholeValue: true, markdown: true, css: true, protocolRelative: true };
+  return { wholeValue: true, markdown: true, css: true };
 }
 
 function checkString({ value, key, path, walk }) {
@@ -150,6 +145,16 @@ function isAllowedStateRead({ params, state }) {
   );
 }
 
+// The state key a _state read names, or null when it is not a literal key
+// (only a policy without a state path allows that).
+function getStateReadKey(params) {
+  if (type.isString(params)) return params;
+  if (type.isObject(params) && params.all !== true && type.isString(params.key)) {
+    return params.key;
+  }
+  return null;
+}
+
 function checkOperators({ value, key, path, walk }) {
   const { clientOperators, errors, policy } = walk;
   const possible = getPossibleOperators({ value, operators: clientOperators });
@@ -171,6 +176,11 @@ function checkOperators({ value, key, path, walk }) {
         rule: 'policy.state',
         message: `_state must read a literal key under "${policy.state}", the state dynamic blocks policy "${policy.id}" allows.`,
       });
+    }
+    // Content may draw what it reads, so a read of state it fills with data
+    // is judged against those keys once the walk has found them all.
+    if (operator === '_state' && !walk.isData && !walk.undrawn) {
+      walk.drawnStateReads.push({ path, key: getStateReadKey(value[operatorKey]) });
     }
   });
   // The client would compute this value at render time, where the policy
@@ -197,6 +207,8 @@ function checkOperators({ value, key, path, walk }) {
 // and text kinds the block's schema marks (by path). Under a value marked
 // textKind 'data', and in walk.isData (SetState values), only the operator
 // rules apply: the content stores the value and never draws or follows it.
+// walk.undrawn marks a value the content sends or tests but never draws (a
+// CallAPI payload, a condition), where a _state read draws nothing.
 function checkValue({ value, key = null, path, walk: parentWalk }) {
   const walk =
     !parentWalk.isData && parentWalk.textKinds?.get(path) === 'data'

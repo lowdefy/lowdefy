@@ -1066,6 +1066,85 @@ test('checkPolicy keeps every check on a SetState value an object-valued input d
   ]);
 });
 
+test('checkPolicy keeps every check on SetState values when the policy sets no state', () => {
+  const errors = checkData(
+    [
+      {
+        id: 'b',
+        type: 'Box',
+        events: {
+          onClick: [{ id: 's', type: 'SetState', params: { note: '<b>x</b>', link: '//host' } }],
+        },
+      },
+    ],
+    { state: undefined }
+  );
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.events.onClick.0.params.note',
+    'policy.urls blocks.0.events.onClick.0.params.link',
+  ]);
+});
+
+test('checkPolicy refuses a _state read that may draw state the content fills with data', () => {
+  const errors = checkData(
+    [
+      { id: 'form.notes', type: 'Editor' },
+      {
+        id: 'form.site',
+        type: 'Selector',
+        properties: { options: [{ label: 'Site', value: '<b>x</b>' }] },
+      },
+      {
+        id: 'b',
+        type: 'Box',
+        events: {
+          onClick: [
+            { id: 'a', type: 'SetState', params: { 'form.tmp': '<img src=x>' } },
+            { id: 'b', type: 'SetState', params: { 'form.notes': { _state: 'form.tmp' } } },
+            { id: 'c', type: 'DisplayMessage', params: { content: { _state: 'form' } } },
+            { id: 'd', type: 'DisplayMessage', params: { content: { _state: 'form.site' } } },
+            { id: 'e', type: 'SetState', params: { 'form.copy': { _state: 'form.tmp' } } },
+          ],
+        },
+      },
+    ],
+    { ...wideEvents, actions: ['SetState', 'DisplayMessage'] }
+  );
+  expect(rules(errors)).toEqual([
+    'policy.state blocks.2.events.onClick.1.params.form.notes',
+    'policy.state blocks.2.events.onClick.2.params.content',
+    'policy.state blocks.2.events.onClick.3.params.content',
+  ]);
+});
+
+test('checkPolicy allows a _state read of data state in a CallAPI payload or a condition', () => {
+  const errors = checkData(
+    [
+      {
+        id: 'b',
+        type: 'Box',
+        events: {
+          onClick: [
+            { id: 'a', type: 'SetState', params: { 'form.note': '<b>x</b>' } },
+            {
+              id: 'b',
+              type: 'CallAPI',
+              skip: { _state: 'form.note' },
+              params: { endpointId: 'submit', payload: { _state: 'form' } },
+            },
+            {
+              ':if': { _state: 'form.note' },
+              ':then': [{ id: 'c', type: 'SetState', params: { 'form.done': true } }],
+            },
+          ],
+        },
+      },
+    ],
+    wideEvents
+  );
+  expect(errors).toEqual([]);
+});
+
 test('checkPolicy judges an option value as data and keeps the html rule on its label', () => {
   const errors = checkData([
     {
