@@ -58,13 +58,16 @@ test('the drawer menu takes the theme tokens in dark mode', async () => {
   await render(
     <ThemeContext.Provider value={{ isDark: true, tokens }}>
       <ShellContext.Provider value={{ session }}>
-        <MenuButton items={[{ pageId: 'jobs', title: 'Jobs' }]} />
+        <MenuButton items={[{ pageId: 'jobs', title: 'Jobs', iconData: house }]} />
       </ShellContext.Provider>
     </ThemeContext.Provider>
   );
   expect(screen.getByText('Menu')).toHaveStyle({ color: '#0A84FF' });
   fireEvent.press(screen.getByTestId('shell-menu'));
   expect(await screen.findByText('Jobs')).toHaveStyle({ color: tokens.colorLabel });
+  expect(screen.getByTestId('menu-jobs-icon', { includeHiddenElements: true }).props.color).toBe(
+    tokens.colorLabel
+  );
   expect(screen.getByText('Jobs').parent.parent.parent).toHaveStyle({
     backgroundColor: tokens.colorGroupedBackground,
   });

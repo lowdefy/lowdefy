@@ -94,7 +94,12 @@ function MenuButton({ items }) {
                 testID={`menu-${item.pageId}`}
               >
                 {item.iconData ? (
-                  <Icon data={item.iconData} size={22} testID={`menu-${item.pageId}-icon`} />
+                  <Icon
+                    color={tokens.colorLabel}
+                    data={item.iconData}
+                    size={22}
+                    testID={`menu-${item.pageId}-icon`}
+                  />
                 ) : null}
                 <Text style={[styles.itemText, { color: tokens.colorLabel }]}>
                   {item.title ?? item.pageId}
