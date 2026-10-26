@@ -46,7 +46,7 @@ const lifecycleTools = [
   {
     name: 'lowdefy_dev_status',
     description:
-      "Report this app's dev server - owner (hub or the user's terminal), state, URL, build status - without starting it.",
+      "Report this app's dev server - owner (hub or the user's terminal), state, URL, build status - without starting it. State idle means its web server stopped while unused; the next call starts it.",
     inputSchema: { type: 'object', properties: { directory: DIRECTORY_PROPERTY } },
   },
   {

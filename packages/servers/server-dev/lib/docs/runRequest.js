@@ -104,7 +104,7 @@ async function runRequest({
       refused: true,
       reason:
         `Request "${requestId}" was not found on page "${pageId}". ` +
-        `See GET /lowdefy-docs/app-map for the pages and requests that exist.`,
+        `See lowdefy_app_map for the pages and requests that exist.`,
     };
   }
 

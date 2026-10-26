@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/vite-yaml-plugin",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "private": true,
   "license": "Apache-2.0",
   "description": "A Vite plugin that turns .yaml imports into modules.",

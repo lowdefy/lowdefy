@@ -27,6 +27,7 @@ import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
 import createStorage from './storage/createStorage.js';
 import createLinkComponent from './createLinkComponent.js';
+import createPageUnload from './createPageUnload.js';
 import createHandleError from './createHandleError.js';
 import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
@@ -60,6 +61,11 @@ function initLowdefyContext({
   if (type.isUndefined(lowdefy.pathMemory)) {
     lowdefy.pathMemory = new Map();
   }
+  // Watched once per tab: this runs on every render, and a dev config reload
+  // does not unload the page.
+  if (type.isUndefined(lowdefy.pageUnload)) {
+    lowdefy.pageUnload = createPageUnload({ window });
+  }
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {
       actions: types.actions,
@@ -73,6 +79,9 @@ function initLowdefyContext({
         Icon: createIcon({ icons: types.icons, loadAllIcons }),
         ShortcutBadge: createShortcutBadge(lowdefy),
       },
+      // Caps for the engine's event and call histories. Unset in production; the dev client
+      // entry sets it before this runs, so it outlives a dev config reload like callerStamp.
+      historyLimits: lowdefy._internal?.historyLimits,
       displayMessage: ({ content }) => {
         console.log(content);
         return () => undefined;

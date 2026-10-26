@@ -18,8 +18,8 @@ import { type } from '@lowdefy/helpers';
 
 import tabAvailable from './tabAvailable.js';
 
-// The single tab-vs-headless decision, shared by inspectState and evalOperator
-// so a change to the rule lands in both. Prefers a real, already-open browser
+// The tab-vs-headless decision for inspectState, for a snapshot and for an
+// expression alike. Prefers a real, already-open browser
 // tab over a fresh headless one — a live tab reflects whatever a developer is
 // actually looking at (their own interactions, in-flight requests), while
 // headless always starts a clean navigation.

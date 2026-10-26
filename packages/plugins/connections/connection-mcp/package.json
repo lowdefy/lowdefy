@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-mcp",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -45,7 +45,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@lowdefy/ajv": "7.0.0",
+    "@lowdefy/ajv": "7.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "vitest": "4.1.12"

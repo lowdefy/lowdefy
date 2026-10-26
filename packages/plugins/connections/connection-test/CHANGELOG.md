@@ -1,5 +1,11 @@
 # @lowdefy/connection-test
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/errors@7.1.0
+
 ## 7.0.0
 
 ### Minor Changes

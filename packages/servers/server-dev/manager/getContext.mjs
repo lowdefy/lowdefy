@@ -60,6 +60,11 @@ async function getContext() {
       destination: pino.destination({ dest: 1, sync: true }),
     }),
     options: {
+      // For tests only: how long the Vite child may sit unused before it stops
+      // (createIdleChild). Defaults to 3 minutes.
+      childIdleMs: env.LOWDEFY_SERVER_DEV_CHILD_IDLE_MS
+        ? Number(env.LOWDEFY_SERVER_DEV_CHILD_IDLE_MS)
+        : undefined,
       internalPort: env.LOWDEFY_SERVER_DEV_INTERNAL_PORT
         ? Number(env.LOWDEFY_SERVER_DEV_INTERNAL_PORT)
         : undefined,

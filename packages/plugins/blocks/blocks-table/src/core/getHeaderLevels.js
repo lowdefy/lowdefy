@@ -14,30 +14,18 @@
   limitations under the License.
 */
 
-function walk({ nodes, ancestors, ancestorsByKey }) {
-  let depth = ancestors.length;
-  nodes.forEach((node) => {
-    if (node.group === true) {
-      const childDepth = walk({
-        nodes: node.children,
-        ancestors: [...ancestors, node],
-        ancestorsByKey,
-      });
-      depth = Math.max(depth, childDepth);
-      return;
-    }
-    ancestorsByKey.set(node.key, ancestors);
+// The header group rows above the leaf headers: `depth` is the number of group rows, and
+// `ancestorsByKey` (getHeaderAncestors) maps each leaf column key to its group nodes, outermost
+// first. The depth follows the displayed columns (`cols`, the layout's), not the config, so a
+// nested group that a collapsed group or the view hides leaves no empty row behind. Groups
+// render from the current column layout, so a group whose columns were reordered apart renders
+// as one cell per run of adjacent columns.
+function getHeaderLevels({ ancestorsByKey, cols }) {
+  let depth = 0;
+  cols.forEach((col) => {
+    if (col.special) return;
+    depth = Math.max(depth, ancestorsByKey.get(col.key)?.length ?? 0);
   });
-  return depth;
-}
-
-// The header group rows above the leaf headers, from normalizeColumns' header tree: `depth` is
-// the number of group rows, and `ancestorsByKey` maps each leaf column key to its group nodes,
-// outermost first. Groups render from the current column layout, so a group whose columns were
-// reordered apart renders as one cell per run of adjacent columns.
-function getHeaderLevels({ headerGroups }) {
-  const ancestorsByKey = new Map();
-  const depth = walk({ nodes: headerGroups, ancestors: [], ancestorsByKey });
   return { depth, ancestorsByKey };
 }
 

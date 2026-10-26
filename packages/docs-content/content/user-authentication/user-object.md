@@ -24,7 +24,7 @@ Its shape is **fixed**. Unlike the old provider-claim mapping, there is no `user
 
 > **`_user.role` (singular) carries nothing.** Lowdefy never writes it; it sits one character from `roles`, so gating on `_user.role` is gating on a constant. Read `roles`.
 
-A caller resolved from an [API strategy](/auth-configuration) (`apiKey`, `jwt`) sits outside the membership boundary: it carries `id`, `roles`, `attributes` and `auth_method`, but no organization, `name`, `image`, `profile` or `two_factor_enrolled`. A signed-in user who holds only a pending invitation (before they accept, under `tenant`) is an *awaiting-organization* caller — known to the always-public accept page, refused everywhere else.
+A caller resolved from an [API strategy](/auth-configuration) (`apiKey`, `jwt`) sits outside the membership boundary: it carries `id`, `roles`, `attributes` and `auth_method`, but no organization, `name`, `image`, `profile` or `two_factor_enrolled`. A signed-in user who holds only a pending invitation (before they accept) is an *awaiting-organization* caller — known to the always-public accept page, refused everywhere else. Under `pinned`, only an invitation to the app's organization counts.
 
 ## Examples
 

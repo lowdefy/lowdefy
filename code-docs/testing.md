@@ -114,8 +114,9 @@ pnpm test:journeys:auth --app auth-reference # another app (default auth-referen
 
 The pinned-organization app (`apps/auth-reference`) carries the password reset journey. The
 pinned invite-only app (`apps/auth-reference-b`, `--app auth-reference-b`) carries an
-invitee accepting a pending invitation; its `scripts/seed-journeys.mjs` writes the org owner
-and the invitation, since nobody can sign up to an empty invite-only app.
+invitee accepting a pending invitation, and an invitee whose invitation the owner cancels
+after they sign in; its `scripts/seed-journeys.mjs` writes the org owner and the invitations,
+since nobody can sign up to an empty invite-only app.
 
 `scripts/test-journeys-auth.mjs` starts a single-node memory replica set (fresh every run,
 auth indexes provisioned, then seeded by the app's `scripts/seed-journeys.mjs` when it has

@@ -1,5 +1,18 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- Updated dependencies [1e614fc]
+- Updated dependencies [a589bb1]
+  - @lowdefy/engine@7.1.0
+  - @lowdefy/layout@7.1.0
+  - @lowdefy/block-utils@7.1.0
+  - @lowdefy/errors@7.1.0
+  - @lowdefy/helpers@7.1.0
+  - @lowdefy/logger@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

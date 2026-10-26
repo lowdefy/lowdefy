@@ -108,6 +108,10 @@ class Requests {
       request.holdValue = true;
     }
     this.context.requests[requestId].unshift(request);
+    const callLimit = this.context._internal.lowdefy._internal?.historyLimits?.calls;
+    if (callLimit && this.context.requests[requestId].length > callLimit) {
+      this.context.requests[requestId].length = callLimit;
+    }
     reportChange(`request:${requestId}`);
     return this.fetch(request);
   }

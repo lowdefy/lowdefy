@@ -38,8 +38,8 @@ function lowdefyBuild({ directories, logger, options }) {
     let result;
     try {
       const [customTypesMap, customMessagesMap] = await Promise.all([
-        createCustomPluginTypesMap({ directories, logger }),
-        createCustomPluginMessagesMap({ directories, logger }),
+        createCustomPluginTypesMap({ cache: true, directories, logger }),
+        createCustomPluginMessagesMap({ cache: true, directories, logger }),
       ]);
       result = await shallowBuild({
         customMessagesMap,

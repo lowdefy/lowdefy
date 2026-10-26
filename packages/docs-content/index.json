@@ -3305,7 +3305,7 @@
       "files": [
         "users/user-object.yaml"
       ],
-      "hash": "b24e564b4abc1b91561def9d35b5278b526e54266d5766fa3e647bd0172c038a"
+      "hash": "8abd5b2a058647962e6bf8ea6e0a2deb64b369beb2a1bff8fe5aa79cb03dd06a"
     },
     "user-authentication/auth-configuration": {
       "files": [
@@ -5033,7 +5033,7 @@
         "actions/Login.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "dbfab9e48fa6bfd8aec2e434becb70868a4a0390a0fbeae8d7e17cbeda0e756c"
+      "hash": "bcae9bda90900fadbc151a6f51aa515cb7d56240bdcadcb60a5f7a9df8576ebf"
     },
     "actions/logout": {
       "files": [
