@@ -208,6 +208,8 @@ context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
 if (!(await startFirstServer(context))) {
   context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
 }
+// Not awaited: builds again for plugins installed after the initial build.
+context.checkPendingPlugins().catch((error) => context.logger.error(error?.message ?? error));
 if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
   opener(`http://localhost:${context.options.port}`);
 }
@@ -605,20 +607,13 @@ function initialBuild(context) {
     await context.lowdefyBuild({ pluginInstallFollows: true });
     await context.checkMockUserWarning();
     await context.installPlugins();
-    if (
-      !context.options.skipPluginChecks &&
-      pluginChecksNeedRebuild({
-        buildDirectory: context.directories.build,
-        serverDirectory: context.directories.server,
-      })
-    ) {
-      await context.lowdefyBuild();
-    }
   };
 }
 ```
 
-The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)). The first build passes `pluginInstallFollows`, so it holds its `did not run: package not installed` warnings; the build after the install warns for any plugin still missing.
+The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. `installPlugins` installs it, and `checkPendingPlugins` (`manager/processes/checkPendingPlugins.mjs`) builds once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)), unless plugin checks are skipped. The first build passes `pluginInstallFollows`, so it holds its `did not run: package not installed` warnings; the build after the install warns for any plugin still missing.
+
+`run.mjs` starts `checkPendingPlugins` once the first child has answered, and does not await it. The checks only add warnings or errors, so the first build's output serves meanwhile, and on a fresh checkout of a large app the time to a usable server is one config build instead of two. The build runs inside `buildActivity.track`, so `building` is true and `lowdefy_build_status({ wait: true })` reads the checked build, then `syncServer` runs, as after a watcher's build. It does not call `reloadClients`: the checks change no output a tab reads, and a reload resets the page of whoever is using it. A failed build publishes nothing, so it is not synced; it is reported in the build status and logged, like a watcher's. The idle GC after the first start is scheduled before this build starts, which cancels it, so the GC never runs during the check build.
 
 A plugin's `./checks` and schemas are imported once per dev server process. Rules are functions, so they can't come back from `importFresh`'s worker, which copies its result by structured clone. An edit to a local plugin's rules or schemas takes effect when the dev server restarts.
 

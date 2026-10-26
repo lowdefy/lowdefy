@@ -56,7 +56,7 @@ test('initialBuild builds once when no plugin checks are pending', async () => {
   expect(calls).toEqual(['readDotEnv', 'lowdefyBuild', 'checkMockUserWarning', 'installPlugins']);
 });
 
-test('initialBuild builds again after installing plugins when plugin checks are pending', async () => {
+test('initialBuild installs plugins without building again when plugin checks are pending', async () => {
   const context = createContext({
     installPlugins: () =>
       fs.writeFileSync(
@@ -65,40 +65,8 @@ test('initialBuild builds again after installing plugins when plugin checks are 
       ),
   });
   await initialBuild(context)();
-  expect(context.lowdefyBuild).toHaveBeenCalledTimes(2);
-  // The first build holds its pending warnings; the build after the install
-  // gives them.
-  expect(context.lowdefyBuild.mock.calls).toEqual([[{ pluginInstallFollows: true }], []]);
-  expect(calls).toEqual([
-    'readDotEnv',
-    'lowdefyBuild',
-    'checkMockUserWarning',
-    'installPlugins',
-    'lowdefyBuild',
-  ]);
-});
-
-test('initialBuild builds once with skipPluginChecks, even when plugin checks are pending', async () => {
-  const context = createContext({
-    skipPluginChecks: true,
-    installPlugins: () =>
-      fs.writeFileSync(
-        path.join(buildDirectory, 'plugin-checks-pending.json'),
-        JSON.stringify({ packages: [{ name: '@acme/plugin', schemaChecked: true }] })
-      ),
-  });
-  await initialBuild(context)();
-  expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
-});
-
-test('initialBuild builds once when the pending plugins give nothing new to check', async () => {
-  const context = createContext({
-    installPlugins: () =>
-      fs.writeFileSync(
-        path.join(buildDirectory, 'plugin-checks-pending.json'),
-        JSON.stringify({ packages: [{ name: '@acme/connection', schemaChecked: false }] })
-      ),
-  });
-  await initialBuild(context)();
-  expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
+  // The first build holds its pending warnings; checkPendingPlugins builds
+  // again once the server answers.
+  expect(context.lowdefyBuild.mock.calls).toEqual([[{ pluginInstallFollows: true }]]);
+  expect(calls).toEqual(['readDotEnv', 'lowdefyBuild', 'checkMockUserWarning', 'installPlugins']);
 });
