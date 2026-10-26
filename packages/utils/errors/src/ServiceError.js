@@ -159,6 +159,11 @@ class ServiceError extends Error {
     if (!error || seen.has(error)) return false;
     seen.add(error);
 
+    // A connection that has already classified its error as the service refusing the request
+    // (a duplicate key, an invalid query) says so. The message checks below would otherwise
+    // match words in a collection name or in the document values a driver message quotes.
+    if (error.isServiceError === false) return false;
+
     // A client that retried and gave up (the AI SDK's RetryError) carries the
     // failure it retried on; its own message and fields hold no status.
     if (error.lastError) {

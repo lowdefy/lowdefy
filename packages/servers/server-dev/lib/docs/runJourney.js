@@ -52,7 +52,8 @@ import createLogger from '../server/log/createLogger.js';
 
 const logger = createLogger();
 
-const PROGRAMMING_ERRORS = new Set(['RangeError', 'ReferenceError', 'SyntaxError', 'TypeError']);
+// Not SyntaxError: JSON.parse of the app's own artifacts or data set input throws one.
+const PROGRAMMING_ERRORS = new Set(['RangeError', 'ReferenceError', 'TypeError']);
 
 // The final state is read even after a failure — it is what an agent needs to
 // write the next assertion. A page that has navigated away or crashed may not

@@ -15,7 +15,7 @@
 */
 
 import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
-import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 
 const mockSendEmail = vi.fn(async () => ({ messageId: 'msg_1' }));
 const mockCreateSendEmail = vi.fn(() => mockSendEmail);
@@ -607,7 +607,11 @@ test('does not add emailVerification when email is not configured', () => {
 // BETTER_AUTH_URL unset construct the options as the dev server does.
 describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
-  const sentinelContext = { system: true, handleError: vi.fn(async () => {}) };
+  const sentinelContext = {
+    system: true,
+    handleError: vi.fn(async () => {}),
+    logger: { warn: vi.fn() },
+  };
   const createSystemContext = vi.fn(() => sentinelContext);
 
   afterEach(() => {
@@ -862,9 +866,10 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     );
   });
 
-  // Only the sign-in code has an email flow behind it; a request for any other
-  // OTP type is a wiring fault and must fail loudly rather than send nothing.
-  test('sendVerificationOTP reports a LowdefyInternalError for an OTP type other than sign-in', async () => {
+  // Only the sign-in code has an email flow behind it. The type comes from the caller's request,
+  // so another type is refused with one warning: no email, and no fault report a caller could
+  // flood error tracking with.
+  test('sendVerificationOTP refuses an OTP type other than sign-in with a warning and sends nothing', async () => {
     const options = getBetterAuthConfig({
       appMeta,
       dev: true,
@@ -885,16 +890,18 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
       secrets: baseSecrets,
     });
     const otpPlugin = options.plugins.find((p) => p.id === 'email-otp');
-    await expect(
-      otpPlugin.options.sendVerificationOTP({
-        email: 'user@example.com',
-        otp: '482913',
-        type: 'forget-password',
-      })
-    ).rejects.toThrow(LowdefyInternalError);
-    expect(sentinelContext.handleError).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'LowdefyInternalError' })
+    sentinelContext.handleError.mockClear();
+    sentinelContext.logger.warn.mockClear();
+    await otpPlugin.options.sendVerificationOTP({
+      email: 'user@example.com',
+      otp: '482913',
+      type: 'forget-password',
+    });
+    expect(sentinelContext.logger.warn).toHaveBeenCalledWith(
+      { event: 'auth_email_otp_type_refused', otpType: 'forget-password' },
+      expect.stringContaining('"forget-password"')
     );
+    expect(sentinelContext.handleError).not.toHaveBeenCalled();
     expect(mockSendEmail).not.toHaveBeenCalled();
   });
 

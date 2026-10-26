@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 function _log({ logger, params }) {
   // On the server the line goes through the request's logger, so the secret
   // scrub and _credential apply to it as to every other log line. The browser
   // has no server logger and writes to its console.
-  if (logger) {
+  if (!type.isNone(logger)) {
     logger.info({ event: 'operator_log', value: params }, '_log');
     return params;
   }

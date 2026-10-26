@@ -502,14 +502,20 @@ function getBetterAuthConfig({
         ...(type.isNone(authConfig.mobile) ? {} : { resendStrategy: 'reuse' }),
         sendVerificationOTP: async ({ email, otp, type: otpType }) => {
           const context = createSystemContext({ auth: getAuth() });
+          // The type is the caller's: BetterAuth's send-verification-otp endpoint takes it from
+          // the request body, so another type is a refused request, not an engine fault. BetterAuth
+          // may run this send in the background, where a throw is only its own error line, so the
+          // refusal is one warning and no email.
+          if (otpType !== 'sign-in') {
+            context.logger.warn(
+              { event: 'auth_email_otp_type_refused', otpType },
+              `Auth "emailOTP" only sends the sign-in code. A "${otpType}" one-time code was requested and not sent.`
+            );
+            return;
+          }
           await runReportingFaults({
             context,
             run: async () => {
-              if (otpType !== 'sign-in') {
-                throw new LowdefyInternalError(
-                  `Auth "emailOTP" only wires the sign-in code. A "${otpType}" one-time code was requested, and the Lowdefy engine has no email flow for it.`
-                );
-              }
               const { subject, html, text } = await renderAuthEmail({
                 flow: 'emailOTP',
                 vars: { otp, expiresIn: authConfig.emailOTP.expiresIn },

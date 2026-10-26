@@ -4906,7 +4906,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "e3b57250865bdc78e88631c7da855e959b5bde8f0f0a3fddc1fe2aded583f45e"
+      "hash": "9c59a4cc32c479431602ec3ea4d3f4fe1650d001c69cea48c7d859d1b374d2ca"
     },
     "connections/mssql": {
       "files": [
@@ -5531,7 +5531,7 @@
         "operators/_log.yaml",
         "templates/operators.yaml.njk"
       ],
-      "hash": "3e300afbe585ff4f71409110e1a5504791607de1a3d4a154eb18d49e64576b39"
+      "hash": "d95320e4cbdc303e2c6e5149c2a9a8df3b4c4c49a8fd973824f34c99f021e9b8"
     },
     "operators/_lt": {
       "files": [

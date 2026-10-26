@@ -53,7 +53,8 @@ function createErrorHandler({ basePath = '', logger }) {
     // status, with no structured error log and no Sentry capture, so probing cannot flood
     // either. isExpectedError decides which errors those are; the table only gives the answer.
     if (isExpectedError(error)) {
-      const { status, warning, text } = expectedAnswers[error.name];
+      // A name expectedErrorNames gains before this table does is still a refusal: a 400.
+      const { status, warning, text } = expectedAnswers[error.name] ?? expectedAnswers.UserError;
       const detail = error.name === 'UserError' ? ` - ${error.message}` : '';
       logger.warn(`${warning}: ${c.req.method} ${c.req.path}${detail}`);
       if (path.startsWith('/api/')) {

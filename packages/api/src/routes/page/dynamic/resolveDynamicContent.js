@@ -168,6 +168,10 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         if (error instanceof Object && !error.configKey) {
           error.configKey = block['~k'];
         }
+        // The log line and the Sentry tags name the block that fell back.
+        if (error instanceof Object && type.isNone(error.blockId)) {
+          error.blockId = block.blockId;
+        }
         await context.handleError(error);
       }
     }

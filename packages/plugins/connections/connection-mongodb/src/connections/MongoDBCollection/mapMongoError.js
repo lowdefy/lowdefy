@@ -123,6 +123,9 @@ function mapMongoError(error, { connection, requestType }) {
   const rejected = new Error(message, { cause: error });
   rejected.code = error.code;
   rejected.hint = hint;
+  // Classified here, so the request layer's service-error check does not read "network" or
+  // "certificate" in the collection name or the quoted document as an outage.
+  rejected.isServiceError = false;
   return rejected;
 }
 

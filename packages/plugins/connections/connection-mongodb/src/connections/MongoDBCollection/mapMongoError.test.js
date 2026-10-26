@@ -199,3 +199,12 @@ test('mapMongoError falls back to "unknown" when the connection has no collectio
   });
   expect(mapped.message).toBe('Collection "unknown" does not exist.');
 });
+
+test('mapMongoError keeps a refused request out of the service-error check, whatever the names in it say', () => {
+  const error = mapMongoError(
+    driverError({ code: 11000, message: 'E11000 duplicate key { host: "network-1" }' }),
+    { connection: { collection: 'certificates' }, requestType: 'MongoDBInsertOne' }
+  );
+  expect(error.isServiceError).toBe(false);
+  expect(ServiceError.isServiceError(error)).toBe(false);
+});

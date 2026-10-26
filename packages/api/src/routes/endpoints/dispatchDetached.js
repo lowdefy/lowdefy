@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ServiceError } from '@lowdefy/errors';
+
 // /api/detached answers 202 once it has accepted the run. Anything else - a 401 for a CRON_SECRET
 // the deployment does not share, a 500 - means the target never ran, which is a fault, not a
 // completed dispatch.
@@ -22,9 +24,13 @@ async function dispatchDetached(url, init) {
   // Drain the body so the connection is released; the route's own log holds the detail.
   await response.arrayBuffer();
   if (!response.ok) {
-    const error = new Error(
-      `Detached call to ${url} answered ${response.status}, so the target endpoint did not run.`
-    );
+    const message = `Detached call to ${url} answered ${response.status}, so the target endpoint did not run.`;
+    // A failing or throttled server passes with time; any other answer (a 401 for a CRON_SECRET
+    // the deployment does not share) repeats until config changes. As forwardScheduledEndpoint.
+    if (response.status === 429 || response.status >= 500) {
+      throw new ServiceError(message, { statusCode: response.status });
+    }
+    const error = new Error(message);
     error.statusCode = response.status;
     throw error;
   }
