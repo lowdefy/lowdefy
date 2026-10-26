@@ -805,6 +805,11 @@ export default {
             description:
               'In a tree, selecting or clearing a row also selects or clears all its descendants.',
           },
+          selectable: {
+            type: 'object',
+            description:
+              'A condition (`{ key, op, value }`, or `and` / `or` lists) tested against the row. Rows that fail it have a disabled checkbox, are skipped by the header checkbox and by select-all, and are left out of its checked state. An `{ all: true }` selection lists the rows it rejects in `except`; in server mode those are the loaded rows, and the server resolves the rest.',
+          },
         },
       },
       tree: {

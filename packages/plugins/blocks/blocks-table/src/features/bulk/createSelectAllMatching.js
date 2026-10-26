@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import isRowSelectable from '../selection/isRowSelectable.js';
+
 // Action and block method `selectAllMatching()`: selects every row the view matches as
 // `{ all: true, except: [], filter, search }`, never a list of every key (D7). The filtered rows
 // (in server mode the loaded ones, the server resolves the rest) are marked selected; rows loaded
@@ -24,7 +26,7 @@ function createSelectAllMatching(api) {
     if (api.config.rowSelection?.type !== 'checkbox') return false;
     const selection = {};
     api.table.getFilteredRowModel().rows.forEach((row) => {
-      selection[row.id] = true;
+      if (isRowSelectable({ api, original: row.original })) selection[row.id] = true;
     });
     api.selectionExcept.clear();
     api.updateSlice('selectionMode', () => 'all', { cause: 'select' });

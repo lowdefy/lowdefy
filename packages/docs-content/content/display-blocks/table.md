@@ -717,6 +717,18 @@ Choose rows and read the selection from state. No events needed.
         params: add_contacts # payload: { ids: { _state: pick_contacts.selected } }
 ```
 
+`rowSelection.selectable` limits selection to rows that pass a condition, for a list that shows rows it does not let people pick:
+
+```yaml
+rowSelection:
+  type: checkbox
+  selectable:
+    key: recheckable
+    op: isTrue
+```
+
+A row that fails the condition shows a disabled checkbox and can not be selected by click, by the header checkbox, by a group checkbox or by `selectAllMatching`. The header checkbox is checked when every selectable row is selected. A selected row that stops passing the condition can still be cleared. An `{ all: true }` selection lists the rows the condition rejects in `except`, so resolving it leaves them out; in server mode only the loaded rows are known, and the server resolves the rest.
+
 - `type: radio` picks one row; `selected` is then a list of at most one key.
 - Space on a focused row toggles it, and Cmd/Ctrl+C copies the selected rows as tab-separated text.
 - `onSelectionChange` fires with `{ selected, rows }` when the selection changes; `rows` are the selected row objects.
@@ -1238,7 +1250,7 @@ Colours are the antd presets (`blue`, `green`, `gold`, ...), the status names (`
 
 ## Conditions
 
-One condition language serves filters (`view.filter`, the filter builder, quick filters), `rules`, `rowRules`, `editable.when`, `expandable.rowExpandable.when`, button and menu `hidden` / `disabled`, and `validate`. A condition is a leaf `{ key, op, value }`, or a group `{ and: [...] }` / `{ or: [...] }` of conditions, nested to any depth (the filter builder edits three levels).
+One condition language serves filters (`view.filter`, the filter builder, quick filters), `rules`, `rowRules`, `editable.when`, `expandable.rowExpandable.when`, `rowSelection.selectable`, button and menu `hidden` / `disabled`, and `validate`. A condition is a leaf `{ key, op, value }`, or a group `{ and: [...] }` / `{ or: [...] }` of conditions, nested to any depth (the filter builder edits three levels).
 
 ```yaml
 filter:
@@ -2554,6 +2566,7 @@ fields:
 | `rowSelection.type` | string | `"checkbox"` | Multiple (checkbox) or single (radio) selection. Enum: `checkbox`, `radio`. |
 | `rowSelection.preserve` | boolean | `false` | Keep selected keys of rows that leave `data`. Always on in server mode. |
 | `rowSelection.cascade` | boolean | `false` | In a tree, selecting or clearing a row also selects or clears all its descendants. |
+| `rowSelection.selectable` | object | - | A condition (`{ key, op, value }`, or `and` / `or` lists) tested against the row. Rows that fail it have a disabled checkbox, are skipped by the header checkbox and by select-all, and are left out of its checked state. An `{ all: true }` selection lists the rows it rejects in `except`; in server mode those are the loaded rows, and the server resolves the rest. |
 | `tree` | object | - | Show rows as a tree (client data only): rows are indented under their parent with an expand chevron in the first column, Right and Left expand and collapse, sorting sorts within each level and a filter keeps the ancestors of matching rows. The expanded row keys are the `expanded` part of the table value. Give exactly one of `childrenField` or `parentField`. |
 | `tree.childrenField` | string | - | Dot path to each row's child rows (nested data). |
 | `tree.parentField` | string | - | Dot path to the row key of each row's parent (flat data). Rows whose parent is not in `data` are roots. |
