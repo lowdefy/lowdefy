@@ -304,6 +304,8 @@ test('checkPolicy classifies URLs that resolve off the app', () => {
     { id: 'f', type: 'Box', style: { background: 'image-set("https://tracker.test/a.png" 1x)' } },
     { id: 'g', type: 'Paragraph', properties: { content: 'data:text/html,hello' } },
     { id: 'h', type: 'Box', properties: { image: 'https://example.com/a.png' } },
+    { id: 'i', type: 'Paragraph', properties: { content: '\\\\tracker.test/p.gif' } },
+    { id: 'j', type: 'Paragraph', properties: { content: '\\/tracker.test/p.gif' } },
   ]);
   expect(rules(errors)).toEqual([
     'policy.urls blocks.0.properties.src',
@@ -312,6 +314,8 @@ test('checkPolicy classifies URLs that resolve off the app', () => {
     'policy.urls blocks.4.style.background',
     'policy.urls blocks.5.style.background',
     'policy.urls blocks.6.properties.content',
+    'policy.urls blocks.8.properties.content',
+    'policy.urls blocks.9.properties.content',
   ]);
 });
 
@@ -634,14 +638,19 @@ const textSchemas = {
         properties: {
           title: { type: 'string', textKind: 'html' },
           items: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                label: { type: 'string', textKind: 'html' },
-                value: { oneOf: [{ type: 'string', textKind: 'html' }, { type: 'number' }] },
+            oneOf: [
+              {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    label: { type: 'string', textKind: 'html' },
+                    value: { oneOf: [{ type: 'string', textKind: 'html' }, { type: 'number' }] },
+                  },
+                },
               },
-            },
+              { type: 'object', additionalProperties: { textKind: 'html' } },
+            ],
           },
         },
       },
@@ -654,7 +663,7 @@ const textSchemas = {
         properties: {
           options: {
             anyOf: [
-              { type: 'array', items: { type: 'string', textKind: 'html' } },
+              { type: 'array', items: { type: 'string' } },
               {
                 type: 'array',
                 items: {
@@ -701,17 +710,31 @@ test('checkPolicy reads markdown targets, CSS url() and protocol-relative words 
       properties: { items: writtenText.slice(1).map((value) => ({ label: 'What', value })) },
     },
     {
+      id: 'e',
+      type: 'Descriptions',
+      properties: { items: { Notes: writtenText[1], Link: writtenText[3], Count: 3 } },
+    },
+    {
       id: 'form.s',
       type: 'Selector',
       properties: { options: [{ label: 'See [notes](https://x.example)', value: 'notes' }] },
     },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy keeps every check on a string option, since it is also the value written to state', () => {
+  const errors = checkText([
     {
       id: 'form.t',
       type: 'Selector',
       properties: { options: ['//x.example', 'url(https://x.example/p.gif)'] },
     },
   ]);
-  expect(errors).toEqual([]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.options.0',
+    'policy.urls blocks.0.properties.options.1',
+  ]);
 });
 
 test('checkPolicy keeps the html rule on an html-drawn property', () => {
@@ -722,11 +745,13 @@ test('checkPolicy keeps the html rule on an html-drawn property', () => {
       properties: { title: 'A <b>b</b>', items: [{ label: 'What', value: writtenText[0] }] },
     },
     { id: 'form.s', type: 'Selector', properties: { options: [{ label: '<i>x</i>', value: 1 }] } },
+    { id: 'e', type: 'Descriptions', properties: { items: { Notes: writtenText[0] } } },
   ]);
   expect(rules(errors)).toEqual([
     'policy.html blocks.0.properties.title',
     'policy.html blocks.0.properties.items.0.value',
     'policy.html blocks.1.properties.options.0.label',
+    'policy.html blocks.2.properties.items.Notes',
   ]);
   // The markdown target in the same value is words.
   expect(
@@ -757,6 +782,51 @@ test('checkPolicy checks CSS url() in an html-drawn property when the policy all
     { html: true }
   );
   expect(rules(errors)).toEqual(['policy.urls blocks.0.properties.title']);
+});
+
+test('checkPolicy checks link and source attributes in HTML when the policy allows tags', () => {
+  const errors = checkText(
+    [
+      {
+        id: 'd',
+        type: 'Descriptions',
+        properties: { title: '<a href="https://evil.example">x</a>' },
+      },
+      { id: 'e', type: 'Descriptions', properties: { title: '<img src="//tracker.test/p.gif">' } },
+      {
+        id: 'f',
+        type: 'Descriptions',
+        properties: { title: `<a title=">" href='https&#58;//evil.example'>x</a>` },
+      },
+      {
+        id: 'g',
+        type: 'Descriptions',
+        properties: { title: '<img srcset="/a.png 1x, https://tracker.test/b.png 2x">' },
+      },
+      { id: 'h', type: 'Descriptions', properties: { title: '<a href="/admin">x</a>' } },
+      {
+        id: 'i',
+        type: 'Markdown',
+        properties: { content: '<img src=https://tracker.test/p.gif>' },
+      },
+      {
+        id: 'j',
+        type: 'Descriptions',
+        properties: {
+          title: '<a href="/thanks">x</a> <a href="https://example.com/a">y</a> <img src="/a.png">',
+        },
+      },
+    ],
+    { html: true }
+  );
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.title',
+    'policy.urls blocks.1.properties.title',
+    'policy.urls blocks.2.properties.title',
+    'policy.urls blocks.3.properties.title',
+    'policy.urls blocks.4.properties.title',
+    'policy.urls blocks.5.properties.content',
+  ]);
 });
 
 test('checkPolicy shows tag syntax, markdown, CSS url() and protocol-relative words in a text-drawn property as written', () => {

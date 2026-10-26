@@ -136,17 +136,11 @@ function checkBlock({ block, path, depth, walk }) {
   // The block schema marks which properties hold URLs and how it draws text.
   const propertiesSchema = blockSchemas[block.type]?.properties?.properties;
   const propertiesPath = `${path}.properties`;
-  const urlKinds = collectSchemaKinds({
+  const { urlKind: urlKinds, textKind: textKinds } = collectSchemaKinds({
     value: block.properties,
     schema: propertiesSchema,
     path: propertiesPath,
-    keyword: 'urlKind',
-  });
-  const textKinds = collectSchemaKinds({
-    value: block.properties,
-    schema: propertiesSchema,
-    path: propertiesPath,
-    keyword: 'textKind',
+    keywords: ['urlKind', 'textKind'],
   });
   findDataRows({
     properties: block.properties,
