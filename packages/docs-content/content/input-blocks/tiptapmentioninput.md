@@ -1,6 +1,6 @@
 # TiptapMentionInput
 
-Rich-text editor with @-mention support. Same feature set as TiptapInput, plus a mention dropdown populated from a static options list or a request. Mention options can be marked as groups (roles, teams, queues) to render under their own menu section, as distinctly coloured chips, and with a hover popover listing the group's current members. See the guide below.
+Rich-text editor with @-mention support. Same feature set as TiptapInput, plus a mention dropdown populated from a static options list or a request. Mention options can be marked as groups (roles, teams, queues) to render under their own menu section, as distinctly coloured chips, and with a hover popover listing the group's current members. Set `imageSrc` to save pasted images at a stable app URL such as a [link endpoint](/api#link-endpoints). See the guide below.
 
 ## Group mentions
 
