@@ -66,6 +66,34 @@ test('InternalApi endpoint throws ConfigError with "does not exist" message', as
   ).rejects.toThrow('API Endpoint "internal_ep" does not exist.');
 });
 
+test('a POST to a link endpoint throws the missing-endpoint error', async () => {
+  const mockReadConfigFile = vi.fn((path) => {
+    if (path === 'api/files.json') {
+      return {
+        endpointId: 'files',
+        type: 'Api',
+        link: true,
+        auth: { public: true },
+        routine: { ':return': 'https://x.test/a.png' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1' },
+  });
+  const call = callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'files',
+    pageId: 'pageId',
+    payload: {},
+  });
+  await expect(call).rejects.toThrow(ConfigError);
+  await expect(call).rejects.toThrow('API Endpoint "files" does not exist.');
+});
+
 test('Api endpoint proceeds normally', async () => {
   const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/public_ep.json') {

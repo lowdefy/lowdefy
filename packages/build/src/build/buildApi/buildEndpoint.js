@@ -31,6 +31,7 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
   resolveEndpointSchedules({ endpoint, environments });
 
   const isWebhook = !type.isNone(endpoint.webhook) && endpoint.webhook !== false;
+  const isLink = endpoint.link === true;
   const verify = type.isObject(endpoint.webhook) ? endpoint.webhook.verify : undefined;
   if (!type.isNone(verify)) {
     // The verifier is a request run in a system context before the routine, so
@@ -45,9 +46,10 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
   }
   buildRoutine(endpoint.routine, {
     endpointId: endpoint.endpointId,
-    // A webhook route answers the HTTP status a :reject sets, also from an InternalApi endpoint
-    // the webhook calls. No other route sends one.
-    rejectSetsStatus: isWebhook || endpoint.type === 'InternalApi',
+    // A webhook or link route answers the HTTP status a :reject sets, also from an InternalApi
+    // endpoint it calls. No other route sends one. A link route answers with no body.
+    rejectSetsStatus: isWebhook || isLink || endpoint.type === 'InternalApi',
+    rejectSetsBody: isWebhook || endpoint.type === 'InternalApi',
     // Only the webhook's own :return is its answer: a called endpoint's :return is a step result.
     returnSetsContentType: isWebhook,
     dynamicPolicies: context.dynamicPolicies,

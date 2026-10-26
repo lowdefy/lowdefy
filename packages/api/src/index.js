@@ -60,6 +60,7 @@ import resolveTenantPreflight, {
 import forwardScheduledEndpoint from './routes/endpoints/forwardScheduledEndpoint.js';
 import acceptDetachedEndpoint from './routes/endpoints/acceptDetachedEndpoint.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
+import runLinkEndpoint from './routes/endpoints/runLinkEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
@@ -106,6 +107,7 @@ export {
   forwardScheduledEndpoint,
   acceptDetachedEndpoint,
   runDetachedEndpoint,
+  runLinkEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,
 };
