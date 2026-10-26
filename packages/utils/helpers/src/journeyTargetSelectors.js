@@ -58,8 +58,10 @@ const interactiveControlRules = [
 // The grids a journey target's `row` and `column` reach, as a displayed row and a cell inside it.
 // A row's attribute holds its zero-based displayed index and a cell's holds the column key.
 // Header rows and header cells are not matched: ag-grid's header cells are `.ag-header-cell`, and
-// the Table header row's index is -1, which is no journey row. A row keyed by pinned position
-// (ag-grid `t-0`) is no journey row either.
+// the Table header row's index is -1, which is no journey row. A Table header cell carries the
+// same class and column key as a body cell, so a Table cell must also be a `gridcell` (header
+// cells are `columnheader`). A row keyed by pinned position (ag-grid `t-0`) is no journey row
+// either.
 const gridRules = [
   {
     cellAttribute: 'col-id',
@@ -70,6 +72,7 @@ const gridRules = [
   {
     cellAttribute: 'data-col-key',
     cellClass: 'lf-table-gridcell',
+    cellRole: 'gridcell',
     rowAttribute: 'data-row-index',
     rowClass: 'lf-table-row',
   },
@@ -94,11 +97,13 @@ function rowSelector(value) {
 // The selector for a cell of any grid: with a value, the cell of that column; without, every cell.
 function cellSelector(value) {
   return gridRules
-    .map(({ cellAttribute, cellClass }) =>
-      value === undefined
-        ? `.${cellClass}[${cellAttribute}]`
-        : `.${cellClass}[${cellAttribute}=${quoted(value)}]`
-    )
+    .map(({ cellAttribute, cellClass, cellRole }) => {
+      const role = cellRole === undefined ? '' : `[role="${cellRole}"]`;
+      if (value === undefined) {
+        return `.${cellClass}[${cellAttribute}]${role}`;
+      }
+      return `.${cellClass}[${cellAttribute}=${quoted(value)}]${role}`;
+    })
     .join(', ');
 }
 

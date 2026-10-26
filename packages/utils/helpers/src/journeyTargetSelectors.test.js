@@ -50,9 +50,11 @@ test('rowSelector and cellSelector cover ag-grid and Table, never their headers'
   expect(rowSelector(1)).toBe('.ag-row[row-index="1"], .lf-table-row[data-row-index="1"]');
   expect(rowSelector()).toBe('.ag-row[row-index], .lf-table-row[data-row-index]');
   expect(cellSelector('a"b')).toBe(
-    '.ag-cell[col-id="a\\"b"], .lf-table-gridcell[data-col-key="a\\"b"]'
+    '.ag-cell[col-id="a\\"b"], .lf-table-gridcell[data-col-key="a\\"b"][role="gridcell"]'
   );
-  expect(cellSelector()).toBe('.ag-cell[col-id], .lf-table-gridcell[data-col-key]');
+  expect(cellSelector()).toBe(
+    '.ag-cell[col-id], .lf-table-gridcell[data-col-key][role="gridcell"]'
+  );
 });
 
 test('portalClass names a block in a class safe for a CSS selector', () => {

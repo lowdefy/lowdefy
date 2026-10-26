@@ -517,7 +517,7 @@ test('runJourney clicks the control inside a grid cell addressed by row and colu
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([
-    `#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="actions"], .lf-table-gridcell[data-col-key="actions"] ${CONTROLS}`,
+    `#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="actions"], .lf-table-gridcell[data-col-key="actions"][role="gridcell"] ${CONTROLS}`,
   ]);
 });
 
@@ -534,7 +534,7 @@ test('runJourney clicks the nth control in a grid cell when several have no text
   });
 
   expect(result.passed).toBe(true);
-  const selector = `#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="actions"], .lf-table-gridcell[data-col-key="actions"] ${CONTROLS}`;
+  const selector = `#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="actions"], .lf-table-gridcell[data-col-key="actions"][role="gridcell"] ${CONTROLS}`;
   expect(page.clicks).toEqual([selector]);
   expect(page.nths).toEqual([{ selector, index: 1 }]);
 });
@@ -743,7 +743,7 @@ test('runJourney escapes quotes in a column id', async () => {
   });
 
   expect(page.clicks).toEqual([
-    '#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="a\\"b"], .lf-table-gridcell[data-col-key="a\\"b"]',
+    '#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="a\\"b"], .lf-table-gridcell[data-col-key="a\\"b"][role="gridcell"]',
   ]);
 });
 
@@ -824,12 +824,12 @@ test('runJourney fills and selects inside a grid cell addressed by row and colum
   expect(page.fills).toEqual([
     {
       selector:
-        '#bl-grid .ag-row[row-index="1"], .lf-table-row[data-row-index="1"] .ag-cell[col-id="name"], .lf-table-gridcell[data-col-key="name"] input, textarea',
+        '#bl-grid .ag-row[row-index="1"], .lf-table-row[data-row-index="1"] .ag-cell[col-id="name"], .lf-table-gridcell[data-col-key="name"][role="gridcell"] input, textarea',
       value: 'Ada',
     },
   ]);
   expect(page.clicks).toEqual([
-    '#bl-grid .ag-row[row-index="1"], .lf-table-row[data-row-index="1"] .ag-cell[col-id="status"], .lf-table-gridcell[data-col-key="status"]',
+    '#bl-grid .ag-row[row-index="1"], .lf-table-row[data-row-index="1"] .ag-cell[col-id="status"], .lf-table-gridcell[data-col-key="status"][role="gridcell"]',
     '.ant-select-item-option, [role="option"]',
   ]);
 });
@@ -837,7 +837,7 @@ test('runJourney fills and selects inside a grid cell addressed by row and colum
 test('runJourney checks visibility and text of a grid row and cell', async () => {
   const page = createPage();
   page.texts[
-    '#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="title"], .lf-table-gridcell[data-col-key="title"]'
+    '#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"] .ag-cell[col-id="title"], .lf-table-gridcell[data-col-key="title"][role="gridcell"]'
   ] = 'Access reviews';
   page.texts['#bl-grid .ag-row[row-index="0"], .lf-table-row[data-row-index="0"]'] =
     'Access reviews open Edit';

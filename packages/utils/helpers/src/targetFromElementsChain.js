@@ -84,14 +84,23 @@ function textOf(scope) {
   return null;
 }
 
+// Whether a chain entry is a row or cell element of the grid the rule describes: its class, its
+// attribute and, when the rule names one, its role (a Table header cell has a body cell's class
+// and column key, but the role `columnheader`).
+function matchesGridRule({ entry, kind, rule }) {
+  if (!entry.classes.includes(rule[`${kind}Class`])) return false;
+  if (!(`attr__${rule[`${kind}Attribute`]}` in entry.attributes)) return false;
+  const role = rule[`${kind}Role`];
+  return role === undefined || entry.attributes.attr__role === role;
+}
+
 // The row index or column key of the innermost row or cell element of any grid, as the class and
 // attribute that grid renders them with. Null when the click was in no row or cell.
 function findGridAttribute({ inner, kind }) {
   for (const entry of inner) {
-    const rule = gridRules.find((candidate) => entry.classes.includes(candidate[`${kind}Class`]));
-    const value = rule && entry.attributes[`attr__${rule[`${kind}Attribute`]}`];
-    if (value !== undefined && rule) {
-      return value;
+    const rule = gridRules.find((candidate) => matchesGridRule({ entry, kind, rule: candidate }));
+    if (rule) {
+      return entry.attributes[`attr__${rule[`${kind}Attribute`]}`];
     }
   }
   return null;

@@ -64,8 +64,8 @@ const tableGrid = `
   <div class="lf-table" role="grid">
     <div class="lf-table-header">
       <div class="lf-table-row" data-row-index="-1" role="row">
-        <div class="lf-table-headercell" data-col-key="name" role="columnheader">Name</div>
-        <div class="lf-table-headercell" data-col-key="actions" role="columnheader">Actions</div>
+        <div class="lf-table-gridcell" data-col-key="name" data-lf-cell="" data-lf-header="" role="columnheader"><span>Name</span></div>
+        <div class="lf-table-gridcell" data-col-key="actions" data-lf-cell="" data-lf-header="" role="columnheader"><span>Actions</span></div>
       </div>
     </div>
     <div class="lf-table-body">
@@ -302,7 +302,7 @@ const targetFixtures = [
   {
     name: 'Table header cell is no row or cell',
     html: tableGrid,
-    element: '.lf-table-headercell[data-col-key="name"]',
+    element: '[role="columnheader"][data-col-key="name"]',
     target: target({ block_id: 'people' }),
     blockIds: ['people'],
     resolvable: false,
