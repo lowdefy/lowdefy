@@ -255,8 +255,8 @@ test('a paired phone shell posts the page it shows', async () => {
 
 test.each([
   ['lists the tabs', 'GET', '/api/dev-inspect'],
-  ['loads a checkpoint', 'GET', '/api/dev-inspect/checkpoint/before-save'],
-  ['posts to another route', 'POST', '/api/dev-inspect/checkpoint/before-save'],
+  ['gets another route', 'GET', '/api/dev-inspect/tabs/phone'],
+  ['posts to another route', 'POST', '/api/dev-inspect/tabs/phone'],
 ])('a paired phone shell is refused when it %s', async (_, method, path) => {
   const res = await createApp().request(path, { method, headers: pairedShellHeaders });
   expect(res.status).toBe(403);

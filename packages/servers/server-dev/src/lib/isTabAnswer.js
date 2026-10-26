@@ -19,8 +19,8 @@ import getPathSegments from './getPathSegments.js';
 // A dev tab's answer leg of the tab channel: POST /api/dev-inspect with the
 // result of a request the dev server sent it, or POST /api/dev-inspect/page
 // with the page it shows. A phone paired with `lowdefy dev --lan` is a dev tab
-// and may send these; it may not list the tabs or load a checkpoint's mocks,
-// which act on the developer's tabs.
+// and may send these; it may not list the tabs, or call any other dev-inspect
+// route, which act on the developer's tabs.
 function isTabAnswer(c) {
   if (c.req.method !== 'POST') {
     return false;

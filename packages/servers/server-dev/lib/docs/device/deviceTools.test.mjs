@@ -22,7 +22,7 @@ import { vi, afterEach, expect, test } from 'vitest';
 import setupTestFixtures from '../setupTestFixtures.mjs';
 
 // inspectState imports getBrowser, which reads build/config.json from the working
-// directory at import; checkpoints are stored under LOWDEFY_DIRECTORY_CONFIG.
+// directory at import.
 const fixtureDir = setupTestFixtures();
 process.chdir(fixtureDir);
 process.env.LOWDEFY_DIRECTORY_CONFIG = fixtureDir;
