@@ -75,7 +75,7 @@ server/
 │   │   ├── apiPage.js         # GET /api/page/* — page config JSON for SPA nav
 │   │   ├── auth.js            # /api/auth/* — authHandler + HEAD pre-check
 │   │   ├── clientError.js     # POST /api/client-error
-│   │   ├── endpoints.js       # /api/endpoints/* (catch-all)
+│   │   ├── endpoints.js       # /api/endpoints/* (catch-all): POST calls, GET link endpoints
 │   │   ├── request.js         # /api/request/* (catch-all)
 │   │   └── usage.js           # POST /api/usage
 │   ├── html/
@@ -176,6 +176,10 @@ The template embeds everything the client needs in one response:
 `src/middleware/noStore.js` sets `Cache-Control: private, no-store` after the handler runs, so redirects and error responses carry it too. `app.js` registers it on `/api/page/*`, `/api/user`, `/api/request/*` and `/api/endpoints/*`, and on `/*` after the static middleware (which answers a file without calling `next()`), so it covers the page routes but not public files or `/assets/*`. Server-dev registers the same middleware on the same routes plus `/api/root`.
 
 `config.security.contentSecurityPolicy` is resolved by the build (`build/buildSecurity/`) into `build/security.json`, always written: `{ contentSecurityPolicy: null }` when off, else `{ reportOnly, directives, nonceDirectives, websockets }`. `renderPage.js` calls `createContentSecurityPolicy` from `@lowdefy/api` (`src/csp/`) on each render, which draws a 128-bit nonce, adds `'nonce-<n>'` to the `nonceDirectives` (`script-src`; a directive that allows `'unsafe-inline'` gets none) and the page's websocket origin to `connect-src` when the app has websockets, and sets the header. `template.js` puts the nonce on its scripts, writes a `<meta property="csp-nonce">` tag, and runs `addNonceToElements` over `appendHead`/`appendBody`. The client reads the meta tag (`lib/client/getCspNonce.js`) and passes it to antd through `XProvider`'s `csp` prop; Vite reads the same tag. `style-src` defaults to `'unsafe-inline'` because antd's portal scroll lock, TextArea autosize and Watermark write styles that cannot carry a nonce. Server-dev's `renderDevPage.js` reads `security.json` per request and always allows the page's websocket origin, which Vite's hot reload socket uses.
+
+## Link Endpoints
+
+`src/routes/endpoints.js` (server-dev carries the same file) answers a `GET` on `/api/endpoints/*` with `runLinkEndpoint` from `@lowdefy/api`: an `Api` endpoint with `link: true` runs as the session caller and the route answers 302 to the URL it returns (or a status with no body, or 404 `{ error: 'Not found.' }` for an unknown id). This is how a page embeds a private file at a stable URL, such as an `<img>` a `TiptapInput` saved with `imageSrc`. The browser sends the image `GET` with the session cookie and no Lowdefy headers, so `refuseOtherBuild` (it acts only on a call naming another build in `x-lowdefy-build`) lets it through, and `stampCaller` only adds `x-lowdefy-caller` to the answer. `noStore` sets `Cache-Control: private, no-store`, so a redirect to a short-lived presigned URL is never cached. Link ids are matched by longest prefix against the `linkEndpoints.json` build artifact, so a `GET` never reaches a non-link endpoint; a `POST` to a link endpoint is refused by `callEndpoint` as a missing endpoint. Session cookies are `SameSite=Lax`, so a cross-site image load arrives signed out.
 
 ## Per-Page Plugin Chunks
 

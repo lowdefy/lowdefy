@@ -93,7 +93,7 @@ Client Action (Endpoint)
 └───────────────────┘
         │
         ▼
-  InternalApi? ──yes──▶ throw "does not exist"
+  InternalApi or link? ──yes──▶ throw "does not exist"
         │ no
         ▼
 ┌───────────────────┐
@@ -200,7 +200,7 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 
 | Module                        | Purpose                                                                                                                                                                                                                                                                                                                |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `callEndpoint.js`             | HTTP entry point for endpoint execution; blocks `InternalApi`                                                                                                                                                                                                                                                          |
+| `callEndpoint.js`             | HTTP entry point for endpoint execution; blocks `InternalApi` and `link: true`                                                                                                                                                                                                                                         |
 | `runRoutine.js`               | Dispatch steps by ID prefix: `request:`, `endpoint:`, control. Catch sets `error.handled = true` so a single error crossing multiple `runRoutine` boundaries (e.g. a deep `callApi` chain) triggers `context.handleError` exactly once.                                                                                |
 | `handleRequest.js`            | Execute a database/API request step                                                                                                                                                                                                                                                                                    |
 | `handleRenderNotification.js` | Execute a `RenderNotification` step: interpolate + validate + resolve links + render one notification to `{ subject, title, preview, html, text, data }`. Does not store or send. See [Notification Rendering](../architecture/notifications.md).                                                                      |
@@ -209,6 +209,8 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 | `addStepResult.js`            | Store step results in `routineContext.steps`                                                                                                                                                                                                                                                                           |
 | `getEndpointConfig.js`        | Load endpoint config from build artifacts                                                                                                                                                                                                                                                                              |
 | `authorizeApiEndpoint.js`     | Check user access to endpoint                                                                                                                                                                                                                                                                                          |
+| `runLinkEndpoint.js`          | GET entry for `link: true` endpoints: matches path segments against `linkEndpoints.json` (longest id first, `matchLinkEndpoint`), authorizes the session caller (401/403, no body), runs the routine with `{ path, query }`. Unknown id: 404, or 401 to an anonymous human on an auth'd app.                           |
+| `createLinkAnswer.js`         | A link route's answer: 302 to the returned URL, a `:reject` status, 400, or a fixed 500. A `:return` that is no absolute http(s) URL or origin path (`//host` refused) logs a `ConfigError`.                                                                                                                           |
 | `control/`                    | Control flow handlers (if, for, try, switch, return, etc.). `controlThrow` and `controlReject` build `UserError` so routine-step and JS-boundary surfaces carry the same class for user-authored failures. `controlSetState` writes to `routineContext.state` — state is scoped to the routine frame, not the request. |
 
 ### `/routes/agent/`
