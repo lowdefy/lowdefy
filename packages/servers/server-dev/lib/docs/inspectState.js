@@ -18,11 +18,16 @@ import inspectStateFromTab from './inspectStateFromTab.js';
 import inspectStateHeadless from './inspectStateHeadless.js';
 import resolveSource from './resolveSource.js';
 
+// Reads a running page: its state snapshot, or, when an expression is passed,
+// the value of that operator expression against its live state.
 // resolveSource picks the tab or headless — including why `user` is
 // headless-only. Falls back to headless whenever the tab path isn't usable
 // (no tab connected, or `source: 'tab'` was requested but it errored) so
 // agents always get an answer.
-async function inspectState({ origin, pageId, pathParams, source, user, data }) {
+async function inspectState(params) {
+  const { origin, pageId, pathParams, expression, source, user, data } = params;
+  // null is a valid expression, so whether one was passed is read from the key.
+  const evaluate = Object.hasOwn(params, 'expression');
   const { tryTab, error, invalidInput } = resolveSource({
     name: 'inspectState',
     pageId,
@@ -36,13 +41,21 @@ async function inspectState({ origin, pageId, pathParams, source, user, data }) 
   }
 
   if (tryTab) {
-    const result = await inspectStateFromTab({ pageId, pathParams });
+    const result = await inspectStateFromTab({ pageId, pathParams, evaluate, expression });
     if (!result?.error) {
       return { ...result, source: 'tab' };
     }
   }
 
-  const result = await inspectStateHeadless({ origin, pageId, pathParams, user, data });
+  const result = await inspectStateHeadless({
+    origin,
+    pageId,
+    pathParams,
+    evaluate,
+    expression,
+    user,
+    data,
+  });
   return { ...result, source: 'headless' };
 }
 

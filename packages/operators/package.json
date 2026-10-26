@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -40,8 +40,8 @@
     "test": "vitest run --testTimeout=10000 --hookTimeout=10000"
   },
   "dependencies": {
-    "@lowdefy/errors": "7.0.0",
-    "@lowdefy/helpers": "7.0.0"
+    "@lowdefy/errors": "7.1.0",
+    "@lowdefy/helpers": "7.1.0"
   },
   "devDependencies": {
     "@swc/cli": "0.8.1",

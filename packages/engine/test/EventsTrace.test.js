@@ -408,3 +408,29 @@ test('an app onInit failure is replayed to a replay subscriber that subscribes a
     stateBefore: undefined,
   });
 });
+
+test('history and eventLog are capped by lowdefy._internal.historyLimits.events', async () => {
+  const lowdefy = createLowdefy();
+  lowdefy._internal.historyLimits = { events: 3, calls: 2 };
+  const context = await testContext({
+    lowdefy,
+    pageConfig: buttonPage([setState('set', { clicked: true })]),
+  });
+  const { button } = context._internal.RootSlots.map;
+  for (let i = 0; i < 5; i += 1) {
+    await button.triggerEvent({ name: 'onClick' });
+  }
+  expect(context.eventLog).toHaveLength(3);
+});
+
+test('history and eventLog are uncapped when no historyLimits are set', async () => {
+  const context = await testContext({
+    lowdefy: createLowdefy(),
+    pageConfig: buttonPage([setState('set', { clicked: true })]),
+  });
+  const { button } = context._internal.RootSlots.map;
+  for (let i = 0; i < 5; i += 1) {
+    await button.triggerEvent({ name: 'onClick' });
+  }
+  expect(context.eventLog).toHaveLength(5);
+});

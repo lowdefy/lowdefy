@@ -29,8 +29,12 @@ import request from './request.js';
 
 // The page's lowdefy object: the caller it renders and where it keeps the last
 // caller stamp.
-function createLowdefy(user) {
-  return { _internal: {}, user };
+function createLowdefy(user, { leaving = false } = {}) {
+  return {
+    _internal: {},
+    pageUnload: { isLeaving: () => leaving, hold: () => new Promise(() => {}) },
+    user,
+  };
 }
 
 function mockFetchResponse({ ok, status = ok ? 200 : 500, body, headers = {} }) {
@@ -465,5 +469,50 @@ describe('caller check', () => {
       roles: null,
       memberships: null,
     });
+  });
+});
+
+describe('page unload', () => {
+  test('request never settles when the browser cancels its fetch as the page leaves', async () => {
+    global.fetch = vi.fn(() => Promise.reject(new TypeError('Failed to fetch')));
+    const settled = vi.fn();
+    request({ lowdefy: createLowdefy(null, { leaving: true }), url: '/api/test' }).then(
+      settled,
+      settled
+    );
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(settled).not.toHaveBeenCalled();
+  });
+
+  test('request never settles when the browser cancels the body read as the page leaves', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        headers: { get: () => null },
+        json: () => Promise.reject(new TypeError('Load failed')),
+      })
+    );
+    const settled = vi.fn();
+    request({ lowdefy: createLowdefy(null, { leaving: true }), url: '/api/test' }).then(
+      settled,
+      settled
+    );
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(settled).not.toHaveBeenCalled();
+  });
+
+  test('request throws a network failure while the page stays open', async () => {
+    global.fetch = vi.fn(() => Promise.reject(new TypeError('Failed to fetch')));
+    await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toThrow(
+      'Failed to fetch'
+    );
+  });
+
+  test('request still throws a server error response while the page unloads', async () => {
+    mockFetchResponse({ ok: false, body: { message: 'Bad gateway.' } });
+    await expect(
+      request({ lowdefy: createLowdefy(null, { leaving: true }), url: '/api/test' })
+    ).rejects.toThrow('Bad gateway.');
   });
 });

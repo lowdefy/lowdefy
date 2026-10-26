@@ -466,3 +466,128 @@ test('startProxy keeps a request held through a child restart counted', async ()
   expect(await pending).toBe('new');
   await waitFor(() => activeRequests() === 0);
 });
+
+function stopChildIdle() {
+  const idleChild = { stopped: true };
+  idleChild.isStopped = () => idleChild.stopped;
+  idleChild.wake = vi.fn(async () => {
+    idleChild.stopped = false;
+  });
+  context.idleChild = idleChild;
+  return idleChild;
+}
+
+test.each([
+  ['a passive read', { method: 'GET', headers: { 'x-lowdefy-passive': '1' } }, '/build-status'],
+  [
+    'a reload stream reconnect',
+    { method: 'GET', headers: { accept: 'text/event-stream' } },
+    '/api/reload',
+  ],
+  [
+    'an MCP push stream reconnect',
+    { method: 'GET', headers: { accept: 'text/event-stream' } },
+    '/lowdefy-docs/mcp',
+  ],
+])(
+  'startProxy answers %s at once without waking an idle-stopped child',
+  async (_, init, requestPath) => {
+    let childRequests = 0;
+    const port = await startChildAndProxy((req, res) => {
+      childRequests += 1;
+      res.end('ok');
+    });
+    context.basePath = '';
+    const idleChild = stopChildIdle();
+
+    const started = Date.now();
+    const response = await fetch(`http://localhost:${port}${requestPath}`, init);
+    expect(Date.now() - started).toBeLessThan(1000);
+    expect(response.status).toBe(503);
+    expect(response.headers.get('retry-after')).toBe('5');
+    expect(response.headers.get('x-lowdefy-child')).toBe('stopped');
+    expect(await response.json()).toEqual({ message: 'Lowdefy dev server is idle.' });
+    expect(idleChild.wake).not.toHaveBeenCalled();
+    expect(childRequests).toBe(0);
+  }
+);
+
+test('startProxy answers a websocket upgrade 503 at once while the child is idle-stopped', async () => {
+  const port = await startChildAndProxy((req, res) => res.end('ok'));
+  const idleChild = stopChildIdle();
+  const clientRequest = http.get(`http://localhost:${port}/hmr`, {
+    headers: { connection: 'upgrade', upgrade: 'websocket' },
+  });
+  const response = await new Promise((resolve) => clientRequest.on('response', resolve));
+  expect(response.statusCode).toBe(503);
+  expect(response.headers['x-lowdefy-child']).toBe('stopped');
+  expect(idleChild.wake).not.toHaveBeenCalled();
+});
+
+test('startProxy wakes an idle-stopped child for a request that is use and holds it until the child answers', async () => {
+  const port = await startChildAndProxy((req, res) => res.end('old'));
+  context.basePath = '';
+  await close(child);
+  const idleChild = stopChildIdle();
+  idleChild.wake.mockImplementation(async () => {
+    idleChild.stopped = false;
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    child = http.createServer((req, res) => res.end('woken'));
+    await new Promise((resolve) => child.listen(context.internalPort, '127.0.0.1', resolve));
+    context.devServer = { exitCode: null, signalCode: null };
+  });
+
+  const response = await fetch(`http://localhost:${port}/page/home`);
+  expect(await response.text()).toBe('woken');
+  expect(idleChild.wake).toHaveBeenCalledTimes(1);
+});
+
+test('startProxy answers a held passive read idle once the child is idle-stopped', async () => {
+  const port = await startChildAndProxy((req, res) => res.end('ok'));
+  await close(child);
+  context.idleChild = { isStopped: () => false, wake: vi.fn() };
+
+  const pending = fetch(`http://localhost:${port}/build-status`, {
+    headers: { 'x-lowdefy-passive': '1' },
+  });
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  context.idleChild.isStopped = () => true;
+  const response = await pending;
+  expect(response.status).toBe(503);
+  expect(response.headers.get('x-lowdefy-child')).toBe('stopped');
+});
+
+test('startProxy counts a tab while its reload stream is open', async () => {
+  const child$ = heldHandler({ contentType: 'text/event-stream' });
+  const port = await startChildAndProxy(child$.handler);
+  context.basePath = '/base';
+
+  const clientRequest = http.get(`http://localhost:${port}/base/api/reload`, {
+    headers: { accept: 'text/event-stream' },
+  });
+  clientRequest.on('error', () => {});
+  await new Promise((resolve) => clientRequest.on('response', resolve));
+  await waitFor(() => context.requestActivity.snapshot().openTabs === 1);
+  expect(activityRecords.at(-1).openTabs).toBe(1);
+  expect(activeRequests()).toBe(0);
+
+  clientRequest.destroy();
+  await waitFor(() => context.requestActivity.snapshot().openTabs === 0);
+  child$.release();
+});
+
+test('startProxy does not count other event streams as tabs', async () => {
+  const child$ = heldHandler({ contentType: 'text/event-stream' });
+  const port = await startChildAndProxy(child$.handler);
+  context.basePath = '';
+
+  const clientRequest = http.get(`http://localhost:${port}/lowdefy-docs/mcp`, {
+    headers: { accept: 'text/event-stream' },
+  });
+  clientRequest.on('error', () => {});
+  await new Promise((resolve) => clientRequest.on('response', resolve));
+  await waitFor(() => child$.held.length === 1);
+  expect(context.requestActivity.snapshot().openTabs).toBe(0);
+  clientRequest.destroy();
+  child$.release();
+});

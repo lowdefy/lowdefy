@@ -583,11 +583,6 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     // They become a caller carrying identity, no membership and no roles,
     // marked awaitingOrganization - createAuthorizeOutcome refuses that caller
     // wherever auth.public is false, so the marker widens no access.
-    //
-    // It also keeps the page and the server on one caller: the client renders
-    // the session's user, so a server that resolved that session to null would
-    // stamp every response as another caller (callerStamp) and the accept page
-    // would reload until it fails.
     if (type.isNone(registered)) {
       context.logger.debug(
         `Session for user "${session.user.id}" has no active organization - resolved unauthenticated.`

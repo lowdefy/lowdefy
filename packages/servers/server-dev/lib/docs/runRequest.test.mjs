@@ -55,7 +55,7 @@ vi.doMock('./reviewPage.js', () => ({
 const { ConfigError } = await import('@lowdefy/errors');
 const { default: runRequest } = await import('./runRequest.js');
 
-const honoContext = { req: { path: '/lowdefy-docs/run-request' } };
+const honoContext = { req: { path: '/lowdefy-docs/mcp' } };
 
 beforeEach(() => {
   vi.clearAllMocks();

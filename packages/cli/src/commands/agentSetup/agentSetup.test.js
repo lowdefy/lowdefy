@@ -85,15 +85,11 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
 
   const skillMd = read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'));
   expect(skillMd).toContain('name: lowdefy-config');
-  expect(skillMd).toContain('Never run `lowdefy dev` yourself');
-  expect(skillMd).toContain('Run `npx lowdefy hub start <app>`');
-  expect(skillMd).toContain('Never configure the pane\n  to start a server of its own');
   expect(skillMd).toContain('Never guess type names or properties.');
-  expect(skillMd).toContain('When you finish work in a git worktree you created for the task');
-  expect(skillMd).toContain('stops once it has been idle for 15 minutes');
-  expect(skillMd).toContain('## Testing a change');
-  expect(skillMd).toContain('Run `tier: common` first');
-  expect(skillMd).toContain('Widen to `tier: edge` before you call the change done');
+  expect(skillMd).toContain('are in AGENTS.md');
+  expect(skillMd).not.toContain('Never run `lowdefy dev` yourself');
+  expect(skillMd).not.toContain('## Testing a change');
+  expect(skillMd).not.toContain('data-icon');
   expect(skillMd).not.toContain('localhost:');
 
   const agentsMd = read('AGENTS.md');
@@ -101,6 +97,8 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).not.toContain('Developers start it');
   expect(agentsMd).toContain('A Lowdefy app is a folder containing `lowdefy.yaml`.');
   expect(agentsMd).toContain('lowdefy_dev_start');
+  expect(agentsMd).toContain('Run `npx lowdefy hub start <app>`');
+  expect(agentsMd).toContain('Never configure the pane\n  to start a server of its own');
   expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
   expect(agentsMd).toContain('### Testing a change');
   expect(agentsMd).toContain('Run `tier: common` first');

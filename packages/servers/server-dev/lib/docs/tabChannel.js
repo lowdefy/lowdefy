@@ -56,6 +56,8 @@ function registerTab({ id, send, source = 'dev', automated = false }) {
 
 // Records the page instance a tab shows, { pageId, pathParams, instanceKey }, and keeps it among
 // the instances the tab has rendered, whose contexts the tab still holds.
+const INSTANCES_PER_PAGE = 10;
+
 function updateTabPage({ id, pageId, pathParams, instanceKey }) {
   const tab = tabs.get(id);
   if (type.isNone(tab)) {
@@ -75,6 +77,12 @@ function updateTabPage({ id, pageId, pathParams, instanceKey }) {
   const page = { pageId, pathParams: pathParams ?? {}, instanceKey };
   tab.page = page;
   tab.rendered.set(instanceKey, { ...page, sequence: renderSequence });
+  // Keep the 10 most recent instances per page, as the engine's keepPageInstance does, so the
+  // list matches the contexts the tab still holds.
+  const ofPage = Array.from(tab.rendered.values())
+    .filter((instance) => instance.pageId === pageId)
+    .sort((a, b) => b.sequence - a.sequence);
+  ofPage.slice(INSTANCES_PER_PAGE).forEach((instance) => tab.rendered.delete(instance.instanceKey));
 }
 
 function unregisterTab({ id }) {

@@ -1,5 +1,7 @@
 # @lowdefy/icons-react-icons
 
+## 7.1.0
+
 ## 7.0.0
 
 ### Minor Changes

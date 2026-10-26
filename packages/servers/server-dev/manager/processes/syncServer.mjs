@@ -23,7 +23,25 @@
 // needs is part of that watcher's batch and a build-status wait covers it.
 // Calls run one at a time, after the first child start (startFirst): the
 // second finds the first's work done.
+//
+// While the child is stopped for being idle (createIdleChild), a restart the
+// build needs is only marked pending: the next waking request starts the
+// child through restartServer, which records the server artifacts, so an
+// edit or a branch switch on a server nobody uses never starts it. The
+// install path still installs, rebuilds and optimises, so the woken child
+// starts warm.
 function syncServer(context) {
+  function deferWhileStopped() {
+    if (context.idleChild?.isStopped() !== true) {
+      return false;
+    }
+    context.idleChild.markRestartPending();
+    // No child runs, so the next start reads every artifact as it is now. Recorded here so the
+    // next build while stopped does not see the same package.json change and install again.
+    context.serverArtifacts.record();
+    return true;
+  }
+
   async function sync({ restart = false } = {}) {
     const changes = context.serverArtifacts.check();
     if (changes.install) {
@@ -36,11 +54,13 @@ function syncServer(context) {
         // process, so the restarted child starts warm (optimizeDependencies.mjs).
         await context.buildActivity.track(() => context.optimizeDependencies());
       } finally {
-        await context.restartServer();
+        if (!deferWhileStopped()) {
+          await context.restartServer();
+        }
       }
       return;
     }
-    if (restart || changes.restart) {
+    if ((restart || changes.restart) && !deferWhileStopped()) {
       await context.restartServer();
     }
   }
@@ -54,11 +74,18 @@ function syncServer(context) {
   }).then((start) => start());
   let previous = firstStart.catch(() => {});
 
-  function queueSync(options) {
-    const next = previous.then(() => sync(options));
+  function queue(task) {
+    const next = previous.then(task);
     previous = next.catch(() => {});
     return next;
   }
+
+  function queueSync(options) {
+    return queue(() => sync(options));
+  }
+  // Child lifecycle work outside a sync (the idle stop and the wake) runs in
+  // the same queue, so it never interleaves with a restart or an install.
+  queueSync.run = queue;
   queueSync.startFirst = (start) => {
     runFirstStart(start);
     return firstStart;

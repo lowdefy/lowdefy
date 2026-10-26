@@ -18,9 +18,9 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Largest response returned inline, in serialized characters. The tool result
-// is pretty-printed, which adds roughly half again, so this keeps a result
-// inside the output budget of common MCP clients.
+// Largest value returned inline, in serialized characters. Tool results are
+// compact JSON, so a result is about this size, which keeps it inside the
+// output budget of common MCP clients.
 const MAX_INLINE_RESPONSE_CHARS = 40_000;
 
 // Saved responses kept per app; the oldest beyond this are deleted on write.
@@ -51,29 +51,30 @@ function writeResponseFile({ name, response }) {
   return filePath;
 }
 
-// Returns the result untouched when its response fits inline. A larger
-// response, or any response when saveResponse is set, is written in full to
-// .lowdefy/responses/ in the config directory, and the result carries the
-// file's path and size in its place, so nothing is cut and an agent can read
-// or query the whole value.
-function fitResponse({ result, name, saveResponse = false }) {
+// Returns the result untouched when its field (response, by default) fits
+// inline. A larger value, or any value when saveResponse is set, is written in
+// full to .lowdefy/responses/ in the config directory, and the result carries
+// the file's path and size in its place (<field>File, <field>Chars and, for an
+// array, <field>Items), so nothing is cut and an agent can read or query the
+// whole value.
+function fitResponse({ result, name, field = 'response', saveResponse = false }) {
   // A request can resolve with no response; it is written as null.
-  const { response = null, ...rest } = result;
-  const json = JSON.stringify(response);
+  const { [field]: value = null, ...rest } = result;
+  const json = JSON.stringify(value);
   if (!saveResponse && json.length <= MAX_INLINE_RESPONSE_CHARS) {
     return result;
   }
   const fitted = {
     ...rest,
-    responseFile: writeResponseFile({ name, response }),
-    responseChars: json.length,
+    [`${field}File`]: writeResponseFile({ name, response: value }),
+    [`${field}Chars`]: json.length,
   };
-  if (Array.isArray(response)) {
-    fitted.responseItems = response.length;
+  if (Array.isArray(value)) {
+    fitted[`${field}Items`] = value.length;
   }
   fitted.note = saveResponse
-    ? 'The full response was written to responseFile.'
-    : `The response is ${json.length} characters, over the ${MAX_INLINE_RESPONSE_CHARS} returned inline, so it was written in full to responseFile. Read or query that file instead.`;
+    ? `The full ${field} was written to ${field}File.`
+    : `The ${field} is ${json.length} characters, over the ${MAX_INLINE_RESPONSE_CHARS} returned inline, so it was written in full to ${field}File. Read or query that file instead.`;
   return fitted;
 }
 

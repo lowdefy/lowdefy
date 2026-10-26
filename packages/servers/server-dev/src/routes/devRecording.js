@@ -20,7 +20,7 @@ import appendRecords from '../../lib/server/recording/appendRecords.js';
 import getBuildId from '../../lib/docs/getBuildId.js';
 import readRecordingCookie from '../../lib/server/recording/readRecordingCookie.js';
 import servedBuilds from '../../lib/server/recording/servedBuilds.js';
-import { getConfigDirectory } from '../../lib/docs/checkpointPaths.js';
+import getConfigDirectory from '../../lib/docs/getConfigDirectory.js';
 
 const MAX_RECORDS = 500;
 

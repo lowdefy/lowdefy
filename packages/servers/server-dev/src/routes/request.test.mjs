@@ -21,18 +21,12 @@ const mockCallRequest = vi.fn();
 vi.doMock('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
   parseRequestBody: ({ text }) => JSON.parse(text),
-  redactErrorResponse: vi.fn((context, error) => ({ error: error.message })),
 }));
 
 const mockBuildPageIfNeeded = vi.fn(async () => true);
 vi.doMock('../../lib/server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
   getPageJitEnrichment: vi.fn(() => ({})),
-}));
-
-const mockGetMock = vi.fn(() => null);
-vi.doMock('../../lib/docs/devMockRegistry.js', () => ({
-  getMock: mockGetMock,
 }));
 
 const { default: requestHandler } = await import('./request.js');
@@ -76,8 +70,6 @@ beforeEach(() => {
 afterEach(() => {
   mockCallRequest.mockReset();
   mockBuildPageIfNeeded.mockReset();
-  mockGetMock.mockReset();
-  mockGetMock.mockImplementation(() => null);
 });
 
 test('requestHandler builds the page JIT before calling the request', async () => {
@@ -105,15 +97,6 @@ test('requestHandler builds nested page ids as one page', async () => {
     expect.anything(),
     expect.objectContaining({ pageId: 'user-account/login', requestId: 'get_session' })
   );
-});
-
-test('requestHandler replays a dev mock without building or calling the request', async () => {
-  mockGetMock.mockImplementation(() => ({ response: { rows: [1] } }));
-  const res = await post(createApp(), '/api/request/dashboard/get_rows');
-  expect(res.status).toEqual(200);
-  expect(await res.json()).toEqual({ success: true, response: { rows: [1] } });
-  expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
-  expect(mockCallRequest).not.toHaveBeenCalled();
 });
 
 // A GET to the request route is client-caused, so it must answer 405 rather

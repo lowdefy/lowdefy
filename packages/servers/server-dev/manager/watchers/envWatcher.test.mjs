@@ -22,6 +22,10 @@ import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import waitFor from '../../test-utils/waitFor.mjs';
 
+const mockClearPluginTypeCache = vi.fn();
+vi.doMock('../utils/pluginTypeCache.mjs', () => ({
+  clearPluginTypeCache: mockClearPluginTypeCache,
+}));
 const { default: envWatcher } = await import('./envWatcher.mjs');
 
 // macOS can hold file events back for tens of seconds on a busy machine.
@@ -32,6 +36,7 @@ let context;
 let watcher;
 
 beforeEach(async () => {
+  mockClearPluginTypeCache.mockClear();
   configDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-env-watcher-test-'));
   fs.writeFileSync(path.join(configDir, '.env'), 'LOWDEFY_SECRET_A=one\n');
   // Otherwise the fixture write can reach the watcher as a second edit.
@@ -79,6 +84,10 @@ test.each([
     expect(context.readDotEnv).toHaveBeenCalledTimes(1);
     expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
     expect(context.readDotEnv.mock.invocationCallOrder[0]).toBeLessThan(
+      context.lowdefyBuild.mock.invocationCallOrder[0]
+    );
+    expect(mockClearPluginTypeCache).toHaveBeenCalledTimes(1);
+    expect(mockClearPluginTypeCache.mock.invocationCallOrder[0]).toBeLessThan(
       context.lowdefyBuild.mock.invocationCallOrder[0]
     );
     expect(context.syncServer).toHaveBeenCalledWith({ restart: true });

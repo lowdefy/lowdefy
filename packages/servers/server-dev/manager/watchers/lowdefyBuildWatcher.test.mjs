@@ -30,6 +30,11 @@ vi.doMock('@lowdefy/build/dev', () => ({
   resolvePagePath: vi.fn(async ({ pageId }) => declaredPaths.get(pageId) ?? pageId),
 }));
 
+const mockClearPluginTypeCache = vi.fn();
+vi.doMock('../utils/pluginTypeCache.mjs', () => ({
+  clearPluginTypeCache: mockClearPluginTypeCache,
+}));
+
 const watchers = spyOnChokidar();
 const { default: lowdefyBuildWatcher } = await import('./lowdefyBuildWatcher.mjs');
 
@@ -90,6 +95,7 @@ async function editUntilInvalidated(filePath) {
 // The app lives in a git worktree under a dot-folder, like the worktrees
 // Claude Code creates under .claude/worktrees/.
 beforeEach(async () => {
+  mockClearPluginTypeCache.mockClear();
   const tmpDir = fs.realpathSync(os.tmpdir());
   repoDir = fs.mkdtempSync(path.join(tmpDir, 'lowdefy-build-watcher-test-'));
   const worktreeDir = path.join(repoDir, '.claude', 'worktrees', 'feature');
@@ -168,6 +174,7 @@ test('a page file edit in an app under a dot-folder invalidates pages', async ()
   });
   expect(context.lowdefyBuild).not.toHaveBeenCalled();
   expect(context.syncServer).not.toHaveBeenCalled();
+  expect(mockClearPluginTypeCache).not.toHaveBeenCalled();
 });
 
 test('watchIgnore globs and node_modules are not watched', async () => {
@@ -213,7 +220,7 @@ test('a page file edit that changes the page path rebuilds the config', async ()
   await waitFor(invalidated, { description: 'the pages to be invalidated' });
 });
 
-test('adding a page to the pages list rebuilds the config', async () => {
+test('adding a page to the pages list rebuilds the config and keeps the plugin type cache', async () => {
   await startWatcher();
   fs.appendFileSync(path.join(configDir, 'pages.yaml'), '- _ref: pages/about.yaml\n');
 
@@ -221,6 +228,20 @@ test('adding a page to the pages list rebuilds the config', async () => {
     description: 'a config build',
   });
   await waitFor(invalidated, { description: 'the pages to be invalidated' });
+  expect(mockClearPluginTypeCache).not.toHaveBeenCalled();
+});
+
+test('a root lowdefy.yaml edit clears the plugin type cache before the config build', async () => {
+  await startWatcher();
+  write(path.join(configDir, 'lowdefy.yaml'), 'lowdefy: local\nplugins:\n  - name: app-plugin\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
+  expect(mockClearPluginTypeCache).toHaveBeenCalledTimes(1);
+  expect(mockClearPluginTypeCache.mock.invocationCallOrder[0]).toBeLessThan(
+    context.lowdefyBuild.mock.invocationCallOrder[0]
+  );
 });
 
 test('a config rebuild stays busy until the server has caught up with the build', async () => {
