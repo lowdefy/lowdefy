@@ -44,6 +44,15 @@ test('isNativeAuthRequest is false for a request with cookies', () => {
   expect(isNativeAuthRequest({ request: request({ ...shell, cookie: 'a=b' }) })).toBe(false);
 });
 
+test('isNativeAuthRequest is false for a browser fetch that sends no Origin and no cookies', () => {
+  // A same-origin GET from page script with credentials: 'omit'.
+  expect(
+    isNativeAuthRequest({
+      request: request({ ...shell, 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-origin' }),
+    })
+  ).toBe(false);
+});
+
 test('isNativeAuthRequest is false for a server-side auth.api call, which has no request', () => {
   expect(isNativeAuthRequest({ request: undefined })).toBe(false);
 });
