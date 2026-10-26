@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import hasTimeoutInChain from './hasTimeoutInChain.js';
 import readErrorCodes from './readErrorCodes.js';
 
 // What a log may say about an error. Chat text and other inputs can hold personal information,
@@ -64,7 +65,9 @@ function errorSummaryForLog(error, depth = 0) {
   }
   const { code, statusCode } = readErrorCodes(error);
   if (code !== undefined) summary.code = code;
-  if (statusCode !== undefined) summary.statusCode = statusCode;
+  // A status above a call that ran out of time is one the client made up, not a server
+  // response (see ServiceError), so neither the log nor the client is told it.
+  if (statusCode !== undefined && !hasTimeoutInChain(error)) summary.statusCode = statusCode;
   // A RetryError holds the attempt that failed last as lastError rather than as its cause.
   const cause = error.lastError ?? error.cause;
   if (cause !== undefined && depth < CAUSE_DEPTH) {

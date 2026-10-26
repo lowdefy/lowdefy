@@ -480,8 +480,53 @@ describe('timeouts are reported as timeouts, not server errors', () => {
     expect(error.statusCode).toBeUndefined();
   });
 
-  test('ServiceError keeps a status passed explicitly for a timeout', () => {
+  test('ServiceError keeps a status passed explicitly for a timeout, and its message matches', () => {
     const error = new ServiceError(undefined, { cause: gatewayTimeout(), statusCode: 504 });
+    expect(error.statusCode).toBe(504);
+    expect(error.message).toBe(
+      'Server returned error 504. Invalid error response format: Gateway request failed: The operation was aborted due to timeout'
+    );
+  });
+
+  test('ServiceError reports an ETIMEDOUT under a client error with an invented 500 as a timeout', () => {
+    const cause = Object.assign(new Error('Gateway request failed'), {
+      statusCode: 500,
+      cause: Object.assign(new Error('connect ETIMEDOUT 10.0.0.1:443'), { code: 'ETIMEDOUT' }),
+    });
+    const error = new ServiceError(undefined, { cause });
+    expect(error.message).toBe(
+      'Request timed out. The service may be slow, or the timeout too short. Gateway request failed'
+    );
+    expect(error.statusCode).toBeUndefined();
+  });
+
+  test('ServiceError reports an undici headers timeout under the gateway 408 as a timeout', () => {
+    const headersTimeout = Object.assign(new Error('Headers Timeout Error'), {
+      name: 'HeadersTimeoutError',
+      code: 'UND_ERR_HEADERS_TIMEOUT',
+    });
+    const cause = Object.assign(new Error('Gateway request timed out: Headers Timeout Error'), {
+      name: 'GatewayTimeoutError',
+      statusCode: 408,
+      cause: headersTimeout,
+    });
+    expect(ServiceError.isServiceError(cause)).toBe(true);
+    const error = new ServiceError(undefined, { cause });
+    expect(error.message).toBe(
+      'Request timed out. The service may be slow, or the timeout too short. Gateway request timed out: Headers Timeout Error'
+    );
+    expect(error.statusCode).toBeUndefined();
+  });
+
+  test('isServiceError treats an undici body timeout code as a service error', () => {
+    const error = Object.assign(new Error('Body Timeout Error'), { code: 'UND_ERR_BODY_TIMEOUT' });
+    expect(ServiceError.isServiceError(error)).toBe(true);
+  });
+
+  test('ServiceError does not take a timeout from a message that only mentions one', () => {
+    const cause = Object.assign(new Error('Upstream timeout'), { statusCode: 504 });
+    const error = new ServiceError(undefined, { cause });
+    expect(error.message).toBe('Server returned error 504. Upstream timeout');
     expect(error.statusCode).toBe(504);
   });
 
@@ -497,4 +542,10 @@ describe('timeouts are reported as timeouts, not server errors', () => {
     error.cause = error;
     expect(ServiceError.enhanceMessage(error)).toBe('Server returned error 502. Bad Gateway');
   });
+});
+
+test('readRetryAfter ends on a cyclic cause chain with no header', () => {
+  const error = new Error('Too Many Requests');
+  error.cause = error;
+  expect(ServiceError.readRetryAfter(error)).toBe(null);
 });

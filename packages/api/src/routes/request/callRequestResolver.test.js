@@ -637,3 +637,18 @@ test("a throttled request's ServiceError keeps the status and Retry-After its co
   expect(caught.cause.response).toBeUndefined();
   expect(caught.devCause.response.data).toEqual({ message: 'My ID is 8001015009087' });
 });
+
+test('a timed-out request carries no status in its summarised cause, so the 500 a client made up is not sent', async () => {
+  const caught = await catchError(async () => {
+    const timeout = new DOMException('The operation was aborted due to timeout', 'TimeoutError');
+    const error = new Error('Gateway request failed', { cause: timeout });
+    error.name = 'GatewayResponseError';
+    error.statusCode = 500;
+    throw error;
+  });
+  expect(caught).toBeInstanceOf(ServiceError);
+  expect(caught.statusCode).toBeUndefined();
+  expect(caught.cause.name).toBe('GatewayResponseError');
+  expect(caught.cause.statusCode).toBeUndefined();
+  expect(caught.cause.cause.name).toBe('TimeoutError');
+});
