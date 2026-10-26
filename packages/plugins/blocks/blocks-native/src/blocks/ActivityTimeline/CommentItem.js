@@ -160,7 +160,7 @@ function CommentItem({ comment, ctx, first, thread }) {
           <AvatarCircle
             avatar={{ name: view.actor.name, src: view.actor.picture ?? undefined }}
             isDark={isDark}
-            resolveUrl={ctx.resolveUrl}
+            imageSource={ctx.imageSource}
             size={avatarSize}
             tokens={tokens}
           />
@@ -223,7 +223,7 @@ function CommentItem({ comment, ctx, first, thread }) {
             onRecordPress={ctx.onRecordPress}
             pattern={ctx.pattern}
             people={ctx.people}
-            resolveUrl={ctx.resolveUrl}
+            imageSource={ctx.imageSource}
             tokens={tokens}
           />
         </Pressable>

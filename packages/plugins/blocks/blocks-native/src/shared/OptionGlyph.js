@@ -44,7 +44,7 @@ function OptionGlyph({ avatar, color, components, icon, isDark, size, symbol, te
       <AvatarCircle
         avatar={avatar}
         isDark={isDark}
-        resolveUrl={components.resolveUrl}
+        imageSource={components.imageSource}
         size={size}
         testID={testID}
         tokens={tokens}

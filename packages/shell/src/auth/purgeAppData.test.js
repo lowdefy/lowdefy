@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { Image } from 'expo-image';
 import { installDevice } from '@lowdefy/blocks-native/device';
 
 import purgeAppData from './purgeAppData.js';
@@ -54,6 +55,26 @@ test('a sign-out stops tracking and geofencing, drops the backlog and clears not
   expect(notifications.cancel).toHaveBeenCalledWith({ all: true });
   expect(notifications.setBadgeCount).toHaveBeenCalledWith({ count: 0 });
   expect([...kv.values.keys()]).toEqual(['lowdefy-shell:preferences']);
+});
+
+test('a sign-out clears the images expo-image cached in memory and on disk', async () => {
+  const clearMemoryCache = jest.spyOn(Image, 'clearMemoryCache');
+  const clearDiskCache = jest.spyOn(Image, 'clearDiskCache');
+  await purge(memoryKv({}));
+  expect(clearMemoryCache).toHaveBeenCalled();
+  expect(clearDiskCache).toHaveBeenCalled();
+  clearMemoryCache.mockRestore();
+  clearDiskCache.mockRestore();
+});
+
+test('an image cache that fails to clear does not fail the sign-out', async () => {
+  const clearDiskCache = jest
+    .spyOn(Image, 'clearDiskCache')
+    .mockRejectedValue(new Error('disk cache busy'));
+  const kv = memoryKv({ 'lowdefy-shell:tracking-backlog': '[]' });
+  await expect(purge(kv)).resolves.toBeUndefined();
+  expect([...kv.values.keys()]).toEqual([]);
+  clearDiskCache.mockRestore();
 });
 
 test('a sign-out on a shell without tracking or notifications still purges', async () => {

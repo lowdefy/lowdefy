@@ -39,18 +39,18 @@ const QUOTE_PADDING = 12;
 // rounded card, quotes with a tint bar, tables in a rounded box and links in the tint. A link
 // that matches one of `linkChips` (by scheme or pattern) is a chip (LinkChip), laid out with its
 // line as a word of it (layoutLinkChips). Every link is pressed through onLinkPress; chips only
-// when onChipPress is given. Images load through MarkdownImage, their url taken against the app
-// server (resolveUrl). Raw html is drawn as its source text, as the web block escapes it, or
+// when onChipPress is given. Images load through MarkdownImage from imageSource, which takes their
+// url against the app server and sends the session token to it alone. Raw html is drawn as its source text, as the web block escapes it, or
 // dropped with skipHtml.
 class MarkdownRenderer extends Renderer {
-  constructor({ Icon, linkChips = [], onChipPress, onLinkPress, palette, resolveUrl, skipHtml }) {
+  constructor({ Icon, imageSource, linkChips = [], onChipPress, onLinkPress, palette, skipHtml }) {
     super();
     this.Icon = Icon;
+    this.imageSource = imageSource;
     this.linkChips = linkChips;
     this.onChipPress = onChipPress;
     this.onLinkPress = onLinkPress;
     this.palette = palette;
-    this.resolveUrl = resolveUrl;
     this.skipHtml = skipHtml;
   }
 
@@ -188,10 +188,10 @@ class MarkdownRenderer extends Renderer {
   }
 
   image(uri, alt, style, title) {
-    const resolved = this.resolveUrl(uri);
+    const source = this.imageSource(uri);
     return (
       <View key={this.getKey()} style={{ marginBottom: this.palette.blockSpace }}>
-        <MarkdownImage alt={alt || title} key={resolved} palette={this.palette} uri={resolved} />
+        <MarkdownImage alt={alt || title} key={source.uri} palette={this.palette} source={source} />
       </View>
     );
   }

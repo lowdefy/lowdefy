@@ -174,6 +174,28 @@ test('a Markdown draws an image from the app server, sized to the image once it 
   expect(screen.getByText(/after/)).toBeTruthy();
 });
 
+test('a Markdown image on the app server carries the session token, and one elsewhere does not', async () => {
+  await renderPage({
+    authTransport: 'bearer',
+    pageConfig: page([
+      {
+        id: 'body',
+        type: 'Markdown',
+        properties: {
+          content: '![Site plan](/public/plan.png)\n\n![Logo](https://cdn.test/logo.svg)',
+        },
+      },
+    ]),
+    token: 'session-token',
+  });
+  const [plan, logo] = await screen.findAllByTestId('markdown-image');
+  expect(plan.props.source).toEqual({
+    headers: { Authorization: 'Bearer session-token' },
+    uri: 'https://app.lowdefy.test/public/plan.png',
+  });
+  expect(logo.props.source).toEqual({ uri: 'https://cdn.test/logo.svg' });
+});
+
 test('a Markdown image that fails to load shows its alt text', async () => {
   await renderPage({
     pageConfig: page([

@@ -77,6 +77,22 @@ test('an Avatar loads a photo path from the app server', async () => {
   expect(image.props.source).toEqual({ uri: 'https://app.lowdefy.test/avatars/ada.png' });
 });
 
+test('an Avatar photo on the app server carries the session token of a signed-in shell', async () => {
+  await renderPage({
+    authTransport: 'bearer',
+    pageConfig: page([
+      { id: 'ada', type: 'Avatar', properties: { name: 'Ada Lovelace', src: '/avatars/ada.png' } },
+    ]),
+    token: 'session-token',
+  });
+  const image = await screen.findByTestId('expo-image', { includeHiddenElements: true });
+  expect(image.props.source).toEqual({
+    headers: { Authorization: 'Bearer session-token' },
+    uri: 'https://app.lowdefy.test/avatars/ada.png',
+  });
+  expect(image.props.recyclingKey).toBe('https://app.lowdefy.test/avatars/ada.png');
+});
+
 test('stacked avatars load photo paths from the app server', async () => {
   await renderPage({
     pageConfig: page([

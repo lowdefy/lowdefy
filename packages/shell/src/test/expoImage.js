@@ -35,4 +35,8 @@ function Image({ cachePolicy, contentFit, onError, onLoad, recyclingKey, source,
   );
 }
 
+// The caches sign-out clears; a test spies on them.
+Image.clearMemoryCache = async () => true;
+Image.clearDiskCache = async () => true;
+
 export { Image };

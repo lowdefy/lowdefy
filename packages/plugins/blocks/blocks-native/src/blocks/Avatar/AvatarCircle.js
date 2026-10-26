@@ -32,17 +32,17 @@ import getInitials from './getInitials.js';
  * @param {Object} props
  * @param {{ name?: string, src?: string, content?: string, color?: string }} props.avatar
  * @param {boolean} props.isDark
- * @param {(url: string) => string} props.resolveUrl Takes a path against the app server.
+ * @param {(url: string) => Object} props.imageSource The expo-image source for a url.
  * @param {string} [props.ringColor] A ring around the avatar, as a stacked avatar has.
  * @param {number} props.size
  * @param {Object} [props.style]
  * @param {string} [props.testID]
  * @param {Object} props.tokens
  */
-function AvatarCircle({ avatar, isDark, resolveUrl, ringColor, size, style, testID, tokens }) {
+function AvatarCircle({ avatar, imageSource, isDark, ringColor, size, style, testID, tokens }) {
   const image = useMemo(
-    () => getAvatarImage({ resolveUrl, src: avatar.src }),
-    [avatar.src, resolveUrl]
+    () => getAvatarImage({ imageSource, src: avatar.src }),
+    [avatar.src, imageSource]
   );
   // Both hold the src they are about, so a new src starts over without an effect to reset them.
   const [failedSrc, setFailedSrc] = useState(null);
@@ -93,11 +93,11 @@ function AvatarCircle({ avatar, isDark, resolveUrl, ringColor, size, style, test
       ) : null}
       {drawImage && image.kind === 'uri' ? (
         <AvatarPhoto
-          key={image.uri}
+          key={image.source.uri}
           onError={() => setFailedSrc(avatar.src)}
           onShown={() => setShownSrc(avatar.src)}
           size={size}
-          uri={image.uri}
+          source={image.source}
         />
       ) : null}
     </View>

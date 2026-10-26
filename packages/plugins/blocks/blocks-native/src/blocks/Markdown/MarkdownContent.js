@@ -40,12 +40,13 @@ const appPathPattern = /^\/(?!\/)/;
  * Without it a web link opens in the in-app browser (expo-web-browser, its controls in the tint)
  * and any other link (mail, phone) through the system, and a chip is not pressable. An app path
  * (`/orders/42`) goes to `onPathPress` when the host gives one, which opens it as a page. Any
- * other path, in a link or an image, is taken against the app server as a browser on the app's
- * page would (components.resolveUrl).
+ * other path in a link is taken against the app server as a browser on the app's page would
+ * (components.resolveUrl). An image loads through components.imageSource, which takes a path the
+ * same way and sends the session token to the app server's own origin alone.
  *
  * @param {Object} props
  * @param {Object} props.components The host block's components (components.Icon for chip icons,
- *   components.resolveUrl for paths).
+ *   components.resolveUrl for link paths, components.imageSource for images).
  * @param {string} props.content
  * @param {Object[]} [props.linkChips] Links drawn as inline chips, by scheme or pattern
  *   (schemas/linkChips).
@@ -99,11 +100,11 @@ function MarkdownContent({
         linkChips,
         onChipPress: onLinkPress === null ? null : openLink,
         onLinkPress: openLink,
+        imageSource: components.imageSource,
         palette,
-        resolveUrl,
         skipHtml,
       }),
-    [components.Icon, linkChips, onLinkPress, openLink, palette, resolveUrl, skipHtml]
+    [components.Icon, components.imageSource, linkChips, onLinkPress, openLink, palette, skipHtml]
   );
   const elements = useMarkdown(content ?? '', {
     colorScheme: isDark ? 'dark' : 'light',

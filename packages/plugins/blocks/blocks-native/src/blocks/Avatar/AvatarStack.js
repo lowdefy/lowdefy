@@ -29,14 +29,24 @@ import getSemanticColors from '../../shared/getSemanticColors.js';
  * @param {Object[]} props.avatars
  * @param {boolean} props.isDark
  * @param {number} [props.max]
- * @param {(url: string) => string} props.resolveUrl Takes a path against the app server.
+ * @param {(url: string) => Object} props.imageSource The expo-image source for a url.
  * @param {string} [props.ringColor] Defaults to the cell colour.
  * @param {number} props.size
  * @param {Object} [props.style]
  * @param {string} props.testID
  * @param {Object} props.tokens
  */
-function AvatarStack({ avatars, isDark, max, resolveUrl, ringColor, size, style, testID, tokens }) {
+function AvatarStack({
+  avatars,
+  imageSource,
+  isDark,
+  max,
+  ringColor,
+  size,
+  style,
+  testID,
+  tokens,
+}) {
   const colors = getSemanticColors({ tokens });
   const ring = ringColor ?? colors.cell;
   const shown = type.isNumber(max) ? avatars.slice(0, max) : avatars;
@@ -55,7 +65,7 @@ function AvatarStack({ avatars, isDark, max, resolveUrl, ringColor, size, style,
           avatar={avatar}
           isDark={isDark}
           key={`${avatar.name ?? avatar.src ?? ''}-${index}`}
-          resolveUrl={resolveUrl}
+          imageSource={imageSource}
           ringColor={ring}
           size={size}
           style={{ marginLeft: index === 0 ? 0 : overlap, zIndex: shown.length - index }}

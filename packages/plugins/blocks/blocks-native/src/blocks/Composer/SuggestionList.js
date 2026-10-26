@@ -30,7 +30,7 @@ const DEFAULT_LINK_ICONS = {
   task: 'CircleCheck',
 };
 
-function MentionRow({ colors, isDark, onPick, person, resolveUrl, tokens }) {
+function MentionRow({ colors, imageSource, isDark, onPick, person, tokens }) {
   return (
     <Pressable
       accessibilityLabel={`Mention ${person.label}`}
@@ -41,7 +41,7 @@ function MentionRow({ colors, isDark, onPick, person, resolveUrl, tokens }) {
       <AvatarCircle
         avatar={{ name: person.label, src: person.picture ?? undefined }}
         isDark={isDark}
-        resolveUrl={resolveUrl}
+        imageSource={imageSource}
         size={28}
         tokens={tokens}
       />
@@ -80,6 +80,7 @@ function LinkRow({ colors, Icon, hit, linkIcons, onPick }) {
  */
 function SuggestionList({
   colors,
+  imageSource,
   Icon,
   isDark,
   linkIcons,
@@ -87,7 +88,6 @@ function SuggestionList({
   onPickLink,
   onPickMention,
   people,
-  resolveUrl,
   tokens,
 }) {
   const icons = { ...DEFAULT_LINK_ICONS, ...(linkIcons ?? {}) };
@@ -111,7 +111,7 @@ function SuggestionList({
             key={String(person.value)}
             onPick={onPickMention}
             person={person}
-            resolveUrl={resolveUrl}
+            imageSource={imageSource}
             tokens={tokens}
           />
         ))}

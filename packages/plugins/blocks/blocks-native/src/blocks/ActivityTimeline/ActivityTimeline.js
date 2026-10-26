@@ -203,6 +203,7 @@ function ActivityTimeline({
       reactions: properties.reactions ?? REACTIONS,
       repliesShown: properties.repliesShown ?? 3,
       resolveUrl: components.resolveUrl,
+      imageSource: components.imageSource,
       tokens,
       trigger,
       user: properties.user,
@@ -210,6 +211,7 @@ function ActivityTimeline({
     [
       colors,
       components.Icon,
+      components.imageSource,
       components.resolveUrl,
       hasLinkPress,
       isDark,

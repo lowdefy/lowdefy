@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { Image } from 'expo-image';
 import { appStorageKey } from '@lowdefy/helpers';
 import { getDeviceFeature, hasDeviceFeature } from '@lowdefy/blocks-native/device';
 
@@ -25,7 +26,8 @@ import getLastCacheKeyName from '../cache/getLastCacheKeyName.js';
  * the device store (SetLocalStorage's user keys, which the core puts under one prefix per app),
  * the requests the offline queue still held for them, and the phone's work for them: background
  * location and geofences stop and their backlog goes, scheduled notifications are cancelled and
- * the badge cleared (on shells that carry those features).
+ * the badge cleared (on shells that carry those features), and the images expo-image cached for
+ * them, avatar photos and Markdown images that loaded with their token, leave memory and disk.
  * Device preferences stay. Nothing a person saw outlives their sign-out.
  *
  * @param {Object} params
@@ -67,6 +69,12 @@ async function purgeAppData({ appId, cacheStore, kv, queueStore, slug, tokenStor
   kv.keys()
     .filter((key) => key.startsWith(userPrefix))
     .forEach((key) => kv.remove(key));
+  try {
+    await Promise.all([Image.clearMemoryCache(), Image.clearDiskCache()]);
+  } catch (error) {
+    // The session and its data are already gone; an image cache that fails to clear is not worth
+    // failing the sign-out for.
+  }
 }
 
 export default purgeAppData;

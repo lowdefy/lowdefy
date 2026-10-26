@@ -55,22 +55,27 @@ function createRecord() {
  * @param {Object} params.pageConfig The page as config writes it (blocks, events, properties).
  *   buildPage builds it; its root is usually a Box.
  * @param {Object} [params.actions] Extra test actions, by type name, over the default ones.
+ * @param {'cookie'|'bearer'} [params.authTransport] The host's auth transport, cookie unless asked;
+ *   a bearer host holds `token`, as a signed-in shell does.
  * @param {'light'|'dark'} [params.darkMode] The theme mode, light unless asked.
  * @param {boolean} [params.focused] Whether the page's screen is the one shown, true unless asked.
  * @param {Object} [params.rootConfig] Root config keys over the test root config.
+ * @param {string} [params.token] The session token a bearer host holds.
  * @returns {Promise<{ calls: Object[], host: Object, lowdefy: Object, setFocused: Function }>}
  *   The Record action's params in the order they ran, the fake host, the lowdefy object and
  *   `setFocused(focused)`, which shows or hides the page's screen.
  */
 async function renderPage({
   actions = {},
+  authTransport,
   darkMode = 'light',
   focused = true,
   pageConfig,
   rootConfig: rootOverrides = {},
+  token,
 }) {
   const { calls, Record } = createRecord();
-  const host = createFakeHost({ path: `/${pageConfig.id}` });
+  const host = createFakeHost({ authTransport, path: `/${pageConfig.id}`, token });
   const lowdefy = { buildId: 'build-1' };
   const builtPage = buildPage(pageConfig);
   const pageElement = (isFocused) => (

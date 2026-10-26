@@ -30,11 +30,17 @@ function jsonResponse(body) {
 
 // A native host for @lowdefy/client-core with no network: fetch answers every request with `{}`,
 // and streamFetch (a block's streamed call, such as AgentChat's chat stream) with an empty body
-// until a test gives it an answer.
-function createFakeHost({ path }) {
+// until a test gives it an answer. A cookie host by default; a 'bearer' host holds `token`, as a
+// signed-in shell does.
+function createFakeHost({ authTransport, path, token = null }) {
   const fetch = jest.fn(async () => jsonResponse({}));
   const streamFetch = jest.fn(async () => new Response(''));
+  const auth =
+    authTransport === 'bearer'
+      ? { authTransport, tokenStore: { clear: jest.fn(), get: () => token, set: jest.fn() } }
+      : {};
   return {
+    ...auth,
     fetch,
     globals: createNativeGlobals({
       assign: jest.fn(),

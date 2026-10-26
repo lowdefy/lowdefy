@@ -29,9 +29,9 @@ const FADE_MS = 220;
  * @param {Function} props.onError Called when the image fails to load.
  * @param {Function} props.onShown Called once the image covers the initials.
  * @param {number} props.size
- * @param {string} props.uri
+ * @param {{ uri: string, headers?: Object }} props.source
  */
-function AvatarPhoto({ onError, onShown, size, uri }) {
+function AvatarPhoto({ onError, onShown, size, source }) {
   const opacity = useRef(new Animated.Value(0)).current;
   const onLoad = ({ cacheType }) => {
     if (cacheType === 'memory') {
@@ -56,8 +56,8 @@ function AvatarPhoto({ onError, onShown, size, uri }) {
         contentFit="cover"
         onError={onError}
         onLoad={onLoad}
-        recyclingKey={uri}
-        source={{ uri }}
+        recyclingKey={source.uri}
+        source={source}
         style={{ height: size, width: size }}
       />
     </Animated.View>

@@ -35,7 +35,7 @@ function Avatar({ blockId, components, properties, styles }) {
         avatars={properties.avatars}
         isDark={isDark}
         max={properties.max}
-        resolveUrl={components.resolveUrl}
+        imageSource={components.imageSource}
         ringColor={properties.ringColor}
         size={size}
         style={styles.element}
@@ -48,7 +48,7 @@ function Avatar({ blockId, components, properties, styles }) {
     <AvatarCircle
       avatar={properties}
       isDark={isDark}
-      resolveUrl={components.resolveUrl}
+      imageSource={components.imageSource}
       size={size}
       style={styles.element}
       testID={`${blockId}_avatar`}

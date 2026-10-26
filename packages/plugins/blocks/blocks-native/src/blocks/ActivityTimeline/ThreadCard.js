@@ -64,7 +64,7 @@ function ThreadCard({ ctx, first, last, thread }) {
     <AvatarCircle
       avatar={{ name: author.name, src: author.picture ?? undefined }}
       isDark={isDark}
-      resolveUrl={ctx.resolveUrl}
+      imageSource={ctx.imageSource}
       size={AVATAR_SIZE}
       tokens={tokens}
     />

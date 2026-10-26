@@ -90,8 +90,8 @@ function CommentBody({
   onLinkPress,
   onRecordPress,
   pattern,
+  imageSource,
   people,
-  resolveUrl,
   tokens,
 }) {
   const { palette, styles, theme } = useMemo(
@@ -113,11 +113,11 @@ function CommentBody({
         onChipPress: hasLinkPress ? onLinkPress : null,
         onLinkPress,
         onRecordPress,
+        imageSource,
         palette,
-        resolveUrl,
         skipHtml: false,
       }),
-    [colors, hasLinkPress, Icon, linkChips, onLinkPress, onRecordPress, palette, resolveUrl]
+    [colors, hasLinkPress, Icon, imageSource, linkChips, onLinkPress, onRecordPress, palette]
   );
   const markdown = useMemo(
     () => toTimelineMarkdown({ body, mentions, people, pattern }),

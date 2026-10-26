@@ -32,9 +32,9 @@ const PLACEHOLDER_HEIGHT = 160;
  * @param {Object} props
  * @param {string} [props.alt]
  * @param {Object} props.palette The Markdown palette (getMarkdownStyles).
- * @param {string} props.uri
+ * @param {{ uri: string, headers?: Object }} props.source
  */
-function MarkdownImage({ alt, palette, uri }) {
+function MarkdownImage({ alt, palette, source }) {
   const [size, setSize] = useState(null);
   const [failed, setFailed] = useState(false);
   if (failed) {
@@ -55,8 +55,8 @@ function MarkdownImage({ alt, palette, uri }) {
       contentFit="contain"
       onError={() => setFailed(true)}
       onLoad={({ source }) => setSize({ height: source.height, width: source.width })}
-      recyclingKey={uri}
-      source={{ uri }}
+      recyclingKey={source.uri}
+      source={source}
       style={[{ borderRadius: 10, width: '100%' }, sizeStyle]}
       testID="markdown-image"
     />

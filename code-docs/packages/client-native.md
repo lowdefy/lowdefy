@@ -22,6 +22,7 @@ renderer in `@lowdefy/client`, over the same `@lowdefy/client-core` and `@lowdef
 | `globals/createScreenGlobals.js`                                 | One screen's globals: the app's, with `location` the screen's own route        |
 | `link/setupLink.js`                                              | Page links through the host router, others through `Linking`                   |
 | `link/createResolveUrl.js`                                       | `components.resolveUrl`: a path taken against the app server, as a browser     |
+| `link/createImageSource.js`, `getUrlOrigin.js`                   | `components.imageSource`: an expo-image source, the token for the app's origin |
 | `screen/useKeyboardWindowOffset.js`                              | Android: a KeyboardAvoidingView's distance from the window top, for its offset |
 | `screen/Screen.js`                                               | The `Screen` page type; reports header options to `onScreenOptions`            |
 | `screen/HeaderActionButton.js`                                   | A header action as a natural-size icon button                                  |
