@@ -55,6 +55,7 @@ export default {
             description: 'Value label shown to user - supports html.',
           },
           value: {
+            textKind: 'data',
             description: 'Option value. Can be of any type.',
           },
           disabled: {

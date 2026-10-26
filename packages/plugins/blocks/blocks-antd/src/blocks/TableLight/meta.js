@@ -16,6 +16,7 @@
 
 import AGGREGATE_LABELS from '../../table/aggregateLabels.js';
 import CELL_TYPE_FAMILIES from '../../table/cellTypeFamilies.js';
+import ROWS_KIND from '../../table/rowsKind.js';
 import TABLE_ONLY_KEYS from './tableOnlyKeys.js';
 
 // Table-only keys are matched by pattern rather than listed as properties, so
@@ -198,6 +199,7 @@ export default {
       data: {
         type: ['array', 'null'],
         items: { type: 'object' },
+        rowsKind: ROWS_KIND,
         description: 'The rows to show.',
         errorMessage: {
           type: 'must be an array of rows. Use Table for server mode (data.mode: server)',
