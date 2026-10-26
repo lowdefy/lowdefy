@@ -20,6 +20,11 @@ import * as QuickActions from 'expo-quick-actions';
 import openPath from './openPath.js';
 import parseShellLink from './parseShellLink.js';
 
+// The quick action or shortcut link that launched the app runs once per launch. The services start
+// again after every sign-out, and QuickActions.initial and the initial url stay as they were, so
+// the next person to sign in would be sent to the shortcut's page again.
+let launchHandled = false;
+
 /**
  * The app icon's quick actions and App Shortcuts, from mobile.shortcuts: set on the phone whenever
  * the root changes (expo-quick-actions, which the App Shortcuts intent reads too). Choosing one,
@@ -64,12 +69,15 @@ function startShortcuts({ app }) {
     run(action.id).catch(() => {});
   });
   const urls = Linking.addEventListener('url', ({ url }) => onUrl(url));
-  if (QuickActions.initial !== undefined) {
-    run(QuickActions.initial.id).catch(() => {});
+  if (!launchHandled) {
+    launchHandled = true;
+    if (QuickActions.initial !== undefined) {
+      run(QuickActions.initial.id).catch(() => {});
+    }
+    Linking.getInitialURL()
+      .then(onUrl)
+      .catch(() => {});
   }
-  Linking.getInitialURL()
-    .then(onUrl)
-    .catch(() => {});
   return () => {
     unsubscribe();
     quickAction.remove();
