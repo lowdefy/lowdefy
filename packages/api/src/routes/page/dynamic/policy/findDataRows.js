@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 // Every column a columns list holds, column groups' children included.
 function flattenColumns({ columns, mark }) {
@@ -37,16 +37,39 @@ function drawsAsText({ column, mark }) {
   if (type.isArray(column[mark.children]) && type.isNone(column[mark.type])) {
     return true;
   }
+  // A cell option that reads another row field into the cell, such as a
+  // colour, draws that field as more than text.
+  const cell = column[mark.cell];
+  if (type.isObject(cell) && mark.cellRowKeys.some((key) => !type.isNone(cell[key]))) {
+    return false;
+  }
   return mark.textTypes.includes(column[mark.type] ?? mark.defaultType);
+}
+
+function isDataRows({ properties, key, mark }) {
+  if (!type.isArray(properties[key])) {
+    return false;
+  }
+  if (mark.drawnBy.some((drawnBy) => !type.isNone(get(properties, drawnBy)))) {
+    return false;
+  }
+  const columns = properties[mark.columns];
+  if (!type.isNone(columns) && !type.isArray(columns)) {
+    return false;
+  }
+  return flattenColumns({ columns, mark }).every((column) => drawsAsText({ column, mark }));
 }
 
 // Returns the paths of row lists that are data: a top-level property whose
 // schema marks it with rowsKind, holding an array, where every column of the
-// sibling columns property draws its cell as text. A column whose type draws a
-// link, an image or HTML (or reads other row fields into one) leaves the rows
-// to every check. rowsKind names the columns property, a column's type and
-// children keys, the type a column without one has, and the text types:
-// { columns, type, children, defaultType, textTypes }.
+// sibling columns property draws its cell as text and nothing else draws the
+// rows. A column whose type draws a link, an image or HTML, or whose cell
+// options read a row field into the cell, leaves the rows to every check.
+// rowsKind names the columns property; a column's type, children and cell
+// options keys; the type a column without one has; the text types; the cell
+// options that read a row field; and the properties (dot paths) that draw rows
+// themselves when set:
+// { columns, type, children, cell, cellRowKeys, drawnBy, defaultType, textTypes }.
 function findDataRows({ properties, schema, path }) {
   if (!type.isObject(properties) || !type.isObject(schema?.properties)) {
     return [];
@@ -54,14 +77,7 @@ function findDataRows({ properties, schema, path }) {
   return Object.keys(schema.properties)
     .filter((key) => {
       const mark = schema.properties[key].rowsKind;
-      if (!type.isObject(mark) || !type.isArray(properties[key])) {
-        return false;
-      }
-      const columns = properties[mark.columns];
-      if (!type.isNone(columns) && !type.isArray(columns)) {
-        return false;
-      }
-      return flattenColumns({ columns, mark }).every((column) => drawsAsText({ column, mark }));
+      return type.isObject(mark) && isDataRows({ properties, key, mark });
     })
     .map((key) => `${path}.${key}`);
 }

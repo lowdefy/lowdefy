@@ -894,6 +894,7 @@ test('checkPolicy refuses content nested deeper than the Dynamic data limit befo
 // The policy checks a value as a URL only where it is used as a link (a URL key
 // or urlKind mark). State, option values, Table cells drawn as text and text a
 // block draws are data or words.
+// The shapes blocks-antd options.js and table/rowsKind.js mark.
 const dataSchemas = {
   ...textSchemas,
   Selector: {
@@ -902,14 +903,29 @@ const dataSchemas = {
         type: 'object',
         properties: {
           options: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                label: { type: 'string', textKind: 'html' },
-                value: { textKind: 'data' },
+            anyOf: [
+              { type: 'array', items: { type: 'string', textKind: 'html' } },
+              { type: 'array', items: { type: 'number' } },
+              {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    label: { type: 'string', textKind: 'html' },
+                    value: {
+                      textKind: 'data',
+                      dataWith: 'label',
+                      oneOf: [
+                        { type: 'string' },
+                        { type: 'number' },
+                        { type: 'object' },
+                        { type: 'array' },
+                      ],
+                    },
+                  },
+                },
               },
-            },
+            ],
           },
         },
       },
@@ -921,14 +937,18 @@ const dataSchemas = {
         type: 'object',
         properties: {
           columns: { type: ['array', 'null'] },
+          expandable: { type: 'object' },
           data: {
             type: ['array', 'object'],
             rowsKind: {
               columns: 'columns',
               type: 'type',
               children: 'children',
+              cell: 'cell',
+              cellRowKeys: ['colorFrom'],
+              drawnBy: ['expandable.template'],
               defaultType: 'text',
-              textTypes: ['text', 'number', 'date', 'tags', 'boolean'],
+              textTypes: ['text', 'email', 'phone', 'number', 'date', 'tag', 'tags', 'status'],
             },
           },
         },
@@ -1146,5 +1166,45 @@ test('checkPolicy reads URLs in displayed text as words and keeps links checked'
     'policy.urls blocks.1.properties.src',
     'policy.urls blocks.1.events.onClick.0.params.url',
     'policy.urls blocks.1.events.onClick.1.params.href',
+  ]);
+});
+
+test('checkPolicy keeps every check on an option value drawn in place of a missing label', () => {
+  const errors = checkData([
+    {
+      id: 'form.site',
+      type: 'Selector',
+      properties: {
+        options: [
+          { value: '<img src=https://evil.example/p.gif>' },
+          { value: 'https://evil.example' },
+          { label: 'Ok', value: 'https://evil.example' },
+        ],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.properties.options.0.value',
+    'policy.urls blocks.0.properties.options.1.value',
+  ]);
+});
+
+test('checkPolicy keeps every check on Table rows a cell colour or row template reads', () => {
+  const data = [{ name: 'Acme', tone: 'url(https://evil.example/p.gif)' }];
+  const errors = checkData([
+    {
+      id: 'form.t1',
+      type: 'Table',
+      properties: { columns: [{ key: 'name', type: 'tag', cell: { colorFrom: 'tone' } }], data },
+    },
+    {
+      id: 'form.t2',
+      type: 'Table',
+      properties: { columns: ['name'], expandable: { template: '{{ row.tone | safe }}' }, data },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.data.0.tone',
+    'policy.urls blocks.1.properties.data.0.tone',
   ]);
 });

@@ -139,6 +139,7 @@ export default {
                 },
                 value: {
                   textKind: 'data',
+                  dataWith: 'label',
                   description: 'Value selected. Can be of any type.',
                   oneOf: [
                     {

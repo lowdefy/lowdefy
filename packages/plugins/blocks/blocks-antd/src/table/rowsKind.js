@@ -20,11 +20,16 @@
 // Any other column (a url, link or relation link, an image, avatar or people
 // picture, html, or buttons and menus) draws or follows row values, so its
 // table's rows keep every check. email and phone cells link with a fixed
-// mailto: or tel: scheme.
+// mailto: or tel: scheme. So do a column whose `cell.colorFrom` reads a row
+// field into a tag's colour (a CSS value), and an `expandable.template`, which
+// draws row fields through renderHtml.
 const ROWS_KIND = {
   columns: 'columns',
   type: 'type',
   children: 'children',
+  cell: 'cell',
+  cellRowKeys: ['colorFrom'],
+  drawnBy: ['expandable.template'],
   defaultType: 'text',
   textTypes: [
     'text',

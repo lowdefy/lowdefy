@@ -56,6 +56,7 @@ export default {
           },
           value: {
             textKind: 'data',
+            dataWith: 'label',
             description: 'Option value. Can be of any type.',
           },
           disabled: {
