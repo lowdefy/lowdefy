@@ -17,6 +17,7 @@
 import AGGREGATE_LABELS from '@lowdefy/blocks-antd/table/aggregateLabels.js';
 import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 import COLUMN_KINDS from '@lowdefy/blocks-antd/table/columnKinds.js';
+import ROWS_KIND from '@lowdefy/blocks-antd/table/rowsKind.js';
 
 // Every property TableLight accepts is valid here with the same meaning (TableLight is a strict
 // subset of Table, design D16), so changing `type: TableLight` to `type: Table` keeps a block
@@ -641,6 +642,7 @@ export default {
       },
       data: {
         type: ['array', 'object', 'null'],
+        rowsKind: ROWS_KIND,
         description:
           "The rows, or `{ mode: server, request, blockSize }` to load rows from a request in blocks as the table scrolls. In server mode the table fires the request with the event `{ startRow, endRow, view: { sort, filter, search, group, aggregates }, groupPath, selected }` (read it in the request `payload` with `_event`) and expects `{ rows, total, groups?, aggregates? }`, the contract of `MongoDBTableQuery`. Sorting, filtering and grouping then run on the server. Rows need a `rowKey`. In place of `request`, `endpoint` names an API endpoint: the table calls it with the event as its payload, and its routine returns the same `{ rows, total }`. `payload` adds the page's own fields to every fetch event.",
         items: { type: 'object' },

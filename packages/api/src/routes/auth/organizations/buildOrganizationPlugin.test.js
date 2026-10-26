@@ -246,6 +246,41 @@ test('buildOrganizationPlugin passes auth.organizations.membershipLimit through'
   expect(plugin.options.membershipLimit).toBe(10000);
 });
 
+function createCountingAuth(openInvitations) {
+  return { $context: Promise.resolve({ adapter: { count: async () => openInvitations } }) };
+}
+
+const invitationHookArgs = {
+  invitation: { email: 'invitee@example.com', organizationId: 'org_1' },
+  inviter: { id: 'user_1' },
+  organization: { id: 'org_1' },
+};
+
+test('buildOrganizationPlugin holds the BetterAuth invitationLimit check open and registers no invitation hook when unset', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => createCountingAuth(100),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.invitationLimit).toBe(1000000);
+  expect(plugin.options.organizationHooks.beforeCreateInvitation).toBeUndefined();
+});
+
+test('buildOrganizationPlugin enforces auth.organizations.invitationLimit in the beforeCreateInvitation hook', async () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig: {
+      ...authConfig,
+      organizations: { ...authConfig.organizations, invitationLimit: 2 },
+    },
+    getAuth: () => createCountingAuth(2),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.invitationLimit).toBe(1000000);
+  await expect(
+    plugin.options.organizationHooks.beforeCreateInvitation(invitationHookArgs)
+  ).rejects.toMatchObject({ statusCode: 403, body: { code: 'INVITATION_LIMIT_REACHED' } });
+});
+
 test('buildOrganizationPlugin uses the plugin defaults when organizations sets no expiry or limit', () => {
   const plugin = buildOrganizationPlugin({
     authConfig: { organizations: { creatorAppRoles: [] } },

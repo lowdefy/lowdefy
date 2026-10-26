@@ -58,6 +58,20 @@ function findKind({ schemas, keyword }) {
   return undefined;
 }
 
+// A 'data' value with dataWith is data only beside a string at that sibling
+// key: an option value is drawn in place of a missing label. Without it the
+// value is unmarked, so it keeps every check.
+function applyDataWith({ kind, schemas, parent }) {
+  if (kind !== 'data') {
+    return kind;
+  }
+  const withKey = schemas.find((candidate) => type.isString(candidate.dataWith))?.dataWith;
+  if (type.isUndefined(withKey) || type.isString(parent?.[withKey])) {
+    return kind;
+  }
+  return undefined;
+}
+
 // Records, by path, the kind a block schema gives the value there under one
 // keyword, so the policy judges a value by what its property is, not by what it
 // is called. A marked array holds one value of that kind per item; false records
@@ -68,14 +82,21 @@ function findKind({ schemas, keyword }) {
 // urlKind: false a property whose name looks like a URL key but whose value is
 // not a URL. textKind marks how a block draws a string: 'html' through
 // renderHtml (sanitised HTML, never markdown or a link), 'text' as escaped
-// text. Values neither marks fall back to the key-name and text rules.
+// text, and 'data' a value the block stores or compares but never draws (an
+// option value), so every string in it, however nested, is text. dataWith
+// names a sibling key the value is data only beside (applyDataWith). Values
+// neither marks fall back to the key-name and text rules.
 function collectSchemaKinds({ value, schema, path, keyword }) {
   const kinds = new Map();
   const pending = [{ value, schema, path }];
   while (pending.length > 0) {
     const item = pending.pop();
     const schemas = expandSchema(item.schema);
-    const kind = findKind({ schemas, keyword });
+    const kind = applyDataWith({
+      kind: findKind({ schemas, keyword }),
+      schemas,
+      parent: item.parent,
+    });
     if (kind === null) {
       // Another schema branch may already have marked it.
       if (!kinds.has(item.path)) {
@@ -102,7 +123,12 @@ function collectSchemaKinds({ value, schema, path, keyword }) {
       }
       Object.keys(item.value).forEach((key) => {
         childSchemas({ schemas, key }).forEach((childSchema) =>
-          pending.push({ value: item.value[key], schema: childSchema, path: `${item.path}.${key}` })
+          pending.push({
+            value: item.value[key],
+            schema: childSchema,
+            path: `${item.path}.${key}`,
+            parent: item.value,
+          })
         );
       });
     }

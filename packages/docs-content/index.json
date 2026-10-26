@@ -3099,7 +3099,7 @@
         "concepts/advanced/dynamic-page-content.yaml",
         "version.yaml"
       ],
-      "hash": "3b4d9afd3e81e4f6807c6a02be7f21b882e8a0bb34a3c33a4d988eec2ef3dccd"
+      "hash": "d40f2d62c81ac08c985d6b06d2a20db75d8bda2efed1eed5634c93b00bb9ac48"
     },
     "concepts/ai-agent-docs": {
       "files": [
@@ -3287,7 +3287,7 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "e1d8446b45156e25e7f1ccd778e89cdbf2303e2ae2797e07339c8bec750c9d31"
+      "hash": "fd01facfe6f0151f1049d4d65dfea08467df02b009376f5800a03e68d35c4533"
     },
     "user-authentication/auth-steps": {
       "files": [

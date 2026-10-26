@@ -25,8 +25,8 @@ import normalizeUrlText from './normalizeUrlText.js';
 //
 // The caller turns off the scans that cannot apply to how the value is drawn: a
 // property drawn as text or HTML renders no markdown, and is no link, so neither
-// a markdown target nor a protocol-relative word in it is a URL; CSS url() only
-// loads in text that can carry a style.
+// the whole value, a markdown target nor a protocol-relative word in it is a URL;
+// CSS url() only loads in text that can carry a style.
 
 // An allowlist of schemes, not a scheme-shaped pattern: any word may hold a colon.
 const LOADED_SCHEME = /^(https?|ftp|wss?|file|blob|filesystem|data):\S/i;
@@ -46,13 +46,12 @@ function unescapeCss(value) {
     .replace(/\\(.)/g, '$1');
 }
 
-function findEmbeddedUrls({ value, markdown = true, css = true, protocolRelative = true }) {
+function findEmbeddedUrls({ value, wholeValue = true, markdown = true, css = true }) {
   const urls = [];
   const text = normalizeUrlText(value);
   const isProtocolRelative = PROTOCOL_RELATIVE.test(text);
-  const isUrlText =
-    !/\s/.test(text) && (LOADED_SCHEME.test(text) || (protocolRelative && isProtocolRelative));
-  if (isUrlText || SCRIPT_SCHEME.test(text)) {
+  const isUrlText = !/\s/.test(text) && (LOADED_SCHEME.test(text) || isProtocolRelative);
+  if (wholeValue && (isUrlText || SCRIPT_SCHEME.test(text))) {
     urls.push(text);
   }
   if (markdown) {

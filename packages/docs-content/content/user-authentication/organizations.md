@@ -28,6 +28,7 @@ An app that sets nothing gets `pinned` with one auto-seeded organization, invite
 | `create` | `auto` \| `operator` | **tenant only** | `tenant` → `auto` | How a tenant organization comes into being: `auto` mints one for a user at first session; `operator` leaves creation to your own config (the `CreateOrganization` step). |
 | `invitationExpiresIn` | integer (seconds, min 60) | both | `172800` (48h) | How long an invitation stays acceptable. Re-sending an invitation refreshes its expiry. |
 | `membershipLimit` | integer (min 1) | both | `1000000` (effectively open) | The most members one organization may have. Once an organization has this many, accepting an invitation and adding a member are refused (a 403). Set it to cap organization size, for example per tenant. It is also the default page size of `ListMembers` when no `limit` is given. |
+| `invitationLimit` | integer (min 1) | both | `1000000` (effectively open) | The most open invitations one organization may have. Once an organization has this many pending, unexpired invitations, inviting another is refused (a 403 with code `INVITATION_LIMIT_REACHED`). Expired, accepted and cancelled invitations don't count, and re-inviting an address replaces its open invitation rather than adding one. |
 | `creatorAppRoles` | array of role ids | both | `[]` | App roles the owner of a new organization gets on their membership. See [App roles for a new organization's owner](#app-roles-for-a-new-organizations-owner). |
 
 The build cross-checks these, and the errors are worth knowing before you hit them:

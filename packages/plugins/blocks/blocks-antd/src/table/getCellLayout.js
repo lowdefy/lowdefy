@@ -33,6 +33,9 @@ function getCellLayout(column) {
   } else {
     classes.push('lf-table-cell-nowrap');
   }
+  if (column.type === 'avatar' || column.type === 'people') {
+    classes.push('lf-table-cell-avatars');
+  }
   if (column.align === 'center' || column.align === 'end') {
     classes.push(`lf-table-cell-align-${column.align}`);
   }
