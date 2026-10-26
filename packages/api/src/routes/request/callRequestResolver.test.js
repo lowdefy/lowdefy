@@ -518,7 +518,10 @@ test('a resolver stopped by the request timeout fails with a ServiceError', asyn
   );
   const error = await pending.catch((e) => e);
   expect(error).toBeInstanceOf(ServiceError);
-  expect(error.message).toBe('conn1: The request timeout of 30000ms was exceeded.');
+  expect(error.message).toBe(
+    'conn1: Request timed out. The service may be slow, or the timeout too short. The request timeout of 30000ms was exceeded.'
+  );
+  expect(error.statusCode).toBeUndefined();
   expect(error.configKey).toBe('request_key');
 });
 
