@@ -20,13 +20,15 @@ import getUploadPolicy from '@lowdefy/blocks-files/utils/getUploadPolicy.js';
 import uploadFile from '@lowdefy/blocks-files/utils/uploadFile.js';
 
 // Uploads a file through the app's upload-policy request (any storage
-// provider) and resolves a display URL for the inline image. Inline images
-// persist in saved markdown, so they must be public assets: the upload
-// request should set the provider's public-read acl, and the download request
-// should set public: true to return a stable, non-expiring URL. Without a
-// download request the legacy unsigned object URL is used (S3-shaped,
-// deprecated).
-async function fileUpload({ file, methods, hasDownloadRequest }) {
+// provider) and resolves the src of the inline image. Inline images persist in
+// saved markdown, so the src must keep working after the upload: either a
+// public URL (a download request with public: true, and the upload request
+// setting the provider's public-read acl), or a stable app URL from imageSrc,
+// such as a link endpoint that redirects the signed-in caller to a fresh
+// presigned URL, which lets the bucket stay private. imageSrc takes precedence:
+// when it is set, no download request runs. With neither, the legacy unsigned
+// object URL is used (S3-shaped, deprecated).
+async function fileUpload({ file, methods, hasDownloadRequest, imageSrc }) {
   if (type.isNone(file)) {
     return;
   }
@@ -36,6 +38,21 @@ async function fileUpload({ file, methods, hasDownloadRequest }) {
 
   await uploadFile({ descriptor, file });
 
+  if (type.isFunction(imageSrc)) {
+    const src = imageSrc({
+      key: descriptor.key,
+      bucket: descriptor.bucket,
+      name: file.name,
+      type: file.type,
+    });
+    if (!type.isString(src) || src === '') {
+      throw new Error(
+        `Tiptap "imageSrc" must return a non-empty string. Received ${JSON.stringify(src)}.`
+      );
+    }
+    file.url = src;
+    return file.url;
+  }
   if (hasDownloadRequest) {
     const response = await methods.triggerEvent({
       name: '__getDownloadPolicy',

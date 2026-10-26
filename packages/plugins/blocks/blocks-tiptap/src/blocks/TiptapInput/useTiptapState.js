@@ -23,7 +23,7 @@ import fileUpload from '../utils/fileUpload.js';
 // source of truth for `fileList` is the `value` prop from Lowdefy. We mirror
 // it into a ref each render so callbacks (onUpdate, insertImage) captured in
 // closures always read the current value instead of a stale render snapshot.
-function useTiptapState({ value, methods, hasDownloadRequest }) {
+function useTiptapState({ value, methods, hasDownloadRequest, imageSrc }) {
   const valueRef = useRef(value);
   valueRef.current = value;
 
@@ -53,7 +53,7 @@ function useTiptapState({ value, methods, hasDownloadRequest }) {
   };
 
   const insertImage = async (editor, file, pos) => {
-    const url = await fileUpload({ file, methods, hasDownloadRequest });
+    const url = await fileUpload({ file, methods, hasDownloadRequest, imageSrc });
     // The upload is async: bail if the editor was torn down meanwhile (e.g. the
     // surrounding page navigated away before the upload resolved), otherwise the
     // chained commands run against a destroyed editor and throw.

@@ -21,7 +21,7 @@ import fileUpload from '../utils/fileUpload.js';
 
 // Ref-tracked controller for the mention editor's value. Mirrors TiptapInput's
 // useTiptapState but also extracts mentions from the document.
-function useTiptapMentionState({ value, methods, hasDownloadRequest }) {
+function useTiptapMentionState({ value, methods, hasDownloadRequest, imageSrc }) {
   const valueRef = useRef(value);
   valueRef.current = value;
 
@@ -62,7 +62,7 @@ function useTiptapMentionState({ value, methods, hasDownloadRequest }) {
   };
 
   const insertImage = async (editor, file, pos) => {
-    const url = await fileUpload({ file, methods, hasDownloadRequest });
+    const url = await fileUpload({ file, methods, hasDownloadRequest, imageSrc });
     // The upload is async: bail if the editor was torn down meanwhile (e.g. the
     // surrounding page navigated away before the upload resolved), otherwise the
     // chained commands run against a destroyed editor and throw.

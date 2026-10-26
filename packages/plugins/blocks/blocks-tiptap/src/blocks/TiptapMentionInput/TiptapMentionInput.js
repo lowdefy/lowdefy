@@ -116,6 +116,7 @@ const TiptapMentionInput = ({
     value,
     methods,
     hasDownloadRequest: !type.isNone(downloadPolicyRequestId),
+    imageSrc: properties.imageSrc,
   });
   const disabled = properties.disabled === true || loading;
   const uploadEnabled = !type.isNone(uploadPolicyRequestId);
