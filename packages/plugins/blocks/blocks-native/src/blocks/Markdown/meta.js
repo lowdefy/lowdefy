@@ -18,6 +18,7 @@ import linkChips from '../../schemas/linkChips.js';
 
 export default {
   category: 'display',
+  actions: ['Link'],
   icons: [],
   valueType: null,
   cssKeys: {
@@ -26,7 +27,7 @@ export default {
   events: {
     onLinkPress: {
       description:
-        'Trigger action when any link is pressed, link chips included, instead of opening it. Without this event a web (http or https) link opens in the in-app browser, any other link (mailto:, tel:) through the system, and link chips are not pressable. Mobile only.',
+        'Trigger action when any link is pressed, link chips included, instead of opening it. Without this event an app path (`/orders/42`) opens as a page, a web (http or https) link opens in the in-app browser, any other link (mailto:, tel:) through the system, and link chips are not pressable. Mobile only.',
       event: {
         href: 'The href of the pressed link, as written in the markdown (`acme:ACME-12` or `/ACME/tasks/ACME-12` for a chip).',
       },

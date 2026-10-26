@@ -27,6 +27,7 @@ import trimOuterSpace from './trimOuterSpace.js';
 import useComponentTokens from '../../useComponentTokens.js';
 
 const webPattern = /^https?:\/\//i;
+const appPathPattern = /^\/(?!\/)/;
 
 /**
  * GitHub-flavoured markdown drawn with React Native views in the iOS typography and the theme's
@@ -37,9 +38,10 @@ const webPattern = /^https?:\/\//i;
  *
  * Every pressed link, link chips included, runs `onLinkPress` when the host block gives one.
  * Without it a web link opens in the in-app browser (expo-web-browser, its controls in the tint)
- * and any other link (mail, phone) through the system, and a chip is not pressable. A path, in a
- * link or an image, is taken against the app server as a browser on the app's page would
- * (components.resolveUrl).
+ * and any other link (mail, phone) through the system, and a chip is not pressable. An app path
+ * (`/orders/42`) goes to `onPathPress` when the host gives one, which opens it as a page. Any
+ * other path, in a link or an image, is taken against the app server as a browser on the app's
+ * page would (components.resolveUrl).
  *
  * @param {Object} props
  * @param {Object} props.components The host block's components (components.Icon for chip icons,
@@ -48,6 +50,7 @@ const webPattern = /^https?:\/\//i;
  * @param {Object[]} [props.linkChips] Links drawn as inline chips, by scheme or pattern
  *   (schemas/linkChips).
  * @param {((href: string) => void)|null} [props.onLinkPress]
+ * @param {((href: string) => void)|null} [props.onPathPress] Opens an app path in the app.
  * @param {boolean} [props.skipHtml] Leave raw html out rather than drawing its source.
  * @param {Object} [props.style]
  */
@@ -56,6 +59,7 @@ function MarkdownContent({
   content,
   linkChips,
   onLinkPress = null,
+  onPathPress = null,
   skipHtml = false,
   style,
 }) {
@@ -74,6 +78,10 @@ function MarkdownContent({
         onLinkPress(href);
         return;
       }
+      if (onPathPress !== null && appPathPattern.test(href)) {
+        onPathPress(href);
+        return;
+      }
       const url = resolveUrl(href);
       if (webPattern.test(url)) {
         WebBrowser.openBrowserAsync(url, { controlsColor: tokens.colorTint });
@@ -82,7 +90,7 @@ function MarkdownContent({
       // A scheme no app on the phone opens (an unknown `slack:`) rejects; the press does nothing.
       Linking.openURL(url).catch(() => {});
     },
-    [onLinkPress, resolveUrl, tokens.colorTint]
+    [onLinkPress, onPathPress, resolveUrl, tokens.colorTint]
   );
   const renderer = useMemo(
     () =>

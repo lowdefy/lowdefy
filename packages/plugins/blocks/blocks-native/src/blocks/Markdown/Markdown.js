@@ -14,19 +14,30 @@
   limitations under the License.
 */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import MarkdownContent from './MarkdownContent.js';
 import meta from './meta.js';
 
 // GitHub-flavoured markdown drawn with React Native views in the iOS typography (MarkdownContent).
-// Every pressed link, chips included, runs onLinkPress when the block has it. Without it a web
-// link opens in the in-app browser and any other link (mail, phone) through the system; a chip is
-// not pressable.
+// Every pressed link, chips included, runs onLinkPress when the block has it. Without it an app
+// path (`/orders/42`) opens as a page through the Link action, as a web page's link stays in the
+// app, a web link opens in the in-app browser and any other link (mail, phone) through the
+// system; a chip is not pressable.
 function Markdown({ components, events, methods, properties, styles = {} }) {
   const hasOnLinkPress = Boolean(events.onLinkPress);
   const triggerLinkPress = useCallback(
     (href) => methods.triggerEvent({ name: 'onLinkPress', event: { href } }),
+    [methods]
+  );
+  useEffect(() => {
+    methods.registerEvent({
+      name: '__link',
+      actions: [{ id: 'link', type: 'Link', params: { url: { _event: 'href' } } }],
+    });
+  }, [methods]);
+  const openPath = useCallback(
+    (href) => methods.triggerEvent({ name: '__link', event: { href } }),
     [methods]
   );
   return (
@@ -35,6 +46,7 @@ function Markdown({ components, events, methods, properties, styles = {} }) {
       content={properties.content}
       linkChips={properties.linkChips}
       onLinkPress={hasOnLinkPress ? triggerLinkPress : null}
+      onPathPress={openPath}
       skipHtml={properties.skipHtml === true}
       style={styles.element}
     />

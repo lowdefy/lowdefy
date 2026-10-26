@@ -18,6 +18,7 @@ import { jest } from '@jest/globals';
 import { Dimensions, Linking } from 'react-native';
 import { act, fireEvent } from '@testing-library/react-native';
 import * as WebBrowser from 'expo-web-browser';
+import { Link } from '@lowdefy/actions-core/actions';
 
 import {
   ios,
@@ -127,17 +128,19 @@ test('a Markdown without onLinkPress opens a mail link through the system', asyn
   expect(WebBrowser.openBrowserAsync).not.toHaveBeenCalled();
 });
 
-test('a Markdown without onLinkPress opens an app path in the in-app browser on the app server', async () => {
+test('a Markdown without onLinkPress opens an app path as a page through the Link action', async () => {
   const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
-  await renderPage({
+  const { host } = await renderPage({
+    actions: { Link },
     pageConfig: page([
       { id: 'body', type: 'Markdown', properties: { content: '[Orders](/orders/42)' } },
     ]),
   });
   await press(await screen.findByText('Orders'));
-  expect(WebBrowser.openBrowserAsync).toHaveBeenCalledWith('https://app.lowdefy.test/orders/42', {
-    controlsColor: theme.light.colorPrimary,
-  });
+  expect(host.router.push).toHaveBeenCalledWith(
+    expect.objectContaining({ pathname: '/orders/42' })
+  );
+  expect(WebBrowser.openBrowserAsync).not.toHaveBeenCalled();
   expect(openURL).not.toHaveBeenCalled();
 });
 
