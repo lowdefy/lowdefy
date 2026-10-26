@@ -68,7 +68,9 @@ function findKind({ schemas, keyword }) {
 // urlKind: false a property whose name looks like a URL key but whose value is
 // not a URL. textKind marks how a block draws a string: 'html' through
 // renderHtml (sanitised HTML, never markdown or a link), 'text' as escaped
-// text. Values neither marks fall back to the key-name and text rules.
+// text, and 'data' a value the block stores or compares but never draws (an
+// option value), so every string in it, however nested, is text. Values
+// neither marks fall back to the key-name and text rules.
 function collectSchemaKinds({ value, schema, path, keyword }) {
   const kinds = new Map();
   const pending = [{ value, schema, path }];

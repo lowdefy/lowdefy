@@ -57,24 +57,35 @@ function listUrls({ value, urlKind }) {
   return [value];
 }
 
-// Which embedded URLs a string can carry depends on how its block draws it
-// (textKind, from the block schema). Text and HTML render no markdown and are
-// no link, so a markdown target or a protocol-relative word in them is words;
-// HTML can carry a style attribute only when the policy allows tags. A whole
-// value with a scheme the browser loads or runs is always judged, since a block
-// may still link it.
+// Which URLs a string can carry depends on how its block draws it (textKind,
+// from the block schema). A value is a URL where it is used as a link (a URL
+// key or urlKind mark, judged whole above); text and HTML a block draws are no
+// link and render no markdown, so a whole value, a markdown target or a
+// protocol-relative word in them is words. HTML can carry a style attribute
+// only when the policy allows tags. A value no schema marks may be drawn as
+// markdown, a style or a link the schema does not mark, so every scan applies.
 function getUrlScans({ textKind, policy }) {
   if (textKind === 'text') {
-    return { markdown: false, css: false, protocolRelative: false };
+    return { wholeValue: false, markdown: false, css: false, protocolRelative: false };
   }
   if (textKind === 'html') {
-    return { markdown: false, css: policy.html === true, protocolRelative: false };
+    return {
+      wholeValue: false,
+      markdown: false,
+      css: policy.html === true,
+      protocolRelative: false,
+    };
   }
-  return { markdown: true, css: true, protocolRelative: true };
+  return { wholeValue: true, markdown: true, css: true, protocolRelative: true };
 }
 
 function checkString({ value, key, path, walk }) {
   const { errors, policy, routes } = walk;
+  // Data is stored or sent, never drawn or followed by the content, so every
+  // string in it is text.
+  if (walk.isData) {
+    return;
+  }
   const textKind = walk.textKinds?.get(path) ?? null;
   // A string drawn as escaped text shows tag syntax as written.
   if (!policy.html && textKind !== 'text' && HTML_TAG.test(value)) {
@@ -163,7 +174,10 @@ function checkOperators({ value, key, path, walk }) {
     }
   });
   // The client would compute this value at render time, where the policy
-  // cannot see it.
+  // cannot see it. In data nothing is a URL or a page link.
+  if (walk.isData) {
+    return;
+  }
   const urlKind = getUrlKind({ key, path, walk });
   if (possible.length > 0 && (urlKind !== null || key === 'pageId')) {
     // A URL in a list (an array item) has no key of its own.
@@ -180,8 +194,14 @@ function checkOperators({ value, key, path, walk }) {
 // under the policy's state, URL-valued and pageId values must be literal and
 // allowed, and strings must obey the html rule. walk carries the policy, the
 // app's client operators, the error list and, inside block properties, the URL
-// and text kinds the block's schema marks (by path).
-function checkValue({ value, key = null, path, walk }) {
+// and text kinds the block's schema marks (by path). Under a value marked
+// textKind 'data', and in walk.isData (SetState values), only the operator
+// rules apply: the content stores the value and never draws or follows it.
+function checkValue({ value, key = null, path, walk: parentWalk }) {
+  const walk =
+    !parentWalk.isData && parentWalk.textKinds?.get(path) === 'data'
+      ? { ...parentWalk, isData: true }
+      : parentWalk;
   if (type.isString(value)) {
     checkString({ value, key, path, walk });
     return;

@@ -126,6 +126,41 @@ function checkSetState({ params, path, walk }) {
   });
 }
 
+// Whether two state paths name the same value or one holds the other. A "$"
+// segment (an id inside a list) matches any segment.
+function overlapsStatePath({ key, id }) {
+  const keyParts = key.split('.');
+  const idParts = id.split('.');
+  const length = Math.min(keyParts.length, idParts.length);
+  for (let index = 0; index < length; index += 1) {
+    const keyPart = keyParts[index];
+    const idPart = idParts[index];
+    if (keyPart !== idPart && keyPart !== '$' && idPart !== '$') return false;
+  }
+  return true;
+}
+
+// SetState values are state: the content stores them and never draws or follows
+// them itself (block properties must be literal, so no block reads them back),
+// so they are data, judged only by the operator rules. A value bound to a
+// content input whose value is an object (walk.objectValueIds: a rich text
+// editor, an upload, a table input) is drawn by it as markup, links or images,
+// so it keeps every check. checkSetState has judged the keys.
+function checkSetStateValues({ action, path, walk }) {
+  const { params, ...rest } = action;
+  checkValue({ value: rest, path, walk });
+  Object.keys(params).forEach((key) => {
+    if (key.startsWith('~')) return;
+    const drawn = walk.objectValueIds.some((id) => overlapsStatePath({ key, id }));
+    checkValue({
+      value: params[key],
+      key,
+      path: `${path}.params.${key}`,
+      walk: drawn ? walk : { ...walk, isData: true },
+    });
+  });
+}
+
 const ACTION_RULES = {
   CallAPI: checkCallApi,
   Link: checkLink,
@@ -163,6 +198,10 @@ function checkAction({ action, path, walk }) {
     });
   }
   ACTION_RULES[action.type]?.({ params: action.params, path: `${path}.params`, walk });
+  if (action.type === 'SetState' && isLiteralObject({ value: action.params, walk })) {
+    checkSetStateValues({ action, path, walk });
+    return;
+  }
   checkValue({ value: action, path, walk });
 }
 

@@ -21,6 +21,7 @@ import getPropertiesSchemaErrors from '../getPropertiesSchemaErrors.js';
 import checkEvents from './checkEvents.js';
 import checkValue from './checkValue.js';
 import collectSchemaKinds from './collectSchemaKinds.js';
+import findDataRows from './findDataRows.js';
 import findSerializerKeys from './findSerializerKeys.js';
 import isUnderState from './isUnderState.js';
 
@@ -146,6 +147,11 @@ function checkBlock({ block, path, depth, walk }) {
     path: propertiesPath,
     keyword: 'textKind',
   });
+  findDataRows({
+    properties: block.properties,
+    schema: propertiesSchema,
+    path: propertiesPath,
+  }).forEach((rowsPath) => textKinds.set(rowsPath, 'data'));
   Object.keys(block).forEach((key) => {
     if (key.startsWith('~') || STRUCTURAL_KEYS.has(key)) return;
     checkValue({
@@ -170,6 +176,26 @@ function checkBlock({ block, path, depth, walk }) {
     // eslint-disable-next-line no-use-before-define
     checkBlockList({ blocks: list.blocks, path: `${path}.${list.path}`, depth: depth + 1, walk });
   });
+}
+
+// The ids of content inputs whose value is an object, such as a rich text
+// editor, an upload or a table input: they draw parts of their value as markup,
+// links or images, so a SetState value bound to one keeps every check.
+function collectObjectValueIds({ blocks, blockMetas, ids = [] }) {
+  if (!type.isArray(blocks)) return ids;
+  blocks.forEach((block) => {
+    if (!type.isObject(block) || !type.isString(block.id)) return;
+    if (blockMetas[block.type]?.valueType === 'object') {
+      ids.push(block.id);
+    }
+    if (type.isObject(block.skeleton)) {
+      collectObjectValueIds({ blocks: [block.skeleton], blockMetas, ids });
+    }
+    childBlockLists(block).forEach((list) => {
+      collectObjectValueIds({ blocks: list.blocks, blockMetas, ids });
+    });
+  });
+  return ids;
 }
 
 function checkBlockList({ blocks, path, depth, walk }) {
@@ -218,6 +244,7 @@ function checkPolicy({ blocks, policy, blockMetas, blockSchemas, clientOperators
     count: 0,
     errors: [],
     ids: new Set(),
+    objectValueIds: collectObjectValueIds({ blocks: content, blockMetas }),
     policy,
     routes,
   };

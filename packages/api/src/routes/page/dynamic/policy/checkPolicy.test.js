@@ -771,16 +771,14 @@ test.each([
   ['a script scheme', 'javascript:alert(1)'],
   ['a script scheme with a space', 'javascript: alert(1)'],
   ['an off-site URL', 'https://tracker.test/p.gif'],
-  ['a data URL', 'data:text/html,<b>x</b>'],
-])('checkPolicy still refuses %s as a whole marked value', (_, value) => {
+  ['a data URL', 'data:text/plain,x'],
+  ['a bare domain', 'acme.co.za'],
+])('checkPolicy reads %s as text in a property drawn as text or HTML', (_, value) => {
   const errors = checkText([
     { id: 'd', type: 'Descriptions', properties: { items: [{ label: 'What', value }] } },
     { id: 'form.s', type: 'Selector', properties: { placeholder: value } },
   ]);
-  expect(errors.filter(({ rule }) => rule === 'policy.urls').map(({ path }) => path)).toEqual([
-    'blocks.0.properties.items.0.value',
-    'blocks.1.properties.placeholder',
-  ]);
+  expect(errors).toEqual([]);
 });
 
 test('checkPolicy keeps every check on the same text in an unmarked property or a style', () => {
@@ -890,5 +888,263 @@ test('checkPolicy refuses content nested deeper than the Dynamic data limit befo
   }
   expect(rules(check([{ id: 'b', type: 'Box', properties: { deep } }]))).toEqual([
     'limits.depth blocks',
+  ]);
+});
+
+// The policy checks a value as a URL only where it is used as a link (a URL key
+// or urlKind mark). State, option values, Table cells drawn as text and text a
+// block draws are data or words.
+const dataSchemas = {
+  ...textSchemas,
+  Selector: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          options: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                label: { type: 'string', textKind: 'html' },
+                value: { textKind: 'data' },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Table: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          columns: { type: ['array', 'null'] },
+          data: {
+            type: ['array', 'object'],
+            rowsKind: {
+              columns: 'columns',
+              type: 'type',
+              children: 'children',
+              defaultType: 'text',
+              textTypes: ['text', 'number', 'date', 'tags', 'boolean'],
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+const dataMetas = {
+  ...blockMetas,
+  Selector: { valueType: 'any' },
+  Table: { valueType: 'object' },
+  Editor: { valueType: 'object' },
+  List: { category: 'list', valueType: 'array' },
+};
+
+function checkData(blocks, overrides = {}) {
+  return checkPolicy({
+    routes,
+    blocks,
+    policy: {
+      ...policy,
+      blocks: ['Box', 'TextInput', 'Descriptions', 'Selector', 'Table', 'Editor', 'List'],
+      ...overrides,
+    },
+    blockMetas: dataMetas,
+    blockSchemas: dataSchemas,
+  });
+}
+
+const typedValues = [
+  'https://acme.co.za',
+  'https://acme.sharepoint.com/sites/policies/Gifts%20policy.pdf',
+  'acme.co.za',
+  'procurement@acme.co.za',
+  'Ladder <b>broke</b>',
+  'see [notes](https://x.example)',
+  'url(https://x.example/p.gif)',
+  '//host',
+  'javascript:alert(1)',
+  'JavaScript: the basics',
+];
+
+test('checkPolicy judges SetState values as data, not as URLs or HTML', () => {
+  const prefill = Object.fromEntries(typedValues.map((value, index) => [`form.f${index}`, value]));
+  const errors = checkData([
+    {
+      id: 'form.f0',
+      type: 'TextInput',
+      events: {
+        onMount: [
+          { id: 'prefill', type: 'SetState', params: prefill },
+          {
+            id: 'nested',
+            type: 'SetState',
+            params: { form: { link: { url: 'https://x.example', href: 'javascript:x' } } },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy still checks operators and state reads in SetState values', () => {
+  const errors = checkData([
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onClick: [
+          {
+            id: 's',
+            type: 'SetState',
+            params: { 'form.a': { _global: 'token' }, 'form.b': { _state: 'user.email' } },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.operators blocks.0.events.onClick.0.params.form.a',
+    'policy.state blocks.0.events.onClick.0.params.form.b',
+  ]);
+});
+
+test('checkPolicy keeps every check on a SetState value an object-valued input draws', () => {
+  const errors = checkData(
+    [
+      { id: 'form.notes', type: 'Editor' },
+      {
+        id: 'form.rows',
+        type: 'List',
+        blocks: [{ id: 'form.rows.$.notes', type: 'Editor' }],
+      },
+      {
+        id: 'b',
+        type: 'Box',
+        events: {
+          onClick: [
+            { id: 'a', type: 'SetState', params: { 'form.notes': { html: '<b>x</b>' } } },
+            { id: 'b', type: 'SetState', params: { form: { notes: 'https://tracker.test/p' } } },
+            { id: 'c', type: 'SetState', params: { 'form.rows.0.notes': '<img src=x>' } },
+            { id: 'd', type: 'SetState', params: { 'form.title': '<b>x</b>' } },
+          ],
+        },
+      },
+    ],
+    wideEvents
+  );
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.2.events.onClick.0.params.form.notes.html',
+    'policy.urls blocks.2.events.onClick.1.params.form.notes',
+    'policy.html blocks.2.events.onClick.2.params.form.rows.0.notes',
+  ]);
+});
+
+test('checkPolicy judges an option value as data and keeps the html rule on its label', () => {
+  const errors = checkData([
+    {
+      id: 'form.site',
+      type: 'Selector',
+      properties: {
+        options: [
+          ...typedValues.map((value) => ({ label: 'Site', value })),
+          { label: 'Site', value: { url: 'https://x.example', note: '<b>x</b>' } },
+          { label: '<b>Site</b>', value: 1 },
+        ],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    `policy.html blocks.0.properties.options.${typedValues.length + 1}.label`,
+  ]);
+});
+
+test('checkPolicy judges Table rows as data when every column draws its cell as text', () => {
+  const data = [
+    { _id: '1', website: typedValues[0], values: { note: { value: typedValues[4] } } },
+    { _id: '2', website: typedValues[8], url: 'https://x.example', tags: typedValues },
+  ];
+  const errors = checkData([
+    {
+      id: 'form.t1',
+      type: 'Table',
+      properties: {
+        columns: [
+          'website',
+          { key: 'note', field: 'values.note.value', type: 'text' },
+          { key: 'group', children: [{ key: 'tags', type: 'tags' }] },
+        ],
+        data,
+      },
+    },
+    { id: 'form.t2', type: 'Table', properties: { data } },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy keeps every check on Table rows when a column draws a link, image or HTML', () => {
+  const errors = checkData([
+    {
+      id: 'form.t1',
+      type: 'Table',
+      properties: {
+        columns: ['name', { key: 'website', type: 'url' }],
+        data: [{ name: 'Acme', website: 'https://evil.example' }],
+      },
+    },
+    {
+      id: 'form.t2',
+      type: 'Table',
+      properties: {
+        columns: [{ key: 'group', children: [{ key: 'note', type: 'html' }] }],
+        data: [{ note: '<b>x</b>' }],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.data.0.website',
+    'policy.html blocks.1.properties.data.0.note',
+  ]);
+});
+
+test('checkPolicy reads URLs in displayed text as words and keeps links checked', () => {
+  const errors = checkData([
+    {
+      id: 'facts',
+      type: 'Descriptions',
+      properties: {
+        items: [
+          { label: 'Website', value: 'https://acme.co.za' },
+          { label: 'Document', value: 'https://acme.sharepoint.com/sites/p/Gifts%20policy.pdf' },
+          { label: 'Note', value: 'Ladder <b>broke</b>' },
+        ],
+      },
+    },
+    {
+      id: 'b',
+      type: 'Box',
+      style: { background: 'url(https://evil.example/p.gif)' },
+      properties: { href: 'https://evil.example', src: 'data:image/png;base64,AAAA' },
+      events: {
+        onClick: [
+          { id: 'l', type: 'Link', params: { url: 'javascript:alert(1)' } },
+          { id: 'm', type: 'Link', params: { href: '//evil.example' } },
+        ],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.properties.items.2.value',
+    'policy.urls blocks.1.style.background',
+    'policy.urls blocks.1.properties.href',
+    'policy.urls blocks.1.properties.src',
+    'policy.urls blocks.1.events.onClick.0.params.url',
+    'policy.urls blocks.1.events.onClick.1.params.href',
   ]);
 });
