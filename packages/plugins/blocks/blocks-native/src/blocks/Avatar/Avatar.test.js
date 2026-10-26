@@ -67,6 +67,30 @@ test('an Avatar draws an SVG data URI picture with react-native-svg, over its in
   expect(findAllOfType(avatar, 'Text')).toHaveLength(0);
 });
 
+test('an Avatar loads a photo path from the app server', async () => {
+  await renderPage({
+    pageConfig: page([
+      { id: 'ada', type: 'Avatar', properties: { name: 'Ada Lovelace', src: '/avatars/ada.png' } },
+    ]),
+  });
+  const image = await screen.findByTestId('expo-image', { includeHiddenElements: true });
+  expect(image.props.source).toEqual({ uri: 'https://app.lowdefy.test/avatars/ada.png' });
+});
+
+test('stacked avatars load photo paths from the app server', async () => {
+  await renderPage({
+    pageConfig: page([
+      {
+        id: 'team',
+        type: 'Avatar',
+        properties: { avatars: [{ name: 'Ada Lovelace', src: '/avatars/ada.png' }] },
+      },
+    ]),
+  });
+  const image = await screen.findByTestId('expo-image', { includeHiddenElements: true });
+  expect(image.props.source).toEqual({ uri: 'https://app.lowdefy.test/avatars/ada.png' });
+});
+
 test('an Avatar fades a photo in over its initials, which it drops once the photo shows', async () => {
   await renderPage({
     pageConfig: page([

@@ -74,19 +74,21 @@ function prepareSvg(root) {
  * What an avatar's `src` draws. An SVG data URI, such as the gradient-and-initials pictures
  * generated for people without a photo, is parsed here and drawn with react-native-svg: iOS's
  * image decoder draws SVG text at its alphabetic baseline and in the regular weight, so the
- * initials sit high and thin. Any other url is loaded, and cached, by expo-image.
+ * initials sit high and thin. Any other url is loaded, and cached, by expo-image, a path taken
+ * against the app server (components.resolveUrl), as a browser on the app's page reads it.
  *
  * @param {Object} params
+ * @param {(url: string) => string} params.resolveUrl
  * @param {string} [params.src]
  * @returns {{ kind: 'svg', ast: Object } | { kind: 'uri', uri: string } | null} null when there
  *   is no image to draw, or an SVG data URI does not parse; the avatar shows initials.
  */
-function getAvatarImage({ src }) {
+function getAvatarImage({ resolveUrl, src }) {
   if (!type.isString(src) || src.trim() === '') {
     return null;
   }
   if (!SVG_DATA_URI.test(src)) {
-    return { kind: 'uri', uri: src };
+    return { kind: 'uri', uri: resolveUrl(src) };
   }
   try {
     const xml = readDataUri(src);

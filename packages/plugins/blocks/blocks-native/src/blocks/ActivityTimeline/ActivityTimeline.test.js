@@ -252,6 +252,34 @@ test('an ActivityTimeline without onLinkPress opens an app path in a comment as 
   );
 });
 
+test('an ActivityTimeline loads a comment author photo path from the app server', async () => {
+  await renderPage({
+    pageConfig: page([
+      {
+        id: 'activity',
+        type: 'ActivityTimeline',
+        properties: {
+          entries: [
+            {
+              id: 'c11',
+              type: 'comment',
+              at: minutesAgo(5),
+              by: { ...ada, picture: '/avatars/ada.png' },
+              body: 'Looks right.',
+            },
+          ],
+          user: { id: 'u1' },
+        },
+      },
+    ]),
+  });
+  await screen.findByText('Looks right.');
+  const sources = screen
+    .getAllByTestId('expo-image', { includeHiddenElements: true })
+    .map((image) => image.props.source.uri);
+  expect(sources).toContain('https://app.lowdefy.test/avatars/ada.png');
+});
+
 test('an ActivityTimeline draws linkChips links in comment bodies as chips that fire onLinkPress', async () => {
   const { calls } = await renderPage({
     pageConfig: page([

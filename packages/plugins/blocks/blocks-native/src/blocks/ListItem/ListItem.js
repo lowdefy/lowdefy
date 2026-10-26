@@ -55,6 +55,7 @@ function Leading({ blockId, colors, components, content, isDark, leading, styles
         <AvatarCircle
           avatar={leading.avatar}
           isDark={isDark}
+          resolveUrl={components.resolveUrl}
           size={leading.size}
           style={styles.avatar}
           testID={`${blockId}_avatar`}
@@ -152,6 +153,7 @@ function Trailing({ blockId, colors, components, content, isDark, styles, tokens
         isDark={isDark}
         key="avatars"
         max={3}
+        resolveUrl={components.resolveUrl}
         size={20}
         testID={`${blockId}_trailing_avatars`}
         tokens={tokens}
@@ -163,6 +165,7 @@ function Trailing({ blockId, colors, components, content, isDark, styles, tokens
         avatar={trailing.avatar}
         isDark={isDark}
         key="avatar"
+        resolveUrl={components.resolveUrl}
         size={trailing.avatar.size ?? 20}
         testID={`${blockId}_trailing_avatar`}
         tokens={tokens}

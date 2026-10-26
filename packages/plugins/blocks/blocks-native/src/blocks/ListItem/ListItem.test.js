@@ -62,6 +62,28 @@ test('a ListItem with onClick shows a chevron and runs onClick when pressed', as
   expect(record).toEqual(['opened']);
 });
 
+test('a ListItem loads leading and trailing avatar photo paths from the app server', async () => {
+  await renderPage({
+    pageConfig: itemPage({
+      id: 'task',
+      type: 'ListItem',
+      properties: {
+        title: 'Fix sign in',
+        leading: { avatar: { name: 'Ada Lovelace', src: '/avatars/ada.png' } },
+        trailing: { avatars: [{ name: 'Grace Hopper', src: 'avatars/grace.png' }] },
+      },
+    }),
+  });
+  await screen.findByText('Fix sign in');
+  const sources = screen
+    .getAllByTestId('expo-image', { includeHiddenElements: true })
+    .map((image) => image.props.source.uri);
+  expect(sources).toEqual([
+    'https://app.lowdefy.test/avatars/ada.png',
+    'https://app.lowdefy.test/avatars/grace.png',
+  ]);
+});
+
 test('a ListItem draws a leading status, a Headline title, a subtitle and trailing parts', async () => {
   await renderPage({
     pageConfig: itemPage({

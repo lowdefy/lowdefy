@@ -160,6 +160,7 @@ function CommentItem({ comment, ctx, first, thread }) {
           <AvatarCircle
             avatar={{ name: view.actor.name, src: view.actor.picture ?? undefined }}
             isDark={isDark}
+            resolveUrl={ctx.resolveUrl}
             size={avatarSize}
             tokens={tokens}
           />

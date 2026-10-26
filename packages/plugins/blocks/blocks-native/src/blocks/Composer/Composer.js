@@ -276,6 +276,7 @@ function Composer({
           onPickLink={editor.pickLink}
           onPickMention={editor.pickMention}
           people={people}
+          resolveUrl={components.resolveUrl}
           tokens={tokens}
         />
       ) : null}

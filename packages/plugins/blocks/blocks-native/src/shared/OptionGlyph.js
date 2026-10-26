@@ -41,7 +41,14 @@ import SystemIcon from './SystemIcon.js';
 function OptionGlyph({ avatar, color, components, icon, isDark, size, symbol, testID, tokens }) {
   if (type.isObject(avatar)) {
     return (
-      <AvatarCircle avatar={avatar} isDark={isDark} size={size} testID={testID} tokens={tokens} />
+      <AvatarCircle
+        avatar={avatar}
+        isDark={isDark}
+        resolveUrl={components.resolveUrl}
+        size={size}
+        testID={testID}
+        tokens={tokens}
+      />
     );
   }
   return (

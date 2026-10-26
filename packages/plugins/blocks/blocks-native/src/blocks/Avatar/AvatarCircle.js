@@ -32,14 +32,18 @@ import getInitials from './getInitials.js';
  * @param {Object} props
  * @param {{ name?: string, src?: string, content?: string, color?: string }} props.avatar
  * @param {boolean} props.isDark
+ * @param {(url: string) => string} props.resolveUrl Takes a path against the app server.
  * @param {string} [props.ringColor] A ring around the avatar, as a stacked avatar has.
  * @param {number} props.size
  * @param {Object} [props.style]
  * @param {string} [props.testID]
  * @param {Object} props.tokens
  */
-function AvatarCircle({ avatar, isDark, ringColor, size, style, testID, tokens }) {
-  const image = useMemo(() => getAvatarImage({ src: avatar.src }), [avatar.src]);
+function AvatarCircle({ avatar, isDark, resolveUrl, ringColor, size, style, testID, tokens }) {
+  const image = useMemo(
+    () => getAvatarImage({ resolveUrl, src: avatar.src }),
+    [avatar.src, resolveUrl]
+  );
   // Both hold the src they are about, so a new src starts over without an effect to reset them.
   const [failedSrc, setFailedSrc] = useState(null);
   const [shownSrc, setShownSrc] = useState(null);

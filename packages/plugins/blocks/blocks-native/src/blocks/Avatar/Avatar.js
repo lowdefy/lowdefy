@@ -26,7 +26,7 @@ import useComponentTokens from '../../useComponentTokens.js';
  * A person's avatar: their initials on a colour their name picks, the same colour everywhere,
  * or their image. With `avatars` it stacks several, overlapping, as a list of assignees does.
  */
-function Avatar({ blockId, properties, styles }) {
+function Avatar({ blockId, components, properties, styles }) {
   const { isDark, tokens } = useComponentTokens(properties.theme);
   const size = properties.size ?? 28;
   if (type.isArray(properties.avatars)) {
@@ -35,6 +35,7 @@ function Avatar({ blockId, properties, styles }) {
         avatars={properties.avatars}
         isDark={isDark}
         max={properties.max}
+        resolveUrl={components.resolveUrl}
         ringColor={properties.ringColor}
         size={size}
         style={styles.element}
@@ -47,6 +48,7 @@ function Avatar({ blockId, properties, styles }) {
     <AvatarCircle
       avatar={properties}
       isDark={isDark}
+      resolveUrl={components.resolveUrl}
       size={size}
       style={styles.element}
       testID={`${blockId}_avatar`}
