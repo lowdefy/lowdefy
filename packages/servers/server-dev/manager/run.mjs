@@ -194,6 +194,12 @@ try {
   if (!(await startFirstServer(context))) {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
   }
+  // Not awaited: the server is usable while the plugins installed after the
+  // initial build are checked (see checkPendingPlugins). A failed build is
+  // reported in the build status, as a watcher's is.
+  context.checkPendingPlugins().catch((error) => {
+    context.logger.error(error?.message ?? error);
+  });
   const docsUrl = `${context.url}/lowdefy-docs`;
   context.logger.info(
     { color: 'blue' },
