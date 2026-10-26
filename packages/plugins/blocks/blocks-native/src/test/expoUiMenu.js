@@ -14,23 +14,28 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useImperativeHandle, useState } from 'react';
 import { View } from 'react-native';
 
 // A stand-in for @expo/ui's community MenuView that keeps its props, so a test reads the actions
 // it was given and picks one with fireEvent(view, 'pressAction', { nativeEvent: { event: id } }).
+// Its ref's show() opens it, which a test reads as the menuShown prop.
 function MenuView({
   actions,
   children,
   onPressAction,
+  ref,
   shouldOpenOnLongPress,
   style,
   testID,
   title,
 }) {
+  const [shown, setShown] = useState(false);
+  useImperativeHandle(ref, () => ({ show: () => setShown(true) }), []);
   return (
     <View
       actions={actions}
+      menuShown={shown}
       menuTitle={title}
       onPressAction={onPressAction}
       shouldOpenOnLongPress={shouldOpenOnLongPress}

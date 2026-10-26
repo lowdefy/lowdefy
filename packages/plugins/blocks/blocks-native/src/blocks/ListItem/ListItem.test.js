@@ -305,6 +305,12 @@ test('a ListItem context menu on Android offers every item and runs nothing unti
       'Delete',
     ]);
     expect(menu.props.actions[3].attributes.destructive).toBe(true);
+    // The row takes the touch, so its own long press opens the menu.
+    expect(menu.props.menuShown).toBe(false);
+    await act(async () => {
+      fireEvent(screen.getByLabelText('Fix sign in'), 'longPress');
+    });
+    expect(screen.getByTestId('task_menu').props.menuShown).toBe(true);
     // Dismissing the menu reports no action, so nothing runs.
     expect(record).toEqual([]);
     await act(async () => {

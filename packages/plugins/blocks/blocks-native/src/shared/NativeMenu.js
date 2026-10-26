@@ -30,6 +30,8 @@ import { MenuView } from '@expo/ui/community/menu';
  * @param {Object[]} props.actions MenuView actions.
  * @param {boolean} [props.disabled] Draw the trigger dimmed, with no menu.
  * @param {boolean} [props.fullWidth] Stretch the trigger across its container.
+ * @param {Object} [props.menuRef] Takes the menu's `{ show }`, for a trigger that is pressable
+ *   itself: on Android the menu's own press never reaches past a pressable trigger.
  * @param {string} [props.menuTitle] A title at the top of the menu, on iOS.
  * @param {Function} props.onSelect Called with the picked action's id.
  * @param {boolean} [props.openOnLongPress]
@@ -40,6 +42,7 @@ function NativeMenu({
   children,
   disabled,
   fullWidth,
+  menuRef,
   menuTitle,
   onSelect,
   openOnLongPress,
@@ -68,6 +71,7 @@ function NativeMenu({
       <MenuView
         actions={actions}
         onPressAction={({ nativeEvent }) => onSelect(nativeEvent.event)}
+        ref={menuRef}
         shouldOpenOnLongPress={openOnLongPress === true}
         testID={testID}
         title={menuTitle}

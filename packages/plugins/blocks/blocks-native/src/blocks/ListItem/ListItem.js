@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useContext, useLayoutEffect, useRef } from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
 import { resolveColor } from '@lowdefy/client-native';
 import { type } from '@lowdefy/helpers';
@@ -197,6 +197,7 @@ function ListItem({ blockId, components, content, events, methods, properties, s
   const { isDark, tokens } = useComponentTokens(properties.theme);
   const colors = getSemanticColors({ tokens });
   const row = useContext(ListRowContext);
+  const menuRef = useRef(null);
   const parts = getListItemParts({ properties });
   const hasLeadingSlot = !type.isNone(content.leading);
   useLayoutEffect(() => {
@@ -238,6 +239,9 @@ function ListItem({ blockId, components, content, events, methods, properties, s
     }
   }
   const nativeMenu = menuItems.length > 0 && Platform.OS === 'ios';
+  // Android's menu opens from the row's own long press: the row is pressable, so it takes the touch
+  // before the menu's trigger could. A disabled row has no menu.
+  const androidMenu = menuItems.length > 0 && !nativeMenu && !disabled;
   let item = (
     <Pressable
       accessibilityActions={accessibilityActions.length > 0 ? accessibilityActions : undefined}
@@ -246,6 +250,7 @@ function ListItem({ blockId, components, content, events, methods, properties, s
       accessibilityState={checked ? { selected: true } : undefined}
       disabled={disabled}
       onAccessibilityAction={onAccessibilityAction}
+      onLongPress={androidMenu ? () => menuRef.current?.show() : undefined}
       onPress={pressable ? () => methods.triggerEvent({ name: 'onClick' }) : undefined}
       style={({ pressed }) => [
         {
@@ -349,7 +354,7 @@ function ListItem({ blockId, components, content, events, methods, properties, s
       </ListItemContextMenu>
     );
   }
-  if (menuItems.length > 0 && !nativeMenu) {
+  if (androidMenu) {
     // Android's Material dropdown on long press: every item shows and a back or outside tap
     // dismisses it, which Alert.alert cannot do (it keeps three buttons and is not cancelable).
     item = (
@@ -360,6 +365,7 @@ function ListItem({ blockId, components, content, events, methods, properties, s
           attributes: { destructive: menuItem.destructive === true },
         }))}
         fullWidth
+        menuRef={menuRef}
         onSelect={(id) => fireContextMenu({ id })}
         openOnLongPress
         testID={`${blockId}_menu`}
