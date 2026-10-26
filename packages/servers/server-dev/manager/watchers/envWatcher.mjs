@@ -15,12 +15,15 @@
 */
 
 import path from 'path';
+import { clearPluginTypeCache } from '../utils/pluginTypeCache.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
 function envWatcher(context) {
   const callback = async () => {
     context.logger.warn('.env file changed.');
     context.readDotEnv();
+    // The server restarts, and a restart reads every plugin's types afresh.
+    clearPluginTypeCache();
     // The server reads the environment only when it starts, and a later
     // successful config build does not restart it, so it restarts with the
     // new environment even when this build fails.

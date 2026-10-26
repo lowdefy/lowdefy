@@ -812,14 +812,9 @@ removals use `fs.rm`'s own retries.
 ```javascript
 async function reloadHandler(c) {
   return streamSSE(c, async (stream) => {
-    const watcher = chokidar.watch(['./build/reload'], { ignoreInitial: true });
+    const unsubscribe = subscribeToReload(() => stream.writeSSE({ event: 'reload', data: '{}' }));
 
-    stream.onAbort(() => watcher.close());
-
-    watcher.on('add', () => stream.writeSSE({ event: 'reload', data: '{}' }));
-    watcher.on('change', () => stream.writeSSE({ event: 'reload', data: '{}' }));
-    // No reload on unlink — a skeleton rebuild removes build/reload when it
-    // publishes the new build; the reload comes from reloadClients() after.
+    stream.onAbort(() => unsubscribe());
 
     while (open) {
       await stream.sleep(15000);
@@ -828,6 +823,8 @@ async function reloadHandler(c) {
   });
 }
 ```
+
+Every stream shares one module-level chokidar watcher on `./build/reload`, started by the first subscriber and closed when the last one leaves, as `lib/docs/devEventBus.js` does for `buildStatus.json` (the close waits a tick, for the reason given there). A watcher per connection held one fs handle per open tab, headless journey and screenshot tabs included. There is no reload on unlink: a skeleton rebuild removes `build/reload` when it publishes the new build, and the reload comes from `reloadClients()` after.
 
 The 15s pings keep the connection alive; the route is registered before the api context middleware (it needs no request context) and dev has no compression middleware, so the stream is never buffered.
 
@@ -876,7 +873,7 @@ Dev serves over HTTP/1.1, where browsers allow six connections per host, and an 
 
 Before this, the inspector opened a second stream per tab and reconnected it on every navigation; three tabs of one app saturated the browser's connection pool and the next fetch on any of them queued forever — the page sat on its skeleton with a request pending and no server error.
 
-The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port and forwards to the Vite child. It destroys the upstream request when the client closes mid-response, so a closed tab reaches `stream.onAbort` in the child and its tab registration and file watcher are released. Without that the child never saw the disconnect: the SSE loop kept writing to a dead socket and closed tabs stayed in the registry, shadowing live ones in `findPageInstance`.
+The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port and forwards to the Vite child. It destroys the upstream request when the client closes mid-response, so a closed tab reaches `stream.onAbort` in the child and its tab registration and reload subscription are released. Without that the child never saw the disconnect: the SSE loop kept writing to a dead socket and closed tabs stayed in the registry, shadowing live ones in `findPageInstance`.
 
 The proxy probes a child once and then forwards straight to it until a forward fails or the child is replaced: a probe per request left one TIME_WAIT socket per Vite module request, and headless page loads (journeys, screenshots) exhausted the ephemeral ports within a minute. After a restart it waits for the stopped child to exit (`context.devServerExited`, set by `shutdownServer`) before probing, since until then the old child still answers. A GET or HEAD that never reached a child that was going away (a refused connect, or a keep-alive socket the child had closed) is replayed through the hold; any other request forwarded in the moment between a child dying and the manager seeing it exit answers 502 once, and that failure sends every later request back through the probe.
 
@@ -915,7 +912,7 @@ The doc tools (`lowdefy_search_docs` and `lowdefy_get_doc`) read one index in th
 - **Plugins** (`plugin`, or `local-plugin` when the package's real directory is outside every `node_modules`), from the plugin packages the build lists (`plugins/availableTypes.json`, `customTypesMap.json`, `installedPluginPackages.json`), `@lowdefy/*` left out: the `README.md` as `plugins/<package>`, and each `docs/*.md` (else `dist/docs/*.md`) as `plugins/<package>/<stem>`. `typeDocs` maps `"<kind>:<type>"` to the doc whose stem is the type name, else to the README. `listPackageDocFiles` lists only regular files whose real path is inside the package, so a link out of it, a broken link or a directory named `*.md` is left out.
 - **Modules** (`module`), from `build/modules.json`: the `README.md` as `modules/<id>`, each `docs/*.md` as `modules/<id>/<stem>`, and `modules/<id>/manifest`, generated from the module's `varDefs` and manifest (vars with type, required, description and default; components; exports). A part with the wrong shape (the build does not check `exports`) is named on the page as not valid, so it never fails a docs call. The package is the module source without its ref, the version the ref, or `local` for `file:`.
 
-The index is built when `src/app.js` is created and rebuilt on the first docs call after its key changes. The key is the stats of the three plugin artifacts (an artifact a build leaves byte-identical keeps its mtime), the docs-relevant parts of `modules.json`, and the README and doc files of local plugins and modules. A config-only edit changes none of them.
+The docs routes and this index load lazily: `src/app.js` mounts each docs route through `src/routes/docs/loadDocsRoutes.js`, which `import()`s them once for every caller. After the child answers its first `/api/ping` (the manager's readiness probe) it loads them and builds the index in the background (`setImmediate`, not awaited), so start does not wait for them; a docs request made before then waits on the same load. The index is rebuilt on the first docs call after its key changes. The key is the stats of the three plugin artifacts (an artifact a build leaves byte-identical keeps its mtime), the docs-relevant parts of `modules.json`, and the README and doc files of local plugins and modules. A config-only edit changes none of them.
 
 `searchDocs` splits the query into terms (lowercased; one- and two-letter terms and common words dropped; a query of only dropped words is searched whole). Each term scores once, by its best field: title or slug 3, type name 2, body 1. Hits come best first, ties in index order, at most 20, and `source` narrows them. `getDoc` looks up a slug in the core docs, then the rest; a type in its plugin's docs first (the core lookup falls back to a type-name prefix match), then the core docs. With no kind, a core page for exactly that type name wins over a plugin type of another kind.
 

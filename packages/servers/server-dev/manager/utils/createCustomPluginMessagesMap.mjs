@@ -17,6 +17,7 @@
 
 import { createRequire } from 'node:module';
 import importFresh from './importFresh.mjs';
+import { importPluginModule } from './pluginTypeCache.mjs';
 import readPluginDefinitions from './readPluginDefinitions.mjs';
 
 const require = createRequire(import.meta.url);
@@ -25,7 +26,9 @@ const require = createRequire(import.meta.url);
 // process instead of repeating the same skip message on each rebuild.
 const warnedMissingMessages = new Set();
 
-async function createCustomPluginMessagesMap({ directories, logger }) {
+// cache: true reads each plugin from the plugin type cache, as
+// createCustomPluginTypesMap does.
+async function createCustomPluginMessagesMap({ cache = false, directories, logger }) {
   const customMessagesMap = {};
   const { plugins: pluginDefinitions } = await readPluginDefinitions({ directories });
 
@@ -43,7 +46,9 @@ async function createCustomPluginMessagesMap({ directories, logger }) {
         }
         return;
       }
-      const messagesModule = await importFresh(messagesPath);
+      const messagesModule = cache
+        ? await importPluginModule({ entryPath: messagesPath, packageName: plugin.name })
+        : await importFresh(messagesPath);
       const messages = messagesModule.default ?? messagesModule;
       if (!messages || typeof messages !== 'object') return;
       customMessagesMap[plugin.name] = messages;

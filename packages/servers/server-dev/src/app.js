@@ -33,15 +33,6 @@ import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
 import devRecordingHandler from './routes/devRecording.js';
 import devToolsHandler from './routes/devTools.js';
-import docsBuildStatusHandler from './routes/docs/buildStatus.js';
-import docsEventsHandler from './routes/docs/events.js';
-import docsFindHandler from './routes/docs/find.js';
-import docsIndexHandler from './routes/docs/index.js';
-import docsJourneyHandler from './routes/docs/journey.js';
-import docsMutantsHandler from './routes/docs/mutants.js';
-import docsMcpHandler from './routes/docs/mcp.js';
-import docsPageConfigHandler from './routes/docs/pageConfig.js';
-import docsRestartHandler from './routes/docs/restart.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
@@ -49,6 +40,7 @@ import getMockUser from '../lib/server/auth/getMockUser.js';
 import isTabAnswer from './lib/isTabAnswer.js';
 import getRequestSurface from './lib/getRequestSurface.js';
 import jitPageHandler from './routes/jitPage.js';
+import loadDocsRoutes from './routes/docs/loadDocsRoutes.js';
 import localDevToolsOnly from './middleware/localDevToolsOnly.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
@@ -68,7 +60,6 @@ import rootHandler from './routes/root.js';
 import staleFlag from './middleware/staleFlag.js';
 import stampCaller from './middleware/stampCaller.js';
 import startIdleGc from '../lib/server/startIdleGc.js';
-import getDocsIndex from '../lib/docs/getDocsIndex.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
@@ -78,6 +69,38 @@ const basePath = lowdefyConfig.basePath ?? '';
 // Same default as the production server, so a request that would time out in production (a 504
 // the page shows as a generic error, beside the other requests' results) also times out in dev.
 const requestTimeoutMs = lowdefyConfig.requestTimeout ?? 30000;
+
+// A docs route handler that loads the docs routes on its first call.
+function docsRoute(name) {
+  return async function lazyDocsRoute(c, next) {
+    const routes = await loadDocsRoutes();
+    return routes[name](c, next);
+  };
+}
+
+// Once the child has answered its first request (the manager's /api/ping
+// readiness probe), the docs routes load and the docs index is built in the
+// background, so neither delays start and the first doc search does not pay
+// for reading every plugin and module's docs. A docs request made before then
+// waits on the same load.
+let docsWarmUpStarted = false;
+
+function warmUpDocs() {
+  loadDocsRoutes()
+    .then((routes) => routes.getDocsIndex())
+    .catch(() => {
+      // Not kept: the next docs request loads again and answers with the error.
+    });
+}
+
+function pingAndWarmUpDocs(c) {
+  const response = pingHandler(c);
+  if (!docsWarmUpStarted) {
+    docsWarmUpStarted = true;
+    setImmediate(warmUpDocs);
+  }
+  return response;
+}
 
 // Dev Hono app — mounted into Vite via @hono/vite-dev-server (Vite owns HTTP
 // and serves /client/* modules with HMR; everything else lands here).
@@ -93,7 +116,7 @@ function createApp() {
 
   // No api context: SSE/health routes had no apiWrapper before.
   app.get('/api/reload', reloadHandler);
-  app.get('/api/ping', pingHandler);
+  app.get('/api/ping', pingAndWarmUpDocs);
   // Dev tools, refused from other machines (localDevToolsOnly).
   app.use('/api/dev-tools', localDevToolsOnly());
   app.get('/api/dev-tools', devToolsHandler);
@@ -131,20 +154,20 @@ function createApp() {
   // does not match the bare path.
   app.use('/lowdefy-docs', localDevToolsOnly());
   app.use('/lowdefy-docs/*', localDevToolsOnly());
-  app.all('/lowdefy-docs/mcp', docsMcpHandler);
+  app.all('/lowdefy-docs/mcp', docsRoute('mcp'));
   // Flags every other docs response while the last build failed. Registered
   // twice: hono's `/*` pattern does not match the bare path.
   app.use('/lowdefy-docs', staleFlag());
   app.use('/lowdefy-docs/*', staleFlag());
-  app.get('/lowdefy-docs', docsIndexHandler);
-  app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
+  app.get('/lowdefy-docs', docsRoute('index'));
+  app.get('/lowdefy-docs/build-status', docsRoute('buildStatus'));
   // Push channel for non-MCP clients.
-  app.get('/lowdefy-docs/events', docsEventsHandler);
-  app.get('/lowdefy-docs/page-config/:pageId{.+}', docsPageConfigHandler);
-  app.get('/lowdefy-docs/find/:id', docsFindHandler);
-  app.post('/lowdefy-docs/journey', docsJourneyHandler);
-  app.post('/lowdefy-docs/mutants', docsMutantsHandler);
-  app.post('/lowdefy-docs/restart', docsRestartHandler);
+  app.get('/lowdefy-docs/events', docsRoute('events'));
+  app.get('/lowdefy-docs/page-config/:pageId{.+}', docsRoute('pageConfig'));
+  app.get('/lowdefy-docs/find/:id', docsRoute('find'));
+  app.post('/lowdefy-docs/journey', docsRoute('journey'));
+  app.post('/lowdefy-docs/mutants', docsRoute('mutants'));
+  app.post('/lowdefy-docs/restart', docsRoute('restart'));
   // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
   // targeted SSE events by posting results here; GET lists connected tabs.
   // The live-tab channel acts on the developer's open tabs - the same
@@ -162,10 +185,6 @@ function createApp() {
   // A paired phone's recorder may post too: the route only writes records.
   app.use('/api/dev-recording', localDevToolsOnly({ allowPaired: (c) => c.req.method === 'POST' }));
   app.post('/api/dev-recording', bodyLimit({ maxSize: 1024 * 1024 }), devRecordingHandler);
-  // Built now so the first doc search does not pay for reading every plugin
-  // and module's docs.
-  getDocsIndex();
-
   // Only the routes that run app logic: JIT page builds, the docs/MCP routes and the SSE streams
   // are dev-only and can legitimately run longer than any production request.
   if (requestTimeoutMs > 0) {

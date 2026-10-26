@@ -18,6 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import createPluginSourceIgnore from './createPluginSourceIgnore.mjs';
 import listServerSidePackages from './listServerSidePackages.mjs';
+import { clearPluginTypeCache } from '../utils/pluginTypeCache.mjs';
 import readPluginDefinitions from '../utils/readPluginDefinitions.mjs';
 import selectLocalPluginPackages from './selectLocalPluginPackages.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
@@ -59,6 +60,8 @@ async function pluginSourceWatcher(context) {
         serverSide.has(packageName) && changedFiles.some((filePath) => isInside({ filePath, dir }))
     );
     context.logger.info({ spin: 'start' }, 'Local plugin source changed, rebuilding.');
+    // The plugin type cache can not see every file a plugin's types import.
+    clearPluginTypeCache();
     try {
       await context.lowdefyBuild();
     } finally {
