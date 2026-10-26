@@ -22,9 +22,11 @@ import { pluginChecksNeedRebuild } from '@lowdefy/node-utils';
 // This runs after the first child answers, not before it: the checks only add
 // warnings or errors, the first build's output serves meanwhile, and a large
 // app's config build would otherwise double the time to a usable server on a
-// fresh checkout. It runs as a change does: tracked as building, so
-// lowdefy_build_status({ wait: true }) reads the checked build, then synced
-// and reloaded.
+// fresh checkout. It is tracked as building, so
+// lowdefy_build_status({ wait: true }) reads the checked build, and synced
+// like a watcher's build. Open tabs are not reloaded: the checks change no
+// output a tab reads, and a reload would reset the page someone is using. A
+// failed build publishes nothing, so it is not synced either.
 function checkPendingPlugins(context) {
   return async () => {
     if (
@@ -37,13 +39,9 @@ function checkPendingPlugins(context) {
       return;
     }
     await context.buildActivity.track(async () => {
-      context.logger.info({ spin: 'start' }, 'Checking the plugins installed at start-up.');
-      try {
-        await context.lowdefyBuild();
-      } finally {
-        await context.syncServer();
-        await context.reloadClients();
-      }
+      context.logger.info('Checking the plugins installed at start-up.');
+      await context.lowdefyBuild();
+      await context.syncServer();
     });
   };
 }

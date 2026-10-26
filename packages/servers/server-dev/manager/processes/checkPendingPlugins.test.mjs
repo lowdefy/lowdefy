@@ -72,16 +72,16 @@ test('checkPendingPlugins does nothing when no plugin checks are pending', async
   expect(calls).toEqual([]);
 });
 
-test('checkPendingPlugins builds, syncs and reloads as one tracked change when checks are pending', async () => {
+test('checkPendingPlugins builds and syncs as one tracked change, without reloading tabs, when checks are pending', async () => {
   writePending([{ name: '@acme/plugin', schemaChecked: true }]);
   const context = createContext();
   await checkPendingPlugins(context)();
   // Warnings held by the initial build are given by this one, so it passes no options.
   expect(context.lowdefyBuild.mock.calls).toEqual([[]]);
-  expect(calls).toEqual(['busy', 'lowdefyBuild', 'syncServer', 'reloadClients', 'idle']);
+  expect(calls).toEqual(['busy', 'lowdefyBuild', 'syncServer', 'idle']);
 });
 
-test('checkPendingPlugins still syncs and reloads when the build fails', async () => {
+test('checkPendingPlugins rejects with the build error and does not sync when the build fails', async () => {
   writePending([{ name: '@acme/plugin', schemaChecked: true }]);
   const context = createContext({
     lowdefyBuild: () => {
@@ -89,7 +89,7 @@ test('checkPendingPlugins still syncs and reloads when the build fails', async (
     },
   });
   await expect(checkPendingPlugins(context)()).rejects.toThrow('Build failed with 1 error(s).');
-  expect(calls).toEqual(['busy', 'lowdefyBuild', 'syncServer', 'reloadClients', 'idle']);
+  expect(calls).toEqual(['busy', 'lowdefyBuild', 'idle']);
 });
 
 test('checkPendingPlugins does nothing with skipPluginChecks, even when checks are pending', async () => {
