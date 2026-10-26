@@ -45,8 +45,8 @@
     "gray-matter": "4.0.3",
     "lucide-react": "^0.400.0",
     "mdast-util-to-string": "3.2.0",
-    "next": "^15.5.26",
-    "posthog-js": "^1.343.2",
+    "next": "^15.5.28",
+    "posthog-js": "^1.438.23",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-markdown": "8.0.7",
@@ -66,5 +66,11 @@
     "eslint-config-next": "15.5.26",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0"
+  },
+  "overrides": {
+    "postcss": "$postcss",
+    "prismjs": "^1.30.0",
+    "source-map-js": "^1.2.2",
+    "dompurify": "^3.4.17"
   }
 }

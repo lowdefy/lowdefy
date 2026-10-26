@@ -55,11 +55,11 @@
     "@lowdefy/nunjucks": "7.1.0",
     "@lowdefy/operators": "7.1.0",
     "@lowdefy/operators-js": "7.1.0",
-    "@modelcontextprotocol/sdk": "1.31.0",
+    "@modelcontextprotocol/sdk": "1.32.2",
     "better-auth": "1.7.7",
     "jose": "^6.2.3",
     "mongodb-connection-string-url": "^7.0.2",
-    "nodemailer": "10.0.13"
+    "nodemailer": "10.1.7"
   },
   "devDependencies": {
     "@lowdefy/connection-mongodb": "7.1.0",
