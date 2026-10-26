@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { getPossibleOperators } from '@lowdefy/operators';
 
 import findEmbeddedUrls from './findEmbeddedUrls.js';
+import findHtmlUrls from './findHtmlUrls.js';
 import isAllowedUrl from './isAllowedUrl.js';
 import isUnderState from './isUnderState.js';
 
@@ -61,8 +62,8 @@ function listUrls({ value, urlKind }) {
 // from the block schema). A value is a URL where it is used as a link (a URL
 // key or urlKind mark, judged whole above); text and HTML a block draws are no
 // link and render no markdown, so a whole value, a markdown target or a
-// protocol-relative word in them is words. HTML can carry a style attribute
-// only when the policy allows tags. A value no schema marks may be drawn as
+// protocol-relative word in them is words. HTML can carry a style, a link or a
+// source attribute only when the policy allows tags (findHtmlUrls). A value no schema marks may be drawn as
 // markdown, a style or a link the schema does not mark, so every scan applies.
 function getUrlScans({ textKind, policy }) {
   if (textKind === 'text') {
@@ -129,6 +130,19 @@ function checkString({ value, key, path, walk }) {
       });
     }
   });
+  // With tags allowed, any string a block may draw as HTML can carry a link or
+  // a source in an attribute.
+  if (policy.html === true && textKind !== 'text') {
+    findHtmlUrls({ value }).forEach(({ url, navigation }) => {
+      if (!isAllowedUrl({ value: url, policy, navigation, schemeless: false, routes })) {
+        errors.push({
+          path,
+          rule: 'policy.urls',
+          message: `HTML attribute URL "${url}" is not a page or origin dynamic blocks policy "${policy.id}" allows.`,
+        });
+      }
+    });
+  }
 }
 
 // A _state read may only name a literal key under the policy's state, so

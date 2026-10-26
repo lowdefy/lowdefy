@@ -191,6 +191,9 @@ export default {
           {
             type: 'object',
             description: 'Object of key value pairs to display',
+            additionalProperties: {
+              textKind: 'html',
+            },
             docs: {
               displayType: 'yaml',
             },

@@ -72,10 +72,11 @@ function applyDataWith({ kind, schemas, parent }) {
   return undefined;
 }
 
-// Records, by path, the kind a block schema gives the value there under one
+// Records, by path, the kind a block schema gives the value there under each
 // keyword, so the policy judges a value by what its property is, not by what it
 // is called. A marked array holds one value of that kind per item; false records
-// null; a value no schema marks either way is not recorded.
+// null; a value no schema marks either way is not recorded. Returns a Map per
+// keyword; one walk reads them all, since it runs on every Dynamic block.
 //
 // urlKind marks URL-valued properties ('url' and 'href' navigate, 'url' the way
 // the engine's link resolver does; 'src' loads; 'srcSet' lists sources), and
@@ -86,41 +87,63 @@ function applyDataWith({ kind, schemas, parent }) {
 // option value), so every string in it, however nested, is text. dataWith
 // names a sibling key the value is data only beside (applyDataWith). Values
 // neither marks fall back to the key-name and text rules.
-function collectSchemaKinds({ value, schema, path, keyword }) {
-  const kinds = new Map();
-  const pending = [{ value, schema, path }];
+function collectSchemaKinds({ value, schema, path, keywords }) {
+  const kindsByKeyword = Object.fromEntries(keywords.map((keyword) => [keyword, new Map()]));
+  const pending = [{ value, schema, path, keywords }];
   while (pending.length > 0) {
     const item = pending.pop();
     const schemas = expandSchema(item.schema);
-    const kind = applyDataWith({
-      kind: findKind({ schemas, keyword }),
-      schemas,
-      parent: item.parent,
-    });
-    if (kind === null) {
-      // Another schema branch may already have marked it.
-      if (!kinds.has(item.path)) {
-        kinds.set(item.path, null);
+    // The keywords a mark has not settled here, read again in the children.
+    const open = item.keywords.filter((keyword) => {
+      const kinds = kindsByKeyword[keyword];
+      const kind = applyDataWith({
+        kind: findKind({ schemas, keyword }),
+        schemas,
+        parent: item.parent,
+      });
+      if (kind === null) {
+        // Another schema branch may already have marked it.
+        if (!kinds.has(item.path)) {
+          kinds.set(item.path, null);
+        }
+        return false;
       }
-    } else if (type.isString(kind) && type.isArray(item.value)) {
-      item.value.forEach((_, index) => kinds.set(`${item.path}.${index}`, kind));
-    } else if (type.isString(kind) && !type.isObject(item.value)) {
-      kinds.set(item.path, kind);
-    } else if (type.isArray(item.value)) {
+      if (type.isString(kind) && type.isArray(item.value)) {
+        item.value.forEach((_, index) => kinds.set(`${item.path}.${index}`, kind));
+        return false;
+      }
+      if (type.isString(kind) && !type.isObject(item.value)) {
+        kinds.set(item.path, kind);
+        return false;
+      }
+      if (type.isObject(item.value)) {
+        // An object under a branch that marks strings is an operator, which the
+        // policy judges by a urlKind mark (it must be literal), or an object
+        // whose properties other branches mark (an option that is a string or a
+        // { label, value } object), so it is walked too.
+        if (type.isString(kind)) {
+          kinds.set(item.path, kind);
+        }
+        return true;
+      }
+      return type.isArray(item.value);
+    });
+    if (open.length === 0) {
+      continue;
+    }
+    if (type.isArray(item.value)) {
       const itemSchemas = schemas.map((candidate) => candidate.items).filter(type.isObject);
       item.value.forEach((child, index) =>
         itemSchemas.forEach((itemSchema) =>
-          pending.push({ value: child, schema: itemSchema, path: `${item.path}.${index}` })
+          pending.push({
+            value: child,
+            schema: itemSchema,
+            path: `${item.path}.${index}`,
+            keywords: open,
+          })
         )
       );
-    } else if (type.isObject(item.value)) {
-      // An object under a branch that marks strings is an operator, which the
-      // policy judges by a urlKind mark (it must be literal), or an object
-      // whose properties other branches mark (an option that is a string or a
-      // { label, value } object), so it is walked too.
-      if (type.isString(kind)) {
-        kinds.set(item.path, kind);
-      }
+    } else {
       Object.keys(item.value).forEach((key) => {
         childSchemas({ schemas, key }).forEach((childSchema) =>
           pending.push({
@@ -128,12 +151,13 @@ function collectSchemaKinds({ value, schema, path, keyword }) {
             schema: childSchema,
             path: `${item.path}.${key}`,
             parent: item.value,
+            keywords: open,
           })
         );
       });
     }
   }
-  return kinds;
+  return kindsByKeyword;
 }
 
 export default collectSchemaKinds;

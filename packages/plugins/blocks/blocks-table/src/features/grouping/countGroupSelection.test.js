@@ -26,3 +26,17 @@ test('countGroupSelection counts the selected leaf rows in the group range', () 
     { selected: 2, total: 3 }
   );
 });
+
+test('countGroupSelection leaves out leaves the group cannot select', () => {
+  const leaves = [{ id: '1' }, { id: '2' }, { id: '3' }];
+  assert.deepEqual(
+    countGroupSelection({
+      leaves,
+      start: 0,
+      end: 3,
+      selection: { 1: true, 2: true },
+      isSelectable: (leaf) => leaf.id !== '2',
+    }),
+    { selected: 1, total: 2 }
+  );
+});

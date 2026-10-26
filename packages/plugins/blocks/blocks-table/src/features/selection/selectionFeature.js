@@ -19,6 +19,7 @@ import { rowSelectionFeature } from '@tanstack/react-table';
 import createClearSelection from './createClearSelection.js';
 import createToggleAllRowsSelected from './createToggleAllRowsSelected.js';
 import createToggleRowSelected from './createToggleRowSelected.js';
+import getEnableRowSelection from './getEnableRowSelection.js';
 import handleSelectionClick from './handleSelectionClick.js';
 import initRowSelection from './initRowSelection.js';
 import initSelectionMode from './initSelectionMode.js';
@@ -40,7 +41,7 @@ const selectionFeature = {
     selectionView: { init: initSelectionView, cause: 'select' },
   },
   tableOptions: ({ config }) => ({
-    enableRowSelection: Boolean(config.rowSelection),
+    enableRowSelection: getEnableRowSelection({ config }),
     enableMultiRowSelection: config.rowSelection?.type !== 'radio',
   }),
   toValue: selectionToValue,

@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getSelectAllExcept from '../selection/getSelectAllExcept.js';
+
 // The number of selected rows. With `{ all: true, except }` and a server total, every row the
 // server matches is selected except the exceptions (rows the user unchecked since, loaded or
 // not); otherwise it is the selected keys (with `preserve`, including rows that are not loaded).
@@ -25,7 +27,7 @@ function countSelection({ api, state }) {
     if (isSelected === true) selected += 1;
   });
   if (state.selectionMode !== 'all' || !type.isNumber(api.total)) return selected;
-  return api.total - api.selectionExcept.size;
+  return api.total - getSelectAllExcept({ api }).length;
 }
 
 export default countSelection;

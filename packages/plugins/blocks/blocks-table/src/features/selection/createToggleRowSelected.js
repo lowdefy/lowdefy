@@ -16,6 +16,7 @@
 
 import getRawRowKey from './getRawRowKey.js';
 import findRow from '../../core/findRow.js';
+import isRowSelectable from './isRowSelectable.js';
 
 // In an `{ all: true, except }` selection, a row cleared by the user joins `except` and a row
 // selected again leaves it. The exceptions are recorded here, where the user acts, rather than
@@ -39,12 +40,17 @@ function createToggleRowSelected(api) {
     const row = findRow({ table: api.table, id });
     if (!row) return false;
     const selected = api.state.rowSelection[id] === true;
+    if (!selected && !isRowSelectable({ api, original: row.original })) return false;
     if (api.config.rowSelection.type === 'radio') {
       api.updateSlice('rowSelection', () => (selected ? {} : { [id]: true }), { cause: 'select' });
       return true;
     }
     if (api.config.rowSelection.cascade && api.tree) {
-      const ids = [id, ...api.tree.getDescendantIds(id)];
+      const ids = [id, ...api.tree.getDescendantIds(id)].filter((rowId) => {
+        if (selected) return true;
+        const descendant = findRow({ table: api.table, id: rowId });
+        return descendant !== null && isRowSelectable({ api, original: descendant.original });
+      });
       recordExceptions({ api, ids, selected });
       api.updateSlice(
         'rowSelection',
