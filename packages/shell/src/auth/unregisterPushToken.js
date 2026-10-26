@@ -46,11 +46,14 @@ async function getDeviceToken() {
  */
 async function unregisterPushToken({ app }) {
   const endpointId = app.session?.getState().root?.notifications?.unregister;
-  if (typeof endpointId !== 'string' || app.tokenStore.get() === null) {
+  const sessionToken = app.tokenStore.get();
+  if (typeof endpointId !== 'string' || sessionToken === null) {
     return;
   }
+  // The sign-out clears the token store while the device token is still being read, so the call
+  // carries the session token as it was when the sign-out began.
   await callEndpoint({
-    app,
+    app: { ...app, tokenStore: { get: () => sessionToken } },
     endpointId,
     payload: { token: await getDeviceToken(), platform: Platform.OS, shellId: app.shell.id },
   });

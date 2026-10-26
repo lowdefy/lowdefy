@@ -43,6 +43,18 @@ test('a sign-out sends this phone push token, so the app drops that one', async 
   );
 });
 
+test('a sign-out that clears the session token while the push token is read still calls with it', async () => {
+  const app = createApp();
+  let current = 'session-token';
+  app.tokenStore = { get: () => current };
+  Notifications.getDevicePushTokenAsync.mockImplementationOnce(async () => {
+    current = null;
+    return { data: 'device-token' };
+  });
+  await unregisterPushToken({ app });
+  expect(callEndpoint.mock.calls[0][0].app.tokenStore.get()).toBe('session-token');
+});
+
 test('a phone without a push token sends token null', async () => {
   Notifications.getDevicePushTokenAsync.mockRejectedValueOnce(new Error('not registered'));
   await unregisterPushToken({ app: createApp() });
