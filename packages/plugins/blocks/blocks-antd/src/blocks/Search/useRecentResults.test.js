@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+
 import { addRecentResult, readStored, writeStored } from './useRecentResults.js';
 
 beforeEach(() => {

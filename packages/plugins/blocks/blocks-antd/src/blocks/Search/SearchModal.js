@@ -42,6 +42,8 @@ function SearchModal({
 }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+  // The query `results` answer. While a typed query waits on the debounce it differs from `query`.
+  const [resultsQuery, setResultsQuery] = useState('');
   const debounceRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -71,7 +73,9 @@ function SearchModal({
     : buildSections({ results, groups, resultMapping, maxResults });
   const displayOrderResults = sections.flatMap((section) => section.items);
   const hasResults = displayOrderResults.length > 0;
-  const showPinned = !!pinned && !!query.trim() && !searchIndex.loading;
+  // Not before the typed query is searched: Enter would fire the pinned row because the results
+  // are not in yet, not because nothing matches.
+  const showPinned = !!pinned && !!query.trim() && !searchIndex.loading && resultsQuery === query;
   const pinnedIndex = displayOrderResults.length;
 
   const handleSelect = useCallback(
@@ -150,10 +154,12 @@ function SearchModal({
       debounceRef.current = setTimeout(() => {
         if (!value) {
           setResults([]);
+          setResultsQuery('');
           return;
         }
         const searchResults = searchIndex.search(value);
         setResults(searchResults);
+        setResultsQuery(value);
         methods.triggerEvent({
           name: 'onSearch',
           event: { value, resultCount: searchResults.length },
@@ -168,6 +174,7 @@ function SearchModal({
       setQuery(recentQuery);
       const searchResults = searchIndex.search(recentQuery);
       setResults(searchResults);
+      setResultsQuery(recentQuery);
     },
     [searchIndex]
   );
@@ -176,6 +183,7 @@ function SearchModal({
     if (!open) {
       setQuery('');
       setResults([]);
+      setResultsQuery('');
     }
   }, [open]);
 
@@ -185,6 +193,7 @@ function SearchModal({
   useEffect(() => {
     if (!open || !query) return;
     setResults(searchIndex.search(query));
+    setResultsQuery(query);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchIndex.version]);
 

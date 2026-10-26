@@ -120,7 +120,8 @@ test.describe('Search Block', () => {
     await modal.locator('input').fill('note');
     await expect(modal.locator('.lf-search-group-header').first()).toContainText('Notes');
     await expect(modal.locator('.lf-search-group-count').first()).toHaveText('4');
-    await expect(modal.locator('.lf-search-item:not(.lf-search-pinned)')).toHaveCount(2);
+    // Two of the four Notes, then the one People match ("Note person").
+    await expect(modal.locator('.lf-search-results .lf-search-item')).toHaveCount(3);
     await expect(modal.locator('.lf-search-see-all')).toHaveText('See all 4');
   });
 
@@ -132,6 +133,22 @@ test.describe('Search Block', () => {
     await expect(pinned).toHaveClass(/lf-search-item-selected/);
     await page.keyboard.press('Enter');
     await expect(getBlock(page, 'search_sections_pinned_display')).toContainText('zzzz');
+  });
+
+  test('Enter before the typed query is searched does not fire the pinned row', async ({
+    page,
+  }) => {
+    const modal = await openSections(page);
+    await modal.locator('input').fill('note');
+    await page.keyboard.press('Enter');
+    // Either the results arrive after the Enter, or (on a slow run) the Enter selected the first
+    // of them; the pinned row never fired.
+    const resultsShown = modal.locator('.lf-search-results .lf-search-item').first();
+    const resultSelected = getBlock(page, 'search_sections_selected_display').filter({
+      hasText: 'Note',
+    });
+    await expect(resultsShown.or(resultSelected)).toBeVisible();
+    await expect(getBlock(page, 'search_sections_pinned_display')).toHaveText('');
   });
 
   test('the pinned shortcut works from a result row', async ({ page }) => {
@@ -147,11 +164,12 @@ test.describe('Search Block', () => {
   test('recent results survive a reload', async ({ page }) => {
     const modal = await openSections(page);
     await modal.locator('input').fill('note');
+    await expect(modal.locator('.lf-search-results .lf-search-item').first()).toBeVisible();
     await page.keyboard.press('Enter');
-    await expect(getBlock(page, 'search_sections_selected_display')).not.toHaveText('');
+    await expect(getBlock(page, 'search_sections_selected_display')).toHaveText('Note one');
     await page.reload();
     const reopened = await openSections(page);
     await expect(reopened.locator('.lf-search-group-header')).toHaveText('Recent');
-    await expect(reopened.locator('.lf-search-item')).toHaveCount(1);
+    await expect(reopened.locator('.lf-search-results .lf-search-item')).toHaveText(['Note one']);
   });
 });

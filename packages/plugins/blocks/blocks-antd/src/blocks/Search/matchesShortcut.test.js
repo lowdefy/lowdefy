@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { describe, expect, test } from 'vitest';
+
 import matchesShortcut from './matchesShortcut.js';
 import parseShortcut from '../parseShortcut.js';
 

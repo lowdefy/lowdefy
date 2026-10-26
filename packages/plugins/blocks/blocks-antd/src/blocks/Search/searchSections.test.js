@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { describe, expect, test } from 'vitest';
+
 import { buildSections, fillQuery } from './searchSections.js';
 
 const doc = (id, category) => ({ id, category, title: id });
