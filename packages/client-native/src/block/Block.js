@@ -20,21 +20,46 @@ import CategorySwitch from './CategorySwitch.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import MountEvents from '../MountEvents.js';
 
+// How long a render's registration waits for a commit before it is dropped.
+const RENDER_REGISTRATION_MS = 1000;
+
 // One block of the page: registers its updater with the engine, runs its mount events and draws
 // it by category. The same flow as the web renderer's block container.
 const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
   const loggedErrorsRef = useRef(new Set());
-  // The block's one updater for this component's life. It registers on render, as the engine
-  // can update the block before the first commit, and again when mounted (a StrictMode remount
-  // unregisters it); unmounting removes only this copy's. A native shell can show one page on
-  // two screens, and each copy of the block keeps its own updater (engine createUpdaters).
+  // The block's one updater for this component's life, as the web renderer's: the engine can
+  // update a block before its first commit, so it registers on render too, and the effect takes
+  // that registration over. A render React discards never commits and runs no cleanup, so the
+  // render registration removes itself after a short wait if no commit followed. A native shell
+  // can show one page on two screens, and each copy keeps its own updater (engine createUpdaters).
   const updater = useRef(() => setUpdate((count) => count + 1)).current;
-  context._internal.updaters.register(block.id, updater);
-  useEffect(
-    () => context._internal.updaters.register(block.id, updater),
-    [block.id, context, updater]
-  );
+  const renderRegistration = useRef(null);
+  const committed = useRef(false);
+  const dropped = useRef(false);
+  if (renderRegistration.current === null && !committed.current) {
+    const unregister = context._internal.updaters.register(block.id, updater);
+    renderRegistration.current = setTimeout(() => {
+      if (committed.current) return;
+      unregister();
+      dropped.current = true;
+    }, RENDER_REGISTRATION_MS);
+  }
+  useEffect(() => {
+    const unregister = context._internal.updaters.register(block.id, updater);
+    committed.current = true;
+    clearTimeout(renderRegistration.current);
+    renderRegistration.current = null;
+    // A first commit later than the wait missed any update sent in between.
+    if (dropped.current) {
+      dropped.current = false;
+      setUpdate((count) => count + 1);
+    }
+    return () => {
+      committed.current = false;
+      unregister();
+    };
+  }, [block.id, context, updater]);
 
   const progress = () => {
     lowdefy._internal.progress.dispatch({ type: 'increment' });
