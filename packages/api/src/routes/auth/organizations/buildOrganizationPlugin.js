@@ -154,12 +154,17 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
         creatorAppRoles: authConfig.organizations.creatorAppRoles,
         getAuth,
       }),
-      beforeCreateInvitation: createBeforeCreateInvitationHook({
-        getAuth,
-        invitationLimit: Number.isFinite(authConfig.organizations?.invitationLimit)
-          ? authConfig.organizations.invitationLimit
-          : DEFAULT_INVITATION_LIMIT,
-      }),
+      // Registered only when a limit is set: unset, the cap is the
+      // effectively open DEFAULT_INVITATION_LIMIT above, and every invite
+      // would pay for a count that can never refuse.
+      ...(Number.isFinite(authConfig.organizations?.invitationLimit)
+        ? {
+            beforeCreateInvitation: createBeforeCreateInvitationHook({
+              getAuth,
+              invitationLimit: authConfig.organizations.invitationLimit,
+            }),
+          }
+        : {}),
     },
     sendInvitationEmail,
   };

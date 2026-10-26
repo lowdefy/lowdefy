@@ -256,16 +256,14 @@ const invitationHookArgs = {
   organization: { id: 'org_1' },
 };
 
-test('buildOrganizationPlugin holds the BetterAuth invitationLimit check open and admits a 101st open invitation when unset', async () => {
+test('buildOrganizationPlugin holds the BetterAuth invitationLimit check open and registers no invitation hook when unset', () => {
   const plugin = buildOrganizationPlugin({
     authConfig,
     getAuth: () => createCountingAuth(100),
     sendInvitationEmail: async () => {},
   });
   expect(plugin.options.invitationLimit).toBe(1000000);
-  await expect(
-    plugin.options.organizationHooks.beforeCreateInvitation(invitationHookArgs)
-  ).resolves.toBeUndefined();
+  expect(plugin.options.organizationHooks.beforeCreateInvitation).toBeUndefined();
 });
 
 test('buildOrganizationPlugin enforces auth.organizations.invitationLimit in the beforeCreateInvitation hook', async () => {
