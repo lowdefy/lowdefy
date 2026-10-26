@@ -272,7 +272,7 @@ test('a payloadSchema validates the { path, query } payload', async () => {
     query: {},
   });
   expect(ok.status).toBe(302);
-  await expect(
-    runLinkEndpoint(context, { segments: ['files', 'other', 'x.png'], query: {} })
-  ).rejects.toMatchObject({ name: 'UserError' });
+  expect(
+    await runLinkEndpoint(context, { segments: ['files', 'other', 'x.png'], query: {} })
+  ).toEqual({ status: 400 });
 });

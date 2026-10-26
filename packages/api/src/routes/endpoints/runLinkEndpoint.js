@@ -30,7 +30,9 @@ const refusalStatuses = {
   TwoFactorEnrolmentRequiredError: 403,
 };
 
-// The caller's auth refused as a status with no body: an image load cannot read one.
+// The caller's auth refused as a status with no body: an image load cannot read one. It goes
+// through authorizeApiEndpoint, as every endpoint route does, so the refusal rules (roles,
+// two-factor enrolment) stay in one place; only the errors it throws are read as statuses here.
 function getRefusalStatus(context, { endpointConfig }) {
   try {
     authorizeApiEndpoint(context, { endpointConfig });
@@ -40,6 +42,24 @@ function getRefusalStatus(context, { endpointConfig }) {
       return refusalStatuses[error.name];
     }
     throw error;
+  }
+}
+
+// A payload the endpoint's payloadSchema refuses is the caller's own mistake (the URL is theirs),
+// answered 400 with no body like the other refusals, and logged without the path.
+function getPayloadRefusalStatus(context, { endpointConfig, payload }) {
+  try {
+    validatePayload({ endpointConfig, payload, outsideCaller: true });
+    return null;
+  } catch (error) {
+    if (error.name !== 'UserError') {
+      throw error;
+    }
+    context.logger.debug(
+      { event: 'debug_link_payload_refused', endpointId: endpointConfig.endpointId },
+      error.message
+    );
+    return 400;
   }
 }
 
@@ -69,7 +89,8 @@ async function runLinkEndpoint(context, { segments, query }) {
   context.endpointId = endpointId;
   context.evaluateOperators = createEvaluateOperators(context);
 
-  // The id only: the path can be a file name.
+  // The id only: the path can be a file name. (The request log line still records the URL path,
+  // as it does on every route.)
   context.logger.info({ event: 'call_link_endpoint', endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
@@ -78,10 +99,11 @@ async function runLinkEndpoint(context, { segments, query }) {
     return { status: refusalStatus };
   }
 
-  // The URL is the caller's own, so a refused payload is the caller's mistake (a UserError the
-  // error handler answers with 400).
   const payload = { path, query };
-  validatePayload({ endpointConfig, payload, outsideCaller: true });
+  const payloadRefusalStatus = getPayloadRefusalStatus(context, { endpointConfig, payload });
+  if (!type.isNone(payloadRefusalStatus)) {
+    return { status: payloadRefusalStatus };
+  }
 
   const routineContext = {
     steps: {},

@@ -284,11 +284,12 @@ The endpoint answers:
 | The caller's roles do not allow the endpoint                                                    | `403`                   | None                                                  |
 | A [`:reject`](/:reject), also one raised in an endpoint the routine calls                       | Its `:status`, or `400` | None                                                  |
 | A failed [`ValidateSchema` step](#validating-data-as-a-routine-step) (with `throwOnInvalid` on) | `400`                   | None                                                  |
+| The payload does not match the endpoint's `payloadSchema`                                       | `400`                   | None                                                  |
 | The routine returned anything but a URL, or any other error                                     | `500`                   | `{ "error": "Link failed." }`, nothing from the error |
 
 The `:return` must be a non-empty string: an absolute `http` or `https` URL, or a path on the app starting with `/`. Any other value answers `500` and logs a config error naming the endpoint. Every answer carries `Cache-Control: private, no-store`, so a redirect to a short-lived URL is never cached. On an app with auth, a signed-out caller gets `401` for an unknown link id too, so link ids cannot be found by trying them.
 
-A link endpoint **must have no side effects**. Any page, email or document that embeds the URL can make the browser send the `GET`, with no click and no confirmation, so the routine should only read and sign. Session cookies are `SameSite=Lax`, so the browser does not send them on an image load from another site: a link embedded in another site's page loads as signed out. Use a `public` link endpoint for a file other sites may embed.
+A link endpoint **must have no side effects**. Any page, email or document that embeds the URL can make the browser send the `GET`, with no click and no confirmation, so the routine should only read and sign. Session cookies are `SameSite=Lax`, so the browser does not send them on an image load from another site: a link embedded in another site's page loads as signed out. Use a `public` link endpoint for a file other sites may embed. Never build the redirect host from the payload: a link that redirects to a host its `path` or `query` names is an open redirect.
 
 To save these links from the editor, set `imageSrc` on [`TiptapInput`](/TiptapInput) or [`TiptapMentionInput`](/TiptapMentionInput) to a `_function` that returns the link for the uploaded key:
 
@@ -297,8 +298,11 @@ imageSrc:
   _function:
     __string.concat:
       - /api/endpoints/files/inline/
-      - __args: 0.key
+      - __uri.encode:
+          __args: 0.key
 ```
+
+Encode the key, so a file name with `#`, `?` or `%` stays one path. The endpoint receives it decoded.
 
 ## Webhook Endpoints
 

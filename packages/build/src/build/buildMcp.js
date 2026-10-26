@@ -129,6 +129,18 @@ function buildMcp({ components, context }) {
       );
       return;
     }
+    // A link endpoint answers only a browser GET with a redirect; the endpoint route refuses any
+    // other call to it, so as a tool every call would fail.
+    if (endpoint.link === true) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `MCP endpoint "${tool.id}" is a link endpoint. A link endpoint answers only a GET with a redirect, so it cannot be an MCP tool.`,
+          { configKey: toolConfigKey }
+        )
+      );
+      return;
+    }
     if (type.isNone(endpoint.description)) {
       collectExceptions(
         context,
