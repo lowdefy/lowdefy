@@ -304,6 +304,8 @@ test('checkPolicy classifies URLs that resolve off the app', () => {
     { id: 'f', type: 'Box', style: { background: 'image-set("https://tracker.test/a.png" 1x)' } },
     { id: 'g', type: 'Paragraph', properties: { content: 'data:text/html,hello' } },
     { id: 'h', type: 'Box', properties: { image: 'https://example.com/a.png' } },
+    { id: 'i', type: 'Paragraph', properties: { content: '\\\\tracker.test/p.gif' } },
+    { id: 'j', type: 'Paragraph', properties: { content: '\\/tracker.test/p.gif' } },
   ]);
   expect(rules(errors)).toEqual([
     'policy.urls blocks.0.properties.src',
@@ -312,6 +314,8 @@ test('checkPolicy classifies URLs that resolve off the app', () => {
     'policy.urls blocks.4.style.background',
     'policy.urls blocks.5.style.background',
     'policy.urls blocks.6.properties.content',
+    'policy.urls blocks.8.properties.content',
+    'policy.urls blocks.9.properties.content',
   ]);
 });
 
@@ -631,14 +635,19 @@ const textSchemas = {
         properties: {
           title: { type: 'string', textKind: 'html' },
           items: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                label: { type: 'string', textKind: 'html' },
-                value: { oneOf: [{ type: 'string', textKind: 'html' }, { type: 'number' }] },
+            oneOf: [
+              {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    label: { type: 'string', textKind: 'html' },
+                    value: { oneOf: [{ type: 'string', textKind: 'html' }, { type: 'number' }] },
+                  },
+                },
               },
-            },
+              { type: 'object', additionalProperties: { textKind: 'html' } },
+            ],
           },
         },
       },
@@ -698,6 +707,11 @@ test('checkPolicy reads markdown targets, CSS url() and protocol-relative words 
       properties: { items: writtenText.slice(1).map((value) => ({ label: 'What', value })) },
     },
     {
+      id: 'e',
+      type: 'Descriptions',
+      properties: { items: { Notes: writtenText[1], Link: writtenText[3], Count: 3 } },
+    },
+    {
       id: 'form.s',
       type: 'Selector',
       properties: { options: [{ label: 'See [notes](https://x.example)', value: 'notes' }] },
@@ -728,11 +742,13 @@ test('checkPolicy keeps the html rule on an html-drawn property', () => {
       properties: { title: 'A <b>b</b>', items: [{ label: 'What', value: writtenText[0] }] },
     },
     { id: 'form.s', type: 'Selector', properties: { options: [{ label: '<i>x</i>', value: 1 }] } },
+    { id: 'e', type: 'Descriptions', properties: { items: { Notes: writtenText[0] } } },
   ]);
   expect(rules(errors)).toEqual([
     'policy.html blocks.0.properties.title',
     'policy.html blocks.0.properties.items.0.value',
     'policy.html blocks.1.properties.options.0.label',
+    'policy.html blocks.2.properties.items.Notes',
   ]);
   // The markdown target in the same value is words.
   expect(

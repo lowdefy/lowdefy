@@ -32,6 +32,9 @@ import normalizeUrlText from './normalizeUrlText.js';
 const LOADED_SCHEME = /^(https?|ftp|wss?|file|blob|filesystem|data):\S/i;
 // Script schemes run whatever follows them, spaces included.
 const SCRIPT_SCHEME = /^(javascript|vbscript):/i;
+// The URL parser reads "\" as "/" in http(s) URLs, so "\\host" and "\/host"
+// are protocol-relative too.
+const PROTOCOL_RELATIVE = /^[\\/]{2}/;
 const MARKDOWN_INLINE = /\]\(\s*<?([^)\s>]+)/g;
 const MARKDOWN_REFERENCE = /^\s*\[[^\]]+\]:\s*<?([^\s>]+)/gm;
 const CSS_FUNCTION = /(url|src|image-set)\(([^)]*)\)/gi;
@@ -46,7 +49,7 @@ function unescapeCss(value) {
 function findEmbeddedUrls({ value, markdown = true, css = true, protocolRelative = true }) {
   const urls = [];
   const text = normalizeUrlText(value);
-  const isProtocolRelative = text.startsWith('//') || text.startsWith('/\\');
+  const isProtocolRelative = PROTOCOL_RELATIVE.test(text);
   const isUrlText =
     !/\s/.test(text) && (LOADED_SCHEME.test(text) || (protocolRelative && isProtocolRelative));
   if (isUrlText || SCRIPT_SCHEME.test(text)) {
