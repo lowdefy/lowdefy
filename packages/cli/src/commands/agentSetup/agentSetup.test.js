@@ -86,6 +86,8 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   const skillMd = read(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'));
   expect(skillMd).toContain('name: lowdefy-config');
   expect(skillMd).toContain('Never run `lowdefy dev` yourself');
+  expect(skillMd).toContain('Run `npx lowdefy hub start <app>`');
+  expect(skillMd).toContain('Never configure the pane\n  to start a server of its own');
   expect(skillMd).toContain('Never guess type names or properties.');
   expect(skillMd).toContain('When you finish work in a git worktree you created for the task');
   expect(skillMd).toContain('stops once it has been idle for 15 minutes');

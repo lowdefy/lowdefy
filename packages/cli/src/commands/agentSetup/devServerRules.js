@@ -24,6 +24,12 @@ function devServerRules() {
 
 - Never run \`lowdefy dev\` yourself, never choose a port, and never kill processes by port or name. Use
   \`lowdefy_dev_start\`, \`lowdefy_dev_stop\`, \`lowdefy_dev_status\` and \`lowdefy_dev_logs\`.
+- No \`lowdefy_\` tools in your session (the MCP server did not start, or dropped)? Still never run
+  \`lowdefy dev\` or the app's dev script. Run \`npx lowdefy hub start <app>\` (\`--restart\` to restart): the hub
+  starts the same server the tools would and prints its \`url\`. Stop it with \`npx lowdefy hub stop <app>\`.
+  Tell the developer the tools are missing.
+- To show the app in a browser or preview pane, open the \`url\` the server reports. Never configure the pane
+  to start a server of its own: that is a second dev server for the same app, outside the hub.
 - Restart (\`lowdefy_dev_start\` with \`restart: true\`) only when the server seems stuck or build status looks
   stale, or after secrets a wrapper (for example infisical) injects have changed. \`.env\` edits and local
   plugin code are picked up without a restart.
