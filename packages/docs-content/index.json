@@ -3106,7 +3106,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "788ce9f3a31b6cf157023a9f72dab04264a3a79e81b66b8ad84706759c6a0097"
+      "hash": "ad2788cb8f88d5cd6352c08b986b91ed4488b9b87e45877463324363676e7491"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3243,7 +3243,7 @@
       "files": [
         "plugins/PostHog.yaml"
       ],
-      "hash": "1fc3ce5bc11c5de9ad59f5fc3444f4087ef23f9ccf22b7b6f57755c3035d1bfe"
+      "hash": "54ef91d2b8cb0d977dda85e0f73fabdd399b489df3fbfbd4681d14dfce0f9d96"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3347,7 +3347,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "9cd08e3eda9c4b78c12cd0d8af7c15c032166cf303bca6923645abe5670e373e"
+      "hash": "94fd498047ff9b857bc2ac3d2c8832f39e83beeeff6fb107a950635278c96eb8"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -5103,7 +5103,7 @@
         "actions/PostHogInit.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "29305f9c60c7163e16397d3518cad8c223326021c06325d1780c0f3e7ca9c367"
+      "hash": "37c86efeee835191f973bef8a9a198034bb9d2605e1bdaae1b98ee26dfb77d80"
     },
     "actions/posthogoptin": {
       "files": [

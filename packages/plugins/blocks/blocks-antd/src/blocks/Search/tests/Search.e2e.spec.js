@@ -101,4 +101,80 @@ test.describe('Search Block', () => {
     const input = page.locator('.ant-modal:visible .ant-input-affix-wrapper').first();
     await expect(input).toHaveCSS('border-radius', '2px');
   });
+
+  // ============================================
+  // CAPPED GROUPS, PINNED ROW, RECENT RESULTS
+  // ============================================
+
+  async function openSections(page) {
+    const block = getBlock(page, 'search_sections');
+    await block.scrollIntoViewIfNeeded();
+    await block.locator('.lf-search-trigger').click();
+    const modal = page.locator('.ant-modal:visible').first();
+    await expect(modal).toBeVisible();
+    return modal;
+  }
+
+  test('a limited group shows its true count and a See all row', async ({ page }) => {
+    const modal = await openSections(page);
+    await modal.locator('input').fill('note');
+    await expect(modal.locator('.lf-search-group-header').first()).toContainText('Notes');
+    await expect(modal.locator('.lf-search-group-count').first()).toHaveText('4');
+    // Two of the four Notes, then the one People match ("Note person").
+    await expect(modal.locator('.lf-search-results .lf-search-item')).toHaveCount(3);
+    await expect(modal.locator('.lf-search-see-all')).toHaveText('See all 4');
+  });
+
+  test('the pinned row is selected when nothing matches and fires onPinned', async ({ page }) => {
+    const modal = await openSections(page);
+    await modal.locator('input').fill('zzzz');
+    const pinned = modal.locator('.lf-search-pinned');
+    await expect(pinned).toContainText('Ask: zzzz');
+    await expect(pinned).toHaveClass(/lf-search-item-selected/);
+    await page.keyboard.press('Enter');
+    await expect(getBlock(page, 'search_sections_pinned_display')).toContainText('zzzz');
+  });
+
+  test('Enter before the typed query is searched selects nothing', async ({ page }) => {
+    const modal = await openSections(page);
+    await modal.locator('input').fill('note');
+    await page.keyboard.press('Enter');
+    await expect(modal.locator('.lf-search-results .lf-search-item').first()).toBeVisible();
+    await expect(getBlock(page, 'search_sections_pinned_display')).toHaveText('');
+    await expect(getBlock(page, 'search_sections_selected_display')).toHaveText('');
+  });
+
+  test('Enter while a new query waits on the search does not select the old results', async ({
+    page,
+  }) => {
+    const modal = await openSections(page);
+    await modal.locator('input').fill('note');
+    await expect(modal.locator('.lf-search-results .lf-search-item').first()).toBeVisible();
+    await modal.locator('input').fill('zzzz');
+    await page.keyboard.press('Enter');
+    await expect(modal.locator('.lf-search-pinned')).toContainText('Ask: zzzz');
+    await expect(getBlock(page, 'search_sections_selected_display')).toHaveText('');
+  });
+
+  test('the pinned shortcut works from a result row', async ({ page }) => {
+    const mod = await getShortcutModifier(page);
+    const modal = await openSections(page);
+    await modal.locator('input').fill('note');
+    await expect(modal.locator('.lf-search-item').first()).toBeVisible();
+    await page.keyboard.press(`${mod}+Enter`);
+    await expect(getBlock(page, 'search_sections_pinned_display')).toContainText('note');
+    await expect(getBlock(page, 'search_sections_selected_display')).toHaveText('');
+  });
+
+  test('recent results survive a reload', async ({ page }) => {
+    const modal = await openSections(page);
+    await modal.locator('input').fill('note');
+    await expect(modal.locator('.lf-search-results .lf-search-item').first()).toBeVisible();
+    await page.keyboard.press('Enter');
+    await expect(getBlock(page, 'search_sections_selected_display')).toHaveText('Note one');
+    await page.reload();
+    const reopened = await openSections(page);
+    await expect(reopened.locator('.lf-search-group-header')).toHaveText('Recent');
+    await expect(reopened.locator('.lf-search-results .lf-search-item')).toHaveText(['Note one']);
+  });
 });

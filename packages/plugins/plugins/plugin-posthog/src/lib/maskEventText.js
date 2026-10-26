@@ -24,6 +24,8 @@ const { blockWrapperPrefix } = journeyTargetSelectors;
 const CHAIN_STRUCTURAL_KEYS = new Set([
   'attr__class',
   'attr__col-id',
+  'attr__data-col-key',
+  'attr__data-row-index',
   'attr__role',
   'attr__row-index',
   'attr__type',
@@ -42,6 +44,8 @@ const ID_KEYS = new Set(['attr__id', 'attr_id']);
 const ELEMENT_STRUCTURAL_KEYS = new Set([
   'attr__class',
   'attr__col-id',
+  'attr__data-col-key',
+  'attr__data-row-index',
   'attr__role',
   'attr__row-index',
   'attr__type',

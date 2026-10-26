@@ -40,11 +40,31 @@ test('journeyTargetSelectors interactiveControl lists every control the journey 
 test('journeyTargetSelectors names the wrapper prefix, grid attributes, layers and options', () => {
   expect(journeyTargetSelectors).toMatchObject({
     blockWrapperPrefix: 'bl-',
-    cellAttribute: 'col-id',
     dropdownOption: '.ant-select-item-option, [role="option"]',
     layers: ['[role="menu"]', '[role="dialog"]'],
-    rowAttribute: 'row-index',
   });
+});
+
+test('gridSelector covers ag-grid and Table rows and cells, never their headers', () => {
+  const { gridSelector } = journeyTargetSelectors;
+  expect(gridSelector({ kind: 'row', value: 1 })).toBe(
+    '.ag-row[row-index="1"], .lf-table-row[data-row-index="1"]'
+  );
+  expect(gridSelector({ kind: 'row' })).toBe(
+    '.ag-row[row-index], .lf-table-row[data-row-index]:not([data-row-index="-1"])'
+  );
+  expect(gridSelector({ kind: 'cell', value: 'a"b' })).toBe(
+    '.ag-cell[col-id="a\\"b"], .lf-table-gridcell[data-col-key="a\\"b"][role="gridcell"]'
+  );
+  expect(gridSelector({ kind: 'cell' })).toBe(
+    '.ag-cell[col-id], .lf-table-gridcell[data-col-key][role="gridcell"]'
+  );
+});
+
+test('gridSelector matches every row when the value is null', () => {
+  expect(journeyTargetSelectors.gridSelector({ kind: 'row', value: null })).toBe(
+    '.ag-row[row-index], .lf-table-row[data-row-index]:not([data-row-index="-1"])'
+  );
 });
 
 test('portalClass names a block in a class safe for a CSS selector', () => {

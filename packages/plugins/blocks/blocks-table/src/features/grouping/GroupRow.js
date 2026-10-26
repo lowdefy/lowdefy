@@ -16,6 +16,7 @@
 
 import React, { memo, useMemo } from 'react';
 
+import isRowSelectable from '../selection/isRowSelectable.js';
 import countGroupSelection from './countGroupSelection.js';
 import getGroupLabel from './getGroupLabel.js';
 import GroupCell from './GroupCell.js';
@@ -69,9 +70,10 @@ function GroupRow({
             start: item.start,
             end: item.end,
             selection,
+            isSelectable: (leaf) => isRowSelectable({ api, original: leaf.original }),
           })
         : null,
-    [checkbox, item, selection]
+    [api, checkbox, item, selection]
   );
   const label = getGroupLabel({ level, item });
   const leading = startCols.filter((col) => col.special);

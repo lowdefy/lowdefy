@@ -23,12 +23,36 @@ import {
 
 import isElementVisible from './isElementVisible.js';
 
-const { blockWrapperPrefix, cellAttribute, dropdownOption, layers, rowAttribute } =
+const { blockWrapperPrefix, dropdownOption, gridPartSelector, gridRules, layers } =
   journeyTargetSelectors;
+
+// Each grid's row and cell selectors, built once: describeElement runs on every traced click.
+const gridParts = {
+  row: gridRules.map(({ row }) => ({
+    attribute: row.attribute,
+    selector: gridPartSelector({ part: row }),
+  })),
+  cell: gridRules.map(({ cell }) => ({
+    attribute: cell.attribute,
+    selector: gridPartSelector({ part: cell }),
+  })),
+};
 
 function textOf(element) {
   const text = element.textContent.replace(/\s+/g, ' ').trim();
   return text === '' ? null : text;
+}
+
+// The innermost row or cell element of any grid among the nodes and the row index or column key
+// it carries, else null.
+function findGridPart({ kind, nodes }) {
+  for (const node of nodes) {
+    const part = gridParts[kind].find((candidate) => node.matches(candidate.selector));
+    if (part) {
+      return { node, value: node.getAttribute(part.attribute) };
+    }
+  }
+  return null;
 }
 
 function ancestorsOf(element) {
@@ -89,9 +113,13 @@ function createDescribeElement({ findBlockType, pathEntryOf }) {
     const blockIds = wrappers.map((node) => node.id.slice(blockWrapperPrefix.length));
     const wrapper = wrappers[0] ?? null;
     const inner = wrapper === null ? path : path.slice(0, path.indexOf(wrapper));
-    const rowElement = inner.find((node) => node.matches(`.ag-row[${rowAttribute}]`)) ?? null;
-    const cellElement = inner.find((node) => node.matches(`.ag-cell[${cellAttribute}]`)) ?? null;
-    const scope = cellElement ?? rowElement ?? wrapper;
+    const row = findGridPart({ kind: 'row', nodes: inner });
+    // A cell counts only inside a row: a Table summary row's cells sit in a row with no index.
+    const cell =
+      row === null
+        ? null
+        : findGridPart({ kind: 'cell', nodes: inner.slice(0, inner.indexOf(row.node)) });
+    const scope = cell?.node ?? row?.node ?? wrapper;
     const scopePath = scope === null ? path : path.slice(0, path.indexOf(scope) + 1);
     const control = scopePath.find(isInteractiveControl) ?? null;
     const optionElement = element.closest(dropdownOption);
@@ -111,8 +139,8 @@ function createDescribeElement({ findBlockType, pathEntryOf }) {
       page_id: entry?.pageId ?? null,
       block_id: blockId,
       block_type: findBlockType({ blockId, instanceKey: entry?.instanceKey }),
-      row: rowElement === null ? null : parseRowIndex(rowElement.getAttribute(rowAttribute)),
-      column: cellElement === null ? null : cellElement.getAttribute(cellAttribute),
+      row: row === null ? null : parseRowIndex(row.value),
+      column: cell === null ? null : cell.value,
       text,
       nth,
       option: optionElement !== null,
