@@ -36,6 +36,53 @@ function tabOrigin(cookieHeader) {
   return { source: recording.source, automated: true };
 }
 
+// Every tab's stream shares one watcher on build/reload: a watcher per
+// connection held one fs handle per open tab, headless journey and screenshot
+// tabs included. Same shape as lib/docs/devEventBus.js.
+const subscribers = new Set();
+
+let watcher = null;
+
+function notifySubscribers() {
+  [...subscribers].forEach((notify) => notify());
+}
+
+function startWatcher() {
+  watcher = chokidar.watch(['./build/reload'], {
+    persistent: true,
+    ignoreInitial: true,
+  });
+  watcher.on('add', notifySubscribers);
+  watcher.on('change', notifySubscribers);
+  // Do not reload on unlink — cleanBuildDirectory deletes build/reload during
+  // skeleton rebuilds, which would send a premature SSE event before the new
+  // build artifacts are written. The real reload comes via add/change when
+  // reloadClients() creates the file after the build completes.
+}
+
+// The close waits until the event being handled is done, for the reason
+// devEventBus.js gives: chokidar 4 registers a new file's watch handle only
+// after its add event returns, so a close made inside it would leave that
+// handle open for the next watcher of build/reload to share.
+function stopWatcher() {
+  const stopping = watcher;
+  watcher = null;
+  return new Promise((resolve) => setImmediate(resolve)).then(() => stopping.close());
+}
+
+function subscribeToReload(notify) {
+  subscribers.add(notify);
+  if (watcher === null) {
+    startWatcher();
+  }
+  return () => {
+    if (!subscribers.delete(notify)) return;
+    if (subscribers.size === 0 && watcher !== null) {
+      stopWatcher();
+    }
+  };
+}
+
 // SSE endpoint — notifies the client when build/reload is written so it can
 // mutate the SWR cache and refetch config. Also doubles as the transport for
 // the agent-state-xray tab channel (lib/docs/tabChannel.js): every
@@ -52,9 +99,8 @@ function tabOrigin(cookieHeader) {
 // { tabId, pageId } whenever it changes.
 async function reloadHandler(c) {
   return streamSSE(c, async (stream) => {
-    const watcher = chokidar.watch(['./build/reload'], {
-      persistent: true,
-      ignoreInitial: true,
+    const unsubscribe = subscribeToReload(() => {
+      stream.writeSSE({ event: 'reload', data: JSON.stringify({}) });
     });
 
     const tabId = randomUUID();
@@ -67,21 +113,11 @@ async function reloadHandler(c) {
     let open = true;
     stream.onAbort(() => {
       open = false;
-      watcher.close();
+      unsubscribe();
       unregisterTab({ id: tabId });
     });
 
     await stream.writeSSE({ event: 'tab', data: JSON.stringify({ tabId }) });
-
-    const reload = () => {
-      stream.writeSSE({ event: 'reload', data: JSON.stringify({}) });
-    };
-    watcher.on('add', () => reload());
-    watcher.on('change', () => reload());
-    // Do not reload on unlink — cleanBuildDirectory deletes build/reload during
-    // skeleton rebuilds, which would send a premature SSE event before the new
-    // build artifacts are written. The real reload comes via add/change when
-    // reloadClients() creates the file after the build completes.
 
     while (open) {
       await stream.sleep(15000);

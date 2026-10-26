@@ -135,7 +135,19 @@ export default defineConfig(({ mode }) => ({
       // sole recompile trigger — see writeGlobalsCss in @lowdefy/build).
       // The config build writes into build-staging and then moves each file
       // into build, so only build is watched.
-      ignored: ['**/lowdefy-build/tailwind/**', '**/build-staging/**'],
+      //
+      // These build/ folders hold the page, request, api, connection, agent
+      // and JIT map artifacts, thousands in a large app. The server reads them
+      // from disk and no module imports them, so Vite need not watch them.
+      ignored: [
+        '**/lowdefy-build/tailwind/**',
+        '**/build-staging/**',
+        '**/build/pages/**',
+        '**/build/api/**',
+        '**/build/connections/**',
+        '**/build/agents/**',
+        '**/build/jitMaps/**',
+      ],
     },
   },
 }));
