@@ -29,9 +29,11 @@ import normalizeUrlText from './normalizeUrlText.js';
 // CSS url() only loads in text that can carry a style.
 
 // An allowlist of schemes, not a scheme-shaped pattern: any word may hold a colon.
-const LOADED_SCHEME = /^(https?|ftp|wss?|file|blob|filesystem|data):\S/i;
-// Script schemes run whatever follows them, spaces included.
-const SCRIPT_SCHEME = /^(javascript|vbscript):/i;
+const LOADED_SCHEME = /^(https?|ftp|wss?|file|blob|filesystem):\S/i;
+// Script and data schemes keep whatever follows them, spaces included.
+const SCRIPT_SCHEME = /^(javascript|vbscript|data):/i;
+// The URL parser reads a backslash as a slash, so "\\host" is protocol-relative too.
+const PROTOCOL_RELATIVE = /^[\\/][\\/]/;
 const MARKDOWN_INLINE = /\]\(\s*<?([^)\s>]+)/g;
 const MARKDOWN_REFERENCE = /^\s*\[[^\]]+\]:\s*<?([^\s>]+)/gm;
 const CSS_FUNCTION = /(url|src|image-set)\(([^)]*)\)/gi;
@@ -46,8 +48,7 @@ function unescapeCss(value) {
 function findEmbeddedUrls({ value, wholeValue = true, markdown = true, css = true }) {
   const urls = [];
   const text = normalizeUrlText(value);
-  const isProtocolRelative = text.startsWith('//') || text.startsWith('/\\');
-  const isUrlText = !/\s/.test(text) && (LOADED_SCHEME.test(text) || isProtocolRelative);
+  const isUrlText = !/\s/.test(text) && (LOADED_SCHEME.test(text) || PROTOCOL_RELATIVE.test(text));
   if (wholeValue && (isUrlText || SCRIPT_SCHEME.test(text))) {
     urls.push(text);
   }
