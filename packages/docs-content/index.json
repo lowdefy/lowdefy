@@ -1,5 +1,5 @@
 {
-  "version": "7.0.0",
+  "version": "7.1.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -210,6 +210,12 @@
       "title": "Lowdefy APIs",
       "section": "Concepts",
       "path": "content/concepts/lowdefy-api.md"
+    },
+    {
+      "slug": "concepts/mobile-apps",
+      "title": "Mobile Apps (Experimental)",
+      "section": "Concepts",
+      "path": "content/concepts/mobile-apps.md"
     },
     {
       "slug": "concepts/notifications",
@@ -2929,7 +2935,7 @@
       "files": [
         "concepts/core/lowdefy-schema.yaml"
       ],
-      "hash": "07740570ecf48abb36652a1b3bd9f06ac773d0689a7080cf850010926f6c0ad1"
+      "hash": "28537260c8bfa4ef068dada587f5585d1dd0397c3ff5401a1bce4cb3537766db"
     },
     "concepts/menus": {
       "files": [
@@ -3000,7 +3006,7 @@
       "files": [
         "concepts/core/events-and-actions.yaml"
       ],
-      "hash": "7eedc6d4ddd784cac10404d15849fc6b7e6581eee1370ec35bc64eaf7b766e3a"
+      "hash": "09eeb0fca318b32a1cda09f6c2af809100db50151e79028d04a79610b470a277"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
@@ -3075,7 +3081,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "46602ff87ff00ffb129234873030a99171e6d9779999296ad5be6520b7ccb86e"
+      "hash": "2d8a2b03ae7b1a4d640223f23bebea31ef5d3c052652f566aa0b68adff4933da"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3083,7 +3089,15 @@
         "concepts/advanced/api.yaml",
         "version.yaml"
       ],
-      "hash": "b144aabdc3888c74d30e6bf65beb57c28ff1ef01b9b60ba7505846fcda464a07"
+      "hash": "4d39c5137867fc430b39a57ad1e230d831ba4f2f50a2e1750fe73a635d11acc7"
+    },
+    "concepts/mobile-apps": {
+      "files": [
+        "concepts/advanced/mobile-apps.md",
+        "concepts/advanced/mobile-apps.yaml",
+        "version.yaml"
+      ],
+      "hash": "705c7e2fa78c8d5076e656a14f4a5528863f804c0a2d270d333e1677415855d2"
     },
     "concepts/notifications": {
       "files": [
@@ -3106,7 +3120,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "ad2788cb8f88d5cd6352c08b986b91ed4488b9b87e45877463324363676e7491"
+      "hash": "1873730b81d22282eeec3ba15ea034117cf501c67c621a3bacf66ed89b8057cf"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3206,7 +3220,7 @@
       "files": [
         "plugins/plugins-introduction.yaml"
       ],
-      "hash": "9d7b754df919adaafb845dca2688c626cfc66e8b5169620400f758ee93807b80"
+      "hash": "b5ea2b592145a9fec38bfd7cbf255d6673dadb7c8bf18169fc9f6afb45e1d0f5"
     },
     "plugins/plugins-dev": {
       "files": [
@@ -3420,7 +3434,7 @@
         "blocks/input/AutoComplete.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "48f0b900cfa3d1e55e1fe34ba9d5eddbe29e12dec9aa860462cb86971cff81cb"
+      "hash": "f964cd4cc8fd7c027c8ebaf25776515f673752f57951e5c2ea2122f5634054ab"
     },
     "input-blocks/buttonselector": {
       "files": [
@@ -3436,7 +3450,7 @@
         "blocks/input/ButtonSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9aae3f4612bf16d75cfe2704c004edd86745ad3a7fe27b32c601e8d4c804a58f"
+      "hash": "cdf32ad7af26fd3598de5c807cb4f4617425dbb19607e7271712da292a68f2ba"
     },
     "input-blocks/captcha": {
       "files": [
@@ -3461,7 +3475,7 @@
         "blocks/input/CheckboxSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "a201a9fbe4c24431a97262a003314b42c6b5de5bde0b8fdc9e154533c1ffbf53"
+      "hash": "bc366cc278d29aebffcc29d9c2fcab6ef1749827d206729c722f4c880be704f0"
     },
     "input-blocks/checkboxswitch": {
       "files": [
@@ -3487,7 +3501,7 @@
         "blocks/input/ColorSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b58f1517adc0d479b2673e8a0559c1bbcc020bd6e0f426b74c104fedff347417"
+      "hash": "fc0989d231880e002388a5c667003f40e8b779875e6e295e92828b1ea2449fb9"
     },
     "input-blocks/daterangeselector": {
       "files": [
@@ -3506,7 +3520,7 @@
         "blocks/input/DateRangeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "38e3c700c0a684f1f08557a05a83fca3099a5c50212c53c7ea05b89d1851883e"
+      "hash": "5a4fb7c0050be5ae9917c1c42462e2f2d626c40556cf8f06b96d400f5568956d"
     },
     "input-blocks/dateselector": {
       "files": [
@@ -3525,7 +3539,7 @@
         "blocks/input/DateSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c843c0092ad519c36ea47112628257525ae411249ab07e652eafb13bf05a7de0"
+      "hash": "2b7ccc9788c3f24bbb6b57f95c26d90d261496a5f410cd49a13fda70de52f763"
     },
     "input-blocks/datetimeselector": {
       "files": [
@@ -3544,7 +3558,7 @@
         "blocks/input/DateTimeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "88e14f8318c6f106333c5a818f825b9735836eecd191025f13d6c0d069d5fbaf"
+      "hash": "646923f6a4a07a0c39eddcb996979cc4c5ceff36193aa963f7d2e5cfc532cc34"
     },
     "input-blocks/intentinput": {
       "files": [
@@ -3573,7 +3587,7 @@
         "blocks/input/MonthSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6ac6688fa9293177a70395ee25e3c6f3f0b4a69d9e6632b496f151afc106490f"
+      "hash": "722994a7538b75ae562b3b904f7ccd3127dd27db96d1abba208730c037480298"
     },
     "input-blocks/multipleselector": {
       "files": [
@@ -3590,7 +3604,7 @@
         "blocks/input/MultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "e2e92c56b21a0cf48df71fca5db07e417677aa428fcc487cae28466f28399ed9"
+      "hash": "fd45224c46b5cfcbbfbfbf5c306b0a5f17867c21eed323d91c1af8e682023fb1"
     },
     "input-blocks/numberinput": {
       "files": [
@@ -3605,7 +3619,7 @@
         "blocks/input/NumberInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "78362338894c9434609b791c05212b2f4e1343ed5bd840fa93255645e4f54a22"
+      "hash": "a29ca6cbc4406547fae58a5d16fb9ea1260e7934f39eb87b3b68195121c8e057"
     },
     "input-blocks/pagination": {
       "files": [
@@ -3640,7 +3654,7 @@
         "blocks/input/PasswordInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "af037ce96af274ac7137c1cfe2e73241c0b5b8a83b991264e2ce85d5b3e251f0"
+      "hash": "c95b9118f619c4cd0081b0d811475e172ff65fba09e2c14222da55fcce81d30f"
     },
     "input-blocks/phonenumberinput": {
       "files": [
@@ -3655,7 +3669,7 @@
         "blocks/input/PhoneNumberInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "8e36678d2088ff8a72d97faa6591a445aec5c143e786c880e48cd40e64a08e3c"
+      "hash": "23b12ce1ca8d6a237e79276d519f7295e5f1ad31ff39ddf947deb77751350b75"
     },
     "input-blocks/placesautocomplete": {
       "files": [
@@ -3680,7 +3694,7 @@
         "blocks/input/RadioSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "8debaada580e9c7a1fe0087add5b389724074a96ddf7327f9face1a3ed21cea3"
+      "hash": "4206f0356cbe1737a9a5c2a429b237ade5983d23e2487fd444791eeebaec1585"
     },
     "input-blocks/ratingslider": {
       "files": [
@@ -3695,7 +3709,7 @@
         "blocks/input/RatingSlider.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "0f7756abafbb3e0360be2870f5848de57a8094771044ee6bff3f7fe00e1e9082"
+      "hash": "9d27407b34aa8454525cb37e210a879f1e324fad8c777394f0cfc735c7a3f78c"
     },
     "input-blocks/segmentedselector": {
       "files": [
@@ -3711,7 +3725,7 @@
         "blocks/input/SegmentedSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "e600bd19da006bbfc7e6e6978126ce125301b41f9b5640a3591719718b95f8d2"
+      "hash": "25b51e8abfb91fddfba234e0f2182a270b20aa468366bf9efcc5b1baf582c19e"
     },
     "input-blocks/s3uploadbutton": {
       "files": [
@@ -3791,7 +3805,7 @@
         "blocks/input/Selector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "a142850df9eb29d5eb5a5d5ae2bcb5341c82f05cb9108ddf10000f80e373aa97"
+      "hash": "0e6aba3cb95e55e9f6702291db550b532a81596d85f2dc4a228cd1c603e35951"
     },
     "input-blocks/switch": {
       "files": [
@@ -3806,7 +3820,7 @@
         "blocks/input/Switch.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "1000e42461624d5f343b85de3a6f9667b8699c3d6679a3c6812deb887e26140d"
+      "hash": "5a33d5810960d2cd34626ac2d08c98cab7118fde649325aec58089d95ff31a55"
     },
     "input-blocks/tableinput": {
       "files": [
@@ -3817,7 +3831,7 @@
         "blocks/input/TableInputGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9767ee5296aa0a112979e4e26e75fc5fdfa97b177be456f96de3810c3920fcaf"
+      "hash": "c52b2860604d25b77f4ee3994a092d82ff77595f1cf89e65dc4e2749e3ce6220"
     },
     "input-blocks/tagmultipleselector": {
       "files": [
@@ -3831,7 +3845,7 @@
         "blocks/input/TagMultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "afb3110dc398e01b062fd2adc184cf285d3045c39abcd611f7f2b127300eec3f"
+      "hash": "44e390034948f31dc5f799420bf355cc54ec1af2b7241cc3e0000a7686d668b9"
     },
     "input-blocks/tagselector": {
       "files": [
@@ -3845,7 +3859,7 @@
         "blocks/input/TagSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "f2a05eba9962e48c051f4bbdc3293fefe3172246bed1917b034031f74cbc765e"
+      "hash": "d87fe83c184973e0abcc5c6e8f16fcb4e84e466dbde87a137421ac8ae360e3a8"
     },
     "input-blocks/textarea": {
       "files": [
@@ -3859,7 +3873,7 @@
         "blocks/input/TextArea.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "e29c4433c5fda7b8f269e87fd60a3b8353574a2fa5c3b18a8126ff0df99a520c"
+      "hash": "bc03a21064f16a6096bfa2724cb74c9456a3477b2517f5564c4c2f14fb987240"
     },
     "input-blocks/textinput": {
       "files": [
@@ -3874,7 +3888,7 @@
         "blocks/input/TextInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "eaf4908e4dbbf3093ab549de49f48d505e9956f03c720abb6b413de127a0fe9b"
+      "hash": "398b92e552a6c57235a6f80644d82ba1e294b38fb36b8af76079cba2bd32769e"
     },
     "input-blocks/tiptapinput": {
       "files": [
@@ -3916,7 +3930,7 @@
         "blocks/input/TreeInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9db6b05448a51f957d1c02b997d1dbf87bb3bef9a0ee2ed0b0bead29d6013fdb"
+      "hash": "418c9dec15f30fd6b8e4e42588224d815b0c49ac344da10d7018aec6117e578c"
     },
     "input-blocks/treemultipleselector": {
       "files": [
@@ -3936,7 +3950,7 @@
         "blocks/input/TreeMultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "d7b6af4b41acac1c0f0d4dbf41aa84c6613f7c9f4dd84c16b51bd25f0a65101b"
+      "hash": "cf24247546270ca3acad4d641fcd7951fc8998c71391ec8ff6293737a4329fbb"
     },
     "input-blocks/treeselector": {
       "files": [
@@ -3956,7 +3970,7 @@
         "blocks/input/TreeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "179da5c268e05a4c2d24795c823ef9337cd826e20d36edf706d8bc2db1f019e6"
+      "hash": "6efddb7c2a0312d3082792407b19e60f8fd9ff16ed2a735c3767d942db15bc90"
     },
     "input-blocks/weekselector": {
       "files": [
@@ -3975,7 +3989,7 @@
         "blocks/input/WeekSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "484f767ebcb78497ac0abe07dda3ec59991f5de4c91819b6853b9967412b0864"
+      "hash": "1505d60941f45a52e8b2504bb6457cdbd515cbe952ca9aa54a2ca5b24aea1012"
     },
     "display-blocks/aggrid": {
       "files": [
@@ -4231,7 +4245,7 @@
         "blocks/display/Paragraph.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "3c8326d8ea2a681106a0892b7b62b10b3b4758d3696a3f4084c4f41c3f0403a3"
+      "hash": "7ec210290540b08cc11b16663dd2841be4936f2cfd2b63d5f8b324db65c6fa02"
     },
     "display-blocks/pollingtimer": {
       "files": [
@@ -4289,7 +4303,7 @@
         "blocks/display/SearchGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "25a5f09fa80ef195d1f66a7390d8d3715814d928fda926f3c141541cbc85bfc9"
+      "hash": "33f19679dc0505ff0c93ccac828b008d8bc24509cb92178a6921a5640dff8e91"
     },
     "display-blocks/skeleton": {
       "files": [
@@ -4364,7 +4378,7 @@
         "blocks/display/TableGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b81ae793a73efadf229238477ffd76d47530ac90e654dacc01a26deb0610b75b"
+      "hash": "729ab365ab7b081fed2b0a001030ce36994d4b6d6f8f7b698b39639cf42c1987"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -4373,11 +4387,12 @@
         "../plugins/blocks/blocks-antd/src/blocks/TableLight/tableOnlyKeys.js",
         "../plugins/blocks/blocks-antd/src/table/aggregateLabels.js",
         "../plugins/blocks/blocks-antd/src/table/cellTypeFamilies.js",
+        "../plugins/blocks/blocks-antd/src/table/rowsKind.js",
         "blocks/display/TableLight.yaml",
         "blocks/display/TableLightGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "e1de461f6c3b5220fc8bb835c215fbf01a91dbe70e542e12811ec78670d554c3"
+      "hash": "fac67fba91a6fbec2b0439ee6c05b83eb2b078371d2bb30aab1638b9e0384edd"
     },
     "display-blocks/tag": {
       "files": [
@@ -4396,7 +4411,7 @@
         "blocks/display/Title.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "2ad9fd50d3c13ed31ba356b3632edd32d533b871b97bbaa149d6adfd6c2fd1f3"
+      "hash": "524e59d2851e1f260e87b36242236ed7cb63530acb1f6cd19db771446f05d9fb"
     },
     "display-blocks/tour": {
       "files": [
@@ -4510,7 +4525,7 @@
         "blocks/container/Descriptions.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "3c854e822e0e339464e329e517f8783eac1ae2a59fa76bacf65a1b506d354b7d"
+      "hash": "5f996663df9e07fbf50bcba28864db10b813c3a5cf81d913e584341ac059ebf8"
     },
     "container-blocks/drawer": {
       "files": [
@@ -4766,7 +4781,7 @@
         "blocks/list/ControlledList.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "003fceb4ba1e81df91167aac3f7aaa5c9a811c41d667bfc8c23ef8ffbf1ff4bc"
+      "hash": "f80adeeeaaa3619623391e884faee2d5236c642eadf5813cfd282b237c9628f3"
     },
     "list-blocks/list": {
       "files": [
@@ -4891,7 +4906,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "e8b01fcbdcee058f34dcfce8354e46b41542ee891d0a54121ffdf371c8a91bc2"
+      "hash": "e3b57250865bdc78e88631c7da855e959b5bde8f0f0a3fddc1fe2aded583f45e"
     },
     "connections/mssql": {
       "files": [

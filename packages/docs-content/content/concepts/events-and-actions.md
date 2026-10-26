@@ -416,6 +416,8 @@ The app events config is sent to the browser with the rest of the app config, li
 
 ###### App events on phones
 
+> **Experimental.** Phone apps need `config.experimental.mobile: true`. See [Mobile Apps](/mobile-apps).
+
 A native shell does not run the root `events`, so they can use web-only actions, like an analytics plugin that has no native version. App events that run on a phone go in `mobile.events`, with the same `onInit` and `onInitAsync` events and the same rules. Every action type in `mobile.events` must have a native version, or the build fails, as on a mobile page.
 
 ```yaml
