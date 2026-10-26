@@ -19,6 +19,7 @@ import { jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import MenuButton from './MenuButton.js';
+import { iosColors, ThemeContext } from '@lowdefy/client-native';
 import ShellContext from '../ShellContext.js';
 
 jest.mock('expo-router', () => ({
@@ -48,4 +49,23 @@ test('the drawer menu draws each item icon from the icon data the root carries',
   expect(await screen.findByTestId('menu-today-icon')).toBeTruthy();
   expect(screen.queryByTestId('menu-jobs-icon')).toBeNull();
   expect(screen.getByText('Jobs')).toBeTruthy();
+});
+
+test('the drawer menu takes the theme tokens in dark mode', async () => {
+  const state = { root: { pageIndex: [] } };
+  const session = { getState: () => state, subscribe: () => () => undefined };
+  const tokens = { ...iosColors.dark, colorTint: '#0A84FF' };
+  await render(
+    <ThemeContext.Provider value={{ isDark: true, tokens }}>
+      <ShellContext.Provider value={{ session }}>
+        <MenuButton items={[{ pageId: 'jobs', title: 'Jobs' }]} />
+      </ShellContext.Provider>
+    </ThemeContext.Provider>
+  );
+  expect(screen.getByText('Menu')).toHaveStyle({ color: '#0A84FF' });
+  fireEvent.press(screen.getByTestId('shell-menu'));
+  expect(await screen.findByText('Jobs')).toHaveStyle({ color: tokens.colorLabel });
+  expect(screen.getByText('Jobs').parent.parent.parent).toHaveStyle({
+    backgroundColor: tokens.colorGroupedBackground,
+  });
 });

@@ -21,6 +21,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '@lowdefy/client-native';
 
 import { useSessionState } from '../ShellContext.js';
+import useSurfaceTokens from './useSurfaceTokens.js';
 
 const styles = StyleSheet.create({
   button: {
@@ -38,7 +39,6 @@ const styles = StyleSheet.create({
   sheet: {
     width: '80%',
     maxWidth: 360,
-    backgroundColor: '#ffffff',
   },
   item: {
     alignItems: 'center',
@@ -59,6 +59,7 @@ function MenuButton({ items }) {
   const [open, setOpen] = useState(false);
   const { root } = useSessionState();
   const insets = useSafeAreaInsets();
+  const tokens = useSurfaceTokens();
   function openPage(pageId) {
     setOpen(false);
     const path = root.pageIndex.find((entry) => entry.pageId === pageId)?.path;
@@ -74,11 +75,16 @@ function MenuButton({ items }) {
         style={styles.button}
         testID="shell-menu"
       >
-        <Text style={styles.buttonText}>Menu</Text>
+        <Text style={[styles.buttonText, { color: tokens.colorTint }]}>Menu</Text>
       </Pressable>
       <Modal animationType="fade" onRequestClose={() => setOpen(false)} transparent visible={open}>
         <View style={styles.backdrop}>
-          <ScrollView style={[styles.sheet, { paddingTop: insets.top }]}>
+          <ScrollView
+            style={[
+              styles.sheet,
+              { backgroundColor: tokens.colorGroupedBackground, paddingTop: insets.top },
+            ]}
+          >
             {items.map((item) => (
               <Pressable
                 accessibilityRole="button"
@@ -90,7 +96,9 @@ function MenuButton({ items }) {
                 {item.iconData ? (
                   <Icon data={item.iconData} size={22} testID={`menu-${item.pageId}-icon`} />
                 ) : null}
-                <Text style={styles.itemText}>{item.title ?? item.pageId}</Text>
+                <Text style={[styles.itemText, { color: tokens.colorLabel }]}>
+                  {item.title ?? item.pageId}
+                </Text>
               </Pressable>
             ))}
           </ScrollView>
