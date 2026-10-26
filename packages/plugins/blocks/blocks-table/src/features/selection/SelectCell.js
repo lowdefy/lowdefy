@@ -21,7 +21,8 @@ import isRowSelectable from './isRowSelectable.js';
 function ignoreChange() {}
 
 // A native input styled with antd tokens: an antd Checkbox per row would mount a CSS-in-JS hook
-// per visible row (tier-0 rule, D4/D10.4). The delegated click handler does the toggling.
+// per visible row (tier-0 rule, D4/D10.4). The delegated click handler does the toggling. A row
+// `selectable` rejects stays enabled while it is selected, so it can still be cleared.
 function SelectCell({ api, original, selected }) {
   const inputType = api.config.rowSelection.type === 'radio' ? 'radio' : 'checkbox';
   return (
@@ -29,7 +30,7 @@ function SelectCell({ api, original, selected }) {
       aria-label="Select row"
       checked={selected}
       className="lf-table-checkbox"
-      disabled={!isRowSelectable({ api, original })}
+      disabled={!selected && !isRowSelectable({ api, original })}
       onChange={ignoreChange}
       tabIndex={-1}
       type={inputType}

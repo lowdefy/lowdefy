@@ -33,6 +33,7 @@ function createToggleGroupSelected(api) {
       end: group.end,
       selection: api.state.rowSelection,
     });
+    if (total === 0) return false;
     const select = selected < total;
     api.updateSlice(
       'rowSelection',

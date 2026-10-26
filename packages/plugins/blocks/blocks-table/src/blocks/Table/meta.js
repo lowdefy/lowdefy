@@ -804,7 +804,7 @@ export default {
           selectable: {
             type: 'object',
             description:
-              'A condition (`{ key, op, value }`, or `and` / `or` lists) tested against the row. Rows that fail it have a disabled checkbox, are skipped by the header checkbox and by select-all, and are left out of its checked state. In server mode it applies to the loaded rows; an `{ all: true }` selection is not limited by it.',
+              'A condition (`{ key, op, value }`, or `and` / `or` lists) tested against the row. Rows that fail it have a disabled checkbox, are skipped by the header checkbox and by select-all, and are left out of its checked state. An `{ all: true }` selection lists the rows it rejects in `except`; in server mode those are the loaded rows, and the server resolves the rest.',
           },
         },
       },

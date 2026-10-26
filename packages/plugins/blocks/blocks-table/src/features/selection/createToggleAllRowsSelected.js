@@ -44,7 +44,8 @@ function createToggleAllRowsSelected(api) {
       return true;
     }
     const { selectedCount, total } = countSelectedRows({ api });
-    const selectAll = total > 0 && selectedCount < total;
+    if (total === 0) return false;
+    const selectAll = selectedCount < total;
     api.updateSlice('selectionMode', () => 'keys', { cause: 'select' });
     api.table.toggleAllRowsSelected(selectAll);
     return true;

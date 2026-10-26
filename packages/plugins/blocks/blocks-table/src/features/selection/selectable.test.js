@@ -20,8 +20,12 @@ import { test } from 'vitest';
 import countSelectedRows from './countSelectedRows.js';
 import createToggleAllRowsSelected from './createToggleAllRowsSelected.js';
 import createToggleRowSelected from './createToggleRowSelected.js';
+import compileSelectable from './compileSelectable.js';
 import getEnableRowSelection from './getEnableRowSelection.js';
+import getSelectAllExcept from './getSelectAllExcept.js';
 import getSelectAllState from './getSelectAllState.js';
+import initRowSelection from './initRowSelection.js';
+import countSelection from '../bulk/countSelection.js';
 import createSelectAllMatching from '../bulk/createSelectAllMatching.js';
 import createToggleGroupSelected from '../grouping/createToggleGroupSelected.js';
 
@@ -41,10 +45,11 @@ function createApi({ rowSelection = {}, config = {}, rows } = {}) {
   const rowsById = Object.fromEntries(tableRows.map((row) => [row.id, row]));
   const api = {
     config: {
+      getKey: (row) => row.id,
       rowSelection: { type: 'checkbox', isSelectable, cascade: false, ...config },
     },
     state: { rowSelection, selectionMode: 'keys' },
-    selectionExcept: new Set(),
+    selectionExcept: new Map(),
     table: {
       getFilteredRowModel: () => ({ rows: tableRows, rowsById }),
       getCoreRowModel: () => ({ rows: tableRows, rowsById }),
@@ -128,7 +133,7 @@ test('toggleAllRowsSelected selects the selectable rows, then clears them', () =
 });
 
 test('server-mode toggleAllRowsSelected selects only the selectable loaded rows', () => {
-  const api = createApi({ config: {} });
+  const api = createApi();
   api.config.server = {};
   createToggleAllRowsSelected(api)();
   assert.deepEqual(api.state.rowSelection, { 1: true, 2: true, 4: true });
@@ -136,9 +141,67 @@ test('server-mode toggleAllRowsSelected selects only the selectable loaded rows'
 
 test('selectAllMatching skips rows the condition rejects', () => {
   const api = createApi();
-  api.selectionExcept = new Set();
   createSelectAllMatching(api)();
   assert.deepEqual(api.state.rowSelection, { 1: true, 2: true, 4: true });
+});
+
+test('an all selection lists the rejected rows in except, so resolving it leaves them out', () => {
+  const api = createApi();
+  createSelectAllMatching(api)();
+  assert.deepEqual(getSelectAllExcept({ api }), [3]);
+  api.selectionExcept.set('1', 1);
+  assert.deepEqual(getSelectAllExcept({ api }), [1, 3]);
+});
+
+test('a server-mode all selection excludes the rejected loaded rows from its count and value', () => {
+  const api = createApi();
+  api.config.server = {};
+  api.total = 10;
+  createToggleAllRowsSelected(api)();
+  assert.equal(api.state.selectionMode, 'all');
+  assert.deepEqual(getSelectAllExcept({ api }), [3]);
+  assert.equal(countSelection({ api, state: api.state }), 9);
+  assert.deepEqual(getSelectAllState({ api }), { checked: true, indeterminate: false });
+});
+
+test('an all selection set from outside leaves the rejected rows unselected', () => {
+  const rows = [1, 2, 3].map((id) => ({ id, recheckable: id !== 3 }));
+  const selection = initRowSelection({
+    value: { selected: { all: true, except: [2] } },
+    rows,
+    getKey: (row) => row.id,
+    config: { rowSelection: { isSelectable } },
+  });
+  assert.deepEqual(selection, { 1: true });
+});
+
+test('the group checkbox does nothing when no leaf is selectable', () => {
+  const api = createApi({ rowSelection: { 3: true } });
+  const leaves = Object.values(api.table.getCoreRowModel().rowsById);
+  api.grouping = {
+    tree: { leaves: [leaves[2]], groupsByKey: new Map([['g', { start: 0, end: 1 }]]) },
+  };
+  assert.equal(createToggleGroupSelected(api)({ key: 'g' }), false);
+  assert.deepEqual(api.state.rowSelection, { 3: true });
+});
+
+test('compileSelectable resolves relative dates and remembers each row', () => {
+  const columnsByKey = { due: { key: 'due', type: 'date' } };
+  const test = compileSelectable({
+    rowSelection: { selectable: { key: 'due', op: 'after', value: { last: 7, unit: 'day' } } },
+    columnsByKey,
+    user: {},
+  });
+  const recent = { due: new Date().toISOString().slice(0, 10) };
+  assert.equal(test(recent), true);
+  assert.equal(test({ due: '2000-01-01' }), false);
+  recent.due = '2000-01-01';
+  assert.equal(test(recent), true);
+  assert.equal(compileSelectable({ rowSelection: {}, columnsByKey, user: {} }), null);
+  assert.throws(
+    () => compileSelectable({ rowSelection: { selectable: 'yes' }, columnsByKey, user: {} }),
+    /must be a condition/
+  );
 });
 
 test('the group checkbox selects only selectable leaves', () => {

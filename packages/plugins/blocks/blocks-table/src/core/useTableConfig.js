@@ -16,7 +16,6 @@
 
 import { useMemo } from 'react';
 import { type } from '@lowdefy/helpers';
-import compileCondition from '@lowdefy/blocks-antd/table/compileCondition.js';
 import compileColumns from '@lowdefy/blocks-antd/table/compileColumns.js';
 import compileRules from '@lowdefy/blocks-antd/table/compileRules.js';
 import createRowKeyGetter from '@lowdefy/blocks-antd/table/createRowKeyGetter.js';
@@ -30,6 +29,7 @@ import getColumnGroupRules from './getColumnGroupRules.js';
 import getHeaderAncestors from './getHeaderAncestors.js';
 import getProviderIds from './getProviderIds.js';
 import normalizeEnrichment from '../features/enrichment/normalizeEnrichment.js';
+import compileSelectable from '../features/selection/compileSelectable.js';
 import normalizeExpandable from '../features/expandable/normalizeExpandable.js';
 import normalizeServerData from '../features/serverData/normalizeServerData.js';
 import normalizeTree from '../features/tree/normalizeTree.js';
@@ -40,28 +40,15 @@ import useStableConfig from './useStableConfig.js';
 const DEFAULT_PAGE_SIZE = 50;
 
 // In server mode rows leave the block cache while they stay selected, so selection is always
-// preserved there. `selectable` is a table condition tested against the row; `isSelectable` is null when every row
-// can be selected.
-function normalizeRowSelection({ rowSelection, server, columns, user }) {
+// preserved there. `isSelectable` is the compiled `selectable` condition, null when every row can
+// be selected.
+function normalizeRowSelection({ rowSelection, server, isSelectable }) {
   if (!type.isObject(rowSelection)) return null;
-  if (!type.isNone(rowSelection.selectable) && !type.isObject(rowSelection.selectable)) {
-    throw new Error(
-      `Table "rowSelection.selectable" must be a condition. Received ${JSON.stringify(
-        rowSelection.selectable
-      )}.`
-    );
-  }
   return {
     type: rowSelection.type === 'radio' ? 'radio' : 'checkbox',
     preserve: rowSelection.preserve === true || Boolean(server),
     cascade: rowSelection.cascade === true,
-    isSelectable: type.isNone(rowSelection.selectable)
-      ? null
-      : compileCondition({
-          condition: rowSelection.selectable,
-          columnsByKey: Object.fromEntries(columns.map((column) => [column.key, column])),
-          user,
-        }),
+    isSelectable,
   };
 }
 
@@ -142,6 +129,15 @@ function useTableConfig({ methods, properties }) {
       user: configUser,
     };
   }, [normalized, compileTemplate, expandable, rowRules, user]);
+  const isSelectable = useMemo(
+    () =>
+      compileSelectable({
+        rowSelection,
+        columnsByKey: normalized.columnsByKey,
+        user: columnModel.user,
+      }),
+    [rowSelection, normalized, columnModel.user]
+  );
 
   return useMemo(() => {
     const server = normalizeServerData(serverData);
@@ -184,8 +180,7 @@ function useTableConfig({ methods, properties }) {
       rowSelection: normalizeRowSelection({
         rowSelection,
         server,
-        columns: columnModel.columns,
-        user: user ?? {},
+        isSelectable,
       }),
       rowVersionField: properties.rowVersionField,
       server,
@@ -200,6 +195,7 @@ function useTableConfig({ methods, properties }) {
     columnModel,
     defaultView,
     getKey,
+    isSelectable,
     properties.bordered,
     keyboard,
     methods.getUserStorageKey,
