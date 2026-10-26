@@ -52,4 +52,17 @@ test.describe('Table rowSelection.selectable', () => {
     await selectAll(page).click();
     await expect(getBlock(page, 'sel_value')).toHaveText('selected=[]');
   });
+
+  test('rows that arrive while all matching rows are selected join only if selectable', async ({
+    page,
+  }) => {
+    const bar = getBlock(page, 'sel').locator('[data-lf-bulk-bar]');
+    await checkbox(page, '1').click();
+    await bar.locator('[data-lf-bulk-action="select-all"]').click();
+    await page.locator('#sel_add').click();
+    await expect(checkbox(page, '4')).toBeChecked();
+    await expect(checkbox(page, '5')).toBeDisabled();
+    await expect(checkbox(page, '5')).not.toBeChecked();
+    await expect(checkbox(page, '2')).not.toBeChecked();
+  });
 });

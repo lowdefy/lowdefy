@@ -16,16 +16,17 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 
+import isRowSelectable from './isRowSelectable.js';
 import isSelectionViewCurrent from './isSelectionViewCurrent.js';
 import SelectAllHeader from './SelectAllHeader.js';
 import SelectCell from './SelectCell.js';
 import selectColumnWidth from './selectColumnWidth.js';
 
 // While the selection is `{ all: true, except }`, rows that appear in later data and match the
-// view are selected too: "all matching" means every row the filter and search match, not the rows
-// that happened to be loaded. Client-side that is the filtered rows; in server mode the server
-// matches, so every loaded row counts. Rows in `except` stay out when their block is loaded again
-// (server mode).
+// view (and that `rowSelection.selectable` allows) are selected too: "all matching" means every row
+// the filter and search match, not the rows that happened to be loaded. Client-side that is the
+// filtered rows; in server mode the server matches, so every loaded row counts. Rows in `except`
+// stay out when their block is loaded again (server mode).
 function useSelection(ctx) {
   const { api, data, state } = ctx;
   const enabled = Boolean(ctx.config.rowSelection);
@@ -38,7 +39,11 @@ function useSelection(ctx) {
     if (!previous || state.selectionMode !== 'all') return;
     const matching = api.config.server ? rowsById : api.table.getFilteredRowModel().rowsById;
     const added = Object.keys(rowsById).filter(
-      (id) => !previous[id] && matching[id] && !api.selectionExcept.has(id)
+      (id) =>
+        !previous[id] &&
+        matching[id] &&
+        !api.selectionExcept.has(id) &&
+        isRowSelectable({ api, original: rowsById[id].original })
     );
     if (!added.length) return;
     api.setSliceSilently('rowSelection', (selection) => {

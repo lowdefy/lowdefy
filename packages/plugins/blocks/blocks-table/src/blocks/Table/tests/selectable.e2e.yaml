@@ -29,15 +29,43 @@ blocks:
         - key: recheckable
           type: boolean
       data:
-        - id: 1
-          name: Alpha
-          recheckable: true
-        - id: 2
-          name: Bravo
-          recheckable: false
-        - id: 3
-          name: Charlie
-          recheckable: true
+        _if_none:
+          - _state: sel_data
+          - - id: 1
+              name: Alpha
+              recheckable: true
+            - id: 2
+              name: Bravo
+              recheckable: false
+            - id: 3
+              name: Charlie
+              recheckable: true
+
+  - id: sel_add
+    type: Button
+    properties:
+      title: Add rows
+    events:
+      onClick:
+        - id: add_selectable_rows
+          type: SetState
+          params:
+            sel_data:
+              - id: 1
+                name: Alpha
+                recheckable: true
+              - id: 2
+                name: Bravo
+                recheckable: false
+              - id: 3
+                name: Charlie
+                recheckable: true
+              - id: 4
+                name: Delta
+                recheckable: true
+              - id: 5
+                name: Echo
+                recheckable: false
 
   - id: sel_value
     type: Paragraph

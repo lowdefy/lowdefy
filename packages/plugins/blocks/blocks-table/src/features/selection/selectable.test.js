@@ -15,6 +15,7 @@
 */
 
 import assert from 'node:assert/strict';
+import { test } from 'vitest';
 
 import countSelectedRows from './countSelectedRows.js';
 import createToggleAllRowsSelected from './createToggleAllRowsSelected.js';
@@ -27,7 +28,8 @@ import createToggleGroupSelected from '../grouping/createToggleGroupSelected.js'
 const isSelectable = (row) => row.recheckable === true;
 
 // A table of rows 1 to 4 where only 1, 2 and 4 are selectable. `toggleAllRowsSelected` mimics
-// TanStack, which selects the rows `enableRowSelection` accepts.
+// TanStack, which selects (and clears) only the rows `enableRowSelection` accepts; it asks
+// getEnableRowSelection, so the tests cover the option the table hands TanStack.
 function createApi({ rowSelection = {}, config = {}, rows } = {}) {
   const tableRows = (rows ?? [1, 2, 3, 4]).map((id) => ({
     id: String(id),
@@ -48,9 +50,11 @@ function createApi({ rowSelection = {}, config = {}, rows } = {}) {
       getCoreRowModel: () => ({ rows: tableRows, rowsById }),
       getPrePaginatedRowModel: () => ({ rows: tableRows, rowsById }),
       toggleAllRowsSelected(value) {
+        const canSelect = getEnableRowSelection({ config: api.config });
         const next = { ...api.state.rowSelection };
         tableRows.forEach((row) => {
-          if (value && isSelectable(row.original)) next[row.id] = true;
+          if (!canSelect(row)) return;
+          if (value) next[row.id] = true;
           if (!value) delete next[row.id];
         });
         api.state.rowSelection = next;
