@@ -91,6 +91,29 @@ test('a Composer shows the picture of a person in the mention picker', async () 
   });
 });
 
+test('a Composer loads a mention picture path from the app server', async () => {
+  await renderPage({
+    pageConfig: formPage({
+      blocks: [
+        {
+          id: 'comment',
+          type: 'Composer',
+          properties: {
+            mentions: [
+              { value: 'u1', label: 'Sam Taylor', sees: true, picture: '/avatars/sam.png' },
+            ],
+          },
+        },
+      ],
+      mirrorKey: 'comment',
+    }),
+  });
+  await type(await screen.findByTestId('comment_input'), '@sa');
+  expect(screen.getByTestId('expo-image').props.source).toEqual({
+    uri: 'https://app.lowdefy.test/avatars/sam.png',
+  });
+});
+
 test('a Composer sends the body and reply_to with onSubmit and clears when the actions succeed', async () => {
   await renderPage({
     pageConfig: formPage({
