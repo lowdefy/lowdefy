@@ -97,8 +97,10 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).not.toContain('Developers start it');
   expect(agentsMd).toContain('A Lowdefy app is a folder containing `lowdefy.yaml`.');
   expect(agentsMd).toContain('lowdefy_dev_start');
-  expect(agentsMd).toContain('Run `npx lowdefy hub start <app>`');
-  expect(agentsMd).toContain('Never configure the pane\n  to start a server of its own');
+  expect(agentsMd).toContain('`npx --yes lowdefy@6.0.0 hub start <app>`');
+  expect(agentsMd).toContain('`<url>/lowdefy-docs/build-status?wait=true`');
+  expect(agentsMd).toContain('`npx lowdefy@6.0.0 agent-setup --user`');
+  expect(agentsMd).toContain('Never configure the pane');
   expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
   expect(agentsMd).toContain('### Testing a change');
   expect(agentsMd).toContain('Run `tier: common` first');

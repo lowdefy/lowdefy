@@ -29,6 +29,7 @@ let context;
 
 function block(version) {
   return `<!-- BEGIN:lowdefy-agent-rules version=${version} -->\n${agentsMd({
+    cliVersion: version,
     skills,
   }).trimEnd()}\n<!-- END:lowdefy-agent-rules -->\n`;
 }
