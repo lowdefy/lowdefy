@@ -19,29 +19,28 @@
 import { isMap, isSeq, isPair, isScalar } from 'yaml';
 
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
-import getLineNumber from './getLineNumber.js';
 
-function addLineNumbers(node, content, result) {
+function addLineNumbers(node, getLineNumber, result) {
   if (isMap(node)) {
     const obj = result || {};
     if (node.range) {
-      setNonEnumerableProperty(obj, '~l', getLineNumber(content, node.range[0]));
+      setNonEnumerableProperty(obj, '~l', getLineNumber(node.range[0]));
     }
     for (const pair of node.items) {
       if (isPair(pair) && isScalar(pair.key)) {
         const key = pair.key.value;
         const value = pair.value;
         // Use key's line number for the value's ~l (more useful for error messages)
-        const keyLineNumber = pair.key.range ? getLineNumber(content, pair.key.range[0]) : null;
+        const keyLineNumber = pair.key.range ? getLineNumber(pair.key.range[0]) : null;
         if (isMap(value)) {
-          const mapResult = addLineNumbers(value, content, {});
+          const mapResult = addLineNumbers(value, getLineNumber, {});
           // Override ~l with key's line number if available
           if (keyLineNumber) {
             setNonEnumerableProperty(mapResult, '~l', keyLineNumber);
           }
           obj[key] = mapResult;
         } else if (isSeq(value)) {
-          const arrResult = addLineNumbers(value, content, []);
+          const arrResult = addLineNumbers(value, getLineNumber, []);
           // Override ~l with key's line number if available
           if (keyLineNumber) {
             setNonEnumerableProperty(arrResult, '~l', keyLineNumber);
@@ -60,13 +59,13 @@ function addLineNumbers(node, content, result) {
   if (isSeq(node)) {
     const arr = result || [];
     if (node.range) {
-      setNonEnumerableProperty(arr, '~l', getLineNumber(content, node.range[0]));
+      setNonEnumerableProperty(arr, '~l', getLineNumber(node.range[0]));
     }
     for (const item of node.items) {
       if (isMap(item)) {
-        arr.push(addLineNumbers(item, content, {}));
+        arr.push(addLineNumbers(item, getLineNumber, {}));
       } else if (isSeq(item)) {
-        arr.push(addLineNumbers(item, content, []));
+        arr.push(addLineNumbers(item, getLineNumber, []));
       } else if (isScalar(item)) {
         arr.push(item.value);
       } else {
