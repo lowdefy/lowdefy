@@ -17,7 +17,7 @@
 import React from 'react';
 import { jest } from '@jest/globals';
 import { Linking } from 'react-native';
-import { render, screen, waitFor } from '@testing-library/react-native';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 
 import OtherPageScreen from './OtherPageScreen.js';
@@ -44,12 +44,16 @@ beforeEach(() => {
   jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
 });
 
-test('a cold start opens the web page with its query and replaces with home', async () => {
+test('a cold start opens the web page with its query and offers home, going nowhere on its own', async () => {
   router.canGoBack.mockReturnValue(false);
   await renderScreen();
-  await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/'));
+  expect(await screen.findByTestId('shell-opened-in-browser')).toBeTruthy();
   expect(Linking.openURL).toHaveBeenCalledWith('https://app.test/reports?id=7');
   expect(router.back).not.toHaveBeenCalled();
+  // Home could be this web-only page, which would open the browser again.
+  expect(router.replace).not.toHaveBeenCalled();
+  fireEvent.press(screen.getByText('Go home'));
+  expect(router.replace).toHaveBeenCalledWith('/');
 });
 
 test('with history it goes back after opening the browser', async () => {

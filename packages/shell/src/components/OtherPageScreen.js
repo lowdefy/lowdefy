@@ -26,7 +26,7 @@ import { useShell } from '../ShellContext.js';
 // { surface: 'web' }), the page opens in the system browser; otherwise it is not found.
 function OtherPageScreen({ path, query = '' }) {
   const { session } = useShell();
-  const [notFound, setNotFound] = useState(false);
+  const [view, setView] = useState('loading');
   useEffect(() => {
     let active = true;
     session
@@ -38,29 +38,43 @@ function OtherPageScreen({ path, query = '' }) {
           const url = `${session.apiBase}/${path}${query ? `?${query}` : ''}`;
           Linking.openURL(url)
             .then(() => {
-              // A cold start from a deep link has nothing to go back to; without the replace the
-              // loading screen would stay up for good behind the browser.
-              if (router.canGoBack()) router.back();
-              else router.replace('/');
+              if (!active) return;
+              if (router.canGoBack()) {
+                router.back();
+                return;
+              }
+              // A cold start from a deep link has nothing to go back to. Going home on its own
+              // would open the browser again when the home page is itself web-only.
+              setView('opened');
             })
             .catch(() => {
-              if (active) setNotFound(true);
+              if (active) setView('notFound');
             });
           return;
         }
-        setNotFound(true);
+        setView('notFound');
       })
       .catch(() => {
-        if (active) setNotFound(true);
+        if (active) setView('notFound');
       });
     return () => {
       active = false;
     };
   }, [path, query, session]);
-  if (!notFound) {
-    return <LoadingScreen />;
+  if (view === 'opened') {
+    return (
+      <MessageScreen
+        action={{ title: 'Go home', onPress: () => router.replace('/') }}
+        body="This page is on the web, not in the app."
+        testID="shell-opened-in-browser"
+        title="Opened in your browser"
+      />
+    );
   }
-  return <MessageScreen testID="shell-not-found" title="Page not found" />;
+  if (view === 'notFound') {
+    return <MessageScreen testID="shell-not-found" title="Page not found" />;
+  }
+  return <LoadingScreen />;
 }
 
 export default OtherPageScreen;
