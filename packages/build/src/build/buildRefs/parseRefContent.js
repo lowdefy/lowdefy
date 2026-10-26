@@ -21,6 +21,7 @@ import JSON5 from 'json5';
 import YAML from 'yaml';
 
 import addLineNumbers from './addLineNumbers.js';
+import createGetLineNumber from './createGetLineNumber.js';
 import parseNunjucks from './parseNunjucks.js';
 import { DEFERRED_KEY } from './deferredRegistry.js';
 
@@ -53,7 +54,7 @@ function parseYamlWithLineNumbers(content) {
   if (doc.errors && doc.errors.length > 0) {
     throw new Error(doc.errors[0].message);
   }
-  return addLineNumbers(doc.contents, content);
+  return addLineNumbers(doc.contents, createGetLineNumber(content));
 }
 
 async function parseRefContent({ content, refDef }) {
