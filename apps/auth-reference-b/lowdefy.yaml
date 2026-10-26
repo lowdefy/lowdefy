@@ -109,6 +109,7 @@ api:
   - _ref: api/list-members-step.yaml
   - _ref: api/list-members-system.yaml
   - _ref: api/invitation-caller.yaml
+  - _ref: api/cancel-invitation.yaml
 
 pages:
   - _ref: pages/home.yaml

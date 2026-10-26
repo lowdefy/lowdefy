@@ -21,7 +21,6 @@ import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 
 import BuildingPage from '../lib/client/BuildingPage.jsx';
 import RestartingPage from '../lib/client/RestartingPage.jsx';
-import FeedbackMount from './feedback/FeedbackMount.jsx';
 import Inspector from './Inspector.jsx';
 import JourneyObserver from './JourneyObserver.jsx';
 import OpenInEditorListener from './openInEditor/OpenInEditorListener.jsx';
@@ -87,7 +86,6 @@ function Routing({ auth, lowdefy, recording, router }) {
   }
   return (
     <>
-      <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} page={shownPage} />
       <OpenInEditorListener basePath={router.basePath} pageId={shownPage?.pageId} />
       <Reload basePath={router.basePath} lowdefy={lowdefy}>
         {(resetContext) => (

@@ -1,0 +1,15 @@
+# Cancels a pending invitation to org-b. Under pinned the org plugin's own
+# /organization/cancel-invitation route is disabled, so the members page
+# cancels through this step instead. Like list-members-step.yaml the endpoint
+# is ungated: the step's floor refuses a caller without invitation:cancel
+# authority in org-b, which the owner holds.
+id: cancel-invitation
+type: Api
+routine:
+  - id: cancel_invitation
+    type: CancelInvitation
+    properties:
+      invitationId:
+        _payload: invitationId
+  - ':return':
+      _step: cancel_invitation

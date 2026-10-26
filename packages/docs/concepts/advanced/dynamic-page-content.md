@@ -223,21 +223,32 @@ policies:
       state: form
 ```
 
-| Key             | Default   | Meaning                                                                                                     |
-| --------------- | --------- | ----------------------------------------------------------------------------------------------------------- |
-| `id`            | required  | Policy id, referenced by Dynamic blocks and steps.                                                          |
-| `blocks`        | required  | Block types the content may use. `Dynamic` cannot be listed.                                                |
-| `actions`       | `[]`      | Action types the content may use.                                                                           |
-| `operators`     | `[]`      | Client operator names. `_string` allows every `_string` method. `_operator` cannot be listed.               |
-| `endpoints`     | `[]`      | Endpoints a `CallAPI` action in the content may call.                                                       |
-| `requests`      | `[]`      | Page requests a `Request` action may call. The build checks every page that hosts the policy defines them.  |
-| `links.pages`   | `[]`      | Page ids the content may link to. A link by app path, like `/form_submitted`, is matched to its page.       |
-| `links.origins` | `[]`      | Exact origins (`https://example.com`) the content may link to or load from.                                 |
-| `state`         | none      | When set, input block ids, `SetState` keys and `_state` reads must sit under this state path.               |
-| `html`          | `false`   | When `false`, no string in the content may contain HTML tag syntax.                                         |
-| `limits`        | see below | `depth` (10), `blocks` (500), `bytes` (262144) and `actionsPerEvent` (20). They can be raised, not removed. |
+| Key             | Default   | Meaning                                                                                                              |
+| --------------- | --------- | -------------------------------------------------------------------------------------------------------------------- |
+| `id`            | required  | Policy id, referenced by Dynamic blocks and steps.                                                                   |
+| `blocks`        | required  | Block types the content may use. `Dynamic` cannot be listed.                                                         |
+| `actions`       | `[]`      | Action types the content may use.                                                                                    |
+| `operators`     | `[]`      | Client operator names. `_string` allows every `_string` method. `_operator` cannot be listed.                        |
+| `endpoints`     | `[]`      | Endpoints a `CallAPI` action in the content may call.                                                                |
+| `requests`      | `[]`      | Page requests a `Request` action may call. The build checks every page that hosts the policy defines them.           |
+| `links.pages`   | `[]`      | Page ids the content may link to. A link by app path, like `/form_submitted`, is matched to its page.                |
+| `links.origins` | `[]`      | Exact origins (`https://example.com`) the content may link to or load from.                                          |
+| `state`         | none      | When set, input block ids, `SetState` keys and `_state` reads must sit under this state path.                        |
+| `html`          | `false`   | When `false`, no string may contain HTML tag syntax, except text a block draws as escaped text and data (see below). |
+| `limits`        | see below | `depth` (10), `blocks` (500), `bytes` (262144) and `actionsPerEvent` (20). They can be raised, not removed.          |
 
-Besides the lists, a policy requires literal values wherever the content names a target: `properties`, `style`, events and action lists; the params of `Link`, `CallAPI`, `Request` and `SetState`; every `_state` key; and every `pageId` and URL. URLs must be app paths or use a listed origin — including image sources, markdown links and CSS `url()`. A block's properties schema marks which properties hold a URL (see [Plugins](/plugins-introduction)), so a URL property is checked whatever it is called, such as `Search` `indexUrl` or `QRCode` `icon`; every value no schema marks, including action params and the properties of blocks that mark none, is checked by its key (`url`, `href`, `src`, ...). URLs are read as the browser reads them, so surrounding spaces and embedded tabs or newlines do not hide one.
+Besides the lists, a policy requires literal values wherever the content names a target: `properties`, `style`, events and action lists; the params of `Link`, `CallAPI`, `Request` and `SetState`; every `_state` key; and every `pageId` and URL.
+
+The policy checks a value as a URL where it is used as a link or a source: `href`, `src`, `url`, `Link` params, markdown links and CSS `url()`. There it must be an app path or use a listed origin, so `javascript:`, `data:` and off-site links and images are refused. A block's properties schema marks which properties hold a URL (see [Plugins](/plugins-introduction)), so a URL property is checked whatever it is called, such as `Search` `indexUrl` or `QRCode` `icon`; every value no schema marks, including action params and the properties of blocks that mark none, is checked by its key (`url`, `href`, `src`, ...). URLs are read as the browser reads them, so surrounding spaces and embedded tabs or newlines do not hide one.
+
+Everywhere else a URL is plain text:
+
+- **Text a block draws.** A block's properties schema marks how it draws a string (`textKind`). In a property it draws as HTML, such as a `Descriptions` item value, a `Paragraph` content, an input `title` or a `Selector` option label, a whole URL, a markdown link, a word starting with `//` and (unless the policy allows HTML) a CSS `url()` are words, since nothing there reads them as a link. The `html` rule still applies there, so text a block draws as HTML shows as written only when it is HTML-escaped (`&lt;` for `<`, `&amp;` for `&`). In a property it draws as escaped text, such as a `ControlledList` title, tag syntax is words too. When the policy allows HTML, a link or source attribute (`href`, `src`, `srcset`) in any string not drawn as escaped text is judged as a link or source, as a `url` or `src` property is.
+- **State.** When the policy sets a `state` path, `SetState` values, such as a form's prefill, are data: no block property can read state (properties are literal). A URL or tag syntax in them is text, and only the operator rules apply. Without a `state` path the content may write any page state, so its `SetState` values keep every check. A value bound to an input in the content whose value is an object, such as a rich text editor, an upload or a table input, keeps every check, since those inputs draw parts of their value as markup, links or images. The content may read data state (`SetState` values, and the state of an input whose option values or rows are data) only in a `CallAPI`'s params, an action's `skip`, a `SetState` value, or an `:if` or `:case` condition. A `_state` read of it anywhere else, such as a `DisplayMessage`'s content, fails with `policy.state`. The page around the Dynamic block owns the state under the policy's `state` path: anything there that draws it as HTML or follows it as a link must treat it as untrusted input, whatever the policy's `html` setting.
+- **Option values.** A `Selector` or `MultipleSelector` option `value` beside a `label` is data (`textKind: data`); the `label` is drawn as HTML. An option without a `label` draws its `value` as HTML in its place, so that value keeps every check.
+- **Table cells.** When every column of a `Table` or `TableLight` draws its cell as text (`text`, `email`, `phone`, `number`, `currency`, `percent`, `progress`, `rating`, `date`, `datetime`, `boolean`, `tag`, `tags`, `status` or `json`, or no type), its `data` rows are data. A `url`, `link`, `relation`, `image`, `avatar`, `people`, `html`, `buttons` or `menu` column draws or follows row values, a `cell.colorFrom` reads a row field into a colour, and an `expandable.template` draws row fields as HTML, so their table's rows keep every check.
+
+A value no schema marks, such as a `Markdown` content, may be drawn as markdown, a style or a link, so it keeps every check: a whole value counts as a URL when it starts with a scheme the browser loads or runs (`http:`, `https:`, `data:`, `javascript:`, ...) or with two slashes (`//`, or `\\` and the mixed forms, which the browser reads the same way). A reference such as `INC:42` or a format such as `HH:mm` is text.
 
 > With `html: false`, an operator that builds strings (`_string`, `_uri`, `_base64`, `_json`) can still assemble HTML at render time from content that passed the check. The build warns when a policy lists one. Leave them out of policies for generated content.
 

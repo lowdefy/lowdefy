@@ -15,6 +15,7 @@
 */
 
 import countSelectedRows from './countSelectedRows.js';
+import isRowSelectable from './isRowSelectable.js';
 import getSelectAllState from './getSelectAllState.js';
 
 // The header checkbox selects every row the filter shows (or clears them when all are selected),
@@ -29,8 +30,8 @@ function createToggleAllRowsSelected(api) {
       api.selectionExcept.clear();
       const selection = {};
       if (!checked) {
-        Object.keys(api.table.getCoreRowModel().rowsById).forEach((id) => {
-          selection[id] = true;
+        Object.values(api.table.getCoreRowModel().rowsById).forEach((row) => {
+          if (isRowSelectable({ api, original: row.original })) selection[row.id] = true;
         });
       }
       api.updateSlice('selectionMode', () => (checked ? 'keys' : 'all'), { cause: 'select' });
@@ -43,7 +44,8 @@ function createToggleAllRowsSelected(api) {
       return true;
     }
     const { selectedCount, total } = countSelectedRows({ api });
-    const selectAll = total > 0 && selectedCount < total;
+    if (total === 0) return false;
+    const selectAll = selectedCount < total;
     api.updateSlice('selectionMode', () => 'keys', { cause: 'select' });
     api.table.toggleAllRowsSelected(selectAll);
     return true;

@@ -1,5 +1,43 @@
 # @lowdefy/server-enterprise
 
+## 7.1.0
+
+### Patch Changes
+
+- 3408010: fix: `lowdefy build` no longer warns `Plugin checks for <package> did not run: package not installed.` for plugins that have nothing to check.
+
+  A clean build warned for every plugin the server had not installed yet, including connection plugins like `@lowdefy/connection-mongodb` that ship no build check rules. The warning now names only plugins that own a block, action or operator type, and `lowdefy build` gives it only from the build after it installs the app's plugins, so it shows a plugin that is still missing rather than one it was about to install. `lowdefy dev` does the same when it starts. Journeys and dev page builds still warn for a missing block, action or operator plugin. `--skip-plugin-checks` no longer gives this warning.
+
+- Updated dependencies [96d6f1c]
+- Updated dependencies [b1d58df]
+- Updated dependencies [c6d665a]
+- Updated dependencies [3df29f3]
+  - @lowdefy/blocks-aggrid@7.1.0
+  - @lowdefy/blocks-antd@7.1.0
+  - @lowdefy/blocks-files@7.1.0
+  - @lowdefy/blocks-table@7.1.0
+  - @lowdefy/blocks-tiptap@7.1.0
+  - @lowdefy/api@7.1.0
+  - @lowdefy/client@7.1.0
+  - @lowdefy/blocks-antd-x@7.1.0
+  - @lowdefy/layout@7.1.0
+  - @lowdefy/actions-core@7.1.0
+  - @lowdefy/blocks-basic@7.1.0
+  - @lowdefy/blocks-captcha@7.1.0
+  - @lowdefy/blocks-echarts@7.1.0
+  - @lowdefy/blocks-loaders@7.1.0
+  - @lowdefy/blocks-markdown@7.1.0
+  - @lowdefy/connection-anthropic@7.1.0
+  - @lowdefy/operators-js@7.1.0
+  - @lowdefy/operators-nunjucks@7.1.0
+  - @lowdefy/plugin-better-auth@7.1.0
+  - @lowdefy/websockets-core@7.1.0
+  - @lowdefy/block-utils@7.1.0
+  - @lowdefy/errors@7.1.0
+  - @lowdefy/helpers@7.1.0
+  - @lowdefy/logger@7.1.0
+  - @lowdefy/node-utils@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

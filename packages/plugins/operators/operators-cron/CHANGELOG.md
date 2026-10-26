@@ -1,5 +1,12 @@
 # @lowdefy/operators-cron
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/operators@7.1.0
+- @lowdefy/helpers@7.1.0
+
 ## 7.0.0
 
 ### Minor Changes

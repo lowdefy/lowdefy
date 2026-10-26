@@ -19,8 +19,7 @@ import parseElementsChain from './parseElementsChain.js';
 import parseRowIndex from './parseRowIndex.js';
 import type from './type.js';
 
-const { blockWrapperPrefix, cellAttribute, interactiveRoles, rowAttribute } =
-  journeyTargetSelectors;
+const { blockWrapperPrefix, gridRules, interactiveRoles } = journeyTargetSelectors;
 
 function blockIdOf(entry) {
   const id = entry.attributes.attr__id;
@@ -85,6 +84,28 @@ function textOf(scope) {
   return null;
 }
 
+// The chain form of the grid part selector: the entry has the part's class and attribute, the
+// part's role when it names one (a Table header cell has a body cell's class and column key, but
+// the role `columnheader`), and is not the part's header (the Table header row's index -1).
+function matchesGridPart({ entry, part }) {
+  const value = entry.attributes[`attr__${part.attribute}`];
+  if (!entry.classes.includes(part.className) || type.isNone(value)) return false;
+  if (!type.isNone(part.role) && entry.attributes.attr__role !== part.role) return false;
+  return type.isNone(part.header) || value !== part.header;
+}
+
+// The innermost row or cell entry of any grid and the row index or column key it carries, else
+// null.
+function findGridPart({ entries, kind }) {
+  for (const [index, entry] of entries.entries()) {
+    const rule = gridRules.find((candidate) => matchesGridPart({ entry, part: candidate[kind] }));
+    if (rule) {
+      return { index, value: entry.attributes[`attr__${rule[kind].attribute}`] };
+    }
+  }
+  return null;
+}
+
 // The journey target a posthog-js `$elements_chain` describes: the block wrappers the click
 // passed through (innermost first), the grid row and column, the control's text, and whether it
 // was a dropdown option. Pure, so the production pull runs it in Node on captured events. Total:
@@ -95,12 +116,14 @@ function targetFromElementsChain(chain) {
   const blockIndex = entries.findIndex((entry) => blockIdOf(entry) !== null);
   const inner = blockIndex === -1 ? entries : entries.slice(0, blockIndex);
   const scope = blockIndex === -1 ? entries : entries.slice(0, blockIndex + 1);
-  const rowEntry = inner.find((entry) => `attr__${rowAttribute}` in entry.attributes);
-  const cellEntry = inner.find((entry) => `attr__${cellAttribute}` in entry.attributes);
+  const row = findGridPart({ entries: inner, kind: 'row' });
+  // A cell counts only inside a row: a Table summary row's cells sit in a row with no index.
+  const cell =
+    row === null ? null : findGridPart({ entries: inner.slice(0, row.index), kind: 'cell' });
   return {
     block_id: blockIds[0] ?? null,
-    row: rowEntry ? parseRowIndex(rowEntry.attributes[`attr__${rowAttribute}`]) : null,
-    column: cellEntry ? cellEntry.attributes[`attr__${cellAttribute}`] : null,
+    row: row === null ? null : parseRowIndex(row.value),
+    column: cell === null ? null : cell.value,
     text: textOf(scope),
     option: inner.some(isOption),
     block_ids: blockIds,

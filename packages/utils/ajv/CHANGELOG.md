@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/helpers@7.1.0
+- @lowdefy/nunjucks@7.1.0
+
 ## 7.0.0
 
 ### Minor Changes

@@ -17,12 +17,23 @@
 import normalizeUrlText from './normalizeUrlText.js';
 
 // Returns every URL a string can make the client load or navigate to that is
-// not given by its key: a scheme or protocol-relative value (read as the URL
-// parser reads it), markdown link and image targets, and CSS
-// url()/image-set()/src() arguments after unescaping.
-const SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:\S/;
-// Script schemes run whatever follows them, spaces included.
-const SCRIPT_SCHEME = /^(javascript|vbscript):/i;
+// not given by its key: a whole value with a scheme the browser loads or runs,
+// or a protocol-relative one (read as the URL parser reads it), markdown link
+// and image targets, and CSS url()/image-set()/src() arguments after
+// unescaping. A word such as "INC:42" or "HH:mm" has the shape of a scheme but
+// names none the browser acts on, so it is text.
+//
+// The caller turns off the scans that cannot apply to how the value is drawn: a
+// property drawn as text or HTML renders no markdown, and is no link, so neither
+// the whole value, a markdown target nor a protocol-relative word in it is a URL;
+// CSS url() only loads in text that can carry a style.
+
+// An allowlist of schemes, not a scheme-shaped pattern: any word may hold a colon.
+const LOADED_SCHEME = /^(https?|ftp|wss?|file|blob|filesystem):\S/i;
+// Script and data schemes keep whatever follows them, spaces included.
+const SCRIPT_SCHEME = /^(javascript|vbscript|data):/i;
+// The URL parser reads a backslash as a slash, so "\\host" is protocol-relative too.
+const PROTOCOL_RELATIVE = /^[\\/][\\/]/;
 const MARKDOWN_INLINE = /\]\(\s*<?([^)\s>]+)/g;
 const MARKDOWN_REFERENCE = /^\s*\[[^\]]+\]:\s*<?([^\s>]+)/gm;
 const CSS_FUNCTION = /(url|src|image-set)\(([^)]*)\)/gi;
@@ -34,17 +45,18 @@ function unescapeCss(value) {
     .replace(/\\(.)/g, '$1');
 }
 
-function findEmbeddedUrls(value) {
+function findEmbeddedUrls({ value, wholeValue = true, markdown = true, css = true }) {
   const urls = [];
   const text = normalizeUrlText(value);
-  const isUrlText =
-    !/\s/.test(text) && (SCHEME.test(text) || text.startsWith('//') || text.startsWith('/\\'));
-  if (isUrlText || SCRIPT_SCHEME.test(text)) {
+  const isUrlText = !/\s/.test(text) && (LOADED_SCHEME.test(text) || PROTOCOL_RELATIVE.test(text));
+  if (wholeValue && (isUrlText || SCRIPT_SCHEME.test(text))) {
     urls.push(text);
   }
-  for (const match of value.matchAll(MARKDOWN_INLINE)) urls.push(match[1]);
-  for (const match of value.matchAll(MARKDOWN_REFERENCE)) urls.push(match[1]);
-  if (value.includes('(')) {
+  if (markdown) {
+    for (const match of value.matchAll(MARKDOWN_INLINE)) urls.push(match[1]);
+    for (const match of value.matchAll(MARKDOWN_REFERENCE)) urls.push(match[1]);
+  }
+  if (css && value.includes('(')) {
     for (const match of unescapeCss(value).matchAll(CSS_FUNCTION)) {
       const argument = match[2].trim();
       const quoted = [...argument.matchAll(QUOTED)].map((quote) => quote[2]);

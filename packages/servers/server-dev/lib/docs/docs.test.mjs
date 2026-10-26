@@ -63,7 +63,6 @@ const { default: listPlugins } = await import('./listPlugins.js');
 const { default: getSchema } = await import('./getSchema.js');
 const { default: getExamples } = await import('./getExamples.js');
 const { default: getCoreDoc } = await import('./getCoreDoc.js');
-const { default: getPluginDoc } = await import('./getPluginDoc.js');
 const { default: getOverview } = await import('./getOverview.js');
 const { default: searchDocs } = await import('./searchDocs.js');
 const { default: normalizeTypeKind } = await import('./normalizeTypeKind.js');
@@ -193,22 +192,6 @@ test('getExamples returns null for unknown block type', () => {
   expect(getExamples({ type: 'Nope' })).toBeNull();
 });
 
-test('getPluginDoc returns README markdown for installed plugin', () => {
-  const result = getPluginDoc({ packageName: 'test-plugin' });
-  expect(result.markdown).toContain('# test-plugin');
-});
-
-test('getPluginDoc returns null for packages without docs', () => {
-  expect(getPluginDoc({ packageName: 'no-such-package' })).toBeNull();
-});
-
-test('getPluginDoc reads only the app plugins, never a path out of node_modules', () => {
-  fs.writeFileSync(path.join(fixtureDir, 'README.md'), '# Server readme\n');
-  expect(getPluginDoc({ packageName: '..' })).toBeNull();
-  expect(getPluginDoc({ packageName: 'test-plugin/../..' })).toBeNull();
-  fs.rmSync(path.join(fixtureDir, 'README.md'));
-});
-
 test('getCoreDoc returns markdown by slug from docs-content', () => {
   const doc = getCoreDoc({ slug: 'operators/_get' });
   expect(doc.title).toEqual('_get');
@@ -255,7 +238,8 @@ test('searchDocs throws on empty query', () => {
 test('getOverview includes counts and route guidance', () => {
   const overview = getOverview();
   expect(overview).toContain('2 block types');
-  expect(overview).toContain('/lowdefy-docs/schema/{kind}/{type}');
+  expect(overview).toContain('`GET /lowdefy-docs/build-status`');
+  expect(overview).not.toContain('/lowdefy-docs/schema');
   expect(overview).toContain('lowdefy_list_types');
   expect(overview).not.toContain('config.basePath');
 });
@@ -319,8 +303,8 @@ test('findConfig resolves a known pageId to its source file', async () => {
   expect(result.kind).toEqual('page');
   expect(result.pageId).toEqual('home');
   expect(result.file).toEqual('pages/home.yaml');
-  // A page's root block renders with blockId === pageId — open-in-editor and
-  // feedback enrichment read matches[0].location.source from this result.
+  // A page's root block renders with blockId === pageId — open-in-editor
+  // reads matches[0].location.source from this result.
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].location.source).toContain(path.join('pages', 'home.yaml'));
 });

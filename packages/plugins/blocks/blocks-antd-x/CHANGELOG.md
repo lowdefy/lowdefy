@@ -1,5 +1,13 @@
 # @lowdefy/blocks-antd-x
 
+## 7.1.0
+
+### Patch Changes
+
+- @lowdefy/blocks-files@7.1.0
+- @lowdefy/block-utils@7.1.0
+- @lowdefy/helpers@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

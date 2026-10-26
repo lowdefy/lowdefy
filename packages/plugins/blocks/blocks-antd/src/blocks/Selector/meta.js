@@ -133,9 +133,12 @@ export default {
               properties: {
                 label: {
                   type: 'string',
+                  textKind: 'html',
                   description: 'Value label shown to user - supports html.',
                 },
                 value: {
+                  textKind: 'data',
+                  dataWith: 'label',
                   description: 'Value selected. Can be of any type.',
                   oneOf: [
                     {

@@ -1,0 +1,96 @@
+# Public page that shows who it renders and who the server answers its request
+# as - the two must agree, since every response carries the server's caller
+# (x-lowdefy-caller) and the page reloads when it differs from the one shown.
+# A session the server no longer admits (a member removed from their active
+# organization) renders nobody here and is answered as nobody.
+#
+# It also signs in without navigating (callbackUrl: false), the way a login
+# form in a modal or a side panel does, and asks the server again right after,
+# in the same chain: the page must already render the new caller by then.
+id: caller
+type: Box
+properties:
+  style:
+    maxWidth: 400
+    margin: 60px auto
+events:
+  onInit:
+    - id: read_caller
+      type: CallAPI
+      params:
+        endpointId: caller
+    - id: set_caller
+      type: SetState
+      params:
+        caller:
+          _api: caller.response
+blocks:
+  - id: caller_title
+    type: Title
+    properties:
+      content: Who am I
+      level: 2
+  - id: rendered_user_html
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>Page renders: {{ email | dump }}</p>
+          on:
+            email:
+              _user: email
+  - id: server_caller_html
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>Server answers: {{ caller.email | dump }}</p>
+          on:
+            caller:
+              _state: caller
+  - id: email
+    type: TextInput
+    properties:
+      title: Email
+  - id: password
+    type: PasswordInput
+    properties:
+      title: Password
+  - id: login_in_place_button
+    type: Button
+    properties:
+      title: Log in here
+      block: true
+    events:
+      onClick:
+        - id: login_in_place
+          type: Login
+          params:
+            callbackUrl: false
+            email:
+              _state: email
+            password:
+              _state: password
+        - id: read_caller_after_login
+          type: CallAPI
+          params:
+            endpointId: caller
+        # Written only here, so a page that reloaded instead of answering
+        # shows nothing in login_caller_html.
+        - id: set_caller_after_login
+          type: SetState
+          params:
+            login_caller:
+              _api: caller.response
+  - id: login_caller_html
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>Server answers the sign-in's request: {{ caller.email | dump }}</p>
+          on:
+            caller:
+              _state: login_caller

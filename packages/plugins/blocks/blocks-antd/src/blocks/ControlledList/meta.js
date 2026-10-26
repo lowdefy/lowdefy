@@ -43,6 +43,7 @@ export default {
     properties: {
       title: {
         type: 'string',
+        textKind: 'text',
         description: 'Controlled list title.',
       },
       addToFront: {

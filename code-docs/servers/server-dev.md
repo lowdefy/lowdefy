@@ -126,6 +126,7 @@ server-dev/
 │   │   ├── optimizeDependencies.mjs  # `vite optimize` in a short-lived process
 │   │   ├── restartServer.mjs # Restart and wait until the new child answers
 │   │   ├── syncServer.mjs    # After a build: install new plugins, restart when needed
+│   │   ├── createIdleChild.mjs  # Stops the unused Vite child, starts it on the next use
 │   │   ├── startProxy.mjs    # Public port; holds requests across restarts and build-status waits
 │   │   ├── shutdownServer.mjs
 │   │   ├── readDotEnv.mjs
@@ -147,7 +148,7 @@ server-dev/
 │   └── watchers/
 │       ├── lowdefyBuildWatcher.mjs   # Config, local modules and ref map files: skeleton vs page
 │       ├── envWatcher.mjs
-│       ├── pluginSourceWatcher.mjs   # Local plugin packages → rebuild (+ restart if server-side)
+│       ├── pluginSourceWatcher.mjs   # Local plugin packages → rebuild (+ restart if server code)
 │       ├── restartRequestWatcher.mjs # build/.restart from the dev tools → rebuild + restart
 │       └── serverPackageWatcher.mjs  # Server package.json from a page build → install + restart
 ├── vite.config.js
@@ -207,6 +208,8 @@ context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
 if (!(await startFirstServer(context))) {
   context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
 }
+// Not awaited: builds again for plugins installed after the initial build.
+context.checkPendingPlugins().catch((error) => context.logger.error(error?.message ?? error));
 if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
   opener(`http://localhost:${context.options.port}`);
 }
@@ -553,8 +556,8 @@ optimises itself. A failure only warns: the child then optimises itself, as it u
 re-optimisation the child triggers mid-session keeps its memory until the next restart.
 
 **Agent browser** (`lib/docs/getBrowser.js`, `createBrowserLifecycle.js`, `launchBrowser.js`,
-`installHeadlessShell.js`). Screenshots, journeys, headless inspection, operator evaluation and
-state loads share one browser per child:
+`installHeadlessShell.js`). Screenshots, journeys, headless inspection and expression evaluation
+share one browser per child:
 
 - `launchBrowser` imports `playwright-core` lazily and launches `chromium-headless-shell` first,
   system Chrome (`channel: 'chrome'`) as the fallback. A missing shell starts
@@ -576,18 +579,15 @@ state loads share one browser per child:
   (`killTaggedBrowser`), because system Chrome runs in its own process group and outlives a
   SIGKILLed child. The headless shell exits with its parent anyway.
 
-**Page instances in the headless tools.** Screenshot, inspect state, eval operator, snapshot and
-load state and journeys take `pathParams` next to `pageId` and `urlQuery`.
+**Page instances in the headless tools.** Screenshot, inspect state (with or without `expression`) and
+journeys take `pathParams` next to `pageId` and `urlQuery`.
 `resolvePageInstance` reads the page's pattern from `routes.json` (`readPagePath`) and returns
 `{ path, instanceKey }`, or the URL builder's error for a missing placeholder, which the tool
 returns to the agent before a browser opens. `openPage` and `buildPageUrl` take the pattern as
 `path`; the tools read `lowdefy.contexts[instanceKey]` and `lowdefy.inputs[instanceKey]`.
 `isPageReady()` waits for the instance on screen, the last key in
 `lowdefy.pageInstances[lowdefy.pageId]`, so a redirect settles on the page the app shows. A request naming only a `pageId` reads a live tab
-through `findPageInstance`; headless it needs `pathParams` for a patterned page. State
-checkpoints keep `pathParams.json` next to `urlQuery.json`, and `loadState` opens that instance.
-`/lowdefy-docs/screenshot`, `/inspect-state` and `/page-config` take multi-segment page ids;
-the GET routes take `pathParams` as JSON in the query. `getAppMap` lists each page's `path`, and
+through `findPageInstance`; headless it needs `pathParams` for a patterned page. `GET /lowdefy-docs/page-config` takes multi-segment page ids. `getAppMap` lists each page's `path`, and
 the overview lists the patterned pages.
 
 **Connection schemas.** The skeleton build's `writeConnectionSchemaMap` (`@lowdefy/build`) reads
@@ -607,20 +607,13 @@ function initialBuild(context) {
     await context.lowdefyBuild({ pluginInstallFollows: true });
     await context.checkMockUserWarning();
     await context.installPlugins();
-    if (
-      !context.options.skipPluginChecks &&
-      pluginChecksNeedRebuild({
-        buildDirectory: context.directories.build,
-        serverDirectory: context.directories.server,
-      })
-    ) {
-      await context.lowdefyBuild();
-    }
   };
 }
 ```
 
-The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)). The first build passes `pluginInstallFollows`, so it holds its `did not run: package not installed` warnings; the build after the install warns for any plugin still missing.
+The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. `installPlugins` installs it, and `checkPendingPlugins` (`manager/processes/checkPendingPlugins.mjs`) builds once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)), unless plugin checks are skipped. The first build passes `pluginInstallFollows`, so it holds its `did not run: package not installed` warnings; the build after the install warns for any plugin still missing.
+
+`run.mjs` starts `checkPendingPlugins` once the first child has answered, and does not await it. The checks only add warnings or errors, so the first build's output serves meanwhile, and on a fresh checkout of a large app the time to a usable server is one config build instead of two. The build runs inside `buildActivity.track`, so `building` is true and `lowdefy_build_status({ wait: true })` reads the checked build, then `syncServer` runs, as after a watcher's build. It does not call `reloadClients`: the checks change no output a tab reads, and a reload resets the page of whoever is using it. A failed build publishes nothing, so it is not synced; it is reported in the build status and logged, like a watcher's. The idle GC after the first start is scheduled before this build starts, which cancels it, so the GC never runs during the check build.
 
 A plugin's `./checks` and schemas are imported once per dev server process. Rules are functions, so they can't come back from `importFresh`'s worker, which copies its result by structured clone. An edit to a local plugin's rules or schemas takes effect when the dev server restarts.
 
@@ -680,6 +673,32 @@ forwarding them to whichever child is current. The result travels in the
 `x-lowdefy-build-wait` header (`readProxyBuildWait`), so the child reports it and does not
 wait again. A request that reaches the child without the header (a direct call to the internal
 port) still waits on `building` itself.
+
+### Idle Child Stop
+
+**File:** `manager/processes/createIdleChild.mjs`
+
+The Vite child holds most of an idle server's memory (360 to 720 MB measured in LDF-799). The
+manager stops it after 3 minutes with no request in flight, no build, no open tab and nothing
+counted as activity (`LOWDEFY_SERVER_DEV_CHILD_IDLE_MS` sets the limit, for tests). It keeps its
+port, watchers and build state. The stop goes through `shutdownServer`; stop and wake run in
+`syncServer`'s queue (`syncServer.run`), so neither interleaves with a restart or an install.
+
+- **Open tabs.** The proxy counts open `GET <basePath>/api/reload` streams, headless journey tabs
+  included, from response start to close (`requestActivity.trackTab`). A tab closing counts as
+  use, so the 3 minutes start then.
+- **Waking.** Only a request for which `isActivity` is true wakes the child and is held as for a
+  restart. Passive reads, event-stream GETs and websocket upgrades get `503` at once with
+  `Retry-After: 5`, `x-lowdefy-child: stopped` and `{ "message": "Lowdefy dev server is idle." }`.
+- **Builds.** While stopped, `syncServer` marks a restart pending instead of restarting; the
+  install path still installs, rebuilds and optimises. The wake runs `restartServer`, which
+  records the server artifacts.
+- **Record.** `state` stays `ready` (the hub treats any other state as busy, and waits on
+  `ready`). `child` is `stopped` or `running`, and `openTabs` is the tab count. The hub reads
+  `openTabs` instead of polling `/api/dev-inspect`, and `lowdefy_dev_status` reports `idle`.
+
+A wake costs a child start and a JIT build of each page as it is first requested, and loses the
+child's error stores, `servedBuilds` and MCP sessions, as any restart does.
 
 ### syncServer
 
@@ -762,9 +781,24 @@ Published packages cannot change under a running server. The whole package is wa
 `node_modules` and dot-folders, since a plugin may be imported from its sources or from a build
 output its own watcher writes. Any change rebuilds the config — which reads each plugin's type
 list, so a new type is defined and a build a broken plugin failed clears once it is fixed — and
-reloads the clients. A change to a plugin with server-side types (per the last build's
-`customTypesMap.json`) also restarts the server, whose ESM cache holds the old modules; block,
-action and client-operator code is Vite's to hot-replace.
+reloads the clients. A change to a file the server imports also restarts the server, whose ESM
+cache holds the old modules; block, action and client-operator code is Vite's to hot-replace, and
+a restart would only drop the requests in flight. After the build, `listServerPluginFiles` follows
+the imports of the build's server-side plugin import files (`build/plugins/*.js`, less the client
+bundle's `actions.js`, `blocks.js`, `icons.js`, `operators/client.js` and
+`operators/clientJsMap.js`) through the files of every local package, so a plugin that only holds
+steps, or a helper a connection imports from another local plugin, counts too. Package
+specifiers and `#` subpath imports resolve through the package's `exports` and `imports` with
+the conditions Vite's SSR resolver matches (`import`, `module`, `node`, `development`,
+`default`), so a package that also exports CommonJS is walked through the modules the server
+loads (`resolvePackageSpecifier`); file imports try Vite's extensions and index files, and a
+TypeScript import of an output name (`./find.js`) its source (`resolveFile`). A changed file in
+the walked set restarts, as does a changed `package.json` of a package the server imports from.
+Where the walk cannot be sure (an import it cannot resolve, or a dynamic import of a computed
+path) it lists the package in `unsureDirs`, and any change in that package restarts, as before.
+Imports are found by patterns over source with its comments removed (string literals are kept
+whole, so a `/*` or `//` inside one stays text), not a parser: a stray match in a string adds a
+file or marks its package unsure, which errs towards a restart.
 
 ### Publishing a Build
 
@@ -784,14 +818,9 @@ removals use `fs.rm`'s own retries.
 ```javascript
 async function reloadHandler(c) {
   return streamSSE(c, async (stream) => {
-    const watcher = chokidar.watch(['./build/reload'], { ignoreInitial: true });
+    const unsubscribe = subscribeToReload(() => stream.writeSSE({ event: 'reload', data: '{}' }));
 
-    stream.onAbort(() => watcher.close());
-
-    watcher.on('add', () => stream.writeSSE({ event: 'reload', data: '{}' }));
-    watcher.on('change', () => stream.writeSSE({ event: 'reload', data: '{}' }));
-    // No reload on unlink — a skeleton rebuild removes build/reload when it
-    // publishes the new build; the reload comes from reloadClients() after.
+    stream.onAbort(() => unsubscribe());
 
     while (open) {
       await stream.sleep(15000);
@@ -800,6 +829,8 @@ async function reloadHandler(c) {
   });
 }
 ```
+
+Every stream shares one module-level chokidar watcher on `./build/reload`, started by the first subscriber and closed when the last one leaves, as `lib/docs/devEventBus.js` does for `buildStatus.json` (the close waits a tick, for the reason given there). A watcher per connection held one fs handle per open tab, headless journey and screenshot tabs included. There is no reload on unlink: a skeleton rebuild removes `build/reload` when it publishes the new build, and the reload comes from `reloadClients()` after.
 
 The 15s pings keep the connection alive; the route is registered before the api context middleware (it needs no request context) and dev has no compression middleware, so the stream is never buffered.
 
@@ -841,14 +872,14 @@ Tailwind CSS updates arrive through Vite HMR (`globals.css` is in the dev module
 
 Dev serves over HTTP/1.1, where browsers allow six connections per host, and an open event stream holds one for the life of the tab. The `/api/reload` EventSource in `Reload.jsx` is therefore the **only** stream a tab opens, and every other dev-only channel rides it:
 
-- `reload.js` registers each connection as an inspectable tab in `lib/docs/tabChannel.js` and sends the id it chose as the first event (`tab`). Agent inspect/eval requests (`/lowdefy-docs/inspect-state`, `eval-operator`) arrive on the same stream as `inspect-request` / `eval-request` events.
+- `reload.js` registers each connection as an inspectable tab in `lib/docs/tabChannel.js` and sends the id it chose as the first event (`tab`). Agent `lowdefy_inspect_state` calls, with or without `expression`, arrive on the same stream as `inspect-request` / `eval-request` events.
 - `Reload.jsx` publishes `{ source, tabId }` through `client/DevStreamContext.js`; `Inspector.jsx` (rendered inside `Reload`'s render prop) attaches its listeners to that source instead of opening its own EventSource.
-- Page navigation is reported with a POST to `/api/dev-inspect/page` (`{ tabId, pageId, pathParams, instanceKey }` → `updateTabPage`) rather than reconnecting, so the registry stays current without churning connections or file watchers. The values come from the fetched page: dev `Page.jsx` calls `onPageShown` once a page renders, and `Routing.jsx` hands that instance to `Inspector`, `FeedbackMount` and `OpenInEditorListener` (until the first page renders they have none).
+- Page navigation is reported with a POST to `/api/dev-inspect/page` (`{ tabId, pageId, pathParams, instanceKey }` → `updateTabPage`) rather than reconnecting, so the registry stays current without churning connections or file watchers. The values come from the fetched page: dev `Page.jsx` calls `onPageShown` once a page renders, and `Routing.jsx` hands that instance to `Inspector` and `OpenInEditorListener` (until the first page renders they have none).
 - The registry keeps each tab's instance on screen and the instances it has rendered. `findPageInstance({ pageId, pathParams })` picks what a request reads: the instance on screen in a tab showing that page (and values), else the page's most recently rendered instance in any tab, whose context that tab still holds; with no `pageId`, the most recently connected tab's instance on screen. Path values compare as strings. `requestFromTab` sends the chosen `{ pageId, pathParams, instanceKey }` with the event, and `Inspector.jsx` reads `lowdefy.contexts[instanceKey]` and `lowdefy.inputs[instanceKey]`.
 
 Before this, the inspector opened a second stream per tab and reconnected it on every navigation; three tabs of one app saturated the browser's connection pool and the next fetch on any of them queued forever — the page sat on its skeleton with a request pending and no server error.
 
-The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port and forwards to the Vite child. It destroys the upstream request when the client closes mid-response, so a closed tab reaches `stream.onAbort` in the child and its tab registration and file watcher are released. Without that the child never saw the disconnect: the SSE loop kept writing to a dead socket and closed tabs stayed in the registry, shadowing live ones in `findPageInstance`.
+The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port and forwards to the Vite child. It destroys the upstream request when the client closes mid-response, so a closed tab reaches `stream.onAbort` in the child and its tab registration and reload subscription are released. Without that the child never saw the disconnect: the SSE loop kept writing to a dead socket and closed tabs stayed in the registry, shadowing live ones in `findPageInstance`.
 
 The proxy probes a child once and then forwards straight to it until a forward fails or the child is replaced: a probe per request left one TIME_WAIT socket per Vite module request, and headless page loads (journeys, screenshots) exhausted the ephemeral ports within a minute. After a restart it waits for the stopped child to exit (`context.devServerExited`, set by `shutdownServer`) before probing, since until then the old child still answers. A GET or HEAD that never reached a child that was going away (a refused connect, or a keep-alive socket the child had closed) is replayed through the hold; any other request forwarded in the moment between a child dying and the manager seeing it exit answers 502 once, and that failure sends every later request back through the probe.
 
@@ -881,13 +912,13 @@ The Hono app is mounted into Vite via `@hono/vite-dev-server`. There is no compr
 
 **Files:** `lib/docs/getDocsIndex.js`, `searchDocs.js`, `getDoc.js`, `listPluginDocEntries.js`, `listModuleDocEntries.js`, `makeModuleManifestDoc.js`, `readDocEntry.js`
 
-The doc tools (`lowdefy_search_docs`, `lowdefy_get_doc`, `/lowdefy-docs/search`, `/lowdefy-docs/content/{slug}`) read one index in the server process. `getDocsIndex()` returns `{ entries, typeDocs }`. Each entry is `{ slug, title, section, kind?, typeName?, source, package, version }` plus where its markdown comes from (a file path, or the module entry a page is generated from). Content is read when asked for: core docs once per process, plugin and module docs on every read.
+The doc tools (`lowdefy_search_docs` and `lowdefy_get_doc`) read one index in the server process. `getDocsIndex()` returns `{ entries, typeDocs }`. Each entry is `{ slug, title, section, kind?, typeName?, source, package, version }` plus where its markdown comes from (a file path, or the module entry a page is generated from). Content is read when asked for: core docs once per process, plugin and module docs on every read.
 
 - **Core** (`source: core`): the `@lowdefy/docs-content` manifest.
 - **Plugins** (`plugin`, or `local-plugin` when the package's real directory is outside every `node_modules`), from the plugin packages the build lists (`plugins/availableTypes.json`, `customTypesMap.json`, `installedPluginPackages.json`), `@lowdefy/*` left out: the `README.md` as `plugins/<package>`, and each `docs/*.md` (else `dist/docs/*.md`) as `plugins/<package>/<stem>`. `typeDocs` maps `"<kind>:<type>"` to the doc whose stem is the type name, else to the README. `listPackageDocFiles` lists only regular files whose real path is inside the package, so a link out of it, a broken link or a directory named `*.md` is left out.
 - **Modules** (`module`), from `build/modules.json`: the `README.md` as `modules/<id>`, each `docs/*.md` as `modules/<id>/<stem>`, and `modules/<id>/manifest`, generated from the module's `varDefs` and manifest (vars with type, required, description and default; components; exports). A part with the wrong shape (the build does not check `exports`) is named on the page as not valid, so it never fails a docs call. The package is the module source without its ref, the version the ref, or `local` for `file:`.
 
-The index is built when `src/app.js` is created and rebuilt on the first docs call after its key changes. The key is the stats of the three plugin artifacts (an artifact a build leaves byte-identical keeps its mtime), the docs-relevant parts of `modules.json`, and the README and doc files of local plugins and modules. A config-only edit changes none of them.
+The docs routes and this index load lazily: `src/app.js` mounts each docs route through `src/routes/docs/loadDocsRoutes.js`, which `import()`s them once for every caller. After the child answers its first `/api/ping` (the manager's readiness probe) it loads them and builds the index in the background (`setImmediate`, not awaited), so start does not wait for them; a docs request made before then waits on the same load. The index is rebuilt on the first docs call after its key changes. The key is the stats of the three plugin artifacts (an artifact a build leaves byte-identical keeps its mtime), the docs-relevant parts of `modules.json`, and the README and doc files of local plugins and modules. A config-only edit changes none of them.
 
 `searchDocs` splits the query into terms (lowercased; one- and two-letter terms and common words dropped; a query of only dropped words is searched whole). Each term scores once, by its best field: title or slug 3, type name 2, body 1. Hits come best first, ties in index order, at most 20, and `source` narrows them. `getDoc` looks up a slug in the core docs, then the rest; a type in its plugin's docs first (the core lookup falls back to a type-name prefix match), then the core docs. With no kind, a core page for exactly that type name wins over a plugin type of another kind.
 
@@ -998,7 +1029,7 @@ Sets up the provider tree (`StyleProvider`, `XProvider`/antd theme, `AntdApp`, `
 
 **File:** `client/Routing.jsx`
 
-Replaces the old `lib/client/App.js` — page resolution is driven by the custom router from `@lowdefy/client/adapters` instead of `next/router`, everything else preserved. It subscribes to router location changes (`{ path, pathname, search }`, `path` without basePath and the outer slashes, `''` at the root) and resolves the path to fetch with `getPagePath(location, rootConfig)`: the root fetches the home page's own path, built with `buildPagePath` from `home` and `pagePaths`, and redirects there when `homePageId` is unset. It never derives a page id before the fetch; the server's response names the page. It renders `<Reload>` → `<Suspense>` → `<Page>` keyed on `${path}_${reloadVersion}`. The in-page tools (`Inspector`, `FeedbackMount`, `OpenInEditorListener`) get the instance on screen, `{ pageId, pathParams, instanceKey }`, which `Page` reports through `onPageShown` once the fetched page renders; it stays on the previous page while the next one fetches and is `null` before the first page renders. The journey `Recorder` gets the page id the path memory holds for the path (`lookupPath`), the path itself before the first page renders.
+Replaces the old `lib/client/App.js` — page resolution is driven by the custom router from `@lowdefy/client/adapters` instead of `next/router`, everything else preserved. It subscribes to router location changes (`{ path, pathname, search }`, `path` without basePath and the outer slashes, `''` at the root) and resolves the path to fetch with `getPagePath(location, rootConfig)`: the root fetches the home page's own path, built with `buildPagePath` from `home` and `pagePaths`, and redirects there when `homePageId` is unset. It never derives a page id before the fetch; the server's response names the page. It renders `<Reload>` → `<Suspense>` → `<Page>` keyed on `${path}_${reloadVersion}`. The in-page tools (`Inspector`, `OpenInEditorListener`) get the instance on screen, `{ pageId, pathParams, instanceKey }`, which `Page` reports through `onPageShown` once the fetched page renders; it stays on the previous page while the next one fetches and is `null` before the first page renders. The journey `Recorder` gets the page id the path memory holds for the path (`lookupPath`), the path itself before the first page renders.
 
 ### Page
 
@@ -1146,7 +1177,7 @@ export default defineConfig(({ mode }) => ({
 | Client plugin code / CSS change                                      | Vite                  | HMR module replacement                   | In-place update (~hundreds of ms, no restart)    |
 | Server artifact change (auth, connections, server operators, config) | syncServer            | Restart child                            | Hard restart                                     |
 | `package.json` change                                                | syncServer            | Install + lowdefy build + restart        | Hard restart                                     |
-| Local plugin package change                                          | pluginSourceWatcher   | Lowdefy build (+ restart if server-side) | Soft reload or hard restart                      |
+| Local plugin package change                                          | pluginSourceWatcher   | Lowdefy build (+ restart if server code) | Soft reload or hard restart                      |
 | `.env` change                                                        | envWatcher            | Read env + lowdefy build + restart       | Hard restart                                     |
 
 ## Mock User for Testing

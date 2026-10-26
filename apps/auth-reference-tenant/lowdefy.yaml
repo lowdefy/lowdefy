@@ -78,6 +78,7 @@ auth:
       - verify-email
       - accept-invitation
       - home
+      - caller
 
   authPages:
     signIn: /login
@@ -122,6 +123,7 @@ connections:
 api:
   - _ref: api/org-info.yaml
   - _ref: api/list-members-no-org.yaml
+  - _ref: api/caller.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -133,5 +135,6 @@ pages:
   - _ref: pages/dashboard.yaml
   - _ref: pages/organizations.yaml
   - _ref: pages/members.yaml
+  - _ref: pages/caller.yaml
   - _ref: pages/notes.yaml
   - _ref: pages/workspace-settings.yaml

@@ -18,11 +18,15 @@
 import { createRequire } from 'node:module';
 import { createPluginTypesMap } from '@lowdefy/build';
 import importFresh from './importFresh.mjs';
+import { importPluginModule } from './pluginTypeCache.mjs';
 import readPluginDefinitions from './readPluginDefinitions.mjs';
 
 const require = createRequire(import.meta.url);
 
-async function createCustomPluginTypesMap({ directories, logger }) {
+// The dev manager passes cache: true and reads each plugin from the plugin
+// type cache. Other callers (lowdefy_check, the config tree build) must see
+// what production would load, so they import every plugin afresh.
+async function createCustomPluginTypesMap({ cache = false, directories, logger }) {
   const customTypesMap = {
     actions: {},
     agents: {},
@@ -52,7 +56,11 @@ async function createCustomPluginTypesMap({ directories, logger }) {
   const pluginTypes = await Promise.all(
     pluginDefinitions.map(async (plugin) => {
       try {
-        return await importFresh(require.resolve(`${plugin.name}/types`));
+        const entryPath = require.resolve(`${plugin.name}/types`);
+        if (cache) {
+          return await importPluginModule({ entryPath, packageName: plugin.name });
+        }
+        return await importFresh(entryPath);
       } catch (e) {
         logger.error(`Failed to import plugin "${plugin.name}".`);
         logger.debug(e);
