@@ -19,6 +19,7 @@ import linkChips from '../../schemas/linkChips.js';
 export default {
   category: 'display',
   actions: ['Link'],
+  operators: ['_event'],
   icons: [],
   valueType: null,
   cssKeys: {

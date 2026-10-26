@@ -187,6 +187,9 @@ const nativeBlockTypes = {
       ],
       "actions": [
         "Link"
+      ],
+      "operators": [
+        "_event"
       ]
     },
     "AgentChat": {
@@ -434,6 +437,9 @@ const nativeBlockTypes = {
       ],
       "actions": [
         "Link"
+      ],
+      "operators": [
+        "_event"
       ]
     },
     "Menu": {

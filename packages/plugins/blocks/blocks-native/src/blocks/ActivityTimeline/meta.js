@@ -64,6 +64,7 @@ const rule = {
 export default {
   category: 'display',
   actions: ['Link'],
+  operators: ['_event'],
   icons: [
     'ChevronDown',
     'ChevronRight',
