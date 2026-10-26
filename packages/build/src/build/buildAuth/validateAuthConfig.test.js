@@ -906,6 +906,49 @@ test('validateAuthConfig throws when organizations.membershipLimit is under 1', 
   );
 });
 
+test('validateAuthConfig passes an organizations block with an invitation limit', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'pinned', org: 'acme', invitationLimit: 500 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws a ConfigError when organizations.invitationLimit is not an integer', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { invitationLimit: 2.5 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    expect.objectContaining({
+      name: 'ConfigError',
+      message: 'Auth "organizations.invitationLimit" should be an integer.',
+    })
+  );
+});
+
+test('validateAuthConfig throws when organizations.invitationLimit is under 1', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { invitationLimit: 0 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "organizations.invitationLimit" should be at least 1.'
+  );
+});
+
 test('validateAuthConfig throws when organizations.creatorAppRoles lists a role id more than once', () => {
   const components = {
     auth: {

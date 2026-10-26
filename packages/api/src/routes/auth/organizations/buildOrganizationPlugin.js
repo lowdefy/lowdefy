@@ -18,10 +18,12 @@ import { organization } from 'better-auth/plugins';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
 import createAfterCreateOrganizationHook from './createAfterCreateOrganizationHook.js';
+import createBeforeCreateInvitationHook from './createBeforeCreateInvitationHook.js';
 import modelNames from '../modelNames.js';
 import { ac, roles } from './organizationAccessControl.js';
 
 const DEFAULT_MEMBERSHIP_LIMIT = 1000000;
+const DEFAULT_INVITATION_LIMIT = 1000000;
 
 // Organizations are always on - the membership and boundary mechanism for every
 // app. member.role carries BetterAuth's org-authority tier and nothing else, so
@@ -78,6 +80,11 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     membershipLimit: Number.isFinite(authConfig.organizations?.membershipLimit)
       ? authConfig.organizations.membershipLimit
       : DEFAULT_MEMBERSHIP_LIMIT,
+    // BetterAuth's own cap of 100 open invitations is held open: its count
+    // never goes past the adapter's default page of 100 rows, so it cannot
+    // enforce a larger limit. createBeforeCreateInvitationHook enforces
+    // auth.organizations.invitationLimit instead.
+    invitationLimit: DEFAULT_INVITATION_LIMIT,
     schema: {
       organization: {
         modelName: modelNames.organization,
@@ -146,6 +153,12 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
       afterCreateOrganization: createAfterCreateOrganizationHook({
         creatorAppRoles: authConfig.organizations.creatorAppRoles,
         getAuth,
+      }),
+      beforeCreateInvitation: createBeforeCreateInvitationHook({
+        getAuth,
+        invitationLimit: Number.isFinite(authConfig.organizations?.invitationLimit)
+          ? authConfig.organizations.invitationLimit
+          : DEFAULT_INVITATION_LIMIT,
       }),
     },
     sendInvitationEmail,
