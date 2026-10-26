@@ -40,6 +40,18 @@ test('_base64.decode a base64url string without padding', () => {
   ).toEqual('café 日本😂');
 });
 
+test('_base64.decode a string with leading or trailing whitespace', () => {
+  expect(base64({ params: 'SGVsbG8=\n', location: 'locationId', methodName: 'decode' })).toEqual(
+    'Hello'
+  );
+  expect(
+    base64({ params: 'SGVsbG8gd29ybGQh\n', location: 'locationId', methodName: 'decode' })
+  ).toEqual('Hello world!');
+  expect(base64({ params: ' SGVsbG8= ', location: 'locationId', methodName: 'decode' })).toEqual(
+    'Hello'
+  );
+});
+
 test('_base64.decode throws when the decoded bytes are not valid UTF-8', () => {
   expect(() =>
     base64({ params: 'Y2Fm6Q==', location: 'locationId', methodName: 'decode' })
