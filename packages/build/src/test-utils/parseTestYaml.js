@@ -17,19 +17,16 @@
 import { type } from '@lowdefy/helpers';
 import YAML, { isMap, isSeq, isPair, isScalar } from 'yaml';
 
-function getLineNumber(content, offset) {
-  if (offset == null || offset < 0) return null;
-  return content.substring(0, offset).split('\n').length;
-}
+import createGetLineNumber from '../build/buildRefs/createGetLineNumber.js';
 
-function addLineNumbersAndRefs(node, content, refCounter) {
+function addLineNumbersAndRefs(node, getLineNumber, refCounter) {
   if (isMap(node)) {
     const obj = {};
     const refId = String(refCounter.next++);
     obj['~r'] = refId;
     if (node.range) {
       Object.defineProperty(obj, '~l', {
-        value: getLineNumber(content, node.range[0]),
+        value: getLineNumber(node.range[0]),
         enumerable: false,
         writable: true,
         configurable: true,
@@ -39,9 +36,9 @@ function addLineNumbersAndRefs(node, content, refCounter) {
       if (isPair(pair) && isScalar(pair.key)) {
         const key = pair.key.value;
         const value = pair.value;
-        const keyLineNumber = pair.key.range ? getLineNumber(content, pair.key.range[0]) : null;
+        const keyLineNumber = pair.key.range ? getLineNumber(pair.key.range[0]) : null;
         if (isMap(value)) {
-          const mapResult = addLineNumbersAndRefs(value, content, refCounter);
+          const mapResult = addLineNumbersAndRefs(value, getLineNumber, refCounter);
           if (keyLineNumber) {
             Object.defineProperty(mapResult, '~l', {
               value: keyLineNumber,
@@ -52,7 +49,7 @@ function addLineNumbersAndRefs(node, content, refCounter) {
           }
           obj[key] = mapResult;
         } else if (isSeq(value)) {
-          const arrResult = addLineNumbersAndRefs(value, content, refCounter);
+          const arrResult = addLineNumbersAndRefs(value, getLineNumber, refCounter);
           if (keyLineNumber) {
             Object.defineProperty(arrResult, '~l', {
               value: keyLineNumber,
@@ -78,7 +75,7 @@ function addLineNumbersAndRefs(node, content, refCounter) {
     arr['~r'] = refId;
     if (node.range) {
       Object.defineProperty(arr, '~l', {
-        value: getLineNumber(content, node.range[0]),
+        value: getLineNumber(node.range[0]),
         enumerable: false,
         writable: true,
         configurable: true,
@@ -86,9 +83,9 @@ function addLineNumbersAndRefs(node, content, refCounter) {
     }
     for (const item of node.items) {
       if (isMap(item)) {
-        arr.push(addLineNumbersAndRefs(item, content, refCounter));
+        arr.push(addLineNumbersAndRefs(item, getLineNumber, refCounter));
       } else if (isSeq(item)) {
-        arr.push(addLineNumbersAndRefs(item, content, refCounter));
+        arr.push(addLineNumbersAndRefs(item, getLineNumber, refCounter));
       } else if (isScalar(item)) {
         arr.push(item.value);
       } else {
@@ -128,7 +125,7 @@ function parseTestYaml(yamlContent) {
     throw new Error(doc.errors[0].message);
   }
   const refCounter = { next: 1 };
-  return addLineNumbersAndRefs(doc.contents, yamlContent, refCounter);
+  return addLineNumbersAndRefs(doc.contents, createGetLineNumber(yamlContent), refCounter);
 }
 
 export default parseTestYaml;

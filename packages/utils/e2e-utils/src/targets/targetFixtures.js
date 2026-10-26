@@ -59,6 +59,37 @@ const grid = `
   </div>
 </div>`;
 
+const tableGrid = `
+<div id="bl-people">
+  <div class="lf-table" role="grid">
+    <div class="lf-table-header">
+      <div class="lf-table-row lf-table-group-row" role="row">
+        <div class="lf-table-gridcell" data-group="person" role="columnheader"><button aria-label="Collapse"></button></div>
+      </div>
+      <div class="lf-table-row" data-row-index="-1" role="row">
+        <div class="lf-table-gridcell" data-col-key="select" data-lf-cell="" data-lf-header="" role="columnheader"><input type="checkbox" /></div>
+        <div class="lf-table-gridcell" data-col-key="name" data-lf-cell="" data-lf-header="" role="columnheader"><span>Name</span></div>
+        <div class="lf-table-gridcell" data-col-key="actions" data-lf-cell="" data-lf-header="" role="columnheader"><span>Actions</span></div>
+      </div>
+    </div>
+    <div class="lf-table-body">
+      <div class="lf-table-row" data-row-index="0" data-row-key="a1" role="row">
+        <div class="lf-table-gridcell" data-col-key="name" role="gridcell">Jane</div>
+        <div class="lf-table-gridcell" data-col-key="actions" role="gridcell"><button><span>Edit</span></button><button><span>Delete</span></button></div>
+      </div>
+      <div class="lf-table-row" data-row-index="1" data-row-key="b2" role="row">
+        <div class="lf-table-gridcell" data-col-key="name" role="gridcell">Sam</div>
+        <div class="lf-table-gridcell" data-col-key="actions" role="gridcell"><button><span>Edit</span></button><button><span>Delete</span></button></div>
+      </div>
+    </div>
+    <div class="lf-table-footer" role="rowgroup">
+      <div class="lf-table-row lf-table-summary-row" data-summary="row" role="row">
+        <div class="lf-table-gridcell" data-col-key="actions" role="gridcell"><button><span>Export</span></button></div>
+      </div>
+    </div>
+  </div>
+</div>`;
+
 function selectorOptions({ blockId, options }) {
   return `
 <div id="bl-${blockId}">
@@ -254,6 +285,54 @@ const targetFixtures = [
     clicked: '#bl-card_title h4',
     target: target({ block_id: 'card_title' }),
     blockIds: ['card_title', 'card'],
+    resolvable: true,
+    variants: [],
+  },
+  {
+    name: 'Table cell button by row and text',
+    html: tableGrid,
+    element: '[data-row-index="1"] [data-col-key="actions"] button:nth-of-type(1)',
+    clicked: '[data-row-index="1"] [data-col-key="actions"] button:nth-of-type(1) span',
+    target: target({ block_id: 'people', row: 1, column: 'actions', text: 'Edit' }),
+    blockIds: ['people'],
+    resolvable: true,
+    variants: [{ block_id: 'people', row: 1, text: 'Edit' }],
+  },
+  {
+    name: 'Table row button, by row and text only',
+    html: tableGrid,
+    element: '[data-row-index="0"] [data-col-key="actions"] button:nth-of-type(2)',
+    clicked: '[data-row-index="0"] [data-col-key="actions"] button:nth-of-type(2) span',
+    target: target({ block_id: 'people', row: 0, column: 'actions', text: 'Delete' }),
+    blockIds: ['people'],
+    resolvable: true,
+    variants: [{ block_id: 'people', row: 0, text: 'Delete' }],
+  },
+  {
+    name: 'Table header cell is no row or cell',
+    html: tableGrid,
+    element: '[role="columnheader"][data-col-key="name"]',
+    target: target({ block_id: 'people' }),
+    blockIds: ['people'],
+    resolvable: false,
+    variants: [],
+  },
+  {
+    name: 'Table header control is counted across the block, not the header row',
+    html: tableGrid,
+    element: '[data-row-index="-1"] input[type="checkbox"]',
+    target: target({ block_id: 'people', nth: 1 }),
+    blockIds: ['people'],
+    resolvable: true,
+    variants: [],
+  },
+  {
+    name: 'Table summary row control is in no row or cell',
+    html: tableGrid,
+    element: '.lf-table-summary-row button',
+    clicked: '.lf-table-summary-row button span',
+    target: target({ block_id: 'people', text: 'Export' }),
+    blockIds: ['people'],
     resolvable: true,
     variants: [],
   },

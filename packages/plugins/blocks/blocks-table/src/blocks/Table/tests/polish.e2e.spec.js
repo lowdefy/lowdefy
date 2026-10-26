@@ -311,30 +311,21 @@ test.describe('Table visual polish', () => {
     expect(cells.some((cell) => cell.hidden > 0)).toBe(true);
   });
 
-  test('stacked avatars leave the initials of every avatar uncovered', async ({ page }) => {
-    const overlaps = await table(page, 'crm').evaluate((root) => {
+  test('a group of avatars sits side by side, no avatar covering another', async ({ page }) => {
+    const gaps = await table(page, 'crm').evaluate((root) => {
       const result = [];
-      root.querySelectorAll('.lf-table-body .lf-table-people').forEach((stack) => {
-        const avatars = Array.from(stack.children);
+      root.querySelectorAll('.lf-table-body .lf-table-people').forEach((group) => {
+        const avatars = Array.from(group.children);
         for (let i = 0; i < avatars.length - 1; i++) {
-          const text = avatars[i].firstChild;
-          if (!text || text.nodeType !== Node.TEXT_NODE) continue;
-          const range = document.createRange();
-          range.selectNodeContents(avatars[i]);
-          const glyphs = range.getBoundingClientRect();
-          const next = avatars[i + 1];
-          const ring = Number.parseFloat(getComputedStyle(next).boxShadow.split(' ').at(-1)) || 0;
-          result.push({
-            initials: text.textContent,
-            covered: glyphs.right - (next.getBoundingClientRect().left - ring),
-          });
+          result.push(
+            avatars[i + 1].getBoundingClientRect().left - avatars[i].getBoundingClientRect().right
+          );
         }
       });
       return result;
     });
-    expect(overlaps.length).toBeGreaterThan(5);
-    // The text box includes the glyphs' side bearings, so half a pixel of it may sit under the ring.
-    overlaps.forEach(({ covered }) => expect(covered).toBeLessThanOrEqual(0.5));
+    expect(gaps.length).toBeGreaterThan(5);
+    gaps.forEach((gap) => expect(gap).toBe(2));
   });
 
   test('a single person shows the full name as a title when it is cut', async ({ page }) => {
@@ -359,12 +350,59 @@ test.describe('Table visual polish', () => {
         descriptionTop: description.top,
       };
     });
-    expect(boxes.avatar.height).toBe(32);
+    expect(boxes.avatar.height).toBe(24);
     expect(isInsideBox(boxes.avatar, boxes.cell)).toBe(true);
     expect(boxes.descriptionTop).toBeGreaterThanOrEqual(boxes.nameBottom - 0.5);
     await expect(
       row(page, 'members', 2).locator('[data-col-key="name"] .lf-table-person-description')
     ).toHaveCount(0);
+  });
+
+  test('every avatar is one size and a whole circle, with or without a description', async ({
+    page,
+  }) => {
+    for (const id of ['members', 'crm']) {
+      const avatars = await table(page, id).evaluate((root) =>
+        Array.from(root.querySelectorAll('.lf-table-body .lf-table-avatar')).map((avatar) => {
+          const box = avatar.getBoundingClientRect();
+          // The avatar's visible box: its own box cut by every ancestor up to the body that clips.
+          const visible = { top: box.top, bottom: box.bottom, left: box.left, right: box.right };
+          let node = avatar.parentElement;
+          while (node && !node.classList.contains('lf-table-body')) {
+            const style = getComputedStyle(node);
+            if (style.overflowY !== 'visible') {
+              const clip = node.getBoundingClientRect();
+              visible.top = Math.max(visible.top, clip.top);
+              visible.bottom = Math.min(visible.bottom, clip.bottom);
+            }
+            if (style.overflowX !== 'visible') {
+              const clip = node.getBoundingClientRect();
+              visible.left = Math.max(visible.left, clip.left);
+              visible.right = Math.min(visible.right, clip.right);
+            }
+            node = node.parentElement;
+          }
+          return {
+            width: box.width,
+            height: box.height,
+            cutHeight: box.height - (visible.bottom - visible.top),
+            radius: getComputedStyle(avatar).borderRadius,
+            fontSize: getComputedStyle(avatar).fontSize,
+          };
+        })
+      );
+      expect(avatars.length).toBeGreaterThan(1);
+      avatars.forEach((avatar) => {
+        expect(avatar).toMatchObject({ width: 24, height: 24, radius: '50%', fontSize: '10px' });
+        expect(avatar.cutHeight).toBeLessThanOrEqual(0.5);
+      });
+    }
+    const nameLefts = await table(page, 'members').evaluate((root) =>
+      Array.from(root.querySelectorAll('.lf-table-body .lf-table-person-name')).map(
+        (name) => name.getBoundingClientRect().left
+      )
+    );
+    expect(nameLefts).toEqual([nameLefts[0], nameLefts[0]]);
   });
 
   test('row separators run the full width of a table wider than its columns', async ({ page }) => {

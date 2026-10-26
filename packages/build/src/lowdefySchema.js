@@ -1568,6 +1568,16 @@ export default {
                 minimum: 'Auth "organizations.membershipLimit" should be at least 1.',
               },
             },
+            invitationLimit: {
+              type: 'integer',
+              minimum: 1,
+              description:
+                'The most open invitations an organization may have. Defaults to 1000000, effectively open. Creating an invitation is refused once an organization has this many pending, unexpired invitations.',
+              errorMessage: {
+                type: 'Auth "organizations.invitationLimit" should be an integer.',
+                minimum: 'Auth "organizations.invitationLimit" should be at least 1.',
+              },
+            },
             creatorAppRoles: {
               type: 'array',
               description:
@@ -1589,7 +1599,7 @@ export default {
           errorMessage: {
             type: 'Auth "organizations" should be an object.',
             additionalProperties:
-              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create", "invitationExpiresIn", "membershipLimit" and "creatorAppRoles".',
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create", "invitationExpiresIn", "membershipLimit", "invitationLimit" and "creatorAppRoles".',
           },
         },
         dev: {

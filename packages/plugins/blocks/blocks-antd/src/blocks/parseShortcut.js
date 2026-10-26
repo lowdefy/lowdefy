@@ -14,9 +14,18 @@
   limitations under the License.
 */
 
-function getLineNumber(content, offset) {
-  if (offset == null || offset < 0) return null;
-  return content.substring(0, offset).split('\n').length;
+// A shortcut is modifiers and one key joined by `+`, such as `mod+k` or `shift+alt+1`. `mod` is
+// Cmd on a Mac and Ctrl elsewhere.
+function parseShortcut(shortcut) {
+  if (!shortcut) return null;
+  const parts = shortcut.toLowerCase().split('+');
+  return {
+    mod: parts.includes('mod'),
+    ctrl: parts.includes('ctrl'),
+    shift: parts.includes('shift'),
+    alt: parts.includes('alt'),
+    key: parts[parts.length - 1],
+  };
 }
 
-export default getLineNumber;
+export default parseShortcut;

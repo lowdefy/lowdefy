@@ -168,3 +168,64 @@
             params:
               pageId:
                 _event: pageId
+
+- title: Capped Sections and a Pinned Row
+  description: >
+    Give each group a `limit` to show a few best results with the group's full
+    match count and a "See all N" row, keep an action row pinned last with its
+    own shortcut, and list the results a person opened when the input is empty.
+    `onSeeAll` and `onPinned` carry the group and the typed query.
+  blocks:
+    - id: example_search_sections
+      type: Search
+      properties:
+        indexUrl: /search-index.json
+        recentResults: true
+        recentResultsCount: 4
+        footer: Enter to open · mod+Enter to ask
+        result:
+          title: title
+          description: snippet
+          category: section
+          pageId: pageId
+        groups:
+          - label: Concepts
+            match:
+              section: Concepts
+            limit: 3
+            seeAll:
+              label: See all
+              pageId: docs-search
+              urlQuery:
+                q: '{query}'
+          - label: Blocks
+            match:
+              section: Blocks
+            limit: 3
+        pinned:
+          title: 'Ask the assistant: {query}'
+          icon: Sparkles
+          shortcut: mod+enter
+      events:
+        onSelect:
+          - id: navigate
+            type: Link
+            params:
+              pageId:
+                _event: pageId
+        onSeeAll:
+          - id: see_all
+            type: Link
+            params:
+              pageId:
+                _event: pageId
+              urlQuery:
+                _event: urlQuery
+        onPinned:
+          - id: ask
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Ask: '
+                  - _event: query

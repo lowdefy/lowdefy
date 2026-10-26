@@ -205,10 +205,17 @@ try {
   // The initial build runs outside buildActivity, so no idle GC followed it:
   // without this the manager holds that build's heap (about 130 MB of
   // footprint) for 20 s or more after ready, until V8 shrinks it on its own.
-  // A batch busy now gets its own GC when it ends.
+  // A batch busy now gets its own GC when it ends, and a build that starts
+  // before this GC runs, such as the plugin check below, cancels it.
   if (!context.buildActivity.isBusy()) {
     idleGc.onBuildingChange(false);
   }
+  // Not awaited: the server is usable while the plugins installed after the
+  // initial build are checked (see checkPendingPlugins). A failed build is
+  // reported in the build status, as a watcher's is.
+  context.checkPendingPlugins().catch((error) => {
+    context.logger.error(error?.message ?? error);
+  });
   context.idleChild.start();
   const docsUrl = `${context.url}/lowdefy-docs`;
   context.logger.info(

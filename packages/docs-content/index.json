@@ -1,5 +1,5 @@
 {
-  "version": "7.1.0",
+  "version": "7.0.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -2929,7 +2929,7 @@
       "files": [
         "concepts/core/lowdefy-schema.yaml"
       ],
-      "hash": "443e7b01806e39b6f91a75bef897ab1dba90b2634710aa33774d31f5e0bc117c"
+      "hash": "07740570ecf48abb36652a1b3bd9f06ac773d0689a7080cf850010926f6c0ad1"
     },
     "concepts/menus": {
       "files": [
@@ -3000,7 +3000,7 @@
       "files": [
         "concepts/core/events-and-actions.yaml"
       ],
-      "hash": "a8b0c1eb2ac8b9edcd0147ff46626070efe29ff0db71bd747153d2f2b4408968"
+      "hash": "7eedc6d4ddd784cac10404d15849fc6b7e6581eee1370ec35bc64eaf7b766e3a"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
@@ -3075,7 +3075,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "c60bcec328cf5a615b5769c3c8d876c595559e97ccb9a991a5e9e29fddc54af6"
+      "hash": "46602ff87ff00ffb129234873030a99171e6d9779999296ad5be6520b7ccb86e"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3099,14 +3099,14 @@
         "concepts/advanced/dynamic-page-content.yaml",
         "version.yaml"
       ],
-      "hash": "970684110f1f2af2b359108b45c9f2df8b9fd48deab077979189b2018dfd80cc"
+      "hash": "3d597277f0d72e64c1de2b8d914565a91b5a2787fcb1302cf92e2890badc5327"
     },
     "concepts/ai-agent-docs": {
       "files": [
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "272b0b89ee7569c8def7711e1b870aa96f6c78514923e21bd94bfe80eaee31e9"
+      "hash": "ad2788cb8f88d5cd6352c08b986b91ed4488b9b87e45877463324363676e7491"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3243,7 +3243,7 @@
       "files": [
         "plugins/PostHog.yaml"
       ],
-      "hash": "1fc3ce5bc11c5de9ad59f5fc3444f4087ef23f9ccf22b7b6f57755c3035d1bfe"
+      "hash": "54ef91d2b8cb0d977dda85e0f73fabdd399b489df3fbfbd4681d14dfce0f9d96"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3287,7 +3287,7 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "e1d8446b45156e25e7f1ccd778e89cdbf2303e2ae2797e07339c8bec750c9d31"
+      "hash": "fd01facfe6f0151f1049d4d65dfea08467df02b009376f5800a03e68d35c4533"
     },
     "user-authentication/auth-steps": {
       "files": [
@@ -3347,7 +3347,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "9cd08e3eda9c4b78c12cd0d8af7c15c032166cf303bca6923645abe5670e373e"
+      "hash": "94fd498047ff9b857bc2ac3d2c8832f39e83beeeff6fb107a950635278c96eb8"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -4891,7 +4891,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "e3b57250865bdc78e88631c7da855e959b5bde8f0f0a3fddc1fe2aded583f45e"
+      "hash": "e8b01fcbdcee058f34dcfce8354e46b41542ee891d0a54121ffdf371c8a91bc2"
     },
     "connections/mssql": {
       "files": [
@@ -5103,7 +5103,7 @@
         "actions/PostHogInit.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "29305f9c60c7163e16397d3518cad8c223326021c06325d1780c0f3e7ca9c367"
+      "hash": "37c86efeee835191f973bef8a9a198034bb9d2605e1bdaae1b98ee26dfb77d80"
     },
     "actions/posthogoptin": {
       "files": [

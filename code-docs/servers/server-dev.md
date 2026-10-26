@@ -148,7 +148,7 @@ server-dev/
 │   └── watchers/
 │       ├── lowdefyBuildWatcher.mjs   # Config, local modules and ref map files: skeleton vs page
 │       ├── envWatcher.mjs
-│       ├── pluginSourceWatcher.mjs   # Local plugin packages → rebuild (+ restart if server-side)
+│       ├── pluginSourceWatcher.mjs   # Local plugin packages → rebuild (+ restart if server code)
 │       ├── restartRequestWatcher.mjs # build/.restart from the dev tools → rebuild + restart
 │       └── serverPackageWatcher.mjs  # Server package.json from a page build → install + restart
 ├── vite.config.js
@@ -208,6 +208,8 @@ context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
 if (!(await startFirstServer(context))) {
   context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
 }
+// Not awaited: builds again for plugins installed after the initial build.
+context.checkPendingPlugins().catch((error) => context.logger.error(error?.message ?? error));
 if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
   opener(`http://localhost:${context.options.port}`);
 }
@@ -609,20 +611,13 @@ function initialBuild(context) {
     await context.lowdefyBuild({ pluginInstallFollows: true });
     await context.checkMockUserWarning();
     await context.installPlugins();
-    if (
-      !context.options.skipPluginChecks &&
-      pluginChecksNeedRebuild({
-        buildDirectory: context.directories.build,
-        serverDirectory: context.directories.server,
-      })
-    ) {
-      await context.lowdefyBuild();
-    }
   };
 }
 ```
 
-The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. Once `installPlugins` has installed it, the build runs once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)). The first build passes `pluginInstallFollows`, so it holds its `did not run: package not installed` warnings; the build after the install warns for any plugin still missing.
+The first build cannot check a plugin that is not installed yet, so it lists the plugin in `plugin-checks-pending.json`. `installPlugins` installs it, and `checkPendingPlugins` (`manager/processes/checkPendingPlugins.mjs`) builds once more when that checks something new (see `pluginChecksNeedRebuild` in [build-pipeline.md](../architecture/build-pipeline.md)), unless plugin checks are skipped. The first build passes `pluginInstallFollows`, so it holds its `did not run: package not installed` warnings; the build after the install warns for any plugin still missing.
+
+`run.mjs` starts `checkPendingPlugins` once the first child has answered, and does not await it. The checks only add warnings or errors, so the first build's output serves meanwhile, and on a fresh checkout of a large app the time to a usable server is one config build instead of two. The build runs inside `buildActivity.track`, so `building` is true and `lowdefy_build_status({ wait: true })` reads the checked build, then `syncServer` runs, as after a watcher's build. It does not call `reloadClients`: the checks change no output a tab reads, and a reload resets the page of whoever is using it. A failed build publishes nothing, so it is not synced; it is reported in the build status and logged, like a watcher's. The idle GC after the first start is scheduled before this build starts, which cancels it, so the GC never runs during the check build.
 
 A plugin's `./checks` and schemas are imported once per dev server process. Rules are functions, so they can't come back from `importFresh`'s worker, which copies its result by structured clone. An edit to a local plugin's rules or schemas takes effect when the dev server restarts.
 
@@ -790,9 +785,24 @@ Published packages cannot change under a running server. The whole package is wa
 `node_modules` and dot-folders, since a plugin may be imported from its sources or from a build
 output its own watcher writes. Any change rebuilds the config — which reads each plugin's type
 list, so a new type is defined and a build a broken plugin failed clears once it is fixed — and
-reloads the clients. A change to a plugin with server-side types (per the last build's
-`customTypesMap.json`) also restarts the server, whose ESM cache holds the old modules; block,
-action and client-operator code is Vite's to hot-replace.
+reloads the clients. A change to a file the server imports also restarts the server, whose ESM
+cache holds the old modules; block, action and client-operator code is Vite's to hot-replace, and
+a restart would only drop the requests in flight. After the build, `listServerPluginFiles` follows
+the imports of the build's server-side plugin import files (`build/plugins/*.js`, less the client
+bundle's `actions.js`, `blocks.js`, `icons.js`, `operators/client.js` and
+`operators/clientJsMap.js`) through the files of every local package, so a plugin that only holds
+steps, or a helper a connection imports from another local plugin, counts too. Package
+specifiers and `#` subpath imports resolve through the package's `exports` and `imports` with
+the conditions Vite's SSR resolver matches (`import`, `module`, `node`, `development`,
+`default`), so a package that also exports CommonJS is walked through the modules the server
+loads (`resolvePackageSpecifier`); file imports try Vite's extensions and index files, and a
+TypeScript import of an output name (`./find.js`) its source (`resolveFile`). A changed file in
+the walked set restarts, as does a changed `package.json` of a package the server imports from.
+Where the walk cannot be sure (an import it cannot resolve, or a dynamic import of a computed
+path) it lists the package in `unsureDirs`, and any change in that package restarts, as before.
+Imports are found by patterns over source with its comments removed (string literals are kept
+whole, so a `/*` or `//` inside one stays text), not a parser: a stray match in a string adds a
+file or marks its package unsure, which errs towards a restart.
 
 ### Publishing a Build
 
@@ -1171,7 +1181,7 @@ export default defineConfig(({ mode }) => ({
 | Client plugin code / CSS change                                      | Vite                  | HMR module replacement                   | In-place update (~hundreds of ms, no restart)    |
 | Server artifact change (auth, connections, server operators, config) | syncServer            | Restart child                            | Hard restart                                     |
 | `package.json` change                                                | syncServer            | Install + lowdefy build + restart        | Hard restart                                     |
-| Local plugin package change                                          | pluginSourceWatcher   | Lowdefy build (+ restart if server-side) | Soft reload or hard restart                      |
+| Local plugin package change                                          | pluginSourceWatcher   | Lowdefy build (+ restart if server code) | Soft reload or hard restart                      |
 | `.env` change                                                        | envWatcher            | Read env + lowdefy build + restart       | Hard restart                                     |
 
 ## Mock User for Testing

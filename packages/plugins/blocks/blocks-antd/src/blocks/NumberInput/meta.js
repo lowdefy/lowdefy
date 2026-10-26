@@ -143,6 +143,7 @@ export default {
       },
       title: {
         type: 'string',
+        textKind: 'html',
         description: 'Number input label title - supports html.',
       },
       variant,

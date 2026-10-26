@@ -111,3 +111,17 @@ test('an error from another realm, which fails instanceof Error, is summarised a
     code: 23,
   });
 });
+
+test('a status above a call that timed out is left out, as the client made it up', () => {
+  const timeout = new DOMException('The operation was aborted due to timeout', 'TimeoutError');
+  const gateway = new Error('Gateway request failed', { cause: timeout });
+  gateway.name = 'GatewayResponseError';
+  gateway.statusCode = 500;
+
+  expect(errorSummaryForLog(gateway)).toEqual({
+    name: 'GatewayResponseError',
+    message: 'Gateway request failed',
+    // A DOMException's legacy code: TIMEOUT_ERR.
+    cause: { name: 'TimeoutError', message: 'The operation was aborted due to timeout', code: 23 },
+  });
+});
