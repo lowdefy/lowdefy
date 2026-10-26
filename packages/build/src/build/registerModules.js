@@ -28,11 +28,12 @@ import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateModuleAuthManifest from './validateModuleAuthManifest.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import { makeShouldStop } from './buildRefs/deferredRegions.js';
+import moduleEntryLocation from '../utils/moduleEntryLocation.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '') {
+function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '', location = {}) {
   for (const [varName, varDef] of Object.entries(varDefs)) {
     const fullName = prefix ? `${prefix}.${varName}` : varName;
 
@@ -40,7 +41,8 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
       if (!type.isNone(consumerVars[varName]) && !type.isObject(consumerVars[varName])) {
         throw new ConfigError(
           `Module "${entryId}" (${source}) var "${fullName}" must be type "object" ` +
-            `(has properties) but got "${type.typeOf(consumerVars[varName])}".`
+            `(has properties) but got "${type.typeOf(consumerVars[varName])}".`,
+          location
         );
       }
       const consumerObj = type.isObject(consumerVars[varName]) ? consumerVars[varName] : {};
@@ -50,11 +52,12 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
             `Module "${entryId}" (${source}) var "${fullName}" has undeclared ` +
               `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(
                 ', '
-              )}.`
+              )}.`,
+            location
           );
         }
       }
-      validateRequiredVars(varDef.properties, consumerObj, entryId, source, fullName);
+      validateRequiredVars(varDef.properties, consumerObj, entryId, source, fullName, location);
     } else if (
       varDef.required &&
       type.isUndefined(varDef.default) &&
@@ -63,7 +66,8 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
       throw new ConfigError(
         `Module "${entryId}" (${source}) requires var "${fullName}"` +
           (varDef.description ? `\n  - ${varDef.description}` : '') +
-          `\n  - Define it in lowdefy.yaml under modules[id=${entryId}].vars.${fullName}`
+          `\n  - Define it in lowdefy.yaml under modules[id=${entryId}].vars.${fullName}`,
+        location
       );
     }
   }
@@ -128,7 +132,7 @@ function assertStaticComponentsList({ components, entryId, filePath }) {
   }
 }
 
-function validateVarTypes(varDefs, resolvedVarCache, entryId, source, prefix = '') {
+function validateVarTypes(varDefs, resolvedVarCache, entryId, source, prefix = '', location = {}) {
   for (const [varName, varDef] of Object.entries(varDefs)) {
     const fullName = prefix ? `${prefix}.${varName}` : varName;
     const value = resolvedVarCache[fullName];
@@ -143,40 +147,47 @@ function validateVarTypes(varDefs, resolvedVarCache, entryId, source, prefix = '
           `Module "${entryId}" (${source}) var "${fullName}" is typed "${varDef.type}" ` +
             `but received a runtime operator "${operatorKey}". ` +
             `Use the build-time equivalent "${suggestBuildOperator(operatorKey)}" instead.` +
-            (varDef.description ? `\n  - ${varDef.description}` : '')
+            (varDef.description ? `\n  - ${varDef.description}` : ''),
+          location
         );
       }
       if (type.typeOf(value) !== varDef.type) {
         throw new ConfigError(
           `Module "${entryId}" (${source}) var "${fullName}" must be type ` +
             `"${varDef.type}" but got "${type.typeOf(value)}".` +
-            (varDef.description ? `\n  - ${varDef.description}` : '')
+            (varDef.description ? `\n  - ${varDef.description}` : ''),
+          location
         );
       }
     }
 
     if (varDef.properties) {
-      validateVarTypes(varDef.properties, resolvedVarCache, entryId, source, fullName);
+      validateVarTypes(varDef.properties, resolvedVarCache, entryId, source, fullName, location);
     }
   }
 }
 
 async function resolveLocalManifest({ entry, resolvedPaths, context }) {
+  const location = moduleEntryLocation({ entry, context });
   if (!entry.id || !type.isString(entry.id)) {
-    throw new ConfigError("Module entry 'id' is required and must be a string.");
+    throw new ConfigError("Module entry 'id' is required and must be a string.", location);
   }
   if (entry.id.includes('/')) {
     throw new ConfigError(
       `Module entry id "${entry.id}" must not contain '/'. ` +
-        `Use a flat identifier like "team-users".`
+        `Use a flat identifier like "team-users".`,
+      location
     );
   }
   if (!entry.source || !type.isString(entry.source)) {
-    throw new ConfigError(`Module entry "${entry.id}": 'source' is required and must be a string.`);
+    throw new ConfigError(
+      `Module entry "${entry.id}": 'source' is required and must be a string.`,
+      location
+    );
   }
 
   if (Object.hasOwn(context.modules, entry.id)) {
-    throw new ConfigError(`Duplicate module entry id "${entry.id}".`);
+    throw new ConfigError(`Duplicate module entry id "${entry.id}".`, location);
   }
 
   const { packageRoot, moduleRoot, isLocal } = resolvedPaths;
@@ -287,6 +298,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     setKey(context.modules, entry.id, {
       id: entry.id,
       source: entry.source,
+      location,
       packageRoot,
       moduleRoot,
       isLocal,
@@ -405,7 +417,14 @@ async function resolveFullManifest({ entryId, context }) {
   // Validate var types against lazily-resolved values
   const varDefs = moduleEntry.varDefs;
   if (Object.keys(varDefs).length > 0) {
-    validateVarTypes(varDefs, moduleEntry.resolvedVarCache, entryId, moduleEntry.source);
+    validateVarTypes(
+      varDefs,
+      moduleEntry.resolvedVarCache,
+      entryId,
+      moduleEntry.source,
+      '',
+      moduleEntry.location
+    );
   }
 }
 

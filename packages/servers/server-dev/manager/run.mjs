@@ -214,7 +214,7 @@ try {
   // initial build are checked (see checkPendingPlugins). A failed build is
   // reported in the build status, as a watcher's is.
   context.checkPendingPlugins().catch((error) => {
-    context.logger.error(error?.message ?? error);
+    context.logger.error(error);
   });
   context.idleChild.start();
   const docsUrl = `${context.url}/lowdefy-docs`;

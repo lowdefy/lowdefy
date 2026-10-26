@@ -15,6 +15,7 @@
 */
 
 import { EventEmitter } from 'node:events';
+import { PassThrough } from 'node:stream';
 
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
@@ -41,7 +42,7 @@ function createContext({ mailSink }) {
 
 beforeEach(() => {
   mockSpawn.mockImplementation(() =>
-    Object.assign(new EventEmitter(), { stderr: new EventEmitter() })
+    Object.assign(new EventEmitter(), { stderr: new PassThrough() })
   );
   process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
 });

@@ -52,7 +52,7 @@ vi.doMock('./reviewPage.js', () => ({
   default: mockReviewPage,
 }));
 
-const { ConfigError } = await import('@lowdefy/errors');
+const { ConfigError, UserError } = await import('@lowdefy/errors');
 const { default: runRequest } = await import('./runRequest.js');
 
 const honoContext = { req: { path: '/lowdefy-docs/mcp' } };
@@ -103,10 +103,10 @@ test('runRequest logs the user it ran the request as', async () => {
   });
 });
 
-test('runRequest throws a ConfigError when user is neither an object nor a data set user', async () => {
+test('runRequest throws a UserError when user is neither an object nor a data set user', async () => {
   await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', user: 'admin', honoContext })
-  ).rejects.toThrow(ConfigError);
+  ).rejects.toThrow(UserError);
   await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', user: ['admin'], honoContext })
   ).rejects.toThrow(/run_request: "user" should be a user object/);
@@ -160,10 +160,10 @@ test('runRequest does not note stale config for a page that is current', async (
   expect(result.staleConfig).toBeUndefined();
 });
 
-test('runRequest throws a ConfigError when saveResponse is not a boolean', async () => {
+test('runRequest throws a UserError when saveResponse is not a boolean', async () => {
   await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', saveResponse: 1, honoContext })
-  ).rejects.toThrow(ConfigError);
+  ).rejects.toThrow(UserError);
   expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
 });
 

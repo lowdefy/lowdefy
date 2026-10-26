@@ -29,6 +29,9 @@ vi.doMock('./loadFrameworkHazards.js', () => ({
   default: mockLoadFrameworkHazards,
 }));
 
+const mockLogger = { info: vi.fn(), warn: vi.fn() };
+vi.doMock('../server/log/createLogger.js', () => ({ default: () => mockLogger }));
+
 const { default: getHazards } = await import('./getHazards.js');
 
 const frameworkHazards = [
@@ -63,12 +66,11 @@ let warnSpy;
 beforeEach(() => {
   mockLoadFrameworkHazards.mockReset();
   mockLoadFrameworkHazards.mockReturnValue(frameworkHazards);
-  warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  warnSpy = mockLogger.warn;
+  warnSpy.mockClear();
 });
 
-afterEach(() => {
-  warnSpy.mockRestore();
-});
+afterEach(() => {});
 
 test('getHazards returns type-attached hazards only when no framework hazard applies', () => {
   mockLoadFrameworkHazards.mockReturnValue([]);

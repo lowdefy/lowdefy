@@ -64,7 +64,9 @@ function lowdefyBuild({ directories, logger, options }) {
       await writeBuildStatus({
         directories,
         status: 'error',
-        errors: error.errors ?? [{ message: error.message }],
+        // A failure before the build's own error collection (a plugin that fails
+        // to import, a failed publish) keeps its name, cause and stack.
+        errors: error.errors ?? [serializeBuildException(error)],
         warnings: error.warnings ?? [],
       });
       throw error;

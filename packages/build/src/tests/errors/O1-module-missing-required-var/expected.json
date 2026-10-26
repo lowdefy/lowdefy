@@ -3,7 +3,11 @@
     {
       "mode": "prod",
       "expectThrow": true,
-      "errorContains": ["requires var \"color\"", "widget"]
+      "errorContains": [
+        "requires var \"color\"",
+        "widget",
+        "lowdefy.yaml:6\n[ConfigError] Module \"widget\""
+      ]
     }
   ]
 }

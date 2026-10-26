@@ -20,6 +20,9 @@ import path from 'path';
 
 import { type } from '@lowdefy/helpers';
 
+import createLogger from '../server/log/createLogger.js';
+
+const logger = createLogger();
 // Read the way Playwright's own installer reads it, so a value that turns
 // Playwright's download off turns this one off too.
 function isDownloadSkipped() {
@@ -56,7 +59,7 @@ function runInstall() {
     path.dirname(require.resolve('playwright-core/package.json')),
     'cli.js'
   );
-  console.info('Installing chromium-headless-shell for the dev server browser tools.');
+  logger.info('Installing chromium-headless-shell for the dev server browser tools.');
   return new Promise((resolve) => {
     let settled = false;
     let stderr = '';
@@ -66,7 +69,7 @@ function runInstall() {
       settled = true;
       clearTimeout(timer);
       if (!installed) {
-        console.warn(
+        logger.warn(
           `Could not install chromium-headless-shell (${reason}). The dev server browser tools use system Chrome when it is installed. Run: npx playwright install chromium-headless-shell`
         );
       }

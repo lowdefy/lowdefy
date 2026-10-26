@@ -64,7 +64,7 @@ test('Print and log error with full context', async () => {
   expect(axiosArguments.data.message).toEqual('Test error');
   expect(axiosArguments.data.name).toEqual('Error');
   expect(axiosArguments.data.source).toEqual('cli');
-  expect(axiosArguments.data.stack).toMatch('Error: Test error');
+  expect(axiosArguments.data.stack).toMatch(/^ +at /);
   expect(axiosArguments.data.lowdefyVersion).toEqual('lowdefyVersion');
   expect(axiosArguments.data.command).toEqual('command');
 });
@@ -91,7 +91,7 @@ test('Print and log error with starting context', async () => {
   expect(axiosArguments.data.message).toEqual('Test error');
   expect(axiosArguments.data.name).toEqual('Error');
   expect(axiosArguments.data.source).toEqual('cli');
-  expect(axiosArguments.data.stack).toMatch('Error: Test error');
+  expect(axiosArguments.data.stack).toMatch(/^ +at /);
   expect(axiosArguments.data.lowdefyVersion).toBe(undefined);
   expect(axiosArguments.data.command).toBe(undefined);
 });

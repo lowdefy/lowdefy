@@ -71,7 +71,7 @@ class BatchChanges {
       this.running = false;
     } catch (error) {
       this.running = false;
-      this.context.logger.error(error?.message ?? error);
+      this.context.logger.error(error);
     }
     this._settle();
   }

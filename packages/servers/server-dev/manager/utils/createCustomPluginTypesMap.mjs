@@ -78,10 +78,12 @@ async function createCustomPluginTypesMap({ cache = false, directories, logger }
           : await importFresh(entryPath);
         return types.default ?? types;
       } catch (e) {
-        logger.error(`Failed to import plugin "${plugin.name}".`);
+        // The reason (a syntax error, a missing dependency) goes in the message,
+        // since the build status shows agents the message and cause, not this log.
+        logger.error(`Failed to import plugin "${plugin.name}": ${e.message}`);
         logger.debug(e);
         logger.info('If the plugin was added while the server was running, restart the server.');
-        throw new Error(`Failed to import plugin "${plugin.name}".`);
+        throw new Error(`Failed to import plugin "${plugin.name}": ${e.message}`, { cause: e });
       }
     })
   );

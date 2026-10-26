@@ -16,6 +16,7 @@
 
 import { spawn } from 'child_process';
 import crypto from 'crypto';
+import readline from 'readline';
 
 import createServerEnv from '../utils/createServerEnv.mjs';
 import killTaggedBrowser from '../utils/killTaggedBrowser.mjs';
@@ -98,14 +99,11 @@ function startServer(context) {
     }
   );
 
+  // Whole lines, not chunks: a chunk boundary can fall inside a line, which
+  // split an uncaught crash's stack into many separate ERROR fragments.
   const stdErrLineHandler = createStdErrLineHandler({ context });
-  devServer.stderr.on('data', (data) => {
-    data
-      .toString('utf8')
-      .split('\n')
-      .forEach((line) => {
-        if (line) stdErrLineHandler(line);
-      });
+  readline.createInterface({ input: devServer.stderr, crlfDelay: Infinity }).on('line', (line) => {
+    if (line) stdErrLineHandler(line);
   });
 
   context.logger.debug(`Started dev server with pid ${devServer.pid}.`);

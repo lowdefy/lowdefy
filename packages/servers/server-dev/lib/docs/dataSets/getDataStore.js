@@ -18,9 +18,12 @@ import { MongoClient } from 'mongodb';
 import { MongoMemoryReplSet } from 'mongodb-memory-server-core';
 import { DryMongoBinary } from 'mongodb-memory-server-core/lib/util/DryMongoBinary.js';
 
+import createLogger from '../../server/log/createLogger.js';
 import pickDataStorePort from './pickDataStorePort.js';
 import registerDataStoreShutdown from './registerDataStoreShutdown.js';
 import removeDataStoreFiles from './removeDataStoreFiles.js';
+
+const logger = createLogger();
 
 // One store per dev server process. Kept on globalThis because the journey route that opens a data
 // session and the API context that reads it may load as separate module instances (Vite's SSR
@@ -35,8 +38,7 @@ async function announceDownload() {
   const options = await DryMongoBinary.generateOptions();
   const binary = await DryMongoBinary.locateBinary(options);
   if (binary === undefined) {
-    // eslint-disable-next-line no-console
-    console.info(`Downloading MongoDB ${options.version} for journey data sets (once).`);
+    logger.info(`Downloading MongoDB ${options.version} for journey data sets (once).`);
   }
 }
 

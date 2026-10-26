@@ -1052,3 +1052,36 @@ test('MCP lowdefy_device inject forwards the injection to the phone', async () =
   phone.close();
   await client.close();
 });
+
+test('MCP tools/call answers a dev tool that throws as the tool at fault, not the app', async () => {
+  mockScreenshotPage.mockRejectedValueOnce(
+    new TypeError("Cannot read properties of undefined (reading 'page')")
+  );
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_screenshot_page',
+    arguments: { pageId: 'tickets' },
+  });
+
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe(
+    "TypeError: Cannot read properties of undefined (reading 'page') (a fault in the dev server's lowdefy_screenshot_page tool, not in the app; the dev server terminal has the stack)"
+  );
+  await client.close();
+});
+
+test('MCP tools/call answers an expected refusal from a dev tool with its message alone', async () => {
+  const { UserError } = await import('@lowdefy/errors');
+  mockScreenshotPage.mockRejectedValueOnce(new UserError('pageId must be a string.'));
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_screenshot_page',
+    arguments: { pageId: 'tickets' },
+  });
+
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('pageId must be a string.');
+  await client.close();
+});
