@@ -324,6 +324,58 @@ test('checkPolicy leaves plain text with colons alone', () => {
   ).toEqual([]);
 });
 
+test.each([
+  ['a reference', 'INC:42'],
+  ['a short reference', 'R:1'],
+  ['a time format', 'HH:mm'],
+  ['a labelled word', 'Note:see'],
+  ['a mail address', 'mailto:ops@example.com'],
+  ['a phone number', 'tel:+27215550000'],
+])('checkPolicy leaves a one-word value with %s alone in unmarked values', (_, text) => {
+  expect(
+    check([
+      { id: 'a', type: 'Paragraph', properties: { content: text } },
+      { id: 'b', type: 'Box', properties: { items: [{ label: 'Ref', value: text }] } },
+      { id: 'c', type: 'Box', properties: { timeFormat: text } },
+    ])
+  ).toEqual([]);
+});
+
+test.each([
+  ['a script scheme', 'javascript:alert(1)'],
+  ['an upper-case script scheme', 'JavaScript:alert(1)'],
+  ['a vbscript scheme', 'vbscript:msgbox(1)'],
+  ['a data scheme', 'data:text/html;base64,PHNjcmlwdD4='],
+  ['an off-site URL', 'https://evil.example'],
+  ['an upper-case off-site URL', 'HTTPS://evil.example'],
+  ['a blob URL', 'blob:https://evil.example/1'],
+  ['a file URL', 'file:///etc/passwd'],
+  ['a websocket URL', 'wss://evil.example'],
+  ['a control character and a tab inside the scheme', '\u0001 JaVa\tScript:alert(1)'],
+  ['a tab inside an http scheme', 'ht\ttps://evil.example'],
+])('checkPolicy still finds a whole value with %s in unmarked values', (_, text) => {
+  expect(
+    rules(check([{ id: 'b', type: 'Box', properties: { items: [{ label: 'Ref', value: text }] } }]))
+  ).toEqual(['policy.urls blocks.0.properties.items.0.value']);
+});
+
+test('checkPolicy still refuses off-site URLs in URL properties, markdown and CSS url()', () => {
+  const errors = check([
+    { id: 'a', type: 'Anchor', properties: { href: 'https://evil.example' } },
+    { id: 'b', type: 'Paragraph', properties: { content: 'see [here](https://evil.example)' } },
+    { id: 'c', type: 'Box', style: { background: 'url(https://evil.example/p.gif)' } },
+    { id: 'd', type: 'Anchor', properties: { href: 'INC:42' } },
+    { id: 'e', type: 'Paragraph', properties: { content: '[x](javascript:alert(1))' } },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.href',
+    'policy.urls blocks.1.properties.content',
+    'policy.urls blocks.2.style.background',
+    'policy.urls blocks.3.properties.href',
+    'policy.urls blocks.4.properties.content',
+  ]);
+});
+
 test('checkPolicy allows duplicate ids on blocks that do not bind state', () => {
   expect(
     check([
@@ -569,6 +621,181 @@ test('checkPolicy leaves a property the schema opts out with urlKind false to th
   ).toEqual([]);
 });
 
+// A block schema marks how it draws a string with textKind: 'html' through
+// renderHtml, 'text' as escaped text. Markdown and style are never marked.
+const textSchemas = {
+  Descriptions: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          title: { type: 'string', textKind: 'html' },
+          items: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                label: { type: 'string', textKind: 'html' },
+                value: { oneOf: [{ type: 'string', textKind: 'html' }, { type: 'number' }] },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Selector: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          options: {
+            anyOf: [
+              { type: 'array', items: { type: 'string', textKind: 'html' } },
+              {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: { label: { type: 'string', textKind: 'html' }, value: {} },
+                },
+              },
+            ],
+          },
+          placeholder: { type: 'string', textKind: 'text' },
+        },
+      },
+    },
+  },
+  Markdown: {
+    properties: {
+      properties: { type: 'object', properties: { content: { type: 'string' } } },
+    },
+  },
+};
+
+function checkText(blocks, overrides = {}) {
+  return checkPolicy({
+    routes,
+    blocks,
+    policy: { ...policy, blocks: ['Descriptions', 'Selector', 'Markdown'], ...overrides },
+    blockMetas: { ...blockMetas, Selector: { valueType: 'any' } },
+    blockSchemas: textSchemas,
+  });
+}
+
+const writtenText = [
+  'A <b>b</b> and [n](https://x.example)',
+  'See [notes](https://x.example)',
+  'background: url(https://x.example/p.gif)',
+  '//x.example',
+];
+
+test('checkPolicy reads markdown targets, CSS url() and protocol-relative words in an html-drawn property as words', () => {
+  const errors = checkText([
+    {
+      id: 'd',
+      type: 'Descriptions',
+      properties: { items: writtenText.slice(1).map((value) => ({ label: 'What', value })) },
+    },
+    {
+      id: 'form.s',
+      type: 'Selector',
+      properties: { options: [{ label: 'See [notes](https://x.example)', value: 'notes' }] },
+    },
+    {
+      id: 'form.t',
+      type: 'Selector',
+      properties: { options: ['//x.example', 'url(https://x.example/p.gif)'] },
+    },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy keeps the html rule on an html-drawn property', () => {
+  const errors = checkText([
+    {
+      id: 'd',
+      type: 'Descriptions',
+      properties: { title: 'A <b>b</b>', items: [{ label: 'What', value: writtenText[0] }] },
+    },
+    { id: 'form.s', type: 'Selector', properties: { options: [{ label: '<i>x</i>', value: 1 }] } },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.properties.title',
+    'policy.html blocks.0.properties.items.0.value',
+    'policy.html blocks.1.properties.options.0.label',
+  ]);
+  // The markdown target in the same value is words.
+  expect(
+    checkText(
+      [
+        {
+          id: 'd',
+          type: 'Descriptions',
+          properties: { items: [{ label: 'What', value: writtenText[0] }] },
+        },
+      ],
+      { html: true }
+    )
+  ).toEqual([]);
+});
+
+test('checkPolicy checks CSS url() in an html-drawn property when the policy allows tags', () => {
+  const errors = checkText(
+    [
+      {
+        id: 'd',
+        type: 'Descriptions',
+        properties: {
+          title: '<span style="background: url(https://tracker.test/p.gif)">x</span>',
+        },
+      },
+    ],
+    { html: true }
+  );
+  expect(rules(errors)).toEqual(['policy.urls blocks.0.properties.title']);
+});
+
+test('checkPolicy shows tag syntax, markdown, CSS url() and protocol-relative words in a text-drawn property as written', () => {
+  const errors = checkText(
+    writtenText.map((placeholder, index) => ({
+      id: `form.s${index}`,
+      type: 'Selector',
+      properties: { placeholder },
+    }))
+  );
+  expect(errors).toEqual([]);
+});
+
+test.each([
+  ['a script scheme', 'javascript:alert(1)'],
+  ['a script scheme with a space', 'javascript: alert(1)'],
+  ['an off-site URL', 'https://tracker.test/p.gif'],
+  ['a data URL', 'data:text/plain,x'],
+  ['a bare domain', 'acme.co.za'],
+])('checkPolicy reads %s as text in a property drawn as text or HTML', (_, value) => {
+  const errors = checkText([
+    { id: 'd', type: 'Descriptions', properties: { items: [{ label: 'What', value }] } },
+    { id: 'form.s', type: 'Selector', properties: { placeholder: value } },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy keeps every check on the same text in an unmarked property or a style', () => {
+  const errors = checkText([
+    { id: 'm', type: 'Markdown', properties: { content: writtenText[0] } },
+    { id: 'n', type: 'Markdown', properties: { content: writtenText[3] } },
+    { id: 'd', type: 'Descriptions', style: { background: writtenText[2].slice(12) } },
+    { id: 'e', type: 'Descriptions', properties: { items: [{ label: 'n', value: 3 }] } },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.properties.content',
+    'policy.urls blocks.0.properties.content',
+    'policy.urls blocks.1.properties.content',
+    'policy.urls blocks.2.style.background',
+  ]);
+});
+
 // A block that marks nothing (any block without urlKind marks) is judged by key name.
 const unmarkedSchemas = {
   Card: {
@@ -661,5 +888,402 @@ test('checkPolicy refuses content nested deeper than the Dynamic data limit befo
   }
   expect(rules(check([{ id: 'b', type: 'Box', properties: { deep } }]))).toEqual([
     'limits.depth blocks',
+  ]);
+});
+
+// The policy checks a value as a URL only where it is used as a link (a URL key
+// or urlKind mark). State, option values, Table cells drawn as text and text a
+// block draws are data or words.
+// The shapes blocks-antd options.js and table/rowsKind.js mark.
+const dataSchemas = {
+  ...textSchemas,
+  Selector: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          options: {
+            anyOf: [
+              { type: 'array', items: { type: 'string', textKind: 'html' } },
+              { type: 'array', items: { type: 'number' } },
+              {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    label: { type: 'string', textKind: 'html' },
+                    value: {
+                      textKind: 'data',
+                      dataWith: 'label',
+                      oneOf: [
+                        { type: 'string' },
+                        { type: 'number' },
+                        { type: 'object' },
+                        { type: 'array' },
+                      ],
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  Table: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          columns: { type: ['array', 'null'] },
+          expandable: { type: 'object' },
+          data: {
+            type: ['array', 'object'],
+            rowsKind: {
+              columns: 'columns',
+              type: 'type',
+              children: 'children',
+              cell: 'cell',
+              cellRowKeys: ['colorFrom'],
+              drawnBy: ['expandable.template'],
+              defaultType: 'text',
+              textTypes: ['text', 'email', 'phone', 'number', 'date', 'tag', 'tags', 'status'],
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+const dataMetas = {
+  ...blockMetas,
+  Selector: { valueType: 'any' },
+  Table: { valueType: 'object' },
+  Editor: { valueType: 'object' },
+  List: { category: 'list', valueType: 'array' },
+};
+
+function checkData(blocks, overrides = {}) {
+  return checkPolicy({
+    routes,
+    blocks,
+    policy: {
+      ...policy,
+      blocks: ['Box', 'TextInput', 'Descriptions', 'Selector', 'Table', 'Editor', 'List'],
+      ...overrides,
+    },
+    blockMetas: dataMetas,
+    blockSchemas: dataSchemas,
+  });
+}
+
+const typedValues = [
+  'https://acme.co.za',
+  'https://acme.sharepoint.com/sites/policies/Gifts%20policy.pdf',
+  'acme.co.za',
+  'procurement@acme.co.za',
+  'Ladder <b>broke</b>',
+  'see [notes](https://x.example)',
+  'url(https://x.example/p.gif)',
+  '//host',
+  'javascript:alert(1)',
+  'JavaScript: the basics',
+];
+
+test('checkPolicy judges SetState values as data, not as URLs or HTML', () => {
+  const prefill = Object.fromEntries(typedValues.map((value, index) => [`form.f${index}`, value]));
+  const errors = checkData([
+    {
+      id: 'form.f0',
+      type: 'TextInput',
+      events: {
+        onMount: [
+          { id: 'prefill', type: 'SetState', params: prefill },
+          {
+            id: 'nested',
+            type: 'SetState',
+            params: { form: { link: { url: 'https://x.example', href: 'javascript:x' } } },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy still checks operators and state reads in SetState values', () => {
+  const errors = checkData([
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onClick: [
+          {
+            id: 's',
+            type: 'SetState',
+            params: { 'form.a': { _global: 'token' }, 'form.b': { _state: 'user.email' } },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.operators blocks.0.events.onClick.0.params.form.a',
+    'policy.state blocks.0.events.onClick.0.params.form.b',
+  ]);
+});
+
+test('checkPolicy keeps every check on a SetState value an object-valued input draws', () => {
+  const errors = checkData(
+    [
+      { id: 'form.notes', type: 'Editor' },
+      {
+        id: 'form.rows',
+        type: 'List',
+        blocks: [{ id: 'form.rows.$.notes', type: 'Editor' }],
+      },
+      {
+        id: 'b',
+        type: 'Box',
+        events: {
+          onClick: [
+            { id: 'a', type: 'SetState', params: { 'form.notes': { html: '<b>x</b>' } } },
+            { id: 'b', type: 'SetState', params: { form: { notes: 'https://tracker.test/p' } } },
+            { id: 'c', type: 'SetState', params: { 'form.rows.0.notes': '<img src=x>' } },
+            { id: 'd', type: 'SetState', params: { 'form.title': '<b>x</b>' } },
+          ],
+        },
+      },
+    ],
+    wideEvents
+  );
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.2.events.onClick.0.params.form.notes.html',
+    'policy.urls blocks.2.events.onClick.1.params.form.notes',
+    'policy.html blocks.2.events.onClick.2.params.form.rows.0.notes',
+  ]);
+});
+
+test('checkPolicy keeps every check on SetState values when the policy sets no state', () => {
+  const errors = checkData(
+    [
+      {
+        id: 'b',
+        type: 'Box',
+        events: {
+          onClick: [{ id: 's', type: 'SetState', params: { note: '<b>x</b>', link: '//host' } }],
+        },
+      },
+    ],
+    { state: undefined }
+  );
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.events.onClick.0.params.note',
+    'policy.urls blocks.0.events.onClick.0.params.link',
+  ]);
+});
+
+test('checkPolicy refuses a _state read that may draw state the content fills with data', () => {
+  const errors = checkData(
+    [
+      { id: 'form.notes', type: 'Editor' },
+      {
+        id: 'form.site',
+        type: 'Selector',
+        properties: { options: [{ label: 'Site', value: '<b>x</b>' }] },
+      },
+      {
+        id: 'b',
+        type: 'Box',
+        events: {
+          onClick: [
+            { id: 'a', type: 'SetState', params: { 'form.tmp': '<img src=x>' } },
+            { id: 'b', type: 'SetState', params: { 'form.notes': { _state: 'form.tmp' } } },
+            { id: 'c', type: 'DisplayMessage', params: { content: { _state: 'form' } } },
+            { id: 'd', type: 'DisplayMessage', params: { content: { _state: 'form.site' } } },
+            { id: 'e', type: 'SetState', params: { 'form.copy': { _state: 'form.tmp' } } },
+          ],
+        },
+      },
+    ],
+    { ...wideEvents, actions: ['SetState', 'DisplayMessage'] }
+  );
+  expect(rules(errors)).toEqual([
+    'policy.state blocks.2.events.onClick.1.params.form.notes',
+    'policy.state blocks.2.events.onClick.2.params.content',
+    'policy.state blocks.2.events.onClick.3.params.content',
+  ]);
+});
+
+test('checkPolicy allows a _state read of data state in a CallAPI payload or a condition', () => {
+  const errors = checkData(
+    [
+      {
+        id: 'b',
+        type: 'Box',
+        events: {
+          onClick: [
+            { id: 'a', type: 'SetState', params: { 'form.note': '<b>x</b>' } },
+            {
+              id: 'b',
+              type: 'CallAPI',
+              skip: { _state: 'form.note' },
+              params: { endpointId: 'submit', payload: { _state: 'form' } },
+            },
+            {
+              ':if': { _state: 'form.note' },
+              ':then': [{ id: 'c', type: 'SetState', params: { 'form.done': true } }],
+            },
+          ],
+        },
+      },
+    ],
+    wideEvents
+  );
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy judges an option value as data and keeps the html rule on its label', () => {
+  const errors = checkData([
+    {
+      id: 'form.site',
+      type: 'Selector',
+      properties: {
+        options: [
+          ...typedValues.map((value) => ({ label: 'Site', value })),
+          { label: 'Site', value: { url: 'https://x.example', note: '<b>x</b>' } },
+          { label: '<b>Site</b>', value: 1 },
+        ],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    `policy.html blocks.0.properties.options.${typedValues.length + 1}.label`,
+  ]);
+});
+
+test('checkPolicy judges Table rows as data when every column draws its cell as text', () => {
+  const data = [
+    { _id: '1', website: typedValues[0], values: { note: { value: typedValues[4] } } },
+    { _id: '2', website: typedValues[8], url: 'https://x.example', tags: typedValues },
+  ];
+  const errors = checkData([
+    {
+      id: 'form.t1',
+      type: 'Table',
+      properties: {
+        columns: [
+          'website',
+          { key: 'note', field: 'values.note.value', type: 'text' },
+          { key: 'group', children: [{ key: 'tags', type: 'tags' }] },
+        ],
+        data,
+      },
+    },
+    { id: 'form.t2', type: 'Table', properties: { data } },
+  ]);
+  expect(errors).toEqual([]);
+});
+
+test('checkPolicy keeps every check on Table rows when a column draws a link, image or HTML', () => {
+  const errors = checkData([
+    {
+      id: 'form.t1',
+      type: 'Table',
+      properties: {
+        columns: ['name', { key: 'website', type: 'url' }],
+        data: [{ name: 'Acme', website: 'https://evil.example' }],
+      },
+    },
+    {
+      id: 'form.t2',
+      type: 'Table',
+      properties: {
+        columns: [{ key: 'group', children: [{ key: 'note', type: 'html' }] }],
+        data: [{ note: '<b>x</b>' }],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.data.0.website',
+    'policy.html blocks.1.properties.data.0.note',
+  ]);
+});
+
+test('checkPolicy reads URLs in displayed text as words and keeps links checked', () => {
+  const errors = checkData([
+    {
+      id: 'facts',
+      type: 'Descriptions',
+      properties: {
+        items: [
+          { label: 'Website', value: 'https://acme.co.za' },
+          { label: 'Document', value: 'https://acme.sharepoint.com/sites/p/Gifts%20policy.pdf' },
+          { label: 'Note', value: 'Ladder <b>broke</b>' },
+        ],
+      },
+    },
+    {
+      id: 'b',
+      type: 'Box',
+      style: { background: 'url(https://evil.example/p.gif)' },
+      properties: { href: 'https://evil.example', src: 'data:image/png;base64,AAAA' },
+      events: {
+        onClick: [
+          { id: 'l', type: 'Link', params: { url: 'javascript:alert(1)' } },
+          { id: 'm', type: 'Link', params: { href: '//evil.example' } },
+        ],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.properties.items.2.value',
+    'policy.urls blocks.1.style.background',
+    'policy.urls blocks.1.properties.href',
+    'policy.urls blocks.1.properties.src',
+    'policy.urls blocks.1.events.onClick.0.params.url',
+    'policy.urls blocks.1.events.onClick.1.params.href',
+  ]);
+});
+
+test('checkPolicy keeps every check on an option value drawn in place of a missing label', () => {
+  const errors = checkData([
+    {
+      id: 'form.site',
+      type: 'Selector',
+      properties: {
+        options: [
+          { value: '<img src=https://evil.example/p.gif>' },
+          { value: 'https://evil.example' },
+          { label: 'Ok', value: 'https://evil.example' },
+        ],
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.html blocks.0.properties.options.0.value',
+    'policy.urls blocks.0.properties.options.1.value',
+  ]);
+});
+
+test('checkPolicy keeps every check on Table rows a cell colour or row template reads', () => {
+  const data = [{ name: 'Acme', tone: 'url(https://evil.example/p.gif)' }];
+  const errors = checkData([
+    {
+      id: 'form.t1',
+      type: 'Table',
+      properties: { columns: [{ key: 'name', type: 'tag', cell: { colorFrom: 'tone' } }], data },
+    },
+    {
+      id: 'form.t2',
+      type: 'Table',
+      properties: { columns: ['name'], expandable: { template: '{{ row.tone | safe }}' }, data },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.data.0.tone',
+    'policy.urls blocks.1.properties.data.0.tone',
   ]);
 });

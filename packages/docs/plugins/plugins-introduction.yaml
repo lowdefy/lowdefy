@@ -76,3 +76,17 @@ _ref:
               },
             },
             ```
+
+            A block also marks how it draws a string with `textKind`: `html` for a property it renders with `renderHtml` (sanitised HTML), `text` for one it renders as escaped text, and `data` for a value it stores or compares but never draws, such as an option value (add `dataWith: label` when the block draws the value in place of a missing `label`). The policy then reads a whole URL, markdown links and words starting with `//` in such a property as words; with `text` tag syntax too; and in `data` every string, however nested, is text. Leave a property that renders markdown, CSS or a URL unmarked.
+
+            A table block marks its rows with `rowsKind`, naming its columns property, a column's type and children keys, the type a column without one has, and the column types that draw a cell as text: the cell options key with the options that read a row field into a cell, and the properties that draw rows themselves: `{ columns: 'columns', type: 'type', children: 'children', cell: 'cell', cellRowKeys: ['colorFrom'], drawnBy: ['expandable.template'], defaultType: 'text', textTypes: ['text', 'number', ...] }`. When every column has a text type, no column reads a row field into its cell and no `drawnBy` property is set, the rows are data.
+
+            ```js
+            properties: {
+              type: 'object',
+              properties: {
+                content: { type: 'string', textKind: 'html', description: 'Text content - supports html.' },
+              },
+            },
+            ```
+

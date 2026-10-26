@@ -58,6 +58,7 @@ export default {
       },
       content: {
         type: 'string',
+        textKind: 'html',
         description: 'Paragraph text content - supports html.',
         docs: {
           displayType: 'text-area',
