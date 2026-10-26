@@ -553,6 +553,11 @@ test('a stranger can neither replace nor use up the code a known phone asked for
     expect((await signIn({ otp: '000000', key })).status).toBe(400);
   }
 
+  // A stranger who has the right code is refused all the same: the code is never checked for
+  // anyone but the phone holding it, so no try, right or wrong, tells a guesser anything.
+  expect((await signIn({ otp: code, key: undefined })).status).toBe(400);
+  expect((await signIn({ otp: code, key: randomBytes(32).toString('base64url') })).status).toBe(400);
+
   // The phone still signs in with the code.
   const response = await signIn({ otp: code, key: deviceKey });
   expect(response.status).toBe(200);
