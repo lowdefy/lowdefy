@@ -935,7 +935,7 @@ test('validateAuthConfig throws a ConfigError when organizations.invitationLimit
   );
 });
 
-test('validateAuthConfig throws when organizations.invitationLimit is under 1', () => {
+test('validateAuthConfig throws a ConfigError when organizations.invitationLimit is under 1', () => {
   const components = {
     auth: {
       secret: validSecret,
@@ -945,7 +945,10 @@ test('validateAuthConfig throws when organizations.invitationLimit is under 1', 
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "organizations.invitationLimit" should be at least 1.'
+    expect.objectContaining({
+      name: 'ConfigError',
+      message: 'Auth "organizations.invitationLimit" should be at least 1.',
+    })
   );
 });
 

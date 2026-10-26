@@ -26,8 +26,13 @@ import { APIError } from 'better-auth/api';
 // pending, unexpired invitation of the organization instead.
 //
 // The hook runs after a re-invite has cancelled the address's earlier
-// invitation, so the invitation being replaced is not counted. A resend
-// refreshes an invitation without creating one and never reaches the hook.
+// invitation, so the invitation being replaced is not counted. That order is
+// BetterAuth's: an organization already over its limit (the limit lowered after
+// invitations went out) refuses the re-invite after the cancel, and the
+// address is left with no open invitation. A resend refreshes an invitation
+// without creating one and never reaches the hook. The count and the create are
+// separate writes, so invitations created in parallel can pass the limit by
+// the number in flight, as BetterAuth's own check could.
 function createBeforeCreateInvitationHook({ getAuth, invitationLimit }) {
   return async function beforeCreateInvitationHook({ organization }) {
     const { adapter } = await getAuth().$context;

@@ -14,9 +14,13 @@
   limitations under the License.
 */
 
-import { vi, expect, test } from 'vitest';
+import { vi, afterEach, expect, test } from 'vitest';
 
 import createBeforeCreateInvitationHook from './createBeforeCreateInvitationHook.js';
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 function createMockAuth({ openInvitations }) {
   const count = vi.fn(async () => openInvitations);
@@ -45,7 +49,6 @@ test('beforeCreateInvitationHook counts the pending, unexpired invitations of th
       { field: 'expiresAt', operator: 'gt', value: new Date('2026-10-26T12:00:00.000Z') },
     ],
   });
-  vi.useRealTimers();
 });
 
 test('beforeCreateInvitationHook allows an invitation while the organization is under its limit', async () => {

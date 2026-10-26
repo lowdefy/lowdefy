@@ -93,7 +93,12 @@ async function setup({ organizations = {} } = {}) {
   });
   await adapter.create({
     model: 'member',
-    data: { userId: user.id, organizationId: organization.id, role: 'owner', createdAt: new Date() },
+    data: {
+      userId: user.id,
+      organizationId: organization.id,
+      role: 'owner',
+      createdAt: new Date(),
+    },
   });
   return { adapter, auth, cookie, db: client.db(database), organization, user };
 }
@@ -175,11 +180,17 @@ test('invitationLimit above 100 is enforced past the adapter page BetterAuth cou
 });
 
 test('re-inviting an address at the limit replaces its invitation instead of counting it', async () => {
-  const { adapter, auth, cookie, organization, user } = await setup({
+  const { adapter, auth, cookie, db, organization, user } = await setup({
     organizations: { invitationLimit: 2 },
   });
   await seedInvitations({ adapter, organization, user, count: 2 });
 
   const response = await invite({ auth, cookie, organization, email: 'open-0@example.com' });
   expect(response.status).toBe(200);
+  const invitations = db.collection('user-invitations');
+  expect(await invitations.countDocuments({ email: 'open-0@example.com' })).toBe(2);
+  expect(
+    await invitations.countDocuments({ email: 'open-0@example.com', status: 'canceled' })
+  ).toBe(1);
+  expect(await invitations.countDocuments({ status: 'pending' })).toBe(2);
 });
