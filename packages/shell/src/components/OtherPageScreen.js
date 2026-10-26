@@ -24,7 +24,7 @@ import { useShell } from '../ShellContext.js';
 
 // A path no mobile page has. When the server has a web page there (it answers the shell with
 // { surface: 'web' }), the page opens in the system browser; otherwise it is not found.
-function OtherPageScreen({ path }) {
+function OtherPageScreen({ path, query = '' }) {
   const { session } = useShell();
   const [notFound, setNotFound] = useState(false);
   useEffect(() => {
@@ -34,8 +34,18 @@ function OtherPageScreen({ path }) {
       .then((result) => {
         if (!active) return;
         if (result.surface === 'web') {
-          Linking.openURL(`${session.apiBase}/${path}`);
-          if (router.canGoBack()) router.back();
+          // The query rides along: the web page reads its own _url_query.
+          const url = `${session.apiBase}/${path}${query ? `?${query}` : ''}`;
+          Linking.openURL(url)
+            .then(() => {
+              // A cold start from a deep link has nothing to go back to; without the replace the
+              // loading screen would stay up for good behind the browser.
+              if (router.canGoBack()) router.back();
+              else router.replace('/');
+            })
+            .catch(() => {
+              if (active) setNotFound(true);
+            });
           return;
         }
         setNotFound(true);
@@ -46,7 +56,7 @@ function OtherPageScreen({ path }) {
     return () => {
       active = false;
     };
-  }, [path, session]);
+  }, [path, query, session]);
   if (!notFound) {
     return <LoadingScreen />;
   }

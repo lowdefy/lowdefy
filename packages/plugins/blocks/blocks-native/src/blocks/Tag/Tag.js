@@ -68,7 +68,7 @@ function Tag({ blockId, components, events, methods, properties, styles = {} }) 
       methods.triggerEvent({ name: 'onClick' });
     }
     if (href !== undefined) {
-      Linking.openURL(href);
+      Linking.openURL(href).catch(() => {});
     }
   };
   const title = type.isString(properties.title) ? htmlToText(properties.title) : null;

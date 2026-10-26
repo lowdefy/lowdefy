@@ -184,7 +184,7 @@ function PageScreen({ path, query = '' }) {
     return <UpdateScreen shell={shell} />;
   }
   if (view.view === 'other') {
-    return <OtherPageScreen path={path} />;
+    return <OtherPageScreen path={path} query={query} />;
   }
   if (view.view === 'loading') {
     if (loadError !== null) {

@@ -25,7 +25,11 @@ function UpdateScreen({ shell }) {
   const storeUrl = shell.store?.[Platform.OS];
   return (
     <MessageScreen
-      action={storeUrl ? { title: 'Update', onPress: () => Linking.openURL(storeUrl) } : null}
+      action={
+        storeUrl
+          ? { title: 'Update', onPress: () => Linking.openURL(storeUrl).catch(() => {}) }
+          : null
+      }
       body="This page needs a newer version of the app."
       testID="shell-update"
       title="Update the app to open this page"
