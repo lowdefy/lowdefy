@@ -60,6 +60,20 @@ function findHttpStatus(error, seen = new Set()) {
   );
 }
 
+// Whether the call was cancelled because it ran out of time (AbortSignal.timeout, the AI
+// SDK's timeout option), anywhere down lastError and the cause chain. Some clients wrap
+// the cancelled fetch in a response error with a status they made up (the AI gateway
+// client reports 500), so a timeout is checked before any status.
+function hasTimeoutError(error, seen = new Set()) {
+  if (!error || typeof error !== 'object' || seen.has(error)) return false;
+  seen.add(error);
+  return (
+    error.name === 'TimeoutError' ||
+    hasTimeoutError(error.lastError, seen) ||
+    hasTimeoutError(error.cause, seen)
+  );
+}
+
 // 5xx is a failing service; 429 is a service throttling its callers. Both pass with
 // time, and neither is fixed by changing config.
 function isServiceStatus(statusCode) {
@@ -116,7 +130,10 @@ class ServiceError extends Error {
   constructor(message, { cause, service, code, statusCode, configKey, hint, retryAfter } = {}) {
     // Extract info from wrapped error if provided
     const errorCode = code ?? cause?.code;
-    const errorStatusCode = statusCode ?? findHttpStatus(cause);
+    // No service answered a call that timed out, so a status found under it is one a
+    // client invented.
+    const errorStatusCode =
+      statusCode ?? (hasTimeoutError(cause) ? undefined : findHttpStatus(cause));
 
     // Use provided message, or enhance wrapped error's message
     const baseMessage = message ?? (cause ? ServiceError.enhanceMessage(cause) : 'Service error');
@@ -218,6 +235,11 @@ class ServiceError extends Error {
     }
     if (code === 'ECONNRESET') {
       return `Connection reset by the server. ${error.message ?? ''}`;
+    }
+    if (hasTimeoutError(error)) {
+      return `Request timed out. The service may be slow, or the timeout too short. ${
+        error.message ?? ''
+      }`;
     }
     if (statusCode === 429) {
       const retryAfter = ServiceError.readRetryAfter(error);
