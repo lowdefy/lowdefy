@@ -24,6 +24,7 @@ import createEmailSendLimit from './createEmailSendLimit.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
 import createKnownDeviceHook from '../mobile/createKnownDeviceHook.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
+import createSignInRefusedRedirectHook from './createSignInRefusedRedirectHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
 import redirectToChallenge from './redirectToChallenge.js';
@@ -135,6 +136,23 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
       id: 'oauthPostLogin',
       matches: (path) => path === '/oauth2/continue',
       handler: createOauthPostLoginHook(),
+    });
+  }
+
+  // A sign-in refused at session creation (banned, no membership, an app hook's
+  // :reject) answers the browser with a redirect to the error page rather than
+  // raw JSON.
+  // Registered ahead of the magic-link two-factor challenge, which has no
+  // session to act on when the refusal fires. /verify-email and
+  // /email-otp/verify-email need no counterpart: they create a session only with
+  // emailVerification.autoSignInAfterVerification or user.changeEmail, and
+  // getBetterAuthConfig sets neither, so a verification link cannot be refused
+  // this way. Setting either one would open the same gap there.
+  if (authConfig.magicLink?.enabled === true) {
+    after.push({
+      id: 'magicLinkSignInRefused',
+      matches: (path) => path === '/magic-link/verify',
+      handler: createSignInRefusedRedirectHook(),
     });
   }
 

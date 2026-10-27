@@ -50,9 +50,9 @@ test('createAdmissionGateHook throws a 403 MEMBERSHIP_REQUIRED APIError for an u
   expect(thrown).toBeInstanceOf(APIError);
   expect(thrown.statusCode).toBe(403);
   expect(thrown.body.code).toBe('MEMBERSHIP_REQUIRED');
-  // The message equals the code so the OAuth error-callback (which surfaces the
-  // message, not the code) still lands ?error=MEMBERSHIP_REQUIRED.
-  expect(thrown.body.message).toBe('MEMBERSHIP_REQUIRED');
+  // The wall's message, so the error page's error_description does not depend
+  // on which of the two refused the sign-in.
+  expect(thrown.body.message).toBe('You have not been granted access to this application.');
 });
 
 test('createAdmissionGateHook admits an invited email without throwing or mutating the record', async () => {

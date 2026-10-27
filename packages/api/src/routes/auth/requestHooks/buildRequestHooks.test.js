@@ -19,13 +19,21 @@ import { vi, beforeEach, expect, test } from 'vitest';
 // Each slot is wrapped in createAuthMiddleware; mock it to identity so the unit
 // test can invoke a slot with a plain endpoint context.
 const mockGetSessionFromCtx = vi.fn();
+class MockAPIError extends Error {
+  constructor(status, body) {
+    super(body?.message);
+    this.body = body;
+  }
+}
 vi.doMock('better-auth/api', () => ({
   // The post-login hook's module graph reaches buildOauthPostLogin, which
   // imports APIError; the post-login and expired-invitation hooks read the
-  // session through getSessionFromCtx.
-  APIError: class APIError extends Error {},
+  // session through getSessionFromCtx; the sign-in refused hook reads
+  // isAPIError.
+  APIError: MockAPIError,
   createAuthMiddleware: (handler) => handler,
   getSessionFromCtx: mockGetSessionFromCtx,
+  isAPIError: (error) => error instanceof MockAPIError,
 }));
 
 // beginTwoFactorChallenge is exercised against a fake endpoint context in its
@@ -619,6 +627,40 @@ test('buildRequestHooks leaves an unenrolled user on /sign-in/email-otp untouche
   expect(thrown).toBeUndefined();
   expect(returned).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks redirects a ban on /magic-link/verify when magicLink is enabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { magicLink: { enabled: true }, organizations },
+    getAuth: vi.fn(),
+  });
+  const response = await hooks.after({
+    path: '/magic-link/verify',
+    query: { callbackURL: '/', errorCallbackURL: '/login' },
+    request: new Request('https://app.example.com/api/auth/magic-link/verify'),
+    context: {
+      baseURL: 'https://app.example.com/api/auth',
+      isTrustedOrigin: () => true,
+      returned: new MockAPIError('FORBIDDEN', { message: 'Banned.', code: 'BANNED_USER' }),
+    },
+  });
+  expect(response.status).toBe(302);
+  expect(new URL(response.headers.get('location')).searchParams.get('error')).toBe('BANNED_USER');
+});
+
+test('buildRequestHooks does not register the sign-in refused redirect without magicLink', async () => {
+  const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  const response = await hooks.after({
+    path: '/magic-link/verify',
+    query: { callbackURL: '/', errorCallbackURL: '/login' },
+    request: new Request('https://app.example.com/api/auth/magic-link/verify'),
+    context: {
+      baseURL: 'https://app.example.com/api/auth',
+      isTrustedOrigin: () => true,
+      returned: new MockAPIError('FORBIDDEN', { message: 'Banned.', code: 'BANNED_USER' }),
+    },
+  });
+  expect(response).toBeUndefined();
 });
 
 test('buildRequestHooks caps code sends per address only for apps with a mobile section', async () => {

@@ -26,19 +26,23 @@ function createUserAfterHook({ dispatch }) {
     const result = await dispatch(data, ctx);
     if (result.status === 'reject') {
       // Keep the rejecting UserError as the cause so the server-side trace still
-      // names the routine control that refused the write.
+      // names the routine control that refused the write. The code matches the
+      // before hook's, so a sign-in refused at either timing lands on the error
+      // page the same way.
       throw new APIError('BAD_REQUEST', {
         cause: result.error,
         message: result.error.message,
+        code: 'AUTH_HOOK_REJECTED',
       });
     }
     if (result.status === 'error') {
-      // An expected outcome (a :throw, a nested call's refusal) is a 400 like :reject, not a
-      // 500. runRoutine has logged it as a warning.
+      // An expected outcome (a :throw, a nested call's refusal) is a 400 like :reject, code
+      // included, not a 500. runRoutine has logged it as a warning.
       if (isExpectedError(result.error)) {
         throw new APIError('BAD_REQUEST', {
           cause: result.error,
           message: result.error.message,
+          code: 'AUTH_HOOK_REJECTED',
         });
       }
       // A fault runRoutine has already reported (handled), so createOnAPIError does not
