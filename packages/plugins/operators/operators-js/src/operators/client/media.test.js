@@ -187,3 +187,25 @@ test('_media throw on no innerWidth', () => {
     'device window width not available for _media.'
   );
 });
+
+test('_media throws when there is no window', () => {
+  expect(() => media({ params: 'darkMode', location: 'locationId', globals: {} })).toThrow(
+    'device window width not available for _media.'
+  );
+});
+
+test('_media returns the media object when a hidden tab reports a width of 0', () => {
+  expect(
+    media({
+      params: true,
+      location: 'locationId',
+      globals: { window: { innerHeight: 0, innerWidth: 0, __lowdefy_isDark: true } },
+    })
+  ).toEqual({
+    height: 0,
+    size: 'xs',
+    width: 0,
+    darkMode: true,
+    darkModePreference: 'system',
+  });
+});

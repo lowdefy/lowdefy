@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { getFromObject, getMediaViewport, getObjectReadKeys } from '@lowdefy/operators';
 
 // The client keeps the preference it reads from storage, under the app's key.
@@ -27,7 +28,9 @@ function getDarkMode(window) {
 
 function _media({ arrayIndices, location, params, globals }) {
   const { window } = globals;
-  if (!window?.innerWidth) {
+  // A page loading in a hidden or background tab reports a width of 0 until it is shown, and the
+  // resize listener reports the real width then.
+  if (type.isNone(window?.innerWidth)) {
     throw new Error(`device window width not available for _media.`);
   }
   const media = {
