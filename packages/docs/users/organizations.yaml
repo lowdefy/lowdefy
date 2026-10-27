@@ -86,11 +86,11 @@ _ref:
 
             - The person's session resolves unauthenticated (`_user` is `null`), so protected pages, requests and API endpoints give them what they give a non-member. Their MCP access tokens and [member tokens](/mcp-oauth#tokens-for-scripts) stop working, and an MCP client's refresh is refused.
             - Signing in to a `pinned` app is refused with `MEMBERSHIP_REQUIRED`, the code a refused non-member gets. Under `signup: open` they are not joined again, and a pending invitation does not let them in either.
-            - Under `tenant`, sign-in makes the oldest organization they are not suspended in active, `ListOrganizations` leaves the organization out, and `SetActiveOrganization` and the other organization endpoints refuse it as they refuse a non-member.
+            - Under `tenant`, sign-in makes the oldest organization they are not suspended in active. With none, sign-in goes as it does for someone with no membership, so under `create: auto` they get a new organization of their own. `ListOrganizations` leaves the organization out, and `SetActiveOrganization` and the other organization endpoints refuse it as they refuse a non-member.
             - A suspended membership grants no [auth-step](/auth-steps) authority. Administrators can still manage the suspended member, with `UnsuspendMember`, `RemoveMember`, `BanUser` and the other steps.
-            - Accepting an invitation does not lift a suspension (see [Invitations for existing members](#invitations-for-existing-members)).
+            - Accepting an invitation does not lift a suspension or make the organization active (see [Invitations for existing members](#invitations-for-existing-members)).
 
-            The `SuspendMember` and `UnsuspendMember` auth steps set and lift it, and need the `member: [suspend]` permission, which `owner` and `admin` hold. The organization's last `owner` who is not suspended cannot be suspended.
+            The `SuspendMember` and `UnsuspendMember` auth steps set and lift it, and need the `member: [suspend]` permission, which `owner` and `admin` hold. An `owner` cannot be suspended: change their org tier with `UpdateMemberOrgRole` first, which only an owner can do. A suspended member cannot be made an `owner` either, so every owner of an organization is a member who can sign in.
 
             ```yaml
             id: suspend-member

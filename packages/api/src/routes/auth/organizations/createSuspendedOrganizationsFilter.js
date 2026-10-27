@@ -16,10 +16,7 @@
 import { getSessionFromCtx } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
-import isActiveMember from './isActiveMember.js';
-
-// More rows than any one person holds, so the read is one round trip.
-const MEMBER_ROWS_LIMIT = 1000;
+import readSuspendedOrganizationIds from './readSuspendedOrganizationIds.js';
 
 // The engine-tier request hooks.after on /organization/list - the
 // ListOrganizations action. The endpoint lists every organization the caller
@@ -37,14 +34,10 @@ function createSuspendedOrganizationsFilter() {
     if (type.isNone(session)) {
       return undefined;
     }
-    const members = await ctx.context.adapter.findMany({
-      model: 'member',
-      where: [{ field: 'userId', value: session.user.id }],
-      limit: MEMBER_ROWS_LIMIT,
+    const suspendedOrganizationIds = await readSuspendedOrganizationIds({
+      adapter: ctx.context.adapter,
+      userId: session.user.id,
     });
-    const suspendedOrganizationIds = members
-      .filter((member) => !isActiveMember({ member }))
-      .map((member) => member.organizationId);
     if (suspendedOrganizationIds.length === 0) {
       return undefined;
     }

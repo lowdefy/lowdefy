@@ -23,7 +23,7 @@ import createEmailCodeHolderGate from './createEmailCodeHolderGate.js';
 import createEmailSendLimit from './createEmailSendLimit.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
 import createSuspendedMemberGate, {
-  MEMBER_GATED_PATHS,
+  MEMBERSHIP_FREE_PATHS,
 } from '../organizations/createSuspendedMemberGate.js';
 import createSuspendedOrganizationsFilter from '../organizations/createSuspendedOrganizationsFilter.js';
 import createKnownDeviceHook from '../mobile/createKnownDeviceHook.js';
@@ -137,7 +137,7 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   if (authConfig.organizations?.policy === 'tenant') {
     before.push({
       id: 'suspendedMemberGate',
-      matches: (path) => MEMBER_GATED_PATHS.includes(path),
+      matches: (path) => path.startsWith('/organization/') && !MEMBERSHIP_FREE_PATHS.includes(path),
       handler: createSuspendedMemberGate(),
     });
     after.push({

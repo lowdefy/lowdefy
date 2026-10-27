@@ -16,37 +16,30 @@
 import { APIError, getSessionFromCtx } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
-import isActiveMember from './isActiveMember.js';
+import readSuspendedOrganizationIds from './readSuspendedOrganizationIds.js';
 
-// More rows than any one person holds, so the read is one round trip.
-const MEMBER_ROWS_LIMIT = 1000;
-
-// The organization plugin's client endpoints that act as a member of an
-// organization. Each one checks membership with its own adapter read, which
-// knows nothing of member.suspended, so a person suspended in an organization
-// would otherwise still read its members, switch to it, invite into it or
-// leave it from the browser. Endpoints that need no membership are not listed:
-// create (disabled by allowUserToCreateOrganization), check-slug, and the
-// invitee's own get-invitation, list-user-invitations, reject-invitation and
-// accept-invitation (accepting leaves an existing membership as it is, see
-// createAcceptExistingMemberHook). /organization/list is filtered instead, by
-// createSuspendedOrganizationsFilter.
-const MEMBER_GATED_PATHS = [
-  '/organization/set-active',
-  '/organization/update',
-  '/organization/delete',
-  '/organization/leave',
-  '/organization/update-member-role',
-  '/organization/remove-member',
-  '/organization/invite-member',
-  '/organization/cancel-invitation',
-  '/organization/list-members',
-  '/organization/get-active-member',
-  '/organization/get-active-member-role',
-  '/organization/get-full-organization',
-  '/organization/get-organization',
-  '/organization/list-invitations',
-  '/organization/has-permission',
+// The organization plugin's client endpoints that need no membership: create
+// (disabled by allowUserToCreateOrganization), check-slug, the server-only
+// add-member, and the invitee's own get-invitation, list-user-invitations,
+// reject-invitation and accept-invitation (accepting leaves an existing
+// membership as it is, see createAcceptExistingMemberHook). /organization/list
+// is filtered instead, by createSuspendedOrganizationsFilter.
+//
+// Every other /organization/* path is gated. Each one checks membership with
+// its own adapter read, which knows nothing of member.suspended, so a person
+// suspended in an organization would otherwise still read its members, switch
+// to it, invite into it or leave it from the browser. Listing the exceptions
+// rather than the gated paths keeps an endpoint the plugin adds later (or
+// teams, should they be enabled) closed to a suspended member by default.
+const MEMBERSHIP_FREE_PATHS = [
+  '/organization/create',
+  '/organization/check-slug',
+  '/organization/add-member',
+  '/organization/get-invitation',
+  '/organization/list-user-invitations',
+  '/organization/reject-invitation',
+  '/organization/accept-invitation',
+  '/organization/list',
 ];
 
 // Every organization the request could act in. The endpoints differ in which
@@ -87,7 +80,7 @@ async function readTargetOrganizationIds({ adapter, ctx, session }) {
 // The engine-tier request hooks.before that refuses a member-gated
 // organization endpoint when the caller is suspended in the organization it
 // acts in, with the error the endpoint gives a non-member. Registered under
-// tenant only: under pinned every listed path is disabled.
+// tenant only: under pinned the organization client endpoints are disabled.
 function createSuspendedMemberGate() {
   return async function suspendedMemberGate(ctx) {
     // Clearing the active organization needs no membership.
@@ -104,13 +97,12 @@ function createSuspendedMemberGate() {
     if (organizationIds.length === 0) {
       return undefined;
     }
-    const members = await adapter.findMany({
-      model: 'member',
-      where: [{ field: 'userId', value: session.user.id }],
-      limit: MEMBER_ROWS_LIMIT,
+    const suspendedOrganizationIds = await readSuspendedOrganizationIds({
+      adapter,
+      userId: session.user.id,
     });
-    const suspended = members.some(
-      (member) => organizationIds.includes(member.organizationId) && !isActiveMember({ member })
+    const suspended = organizationIds.some((organizationId) =>
+      suspendedOrganizationIds.includes(organizationId)
     );
     if (!suspended) {
       return undefined;
@@ -122,5 +114,5 @@ function createSuspendedMemberGate() {
   };
 }
 
-export { MEMBER_GATED_PATHS };
+export { MEMBERSHIP_FREE_PATHS };
 export default createSuspendedMemberGate;

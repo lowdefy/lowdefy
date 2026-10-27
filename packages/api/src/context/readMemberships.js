@@ -17,10 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import isActiveMember from '../routes/auth/organizations/isActiveMember.js';
-
-// The adapter returns at most this many rows when asked for none; ask for more
-// than any one person holds, so the read is one round trip in practice.
-const MEMBER_ROWS_LIMIT = 1000;
+import MEMBER_ROWS_LIMIT from '../routes/auth/organizations/memberRowsLimit.js';
 
 // Reads every member row the person holds in one query, served by the unique
 // { userId, organizationId } member index (ensureAuthIndexes), and picks the

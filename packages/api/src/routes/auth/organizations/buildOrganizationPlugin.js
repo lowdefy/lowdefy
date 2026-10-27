@@ -18,6 +18,7 @@ import { organization } from 'better-auth/plugins';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
 import createBeforeCreateInvitationHook from './createBeforeCreateInvitationHook.js';
+import createBeforeUpdateMemberRoleHook from './createBeforeUpdateMemberRoleHook.js';
 import modelNames from '../modelNames.js';
 import { ac, roles } from './organizationAccessControl.js';
 
@@ -157,6 +158,9 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     },
     organizationHooks: {
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
+      // Keeps a suspended member out of the owner tier, so the plugin's owner
+      // guards, which count every owner row, stay exact (SuspendMember).
+      beforeUpdateMemberRole: createBeforeUpdateMemberRoleHook(),
       // Registered only when a limit is set: unset, the cap is the
       // effectively open DEFAULT_INVITATION_LIMIT above, and every invite
       // would pay for a count that can never refuse.

@@ -335,6 +335,26 @@ test('tenant: a user already holding the owner row of a marked organization clea
   expect(result.data.activeOrganizationId).toBe('org_own');
 });
 
+test('tenant: a user suspended in their own organization is minted the next one, not signed in to it', async () => {
+  const organization = { id: 'org_own', slug: 'org-user_1', createdAt: new Date() };
+  const member = {
+    id: 'm_1',
+    userId: 'user_1',
+    organizationId: 'org_own',
+    role: 'admin',
+    suspended: true,
+  };
+  const { auth, db } = createMemoryAuth({ organizations: [organization], members: [member] });
+  const result = await mintHook(auth)({ userId: 'user_1' });
+  const minted = db.organization.find((row) => row.slug === 'org-user_1-2');
+  expect(minted).toBeDefined();
+  expect(db.member).toEqual([
+    member,
+    expect.objectContaining({ userId: 'user_1', organizationId: minted.id, role: 'owner' }),
+  ]);
+  expect(result.data.activeOrganizationId).toBe(minted.id);
+});
+
 test('tenant: two sessions that both see no members and both write the owner row end with one row', async () => {
   const { auth, db, before } = createMemoryAuth();
   const hook = mintHook(auth);

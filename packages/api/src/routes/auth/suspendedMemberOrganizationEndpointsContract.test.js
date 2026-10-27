@@ -298,3 +298,32 @@ test('an admin lists a suspended member of their organization with the suspended
   const colleague = members.find((member) => member.user.email === 'colleague@example.com');
   expect(colleague).toMatchObject({ suspended: true, appRoles: ['viewer'] });
 });
+
+test('an owner cannot make a suspended member an owner', async () => {
+  const { auth, cookie } = await createSeededAuth();
+  const { adapter } = await auth.$context;
+  const members = await adapter.findMany({
+    model: 'member',
+    where: [{ field: 'organizationId', value: 'active' }],
+  });
+  const caller = members.find((member) => member.suspended !== true);
+  const colleague = members.find((member) => member.suspended === true);
+  await adapter.update({
+    model: 'member',
+    where: [{ field: 'id', value: caller.id }],
+    update: { role: 'owner' },
+  });
+  const response = await post({
+    auth,
+    cookie,
+    path: '/organization/update-member-role',
+    body: { memberId: colleague.id, role: 'owner', organizationId: 'active' },
+  });
+  expect(response.status).toBe(400);
+  expect(await response.json()).toMatchObject({ code: 'SUSPENDED_MEMBER_CANNOT_BE_OWNER' });
+  const unchanged = await adapter.findOne({
+    model: 'member',
+    where: [{ field: 'id', value: colleague.id }],
+  });
+  expect(unchanged.role).toBe('member');
+});

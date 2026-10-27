@@ -19,9 +19,7 @@ import { type } from '@lowdefy/helpers';
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
 import isActiveMember from './isActiveMember.js';
-
-// More rows than any one person holds, so the read is one round trip.
-const MEMBER_ROWS_LIMIT = 1000;
+import MEMBER_ROWS_LIMIT from './memberRowsLimit.js';
 
 // The one admission predicate, shared by all three enforcement points: the
 // session.create wall (which passes a userId), the user.create.before gate and

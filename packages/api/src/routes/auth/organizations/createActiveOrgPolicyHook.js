@@ -23,10 +23,8 @@ import findPendingInvitation from './findPendingInvitation.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
 import isActiveMember from './isActiveMember.js';
 import isEmailAdmitted from './isEmailAdmitted.js';
+import MEMBER_ROWS_LIMIT from './memberRowsLimit.js';
 import mintOrganization from './mintOrganization.js';
-
-// More rows than any one person holds, so the read is one round trip.
-const MEMBER_ROWS_LIMIT = 1000;
 
 // The engine-tier session.create hook that applies the active-org policy.
 // session.create is the one provider-agnostic choke point - it fires for

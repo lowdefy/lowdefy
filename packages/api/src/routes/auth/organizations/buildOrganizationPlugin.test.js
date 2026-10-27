@@ -266,6 +266,22 @@ test('buildOrganizationPlugin enforces auth.organizations.invitationLimit in the
   ).rejects.toMatchObject({ statusCode: 403, body: { code: 'INVITATION_LIMIT_REACHED' } });
 });
 
+test('buildOrganizationPlugin refuses making a suspended member an owner in the beforeUpdateMemberRole hook', async () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  await expect(
+    plugin.options.organizationHooks.beforeUpdateMemberRole({
+      member: { id: 'member_1', role: 'member', suspended: true },
+      newRole: 'owner',
+      user: { id: 'user_1' },
+      organization: { id: 'org_1' },
+    })
+  ).rejects.toMatchObject({ body: { code: 'SUSPENDED_MEMBER_CANNOT_BE_OWNER' } });
+});
+
 // mintOrganization writes organizations and their owners through the adapter,
 // skipping the createOrganization endpoint, so anything the endpoint would apply
 // on that path would be skipped without an error. Declaring one of these means

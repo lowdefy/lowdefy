@@ -153,13 +153,42 @@ test('buildRequestHooks gates the member-gated organization endpoints under tena
   expect(await tenantHooks.before({ ...ctx, body: { organizationId: 'org_1' } })).toBeUndefined();
 });
 
+test('buildRequestHooks gates organization endpoints it does not list as membership-free', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({
+    user: { id: 'user_1' },
+    session: { activeOrganizationId: 'org_2' },
+  });
+  const adapter = {
+    findOne: vi.fn(async () => null),
+    findMany: vi.fn(async () => [{ userId: 'user_1', organizationId: 'org_2', suspended: true }]),
+  };
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  await expect(
+    tenantHooks.before({ path: '/organization/list-teams', query: {}, context: { adapter } })
+  ).rejects.toMatchObject({ body: { code: 'USER_IS_NOT_A_MEMBER_OF_THE_ORGANIZATION' } });
+  expect(
+    await tenantHooks.before({
+      path: '/organization/get-invitation',
+      query: { id: 'inv_1' },
+      context: { adapter },
+    })
+  ).toBeUndefined();
+  expect(adapter.findMany).toHaveBeenCalledTimes(1);
+});
+
 test('buildRequestHooks filters /organization/list under tenant only', async () => {
   mockGetSessionFromCtx.mockResolvedValue({ user: { id: 'user_1' }, session: {} });
+  const rows = [
+    { userId: 'user_1', organizationId: 'org_1' },
+    { userId: 'user_1', organizationId: 'org_2', suspended: true },
+  ];
   const adapter = {
-    findMany: vi.fn(async () => [
-      { userId: 'user_1', organizationId: 'org_1' },
-      { userId: 'user_1', organizationId: 'org_2', suspended: true },
-    ]),
+    findMany: vi.fn(async ({ where }) =>
+      rows.filter((row) => where.every(({ field, value }) => row[field] === value))
+    ),
   };
   const ctx = {
     path: '/organization/list',

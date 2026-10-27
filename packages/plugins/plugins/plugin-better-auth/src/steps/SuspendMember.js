@@ -32,9 +32,16 @@ function holdsOwnerTier({ member }) {
 //
 // Adapter-direct, like UpdateMemberRoles: the flag is an admin-set
 // authorization input, not an org-tier change, so it fires no member.update
-// database hooks. The one org-tier invariant it can break is guarded here - the
-// organization's last unsuspended owner is never suspended, or nobody would be
-// left to administer it.
+// database hooks.
+//
+// An owner is never suspended - their org tier is changed first, with
+// UpdateMemberOrgRole. The organization plugin's owner guards (an admin cannot
+// remove or demote an owner, the last owner cannot leave, be removed or demote
+// themselves) count every owner row and know nothing of suspension, so a
+// suspended owner would let an admin lock an owner out and let the last
+// active owner leave behind only suspended ones. Keeping suspended rows out of
+// the owner tier keeps those guards exact; beforeUpdateMemberRole refuses the
+// other way in, promoting a suspended member.
 //
 // organizationId is part of the authored property surface but the step never
 // resolves it: the floor resolves the target organization (defaulting to the
@@ -45,44 +52,29 @@ async function SuspendMember({ auth, organizationId, properties }) {
     throw new Error('SuspendMember requires a "memberId" property.');
   }
   const { adapter } = await auth.$context;
-  const member = await adapter.findOne({
-    model: 'member',
-    where: [
-      { field: 'id', value: memberId },
-      { field: 'organizationId', value: organizationId },
-    ],
-  });
+  const where = [
+    { field: 'id', value: memberId },
+    { field: 'organizationId', value: organizationId },
+  ];
+  const member = await adapter.findOne({ model: 'member', where });
   if (type.isNone(member)) {
     throw new Error(
       `SuspendMember found no member "${memberId}" in organization "${organizationId}".`
     );
   }
-  if (holdsOwnerTier({ member }) && member.suspended !== true) {
-    const owners = await adapter.findMany({
-      model: 'member',
-      where: [
-        { field: 'organizationId', value: organizationId },
-        { field: 'role', operator: 'contains', value: 'owner' },
-      ],
-    });
-    const otherActiveOwners = owners.filter(
-      (owner) =>
-        owner.id !== member.id && owner.suspended !== true && holdsOwnerTier({ member: owner })
+  if (holdsOwnerTier({ member })) {
+    throw new Error(
+      `SuspendMember cannot suspend member "${memberId}" - they are an owner of organization "${organizationId}". Change their org role with UpdateMemberOrgRole first.`
     );
-    if (otherActiveOwners.length === 0) {
-      throw new Error(
-        `SuspendMember cannot suspend member "${memberId}" - they are the last unsuspended owner of organization "${organizationId}".`
-      );
-    }
   }
-  return adapter.update({
-    model: 'member',
-    where: [
-      { field: 'id', value: memberId },
-      { field: 'organizationId', value: organizationId },
-    ],
-    update: { suspended: true },
-  });
+  // The row can be removed between the read and this write.
+  const suspended = await adapter.update({ model: 'member', where, update: { suspended: true } });
+  if (type.isNone(suspended)) {
+    throw new Error(
+      `SuspendMember found no member "${memberId}" in organization "${organizationId}".`
+    );
+  }
+  return suspended;
 }
 
 // Suspending takes a member out of the organization the caller administers, so

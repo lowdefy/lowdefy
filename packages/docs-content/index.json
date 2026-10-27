@@ -3301,13 +3301,13 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "a99abdb50d66fa4c47bc6b8ad8a2317cf5a6ea7153597d5c38481830264a46f4"
+      "hash": "be6003a3d5dce08abc7e74e6766c5031d0710b73fc24204b8bd9a694bcdbaed8"
     },
     "user-authentication/auth-steps": {
       "files": [
         "users/auth-steps.yaml"
       ],
-      "hash": "a59b2343b17f1bc0addc0c024cb7adcff8b71523e50634345bb2aca28611e802"
+      "hash": "4dbd25d7bdbb365011b70653739e44008fe56e3504d1209def1dd00350a7a58e"
     },
     "user-authentication/mcp-oauth": {
       "files": [

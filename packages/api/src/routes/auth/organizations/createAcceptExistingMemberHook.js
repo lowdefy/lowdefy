@@ -18,6 +18,8 @@ import { getSessionFromCtx } from 'better-auth/api';
 import { setSessionCookie } from 'better-auth/cookies';
 import { type } from '@lowdefy/helpers';
 
+import isActiveMember from './isActiveMember.js';
+
 // The engine-tier request hooks.before on /organization/accept-invitation for a
 // caller who is already a member of the invitation's organization - someone
 // invited before they joined another way (the open-signup auto-join, an
@@ -41,7 +43,9 @@ import { type } from '@lowdefy/helpers';
 //
 // Like the route, the session gets the organization as its active one only
 // when it has none (createAcceptActiveOrgGuardHook vetoes the route's switch
-// away from an existing active organization).
+// away from an existing active organization). A suspended membership is left
+// as it is too, so the organization is never made active: it admits nobody,
+// and an org-less session at least keeps the caller awaiting an organization.
 function createAcceptExistingMemberHook() {
   return async function acceptExistingMemberHook(ctx) {
     const invitationId = ctx.body?.invitationId;
@@ -90,7 +94,7 @@ function createAcceptExistingMemberHook() {
     if (type.isNone(accepted)) {
       return undefined;
     }
-    if (type.isNone(session.session.activeOrganizationId)) {
+    if (type.isNone(session.session.activeOrganizationId) && isActiveMember({ member })) {
       // Re-issued like the set-active-organization route does, so a session
       // cookie cache does not keep serving the org-less session.
       await setSessionCookie(ctx, {
