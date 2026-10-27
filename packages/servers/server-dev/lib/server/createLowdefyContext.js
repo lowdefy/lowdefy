@@ -239,11 +239,7 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession }) {
     // config so the tenant wall's policy gate still engages under
     // policy: tenant (a mock caller there must carry organizationId, or the
     // wall fails closed - loudly, as it should).
-    context.organization = {
-      creatorAppRoles: authJson.organizations.creatorAppRoles,
-      policy: authJson.organizations.policy,
-      pinned: null,
-    };
+    context.organization = { policy: authJson.organizations.policy, pinned: null };
   }
   // Under policy: tenant, report walled collections that hold unstamped rows
   // (lazily-run-once, logged once per offending collection). It never blocks or

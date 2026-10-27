@@ -18,14 +18,15 @@ import { ConfigError, ServiceError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 // The auth invariants the engine's own writes rely on but BetterAuth only
-// checks by reading first: one organization per slug (the pinned ensure and
-// the tenant signup mint find-or-create by slug) and one member row per
-// (user, organization) (the mint and the open-signup joins check for the row
-// before writing it). Two concurrent writers can both pass the read; a unique
-// index turns the second write into an error the caller recovers from by
-// reading the winner's row. The mint refuses to run without them
-// (createActiveOrgPolicyHook), so a race can never leave a user owning two
-// organizations or holding two owner rows.
+// checks by reading first: one organization per slug (the pinned ensure, the
+// tenant signup mint and the CreateOrganization step find or refuse by slug)
+// and one member row per (user, organization) (the mints and the open-signup
+// joins check for the row before writing it). Two concurrent writers can both
+// pass the read; a unique index turns the second write into an error the
+// caller recovers from by reading the winner's row. The signup mint and the
+// CreateOrganization step refuse to run without them (createActiveOrgPolicyHook,
+// provisionOrganization), so a race can never leave two organizations with one
+// slug, or a user holding two owner rows.
 //
 // The indexes are created at startup, by the running server against the
 // database it serves, rather than by a build or CLI step: the build has no
@@ -33,7 +34,7 @@ import { type } from '@lowdefy/helpers';
 // remember, and both would miss a database swapped under a running app. The
 // adapter reads the existing indexes first and only creates missing ones.
 //
-// The mint awaits the same call. Once the indexes are in place the result is
+// The mints await the same call. Once the indexes are in place the result is
 // kept for the life of the process, so a mint costs no database read. When an
 // attempt fails - duplicate rows block the index build, the database user may
 // not create indexes, the database is unreachable - the failure is logged once
@@ -78,7 +79,7 @@ async function attempt({ auth, logger }) {
           error.message
         } Remove duplicate rows, or create the index with a database user that is allowed to. New organizations are refused until then; the server retries every ${
           coolDownMs / 1000
-        } seconds while sign-ins need one.`,
+        } seconds while a new organization is needed.`,
         { cause: error }
       );
     }

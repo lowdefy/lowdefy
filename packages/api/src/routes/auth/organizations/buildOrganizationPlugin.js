@@ -88,12 +88,14 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
       organization: {
         modelName: modelNames.organization,
         additionalFields: {
-          // Set while a tenant signup mint has written the organization but
-          // not yet its owner's member row (createActiveOrgPolicyHook). Only a
-          // marked organization is ever joined as owner by the mint, so one
-          // that everyone has left is never handed back. Server-only: never
-          // accepted from a request body, never returned by an endpoint.
+          // Set while an engine mint has written the organization but not yet
+          // its owner's member row (mintOrganization). Only a marked
+          // organization is ever joined as owner by a mint, and only by the
+          // creator in mintCreatorId, so one that everyone has left is never
+          // handed back. Server-only: never accepted from a request body,
+          // never returned by an endpoint.
           mintPending: { type: 'boolean', required: false, input: false, returned: false },
+          mintCreatorId: { type: 'string', required: false, input: false, returned: false },
         },
       },
       member: {

@@ -39,6 +39,8 @@ const { betterAuth } = await import('better-auth');
 const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/adapters');
 const { default: buildOrganizationPlugin } = await import('./buildOrganizationPlugin.js');
 const { default: createActiveOrgPolicyHook } = await import('./createActiveOrgPolicyHook.js');
+const { default: provisionOrganization } = await import('./provisionOrganization.js');
+const { registerOrganizationBinding } = await import('./getOrganizationBinding.js');
 const { CreateOrganization } = await import('@lowdefy/plugin-better-auth/steps');
 
 const tenant = { policy: 'tenant', signup: 'open', create: 'auto', creatorAppRoles: [] };
@@ -69,11 +71,17 @@ async function setup({ creatorAppRoles = [] } = {}) {
     plugins: [buildOrganizationPlugin({ authConfig: { organizations }, getAuth: () => auth })],
   });
   const context = await auth.$context;
-  const hook = createActiveOrgPolicyHook({
-    getAuth: () => auth,
-    logger: { error: vi.fn(), warn: vi.fn() },
-    organizations,
-  });
+  const logger = { error: vi.fn(), warn: vi.fn() };
+  registerOrganizationBinding({ auth, database: true, organizations });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, logger, organizations });
+  // The CreateOrganization step as handleAuthStep runs it.
+  function createOrganization(properties) {
+    return CreateOrganization({
+      auth,
+      properties,
+      provisionOrganization: (args) => provisionOrganization({ auth, logger, ...args }),
+    });
+  }
   async function createUser(name) {
     return context.internalAdapter.createUser({
       email: `${name}@example.com`,
@@ -83,11 +91,10 @@ async function setup({ creatorAppRoles = [] } = {}) {
   }
   return {
     adapter: context.adapter,
-    auth,
+    createOrganization,
     createUser,
     db: client.db(database),
     hook,
-    organizations,
   };
 }
 
@@ -278,19 +285,22 @@ test('a signup mint writes the creatorAppRoles app roles on the owner row', asyn
 // The CreateOrganization step writes the owner row the same way the mint does,
 // so it is checked here against the same real adapter.
 test('the CreateOrganization step gives its creator the creatorAppRoles app roles', async () => {
-  const { auth, createUser, db, organizations } = await setup({
+  const { createOrganization, createUser, db } = await setup({
     creatorAppRoles: ['workspace-admin'],
   });
   const user = await createUser('operator-made');
-  const result = await CreateOrganization({
-    acting: { system: true, user: null },
-    auth,
-    organization: organizations,
-    properties: { name: 'Operator Made', slug: `operator-made-${run}`, userId: user.id },
+  const result = await createOrganization({
+    name: 'Operator Made',
+    slug: `operator-made-${run}`,
+    metadata: { tier: 'gold' },
+    userId: user.id,
   });
   expect(result.members).toEqual([
     expect.objectContaining({ userId: user.id, role: 'owner', appRoles: ['workspace-admin'] }),
   ]);
+  expect(result.metadata).toEqual({ tier: 'gold' });
+  expect('mintPending' in result).toBe(false);
+  expect('mintCreatorId' in result).toBe(false);
   const members = await db.collection('user-members').find({ user_id: user.id }).toArray();
   expect(members).toEqual([
     expect.objectContaining({
@@ -299,18 +309,34 @@ test('the CreateOrganization step gives its creator the creatorAppRoles app role
       app_roles: ['workspace-admin'],
     }),
   ]);
+  const organizations = await db.collection('user-organizations').find({}).toArray();
+  expect(organizations).toEqual([
+    expect.objectContaining({ mint_pending: false, mint_creator_id: user.id }),
+  ]);
 });
 
 test('the CreateOrganization step writes no appRoles field when creatorAppRoles is empty', async () => {
-  const { auth, createUser, db, organizations } = await setup();
+  const { createOrganization, createUser, db } = await setup();
   const user = await createUser('operator-made');
-  await CreateOrganization({
-    acting: { system: true, user: null },
-    auth,
-    organization: organizations,
-    properties: { name: 'Operator Made', slug: `operator-made-${run}`, userId: user.id },
+  await createOrganization({
+    name: 'Operator Made',
+    slug: `operator-made-${run}`,
+    userId: user.id,
   });
   const members = await db.collection('user-members').find({ user_id: user.id }).toArray();
   expect(members).toHaveLength(1);
   expect('app_roles' in members[0]).toBe(false);
+});
+
+test('the CreateOrganization step refuses a slug another organization holds', async () => {
+  const { createOrganization, createUser, db } = await setup();
+  const first = await createUser('first');
+  const second = await createUser('second');
+  const slug = `operator-made-${run}`;
+  await createOrganization({ name: 'First', slug, userId: first.id });
+  await expect(createOrganization({ name: 'Second', slug, userId: second.id })).rejects.toThrow(
+    `CreateOrganization refused - an organization with slug "${slug}" already exists.`
+  );
+  expect(await db.collection('user-organizations').countDocuments()).toBe(1);
+  expect(await db.collection('user-members').countDocuments({ user_id: second.id })).toBe(0);
 });

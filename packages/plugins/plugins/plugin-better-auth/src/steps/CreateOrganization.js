@@ -15,78 +15,83 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { getOrgAdapter } from 'better-auth/plugins';
 
-// The rows are written straight through the org plugin's own adapter layer, not
-// its createOrganization endpoint. The endpoint mints its creator as an owner
-// member with no app roles, so granting auth.organizations.creatorAppRoles
-// would take a second write, and undoing both rows when that one failed.
-// Written here, the owner row carries its app roles from the one write, the
-// same way the tenant signup mint writes it (createActiveOrgPolicyHook).
-//
-// Of what the endpoint checks for a system action, this keeps the two that
-// apply: the creator must be a user, and the slug must be free. The engine sets
-// no organizationLimit, teams or member hooks. A provisioned organization has
-// no creator - membership arrives by invitation - so it gets no member row.
-async function CreateOrganization({ acting, auth, organization: organizations, properties }) {
-  const { userId: propertiesUserId, ...organizationFields } = properties;
-  const userId = propertiesUserId ?? acting.user?.id;
-  if (type.isNone(organizationFields.name) || type.isNone(organizationFields.slug)) {
-    throw new Error('CreateOrganization requires "name" and "slug".');
+const organizationProperties = ['name', 'slug', 'logo', 'metadata'];
+
+// The org plugin's createOrganization endpoint body schema does not run on
+// this path (see CreateOrganization), so the step checks the properties
+// itself: the endpoint's name, slug, logo and metadata, and userId. The org
+// plugin declares no additional organization fields a routine may set.
+function checkProperties(properties) {
+  const unknown = Object.keys(properties).filter(
+    (key) => key !== 'userId' && !organizationProperties.includes(key)
+  );
+  if (unknown.length > 0) {
+    throw new Error(
+      `CreateOrganization does not take ${unknown
+        .map((key) => `"${key}"`)
+        .join(', ')}. It takes "name", "slug", "logo", "metadata" and "userId".`
+    );
   }
-  const authContext = await auth.$context;
+  const { logo, metadata, name, slug, userId } = properties;
+  if (!type.isString(name) || name === '') {
+    throw new Error('CreateOrganization requires a "name" string property.');
+  }
+  if (!type.isString(slug) || slug === '') {
+    throw new Error('CreateOrganization requires a "slug" string property.');
+  }
+  if (!type.isNone(logo) && !type.isString(logo)) {
+    throw new Error('CreateOrganization requires a "logo" string property.');
+  }
+  if (!type.isNone(metadata) && !type.isObject(metadata)) {
+    throw new Error('CreateOrganization requires a "metadata" object property.');
+  }
+  if (!type.isNone(userId) && (!type.isString(userId) || userId === '')) {
+    throw new Error('CreateOrganization requires "userId" to be a user id string.');
+  }
+}
 
-  let user = null;
+// The rows are written by the engine's provisionOrganization, not the org
+// plugin's createOrganization endpoint. The endpoint mints its creator as an
+// owner member with no app roles, so granting auth.organizations.creatorAppRoles
+// would take a second write, and undoing both rows when that one failed. The
+// engine writes the owner row with its app roles in the one write, the same
+// way the tenant signup mint does, and a run that fails between the
+// organization and owner writes is finished by the creator's next run for the
+// same slug.
+//
+// A provisioned organization has no creator - membership arrives by
+// invitation - so without a userId it gets no member row. The step is
+// system-scoped, so there is no caller to default the creator to.
+async function CreateOrganization({ auth, properties, provisionOrganization }) {
+  checkProperties(properties);
+  const { userId } = properties;
+  const organization = {};
+  organizationProperties.forEach((key) => {
+    if (!type.isNone(properties[key])) {
+      organization[key] = properties[key];
+    }
+  });
+
   if (!type.isNone(userId)) {
-    user = await authContext.internalAdapter.findUserById(userId);
+    const { internalAdapter } = await auth.$context;
+    const user = await internalAdapter.findUserById(userId);
     if (type.isNone(user)) {
       throw new Error(`CreateOrganization creator "${userId}" is not a user.`);
     }
   }
 
-  const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
-  const orgAdapter = getOrgAdapter(authContext, orgPlugin.options);
-  // The unique slug index still rejects a create that races this read.
-  const existing = await orgAdapter.findOrganizationBySlug(organizationFields.slug);
-  if (!type.isNone(existing)) {
+  const provisioned = await provisionOrganization({ organization, userId });
+  if (type.isNone(provisioned)) {
     throw new Error(
-      `CreateOrganization refused - an organization with slug "${organizationFields.slug}" already exists.`
+      `CreateOrganization refused - an organization with slug "${organization.slug}" already exists.`
     );
   }
-  // createOrganization spreads the row verbatim and adds no timestamp.
-  const organization = await orgAdapter.createOrganization({
-    organization: {
-      ...organizationFields,
-      createdAt: new Date(),
-    },
-  });
-
-  let member = null;
-  if (!type.isNone(user)) {
-    const memberData = { userId: user.id, organizationId: organization.id, role: 'owner' };
-    // An empty list leaves the row without an appRoles field, as it was before
-    // creatorAppRoles existed. A copy, so a routine that mutates the step result
-    // cannot change the roles every later organization's owner gets.
-    if (organizations.creatorAppRoles.length > 0) {
-      memberData.appRoles = [...organizations.creatorAppRoles];
-    }
-    member = await orgAdapter.createMember(memberData);
-  }
-
-  // Adapter-layer writes fire no organizationHooks, so the org plugin's
-  // declared afterCreateOrganization is invoked directly, with the endpoint's
-  // payload shape ({ organization, member, user }).
-  await orgPlugin.options.organizationHooks?.afterCreateOrganization?.({
-    organization,
-    member,
-    user,
-  });
-
-  if (type.isNone(member)) {
-    return organization;
+  if (type.isNone(provisioned.member)) {
+    return provisioned.organization;
   }
   // The endpoint's result shape, which routines already read the owner from.
-  return { ...organization, members: [member] };
+  return { ...provisioned.organization, members: [provisioned.member] };
 }
 
 // system scope: under the pinned policy organizations are seeded by

@@ -19,8 +19,7 @@ import { type } from '@lowdefy/helpers';
 // The engine retains the deployment's organizations declaration and the
 // ensured pinned organization per auth instance. Request and system contexts
 // read the retained state synchronously so the _organization operator and
-// the org-scoped admin steps can resolve the pinned org at evaluation time,
-// and the CreateOrganization step can read the app roles its owner gets.
+// the org-scoped admin steps can resolve the pinned org at evaluation time.
 // The pinned row is retained by ensureOrganization when its ensure resolves
 // (at startup, or on the first session fire when startup seeding failed) -
 // the org id is minted at creation, so no build artifact can carry it.
@@ -36,8 +35,9 @@ function registerOrganizationBinding({ auth, database = false, organizations }) 
   });
 }
 
-// The raw registered entry (policy, slug, database, pinned, creatorAppRoles) - used by
-// resolvePinnedOrganization to decide whether an ensure is needed.
+// The raw registered entry (policy, slug, database, pinned, creatorAppRoles) -
+// used by resolvePinnedOrganization to decide whether an ensure is needed, and
+// by provisionOrganization for the app roles a new organization's owner gets.
 function getRegisteredOrganization({ auth }) {
   if (type.isNone(auth)) {
     return null;
@@ -61,11 +61,7 @@ function getOrganizationBinding({ auth }) {
   if (type.isNone(binding)) {
     return null;
   }
-  return {
-    creatorAppRoles: binding.creatorAppRoles,
-    policy: binding.policy,
-    pinned: binding.pinned,
-  };
+  return { policy: binding.policy, pinned: binding.pinned };
 }
 
 export { getRegisteredOrganization, registerOrganizationBinding, setPinnedOrganization };

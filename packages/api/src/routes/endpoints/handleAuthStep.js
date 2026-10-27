@@ -21,6 +21,7 @@ import { markCredential } from '@lowdefy/node-utils';
 import addStepResult from './addStepResult.js';
 import authorizeRole from '../auth/organizations/authorizeRole.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
+import provisionOrganization from '../auth/organizations/provisionOrganization.js';
 import resolveStepOrganizationId from './resolveStepOrganizationId.js';
 
 // Refusals name what was asked for, because "refused" with no subject is the
@@ -202,15 +203,17 @@ async function handleAuthStep(context, routineContext, { step }) {
     }
   }
 
-  // organization is the retained organizations state ({ policy, pinned,
-  // creatorAppRoles }) - steps read policy for their own messages, and
-  // CreateOrganization reads the app roles it gives a new organization's owner. organizationId is the resolved
+  // organization is the retained organizations state ({ policy, pinned }) -
+  // steps read policy for their own messages. organizationId is the resolved
   // target, which is what a step scopes its write to.
   // mcp is the MCP route's token outcome (client, organization, scopes) for a
   // caller that arrived over /api/mcp, null on every other surface - the
   // caller-scoped grant steps read it to find the grant behind the call.
   // markCredential lets a step that makes a credential (a member token) keep
   // it out of every log line for the rest of the request.
+  // provisionOrganization is the engine's organization-and-owner write, which
+  // CreateOrganization makes through it so the signup mint and the step write
+  // the owner row one way, behind the same unique indexes.
   const result = await stepFn({
     acting,
     auth: context.auth,
@@ -219,6 +222,8 @@ async function handleAuthStep(context, routineContext, { step }) {
     organization: context.organization ?? null,
     organizationId,
     properties: evaluatedProperties,
+    provisionOrganization: ({ organization, userId }) =>
+      provisionOrganization({ auth: context.auth, logger, organization, userId }),
   });
 
   addStepResult(context, routineContext, {

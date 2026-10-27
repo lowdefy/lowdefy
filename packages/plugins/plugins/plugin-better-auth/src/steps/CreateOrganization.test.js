@@ -14,273 +14,173 @@
   limitations under the License.
 */
 
-import { vi, beforeEach, expect, test } from 'vitest';
+import { vi, expect, test } from 'vitest';
 
 import createMockAuth from '../../test/createMockAuth.js';
+import CreateOrganization from './CreateOrganization.js';
 
-vi.doMock('better-auth/plugins', () => ({
-  getOrgAdapter: vi.fn(),
-}));
-
-const { getOrgAdapter } = await import('better-auth/plugins');
-const { default: CreateOrganization } = await import('./CreateOrganization.js');
-
-const sessionCaller = {
-  system: false,
-  user: {
-    id: 'user-1',
-    email: 'user1@example.com',
-    name: 'User One',
-    image: null,
-    email_verified: true,
-    active_organization_id: null,
-  },
+const provisioned = {
+  organization: { id: 'org-1', name: 'Org One', slug: 'org-one', createdAt: new Date() },
+  member: null,
 };
 
-const systemCaller = { system: true, user: null };
-
-const organizations = { policy: 'tenant', pinned: null, creatorAppRoles: [] };
-
-beforeEach(() => {
-  getOrgAdapter.mockReset();
-});
-
-function setup({ creatorAppRoles = [], existing = null, users = {} } = {}) {
-  const orgAdapter = {
-    createMember: vi.fn(async (data) => ({ id: 'member-1', ...data, createdAt: new Date() })),
-    createOrganization: vi.fn(async ({ organization }) => ({ id: 'org-1', ...organization })),
-    findOrganizationBySlug: vi.fn(async () => existing),
-  };
-  getOrgAdapter.mockReturnValue(orgAdapter);
+function setup({ result = provisioned, users = {} } = {}) {
   const { auth, authContext } = createMockAuth();
   authContext.internalAdapter = { findUserById: vi.fn(async (id) => users[id] ?? null) };
-  return { auth, authContext, orgAdapter, organization: { ...organizations, creatorAppRoles } };
+  const provisionOrganization = vi.fn(async () => result);
+  return { auth, authContext, provisionOrganization };
 }
 
-test('CreateOrganization writes the organization and its creator as owner, and returns the members', async () => {
-  const { auth, authContext, orgAdapter, organization } = setup({
+test('CreateOrganization provisions the organization with its creator and returns the owner under members', async () => {
+  const member = { id: 'member-1', userId: 'user-9', organizationId: 'org-1', role: 'owner' };
+  const { auth, provisionOrganization } = setup({
+    result: { ...provisioned, member },
     users: { 'user-9': { id: 'user-9' } },
   });
   const result = await CreateOrganization({
-    acting: systemCaller,
     auth,
-    organization,
     properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
+    provisionOrganization,
   });
-  expect(getOrgAdapter).toHaveBeenCalledWith(authContext, {});
-  const written = orgAdapter.createOrganization.mock.calls[0][0].organization;
-  expect(written.name).toBe('Org One');
-  expect(written.slug).toBe('org-one');
-  expect(written.createdAt).toBeInstanceOf(Date);
-  expect('userId' in written).toBe(false);
-  expect(orgAdapter.createMember).toHaveBeenCalledWith({
+  expect(provisionOrganization).toHaveBeenCalledWith({
+    organization: { name: 'Org One', slug: 'org-one' },
     userId: 'user-9',
-    organizationId: 'org-1',
-    role: 'owner',
   });
-  expect(result).toEqual(
-    expect.objectContaining({
-      id: 'org-1',
-      members: [expect.objectContaining({ userId: 'user-9', role: 'owner' })],
-    })
-  );
+  expect(result).toEqual({ ...provisioned.organization, members: [member] });
 });
 
-test('CreateOrganization defaults the creator to the acting caller', async () => {
-  const { auth, orgAdapter, organization } = setup({ users: { 'user-1': { id: 'user-1' } } });
-  await CreateOrganization({
-    acting: sessionCaller,
+test('CreateOrganization creator-less provisions with no userId and returns the organization alone', async () => {
+  const { auth, authContext, provisionOrganization } = setup();
+  const result = await CreateOrganization({
     auth,
-    organization,
     properties: { name: 'Org One', slug: 'org-one' },
+    provisionOrganization,
   });
-  expect(orgAdapter.createMember.mock.calls[0][0].userId).toBe('user-1');
+  expect(provisionOrganization).toHaveBeenCalledWith({
+    organization: { name: 'Org One', slug: 'org-one' },
+    userId: undefined,
+  });
+  expect(authContext.internalAdapter.findUserById).not.toHaveBeenCalled();
+  expect(result).toEqual(provisioned.organization);
 });
 
-test('CreateOrganization writes creatorAppRoles on the owner row in the same write', async () => {
-  const { auth, orgAdapter, organization } = setup({
-    creatorAppRoles: ['workspace-admin', 'billing'],
-    users: { 'user-9': { id: 'user-9' } },
-  });
+test('CreateOrganization passes logo and metadata through to the organization row', async () => {
+  const { auth, provisionOrganization } = setup();
   await CreateOrganization({
-    acting: systemCaller,
     auth,
-    organization,
-    properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
+    properties: { name: 'Org One', slug: 'org-one', logo: 'logo.png', metadata: { tier: 'gold' } },
+    provisionOrganization,
   });
-  expect(orgAdapter.createMember).toHaveBeenCalledTimes(1);
-  const memberData = orgAdapter.createMember.mock.calls[0][0];
-  expect(memberData.appRoles).toEqual(['workspace-admin', 'billing']);
-  // A copy, so the configured list is never shared with a step result.
-  expect(memberData.appRoles).not.toBe(organization.creatorAppRoles);
+  expect(provisionOrganization.mock.calls[0][0].organization).toEqual({
+    name: 'Org One',
+    slug: 'org-one',
+    logo: 'logo.png',
+    metadata: { tier: 'gold' },
+  });
 });
 
-test('CreateOrganization leaves the owner row without an appRoles field when creatorAppRoles is empty', async () => {
-  const { auth, orgAdapter, organization } = setup({ users: { 'user-9': { id: 'user-9' } } });
-  await CreateOrganization({
-    acting: systemCaller,
-    auth,
-    organization,
-    properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
-  });
-  expect('appRoles' in orgAdapter.createMember.mock.calls[0][0]).toBe(false);
-});
-
-test('CreateOrganization throws and writes nothing when the creator is not a user', async () => {
-  const { auth, orgAdapter, organization } = setup();
+test('CreateOrganization throws and provisions nothing when the creator is not a user', async () => {
+  const { auth, provisionOrganization } = setup();
   await expect(
     CreateOrganization({
-      acting: systemCaller,
       auth,
-      organization,
       properties: { name: 'Org One', slug: 'org-one', userId: 'user-404' },
+      provisionOrganization,
     })
   ).rejects.toThrow('CreateOrganization creator "user-404" is not a user.');
-  expect(orgAdapter.createOrganization).not.toHaveBeenCalled();
+  expect(provisionOrganization).not.toHaveBeenCalled();
 });
 
-test('CreateOrganization throws and writes nothing when the slug is taken', async () => {
-  const { auth, orgAdapter, organization } = setup({
-    existing: { id: 'org-0', slug: 'org-one' },
+test('CreateOrganization throws when the slug belongs to another organization', async () => {
+  const { auth, provisionOrganization } = setup({
+    result: null,
     users: { 'user-9': { id: 'user-9' } },
   });
   await expect(
     CreateOrganization({
-      acting: systemCaller,
       auth,
-      organization,
       properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
+      provisionOrganization,
     })
   ).rejects.toThrow(
     'CreateOrganization refused - an organization with slug "org-one" already exists.'
   );
-  expect(orgAdapter.createOrganization).not.toHaveBeenCalled();
-  expect(orgAdapter.createMember).not.toHaveBeenCalled();
 });
 
-test('CreateOrganization surfaces the unique-index error when a create races the slug check', async () => {
-  const { auth, orgAdapter, organization } = setup();
-  orgAdapter.createOrganization.mockRejectedValue(new Error('E11000 duplicate key error: slug'));
+test('CreateOrganization surfaces a provisioning failure', async () => {
+  const { auth, provisionOrganization } = setup();
+  provisionOrganization.mockRejectedValue(new Error('index missing'));
   await expect(
     CreateOrganization({
-      acting: systemCaller,
       auth,
-      organization,
       properties: { name: 'Org One', slug: 'org-one' },
+      provisionOrganization,
     })
-  ).rejects.toThrow('E11000 duplicate key error: slug');
+  ).rejects.toThrow('index missing');
 });
 
-test('CreateOrganization creator-less writes the organization and mints no member', async () => {
-  const { auth, authContext, orgAdapter, organization } = setup({
-    creatorAppRoles: ['workspace-admin'],
-  });
-  const result = await CreateOrganization({
-    acting: systemCaller,
+test('CreateOrganization ignores a null optional property', async () => {
+  const { auth, provisionOrganization } = setup();
+  await CreateOrganization({
     auth,
-    organization,
-    properties: { name: 'Org One', slug: 'org-one' },
+    properties: { name: 'Org One', slug: 'org-one', logo: null, userId: null },
+    provisionOrganization,
   });
-  expect(result).toEqual(expect.objectContaining({ id: 'org-1', name: 'Org One' }));
-  expect('members' in result).toBe(false);
+  expect(provisionOrganization).toHaveBeenCalledWith({
+    organization: { name: 'Org One', slug: 'org-one' },
+    userId: null,
+  });
+});
+
+test.each([
+  [
+    'an endpoint option',
+    { name: 'Org One', slug: 'org-one', keepCurrentActiveOrganization: true },
+    'CreateOrganization does not take "keepCurrentActiveOrganization". It takes "name", "slug", "logo", "metadata" and "userId".',
+  ],
+  [
+    'server-only fields',
+    { name: 'Org One', slug: 'org-one', id: 'chosen-id', mintPending: true },
+    'CreateOrganization does not take "id", "mintPending". It takes "name", "slug", "logo", "metadata" and "userId".',
+  ],
+  ['a missing name', { slug: 'org-one' }, 'CreateOrganization requires a "name" string property.'],
+  [
+    'a number name',
+    { name: 123, slug: 'org-one' },
+    'CreateOrganization requires a "name" string property.',
+  ],
+  [
+    'a missing slug',
+    { name: 'Org One', userId: 'user-9' },
+    'CreateOrganization requires a "slug" string property.',
+  ],
+  [
+    'an empty slug',
+    { name: 'Org One', slug: '' },
+    'CreateOrganization requires a "slug" string property.',
+  ],
+  [
+    'a number logo',
+    { name: 'Org One', slug: 'org-one', logo: 7 },
+    'CreateOrganization requires a "logo" string property.',
+  ],
+  [
+    'a string metadata',
+    { name: 'Org One', slug: 'org-one', metadata: '{"tier":"gold"}' },
+    'CreateOrganization requires a "metadata" object property.',
+  ],
+  [
+    'a number userId',
+    { name: 'Org One', slug: 'org-one', userId: 9 },
+    'CreateOrganization requires "userId" to be a user id string.',
+  ],
+])('CreateOrganization refuses %s and provisions nothing', async (_label, properties, message) => {
+  const { auth, authContext, provisionOrganization } = setup({
+    users: { 'user-9': { id: 'user-9' } },
+  });
+  await expect(CreateOrganization({ auth, properties, provisionOrganization })).rejects.toThrow(
+    message
+  );
   expect(authContext.internalAdapter.findUserById).not.toHaveBeenCalled();
-  expect(orgAdapter.createMember).not.toHaveBeenCalled();
-});
-
-test('CreateOrganization forwards a caller id and metadata to the adapter', async () => {
-  const { auth, orgAdapter, organization } = setup();
-  await CreateOrganization({
-    acting: systemCaller,
-    auth,
-    organization,
-    properties: {
-      id: 'chosen-id',
-      name: 'Org One',
-      slug: 'org-one',
-      metadata: { tier: 'gold' },
-    },
-  });
-  const written = orgAdapter.createOrganization.mock.calls[0][0].organization;
-  expect(written.id).toBe('chosen-id');
-  expect(written.metadata).toEqual({ tier: 'gold' });
-});
-
-test('CreateOrganization throws naming the required fields when name is missing', async () => {
-  const { auth, orgAdapter, organization } = setup();
-  await expect(
-    CreateOrganization({
-      acting: systemCaller,
-      auth,
-      organization,
-      properties: { slug: 'org-one' },
-    })
-  ).rejects.toThrow('CreateOrganization requires "name" and "slug".');
-  expect(orgAdapter.createOrganization).not.toHaveBeenCalled();
-});
-
-test('CreateOrganization throws naming the required fields when slug is missing', async () => {
-  const { auth, orgAdapter, organization } = setup({ users: { 'user-9': { id: 'user-9' } } });
-  await expect(
-    CreateOrganization({
-      acting: systemCaller,
-      auth,
-      organization,
-      properties: { name: 'Org One', userId: 'user-9' },
-    })
-  ).rejects.toThrow('CreateOrganization requires "name" and "slug".');
-  expect(orgAdapter.createOrganization).not.toHaveBeenCalled();
-});
-
-test('CreateOrganization invokes the org plugin afterCreateOrganization hook with the endpoint payload shape', async () => {
-  const user = { id: 'user-9' };
-  const { auth, organization } = setup({ users: { 'user-9': user } });
-  const afterCreateOrganization = vi.fn();
-  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
-    afterCreateOrganization,
-  };
-  await CreateOrganization({
-    acting: systemCaller,
-    auth,
-    organization,
-    properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
-  });
-  expect(afterCreateOrganization).toHaveBeenCalledWith({
-    organization: expect.objectContaining({ id: 'org-1' }),
-    member: expect.objectContaining({ userId: 'user-9', role: 'owner' }),
-    user,
-  });
-});
-
-test('CreateOrganization creator-less passes a null member and user to the afterCreateOrganization hook', async () => {
-  const { auth, organization } = setup();
-  const afterCreateOrganization = vi.fn();
-  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
-    afterCreateOrganization,
-  };
-  await CreateOrganization({
-    acting: systemCaller,
-    auth,
-    organization,
-    properties: { name: 'Org One', slug: 'org-one' },
-  });
-  expect(afterCreateOrganization).toHaveBeenCalledWith({
-    organization: expect.objectContaining({ id: 'org-1' }),
-    member: null,
-    user: null,
-  });
-});
-
-test('CreateOrganization surfaces an afterCreateOrganization hook failure', async () => {
-  const { auth, organization } = setup();
-  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
-    afterCreateOrganization: vi.fn().mockRejectedValue(new Error('hook failed')),
-  };
-  await expect(
-    CreateOrganization({
-      acting: systemCaller,
-      auth,
-      organization,
-      properties: { name: 'Org One', slug: 'org-one' },
-    })
-  ).rejects.toThrow('hook failed');
+  expect(provisionOrganization).not.toHaveBeenCalled();
 });
