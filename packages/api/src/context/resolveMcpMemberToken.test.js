@@ -168,6 +168,19 @@ test('a member token whose member row is gone is refused', async () => {
   });
 });
 
+test('a member token whose member is suspended is refused', async () => {
+  const { auth } = mockAuth({
+    member: { id: 'member_1', role: 'member', appRoles: ['builder'], suspended: true },
+  });
+  const context = await resolve({ auth });
+  expect(context.user).toBe(null);
+  expect(context.mcpAuth).toEqual({
+    tokenStatus: 'invalid',
+    memberToken: true,
+    description: MEMBER_GONE,
+  });
+});
+
 test('a member token made for an earlier member row is refused after the member rejoins', async () => {
   const { auth } = mockAuth({ member: { id: 'member_2', role: 'member', appRoles: [] } });
   const context = await resolve({ auth });

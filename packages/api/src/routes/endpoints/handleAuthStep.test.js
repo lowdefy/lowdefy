@@ -470,6 +470,24 @@ test('AuthStep step refuses an org-scoped step when the caller holds no member r
   expect(stepFn).not.toHaveBeenCalled();
 });
 
+test('AuthStep step refuses an org-scoped step when the caller is suspended in the resolved organization', async () => {
+  const stepFn = createStepFn();
+  const { context } = createTestContext({
+    members: [{ userId: 'user_1', organizationId: 'org_pinned', role: 'admin', suspended: true }],
+    steps: { TestAuthStep: stepFn },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res.status).toBe('error');
+  expect(res.error.name).toBe('AuthorizationError');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" refused - the caller does not hold member: [update] in organization "org_pinned".'
+  );
+  expect(stepFn).not.toHaveBeenCalled();
+});
+
 test('AuthStep step names every requested resource and action in the refusal', async () => {
   const stepFn = createStepFn({
     scope: 'org',
@@ -655,6 +673,29 @@ test('AuthStep step runs a targetUser step when the target holds a member row in
       { field: 'organizationId', value: 'org_pinned' },
     ],
   });
+});
+
+test('AuthStep step runs a targetUser step when the target is suspended in the resolved organization', async () => {
+  const stepFn = createStepFn({
+    scope: 'org',
+    permissions: { user: ['ban'] },
+    targetUser: 'userId',
+  });
+  const { context } = createTestContext({
+    members: [
+      { userId: 'user_1', organizationId: 'org_pinned', role: 'admin' },
+      { userId: 'user_2', organizationId: 'org_pinned', role: 'member', suspended: true },
+    ],
+    steps: { TestAuthStep: stepFn },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ properties: { userId: 'user_2' } }),
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(stepFn).toHaveBeenCalled();
 });
 
 test('AuthStep step leaves an absent targetUser property to the step to reject', async () => {

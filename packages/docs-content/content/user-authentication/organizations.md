@@ -57,6 +57,31 @@ An equivalent unique index you created yourself, under any name, is accepted. If
 
 An invitation is how someone joins an organization, never how a membership changes. Accepting an invitation into an organization you already belong to (you joined another way after it was sent) succeeds and marks the invitation accepted, but leaves your membership exactly as it is: the invitation's role, app roles and attributes are not applied, and no second membership is written. If your session had no active organization, the accepted organization becomes active. To change an existing membership, use the [auth steps](/auth-steps) (`UpdateMemberOrgRole`, `UpdateMemberRoles`, `UpdateMemberAttributes`), which check the caller's authority at the time of the change.
 
+### Suspending a member
+
+Suspending takes a person out of one organization while keeping their membership on record. `BanUser` bans the login, which covers every organization and every app sharing the auth database. `RemoveMember` deletes the membership, so the app's own queries stop finding the person and the roles they held. A suspended membership keeps its row, its `appRoles`, org tier and attributes, but admits nobody. Lowdefy treats it as no membership everywhere it decides who the caller is:
+
+- The person's session resolves unauthenticated (`_user` is `null`), so protected pages, requests and API endpoints give them what they give a non-member. Their MCP access tokens and [member tokens](/mcp-oauth#tokens-for-scripts) stop working, and an MCP client's refresh is refused.
+- Signing in to a `pinned` app is refused with `MEMBERSHIP_REQUIRED`, the code a refused non-member gets. Under `signup: open` they are not joined again, and a pending invitation does not let them in either.
+- Under `tenant`, sign-in makes the oldest organization they are not suspended in active, `ListOrganizations` leaves the organization out, and `SetActiveOrganization` and the other organization endpoints refuse it as they refuse a non-member.
+- A suspended membership grants no [auth-step](/auth-steps) authority. Administrators can still manage the suspended member, with `UnsuspendMember`, `RemoveMember`, `BanUser` and the other steps.
+- Accepting an invitation does not lift a suspension (see [Invitations for existing members](#invitations-for-existing-members)).
+
+The `SuspendMember` and `UnsuspendMember` auth steps set and lift it, and need the `member: [suspend]` permission, which `owner` and `admin` hold. The organization's last `owner` who is not suspended cannot be suspended.
+
+```yaml
+id: suspend-member
+type: Api
+routine:
+  - id: suspend
+    type: SuspendMember
+    properties:
+      memberId:
+        _payload: memberId
+```
+
+The membership row stores it as `suspended: true` in the `user-members` collection. Rows without the field, including every row written before it existed, are not suspended. `ListMembers` returns `suspended` on each row. A report that finds people by role reads suspended members too; to leave them out, filter on `suspended: { $ne: true }`.
+
 ## The `owner` / `admin` / `member` tier vs app roles
 
 A membership carries **two** independent role authorities, and keeping them apart is the whole point:

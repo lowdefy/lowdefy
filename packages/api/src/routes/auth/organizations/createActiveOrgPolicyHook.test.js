@@ -119,6 +119,47 @@ test('pinned: an expired invitation gets the normal rejection', async () => {
   await expect(hook({ userId: 'user_1' })).rejects.toThrow(APIError);
 });
 
+test('pinned: a suspended member is rejected with a 403 MEMBERSHIP_REQUIRED APIError', async () => {
+  const { auth } = createMockAuth({
+    member: { id: 'member_1', role: 'admin', appRoles: ['manager'], suspended: true },
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
+  await expect(hook({ userId: 'user_1' })).rejects.toMatchObject({
+    statusCode: 403,
+    body: { code: 'MEMBERSHIP_REQUIRED' },
+  });
+});
+
+test('pinned: a suspended member holding a pending invitation is still rejected', async () => {
+  const { auth } = createMockAuth({
+    member: { id: 'member_1', role: 'member', suspended: true },
+    invitations: [{ id: 'inv_1', status: 'pending', expiresAt: future }],
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
+  await expect(hook({ userId: 'user_1' })).rejects.toMatchObject({
+    body: { code: 'MEMBERSHIP_REQUIRED' },
+  });
+});
+
+test('pinned open signup: a suspended member is rejected and never re-added', async () => {
+  const { auth } = createMockAuth({ member: { id: 'member_1', role: 'member', suspended: true } });
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    organizations: { policy: 'pinned', org: 'team-portal', signup: 'open' },
+  });
+  await expect(hook({ userId: 'user_1' })).rejects.toMatchObject({
+    body: { code: 'MEMBERSHIP_REQUIRED' },
+  });
+  expect(auth.api.addMember).not.toHaveBeenCalled();
+});
+
+test('pinned: a member whose suspended flag is false gets the pinned org as active', async () => {
+  const { auth } = createMockAuth({ member: { id: 'member_1', role: 'member', suspended: false } });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
+  const result = await hook({ userId: 'user_1' });
+  expect(result).toEqual({ data: { userId: 'user_1', activeOrganizationId: 'team-portal' } });
+});
+
 test('pinned: the invitation lookup uses the lowercased user email scoped to the pinned org', async () => {
   const { auth, adapter } = createMockAuth({ member: null, invitations: [] });
   const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
@@ -146,8 +187,39 @@ test('tenant: the oldest membership becomes the active organization', async () =
     model: 'member',
     where: [{ field: 'userId', value: 'user_1' }],
     sortBy: { field: 'createdAt', direction: 'asc' },
-    limit: 1,
+    limit: 1000,
   });
+});
+
+test('tenant: the oldest unsuspended membership becomes the active organization', async () => {
+  const { auth } = createMockAuth({
+    members: [
+      { id: 'member_1', organizationId: 'org_oldest', suspended: true },
+      { id: 'member_2', organizationId: 'org_next' },
+    ],
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'org_next' },
+  });
+});
+
+test('tenant invite-only: a user suspended in every organization is rejected with MEMBERSHIP_REQUIRED', async () => {
+  const { auth, adapter } = createMockAuth({
+    members: [{ id: 'member_1', organizationId: 'org_1', suspended: true }],
+    invitations: [],
+    organization: null,
+  });
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    organizations: { policy: 'tenant', signup: 'invite-only', create: 'auto' },
+  });
+  await expect(hook({ userId: 'user_1' })).rejects.toMatchObject({
+    statusCode: 403,
+    body: { code: 'MEMBERSHIP_REQUIRED' },
+  });
+  expect(adapter.create).not.toHaveBeenCalled();
 });
 
 test('tenant: a pending invitation admits the session and mints nothing', async () => {

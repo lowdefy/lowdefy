@@ -23,6 +23,7 @@ import { normalizeCaller, type } from '@lowdefy/helpers';
 
 import findPendingInvitation from '../routes/auth/organizations/findPendingInvitation.js';
 import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
+import isActiveMember from '../routes/auth/organizations/isActiveMember.js';
 import { getAsIssuer, getMcpResourceUri } from '../routes/mcp/getMcpUri.js';
 import getMcpJwks from '../routes/mcp/getMcpJwks.js';
 import readMemberships from './readMemberships.js';
@@ -116,6 +117,11 @@ function passkeyConfigured({ auth }) {
 // memberId is passed only by the member token branch: a token works for the
 // member row it was made for, so a member who left and rejoined - a new row -
 // holds no old tokens.
+//
+// A suspended row resolves exactly as no row does. The row stays so the app's
+// own queries still find the person and their roles (a report of everyone who
+// held a role), but it admits nobody - every protected page, request, endpoint
+// and MCP call sees a non-member.
 async function resolveMemberCaller(
   context,
   { adapter, auth, member, memberId, organizationId, user }
@@ -123,6 +129,12 @@ async function resolveMemberCaller(
   if (type.isNone(member)) {
     context.logger.debug(
       `User "${user.id}" has no member row in organization "${organizationId}" - resolved unauthenticated.`
+    );
+    return null;
+  }
+  if (!isActiveMember({ member })) {
+    context.logger.debug(
+      `User "${user.id}" is suspended in organization "${organizationId}" - resolved unauthenticated.`
     );
     return null;
   }
@@ -639,7 +651,8 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
     // admin added them directly) while the invitation stayed pending. They are
     // not awaiting: unauthenticated sends protected pages to the login page,
     // and that sign-in re-pins the session (applyPinnedPolicy). Awaiting would
-    // refuse those pages with no way back.
+    // refuse those pages with no way back. A suspended row is not one: sign-in
+    // would not re-pin it, so they stay awaiting, like a non-member.
     if (registered.policy === 'pinned') {
       const member = await adapter.findOne({
         model: 'member',
@@ -648,7 +661,7 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
           { field: 'organizationId', value: registered.slug },
         ],
       });
-      if (!type.isNone(member)) {
+      if (isActiveMember({ member })) {
         context.logger.debug(
           `Session for user "${session.user.id}" has no active organization but holds a member row in this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
         );

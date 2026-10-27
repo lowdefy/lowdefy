@@ -28,7 +28,10 @@ import {
 // authority. The resource names are the admin design's, kept verbatim so its
 // catalog table stays the contract.
 const ADDED = {
-  member: ['list'],
+  // suspend is its own action rather than update or delete: suspending takes a
+  // person out of the organization without removing the row, and a narrower
+  // role may be granted one without the other.
+  member: ['list', 'suspend'],
   user: [
     'ban',
     'delete',

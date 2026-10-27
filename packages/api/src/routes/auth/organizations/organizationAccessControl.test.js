@@ -17,8 +17,16 @@
 import { roles, statements } from './organizationAccessControl.js';
 import { expect, test } from 'vitest';
 
-test('organizationAccessControl extends the member statement with list', () => {
-  expect(statements.member).toEqual(expect.arrayContaining(['create', 'update', 'delete', 'list']));
+test('organizationAccessControl extends the member statement with list and suspend', () => {
+  expect(statements.member).toEqual(
+    expect.arrayContaining(['create', 'update', 'delete', 'list', 'suspend'])
+  );
+});
+
+test('organizationAccessControl grants suspend to owner and admin and not to member', () => {
+  expect(roles.owner.authorize({ member: ['suspend'] }).success).toBe(true);
+  expect(roles.admin.authorize({ member: ['suspend'] }).success).toBe(true);
+  expect(roles.member.authorize({ member: ['suspend'] }).success).not.toBe(true);
 });
 
 test('organizationAccessControl adds the user and session resources', () => {

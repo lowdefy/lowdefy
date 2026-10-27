@@ -124,6 +124,59 @@ test('buildRequestHooks routes /organization/accept-invitation into the expired 
   expect(adapter.findOne).toHaveBeenCalledTimes(1);
 });
 
+test('buildRequestHooks gates the member-gated organization endpoints under tenant only', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({
+    user: { id: 'user_1' },
+    session: { activeOrganizationId: 'org_1' },
+  });
+  const adapter = {
+    findOne: vi.fn(async () => null),
+    findMany: vi.fn(async () => [{ userId: 'user_1', organizationId: 'org_2', suspended: true }]),
+  };
+  const ctx = {
+    path: '/organization/set-active',
+    body: { organizationId: 'org_2' },
+    context: { adapter },
+  };
+
+  const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  expect(await pinnedHooks.before(ctx)).toBeUndefined();
+  expect(adapter.findMany).not.toHaveBeenCalled();
+
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  await expect(tenantHooks.before(ctx)).rejects.toMatchObject({
+    body: { code: 'USER_IS_NOT_A_MEMBER_OF_THE_ORGANIZATION' },
+  });
+  expect(await tenantHooks.before({ ...ctx, body: { organizationId: 'org_1' } })).toBeUndefined();
+});
+
+test('buildRequestHooks filters /organization/list under tenant only', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({ user: { id: 'user_1' }, session: {} });
+  const adapter = {
+    findMany: vi.fn(async () => [
+      { userId: 'user_1', organizationId: 'org_1' },
+      { userId: 'user_1', organizationId: 'org_2', suspended: true },
+    ]),
+  };
+  const ctx = {
+    path: '/organization/list',
+    json: (value) => value,
+    context: { adapter, returned: [{ id: 'org_1' }, { id: 'org_2' }] },
+  };
+
+  const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  expect(await pinnedHooks.after(ctx)).toBeUndefined();
+
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  expect(await tenantHooks.after(ctx)).toEqual([{ id: 'org_1' }]);
+});
+
 test('buildRequestHooks does not resolve the BetterAuth instance while assembling', () => {
   const getAuth = vi.fn();
   buildRequestHooks({ authConfig: { magicLink: { enabled: true }, organizations }, getAuth });

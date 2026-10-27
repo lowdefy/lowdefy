@@ -121,6 +121,8 @@ Scope, required permission, and target for every auth step. Permissions are chec
 | `UpdateMemberRoles` | org | `member: [update]` | — | Set the membership's **app roles** (`appRoles` array; empty clears). |
 | `UpdateMemberOrgRole` | org | `member: [update]` | — | Set the **org tier** (`owner`/`admin`/`member`). |
 | `UpdateMemberAttributes` | org | `member: [update]` | — | Set the membership's per-organization attributes. |
+| `SuspendMember` | org | `member: [suspend]` | — | [Suspend](/organizations#suspending-a-member) a member in this organization (`memberId`): the row and its roles stay, but it admits nobody. Refuses the last unsuspended `owner`. |
+| `UnsuspendMember` | org | `member: [suspend]` | — | Lift a suspension (`memberId`); the member keeps the roles they held. |
 | `UpdateOrganization` | org | `organization: [update]` | — | Update the organization row (name, slug, metadata). |
 | `RevokeOrgMcpToken` | org | `member: [update]` | — | Switch off any [member token](/mcp-oauth#tokens-for-scripts) in the organization (`id`). |
 | `UpdateUserProfile` | org | `user: [update]` | `userId` (self-exempt) | Update a member's display name/image (per-organization copy). Self-service save is exempt. |

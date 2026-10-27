@@ -21,8 +21,12 @@ import ensureAuthIndexes from './ensureAuthIndexes.js';
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
+import isActiveMember from './isActiveMember.js';
 import isEmailAdmitted from './isEmailAdmitted.js';
 import mintOrganization from './mintOrganization.js';
+
+// More rows than any one person holds, so the read is one round trip.
+const MEMBER_ROWS_LIMIT = 1000;
 
 // The engine-tier session.create hook that applies the active-org policy.
 // session.create is the one provider-agnostic choke point - it fires for
@@ -50,7 +54,7 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
         { field: 'organizationId', value: organization.id },
       ],
     });
-    if (member) {
+    if (isActiveMember({ member })) {
       return { data: { ...session, activeOrganizationId: organization.id } };
     }
     // Open signup ensures membership here as well as at user.create.after:
@@ -60,7 +64,7 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
     // mints an immediate session reaches this hook before the auto-join has
     // run. The two joins are idempotent - each skips when the member row
     // already exists.
-    if (organizations.signup === 'open') {
+    if (type.isNone(member) && organizations.signup === 'open') {
       await auth.api.addMember({
         body: {
           userId: session.userId,
@@ -73,13 +77,20 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
       });
       return { data: { ...session, activeOrganizationId: organization.id } };
     }
-    const admitted = await isEmailAdmitted({
-      userId: session.userId,
-      organizations,
-      auth,
-      adapter,
-      internalAdapter,
-    });
+    // A suspended member is refused under either signup mode, with the code a
+    // refused non-member gets: open signup must not join them (the row they
+    // hold is the suspension), and an invitation cannot let them in either -
+    // accepting one leaves an existing membership as it is
+    // (createAcceptExistingMemberHook).
+    const admitted =
+      type.isNone(member) &&
+      (await isEmailAdmitted({
+        userId: session.userId,
+        organizations,
+        auth,
+        adapter,
+        internalAdapter,
+      }));
     if (admitted) {
       // The member row was a miss above, so admission under invite-only means
       // the pending-invitation carve-out: the invitee needs a session to
@@ -117,14 +128,18 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   }
 
   async function applyTenantPolicy({ auth, adapter, internalAdapter, session }) {
+    // Every row, not the oldest one: the oldest may be suspended, and the
+    // filter runs here rather than in the query so it means the same on every
+    // adapter (a row written before suspension existed has no suspended field).
     const members = await adapter.findMany({
       model: 'member',
       where: [{ field: 'userId', value: session.userId }],
       sortBy: { field: 'createdAt', direction: 'asc' },
-      limit: 1,
+      limit: MEMBER_ROWS_LIMIT,
     });
-    if (members.length > 0) {
-      return { data: { ...session, activeOrganizationId: members[0].organizationId } };
+    const activeMember = members.find((member) => isActiveMember({ member }));
+    if (!type.isNone(activeMember)) {
+      return { data: { ...session, activeOrganizationId: activeMember.organizationId } };
     }
     const user = await internalAdapter.findUserById(session.userId);
     const invitation = user ? await findPendingInvitation({ adapter, email: user.email }) : null;

@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import isActiveMember from '../routes/auth/organizations/isActiveMember.js';
+
 // The adapter returns at most this many rows when asked for none; ask for more
 // than any one person holds, so the read is one round trip in practice.
 const MEMBER_ROWS_LIMIT = 1000;
@@ -25,6 +27,11 @@ const MEMBER_ROWS_LIMIT = 1000;
 // row in the active organization. The same read gives the ids of every
 // organization they belong to, which the response stamp hashes (callerStamp),
 // so the full identity costs no extra round trip.
+//
+// organizationIds leaves out organizations the person is suspended in - they
+// are not a member there for anything the stamp is used for, and suspending
+// someone then changes their stamp as removing them would. member is returned
+// suspended or not; resolveMemberCaller refuses a suspended one.
 //
 // A person holding more rows than one read returns is not cut off: the active
 // row is then read on its own, as before, and organizationIds is null - the
@@ -38,7 +45,12 @@ async function readMemberships({ adapter, organizationId, userId }) {
   });
   const member = rows.find((row) => row.organizationId === organizationId) ?? null;
   if (rows.length < MEMBER_ROWS_LIMIT) {
-    return { member, organizationIds: rows.map((row) => row.organizationId) };
+    return {
+      member,
+      organizationIds: rows
+        .filter((row) => isActiveMember({ member: row }))
+        .map((row) => row.organizationId),
+    };
   }
   if (!type.isNone(member)) {
     return { member, organizationIds: null };

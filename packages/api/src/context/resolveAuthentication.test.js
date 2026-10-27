@@ -107,6 +107,61 @@ test('sets context.user to null when the user holds no member row in the active 
   );
 });
 
+test('sets context.user to null when the caller is suspended in the active org', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'admin', appRoles: ['manager'], suspended: true },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toBe(null);
+  expect(context.authSession).toBe(null);
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'User "user_1" is suspended in organization "org_1" - resolved unauthenticated.'
+  );
+});
+
+test('a suspended row does not fall through to strategies', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['viewer'], suspended: true },
+  });
+  const context = { logger: mockLogger() };
+  const strategies = [
+    mockStrategy({ id: 'partner-access', match: { user: { id: 'apiKey:partner-access:acme' } } }),
+  ];
+
+  await resolveAuthentication(context, { auth, headers: {}, strategies });
+
+  expect(context.user).toBe(null);
+  expect(strategies[0].verify).not.toHaveBeenCalled();
+});
+
+test('resolves a member whose suspended flag is false', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['viewer'], suspended: false },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.roles).toEqual(['viewer']);
+});
+
 test('sets context.user to null when a pinned app gets a session active in another organization', async () => {
   const { auth, findMany, findOne } = mockAuth({
     session: {
@@ -881,6 +936,35 @@ test('a pinned session carrying no organization stays unauthenticated when it ho
   );
 });
 
+test('a pinned session carrying no organization and a suspended row there awaits the organization as a non-member does', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'invited@example.com' },
+      session: { id: 'sess_1' },
+    },
+    member: { id: 'member_1', role: 'member', suspended: true },
+    invitations: [
+      {
+        id: 'invitation_1',
+        organizationId: 'team-portal',
+        status: 'pending',
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toMatchObject({
+    id: 'user_1',
+    roles: [],
+    awaiting_organization: true,
+    pending_invitation_id: 'invitation_1',
+  });
+});
+
 test('an expired invitation leaves a pinned session carrying no organization unauthenticated', async () => {
   const { auth } = mockAuth({
     session: {
@@ -953,6 +1037,26 @@ test('records the session id and every organization the session caller belongs t
   // Roles come from the active organization's row only.
   expect(context.user.roles).toEqual(['editor']);
   expect(context.user.org_roles).toEqual(['member']);
+});
+
+test('leaves organizations the session caller is suspended in out of the memberships', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['editor'] },
+    memberRows: [
+      { id: 'member_2', organizationId: 'org_2', role: 'owner', suspended: true },
+      { id: 'member_3', organizationId: 'org_3', role: 'member' },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.authSession).toEqual({ id: 'sess_1', memberOrganizationIds: ['org_1', 'org_3'] });
 });
 
 test('records only the pinned organization as a membership under pinned', async () => {
@@ -1356,6 +1460,26 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
 
   test('a valid token whose subject is no longer a member resolves invalid and marks no membership', async () => {
     const { auth } = mockMcpAuth({ user: { id: 'user_1' }, member: null });
+    const context = mcpContext();
+    const token = await mintToken();
+
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({
+      clientId: 'client_1',
+      organizationId: 'org_1',
+      tokenStatus: 'invalid',
+      parseableJwt: true,
+      noMembership: true,
+    });
+  });
+
+  test('a valid token whose subject is suspended in its organization resolves invalid and marks no membership', async () => {
+    const { auth } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: ['viewer'], suspended: true },
+    });
     const context = mcpContext();
     const token = await mintToken();
 

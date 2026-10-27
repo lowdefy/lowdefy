@@ -235,3 +235,15 @@ test('the refresh grant answers invalid_grant once the user is no longer a membe
   expect(response.status).toBe(400);
   expect(await response.json()).toMatchObject({ error: 'invalid_grant' });
 });
+
+test('the refresh grant answers invalid_grant while the user is suspended in the organization', async () => {
+  const { adapter, auth, member } = await createSeededAuth();
+  await adapter.update({
+    model: 'member',
+    where: [{ field: 'id', value: member.id }],
+    update: { suspended: true },
+  });
+  const response = await refresh({ auth });
+  expect(response.status).toBe(400);
+  expect(await response.json()).toMatchObject({ error: 'invalid_grant' });
+});

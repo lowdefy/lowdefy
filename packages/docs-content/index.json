@@ -3089,7 +3089,7 @@
         "concepts/advanced/api.yaml",
         "version.yaml"
       ],
-      "hash": "4d39c5137867fc430b39a57ad1e230d831ba4f2f50a2e1750fe73a635d11acc7"
+      "hash": "b6d9e25cd623967ac367321f5cc59bb398edb7475fc3ef0d30640b62a8e27218"
     },
     "concepts/mobile-apps": {
       "files": [
@@ -3301,13 +3301,13 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "fd01facfe6f0151f1049d4d65dfea08467df02b009376f5800a03e68d35c4533"
+      "hash": "a99abdb50d66fa4c47bc6b8ad8a2317cf5a6ea7153597d5c38481830264a46f4"
     },
     "user-authentication/auth-steps": {
       "files": [
         "users/auth-steps.yaml"
       ],
-      "hash": "81762030ddae93694cf12fe4dfd3c732c46f8d8106e9a04d410f320c6dc86ec1"
+      "hash": "a59b2343b17f1bc0addc0c024cb7adcff8b71523e50634345bb2aca28611e802"
     },
     "user-authentication/mcp-oauth": {
       "files": [
@@ -3897,7 +3897,7 @@
         "blocks/input/TiptapInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "44ba1d9996eb3cee8558b5e2f3dd1c3e2cf91f1484f728d2e8b9e5117766e8d8"
+      "hash": "7da730fe1af0ec99d033d7ec6643bd05b760cf85516f33e473341d237716bcbb"
     },
     "input-blocks/tiptapmentioninput": {
       "files": [
@@ -3907,7 +3907,7 @@
         "blocks/input/TiptapMentionInputGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "a0524d3c6febd59e4cec5ca61b4dd1369f083866b50289ad2a6447bc0369c4da"
+      "hash": "b7c12b636d9f00aae5bc6c4fa11f77999fe0083090928e644f589a48267c9067"
     },
     "input-blocks/titleinput": {
       "files": [
@@ -5840,7 +5840,7 @@
         "controls/reject.yaml",
         "templates/controls.yaml.njk"
       ],
-      "hash": "c06a694b68ee2ee4a40c191a01f610c388e240cc9e85dba46e9e274ae4931cfb"
+      "hash": "ab873d300bf71fd81f4e4552b9ef1fccf1bd2cfb22b4ad4639be4f7e6e0bedb9"
     },
     "controls/return": {
       "files": [

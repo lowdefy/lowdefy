@@ -1,0 +1,54 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+import { type } from '@lowdefy/helpers';
+
+// Lifts a suspension SuspendMember set: the member row is admitted again with
+// the roles and attributes it kept while suspended. The flag is written false
+// rather than removed; false and absent mean the same to every membership
+// check.
+//
+// organizationId is part of the authored property surface but the step never
+// resolves it: the floor resolves the target organization (defaulting to the
+// pinned one), authorizes the caller there, and passes the result in.
+async function UnsuspendMember({ auth, organizationId, properties }) {
+  const { memberId } = properties;
+  if (type.isNone(memberId)) {
+    throw new Error('UnsuspendMember requires a "memberId" property.');
+  }
+  const { adapter } = await auth.$context;
+  const member = await adapter.update({
+    model: 'member',
+    where: [
+      { field: 'id', value: memberId },
+      { field: 'organizationId', value: organizationId },
+    ],
+    update: { suspended: false },
+  });
+  if (type.isNone(member)) {
+    throw new Error(
+      `UnsuspendMember found no member "${memberId}" in organization "${organizationId}".`
+    );
+  }
+  return member;
+}
+
+// The authority to suspend is the authority to lift it, as BanUser and
+// UnbanUser share user:ban.
+UnsuspendMember.meta = {
+  authority: { scope: 'org', permissions: { member: ['suspend'] } },
+};
+
+export default UnsuspendMember;
