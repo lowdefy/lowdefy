@@ -50,4 +50,7 @@ module.exports = {
     'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native(-svg|-marked|-reanimated-table)?|marked|@jsamr|github-slugger|@react-native(-community)?|expo(nent)?|@expo|expo-[^/]+|change-case|intl-messageformat|@formatjs|mingo|uuid|yaml|cron-parser|cronstrue|luxon|jsonata|deep-diff|nunjucks|ai|@ai-sdk|eventsource-parser|throttleit|swr|zod|@standard-schema|@vercel/oidc|@workflow)/)',
   ],
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test/', '<rootDir>/node_modules/'],
+  // A file's first render loads and compiles the engine, client-core and React Native for that
+  // file, about 2.5s on a laptop and past Jest's 5s default on a busy CI runner.
+  testTimeout: 30000,
 };

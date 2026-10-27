@@ -16,4 +16,7 @@ export default {
     'node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?((jest-)?react-native(-svg)?|@react-native(-community)?|change-case|intl-messageformat|@formatjs)/)',
   ],
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test/'],
+  // A file's first render loads and compiles the engine, client-core and React Native for that
+  // file, about 2.5s on a laptop and past Jest's 5s default on a busy CI runner.
+  testTimeout: 30000,
 };
