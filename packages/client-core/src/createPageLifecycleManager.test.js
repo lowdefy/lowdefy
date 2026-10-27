@@ -222,6 +222,7 @@ test('a page that can reach _media updates media once per settled resize', () =>
   manager.init(context);
   expect(addEventListener.mock.calls.map(([name]) => name)).toEqual(['resize']);
   addEventListener.mockRestore();
+  context._internal.updateMedia.mockClear();
   window.dispatchEvent(new Event('resize'));
   vi.advanceTimersByTime(100);
   window.dispatchEvent(new Event('resize'));
@@ -250,27 +251,55 @@ test('one resize listener serves both _media and onResize, updating media before
   manager.init(context);
   expect(addEventListener.mock.calls.map(([name]) => name)).toEqual(['resize']);
   addEventListener.mockRestore();
+  calls.length = 0;
   window.dispatchEvent(new Event('resize'));
   vi.advanceTimersByTime(150);
   expect(calls).toEqual(['updateMedia', 'onResize']);
   manager.destroy();
 });
 
-test('a page that can not reach _media does not update media on resize', () => {
+test('a page that can not reach _media does not update media on resize or when shown', () => {
   const context = getContext({ events: { onResize: [] } });
   const manager = createPageLifecycleManager();
   manager.init(context);
   window.dispatchEvent(new Event('resize'));
   vi.advanceTimersByTime(150);
+  document.dispatchEvent(new Event('visibilitychange'));
   expect(context._internal.triggerPageEvent).toHaveBeenCalledTimes(1);
   expect(context._internal.updateMedia).not.toHaveBeenCalled();
   manager.destroy();
+});
+
+test('a page that can reach _media updates media when the listeners attach', () => {
+  const context = getContext({ events: {}, operators: mediaOperators });
+  const manager = createPageLifecycleManager();
+  manager.init(context);
+  expect(context._internal.updateMedia).toHaveBeenCalledTimes(1);
+  expect(context._internal.triggerPageEvent).not.toHaveBeenCalled();
+  manager.destroy();
+});
+
+test('a page that can reach _media updates media when it becomes visible', () => {
+  const context = getContext({ events: {}, operators: mediaOperators });
+  const manager = createPageLifecycleManager();
+  setVisibilityState('hidden');
+  manager.init(context);
+  context._internal.updateMedia.mockClear();
+  document.dispatchEvent(new Event('visibilitychange'));
+  expect(context._internal.updateMedia).not.toHaveBeenCalled();
+  setVisibilityState('visible');
+  document.dispatchEvent(new Event('visibilitychange'));
+  expect(context._internal.updateMedia).toHaveBeenCalledTimes(1);
+  manager.destroy();
+  document.dispatchEvent(new Event('visibilitychange'));
+  expect(context._internal.updateMedia).toHaveBeenCalledTimes(1);
 });
 
 test('a pending media update does not run after destroy', () => {
   const context = getContext({ events: {}, operators: mediaOperators });
   const manager = createPageLifecycleManager();
   manager.init(context);
+  context._internal.updateMedia.mockClear();
   window.dispatchEvent(new Event('resize'));
   manager.destroy();
   window.dispatchEvent(new Event('resize'));
