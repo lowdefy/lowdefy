@@ -61,6 +61,23 @@ test('CallAPI targeting InternalApi endpoint produces warning', () => {
   expect(warning.checkSlug).toBe('callapi-internal-refs');
 });
 
+test('CallAPI targeting a link endpoint produces warning', () => {
+  const callApiActionRefs = [
+    {
+      endpointId: 'files',
+      action: { id: 'call_1', type: 'CallAPI', params: { endpointId: 'files' } },
+      sourcePageId: 'page1',
+    },
+  ];
+  const endpointConfigs = [{ endpointId: 'files', type: 'Api', link: true }];
+  validateCallApiRefs({ callApiActionRefs, endpointConfigs, context });
+  expect(mockHandleWarning).toHaveBeenCalledTimes(1);
+  const warning = mockHandleWarning.mock.calls[0][0];
+  expect(warning).toBeInstanceOf(ConfigWarning);
+  expect(warning.message).toContain('link endpoint "files"');
+  expect(warning.prodError).toBe(true);
+});
+
 test('skipped action is not validated', () => {
   const callApiActionRefs = [
     {

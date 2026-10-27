@@ -149,6 +149,31 @@ function compilePayloadSchema({ endpoint, configKey }) {
   }
 }
 
+// A link endpoint answers a browser GET with a redirect to the URL its routine returns, as the
+// signed-in caller. An InternalApi endpoint is never reachable over HTTP, a webhook takes a raw
+// POST with no caller, and an async run answers before the routine has a URL to return.
+function validateLink({ endpoint, isWebhook, configKey }) {
+  if (endpoint.link !== true) return;
+  if (endpoint.type !== 'Api') {
+    throw new ConfigError(
+      `Endpoint "${endpoint.id}" declares "link" but is type "${endpoint.type}". Only an Api endpoint can be a link endpoint.`,
+      { received: endpoint.type, configKey }
+    );
+  }
+  if (isWebhook) {
+    throw new ConfigError(
+      `Endpoint "${endpoint.id}" declares both "link" and "webhook". A link endpoint answers a signed-in GET with a redirect; a webhook answers a third-party POST.`,
+      { configKey }
+    );
+  }
+  if (endpoint.async === true) {
+    throw new ConfigError(
+      `Endpoint "${endpoint.id}" declares both "link" and "async". A link endpoint answers with the URL its routine returns, so the routine cannot run in the background.`,
+      { configKey }
+    );
+  }
+}
+
 function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, environments }) {
   const configKey = endpoint['~k'];
   if (type.isUndefined(endpoint.id)) {
@@ -189,6 +214,7 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, environme
       { configKey }
     );
   }
+  validateLink({ endpoint, isWebhook, configKey });
   const validatePayload = compilePayloadSchema({ endpoint, configKey });
   if (type.isObject(endpoint.schedules)) {
     validateEnvironmentSchedules({ endpoint, configKey, environments, validatePayload });

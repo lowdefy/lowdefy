@@ -27,4 +27,6 @@ _ref:
       highlights, headings, lists, tables, links, and drag/drop or paste image
       uploads via a configurable upload-policy request (`uploadPolicyRequestId`) —
       any storage provider (S3, GCS, Azure). Configure `downloadPolicyRequestId`
-      to resolve inserted image URLs through a download request.
+      to resolve inserted image URLs through a download request, or `imageSrc`
+      to save a stable app URL such as a [link endpoint](/api#link-endpoints),
+      which lets the bucket stay private.

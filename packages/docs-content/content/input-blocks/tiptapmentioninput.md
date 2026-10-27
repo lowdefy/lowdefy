@@ -1,6 +1,6 @@
 # TiptapMentionInput
 
-Rich-text editor with @-mention support. Same feature set as TiptapInput, plus a mention dropdown populated from a static options list or a request. Mention options can be marked as groups (roles, teams, queues) to render under their own menu section, as distinctly coloured chips, and with a hover popover listing the group's current members. See the guide below.
+Rich-text editor with @-mention support. Same feature set as TiptapInput, plus a mention dropdown populated from a static options list or a request. Mention options can be marked as groups (roles, teams, queues) to render under their own menu section, as distinctly coloured chips, and with a hover popover listing the group's current members. Set `imageSrc` to save pasted images at a stable app URL such as a [link endpoint](/api#link-endpoints). See the guide below.
 
 ## Group mentions
 
@@ -452,7 +452,8 @@ A mixed `options` array — people alongside group options carrying `tag.section
 | `mentionsRequestId` | string | - | Id of a request used to populate mention options. When set, the block registers a __getTipTapMentions event that calls that request. |
 | `placeholder` | string | - | Placeholder shown when the editor is empty. |
 | `rows` | integer | - | Fix the editor height to exactly this many rows. Takes precedence over autoSize. |
-| `downloadPolicyRequestId` | string | - | Id of a download request (e.g. AwsS3PresignedGetObject) used to resolve the inserted image URL after upload. Inline images persist in saved content, so the request should set public: true (and the upload request the provider public-read acl) to return a stable, non-expiring URL. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated). |
+| `imageSrc` | object | - | Optional _function that receives { key, bucket, name, type } of an uploaded image and returns the src saved for it, typically a stable app URL such as a link endpoint (/api/endpoints/&lt;endpointId>/&lt;key>) that redirects the signed-in caller to a fresh presigned URL, so the bucket can stay private. Takes precedence over downloadPolicyRequestId: when set, no download request runs. |
+| `downloadPolicyRequestId` | string | - | Id of a download request (e.g. AwsS3PresignedGetObject) used to resolve the inserted image URL after upload. Inline images persist in saved content, so the request should set public: true (and the upload request the provider public-read acl) to return a stable, non-expiring URL. Ignored when imageSrc is set, which takes precedence. When neither is set, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated). |
 | `s3PostPolicyRequestId` | string | - | Deprecated — use uploadPolicyRequestId instead. |
 | `uploadPolicyRequestId` | string | - | Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas). When set, images dragged or pasted into the editor are uploaded via that request. |
 | `size` | string | - | Label size forwarded to the Label block. Enum: `small`, `middle`, `large`. |

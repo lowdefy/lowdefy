@@ -101,13 +101,32 @@ async function writeSchedulesManifest({ components, context }) {
   await context.writeBuildArtifact('schedules.json', serializer.serializeToString(schedules));
 }
 
+// linkEndpoints.json: [{ endpointId, segments }] for every link endpoint, the id split into path
+// segments, longest first. The GET route matches a request path against it by prefix, so a nested
+// id wins over a shorter id it starts with, and no request path reaches a non-link endpoint.
+// Always written, also as [], so the route reads it without a fallback.
+async function writeLinkEndpoints({ api, context }) {
+  const linkEndpoints = api
+    .filter((endpoint) => endpoint.link === true)
+    .map((endpoint) => ({
+      endpointId: endpoint.endpointId,
+      segments: endpoint.endpointId.split('/').filter(Boolean),
+    }))
+    .sort((a, b) => b.segments.length - a.segments.length);
+  await context.writeBuildArtifact(
+    'linkEndpoints.json',
+    serializer.serializeToString(linkEndpoints)
+  );
+}
+
 async function writeApi({ components, context }) {
-  if (type.isNone(components.api)) return;
-  if (!type.isArray(components.api)) {
+  if (!type.isNone(components.api) && !type.isArray(components.api)) {
     throw new LowdefyInternalError('Api is not an array.');
   }
-  const writePromises = components.api.map((endpoint) => writeEndpoint({ endpoint, context }));
+  const api = components.api ?? [];
+  const writePromises = api.map((endpoint) => writeEndpoint({ endpoint, context }));
   await Promise.all(writePromises);
+  await writeLinkEndpoints({ api, context });
   await writeSchedulesManifest({ components, context });
 }
 

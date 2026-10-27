@@ -1652,6 +1652,9 @@ importers:
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+      vitest:
+        specifier: 4.1.12
+        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(jsdom@19.0.0)(vite@8.0.16(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0))
 
   packages/plugins/connections/connection-ai-gateway:
     dependencies:

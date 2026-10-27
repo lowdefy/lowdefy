@@ -18,12 +18,36 @@ import {
   callEndpoint,
   getEndpointConfig,
   parseRequestBody,
+  runLinkEndpoint,
   runWebhookEndpoint,
 } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 
 import getPathSegments from '../lib/getPathSegments.js';
 
+// A GET serves a link endpoint (`link: true`): typically an <img src> or a download link, sent
+// by the browser with the session cookie and no Lowdefy headers. The routine runs as that caller
+// and the answer is a 302 to the URL it returns, or a status with no body. The noStore middleware
+// sets Cache-Control: private, no-store on it, so a redirect to a short-lived URL is never cached.
+async function linkHandler(c) {
+  const context = c.get('lowdefyContext');
+  const { status, location, body } = await runLinkEndpoint(context, {
+    segments: getPathSegments(c, '/api/endpoints/'),
+    query: c.req.query(),
+  });
+  if (status === 302) {
+    return c.redirect(location, 302);
+  }
+  if (type.isNone(body)) {
+    return c.body(null, status);
+  }
+  return c.json(body, status);
+}
+
 async function endpointsHandler(c) {
+  if (c.req.method === 'GET') {
+    return linkHandler(c);
+  }
   if (c.req.method !== 'POST') {
     // A wrong-method request is client-caused: answer 405 rather than raising a
     // fault that would be logged at error level and answered with a 500.

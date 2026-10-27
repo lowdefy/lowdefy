@@ -296,6 +296,17 @@ test('buildMcp throws when an endpoint is an InternalApi endpoint', () => {
   );
 });
 
+test('buildMcp throws when an endpoint is a link endpoint', () => {
+  const context = testContext();
+  const components = {
+    api: [{ ...publicEndpoint, link: true }],
+    mcp: { endpoints: [{ id: 'get-customer', scope: 'mcp:read' }] },
+  };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'MCP endpoint "get-customer" is a link endpoint. A link endpoint answers only a GET with a redirect, so it cannot be an MCP tool.'
+  );
+});
+
 test('buildMcp throws when an endpoint has no description', () => {
   const context = testContext();
   const components = {

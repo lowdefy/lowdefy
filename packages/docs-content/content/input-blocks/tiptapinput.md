@@ -1,6 +1,6 @@
 # TiptapInput
 
-Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlights, headings, lists, tables, links, and drag/drop or paste image uploads via a configurable upload-policy request (`uploadPolicyRequestId`) — any storage provider (S3, GCS, Azure). Configure `downloadPolicyRequestId` to resolve inserted image URLs through a download request.
+Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlights, headings, lists, tables, links, and drag/drop or paste image uploads via a configurable upload-policy request (`uploadPolicyRequestId`) — any storage provider (S3, GCS, Azure). Configure `downloadPolicyRequestId` to resolve inserted image URLs through a download request, or `imageSrc` to save a stable app URL such as a [link endpoint](/api#link-endpoints), which lets the bucket stay private.
 
 ```yaml
 - id: tiptap_default
@@ -207,7 +207,8 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 | `link.defaultProtocol` | string | `"https"` | Protocol prefixed to URLs that omit one (e.g. "https"). |
 | `placeholder` | string | - | Placeholder shown when the editor is empty. |
 | `rows` | integer | - | Fix the editor height to exactly this many rows. Takes precedence over autoSize. |
-| `downloadPolicyRequestId` | string | - | Id of a download request (e.g. AwsS3PresignedGetObject) used to resolve the inserted image URL after upload. Inline images persist in saved content, so the request should set public: true (and the upload request the provider public-read acl) to return a stable, non-expiring URL. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated). |
+| `imageSrc` | object | - | Optional _function that receives { key, bucket, name, type } of an uploaded image and returns the src saved for it, typically a stable app URL such as a link endpoint (/api/endpoints/&lt;endpointId>/&lt;key>) that redirects the signed-in caller to a fresh presigned URL, so the bucket can stay private. Takes precedence over downloadPolicyRequestId: when set, no download request runs. |
+| `downloadPolicyRequestId` | string | - | Id of a download request (e.g. AwsS3PresignedGetObject) used to resolve the inserted image URL after upload. Inline images persist in saved content, so the request should set public: true (and the upload request the provider public-read acl) to return a stable, non-expiring URL. Ignored when imageSrc is set, which takes precedence. When neither is set, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated). |
 | `s3PostPolicyRequestId` | string | - | Deprecated — use uploadPolicyRequestId instead. |
 | `uploadPolicyRequestId` | string | - | Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas). When set, images dragged or pasted into the editor are uploaded via that request and inserted as &lt;img> nodes. Leave unset to disable image uploads. |
 | `size` | string | - | Label size forwarded to the Label block. Enum: `small`, `middle`, `large`. |

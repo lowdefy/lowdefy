@@ -202,6 +202,17 @@ function validateToolEndpoints(agent, components, context) {
       );
       return false;
     }
+    // A link endpoint answers only a browser GET with a redirect, as buildMcp refuses it too.
+    if (endpoint.link === true) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Endpoint "${toolConfig.endpointId}" is a link endpoint. A link endpoint answers only a GET with a redirect, so it cannot be an agent tool.`,
+          { configKey }
+        )
+      );
+      return false;
+    }
     if (type.isNone(endpoint.description)) {
       collectExceptions(
         context,

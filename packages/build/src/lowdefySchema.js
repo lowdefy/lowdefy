@@ -2147,6 +2147,14 @@ export default {
             _: 'Api endpoint "webhook" should be a boolean or an object with a "verify" request plugin.',
           },
         },
+        link: {
+          type: 'boolean',
+          description:
+            'Serve this endpoint at a stable link: a GET on /api/endpoints/<endpointId>/<path...> runs the routine as the signed-in caller, with { path, query } as payload, and answers 302 to the URL its :return gives (an absolute http(s) URL or a path starting with /). Use it to serve a private file at a URL that does not expire, such as an inline image. Only on type Api, and not with "webhook" or "async". The auth config applies as for any endpoint. A GET can be triggered by any page that embeds the URL, so the routine must have no side effects.',
+          errorMessage: {
+            type: 'Api endpoint "link" should be a boolean.',
+          },
+        },
         schedules: {
           description:
             'Cron schedules that run the routine on a timer: an array (the same in every environment), or with config.environments declared an object keyed by environment name with an optional "default" key that every other environment inherits ("staging: []" turns crons off for staging).',

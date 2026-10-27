@@ -54,7 +54,8 @@
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.snap\"",
     "e2e": "playwright test --config e2e/playwright.config.js",
     "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "test": "vitest run"
   },
   "dependencies": {
     "@lowdefy/block-utils": "7.1.0",
@@ -87,7 +88,8 @@
     "@playwright/test": "1.59.1",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
-    "copyfiles": "2.4.1"
+    "copyfiles": "2.4.1",
+    "vitest": "4.1.12"
   },
   "publishConfig": {
     "access": "public"
