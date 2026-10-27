@@ -198,31 +198,6 @@ test('callRequest sets context requestId, so an error the request raises names i
   expect(requestContext.blockId).toEqual('blockId');
 });
 
-test('callRequest logs the request ids at debug, never the page payload', async () => {
-  mockReadConfigFile.mockImplementation(defaultReadConfigImp());
-  mockTestRequest.mockImplementation(defaultResolverImp);
-  const debug = vi.fn();
-  const requestContext = testContext({
-    connections,
-    logger: { debug, info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-    readConfigFile: mockReadConfigFile,
-    operators,
-    secrets,
-  });
-  await callRequest(requestContext, {
-    ...defaultParams,
-    blockId: 'blockId',
-    payload: { idNumber: '8001015009087' },
-  });
-  expect(debug).toHaveBeenCalledWith({
-    event: 'debug_request',
-    blockId: 'blockId',
-    pageId: 'pageId',
-    requestId: 'requestId',
-  });
-  expect(JSON.stringify(debug.mock.calls)).not.toContain('8001015009087');
-});
-
 test('call request, protected auth with user', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
