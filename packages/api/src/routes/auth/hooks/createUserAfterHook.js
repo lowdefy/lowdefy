@@ -36,12 +36,13 @@ function createUserAfterHook({ dispatch }) {
       });
     }
     if (result.status === 'error') {
-      // An expected outcome (a :throw, a nested call's refusal) is a 400 like :reject, not a
-      // 500. runRoutine has logged it as a warning.
+      // An expected outcome (a :throw, a nested call's refusal) is a 400 like :reject, code
+      // included, not a 500. runRoutine has logged it as a warning.
       if (isExpectedError(result.error)) {
         throw new APIError('BAD_REQUEST', {
           cause: result.error,
           message: result.error.message,
+          code: 'AUTH_HOOK_REJECTED',
         });
       }
       // A fault runRoutine has already reported (handled), so createOnAPIError does not

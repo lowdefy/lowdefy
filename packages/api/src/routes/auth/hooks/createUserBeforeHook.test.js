@@ -80,6 +80,7 @@ test.each([
   expect(error).toBeInstanceOf(APIError);
   expect(error.statusCode).toBe(400);
   expect(error.message).toBe('Sign-ups are closed.');
+  expect(error.body.code).toBe('AUTH_HOOK_REJECTED');
   expect(error.cause).toBe(routineError);
 });
 
