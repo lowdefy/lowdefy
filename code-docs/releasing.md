@@ -14,8 +14,10 @@ develop merged into main", "Release 7.x: other push to main" or "Release 7.x: ru
 
 1. With changesets pending (the Release merge from `develop`), the `version` job runs
    `changesets/action`, which opens or updates the "Publish new release" pull request
-   (`pnpm release:version`). Nothing is tested, built or published, and the run summary links
-   the pull request.
+   (`pnpm release:version`). Nothing is tested or published, and the run summary links the
+   pull request. The only build is of the shell's dependencies (`--filter=@lowdefy/shell^...`):
+   the shell's type manifest is rewritten after the version bump, and its generator imports
+   each plugin package's built `./types` export.
 2. Once that pull request is merged there are no changesets left. The `test` job runs the
    complete path, and only when it passes the `publish` job publishes
    (`pnpm release:publish`, which is `changeset publish`). Its exit code is ignored, since it
