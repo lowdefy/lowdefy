@@ -48,7 +48,7 @@
     "web:build": "pnpm --filter=@lowdefy/website build",
     "web:dev": "pnpm --filter=@lowdefy/website dev",
     "web:start": "pnpm --filter=@lowdefy/website start",
-    "release:version": "pnpm changeset version && pnpm install --no-frozen-lockfile && pnpm --filter=@lowdefy/shell type-manifest && pnpm --filter=@lowdefy/shell shell-version",
+    "release:version": "pnpm changeset version && pnpm install --no-frozen-lockfile && pnpm --filter=@lowdefy/shell^... build && pnpm --filter=@lowdefy/shell type-manifest && pnpm --filter=@lowdefy/shell shell-version",
     "release:publish": "changeset publish",
     "release:version-experimental": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm build && pnpm --filter=@lowdefy/shell type-manifest && pnpm --filter=@lowdefy/shell shell-version",
     "release:publish-experimental": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks",
