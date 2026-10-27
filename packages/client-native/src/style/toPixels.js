@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-const lengthPattern = /^(-?\d*\.?\d+)(px|em)?$/;
+const lengthPattern = /^(-?(?:\d+(?:\.\d+)?|\.\d+))(px|em)?$/;
 
 // A CSS length as a number of points: a number as it is, `12px` as 12 and `1.5em` relative to
 // `fontSize`, as an em is relative to the text around it on the web. Anything else (a percentage,

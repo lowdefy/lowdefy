@@ -30,6 +30,15 @@ test('parseNumberText reads numbers, empty text and text on its way to a number'
   });
 });
 
+test('parseNumberText reads a long run of digits that is no number as not valid without backtracking', () => {
+  const start = performance.now();
+  expect(parseNumberText({ text: `${'0'.repeat(100000)}x` })).toEqual({
+    valid: false,
+    value: null,
+  });
+  expect(performance.now() - start).toBeLessThan(1000);
+});
+
 test('formatNumber fixes precision and uses the decimal separator', () => {
   expect(formatNumber({ value: null })).toBe('');
   expect(formatNumber({ value: 2, precision: 2 })).toBe('2.00');

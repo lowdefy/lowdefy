@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-const NUMBER_PATTERN = /^-?\d*\.?\d*$/;
+const NUMBER_PATTERN = /^-?\d*(?:\.\d*)?$/;
 
 /**
  * Reads the number typed in a NumberInput. An empty input is null. Text on its way to a number
