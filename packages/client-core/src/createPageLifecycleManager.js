@@ -29,7 +29,8 @@
 // trigger an event.
 //
 // The same resize listener keeps _media current: once a resize settles, the
-// engine re-evaluates the blocks that read a media value that changed.
+// engine re-evaluates the blocks that read a media value that changed. Media is
+// also updated when the listeners attach and when the page becomes visible.
 
 const VISIBILITY_DEBOUNCE_MS = 300;
 const RESIZE_DEBOUNCE_MS = 150;
@@ -156,6 +157,17 @@ function createPageLifecycleManager() {
           timeouts = timeouts.filter((t) => t !== resizeTimeout);
         }
         resizeTimeout = setTimer(flush, RESIZE_DEBOUNCE_MS);
+      });
+    }
+    if (watchMedia) {
+      // The engine reads the viewport when it creates the context, and the page's
+      // onInit runs before these listeners attach, so a resize in between is missed.
+      context._internal.updateMedia();
+      // A page loaded in a hidden tab reads a width of 0. The browser may not fire
+      // resize when the tab is shown, so showing the page updates media too.
+      listen(doc, 'visibilitychange', () => {
+        if (destroyed || doc.visibilityState === 'hidden') return;
+        context._internal.updateMedia();
       });
     }
   }
