@@ -15,13 +15,13 @@
 */
 
 import { expect, test } from 'vitest';
-import { betterAuth } from 'better-auth';
-import { memoryAdapter } from 'better-auth/adapters/memory';
 import { APIError } from 'better-auth/api';
-import { admin, magicLink } from 'better-auth/plugins';
 
-import buildRequestHooks from './buildRequestHooks.js';
 import createSignInRefusedRedirectHook from './createSignInRefusedRedirectHook.js';
+
+// The hook's behaviour against BetterAuth itself - the endpoint's URL
+// resolution, its origin checks and the engine's own refusals - is pinned in
+// signInRefusedRedirectContract.test.js.
 
 const BASE_URL = 'https://app.example.com';
 
@@ -60,25 +60,36 @@ test('createSignInRefusedRedirectHook redirects a ban to the error callback URL 
   expect(url.searchParams.get('error_description')).toBe('You have been banned.');
 });
 
-test('createSignInRefusedRedirectHook redirects a missing membership', async () => {
+test.each([
+  ['FORBIDDEN', 'MEMBERSHIP_REQUIRED'],
+  ['BAD_REQUEST', 'AUTH_HOOK_REJECTED'],
+  ['SERVICE_UNAVAILABLE', 'ORGANIZATION_SETUP_UNAVAILABLE'],
+])(
+  'createSignInRefusedRedirectHook redirects any coded refusal, here a %s %s',
+  async (status, code) => {
+    const url = await redirectLocation(
+      createCtx({
+        returned: new APIError(status, { message: 'Refused.', code }),
+        query: { callbackURL: '/', errorCallbackURL: '/login' },
+      })
+    );
+    expect(url.searchParams.get('error')).toBe(code);
+  }
+);
+
+test('createSignInRefusedRedirectHook leaves the description off when the refusal has no message', async () => {
   const url = await redirectLocation(
     createCtx({
-      returned: new APIError('FORBIDDEN', {
-        message: 'You have not been granted access to this application.',
-        code: 'MEMBERSHIP_REQUIRED',
-      }),
-      query: { callbackURL: '/', errorCallbackURL: '/login' },
+      returned: new APIError('FORBIDDEN', { code: 'BANNED_USER' }),
+      query: { errorCallbackURL: '/login' },
     })
   );
-  expect(url.searchParams.get('error')).toBe('MEMBERSHIP_REQUIRED');
+  expect(url.searchParams.has('error_description')).toBe(false);
 });
 
 test('createSignInRefusedRedirectHook falls back to callbackURL, as the endpoint does', async () => {
   const url = await redirectLocation(
-    createCtx({
-      returned: new APIError('FORBIDDEN', { message: 'Banned.', code: 'BANNED_USER' }),
-      query: { callbackURL: '/home' },
-    })
+    createCtx({ returned: banned(), query: { callbackURL: '/home' } })
   );
   expect(url.pathname).toBe('/home');
 });
@@ -95,28 +106,63 @@ test('createSignInRefusedRedirectHook falls back to / when callbackURL is empty'
   expect(url.pathname).toBe('/');
 });
 
+test('createSignInRefusedRedirectHook redirects an origin check failure when the error page is trusted', async () => {
+  const url = await redirectLocation(
+    createCtx({
+      returned: new APIError('FORBIDDEN', {
+        message: 'Invalid callbackURL',
+        code: 'INVALID_CALLBACK_URL',
+      }),
+      query: { callbackURL: 'https://evil.com', errorCallbackURL: '/login' },
+    })
+  );
+  expect(url.pathname).toBe('/login');
+  expect(url.searchParams.get('error')).toBe('INVALID_CALLBACK_URL');
+});
+
 test('createSignInRefusedRedirectHook does not redirect to an untrusted error callback URL', async () => {
   const response = await createSignInRefusedRedirectHook()(
-    createCtx({ returned: banned(), query: { errorCallbackURL: 'https%3A%2F%2Fevil.com%2Flogin' } })
+    createCtx({
+      // Verify reports a failed errorCallbackURL check with this code too.
+      returned: new APIError('FORBIDDEN', {
+        message: 'Invalid callbackURL',
+        code: 'INVALID_CALLBACK_URL',
+      }),
+      query: { errorCallbackURL: 'https%3A%2F%2Fevil.com%2Flogin' },
+    })
   );
   expect(response).toBeUndefined();
 });
 
-test('createSignInRefusedRedirectHook leaves a direct server-side call to throw', async () => {
+test('createSignInRefusedRedirectHook does not redirect to an untrusted callbackURL it falls back to', async () => {
+  const response = await createSignInRefusedRedirectHook()(
+    createCtx({ returned: banned(), query: { callbackURL: 'https://evil.com' } })
+  );
+  expect(response).toBeUndefined();
+});
+
+test('createSignInRefusedRedirectHook leaves a server-side call without a request to throw', async () => {
   const response = await createSignInRefusedRedirectHook()(
     createCtx({ returned: banned(), query: { errorCallbackURL: '/login' }, request: null })
   );
   expect(response).toBeUndefined();
 });
 
-test('createSignInRefusedRedirectHook leaves other errors alone, origin check failures among them', async () => {
+test('createSignInRefusedRedirectHook leaves an APIError without a code alone', async () => {
   const response = await createSignInRefusedRedirectHook()(
     createCtx({
-      returned: new APIError('FORBIDDEN', {
-        message: 'Invalid errorCallbackURL',
-        code: 'INVALID_ERROR_CALLBACK_URL',
-      }),
-      query: { errorCallbackURL: 'https://evil.com' },
+      returned: new APIError('BAD_REQUEST', { message: 'Refused.' }),
+      query: { errorCallbackURL: '/login' },
+    })
+  );
+  expect(response).toBeUndefined();
+});
+
+test("createSignInRefusedRedirectHook leaves the endpoint's own redirects alone", async () => {
+  const response = await createSignInRefusedRedirectHook()(
+    createCtx({
+      returned: new APIError('FOUND', undefined, { location: `${BASE_URL}/home` }),
+      query: { callbackURL: '/home', errorCallbackURL: '/login' },
     })
   );
   expect(response).toBeUndefined();
@@ -127,59 +173,4 @@ test('createSignInRefusedRedirectHook leaves a successful sign-in alone', async 
     createCtx({ returned: { token: 'token', user: { id: 'user_1' } }, query: { callbackURL: '/' } })
   );
   expect(response).toBeUndefined();
-});
-
-// Against BetterAuth itself. The first test pins the upstream gap: without
-// the hook, /magic-link/verify answers a session.create.before refusal with
-// JSON. If upstream starts redirecting it, that test fails and this hook can go.
-async function followMagicLinkAsBannedUser({ withHooks }) {
-  let sentUrl;
-  let auth = null;
-  const hooks = withHooks
-    ? buildRequestHooks({
-        authConfig: {
-          magicLink: { enabled: true },
-          organizations: { policy: 'tenant', signup: 'open' },
-        },
-        getAuth: () => auth,
-      })
-    : undefined;
-  auth = betterAuth({
-    baseURL: BASE_URL,
-    secret: 'a-test-secret-that-is-at-least-32-characters-long',
-    database: memoryAdapter({ user: [], session: [], account: [], verification: [] }),
-    plugins: [
-      magicLink({
-        sendMagicLink: async ({ url }) => {
-          sentUrl = url;
-        },
-      }),
-      admin(),
-    ],
-    hooks,
-  });
-  const { user } = await auth.api.createUser({
-    body: { email: 'banned@example.com', name: 'Banned', password: 'a-long-password-123' },
-  });
-  const authContext = await auth.$context;
-  await authContext.internalAdapter.updateUser(user.id, { banned: true });
-  await auth.api.signInMagicLink({
-    body: { email: 'banned@example.com', callbackURL: '/home', errorCallbackURL: '/login' },
-    headers: new Headers(),
-  });
-  return auth.handler(new Request(sentUrl));
-}
-
-test('BetterAuth answers a banned user following a magic link with JSON', async () => {
-  const response = await followMagicLinkAsBannedUser({ withHooks: false });
-  expect(response.status).toBe(403);
-  expect((await response.json()).code).toBe('BANNED_USER');
-});
-
-test('a banned user following a magic link is redirected to the error page by the hook', async () => {
-  const response = await followMagicLinkAsBannedUser({ withHooks: true });
-  expect(response.status).toBe(302);
-  const location = new URL(response.headers.get('location'));
-  expect(location.origin + location.pathname).toBe(`${BASE_URL}/login`);
-  expect(location.searchParams.get('error')).toBe('BANNED_USER');
 });

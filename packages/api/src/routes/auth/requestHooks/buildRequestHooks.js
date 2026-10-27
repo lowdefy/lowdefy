@@ -113,8 +113,9 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
     });
   }
 
-  // A sign-in refused at session creation (banned, or no membership) answers
-  // the browser with a redirect to the error page rather than raw JSON.
+  // A sign-in refused at session creation (banned, no membership, an app hook's
+  // :reject) answers the browser with a redirect to the error page rather than
+  // raw JSON.
   // Registered ahead of the magic-link two-factor challenge, which has no
   // session to act on when the refusal fires. /verify-email and
   // /email-otp/verify-email need no counterpart: they create a session only with

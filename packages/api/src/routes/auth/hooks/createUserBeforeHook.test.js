@@ -59,6 +59,17 @@ test('before hook maps :reject to an APIError with the reject message', async ()
   await expect(userHook({ name: 'A' })).rejects.toThrow('blocked');
 });
 
+test('before hook gives a :reject the AUTH_HOOK_REJECTED code, so a refused sign-in redirects', async () => {
+  const userHook = createUserBeforeHook({
+    dispatch: async () => ({ status: 'reject', error: new Error('blocked') }),
+    hook,
+  });
+  await expect(userHook({ name: 'A' })).rejects.toMatchObject({
+    statusCode: 400,
+    body: { code: 'AUTH_HOOK_REJECTED', message: 'blocked' },
+  });
+});
+
 test('before hook rethrows the routine error on error status', async () => {
   const routineError = new Error('exploded');
   const userHook = createUserBeforeHook({
@@ -88,6 +99,9 @@ test('after hook maps :reject to an APIError and rethrows routine errors', async
     dispatch: async () => ({ status: 'error', error: routineError }),
   });
   await expect(rejected({ id: 's1' })).rejects.toThrow(APIError);
+  await expect(rejected({ id: 's1' })).rejects.toMatchObject({
+    body: { code: 'AUTH_HOOK_REJECTED', message: 'no' },
+  });
   await expect(errored({ id: 's1' })).rejects.toBe(routineError);
 });
 

@@ -38,10 +38,13 @@ function createUserBeforeHook({ dispatch, hook }) {
     }
     if (result.status === 'reject') {
       // Keep the rejecting UserError as the cause so the server-side trace still
-      // names the routine control that refused the write.
+      // names the routine control that refused the write. BetterAuth redirects a
+      // refused sign-in to the error page only when the APIError carries a code,
+      // so without one the browser is shown the JSON.
       throw new APIError('BAD_REQUEST', {
         cause: result.error,
         message: result.error.message,
+        code: 'AUTH_HOOK_REJECTED',
       });
     }
     if (result.status === 'error') {

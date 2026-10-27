@@ -25,10 +25,10 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 // hook, no orphan contact) is ever written.
 //
 // It throws instead of returning false so the rejection carries the
-// MEMBERSHIP_REQUIRED code and matches the wall. The message is set to the same
-// machine token deliberately: the OAuth path surfaces the throw's message (not
-// its code) on the error-callback redirect, so equal message and code land a
-// consistent ?error=MEMBERSHIP_REQUIRED across every provider.
+// MEMBERSHIP_REQUIRED code and matches the wall, message included: the magic
+// link and OAuth callbacks redirect a refusal with the code in ?error= and the
+// message in error_description, so a new user refused here and an existing one
+// refused at the wall land on the error page with the same text.
 //
 // A no-op under open (isEmailAdmitted returns admitted), so it never blocks a
 // legitimate open signup.
@@ -45,7 +45,7 @@ function createAdmissionGateHook({ getAuth, organizations }) {
     });
     if (!admitted) {
       throw new APIError('FORBIDDEN', {
-        message: 'MEMBERSHIP_REQUIRED',
+        message: 'You have not been granted access to this application.',
         code: 'MEMBERSHIP_REQUIRED',
       });
     }
