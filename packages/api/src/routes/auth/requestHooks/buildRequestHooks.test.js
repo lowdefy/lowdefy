@@ -127,16 +127,17 @@ test('buildRequestHooks routes /organization/accept-invitation into the expired 
 test('buildRequestHooks gates the member-gated organization endpoints under tenant only', async () => {
   mockGetSessionFromCtx.mockResolvedValue({
     user: { id: 'user_1' },
-    session: { activeOrganizationId: 'org_1' },
+    session: { token: 'token_1', activeOrganizationId: 'org_1' },
   });
   const adapter = {
     findOne: vi.fn(async () => null),
     findMany: vi.fn(async () => [{ userId: 'user_1', organizationId: 'org_2', suspended: true }]),
   };
+  const internalAdapter = { updateSession: vi.fn() };
   const ctx = {
     path: '/organization/set-active',
     body: { organizationId: 'org_2' },
-    context: { adapter },
+    context: { adapter, internalAdapter },
   };
 
   const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
@@ -149,6 +150,10 @@ test('buildRequestHooks gates the member-gated organization endpoints under tena
   });
   await expect(tenantHooks.before(ctx)).rejects.toMatchObject({
     body: { code: 'USER_IS_NOT_A_MEMBER_OF_THE_ORGANIZATION' },
+  });
+  // Refused like the endpoint refuses a non-member: the active organization is cleared.
+  expect(internalAdapter.updateSession).toHaveBeenCalledWith('token_1', {
+    activeOrganizationId: null,
   });
   expect(await tenantHooks.before({ ...ctx, body: { organizationId: 'org_1' } })).toBeUndefined();
 });

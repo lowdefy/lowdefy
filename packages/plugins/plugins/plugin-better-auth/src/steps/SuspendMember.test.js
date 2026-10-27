@@ -21,6 +21,7 @@ import createMockAuth from '../../test/createMockAuth.js';
 // The step floor resolves the target organization and passes the id in; the
 // defaulting and tenant-policy rules are tested there, not here.
 const organizationId = 'org-1';
+const acting = { user: { id: 'admin-user' } };
 
 // rows is the organization's member table; update applies to the matching row.
 function createAdapter(rows) {
@@ -44,6 +45,7 @@ test('SuspendMember marks the member row suspended, scoped to the resolved organ
   ]);
   const { auth } = createMockAuth({ adapter });
   const result = await SuspendMember({
+    acting,
     auth,
     organizationId,
     properties: { memberId: 'member-1' },
@@ -53,6 +55,7 @@ test('SuspendMember marks the member row suspended, scoped to the resolved organ
     where: [
       { field: 'id', value: 'member-1' },
       { field: 'organizationId', value: 'org-1' },
+      { field: 'role', value: 'member' },
     ],
     update: { suspended: true },
   });
@@ -68,7 +71,7 @@ test('SuspendMember marks the member row suspended, scoped to the resolved organ
 
 test('SuspendMember throws when memberId is missing', async () => {
   const { auth } = createMockAuth({ adapter: createAdapter([]) });
-  await expect(SuspendMember({ auth, organizationId, properties: {} })).rejects.toThrow(
+  await expect(SuspendMember({ acting, auth, organizationId, properties: {} })).rejects.toThrow(
     'SuspendMember requires a "memberId" property.'
   );
 });
@@ -77,7 +80,7 @@ test('SuspendMember throws when the member is not in the resolved organization',
   const adapter = createAdapter([{ id: 'member-1', organizationId: 'org-2', role: 'member' }]);
   const { auth } = createMockAuth({ adapter });
   await expect(
-    SuspendMember({ auth, organizationId, properties: { memberId: 'member-1' } })
+    SuspendMember({ acting, auth, organizationId, properties: { memberId: 'member-1' } })
   ).rejects.toThrow('SuspendMember found no member "member-1" in organization "org-1".');
   expect(adapter.update).not.toHaveBeenCalled();
 });
@@ -89,7 +92,7 @@ test('SuspendMember refuses to suspend an owner, even while another owner remain
   ]);
   const { auth } = createMockAuth({ adapter });
   await expect(
-    SuspendMember({ auth, organizationId, properties: { memberId: 'member-1' } })
+    SuspendMember({ acting, auth, organizationId, properties: { memberId: 'member-1' } })
   ).rejects.toThrow(
     'SuspendMember cannot suspend member "member-1" - they are an owner of organization "org-1". Change their org role with UpdateMemberOrgRole first.'
   );
@@ -100,16 +103,43 @@ test('SuspendMember refuses a member holding owner among several org roles', asy
   const adapter = createAdapter([{ id: 'member-1', organizationId, role: 'admin, owner' }]);
   const { auth } = createMockAuth({ adapter });
   await expect(
-    SuspendMember({ auth, organizationId, properties: { memberId: 'member-1' } })
+    SuspendMember({ acting, auth, organizationId, properties: { memberId: 'member-1' } })
   ).rejects.toThrow('they are an owner of organization "org-1"');
   expect(adapter.update).not.toHaveBeenCalled();
 });
 
-test('SuspendMember throws when the member row is removed between its read and its write', async () => {
+test('SuspendMember throws when the member row is removed or promoted between its read and its write', async () => {
   const adapter = createAdapter([{ id: 'member-1', organizationId, role: 'member' }]);
   adapter.update.mockResolvedValueOnce(null);
   const { auth } = createMockAuth({ adapter });
   await expect(
-    SuspendMember({ auth, organizationId, properties: { memberId: 'member-1' } })
-  ).rejects.toThrow('SuspendMember found no member "member-1" in organization "org-1".');
+    SuspendMember({ acting, auth, organizationId, properties: { memberId: 'member-1' } })
+  ).rejects.toThrow(
+    'SuspendMember found no member "member-1" in organization "org-1" with role "member".'
+  );
+});
+
+test("SuspendMember refuses to suspend the caller's own membership", async () => {
+  const adapter = createAdapter([
+    { id: 'member-1', organizationId, role: 'admin', userId: 'admin-user' },
+  ]);
+  const { auth } = createMockAuth({ adapter });
+  await expect(
+    SuspendMember({ acting, auth, organizationId, properties: { memberId: 'member-1' } })
+  ).rejects.toThrow("it is the caller's own membership");
+  expect(adapter.update).not.toHaveBeenCalled();
+});
+
+test('SuspendMember run as the system suspends any non-owner member', async () => {
+  const adapter = createAdapter([
+    { id: 'member-1', organizationId, role: 'admin', userId: 'admin-user' },
+  ]);
+  const { auth } = createMockAuth({ adapter });
+  const result = await SuspendMember({
+    acting: { system: true },
+    auth,
+    organizationId,
+    properties: { memberId: 'member-1' },
+  });
+  expect(result).toMatchObject({ suspended: true });
 });

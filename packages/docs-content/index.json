@@ -3307,7 +3307,7 @@
       "files": [
         "users/auth-steps.yaml"
       ],
-      "hash": "4dbd25d7bdbb365011b70653739e44008fe56e3504d1209def1dd00350a7a58e"
+      "hash": "46c67f8c9ecf56a5f18ba4f109bb011beb956daa90a0844405ab7cb396e1cf4d"
     },
     "user-authentication/mcp-oauth": {
       "files": [

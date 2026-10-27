@@ -220,6 +220,21 @@ test('setting an organization the caller is suspended in active is refused as fo
   );
 });
 
+test('setting an organization the caller is suspended in active clears the active organization', async () => {
+  const { auth, cookie } = await createSeededAuth({ activeOrganizationId: 'suspended' });
+  await expectNotAMember(
+    await post({
+      auth,
+      cookie,
+      path: '/organization/set-active',
+      body: { organizationId: 'suspended' },
+    })
+  );
+  const response = await get({ auth, cookie, path: '/get-session' });
+  const { session } = await response.json();
+  expect(session.activeOrganizationId).toBeNull();
+});
+
 test('setting an organization the caller is an unsuspended member of active still works', async () => {
   const { auth, cookie } = await createSeededAuth({ activeOrganizationId: 'suspended' });
   const response = await post({
@@ -260,6 +275,21 @@ test('member-gated reads in an organization the caller is suspended in are refus
 test('member-gated reads fall back to a suspended active organization', async () => {
   const { auth, cookie } = await createSeededAuth({ activeOrganizationId: 'suspended' });
   await expectNotAMember(await get({ auth, cookie, path: '/organization/get-active-member' }));
+});
+
+test('an empty organization id falls back to a suspended active organization', async () => {
+  const { auth, cookie } = await createSeededAuth({ activeOrganizationId: 'suspended' });
+  await expectNotAMember(
+    await get({ auth, cookie, path: '/organization/list-members?organizationId=' })
+  );
+  await expectNotAMember(
+    await post({
+      auth,
+      cookie,
+      path: '/organization/invite-member',
+      body: { email: 'another@example.com', role: 'member', organizationId: '' },
+    })
+  );
 });
 
 test('administering an organization the caller is suspended in is refused', async () => {

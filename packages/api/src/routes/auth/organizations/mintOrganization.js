@@ -173,9 +173,12 @@ async function mintOrganization({
   }
   const member = await findMember({ adapter, userId, organizationId: organization.id });
   // A membership the creator is suspended in is not theirs to sign in to, so
-  // the signup mint moves on to the next slug, as for an organization they left.
-  const keepsMembership = keepMembership && isActiveMember({ member });
-  if (!type.isNone(member) && (keepsMembership || organization.mintPending === true)) {
+  // the signup mint moves on to the next slug, as for an organization they
+  // left - whether or not the organization is still marked mid-mint.
+  if (!type.isNone(member) && !isActiveMember({ member })) {
+    return null;
+  }
+  if (!type.isNone(member) && (keepMembership || organization.mintPending === true)) {
     await clearMintPending({ adapter, organization });
     return { organization, member };
   }

@@ -42,6 +42,13 @@ const MEMBERSHIP_FREE_PATHS = [
   '/organization/list',
 ];
 
+// The endpoints fall back to the active organization on any falsy id or slug
+// (`ctx.body.organizationId || activeOrganizationId`), so an empty string names
+// no organization.
+function isNamed(value) {
+  return type.isString(value) && value !== '';
+}
+
 // Every organization the request could act in. The endpoints differ in which
 // of these they read first (get-organization prefers the slug, set-active the
 // id), so all of them are gathered and the request is refused if the caller is
@@ -49,8 +56,8 @@ const MEMBERSHIP_FREE_PATHS = [
 // counts only when the request names none - a person whose active
 // organization is one they are suspended in can still switch away from it.
 async function readTargetOrganizationIds({ adapter, ctx, session }) {
-  const ids = [ctx.body?.organizationId, ctx.query?.organizationId].filter(type.isString);
-  const slugs = [ctx.body?.organizationSlug, ctx.query?.organizationSlug].filter(type.isString);
+  const ids = [ctx.body?.organizationId, ctx.query?.organizationId].filter(isNamed);
+  const slugs = [ctx.body?.organizationSlug, ctx.query?.organizationSlug].filter(isNamed);
   for (const slug of slugs) {
     const organization = await adapter.findOne({
       model: 'organization',
@@ -62,7 +69,7 @@ async function readTargetOrganizationIds({ adapter, ctx, session }) {
   }
   // cancel-invitation names only the invitation; the endpoint checks the
   // caller's membership in the invitation's organization.
-  if (type.isString(ctx.body?.invitationId)) {
+  if (isNamed(ctx.body?.invitationId)) {
     const invitation = await adapter.findOne({
       model: 'invitation',
       where: [{ field: 'id', value: ctx.body.invitationId }],
@@ -71,7 +78,7 @@ async function readTargetOrganizationIds({ adapter, ctx, session }) {
       ids.push(invitation.organizationId);
     }
   }
-  if (ids.length === 0 && type.isString(session.session.activeOrganizationId)) {
+  if (ids.length === 0 && isNamed(session.session.activeOrganizationId)) {
     ids.push(session.session.activeOrganizationId);
   }
   return ids;
@@ -92,20 +99,28 @@ function createSuspendedMemberGate() {
     if (type.isNone(session)) {
       return undefined;
     }
-    const { adapter } = ctx.context;
-    const organizationIds = await readTargetOrganizationIds({ adapter, ctx, session });
-    if (organizationIds.length === 0) {
-      return undefined;
-    }
+    const { adapter, internalAdapter } = ctx.context;
+    // Almost nobody is suspended anywhere, so this read comes first and spares
+    // the common request the slug and invitation reads.
     const suspendedOrganizationIds = await readSuspendedOrganizationIds({
       adapter,
       userId: session.user.id,
     });
+    if (suspendedOrganizationIds.length === 0) {
+      return undefined;
+    }
+    const organizationIds = await readTargetOrganizationIds({ adapter, ctx, session });
     const suspended = organizationIds.some((organizationId) =>
       suspendedOrganizationIds.includes(organizationId)
     );
     if (!suspended) {
       return undefined;
+    }
+    // set-active clears the active organization before refusing a non-member,
+    // so a session left in an organization the person is suspended in is not
+    // stuck there.
+    if (ctx.path === '/organization/set-active') {
+      await internalAdapter.updateSession(session.session.token, { activeOrganizationId: null });
     }
     throw new APIError('FORBIDDEN', {
       message: 'User is not a member of the organization',

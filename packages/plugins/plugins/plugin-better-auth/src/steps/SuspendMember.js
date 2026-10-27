@@ -46,7 +46,7 @@ function holdsOwnerTier({ member }) {
 // organizationId is part of the authored property surface but the step never
 // resolves it: the floor resolves the target organization (defaulting to the
 // pinned one), authorizes the caller there, and passes the result in.
-async function SuspendMember({ auth, organizationId, properties }) {
+async function SuspendMember({ acting, auth, organizationId, properties }) {
   const { memberId } = properties;
   if (type.isNone(memberId)) {
     throw new Error('SuspendMember requires a "memberId" property.');
@@ -67,11 +67,24 @@ async function SuspendMember({ auth, organizationId, properties }) {
       `SuspendMember cannot suspend member "${memberId}" - they are an owner of organization "${organizationId}". Change their org role with UpdateMemberOrgRole first.`
     );
   }
-  // The row can be removed between the read and this write.
-  const suspended = await adapter.update({ model: 'member', where, update: { suspended: true } });
+  // A caller who suspends themselves resolves unauthenticated from the next
+  // request on, with no way back short of another administrator.
+  if (acting.system !== true && member.userId === acting.user.id) {
+    throw new Error(
+      `SuspendMember cannot suspend member "${memberId}" - it is the caller's own membership.`
+    );
+  }
+  // Written only while the role is still the one read, so a promotion to owner
+  // that lands between the read and this write is not suspended with it. The
+  // row can also be removed in between.
+  const suspended = await adapter.update({
+    model: 'member',
+    where: [...where, { field: 'role', value: member.role }],
+    update: { suspended: true },
+  });
   if (type.isNone(suspended)) {
     throw new Error(
-      `SuspendMember found no member "${memberId}" in organization "${organizationId}".`
+      `SuspendMember found no member "${memberId}" in organization "${organizationId}" with role "${member.role}". It was removed or its org role changed - try again.`
     );
   }
   return suspended;
