@@ -151,9 +151,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
   // registerDevTool looks the definition up, and the check after the last
   // registration fails the server if any definition was missed.
   //
-  // It also debug-logs every tool call (name and argument keys, never their
-  // values or the response) so agent activity is visible in the dev terminal
-  // with --log-level=debug. Values hold payloads, users and data sets.
+  // It also debug-logs every tool call (name + args, never the response) so
+  // agent activity is visible in the dev terminal with --log-level=debug.
   //
   // A handler that throws is caught here: left to the MCP SDK it became a bare
   // tool error, with nothing logged and no stack.
@@ -166,10 +165,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     registered.add(name);
     server.registerTool(name, definition, async (args, extra) => {
       try {
-        logger.debug(
-          { event: 'mcp_tool_call', tool: name, argKeys: Object.keys(args ?? {}) },
-          `MCP tool call: ${name}`
-        );
+        logger.debug({ event: 'mcp_tool_call', tool: name, args }, `MCP tool call: ${name}`);
       } catch {
         // Logging must never break a tool call.
       }
