@@ -22,6 +22,10 @@ import createEmailSendGate from '../organizations/createEmailSendGate.js';
 import createEmailCodeHolderGate from './createEmailCodeHolderGate.js';
 import createEmailSendLimit from './createEmailSendLimit.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
+import createSuspendedMemberGate, {
+  MEMBERSHIP_FREE_PATHS,
+} from '../organizations/createSuspendedMemberGate.js';
+import createSuspendedOrganizationsFilter from '../organizations/createSuspendedOrganizationsFilter.js';
 import createKnownDeviceHook from '../mobile/createKnownDeviceHook.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
 import createSignInRefusedRedirectHook from './createSignInRefusedRedirectHook.js';
@@ -126,6 +130,22 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
     matches: (path) => path === '/organization/accept-invitation',
     handler: createExpiredInvitationGate({ getAuth }),
   });
+
+  // A member suspended in an organization is a non-member to the organization
+  // plugin's own client endpoints too. Tenant only: under pinned every one of
+  // these paths is disabled.
+  if (authConfig.organizations?.policy === 'tenant') {
+    before.push({
+      id: 'suspendedMemberGate',
+      matches: (path) => path.startsWith('/organization/') && !MEMBERSHIP_FREE_PATHS.includes(path),
+      handler: createSuspendedMemberGate(),
+    });
+    after.push({
+      id: 'suspendedOrganizationsFilter',
+      matches: (path) => path === '/organization/list',
+      handler: createSuspendedOrganizationsFilter(),
+    });
+  }
 
   // The post-login organization choice (buildOauthPostLogin): stamps the
   // request's cached session when /oauth2/continue confirms the choice, so the

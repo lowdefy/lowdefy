@@ -18,6 +18,7 @@ import { organization } from 'better-auth/plugins';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
 import createBeforeCreateInvitationHook from './createBeforeCreateInvitationHook.js';
+import createBeforeUpdateMemberRoleHook from './createBeforeUpdateMemberRoleHook.js';
 import modelNames from '../modelNames.js';
 import { ac, roles } from './organizationAccessControl.js';
 
@@ -118,6 +119,12 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
           // caller then falls back to the global copies.
           name: { type: 'string', required: false, input: false },
           image: { type: 'string', required: false, input: false },
+          // A suspended member keeps their row - roles, attributes and all, so
+          // the app's own queries still find them - but holds no membership:
+          // every check that admits a member reads it (isActiveMember). Written
+          // only by the SuspendMember and UnsuspendMember steps. Absent means
+          // not suspended, so rows written before it existed need no migration.
+          suspended: { type: 'boolean', required: false, input: false },
         },
       },
       invitation: {
@@ -151,6 +158,9 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     },
     organizationHooks: {
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
+      // Keeps a suspended member out of the owner tier, so the plugin's owner
+      // guards, which count every owner row, stay exact (SuspendMember).
+      beforeUpdateMemberRole: createBeforeUpdateMemberRoleHook(),
       // Registered only when a limit is set: unset, the cap is the
       // effectively open DEFAULT_INVITATION_LIMIT above, and every invite
       // would pay for a count that can never refuse.

@@ -15,15 +15,16 @@
 */
 
 import { APIError } from 'better-auth/api';
-import { type } from '@lowdefy/helpers';
+
+import isActiveMember from './organizations/isActiveMember.js';
 
 // Every MCP access token carries the organization its grant acts in as the
 // organization_id claim - the consent referenceId (buildOauthPostLogin). The
 // refresh grant re-stamps that reference without asking whether the user still
-// belongs to the organization, so a member who left or was removed would keep
-// refreshing into tokens the MCP route refuses: the client refreshes, retries,
-// gets the same 401 and gives up, and never re-runs sign-in and the
-// organization choice. Refusing the mint with invalid_grant is what sends an
+// belongs to the organization, so a member who left, was removed or was
+// suspended would keep refreshing into tokens the MCP route refuses: the client
+// refreshes, retries, gets the same 401 and gives up, and never re-runs sign-in
+// and the organization choice. Refusing the mint with invalid_grant is what sends an
 // OAuth client back through authorization.
 function createMcpAccessTokenClaims({ getAuth }) {
   return async function mcpAccessTokenClaims({ user, referenceId }) {
@@ -35,7 +36,7 @@ function createMcpAccessTokenClaims({ getAuth }) {
         { field: 'organizationId', value: referenceId },
       ],
     });
-    if (type.isNone(member)) {
+    if (!isActiveMember({ member })) {
       throw new APIError('BAD_REQUEST', {
         error: 'invalid_grant',
         error_description:

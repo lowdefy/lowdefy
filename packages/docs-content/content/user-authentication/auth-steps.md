@@ -119,8 +119,10 @@ Scope, required permission, and target for every auth step. Permissions are chec
 | `ListMembers` | org | `member: [list]` | — | List members of the organization (accepts `organizationSlug`). |
 | `RemoveMember` | org | `member: [delete]` | — | Remove a member from the organization. |
 | `UpdateMemberRoles` | org | `member: [update]` | — | Set the membership's **app roles** (`appRoles` array; empty clears). |
-| `UpdateMemberOrgRole` | org | `member: [update]` | — | Set the **org tier** (`owner`/`admin`/`member`). |
+| `UpdateMemberOrgRole` | org | `member: [update]` | — | Set the **org tier** (`owner`/`admin`/`member`). A suspended member cannot be made `owner`. |
 | `UpdateMemberAttributes` | org | `member: [update]` | — | Set the membership's per-organization attributes. |
+| `SuspendMember` | org | `member: [suspend]` | — | [Suspend](/organizations#suspending-a-member) a member in this organization (`memberId`): the row and its roles stay, but it admits nobody. Refuses an `owner` (change their org tier first) and the caller's own membership. |
+| `UnsuspendMember` | org | `member: [suspend]` | — | Lift a suspension (`memberId`); the member keeps the roles they held. |
 | `UpdateOrganization` | org | `organization: [update]` | — | Update the organization row (name, slug, metadata). |
 | `RevokeOrgMcpToken` | org | `member: [update]` | — | Switch off any [member token](/mcp-oauth#tokens-for-scripts) in the organization (`id`). |
 | `UpdateUserProfile` | org | `user: [update]` | `userId` (self-exempt) | Update a member's display name/image (per-organization copy). Self-service save is exempt. |

@@ -161,6 +161,19 @@ test('buildOrganizationPlugin declares member.appRoles as a request-body-exclude
   });
 });
 
+test('buildOrganizationPlugin declares member.suspended as a request-body-excluded boolean', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.schema.member.additionalFields.suspended).toEqual({
+    type: 'boolean',
+    required: false,
+    input: false,
+  });
+});
+
 test('buildOrganizationPlugin declares invitation.appRoles without input: false so the invite body keeps it', () => {
   const plugin = buildOrganizationPlugin({
     authConfig,
@@ -251,6 +264,22 @@ test('buildOrganizationPlugin enforces auth.organizations.invitationLimit in the
   await expect(
     plugin.options.organizationHooks.beforeCreateInvitation(invitationHookArgs)
   ).rejects.toMatchObject({ statusCode: 403, body: { code: 'INVITATION_LIMIT_REACHED' } });
+});
+
+test('buildOrganizationPlugin refuses making a suspended member an owner in the beforeUpdateMemberRole hook', async () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  await expect(
+    plugin.options.organizationHooks.beforeUpdateMemberRole({
+      member: { id: 'member_1', role: 'member', suspended: true },
+      newRole: 'owner',
+      user: { id: 'user_1' },
+      organization: { id: 'org_1' },
+    })
+  ).rejects.toMatchObject({ body: { code: 'SUSPENDED_MEMBER_CANNOT_BE_OWNER' } });
 });
 
 // mintOrganization writes organizations and their owners through the adapter,

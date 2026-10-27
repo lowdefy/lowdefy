@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import isActiveMember from './isActiveMember.js';
+
 // How long a minted organization's owner row may take to follow it. A mint
 // writes both rows within one request, so a marker older than this is left
 // over from a mint that failed between its writes.
@@ -153,8 +155,8 @@ async function isMintInProgress({ adapter, organization, userId }) {
 // organization.slug, or null when that slug belongs to an organization this
 // mint may not take. A stale marker found on the way is cleared.
 //
-// keepMembership: an unmarked organization the creator already belongs to
-// counts as theirs. The signup mint needs it - a concurrent session of the
+// keepMembership: an unmarked organization the creator already belongs to,
+// unsuspended, counts as theirs. The signup mint needs it - a concurrent session of the
 // same user may have finished the mint between that user's membership read and
 // this call. The CreateOrganization step leaves it off: an organization that
 // already exists is refused, whoever belongs to it.
@@ -170,6 +172,12 @@ async function mintOrganization({
     return null;
   }
   const member = await findMember({ adapter, userId, organizationId: organization.id });
+  // A membership the creator is suspended in is not theirs to sign in to, so
+  // the signup mint moves on to the next slug, as for an organization they
+  // left - whether or not the organization is still marked mid-mint.
+  if (!type.isNone(member) && !isActiveMember({ member })) {
+    return null;
+  }
   if (!type.isNone(member) && (keepMembership || organization.mintPending === true)) {
     await clearMintPending({ adapter, organization });
     return { organization, member };

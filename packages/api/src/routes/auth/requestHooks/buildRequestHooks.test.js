@@ -124,6 +124,93 @@ test('buildRequestHooks routes /organization/accept-invitation into the expired 
   expect(adapter.findOne).toHaveBeenCalledTimes(1);
 });
 
+test('buildRequestHooks gates the member-gated organization endpoints under tenant only', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({
+    user: { id: 'user_1' },
+    session: { token: 'token_1', activeOrganizationId: 'org_1' },
+  });
+  const adapter = {
+    findOne: vi.fn(async () => null),
+    findMany: vi.fn(async () => [{ userId: 'user_1', organizationId: 'org_2', suspended: true }]),
+  };
+  const internalAdapter = { updateSession: vi.fn() };
+  const ctx = {
+    path: '/organization/set-active',
+    body: { organizationId: 'org_2' },
+    context: { adapter, internalAdapter },
+  };
+
+  const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  expect(await pinnedHooks.before(ctx)).toBeUndefined();
+  expect(adapter.findMany).not.toHaveBeenCalled();
+
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  await expect(tenantHooks.before(ctx)).rejects.toMatchObject({
+    body: { code: 'USER_IS_NOT_A_MEMBER_OF_THE_ORGANIZATION' },
+  });
+  // Refused like the endpoint refuses a non-member: the active organization is cleared.
+  expect(internalAdapter.updateSession).toHaveBeenCalledWith('token_1', {
+    activeOrganizationId: null,
+  });
+  expect(await tenantHooks.before({ ...ctx, body: { organizationId: 'org_1' } })).toBeUndefined();
+});
+
+test('buildRequestHooks gates organization endpoints it does not list as membership-free', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({
+    user: { id: 'user_1' },
+    session: { activeOrganizationId: 'org_2' },
+  });
+  const adapter = {
+    findOne: vi.fn(async () => null),
+    findMany: vi.fn(async () => [{ userId: 'user_1', organizationId: 'org_2', suspended: true }]),
+  };
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  await expect(
+    tenantHooks.before({ path: '/organization/list-teams', query: {}, context: { adapter } })
+  ).rejects.toMatchObject({ body: { code: 'USER_IS_NOT_A_MEMBER_OF_THE_ORGANIZATION' } });
+  expect(
+    await tenantHooks.before({
+      path: '/organization/get-invitation',
+      query: { id: 'inv_1' },
+      context: { adapter },
+    })
+  ).toBeUndefined();
+  expect(adapter.findMany).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks filters /organization/list under tenant only', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({ user: { id: 'user_1' }, session: {} });
+  const rows = [
+    { userId: 'user_1', organizationId: 'org_1' },
+    { userId: 'user_1', organizationId: 'org_2', suspended: true },
+  ];
+  const adapter = {
+    findMany: vi.fn(async ({ where }) =>
+      rows.filter((row) => where.every(({ field, value }) => row[field] === value))
+    ),
+  };
+  const ctx = {
+    path: '/organization/list',
+    json: (value) => value,
+    context: { adapter, returned: [{ id: 'org_1' }, { id: 'org_2' }] },
+  };
+
+  const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  expect(await pinnedHooks.after(ctx)).toBeUndefined();
+
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  expect(await tenantHooks.after(ctx)).toEqual([{ id: 'org_1' }]);
+});
+
 test('buildRequestHooks does not resolve the BetterAuth instance while assembling', () => {
   const getAuth = vi.fn();
   buildRequestHooks({ authConfig: { magicLink: { enabled: true }, organizations }, getAuth });

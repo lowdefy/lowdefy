@@ -18,6 +18,8 @@ import { type } from '@lowdefy/helpers';
 
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
+import isActiveMember from './isActiveMember.js';
+import MEMBER_ROWS_LIMIT from './memberRowsLimit.js';
 
 // The one admission predicate, shared by all three enforcement points: the
 // session.create wall (which passes a userId), the user.create.before gate and
@@ -27,8 +29,8 @@ import findPendingInvitation from './findPendingInvitation.js';
 // auto-joins under both policies, so the predicate short-circuits to true and
 // leaves those flows untouched.
 //
-// An email is admitted when there is either a member row (keyed by the given
-// userId, or by the user resolved from the email) or a pending, unexpired
+// An email is admitted when there is either an unsuspended member row (keyed by
+// the given userId, or by the user resolved from the email) or a pending, unexpired
 // invitation for the email. Under pinned the scope is the pinned org; under
 // tenant it is membership-anywhere or invitation-anywhere, since admission gates
 // deployment-global account existence and there is no target org at signup time.
@@ -62,13 +64,15 @@ async function isEmailAdmitted({ email, userId, organizations, auth, adapter, in
     invitationEmail = user?.email;
   }
 
+  // A suspended row admits nobody, so under tenant every row is read: a
+  // person suspended in one organization is still admitted by another.
   if (!type.isNone(memberUserId)) {
     const where = [{ field: 'userId', value: memberUserId }];
     if (pinned) {
       where.push({ field: 'organizationId', value: organization.id });
     }
-    const member = await adapter.findOne({ model: 'member', where });
-    if (member) {
+    const members = await adapter.findMany({ model: 'member', where, limit: MEMBER_ROWS_LIMIT });
+    if (members.some((member) => isActiveMember({ member }))) {
       return true;
     }
   }
