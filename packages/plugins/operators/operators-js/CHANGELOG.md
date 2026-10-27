@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.2.2
+
+### Patch Changes
+
+- @lowdefy/operators@6.2.2
+- @lowdefy/errors@6.2.2
+- @lowdefy/helpers@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes

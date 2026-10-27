@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/errors",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "license": "Apache-2.0",
   "description": "Lowdefy error classes for consistent error handling across build, server, and client",
   "homepage": "https://lowdefy.com",

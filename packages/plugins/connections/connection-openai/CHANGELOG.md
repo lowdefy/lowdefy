@@ -1,5 +1,11 @@
 # @lowdefy/connection-openai
 
+## 6.2.2
+
+### Patch Changes
+
+- @lowdefy/ai-utils@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes

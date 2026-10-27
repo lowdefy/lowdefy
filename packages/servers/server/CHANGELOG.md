@@ -1,5 +1,35 @@
 # @lowdefy/server-enterprise
 
+## 6.2.2
+
+### Patch Changes
+
+- 4c08191: fix(server): The production log no longer records evaluated values
+
+  The production server's error log and Sentry no longer carry an error's `received` value. It holds an operator's or control's evaluated input, such as a user's ID number or a token fetched by an earlier step, which the secret scrub cannot recognise. The log still names the error's class, message, config location and step. The dev server's log keeps `received`.
+
+  - @lowdefy/api@6.2.2
+  - @lowdefy/client@6.2.2
+  - @lowdefy/layout@6.2.2
+  - @lowdefy/actions-core@6.2.2
+  - @lowdefy/blocks-aggrid@6.2.2
+  - @lowdefy/blocks-antd@6.2.2
+  - @lowdefy/blocks-antd-x@6.2.2
+  - @lowdefy/blocks-basic@6.2.2
+  - @lowdefy/blocks-echarts@6.2.2
+  - @lowdefy/blocks-files@6.2.2
+  - @lowdefy/blocks-loaders@6.2.2
+  - @lowdefy/blocks-markdown@6.2.2
+  - @lowdefy/blocks-tiptap@6.2.2
+  - @lowdefy/operators-js@6.2.2
+  - @lowdefy/plugin-next-auth@6.2.2
+  - @lowdefy/websockets-core@6.2.2
+  - @lowdefy/block-utils@6.2.2
+  - @lowdefy/errors@6.2.2
+  - @lowdefy/helpers@6.2.2
+  - @lowdefy/logger@6.2.2
+  - @lowdefy/node-utils@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes
