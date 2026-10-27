@@ -115,11 +115,11 @@ const cases = [
   {
     name: 'allows devDependencies in tests and unpublished files, but not undeclared packages',
     files: {
-      'src/index.test.js': "import devdep from 'devdep';\nimport { jest } from '@jest/globals';",
+      'src/index.test.js': "import devdep from 'devdep';\nimport { vi } from 'vitest';",
       'src/test/helper.js': "import devdep from 'devdep';",
       'scripts/generate.mjs': "import devdep from 'devdep';",
     },
-    expected: [['src/index.test.js', '@jest/globals', 'undeclared']],
+    expected: [['src/index.test.js', 'vitest', 'undeclared']],
   },
   {
     name: 'allows devDependencies in e2e helpers reachable from the e2e export only',
@@ -141,6 +141,23 @@ cases.forEach(({ name, files, expected }) => {
     );
     assert.deepEqual(check(prefixed), expected);
   });
+});
+
+test('allows devDependencies in a file the package leaves out with a ! files entry', () => {
+  const problems = findUndeclaredImports({
+    files: {
+      'packages/example/package.json': JSON.stringify({
+        name: '@lowdefy/example',
+        files: ['scripts/*', '!scripts/ci.mjs'],
+        devDependencies: { devdep: '1.0.0' },
+      }),
+      'packages/example/scripts/ci.mjs': "import devdep from 'devdep';",
+      'packages/example/scripts/published.mjs': "import devdep from 'devdep';",
+    },
+  }).map(({ filePath, name, problem }) => [filePath, name, problem]);
+  assert.deepEqual(problems, [
+    ['packages/example/scripts/published.mjs', 'devdep', 'devDependency'],
+  ]);
 });
 
 test('allows devDependencies anywhere in a private package', () => {

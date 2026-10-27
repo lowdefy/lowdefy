@@ -1,0 +1,19 @@
+# MB5: Mobile Menu Links A Web Page
+# A mobile menu item must open a mobile page.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  menus:
+    drawer:
+      - pageId: today
+      - pageId: home
+  pages:
+    - id: today
+      type: Box
+config:
+  experimental:
+    mobile: true

@@ -15,6 +15,7 @@
 */
 
 import getBlockRange from './getBlockRange.js';
+import { expect, test } from 'vitest';
 
 test('getBlockRange returns the blocks covering a row range', () => {
   expect(getBlockRange({ startRow: 0, endRow: 200, blockSize: 200 })).toEqual({

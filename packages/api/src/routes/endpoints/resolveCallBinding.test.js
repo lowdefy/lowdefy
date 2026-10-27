@@ -15,6 +15,7 @@
 */
 
 import resolveCallBinding from './resolveCallBinding.js';
+import { expect, test } from 'vitest';
 
 const system = { system: true, boundOrganizationId: null, user: null };
 const github = { id: 'github', name: 'GitHub' };

@@ -15,6 +15,7 @@
 */
 
 import parseNpmrcLine from './parseNpmrcLine.js';
+import { expect, test } from 'vitest';
 
 test('parseNpmrcLine returns the trimmed key and value of a line', () => {
   expect(parseNpmrcLine('  store-dir = .pnpm-store ')).toEqual({

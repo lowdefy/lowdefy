@@ -15,6 +15,7 @@
 */
 
 import setNonEnumerableProperty from './setNonEnumerableProperty.js';
+import { expect, test } from 'vitest';
 
 test('setNonEnumerableProperty sets a non-enumerable property on an object', () => {
   const obj = { a: 1 };

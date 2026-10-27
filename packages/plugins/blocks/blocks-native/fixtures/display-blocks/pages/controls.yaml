@@ -1,0 +1,219 @@
+# The native controls on a mobile-only page: a SegmentedControl, Selector property rows with
+# variant menu and variant sheet, a MultipleSelector sheet row, a Menu, and a Sheet holding a form
+# that a button opens.
+id: controls
+type: Box
+blocks:
+  - id: scope
+    type: SegmentedControl
+    properties:
+      title: Scope
+      options:
+        - label: Open
+          value: open
+        - label: Mine
+          value: mine
+        - label: All
+          value: all
+    events:
+      onChange:
+        - id: note_scope
+          type: SetState
+          params:
+            scope_changed: true
+  - id: properties_card
+    type: Card
+    properties:
+      padding: none
+    blocks:
+      - id: status
+        type: Selector
+        properties:
+          title: Status
+          variant: menu
+          menuTitle: Set status
+          allowClear: false
+          options:
+            - label: Backlog
+              value: backlog
+              symbol: circle.dashed
+              icon: CircleDashed
+            - label: Todo
+              value: todo
+              symbol: circle
+              icon: Circle
+            - label: In progress
+              value: in_progress
+              symbol: circle.lefthalf.filled
+              icon: CircleDot
+              iconColor: '#F59E0B'
+            - label: Done
+              value: done
+              symbol: checkmark.circle.fill
+              icon: CircleCheck
+              iconColor: '#22C55E'
+      - id: assignee
+        type: Selector
+        properties:
+          title: Assignee
+          variant: menu
+          placeholder: Unassigned
+          options:
+            - label: Ada Lovelace
+              value: ada
+              avatar:
+                name: Ada Lovelace
+            - label: Grace Hopper
+              value: grace
+              avatar:
+                name: Grace Hopper
+      - id: reviewer
+        type: Selector
+        properties:
+          title: Reviewer
+          variant: sheet
+          menuTitle: Request review
+          placeholder: No reviewer
+          searchThreshold: 5
+          options:
+            - label: Assign to me
+              value: me
+              pinned: true
+              avatar:
+                name: Pieter van Dam
+                src: https://i.pravatar.cc/96?img=1
+            - label: Sam Taylor
+              value: sam
+              description: Engineer
+              avatar:
+                name: Sam Taylor
+                src: https://i.pravatar.cc/96?img=5
+            - label: Ada Lovelace
+              value: ada
+              description: ada@example.com
+              avatar:
+                name: Ada Lovelace
+            - label: Grace Hopper
+              value: grace
+              description: grace@example.com
+              avatar:
+                name: Grace Hopper
+            - label: José Núñez
+              value: jose
+              avatar:
+                name: José Núñez
+            - label: Zoë Smit
+              value: zoe
+              avatar:
+                name: Zoë Smit
+            - label: Former member
+              value: former
+              disabled: true
+              avatar:
+                name: Former member
+      - id: labels
+        type: MultipleSelector
+        properties:
+          title: Labels
+          variant: sheet
+          menuTitle: Labels
+          allowCreate: true
+          createPattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+          createPatternMessage: Use lowercase letters, digits and hyphens.
+          options:
+            - agent-rules
+            - api
+            - docs
+            - ui
+  - id: more
+    type: Menu
+    properties:
+      icon: Ellipsis
+      title: More
+      menuTitle: ACME-645
+      items:
+        - id: copy_link
+          title: Copy link
+          symbol: link
+        - id: open_web
+          title: Open on web
+          symbol: safari
+        - title: Set state
+          submenu: true
+          symbol: circle.dashed
+          items:
+            - id: state_discussing
+              title: Discussing
+              checked: true
+            - id: state_settled
+              title: Settled
+              checked: false
+        - title: Danger
+          items:
+            - id: delete
+              title: Delete
+              symbol: trash
+              destructive: true
+    events:
+      onSelect:
+        - id: remember_pick
+          type: SetState
+          params:
+            picked:
+              _event: id
+  - id: answer
+    type: Button
+    properties:
+      title: Answer
+    events:
+      onClick:
+        - id: open_sheet
+          type: CallMethod
+          params:
+            blockId: answer_sheet
+            method: open
+  - id: answer_sheet
+    type: Sheet
+    properties:
+      title: Answer question
+      detents: both
+    slots:
+      headerRight:
+        blocks:
+          - id: send
+            type: Button
+            properties:
+              title: Send
+              type: link
+            events:
+              onClick:
+                - id: close_sheet
+                  type: CallMethod
+                  params:
+                    blockId: answer_sheet
+                    method: close
+    blocks:
+      - id: answer_option
+        type: Selector
+        properties:
+          title: Option
+          options:
+            - Ship it
+            - Wait for review
+      - id: answer_note
+        type: TextArea
+        properties:
+          title: Note
+          placeholder: Add a note
+      - id: answer_submit
+        type: Button
+        properties:
+          title: Send answer
+          block: true
+        events:
+          onClick:
+            - id: close_from_body
+              type: CallMethod
+              params:
+                blockId: answer_sheet
+                method: close

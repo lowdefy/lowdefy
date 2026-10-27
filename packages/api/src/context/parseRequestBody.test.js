@@ -17,6 +17,7 @@
 import { UserError } from '@lowdefy/errors';
 
 import parseRequestBody from './parseRequestBody.js';
+import { expect, test } from 'vitest';
 
 test('parseRequestBody returns the parsed object', () => {
   expect(parseRequestBody({ text: '{"payload":{"a":1}}' })).toEqual({ payload: { a: 1 } });

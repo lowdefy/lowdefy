@@ -12,7 +12,7 @@ The `_base64` operator converts strings to and from [base64](https://en.wikipedi
 (value: string): string
 ```
 
-The `_base64.decode` method decodes base64 encoded content into an ASCII string.
+The `_base64.decode` method decodes base64 or base64url encoded content into a UTF-8 string. In the browser, it throws an error if the decoded bytes are not valid UTF-8.
 
 #### Arguments
 
@@ -33,7 +33,7 @@ Returns: `"Hello"`.
 (value: string): string
 ```
 
-The `_base64.encode` method base64 encodes a ASCII string.
+The `_base64.encode` method base64 encodes the UTF-8 bytes of a string.
 
 #### Arguments
 

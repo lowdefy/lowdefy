@@ -16,6 +16,7 @@
 import { MongoClient } from 'mongodb';
 
 import getClient, { closeClients } from './getClient.js';
+import { afterAll, expect, test } from 'vitest';
 
 const databaseUri = process.env.MONGO_URL;
 

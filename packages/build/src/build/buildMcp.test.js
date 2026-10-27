@@ -16,6 +16,7 @@
 
 import buildMcp from './buildMcp.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 const publicEndpoint = {
   id: 'endpoint:get-customer',
@@ -292,6 +293,17 @@ test('buildMcp throws when an endpoint is an InternalApi endpoint', () => {
   };
   expect(() => buildMcp({ components, context })).toThrow(
     'MCP endpoint "get-customer" is an InternalApi endpoint. Only "Api" endpoints can be exposed as MCP tools.'
+  );
+});
+
+test('buildMcp throws when an endpoint is a link endpoint', () => {
+  const context = testContext();
+  const components = {
+    api: [{ ...publicEndpoint, link: true }],
+    mcp: { endpoints: [{ id: 'get-customer', scope: 'mcp:read' }] },
+  };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'MCP endpoint "get-customer" is a link endpoint. A link endpoint answers only a GET with a redirect, so it cannot be an MCP tool.'
   );
 });
 

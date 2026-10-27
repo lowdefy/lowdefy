@@ -15,6 +15,7 @@
 */
 
 import resolveNotificationLinks from './resolveNotificationLinks.js';
+import { expect, test } from 'vitest';
 
 const routes = [
   { pageId: 'users', path: 'admin/users', auth: { public: false } },

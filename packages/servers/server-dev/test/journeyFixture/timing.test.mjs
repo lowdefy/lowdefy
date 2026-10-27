@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // wait.request waits for a call started since the last interaction, and a
 // block that renders late is clicked through its control, over the fixture

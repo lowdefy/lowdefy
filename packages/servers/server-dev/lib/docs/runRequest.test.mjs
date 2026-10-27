@@ -14,51 +14,51 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // runRequest reads build artifacts, builds a Lowdefy context and calls
 // callRequest - all three only exist in a running server directory, so mock
 // them and leave only runRequest's own validation and pass-through under test.
-const mockCallRequest = jest.fn();
-const mockReadBuildArtifact = jest.fn();
-const mockIsWriteRequestsAllowed = jest.fn();
-const mockCreateLowdefyContext = jest.fn();
-const mockLoggerInfo = jest.fn();
+const mockCallRequest = vi.fn();
+const mockReadBuildArtifact = vi.fn();
+const mockIsWriteRequestsAllowed = vi.fn();
+const mockCreateLowdefyContext = vi.fn();
+const mockLoggerInfo = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/api', () => ({
+vi.doMock('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
 }));
-jest.unstable_mockModule('./readBuildArtifact.js', () => ({
+vi.doMock('./readBuildArtifact.js', () => ({
   default: mockReadBuildArtifact,
 }));
-jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
+vi.doMock('./isWriteRequestsAllowed.js', () => ({
   default: mockIsWriteRequestsAllowed,
 }));
-jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
+vi.doMock('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
-const mockBuildPageIfNeeded = jest.fn();
-const mockSyncBuildSignals = jest.fn(() => ({
+const mockBuildPageIfNeeded = vi.fn();
+const mockSyncBuildSignals = vi.fn(() => ({
   registry: { home: { pageId: 'home', refPath: 'pages/home.yaml' } },
   eventCounter: 0,
   generation: 1,
 }));
-jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
+vi.doMock('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
   syncBuildSignals: mockSyncBuildSignals,
 }));
-const mockReviewPage = jest.fn();
-jest.unstable_mockModule('./reviewPage.js', () => ({
+const mockReviewPage = vi.fn();
+vi.doMock('./reviewPage.js', () => ({
   default: mockReviewPage,
 }));
 
-const { ConfigError } = await import('@lowdefy/errors');
+const { ConfigError, UserError } = await import('@lowdefy/errors');
 const { default: runRequest } = await import('./runRequest.js');
 
-const honoContext = { req: { path: '/lowdefy-docs/run-request' } };
+const honoContext = { req: { path: '/lowdefy-docs/mcp' } };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockReadBuildArtifact.mockImplementation(({ name }) => {
     if (name === 'plugins/requestSchemas.json') {
       return { MongoDBFind: { meta: { checkRead: true, checkWrite: false } } };
@@ -103,10 +103,10 @@ test('runRequest logs the user it ran the request as', async () => {
   });
 });
 
-test('runRequest throws a ConfigError when user is neither an object nor a data set user', async () => {
+test('runRequest throws a UserError when user is neither an object nor a data set user', async () => {
   await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', user: 'admin', honoContext })
-  ).rejects.toThrow(ConfigError);
+  ).rejects.toThrow(UserError);
   await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', user: ['admin'], honoContext })
   ).rejects.toThrow(/run_request: "user" should be a user object/);
@@ -160,10 +160,10 @@ test('runRequest does not note stale config for a page that is current', async (
   expect(result.staleConfig).toBeUndefined();
 });
 
-test('runRequest throws a ConfigError when saveResponse is not a boolean', async () => {
+test('runRequest throws a UserError when saveResponse is not a boolean', async () => {
   await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', saveResponse: 1, honoContext })
-  ).rejects.toThrow(ConfigError);
+  ).rejects.toThrow(UserError);
   expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
 });
 

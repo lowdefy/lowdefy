@@ -14,27 +14,27 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
-const mockSendEmail = jest.fn(async () => ({ messageId: 'msg_1' }));
-const mockCreateSendEmail = jest.fn(() => mockSendEmail);
-const mockRenderAuthEmail = jest.fn(async () => ({
+const mockSendEmail = vi.fn(async () => ({ messageId: 'msg_1' }));
+const mockCreateSendEmail = vi.fn(() => mockSendEmail);
+const mockRenderAuthEmail = vi.fn(async () => ({
   subject: 'Rendered subject',
   html: '<p>Rendered</p>',
   text: 'Rendered text',
 }));
 
-jest.unstable_mockModule('./createSendEmail.js', () => ({ default: mockCreateSendEmail }));
-jest.unstable_mockModule('../../email/renderAuthEmail.js', () => ({
+vi.doMock('./createSendEmail.js', () => ({ default: mockCreateSendEmail }));
+vi.doMock('../../email/renderAuthEmail.js', () => ({
   default: mockRenderAuthEmail,
 }));
 
 // The challenge sequence walks endpoint-context internals a plain object cannot
 // supply, and has its own test; stub it so the two-factor interception's wiring
 // can be driven with a fake context.
-const mockBeginTwoFactorChallenge = jest.fn(async () => 'challenged');
-jest.unstable_mockModule('./requestHooks/beginTwoFactorChallenge.js', () => ({
+const mockBeginTwoFactorChallenge = vi.fn(async () => 'challenged');
+vi.doMock('./requestHooks/beginTwoFactorChallenge.js', () => ({
   default: mockBeginTwoFactorChallenge,
 }));
 
@@ -98,17 +98,17 @@ const getAuth = () => ({});
 
 function createLogger() {
   return {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    isLevelEnabled: jest.fn(() => false),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    isLevelEnabled: vi.fn(() => false),
   };
 }
 
 function createPlugins(overrides = {}) {
   return {
-    adapters: { MongoDBAuthAdapter: jest.fn(() => 'adapter-instance') },
+    adapters: { MongoDBAuthAdapter: vi.fn(() => 'adapter-instance') },
     providers: {},
     ...overrides,
   };
@@ -342,7 +342,7 @@ describe('base URL resolution', () => {
 });
 
 test('resolves the database adapter using the matching plugin and resolved secrets', () => {
-  const adapterPlugin = jest.fn(() => 'adapter-instance');
+  const adapterPlugin = vi.fn(() => 'adapter-instance');
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -356,7 +356,7 @@ test('resolves the database adapter using the matching plugin and resolved secre
 });
 
 test('constructs a stateless instance without a database for a strategies-only app', () => {
-  const adapterPlugin = jest.fn(() => 'adapter-instance');
+  const adapterPlugin = vi.fn(() => 'adapter-instance');
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({
@@ -607,11 +607,16 @@ test('does not add emailVerification when email is not configured', () => {
 // BETTER_AUTH_URL unset construct the options as the dev server does.
 describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
-  const sentinelContext = { system: true };
-  const createSystemContext = jest.fn(() => sentinelContext);
+  const sentinelContext = {
+    system: true,
+    handleError: vi.fn(async () => {}),
+    logger: { warn: vi.fn() },
+  };
+  const createSystemContext = vi.fn(() => sentinelContext);
 
   afterEach(() => {
     createSystemContext.mockClear();
+    sentinelContext.handleError.mockClear();
     if (originalBetterAuthUrl === undefined) {
       delete process.env.BETTER_AUTH_URL;
     } else {
@@ -634,7 +639,9 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    expect(mockCreateSendEmail).toHaveBeenCalledWith({ connectionId: 'auth_email' });
+    expect(mockCreateSendEmail).toHaveBeenCalledWith({
+      authEmailConfig: expect.objectContaining({ connectionId: 'auth_email' }),
+    });
   });
 
   test('sendResetPassword renders the resetPassword flow and sends to the user email', async () => {
@@ -859,9 +866,10 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     );
   });
 
-  // Only the sign-in code has an email flow behind it; a request for any other
-  // OTP type is a wiring fault and must fail loudly rather than send nothing.
-  test('sendVerificationOTP throws a ConfigError for an OTP type other than sign-in', async () => {
+  // Only the sign-in code has an email flow behind it. The type comes from the caller's request,
+  // so another type is refused with one warning: no email, and no fault report a caller could
+  // flood error tracking with.
+  test('sendVerificationOTP refuses an OTP type other than sign-in with a warning and sends nothing', async () => {
     const options = getBetterAuthConfig({
       appMeta,
       dev: true,
@@ -882,20 +890,25 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
       secrets: baseSecrets,
     });
     const otpPlugin = options.plugins.find((p) => p.id === 'email-otp');
-    await expect(
-      otpPlugin.options.sendVerificationOTP({
-        email: 'user@example.com',
-        otp: '482913',
-        type: 'forget-password',
-      })
-    ).rejects.toThrow(ConfigError);
+    sentinelContext.handleError.mockClear();
+    sentinelContext.logger.warn.mockClear();
+    await otpPlugin.options.sendVerificationOTP({
+      email: 'user@example.com',
+      otp: '482913',
+      type: 'forget-password',
+    });
+    expect(sentinelContext.logger.warn).toHaveBeenCalledWith(
+      { event: 'auth_email_otp_type_refused', otpType: 'forget-password' },
+      expect.stringContaining('"forget-password"')
+    );
+    expect(sentinelContext.handleError).not.toHaveBeenCalled();
     expect(mockSendEmail).not.toHaveBeenCalled();
   });
 
   // One email carries both when magicLink and emailOTP are enabled together -
   // link-scanning mail security burns the link, and the typed code survives it.
   test('sendMagicLink mints the code through api.createVerificationOTP and adds otp and expiresIn to the vars when emailOTP is enabled', async () => {
-    const createVerificationOTP = jest.fn(async () => '482913');
+    const createVerificationOTP = vi.fn(async () => '482913');
     const options = getBetterAuthConfig({
       appMeta,
       dev: true,
@@ -1030,6 +1043,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     const options = getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson(),
+      createSystemContext,
       getAuth,
       logger: createLogger(),
       plugins: createPlugins(),
@@ -1042,6 +1056,10 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
         invitation: { id: 'inv_1' },
       })
     ).rejects.toThrow('Cannot send the invitation email. Configure "auth.email".');
+    // A fault, reported through the system context before BetterAuth sees it.
+    expect(sentinelContext.handleError).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'ConfigError' })
+    );
     expect(mockRenderAuthEmail).not.toHaveBeenCalled();
     expect(mockSendEmail).not.toHaveBeenCalled();
   });
@@ -1336,7 +1354,7 @@ test('assembles databaseHooks from auth.hooks bindings', () => {
         { id: 'audit', point: 'session.create.after', endpointId: 'auth/audit' },
       ],
     }),
-    createSystemContext: jest.fn(),
+    createSystemContext: vi.fn(),
     getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
@@ -1351,7 +1369,7 @@ test('always sets the engine session.create.before and user.create.before slots 
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({ hooks: [] }),
-    createSystemContext: jest.fn(),
+    createSystemContext: vi.fn(),
     getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
@@ -1372,7 +1390,7 @@ test('an email.verified hook sets emailVerification.afterEmailVerification and p
       },
       hooks: [{ id: 'on-verified', point: 'email.verified', endpointId: 'auth/on-verified' }],
     }),
-    createSystemContext: jest.fn(),
+    createSystemContext: vi.fn(),
     getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
@@ -1738,11 +1756,13 @@ describe('onAPIError.onError owns auth API error logging', () => {
     );
   });
 
-  test('logs a 5xx or non-API error at error level with the error object', () => {
+  test('reports a 5xx or non-API error through a system context error sink', () => {
     const logger = createLogger();
+    const handleError = vi.fn(async () => {});
     const options = getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson(),
+      createSystemContext: () => ({ handleError }),
       getAuth,
       logger,
       plugins: createPlugins(),
@@ -1754,7 +1774,7 @@ describe('onAPIError.onError owns auth API error logging', () => {
       expect.anything(),
       expect.stringContaining('Auth request rejected')
     );
-    expect(logger.error).toHaveBeenCalledWith(adapterError);
+    expect(handleError).toHaveBeenCalledWith(adapterError);
   });
 });
 
@@ -2057,5 +2077,47 @@ describe('oauthProvider authorization server plugins', () => {
   test('registers the cimd plugin alongside the oauth-provider', () => {
     const options = getOAuthOptions();
     expect(options.plugins.some((p) => p.id === 'cimd')).toBe(true);
+  });
+});
+
+describe('mobile', () => {
+  const mobile = { shells: [{ id: 'field', scheme: 'com.example.field' }], sessionExpiresIn: null };
+
+  function build(authJsonOverrides) {
+    return getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(authJsonOverrides),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+  }
+
+  test('adds no bearer or one-time-token plugin for an app without a mobile section', () => {
+    const ids = build().plugins.map((plugin) => plugin.id);
+    expect(ids).not.toContain('bearer');
+    expect(ids).not.toContain('one-time-token');
+  });
+
+  test('adds the bearer and one-time-token plugins for an app with a mobile section', () => {
+    const options = build({ mobile });
+    const ids = options.plugins.map((plugin) => plugin.id);
+    expect(ids).toContain('bearer');
+    expect(ids).toContain('one-time-token');
+    expect(options.plugins.find((plugin) => plugin.id === 'bearer').options).toEqual({
+      requireSignature: true,
+    });
+    // customSession stays last, so its token strip sees every session field.
+    expect(ids.at(-1)).toBe('custom-session');
+  });
+
+  test('marks phone sessions only when mobile.auth.sessionExpiresIn is set', () => {
+    expect(build({ mobile }).session.additionalFields).toBeUndefined();
+    const options = build({ mobile: { ...mobile, sessionExpiresIn: 2592000 } });
+    expect(options.session.additionalFields).toEqual({
+      mobile: { type: 'boolean', required: false, input: false },
+    });
+    expect(options.session.expiresIn).toBe(604800);
   });
 });

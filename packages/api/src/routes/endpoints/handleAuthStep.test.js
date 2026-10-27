@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -24,10 +24,10 @@ import testContext from '../../test/testContext.js';
 const operators = { ...operatorsServer };
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const pinnedOrganization = {
@@ -39,7 +39,7 @@ const pinnedOrganization = {
 // row, and the organization named by a slug. The stub answers them from row
 // arrays so a test states membership rather than scripting calls.
 function createAdapter({ members = [], organizations = [] } = {}) {
-  const findOne = jest.fn(async ({ model, where }) => {
+  const findOne = vi.fn(async ({ model, where }) => {
     const clause = (field) => where.find((entry) => entry.field === field)?.value;
     if (model === 'member') {
       return (
@@ -60,7 +60,7 @@ function createAdapter({ members = [], organizations = [] } = {}) {
 // The default step is org-scoped and needs member:update, and the default caller
 // is an admin of the pinned organization - the arrangement that passes.
 function createStepFn(authority = { scope: 'org', permissions: { member: ['update'] } }) {
-  const stepFn = jest.fn().mockResolvedValue({ ok: true });
+  const stepFn = vi.fn().mockResolvedValue({ ok: true });
   stepFn.meta = { authority };
   return stepFn;
 }
@@ -112,7 +112,7 @@ function createStepRoutine(overrides = {}) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('AuthStep step runs the step function and stores the result in steps', async () => {
@@ -136,6 +136,7 @@ test('AuthStep step runs the step function and stores the result in steps', asyn
     organization: pinnedOrganization,
     organizationId: 'org_pinned',
     properties: { name: 'ci key' },
+    provisionOrganization: expect.any(Function),
   });
 });
 
@@ -154,6 +155,7 @@ test('AuthStep step does not pass a userAdminRole key to the step function', asy
     'organization',
     'organizationId',
     'properties',
+    'provisionOrganization',
   ]);
 });
 
@@ -326,7 +328,7 @@ test('AuthStep step evaluates properties operators against the routine payload',
 });
 
 test('AuthStep step refuses a step that declares no meta.authority', async () => {
-  const stepFn = jest.fn().mockResolvedValue({ ok: true });
+  const stepFn = vi.fn().mockResolvedValue({ ok: true });
   const { context } = createTestContext({ steps: { TestAuthStep: stepFn } });
   const routineContext = createRoutineContext();
 
@@ -340,7 +342,7 @@ test('AuthStep step refuses a step that declares no meta.authority', async () =>
 });
 
 test('AuthStep step refuses a step whose meta carries no authority key', async () => {
-  const stepFn = jest.fn().mockResolvedValue({ ok: true });
+  const stepFn = vi.fn().mockResolvedValue({ ok: true });
   stepFn.meta = { checkRead: true };
   const { context } = createTestContext({ steps: { TestAuthStep: stepFn } });
   const routineContext = createRoutineContext();
@@ -462,6 +464,24 @@ test('AuthStep step refuses an org-scoped step when the caller holds no member r
   const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
 
   expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" refused - the caller does not hold member: [update] in organization "org_pinned".'
+  );
+  expect(stepFn).not.toHaveBeenCalled();
+});
+
+test('AuthStep step refuses an org-scoped step when the caller is suspended in the resolved organization', async () => {
+  const stepFn = createStepFn();
+  const { context } = createTestContext({
+    members: [{ userId: 'user_1', organizationId: 'org_pinned', role: 'admin', suspended: true }],
+    steps: { TestAuthStep: stepFn },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res.status).toBe('error');
+  expect(res.error.name).toBe('AuthorizationError');
   expect(res.error.message).toBe(
     'Auth step "run_step" refused - the caller does not hold member: [update] in organization "org_pinned".'
   );
@@ -653,6 +673,29 @@ test('AuthStep step runs a targetUser step when the target holds a member row in
       { field: 'organizationId', value: 'org_pinned' },
     ],
   });
+});
+
+test('AuthStep step runs a targetUser step when the target is suspended in the resolved organization', async () => {
+  const stepFn = createStepFn({
+    scope: 'org',
+    permissions: { user: ['ban'] },
+    targetUser: 'userId',
+  });
+  const { context } = createTestContext({
+    members: [
+      { userId: 'user_1', organizationId: 'org_pinned', role: 'admin' },
+      { userId: 'user_2', organizationId: 'org_pinned', role: 'member', suspended: true },
+    ],
+    steps: { TestAuthStep: stepFn },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ properties: { userId: 'user_2' } }),
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(stepFn).toHaveBeenCalled();
 });
 
 test('AuthStep step leaves an absent targetUser property to the step to reject', async () => {

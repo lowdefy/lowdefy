@@ -168,7 +168,9 @@ async function resolvePageSource({ pageId, pageEntry, buildContext, skipContent 
     const unscopedId = moduleEntry ? pageId.slice(`${moduleEntry.id}/`.length) : pageId;
     processed = processed.find((p) => type.isObject(p) && p.id === unscopedId);
     if (!processed) {
-      throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`);
+      throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`, {
+        filePath: pageEntry.refPath,
+      });
     }
   }
 

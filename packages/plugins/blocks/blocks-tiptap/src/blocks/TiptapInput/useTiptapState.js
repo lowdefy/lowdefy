@@ -23,7 +23,7 @@ import fileUpload from '../utils/fileUpload.js';
 // source of truth for `fileList` is the `value` prop from Lowdefy. We mirror
 // it into a ref each render so callbacks (onUpdate, insertImage) captured in
 // closures always read the current value instead of a stale render snapshot.
-function useTiptapState({ value, methods, hasDownloadRequest }) {
+function useTiptapState({ value, methods, hasDownloadRequest, imageSrc }) {
   const valueRef = useRef(value);
   valueRef.current = value;
 
@@ -32,7 +32,10 @@ function useTiptapState({ value, methods, hasDownloadRequest }) {
     filter: 'img',
     replacement: (content, node) => {
       const src = node.getAttribute('src');
-      return `![${content}](${encodeURI(src)})`;
+      // encodeURI escapes the spaces and brackets markdown cannot hold, but also the % of an
+      // escape already in the src (an imageSrc built with __uri.encode), so restore those.
+      const markdownSrc = encodeURI(src).replace(/%25([0-9A-Fa-f]{2})/g, '%$1');
+      return `![${content}](${markdownSrc})`;
     },
   });
 
@@ -53,7 +56,7 @@ function useTiptapState({ value, methods, hasDownloadRequest }) {
   };
 
   const insertImage = async (editor, file, pos) => {
-    const url = await fileUpload({ file, methods, hasDownloadRequest });
+    const url = await fileUpload({ file, methods, hasDownloadRequest, imageSrc });
     // The upload is async: bail if the editor was torn down meanwhile (e.g. the
     // surrounding page navigated away before the upload resolved), otherwise the
     // chained commands run against a destroyed editor and throw.

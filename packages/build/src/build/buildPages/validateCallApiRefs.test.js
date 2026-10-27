@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigWarning } from '@lowdefy/errors';
 
 import validateCallApiRefs from './validateCallApiRefs.js';
 
-const mockHandleWarning = jest.fn();
+const mockHandleWarning = vi.fn();
 
 beforeEach(() => {
   mockHandleWarning.mockReset();
@@ -59,6 +59,23 @@ test('CallAPI targeting InternalApi endpoint produces warning', () => {
   expect(warning.message).toContain('page "page1"');
   expect(warning.prodError).toBe(true);
   expect(warning.checkSlug).toBe('callapi-internal-refs');
+});
+
+test('CallAPI targeting a link endpoint produces warning', () => {
+  const callApiActionRefs = [
+    {
+      endpointId: 'files',
+      action: { id: 'call_1', type: 'CallAPI', params: { endpointId: 'files' } },
+      sourcePageId: 'page1',
+    },
+  ];
+  const endpointConfigs = [{ endpointId: 'files', type: 'Api', link: true }];
+  validateCallApiRefs({ callApiActionRefs, endpointConfigs, context });
+  expect(mockHandleWarning).toHaveBeenCalledTimes(1);
+  const warning = mockHandleWarning.mock.calls[0][0];
+  expect(warning).toBeInstanceOf(ConfigWarning);
+  expect(warning.message).toContain('link endpoint "files"');
+  expect(warning.prodError).toBe(true);
 });
 
 test('skipped action is not validated', () => {

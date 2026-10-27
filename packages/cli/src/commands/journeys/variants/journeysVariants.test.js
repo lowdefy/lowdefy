@@ -14,20 +14,27 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-const mockPost = jest.fn();
-const mockGet = jest.fn();
-jest.unstable_mockModule('axios', () => ({
+const mockPost = vi.fn();
+const mockGet = vi.fn();
+vi.doMock('axios', () => ({
   default: { post: mockPost, get: mockGet },
 }));
 
-const mockStartDevServer = jest.fn();
-jest.unstable_mockModule('../../test/startDevServer.js', () => ({
+const mockStartDevServer = vi.fn();
+vi.doMock('../../test/startDevServer.js', () => ({
   default: mockStartDevServer,
+}));
+
+// The slot files live in LOWDEFY_HOME, shared by the machine; acquireJourneyRunSlots has its own tests.
+const mockReleaseSlots = vi.fn();
+const mockAcquireJourneyRunSlots = vi.fn();
+vi.doMock('../../test/acquireJourneyRunSlots.js', () => ({
+  default: mockAcquireJourneyRunSlots,
 }));
 
 const url = 'http://localhost:3230';
@@ -93,9 +100,9 @@ beforeEach(() => {
       info: (line) => logs.info.push(line),
       warn: (line) => logs.warn.push(line),
       error: (line) => logs.error.push(line),
-      debug: jest.fn(),
+      debug: vi.fn(),
     },
-    sendTelemetry: jest.fn(),
+    sendTelemetry: vi.fn(),
   };
   mockGet.mockImplementation(async (target) => {
     if (target === `${url}/lowdefy-docs/page-config/tickets`) return { data: pageConfig };
@@ -103,6 +110,9 @@ beforeEach(() => {
     return { data: { buildId: 'build-1' } };
   });
   mockPost.mockResolvedValue({ data: { passed: true, steps: [], exercised } });
+  mockReleaseSlots.mockReset();
+  mockAcquireJourneyRunSlots.mockReset();
+  mockAcquireJourneyRunSlots.mockResolvedValue({ release: mockReleaseSlots });
 });
 
 afterEach(() => {
@@ -399,4 +409,29 @@ test('journeysVariants replays a granted role variant, whose comment is no place
   expect(bodies.map((body) => body.user)).toEqual(['member', 'admin', 'admin', 'admin']);
   expect(logs.warn.filter((line) => line.startsWith('NOT RUN'))).toEqual([]);
   expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
+});
+
+test('journeysVariants exits 75 without measuring or writing when no journey run slot frees', async () => {
+  mockAcquireJourneyRunSlots.mockRejectedValue(
+    Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
+  );
+  await variants({ run: false });
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy journeys variants',
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(listVariants()).toEqual([]);
+  expect(logs.error).toEqual([
+    'The machine is busy running other journeys. Try again later; do not start your own dev server.',
+  ]);
+  expect(process.exitCode).toBe(75);
+});
+
+test('journeysVariants frees the journey run slots after the run, and when the server fails to start', async () => {
+  await variants({ run: false });
+  expect(mockReleaseSlots).toHaveBeenCalledTimes(1);
+  mockStartDevServer.mockRejectedValue(new Error('boot failed'));
+  await expect(variants({ url: undefined, run: false })).rejects.toThrow('boot failed');
+  expect(mockReleaseSlots).toHaveBeenCalledTimes(2);
 });

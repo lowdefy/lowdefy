@@ -19,7 +19,7 @@ import path from 'node:path';
 import { shallowBuild } from '@lowdefy/build/dev';
 
 // Builds an app into <serverDirectory>/build for a test, in a Node process of its own: the build
-// imports plugin modules dynamically, which jest's module runtime cannot load.
+// imports plugin modules dynamically, so it runs outside the test runner's module runtime.
 //   node buildTestApp.mjs <configDirectory> <serverDirectory>
 const [configDirectory, serverDirectory] = process.argv.slice(2);
 const serverDevDirectory = path.resolve(import.meta.dirname, '../../../..');

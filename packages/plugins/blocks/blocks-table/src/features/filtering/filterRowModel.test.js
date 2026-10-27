@@ -16,6 +16,7 @@
 
 import filterRowModel from './filterRowModel.js';
 import prepareFilterResult from './prepareFilterResult.js';
+import { expect, test } from 'vitest';
 
 const columns = [
   { key: 'name', field: 'name', type: 'text', cell: {} },

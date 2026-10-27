@@ -20,6 +20,7 @@ import {
 } from 'ai/test';
 
 import decide from './decide.js';
+import { expect, test } from 'vitest';
 
 const questions = {
   next: { choice: 'Which control next', options: { c0: 'click "Assign"', c1: 'fill "Title"' } },

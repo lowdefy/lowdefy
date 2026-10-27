@@ -16,11 +16,12 @@
 
 import agentsMd from './agentsMd.js';
 import skills from './skills/index.js';
+import { expect, test } from 'vitest';
 
 // Every app in a repository renders the same agent files, so the text names
 // no app: no `cd <app> &&` before a command and no app-specific dev command.
 const texts = [
-  { name: 'agentsMd', text: agentsMd({ skills }) },
+  { name: 'agentsMd', text: agentsMd({ cliVersion: '7.0.0', skills }) },
   ...skills.map((skill) => ({ name: skill.name, text: skill.render() })),
 ];
 
@@ -31,7 +32,7 @@ test.each(texts)('$name names no app', ({ text }) => {
 });
 
 test('agentsMd states the app rule once', () => {
-  const text = agentsMd({ skills });
+  const text = agentsMd({ cliVersion: '7.0.0', skills });
   expect(text.split('A Lowdefy app is a folder containing `lowdefy.yaml`.')).toHaveLength(2);
   expect(text).toContain('pass its folder as `directory`');
   expect(text).toContain('`--config-directory <app>`');

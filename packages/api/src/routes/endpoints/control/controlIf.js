@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import runRoutine from '../runRoutine.js';
 import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
@@ -25,11 +27,13 @@ async function controlIf(context, routineContext, { control }) {
     location: control['~k'] ?? ':if',
   });
 
+  // No evaluated values: they can carry chat text or other personal information,
+  // which no log level may hold.
   logger.debug({
     event: 'debug_control_if',
     condition: {
       input: control[':if'],
-      evaluated: evaluatedIf,
+      result: Boolean(evaluatedIf),
     },
   });
   if (evaluatedIf) {
@@ -37,7 +41,9 @@ async function controlIf(context, routineContext, { control }) {
       event: 'debug_control_if_run_then',
     });
     if (!control[':then']) {
-      throw new Error(`Invalid :if in endpoint "${endpointId}" - missing :then.`);
+      throw new ConfigError(`Invalid :if in endpoint "${endpointId}" - missing :then.`, {
+        configKey: control['~k'],
+      });
     }
     return runRoutine(context, routineContext, { routine: control[':then'] });
   } else if (control[':else']) {

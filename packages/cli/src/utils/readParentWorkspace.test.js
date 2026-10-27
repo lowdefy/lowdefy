@@ -15,26 +15,26 @@
 */
 
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('fs', () => ({
+vi.doMock('fs', () => ({
   default: {
-    existsSync: jest.fn(),
+    existsSync: vi.fn(),
   },
 }));
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  readFile: jest.fn(),
+vi.doMock('@lowdefy/node-utils', () => ({
+  readFile: vi.fn(),
 }));
 
-jest.unstable_mockModule('./getPnpmMajorVersion.js', () => ({
-  default: jest.fn(),
+vi.doMock('./getPnpmMajorVersion.js', () => ({
+  default: vi.fn(),
 }));
 
 const pnpmCmd = 'pnpm';
 
 beforeEach(async () => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
   getPnpmMajorVersion.mockReturnValue(10);
 });

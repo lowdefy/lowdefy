@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import parsePsStartTime from './parsePsStartTime.js';
 
-const mockGetProcessStartTimeCommand = jest.fn();
-jest.unstable_mockModule('./getProcessStartTimeCommand.js', () => ({
+const mockGetProcessStartTimeCommand = vi.fn();
+vi.doMock('./getProcessStartTimeCommand.js', () => ({
   default: mockGetProcessStartTimeCommand,
 }));
 

@@ -14,12 +14,16 @@
   limitations under the License.
 */
 
+import { isExpectedError } from '@lowdefy/errors';
+
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 
 // Runs the app's mcp.afterToolCall endpoint as the tool's caller, after the
 // reply to the agent is built. The hook observes the call; it can never change
-// the reply, so every failure (a refused caller, a payload its schema rejects,
-// a routine that errors or rejects) ends as one warning and nothing else.
+// the reply, so every failure ends as one warning naming the hook and the tool.
+// A fault the routine did not reach (a missing endpoint, a payload its schema
+// rejects) is also reported through handleError, like any other fault; the
+// routine's own faults already were, by runRoutine.
 // Awaited by the caller rather than left running: a serverless platform may
 // reap the invocation once the response is sent.
 async function runAfterToolCall(context, { hookId, payload }) {
@@ -46,6 +50,9 @@ async function runAfterToolCall(context, { hookId, payload }) {
       { event: 'warn_mcp_after_tool_call', hook: hookId, tool: payload.tool, err: error },
       `MCP afterToolCall hook "${hookId}" failed after tool "${payload.tool}": ${error.message}`
     );
+    if (!isExpectedError(error) && error?.handled !== true) {
+      await context.handleError(error);
+    }
   }
 }
 

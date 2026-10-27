@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import readMemberships from './readMemberships.js';
 
 function mockAdapter({ rows, activeRow = null }) {
   return {
-    findMany: jest.fn().mockResolvedValue(rows),
-    findOne: jest.fn().mockResolvedValue(activeRow),
+    findMany: vi.fn().mockResolvedValue(rows),
+    findOne: vi.fn().mockResolvedValue(activeRow),
   };
 }
 
@@ -63,6 +63,23 @@ test('readMemberships returns no member when the user holds no row in the active
 
   expect(result).toEqual({ member: null, organizationIds: ['org_0', 'org_1'] });
   expect(adapter.findOne).not.toHaveBeenCalled();
+});
+
+test('readMemberships returns a suspended active row and leaves suspended organizations out of the list', async () => {
+  const adapter = mockAdapter({
+    rows: [
+      { id: 'member_0', organizationId: 'org_0' },
+      { id: 'member_1', organizationId: 'org_1', suspended: true },
+      { id: 'member_2', organizationId: 'org_2', suspended: false },
+    ],
+  });
+
+  const result = await readMemberships({ adapter, organizationId: 'org_1', userId: 'user_1' });
+
+  expect(result).toEqual({
+    member: { id: 'member_1', organizationId: 'org_1', suspended: true },
+    organizationIds: ['org_0', 'org_2'],
+  });
 });
 
 test('readMemberships lists no organizations for a user with no member rows', async () => {

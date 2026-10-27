@@ -16,6 +16,8 @@
 
 import { builtinMessages, type } from '@lowdefy/helpers';
 
+import getGlobals from '../getGlobals.js';
+
 // Build markers: their values are key and reference ids, not text the app shows.
 const MARKER_KEYS = new Set(['~k', '~r', '~l', '~ignoreBuildChecks']);
 
@@ -80,7 +82,7 @@ function createIsConfigText({ lowdefy, pathEntryOf }) {
     if (!type.isString(pageId)) {
       return null;
     }
-    const entry = pathEntryOf(window.location.href);
+    const entry = pathEntryOf(getGlobals(lowdefy).window.location.href);
     const context = lowdefy.contexts?.[entry?.instanceKey];
     if (context?.pageId !== pageId) {
       return null;
@@ -99,7 +101,7 @@ function createIsConfigText({ lowdefy, pathEntryOf }) {
       lowdefy.i18n?.messages,
       lowdefy.i18n?.locales,
       builtinMessages,
-      window.__lowdefy_antd_locale,
+      getGlobals(lowdefy).window.__lowdefy_antd_locale,
     ];
     return sources.some((source) => textSetOf(source)?.has(normalised) === true);
   };

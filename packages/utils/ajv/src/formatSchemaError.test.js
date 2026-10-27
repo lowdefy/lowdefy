@@ -15,6 +15,7 @@
 */
 
 import formatSchemaError from './formatSchemaError.js';
+import { expect, test } from 'vitest';
 
 test('formats type error', () => {
   const result = formatSchemaError({

@@ -17,6 +17,7 @@
 import { Hono } from 'hono';
 
 import noStore from './noStore.js';
+import { expect, test } from 'vitest';
 
 function createApp() {
   const app = new Hono();

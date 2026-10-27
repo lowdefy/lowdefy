@@ -22,6 +22,7 @@ import { hideBin } from 'yargs/helpers';
 import pino from 'pino';
 import { createNodeLogger } from '@lowdefy/logger/node';
 import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
+import checkPendingPlugins from './processes/checkPendingPlugins.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
@@ -59,9 +60,16 @@ async function getContext() {
       destination: pino.destination({ dest: 1, sync: true }),
     }),
     options: {
+      // For tests only: how long the Vite child may sit unused before it stops
+      // (createIdleChild). Defaults to 3 minutes.
+      childIdleMs: env.LOWDEFY_SERVER_DEV_CHILD_IDLE_MS
+        ? Number(env.LOWDEFY_SERVER_DEV_CHILD_IDLE_MS)
+        : undefined,
       internalPort: env.LOWDEFY_SERVER_DEV_INTERNAL_PORT
         ? Number(env.LOWDEFY_SERVER_DEV_INTERNAL_PORT)
         : undefined,
+      // "true" or a network interface name: lowdefy dev --lan [interface].
+      lan: env.LOWDEFY_SERVER_DEV_LAN || undefined,
       owner: env.LOWDEFY_DEV_OWNER === 'hub' ? 'hub' : 'terminal',
       port: Number(argv.port ?? env.PORT ?? 3000),
       refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,
@@ -84,6 +92,7 @@ async function getContext() {
 
   context.packageManagerCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
   context.checkMockUserWarning = checkMockUserWarning(context);
+  context.checkPendingPlugins = checkPendingPlugins(context);
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
 

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const spawnSync = jest.fn();
-jest.unstable_mockModule('child_process', () => ({ spawnSync }));
+const spawnSync = vi.fn();
+vi.doMock('child_process', () => ({ spawnSync }));
 
 const ENTRY = {
   type: 'stdio',
@@ -30,7 +30,7 @@ let output;
 beforeEach(() => {
   spawnSync.mockReset();
   output = '';
-  jest.spyOn(process.stdout, 'write').mockImplementation((chunk) => {
+  vi.spyOn(process.stdout, 'write').mockImplementation((chunk) => {
     output += chunk;
     return true;
   });

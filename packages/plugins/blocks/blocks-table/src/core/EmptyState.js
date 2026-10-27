@@ -18,14 +18,19 @@ import React from 'react';
 import { Button, Empty } from 'antd';
 import { renderHtml } from '@lowdefy/block-utils';
 
+import getEmptyStateKind from './getEmptyStateKind.js';
 import renderSlot from './renderSlot.js';
 
 // When a filter or search hides every row, the table says so and offers to clear them, since
-// "No rows" would suggest there is no data at all (D17). Otherwise blocks in the `empty` slot
-// replace the default empty state, else `emptyText` (html, as in TableLight).
+// "No rows" would suggest there is no data at all (D17), unless blocks in the `emptyFiltered`
+// slot replace that (a saved list whose filter must not be thrown away). Otherwise blocks in the
+// `empty` slot replace the default empty state, else `emptyText` (html, as in TableLight).
 function EmptyState({ content, filtered, methods, onClearFilters, text }) {
+  const kind = getEmptyStateKind({ content, filtered });
   let body;
-  if (filtered) {
+  if (kind === 'emptyFiltered' || kind === 'empty') {
+    body = renderSlot({ content, slot: kind });
+  } else if (kind === 'filtered') {
     body = (
       <Empty description="No matching rows" image={Empty.PRESENTED_IMAGE_SIMPLE}>
         <Button data-lf-clear-filters="" onClick={onClearFilters} size="small">
@@ -33,8 +38,6 @@ function EmptyState({ content, filtered, methods, onClearFilters, text }) {
         </Button>
       </Empty>
     );
-  } else if (content.empty) {
-    body = renderSlot({ content, slot: 'empty' });
   } else {
     body = (
       <Empty

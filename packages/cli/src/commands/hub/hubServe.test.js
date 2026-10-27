@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import net from 'net';
 import os from 'os';
@@ -25,7 +25,7 @@ import { fileURLToPath } from 'url';
 import createHubClient from './createHubClient.js';
 import getHubPaths from './getHubPaths.js';
 
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000, hookTimeout: 30000 });
 
 const cliEntry = fileURLToPath(new URL('../../index.js', import.meta.url));
 

@@ -14,34 +14,34 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import path from 'path';
 
-jest.unstable_mockModule('./getLowdefyYaml.js', () => ({
-  default: jest.fn(() =>
+vi.doMock('./getLowdefyYaml.js', () => ({
+  default: vi.fn(() =>
     Promise.resolve({ cliConfig: { cliConfig: true }, lowdefyVersion: 'lowdefyVersion' })
   ),
 }));
-jest.unstable_mockModule('./getCliJson.js', () => ({
+vi.doMock('./getCliJson.js', () => ({
   default: () => Promise.resolve({ appId: 'appId' }),
 }));
-jest.unstable_mockModule('@lowdefy/logger/cli', () => {
+vi.doMock('@lowdefy/logger/cli', () => {
   const logger = {
-    error: jest.fn(),
-    warn: jest.fn(),
-    info: jest.fn(),
-    debug: jest.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
   };
-  const createCliLogger = jest.fn(() => logger);
+  const createCliLogger = vi.fn(() => logger);
   return {
     default: createCliLogger,
     createCliLogger,
   };
 });
-jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
-jest.unstable_mockModule('./getSendTelemetry.js', () => ({ default: () => 'sendTelemetry' }));
-jest.unstable_mockModule('./validateVersion.js', () => ({
-  default: jest.fn(),
+vi.mock('../../package.json', () => ({ version: 'cliVersion' }));
+vi.doMock('./getSendTelemetry.js', () => ({ default: () => 'sendTelemetry' }));
+vi.doMock('./validateVersion.js', () => ({
+  default: vi.fn(),
 }));
 
 const command = {
@@ -49,7 +49,7 @@ const command = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('startUp, options empty', async () => {

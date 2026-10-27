@@ -15,33 +15,36 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const { default: getPageConfig } = await import('@lowdefy/api/routes/page/getPageConfig.js');
 
-const mockGetRootConfig = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  createContentSecurityPolicy: jest.fn(),
+const mockGetRootConfig = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
+  createContentSecurityPolicy: vi.fn(),
   getPageConfig,
   getRootConfig: mockGetRootConfig,
 }));
 
-jest.unstable_mockModule('../../lib/build/app.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({
+vi.doMock('../../lib/build/app.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/auth.js', () => ({
   default: { authPages: { signIn: '/auth/login', twoFactorEnrol: '/two-factor-enrol' } },
 }));
-jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: { basePath: '' } }));
-jest.unstable_mockModule('../../lib/build/security.js', () => ({
+vi.doMock('../../lib/build/config.js', () => ({ default: { basePath: '' } }));
+vi.doMock('../../lib/build/security.js', () => ({
   default: { contentSecurityPolicy: null },
 }));
-jest.unstable_mockModule('../../lib/build/theme.js', () => ({ default: {} }));
-jest.unstable_mockModule('./getAssets.js', () => ({ default: () => ({}) }));
-jest.unstable_mockModule('./getPageAssets.js', () => ({ default: () => ({}) }));
-jest.unstable_mockModule('./template.js', () => ({
+vi.doMock('../../lib/build/theme.js', () => ({ default: {} }));
+vi.doMock('./getAssets.js', () => ({ default: () => ({}) }));
+vi.doMock('./getPageAssets.js', () => ({ default: () => ({}) }));
+vi.doMock('./template.js', () => ({
   default: ({ config, title }) => JSON.stringify({ config, title }),
 }));
 
 const { default: renderPage } = await import('./renderPage.js');
+// The mobile sign-in route reaches the auth engine, which these tests never start.
+vi.doMock('../routes/mobileSignIn.js', () => ({ default: () => null }));
+vi.doMock('../routes/mobileSignInCallback.js', () => ({ default: () => null }));
 const { default: mountPageRoutes } = await import('../routes/mountPageRoutes.js');
 
 const routes = [
@@ -71,7 +74,7 @@ function createApp({
     c.set('lowdefyContext', {
       authEnforcement: { pagesProtectedByDefault },
       authorizeOutcome: () => outcome,
-      logger: { info: jest.fn() },
+      logger: { info: vi.fn() },
       readConfigFile: async (file) => {
         if (file === 'routes.json') return routeTable;
         return pages[file.slice('pages/'.length, -'.json'.length)] ?? null;

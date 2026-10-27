@@ -15,6 +15,7 @@
 */
 
 import buildTestPage from './buildTestPage.js';
+import { expect, test } from 'vitest';
 
 test('buildTestPage', () => {
   const pageConfig = {
@@ -41,6 +42,7 @@ test('buildTestPage', () => {
   const res = buildTestPage({ pageConfig });
   expect(res).toEqual({
     id: 'page:page',
+    target: 'web',
     linkPaths: {},
     pageId: 'page',
     blockId: 'page',
@@ -57,6 +59,7 @@ test('buildTestPage', () => {
         type: 'AxiosHttp',
         connectionId: 'axios',
         payload: {},
+        readOnly: false,
         auth: {
           public: true,
         },

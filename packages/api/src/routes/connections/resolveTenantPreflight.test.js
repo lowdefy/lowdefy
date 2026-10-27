@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, TenantIntegrityError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
-const mockReadConfigFile = jest.fn();
+const mockReadConfigFile = vi.fn();
 
 // The unwalled-reach verdict reads the build through a fresh base reader, not
 // context.readConfigFile; both serve the same mocked build here.
-jest.unstable_mockModule('../../context/createReadConfigFile.js', () => ({
+vi.doMock('../../context/createReadConfigFile.js', () => ({
   default: () => mockReadConfigFile,
 }));
 
@@ -31,13 +31,13 @@ const { default: getConnectionConfig } = await import('./getConnectionConfig.js'
 const { default: resolveTenantPreflight, getTenantIntegrityStatus } = await import(
   './resolveTenantPreflight.js'
 );
-const mockProbe = jest.fn();
+const mockProbe = vi.fn();
 
 const logger = {
-  debug: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
+  debug: vi.fn(),
+  error: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
 };
 
 const connections = {
@@ -58,6 +58,10 @@ function createTestContext({ organization = { policy: 'tenant' } } = {}) {
     user: null,
   });
   context.logger = logger;
+  context.handleError = async (error) => {
+    logger.error(error);
+    error.handled = true;
+  };
   return context;
 }
 
@@ -172,7 +176,7 @@ test('serves and reports: one error log and one capture per offending target, ne
     })
   );
   mockProbe.mockResolvedValue({ ok: false });
-  const captureError = jest.fn();
+  const captureError = vi.fn();
   const context = createTestContext();
   await expect(resolveTenantPreflight(context, { captureError })).resolves.toBeUndefined();
   // Deduped by evaluated target - two contacts connections share one probe.
@@ -351,16 +355,14 @@ const pluginReach = {
 const pluginReachMessage =
   'Connection "plugin" (Plugin) holds a URI to the database of walled connection "walled". Unwalled connections must not reach walled data: give the plugin a mongoConnectionId and use the walled MongoDB client (@lowdefy/connection-mongodb/walled). Requests on this connection are refused.';
 
-test('logs an error at start when an unwalled connection holds a URI to the walled database', async () => {
+test('reports a fault at start when an unwalled connection holds a URI to the walled database', async () => {
   withUnwalled(pluginReach);
   await resolveTenantPreflight(createTestContext());
   expect(logger.error).toHaveBeenCalledTimes(1);
-  expect(logger.error.mock.calls[0][0]).toMatchObject({
-    event: 'unwalled_reach',
-    connectionId: 'plugin',
-  });
-  expect(logger.error.mock.calls[0][0].err).toBeInstanceOf(ConfigError);
-  expect(logger.error.mock.calls[0][1]).toBe(pluginReachMessage);
+  const [error] = logger.error.mock.calls[0];
+  expect(error).toBeInstanceOf(ConfigError);
+  expect(error).toMatchObject({ connectionId: 'plugin', configKey: 'k-plugin' });
+  expect(error.message).toBe(pluginReachMessage);
   expect(logger.warn).not.toHaveBeenCalled();
 });
 

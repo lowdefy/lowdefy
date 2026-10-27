@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import path from 'path';
 
 /**
@@ -272,6 +272,28 @@ const snapshotTypesMap = {
 };
 
 /**
+ * Native types map for success tests: blocks from the native skeleton, the
+ * actions-core actions, and the web client operators. Versions are set so the
+ * mobile type sets carry a major version.
+ */
+const snapshotTypesMapMobile = {
+  actions: Object.fromEntries(
+    Object.entries(snapshotTypesMap.actions)
+      .filter(([, definition]) => definition.package === '@lowdefy/actions-core')
+      .map(([typeName, definition]) => [typeName, { ...definition, version: '6.0.0' }])
+  ),
+  blocks: {
+    Box: { package: '@lowdefy/blocks-native', version: '6.0.0' },
+    Button: { package: '@lowdefy/blocks-native', version: '6.0.0' },
+    Paragraph: { package: '@lowdefy/blocks-native', version: '6.0.0' },
+    Title: { package: '@lowdefy/blocks-native', version: '6.0.0' },
+  },
+  operators: {
+    client: snapshotTypesMap.operators.client,
+  },
+};
+
+/**
  * Creates a runBuild helper function for snapshot testing build artifacts.
  *
  * @param {Function} build - The build function
@@ -290,15 +312,16 @@ function createRunBuildForSnapshots(build, fixturesDir, mockWriteBuildArtifact) 
     });
 
     const logger = {
-      info: jest.fn(),
-      log: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-      succeed: jest.fn(),
+      info: vi.fn(),
+      log: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      succeed: vi.fn(),
     };
 
     await build({
       customTypesMap: snapshotTypesMap,
+      customTypesMapMobile: snapshotTypesMapMobile,
       directories: {
         config: configDir,
         build: path.join(configDir, '.lowdefy'),
@@ -329,4 +352,4 @@ function createRunBuildForSnapshots(build, fixturesDir, mockWriteBuildArtifact) 
   };
 }
 
-export { snapshotTypesMap, createRunBuildForSnapshots };
+export { snapshotTypesMap, snapshotTypesMapMobile, createRunBuildForSnapshots };

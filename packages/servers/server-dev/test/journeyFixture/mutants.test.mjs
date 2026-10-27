@@ -21,6 +21,7 @@ import {
   listMutants,
   postJourney,
 } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // Config mutants applied to one journey's browsers on the real fixture app:
 // the mutated artifact reaches the page, request and endpoint routes, and the

@@ -35,6 +35,31 @@ function setupTestFixtures() {
   write('build/config.json', {});
   write('build/routes.json', [{ pageId: 'home', path: 'home' }]);
 
+  // The client types a native shell carries (writeAvailableTypes), for target mobile.
+  write('build/plugins/availableTypesMobile.json', {
+    actions: {
+      SetState: {
+        package: '@lowdefy/actions-core',
+        originalTypeName: 'SetState',
+        version: '5.0.0',
+      },
+    },
+    blockMetas: { Button: { category: 'display' }, TextInput: { category: 'input' } },
+    blocks: {
+      Button: { package: '@lowdefy/blocks-native', originalTypeName: 'Button', version: '5.0.0' },
+      TextInput: {
+        package: '@lowdefy/blocks-native',
+        originalTypeName: 'TextInput',
+        version: '5.0.0',
+      },
+    },
+    operators: {
+      client: {
+        _state: { package: '@lowdefy/operators-js', originalTypeName: '_state', version: '5.0.0' },
+      },
+    },
+  });
+
   write('build/plugins/availableTypes.json', {
     actions: {
       SetState: {

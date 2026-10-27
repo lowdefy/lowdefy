@@ -1,0 +1,133 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+import { APIError, getSessionFromCtx } from 'better-auth/api';
+import { type } from '@lowdefy/helpers';
+
+import readSuspendedOrganizationIds from './readSuspendedOrganizationIds.js';
+
+// The organization plugin's client endpoints that need no membership: create
+// (disabled by allowUserToCreateOrganization), check-slug, the server-only
+// add-member, and the invitee's own get-invitation, list-user-invitations,
+// reject-invitation and accept-invitation (accepting leaves an existing
+// membership as it is, see createAcceptExistingMemberHook). /organization/list
+// is filtered instead, by createSuspendedOrganizationsFilter.
+//
+// Every other /organization/* path is gated. Each one checks membership with
+// its own adapter read, which knows nothing of member.suspended, so a person
+// suspended in an organization would otherwise still read its members, switch
+// to it, invite into it or leave it from the browser. Listing the exceptions
+// rather than the gated paths keeps an endpoint the plugin adds later (or
+// teams, should they be enabled) closed to a suspended member by default.
+const MEMBERSHIP_FREE_PATHS = [
+  '/organization/create',
+  '/organization/check-slug',
+  '/organization/add-member',
+  '/organization/get-invitation',
+  '/organization/list-user-invitations',
+  '/organization/reject-invitation',
+  '/organization/accept-invitation',
+  '/organization/list',
+];
+
+// The endpoints fall back to the active organization on any falsy id or slug
+// (`ctx.body.organizationId || activeOrganizationId`), so an empty string names
+// no organization.
+function isNamed(value) {
+  return type.isString(value) && value !== '';
+}
+
+// Every organization the request could act in. The endpoints differ in which
+// of these they read first (get-organization prefers the slug, set-active the
+// id), so all of them are gathered and the request is refused if the caller is
+// suspended in any. The active organization is the endpoints' fallback, so it
+// counts only when the request names none - a person whose active
+// organization is one they are suspended in can still switch away from it.
+async function readTargetOrganizationIds({ adapter, ctx, session }) {
+  const ids = [ctx.body?.organizationId, ctx.query?.organizationId].filter(isNamed);
+  const slugs = [ctx.body?.organizationSlug, ctx.query?.organizationSlug].filter(isNamed);
+  for (const slug of slugs) {
+    const organization = await adapter.findOne({
+      model: 'organization',
+      where: [{ field: 'slug', value: slug }],
+    });
+    if (!type.isNone(organization)) {
+      ids.push(organization.id);
+    }
+  }
+  // cancel-invitation names only the invitation; the endpoint checks the
+  // caller's membership in the invitation's organization.
+  if (isNamed(ctx.body?.invitationId)) {
+    const invitation = await adapter.findOne({
+      model: 'invitation',
+      where: [{ field: 'id', value: ctx.body.invitationId }],
+    });
+    if (!type.isNone(invitation)) {
+      ids.push(invitation.organizationId);
+    }
+  }
+  if (ids.length === 0 && isNamed(session.session.activeOrganizationId)) {
+    ids.push(session.session.activeOrganizationId);
+  }
+  return ids;
+}
+
+// The engine-tier request hooks.before that refuses a member-gated
+// organization endpoint when the caller is suspended in the organization it
+// acts in, with the error the endpoint gives a non-member. Registered under
+// tenant only: under pinned the organization client endpoints are disabled.
+function createSuspendedMemberGate() {
+  return async function suspendedMemberGate(ctx) {
+    // Clearing the active organization needs no membership.
+    if (ctx.path === '/organization/set-active' && ctx.body?.organizationId === null) {
+      return undefined;
+    }
+    const session = await getSessionFromCtx(ctx);
+    // No session is the endpoint's own 401.
+    if (type.isNone(session)) {
+      return undefined;
+    }
+    const { adapter, internalAdapter } = ctx.context;
+    // Almost nobody is suspended anywhere, so this read comes first and spares
+    // the common request the slug and invitation reads.
+    const suspendedOrganizationIds = await readSuspendedOrganizationIds({
+      adapter,
+      userId: session.user.id,
+    });
+    if (suspendedOrganizationIds.length === 0) {
+      return undefined;
+    }
+    const organizationIds = await readTargetOrganizationIds({ adapter, ctx, session });
+    const suspended = organizationIds.some((organizationId) =>
+      suspendedOrganizationIds.includes(organizationId)
+    );
+    if (!suspended) {
+      return undefined;
+    }
+    // set-active clears the active organization before refusing a non-member,
+    // so a session left in an organization the person is suspended in is not
+    // stuck there.
+    if (ctx.path === '/organization/set-active') {
+      await internalAdapter.updateSession(session.session.token, { activeOrganizationId: null });
+    }
+    throw new APIError('FORBIDDEN', {
+      message: 'User is not a member of the organization',
+      code: 'USER_IS_NOT_A_MEMBER_OF_THE_ORGANIZATION',
+    });
+  };
+}
+
+export { MEMBERSHIP_FREE_PATHS };
+export default createSuspendedMemberGate;

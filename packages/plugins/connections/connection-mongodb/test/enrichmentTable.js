@@ -52,7 +52,7 @@ const databaseName = 'test';
 
 let run = 0;
 
-// Each test file passes its own name, since jest runs the files in parallel on one server.
+// Each test file passes its own name, since the test files run in parallel on one server.
 async function setupEnrichmentCollection({ documents, name, changeLog = false }) {
   run += 1;
   const collection = `${name}${run}`;

@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import normalizeLayout from './normalizeLayout.js';
 
 function createPageContext() {
   return {
     context: {
-      handleWarning: jest.fn(),
+      handleWarning: vi.fn(),
     },
   };
 }

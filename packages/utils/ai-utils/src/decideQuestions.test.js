@@ -15,6 +15,7 @@
 */
 
 import { fromEvaluationAnswer, optionDescriptions } from './decideQuestions.js';
+import { expect, test } from 'vitest';
 
 const choice = { choice: 'Which team', options: { billing: null, tech: null } };
 const yesno = { yesno: 'The service is down' };

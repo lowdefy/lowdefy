@@ -21,6 +21,7 @@ import { Readable } from 'node:stream';
 import { GetObjectCommand, HeadObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
 import createS3Client from './createS3Client.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // The real AWS SDK against a local S3-compatible endpoint: the SDK parses S3's XML
 // responses itself, so a client upgrade is checked here rather than in the mocked

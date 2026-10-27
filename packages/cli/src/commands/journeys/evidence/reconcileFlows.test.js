@@ -17,6 +17,7 @@
 import flowLines from './flowLines.js';
 import reconcileFlows from './reconcileFlows.js';
 import sequenceId from './sequenceId.js';
+import { expect, test } from 'vitest';
 
 const today = '2026-10-05';
 const oldSteps = [{ click: { blockId: 'assign', text: 'Assign' } }, { click: 'save' }];

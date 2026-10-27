@@ -15,6 +15,7 @@
 */
 
 import _dayjs from './dayjs.js';
+import { expect, test } from 'vitest';
 
 function kind(callInfo) {
   return _dayjs.tracking(callInfo).kind;

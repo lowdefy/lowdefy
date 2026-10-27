@@ -15,6 +15,7 @@
 */
 
 import splitSearchTerms from './splitSearchTerms.js';
+import { expect, test } from 'vitest';
 
 test('splitSearchTerms lowercases and splits on spaces and punctuation', () => {
   expect(splitSearchTerms({ query: 'Link action, pathParams? (path parameters)' })).toEqual([

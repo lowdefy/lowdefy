@@ -16,9 +16,9 @@
 
 import { OperatorError, RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
-import maskCredentialKeys from './maskCredentialKeys.js';
 import projectErrorForLog from './projectErrorForLog.js';
 import serializeErrorForLog from './serializeErrorForLog.js';
+import { expect, test } from 'vitest';
 
 const allowedErrorKeys = new Set([
   'name',
@@ -32,7 +32,6 @@ const allowedErrorKeys = new Set([
   'config',
   'handled',
   'isLowdefyError',
-  'received',
   'typeName',
   'location',
   'service',
@@ -43,10 +42,12 @@ const allowedErrorKeys = new Set([
   'blockId',
   'pageId',
   'isReject',
+  'endpointId',
+  'stepId',
+  'connectionId',
 ]);
 
-// Every serialized error node carries `stack`; free-form values under
-// `received` in these fixtures never do.
+// Every serialized error node carries `stack`.
 function collectErrorNodes(value, nodes = []) {
   if (value === null || typeof value !== 'object') return nodes;
   if (!Array.isArray(value) && Object.hasOwn(value, 'stack')) nodes.push(value);
@@ -129,54 +130,36 @@ test('serializeErrorForLog drops input from a Node ERR_INVALID_URL error', () =>
   expect(Object.keys(serialized)).not.toContain('input');
 });
 
-test('serializeErrorForLog masks credential keys in received and keeps the other received properties', () => {
-  const received = {
-    url: 'https://api.example.com/items',
-    method: 'get',
-    headers: { Authorization: 'Bearer runtime-token-1', Accept: 'application/json' },
-    params: { access_token: 'runtime-token-2', page: 2 },
-    'x-api-key': 'runtime-token-3',
-  };
-  const error = new RequestError('Upstream failed.', {
-    typeName: 'AxiosHttp',
+test('serializeErrorForLog leaves out the evaluated input an operator error carries as received', () => {
+  const received = { idNumber: '8001015009087' };
+  const error = new OperatorError('_string.concat failed.', {
+    typeName: '_string.concat',
     received,
-    cause: new OperatorError('Inner failed.', { typeName: '_step', received }),
+    cause: new OperatorError('Inner failed.', { typeName: '_get', received }),
   });
-  const expectedReceived = {
-    url: 'https://api.example.com/items',
-    method: 'get',
-    headers: { Authorization: '[REDACTED]', Accept: 'application/json' },
-    params: { access_token: '[REDACTED]', page: 2 },
-    'x-api-key': '[REDACTED]',
-  };
   const serialized = serializeErrorForLog(error);
-  expect(serialized.received).toEqual(expectedReceived);
-  expect(serialized.cause.received).toEqual(expectedReceived);
-  expect(JSON.stringify(serialized)).not.toMatch(/runtime-token/);
+  expect(serialized.typeName).toEqual('_string.concat');
+  expect(serialized.received).toBeUndefined();
+  expect(serialized.cause.received).toBeUndefined();
+  expect(JSON.stringify(serialized)).not.toMatch(/8001015009087/);
 });
 
-test('serializeErrorForLog does not mutate the received it masks', () => {
-  const received = { headers: { Authorization: 'Bearer runtime-token' } };
-  serializeErrorForLog(new RequestError('Upstream failed.', { received }));
-  expect(received).toEqual({ headers: { Authorization: 'Bearer runtime-token' } });
-});
-
-test('serializeErrorForLog projects an Error nested seven levels deep inside a cause property', () => {
+// metaData is the one kept free-form field, so an error placed in it is walked like any other value.
+test('serializeErrorForLog projects an Error nested seven levels deep inside a kept field', () => {
   let nested = createAxiosError();
   for (let level = 7; level >= 1; level -= 1) {
-    nested = new RequestError(`Level ${level}.`, { received: nested });
+    const wrapper = new RequestError(`Level ${level}.`);
+    wrapper.metaData = nested;
+    nested = wrapper;
   }
-  // An explicit received, so the top node does not inherit the cause's.
-  const error = new RequestError('Top.', {
-    received: { page: 1 },
-    cause: new OperatorError('Cause.', { received: nested }),
-  });
+  const error = new RequestError('Top.', { cause: new OperatorError('Cause.') });
+  error.cause.metaData = nested;
   const serialized = serializeErrorForLog(error);
 
-  let node = serialized.cause.received;
+  let node = serialized.cause.metaData;
   for (let level = 1; level <= 7; level += 1) {
     expect(node.message).toEqual(`Level ${level}.`);
-    node = node.received;
+    node = node.metaData;
   }
   expect(node.name).toEqual('AxiosError');
   expect(node.statusCode).toEqual(401);
@@ -187,6 +170,33 @@ test('serializeErrorForLog projects an Error nested seven levels deep inside a c
     Object.keys(errorNode).forEach((key) => {
       expect(allowedErrorKeys.has(key)).toBe(true);
     });
+  });
+  expect(JSON.stringify(serialized)).not.toMatch(/planted/);
+});
+
+test("serializeErrorForLog keeps a failed request's ids and leaves out the connection's error it keeps for the dev tools", () => {
+  const driverError = new Error('Document failed validation');
+  driverError.name = 'MongoServerError';
+  driverError.errInfo = { details: { document: { message: 'planted-chat-text' } } };
+  const error = new RequestError('Document failed validation', {
+    cause: new Error('Document failed validation'),
+    typeName: 'MongoDBInsertOne',
+    location: 'threads/save_thread',
+  });
+  Object.assign(error, {
+    endpointId: 'save-thread',
+    stepId: 'save_thread',
+    connectionId: 'threads',
+  });
+  Object.defineProperty(error, 'devCause', { value: driverError });
+
+  const serialized = serializeErrorForLog(error);
+
+  expect(serialized).toMatchObject({
+    name: 'RequestError',
+    endpointId: 'save-thread',
+    stepId: 'save_thread',
+    connectionId: 'threads',
   });
   expect(JSON.stringify(serialized)).not.toMatch(/planted/);
 });
@@ -256,79 +266,6 @@ test('projectErrorForLog reads statusCode from the node and passes the cause thr
   const projected = projectErrorForLog(error);
   expect(projected.statusCode).toEqual(503);
   expect(projected.cause).toBe(cause);
-});
-
-test('maskCredentialKeys masks keys containing each credential word after lower-casing and removing - and _', () => {
-  expect(
-    maskCredentialKeys({
-      Authorization: 'a',
-      access_token: 'b',
-      'x-api-key': 'c',
-      client_secret: 'd',
-      Password: 'e',
-      Cookie: 'f',
-      API_KEY: 'g',
-      tokenCount: 3,
-      name: 'kept',
-    })
-  ).toEqual({
-    Authorization: '[REDACTED]',
-    access_token: '[REDACTED]',
-    'x-api-key': '[REDACTED]',
-    client_secret: '[REDACTED]',
-    Password: '[REDACTED]',
-    Cookie: '[REDACTED]',
-    API_KEY: '[REDACTED]',
-    tokenCount: '[REDACTED]',
-    name: 'kept',
-  });
-});
-
-test('maskCredentialKeys replaces a whole object value under a credential key', () => {
-  expect(maskCredentialKeys({ tokens: { access: 'a', refresh: 'b' } })).toEqual({
-    tokens: '[REDACTED]',
-  });
-});
-
-test('maskCredentialKeys recurses into arrays and nested objects', () => {
-  expect(
-    maskCredentialKeys({ items: [{ secret: 'a', id: 1 }, [{ cookie: 'b' }], 'plain'] })
-  ).toEqual({ items: [{ secret: '[REDACTED]', id: 1 }, [{ cookie: '[REDACTED]' }], 'plain'] });
-});
-
-test('maskCredentialKeys returns primitives, Dates, Errors and class instances unchanged', () => {
-  class Client {
-    constructor() {
-      this.password = 'internal';
-    }
-  }
-  const date = new Date(0);
-  const error = new Error('x');
-  const client = new Client();
-  expect(maskCredentialKeys('text')).toEqual('text');
-  expect(maskCredentialKeys(undefined)).toBeUndefined();
-  expect(maskCredentialKeys(date)).toBe(date);
-  expect(maskCredentialKeys(error)).toBe(error);
-  expect(maskCredentialKeys(client)).toBe(client);
-});
-
-test('serializeErrorForLog marks a class instance in received by type name only', () => {
-  class Client {
-    constructor() {
-      this.password = 'planted';
-    }
-  }
-  const serialized = serializeErrorForLog(
-    new RequestError('Failed.', { received: { client: new Client() } })
-  );
-  expect(serialized.received).toEqual({ client: '[Object: Client]' });
-});
-
-test('serializeErrorForLog marks a cycle in received as circular', () => {
-  const received = { name: 'loop' };
-  received.self = received;
-  const serialized = serializeErrorForLog(new RequestError('Failed.', { received }));
-  expect(serialized.received).toEqual({ name: 'loop', self: '[Circular]' });
 });
 
 test('serializeErrorForLog returns a non-Error value unchanged', () => {

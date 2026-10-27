@@ -14,27 +14,25 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 
-const mockBuild = jest.fn();
+const mockBuild = vi.fn();
 
-jest.unstable_mockModule('@lowdefy/build', () => ({ default: mockBuild }));
-jest.unstable_mockModule('@lowdefy/logger/node', () => ({
-  createNodeLogger: jest.fn(() => 'logger'),
+vi.doMock('@lowdefy/build', () => ({ default: mockBuild }));
+vi.doMock('@lowdefy/logger/node', () => ({
+  createNodeLogger: vi.fn(() => 'logger'),
 }));
-jest.unstable_mockModule('./createCustomPluginTypesMap.mjs', () => ({
-  default: jest.fn().mockResolvedValue({}),
+vi.doMock('./createCustomPluginTypesMap.mjs', () => ({
+  default: vi.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
 const savedInstallFollows = process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS;
-let loadCount = 0;
-
 // build.mjs runs the build when imported, so each case loads a fresh module
 // instance and waits for the build call.
 async function runScript() {
-  loadCount += 1;
-  await import(`./build.mjs?case=${loadCount}`);
+  vi.resetModules();
+  await import('./build.mjs');
   await new Promise((resolve) => setImmediate(resolve));
 }
 

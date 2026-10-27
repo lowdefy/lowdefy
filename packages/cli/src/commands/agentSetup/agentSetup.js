@@ -100,9 +100,6 @@ async function agentSetup({ context }) {
   warnVersionMismatch({ context });
 
   await context.sendTelemetry();
-  context.logger.info(
-    'Annotate the app: press Cmd/Ctrl+/ in the browser to point, draw, and copy feedback, then paste it into your agent session.'
-  );
   context.logger.info({ spin: 'succeed' }, 'Project set up for AI coding agents.');
 }
 

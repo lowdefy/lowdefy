@@ -15,6 +15,7 @@
 */
 
 import setAuthDefaults from './setAuthDefaults.js';
+import { expect, test } from 'vitest';
 
 test('setAuthDefaults sets only authorization defaults when auth is not configured', () => {
   const components = {
@@ -65,6 +66,7 @@ test('setAuthDefaults sets full defaults when auth is configured', () => {
         policy: 'pinned',
         org: 'default',
         signup: 'invite-only',
+        creatorAppRoles: [],
       },
       authPages: {
         signIn: '/login',
@@ -147,6 +149,7 @@ test('setAuthDefaults pins the auto-seeded default org with invite-only signup',
     policy: 'pinned',
     org: 'default',
     signup: 'invite-only',
+    creatorAppRoles: [],
   });
 });
 
@@ -162,6 +165,7 @@ test('setAuthDefaults does not overwrite explicit organizations values under pin
     policy: 'pinned',
     org: 'team-portal',
     signup: 'open',
+    creatorAppRoles: [],
   });
 });
 
@@ -173,7 +177,12 @@ test('setAuthDefaults defaults signup to open and create to auto under the tenan
     },
   };
   const res = setAuthDefaults({ components });
-  expect(res.auth.organizations).toEqual({ policy: 'tenant', signup: 'open', create: 'auto' });
+  expect(res.auth.organizations).toEqual({
+    policy: 'tenant',
+    signup: 'open',
+    create: 'auto',
+    creatorAppRoles: [],
+  });
 });
 
 test('setAuthDefaults sets no org default under the tenant policy', () => {
@@ -199,7 +208,19 @@ test('setAuthDefaults does not overwrite explicit signup or create under the ten
     policy: 'tenant',
     signup: 'invite-only',
     create: 'operator',
+    creatorAppRoles: [],
   });
+});
+
+test('setAuthDefaults does not overwrite explicit organizations creatorAppRoles', () => {
+  const components = {
+    auth: {
+      configured: true,
+      organizations: { policy: 'tenant', creatorAppRoles: ['workspace-admin'] },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.organizations.creatorAppRoles).toEqual(['workspace-admin']);
 });
 
 test('setAuthDefaults does not add emailAndPassword or magicLink blocks when absent', () => {

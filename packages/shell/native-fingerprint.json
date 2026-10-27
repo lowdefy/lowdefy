@@ -1,0 +1,16 @@
+{
+  "nativeVersion": 4,
+  "hash": "7e1c995f3bdbbc6a41e5bb457b80485fe4e6fa94",
+  "profiles": {
+    "basic": "3d4862c094f031bcede19615f6544735394b3ffd",
+    "field": "e40b727ee83be623cc3fbd7d6f924b7fc76da7f9",
+    "field-nfc": "6342397ca9e29c2dbbe09cf5c6ff4b5f5ce8b90e",
+    "field-tracking": "7fd10ca1ad84d518add4710fbc43e5a45b112423",
+    "dev": "03e6bfa70243a3916a158c5f5d600ca55c1ff9a3",
+    "development": "03e6bfa70243a3916a158c5f5d600ca55c1ff9a3",
+    "basic+share": "6916d64313fcf05bfb807b4459762d207b66fe8d",
+    "basic+widgets": "2119db77c31fadbaae3038be75c969f0a13add3f",
+    "basic+contacts": "da05a4b9a74032d3b6fe662a490ce7b28a4f2ebc",
+    "basic+calendar": "f63399c18343e99107d0b6bbd4378cd62437fe82"
+  }
+}

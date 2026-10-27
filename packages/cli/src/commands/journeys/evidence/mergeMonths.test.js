@@ -15,6 +15,7 @@
 */
 
 import mergeMonths from './mergeMonths.js';
+import { expect, test } from 'vitest';
 
 function entry(month, days, sessions) {
   return { month, days, sessions, persons: 1, orgs: 1, failures: 0 };

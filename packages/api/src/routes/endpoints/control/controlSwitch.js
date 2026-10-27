@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import runRoutine from '../runRoutine.js';
 import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
@@ -32,7 +34,7 @@ async function controlSwitch(context, routineContext, { control }) {
       event: 'debug_control_switch_case',
       case: {
         input: caseObj[':case'],
-        evaluated: evaluatedCase,
+        result: Boolean(evaluatedCase),
       },
     });
     if (evaluatedCase) {
@@ -40,7 +42,10 @@ async function controlSwitch(context, routineContext, { control }) {
         event: 'debug_control_switch_run_then',
       });
       if (!caseObj[':then']) {
-        throw new Error(`Invalid :switch :case in endpoint "${endpointId}" - missing :then.`);
+        throw new ConfigError(
+          `Invalid :switch :case in endpoint "${endpointId}" - missing :then.`,
+          { configKey: caseObj['~k'] ?? control['~k'] }
+        );
       }
       return runRoutine(context, routineContext, { routine: caseObj[':then'] });
     }

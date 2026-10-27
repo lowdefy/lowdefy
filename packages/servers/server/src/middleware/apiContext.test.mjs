@@ -19,48 +19,48 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, expect, test } from 'vitest';
 
 const secret = 'planted-apicontext-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
 
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  createApiContext: jest.fn(),
-  createRequestSignal: jest.fn(({ clientSignal, timeoutSignal }) =>
+vi.doMock('@lowdefy/api', () => ({
+  createApiContext: vi.fn(),
+  createRequestSignal: vi.fn(({ clientSignal, timeoutSignal }) =>
     AbortSignal.any([clientSignal, timeoutSignal].filter(Boolean))
   ),
   // Returns what the server passes, so the test reads the auth-hook system context inputs.
-  createSystemContext: jest.fn((options) => options),
-  ensureMcpOauthResource: jest.fn(async () => {}),
-  resolveAuthentication: jest.fn(async () => {}),
-  resolvePinnedOrganization: jest.fn(async () => {}),
-  resolveTenantPreflight: jest.fn(async () => {}),
+  createSystemContext: vi.fn((options) => options),
+  ensureMcpOauthResource: vi.fn(async () => {}),
+  resolveAuthentication: vi.fn(async () => {}),
+  resolvePinnedOrganization: vi.fn(async () => {}),
+  resolveTenantPreflight: vi.fn(async () => {}),
 }));
-jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/i18n.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/build/logger.js', () => ({ default: { sentry: {} } }));
-jest.unstable_mockModule('../../lib/server/log/createHandleError.js', () => ({
-  default: jest.fn(() => jest.fn()),
+vi.doMock('../../lib/build/appMeta.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/config.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/i18n.js', () => ({ default: {} }));
+vi.doMock('../../lib/build/logger.js', () => ({ default: { sentry: {} } }));
+vi.doMock('../../lib/server/log/createHandleError.js', () => ({
+  default: vi.fn(() => vi.fn()),
 }));
-jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
-  default: jest.fn(() => ({
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+vi.doMock('../../lib/server/log/createLogger.js', () => ({
+  default: vi.fn(() => ({
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   })),
 }));
-jest.unstable_mockModule('../../lib/server/fileCache.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({
-  default: jest.fn(() => null),
+vi.doMock('../../lib/server/fileCache.js', () => ({ default: {} }));
+vi.doMock('../../lib/server/auth/getAuth.js', () => ({
+  default: vi.fn(() => null),
 }));
-jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
-  default: jest.fn(() => null),
+vi.doMock('../../lib/server/auth/getStrategies.js', () => ({
+  default: vi.fn(() => null),
 }));
-jest.unstable_mockModule('../../lib/server/log/logRequest.js', () => ({ default: jest.fn() }));
-jest.unstable_mockModule('../../lib/server/sentry/setSentryUser.js', () => ({
-  default: jest.fn(),
+vi.doMock('../../lib/server/log/logRequest.js', () => ({ default: vi.fn() }));
+vi.doMock('../../lib/server/sentry/setSentryUser.js', () => ({
+  default: vi.fn(),
 }));
 
 // apiContext statically imports the app build's plugin artifacts, which only
@@ -94,7 +94,7 @@ fixtures.forEach(({ absolutePath, content }) => {
 // A checkout that has built an app already holds real artifacts here, which import plugins this
 // package does not depend on, so the stubs are also mocked over whatever is on disk.
 fixtures.forEach(({ absolutePath }) => {
-  jest.unstable_mockModule(absolutePath, () => ({
+  vi.doMock(absolutePath, () => ({
     default: {},
     interpolateProperties: () => {},
     renderEmail: () => {},
@@ -175,4 +175,22 @@ test('a request that answers within the timeout leaves its signal unaborted', as
   expect(res.status).toEqual(200);
   await new Promise((resolve) => setTimeout(resolve, 40));
   expect(signal.aborted).toBe(false);
+});
+
+test('a fault in authentication reaches the error handler with the request context', async () => {
+  const { resolveAuthentication } = await import('@lowdefy/api');
+  resolveAuthentication.mockRejectedValueOnce(new Error('Session store is down.'));
+  const app = new Hono();
+  let seen;
+  app.onError((error, c) => {
+    seen = c.get('lowdefyContext');
+    return c.text('failed', 500);
+  });
+  app.use('*', apiContext());
+  app.get('/api/ping', (c) => c.text('ok'));
+  const response = await app.request('/api/ping', { headers: { 'x-request-id': 'rid-1' } });
+  expect(response.status).toBe(500);
+  expect(seen?.rid).toBe('rid-1');
+  expect(seen?.handleError).toBeInstanceOf(Function);
+  expect(response.headers.get('x-request-id')).toBe('rid-1');
 });

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import { serializer } from '@lowdefy/helpers';
 
@@ -22,7 +22,7 @@ import writeApi from './writeApi.js';
 import testContext from '../test-utils/testContext.js';
 
 async function getSchedulesManifest(components) {
-  const writeBuildArtifact = jest.fn();
+  const writeBuildArtifact = vi.fn();
   const context = testContext({ writeBuildArtifact });
   await writeApi({ components, context });
   const call = writeBuildArtifact.mock.calls.find(([name]) => name === 'schedules.json');
@@ -92,4 +92,35 @@ test('writeApi registers nothing for an environment with cron.enabled false', as
 test('writeApi registers the default schedules without a current environment', async () => {
   const manifest = await getSchedulesManifest({ config: { environments }, api });
   expect(manifest).toEqual([{ endpointId: 'tick', cron: '*/5 * * * *', payload: {} }]);
+});
+
+async function getLinkEndpoints(components) {
+  const writeBuildArtifact = vi.fn();
+  const context = testContext({ writeBuildArtifact });
+  await writeApi({ components, context });
+  const call = writeBuildArtifact.mock.calls.find(([name]) => name === 'linkEndpoints.json');
+  return call ? serializer.deserializeFromString(call[1]) : undefined;
+}
+
+test('writeApi writes link endpoints split into segments, longest id first', async () => {
+  const linkEndpoints = await getLinkEndpoints({
+    api: [
+      { endpointId: 'a', link: true },
+      { endpointId: 'plain' },
+      { endpointId: 'a/b', link: true },
+      { endpointId: 'hook', webhook: true },
+    ],
+  });
+  expect(linkEndpoints).toEqual([
+    { endpointId: 'a/b', segments: ['a', 'b'] },
+    { endpointId: 'a', segments: ['a'] },
+  ]);
+});
+
+test('writeApi writes an empty link endpoints list when no endpoint is a link', async () => {
+  expect(await getLinkEndpoints({ api: [{ endpointId: 'plain' }] })).toEqual([]);
+});
+
+test('writeApi writes an empty link endpoints list when the app has no api', async () => {
+  expect(await getLinkEndpoints({})).toEqual([]);
 });

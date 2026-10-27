@@ -17,11 +17,26 @@
 import assert from 'node:assert/strict';
 
 import countGroupSelection from './countGroupSelection.js';
+import { test } from 'vitest';
 
 test('countGroupSelection counts the selected leaf rows in the group range', () => {
   const leaves = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }];
   assert.deepEqual(
     countGroupSelection({ leaves, start: 1, end: 4, selection: { 1: true, 2: true, 4: true } }),
     { selected: 2, total: 3 }
+  );
+});
+
+test('countGroupSelection leaves out leaves the group cannot select', () => {
+  const leaves = [{ id: '1' }, { id: '2' }, { id: '3' }];
+  assert.deepEqual(
+    countGroupSelection({
+      leaves,
+      start: 0,
+      end: 3,
+      selection: { 1: true, 2: true },
+      isSelectable: (leaf) => leaf.id !== '2',
+    }),
+    { selected: 1, total: 2 }
   );
 });

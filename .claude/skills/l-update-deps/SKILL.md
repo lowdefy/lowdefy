@@ -54,7 +54,7 @@ Major (needs design review):
 
 Patch/Minor:
 - @babel/core 7.23.3 → 7.29.0 (block-utils)
-- @emotion/jest 11.10.5 → 11.14.2 (block-dev, block-utils, client, layout)
+- vitest 4.1.11 → 4.1.12 (every package with tests)
 
 Major:
 - eslint 8.54.0 → 10.0.3

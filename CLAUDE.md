@@ -44,7 +44,7 @@ packages/
 
 **server-dev manager** orchestrates: initial build → file watchers → Vite + Hono child process → Vite HMR for client code, SSE reload for config. See `code-docs/architecture/` for details.
 
-**Docs/MCP endpoint for AI agents**: the dev server always serves `/lowdefy-docs` (REST) and `/lowdefy-docs/mcp` (MCP streamable HTTP) — schemas, examples, and markdown docs for every installed plugin type, including local plugins, plus the feedback loop: `GET /lowdefy-docs/build-status` (current build errors/warnings + browser runtime errors with file locations), `/page-config/{pageId}`, `/screenshot/{pageId}`, `/find/{id}`. When a Lowdefy dev server is running, prefer these routes over guessing type names or re-running builds (`GET /lowdefy-docs` lists everything). Implementation: `packages/servers/server-dev/lib/docs/` + `src/routes/docs/`; core docs content ships in `@lowdefy/docs-content` (regenerate with `pnpm docs:content`); roadmap in `code-docs/plans/agentic-coding-roadmap.md`. The `/lowdefy-docs` page-path prefix is reserved in dev. `lowdefy agent-setup` (CLI) writes .mcp.json/AGENTS.md/skill into a project; its `.mcp.json` entry runs `lowdefy mcp`, a stdio MCP server that routes each tool call to the right app/worktree's dev server and starts it through the per-user `lowdefy hub` — see `code-docs/architecture/agent-dev-hub.md`. A running dev server records itself in `<app>/.lowdefy/instance.json`.
+**Docs/MCP endpoint for AI agents**: the dev server always serves `/lowdefy-docs/mcp` (MCP streamable HTTP, the agent interface) — schemas, examples, and markdown docs for every installed plugin type, including local plugins, plus the feedback loop: `lowdefy_build_status` (current build errors/warnings + browser runtime errors with file locations), `lowdefy_get_page_config`, `lowdefy_screenshot_page`, `lowdefy_find_config`. It also serves the few `/lowdefy-docs` REST routes the CLI and dev app call (`build-status`, `page-config`, `find`, `journey`, `mutants`, `events`, `restart`). When a Lowdefy dev server is running, prefer these tools over guessing type names or re-running builds (`GET /lowdefy-docs` lists everything). Implementation: `packages/servers/server-dev/lib/docs/` + `src/routes/docs/`; core docs content ships in `@lowdefy/docs-content` (regenerate with `pnpm docs:content`); roadmap in `code-docs/plans/agentic-coding-roadmap.md`. The `/lowdefy-docs` page-path prefix is reserved in dev. `lowdefy agent-setup` (CLI) writes .mcp.json/AGENTS.md/skill into a project; its `.mcp.json` entry runs `lowdefy mcp`, a stdio MCP server that routes each tool call to the right app/worktree's dev server and starts it through the per-user `lowdefy hub` — see `code-docs/architecture/agent-dev-hub.md`. A running dev server records itself in `<app>/.lowdefy/instance.json`.
 
 ## Code Principles
 
@@ -359,9 +359,9 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 
 ## Testing
 
-- Test files: `{name}.test.js` co-located with source
+- Test files: `{name}.test.js` co-located with source, run by vitest. Import `test`, `expect`, `vi` and the hooks from `'vitest'`: there are no globals
 - **Do not create tests for blocks** (currently disabled)
-- **NEVER run `pnpm jest` or `npx jest` directly** — always use `pnpm test`
+- **NEVER run `pnpm vitest` or `npx vitest` directly** — always use `pnpm test`
 - **CI does not test pull requests by default** — run the tests your change needs before you push (`code-docs/testing.md`, "Before pushing") and list them in the PR body. The `ci` label runs the fast affected-only job on a PR, `ci-full` the complete matrix with the MongoDB, journey fixture and block e2e suites; pushes to `main` always run the complete path.
 
 ### Running Tests
@@ -375,8 +375,8 @@ pnpm test
 # Single package
 pnpm --filter=@lowdefy/api test
 
-# Single package with jest flags (no `--` separator — it breaks flag parsing)
-pnpm --filter=@lowdefy/api test --testPathPattern='validatePluginSchema' --no-coverage
+# Single package with vitest arguments (no `--` separator — it breaks argument parsing)
+pnpm --filter=@lowdefy/api test validatePluginSchema
 ```
 
 ### Cross-Package Changes
@@ -399,17 +399,23 @@ test('test error', () => {}); // What error? What scenario?
 **Dynamic imports for ES module mocking:**
 
 ```javascript
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({ readFile: jest.fn() }));
+import { expect, test, vi } from 'vitest';
+
+vi.doMock('@lowdefy/node-utils', () => ({ readFile: vi.fn() }));
 test('name', async () => {
   const { default: fn } = await import('./fn.js');
 });
 ```
+
+`vi.doMock` is not hoisted, so the module under test is imported after it. A mock the code calls with `new` (a client class, `Date`) needs a `function` implementation, not an arrow function.
 
 ## Commits
 
 [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`
 
 PRs target `develop` branch.
+
+**`v6` is a separate release line. Never merge `v6` into `develop` or `main`.** 7.x releases from `main` under the npm dist-tag `latest`; 6.x patches release from the `v6` branch under the dist-tag `latest-6` (npm rejects a tag that reads as a version range, such as `v6`). `v6` carries its own `.github/workflows/release.yaml`, `release:publish` script and `.changeset/config.json` `baseBranch`, and a merge would carry them over and point 7.x releases at `v6`. To backport a change to 6.x, cherry-pick or re-apply it on a branch from `v6` and open the PR against `v6`.
 
 ## @lowdefy/helpers Usage
 

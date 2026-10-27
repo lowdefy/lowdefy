@@ -16,7 +16,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
@@ -46,10 +46,10 @@ function mockAuth({
   jwksRows = [],
   member = { id: 'member_1', role: 'member', appRoles: ['builder'] },
   row = tokenRow(),
-  update = jest.fn().mockResolvedValue({}),
+  update = vi.fn().mockResolvedValue({}),
   user = { id: 'user_1', email: 'worker@example.com' },
 } = {}) {
-  const findOne = jest.fn(async ({ model, where }) => {
+  const findOne = vi.fn(async ({ model, where }) => {
     if (model === 'mcpToken') {
       return where[0].value === row?.hash ? row : null;
     }
@@ -58,18 +58,18 @@ function mockAuth({
     if (model === 'oauthConsent') return consent;
     return null;
   });
-  const findMany = jest.fn(async ({ model }) => (model === 'jwks' ? jwksRows : []));
+  const findMany = vi.fn(async ({ model }) => (model === 'jwks' ? jwksRows : []));
   const auth = {
-    api: { getSession: jest.fn() },
+    api: { getSession: vi.fn() },
     $context: Promise.resolve({
-      adapter: { count: jest.fn().mockResolvedValue(0), findMany, findOne, update },
+      adapter: { count: vi.fn().mockResolvedValue(0), findMany, findOne, update },
     }),
   };
   return { auth, findOne, update };
 }
 
 function mcpContext() {
-  return { config: {}, logger: { debug: jest.fn(), warn: jest.fn() } };
+  return { config: {}, logger: { debug: vi.fn(), warn: vi.fn() } };
 }
 
 function bearerHeaders(value) {
@@ -168,6 +168,19 @@ test('a member token whose member row is gone is refused', async () => {
   });
 });
 
+test('a member token whose member is suspended is refused', async () => {
+  const { auth } = mockAuth({
+    member: { id: 'member_1', role: 'member', appRoles: ['builder'], suspended: true },
+  });
+  const context = await resolve({ auth });
+  expect(context.user).toBe(null);
+  expect(context.mcpAuth).toEqual({
+    tokenStatus: 'invalid',
+    memberToken: true,
+    description: MEMBER_GONE,
+  });
+});
+
 test('a member token made for an earlier member row is refused after the member rejoins', async () => {
   const { auth } = mockAuth({ member: { id: 'member_2', role: 'member', appRoles: [] } });
   const context = await resolve({ auth });
@@ -225,7 +238,7 @@ test('a member token last used over an hour ago records lastUsedAt again', async
 });
 
 test('a failed lastUsedAt write does not fail the call', async () => {
-  const { auth } = mockAuth({ update: jest.fn().mockRejectedValue(new Error('write failed')) });
+  const { auth } = mockAuth({ update: vi.fn().mockRejectedValue(new Error('write failed')) });
   const context = await resolve({ auth });
   expect(context.mcpAuth.tokenStatus).toBe('valid');
   expect(context.user.id).toBe('user_1');

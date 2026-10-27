@@ -16,6 +16,7 @@
 
 import buildAppEvents from './buildAppEvents.js';
 import testContext from '../test-utils/testContext.js';
+import { expect, test } from 'vitest';
 
 function setup(components) {
   const context = testContext();

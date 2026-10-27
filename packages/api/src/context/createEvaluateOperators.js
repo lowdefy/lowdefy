@@ -18,11 +18,12 @@ import { markCredential } from '@lowdefy/node-utils';
 import { ServerParser } from '@lowdefy/operators';
 
 function createEvaluateOperators(context) {
-  const { appMeta, i18n, jsMap, operators, organization, secrets, user } = context;
+  const { appMeta, i18n, jsMap, logger, operators, organization, secrets, user } = context;
 
   const operatorsParser = new ServerParser({
     i18n,
     jsMap,
+    logger,
     lowdefyApp: appMeta,
     markCredential,
     operators,

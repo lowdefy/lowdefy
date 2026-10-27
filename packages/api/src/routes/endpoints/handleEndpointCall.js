@@ -20,6 +20,7 @@ import { getMarkedCredentials } from '@lowdefy/node-utils';
 
 import addStepResult from './addStepResult.js';
 import createBoundSystemContext from '../../context/createBoundSystemContext.js';
+import dispatchDetached from './dispatchDetached.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 import invokeEndpoint from './invokeEndpoint.js';
 import resolveCallBinding from './resolveCallBinding.js';
@@ -60,7 +61,8 @@ async function handleEndpointCall(context, routineContext, { step }) {
   if (evaluatedProperties.detached === true) {
     if (!process.env.CRON_SECRET) {
       throw new ConfigError(
-        'CallApi with "detached: true" requires the CRON_SECRET environment variable — the /api/detached route fails closed without it.'
+        'CallApi with "detached: true" requires the CRON_SECRET environment variable — the /api/detached route fails closed without it.',
+        { configKey: step['~k'] }
       );
     }
     if (!context.origin) {
@@ -70,7 +72,7 @@ async function handleEndpointCall(context, routineContext, { step }) {
     }
     const targetEndpointId = evaluatedProperties.endpointId;
     scheduleBackground(context, { event: 'detached_dispatch', endpointId: targetEndpointId }, () =>
-      fetch(`${context.origin}/api/detached/${targetEndpointId}`, {
+      dispatchDetached(`${context.origin}/api/detached/${targetEndpointId}`, {
         method: 'POST',
         headers: {
           // The dev server's journey cookies (data set, mutant) ride the hop
@@ -140,7 +142,6 @@ async function handleEndpointCall(context, routineContext, { step }) {
     event: 'debug_end_endpoint_call',
     stepId: step.stepId,
     targetEndpointId: evaluatedProperties.endpointId,
-    response,
   });
 
   return { status: 'continue' };

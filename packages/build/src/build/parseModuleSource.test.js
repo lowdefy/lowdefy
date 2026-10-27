@@ -15,6 +15,7 @@
 */
 
 import parseModuleSource from './parseModuleSource.js';
+import { expect, test } from 'vitest';
 
 test('parseModuleSource parses file source', () => {
   expect(parseModuleSource('file:../../modules/user-admin')).toEqual({

@@ -17,6 +17,7 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { cleanBuildArtifact, serializer, type } from '@lowdefy/helpers';
+import { isExpectedError } from '@lowdefy/errors';
 
 import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
@@ -193,13 +194,7 @@ async function createMcpServer({ context }) {
       // model needs to retry, not a structured error log. Everything else
       // goes through the server's error sink, which resolves the config
       // source, logs it and collects it for the dev feedback channel.
-      if (
-        ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
-          error.name
-        )
-      ) {
-        context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
-      } else if (error.name === 'UserError') {
+      if (isExpectedError(error)) {
         context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {
         await context.handleError(error);

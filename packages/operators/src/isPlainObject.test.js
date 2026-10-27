@@ -15,6 +15,7 @@
 */
 
 import isPlainObject from './isPlainObject.js';
+import { expect, test } from 'vitest';
 
 test('isPlainObject is true for object literals and null-prototype objects', () => {
   expect(isPlainObject({})).toBe(true);

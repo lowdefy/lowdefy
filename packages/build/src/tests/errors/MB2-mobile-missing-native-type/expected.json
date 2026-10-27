@@ -1,0 +1,16 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Block type \"AgGridAlpine\" on block \"jobs_grid\" on page \"jobs\" has no native version, so a mobile shell cannot render it. Use \"List\" with \"ListItem\" on mobile.",
+        "Action type \"CopyToClipboard\" on page \"jobs\" has no native version, so a mobile shell cannot run it."
+      ],
+      "errorContains": [
+        "Block type \"AgGridAlpine\" on block \"jobs_grid\" on page \"jobs\" has no native version, so a mobile shell cannot render it. Use \"List\" with \"ListItem\" on mobile.",
+        "Action type \"CopyToClipboard\" on page \"jobs\" has no native version, so a mobile shell cannot run it.",
+        "{{fixturesDir}}/MB2-mobile-missing-native-type/lowdefy.yaml:16"
+      ]
+    }
+  ]
+}

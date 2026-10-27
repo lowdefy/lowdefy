@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockKnexClient = jest.fn(() => mockKnexClient);
-const mockKnex = jest.fn(() => mockKnexClient);
+const mockKnexClient = vi.fn(() => mockKnexClient);
+const mockKnex = vi.fn(() => mockKnexClient);
 
 mockKnexClient.client = { connectionSettings: {} };
-mockKnexClient.select = jest.fn(() => mockKnexClient);
-mockKnexClient.from = jest.fn(() => mockKnexClient);
-mockKnexClient.where = jest.fn(() => mockKnexClient);
-mockKnexClient.destroy = jest.fn(() => Promise.resolve());
+mockKnexClient.select = vi.fn(() => mockKnexClient);
+mockKnexClient.from = vi.fn(() => mockKnexClient);
+mockKnexClient.where = vi.fn(() => mockKnexClient);
+mockKnexClient.destroy = vi.fn(() => Promise.resolve());
 
-jest.unstable_mockModule('knex', () => {
+vi.doMock('knex', () => {
   return {
     default: mockKnex,
   };

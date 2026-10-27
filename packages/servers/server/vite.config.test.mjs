@@ -20,6 +20,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 const serverDir = path.dirname(fileURLToPath(import.meta.url));
 let root;

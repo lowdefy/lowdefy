@@ -23,8 +23,10 @@ function apiContext() {
     if (c.get('lowdefyContext')) {
       return next();
     }
-    const context = await createLowdefyContext({ c });
-    c.set('lowdefyContext', context);
+    await createLowdefyContext({
+      c,
+      onContext: (context) => c.set('lowdefyContext', context),
+    });
     return next();
   };
 }

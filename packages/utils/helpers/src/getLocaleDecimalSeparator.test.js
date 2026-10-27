@@ -15,6 +15,7 @@
 */
 
 import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
+import { expect, test } from 'vitest';
 
 test('en-US decimal separator is a period', () => {
   expect(getLocaleDecimalSeparator('en-US')).toBe('.');

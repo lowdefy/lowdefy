@@ -1,0 +1,163 @@
+# Search, the page of the `role: search` tab (the iOS 26 search tab at the right of the tab bar):
+# the search field takes focus each time the tab is picked. With no text it lists recent issues;
+# typing filters every issue by its title or key.
+id: search
+type: Screen
+properties:
+  title: Search
+  headerSearch:
+    placeholder: Issues, projects and people
+    autoFocus: true
+events:
+  onInit:
+    - id: seed
+      type: SetState
+      params:
+        issues:
+          _ref: data/issues.yaml
+        recent:
+          - key: ACME-142
+            title: Offline edits sync twice after reconnecting
+            glyph: inProgress
+            project: iOS app
+            when: 12m
+          - key: ACME-147
+            title: Idempotency keys on every write endpoint
+            glyph: inProgress
+            project: Platform API
+            when: 1h
+          - key: ACME-144
+            title: Board columns jump when a card lands
+            glyph: inReview
+            project: Web app
+            when: Yesterday
+          - key: ACME-118
+            title: Queue writes while offline
+            glyph: done
+            project: Platform API
+            when: Mon
+          - key: ACME-151
+            title: Large title clips under the Dynamic Island
+            glyph: todo
+            project: iOS app
+            when: Last week
+        results: []
+  onSearchChange:
+    - id: set_search
+      type: SetState
+      params:
+        search:
+          _event: value
+    - id: filter
+      type: SetState
+      params:
+        results:
+          _array.filter:
+            on:
+              _state: issues
+            callback:
+              _function:
+                __string.includes:
+                  on:
+                    __string.toLowerCase:
+                      __string.concat:
+                        - __args: 0.key
+                        - ' '
+                        - __args: 0.title
+                  searchString:
+                    __string.toLowerCase:
+                      __if_none:
+                        - __state: search
+                        - ''
+blocks:
+  - id: recent
+    type: List
+    visible:
+      _eq:
+        - _if_none:
+            - _state: search
+            - ''
+        - ''
+    properties:
+      header:
+        title: Recent
+    blocks:
+      - id: recent.$.row
+        type: ListItem
+        properties:
+          title:
+            _state: recent.$.title
+          subtitle:
+            _string.concat:
+              - _state: recent.$.key
+              - ' · '
+              - _state: recent.$.project
+          leading:
+            status:
+              _state: recent.$.glyph
+          trailing:
+            text:
+              _state: recent.$.when
+        events:
+          onClick:
+            - id: open_issue
+              type: Link
+              params:
+                pageId: issue
+                urlQuery:
+                  key:
+                    _state: recent.$.key
+  - id: results
+    type: List
+    visible:
+      _ne:
+        - _if_none:
+            - _state: search
+            - ''
+        - ''
+    properties:
+      header:
+        title: Issues
+      showCount: true
+    blocks:
+      - id: results.$.row
+        type: ListItem
+        properties:
+          title:
+            _state: results.$.title
+          subtitle:
+            _state: results.$.key
+          leading:
+            status:
+              _state: results.$.glyph
+          trailing:
+            avatar:
+              name:
+                _state: results.$.assigneeName
+              src:
+                _state: results.$.picture
+        events:
+          onClick:
+            - id: open_issue
+              type: Link
+              params:
+                pageId: issue
+                urlQuery:
+                  key:
+                    _state: results.$.key
+  - id: no_results
+    type: Empty
+    visible:
+      _and:
+        - _ne:
+            - _if_none:
+                - _state: search
+                - ''
+            - ''
+        - _eq:
+            - _array.length:
+                _state: results
+            - 0
+    properties:
+      title: No results
+      description: Try a key like ACME-142, or fewer words.

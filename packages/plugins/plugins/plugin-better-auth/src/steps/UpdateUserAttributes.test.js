@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import UpdateUserAttributes from './UpdateUserAttributes.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 test('UpdateUserAttributes updates the user row directly through the adapter', async () => {
   const updated = { id: 'user-2', attributes: { plan: 'pro' } };
-  const adapter = { update: jest.fn().mockResolvedValue(updated) };
+  const adapter = { update: vi.fn().mockResolvedValue(updated) };
   const { auth } = createMockAuth({ adapter });
   const result = await UpdateUserAttributes({
     auth,
@@ -36,7 +36,7 @@ test('UpdateUserAttributes updates the user row directly through the adapter', a
 });
 
 test('UpdateUserAttributes throws when userId matches no user', async () => {
-  const adapter = { update: jest.fn().mockResolvedValue(null) };
+  const adapter = { update: vi.fn().mockResolvedValue(null) };
   const { auth } = createMockAuth({ adapter });
   await expect(
     UpdateUserAttributes({ auth, properties: { userId: 'missing', attributes: { plan: 'pro' } } })

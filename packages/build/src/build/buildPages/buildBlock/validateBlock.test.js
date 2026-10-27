@@ -15,6 +15,7 @@
 */
 
 import validateBlock from './validateBlock.js';
+import { expect, test } from 'vitest';
 
 function callValidateBlock(block) {
   validateBlock(block, { pageId: 'home' }, 'parentConfigKey');
@@ -60,12 +61,9 @@ test.each([
   'valueOf',
   'constructor_',
   'Constructor',
-])(
-  'validateBlock allows the valid block id "%s"',
-  (id) => {
-    expect(() => callValidateBlock({ id, type: 'Box' })).not.toThrow();
-  }
-);
+])('validateBlock allows the valid block id "%s"', (id) => {
+  expect(() => callValidateBlock({ id, type: 'Box' })).not.toThrow();
+});
 
 test('validateBlock reserved name error carries the configKey', () => {
   try {

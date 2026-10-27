@@ -17,6 +17,8 @@
 import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
+
+import { clearPluginTypeCache } from '../utils/pluginTypeCache.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
 function readReason(filePath) {
@@ -42,10 +44,11 @@ function restartRequestWatcher(context) {
     const reason = readReason(sentinelPath);
     fs.rmSync(sentinelPath, { force: true });
     context.logger.info({ spin: 'start' }, `Restart requested by the dev tools: ${reason}.`);
-    // The config build reads the plugins' type lists afresh, so a block,
-    // request or operator type added to a plugin since the last build is
-    // defined once the server is back. The server restarts even when the
-    // build fails.
+    // The plugin type cache is cleared, so the config build reads the
+    // plugins' type lists afresh and a block, request or operator type added
+    // to a plugin since the last build is defined once the server is back.
+    // The server restarts even when the build fails.
+    clearPluginTypeCache();
     try {
       await context.lowdefyBuild();
     } finally {

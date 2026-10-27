@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('./waitForClientErrorReports.js', () => ({ default: async () => {} }));
+vi.doMock('./waitForClientErrorReports.js', () => ({ default: async () => {} }));
 
 const { default: createJourneyAppErrors } = await import('./createJourneyAppErrors.js');
 const { default: installStepObserver } = await import('./installStepObserver.js');
@@ -33,7 +33,7 @@ let emits;
 
 function createPage() {
   return {
-    evaluate: jest.fn(async (fn) => {
+    evaluate: vi.fn(async (fn) => {
       if (fn === installStepObserver) return true;
       if (fn === readStepObserver) return { emits, mutationCount: 1 };
       return 'orders';

@@ -20,7 +20,7 @@
 // organization, the walled read returns only its rows, and the change log
 // records the stand-in as the user.
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import * as mongodb from 'mongodb';
 
 // The connection keeps its client for the process lifetime, so the test
@@ -33,14 +33,14 @@ class RecordingMongoClient extends mongodb.MongoClient {
   }
 }
 
-jest.unstable_mockModule('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
+vi.doMock('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
 
 const { MongoDBCollection } = await import('@lowdefy/connection-mongodb/connections');
 const { operatorsServer } = await import('@lowdefy/operators-js');
 const { default: runWebhookEndpoint } = await import('./runWebhookEndpoint.js');
 const { default: testContext } = await import('../../test/testContext.js');
 
-const logger = { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() };
+const logger = { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() };
 
 const verify = ({ request }) => request.token === 'good';
 verify.schema = {};
@@ -145,7 +145,7 @@ test('a verified webhook binds a CallApi to an organization with a stand-in call
     },
     operators: operatorsServer,
     organization: { policy: 'tenant' },
-    readConfigFile: jest.fn((path) => files[path] ?? null),
+    readConfigFile: vi.fn((path) => files[path] ?? null),
     secrets: { MONGO_URL: process.env.MONGO_URL },
   });
   const result = await runWebhookEndpoint(context, {

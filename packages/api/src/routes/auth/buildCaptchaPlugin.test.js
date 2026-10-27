@@ -15,6 +15,7 @@
 */
 
 import buildCaptchaPlugin from './buildCaptchaPlugin.js';
+import { expect, test } from 'vitest';
 
 function createAuthConfig({ captcha = {}, ...rest } = {}) {
   return {

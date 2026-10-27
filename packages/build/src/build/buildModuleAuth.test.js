@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import buildModuleAuth from './buildModuleAuth.js';
 import buildRoutes from './buildRoutes/buildRoutes.js';
@@ -22,7 +22,7 @@ import getAlwaysPublicPageIds from './buildAuth/getAlwaysPublicPageIds.js';
 import testContext from '../test-utils/testContext.js';
 
 function makeContext(modules) {
-  const context = { modules: {}, logger: { info: jest.fn(), warn: jest.fn() } };
+  const context = { modules: {}, logger: { info: vi.fn(), warn: vi.fn() } };
   for (const mod of modules) {
     context.modules[mod.id] = mod;
   }

@@ -15,6 +15,7 @@
 */
 
 import getMediaChanges from './getMediaChanges.js';
+import { expect, test } from 'vitest';
 
 const previous = { size: 'md', width: 800, height: 600 };
 

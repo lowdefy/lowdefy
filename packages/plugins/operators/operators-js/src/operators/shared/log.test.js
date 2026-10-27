@@ -15,13 +15,13 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import _log from './log.js';
 
 const location = 'location';
 
 const logger = console.log;
-const mockLogger = jest.fn();
+const mockLogger = vi.fn();
 beforeEach(() => {
   console.log = mockLogger;
   mockLogger.mockReset();
@@ -62,4 +62,14 @@ test('_log an object', () => {
 test('_log an array', () => {
   expect(_log({ params: [{ b: 1 }], location })).toEqual([{ b: 1 }]);
   expect(mockLogger).toHaveBeenCalledWith([{ b: 1 }]);
+});
+
+test('_log on the server writes through the request logger, not the console', () => {
+  const requestLogger = { info: vi.fn() };
+  expect(_log({ params: { b: 1 }, location, logger: requestLogger })).toEqual({ b: 1 });
+  expect(requestLogger.info).toHaveBeenCalledWith(
+    { event: 'operator_log', value: { b: 1 } },
+    '_log'
+  );
+  expect(mockLogger).not.toHaveBeenCalled();
 });

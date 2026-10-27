@@ -19,7 +19,7 @@
 // JSON-serializable summary instead - no stack, no cause, no `received`
 // (arbitrary config values that may be huge or circular).
 function serializeBuildException(exception) {
-  return {
+  const serialized = {
     message: exception.message,
     name: exception.name,
     source: exception.source ?? null,
@@ -29,6 +29,15 @@ function serializeBuildException(exception) {
     checkGroup: exception.checkGroup ?? null,
     prodError: exception.prodError === true,
   };
+  // A config error is located by its source line. An internal fault (a bug, a
+  // plugin that fails to import) has none, so its cause and the stack where it
+  // was thrown are all the build status can show an agent about what failed.
+  if (exception.name === 'LowdefyInternalError' || exception.isLowdefyError !== true) {
+    const thrown = exception.cause instanceof Error ? exception.cause : exception;
+    serialized.cause = exception.cause instanceof Error ? exception.cause.message : null;
+    serialized.stack = thrown.stack ?? null;
+  }
+  return serialized;
 }
 
 export default serializeBuildException;

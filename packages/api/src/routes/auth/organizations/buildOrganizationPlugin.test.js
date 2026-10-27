@@ -15,6 +15,7 @@
 */
 
 import buildOrganizationPlugin from './buildOrganizationPlugin.js';
+import { expect, test } from 'vitest';
 
 const authConfig = {
   organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
@@ -160,6 +161,19 @@ test('buildOrganizationPlugin declares member.appRoles as a request-body-exclude
   });
 });
 
+test('buildOrganizationPlugin declares member.suspended as a request-body-excluded boolean', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.schema.member.additionalFields.suspended).toEqual({
+    type: 'boolean',
+    required: false,
+    input: false,
+  });
+});
+
 test('buildOrganizationPlugin declares invitation.appRoles without input: false so the invite body keeps it', () => {
   const plugin = buildOrganizationPlugin({
     authConfig,
@@ -215,6 +229,95 @@ test('buildOrganizationPlugin passes auth.organizations.membershipLimit through'
     sendInvitationEmail: async () => {},
   });
   expect(plugin.options.membershipLimit).toBe(10000);
+});
+
+function createCountingAuth(openInvitations) {
+  return { $context: Promise.resolve({ adapter: { count: async () => openInvitations } }) };
+}
+
+const invitationHookArgs = {
+  invitation: { email: 'invitee@example.com', organizationId: 'org_1' },
+  inviter: { id: 'user_1' },
+  organization: { id: 'org_1' },
+};
+
+test('buildOrganizationPlugin holds the BetterAuth invitationLimit check open and registers no invitation hook when unset', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => createCountingAuth(100),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.invitationLimit).toBe(1000000);
+  expect(plugin.options.organizationHooks.beforeCreateInvitation).toBeUndefined();
+});
+
+test('buildOrganizationPlugin enforces auth.organizations.invitationLimit in the beforeCreateInvitation hook', async () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig: {
+      ...authConfig,
+      organizations: { ...authConfig.organizations, invitationLimit: 2 },
+    },
+    getAuth: () => createCountingAuth(2),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.invitationLimit).toBe(1000000);
+  await expect(
+    plugin.options.organizationHooks.beforeCreateInvitation(invitationHookArgs)
+  ).rejects.toMatchObject({ statusCode: 403, body: { code: 'INVITATION_LIMIT_REACHED' } });
+});
+
+test('buildOrganizationPlugin refuses making a suspended member an owner in the beforeUpdateMemberRole hook', async () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  await expect(
+    plugin.options.organizationHooks.beforeUpdateMemberRole({
+      member: { id: 'member_1', role: 'member', suspended: true },
+      newRole: 'owner',
+      user: { id: 'user_1' },
+      organization: { id: 'org_1' },
+    })
+  ).rejects.toMatchObject({ body: { code: 'SUSPENDED_MEMBER_CANNOT_BE_OWNER' } });
+});
+
+// mintOrganization writes organizations and their owners through the adapter,
+// skipping the createOrganization endpoint, so anything the endpoint would apply
+// on that path would be skipped without an error. Declaring one of these means
+// mintOrganization has to apply it too.
+test.each([{}, { organizations: { ...authConfig.organizations, invitationLimit: 5 } }])(
+  'buildOrganizationPlugin declares none of the createOrganization options the engine mint skips (%o)',
+  (overrides) => {
+    const plugin = buildOrganizationPlugin({
+      authConfig: { ...authConfig, ...overrides },
+      getAuth: () => ({}),
+      sendInvitationEmail: async () => {},
+    });
+    expect(plugin.options.creatorRole).toBeUndefined();
+    expect(plugin.options.organizationLimit).toBeUndefined();
+    expect(plugin.options.teams).toBeUndefined();
+    const skippedHooks = [
+      'beforeCreateOrganization',
+      'afterCreateOrganization',
+      'beforeAddMember',
+      'afterAddMember',
+    ];
+    expect(
+      Object.keys(plugin.options.organizationHooks).filter((hook) => skippedHooks.includes(hook))
+    ).toEqual([]);
+  }
+);
+
+test('buildOrganizationPlugin declares the mint marker fields server-only', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  const { mintCreatorId, mintPending } = plugin.options.schema.organization.additionalFields;
+  expect(mintPending).toEqual({ type: 'boolean', required: false, input: false, returned: false });
+  expect(mintCreatorId).toEqual({ type: 'string', required: false, input: false, returned: false });
 });
 
 test('buildOrganizationPlugin tolerates a missing authConfig', () => {

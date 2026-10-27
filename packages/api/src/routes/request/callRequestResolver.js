@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
+import { UserError } from '@lowdefy/errors';
 
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import createWalledResolver from './createWalledResolver.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
-import maskCredentialProperties from './maskCredentialProperties.js';
+import stampTypedError from './stampTypedError.js';
+import wrapResolverError from './wrapResolverError.js';
 
 async function callRequestResolver(
   context,
@@ -106,14 +107,24 @@ async function callRequestResolver(
     });
     return response;
   } catch (error) {
-    // Add configKey to any error for location tracing
-    if (!error.configKey) {
+    // Add configKey to any error for location tracing. A thrown string or null takes no
+    // property, and the TypeError assigning one raises would quote the string.
+    if (error instanceof Object && !error.configKey) {
       error.configKey = requestConfig['~k'];
     }
 
-    // Lowdefy errors pass through unchanged — re-wrapping every boundary would
-    // nest causes and truncate the deepest (most informative) frame.
-    if (error.isLowdefyError) {
+    // stepId, not requestId: on an error requestId is the HTTP request's id (context.rid)
+    // everywhere else.
+    const fields = {
+      endpointId: requestConfig.endpointId ?? endpointId,
+      stepId: stepOrRequestId,
+      connectionId: requestConfig.connectionId,
+    };
+
+    // Lowdefy errors are not re-wrapped - re-wrapping every boundary would nest causes and
+    // truncate the deepest (most informative) frame.
+    if (error?.isLowdefyError) {
+      stampTypedError(error, { fields });
       logger.debug(
         { params: { id: stepOrRequestId, type: requestConfig.type }, err: error },
         error.message
@@ -123,7 +134,7 @@ async function callRequestResolver(
 
     // The client left before the resolver finished and the resolver stopped on the
     // signal: the cancellation is the caller's doing, not a fault in the request.
-    if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') {
+    if (signal?.reason?.name === 'AbortError' && error?.name === 'AbortError') {
       const cancelled = new UserError(signal.reason.message, { cause: error });
       logger.debug(
         { params: { id: stepOrRequestId, type: requestConfig.type }, err: cancelled },
@@ -132,34 +143,19 @@ async function callRequestResolver(
       throw cancelled;
     }
 
-    // Check if this is a service error (network, timeout, 5xx, 429)
-    if (ServiceError.isServiceError(error)) {
-      const serviceError = new ServiceError(undefined, {
-        cause: error,
-        service: requestConfig.connectionId,
-        configKey: requestConfig['~k'],
-      });
-      logger.debug(
-        { params: { id: stepOrRequestId, type: requestConfig.type }, err: serviceError },
-        serviceError.message
-      );
-      throw serviceError;
-    }
-
-    // Wrap other errors in RequestError (request/connection logic error)
-    const requestError = new RequestError(error.message, {
-      cause: error,
-      typeName: requestConfig.type,
-      received: maskCredentialProperties({ requestProperties, requestResolver }),
-      location: `${requestConfig.connectionId}/${stepOrRequestId}`,
+    // A ServiceError for a network failure, timeout, 5xx or 429; a RequestError otherwise.
+    const wrapped = wrapResolverError(error, {
       configKey: requestConfig['~k'],
+      fields,
+      location: `${requestConfig.connectionId}/${stepOrRequestId}`,
+      service: requestConfig.connectionId,
+      typeName: requestConfig.type,
     });
-
     logger.debug(
-      { params: { id: stepOrRequestId, type: requestConfig.type }, err: requestError },
-      requestError.message
+      { params: { id: stepOrRequestId, type: requestConfig.type }, err: wrapped },
+      wrapped.message
     );
-    throw requestError;
+    throw wrapped;
   }
 }
 

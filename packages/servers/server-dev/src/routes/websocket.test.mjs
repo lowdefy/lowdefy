@@ -15,10 +15,10 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 const mockStrategies = [];
-jest.unstable_mockModule('../../lib/server/auth/getStrategies.js', () => ({
+vi.doMock('../../lib/server/auth/getStrategies.js', () => ({
   default: () => mockStrategies,
 }));
 

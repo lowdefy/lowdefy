@@ -18,14 +18,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { Hono } from 'hono';
 import { serializer } from '@lowdefy/helpers';
 
 import { endpointFixture, pageFixture } from '../../../lib/server/mutants/test/fixtures.mjs';
 
-const mockBuildPageIfNeeded = jest.fn();
-jest.unstable_mockModule('../../../lib/server/jitPageBuilder.js', () => ({
+const mockBuildPageIfNeeded = vi.fn();
+vi.doMock('../../../lib/server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
 }));
 
@@ -41,7 +41,7 @@ function write(name, content) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockBuildPageIfNeeded.mockResolvedValue(true);
   serverDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-mutants-route-'));
   const page = pageFixture();
@@ -146,12 +146,26 @@ test.each([
 );
 
 test('POST /lowdefy-docs/mutants answers a page that fails to build with a 422 and its errors', async () => {
-  mockBuildPageIfNeeded.mockRejectedValue(new Error('Block type "Buton" not found.'));
+  const { ConfigError } = await import('@lowdefy/errors');
+  mockBuildPageIfNeeded.mockRejectedValue(new ConfigError('Block type "Buton" not found.'));
   const { status, data } = await post({ pages: ['tickets'] });
   expect(status).toBe(422);
   expect(data.buildErrors).toEqual([
-    { type: 'Error', message: 'Block type "Buton" not found.', source: null },
+    { type: 'ConfigError', message: 'Block type "Buton" not found.', source: null },
   ]);
+});
+
+test('POST /lowdefy-docs/mutants does not answer a fault of its own as a page that fails to build', async () => {
+  mockBuildPageIfNeeded.mockRejectedValue(new TypeError('Cannot read properties of undefined'));
+  const app = new Hono();
+  app.post('/lowdefy-docs/mutants', docsMutantsHandler);
+  app.onError(() => new Response('fault', { status: 500 }));
+  const response = await app.request('/lowdefy-docs/mutants', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ pages: ['tickets'] }),
+  });
+  expect(response.status).toBe(500);
 });
 
 test('POST /lowdefy-docs/mutants answers with the build id read before the pages built', async () => {

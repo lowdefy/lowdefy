@@ -16,6 +16,7 @@
 
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
+import { expect, test } from 'vitest';
 
 test('ConfigError keeps checkGroup beside checkSlug', () => {
   const error = new ConfigError('Rule broken', {

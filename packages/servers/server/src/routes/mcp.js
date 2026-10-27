@@ -102,6 +102,12 @@ async function mcpHandler(c) {
       });
     }
   }
+  // The server is stateless and pushes nothing, so it offers no event stream:
+  // the MCP spec's answer to a GET is then 405. Opening one would hold the
+  // request, and on a serverless host its function, until the host's time limit.
+  if (c.req.method === 'GET') {
+    return c.json({ error: 'Method not allowed.' }, 405, { Allow: 'POST' });
+  }
   const server = await createMcpServer({ context });
   const transport = new StreamableHTTPTransport();
   await server.connect(transport);

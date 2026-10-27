@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { RequestError, TenantIntegrityError } from '@lowdefy/errors';
 
-const captureException = jest.fn();
+const captureException = vi.fn();
 
 const { default: sentrySdk } = await import('./sentrySdk.js');
 const { default: captureSentryError } = await import('./captureSentryError.js');
@@ -52,7 +52,7 @@ function createRequestError() {
   });
 }
 
-test('captureSentryError sends the log projection as extra.error, without axios config and with received credential keys masked', () => {
+test('captureSentryError sends the log projection as extra.error, without axios config or received', () => {
   const error = createRequestError();
   captureSentryError({ error, context: { rid: 'req-1', pageId: 'orders' } });
   expect(captureException).toHaveBeenCalledTimes(1);
@@ -60,10 +60,7 @@ test('captureSentryError sends the log projection as extra.error, without axios 
   expect(captured).toBe(error);
   expect(extra.error.typeName).toEqual('AxiosHttp');
   expect(extra.error.statusCode).toEqual(401);
-  expect(extra.error.received).toEqual({
-    url: 'https://api.example.com/items',
-    headers: { Authorization: '[REDACTED]', Accept: 'application/json' },
-  });
+  expect(extra.error.received).toBeUndefined();
   expect(extra.error.cause).toEqual({
     name: 'AxiosError',
     message: 'Request failed with status code 401',

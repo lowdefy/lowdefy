@@ -23,6 +23,8 @@ const builtinMessages = {
   'client.popupBlocked':
     'A popup blocker may be preventing the application from opening the page. Approve the popup to continue.',
   'client.requestError': 'Request error',
+  'client.requestTimedOut': 'The request timed out. Try again.',
+  'client.serverUnavailable': 'The server could not answer (status {status}). Try again.',
   'client.backAriaLabel': 'back',
   'client.shortcutThen': 'then',
   'client.copy': 'Copy',
@@ -76,6 +78,24 @@ const builtinMessages = {
     '{count, plural, one {Returned # result} other {Returned # results}}',
   'agent.toolResult.returnedKeys': 'Returned: {keys}',
   'agent.toolResult.returnedFields': 'Returned object with {count} fields',
+  'agent.toolResult.waitingApproval': 'Waiting for your approval',
+  'agent.toolResult.approved': 'Approved',
+
+  // The native AgentChat's own controls.
+  'agent.chat.cancel': 'Cancel',
+  'agent.chat.chats': 'Chats',
+  'agent.chat.chatsLoadFailed': 'Your chats could not be loaded.',
+  'agent.chat.deleteChat': 'Delete',
+  'agent.chat.errorTitle': 'Something went wrong',
+  'agent.chat.jumpToLatest': 'Jump to latest',
+  'agent.chat.newChat': 'New chat',
+  'agent.chat.noChats': 'No chats yet',
+  'agent.chat.noChatsDescription': 'Your conversations show here.',
+  'agent.chat.retry': 'Try again',
+  'agent.chat.send': 'Send',
+  'agent.chat.stop': 'Stop',
+  'agent.chat.thinking': 'Thinking',
+  'agent.chat.thought': 'Thought process',
 
   // Block built-ins — surfaced directly by block components, overridable per-locale.
   'blocks.listSelector.search.placeholder': 'Search…',
@@ -85,6 +105,13 @@ const builtinMessages = {
   'blocks.treeSelector.notFound': 'Not found',
   'blocks.treeMultipleSelector.placeholder': 'Select items',
   'blocks.treeMultipleSelector.notFound': 'Not found',
+  'blocks.dictation.start': 'Dictate',
+  'blocks.dictation.stop': 'Stop dictation',
+  'blocks.dictation.cancel': 'Cancel dictation',
+  'blocks.dictation.listening': 'Listening',
+  'blocks.dictation.denied': 'Microphone access is off.',
+  'blocks.dictation.failed': 'Dictation stopped.',
+  'blocks.dictation.settings': 'Settings',
 
   // antd X built-ins — apps can override per-locale via config.i18n.messages.
   // For en_US and zh_CN, XProvider's pack already covers these natively.

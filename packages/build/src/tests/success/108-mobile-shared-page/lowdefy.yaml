@@ -1,0 +1,19 @@
+# 108: Mobile Shared Page
+# A page listed in both pages and mobile.pages (the same _ref) is built once
+# with target "both": the web client gets its type module, and the mobile page
+# index lists it with its native type set.
+lowdefy: local
+
+pages:
+  - _ref: pages/about.yaml
+  - id: home
+    type: Box
+
+mobile:
+  menus:
+    stack: true
+  pages:
+    - _ref: pages/about.yaml
+config:
+  experimental:
+    mobile: true

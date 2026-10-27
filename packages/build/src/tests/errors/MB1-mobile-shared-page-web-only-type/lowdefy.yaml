@@ -1,0 +1,14 @@
+# MB1: Shared Page With A Web-Only Type
+# A page in both pages and mobile.pages must use types that exist on web and
+# on mobile. TextInput has no native version.
+lowdefy: local
+
+pages:
+  - _ref: pages/form.yaml
+
+mobile:
+  pages:
+    - _ref: pages/form.yaml
+config:
+  experimental:
+    mobile: true

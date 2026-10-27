@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const createTracePayload = jest.fn(({ record }) => ({ success: record.success, record }));
+const createTracePayload = vi.fn(({ record }) => ({ success: record.success, record }));
 
-jest.unstable_mockModule('../src/trace/createTracePayload.js', () => ({
+vi.doMock('../src/trace/createTracePayload.js', () => ({
   default: createTracePayload,
 }));
 

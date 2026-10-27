@@ -15,6 +15,7 @@
 */
 
 import resolveMockUser from './resolveMockUser.js';
+import { expect, test } from 'vitest';
 
 test('resolveMockUser returns a default roleless user for the bare flag', () => {
   expect(JSON.parse(resolveMockUser(true))).toEqual({

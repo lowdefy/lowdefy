@@ -17,6 +17,7 @@
 import { ConfigError, ConfigWarning, LowdefyInternalError } from '@lowdefy/errors';
 
 import serializeBuildException from './serializeBuildException.js';
+import { expect, test } from 'vitest';
 
 test('serializeBuildException extracts message, name and location fields', () => {
   const error = new ConfigError('Bad config', { configKey: 'abc123', checkSlug: 'my-check' });
@@ -47,7 +48,27 @@ test('serializeBuildException defaults unresolved location fields to null', () =
     checkSlug: null,
     checkGroup: null,
     prodError: false,
+    cause: null,
+    stack: expect.stringContaining('Something broke'),
   });
+});
+
+test('serializeBuildException keeps the cause message and its stack for an internal fault', () => {
+  const syntaxError = new SyntaxError('Unexpected token }');
+  const error = new Error('Failed to import plugin "my-plugin": Unexpected token }', {
+    cause: syntaxError,
+  });
+
+  const serialized = serializeBuildException(error);
+  expect(serialized.name).toBe('Error');
+  expect(serialized.cause).toBe('Unexpected token }');
+  expect(serialized.stack).toBe(syntaxError.stack);
+});
+
+test('serializeBuildException leaves the stack off a config error', () => {
+  const serialized = serializeBuildException(new ConfigError('Bad', { configKey: 'k' }));
+  expect(serialized).not.toHaveProperty('stack');
+  expect(serialized).not.toHaveProperty('cause');
 });
 
 test('serializeBuildException produces JSON-serializable output for a ConfigWarning', () => {

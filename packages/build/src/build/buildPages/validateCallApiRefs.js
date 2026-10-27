@@ -23,6 +23,9 @@ function validateCallApiRefs({ callApiActionRefs, endpointConfigs, context }) {
       .filter((config) => config.type === 'InternalApi')
       .map((config) => config.endpointId)
   );
+  const linkEndpoints = new Set(
+    endpointConfigs.filter((config) => config.link === true).map((config) => config.endpointId)
+  );
 
   callApiActionRefs.forEach(({ endpointId, action, sourcePageId }) => {
     if (action.skip === true) {
@@ -46,6 +49,18 @@ function validateCallApiRefs({ callApiActionRefs, endpointConfigs, context }) {
           `CallAPI action on page "${sourcePageId}" targets InternalApi endpoint "${endpointId}". ` +
             `InternalApi endpoints are not accessible from client pages. ` +
             `Change the endpoint type to Api, or call it from another endpoint using a :call_api step.`,
+          { configKey: action['~k'], prodError: true, checkSlug: 'callapi-internal-refs' }
+        )
+      );
+      return;
+    }
+
+    if (linkEndpoints.has(endpointId)) {
+      context.handleWarning(
+        new ConfigWarning(
+          `CallAPI action on page "${sourcePageId}" targets link endpoint "${endpointId}". ` +
+            `A link endpoint answers only a GET, such as an <img src> or a download link. ` +
+            `Point the page at the link URL instead, or remove "link: true" from the endpoint.`,
           { configKey: action['~k'], prodError: true, checkSlug: 'callapi-internal-refs' }
         )
       );

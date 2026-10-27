@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import UpdateMemberOrgRole from './UpdateMemberOrgRole.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -36,7 +36,7 @@ const acting = {
 const organizationId = 'org-1';
 
 test('UpdateMemberOrgRole calls updateMemberRole with the memberId, organizationId and role', async () => {
-  const updateMemberRole = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
+  const updateMemberRole = vi.fn().mockResolvedValue({ member: { id: 'member-1' } });
   const { auth } = createMockAuth({ organizationEndpoints: { updateMemberRole } });
   const result = await UpdateMemberOrgRole({
     acting,
@@ -53,9 +53,9 @@ test('UpdateMemberOrgRole calls updateMemberRole with the memberId, organization
 });
 
 test('UpdateMemberOrgRole carries the real caller so the endpoint own member check runs', async () => {
-  const updateMemberRole = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
+  const updateMemberRole = vi.fn().mockResolvedValue({ member: { id: 'member-1' } });
   const { auth, authContext } = createMockAuth({
-    adapter: { findOne: jest.fn() },
+    adapter: { findOne: vi.fn() },
     organizationEndpoints: { updateMemberRole },
   });
   await UpdateMemberOrgRole({
@@ -74,7 +74,7 @@ test('UpdateMemberOrgRole carries the real caller so the endpoint own member che
 });
 
 test('UpdateMemberOrgRole scopes the write to the organizationId passed by the floor', async () => {
-  const updateMemberRole = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
+  const updateMemberRole = vi.fn().mockResolvedValue({ member: { id: 'member-1' } });
   const { auth } = createMockAuth({ organizationEndpoints: { updateMemberRole } });
   await UpdateMemberOrgRole({
     acting,
@@ -86,7 +86,7 @@ test('UpdateMemberOrgRole scopes the write to the organizationId passed by the f
 });
 
 test('UpdateMemberOrgRole sends orgRole "member" unchanged to revoke the org tier', async () => {
-  const updateMemberRole = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
+  const updateMemberRole = vi.fn().mockResolvedValue({ member: { id: 'member-1' } });
   const { auth } = createMockAuth({ organizationEndpoints: { updateMemberRole } });
   await UpdateMemberOrgRole({
     acting,
@@ -98,8 +98,8 @@ test('UpdateMemberOrgRole sends orgRole "member" unchanged to revoke the org tie
 });
 
 test('UpdateMemberOrgRole writes no field other than the org tier', async () => {
-  const updateMemberRole = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
-  const update = jest.fn();
+  const updateMemberRole = vi.fn().mockResolvedValue({ member: { id: 'member-1' } });
+  const update = vi.fn();
   const { auth } = createMockAuth({
     adapter: { update },
     organizationEndpoints: { updateMemberRole },
@@ -151,7 +151,7 @@ test('UpdateMemberOrgRole surfaces the endpoint rejection of an unregistered rol
     code: 'ROLE_NOT_FOUND',
     message: 'ROLE_NOT_FOUND: branch-manager',
   };
-  const updateMemberRole = jest.fn().mockRejectedValue(apiError);
+  const updateMemberRole = vi.fn().mockRejectedValue(apiError);
   const { auth } = createMockAuth({ organizationEndpoints: { updateMemberRole } });
   // The step holds no allowlist of its own - validStaticRoles in the endpoint is
   // the only place a role name is checked.

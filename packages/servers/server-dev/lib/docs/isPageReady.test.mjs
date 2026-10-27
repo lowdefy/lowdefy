@@ -15,6 +15,7 @@
 */
 
 import isPageReady from './isPageReady.js';
+import { afterEach, expect, test } from 'vitest';
 
 // isPageReady runs against `window` inside the browser, so each case installs
 // a stub context on global.window and asserts the boolean.

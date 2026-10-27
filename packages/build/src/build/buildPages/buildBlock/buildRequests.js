@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import isReadOnlyRequest from '../../isReadOnlyRequest.js';
 import validateId from '../../../utils/validateId.js';
 import validateSharedPipelineWrite from '../../validateSharedPipelineWrite.js';
 import validateTenantNoneRead from '../../validateTenantNoneRead.js';
@@ -100,6 +101,21 @@ function buildRequest(request, pageContext) {
     configKey,
   });
 
+  // offline: queue lets a mobile shell keep the call while it has no signal and send it later
+  // (the shell's request queue). It stays on the client request config; the web sends as usual.
+  if (!type.isUndefined(request.offline) && request.offline !== 'queue') {
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" "offline" only accepts "queue".`,
+      { received: request.offline, configKey }
+    );
+  }
+  if (!type.isUndefined(request.offline) && context.experimental?.mobile !== true) {
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" "offline" is part of experimental mobile apps. Set "config.experimental.mobile: true" in lowdefy.yaml to use it.`,
+      { configKey }
+    );
+  }
+
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {
@@ -110,6 +126,10 @@ function buildRequest(request, pageContext) {
   }
 
   request.auth = auth;
+  request.readOnly = isReadOnlyRequest({
+    request,
+    requestMetas: context.typesMap?.requestMetas,
+  });
   request.requestId = request.id;
   request.pageId = pageId;
   request.id = `request:${pageId}:${request.id}`;

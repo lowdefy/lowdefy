@@ -15,6 +15,7 @@
 */
 
 import normalizeServerData from './normalizeServerData.js';
+import { expect, test } from 'vitest';
 
 test('normalizeServerData returns null for client rows', () => {
   expect(normalizeServerData([{ id: 1 }])).toBeNull();
@@ -24,15 +25,48 @@ test('normalizeServerData returns null for client rows', () => {
 test('normalizeServerData defaults the block size and cache size', () => {
   expect(normalizeServerData({ mode: 'server', request: 'deals' })).toEqual({
     request: 'deals',
+    endpoint: null,
+    payload: null,
     blockSize: 200,
     maxBlocks: 20,
   });
 });
 
-test('normalizeServerData throws for a missing request or a bad block size', () => {
-  expect(() => normalizeServerData({ mode: 'server' })).toThrow('requires "request"');
+test('normalizeServerData takes an endpoint in place of a request', () => {
+  expect(normalizeServerData({ mode: 'server', endpoint: 'deals-rows', blockSize: 50 })).toEqual({
+    request: null,
+    endpoint: 'deals-rows',
+    payload: null,
+    blockSize: 50,
+    maxBlocks: 20,
+  });
+});
+
+test('normalizeServerData keeps a payload object for every fetch event', () => {
+  expect(
+    normalizeServerData({ mode: 'server', endpoint: 'deals-rows', payload: { region: 'EU' } })
+      .payload
+  ).toEqual({ region: 'EU' });
+});
+
+test('normalizeServerData throws for a payload that is not an object', () => {
+  expect(() =>
+    normalizeServerData({ mode: 'server', endpoint: 'deals-rows', payload: 'EU' })
+  ).toThrow('"data.payload" must be an object of fields to add to the fetch event');
+});
+
+test('normalizeServerData throws without exactly one of request and endpoint', () => {
+  expect(() => normalizeServerData({ mode: 'server' })).toThrow(
+    /requires one of "request".*or "endpoint"/
+  );
+  expect(() => normalizeServerData({ mode: 'server', request: 'a', endpoint: 'b' })).toThrow(
+    /requires one of "request"/
+  );
+});
+
+test('normalizeServerData throws for a bad mode or a bad block size', () => {
   expect(() => normalizeServerData({ mode: 'client', request: 'x' })).toThrow(
-    'must be a list of rows or { mode: server, request }'
+    'must be a list of rows or { mode: server, request | endpoint }'
   );
   expect(() => normalizeServerData({ mode: 'server', request: 'x', blockSize: 0 })).toThrow(
     '"data.blockSize" must be a positive integer'

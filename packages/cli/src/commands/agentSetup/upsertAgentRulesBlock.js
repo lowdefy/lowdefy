@@ -27,7 +27,7 @@ const IMPORT_PATTERN = /^\s*@AGENTS\.md\s*$/m;
 
 function renderBlock({ cliVersion, skills }) {
   return `<!-- BEGIN:lowdefy-agent-rules version=${cliVersion} -->
-${agentsMd({ skills }).trimEnd()}
+${agentsMd({ cliVersion, skills }).trimEnd()}
 ${END_MARKER}
 `;
 }

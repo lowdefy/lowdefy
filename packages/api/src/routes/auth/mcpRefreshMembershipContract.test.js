@@ -16,7 +16,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { betterAuth } from 'better-auth';
 import { memoryAdapter } from 'better-auth/adapters/memory';
 import { decodeJwt } from 'jose';
@@ -52,11 +52,11 @@ afterEach(() => {
 
 function createLogger() {
   return {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    isLevelEnabled: jest.fn(() => false),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    isLevelEnabled: vi.fn(() => false),
   };
 }
 
@@ -204,25 +204,22 @@ test('a rotated refresh token presented again after the reuse interval revokes t
   const other = await seedRefreshToken({ adapter, userId: user.id, raw: 'other-session' });
   expect((await refresh({ auth })).status).toBe(200);
   // Only Date is faked: the handler's own async work runs on real timers.
-  jest.useFakeTimers({
+  vi.useFakeTimers({
     now: Date.now() + 121 * 1000,
-    doNotFake: [
-      'nextTick',
-      'setImmediate',
-      'clearImmediate',
-      'setTimeout',
-      'clearTimeout',
-      'setInterval',
-      'clearInterval',
-      'queueMicrotask',
-      'performance',
+    toFake: [
+      'Date',
+      'hrtime',
+      'requestAnimationFrame',
+      'cancelAnimationFrame',
+      'requestIdleCallback',
+      'cancelIdleCallback',
     ],
   });
   let stale;
   try {
     stale = await refresh({ auth });
   } finally {
-    jest.useRealTimers();
+    vi.useRealTimers();
   }
   expect(stale.status).toBe(400);
   expect(await stale.json()).toMatchObject({ error: 'invalid_grant' });
@@ -234,6 +231,18 @@ test('a rotated refresh token presented again after the reuse interval revokes t
 test('the refresh grant answers invalid_grant once the user is no longer a member of the organization', async () => {
   const { adapter, auth, member } = await createSeededAuth();
   await adapter.delete({ model: 'member', where: [{ field: 'id', value: member.id }] });
+  const response = await refresh({ auth });
+  expect(response.status).toBe(400);
+  expect(await response.json()).toMatchObject({ error: 'invalid_grant' });
+});
+
+test('the refresh grant answers invalid_grant while the user is suspended in the organization', async () => {
+  const { adapter, auth, member } = await createSeededAuth();
+  await adapter.update({
+    model: 'member',
+    where: [{ field: 'id', value: member.id }],
+    update: { suspended: true },
+  });
   const response = await refresh({ auth });
   expect(response.status).toBe(400);
   expect(await response.json()).toMatchObject({ error: 'invalid_grant' });

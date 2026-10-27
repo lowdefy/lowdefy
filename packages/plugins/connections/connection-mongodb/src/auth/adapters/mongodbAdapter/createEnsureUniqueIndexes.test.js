@@ -23,6 +23,7 @@ import { organization } from 'better-auth/plugins';
 import { MongoClient } from 'mongodb';
 
 import MongoDBAuthAdapter from '../MongoDBAuthAdapter/MongoDBAuthAdapter.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 const indexes = [
   { model: 'organization', fields: ['slug'] },
@@ -101,10 +102,12 @@ test('ensureUniqueIndexes names the collection when existing duplicates block th
     { user_id: 'u1', organization_id: 'o1', role: 'owner' },
   ]);
   const ensure = adapter.options.ensureUniqueIndexes({ indexes });
-  await expect(ensure).rejects.toThrow(
-    'Could not create the unique index on collection "user-members" over ["user_id","organization_id"]'
+  const error = await ensure.catch((caught) => caught);
+  expect(error.message).toBe(
+    'Could not create the unique index "lowdefy_unique_user_id_organization_id" on collection "user-members" over ["user_id","organization_id"] (MongoDB code 11000).'
   );
-  await expect(ensure).rejects.toThrow('E11000 duplicate key error');
+  expect(error.code).toBe(11000);
+  expect(error.cause.message).toContain('E11000 duplicate key error');
 });
 
 test('after ensureUniqueIndexes, concurrent writes of the same member row store exactly one', async () => {

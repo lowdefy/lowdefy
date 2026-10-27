@@ -16,57 +16,14 @@
 
 import fs from 'fs';
 import path from 'path';
-import { mergeObjects } from '@lowdefy/helpers';
 import { writeFile } from '@lowdefy/node-utils';
 import collectBlockSourceContent from './collectBlockSourceContent.js';
-
-const BRIDGE_DEFAULTS = {
-  color: {
-    primary: 'var(--ant-color-primary)',
-    'primary-hover': 'var(--ant-color-primary-hover)',
-    'primary-active': 'var(--ant-color-primary-active)',
-    'primary-bg': 'var(--ant-color-primary-bg)',
-    success: 'var(--ant-color-success)',
-    warning: 'var(--ant-color-warning)',
-    error: 'var(--ant-color-error)',
-    info: 'var(--ant-color-info)',
-    'text-primary': 'var(--ant-color-text)',
-    'text-secondary': 'var(--ant-color-text-secondary)',
-    'bg-container': 'var(--ant-color-bg-container)',
-    'bg-layout': 'var(--ant-color-bg-layout)',
-    border: 'var(--ant-color-border)',
-  },
-  radius: {
-    DEFAULT: 'var(--ant-border-radius)',
-    sm: 'var(--ant-border-radius-sm)',
-    lg: 'var(--ant-border-radius-lg)',
-  },
-  'font-size': {
-    DEFAULT: 'var(--ant-font-size)',
-    sm: 'var(--ant-font-size-sm)',
-    lg: 'var(--ant-font-size-lg)',
-  },
-  'font-family': {
-    sans: 'var(--ant-font-family)',
-  },
-};
-
-function objectToThemeVars(obj, prefix) {
-  const lines = [];
-  for (const [key, value] of Object.entries(obj)) {
-    const varName = prefix ? `${prefix}-${key}` : `--${key}`;
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      lines.push(...objectToThemeVars(value, varName));
-    } else {
-      lines.push(`  ${varName}: ${value};`);
-    }
-  }
-  return lines;
-}
+import getTailwindThemeVars from './getTailwindThemeVars.js';
 
 function buildThemeVars(tailwindConfig) {
-  const merged = mergeObjects([BRIDGE_DEFAULTS, tailwindConfig ?? {}]);
-  return objectToThemeVars(merged).join('\n');
+  return getTailwindThemeVars({ tailwindConfig })
+    .map(([name, value]) => `  ${name}: ${value};`)
+    .join('\n');
 }
 
 // The deprecated public/styles.less is rejected by validateDeprecatedStyles,

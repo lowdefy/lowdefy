@@ -15,15 +15,15 @@
 */
 
 import { spawn } from 'child_process';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
 // A start time read is a PowerShell process on Windows, slow enough cold to outrun a test's
 // timeout. These tests are about the slots, so this process's start time is a fixed value.
-jest.unstable_mockModule('./getProcessStartTime.js', () => ({
-  default: jest.fn(() => 'Mon Jan  5 09:00:00 2026'),
+vi.doMock('./getProcessStartTime.js', () => ({
+  default: vi.fn(() => 'Mon Jan  5 09:00:00 2026'),
 }));
 
 const { default: acquireMachineSlot } = await import('./acquireMachineSlot.js');
@@ -113,7 +113,7 @@ test('acquireMachineSlot states a wait of whole minutes in minutes', async () =>
   await acquireMachineSlot({ name: 'browser', limit: 3 });
   // The clock jumps past the deadline after it is set.
   const start = Date.now();
-  const now = jest
+  const now = vi
     .spyOn(Date, 'now')
     .mockReturnValueOnce(start)
     .mockReturnValue(start + 6 * 60000);
@@ -137,4 +137,77 @@ test('acquireMachineSlot release is harmless twice and never removes a slot anot
   writeHolder(0, { pid: 1, processStartTime: null, token: 'someone-else' });
   taken.release();
   expect(JSON.parse(fs.readFileSync(slotPath(0), 'utf8')).token).toBe('someone-else');
+});
+
+test('acquireMachineSlot writes describe into the slot file beside its own fields', async () => {
+  const slot = await acquireMachineSlot({
+    name: 'browser',
+    limit: 1,
+    describe: { command: 'lowdefy test', configDirectory: '/apps/foo', pid: 1 },
+  });
+  expect(JSON.parse(fs.readFileSync(slotPath(0), 'utf8'))).toMatchObject({
+    command: 'lowdefy test',
+    configDirectory: '/apps/foo',
+    pid: process.pid,
+  });
+  slot.release();
+});
+
+test('acquireMachineSlot calls onWait while it waits, with the live holders only', async () => {
+  const held = await acquireMachineSlot({
+    name: 'browser',
+    limit: 1,
+    describe: { command: 'lowdefy test' },
+  });
+  // Slots past the limit still count as running: a run took them at a higher limit.
+  writeHolder(1, { pid: await deadPid(), processStartTime: null, token: 'gone' });
+  writeHolder(2, { pid: process.pid, processStartTime: null, token: 'past-limit' });
+  const onWait = vi.fn();
+  await expect(
+    acquireMachineSlot({
+      name: 'browser',
+      limit: 1,
+      waitMs: 300,
+      intervalMs: 10,
+      onWait,
+      onWaitIntervalMs: 50,
+    })
+  ).rejects.toThrow('stayed busy');
+  expect(onWait).toHaveBeenCalled();
+  const [{ waitedMs, holders }] = onWait.mock.calls[0];
+  expect(waitedMs).toBeGreaterThanOrEqual(50);
+  expect(holders.map((holder) => holder.token)).toEqual([
+    JSON.parse(fs.readFileSync(slotPath(0), 'utf8')).token,
+    'past-limit',
+  ]);
+  expect(holders[0]).toMatchObject({ command: 'lowdefy test', pid: process.pid });
+  held.release();
+});
+
+test('acquireMachineSlot does not call onWait when a slot is free', async () => {
+  const onWait = vi.fn();
+  const slot = await acquireMachineSlot({ name: 'browser', limit: 1, onWait, onWaitIntervalMs: 0 });
+  expect(onWait).not.toHaveBeenCalled();
+  slot.release();
+});
+
+test('acquireMachineSlot timeout error carries its code, the slot name and the limit', async () => {
+  const held = await acquireMachineSlot({ name: 'browser', limit: 1 });
+  const error = await acquireMachineSlot({
+    name: 'browser',
+    limit: 1,
+    waitMs: 50,
+    intervalMs: 10,
+  }).catch((caught) => caught);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).toMatchObject({ code: 'MACHINE_SLOT_TIMEOUT', slot: 'browser', limit: 1 });
+  held.release();
+});
+
+test('acquireMachineSlot waits while a holder past a lowered limit still runs', async () => {
+  writeHolder(1, { pid: process.pid, processStartTime: null, token: 'took-at-limit-2' });
+  await expect(
+    acquireMachineSlot({ name: 'browser', limit: 1, waitMs: 50, intervalMs: 10 })
+  ).rejects.toThrow('stayed busy');
+  expect(fs.existsSync(slotPath(0))).toBe(false);
 });

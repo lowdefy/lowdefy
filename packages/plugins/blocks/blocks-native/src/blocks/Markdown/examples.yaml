@@ -1,0 +1,113 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only. GitHub-flavoured markdown in the iOS text styles.
+
+- title: Design body with record and mention chips
+  blocks:
+    - id: design_body
+      type: Markdown
+      properties:
+        linkChips:
+          - scheme: acme
+            icon: FileText
+            tone: primary
+          - scheme: mention
+            tone: primary
+            prefix: '@'
+        content: |
+          ## Why
+
+          Field teams sign in several times a day on shared phones. Passwords are slow and get
+          written down, so [ACME-644 Sign in with a passkey](acme:ACME-644) replaces them.
+          [@Ada Lovelace](mention:u_ada) owns the rollout; **Use the platform passkey sheet** was
+          settled last week.
+
+          ## Plan
+
+          1. Ship the passkey sheet behind a flag
+             1. iOS first, with Face ID
+             2. Android once Credential Manager lands
+          2. Move every pilot site over
+          3. Remove password sign-in
+
+          - [x] Spike the WebAuthn flow ([ACME-640 Passkey spike](acme:ACME-640))
+          - [x] Write the threat model
+          - [ ] Pilot with two sites
+          - [ ] Retire passwords
+
+          > Keep the recovery code. A lost phone must never lock a site out of its own records.
+
+          ### Config
+
+          ```yaml
+          auth:
+            passkeys:
+              enabled: true
+              userVerification: required
+          ```
+
+          | Site | Phones | Status |
+          | ---- | -----: | ------ |
+          | Durban depot | 14 | Piloting |
+          | Cape Town yard | 9 | Waiting |
+          | Riverside hub | 31 | Not started |
+
+          ---
+
+          See the [WebAuthn guide](https://webauthn.guide) and _Rollout plan.pdf_.
+      events:
+        onLinkPress:
+          - id: open_link
+            type: SetState
+            params:
+              last_link:
+                _event: href
+
+- title: Comment-sized note with inline code
+  blocks:
+    - id: note
+      type: Markdown
+      properties:
+        linkChips:
+          - scheme: mention
+            tone: primary
+            prefix: '@'
+        content: |
+          [@Sam Taylor](mention:u_sam) the `m_body` block reads `m_view.body`, so the summary
+          needs its own state key. Done in a follow-up.
+
+- title: Agent reply with app path links drawn as chips
+  blocks:
+    - id: reply
+      type: Markdown
+      properties:
+        linkChips:
+          - pattern: '^/ACME/tasks/(?<key>ACME-\d+)$'
+            icon: CircleCheck
+            tone: primary
+          - pattern: '^/ACME/designs/(?<key>ACME-\d+)$'
+            icon: FileText
+            tone: info
+            label: key
+        content: |
+          I logged [ACME-647 (Fix broken menu URL)](/ACME/tasks/ACME-647) under the
+          [ACME-640 Navigation](/ACME/designs/ACME-640) design.
+      events:
+        onLinkPress:
+          - id: open_record
+            type: Link
+            params:
+              url:
+                _event: href

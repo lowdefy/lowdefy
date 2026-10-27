@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, describe, expect, test } from 'vitest';
 import { MockLanguageModelV4 } from 'ai/test';
 
-const mockFetchUrl = jest.fn();
-const undici = jest.requireActual('undici');
+const mockFetchUrl = vi.fn();
+const undici = await vi.importActual('undici');
 
-jest.unstable_mockModule('undici', () => ({
+vi.doMock('undici', () => ({
   ...undici,
   fetch: (...fetchArgs) => mockFetchUrl(...fetchArgs),
 }));

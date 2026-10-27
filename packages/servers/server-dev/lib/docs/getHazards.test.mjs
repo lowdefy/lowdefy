@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import setupTestFixtures from './setupTestFixtures.mjs';
 
@@ -24,10 +24,13 @@ process.chdir(fixtureDir);
 
 // The framework list ships in @lowdefy/docs-content; mock the loader so each
 // test controls the list (and the "package not installed" case).
-const mockLoadFrameworkHazards = jest.fn();
-jest.unstable_mockModule('./loadFrameworkHazards.js', () => ({
+const mockLoadFrameworkHazards = vi.fn();
+vi.doMock('./loadFrameworkHazards.js', () => ({
   default: mockLoadFrameworkHazards,
 }));
+
+const mockLogger = { info: vi.fn(), warn: vi.fn() };
+vi.doMock('../server/log/createLogger.js', () => ({ default: () => mockLogger }));
 
 const { default: getHazards } = await import('./getHazards.js');
 
@@ -63,12 +66,11 @@ let warnSpy;
 beforeEach(() => {
   mockLoadFrameworkHazards.mockReset();
   mockLoadFrameworkHazards.mockReturnValue(frameworkHazards);
-  warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  warnSpy = mockLogger.warn;
+  warnSpy.mockClear();
 });
 
-afterEach(() => {
-  warnSpy.mockRestore();
-});
+afterEach(() => {});
 
 test('getHazards returns type-attached hazards only when no framework hazard applies', () => {
   mockLoadFrameworkHazards.mockReturnValue([]);

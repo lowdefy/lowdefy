@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import ScrollTo from './ScrollTo.js';
 
 // Mock document
-const mockDocGetElementById = jest.fn();
-const mockElemScrollIntoView = jest.fn();
+const mockDocGetElementById = vi.fn();
+const mockElemScrollIntoView = vi.fn();
 const document = {
   getElementById: mockDocGetElementById,
 };
 
 // Mock window
-const mockWindowFocus = jest.fn();
-const mockWindowOpen = jest.fn(() => ({ focus: mockWindowFocus }));
-const mockWindowScrollTo = jest.fn();
+const mockWindowFocus = vi.fn();
+const mockWindowOpen = vi.fn(() => ({ focus: mockWindowFocus }));
+const mockWindowScrollTo = vi.fn();
 const window = {
   location: { href: '', origin: 'http://lowdefy.com' },
   open: mockWindowOpen,

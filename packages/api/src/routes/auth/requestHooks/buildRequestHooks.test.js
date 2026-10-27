@@ -14,24 +14,32 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // Each slot is wrapped in createAuthMiddleware; mock it to identity so the unit
 // test can invoke a slot with a plain endpoint context.
-const mockGetSessionFromCtx = jest.fn();
-jest.unstable_mockModule('better-auth/api', () => ({
+const mockGetSessionFromCtx = vi.fn();
+class MockAPIError extends Error {
+  constructor(status, body) {
+    super(body?.message);
+    this.body = body;
+  }
+}
+vi.doMock('better-auth/api', () => ({
   // The post-login hook's module graph reaches buildOauthPostLogin, which
   // imports APIError; the post-login and expired-invitation hooks read the
-  // session through getSessionFromCtx.
-  APIError: class APIError extends Error {},
+  // session through getSessionFromCtx; the sign-in refused hook reads
+  // isAPIError.
+  APIError: MockAPIError,
   createAuthMiddleware: (handler) => handler,
   getSessionFromCtx: mockGetSessionFromCtx,
+  isAPIError: (error) => error instanceof MockAPIError,
 }));
 
 // beginTwoFactorChallenge is exercised against a fake endpoint context in its
 // own test; here the interest is only which paths reach it.
-const mockBeginTwoFactorChallenge = jest.fn(async () => 'challenged');
-jest.unstable_mockModule('./beginTwoFactorChallenge.js', () => ({
+const mockBeginTwoFactorChallenge = vi.fn(async () => 'challenged');
+vi.doMock('./beginTwoFactorChallenge.js', () => ({
   default: mockBeginTwoFactorChallenge,
 }));
 
@@ -42,19 +50,21 @@ const organizations = { policy: 'pinned', org: 'team-portal', signup: 'invite-on
 
 function createMockAuth({ invitations = [] } = {}) {
   const adapter = {
-    findOne: jest.fn(async ({ model }) => (model === 'organization' ? pinnedOrg : null)),
-    findMany: jest.fn(async () => invitations),
-    create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    findOne: vi.fn(async ({ model }) => (model === 'organization' ? pinnedOrg : null)),
+    findMany: vi.fn(async () => invitations),
+    create: vi.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    count: vi.fn(async () => 0),
+    deleteMany: vi.fn(async () => 0),
   };
   const internalAdapter = {
-    findUserById: jest.fn(async () => null),
-    findUserByEmail: jest.fn(async () => null),
+    findUserById: vi.fn(async () => null),
+    findUserByEmail: vi.fn(async () => null),
   };
   return { $context: Promise.resolve({ adapter, internalAdapter }) };
 }
 
 test('buildRequestHooks returns a before and an after slot with no magic link configured', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth });
   expect(typeof hooks.before).toBe('function');
   expect(typeof hooks.after).toBe('function');
@@ -79,7 +89,7 @@ test('buildRequestHooks routes /sign-in/magic-link into the send gate when magic
 });
 
 test('buildRequestHooks leaves paths other than /sign-in/magic-link alone when magicLink is enabled', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const hooks = buildRequestHooks({
     authConfig: { magicLink: { enabled: true }, organizations },
     getAuth,
@@ -95,7 +105,7 @@ test('buildRequestHooks leaves paths other than /sign-in/magic-link alone when m
 
 test('buildRequestHooks routes /organization/accept-invitation into the expired invitation gate', async () => {
   const adapter = {
-    findOne: jest.fn(async () => ({
+    findOne: vi.fn(async () => ({
       id: 'inv_1',
       status: 'pending',
       expiresAt: new Date(Date.now() - 1000).toISOString(),
@@ -114,8 +124,95 @@ test('buildRequestHooks routes /organization/accept-invitation into the expired 
   expect(adapter.findOne).toHaveBeenCalledTimes(1);
 });
 
+test('buildRequestHooks gates the member-gated organization endpoints under tenant only', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({
+    user: { id: 'user_1' },
+    session: { token: 'token_1', activeOrganizationId: 'org_1' },
+  });
+  const adapter = {
+    findOne: vi.fn(async () => null),
+    findMany: vi.fn(async () => [{ userId: 'user_1', organizationId: 'org_2', suspended: true }]),
+  };
+  const internalAdapter = { updateSession: vi.fn() };
+  const ctx = {
+    path: '/organization/set-active',
+    body: { organizationId: 'org_2' },
+    context: { adapter, internalAdapter },
+  };
+
+  const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  expect(await pinnedHooks.before(ctx)).toBeUndefined();
+  expect(adapter.findMany).not.toHaveBeenCalled();
+
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  await expect(tenantHooks.before(ctx)).rejects.toMatchObject({
+    body: { code: 'USER_IS_NOT_A_MEMBER_OF_THE_ORGANIZATION' },
+  });
+  // Refused like the endpoint refuses a non-member: the active organization is cleared.
+  expect(internalAdapter.updateSession).toHaveBeenCalledWith('token_1', {
+    activeOrganizationId: null,
+  });
+  expect(await tenantHooks.before({ ...ctx, body: { organizationId: 'org_1' } })).toBeUndefined();
+});
+
+test('buildRequestHooks gates organization endpoints it does not list as membership-free', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({
+    user: { id: 'user_1' },
+    session: { activeOrganizationId: 'org_2' },
+  });
+  const adapter = {
+    findOne: vi.fn(async () => null),
+    findMany: vi.fn(async () => [{ userId: 'user_1', organizationId: 'org_2', suspended: true }]),
+  };
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  await expect(
+    tenantHooks.before({ path: '/organization/list-teams', query: {}, context: { adapter } })
+  ).rejects.toMatchObject({ body: { code: 'USER_IS_NOT_A_MEMBER_OF_THE_ORGANIZATION' } });
+  expect(
+    await tenantHooks.before({
+      path: '/organization/get-invitation',
+      query: { id: 'inv_1' },
+      context: { adapter },
+    })
+  ).toBeUndefined();
+  expect(adapter.findMany).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks filters /organization/list under tenant only', async () => {
+  mockGetSessionFromCtx.mockResolvedValue({ user: { id: 'user_1' }, session: {} });
+  const rows = [
+    { userId: 'user_1', organizationId: 'org_1' },
+    { userId: 'user_1', organizationId: 'org_2', suspended: true },
+  ];
+  const adapter = {
+    findMany: vi.fn(async ({ where }) =>
+      rows.filter((row) => where.every(({ field, value }) => row[field] === value))
+    ),
+  };
+  const ctx = {
+    path: '/organization/list',
+    json: (value) => value,
+    context: { adapter, returned: [{ id: 'org_1' }, { id: 'org_2' }] },
+  };
+
+  const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  expect(await pinnedHooks.after(ctx)).toBeUndefined();
+
+  const tenantHooks = buildRequestHooks({
+    authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
+    getAuth: vi.fn(),
+  });
+  expect(await tenantHooks.after(ctx)).toEqual([{ id: 'org_1' }]);
+});
+
 test('buildRequestHooks does not resolve the BetterAuth instance while assembling', () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   buildRequestHooks({ authConfig: { magicLink: { enabled: true }, organizations }, getAuth });
   expect(getAuth).not.toHaveBeenCalled();
 });
@@ -160,7 +257,7 @@ test('buildRequestHooks challenges an enrolled user on /magic-link/verify when t
     authConfig: twoFactorAuthConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   const { thrown } = await catchAfter(hooks, createEnrolledCtx());
@@ -174,7 +271,7 @@ test('buildRequestHooks threads the 30-day trust lifetime into the challenge whe
     authConfig: twoFactorAuthConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   await catchAfter(hooks, createEnrolledCtx());
@@ -187,7 +284,7 @@ test('buildRequestHooks threads trustDeviceMaxAge 0 into the challenge when trus
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: true, trustDevice: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   await catchAfter(hooks, createEnrolledCtx());
@@ -199,7 +296,7 @@ test('buildRequestHooks does not challenge on a path no registration claims', as
   const hooks = buildRequestHooks({
     authConfig: twoFactorAuthConfig,
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   const ctx = createEnrolledCtx();
@@ -213,7 +310,7 @@ test('buildRequestHooks registers no two factor challenge when twoFactor is disa
   const hooks = buildRequestHooks({
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
@@ -224,7 +321,7 @@ test('buildRequestHooks registers no two factor challenge when magicLink is disa
   const hooks = buildRequestHooks({
     authConfig: { ...twoFactorAuthConfig, magicLink: { enabled: false } },
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
@@ -235,7 +332,7 @@ test('buildRequestHooks registers no two factor challenge when authPages.twoFact
   const hooks = buildRequestHooks({
     authConfig: { ...twoFactorAuthConfig, authPages: {} },
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
@@ -250,7 +347,7 @@ function createOAuthHooks(mfaTrustedProviderKeys) {
     },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 }
 
@@ -313,7 +410,7 @@ test('buildRequestHooks challenges an OAuth callback with magicLink disabled', a
     authConfig: { ...twoFactorAuthConfig, magicLink: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect((await catchAfter(hooks, createOAuthCtx('google'))).thrown.redirectTo).toBe(
@@ -327,7 +424,7 @@ test('buildRequestHooks challenges no OAuth callback when twoFactor is disabled'
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createOAuthCtx('google'))).toBeUndefined();
@@ -360,7 +457,7 @@ function createPhoneHooks(authConfig) {
     authConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 }
 
@@ -406,7 +503,7 @@ test('buildRequestHooks does not challenge an id token sign-in when twoFactor is
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 
   expect(await hooks.after(createIdTokenCtx('google'))).toBeUndefined();
@@ -517,7 +614,7 @@ function createEmailOtpHooks(authConfig) {
     authConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
-    getAuth: jest.fn(),
+    getAuth: vi.fn(),
   });
 }
 
@@ -560,7 +657,7 @@ test('buildRequestHooks lets an admitted email through the OTP send gate', async
 });
 
 test('buildRequestHooks registers no OTP send gate when emailOTP is disabled', async () => {
-  const getAuth = jest.fn();
+  const getAuth = vi.fn();
   const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth });
   expect(
     await hooks.before({
@@ -617,4 +714,70 @@ test('buildRequestHooks leaves an unenrolled user on /sign-in/email-otp untouche
   expect(thrown).toBeUndefined();
   expect(returned).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks redirects a ban on /magic-link/verify when magicLink is enabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { magicLink: { enabled: true }, organizations },
+    getAuth: vi.fn(),
+  });
+  const response = await hooks.after({
+    path: '/magic-link/verify',
+    query: { callbackURL: '/', errorCallbackURL: '/login' },
+    request: new Request('https://app.example.com/api/auth/magic-link/verify'),
+    context: {
+      baseURL: 'https://app.example.com/api/auth',
+      isTrustedOrigin: () => true,
+      returned: new MockAPIError('FORBIDDEN', { message: 'Banned.', code: 'BANNED_USER' }),
+    },
+  });
+  expect(response.status).toBe(302);
+  expect(new URL(response.headers.get('location')).searchParams.get('error')).toBe('BANNED_USER');
+});
+
+test('buildRequestHooks does not register the sign-in refused redirect without magicLink', async () => {
+  const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  const response = await hooks.after({
+    path: '/magic-link/verify',
+    query: { callbackURL: '/', errorCallbackURL: '/login' },
+    request: new Request('https://app.example.com/api/auth/magic-link/verify'),
+    context: {
+      baseURL: 'https://app.example.com/api/auth',
+      isTrustedOrigin: () => true,
+      returned: new MockAPIError('FORBIDDEN', { message: 'Banned.', code: 'BANNED_USER' }),
+    },
+  });
+  expect(response).toBeUndefined();
+});
+
+test('buildRequestHooks caps code sends per address only for apps with a mobile section', async () => {
+  const web = createMockAuth();
+  const webHooks = buildRequestHooks({
+    authConfig: { emailOTP: { enabled: true }, organizations },
+    getAuth: () => web,
+  });
+  await webHooks.before({
+    path: '/email-otp/send-verification-otp',
+    body: { email: 'stranger@example.com' },
+  });
+  const webAdapter = (await web.$context).adapter;
+  expect(webAdapter.count).not.toHaveBeenCalled();
+
+  const phone = createMockAuth();
+  const phoneHooks = buildRequestHooks({
+    authConfig: { emailOTP: { enabled: true }, organizations, mobile: { shells: [] } },
+    getAuth: () => phone,
+  });
+  // Counted ahead of the send gate, which then answers for the unknown address.
+  expect(
+    await phoneHooks.before({
+      path: '/email-otp/send-verification-otp',
+      body: { email: 'stranger@example.com' },
+    })
+  ).toEqual({ success: true });
+  const phoneAdapter = (await phone.$context).adapter;
+  expect(phoneAdapter.count).toHaveBeenCalledTimes(1);
+  expect(phoneAdapter.create).toHaveBeenCalledWith(
+    expect.objectContaining({ model: 'verification' })
+  );
 });

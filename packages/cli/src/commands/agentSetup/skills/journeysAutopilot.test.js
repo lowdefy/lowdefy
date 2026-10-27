@@ -16,6 +16,7 @@
 
 import skills from './index.js';
 import journeysAutopilot from './journeysAutopilot.js';
+import { expect, test } from 'vitest';
 
 test('the skill list includes journeys-autopilot with its renderer and AGENTS.md line', () => {
   const entry = skills.find((skill) => skill.name === 'journeys-autopilot');
@@ -61,6 +62,14 @@ test('journeys-autopilot is one light agent that never touches production or the
   expect(skill).toContain('Never merge, never push to the default branch');
   expect(skill).toContain('Never ask a question mid-run');
   expect(skill).toContain('/loop /journeys-autopilot');
+});
+
+test('journeys-autopilot waits for run slots, backs off on exit 75 and warms through the hub', () => {
+  const skill = journeysAutopilot();
+  expect(skill).toContain('exit code 75');
+  expect(skill).toContain('Never loop');
+  expect(skill).toContain('lowdefy hub start .');
+  expect(skill).toContain('lowdefy hub stop .');
 });
 
 test('journeys-autopilot proves before keeping and never weakens or deletes a journey', () => {

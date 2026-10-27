@@ -15,6 +15,7 @@
 */
 
 import getCanonicalUrl from './getCanonicalUrl.js';
+import { afterAll, beforeEach, expect, test } from 'vitest';
 
 const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
 

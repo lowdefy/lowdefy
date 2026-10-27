@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-const handleAuthRequest = jest.fn(async () => new Response('engine'));
-const getAuth = jest.fn(() => ({}));
+const handleAuthRequest = vi.fn(async () => new Response('engine'));
+const getAuth = vi.fn(() => ({}));
 
-jest.unstable_mockModule('@lowdefy/api', () => ({ handleAuthRequest }));
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: { configured: true } }));
-jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({ default: getAuth }));
-jest.unstable_mockModule('../../lib/server/auth/getMockUser.js', () => ({
-  default: jest.fn(() => undefined),
+vi.doMock('@lowdefy/api', () => ({ handleAuthRequest }));
+vi.doMock('../../lib/build/auth.js', () => ({ default: { configured: true } }));
+vi.doMock('../../lib/server/auth/getAuth.js', () => ({ default: getAuth }));
+vi.doMock('../../lib/server/auth/getMockUser.js', () => ({
+  default: vi.fn(() => undefined),
 }));
-jest.unstable_mockModule('../../lib/server/getClientAddress.js', () => ({
-  default: jest.fn(() => '127.0.0.1'),
+vi.doMock('../../lib/server/getClientAddress.js', () => ({
+  default: vi.fn(() => '127.0.0.1'),
 }));
 
 const { default: authMiddleware } = await import('./auth.js');

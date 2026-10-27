@@ -17,6 +17,7 @@
 import { spawn, spawnSync } from 'child_process';
 
 import getProcessStartTime from './getProcessStartTime.js';
+import { expect, test } from 'vitest';
 
 // Hubs, shims and CLIs each run with the environment of the session that
 // started them.

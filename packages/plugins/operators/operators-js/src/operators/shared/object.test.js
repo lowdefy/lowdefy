@@ -15,6 +15,7 @@
 */
 
 import object from './object.js';
+import { describe, expect, test } from 'vitest';
 
 const location = 'locationId';
 
@@ -65,7 +66,7 @@ describe('_object.hasOwnProperty', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide an object instance as the first element in the operator argument array."`
+      `[Error: _object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the "on" property, for listed args provide an object instance as the first element in the operator argument array.]`
     );
     expect(() =>
       object({
@@ -74,7 +75,7 @@ describe('_object.hasOwnProperty', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.hasOwnProperty accepts one of the following types: array, object."`
+      `[Error: _object.hasOwnProperty accepts one of the following types: array, object.]`
     );
     expect(() =>
       object({
@@ -83,7 +84,7 @@ describe('_object.hasOwnProperty', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.hasOwnProperty accepts one of the following types: array, object."`
+      `[Error: _object.hasOwnProperty accepts one of the following types: array, object.]`
     );
   });
 });
@@ -119,7 +120,7 @@ describe('_object.entries', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.entries accepts one of the following types: object, null."`
+      `[Error: _object.entries accepts one of the following types: object, null.]`
     );
     expect(() =>
       object({
@@ -128,7 +129,7 @@ describe('_object.entries', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.entries accepts one of the following types: object, null."`
+      `[Error: _object.entries accepts one of the following types: object, null.]`
     );
   });
 });
@@ -164,7 +165,7 @@ describe('_object.fromEntries', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.fromEntries accepts one of the following types: array, null."`
+      `[Error: _object.fromEntries accepts one of the following types: array, null.]`
     );
     expect(() =>
       object({
@@ -173,7 +174,7 @@ describe('_object.fromEntries', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.fromEntries accepts one of the following types: array, null."`
+      `[Error: _object.fromEntries accepts one of the following types: array, null.]`
     );
   });
 });
@@ -206,7 +207,7 @@ describe('_object.keys', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.keys accepts one of the following types: object, null."`
+      `[Error: _object.keys accepts one of the following types: object, null.]`
     );
     expect(() =>
       object({
@@ -215,7 +216,7 @@ describe('_object.keys', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.keys accepts one of the following types: object, null."`
+      `[Error: _object.keys accepts one of the following types: object, null.]`
     );
   });
 });
@@ -248,7 +249,7 @@ describe('_object.values', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.values accepts one of the following types: object, null."`
+      `[Error: _object.values accepts one of the following types: object, null.]`
     );
     expect(() =>
       object({
@@ -257,7 +258,7 @@ describe('_object.values', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.values accepts one of the following types: object, null."`
+      `[Error: _object.values accepts one of the following types: object, null.]`
     );
   });
 });
@@ -298,7 +299,7 @@ describe('_object.assign', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.assign accepts one of the following types: array."`
+      `[Error: _object.assign accepts one of the following types: array.]`
     );
     expect(() =>
       object({
@@ -307,7 +308,7 @@ describe('_object.assign', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.assign accepts one of the following types: array."`
+      `[Error: _object.assign accepts one of the following types: array.]`
     );
   });
 });
@@ -358,7 +359,7 @@ describe('_object.defineProperty', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.defineProperty accepts one of the following types: array, object."`
+      `[Error: _object.defineProperty accepts one of the following types: array, object.]`
     );
     expect(() =>
       object({
@@ -367,14 +368,14 @@ describe('_object.defineProperty', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_object.defineProperty accepts one of the following types: array, object."`
+      `[Error: _object.defineProperty accepts one of the following types: array, object.]`
     );
   });
 });
 
 test('_object called with no method or params', () => {
   expect(() => object({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(
-    `"_object requires a valid method name, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
+    `[Error: _object requires a valid method name, use one of the following: assign, defineProperty, entries, fromEntries, keys, values.]`
   );
 });
 
@@ -382,7 +383,7 @@ test('_object invalid method', () => {
   expect(() =>
     object({ params: [{ a: 1 }], methodName: 'X', location: 'locationId' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_object.X is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
+    `[Error: _object.X is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values.]`
   );
 });
 
@@ -390,6 +391,6 @@ test('_object invalid method args', () => {
   expect(() =>
     object({ params: 'X', methodName: 'flat', location: 'locationId' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_object.flat is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
+    `[Error: _object.flat is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values.]`
   );
 });

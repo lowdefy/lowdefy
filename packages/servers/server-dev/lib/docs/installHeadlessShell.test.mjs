@@ -16,14 +16,17 @@
 
 import { EventEmitter } from 'node:events';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockSpawn = jest.fn();
-jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn, spawnSync: jest.fn() }));
+const mockSpawn = vi.fn();
+vi.doMock('child_process', () => ({ spawn: mockSpawn, spawnSync: vi.fn() }));
 
 // installHeadlessShell keeps one install per process in module state, so the
 // tests below run in order against one module: the skipped calls first, then
 // the one install. The failure path is in installHeadlessShell.failure.test.mjs.
+const mockLogger = { info: vi.fn(), warn: vi.fn() };
+vi.doMock('../server/log/createLogger.js', () => ({ default: () => mockLogger }));
+
 const { default: installHeadlessShell } = await import('./installHeadlessShell.js');
 
 function createInstaller() {
@@ -31,11 +34,11 @@ function createInstaller() {
 }
 
 beforeEach(() => {
-  jest.spyOn(console, 'info').mockImplementation(() => {});
+  mockLogger.info.mockClear();
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   delete process.env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD;
 });
 

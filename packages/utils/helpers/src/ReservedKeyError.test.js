@@ -16,6 +16,7 @@
 
 import { RESERVED_KEYS, ReservedKeyError, isReserved } from './ReservedKeyError.js';
 import serializer from './serializer.js';
+import { expect, test } from 'vitest';
 
 const reservedKeys = [
   '__proto__',

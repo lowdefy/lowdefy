@@ -16,18 +16,18 @@
 
 import { lowdefyErrorNames, readErrorCodes } from '@lowdefy/errors';
 
-import maskCredentialKeys from './maskCredentialKeys.js';
-
 // Kept only on nodes named as a Lowdefy error class: libraries reuse some of
 // these names for their own data - axios's `config` carries auth, params and
 // headers - so keying on the field alone would let a library's copy through.
+// `received` is not among them: it holds an operator's or control's evaluated
+// input - a user's ID number, a token from an earlier step - and the log names
+// where a fault happened, not the values it ran on. The dev server's log keeps it.
 const lowdefyErrorFields = [
   'configKey',
   'source',
   'config',
   'handled',
   'isLowdefyError',
-  'received',
   'typeName',
   'location',
   'service',
@@ -43,6 +43,9 @@ const lowdefyErrorFields = [
   'organizationId',
   'field',
   'endpointId',
+  // A failed request's step id (callRequestResolver), beside its endpointId and connectionId,
+  // so its error log names the step rather than its inputs.
+  'stepId',
 ];
 
 function projectErrorForLog(err) {
@@ -52,7 +55,6 @@ function projectErrorForLog(err) {
     lowdefyErrorFields.forEach((field) => {
       props[field] = err[field];
     });
-    props.received = maskCredentialKeys(err.received);
   }
   props.cause = err.cause;
   return props;

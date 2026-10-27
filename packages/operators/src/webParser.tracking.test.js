@@ -17,6 +17,7 @@
 import getFromObject from './getFromObject.js';
 import getObjectReadKeys from './getObjectReadKeys.js';
 import WebParser from './webParser.js';
+import { expect, test } from 'vitest';
 
 // Pure calls are counted apart from the events: they only prove the parser recorded the call.
 function createRecorder() {

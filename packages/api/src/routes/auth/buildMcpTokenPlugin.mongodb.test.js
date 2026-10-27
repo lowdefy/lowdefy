@@ -19,7 +19,7 @@
 // modules read natively, and the unique index on the hash.
 
 import { createHash, randomUUID } from 'node:crypto';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import * as mongodb from 'mongodb';
 
 const clients = [];
@@ -30,7 +30,7 @@ class RecordingMongoClient extends mongodb.MongoClient {
   }
 }
 
-jest.unstable_mockModule('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
+vi.doMock('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
 
 const { betterAuth } = await import('better-auth');
 const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/adapters');
@@ -62,7 +62,7 @@ test('member tokens are stored in user-mcp-tokens with snake_case columns and a 
     advanced: { database: { generateId: () => randomUUID() } },
     plugins: [buildMcpTokenPlugin()],
   });
-  const logger = { error: jest.fn(), warn: jest.fn() };
+  const logger = { error: vi.fn(), warn: vi.fn() };
   await ensureMcpTokenIndexes({ auth, logger });
   expect(logger.error).not.toHaveBeenCalled();
 
@@ -154,7 +154,7 @@ test('a member token resolves its member through the real adapter and records la
     },
   });
 
-  const context = { config: {}, logger: { debug: jest.fn(), warn: jest.fn() } };
+  const context = { config: {}, logger: { debug: vi.fn(), warn: vi.fn() } };
   await resolveAuthentication(context, {
     auth,
     headers: new Headers({ authorization: `Bearer ${token}` }),

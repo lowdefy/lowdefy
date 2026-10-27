@@ -18,6 +18,7 @@ import enrichEvent from './enrichEvent.js';
 import postHogState from './postHogState.js';
 import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
+import { beforeEach, expect, test } from 'vitest';
 
 const CHAIN = 'button:nth-child="1"nth-of-type="1"text="Save"';
 

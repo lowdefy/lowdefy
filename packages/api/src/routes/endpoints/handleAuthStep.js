@@ -21,6 +21,8 @@ import { markCredential } from '@lowdefy/node-utils';
 import addStepResult from './addStepResult.js';
 import authorizeRole from '../auth/organizations/authorizeRole.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
+import isActiveMember from '../auth/organizations/isActiveMember.js';
+import provisionOrganization from '../auth/organizations/provisionOrganization.js';
 import resolveStepOrganizationId from './resolveStepOrganizationId.js';
 
 // Refusals name what was asked for, because "refused" with no subject is the
@@ -157,7 +159,8 @@ async function handleAuthStep(context, routineContext, { step }) {
       // The caller's authority is their member row in the TARGET organization,
       // which is the same question the organization endpoint would ask, asked
       // one layer earlier so the adapter-direct and admin-plugin steps get it
-      // too.
+      // too. A suspended row holds no authority - the caller may be active in
+      // another organization and name this one.
       const callerMember = await adapter.findOne({
         model: 'member',
         where: [
@@ -166,7 +169,7 @@ async function handleAuthStep(context, routineContext, { step }) {
         ],
       });
       if (
-        type.isNone(callerMember) ||
+        !isActiveMember({ member: callerMember }) ||
         !authorizeRole({ permissions: authority.permissions, role: callerMember.role })
       ) {
         throw new AuthorizationError(
@@ -178,7 +181,8 @@ async function handleAuthStep(context, routineContext, { step }) {
       // A step that writes the user row reaches a row shared by the whole
       // deployment, so org authority alone would let an administrator of any
       // organization reach any user. Membership in the same organization is
-      // what makes the target the caller's business. Steps that write a member
+      // what makes the target the caller's business, suspended or not - an
+      // administrator still manages a suspended member. Steps that write a member
       // row declare no targetUser - their target is already a row there. An
       // absent property is the step's own required-property error, so leave it
       // to the step.
@@ -210,6 +214,9 @@ async function handleAuthStep(context, routineContext, { step }) {
   // caller-scoped grant steps read it to find the grant behind the call.
   // markCredential lets a step that makes a credential (a member token) keep
   // it out of every log line for the rest of the request.
+  // provisionOrganization is the engine's organization-and-owner write, which
+  // CreateOrganization makes through it so the signup mint and the step write
+  // the owner row one way, behind the same unique indexes.
   const result = await stepFn({
     acting,
     auth: context.auth,
@@ -218,6 +225,8 @@ async function handleAuthStep(context, routineContext, { step }) {
     organization: context.organization ?? null,
     organizationId,
     properties: evaluatedProperties,
+    provisionOrganization: ({ organization, userId }) =>
+      provisionOrganization({ auth: context.auth, logger, organization, userId }),
   });
 
   addStepResult(context, routineContext, {

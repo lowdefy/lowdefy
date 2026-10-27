@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import Elasticsearch from './Elasticsearch.js';
+import { expect, test } from 'vitest';
 
 const schema = Elasticsearch.schema;
 

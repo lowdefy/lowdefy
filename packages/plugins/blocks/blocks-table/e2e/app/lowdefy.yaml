@@ -28,6 +28,9 @@ connections:
       collection: table_people
       write: true
 
+api:
+  - _ref: ../../src/blocks/Table/tests/table_rows_endpoint.yaml
+
 pages:
   - _ref: ../../src/blocks/Table/tests/Table.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/TableLinkTarget.e2e.yaml
@@ -46,6 +49,7 @@ pages:
   - _ref: ../../src/blocks/Table/tests/toolbar.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/views.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/bulk.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/selectable.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/enrichment.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/polish.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/loading.e2e.yaml

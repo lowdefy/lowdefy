@@ -26,6 +26,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import nunjucks from 'nunjucks';
 import dateFilter from './dateFilter.js';
+import { describe, expect, test } from 'vitest';
 
 dayjs.extend(utc);
 

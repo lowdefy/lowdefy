@@ -15,25 +15,95 @@
 */
 
 import { randomUUID } from 'node:crypto';
+import fs from 'node:fs';
 
 import chokidar from 'chokidar';
 import { streamSSE } from 'hono/streaming';
 
+import pollTab from '../../lib/docs/pollTab.js';
 import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
+import { remoteCallerHeader } from '../../lib/server/pairingHeaders.js';
 import readRecordingCookie from '../../lib/server/recording/readRecordingCookie.js';
+
+const PLATFORMS = ['ios', 'android'];
+
+// A phone shell (Lowdefy Dev) names its shell version in x-lowdefy-shell, and
+// its platform and bundle id in the query; the manager's proxy marks a phone
+// paired over the network (remoteCallerHeader). A browser tab is no device.
+function tabDevice(c) {
+  const shell = c.req.header('x-lowdefy-shell');
+  if (shell === undefined) {
+    return null;
+  }
+  const platform = c.req.query('platform');
+  return {
+    shell,
+    platform: PLATFORMS.includes(platform) ? platform : null,
+    app: c.req.query('app') ?? null,
+    paired: c.req.header(remoteCallerHeader) !== undefined,
+  };
+}
 
 // A verified recording cookie means the dev server's own headless browser
 // opened the tab: a journey run ({ source }), or a headless
 // tool ('off'). A developer's tab carries none.
-function tabOrigin(cookieHeader) {
-  const recording = readRecordingCookie(cookieHeader);
+function tabOrigin(c) {
+  const device = tabDevice(c);
+  const recording = readRecordingCookie(c.req.header('cookie'));
   if (recording === null) {
-    return { source: 'dev', automated: false };
+    return { source: 'dev', automated: false, device };
   }
   if (recording === 'off') {
-    return { source: 'headless', automated: true };
+    return { source: 'headless', automated: true, device };
   }
-  return { source: recording.source, automated: true };
+  return { source: recording.source, automated: true, device };
+}
+
+// Every tab's stream shares one watcher on build/reload: a watcher per
+// connection held one fs handle per open tab, headless journey and screenshot
+// tabs included. Same shape as lib/docs/devEventBus.js.
+const subscribers = new Set();
+
+let watcher = null;
+
+function notifySubscribers() {
+  [...subscribers].forEach((notify) => notify());
+}
+
+function startWatcher() {
+  watcher = chokidar.watch(['./build/reload'], {
+    persistent: true,
+    ignoreInitial: true,
+  });
+  watcher.on('add', notifySubscribers);
+  watcher.on('change', notifySubscribers);
+  // Do not reload on unlink — cleanBuildDirectory deletes build/reload during
+  // skeleton rebuilds, which would send a premature SSE event before the new
+  // build artifacts are written. The real reload comes via add/change when
+  // reloadClients() creates the file after the build completes.
+}
+
+// The close waits until the event being handled is done, for the reason
+// devEventBus.js gives: chokidar 4 registers a new file's watch handle only
+// after its add event returns, so a close made inside it would leave that
+// handle open for the next watcher of build/reload to share.
+function stopWatcher() {
+  const stopping = watcher;
+  watcher = null;
+  return new Promise((resolve) => setImmediate(resolve)).then(() => stopping.close());
+}
+
+function subscribeToReload(notify) {
+  subscribers.add(notify);
+  if (watcher === null) {
+    startWatcher();
+  }
+  return () => {
+    if (!subscribers.delete(notify)) return;
+    if (subscribers.size === 0 && watcher !== null) {
+      stopWatcher();
+    }
+  };
 }
 
 // SSE endpoint — notifies the client when build/reload is written so it can
@@ -50,38 +120,49 @@ function tabOrigin(cookieHeader) {
 // would force a reconnect on every navigation — but posted by
 // client/Inspector.jsx to /api/dev-inspect/page (routes/devInspect.js) as
 // { tabId, pageId } whenever it changes.
+function readReloadStamp() {
+  try {
+    return fs.readFileSync('./build/reload', 'utf8');
+  } catch {
+    // No build has finished since the build directory was cleaned.
+    return null;
+  }
+}
+
+// GET /api/reload?transport=poll[&tabId=<id>] is the same channel for a tab
+// that cannot read an event stream (a phone shell whose fetch cannot stream):
+// it answers { tabId, events } with the events queued since the last poll
+// (lib/docs/pollTab.js).
 async function reloadHandler(c) {
+  if (c.req.query('transport') === 'poll') {
+    return c.json(
+      pollTab({
+        tabId: c.req.query('tabId'),
+        origin: tabOrigin(c),
+        readReloadStamp,
+      })
+    );
+  }
   return streamSSE(c, async (stream) => {
-    const watcher = chokidar.watch(['./build/reload'], {
-      persistent: true,
-      ignoreInitial: true,
+    const unsubscribe = subscribeToReload(() => {
+      stream.writeSSE({ event: 'reload', data: JSON.stringify({}) });
     });
 
     const tabId = randomUUID();
     registerTab({
       id: tabId,
       send: (event, data) => stream.writeSSE({ event, data: JSON.stringify(data) }),
-      ...tabOrigin(c.req.header('cookie')),
+      ...tabOrigin(c),
     });
 
     let open = true;
     stream.onAbort(() => {
       open = false;
-      watcher.close();
+      unsubscribe();
       unregisterTab({ id: tabId });
     });
 
     await stream.writeSSE({ event: 'tab', data: JSON.stringify({ tabId }) });
-
-    const reload = () => {
-      stream.writeSSE({ event: 'reload', data: JSON.stringify({}) });
-    };
-    watcher.on('add', () => reload());
-    watcher.on('change', () => reload());
-    // Do not reload on unlink — cleanBuildDirectory deletes build/reload during
-    // skeleton rebuilds, which would send a premature SSE event before the new
-    // build artifacts are written. The real reload comes via add/change when
-    // reloadClients() creates the file after the build completes.
 
     while (open) {
       await stream.sleep(15000);

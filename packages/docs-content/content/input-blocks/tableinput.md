@@ -348,7 +348,7 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `defaultView.sort` | array | - | Sort order: `[{ key, desc }]`. |
 | `defaultView.sort.$.key` | string | - |  |
 | `defaultView.sort.$.desc` | boolean | - |  |
-| `defaultView.filter` | object \| null | - | Filter condition: `{ and: [...] }` / `{ or: [...] }` groups of `{ key, op, value }` leaves. Operators depend on the column type; `{ $user: path }` values read the `user` property. |
+| `defaultView.filter` | object \| null | - | Filter condition: `{ and: [...] }` / `{ or: [...] }` groups of `{ key, op, value }` leaves. Operators depend on the column type; `{ $user: path }` values read the `user` property. Date `within` takes a relative date `{ last \| next: n, unit: day \| week \| month \| year }`, and `before` and `after` take a date or a relative date, so `{ op: before, value: { last: 3, unit: month } }` keeps meaning "before 3 months ago". |
 | `defaultView.search` | string \| null | - | Search text: rows match when every word appears (case-insensitive) in the display text of the searched columns. |
 | `defaultView.group` | array | - | Group rows by these columns, outermost first: `[{ key }]`. Only columns with `groupable: true` group; groups follow the sort on their column, else option order, else first appearance, and empty values group as "(Empty)" last. |
 | `defaultView.group.$.key` | string | - |  |
@@ -361,6 +361,7 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `rowSelection.type` | string | `"checkbox"` | Multiple (checkbox) or single (radio) selection. Enum: `checkbox`, `radio`. |
 | `rowSelection.preserve` | boolean | `false` | Keep selected keys of rows that leave `data`. Always on in server mode. |
 | `rowSelection.cascade` | boolean | `false` | In a tree, selecting or clearing a row also selects or clears all its descendants. |
+| `rowSelection.selectable` | object | - | A condition (`{ key, op, value }`, or `and` / `or` lists) tested against the row. Rows that fail it have a disabled checkbox, are skipped by the header checkbox and by select-all, and are left out of its checked state. An `{ all: true }` selection lists the rows it rejects in `except`; in server mode those are the loaded rows, and the server resolves the rest. |
 | `tree` | object | - | Show rows as a tree (client data only): rows are indented under their parent with an expand chevron in the first column, Right and Left expand and collapse, sorting sorts within each level and a filter keeps the ancestors of matching rows. The expanded row keys are the `expanded` part of the table value. Give exactly one of `childrenField` or `parentField`. |
 | `tree.childrenField` | string | - | Dot path to each row's child rows (nested data). |
 | `tree.parentField` | string | - | Dot path to the row key of each row's parent (flat data). Rows whose parent is not in `data` are roots. |
@@ -395,7 +396,7 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `toolbar` | boolean \| object | `false` | The toolbar above the table. `true` turns on every item; an object turns on the listed items. |
 | `toolbar.views` | boolean | `false` | Saved view tabs (needs `views`), with the unsaved changes strip. |
 | `toolbar.search` | boolean | `false` | A search box that writes `view.search` (Cmd/Ctrl+F focuses it while the table has focus). |
-| `toolbar.quickFilters` | array | - | Column keys to show as quick filter chips. Columns with `options` get a checkbox list (an `in` condition); others open the column filter. |
+| `toolbar.quickFilters` | array | - | Column keys to show as quick filter chips. Columns with `options` get a checkbox list (an `in` condition), with a search box over its labels when it has more than 8 options; others open the column filter. |
 | `toolbar.filter` | boolean | `false` | A Filter button that edits the whole `view.filter`. |
 | `toolbar.sort` | boolean | `false` | A Sort button to add, remove, reorder and flip sort levels. |
 | `toolbar.group` | boolean | `false` | A Group button to pick and order group levels (groupable columns). |
@@ -403,6 +404,11 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `toolbar.density` | boolean | `false` | A compact / default / comfortable density toggle, with a Wrap toggle for `view.wrap`. |
 | `toolbar.export` | boolean | `false` | An Export button that downloads the view as CSV. |
 | `views` | array \| null | - | Saved views, from any source (often a request). Selecting a tab loads its view; changes show an unsaved changes strip with Save, Save as and Discard. |
+| `viewMenu` | array | - | The items of the active view tab's menu, in place of Delete view: for example Rename, Duplicate and Archive. Clicking one fires `onViewMenu` with its `key` and the view `id`. Without it the menu has Delete view, firing `onViewDelete` (disabled on a `locked` view). |
+| `viewMenu.$.key` | string | - | The item key `onViewMenu` receives. |
+| `viewMenu.$.label` | string | - | The item text. Defaults to the key. |
+| `viewMenu.$.danger` | boolean | - | Show the item in the danger colour. |
+| `viewMenu.$.confirm` | boolean \| string | - | Ask before firing: `true` asks "Are you sure?", a string asks that message. |
 | `activeView` | string \| number \| object \| null | - | The id of the active saved view (an ObjectId id matches by its hex). Defaults to the first view. Changing it selects that view. |
 | `persist` | object | - | Keep the user's view between visits. Off by default. The selection is never persisted. |
 | `persist.key` | string | - | Storage key (localStorage) or query parameter name (url). |
@@ -429,8 +435,10 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `onRowDoubleClick` | `{ row, rowKey, index }` | Trigger when a row is double clicked. |
 | `onCellClick` | `{ row, rowKey, column, value }` | Trigger actions when a cell is clicked. Clicks on controls in the cell do not trigger it. |
 | `onViewSelect` | `{ id }` | Trigger when a saved view tab is selected, after its view loads. |
-| `onViewSave` | `{ view, id, title, shared }` | Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view). The app stores views; update `views` (and `activeView`) with the result. |
-| `onViewDelete` | `{ id }` | Trigger when the user deletes a saved view from its tab menu. |
+| `onViewSave` | `{ view, id, title, shared }` | Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view), unless the block has `onViewSaveAs` actions. The app stores views; update `views` (and `activeView`) with the result. |
+| `onViewSaveAs` | `{ view }` | Trigger when the user clicks Save as, in place of the built-in title and Shared popover, when the block has actions on it. Open your own dialog (for example a modal asking for a name and description), store the view, then update `views` and `activeView` as after `onViewSave`. |
+| `onViewMenu` | `{ key, id }` | Trigger when the user picks a `viewMenu` item on a saved view tab, after its confirmation when the item has `confirm`. |
+| `onViewDelete` | `{ id }` | Trigger when the user deletes a saved view from its tab menu (the default menu, without `viewMenu`). |
 | `onCellLink` | `{ link, row, value }` | Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do. |
 | `onCellButton` | `{ row, rowKey, value, button, buttonIndex }` | Documentation reference - the event fired is the `eventName` of each button in a `buttons` cell. Define any number of named events on the block, such as `onEdit`. |
 | `onCellMenuItem` | `{ row, rowKey, value, item, itemIndex }` | Documentation reference - the event fired is the `eventName` of each item in a `menu` cell. |

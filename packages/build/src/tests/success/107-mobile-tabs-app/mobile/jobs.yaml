@@ -1,0 +1,18 @@
+id: jobs
+type: Box
+requests:
+  - id: get_jobs
+    type: AxiosHttp
+    connectionId: api
+    properties:
+      url: /jobs
+events:
+  onMount:
+    - id: fetch
+      type: Request
+      params: get_jobs
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Jobs

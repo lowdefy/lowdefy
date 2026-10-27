@@ -19,6 +19,7 @@ import assert from 'node:assert/strict';
 import initAggregates from './initAggregates.js';
 import initCollapsedGroups from './initCollapsedGroups.js';
 import initGrouping from './initGrouping.js';
+import { test } from 'vitest';
 
 const config = {
   columnsByKey: new Map([

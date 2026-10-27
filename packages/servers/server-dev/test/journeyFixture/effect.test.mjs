@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // expect.effect, run by the real runner over the fixture app: it fails after
 // a click that did nothing (a dead click), and passes after one

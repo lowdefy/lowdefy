@@ -1,0 +1,32 @@
+# G6: Nested Action List
+# ======================
+# Tests that a _ref returning a list of actions, placed as one item of an
+# event's action list, fails the build with a ConfigError at the list, rather
+# than crashing the schema check. Action lists are not flattened: the engine
+# runs each item as an action.
+#
+# Several events hold the nested list, so the schema check passes its error cap.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: save
+        type: Button
+        events:
+          onClick:
+            - id: first
+              type: SetState
+              params:
+                key: value
+            - _ref: actions.yaml
+            - _ref: actions.yaml
+            - _ref: actions.yaml
+            - _ref: actions.yaml
+          onBlur:
+            - id: blur
+              type: SetState
+              params:
+                key: value

@@ -19,6 +19,7 @@ import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne.js';
 import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
 import getTestCollection from '../../../../test/getTestCollection.js';
+import { beforeEach, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBVersionedUpdateOne.meta;
 const schema = MongoDBVersionedUpdateOne.schema;
@@ -496,7 +497,7 @@ test('updateInsertOne mongodb error', async () => {
     write: true,
   };
   await expect(MongoDBVersionedUpdateOne({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBVersionedUpdateOne command on collection "updateInsertOne" as malformed.'
+    'MongoDB rejected the MongoDBVersionedUpdateOne command on collection "updateInsertOne" as malformed.'
   );
 });
 

@@ -19,6 +19,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import pluginChecksNeedRebuild from './pluginChecksNeedRebuild.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let serverDirectory;
 let buildDirectory;

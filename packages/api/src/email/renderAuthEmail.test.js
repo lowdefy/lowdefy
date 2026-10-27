@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { InvitationEmail } from '@lowdefy/email-templates';
 
 import renderAuthEmail from './renderAuthEmail.js';
+import { describe, expect, test } from 'vitest';
 
 const logger = { debug() {}, error() {}, warn() {} };
 
@@ -79,7 +80,7 @@ describe('stock render per flow', () => {
     expect(result.text.length).toBeGreaterThan(0);
   });
 
-  test('throws ConfigError for an unknown flow', async () => {
+  test('throws LowdefyInternalError for an unknown flow: the engine names the flows', async () => {
     await expect(
       renderAuthEmail({
         flow: 'notAFlow',
@@ -88,7 +89,7 @@ describe('stock render per flow', () => {
         baseURL: undefined,
         context: createContext(),
       })
-    ).rejects.toThrow(ConfigError);
+    ).rejects.toThrow(LowdefyInternalError);
   });
 });
 

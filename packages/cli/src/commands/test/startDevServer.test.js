@@ -14,30 +14,34 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { EventEmitter } from 'events';
 
-const mockFindAvailablePort = jest.fn();
-const mockReadDevInstance = jest.fn();
-const mockSpawnProcess = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+const mockFindAvailablePort = vi.fn();
+const mockReadDevInstance = vi.fn();
+const mockSpawnProcess = vi.fn();
+vi.doMock('@lowdefy/node-utils', () => ({
   findAvailablePort: mockFindAvailablePort,
   readDevInstance: mockReadDevInstance,
   spawnProcess: mockSpawnProcess,
 }));
 
-const mockGetServer = jest.fn();
-const mockAddCustomPluginsAsDeps = jest.fn();
-const mockEnsurePnpmWorkspaceYaml = jest.fn();
-const mockInstallServer = jest.fn();
-jest.unstable_mockModule('../../utils/getServer.js', () => ({ default: mockGetServer }));
-jest.unstable_mockModule('../../utils/addCustomPluginsAsDeps.js', () => ({
+const mockGetServer = vi.fn();
+const mockAddCustomPluginsAsDeps = vi.fn();
+const mockEnsurePnpmWorkspaceYaml = vi.fn();
+const mockInstallServer = vi.fn();
+vi.doMock('../../utils/getServer.js', () => ({ default: mockGetServer }));
+vi.doMock('../../utils/addCustomPluginsAsDeps.js', () => ({
   default: mockAddCustomPluginsAsDeps,
 }));
-jest.unstable_mockModule('../../utils/ensurePnpmWorkspaceYaml.js', () => ({
+vi.doMock('../../utils/ensurePnpmWorkspaceYaml.js', () => ({
   default: mockEnsurePnpmWorkspaceYaml,
 }));
-jest.unstable_mockModule('../../utils/installServer.js', () => ({ default: mockInstallServer }));
+vi.doMock('../../utils/installServer.js', () => ({ default: mockInstallServer }));
+
+const mockStopSampler = vi.fn();
+const mockSampleServerResources = vi.fn();
+vi.doMock('./sampleServerResources.js', () => ({ default: mockSampleServerResources }));
 
 const CHILD_PID = 4242;
 const isWindows = process.platform === 'win32';
@@ -54,7 +58,7 @@ function createChild() {
   child.pid = CHILD_PID;
   child.exitCode = null;
   child.signalCode = null;
-  child.kill = jest.fn((signal) => exitOnSignal(child, signal));
+  child.kill = vi.fn((signal) => exitOnSignal(child, signal));
   return child;
 }
 
@@ -78,18 +82,21 @@ beforeEach(() => {
     directories: { config: '/app', dev: '/app/.lowdefy/dev' },
     options: { port: 3000, logLevel: 'info', refResolver: undefined },
     pnpmCmd: 'pnpm',
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() },
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() },
   };
   child = createChild();
   killedGroups = [];
   // stop() signals the child's process group (a negative pid); intercept it instead of
   // sending a real signal.
-  process.kill = jest.fn((pid, signal) => {
+  process.kill = vi.fn((pid, signal) => {
     killedGroups.push({ pid, signal });
     exitOnSignal(child, signal);
   });
   mockFindAvailablePort.mockResolvedValue(3228);
   mockSpawnProcess.mockReturnValue(child);
+  mockStopSampler.mockReset();
+  mockStopSampler.mockResolvedValue(null);
+  mockSampleServerResources.mockReturnValue({ stop: mockStopSampler });
 });
 
 afterEach(() => {
@@ -186,4 +193,41 @@ test('startDevServer throws when the server process exits before it is ready', a
   await expect(startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 1000 })).rejects.toThrow(
     'Development server exited with code 1 before it was ready.'
   );
+});
+
+test('startDevServer samples the server from its spawn and ends stop() with the resource line', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockReadDevInstance.mockReturnValue({ state: 'ready', url: 'http://localhost:3228' });
+  mockStopSampler.mockImplementation(async () => {
+    // The last sample is taken before the server is signalled.
+    expect(child.signalCode).toBeNull();
+    return { peakBytes: 0.71 * 1024 ** 3, cpuSeconds: 94.4 };
+  });
+  const server = await startDevServer({ context, pollIntervalMs: 1 });
+  expect(mockSampleServerResources).toHaveBeenCalledWith({ pid: CHILD_PID });
+  await server.stop();
+  expect(mockStopSampler).toHaveBeenCalledTimes(1);
+  expectStoppedOnce();
+  expect(context.logger.info).toHaveBeenLastCalledWith(
+    'Resources (approximate): server peak 0.71 GB, CPU 94 s, including data store and browsers.'
+  );
+});
+
+test('startDevServer logs no resource line when nothing was measured', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockReadDevInstance.mockReturnValue({ state: 'ready', url: 'http://localhost:3228' });
+  const server = await startDevServer({ context, pollIntervalMs: 1 });
+  await server.stop();
+  expect(context.logger.info.mock.calls.flat().some((line) => line.startsWith('Resources'))).toBe(
+    false
+  );
+});
+
+test('startDevServer stops the sampler when the server never becomes ready', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockReadDevInstance.mockReturnValue(null);
+  await expect(startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 20 })).rejects.toThrow(
+    'Development server was not ready within 20ms.'
+  );
+  expect(mockStopSampler).toHaveBeenCalledTimes(1);
 });

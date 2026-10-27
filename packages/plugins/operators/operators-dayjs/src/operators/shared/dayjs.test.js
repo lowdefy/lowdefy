@@ -15,6 +15,7 @@
 */
 
 import _dayjs from './dayjs.js';
+import { describe, expect, test } from 'vitest';
 
 describe('_dayjs.format', () => {
   const methodName = 'format';

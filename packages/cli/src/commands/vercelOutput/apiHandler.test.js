@@ -24,6 +24,7 @@ import { createRequire } from 'module';
 import { pathToFileURL } from 'url';
 
 import apiHandler from './apiHandler.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 // Runs the generated function entry in its own process against a small Hono
 // app, the way Vercel runs it: the entry's default export is a Node HTTP
@@ -64,7 +65,7 @@ export default function createApp(options) {
     return new Response(
       new ReadableStream({
         pull(controller) {
-          if (sent) throw new Error('stream failed');
+          if (sent) throw new Error('stream failed: planted-secret');
           sent = true;
           controller.enqueue(new TextEncoder().encode('partial'));
         },
@@ -146,6 +147,19 @@ export default async function initServer(options) {
 }
 `;
 
+// The server's log projection and secret scrub, stubbed so the test can see the entry used them.
+const serializeErrorForLog = `
+export default function serializeErrorForLog(error) {
+  return { projected: true, name: error.name, message: error.message };
+}
+`;
+
+const scrubSecrets = `
+export default function scrubSecrets(text) {
+  return text.replaceAll('planted-secret', '[REDACTED]');
+}
+`;
+
 const runner = `
 globalThis.sentry = { flushes: 0, waitUntil: 0 };
 globalThis[Symbol.for('@vercel/request-context')] = {
@@ -161,6 +175,7 @@ server.listen(0, '127.0.0.1', () => console.log(server.address().port));
 
 let serverDirectory;
 let child;
+let stderr = '';
 let baseUrl;
 let exited;
 
@@ -171,6 +186,12 @@ beforeAll(async () => {
   fs.writeFileSync(path.join(serverDirectory, 'package.json'), '{"type":"module"}');
   fs.writeFileSync(path.join(serverDirectory, 'src', 'app.js'), app);
   fs.writeFileSync(path.join(serverDirectory, 'src', 'initServer.js'), initServer);
+  fs.mkdirSync(path.join(serverDirectory, 'lib', 'server', 'log'), { recursive: true });
+  fs.writeFileSync(
+    path.join(serverDirectory, 'lib', 'server', 'log', 'serializeErrorForLog.js'),
+    serializeErrorForLog
+  );
+  fs.writeFileSync(path.join(serverDirectory, 'lib', 'server', 'scrubSecrets.js'), scrubSecrets);
   fs.writeFileSync(path.join(serverDirectory, 'api', 'index.js'), apiHandler);
   ['hono', '@hono/node-server', 'ws'].forEach((name) => {
     const linkPath = path.join(serverDirectory, 'node_modules', name);
@@ -193,7 +214,6 @@ beforeAll(async () => {
     ],
     { stdio: ['ignore', 'pipe', 'pipe'] }
   );
-  let stderr = '';
   child.stderr.on('data', (data) => {
     stderr += data;
   });
@@ -360,4 +380,14 @@ test('the function entry flushes Sentry when a response fails after its headers 
 
   expect(await waitFor(async () => (await readSentry()).flushes >= before.flushes + 2)).toBe(true);
   expect(child.exitCode).toBe(null);
+});
+
+test('the function entry writes a failed request as the scrubbed log projection', async () => {
+  await fetch(`${baseUrl}/broken-stream`)
+    .then((response) => response.text())
+    .catch(() => {});
+
+  expect(await waitFor(async () => stderr.includes('"projected":true'))).toBe(true);
+  expect(stderr).toContain('stream failed: [REDACTED]');
+  expect(stderr).not.toContain('planted-secret');
 });

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import CallMethod from './CallMethod.js';
 
-const mockCallMethod = jest.fn();
+const mockCallMethod = vi.fn();
 const methods = { callMethod: mockCallMethod };
 
 test('CallMethod mock test', () => {

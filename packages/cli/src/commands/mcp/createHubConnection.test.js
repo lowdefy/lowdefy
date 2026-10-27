@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const connectHub = jest.fn();
+const connectHub = vi.fn();
 
-jest.unstable_mockModule('../hub/connectHub.js', () => ({ default: connectHub }));
+vi.doMock('../hub/connectHub.js', () => ({ default: connectHub }));
 
 const { default: createHubConnection } = await import('./createHubConnection.js');
 
 function fakeHubClient() {
   return {
-    close: jest.fn(),
-    onClose: jest.fn(),
-    request: jest.fn(async (method) => ({ method })),
+    close: vi.fn(),
+    onClose: vi.fn(),
+    request: vi.fn(async (method) => ({ method })),
   };
 }
 

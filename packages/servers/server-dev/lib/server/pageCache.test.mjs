@@ -15,6 +15,7 @@
 */
 
 import PageCache from './pageCache.mjs';
+import { expect, test } from 'vitest';
 
 test('isCompiled returns false for uncompiled page', () => {
   const cache = new PageCache();

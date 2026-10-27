@@ -15,6 +15,7 @@
 */
 
 import base64 from './base64.js';
+import { expect, test } from 'vitest';
 
 console.error = () => {};
 
@@ -24,11 +25,44 @@ test('_base64.decode a string', () => {
   ).toEqual('A string value');
 });
 
+test('_base64.decode a UTF-8 string', () => {
+  expect(
+    base64({ params: 'Y2Fmw6kg5pel5pys8J+Ygg==', location: 'locationId', methodName: 'decode' })
+  ).toEqual('café 日本😂');
+});
+
+test('_base64.decode a base64url string without padding', () => {
+  expect(base64({ params: 'PDw_Pz8-Pg', location: 'locationId', methodName: 'decode' })).toEqual(
+    '<<???>>'
+  );
+  expect(
+    base64({ params: 'Y2Fmw6kg5pel5pys8J-Ygg', location: 'locationId', methodName: 'decode' })
+  ).toEqual('café 日本😂');
+});
+
+test('_base64.decode a string with leading or trailing whitespace', () => {
+  expect(base64({ params: 'SGVsbG8=\n', location: 'locationId', methodName: 'decode' })).toEqual(
+    'Hello'
+  );
+  expect(
+    base64({ params: 'SGVsbG8gd29ybGQh\n', location: 'locationId', methodName: 'decode' })
+  ).toEqual('Hello world!');
+  expect(base64({ params: ' SGVsbG8= ', location: 'locationId', methodName: 'decode' })).toEqual(
+    'Hello'
+  );
+});
+
+test('_base64.decode throws when the decoded bytes are not valid UTF-8', () => {
+  expect(() =>
+    base64({ params: 'Y2Fm6Q==', location: 'locationId', methodName: 'decode' })
+  ).toThrow('_base64.decode received base64 that does not decode to valid UTF-8 text.');
+});
+
 test('_base64.decode a number', () => {
   expect(() =>
     base64({ params: 10, location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -36,7 +70,7 @@ test('_base64.decode a boolean', () => {
   expect(() =>
     base64({ params: true, location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -44,7 +78,7 @@ test('_base64.decode a object', () => {
   expect(() =>
     base64({ params: { a: 1 }, location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -52,7 +86,7 @@ test('_base64.decode a array', () => {
   expect(() =>
     base64({ params: ['a', 'b'], location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -60,7 +94,7 @@ test('_base64.decode undefined', () => {
   expect(() =>
     base64({ location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -68,7 +102,7 @@ test('_base64.decode null', () => {
   expect(() =>
     base64({ params: null, location: 'locationId', methodName: 'decode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.decode accepts one of the following types: string."`
+    `[Error: _base64.decode accepts one of the following types: string.]`
   );
 });
 
@@ -78,11 +112,17 @@ test('_base64.encode a string', () => {
   ).toEqual('QSBzdHJpbmcgdmFsdWU=');
 });
 
+test('_base64.encode a UTF-8 string', () => {
+  expect(base64({ params: 'café 日本😂', location: 'locationId', methodName: 'encode' })).toEqual(
+    'Y2Fmw6kg5pel5pys8J+Ygg=='
+  );
+});
+
 test('_base64.encode a number', () => {
   expect(() =>
     base64({ params: 10, location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -90,7 +130,7 @@ test('_base64.encode a boolean', () => {
   expect(() =>
     base64({ params: true, location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -98,7 +138,7 @@ test('_base64.encode a object', () => {
   expect(() =>
     base64({ params: { a: 1 }, location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -106,7 +146,7 @@ test('_base64.encode a array', () => {
   expect(() =>
     base64({ params: ['a', 'b'], location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -114,7 +154,7 @@ test('_base64.encode undefined', () => {
   expect(() =>
     base64({ location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });
 
@@ -122,6 +162,6 @@ test('_base64.encode null', () => {
   expect(() =>
     base64({ params: null, location: 'locationId', methodName: 'encode' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_base64.encode accepts one of the following types: string."`
+    `[Error: _base64.encode accepts one of the following types: string.]`
   );
 });

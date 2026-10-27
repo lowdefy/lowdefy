@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import validateSlots from './validateSlots.js';
 
 function createPageContext(blockMetas = {}) {
   return {
+    blockMetas,
     context: {
-      handleWarning: jest.fn(),
-      blockMetas,
+      handleWarning: vi.fn(),
     },
   };
 }

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -27,24 +27,26 @@ const fixturesDir = path.join(__dirname, 'tests/success');
 process.env.LOWDEFY_GIT_SHA = 'test-git-sha-for-snapshots';
 
 // Mock writeBuildArtifact to capture artifacts instead of writing to disk
-const mockWriteBuildArtifact = jest.fn();
-jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
+const mockWriteBuildArtifact = vi.fn();
+vi.doMock('./utils/writeBuildArtifact.js', () => ({
   default: () => mockWriteBuildArtifact,
 }));
 
 // Mock updateServerPackageJson to skip server package.json update
-jest.unstable_mockModule('./build/full/updateServerPackageJson.js', () => ({
-  default: jest.fn(() => Promise.resolve()),
+vi.doMock('./build/full/updateServerPackageJson.js', () => ({
+  default: vi.fn(() => Promise.resolve()),
 }));
 
 // Mock copyPublicFolder to skip public folder copy
-jest.unstable_mockModule('./build/copyPublicFolder.js', () => ({
-  default: jest.fn(() => Promise.resolve()),
+vi.doMock('./build/copyPublicFolder.js', () => ({
+  default: vi.fn(() => Promise.resolve()),
 }));
 
 // Import after mocking
 const { default: build } = await import('./index.js');
-const { snapshotTypesMap } = await import('./test-utils/runBuildForSnapshots.js');
+const { snapshotTypesMap, snapshotTypesMapMobile } = await import(
+  './test-utils/runBuildForSnapshots.js'
+);
 const { default: makeId } = await import('./utils/makeId.js');
 
 /**
@@ -105,16 +107,17 @@ async function runBuildForFixture(fixtureDir) {
   });
 
   const logger = {
-    info: jest.fn(),
-    log: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    succeed: jest.fn(),
+    info: vi.fn(),
+    log: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    succeed: vi.fn(),
   };
 
   try {
     await build({
       customTypesMap: snapshotTypesMap,
+      customTypesMapMobile: snapshotTypesMapMobile,
       directories: {
         config: configDir,
         build: path.join(configDir, '.lowdefy'),

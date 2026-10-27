@@ -15,18 +15,17 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 const mockConfig = {};
-jest.unstable_mockModule('../build/config.js', () => ({ default: mockConfig }));
+vi.doMock('../build/config.js', () => ({ default: mockConfig }));
 
 // The resolver is built from config at module load, so each case loads a fresh
-// module instance (the query string) against its own trustedProxies.
-let loadCount = 0;
+// module instance (vi.resetModules) against its own trustedProxies.
 async function loadGetClientAddress({ trustedProxies }) {
   mockConfig.trustedProxies = trustedProxies;
-  loadCount += 1;
-  const { default: getClientAddress } = await import(`./getClientAddress.js?case=${loadCount}`);
+  vi.resetModules();
+  const { default: getClientAddress } = await import('./getClientAddress.js');
   return getClientAddress;
 }
 
@@ -43,7 +42,7 @@ async function resolve({ getClientAddress, clientAddressHeader, headers, peerAdd
 }
 
 function createLogger() {
-  return { warn: jest.fn() };
+  return { warn: vi.fn() };
 }
 
 test('getClientAddress takes the connection peer and ignores X-Forwarded-For without trusted proxies', async () => {

@@ -15,6 +15,7 @@
 */
 
 import computeWindow from './computeWindow.js';
+import { expect, test } from 'vitest';
 
 const layout = { center: [], centerEnds: [], centerStarts: [], startWidth: 0, endWidth: 0 };
 

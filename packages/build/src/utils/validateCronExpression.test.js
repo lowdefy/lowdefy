@@ -15,6 +15,7 @@
 */
 
 import validateCronExpression from './validateCronExpression.js';
+import { expect, test } from 'vitest';
 
 test('validateCronExpression accepts valid expressions', () => {
   expect(validateCronExpression('0 6 * * *')).toBe(null);

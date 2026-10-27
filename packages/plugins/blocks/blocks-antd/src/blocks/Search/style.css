@@ -66,6 +66,36 @@
     letter-spacing: 0.05em;
   }
 
+  .lf-search-group-count {
+    margin-left: var(--ant-margin-xs);
+    font-weight: 400;
+    color: var(--ant-color-text-tertiary);
+  }
+
+  .lf-search-see-all {
+    padding: var(--ant-padding-xs) var(--ant-padding-md);
+    font-size: var(--ant-font-size-sm);
+    color: var(--ant-color-primary);
+    cursor: pointer;
+  }
+
+  .lf-search-see-all:hover {
+    text-decoration: underline;
+  }
+
+  .lf-search-pinned {
+    border-top: 1px solid var(--ant-color-split);
+    border-radius: 0;
+    margin-top: var(--ant-margin-xs);
+  }
+
+  .lf-search-footer {
+    padding: var(--ant-padding-xs) var(--ant-padding-md) 0;
+    border-top: 1px solid var(--ant-color-split);
+    font-size: var(--ant-font-size-sm);
+    color: var(--ant-color-text-tertiary);
+  }
+
   .lf-search-highlight mark {
     background-color: var(--ant-color-warning-bg);
     color: inherit;
@@ -98,6 +128,45 @@
   @media (max-width: 640px) {
     .lf-search-trigger-label {
       display: none;
+    }
+  }
+
+  /* A full-screen sheet on a phone. The results take the height left, so the pinned row and
+     footer stay in view above the keyboard (dvh follows the visible viewport). */
+  @media (max-width: 575.98px) {
+    .lf-search-modal {
+      top: 0;
+      margin: 0;
+      padding: 0;
+      max-width: 100vw;
+      width: 100vw !important;
+    }
+
+    .lf-search-modal .ant-modal-container,
+    .lf-search-modal .ant-modal-content {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      border-radius: 0;
+    }
+
+    .lf-search-modal .ant-modal-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .lf-search-modal .ant-modal-body > div {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .lf-search-modal .lf-search-results {
+      flex: 1;
+      max-height: none;
     }
   }
 }

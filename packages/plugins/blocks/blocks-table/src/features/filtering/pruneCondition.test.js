@@ -17,6 +17,7 @@
 import getFilteredKeys from './getFilteredKeys.js';
 import isCompleteLeaf from './isCompleteLeaf.js';
 import pruneCondition from './pruneCondition.js';
+import { expect, test } from 'vitest';
 
 test('isCompleteLeaf needs a key, an operator and a value unless the operator takes none', () => {
   expect(isCompleteLeaf({ key: 'a', op: 'eq', value: 1 })).toBe(true);

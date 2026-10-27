@@ -17,6 +17,7 @@
 import compileSegments from './compileSegments.js';
 import traceRecord from './traceRecord.js';
 import { blockMetas, traceRecords } from './testTrace.js';
+import { expect, test } from 'vitest';
 
 // The shared corpus as a test run's journey records.
 const runRecords = traceRecords.map((record) => ({ ...record, source: 'journey' }));

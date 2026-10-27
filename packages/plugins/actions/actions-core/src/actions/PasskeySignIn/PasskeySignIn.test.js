@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import PasskeySignIn from './PasskeySignIn.js';
 
 test('PasskeySignIn passes params to the passkeySignIn method', async () => {
-  const mockPasskeySignIn = jest.fn();
+  const mockPasskeySignIn = vi.fn();
   const methods = { passkeySignIn: mockPasskeySignIn };
   await PasskeySignIn({ methods, params: { callbackUrl: '/dashboard' } });
   expect(mockPasskeySignIn.mock.calls).toEqual([[{ callbackUrl: '/dashboard' }]]);
@@ -26,7 +26,7 @@ test('PasskeySignIn passes params to the passkeySignIn method', async () => {
 
 test('PasskeySignIn returns the session response from the method', async () => {
   const response = { session: {}, user: { id: 'user-1' } };
-  const methods = { passkeySignIn: jest.fn(() => Promise.resolve(response)) };
+  const methods = { passkeySignIn: vi.fn(() => Promise.resolve(response)) };
   const result = await PasskeySignIn({ methods, params: { callbackUrl: '/dashboard' } });
   expect(result).toEqual(response);
 });

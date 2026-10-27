@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -24,14 +24,14 @@ import testContext from '../../test/testContext.js';
 const operators = { ...operatorsServer };
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
-const mockRenderEmail = jest.fn();
-const mockInterpolateProperties = jest.fn();
+const mockRenderEmail = vi.fn();
+const mockInterpolateProperties = vi.fn();
 
 function createNotificationConfig(overrides = {}) {
   return {
@@ -54,7 +54,7 @@ const routes = [
 ];
 
 function createMockReadConfigFile({ notificationConfig, app = {} }) {
-  return jest.fn((path) => {
+  return vi.fn((path) => {
     if (path === 'routes.json') {
       return routes;
     }
@@ -77,7 +77,7 @@ function createTestContext({ notificationConfig, app, config } = {}) {
     readConfigFile: createMockReadConfigFile({ notificationConfig, app }),
   });
   context.notifications = {
-    NotificationEmail: Object.assign(jest.fn(), {
+    NotificationEmail: Object.assign(vi.fn(), {
       markdownProperties: ['message'],
       dataKeys: ['actions'],
     }),
@@ -119,7 +119,7 @@ function createStep({ data, serverUrl, landingPage, recordId, properties }) {
 const contact = { _id: 'UC-1', email: 'Jane@Example.com', profile: { name: 'Jane' } };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockRenderEmail.mockResolvedValue({ html: '<html>body</html>', text: 'plain body' });
   mockInterpolateProperties.mockImplementation(({ properties }) => properties);
 });
@@ -274,7 +274,7 @@ test('RenderNotification builds patterned page links from pathParams', async () 
   });
   expect(mockRenderEmail.mock.calls[0][0].links.button).toBe('https://myapp.com/tickets/s/1?tab=a');
 
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   await runRoutine(context, routineContext, {
     routine: createStep({
       data,

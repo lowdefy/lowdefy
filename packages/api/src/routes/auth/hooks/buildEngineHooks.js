@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import createAcceptActiveOrgGuardHook from '../organizations/createAcceptActiveOrgGuardHook.js';
 import createActiveOrgPolicyHook from '../organizations/createActiveOrgPolicyHook.js';
 import createAdmissionGateHook from '../organizations/createAdmissionGateHook.js';
 import createAutoJoinHook from '../organizations/createAutoJoinHook.js';
+import createMobileSessionCreateHook from '../mobile/createMobileSessionCreateHook.js';
+import createMobileSessionRefreshHook from '../mobile/createMobileSessionRefreshHook.js';
 
 // Engine-tier hook bindings - hard-coded framework behavior, not entries in
 // auth.hooks. Keyed by point; each point lists BetterAuth-native callbacks
@@ -48,6 +52,14 @@ function buildEngineHooks({ authConfig, getAuth, logger }) {
 
   if (organizations.policy === 'pinned' && organizations.signup === 'open') {
     engineHooks['user.create.after'] = [createAutoJoinHook({ getAuth, organizations })];
+  }
+
+  // Phone sessions get their own lifetime. After the organization policy hook,
+  // which picks the session's organization and leaves its expiry alone.
+  const sessionExpiresIn = authConfig.mobile?.sessionExpiresIn;
+  if (type.isNumber(sessionExpiresIn)) {
+    engineHooks['session.create.before'].push(createMobileSessionCreateHook({ sessionExpiresIn }));
+    engineHooks['session.update.before'].push(createMobileSessionRefreshHook({ sessionExpiresIn }));
   }
 
   return engineHooks;

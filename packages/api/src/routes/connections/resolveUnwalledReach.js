@@ -34,8 +34,8 @@ import createReadConfigFile from '../../context/createReadConfigFile.js';
 // match. A walled connection's database name is its databaseName property,
 // falling back to the path of its URI.
 //
-// The result maps each reaching connection id to the refusal message, logged
-// once when the check runs. checkUnwalledReach throws it as a ConfigError on
+// The result maps each reaching connection id to the refusal message, reported
+// once, through handleError at the connection's config location, when the check runs. checkUnwalledReach throws it as a ConfigError on
 // that connection's requests; every other connection is served. The check reads config and
 // secrets only, so it runs once per config build artifact, independent of the
 // tenant preflight's database probes. A check that throws is not memoized.
@@ -68,9 +68,9 @@ function collectUris(value, uris) {
   return uris;
 }
 
-async function evaluateConnectionProperties({ connectionId, evaluateOperators, readConfigFile }) {
-  const connectionConfig = await readConfigFile(`connections/${connectionId}.json`);
+async function evaluateConnectionProperties({ connectionConfig, evaluateOperators }) {
   if (!connectionConfig) return null;
+  const { connectionId } = connectionConfig;
   try {
     return evaluateOperators({
       input: connectionConfig.properties ?? {},
@@ -89,9 +89,8 @@ async function collectWalledDatabases({ evaluateOperators, readConfigFile }) {
   const walled = new Map();
   for (const entry of tenantConnections ?? []) {
     const properties = await evaluateConnectionProperties({
-      connectionId: entry.connectionId,
+      connectionConfig: await readConfigFile(`connections/${entry.connectionId}.json`),
       evaluateOperators,
-      readConfigFile,
     });
     const parsed = parseMongoUri(properties?.databaseUri);
     if (!parsed) continue;
@@ -113,11 +112,8 @@ async function findUnwalledReach(context) {
   const walled = await collectWalledDatabases({ evaluateOperators, readConfigFile });
   if (walled.size === 0) return reach;
   for (const entry of unwalledConnections) {
-    const properties = await evaluateConnectionProperties({
-      connectionId: entry.connectionId,
-      evaluateOperators,
-      readConfigFile,
-    });
+    const connectionConfig = await readConfigFile(`connections/${entry.connectionId}.json`);
+    const properties = await evaluateConnectionProperties({ connectionConfig, evaluateOperators });
     const reached = collectUris(properties, []).find(({ hosts, database }) =>
       walled.has(`${hosts}/${database}`)
     );
@@ -127,12 +123,11 @@ async function findUnwalledReach(context) {
         entry.type
       }) holds a URI to the database of walled connection "${walled.get(
         `${reached.hosts}/${reached.database}`
-      )}". Unwalled connections must not reach walled data: give the plugin a mongoConnectionId and use the walled MongoDB client (@lowdefy/connection-mongodb/walled). Requests on this connection are refused.`
+      )}". Unwalled connections must not reach walled data: give the plugin a mongoConnectionId and use the walled MongoDB client (@lowdefy/connection-mongodb/walled). Requests on this connection are refused.`,
+      { configKey: connectionConfig['~k'] }
     );
-    context.logger.error(
-      { err: error, event: 'unwalled_reach', connectionId: entry.connectionId },
-      error.message
-    );
+    error.connectionId = entry.connectionId;
+    await context.handleError(error);
     reach.set(entry.connectionId, error.message);
   }
   return reach;

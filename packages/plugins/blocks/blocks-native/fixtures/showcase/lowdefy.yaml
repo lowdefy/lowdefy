@@ -1,0 +1,52 @@
+# Acme, a made-up issue tracker that shows off the native mobile blocks: a Lowdefy phone app with
+# five tabs, a pushed issue page and a details sheet. Every page runs on static data (no
+# connections, no requests): each Screen seeds its state from the files in data/ in onInit, and the
+# Inbox and the issue page fake a 600ms load (a Wait in onMountAsync) to show their skeletons.
+#
+# Deep links (the dev shell's scheme): lowdefy-dev://inbox, lowdefy-dev://projects,
+# lowdefy-dev://issues, lowdefy-dev://issue?key=ACME-142, lowdefy-dev://assistant and
+# lowdefy-dev://search.
+lowdefy: local
+name: Acme
+
+theme:
+  darkMode: system
+  antd:
+    token:
+      # iOS indigo, the app's tint in both modes.
+      colorPrimary: '#5E5CE6'
+
+mobile:
+  homePageId: inbox
+  menus:
+    tabs:
+      - pageId: inbox
+        title: Inbox
+        icon: Inbox
+        sfSymbol: tray
+      - pageId: projects
+        title: Projects
+        icon: Folder
+        sfSymbol: folder
+      - pageId: issues
+        title: Issues
+        icon: CircleCheck
+        sfSymbol: checkmark.circle
+      - pageId: assistant
+        title: Assistant
+        icon: Sparkles
+        sfSymbol: sparkles
+      - pageId: search
+        title: Search
+        icon: Search
+        role: search
+  pages:
+    - _ref: pages/inbox.yaml
+    - _ref: pages/projects.yaml
+    - _ref: pages/issues.yaml
+    - _ref: pages/issue.yaml
+    - _ref: pages/assistant.yaml
+    - _ref: pages/search.yaml
+config:
+  experimental:
+    mobile: true

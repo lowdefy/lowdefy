@@ -15,6 +15,7 @@
 */
 
 import L5 from './L5.js';
+import { expect, test } from 'vitest';
 
 function journey(extra = {}) {
   return { name: 'assigns a ticket', pageId: 'tickets', steps: [], ...extra };

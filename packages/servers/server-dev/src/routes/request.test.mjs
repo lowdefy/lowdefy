@@ -15,24 +15,18 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockCallRequest = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
+const mockCallRequest = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
   parseRequestBody: ({ text }) => JSON.parse(text),
-  redactErrorResponse: jest.fn((context, error) => ({ error: error.message })),
 }));
 
-const mockBuildPageIfNeeded = jest.fn(async () => true);
-jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
+const mockBuildPageIfNeeded = vi.fn(async () => true);
+vi.doMock('../../lib/server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
-  getPageJitEnrichment: jest.fn(() => ({})),
-}));
-
-const mockGetMock = jest.fn(() => null);
-jest.unstable_mockModule('../../lib/docs/devMockRegistry.js', () => ({
-  getMock: mockGetMock,
+  getPageJitEnrichment: vi.fn(() => ({})),
 }));
 
 const { default: requestHandler } = await import('./request.js');
@@ -45,7 +39,7 @@ function createApp() {
     c.set('lowdefyContext', {
       buildDirectory: '/build',
       configDirectory: '/config',
-      logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
+      logger: { debug: vi.fn(), info: vi.fn(), error: vi.fn() },
     });
     await next();
   });
@@ -76,8 +70,6 @@ beforeEach(() => {
 afterEach(() => {
   mockCallRequest.mockReset();
   mockBuildPageIfNeeded.mockReset();
-  mockGetMock.mockReset();
-  mockGetMock.mockImplementation(() => null);
 });
 
 test('requestHandler builds the page JIT before calling the request', async () => {
@@ -105,15 +97,6 @@ test('requestHandler builds nested page ids as one page', async () => {
     expect.anything(),
     expect.objectContaining({ pageId: 'user-account/login', requestId: 'get_session' })
   );
-});
-
-test('requestHandler replays a dev mock without building or calling the request', async () => {
-  mockGetMock.mockImplementation(() => ({ response: { rows: [1] } }));
-  const res = await post(createApp(), '/api/request/dashboard/get_rows');
-  expect(res.status).toEqual(200);
-  expect(await res.json()).toEqual({ success: true, response: { rows: [1] } });
-  expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
-  expect(mockCallRequest).not.toHaveBeenCalled();
 });
 
 // A GET to the request route is client-caused, so it must answer 405 rather

@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import HtmlComponent from '../HtmlComponent.js';
@@ -33,7 +33,7 @@ function setSize(element, { clientHeight, scrollHeight }) {
 
 beforeEach(() => {
   registerHtmlEnhancements({ HtmlOverlay, Icon: () => null, icons: {} });
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 });
 
 afterEach(() => {

@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 
 import AzureBlobContainer from './AzureBlobContainer.js';
+import { expect, test } from 'vitest';
 
 const schema = AzureBlobContainer.schema;
 

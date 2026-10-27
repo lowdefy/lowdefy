@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 
-const mockLaunch = jest.fn();
-const mockInstall = jest.fn();
-const mockIsIncomplete = jest.fn(async () => false);
-jest.unstable_mockModule('playwright-core', () => ({
+const mockLaunch = vi.fn();
+const mockInstall = vi.fn();
+const mockIsIncomplete = vi.fn(async () => false);
+vi.doMock('playwright-core', () => ({
   chromium: { launch: mockLaunch },
-  selectors: { register: jest.fn(async () => {}) },
+  selectors: { register: vi.fn(async () => {}) },
 }));
-jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: mockInstall }));
-jest.unstable_mockModule('./isHeadlessShellIncomplete.js', () => ({ default: mockIsIncomplete }));
+vi.doMock('./installHeadlessShell.js', () => ({ default: mockInstall }));
+vi.doMock('./isHeadlessShellIncomplete.js', () => ({ default: mockIsIncomplete }));
 
 const { default: launchBrowser } = await import('./launchBrowser.js');
 

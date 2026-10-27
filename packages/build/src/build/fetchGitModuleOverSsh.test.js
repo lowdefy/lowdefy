@@ -20,6 +20,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import fetchGitModuleOverSsh from './fetchGitModuleOverSsh.js';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 let tmpDir;
 let gitEnv;

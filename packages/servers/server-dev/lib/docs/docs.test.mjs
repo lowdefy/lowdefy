@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import setupTestFixtures from './setupTestFixtures.mjs';
 
@@ -32,21 +32,21 @@ process.chdir(fixtureDir);
 // server's own build/plugins/*.js — not the app fixture built above, and not
 // present in this checkout) — mock both so runRequest can be unit tested
 // without a real server build.
-const mockCallRequest = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
+const mockCallRequest = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
 }));
-const mockCreateLowdefyContext = jest.fn(async () => ({
-  logger: { info: jest.fn(), debug: jest.fn(), warn: jest.fn(), error: jest.fn() },
+const mockCreateLowdefyContext = vi.fn(async () => ({
+  logger: { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
-jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
+vi.doMock('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
 
 // findConfig force-builds a page when pageId is passed — the fixture pages
 // only exist as pre-written build artifacts, so stub the JIT builder out.
-const mockBuildPageIfNeeded = jest.fn(async () => true);
-jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
+const mockBuildPageIfNeeded = vi.fn(async () => true);
+vi.doMock('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
   reviewBuiltPage: async () => 'current',
   syncBuildSignals: () => ({
@@ -63,7 +63,6 @@ const { default: listPlugins } = await import('./listPlugins.js');
 const { default: getSchema } = await import('./getSchema.js');
 const { default: getExamples } = await import('./getExamples.js');
 const { default: getCoreDoc } = await import('./getCoreDoc.js');
-const { default: getPluginDoc } = await import('./getPluginDoc.js');
 const { default: getOverview } = await import('./getOverview.js');
 const { default: searchDocs } = await import('./searchDocs.js');
 const { default: normalizeTypeKind } = await import('./normalizeTypeKind.js');
@@ -95,6 +94,38 @@ test('listTypes merges client and server operators with environments', () => {
   const secret = operators.find((operator) => operator.type === '_secret');
   expect(secret.environments).toEqual(['server']);
   expect(secret.used).toBe(false);
+});
+
+test('listTypes with target mobile lists the blocks a native shell carries', () => {
+  const blocks = listTypes({ kind: 'blocks', target: 'mobile' });
+  expect(blocks.map((block) => block.type)).toEqual(['Button', 'TextInput']);
+  const button = blocks.find((block) => block.type === 'Button');
+  expect(button.package).toEqual('@lowdefy/blocks-native');
+  expect(button.category).toEqual('display');
+  expect(button).not.toHaveProperty('used');
+});
+
+test('listTypes with target web lists the installed web blocks, as without a target', () => {
+  expect(listTypes({ kind: 'blocks', target: 'web' })).toEqual(listTypes({ kind: 'blocks' }));
+});
+
+test('listTypes with target mobile takes client operators from the shell and server ones from the app', () => {
+  const operators = listTypes({ kind: 'operators', target: 'mobile' });
+  expect(operators.map(({ type, environments }) => [type, environments])).toEqual([
+    ['_get', ['server']],
+    ['_secret', ['server']],
+    ['_state', ['client']],
+  ]);
+});
+
+test('listTypes with target mobile lists server kinds as for the web', () => {
+  expect(listTypes({ kind: 'requests', target: 'mobile' }).map(({ type }) => type)).toEqual([
+    'AxiosHttp',
+  ]);
+});
+
+test('listTypes throws on an unknown target', () => {
+  expect(() => listTypes({ kind: 'blocks', target: 'watch' })).toThrow('Unknown target');
 });
 
 test('listTypes accepts singular kind names', () => {
@@ -193,22 +224,6 @@ test('getExamples returns null for unknown block type', () => {
   expect(getExamples({ type: 'Nope' })).toBeNull();
 });
 
-test('getPluginDoc returns README markdown for installed plugin', () => {
-  const result = getPluginDoc({ packageName: 'test-plugin' });
-  expect(result.markdown).toContain('# test-plugin');
-});
-
-test('getPluginDoc returns null for packages without docs', () => {
-  expect(getPluginDoc({ packageName: 'no-such-package' })).toBeNull();
-});
-
-test('getPluginDoc reads only the app plugins, never a path out of node_modules', () => {
-  fs.writeFileSync(path.join(fixtureDir, 'README.md'), '# Server readme\n');
-  expect(getPluginDoc({ packageName: '..' })).toBeNull();
-  expect(getPluginDoc({ packageName: 'test-plugin/../..' })).toBeNull();
-  fs.rmSync(path.join(fixtureDir, 'README.md'));
-});
-
 test('getCoreDoc returns markdown by slug from docs-content', () => {
   const doc = getCoreDoc({ slug: 'operators/_get' });
   expect(doc.title).toEqual('_get');
@@ -255,7 +270,8 @@ test('searchDocs throws on empty query', () => {
 test('getOverview includes counts and route guidance', () => {
   const overview = getOverview();
   expect(overview).toContain('2 block types');
-  expect(overview).toContain('/lowdefy-docs/schema/{kind}/{type}');
+  expect(overview).toContain('`GET /lowdefy-docs/build-status`');
+  expect(overview).not.toContain('/lowdefy-docs/schema');
   expect(overview).toContain('lowdefy_list_types');
   expect(overview).not.toContain('config.basePath');
 });
@@ -319,8 +335,8 @@ test('findConfig resolves a known pageId to its source file', async () => {
   expect(result.kind).toEqual('page');
   expect(result.pageId).toEqual('home');
   expect(result.file).toEqual('pages/home.yaml');
-  // A page's root block renders with blockId === pageId — open-in-editor and
-  // feedback enrichment read matches[0].location.source from this result.
+  // A page's root block renders with blockId === pageId — open-in-editor
+  // reads matches[0].location.source from this result.
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].location.source).toContain(path.join('pages', 'home.yaml'));
 });

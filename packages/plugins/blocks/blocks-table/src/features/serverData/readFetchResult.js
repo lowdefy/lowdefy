@@ -16,13 +16,15 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The `__tableFetch` event result: the Request action's response for the table's request. The
-// entries of a list are its groups at a group level and its rows at the leaf level.
+// The `__tableFetch` event result: the Request action's response for the table's request, or the
+// CallAPI action's routine response for its endpoint. The entries of a list are its groups at a
+// group level and its rows at the leaf level.
 function readFetchResult({ result, isGroupLevel }) {
-  const response = result?.responses?.__tableFetch?.response?.[0];
+  const fetched = result?.responses?.__tableFetch?.response;
+  const response = type.isArray(fetched) ? fetched[0] : fetched?.response;
   if (!type.isObject(response) || !type.isInt(response.total) || !type.isArray(response.rows)) {
     throw new Error(
-      `Table server request must return { rows, total }. Received ${JSON.stringify(response)}.`
+      `Table server request or endpoint must return { rows, total }. Received ${JSON.stringify(response)}.`
     );
   }
   let entries = response.rows;

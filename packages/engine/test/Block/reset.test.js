@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
+import { vi, afterEach, expect, test } from 'vitest';
 import { serializer, type } from '@lowdefy/helpers';
 
 import testContext from '../testContext.js';
@@ -94,7 +94,7 @@ function createPageConfig() {
 }
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 function countStateCopies(copySpy) {
@@ -104,7 +104,7 @@ function countStateCopies(copySpy) {
 test('SetState copies the page state once, not once per container and list row', async () => {
   const context = await testContext({ lowdefy, pageConfig: createPageConfig() });
   const { setState } = context._internal.RootSlots.map;
-  const copySpy = jest.spyOn(serializer, 'copy');
+  const copySpy = vi.spyOn(serializer, 'copy');
 
   await setState.triggerEvent({ name: 'onClick' });
 
@@ -114,7 +114,7 @@ test('SetState copies the page state once, not once per container and list row',
 test('Reset copies the page state once, not once per container and list row', async () => {
   const context = await testContext({ lowdefy, pageConfig: createPageConfig() });
   const { reset } = context._internal.RootSlots.map;
-  const copySpy = jest.spyOn(serializer, 'copy');
+  const copySpy = vi.spyOn(serializer, 'copy');
 
   await reset.triggerEvent({ name: 'onClick' });
 
@@ -124,8 +124,8 @@ test('Reset copies the page state once, not once per container and list row', as
 test('Reset clones the frozen state once for page state and once for the blocks', async () => {
   const context = await testContext({ lowdefy, pageConfig: createPageConfig() });
   const { reset } = context._internal.RootSlots.map;
-  const copySpy = jest.spyOn(serializer, 'copy');
-  const deserializeSpy = jest.spyOn(serializer, 'deserializeFromString');
+  const copySpy = vi.spyOn(serializer, 'copy');
+  const deserializeSpy = vi.spyOn(serializer, 'deserializeFromString');
 
   await reset.triggerEvent({ name: 'onClick' });
 

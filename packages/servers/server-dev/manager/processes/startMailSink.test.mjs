@@ -19,7 +19,7 @@ import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import nodemailer from 'nodemailer';
 
 import readMailOutbox from '../../lib/docs/readMailOutbox.js';
@@ -55,7 +55,7 @@ afterEach(async () => {
 function createContext() {
   return {
     directories: { config: configDirectory },
-    logger: { info: jest.fn(), error: jest.fn() },
+    logger: { info: vi.fn(), error: vi.fn() },
   };
 }
 
@@ -143,4 +143,30 @@ test('startMailSink fails with the port when LOWDEFY_DEV_SMTP_PORT is taken', as
   } finally {
     await new Promise((resolve) => blocker.close(resolve));
   }
+});
+
+test('startMailSink prints the sign-in code a message carries', async () => {
+  const port = await getFreePort();
+  process.env.LOWDEFY_DEV_SMTP_PORT = String(port);
+  const context = createContext();
+  sink = await startMailSink(context);
+  const transport = nodemailer.createTransport({ host: '127.0.0.1', port, secure: false });
+  await transport.sendMail({
+    from: 'app@localhost',
+    to: 'ada@example.test',
+    subject: 'Your sign-in code',
+    text: 'Enter this code on the sign-in page to continue.\n\n482913\n\nThis code expires in 5 minutes.',
+  });
+  await transport.sendMail({
+    from: 'app@localhost',
+    to: 'ada@example.test',
+    subject: 'Order shipped',
+    text: 'Your order 123456 has shipped.',
+  });
+  transport.close();
+
+  const printed = context.logger.info.mock.calls.map(([line]) => line);
+  expect(printed.filter((line) => line.startsWith('code for'))).toEqual([
+    'code for ada@example.test: 482913',
+  ]);
 });

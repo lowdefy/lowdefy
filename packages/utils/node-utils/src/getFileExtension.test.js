@@ -15,6 +15,7 @@
 */
 
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
+import { expect, test } from 'vitest';
 
 test('getFileExtension a', () => {
   expect(getFileExtension('a')).toBe(null);

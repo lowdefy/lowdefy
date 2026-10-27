@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -29,6 +29,7 @@ let context;
 
 function block(version) {
   return `<!-- BEGIN:lowdefy-agent-rules version=${version} -->\n${agentsMd({
+    cliVersion: version,
     skills,
   }).trimEnd()}\n<!-- END:lowdefy-agent-rules -->\n`;
 }
@@ -52,7 +53,7 @@ async function run(cliVersion = '7.0.0') {
 
 beforeEach(() => {
   projectDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-agent-rules-test-'));
-  context = { logger: { info: jest.fn(), warn: jest.fn() } };
+  context = { logger: { info: vi.fn(), warn: vi.fn() } };
 });
 
 afterEach(() => {

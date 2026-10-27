@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
 
-jest.unstable_mockModule('./fetchGitHubModule.js', () => ({
-  default: jest.fn(),
+vi.doMock('./fetchGitHubModule.js', () => ({
+  default: vi.fn(),
 }));
 
 let fetchModules;
 let fetchGitHubModule;
 
 beforeEach(async () => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   const mod = await import('./fetchModules.js');
   fetchModules = mod.default;
   const ghMod = await import('./fetchGitHubModule.js');

@@ -99,6 +99,8 @@ function createPageRegistry({ components, context }) {
       pageId: page.id,
       auth: page.auth,
       path: page.path,
+      // Set by buildMobile on mobile and shared pages; a web page has none until buildPage.
+      target: page.target,
       refId: isInline ? null : refId,
       refPath: sourceRef?.path ?? null,
       unresolvedVars: sourceRef?.unresolvedVars ?? null,

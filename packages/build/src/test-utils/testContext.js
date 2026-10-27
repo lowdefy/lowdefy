@@ -15,6 +15,7 @@
 */
 
 import createCounter from '../utils/createCounter.js';
+import createMobileTypeCounters from '../utils/createMobileTypeCounters.js';
 import createImportAppCode from '../utils/createImportAppCode.js';
 
 function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
@@ -69,6 +70,16 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     linkActionRefs: [],
     routes: [],
   };
+
+  context.typeCountersMobile = createMobileTypeCounters({ typeCounters: context.typeCounters });
+  context.typesMapMobile = {
+    actions: {},
+    blockMetas: {},
+    blocks: {},
+    icons: {},
+    operators: { client: {} },
+  };
+  context.blockMetasMobile = {};
 
   context.importAppCode = createImportAppCode({ directories: context.directories });
 

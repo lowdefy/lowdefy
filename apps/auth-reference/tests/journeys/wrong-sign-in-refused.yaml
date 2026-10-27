@@ -1,0 +1,13 @@
+- name: a signed-out visitor to the dashboard is sent to log in, and a wrong email and password are refused
+  pageId: home
+  user: none
+  timeout: 30000
+  steps:
+    - goto: dashboard
+    - expect: { url: { contains: /login?callbackUrl=%2Fdashboard } }
+    - fill: { blockId: email, value: gate-member@example.test }
+    - fill: { blockId: password, value: not-the-password }
+    - click: login_button
+    - expect: { text: { blockId: login_error_html, contains: Invalid email or password } }
+    - expect: { state: { path: login_error_message, equals: Invalid email or password } }
+    - expect: { state: { path: login_error_code, equals: INVALID_EMAIL_OR_PASSWORD } }

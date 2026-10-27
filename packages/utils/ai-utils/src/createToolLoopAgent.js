@@ -16,6 +16,7 @@
 
 import { ToolLoopAgent, isStepCount, hasToolCall } from 'ai';
 
+import agentErrorForLog, { agentLogIds } from './agentErrorForLog.js';
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
 import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
@@ -49,7 +50,7 @@ const hookMapping = {
   onStepFinish: 'onStepEnd',
 };
 
-function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
+function createHookCallbacks({ callEndpoint, hooks, locale, logger, logIds }) {
   if (!hooks) return {};
 
   const callbacks = {};
@@ -61,7 +62,10 @@ function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
       const payload = { ...cleanHookEvent(event), locale };
       for (const endpointId of endpointIds) {
         callEndpoint(endpointId, { payload }).catch((error) =>
-          logger.warn({ err: error, endpointId }, 'Agent hook endpoint failed.')
+          logger.warn(
+            { ...logIds, endpointId, error: agentErrorForLog(error) },
+            'Agent hook endpoint failed.'
+          )
         );
       }
     };
@@ -73,7 +77,11 @@ function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
 // path: tools, model, hook callbacks, instructions, stop conditions, and the
 // ToolLoopAgent instance.
 async function createToolLoopAgent({ connection, agent, context, autoApprove = false }) {
-  const { tools, mcpClients, toolApproval } = await buildAgentTools({ agent, context, autoApprove });
+  const { tools, mcpClients, toolApproval } = await buildAgentTools({
+    agent,
+    context,
+    autoApprove,
+  });
 
   const { sharedState, sharedStateReadOnly } = context.agentContext ?? {};
   if (!sharedStateReadOnly) {
@@ -91,6 +99,7 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     hooks: agent.hooks,
     locale,
     logger: context.logger,
+    logIds: agentLogIds({ agent, context }),
   });
 
   // Prepend page context to instructions when pageContext is enabled
@@ -151,6 +160,15 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
       signal: context.signal,
     }),
     ...hookCallbacks,
+    // streamText's default onError writes the whole error to the console, and an AI SDK error
+    // can carry the request body (instructions, page context, messages) or the provider's
+    // reply. A mid-stream error reaches the client as an error chunk without throwing, so this
+    // is the only log of it: its summary and ids.
+    onError: ({ error }) =>
+      context.logger.error(
+        { ...agentLogIds({ agent, context }), error: agentErrorForLog(error) },
+        'Agent stream error.'
+      ),
     ...(agent.properties.repairToolCall
       ? {
           repairToolCall: async ({ toolCall }) => {

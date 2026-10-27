@@ -16,6 +16,7 @@
 
 import BlockError from './BlockError.js';
 import PluginError from './PluginError.js';
+import { expect, test } from 'vitest';
 
 test('BlockError sets name and is instanceof PluginError', () => {
   const original = new Error('Render failed');

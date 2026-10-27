@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // The one-step journey that proves a finding at open:
 // `expect: { visible: <pageId> }`, the page's root block showing. The build

@@ -119,8 +119,10 @@ Scope, required permission, and target for every auth step. Permissions are chec
 | `ListMembers` | org | `member: [list]` | — | List members of the organization (accepts `organizationSlug`). |
 | `RemoveMember` | org | `member: [delete]` | — | Remove a member from the organization. |
 | `UpdateMemberRoles` | org | `member: [update]` | — | Set the membership's **app roles** (`appRoles` array; empty clears). |
-| `UpdateMemberOrgRole` | org | `member: [update]` | — | Set the **org tier** (`owner`/`admin`/`member`). |
+| `UpdateMemberOrgRole` | org | `member: [update]` | — | Set the **org tier** (`owner`/`admin`/`member`). A suspended member cannot be made `owner`. |
 | `UpdateMemberAttributes` | org | `member: [update]` | — | Set the membership's per-organization attributes. |
+| `SuspendMember` | org | `member: [suspend]` | — | [Suspend](/organizations#suspending-a-member) a member in this organization (`memberId`): the row and its roles stay, but it admits nobody. Refuses an `owner` (change their org tier first) and the caller's own membership. |
+| `UnsuspendMember` | org | `member: [suspend]` | — | Lift a suspension (`memberId`); the member keeps the roles they held. |
 | `UpdateOrganization` | org | `organization: [update]` | — | Update the organization row (name, slug, metadata). |
 | `RevokeOrgMcpToken` | org | `member: [update]` | — | Switch off any [member token](/mcp-oauth#tokens-for-scripts) in the organization (`id`). |
 | `UpdateUserProfile` | org | `user: [update]` | `userId` (self-exempt) | Update a member's display name/image (per-organization copy). Self-service save is exempt. |
@@ -131,7 +133,7 @@ Scope, required permission, and target for every auth step. Permissions are chec
 | `RevokeUserSessions` | org | `session: [revoke]` | `userId` | Sign a user out of all sessions. |
 | `ResetUserTwoFactor` | org | `user: [reset-two-factor]` | `userId` | Clear a user's two-factor enrolment and trust-device records. |
 | `RevokeUserPasskeys` | org | `user: [revoke-passkeys]` | `userId` | Remove a user's passkeys (`passkeyId` to target one). |
-| `CreateOrganization` | system | — | — | Create an organization (tenant provisioning). Needs `userId`, or `name`+`slug` for creator-less provisioning. |
+| `CreateOrganization` | system | — | — | Create an organization (tenant provisioning). Takes `name` and `slug` (required), `logo`, `metadata` and an optional creator `userId`. The creator becomes its `owner`, with the app roles in [`auth.organizations.creatorAppRoles`](/organizations#app-roles-for-a-new-organizations-owner); without one the organization has no members until someone accepts an invitation. A slug another organization holds is refused. If a run fails after writing the organization but before its owner, running it again with the same creator and slug within ten minutes finishes it. |
 | `ListUsers` | system | — | — | List every user in the deployment. |
 | `LeaveOrganization` | caller | — | — | End the caller's own membership of the named organization (`organizationId`, required). [Leaving from a routine](#leaving-an-organization-from-a-routine). |
 | `RevokeMcpGrant` | caller | — | — | Revoke the calling assistant's own [MCP grant](/mcp-oauth#switching-organization-from-the-assistant). |

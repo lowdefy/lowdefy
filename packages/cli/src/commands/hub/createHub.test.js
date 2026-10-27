@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 import fs from 'fs';
 import { spawn } from 'child_process';
 import os from 'os';
@@ -27,7 +27,7 @@ import createHub from './createHub.js';
 // Longer than the hub's own 120 s wait for a server to be ready, so a dev
 // script that starts slowly on a loaded machine gets the hub's answer, not a
 // test timeout. How long anything takes is not under test here.
-jest.setTimeout(150000);
+vi.setConfig({ testTimeout: 150000, hookTimeout: 150000 });
 
 // Stands in for `lowdefy dev`: writes the instance record the dev manager
 // writes (its configDirectory the native realpath, as the manager records it),
@@ -388,7 +388,7 @@ test('a dev server whose leader reads as gone before its exit event reads as exi
   const started = await hub.start({ configDirectory });
   expect(started.state).toEqual('starting');
   const kill = process.kill.bind(process);
-  const killSpy = jest.spyOn(process, 'kill').mockImplementation((pid, signal) => {
+  const killSpy = vi.spyOn(process, 'kill').mockImplementation((pid, signal) => {
     if (signal === 0 && Math.abs(pid) === started.pid) {
       throw Object.assign(new Error('kill ESRCH'), { code: 'ESRCH' });
     }
@@ -460,7 +460,7 @@ test('overlapping reaps share one pass, so a slow open-tabs check is not repeate
   const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
   registry.instances[configDirectory].startedAt = new Date(0).toISOString();
   fs.writeFileSync(registryPath, JSON.stringify(registry));
-  const openTabs = jest.fn(async () => {
+  const openTabs = vi.fn(async () => {
     await wait(200);
     return 1;
   });
@@ -520,7 +520,7 @@ test.each([
 ])('hub reap keeps a server judged idle when %s during the tab poll', async (_, activity) => {
   await hub.start({ configDirectory });
   writeActivity({ idleMinutes: 16 });
-  const openTabs = jest.fn(async () => {
+  const openTabs = vi.fn(async () => {
     writeActivity(activity);
     return 0;
   });
@@ -557,11 +557,37 @@ test('hub reap keeps a server restarted during the tab poll', async () => {
 test('hub reap keeps an unused server that a browser tab has open', async () => {
   await hub.start({ configDirectory });
   writeActivity({ idleMinutes: 60 });
-  const openTabs = jest.fn(async () => 1);
+  const openTabs = vi.fn(async () => 1);
   const adopting = createTestHub({ openTabs });
   await adopting.reap();
   expect(openTabs).toHaveBeenCalledTimes(1);
   expect((await adopting.list()).instances).toEqual([expect.objectContaining({ configDirectory })]);
+});
+
+test('hub reap reads open tabs from the record instead of asking the server', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 60, openTabs: 1 });
+  const openTabs = vi.fn(async () => 0);
+  const adopting = createTestHub({ openTabs });
+  await adopting.reap();
+  expect(openTabs).not.toHaveBeenCalled();
+  expect((await adopting.list()).instances).toEqual([expect.objectContaining({ configDirectory })]);
+});
+
+test('hub reap stops an unused server whose record counts no open tabs, without asking it', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 60, openTabs: 0, child: 'stopped' });
+  const openTabs = vi.fn(async () => 1);
+  const adopting = createTestHub({ openTabs });
+  await adopting.reap();
+  expect(openTabs).not.toHaveBeenCalled();
+  expect((await adopting.list()).instances).toEqual([]);
+});
+
+test('hub status passes through whether the manager has stopped its idle child', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 4, child: 'stopped' });
+  expect(await hub.status({ configDirectory })).toMatchObject({ state: 'ready', child: 'stopped' });
 });
 
 test.each([

@@ -15,6 +15,7 @@
 */
 
 import computeRowOffsets from './computeRowOffsets.js';
+import { expect, test } from 'vitest';
 
 test('computeRowOffsets gives each item its top offset and the body height last', () => {
   const rows = ['a', { kind: 'detail' }, 'b'];

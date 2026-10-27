@@ -9,6 +9,7 @@ APIs are particularly useful when you need to:
 - Transform or aggregate data from multiple sources.
 - Create reusable endpoints that can be called from multiple pages.
 - Build webhook endpoints for external services.
+- Serve private files at stable links, such as inline images.
 - Keep sensitive operations and data on the server.
 
 ## How Lowdefy APIs Work
@@ -35,12 +36,13 @@ The schema for a Lowdefy API is:
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
 - `payloadSchema: object`: **Optional** - A JSON Schema every payload sent to this endpoint must match. Declaring it turns validation on for every caller, and it is required before an endpoint can be exposed as an MCP or agent tool. See [Payload Schema](#payload-schema).
 - `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
+- `link: boolean`: **Optional** - Serve this endpoint at a stable link: a `GET` on `/api/endpoints/<endpointId>/<path>` runs the routine as the signed-in caller and redirects to the URL it returns. See [Link Endpoints](#link-endpoints).
 - `schedules: array | object`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object. With `config.environments` declared, `schedules` can instead be an object keyed by environment name (plus an optional `default`), see [Schedules per environment](#schedules-per-environment).
 
 ###### API definition example:
 
 ```yaml
-lowdefy: '7.0.0'
+lowdefy: '7.1.0'
 
 connections:
   - id: users
@@ -75,7 +77,7 @@ Lowdefy APIs use the same [authorization configuration](/protected-pages-apis) a
 Unlike requests which are defined on a specific page and inherit the authorization of the page they are defined on, API endpoints can be called from any page in the app. Thus they do not inherit the authorization of the page they are called from, and authorization should be configured separately.
 
 ```yaml
-lowdefy: '7.0.0'
+lowdefy: '7.1.0'
 
 auth:
   # Configure which APIs require authentication
@@ -127,7 +129,7 @@ Each schedule item has:
 
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
-To test a scheduled routine locally, run it as a system context with the dev server's `lowdefy_run_endpoint` MCP tool (or `POST /lowdefy-docs/run-endpoint`) with `system: true` — see [Docs for AI Agents](/ai-agent-docs#running-endpoints).
+To test a scheduled routine locally, run it as a system context with the dev server's `lowdefy_run_endpoint` MCP tool with `system: true` — see [Docs for AI Agents](/ai-agent-docs#running-endpoints).
 
 See [Deploy with Vercel](/vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
 
@@ -239,6 +241,71 @@ api:
 - `async: true` also applies to scheduled runs — the cron trigger is acknowledged immediately and the routine runs in the background.
 - On serverless deployments the background work still runs inside the same function invocation, so it remains bounded by the function's `maxDuration` — see [Deploy with Vercel](/vercel). To run work in a separate invocation with a fresh time budget, use a [detached endpoint call](#detached-endpoint-calls).
 
+## Link Endpoints
+
+An endpoint with `link: true` serves a file at a URL that does not expire, so a page can save `<img src="/api/endpoints/<endpointId>/<path>">` in rich text or a record and the browser loads it later with the signed-in session. This lets a bucket stay private: the link endpoint checks the caller and redirects to a fresh presigned URL on every load.
+
+- A `GET` on `/api/endpoints/<endpointId>/<path>` runs the routine as the session caller. The endpoint's `auth` config applies as on any other endpoint.
+- The payload is `{ path, query }`: `path` is the rest of the URL after the endpoint id, decoded and joined with `/` (it may be empty), and `query` is the URL's query parameters. A [`payloadSchema`](#payload-schema) validates it.
+- Endpoint ids can hold slashes, so the longest link endpoint id the URL starts with wins: with `files` and `files/inline` both declared, `/api/endpoints/files/inline/a.png` runs `files/inline` with path `a.png`.
+- Only an endpoint with `link: true` answers a `GET`, and a `CallAPI` (a `POST`) to a link endpoint is refused as if it did not exist.
+- `link` is allowed on `type: Api` only, and cannot be combined with `webhook` or `async`.
+
+```yaml
+id: files/inline
+type: Api
+link: true
+routine:
+  - :if:
+      _not:
+        _regex:
+          pattern: '^log-events/'
+          on:
+            _payload: path
+    :then:
+      :reject: Not an inline image.
+      :status: 404
+  - id: presign
+    type: AwsS3PresignedGetObject
+    connectionId: files
+    properties:
+      key:
+        _payload: path
+      expires: 300
+  - :return:
+      _step: presign
+```
+
+The endpoint answers:
+
+| Outcome                                                                                         | Status                  | Body                                                  |
+| ----------------------------------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------- |
+| The routine returned a URL                                                                      | `302` to that URL       | None                                                  |
+| No link endpoint matches the URL                                                                | `404`                   | `{ "error": "Not found." }`                           |
+| The caller is not signed in and the endpoint is protected                                       | `401`                   | None                                                  |
+| The caller's roles do not allow the endpoint                                                    | `403`                   | None                                                  |
+| A [`:reject`](/:reject), also one raised in an endpoint the routine calls                       | Its `:status`, or `400` | None                                                  |
+| A failed [`ValidateSchema` step](#validating-data-as-a-routine-step) (with `throwOnInvalid` on) | `400`                   | None                                                  |
+| The payload does not match the endpoint's `payloadSchema`                                       | `400`                   | None                                                  |
+| The routine returned anything but a URL, or any other error                                     | `500`                   | `{ "error": "Link failed." }`, nothing from the error |
+
+The `:return` must be a non-empty string: an absolute `http` or `https` URL, or a path on the app starting with `/`. Any other value answers `500` and logs a config error naming the endpoint. Every answer carries `Cache-Control: private, no-store`, so a redirect to a short-lived URL is never cached. On an app with auth, a signed-out caller gets `401` for an unknown link id too, so link ids cannot be found by trying them.
+
+A link endpoint **must have no side effects**. Any page, email or document that embeds the URL can make the browser send the `GET`, with no click and no confirmation, so the routine should only read and sign. Session cookies are `SameSite=Lax`, so the browser does not send them on an image load from another site: a link embedded in another site's page loads as signed out. Use a `public` link endpoint for a file other sites may embed. Never build the redirect host from the payload: a link that redirects to a host its `path` or `query` names is an open redirect.
+
+To save these links from the editor, set `imageSrc` on [`TiptapInput`](/TiptapInput) or [`TiptapMentionInput`](/TiptapMentionInput) to a `_function` that returns the link for the uploaded key:
+
+```yaml
+imageSrc:
+  _function:
+    __string.concat:
+      - /api/endpoints/files/inline/
+      - __uri.encode:
+          __args: 0.key
+```
+
+Encode the key, so a file name with `#`, `?` or `%` stays one path. The endpoint receives it decoded.
+
 ## Webhook Endpoints
 
 An endpoint with `webhook: true` is a receiver for third-party webhooks (AWS SNS, Azure Event Grid, Stripe, GitHub, ...). It is served on the same `POST /api/endpoints/<endpointId>` URL as every other endpoint, but the request is handled raw:
@@ -340,17 +407,17 @@ routine:
 
 A webhook endpoint answers with an HTTP status that says how the run ended, so the sender can tell its own mistake from an outage:
 
-| Outcome | Status | Body |
-| --- | --- | --- |
-| The routine finished | `200` | Its `:return` value, or `{ "ok": true }` when it returned nothing |
-| A [`:return`](/:return) with `:content_type: text/plain` | `200` | The returned string as plain text (see [Answering with plain text](#answering-with-plain-text)) |
-| A [`:reject`](/:reject) with `:status` | That status (400 to 499) | `:body` as given, or the error body below |
-| A [`:reject`](/:reject) without `:status` | `400` | `{ "error": { "code": "rejected", "message": <the reject message> } }`, or `:body` when given |
-| A failed [`ValidateSchema` step](#validating-data-as-a-routine-step) (with `throwOnInvalid` on) | `400` | `{ "error": { "code": "invalid_request", "message": <names the failing path> } }` |
-| The `verify` request did not pass | `401` | `{ "error": { "code": "unauthorized", "message": "Webhook verification failed." } }` |
-| Any other uncaught error | `500` | `{ "error": { "code": "internal_error", "message": "Webhook failed." } }`, with nothing from the error itself |
+| Outcome                                                                                         | Status                   | Body                                                                                                          |
+| ----------------------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| The routine finished                                                                            | `200`                    | Its `:return` value, or `{ "ok": true }` when it returned nothing                                             |
+| A [`:return`](/:return) with `:content_type: text/plain`                                        | `200`                    | The returned string as plain text (see [Answering with plain text](#answering-with-plain-text))               |
+| A [`:reject`](/:reject) with `:status`                                                          | That status (400 to 499) | `:body` as given, or the error body below                                                                     |
+| A [`:reject`](/:reject) without `:status`                                                       | `400`                    | `{ "error": { "code": "rejected", "message": <the reject message> } }`, or `:body` when given                 |
+| A failed [`ValidateSchema` step](#validating-data-as-a-routine-step) (with `throwOnInvalid` on) | `400`                    | `{ "error": { "code": "invalid_request", "message": <names the failing path> } }`                             |
+| The `verify` request did not pass                                                               | `401`                    | `{ "error": { "code": "unauthorized", "message": "Webhook verification failed." } }`                          |
+| Any other uncaught error                                                                        | `500`                    | `{ "error": { "code": "internal_error", "message": "Webhook failed." } }`, with nothing from the error itself |
 
-A `:reject` or a failed `ValidateSchema` step in an endpoint the routine calls with `CallApi` sets the answer the same way, so the work can live in an `InternalApi` endpoint the webhook calls. `:status` and `:body` are accepted only on a `:reject` in a webhook endpoint or an `InternalApi` endpoint; on any other endpoint they are a build error. An error a `:catch` handles does not change the answer. A `:reject` is never caught, so it always sets it.
+A `:reject` or a failed `ValidateSchema` step in an endpoint the routine calls with `CallApi` sets the answer the same way, so the work can live in an `InternalApi` endpoint the webhook calls. `:status` and `:body` are accepted only on a `:reject` in a webhook endpoint or an `InternalApi` endpoint (and `:status` alone in a [link endpoint](#link-endpoints)); on any other endpoint they are a build error. An error a `:catch` handles does not change the answer. A `:reject` is never caught, so it always sets it.
 
 ```yaml
 id: support-tickets
@@ -1168,7 +1235,7 @@ blocks:
 Here's a comprehensive example showing various features:
 
 ```yaml
-lowdefy: '7.0.0'
+lowdefy: '7.1.0'
 auth:
   api:
     protected: true

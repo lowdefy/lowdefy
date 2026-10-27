@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import { registerMcpResourceBinding } from './getMcpResourceBinding.js';
 import { ensureMcpOauthResource } from './oauthResourceLifecycle.js';
@@ -24,24 +24,24 @@ const resourceUri = 'https://app.example.com/api/mcp';
 function createMockAuth({ resources = [] } = {}) {
   const rows = new Map(resources.map((row) => [row.identifier, { ...row }]));
   const adapter = {
-    findOne: jest.fn(async ({ model, where }) => {
+    findOne: vi.fn(async ({ model, where }) => {
       if (model === 'oauthResource') {
         return rows.get(where[0].value) ?? null;
       }
       throw new Error(`Unexpected findOne model ${model}.`);
     }),
-    create: jest.fn(async ({ data }) => {
+    create: vi.fn(async ({ data }) => {
       rows.set(data.identifier, { ...data });
       return { ...data };
     }),
-    update: jest.fn(),
+    update: vi.fn(),
   };
   const auth = { $context: Promise.resolve({ adapter }) };
   return { auth, adapter, rows };
 }
 
 function createMockLogger() {
-  return { warn: jest.fn() };
+  return { warn: vi.fn() };
 }
 
 test('ensureMcpOauthResource is a no-op when no MCP resource binding is registered', async () => {

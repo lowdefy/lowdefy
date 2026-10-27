@@ -15,6 +15,7 @@
 */
 
 import { escapeId } from './escapeId.js';
+import { expect, test } from 'vitest';
 
 test('escapeId escapes dots in block IDs', () => {
   expect(escapeId('complaint.customer.product_type')).toBe('complaint\\.customer\\.product_type');

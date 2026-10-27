@@ -38,6 +38,7 @@ import findLogCollectionRecordTestMongoDb from '../../../test/findLogCollectionR
 import { columnDefs, fields } from '../../../test/enrichmentTable.js';
 import getTestCollection from '../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
+import { expect, test } from 'vitest';
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -831,6 +832,21 @@ test('enrichment: enqueue on a tenant connection only queues cells of its org', 
   expect(enrichmentCell(docs, 'a2', 'email').status).toBe('queued');
   ['b1', 'b2', 'n1'].forEach((_id) => {
     expect(docs.find((doc) => doc._id === _id)._enrich).toBeUndefined();
+  });
+});
+
+test('enrichment: a dry run on a tenant connection counts only cells of its org', async () => {
+  const collection = 'tenantIsolationEnrichmentDryRun';
+  await populateTestMongoDb({ collection, documents: enrichmentDocs });
+  const res = await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, columns: ['email'], dryRun: true },
+    connection: enrichmentConnection(collection),
+    tenant,
+  });
+  expect(res).toMatchObject({ dryRun: true, queued: 2, missingInputs: 0 });
+  const docs = await readAll(collection);
+  docs.forEach((doc) => {
+    expect(doc._enrich).toBeUndefined();
   });
 });
 

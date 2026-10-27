@@ -15,6 +15,7 @@
 */
 
 import listFailurePaths from './listFailurePaths.js';
+import { expect, test } from 'vitest';
 
 function failed({ name, blockId, invalidBlocks }) {
   return { name, block_id: blockId, success: false, invalid_blocks: invalidBlocks };

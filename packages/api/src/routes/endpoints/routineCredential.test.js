@@ -17,7 +17,7 @@
 // A value a routine marks with _credential reaches its caller but no log line. The logger here
 // writes each call as one JSON line through scrubCredentials, as the servers' streamWrite hooks do.
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { runInCredentialScope, scrubCredentials } from '@lowdefy/node-utils';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { CreateMcpToken } from '@lowdefy/plugin-better-auth/steps';
@@ -33,7 +33,7 @@ const newKey = 'runtime-made-app-key-0001';
 const makeKey = { '_string.concat': ['runtime-made-', 'app-key-0001'] };
 const rootSecret = 'support-root-secret-value';
 
-const mockEcho = jest.fn(({ request }) => request);
+const mockEcho = vi.fn(({ request }) => request);
 mockEcho.schema = {};
 mockEcho.meta = { checkRead: false, checkWrite: false };
 
@@ -94,7 +94,7 @@ function createContext(lines) {
     connections: { TestConnection: { schema: {}, requests: { Echo: mockEcho } } },
     logger: createLogger(lines),
     operators: operatorsServer,
-    readConfigFile: jest.fn(async (path) => {
+    readConfigFile: vi.fn(async (path) => {
       if (path === 'connections/test.json') {
         return { id: 'connection:test', type: 'TestConnection', connectionId: 'test' };
       }
@@ -145,7 +145,8 @@ test('A credential marked in :set_state is redacted in every later log line and 
   );
   lines.forEach((line) => expect(line).not.toContain(newKey));
   const setState = JSON.parse(lines.find((line) => line.includes('debug_control_set_state')));
-  expect(setState.evaluated.key).toEqual('[REDACTED]');
+  expect(setState.keys).toEqual(['key']);
+  expect(setState).not.toHaveProperty('evaluated');
   expect(res.response).toEqual({ key: newKey });
   expect(buildEndpointResult(context, res).response).toEqual({ key: newKey });
 });
@@ -179,10 +180,10 @@ test('Credentials a called endpoint marks are redacted in the CallApi step resul
     expect(line).not.toContain(webhookSecret);
   });
   const endCall = JSON.parse(lines.find((line) => line.includes('debug_end_endpoint_call')));
-  expect(endCall.response).toEqual({ key: '[REDACTED]', webhook_secret: '[REDACTED]' });
+  expect(endCall).not.toHaveProperty('response');
 });
 
-test('A credential in a failed request properties is redacted in the logged error and its received', async () => {
+test('A credential in a failed request properties is redacted in the logged error, which keeps no received', async () => {
   mockEcho.mockImplementationOnce(() => {
     throw new Error(`Upstream refused key ${newKey}.`);
   });
@@ -198,7 +199,7 @@ test('A credential in a failed request properties is redacted in the logged erro
   expect(res.status).toEqual('error');
   lines.forEach((line) => expect(line).not.toContain(newKey));
   const errorLine = JSON.parse(lines.find((line) => JSON.parse(line).level === 'error'));
-  expect(errorLine.received).toEqual({ key: '[REDACTED]' });
+  expect(errorLine).not.toHaveProperty('received');
 });
 
 test('_credential outside a credential scope throws', async () => {
@@ -211,7 +212,7 @@ test('_credential outside a credential scope throws', async () => {
 
 test('A credential the dispatcher marked is redacted in a detached target that reads it from its payload', async () => {
   process.env.CRON_SECRET = 'detached-hop-secret';
-  const fetchMock = jest.fn(async () => ({ status: 202 }));
+  const fetchMock = vi.fn(async () => ({ status: 202 }));
   global.fetch = fetchMock;
   const dispatcher = await runInCredentialScope(async () => {
     const lines = [];
@@ -262,14 +263,14 @@ test('A credential the dispatcher marked is redacted in a detached target that r
   });
   expect(target.result.success).toBe(true);
   const setState = target.lines.find((line) => line.includes('debug_control_set_state'));
-  expect(JSON.parse(setState).evaluated.key).toEqual('[REDACTED]');
+  expect(JSON.parse(setState)).not.toHaveProperty('evaluated');
   target.lines.forEach((line) => expect(line).not.toContain(newKey));
 });
 
 test('A member token CreateMcpToken makes is redacted in every log line and returned whole', async () => {
   const adapter = {
-    findOne: jest.fn(async () => ({ id: 'member_1' })),
-    create: jest.fn(async ({ data }) => ({ id: 'token_1', ...data })),
+    findOne: vi.fn(async () => ({ id: 'member_1' })),
+    create: vi.fn(async ({ data }) => ({ id: 'token_1', ...data })),
   };
   const { lines, res } = await runInCredentialScope(() => {
     const lines = [];
@@ -321,6 +322,5 @@ test('A member token CreateMcpToken makes is redacted in every log line and retu
   );
   lines.forEach((line) => expect(line).not.toContain(token));
   const endCall = JSON.parse(lines.find((line) => line.includes('debug_end_endpoint_call')));
-  expect(endCall.response.token).toEqual('[REDACTED]');
-  expect(endCall.response.start).toEqual(token.slice(0, 12));
+  expect(endCall).not.toHaveProperty('response');
 });

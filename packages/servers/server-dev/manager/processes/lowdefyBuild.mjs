@@ -37,13 +37,14 @@ function lowdefyBuild({ directories, logger, options }) {
     // builds, and the next change must rebuild and publish it whole.
     let result;
     try {
-      const [customTypesMap, customMessagesMap] = await Promise.all([
-        createCustomPluginTypesMap({ directories, logger }),
-        createCustomPluginMessagesMap({ directories, logger }),
+      const [{ customTypesMap, customTypesMapMobile }, customMessagesMap] = await Promise.all([
+        createCustomPluginTypesMap({ cache: true, directories, logger }),
+        createCustomPluginMessagesMap({ cache: true, directories, logger }),
       ]);
       result = await shallowBuild({
         customMessagesMap,
         customTypesMap,
+        customTypesMapMobile,
         directories: { ...directories, build: directories.buildStaging },
         logger,
         pluginInstallFollows,
@@ -63,7 +64,9 @@ function lowdefyBuild({ directories, logger, options }) {
       await writeBuildStatus({
         directories,
         status: 'error',
-        errors: error.errors ?? [{ message: error.message }],
+        // A failure before the build's own error collection (a plugin that fails
+        // to import, a failed publish) keeps its name, cause and stack.
+        errors: error.errors ?? [serializeBuildException(error)],
         warnings: error.warnings ?? [],
       });
       throw error;

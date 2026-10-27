@@ -19,8 +19,16 @@ import { type } from '@lowdefy/helpers';
 
 import createAcceptExistingMemberHook from '../organizations/createAcceptExistingMemberHook.js';
 import createEmailSendGate from '../organizations/createEmailSendGate.js';
+import createEmailCodeHolderGate from './createEmailCodeHolderGate.js';
+import createEmailSendLimit from './createEmailSendLimit.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
+import createSuspendedMemberGate, {
+  MEMBERSHIP_FREE_PATHS,
+} from '../organizations/createSuspendedMemberGate.js';
+import createSuspendedOrganizationsFilter from '../organizations/createSuspendedOrganizationsFilter.js';
+import createKnownDeviceHook from '../mobile/createKnownDeviceHook.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
+import createSignInRefusedRedirectHook from './createSignInRefusedRedirectHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
 import redirectToChallenge from './redirectToChallenge.js';
@@ -78,6 +86,29 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   // the code is minted inside sendMagicLink, which only runs after the
   // magic-link gate has already admitted the address.
   if (authConfig.emailOTP?.enabled === true) {
+    // Apps with phones sign in by email code by default, so codes are capped at
+    // 5 in 15 minutes, per phone and per address (createEmailSendLimit). The
+    // password reset code is another unauthenticated send to the same address.
+    // Registered ahead of the gate.
+    if (!type.isNone(authConfig.mobile)) {
+      before.push({
+        id: 'emailOtpSendLimit',
+        matches: (path) =>
+          path === '/email-otp/send-verification-otp' || path === '/forget-password/email-otp',
+        handler: createEmailSendLimit({
+          codeSeconds: authConfig.emailOTP.expiresIn,
+          getAuth,
+          max: 5,
+          windowSeconds: 900,
+        }),
+      });
+      // Only the known phone holding the live code may try it (holdEmailCode).
+      before.push({
+        id: 'emailOtpCodeHolderGate',
+        matches: (path) => path === '/sign-in/email-otp',
+        handler: createEmailCodeHolderGate({ getAuth }),
+      });
+    }
     before.push({
       id: 'emailOtpSendGate',
       matches: (path) => path === '/email-otp/send-verification-otp',
@@ -100,6 +131,22 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
     handler: createExpiredInvitationGate({ getAuth }),
   });
 
+  // A member suspended in an organization is a non-member to the organization
+  // plugin's own client endpoints too. Tenant only: under pinned every one of
+  // these paths is disabled.
+  if (authConfig.organizations?.policy === 'tenant') {
+    before.push({
+      id: 'suspendedMemberGate',
+      matches: (path) => path.startsWith('/organization/') && !MEMBERSHIP_FREE_PATHS.includes(path),
+      handler: createSuspendedMemberGate(),
+    });
+    after.push({
+      id: 'suspendedOrganizationsFilter',
+      matches: (path) => path === '/organization/list',
+      handler: createSuspendedOrganizationsFilter(),
+    });
+  }
+
   // The post-login organization choice (buildOauthPostLogin): stamps the
   // request's cached session when /oauth2/continue confirms the choice, so the
   // authorize call it re-enters with does not send the member back to the
@@ -109,6 +156,23 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
       id: 'oauthPostLogin',
       matches: (path) => path === '/oauth2/continue',
       handler: createOauthPostLoginHook(),
+    });
+  }
+
+  // A sign-in refused at session creation (banned, no membership, an app hook's
+  // :reject) answers the browser with a redirect to the error page rather than
+  // raw JSON.
+  // Registered ahead of the magic-link two-factor challenge, which has no
+  // session to act on when the refusal fires. /verify-email and
+  // /email-otp/verify-email need no counterpart: they create a session only with
+  // emailVerification.autoSignInAfterVerification or user.changeEmail, and
+  // getBetterAuthConfig sets neither, so a verification link cannot be refused
+  // this way. Setting either one would open the same gap there.
+  if (authConfig.magicLink?.enabled === true) {
+    after.push({
+      id: 'magicLinkSignInRefused',
+      matches: (path) => path === '/magic-link/verify',
+      handler: createSignInRefusedRedirectHook(),
     });
   }
 
@@ -272,6 +336,16 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         exit: (ctx) => ctx.json({ twoFactorRedirect: true, twoFactorMethods: ['totp'] }),
       })
     );
+  }
+
+  // After the two-factor challenge, which answers first when a second factor is
+  // needed: only a sign-in that kept its session records a known phone.
+  if (!type.isNone(authConfig.mobile) && authConfig.emailOTP?.enabled === true) {
+    after.push({
+      id: 'emailOtpKnownDevice',
+      matches: (path) => path === '/sign-in/email-otp',
+      handler: createKnownDeviceHook({ getAuth }),
+    });
   }
 
   return {

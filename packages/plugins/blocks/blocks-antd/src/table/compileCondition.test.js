@@ -16,6 +16,7 @@
 
 import compileCondition from './compileCondition.js';
 import normalizeColumns from './normalizeColumns.js';
+import { expect, test } from 'vitest';
 
 const { columnsByKey } = normalizeColumns({
   columns: [

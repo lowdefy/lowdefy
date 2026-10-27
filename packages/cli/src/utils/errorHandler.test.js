@@ -14,30 +14,30 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('@lowdefy/logger/cli', () => {
+vi.doMock('@lowdefy/logger/cli', () => {
   const logger = {
-    error: jest.fn(),
-    warn: jest.fn(),
-    info: jest.fn(),
-    debug: jest.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
   };
-  const createCliLogger = jest.fn(() => logger);
+  const createCliLogger = vi.fn(() => logger);
   return {
     default: createCliLogger,
     createCliLogger,
   };
 });
 
-jest.unstable_mockModule('axios', () => ({
+vi.doMock('axios', () => ({
   default: {
-    request: jest.fn(),
+    request: vi.fn(),
   },
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('Print and log error with full context', async () => {
@@ -64,7 +64,7 @@ test('Print and log error with full context', async () => {
   expect(axiosArguments.data.message).toEqual('Test error');
   expect(axiosArguments.data.name).toEqual('Error');
   expect(axiosArguments.data.source).toEqual('cli');
-  expect(axiosArguments.data.stack).toMatch('Error: Test error');
+  expect(axiosArguments.data.stack).toMatch(/^ +at /);
   expect(axiosArguments.data.lowdefyVersion).toEqual('lowdefyVersion');
   expect(axiosArguments.data.command).toEqual('command');
 });
@@ -91,7 +91,7 @@ test('Print and log error with starting context', async () => {
   expect(axiosArguments.data.message).toEqual('Test error');
   expect(axiosArguments.data.name).toEqual('Error');
   expect(axiosArguments.data.source).toEqual('cli');
-  expect(axiosArguments.data.stack).toMatch('Error: Test error');
+  expect(axiosArguments.data.stack).toMatch(/^ +at /);
   expect(axiosArguments.data.lowdefyVersion).toBe(undefined);
   expect(axiosArguments.data.command).toBe(undefined);
 });

@@ -17,6 +17,7 @@
 import { isTraceId } from '@lowdefy/helpers';
 
 import journeyRunRecording from './journeyRunRecording.js';
+import { expect, test } from 'vitest';
 
 test('journeyRunRecording keeps the recording a caller passes', () => {
   const recording = {

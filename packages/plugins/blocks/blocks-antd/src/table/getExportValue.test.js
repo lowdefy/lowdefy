@@ -19,6 +19,7 @@ import { nunjucksFunction } from '@lowdefy/nunjucks';
 import compileColumns from './compileColumns.js';
 import getExportValue from './getExportValue.js';
 import normalizeColumns from './normalizeColumns.js';
+import { expect, test } from 'vitest';
 
 const normalized = normalizeColumns({
   columns: [

@@ -1,0 +1,236 @@
+# A list page: a large title that collapses as the page scrolls, a native search bar,
+# pull-to-refresh and an add button in the header. onFocus reloads the list each time the
+# screen is shown again (a tab switch, or back from a task).
+- id: m-tasks
+  type: Screen
+  properties:
+    title: Tasks
+    largeTitle: true
+    headerSearch:
+      placeholder: Search tasks
+    headerActions:
+      - id: add
+        icon: add
+        title: New task
+  events:
+    onFocus:
+      - id: load
+        type: Request
+        params: get_tasks
+    onRefresh:
+      - id: reload
+        type: Request
+        params: get_tasks
+    onSearchChange:
+      - id: set_search
+        type: SetState
+        params:
+          search:
+            _event: value
+      - id: search
+        type: Request
+        params: get_tasks
+    onHeaderAction:
+      - id: new_task
+        type: Link
+        params:
+          pageId: m-new-task
+  blocks:
+    - id: tasks
+      type: List
+      blocks:
+        - id: tasks.$.row
+          type: ListItem
+          properties:
+            title:
+              _state: tasks.$.title
+          events:
+            onClick:
+              - id: open
+                type: Link
+                params:
+                  pageId: m-task
+                  urlQuery:
+                    key:
+                      _state: tasks.$.key
+
+# A list page with a space switcher and a filter pinned under the search field: they ride with
+# the content as the large title collapses, then stay under the header, on the screen's
+# background with a hairline, as the list scrolls on.
+- id: m-designs
+  type: Screen
+  properties:
+    title: Designs
+    largeTitle: true
+    headerSearch:
+      placeholder: Search designs
+  events:
+    onFocus:
+      - id: load
+        type: Request
+        params: get_designs
+  slots:
+    headerBottom:
+      blocks:
+        - id: space_id
+          type: ChipSelector
+          properties:
+            title: Space
+            options:
+              _request: get_spaces
+            moreChip:
+              label: All spaces
+              icon: LayoutGrid
+          events:
+            onChange:
+              - id: load
+                type: Request
+                params: get_designs
+            onMore:
+              - id: open
+                type: CallMethod
+                params:
+                  blockId: spaces_sheet
+                  method: open
+        - id: scope
+          type: SegmentedControl
+          properties:
+            title: Scope
+            options:
+              - Open
+              - Mine
+              - All
+          events:
+            onChange:
+              - id: load
+                type: Request
+                params: get_designs
+    content:
+      blocks:
+        - id: designs
+          type: List
+          blocks:
+            - id: designs.$.row
+              type: ListItem
+              properties:
+                title:
+                  _state: designs.$.title
+        - id: spaces_sheet
+          type: Sheet
+          properties:
+            title: All spaces
+
+# A detail page: a standard title, a header button that triggers its own event, and a ⋯ menu
+# whose picked item reaches onHeaderAction. The page reads its key from the query it was opened
+# with; two task screens stacked on each other keep their own state.
+- id: m-task
+  type: Screen
+  properties:
+    title:
+      _state: task.key
+    headerActions:
+      - id: share
+        icon: share
+        event: onShare
+      - id: edit
+        icon: edit
+        sfSymbol: square.and.pencil
+        event: onEdit
+      - id: more
+        icon: Ellipsis
+        sfSymbol: ellipsis
+        title: More
+        items:
+          - id: copy_link
+            title: Copy link
+            symbol: link
+          - id: archive
+            title: Archive
+            symbol: archivebox
+            destructive: true
+  events:
+    onInit:
+      - id: key
+        type: SetState
+        params:
+          key:
+            _url_query: key
+    onShare:
+      - id: copy
+        type: CopyToClipboard
+        params:
+          copy:
+            _state: task.url
+    onHeaderAction:
+      - id: copy_link
+        type: CopyToClipboard
+        skip:
+          _ne:
+            - _event: id
+            - copy_link
+        params:
+          copy:
+            _state: task.url
+    onEdit:
+      - id: edit
+        type: Link
+        params:
+          pageId: m-edit-task
+          urlQuery:
+            key:
+              _state: key
+  blocks:
+    - id: body
+      type: Markdown
+      properties:
+        content:
+          _state: task.body
+
+# A search page for a `role: search` tab: the search field takes focus each time the tab
+# is picked.
+- id: m-search
+  type: Screen
+  properties:
+    title: Search
+    headerSearch:
+      placeholder: Designs, tasks and people
+      autoFocus: true
+  events:
+    onSearchChange:
+      - id: search
+        type: Request
+        params: search_all
+    onSearch:
+      - id: search
+        type: Request
+        params: search_all
+  blocks:
+    - id: results
+      type: List
+
+# A detail page washed in its space's colour: the tint shows behind the large title and through
+# the navigation bar's glass, fades out a fifth of the way down the screen, and cross-fades when
+# the page moves to a design of another space.
+- id: m-design
+  type: Screen
+  properties:
+    title:
+      _state: design.title
+    largeTitle: true
+    backgroundTint:
+      color:
+        _state: design.space_color
+      colorDark:
+        _state: design.space_color_dark
+      height: 0.2
+  events:
+    onInit:
+      - id: load
+        type: Request
+        params: get_design
+  blocks:
+    - id: body
+      type: Markdown
+      properties:
+        content:
+          _state: design.body

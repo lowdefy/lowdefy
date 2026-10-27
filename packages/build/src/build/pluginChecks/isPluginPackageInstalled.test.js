@@ -15,6 +15,7 @@
 */
 
 import isPluginPackageInstalled from './isPluginPackageInstalled.js';
+import { expect, test } from 'vitest';
 
 test('isPluginPackageInstalled finds a package the build package depends on', () => {
   expect(

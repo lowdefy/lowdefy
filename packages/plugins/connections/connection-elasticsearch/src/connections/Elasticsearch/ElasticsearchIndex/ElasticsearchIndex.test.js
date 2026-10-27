@@ -14,13 +14,19 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
-mockElasticsearchClient.index = jest.fn(() => mockElasticsearchClient);
-jest.unstable_mockModule('@elastic/elasticsearch', () => ({
-  Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
+const mockElasticsearchClient = vi.fn(function () {
+  return mockElasticsearchClient;
+});
+mockElasticsearchClient.index = vi.fn(function () {
+  return mockElasticsearchClient;
+});
+vi.doMock('@elastic/elasticsearch', () => ({
+  Client: vi.fn().mockImplementation(function () {
+    return mockElasticsearchClient;
+  }),
 }));
 
 const connection = {
@@ -111,7 +117,9 @@ test('ElasticsearchIndex', async () => {
       _primary_term: 1,
     },
   };
-  mockElasticsearchClient.index.mockImplementationOnce(() => Promise.resolve(responseData));
+  mockElasticsearchClient.index.mockImplementationOnce(function () {
+    return Promise.resolve(responseData);
+  });
   const request = {
     id: 42,
     body: {

@@ -15,6 +15,7 @@
 */
 
 import resolveDevAuthUrl from './resolveDevAuthUrl.mjs';
+import { expect, test } from 'vitest';
 
 test('a localhost origin on another port follows the dev server port', () => {
   expect(resolveDevAuthUrl({ configured: 'http://localhost:3000', port: 4102 })).toEqual({

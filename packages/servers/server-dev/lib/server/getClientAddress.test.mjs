@@ -15,9 +15,9 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
-jest.unstable_mockModule('../build/config.js', () => ({ default: {} }));
+vi.doMock('../build/config.js', () => ({ default: {} }));
 
 const { default: getClientAddress } = await import('./getClientAddress.js');
 const { journeyActorToken } = await import('./auth/journeyActor.js');

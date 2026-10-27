@@ -15,6 +15,7 @@
 */
 
 import iconSets from './iconSets.js';
+import { expect, test } from 'vitest';
 
 test('iconSets declares the react-icons set with listIcons and loadIcons', () => {
   expect(Object.keys(iconSets)).toEqual(['react-icons']);

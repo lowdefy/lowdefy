@@ -18,14 +18,14 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 const realFs = await import('fs/promises');
 const moved = [];
 
 // readdir order is up to the file system. Listing in reverse alphabetical order puts the
 // maps ahead of idCounter.json, so only an explicit order passes.
-jest.unstable_mockModule('fs/promises', () => ({
+vi.doMock('fs/promises', () => ({
   default: {
     ...realFs.default,
     readdir: async (...args) => (await realFs.default.readdir(...args)).reverse(),

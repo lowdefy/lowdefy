@@ -17,7 +17,9 @@
 import buildTestPage from '@lowdefy/build/buildTestPage';
 
 import getContext from '../src/getContext.js';
+import getContextGlobals from '../src/getContextGlobals.js';
 import rememberPath from '../src/rememberPath.js';
+import { expect, test } from 'vitest';
 
 const resetContext = { reset: false, setReset: () => {} };
 
@@ -246,4 +248,42 @@ test('leaving the organization rebuilds a page instance built in it', async () =
   const left = await visit({ lowdefy, config, ticket_id: '1' });
   expect(left).not.toBe(member);
   expect(left._internal.organizationId).toBe(null);
+});
+
+test('two screens of one page keep their own context and state when named by instanceId', async () => {
+  const lowdefy = getLowdefy();
+  const config = buildTestPage({ pageConfig: { id: 'task', type: 'Box' } });
+  // A Link to the page leaves its input under the page's key before the screen renders.
+  lowdefy.inputs['page:task'] = { from: 'A link' };
+  const taskA = getContext({ config, instanceId: 'route-a', lowdefy, resetContext });
+  lowdefy.inputs['page:task'] = { from: 'B link' };
+  const taskB = getContext({ config, instanceId: 'route-b', lowdefy, resetContext });
+  expect(taskA).not.toBe(taskB);
+  expect(taskA.instanceKey).toEqual('page:task@route-a');
+  expect(taskB.instanceKey).toEqual('page:task@route-b');
+  taskA.state.key = 'A';
+  taskB.state.key = 'B';
+  // Back from B: the A screen renders again and finds its own context.
+  expect(getContext({ config, instanceId: 'route-a', lowdefy, resetContext })).toBe(taskA);
+  expect(taskA.state).toEqual({ key: 'A' });
+  expect(lowdefy.inputs['page:task@route-a']).toEqual({ from: 'A link' });
+  expect(lowdefy.inputs['page:task@route-b']).toEqual({ from: 'B link' });
+});
+
+test('a context given its own globals reads its location, not the app globals', async () => {
+  const lowdefy = getLowdefy();
+  lowdefy._internal.globals = { window: { location: { search: '?key=TOP' } } };
+  const screenGlobals = { window: { location: { search: '?key=A' } } };
+  const config = buildTestPage({ pageConfig: { id: 'task', type: 'Box' } });
+  const context = getContext({
+    config,
+    globals: screenGlobals,
+    instanceId: 'route-a',
+    lowdefy,
+    resetContext,
+  });
+  expect(context._internal.globals).toBe(screenGlobals);
+  expect(getContextGlobals(context).window.location.search).toEqual('?key=A');
+  const appContext = getContext({ config, lowdefy, resetContext });
+  expect(getContextGlobals(appContext).window.location.search).toEqual('?key=TOP');
 });

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import composeAfterSlot from './composeAfterSlot.js';
 import composeBeforeSlot from './composeBeforeSlot.js';
@@ -47,7 +47,7 @@ test('composeBeforeSlot passes the record on unchanged when a hook falls through
 });
 
 test('composeBeforeSlot short-circuits on the first hook returning false', async () => {
-  const second = jest.fn();
+  const second = vi.fn();
   const slot = composeBeforeSlot({
     hooks: [async () => false, second],
   });
@@ -57,7 +57,7 @@ test('composeBeforeSlot short-circuits on the first hook returning false', async
 });
 
 test('composeBeforeSlot lets a thrown error propagate and skips later hooks', async () => {
-  const second = jest.fn();
+  const second = vi.fn();
   const slot = composeBeforeSlot({
     hooks: [
       async () => {

@@ -44,8 +44,9 @@ async function controlParallelFor(context, routineContext, { control }) {
 
   const itemName = control[':parallel_for'];
   if (!itemName) {
-    throw new Error(
-      `Invalid :parallel_for in endpoint "${endpointId}" - missing variable name in :parallel_for.`
+    throw new ConfigError(
+      `Invalid :parallel_for in endpoint "${endpointId}" - missing variable name in :parallel_for.`,
+      { configKey: control['~k'] }
     );
   }
 
@@ -56,7 +57,7 @@ async function controlParallelFor(context, routineContext, { control }) {
 
   logger.debug({
     event: 'debug_control_parallel',
-    array,
+    itemCount: Array.isArray(array) ? array.length : null,
     itemName,
   });
 
@@ -68,7 +69,9 @@ async function controlParallelFor(context, routineContext, { control }) {
   }
 
   if (!control[':do']) {
-    throw new Error(`Invalid :parallel_for in endpoint "${endpointId}" - missing :do.`);
+    throw new ConfigError(`Invalid :parallel_for in endpoint "${endpointId}" - missing :do.`, {
+      configKey: control['~k'],
+    });
   }
 
   const concurrency = evaluateRoutineOperators(context, routineContext, {
@@ -93,9 +96,8 @@ async function controlParallelFor(context, routineContext, { control }) {
 
       logger.debug({
         event: 'debug_control_parallel_iteration',
-        itemName: itemName,
-        value: item,
-        items: updatedItems,
+        itemName,
+        index,
       });
 
       return runRoutine(

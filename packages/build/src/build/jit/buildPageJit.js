@@ -20,6 +20,8 @@ import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addKeys from '../addKeys.js';
+import validateMobileStyles from '../buildMobile/validateMobileStyles.js';
+import validateNativeIgnoredProperties from '../buildMobile/validateNativeIgnoredProperties.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
@@ -38,6 +40,8 @@ import { tagRefDeep } from '../buildRefs/walker.js';
 import warnUnsetEnvReads from '../buildRefs/warnUnsetEnvReads.js';
 import testSchema from '../testSchema.js';
 import validateIconNames from '../icons/validateIconNames.js';
+import buildPageClassMapJit from './buildPageClassMapJit.js';
+import buildPageIconsJit from './buildPageIconsJit.js';
 import createPageBuildContext from './createPageBuildContext.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
@@ -141,10 +145,15 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // build's testSchema does. Before auth is attached: it is not page config.
     testSchema({ components: processed, context: buildContext, schema: pageSchema });
 
-    // Apply skeleton-computed auth and path (buildAuth ran during skeleton
+    // Apply skeleton-computed auth, path and target (buildAuth ran during skeleton
     // build, and buildModules scoped a module page's path to its entry).
     processed.auth = pageEntry.auth;
     processed.path = pageEntry.path;
+    // A mobile page resolves its client types against the native types map
+    // (buildPage), as in the full build.
+    if (!type.isUndefined(pageEntry.target)) {
+      processed.target = pageEntry.target;
+    }
 
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({
@@ -152,6 +161,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     });
     // buildPage collects the page's action references on this build's context.
     buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
+    // After buildPage: styles are keyed by slot (normalizeClassAndStyles), as
+    // in the full build.
+    validateMobileStyles({ components: { pages: [processed] }, context: buildContext });
+    validateNativeIgnoredProperties({
+      components: { pages: [processed] },
+      context: buildContext,
+    });
 
     // Validate that all page-level types (blocks, actions, operators) exist
     validatePageTypes({ context: buildContext });
@@ -234,6 +250,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
 
+    // A mobile page's own class map entries, which the skeleton build's class
+    // map does not hold. Before _js extraction, like the web's Tailwind scan.
+    const pageClassMap = await buildPageClassMapJit({ page: processed, context: buildContext });
+
     // Collect Tailwind class candidates before _js extraction — jsMapParser
     // replaces _js source with hashes, so classes used only inside _js source
     // would otherwise never reach the Tailwind scanner.
@@ -249,6 +269,17 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       env: 'server',
     });
     const finalPage = { ...cleanPage, requests: cleanRequests };
+    // Written with the page, so a page served from its last build still has
+    // it; the dev mobile client lays it over the root class map.
+    if (!type.isUndefined(pageClassMap)) {
+      finalPage._classMap = pageClassMap;
+    }
+    // After _js extraction: a page reaches its functions' icon names through
+    // their hashes, as in the full build.
+    const pageIcons = await buildPageIconsJit({ page: cleanPage, context: buildContext });
+    if (!type.isUndefined(pageIcons)) {
+      finalPage._icons = pageIcons;
+    }
 
     // Check for collected errors from validation steps
     if (buildErrors.length > 0) {

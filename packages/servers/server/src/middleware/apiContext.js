@@ -128,6 +128,13 @@ function apiContext({ clientAddressHeader } = {}) {
       websockets,
     };
     context.handleError = createHandleError({ context });
+    // Set as soon as the context can sink an error: the auth steps below can throw, and the
+    // error handler reads the context back to log a fault with the request id and its location
+    // rather than raw.
+    c.set('lowdefyContext', context);
+    // Echo the request id so clients and proxies can quote it when reporting
+    // a failure, and it can be matched to the rid on the server log lines.
+    c.header('x-request-id', context.rid);
     // Resolved once per request: the auth route hands it to BetterAuth, and the
     // request log records it.
     context.clientAddress = getClientAddress({
@@ -170,10 +177,6 @@ function apiContext({ clientAddressHeader } = {}) {
     void resolveTenantPreflight(context, {
       captureError: (error) => captureSentryError({ error, context }),
     });
-    c.set('lowdefyContext', context);
-    // Echo the request id so clients and proxies can quote it when reporting
-    // a failure, and it can be matched to the rid on the server log lines.
-    c.header('x-request-id', context.rid);
     const startTime = performance.now();
     // Handler errors never reject next() — Hono's compose routes them to the
     // app-level error handler at the throwing dispatch level, so by the time

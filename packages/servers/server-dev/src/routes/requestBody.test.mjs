@@ -17,36 +17,30 @@
 import { fileURLToPath } from 'node:url';
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 
 import { isSameOriginRequest, parseRequestBody } from '@lowdefy/api';
 
 // usage.js reads package.json from the working directory as it loads, and a suite that
-// ran earlier in the same jest worker may have left the working directory in a temporary
+// ran earlier in the same test worker may have left the working directory in a temporary
 // fixture directory.
 process.chdir(fileURLToPath(new URL('../..', import.meta.url)));
 
-const mockGetEndpointConfig = jest.fn().mockRejectedValue(new Error('not found'));
-const mockRunWebhookEndpoint = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  acceptDetachedEndpoint: jest.fn(),
-  callAgent: jest.fn(),
-  callEndpoint: jest.fn(),
-  callRequest: jest.fn(),
+const mockGetEndpointConfig = vi.fn().mockRejectedValue(new Error('not found'));
+const mockRunWebhookEndpoint = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
+  acceptDetachedEndpoint: vi.fn(),
+  callAgent: vi.fn(),
+  callEndpoint: vi.fn(),
+  callRequest: vi.fn(),
   getEndpointConfig: mockGetEndpointConfig,
-  logClientError: jest.fn(),
+  logClientError: vi.fn(),
   isSameOriginRequest,
   parseRequestBody,
-  redactErrorResponse: jest.fn(),
+  redactErrorResponse: vi.fn(),
   runWebhookEndpoint: mockRunWebhookEndpoint,
 }));
-jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({ default: jest.fn() }));
-jest.unstable_mockModule('../../lib/docs/devMockRegistry.js', () => ({
-  getMock: jest.fn(),
-  loadMocks: jest.fn(),
-}));
-jest.unstable_mockModule('../../lib/docs/loadState.js', () => ({ default: jest.fn() }));
-jest.unstable_mockModule('../../lib/docs/snapshotState.js', () => ({ default: jest.fn() }));
+vi.doMock('../../lib/server/jitPageBuilder.js', () => ({ default: vi.fn() }));
 
 const { default: createErrorHandler } = await import('../middleware/errorHandler.js');
 const routes = {
@@ -58,17 +52,14 @@ const routes = {
   '/api/endpoints/*': (await import('./endpoints.js')).default,
   '/api/request/*': (await import('./request.js')).default,
   '/api/usage': (await import('./usage.js')).default,
-  '/lowdefy-docs/state-checkpoints/load': (await import('./docs/loadState.js')).default,
-  '/lowdefy-docs/state-checkpoints/snapshot': (await import('./docs/snapshotState.js')).default,
-  '/lowdefy-feedback': (await import('./feedback.js')).default,
 };
 
-const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 function createApp() {
   const app = new Hono();
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { logger, handleError: jest.fn() });
+    c.set('lowdefyContext', { logger, handleError: vi.fn() });
     await next();
   });
   Object.entries(routes).forEach(([path, handler]) => app.all(path, handler));
@@ -91,7 +82,6 @@ afterAll(() => {
 const sameOrigin = { host: 'localhost', origin: 'http://localhost' };
 const notJson = JSON.stringify({ name: 'UserError', message: 'Request body is not valid JSON.' });
 
-// Paths outside /api/ get the error handler's plain-text answer.
 test.each([
   ['/api/endpoints/save', {}, notJson],
   ['/api/request/orders/load', {}, notJson],
@@ -101,9 +91,6 @@ test.each([
   ['/api/client-error', sameOrigin, notJson],
   ['/api/dev-inspect', sameOrigin, notJson],
   ['/api/dev-inspect/page', sameOrigin, notJson],
-  ['/lowdefy-docs/state-checkpoints/load', {}, 'Bad Request'],
-  ['/lowdefy-docs/state-checkpoints/snapshot', {}, 'Bad Request'],
-  ['/lowdefy-feedback', sameOrigin, 'Bad Request'],
 ])(
   'POST %s with a body that is not JSON answers 400 and logs a warning',
   async (path, headers, text) => {

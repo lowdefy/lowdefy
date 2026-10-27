@@ -15,6 +15,7 @@
 */
 
 import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { expect } from 'vitest';
 
 // expect.hidden, expect.calls and click.count, run by the real runner over the
 // fixture app.

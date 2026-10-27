@@ -81,9 +81,9 @@ function getBetterAuth({
   }
 
   // Ensure the unique indexes the organization writes rely on at startup. The
-  // tenant signup mint awaits the same ensure and refuses to mint without
-  // them. A failure is logged by ensureAuthIndexes and retried after its
-  // cool-down, so nothing is left to handle here.
+  // tenant signup mint and the CreateOrganization step await the same ensure
+  // and write nothing without them. A failure is logged by ensureAuthIndexes
+  // and retried after its cool-down, so nothing is left to handle here.
   if (authJson.database) {
     ensureAuthIndexes({ auth: instance, logger }).catch(() => {});
   }

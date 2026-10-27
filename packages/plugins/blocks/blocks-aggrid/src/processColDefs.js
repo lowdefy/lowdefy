@@ -51,12 +51,51 @@ const HEADER_ALIGN_CLASS = {
   right: 'ag-right-aligned-header',
 };
 
+// The flex alignments a cellStyle could use while every cell was a flex container, and their
+// block equivalents. Values without one (space-between, stretch, baseline) are left as they are.
+const FLEX_TO_TEXT_ALIGN = {
+  'flex-start': 'start',
+  start: 'start',
+  left: 'left',
+  center: 'center',
+  'flex-end': 'end',
+  end: 'end',
+  right: 'right',
+};
+const FLEX_TO_ALIGN_CONTENT = {
+  'flex-start': 'start',
+  start: 'start',
+  center: 'center',
+  'flex-end': 'end',
+  end: 'end',
+};
+
+// A cell holding only text lays out as a block (see ag-grid-antd.module.css), where
+// justifyContent and alignItems do nothing. Columns that aligned their text that way, from before
+// those cells were blocks, keep their alignment through the block equivalents.
+function applyBlockAlignment(colDef) {
+  if (!type.isObject(colDef.cellStyle)) return colDef;
+  const cellStyle = { ...colDef.cellStyle };
+  const textAlign = FLEX_TO_TEXT_ALIGN[cellStyle.justifyContent];
+  if (type.isNone(cellStyle.textAlign) && !type.isNone(textAlign)) {
+    cellStyle.textAlign = textAlign;
+  }
+  const alignContent = FLEX_TO_ALIGN_CONTENT[cellStyle.alignItems];
+  if (type.isNone(cellStyle.alignContent) && !type.isNone(alignContent)) {
+    cellStyle.alignContent = alignContent;
+  }
+  return { ...colDef, cellStyle };
+}
+
 function applyAlignment(colDef, cell) {
   if (!type.isObject(cell)) return colDef;
   const align = cell.align ?? (cell.type === 'number' ? 'right' : undefined);
   if (!align || !JUSTIFY_MAP[align]) return colDef;
   const cellStyle = { ...(type.isObject(colDef.cellStyle) ? colDef.cellStyle : {}) };
   if (type.isNone(cellStyle.justifyContent)) cellStyle.justifyContent = JUSTIFY_MAP[align];
+  // A cell holding only text lays out as a block (see ag-grid-antd.module.css), where
+  // justifyContent does nothing.
+  if (type.isNone(cellStyle.textAlign)) cellStyle.textAlign = align;
   const headerClass = type.isString(colDef.headerClass)
     ? `${colDef.headerClass} ${HEADER_ALIGN_CLASS[align]}`
     : type.isArray(colDef.headerClass)
@@ -137,7 +176,7 @@ function recProcessColDefs(columnDefs, methods, components, cache, seen, prefix)
     } else if (type.isFunction(col.cellRenderer)) {
       const cellRenderer = col.cellRenderer;
       newColDef.cellRenderer = stableRenderer(entry, 'cell', (params) =>
-        renderHtml({ html: cellRenderer(params), methods })
+        renderHtml({ className: 'lf-cell-html', html: cellRenderer(params), methods })
       );
     }
     const merged = {
@@ -147,7 +186,7 @@ function recProcessColDefs(columnDefs, methods, components, cache, seen, prefix)
     // `cell` is our config object — ag-grid would ignore it, but strip to keep colDef clean.
     delete merged.cell;
     delete merged.ellipsis;
-    const aligned = applyAlignment(merged, col.cell);
+    const aligned = applyAlignment(applyBlockAlignment(merged), col.cell);
     return applyEllipsis(aligned, col.ellipsis, () =>
       stableRenderer(entry, 'ellipsis', createEllipsisCell(col.ellipsis))
     );

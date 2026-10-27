@@ -17,7 +17,7 @@
 import path from 'node:path';
 
 import { callRequest } from '@lowdefy/api';
-import { ConfigError } from '@lowdefy/errors';
+import { UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import buildPageIfNeeded, { syncBuildSignals } from '../server/jitPageBuilder.js';
@@ -60,23 +60,23 @@ async function runRequest({
   honoContext,
 }) {
   if (type.isUndefined(pageId) || !type.isString(pageId)) {
-    throw new ConfigError(
+    throw new UserError(
       `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
     );
   }
   if (type.isUndefined(requestId) || !type.isString(requestId)) {
-    throw new ConfigError(
+    throw new UserError(
       `run_request requires a "requestId" string. Received ${JSON.stringify(requestId)}.`
     );
   }
 
   const caller = await resolveToolCaller({ user, data });
   if (!type.isUndefined(caller.error)) {
-    throw new ConfigError(`run_request: ${caller.error}`);
+    throw new UserError(`run_request: ${caller.error}`);
   }
 
   if (!type.isBoolean(saveResponse)) {
-    throw new ConfigError(
+    throw new UserError(
       `run_request "saveResponse" must be a boolean. Received ${JSON.stringify(saveResponse)}.`
     );
   }
@@ -104,7 +104,7 @@ async function runRequest({
       refused: true,
       reason:
         `Request "${requestId}" was not found on page "${pageId}". ` +
-        `See GET /lowdefy-docs/app-map for the pages and requests that exist.`,
+        `See lowdefy_app_map for the pages and requests that exist.`,
     };
   }
 

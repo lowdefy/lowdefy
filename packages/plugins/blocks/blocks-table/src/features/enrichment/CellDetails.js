@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Drawer } from 'antd';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
+import fetchCellRaw from './fetchCellRaw.js';
 import formatCost from './formatCost.js';
 import formatJsonPreview from './formatJsonPreview.js';
 import formatRunDuration from './formatRunDuration.js';
@@ -129,10 +130,22 @@ function TruncatedRaw({ raw }) {
 }
 
 // The raw result tree, its root named after the column that ran (the extract source for an
-// extract cell).
-function RawResult({ api, raw, source }) {
+// extract cell). Only a raw result the rows carry can be added as extract columns, since extract
+// columns read it from the row.
+function RawResult({ addable, api, raw, source }) {
   if (raw === undefined || raw === null) return <p className="lf-enrich-muted">No raw result.</p>;
   if (raw._truncated === true) return <TruncatedRaw raw={raw} />;
+  if (!addable) {
+    return (
+      <>
+        <p className="lf-enrich-muted" data-lf-details-raw-fetched="">
+          Loaded from the raw result endpoint. The rows leave it out, so its values cannot be added
+          as columns.
+        </p>
+        <JsonTree label={htmlToText(source.title)} value={raw} />
+      </>
+    );
+  }
   return (
     <JsonTree
       label={htmlToText(source.title)}
@@ -140,6 +153,46 @@ function RawResult({ api, raw, source }) {
       value={raw}
     />
   );
+}
+
+const FINISHED = new Set(['ok', 'empty', 'error']);
+
+// The raw result as the row holds it, or, for a table with a `rawEndpoint` whose rows carry their
+// cells without it, loaded from that endpoint when the panel opens and again when the cell
+// finishes a new run.
+function RawSection({ api, run, rowKey, source }) {
+  const endpoint = api.config.enrichment.rawEndpoint;
+  const stored = run.state ? run.state.raw : undefined;
+  const fetchable = endpoint !== null && stored === undefined && FINISHED.has(run.status);
+  const finishedAt = run.state?.finishedAt ?? null;
+  const [fetched, setFetched] = useState(null);
+  useEffect(() => {
+    if (!fetchable) return undefined;
+    let live = true;
+    setFetched(null);
+    fetchCellRaw({ api, endpoint, rowKey, key: source.key }).then((answer) => {
+      if (live) setFetched(answer);
+    });
+    return () => {
+      live = false;
+    };
+  }, [fetchable, endpoint, rowKey, source.key, finishedAt]);
+  if (!fetchable) return <RawResult addable api={api} raw={stored} source={source} />;
+  if (fetched === null) {
+    return (
+      <p className="lf-enrich-muted" data-lf-details-raw-loading="">
+        Loading the raw result…
+      </p>
+    );
+  }
+  if (fetched.error) {
+    return (
+      <p className="lf-enrich-details-error" data-lf-details-raw-error="">
+        {fetched.error}
+      </p>
+    );
+  }
+  return <RawResult addable={false} api={api} raw={fetched.raw} source={source} />;
 }
 
 function renderBody({ api, column, row, rowId }) {
@@ -153,7 +206,6 @@ function renderBody({ api, column, row, rowId }) {
     provider: api.config.enrichment.providersById.get(runColumn.provider),
   });
   const rowKey = api.config.getKey(row);
-  const raw = run.state?.raw;
   return (
     <>
       <Section name="status" title="Status">
@@ -204,7 +256,13 @@ function renderBody({ api, column, row, rowId }) {
         <Inputs rows={inputRows} />
       </Section>
       <Section name="raw" title="Raw result">
-        <RawResult api={api} raw={raw} source={runColumn} />
+        <RawSection
+          api={api}
+          key={`${rowKey}:${runColumn.key}`}
+          run={run}
+          rowKey={rowKey}
+          source={runColumn}
+        />
       </Section>
     </>
   );
@@ -213,8 +271,9 @@ function renderBody({ api, column, row, rowId }) {
 // The cell details panel (design E6): an antd Drawer beside the table, loaded and mounted only
 // while open, reading the row live (a push update shows at once). It shows the run's status
 // (with Rerun, onCellRun), the value through the column's type, the error, the timings and
-// cost, the inputs the value was computed from, and the raw result as a JSON tree whose nodes can each be
-// added as an extract column (onColumnAdd). For an extract cell it shows its source column's run.
+// cost, the inputs the value was computed from, and the raw result as a JSON tree whose nodes
+// can each be added as an extract column (onColumnAdd), loaded from `rawEndpoint` (view only) when
+// the rows leave it out. For an extract cell it shows its source column's run.
 function CellDetails({ api, details }) {
   const column = api.config.columnsByKey.get(details.key);
   const row = api.table.getRow(details.rowId, true)?.original;

@@ -28,11 +28,14 @@ An app that sets nothing gets `pinned` with one auto-seeded organization, invite
 | `create` | `auto` \| `operator` | **tenant only** | `tenant` → `auto` | How a tenant organization comes into being: `auto` mints one for a user at first session; `operator` leaves creation to your own config (the `CreateOrganization` step). |
 | `invitationExpiresIn` | integer (seconds, min 60) | both | `172800` (48h) | How long an invitation stays acceptable. Re-sending an invitation refreshes its expiry. |
 | `membershipLimit` | integer (min 1) | both | `1000000` (effectively open) | The most members one organization may have. Once an organization has this many, accepting an invitation and adding a member are refused (a 403). Set it to cap organization size, for example per tenant. It is also the default page size of `ListMembers` when no `limit` is given. |
+| `invitationLimit` | integer (min 1) | both | `1000000` (effectively open) | The most open invitations one organization may have. Once an organization has this many pending, unexpired invitations, inviting another is refused (a 403 with code `INVITATION_LIMIT_REACHED`). Expired, accepted and cancelled invitations don't count, and re-inviting an address replaces its open invitation rather than adding one. |
+| `creatorAppRoles` | array of role ids | both | `[]` | App roles the owner of a new organization gets on their membership. See [App roles for a new organization's owner](#app-roles-for-a-new-organizations-owner). |
 
 The build cross-checks these, and the errors are worth knowing before you hit them:
 
 - **`org` is required under `pinned`** and **rejected under `tenant`** — under `tenant` there is no single organization to pin; organizations are created per user.
 - **`create` is rejected under `pinned`** — the active organization is ensured at startup, so there is nothing to create on demand.
+- **Every `creatorAppRoles` id must be declared in `auth.roles`**, the same as the roles a page or API gate names.
 - **Renaming `org` strands the existing membership.** The startup ensure is by slug, so changing `org` mints a *fresh* organization rather than renaming the old one, and every existing `member` row still points at the old id. Treat the pinned slug as permanent.
 
 Defaults line up with intent: `pinned` defaults to a closed, invite-only internal app; `tenant` defaults to self-serve SaaS (`signup: open`, `create: auto`).
@@ -54,6 +57,31 @@ An equivalent unique index you created yourself, under any name, is accepted. If
 
 An invitation is how someone joins an organization, never how a membership changes. Accepting an invitation into an organization you already belong to (you joined another way after it was sent) succeeds and marks the invitation accepted, but leaves your membership exactly as it is: the invitation's role, app roles and attributes are not applied, and no second membership is written. If your session had no active organization, the accepted organization becomes active. To change an existing membership, use the [auth steps](/auth-steps) (`UpdateMemberOrgRole`, `UpdateMemberRoles`, `UpdateMemberAttributes`), which check the caller's authority at the time of the change.
 
+### Suspending a member
+
+Suspending takes a person out of one organization while keeping their membership on record. `BanUser` bans the login, which covers every organization and every app sharing the auth database. `RemoveMember` deletes the membership, so the app's own queries stop finding the person and the roles they held. A suspended membership keeps its row, its `appRoles`, org tier and attributes, but admits nobody. Lowdefy treats it as no membership everywhere it decides who the caller is:
+
+- The person's session resolves unauthenticated (`_user` is `null`), so protected pages, requests and API endpoints give them what they give a non-member. Their MCP access tokens and [member tokens](/mcp-oauth#tokens-for-scripts) stop working, and an MCP client's refresh is refused.
+- Signing in to a `pinned` app is refused with `MEMBERSHIP_REQUIRED`, the code a refused non-member gets. Under `signup: open` they are not joined again, and a pending invitation does not let them in either.
+- Under `tenant`, sign-in makes the oldest organization they are not suspended in active. With none, sign-in goes as it does for someone with no membership, so under `create: auto` they get a new organization of their own. `ListOrganizations` leaves the organization out, and `SetActiveOrganization` and the other organization endpoints refuse it as they refuse a non-member.
+- A suspended membership grants no [auth-step](/auth-steps) authority. Administrators can still manage the suspended member, with `UnsuspendMember`, `RemoveMember`, `BanUser` and the other steps.
+- Accepting an invitation does not lift a suspension or make the organization active (see [Invitations for existing members](#invitations-for-existing-members)).
+
+The `SuspendMember` and `UnsuspendMember` auth steps set and lift it, and need the `member: [suspend]` permission, which `owner` and `admin` hold. An `owner` cannot be suspended: change their org tier with `UpdateMemberOrgRole` first, which only an owner can do. A suspended member cannot be made an `owner` either, so every owner of an organization is a member who can sign in.
+
+```yaml
+id: suspend-member
+type: Api
+routine:
+  - id: suspend
+    type: SuspendMember
+    properties:
+      memberId:
+        _payload: memberId
+```
+
+The membership row stores it as `suspended: true` in the `user-members` collection. Rows without the field, including every row written before it existed, are not suspended. `ListMembers` returns `suspended` on each row. A report that finds people by role reads suspended members too; to leave them out, filter on `suspended: { $ne: true }`.
+
 ## The `owner` / `admin` / `member` tier vs app roles
 
 A membership carries **two** independent role authorities, and keeping them apart is the whole point:
@@ -62,6 +90,35 @@ A membership carries **two** independent role authorities, and keeping them apar
 - **`_user.roles`** — the app's own role strings, from the membership's `appRoles`. These are what [`auth.pages.roles` and `auth.api.roles`](/roles) match, and the only thing they match.
 
 So an app that wants a page for organization administrators does **not** gate it on the `admin` tier — it gates on one of its own app roles, and lets the write authority answer the administration question separately, at the step. See [Roles](/roles) for page and API gating, and [Auth Steps](/auth-steps) for the administration model.
+
+### App roles for a new organization's owner
+
+When Lowdefy creates an organization and makes someone its owner, that person gets the `owner` tier and, by default, no app roles. In an app whose pages, endpoints and menus are gated on app roles, a new signup's own organization is then closed to them. `creatorAppRoles` lists the app roles the owner gets as well:
+
+```yaml
+auth:
+  roles:
+    - id: billing-admin
+    - id: editor
+  organizations:
+    policy: tenant
+    creatorAppRoles:
+      - billing-admin
+      - editor
+  pages:
+    roles:
+      billing-admin:
+        - billing
+```
+
+Here a new signup under `create: auto` becomes the `owner` of their own organization with `_user.roles` `[billing-admin, editor]`, so the `billing` page opens for them. The owner's tier stays `owner`; only the membership's `appRoles` is added.
+
+It applies wherever Lowdefy itself makes someone the owner of a new organization:
+
+- the organization a tenant signup mints under `create: auto`;
+- the [`CreateOrganization`](/auth-steps) step, when it is given a creator (`userId`). An organization created without a creator has no owner to grant roles to.
+
+It does not apply to anyone who joins an existing organization: invited members get the app roles their invitation carries, and users auto-joined to a pinned organization under `signup: open` join as `member` with none. Changing the setting leaves existing memberships as they are; use `UpdateMemberRoles` for those.
 
 ## Bootstrapping the first administrator
 

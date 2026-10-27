@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { LowdefyInternalError } from '@lowdefy/errors';
+import { isExpectedError, LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import handleAgentCall from './handleAgentCall.js';
@@ -104,10 +104,10 @@ async function runRoutine(context, routineContext, { routine }) {
       }
       return { status: 'error', error };
     }
-    // A UserError is an expected outcome, not a fault: it is logged once, as a
-    // warning. A step or control that logs one marks it handled; one thrown
-    // without being logged is logged here.
-    if (error.name === 'UserError') {
+    // An expected outcome (a UserError, or an auth refusal from a nested CallApi) is not a
+    // fault: it is logged once, as a warning. A step or control that logs one marks it
+    // handled; one thrown without being logged is logged here.
+    if (isExpectedError(error)) {
       if (!error.handled) {
         context.logger.warn({ event: 'warn_routine_user_error', err: error }, error.message);
         error.handled = true;

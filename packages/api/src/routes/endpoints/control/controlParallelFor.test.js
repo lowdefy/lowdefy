@@ -15,6 +15,7 @@
 */
 
 import runTest, { inFlight } from '../test/runTest.js';
+import { expect, test } from 'vitest';
 
 test('parallel_for iterates over array', async () => {
   const routine = {
@@ -35,7 +36,7 @@ test('parallel_for iterates over array', async () => {
   expect(context.logger.debug.mock.calls).toContainEqual([
     {
       event: 'debug_control_parallel',
-      array: ['a', 'b', 'c'],
+      itemCount: 3,
       itemName: 'item',
     },
   ]);
@@ -60,7 +61,7 @@ test('parallel_for with empty array', async () => {
   expect(context.logger.debug.mock.calls).toContainEqual([
     {
       event: 'debug_control_parallel',
-      array: [],
+      itemCount: 0,
       itemName: 'item',
     },
   ]);
@@ -101,6 +102,7 @@ test('missing :parallel_for variable name', async () => {
   const { res } = await runTest({ routine });
   expect(res.status).toEqual('error');
   expect(res.error.message).toContain(':parallel_for');
+  expect(res.error.name).toEqual('ConfigError');
   expect(res.error.message).toContain('missing variable name');
 });
 
@@ -132,6 +134,7 @@ test('missing :do', async () => {
   };
   const { res } = await runTest({ routine });
   expect(res.status).toEqual('error');
+  expect(res.error.name).toEqual('ConfigError');
   expect(res.error.message).toContain('missing :do');
 });
 
@@ -156,7 +159,9 @@ test('parallel_for logs iteration details', async () => {
   );
   expect(iterationLog).toBeDefined();
   expect(iterationLog[0].itemName).toEqual('item');
-  expect(iterationLog[0].value).toEqual('x');
+  expect(iterationLog[0].index).toEqual(0);
+  expect(iterationLog[0]).not.toHaveProperty('value');
+  expect(iterationLog[0]).not.toHaveProperty('items');
 });
 
 test('parallel_for handles error result', async () => {
@@ -276,8 +281,8 @@ test('parallel_for with :concurrency runs at most that many items at once', asyn
   expect(inFlight.max).toEqual(2);
   const values = context.logger.debug.mock.calls
     .filter((call) => call[0].event === 'debug_control_parallel_iteration')
-    .map((call) => call[0].value);
-  expect(values).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    .map((call) => call[0].index);
+  expect(values).toEqual([0, 1, 2, 3, 4, 5, 6]);
 });
 
 test('parallel_for evaluates :concurrency operators', async () => {
@@ -314,8 +319,8 @@ test('parallel_for with :concurrency still runs every item after an error and re
   expect(res.error.message).toContain('First item failed.');
   const values = context.logger.debug.mock.calls
     .filter((call) => call[0].event === 'debug_control_parallel_iteration')
-    .map((call) => call[0].value);
-  expect(values).toEqual([1, 2, 3]);
+    .map((call) => call[0].index);
+  expect(values).toEqual([0, 1, 2]);
 });
 
 test('parallel_for with a :concurrency larger than the array runs every item at once', async () => {

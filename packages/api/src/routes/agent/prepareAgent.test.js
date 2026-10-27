@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, UserError } from '@lowdefy/errors';
 
 import prepareAgent from './prepareAgent.js';
@@ -22,10 +22,10 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const agentConfig = {
@@ -64,7 +64,7 @@ const typedEndpointConfig = {
 };
 
 function createContext({ mode } = {}) {
-  const readConfigFile = jest.fn((path) => {
+  const readConfigFile = vi.fn((path) => {
     if (path === 'agents/my-agent.json') return agentConfig;
     if (path === 'connections/my-anthropic.json') return connectionConfig;
     if (path === 'api/my-endpoint.json') return endpointConfig;
@@ -75,12 +75,12 @@ function createContext({ mode } = {}) {
     logger,
     readConfigFile,
     connections: {
-      Anthropic: { create: jest.fn().mockReturnValue({ provider: 'mock-provider' }), requests: {} },
+      Anthropic: { create: vi.fn().mockReturnValue({ provider: 'mock-provider' }), requests: {} },
     },
     mode,
     user: { id: 'user_1' },
   });
-  context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: vi.fn(), schema: {} } };
   context.evaluateOperators = createEvaluateOperators(context);
   return context;
 }
@@ -94,7 +94,7 @@ const agentContext = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('prepareAgent defaults resolver context mode to chat', async () => {

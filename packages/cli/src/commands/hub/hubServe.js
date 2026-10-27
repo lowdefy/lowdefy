@@ -131,13 +131,15 @@ async function hubServe({ cliVersion }) {
         )
       )
     )
-    .catch((error) => logger.error(`Pruning orphaned servers failed: ${error.message}`));
+    .catch((error) =>
+      logger.error(`Pruning orphaned servers failed: ${error.stack ?? error.message}`)
+    );
 
   setInterval(async () => {
     try {
       await hub.reap();
     } catch (error) {
-      logger.error(`Reaping failed: ${error.message}`);
+      logger.error(`Reaping failed: ${error.stack ?? error.message}`);
     }
     if (connections.size > 0 || hub.hasManagedServers()) {
       idleSince = Date.now();

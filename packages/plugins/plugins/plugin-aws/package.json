@@ -53,7 +53,7 @@
     "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "vitest run"
   },
   "dependencies": {
     "@lowdefy/block-utils": "7.1.0",
@@ -65,7 +65,7 @@
     "@aws-sdk/client-s3": "3.1141.0",
     "@aws-sdk/s3-presigned-post": "3.1141.0",
     "@aws-sdk/s3-request-presigner": "3.1141.0",
-    "undici": "7.30.0"
+    "undici": "7.30.1"
   },
   "peerDependencies": {
     "antd": ">=6",
@@ -73,20 +73,16 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@jest/globals": "28.1.3",
     "@lowdefy/ajv": "7.1.0",
     "@lowdefy/block-dev": "7.1.0",
-    "@lowdefy/jest-yaml-transform": "7.1.0",
+    "@lowdefy/vite-yaml-plugin": "7.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
-    "@swc/jest": "0.2.39",
     "@testing-library/dom": "8.19.1",
     "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "14.6.1",
     "copyfiles": "2.4.1",
-    "jest": "28.1.3",
-    "jest-environment-jsdom": "28.1.3",
-    "jest-serializer-html": "7.1.0"
+    "vitest": "4.1.12"
   },
   "publishConfig": {
     "access": "public"

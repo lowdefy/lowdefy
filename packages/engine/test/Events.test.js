@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
 import testContext from './testContext.js';
@@ -45,15 +45,17 @@ const mockQueryImp = ({ variables }) => {
     resolve(mockReqResponses[requestId]);
   });
 };
-const mockQuery = jest.fn();
+const mockQuery = vi.fn();
 
 const client = {
   query: mockQuery,
 };
 
 const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
+const mockDate = vi.fn(function () {
+  return { date: 0 };
+});
+mockDate.now = vi.fn(() => 0);
 
 const lowdefy = {
   client,
@@ -412,12 +414,12 @@ test('triggerEvent skip', async () => {
   const { button } = context._internal.RootSlots.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toMatchInlineSnapshot(`
-    Object {
-      "onClick": Object {
-        "actions": Array [
-          Object {
+    {
+      "onClick": {
+        "actions": [
+          {
             "id": "a",
-            "params": Object {
+            "params": {
               "a": "a",
             },
             "skip": true,
@@ -425,27 +427,27 @@ test('triggerEvent skip', async () => {
           },
         ],
         "bubble": false,
-        "catchActions": Array [],
+        "catchActions": [],
         "debounce": undefined,
-        "history": Array [
-          Object {
+        "history": [
+          {
             "blockId": "button",
             "bounced": false,
-            "endTimestamp": Object {
+            "endTimestamp": {
               "date": 0,
             },
-            "event": Object {
+            "event": {
               "x": 1,
             },
             "eventName": "onClick",
-            "responses": Object {
-              "a": Object {
+            "responses": {
+              "a": {
                 "index": 0,
                 "skipped": true,
                 "type": "SetState",
               },
             },
-            "startTimestamp": Object {
+            "startTimestamp": {
               "date": 0,
             },
             "success": true,
@@ -457,45 +459,45 @@ test('triggerEvent skip', async () => {
     }
   `);
   expect(context.eventLog).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "blockId": "button",
         "bounced": false,
-        "endTimestamp": Object {
+        "endTimestamp": {
           "date": 0,
         },
-        "event": Object {
+        "event": {
           "x": 1,
         },
         "eventName": "onClick",
-        "responses": Object {
-          "a": Object {
+        "responses": {
+          "a": {
             "index": 0,
             "skipped": true,
             "type": "SetState",
           },
         },
-        "startTimestamp": Object {
+        "startTimestamp": {
           "date": 0,
         },
         "success": true,
       },
-      Object {
+      {
         "blockId": "root",
         "bounced": false,
-        "endTimestamp": Object {
+        "endTimestamp": {
           "date": 0,
         },
         "event": undefined,
         "eventName": "onInit",
-        "responses": Object {
-          "init": Object {
+        "responses": {
+          "init": {
             "index": 0,
             "response": undefined,
             "type": "SetState",
           },
         },
-        "startTimestamp": Object {
+        "startTimestamp": {
           "date": 0,
         },
         "success": true,
@@ -534,12 +536,12 @@ test('triggerEvent skip tests === true', async () => {
   const { button } = context._internal.RootSlots.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toMatchInlineSnapshot(`
-    Object {
-      "onClick": Object {
-        "actions": Array [
-          Object {
+    {
+      "onClick": {
+        "actions": [
+          {
             "id": "a",
-            "params": Object {
+            "params": {
               "a": "a",
             },
             "skip": "Truthy",
@@ -547,27 +549,27 @@ test('triggerEvent skip tests === true', async () => {
           },
         ],
         "bubble": false,
-        "catchActions": Array [],
+        "catchActions": [],
         "debounce": undefined,
-        "history": Array [
-          Object {
+        "history": [
+          {
             "blockId": "button",
             "bounced": false,
-            "endTimestamp": Object {
+            "endTimestamp": {
               "date": 0,
             },
-            "event": Object {
+            "event": {
               "x": 1,
             },
             "eventName": "onClick",
-            "responses": Object {
-              "a": Object {
+            "responses": {
+              "a": {
                 "index": 0,
                 "response": undefined,
                 "type": "SetState",
               },
             },
-            "startTimestamp": Object {
+            "startTimestamp": {
               "date": 0,
             },
             "success": true,
@@ -579,45 +581,45 @@ test('triggerEvent skip tests === true', async () => {
     }
   `);
   expect(context.eventLog).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "blockId": "button",
         "bounced": false,
-        "endTimestamp": Object {
+        "endTimestamp": {
           "date": 0,
         },
-        "event": Object {
+        "event": {
           "x": 1,
         },
         "eventName": "onClick",
-        "responses": Object {
-          "a": Object {
+        "responses": {
+          "a": {
             "index": 0,
             "response": undefined,
             "type": "SetState",
           },
         },
-        "startTimestamp": Object {
+        "startTimestamp": {
           "date": 0,
         },
         "success": true,
       },
-      Object {
+      {
         "blockId": "root",
         "bounced": false,
-        "endTimestamp": Object {
+        "endTimestamp": {
           "date": 0,
         },
         "event": undefined,
         "eventName": "onInit",
-        "responses": Object {
-          "init": Object {
+        "responses": {
+          "init": {
             "index": 0,
             "response": undefined,
             "type": "SetState",
           },
         },
-        "startTimestamp": Object {
+        "startTimestamp": {
           "date": 0,
         },
         "success": true,

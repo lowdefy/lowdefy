@@ -14,30 +14,30 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 // inspectState.js only chooses between the tab and headless sources - the
 // sources' own behavior is covered by inspectStateHeadless.test.mjs and (once
 // written) inspectStateFromTab's own tests. Mock both, plus tabAvailable, so
 // only the fallback logic is under test here.
-const mockInspectStateFromTab = jest.fn();
-const mockInspectStateHeadless = jest.fn();
-const mockTabAvailable = jest.fn();
+const mockInspectStateFromTab = vi.fn();
+const mockInspectStateHeadless = vi.fn();
+const mockTabAvailable = vi.fn();
 
-jest.unstable_mockModule('./inspectStateFromTab.js', () => ({
+vi.doMock('./inspectStateFromTab.js', () => ({
   default: mockInspectStateFromTab,
 }));
-jest.unstable_mockModule('./inspectStateHeadless.js', () => ({
+vi.doMock('./inspectStateHeadless.js', () => ({
   default: mockInspectStateHeadless,
 }));
-jest.unstable_mockModule('./tabAvailable.js', () => ({
+vi.doMock('./tabAvailable.js', () => ({
   default: mockTabAvailable,
 }));
 
 const { default: inspectState } = await import('./inspectState.js');
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('inspectState uses the tab when source is "tab" and it succeeds', async () => {
@@ -50,7 +50,7 @@ test('inspectState uses the tab when source is "tab" and it succeeds', async () 
   });
 
   expect(result).toEqual({ state: { a: 1 }, source: 'tab' });
-  expect(mockInspectStateFromTab).toHaveBeenCalledWith({ pageId: 'home' });
+  expect(mockInspectStateFromTab).toHaveBeenCalledWith({ pageId: 'home', evaluate: false });
   expect(mockInspectStateHeadless).not.toHaveBeenCalled();
 });
 
@@ -68,6 +68,7 @@ test('inspectState falls back to headless when source is "tab" but the tab error
   expect(mockInspectStateHeadless).toHaveBeenCalledWith({
     origin: 'http://localhost:3001',
     pageId: 'home',
+    evaluate: false,
   });
 });
 
@@ -120,6 +121,7 @@ test('inspectState ignores an available tab and passes the user to headless when
   expect(mockInspectStateHeadless).toHaveBeenCalledWith({
     origin: 'http://localhost:3001',
     pageId: 'home',
+    evaluate: false,
     user: { roles: ['admin'] },
   });
 });
@@ -137,4 +139,54 @@ test('inspectState errors when a user is combined with source "tab"', async () =
   expect(result.invalidInput).toBe(true);
   expect(mockInspectStateFromTab).not.toHaveBeenCalled();
   expect(mockInspectStateHeadless).not.toHaveBeenCalled();
+});
+
+test('inspectState evaluates an expression in the tab when one is passed', async () => {
+  mockInspectStateFromTab.mockResolvedValue({ value: 'Jane', errors: [], reads: ['state:name'] });
+  const expression = { _state: 'name' };
+
+  const result = await inspectState({ pageId: 'home', expression, source: 'tab' });
+
+  expect(result).toEqual({ value: 'Jane', errors: [], reads: ['state:name'], source: 'tab' });
+  expect(mockInspectStateFromTab).toHaveBeenCalledWith({
+    pageId: 'home',
+    evaluate: true,
+    expression,
+  });
+});
+
+test('inspectState evaluates a null expression rather than treating it as absent', async () => {
+  mockInspectStateHeadless.mockResolvedValue({ value: null, errors: [], reads: [] });
+
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    expression: null,
+    source: 'headless',
+  });
+
+  expect(result).toEqual({ value: null, errors: [], reads: [], source: 'headless' });
+  expect(mockInspectStateHeadless).toHaveBeenCalledWith({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    evaluate: true,
+    expression: null,
+  });
+});
+
+test('inspectState falls back to headless evaluation when the tab errors', async () => {
+  mockInspectStateFromTab.mockResolvedValue({ error: 'No browser tab connected.' });
+  mockInspectStateHeadless.mockResolvedValue({ value: 1, errors: [], reads: ['state:a'] });
+
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    expression: { _state: 'a' },
+    source: 'tab',
+  });
+
+  expect(result).toEqual({ value: 1, errors: [], reads: ['state:a'], source: 'headless' });
+  expect(mockInspectStateHeadless).toHaveBeenCalledWith(
+    expect.objectContaining({ evaluate: true, expression: { _state: 'a' } })
+  );
 });

@@ -14,37 +14,37 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 // Covers the clip/scroll success path, which screenshotPage.test.mjs cannot
 // (it deliberately fails chromium.launch to test the "no browser" error
 // path). Mocking the whole ./getBrowser.js module — not just
 // playwright-core — means lib/build/config.js (which getBrowser.js reads at
 // import time) is never touched, so no fixture chdir is needed here.
-const mockScreenshot = jest.fn(async () => Buffer.from('fake-png'));
-const mockWaitForTimeout = jest.fn(async () => {});
-const mockEvaluate = jest.fn(async () => {});
+const mockScreenshot = vi.fn(async () => Buffer.from('fake-png'));
+const mockWaitForTimeout = vi.fn(async () => {});
+const mockEvaluate = vi.fn(async () => {});
 const mockPage = {
   screenshot: mockScreenshot,
   waitForTimeout: mockWaitForTimeout,
   evaluate: mockEvaluate,
 };
-const mockContext = { close: jest.fn(async () => {}) };
-const mockOpenPage = jest.fn(async () => ({
+const mockContext = { close: vi.fn(async () => {}) };
+const mockOpenPage = vi.fn(async () => ({
   context: mockContext,
   page: mockPage,
   url: 'http://localhost:3001/home',
 }));
-const mockGetBrowser = jest.fn(async () => ({}));
+const mockGetBrowser = vi.fn(async () => ({}));
 
 // The route table is a build artifact these tests have none of: every page is served at its id.
-jest.unstable_mockModule('./resolvePageInstance.js', () => ({
+vi.doMock('./resolvePageInstance.js', () => ({
   default: ({ pageId }) => ({ path: pageId, instanceKey: `page:${pageId}` }),
 }));
-jest.unstable_mockModule('./getBrowser.js', () => ({
+vi.doMock('./getBrowser.js', () => ({
   getBrowser: mockGetBrowser,
   openPage: mockOpenPage,
-  buildPageUrl: jest.fn(() => 'http://localhost:3001/home'),
+  buildPageUrl: vi.fn(() => 'http://localhost:3001/home'),
 }));
 
 const { default: screenshotPage } = await import('./screenshotPage.js');

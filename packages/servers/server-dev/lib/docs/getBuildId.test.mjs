@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { afterEach, expect, test } from 'vitest';
 
 // getBuildId reads build/buildStatus.json and build/invalidatePages from
 // process.cwd(): point it at a throwaway server directory.

@@ -18,6 +18,7 @@ import path from 'path';
 import { RequestError } from '@lowdefy/errors';
 
 import buildEndpointResult from './buildEndpointResult.js';
+import { expect, test } from 'vitest';
 
 test('buildEndpointResult reports success and passes the status through for a continue status', () => {
   const result = buildEndpointResult({}, { error: null, response: { a: 1 }, status: 'continue' });

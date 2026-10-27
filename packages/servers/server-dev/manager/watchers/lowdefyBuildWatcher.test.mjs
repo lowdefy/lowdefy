@@ -17,7 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import spyOnChokidar from '../../test-utils/spyOnChokidar.mjs';
@@ -26,15 +26,20 @@ import waitFor from '../../test-utils/waitFor.mjs';
 // The path each page file declares now, as resolvePagePath would read it. A
 // page left out declares no path, so its path is its id.
 const declaredPaths = new Map();
-jest.unstable_mockModule('@lowdefy/build/dev', () => ({
-  resolvePagePath: jest.fn(async ({ pageId }) => declaredPaths.get(pageId) ?? pageId),
+vi.doMock('@lowdefy/build/dev', () => ({
+  resolvePagePath: vi.fn(async ({ pageId }) => declaredPaths.get(pageId) ?? pageId),
+}));
+
+const mockClearPluginTypeCache = vi.fn();
+vi.doMock('../utils/pluginTypeCache.mjs', () => ({
+  clearPluginTypeCache: mockClearPluginTypeCache,
 }));
 
 const watchers = spyOnChokidar();
 const { default: lowdefyBuildWatcher } = await import('./lowdefyBuildWatcher.mjs');
 
 // macOS can hold file events back for tens of seconds on a busy machine.
-jest.setTimeout(180000);
+vi.setConfig({ testTimeout: 180000, hookTimeout: 180000 });
 
 function write(filePath, content) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -90,6 +95,7 @@ async function editUntilInvalidated(filePath) {
 // The app lives in a git worktree under a dot-folder, like the worktrees
 // Claude Code creates under .claude/worktrees/.
 beforeEach(async () => {
+  mockClearPluginTypeCache.mockClear();
   const tmpDir = fs.realpathSync(os.tmpdir());
   repoDir = fs.mkdtempSync(path.join(tmpDir, 'lowdefy-build-watcher-test-'));
   const worktreeDir = path.join(repoDir, '.claude', 'worktrees', 'feature');
@@ -139,13 +145,13 @@ beforeEach(async () => {
       config: configDir,
       server: path.join(configDir, '.lowdefy', 'server'),
     },
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
-    buildActivity: { setBusy: jest.fn() },
-    lowdefyBuild: jest.fn(async () => {}),
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    buildActivity: { setBusy: vi.fn() },
+    lowdefyBuild: vi.fn(async () => {}),
     pageRegistry: new Map([['home', { pageId: 'home', refPath: 'pages/home.yaml' }]]),
     options: { watch: [], watchIgnore: [] },
-    reloadClients: jest.fn(async () => {}),
-    syncServer: jest.fn(async () => {}),
+    reloadClients: vi.fn(async () => {}),
+    syncServer: vi.fn(async () => {}),
     version: 'local',
   };
 });
@@ -168,6 +174,39 @@ test('a page file edit in an app under a dot-folder invalidates pages', async ()
   });
   expect(context.lowdefyBuild).not.toHaveBeenCalled();
   expect(context.syncServer).not.toHaveBeenCalled();
+  expect(mockClearPluginTypeCache).not.toHaveBeenCalled();
+});
+
+test('watchIgnore globs and node_modules are not watched', async () => {
+  const draft = path.join(configDir, 'drafts', 'page.yaml');
+  const dependency = path.join(configDir, 'node_modules', 'pkg', 'page.yaml');
+  write(draft, 'id: draft\n');
+  write(dependency, 'id: dependency\n');
+  await flushFsEvents();
+  context.options.watchIgnore = ['drafts/**'];
+
+  const configWatcher = await startWatcher();
+
+  expect(isWatched({ configWatcher, filePath: draft })).toBe(false);
+  expect(isWatched({ configWatcher, filePath: dependency })).toBe(false);
+  expect(isWatched({ configWatcher, filePath: path.join(configDir, 'pages', 'home.yaml') })).toBe(
+    true
+  );
+});
+
+test('a --watch glob watches the files it matches and no others', async () => {
+  const shared = path.join(repoDir, 'shared');
+  const block = path.join(shared, 'blocks', 'title.yaml');
+  const notes = path.join(shared, 'blocks', 'notes.md');
+  write(block, 'id: title\n');
+  write(notes, 'notes\n');
+  await flushFsEvents();
+  context.options.watch = [path.join(shared, '**', '*.yaml')];
+
+  const configWatcher = await startWatcher();
+
+  expect(isWatched({ configWatcher, filePath: block })).toBe(true);
+  expect(isWatched({ configWatcher, filePath: notes })).toBe(false);
 });
 
 test('a page file edit that changes the page path rebuilds the config', async () => {
@@ -181,7 +220,7 @@ test('a page file edit that changes the page path rebuilds the config', async ()
   await waitFor(invalidated, { description: 'the pages to be invalidated' });
 });
 
-test('adding a page to the pages list rebuilds the config', async () => {
+test('adding a page to the pages list rebuilds the config and keeps the plugin type cache', async () => {
   await startWatcher();
   fs.appendFileSync(path.join(configDir, 'pages.yaml'), '- _ref: pages/about.yaml\n');
 
@@ -189,6 +228,20 @@ test('adding a page to the pages list rebuilds the config', async () => {
     description: 'a config build',
   });
   await waitFor(invalidated, { description: 'the pages to be invalidated' });
+  expect(mockClearPluginTypeCache).not.toHaveBeenCalled();
+});
+
+test('a root lowdefy.yaml edit clears the plugin type cache before the config build', async () => {
+  await startWatcher();
+  write(path.join(configDir, 'lowdefy.yaml'), 'lowdefy: local\nplugins:\n  - name: app-plugin\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
+  expect(mockClearPluginTypeCache).toHaveBeenCalledTimes(1);
+  expect(mockClearPluginTypeCache.mock.invocationCallOrder[0]).toBeLessThan(
+    context.lowdefyBuild.mock.invocationCallOrder[0]
+  );
 });
 
 test('a config rebuild stays busy until the server has caught up with the build', async () => {

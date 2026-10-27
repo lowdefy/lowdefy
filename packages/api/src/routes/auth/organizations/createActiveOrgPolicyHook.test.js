@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { APIError } from 'better-auth/api';
 
 import createActiveOrgPolicyHook from './createActiveOrgPolicyHook.js';
+import createMemoryAuth from '../../../test/createMemoryAuth.js';
 
 const future = new Date(Date.now() + 3600 * 1000).toISOString();
 const past = new Date(Date.now() - 3600 * 1000).toISOString();
@@ -34,7 +35,7 @@ function createMockAuth({
   user = { id: 'user_1', email: 'User@Example.com', name: 'User One' },
 } = {}) {
   const adapter = {
-    findOne: jest.fn(async ({ model, where }) => {
+    findOne: vi.fn(async ({ model, where }) => {
       if (model === 'organization') {
         return organization;
       }
@@ -43,7 +44,7 @@ function createMockAuth({
       }
       throw new Error(`Unexpected findOne model ${model} ${JSON.stringify(where)}.`);
     }),
-    findMany: jest.fn(async ({ model }) => {
+    findMany: vi.fn(async ({ model }) => {
       if (model === 'member') {
         return members;
       }
@@ -52,21 +53,21 @@ function createMockAuth({
       }
       throw new Error(`Unexpected findMany model ${model}.`);
     }),
-    count: jest.fn(async ({ model, where }) => {
+    count: vi.fn(async ({ model, where }) => {
       if (model === 'member') {
         return organizationMemberCounts[where[0].value] ?? 0;
       }
       throw new Error(`Unexpected count model ${model}.`);
     }),
-    create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    create: vi.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
   };
   const internalAdapter = {
-    findUserById: jest.fn(async () => user),
+    findUserById: vi.fn(async () => user),
   };
   const auth = {
     $context: Promise.resolve({ adapter, internalAdapter }),
     api: {
-      addMember: jest.fn(async () => ({ id: 'member_new' })),
+      addMember: vi.fn(async () => ({ id: 'member_new' })),
     },
     options: { plugins: [{ id: 'organization', options: {} }] },
   };
@@ -74,7 +75,7 @@ function createMockAuth({
 }
 
 const pinned = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
-const tenant = { policy: 'tenant', signup: 'open', create: 'auto' };
+const tenant = { policy: 'tenant', signup: 'open', create: 'auto', creatorAppRoles: [] };
 
 test('pinned: a member of the pinned org gets it as the active organization', async () => {
   const { auth } = createMockAuth({ member: { id: 'member_1', role: 'admin' } });
@@ -118,6 +119,47 @@ test('pinned: an expired invitation gets the normal rejection', async () => {
   await expect(hook({ userId: 'user_1' })).rejects.toThrow(APIError);
 });
 
+test('pinned: a suspended member is rejected with a 403 MEMBERSHIP_REQUIRED APIError', async () => {
+  const { auth } = createMockAuth({
+    member: { id: 'member_1', role: 'admin', appRoles: ['manager'], suspended: true },
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
+  await expect(hook({ userId: 'user_1' })).rejects.toMatchObject({
+    statusCode: 403,
+    body: { code: 'MEMBERSHIP_REQUIRED' },
+  });
+});
+
+test('pinned: a suspended member holding a pending invitation is still rejected', async () => {
+  const { auth } = createMockAuth({
+    member: { id: 'member_1', role: 'member', suspended: true },
+    invitations: [{ id: 'inv_1', status: 'pending', expiresAt: future }],
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
+  await expect(hook({ userId: 'user_1' })).rejects.toMatchObject({
+    body: { code: 'MEMBERSHIP_REQUIRED' },
+  });
+});
+
+test('pinned open signup: a suspended member is rejected and never re-added', async () => {
+  const { auth } = createMockAuth({ member: { id: 'member_1', role: 'member', suspended: true } });
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    organizations: { policy: 'pinned', org: 'team-portal', signup: 'open' },
+  });
+  await expect(hook({ userId: 'user_1' })).rejects.toMatchObject({
+    body: { code: 'MEMBERSHIP_REQUIRED' },
+  });
+  expect(auth.api.addMember).not.toHaveBeenCalled();
+});
+
+test('pinned: a member whose suspended flag is false gets the pinned org as active', async () => {
+  const { auth } = createMockAuth({ member: { id: 'member_1', role: 'member', suspended: false } });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
+  const result = await hook({ userId: 'user_1' });
+  expect(result).toEqual({ data: { userId: 'user_1', activeOrganizationId: 'team-portal' } });
+});
+
 test('pinned: the invitation lookup uses the lowercased user email scoped to the pinned org', async () => {
   const { auth, adapter } = createMockAuth({ member: null, invitations: [] });
   const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
@@ -145,8 +187,39 @@ test('tenant: the oldest membership becomes the active organization', async () =
     model: 'member',
     where: [{ field: 'userId', value: 'user_1' }],
     sortBy: { field: 'createdAt', direction: 'asc' },
-    limit: 1,
+    limit: 1000,
   });
+});
+
+test('tenant: the oldest unsuspended membership becomes the active organization', async () => {
+  const { auth } = createMockAuth({
+    members: [
+      { id: 'member_1', organizationId: 'org_oldest', suspended: true },
+      { id: 'member_2', organizationId: 'org_next' },
+    ],
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'org_next' },
+  });
+});
+
+test('tenant invite-only: a user suspended in every organization is rejected with MEMBERSHIP_REQUIRED', async () => {
+  const { auth, adapter } = createMockAuth({
+    members: [{ id: 'member_1', organizationId: 'org_1', suspended: true }],
+    invitations: [],
+    organization: null,
+  });
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    organizations: { policy: 'tenant', signup: 'invite-only', create: 'auto' },
+  });
+  await expect(hook({ userId: 'user_1' })).rejects.toMatchObject({
+    statusCode: 403,
+    body: { code: 'MEMBERSHIP_REQUIRED' },
+  });
+  expect(adapter.create).not.toHaveBeenCalled();
 });
 
 test('tenant: a pending invitation admits the session and mints nothing', async () => {
@@ -160,90 +233,10 @@ test('tenant: a pending invitation admits the session and mints nothing', async 
   expect(adapter.create).not.toHaveBeenCalled();
 });
 
-// An in-memory auth database holding the unique indexes ensureAuthIndexes
-// creates - one organization per slug, one member row per (user, org) - so the
-// mint's recovery from a lost race runs against the same rejection a real
-// database gives. `before` pauses an operation until the test releases it,
-// which fixes the interleaving of two concurrent sessions.
-function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexes } = {}) {
-  const db = { organization: [...organizations], member: [...members] };
-  const pauses = [];
-  let ids = 0;
-  function matches(row, where) {
-    return where.every(({ field, value, operator }) =>
-      operator === 'ne' ? row[field] !== value : row[field] === value
-    );
-  }
-  async function pause(operation, args) {
-    const found = pauses.find((entry) => entry.match(operation, args));
-    if (found) {
-      pauses.splice(pauses.indexOf(found), 1);
-      found.reached();
-      await found.released;
-    }
-  }
-  const adapter = {
-    options: {
-      ensureUniqueIndexes: ensureUniqueIndexes ?? jest.fn(async () => {}),
-    },
-    findOne: jest.fn(async ({ model, where }) => {
-      await pause('findOne', { model, where });
-      return db[model].find((row) => matches(row, where)) ?? null;
-    }),
-    findMany: jest.fn(async ({ model, where }) => {
-      if (model === 'invitation') return [];
-      return db[model].filter((row) => matches(row, where));
-    }),
-    create: jest.fn(async ({ model, data }) => {
-      await pause('create', { model, data });
-      const duplicate =
-        model === 'organization'
-          ? db.organization.some((row) => row.slug === data.slug)
-          : db.member.some(
-              (row) => row.userId === data.userId && row.organizationId === data.organizationId
-            );
-      if (duplicate) {
-        throw new Error(`E11000 duplicate key error collection: ${model}`);
-      }
-      ids += 1;
-      const row = { id: `${model}_${ids}`, ...data };
-      db[model].push(row);
-      return { ...row };
-    }),
-    count: jest.fn(
-      async ({ model, where }) => db[model].filter((row) => matches(row, where)).length
-    ),
-    update: jest.fn(async ({ model, where, update }) => {
-      const row = db[model].find((candidate) => matches(candidate, where));
-      Object.assign(row, update);
-      return { ...row };
-    }),
-  };
-  const internalAdapter = {
-    findUserById: jest.fn(async (id) => ({ id, email: `${id}@example.com`, name: 'User One' })),
-  };
-  const auth = { $context: Promise.resolve({ adapter, internalAdapter }) };
-  // Pause the next operation matching `match` until release() is called;
-  // reached resolves once a session is waiting there.
-  function before(match) {
-    const entry = { match };
-    const reached = new Promise((resolve) => {
-      entry.reached = resolve;
-    });
-    let release;
-    entry.released = new Promise((resolve) => {
-      release = resolve;
-    });
-    pauses.push(entry);
-    return { reached, release };
-  }
-  return { auth, adapter, db, before };
-}
-
 function mintHook(auth) {
   return createActiveOrgPolicyHook({
     getAuth: () => auth,
-    logger: { error: jest.fn(), warn: jest.fn() },
+    logger: { error: vi.fn(), warn: vi.fn() },
     organizations: tenant,
   });
 }
@@ -264,6 +257,30 @@ test('tenant: a fresh signup mints its own organization as owner and clears the 
   expect(result).toEqual({
     data: { userId: 'user_1', activeOrganizationId: db.organization[0].id },
   });
+});
+
+test('tenant: a fresh signup owner row holds the creatorAppRoles app roles', async () => {
+  const { auth, db } = createMemoryAuth();
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    logger: { error: vi.fn(), warn: vi.fn() },
+    organizations: { ...tenant, creatorAppRoles: ['workspace-admin', 'billing'] },
+  });
+  await hook({ userId: 'user_1' });
+  expect(db.member).toEqual([
+    expect.objectContaining({
+      userId: 'user_1',
+      role: 'owner',
+      appRoles: ['workspace-admin', 'billing'],
+    }),
+  ]);
+});
+
+test('tenant: a fresh signup owner row carries no appRoles field when creatorAppRoles is empty', async () => {
+  const { auth, db } = createMemoryAuth();
+  await mintHook(auth)({ userId: 'user_1' });
+  expect(db.member).toHaveLength(1);
+  expect('appRoles' in db.member[0]).toBe(false);
 });
 
 test('tenant: a retried mint joins the marked organization a failed member write left behind', async () => {
@@ -316,6 +333,47 @@ test('tenant: a user already holding the owner row of a marked organization clea
   expect(db.member).toEqual([member]);
   expect(db.organization).toEqual([{ ...organization, mintPending: false }]);
   expect(result.data.activeOrganizationId).toBe('org_own');
+});
+
+test('tenant: a user suspended in their own organization is minted the next one, not signed in to it', async () => {
+  const organization = { id: 'org_own', slug: 'org-user_1', createdAt: new Date() };
+  const member = {
+    id: 'm_1',
+    userId: 'user_1',
+    organizationId: 'org_own',
+    role: 'admin',
+    suspended: true,
+  };
+  const { auth, db } = createMemoryAuth({ organizations: [organization], members: [member] });
+  const result = await mintHook(auth)({ userId: 'user_1' });
+  const minted = db.organization.find((row) => row.slug === 'org-user_1-2');
+  expect(minted).toBeDefined();
+  expect(db.member).toEqual([
+    member,
+    expect.objectContaining({ userId: 'user_1', organizationId: minted.id, role: 'owner' }),
+  ]);
+  expect(result.data.activeOrganizationId).toBe(minted.id);
+});
+
+test('tenant: a user suspended in their own organization still marked mid-mint is minted the next one', async () => {
+  const organization = {
+    id: 'org_own',
+    slug: 'org-user_1',
+    mintPending: true,
+    createdAt: new Date(),
+  };
+  const member = {
+    id: 'm_1',
+    userId: 'user_1',
+    organizationId: 'org_own',
+    role: 'admin',
+    suspended: true,
+  };
+  const { auth, db } = createMemoryAuth({ organizations: [organization], members: [member] });
+  const result = await mintHook(auth)({ userId: 'user_1' });
+  const minted = db.organization.find((row) => row.slug === 'org-user_1-2');
+  expect(minted).toBeDefined();
+  expect(result.data.activeOrganizationId).toBe(minted.id);
 });
 
 test('tenant: two sessions that both see no members and both write the owner row end with one row', async () => {
@@ -373,9 +431,9 @@ test('tenant: a mint losing the unique slug race joins the winning organization'
 });
 
 test('tenant: while the unique indexes can not be ensured, repeated sign-ins are refused without retrying the index build until the cool-down passes', async () => {
-  const now = jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
+  const now = vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
   try {
-    const ensureUniqueIndexes = jest.fn(async () => {
+    const ensureUniqueIndexes = vi.fn(async () => {
       throw new Error('E11000 duplicate key error collection: user-members');
     });
     const { auth, db } = createMemoryAuth({ ensureUniqueIndexes });

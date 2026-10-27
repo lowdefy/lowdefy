@@ -29,7 +29,7 @@ _ref:
           (value: string): string
           ```
         description: |
-          The `_base64.decode` method decodes base64 encoded content into an ASCII string.
+          The `_base64.decode` method decodes base64 or base64url encoded content into a UTF-8 string. In the browser, it throws an error if the decoded bytes are not valid UTF-8.
         arguments: |
           ###### string
           The string to decode.
@@ -45,7 +45,7 @@ _ref:
           (value: string): string
           ```
         description: |
-          The `_base64.encode` method base64 encodes a ASCII string.
+          The `_base64.encode` method base64 encodes the UTF-8 bytes of a string.
         arguments: |
           ###### string
           The string to encode.

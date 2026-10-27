@@ -16,6 +16,7 @@
 
 import splitPath from './splitPath.js';
 import joinPath from './joinPath.js';
+import { expect, test } from 'vitest';
 
 test('splitPath returns a single segment for a path without separators', () => {
   expect(splitPath('a')).toEqual(['a']);

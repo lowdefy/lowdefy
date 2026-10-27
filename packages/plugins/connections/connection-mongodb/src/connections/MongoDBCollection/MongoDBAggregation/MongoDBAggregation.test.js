@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 import MongoDBAggregation from './MongoDBAggregation.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBAggregation.meta;
 const schema = MongoDBAggregation.schema;
@@ -82,7 +83,7 @@ test('aggregation mongodb error', async () => {
     read: true,
   };
   await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBAggregation command on collection "aggregate" as malformed.'
+    'MongoDB rejected the MongoDBAggregation command on collection "aggregate" as malformed.'
   );
 });
 

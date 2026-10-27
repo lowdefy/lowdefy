@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const { default: forwardScheduledEndpoint } = await import('./forwardScheduledEndpoint.js');
 const { default: testContext } = await import('../../test/testContext.js');
 
 const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 };
 
 const config = {
@@ -56,7 +56,7 @@ function makeContext({
   secrets = { STAGING_CRON_SECRET: 'staging-secret' },
   waitUntil,
 } = {}) {
-  const readConfigFile = jest.fn((path) => (path === 'api/jobs/purge.json' ? endpoint : null));
+  const readConfigFile = vi.fn((path) => (path === 'api/jobs/purge.json' ? endpoint : null));
   const context = testContext({ logger, readConfigFile, config: { ...config, basePath }, secrets });
   context.waitUntil = waitUntil;
   return context;
@@ -65,8 +65,8 @@ function makeContext({
 let fetchMock;
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  fetchMock = jest.fn(async () => ({
+  vi.clearAllMocks();
+  fetchMock = vi.fn(async () => ({
     ok: true,
     status: 200,
     arrayBuffer: async () => new ArrayBuffer(0),
@@ -133,10 +133,57 @@ test('logs a non-2xx answer from the environment as a failure without failing th
   });
   expect(result.success).toBe(true);
   await promises[0];
+  expect(logger.info).toHaveBeenCalledWith({
+    event: 'forward_scheduled_endpoint_failed',
+    endpointId: 'jobs/purge',
+  });
   expect(logger.error).toHaveBeenCalledWith(
-    expect.objectContaining({ event: 'forward_scheduled_endpoint_failed' }),
-    'Forwarded cron for environment "staging" at https://staging.example.com/api/cron/jobs/purge responded 500.'
+    expect.objectContaining({
+      name: 'ServiceError',
+      statusCode: 500,
+      message:
+        'Forwarded cron for environment "staging" at https://staging.example.com/api/cron/jobs/purge responded 500.',
+    })
   );
+});
+
+test('reports an environment that refuses the forwarded cron as a config fault at the environment', async () => {
+  fetchMock.mockImplementation(async () => ({
+    ok: false,
+    status: 401,
+    arrayBuffer: async () => new ArrayBuffer(0),
+  }));
+  const promises = [];
+  const context = makeContext({ waitUntil: (promise) => promises.push(promise) });
+  context.config.environments.staging['~k'] = 'staging_key';
+  await forwardScheduledEndpoint(context, {
+    environment: 'staging',
+    endpointId: 'jobs/purge',
+    cron: '0 * * * *',
+  });
+  await promises[0];
+  delete context.config.environments.staging['~k'];
+  expect(logger.error).toHaveBeenCalledWith(
+    expect.objectContaining({
+      name: 'ConfigError',
+      configKey: 'staging_key',
+      message:
+        'Forwarded cron for environment "staging" at https://staging.example.com/api/cron/jobs/purge responded 401.',
+    })
+  );
+});
+
+test('a cron environment fault names the environment config node', async () => {
+  const context = makeContext();
+  context.config.environments.develop['~k'] = 'develop_key';
+  const error = await forwardScheduledEndpoint(context, {
+    environment: 'develop',
+    endpointId: 'jobs/purge',
+    cron: '0 * * * *',
+  }).catch((caught) => caught);
+  delete context.config.environments.develop['~k'];
+  expect(error.name).toBe('ConfigError');
+  expect(error.configKey).toBe('develop_key');
 });
 
 test('throws when the environment is not declared', async () => {

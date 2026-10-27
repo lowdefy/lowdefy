@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import buildApi from './buildApi.js';
 import testContext from '../../test-utils/testContext.js';
 
-const mockLogWarn = jest.fn();
-const mockLog = jest.fn();
+const mockLogWarn = vi.fn();
+const mockLog = vi.fn();
 
 const logger = {
   warn: mockLogWarn,
@@ -252,7 +252,37 @@ test(':reject :status on an endpoint no webhook answers for is a build error', (
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    ':reject in endpoint plain sets :status and :body, which only a webhook endpoint, or an InternalApi endpoint a webhook calls, answers with.'
+    ':reject in endpoint plain sets :status and :body, which only a webhook or link endpoint, or an InternalApi endpoint one calls, answers with.'
+  );
+});
+
+test(':reject :status builds in a link endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: 'files',
+        type: 'Api',
+        link: true,
+        routine: { ':reject': 'Not found', ':status': 404 },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test(':reject :body in a link endpoint is a build error', () => {
+  const components = {
+    api: [
+      {
+        id: 'files',
+        type: 'Api',
+        link: true,
+        routine: { ':reject': 'Not found', ':status': 404, ':body': { error: 'not_found' } },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    ':reject in endpoint files sets :body, which a link endpoint does not answer with. A link endpoint answers a :reject with its :status and no body.'
   );
 });
 

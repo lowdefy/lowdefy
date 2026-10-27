@@ -55,6 +55,8 @@ The config object has the following properties:
 - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
 - `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, in other words, when the visitor navigates to `yourdomain.com` or `yourdomain.com/`. The home page cannot have placeholders in its [`path`](/page-paths).
 - `dependencyTracking: boolean`: Defaults to `true`. The browser re-evaluates only the blocks whose inputs changed (the state paths, requests and globals their operators read) instead of every block on the page after each change. Set to `false` to evaluate every block on every update, as earlier versions did.
+- `experimental: object`: Opt in to features that are not yet stable. An experimental feature may change, or be removed, in a minor release. The build fails on a key it does not know.
+  - `mobile: boolean`: Build the `mobile` section, so the app runs as a native iOS and Android app, and allow `offline` on requests. Defaults to `false`. See [Mobile Apps](/mobile-apps).
 - `requestTimeout: number`: Maximum time in milliseconds a request may run before the server returns a timeout. This protects against requests that hang on an upstream call (database, SMTP, an external API) running all the way to the host's function limit — important on serverless platforms that bill by execution duration. Defaults to `30000` (30 seconds). Set to `0` to disable. Agent streaming routes are exempt, since they are long-lived by design.
 - `security: object`: Opt-in browser security settings. See [Security](#security) below.
   - `contentSecurityPolicy: boolean | object`: Send a Content-Security-Policy header with app pages. Set `true` for the default policy, or an object with:
@@ -169,6 +171,14 @@ The plugins section is used to configure which plugin packages should be used in
 - `name: string`: The name of the package. If published to npm, this is the name under which the package is published on npm.
 - `version: string`: An npm or pnpm version specifier of the package to use.
 - `typePrefix: string`: A prefix to append to all types exported by the package to prevent type name clashes.
+
+A phone app's shell lists the plugins that add native code to it under `mobile.shells[].plugins`, each at an exact version. A package in both lists must have the same version. See [Shell plugins](/cli#shell-plugins).
+
+## Mobile
+
+> **Experimental.** The `mobile` section builds only when `config.experimental.mobile` is `true`.
+
+The `mobile` section declares the pages, menus, home page, app events and shells a native iOS and Android app shows. See [Mobile Apps](/mobile-apps).
 
 ## Menus
 
@@ -395,6 +405,7 @@ Every build error or warning from a check that the build prints shows its slug a
 | `websocket-refs` | Invalid websocket action reference warnings |
 | `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
 | `icons` | Unresolvable icon name warnings |
+| `native-ignored` | Properties set on a mobile page that the native block ignores |
 | `types` | All type validation (blocks, operators, actions, requests, connections) |
 | `schema` | JSON schema validation errors |
 | `secrets` | Environment variable names that are not set in the build environment |

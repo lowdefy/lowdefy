@@ -15,12 +15,13 @@
 */
 
 import { EventEmitter } from 'node:events';
+import { PassThrough } from 'node:stream';
 
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-const mockSpawn = jest.fn();
-jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn }));
-jest.unstable_mockModule('../utils/readBasePath.mjs', () => ({ default: () => '' }));
+const mockSpawn = vi.fn();
+vi.doMock('child_process', () => ({ spawn: mockSpawn }));
+vi.doMock('../utils/readBasePath.mjs', () => ({ default: () => '' }));
 
 const { default: startServer } = await import('./startServer.mjs');
 
@@ -28,20 +29,20 @@ function createContext({ mailSink }) {
   return {
     bin: { vite: 'vite.js' },
     directories: { config: '/apps/tenant' },
-    instance: { update: jest.fn() },
+    instance: { update: vi.fn() },
     internalPort: 3211,
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn() },
     mailSink,
     options: { port: 3210 },
-    serverArtifacts: { record: jest.fn() },
-    shutdownServer: jest.fn(),
+    serverArtifacts: { record: vi.fn() },
+    shutdownServer: vi.fn(),
     version: '7.2.0',
   };
 }
 
 beforeEach(() => {
   mockSpawn.mockImplementation(() =>
-    Object.assign(new EventEmitter(), { stderr: new EventEmitter() })
+    Object.assign(new EventEmitter(), { stderr: new PassThrough() })
   );
   process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
 });

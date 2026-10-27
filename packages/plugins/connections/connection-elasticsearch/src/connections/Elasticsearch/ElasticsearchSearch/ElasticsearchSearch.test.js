@@ -14,14 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
-mockElasticsearchClient.search = jest.fn(() => mockElasticsearchClient);
+const mockElasticsearchClient = vi.fn(function () {
+  return mockElasticsearchClient;
+});
+mockElasticsearchClient.search = vi.fn(function () {
+  return mockElasticsearchClient;
+});
 
-jest.unstable_mockModule('@elastic/elasticsearch', () => ({
-  Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
+vi.doMock('@elastic/elasticsearch', () => ({
+  Client: vi.fn().mockImplementation(function () {
+    return mockElasticsearchClient;
+  }),
 }));
 
 const connection = {
@@ -138,7 +144,9 @@ test('ElasticsearchSearch with match_all query', async () => {
       aborted: false,
     },
   };
-  mockElasticsearchClient.search.mockImplementationOnce(() => Promise.resolve(responseData));
+  mockElasticsearchClient.search.mockImplementationOnce(function () {
+    return Promise.resolve(responseData);
+  });
   const request = {
     size: 3,
     body: {
@@ -341,7 +349,9 @@ test('ElasticsearchSearch exposes total results', async () => {
       aborted: false,
     },
   };
-  mockElasticsearchClient.search.mockImplementationOnce(() => Promise.resolve(responseData));
+  mockElasticsearchClient.search.mockImplementationOnce(function () {
+    return Promise.resolve(responseData);
+  });
   const request = {
     size: 3,
     body: {
@@ -426,7 +436,9 @@ test('ElasticsearchSearch exposes total results over 10k as Infinity', async () 
       aborted: false,
     },
   };
-  mockElasticsearchClient.search.mockImplementationOnce(() => Promise.resolve(responseData));
+  mockElasticsearchClient.search.mockImplementationOnce(function () {
+    return Promise.resolve(responseData);
+  });
   const request = {
     size: 3,
     body: {
@@ -511,7 +523,9 @@ test('ElasticsearchSearch exposes maximum score', async () => {
       aborted: false,
     },
   };
-  mockElasticsearchClient.search.mockImplementationOnce(() => Promise.resolve(responseData));
+  mockElasticsearchClient.search.mockImplementationOnce(function () {
+    return Promise.resolve(responseData);
+  });
   const request = {
     size: 3,
     body: {
@@ -596,7 +610,9 @@ test('ElasticsearchSearch exposes aggregations', async () => {
       aborted: false,
     },
   };
-  mockElasticsearchClient.search.mockImplementationOnce(() => Promise.resolve(responseData));
+  mockElasticsearchClient.search.mockImplementationOnce(function () {
+    return Promise.resolve(responseData);
+  });
   const request = {
     size: 3,
     body: {
@@ -687,7 +703,9 @@ test('ElasticsearchSearch exposes original response body', async () => {
       aborted: false,
     },
   };
-  mockElasticsearchClient.search.mockImplementationOnce(() => Promise.resolve(responseData));
+  mockElasticsearchClient.search.mockImplementationOnce(function () {
+    return Promise.resolve(responseData);
+  });
   const request = {
     size: 3,
     body: {

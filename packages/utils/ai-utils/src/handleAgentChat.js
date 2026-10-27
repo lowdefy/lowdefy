@@ -28,6 +28,7 @@ import {
 
 import { serializer } from '@lowdefy/helpers';
 
+import agentErrorForLog, { agentLogIds, stackFramesForLog } from './agentErrorForLog.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 import handleAgentGenerate from './handleAgentGenerate.js';
@@ -66,7 +67,7 @@ function dropEmptyMessages(messages) {
 // user and AgentChat config (`_event: message`), so it takes the wire policy: the
 // author's message for a UserError or an auth refusal, the generic message otherwise. A
 // library's message can embed anything it saw - a TypeValidationError's embeds the whole
-// conversation. The full error is logged server-side.
+// conversation. The server log takes agentErrorForLog's summary instead, for the same reason.
 function createClientErrorText(context) {
   return function clientErrorText(error) {
     return context.wireErrorMessage(error);
@@ -109,6 +110,8 @@ async function handleAgentChat({ connection, properties, context }) {
   const titleEnabled = agent.properties.generateTitle === true;
 
   const clientErrorText = createClientErrorText(context);
+
+  const logIds = agentLogIds({ agent, context });
 
   // Every stream gets clientErrorText: the AI SDK's default onError writes a tool error or
   // an in-stream error to the client raw.
@@ -159,7 +162,10 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             })
             .catch((error) => {
-              context.logger.warn({ err: error }, 'generateTitle failed.');
+              context.logger.warn(
+                { ...logIds, error: agentErrorForLog(error) },
+                'generateTitle failed.'
+              );
             });
         }
       }
@@ -237,8 +243,16 @@ async function handleAgentChat({ connection, properties, context }) {
         }
       } catch (error) {
         // The client only ever sees the redacted error text, so the fault is
-        // logged server-side before it is written to the stream.
-        context.logger.error({ err: error }, 'Agent stream failed.');
+        // logged server-side before it is written to the stream - its summary,
+        // since the error itself can embed the whole conversation.
+        context.logger.error(
+          { ...logIds, stepCount: steps.length, error: agentErrorForLog(error) },
+          'Agent stream failed.'
+        );
+        context.logger.debug(
+          { ...logIds, stack: stackFramesForLog(error) },
+          'Agent stream failed: stack.'
+        );
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
       // Ensure the title (if any) is written before the stream closes.
@@ -269,7 +283,10 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             }
           } catch (error) {
-            context.logger.error({ err: error }, `onFinish hook "${endpointId}" failed.`);
+            context.logger.error(
+              { ...logIds, endpointId, error: agentErrorForLog(error) },
+              `onFinish hook "${endpointId}" failed.`
+            );
           }
         }
       }

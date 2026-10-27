@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeAll, expect, test } from 'vitest';
 import React from 'react';
 import { act, render } from '@testing-library/react';
 import { LucideProvider } from 'lucide-react/dist/esm/context.mjs';
 
 // Mock @ant-design/icons to avoid ESM/CJS interop issues in Jest. Like the real
 // Icon, it renders `component` inside <span role="img" class="anticon">.
-jest.unstable_mockModule('@ant-design/icons', () => ({
+vi.doMock('@ant-design/icons', () => ({
   __esModule: true,
   default: React.forwardRef(({ className, component: Component, children }, ref) => (
     <span ref={ref} role="img" className={['anticon', className].filter(Boolean).join(' ')}>
@@ -33,7 +33,7 @@ jest.unstable_mockModule('@ant-design/icons', () => ({
 const { default: createIcon } = await import('./createIcon.js');
 
 const methods = {
-  triggerEvent: jest.fn(),
+  triggerEvent: vi.fn(),
 };
 
 beforeAll(() => {
@@ -98,7 +98,7 @@ test('Icon renders icon data as a lucide svg inside the antd anticon span', () =
 
 test('Icon keeps the page path params off the svg', () => {
   const IconComponent = createIcon({ icons: Icons });
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   const { container } = render(
     <IconComponent
       blockId="test-id"
@@ -362,7 +362,7 @@ test('Icon onClick loading renders the loading icon unless disableLoadingIcon is
 });
 
 test('Icon onClick event triggers onClick and shows a pointer cursor', () => {
-  const triggerEvent = jest.fn();
+  const triggerEvent = vi.fn();
   const IconComponent = createIcon({ icons: Icons });
   const { container } = render(
     <IconComponent
@@ -456,7 +456,7 @@ test('Icon looks names up at render, so names added to the map later render', ()
 // A deferred loadAllIcons that adds `added` to the live map when resolved.
 function createLoader({ icons, added = {} }) {
   const deferred = {};
-  const loadAllIcons = jest.fn(() => {
+  const loadAllIcons = vi.fn(() => {
     deferred.promise ??= new Promise((resolve, reject) => {
       deferred.resolve = () => {
         Object.assign(icons, added);
@@ -525,7 +525,7 @@ test('Icon draws icon-missing when loading every icon fails, and a later miss tr
 });
 
 test('Icon never waits for names that are in the page icons', () => {
-  const loadAllIcons = jest.fn(() => new Promise(() => {}));
+  const loadAllIcons = vi.fn(() => new Promise(() => {}));
   const IconComponent = createIcon({ icons: Icons, loadAllIcons });
   const { container } = render(
     <IconComponent blockId="known" methods={methods} properties={{ name: 'Pencil' }} />

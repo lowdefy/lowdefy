@@ -24,7 +24,10 @@ async function controlFor(context, routineContext, { control }) {
 
   const itemName = control[':for'];
   if (!itemName) {
-    throw new Error(`Invalid :for in endpoint "${endpointId}" - missing variable name in :for.`);
+    throw new ConfigError(
+      `Invalid :for in endpoint "${endpointId}" - missing variable name in :for.`,
+      { configKey: control['~k'] }
+    );
   }
 
   const array = evaluateRoutineOperators(context, routineContext, {
@@ -34,7 +37,7 @@ async function controlFor(context, routineContext, { control }) {
 
   logger.debug({
     event: 'debug_control_for',
-    array,
+    itemCount: Array.isArray(array) ? array.length : null,
     itemName,
   });
 
@@ -46,7 +49,9 @@ async function controlFor(context, routineContext, { control }) {
   }
 
   if (!control[':do']) {
-    throw new Error(`Invalid :for in endpoint "${endpointId}" - missing :do.`);
+    throw new ConfigError(`Invalid :for in endpoint "${endpointId}" - missing :do.`, {
+      configKey: control['~k'],
+    });
   }
 
   for (const [index, item] of array.entries()) {
@@ -54,9 +59,8 @@ async function controlFor(context, routineContext, { control }) {
 
     logger.debug({
       event: 'debug_control_for_iteration',
-      itemName: itemName,
-      value: item,
-      items: updatedItems,
+      itemName,
+      index,
     });
 
     const res = await runRoutine(

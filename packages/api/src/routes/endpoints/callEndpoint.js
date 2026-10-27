@@ -36,13 +36,17 @@ async function callEndpoint(
   context.pageId = pageId;
   context.evaluateOperators = createEvaluateOperators(context);
 
-  logger.debug({ event: 'debug_endpoint', blockId, endpointId, pageId, payload });
+  // Ids only: a payload can carry chat text or other personal information (an agent
+  // chat's save-thread call sends the whole thread), which no log level may hold.
+  logger.debug({ event: 'debug_endpoint', blockId, endpointId, pageId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
   // Block HTTP access to InternalApi endpoints - same error as a missing
   // endpoint, including the guarded unauthenticated fork, so an internal
   // endpoint is indistinguishable from one that does not exist on both paths.
-  if (endpointConfig.type === 'InternalApi') {
+  // A link endpoint answers only the GET route (runLinkEndpoint), so a POST or
+  // MCP call to it is refused the same way.
+  if (endpointConfig.type === 'InternalApi' || endpointConfig.link === true) {
     const unauthenticatedHuman =
       type.isNone(context.user) && !type.isNone(context.authEnforcement) && context.system !== true;
     const err = unauthenticatedHuman

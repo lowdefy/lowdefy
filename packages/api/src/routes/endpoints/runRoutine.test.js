@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import runTest from './test/runTest.js';
 
@@ -50,7 +50,6 @@ test('single stage', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request',
-        result: 1,
       },
     ],
   ]);
@@ -91,7 +90,6 @@ test('array with single stage', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request',
-        result: 1,
       },
     ],
   ]);
@@ -141,7 +139,6 @@ test('array with two stages', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
-        result: 1,
       },
     ],
     [
@@ -162,7 +159,6 @@ test('array with two stages', async () => {
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_2',
-        result: 2,
       },
     ],
   ]);
@@ -354,7 +350,7 @@ test('handleError skipped when error.handled is already true', async () => {
   const { default: runRoutine } = await import('./runRoutine.js');
   // The real sink (servers' createHandleError) marks the error handled once it
   // has logged it; runRoutine's guard reads that flag rather than setting it.
-  const handleError = jest.fn(async (error) => {
+  const handleError = vi.fn(async (error) => {
     error.handled = true;
   });
   const context = { handleError };
@@ -369,7 +365,7 @@ test('handleError skipped when error.handled is already true', async () => {
 
 test('an invalid routine throws a LowdefyInternalError', async () => {
   const { default: runRoutine } = await import('./runRoutine.js');
-  const handleError = jest.fn();
+  const handleError = vi.fn();
   const res = await runRoutine({ handleError }, {}, { routine: null });
   expect(res.status).toBe('error');
   expect(res.error.name).toBe('LowdefyInternalError');
@@ -377,15 +373,22 @@ test('an invalid routine throws a LowdefyInternalError', async () => {
 });
 
 test.each([
-  ['a thrown UserError nobody logged is logged here as a warning', false, 1],
-  ['a UserError already logged where it was raised is not logged again', true, 0],
+  ['a thrown UserError nobody logged is logged here as a warning', 'UserError', false, 1],
+  ['a UserError already logged where it was raised is not logged again', 'UserError', true, 0],
+  [
+    'an auth refusal from a nested call is logged here as a warning',
+    'AuthorizationError',
+    false,
+    1,
+  ],
+  ['an unauthenticated nested call is logged here as a warning', 'AuthenticationError', false, 1],
 ])(
   '%s and returned as an error status, never through handleError',
-  async (_, handled, warnings) => {
+  async (_, errorName, handled, warnings) => {
     const { default: runRoutine } = await import('./runRoutine.js');
-    const { UserError } = await import('@lowdefy/errors');
-    const handleError = jest.fn();
-    const error = new UserError('Nested payload refused.');
+    const errors = await import('@lowdefy/errors');
+    const handleError = vi.fn();
+    const error = new errors[errorName]('Nested payload refused.');
     error.handled = handled || undefined;
     const routine = {
       id: 'endpoint:nested',
@@ -393,7 +396,7 @@ test.each([
     };
     const context = {
       handleError,
-      logger: { debug: jest.fn(), warn: jest.fn() },
+      logger: { debug: vi.fn(), warn: vi.fn() },
       evaluateOperators: () => {
         throw error;
       },

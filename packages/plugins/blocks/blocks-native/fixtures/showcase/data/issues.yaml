@@ -1,0 +1,178 @@
+# Every issue, as the lists draw them: `glyph` and `priorityGlyph` are StatusIcon names, and
+# `picture` is the assignee's.
+- key: ACME-142
+  title: Offline edits sync twice after reconnecting
+  project: ios
+  status: in_progress
+  glyph: inProgress
+  priority: urgent
+  priorityGlyph: priorityUrgent
+  assignee: grace
+  assigneeName: Grace Hopper
+  picture: https://i.pravatar.cc/96?img=32
+  updated: 12m
+- key: ACME-139
+  title: Haptic tick when a swipe action commits
+  project: ios
+  status: in_progress
+  glyph: inProgress
+  priority: medium
+  priorityGlyph: priorityMedium
+  assignee: ada
+  assigneeName: Ada Lovelace
+  picture: https://i.pravatar.cc/96?img=47
+  updated: 2h
+- key: ACME-151
+  title: Large title clips under the Dynamic Island
+  project: ios
+  status: todo
+  glyph: todo
+  priority: high
+  priorityGlyph: priorityHigh
+  assignee: alan
+  assigneeName: Alan Turing
+  picture: https://i.pravatar.cc/96?img=12
+  updated: 1d
+- key: ACME-156
+  title: Home Screen widget for issues due today
+  project: ios
+  status: backlog
+  glyph: backlog
+  priority: low
+  priorityGlyph: priorityLow
+  assignee: katherine
+  assigneeName: Katherine Johnson
+  picture: https://i.pravatar.cc/96?img=45
+  updated: 3d
+- key: ACME-133
+  title: Avatars lose their ring in dark mode
+  project: ios
+  status: done
+  glyph: done
+  priority: low
+  priorityGlyph: priorityLow
+  assignee: ada
+  assigneeName: Ada Lovelace
+  picture: https://i.pravatar.cc/96?img=47
+  updated: 5d
+- key: ACME-148
+  title: Keyboard shortcuts sheet
+  project: web
+  status: in_progress
+  glyph: inProgress
+  priority: medium
+  priorityGlyph: priorityMedium
+  assignee: katherine
+  assigneeName: Katherine Johnson
+  picture: https://i.pravatar.cc/96?img=45
+  updated: 40m
+- key: ACME-144
+  title: Board columns jump when a card lands
+  project: web
+  status: in_review
+  glyph: inReview
+  priority: high
+  priorityGlyph: priorityHigh
+  assignee: ada
+  assigneeName: Ada Lovelace
+  picture: https://i.pravatar.cc/96?img=47
+  updated: 1h
+- key: ACME-153
+  title: Remember the last filter for each project
+  project: web
+  status: todo
+  glyph: todo
+  priority: medium
+  priorityGlyph: priorityMedium
+  assignee: ada
+  assigneeName: Ada Lovelace
+  picture: https://i.pravatar.cc/96?img=47
+  updated: 4h
+- key: ACME-161
+  title: Release notes for Acme 2.4
+  project: web
+  status: todo
+  glyph: todo
+  priority: low
+  priorityGlyph: priorityLow
+  assignee: ada
+  assigneeName: Ada Lovelace
+  picture: https://i.pravatar.cc/96?img=47
+  updated: 6h
+- key: ACME-158
+  title: Export a board as CSV
+  project: web
+  status: backlog
+  glyph: backlog
+  priority: none
+  priorityGlyph: priorityNone
+  assignee: grace
+  assigneeName: Grace Hopper
+  picture: https://i.pravatar.cc/96?img=32
+  updated: 1w
+- key: ACME-129
+  title: Focus ring missing on the comment field
+  project: web
+  status: done
+  glyph: done
+  priority: low
+  priorityGlyph: priorityLow
+  assignee: alan
+  assigneeName: Alan Turing
+  picture: https://i.pravatar.cc/96?img=12
+  updated: 1w
+- key: ACME-147
+  title: Idempotency keys on every write endpoint
+  project: api
+  status: in_progress
+  glyph: inProgress
+  priority: urgent
+  priorityGlyph: priorityUrgent
+  assignee: alan
+  assigneeName: Alan Turing
+  picture: https://i.pravatar.cc/96?img=12
+  updated: 25m
+- key: ACME-155
+  title: Webhooks for status changes
+  project: api
+  status: in_review
+  glyph: inReview
+  priority: medium
+  priorityGlyph: priorityMedium
+  assignee: ada
+  assigneeName: Ada Lovelace
+  picture: https://i.pravatar.cc/96?img=47
+  updated: 3h
+- key: ACME-150
+  title: Rate limit the search endpoint
+  project: api
+  status: todo
+  glyph: todo
+  priority: medium
+  priorityGlyph: priorityMedium
+  assignee: katherine
+  assigneeName: Katherine Johnson
+  picture: https://i.pravatar.cc/96?img=45
+  updated: 1d
+- key: ACME-159
+  title: Paginate the activity feed
+  project: api
+  status: backlog
+  glyph: backlog
+  priority: low
+  priorityGlyph: priorityLow
+  assignee: grace
+  assigneeName: Grace Hopper
+  picture: https://i.pravatar.cc/96?img=32
+  updated: 2d
+- key: ACME-118
+  title: Queue writes while offline
+  project: api
+  status: done
+  glyph: done
+  priority: high
+  priorityGlyph: priorityHigh
+  assignee: alan
+  assigneeName: Alan Turing
+  picture: https://i.pravatar.cc/96?img=12
+  updated: 2w

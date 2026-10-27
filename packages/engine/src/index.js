@@ -17,6 +17,7 @@
 import Actions from './Actions.js';
 import Slots from './Slots.js';
 import createLink from './createLink.js';
+import createUpdaters from './createUpdaters.js';
 import decodeServerError, { getDevError } from './decodeServerError.js';
 import Events from './Events.js';
 import getAppContext from './getAppContext.js';
@@ -35,6 +36,7 @@ export {
   Actions,
   Slots,
   createLink,
+  createUpdaters,
   decodeServerError,
   Events,
   getAppContext,

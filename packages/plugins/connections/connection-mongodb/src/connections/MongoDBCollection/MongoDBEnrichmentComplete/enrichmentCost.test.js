@@ -19,6 +19,7 @@ import { validate } from '@lowdefy/ajv';
 import compileEnrichmentComplete from './compileEnrichmentComplete.js';
 import planCompleteCell from './planCompleteCell.js';
 import schema from './schema.js';
+import { expect, test } from 'vitest';
 
 // The per-cell cost of a result (micro-USD), as a treg-backed provider reports it.
 

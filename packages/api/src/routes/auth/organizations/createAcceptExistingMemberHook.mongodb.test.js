@@ -19,7 +19,7 @@
 // instance on the MongoDB auth adapter, with the unique member index in place
 // (pnpm test:mongodb).
 
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import * as mongodb from 'mongodb';
 
 // The adapter keeps its client for the process lifetime, so the test records
@@ -32,7 +32,7 @@ class RecordingMongoClient extends mongodb.MongoClient {
   }
 }
 
-jest.unstable_mockModule('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
+vi.doMock('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
 
 const { betterAuth } = await import('better-auth');
 const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/adapters');
@@ -63,11 +63,11 @@ afterAll(async () => {
 
 function createLogger() {
   return {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    isLevelEnabled: jest.fn(() => false),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    isLevelEnabled: vi.fn(() => false),
   };
 }
 
@@ -252,6 +252,46 @@ test('a member added by an operator gets the organization active when accepting 
     })
   );
   expect((await getSession.json()).session.activeOrganizationId).toBe(organization.id);
+});
+
+test('a member suspended in the organization accepting from an org-less session does not get it active', async () => {
+  const { adapter, auth, db } = await setup({ organizations: tenantOpen });
+  const owner = await adapter.create({
+    model: 'user',
+    data: { email: 'owner@example.com', name: 'Owner', emailVerified: true },
+  });
+  const organization = await adapter.create({
+    model: 'organization',
+    data: { name: 'Acme', slug: 'acme', createdAt: new Date() },
+  });
+  const invitation = await invite({
+    adapter,
+    email: 'invitee@example.com',
+    organizationId: organization.id,
+    inviterId: owner.id,
+  });
+  const { cookie, user } = await signUp({ auth, adapter, email: 'invitee@example.com' });
+  await adapter.create({
+    model: 'member',
+    data: {
+      userId: user.id,
+      organizationId: organization.id,
+      role: 'member',
+      suspended: true,
+      createdAt: new Date(),
+    },
+  });
+  const response = await accept({ auth, cookie, invitationId: invitation.id });
+  expect(response.status).toBe(200);
+  const members = await db.collection('user-members').find({ user_id: user.id }).toArray();
+  expect(members).toHaveLength(1);
+  expect(members[0].suspended).toBe(true);
+  const getSession = await auth.handler(
+    new Request(`${ORIGIN}/api/auth/get-session`, {
+      headers: { cookie: mergeCookies(cookie, response), origin: ORIGIN },
+    })
+  );
+  expect((await getSession.json()).session.activeOrganizationId ?? null).toBeNull();
 });
 
 test('a user who is not yet a member still joins through the route with the invitation role', async () => {

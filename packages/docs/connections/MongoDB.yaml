@@ -703,8 +703,17 @@ _ref:
             queued: 2400          # cells queued, those waiting for an input column included
             skipped: 12           # selected cells the mode left alone (live, fresh or not matching)
             missingInputs: 3      # cells set to empty for a missing input
+            byColumn:             # the same counts for each column run, summing to the totals
+              email: { queued: 1200, missingInputs: 3 }
+              pitch: { queued: 1200, missingInputs: 0 }
             runId: 66f9…
             ```
+
+            ##### Dry run
+
+            With `dryRun: true` the request reads and plans exactly as a run does (the same selection, mode, `maxCells`, `maxTimeMS` and tenant scope) and returns the counts the run would write, writing no cell and no change log record. The response is `{ dryRun: true, queued, missingInputs, skipped, byColumn }`, with no `runId`. Over `maxCells` it throws as a run would, so an app learns a run is too large before it asks.
+
+            Use it to confirm a run that costs money before it starts: in the run event, call the request with `dryRun: true`, show a confirm with each column's `queued` count times that column's provider cost, and on a yes call it again without `dryRun`. Cells can change between the two calls, so the run's own response, whose `byColumn` has the same shape, says what was queued.
 
             #### Properties
             - `columns: string[]`: __Required__ - The keys of the enrichment or ai columns to run.
@@ -715,6 +724,7 @@ _ref:
             - `filter: object`: The base filter every read and write is scoped by, for example `{ org_id: { _user: organization.id } }`. Required unless the connection is tenant-scoped. Set it to `{}` to run on every document.
             - `maxCells: integer`: Default: `10000` - The most cells one enqueue may write, queued and missing input cells together.
             - `maxTimeMS: integer`: Default: `30000` - The time limit of each read.
+            - `dryRun: boolean`: Default: `false` - Count the cells the run would queue and set empty, by column, and write nothing. See [Dry run](#dry-run).
             - `runId: string`: The `runId` the queued cells get, 1 to 64 letters, digits, `_` or `-`. Generated when left out.
             - `user: object`: The user that `{ $user: path }` values in a selection filter resolve from. Set it to `{ _user: true }`.
             - `timezone: string`: Default: `UTC` - The IANA time zone whose days the date filters of a selection compare.
@@ -1353,7 +1363,10 @@ _ref:
                 aggregates: { amount: 125000 }
             aggregates:           # only when view.aggregates is set, over the rows this request matches
               amount: 3400000
+            sentence: Stage is any of Lead or Won   # only when view.filter is set
             ```
+
+            `sentence` is the filter in words, from the field `title` and `options` (`describeCondition` in `@lowdefy/helpers`). It reads the same as the Table's Filter button tooltip when each field carries its column's plain-text `title` and its options as `[{ value, label }]`; a field without a `title` reads as its key, where the Table shows the key humanized. An agent or a server routine that runs the request with no browser can then say what a saved view matches.
 
             When `view.group` is set and `groupPath` is shorter than it, the request returns the groups of the next level, inside the groups in `groupPath`. When `groupPath` has a value for every level, it returns the leaf rows of that group.
 
@@ -1366,7 +1379,7 @@ _ref:
             | all | `eq`, `ne`, `in`, `nin`, `empty`, `notEmpty` |
             | `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status`, `avatar` | `contains`, `notContains`, `startsWith`, `endsWith` |
             | `number`, `currency`, `percent`, `progress`, `rating` | `gt`, `gte`, `lt`, `lte`, `between` (`value: [from, to]`) |
-            | `date`, `datetime` | `before`, `after`, `between`, `within` (`value: { last or next: n, unit: day, week, month or year }`) |
+            | `date`, `datetime` | `before`, `after`, `between`, `within` (`value: { last or next: n, unit: day, week, month or year }`); `before` and `after` take a date or the same relative value |
             | `boolean` | `isTrue`, `isFalse` |
             | `tags`, `people` | `contains` (has the value), `notContains` (does not have the value); `in` is has any of, `nin` is has none of |
             | `image`, `json` | the operators for all types only |
@@ -1376,6 +1389,7 @@ _ref:
             - Text comparisons are case-insensitive.
             - `empty` matches null, missing, `''` and `[]`.
             - `eq` and `ne` on dates compare whole days, and so do `before`, `after` and `between` on `date` fields. `within` covers whole days, from the start of the day `n` units ago to the end of today (or from the start of today to the end of the day `n` units ahead), as the table filters in the browser.
+            - `before` and `after` with a relative value, such as `{ last: 3, unit: month }`, resolve when the query runs to the day it names in `timezone`: `before` matches values before the start of that day and `after` values from the end of it, on `date` and `datetime` fields alike. A bad relative value is refused with the message `within` gives.
             - Days are the days of `timezone`, UTC by default. The browser filters by the user's local days, so pass the user's time zone for day-based filters, for example `timezone: { _payload: timezone }` with `timezone: { _js: 'return Intl.DateTimeFormat().resolvedOptions().timeZone;' }` in the request `payload`. A date-only value such as `2026-03-01` (what `date` column filters send) is that day in the time zone. An instant is compared by the day it falls on there.
             - `isFalse` matches every value that is not `true`.
             - Numeric values may be numbers or numeric strings, and date values dates, date strings or timestamps.
@@ -1409,6 +1423,8 @@ _ref:
               - `sortable: boolean`: Default: `true` - Allow sorting by the field.
               - `filterable: boolean`: Default: `true` - Allow filtering by the field.
               - `groupable: boolean`: Default: `false` - Allow grouping by the field, and `countDistinct` on it. `tags` and `people` fields can not be grouped.
+              - `title: string`: Default: the field key - The field's name in the response `sentence`, as the Table column's title.
+              - `options: object[]`: The field's options as `[{ value, label }]`. The response `sentence` reads option values as their labels.
             - `pipeline: object[]`: Default: `[]` - Base aggregation stages that always run first, for example tenant scoping and a `$project`. `$out` and `$merge` are not allowed.
             - `view: object`: The Table view, `{ _payload: view }`. Only `sort`, `filter`, `search`, `group` and `aggregates` are read.
             - `startRow: integer`: Default: `0` - Index of the first row to return, `{ _payload: startRow }`.
@@ -1780,12 +1796,12 @@ _ref:
 
             ## Errors
 
-            When MongoDB rejects an operation, the request fails with a `ServiceError` that carries:
+            When MongoDB rejects an operation, the request fails with a `RequestError` that carries:
 
             - `code` — the MongoDB error code, for example `11000` for a duplicate key.
-            - `message` — a plain sentence naming the collection and the request type, like `MongoDB: Duplicate key on collection "orders".`
-            - `hint` — a sentence saying what to do about it, for example to insert with `MongoDBUpdateOne` and `upsert: true`, to add an index covering the filter, or to grant the database user a role.
+            - `message` — a plain sentence naming the collection and the request type, like `Duplicate key on collection "orders".`
+            - `hint` — a sentence saying what to do about it, for example to insert with `MongoDBUpdateOne` and `upsert: true`, or to grant the database user a role.
 
-            The driver's own message is never sent to the browser — it can quote values from the document that triggered the error. It is logged on the server instead, where the dev server terminal prints it under the located error line as `Caused by: MongoServerError: E11000 …`.
+            A time limit (codes `50` and `89`) or the aggregation memory limit (code `292`) is a `ServiceError` instead, with the same `code` and a `hint` such as adding an index covering the filter. Network, DNS and TLS failures are also `ServiceError`s, classified by the connection layer rather than by an error code. A `ServiceError` is an outage that can pass with time; a `RequestError` repeats until the request or the database changes.
 
-            Network, DNS and TLS failures are also `ServiceError`s, classified by the connection layer rather than by an error code.
+            The driver's own message is never sent to the browser — it can quote values from the document that triggered the error. The dev server terminal prints it under the located error line as `Caused by: MongoServerError: E11000 …`.

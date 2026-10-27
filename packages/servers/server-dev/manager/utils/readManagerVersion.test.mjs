@@ -17,6 +17,7 @@
 import fs from 'fs';
 
 import readManagerVersion from './readManagerVersion.mjs';
+import { expect, test } from 'vitest';
 
 test('readManagerVersion reads the version from the server package.json, without npm_package_version', () => {
   const saved = process.env.npm_package_version;

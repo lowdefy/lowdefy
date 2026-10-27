@@ -39,7 +39,7 @@ import { ConfigError } from '@lowdefy/errors';
 function createAuthorizeOutcome({ authEnforcement, system, user }) {
   const authenticated = !type.isNone(user);
   // A caller awaiting an organization is signed in and holds no membership -
-  // under tenant, the invited user before they accept (resolveAuthentication).
+  // the invited user before they accept (resolveAuthentication).
   // They are known so the always-public accept page can address them, and
   // refused everywhere auth.public is false, roles or not: empty roles is not a
   // wall (user-model Decision 2), so authenticated alone must not admit them to

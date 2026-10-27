@@ -20,6 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import applyDataSetRedirect from './applyDataSetRedirect.js';
+import { expect, test } from 'vitest';
 
 const connections = {
   MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' }, requests: {} },

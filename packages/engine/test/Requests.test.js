@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { expect, jest } from '@jest/globals';
+import { expect, vi, beforeEach, test } from 'vitest';
 
 import decodeServerError, { getDevError } from '../src/decodeServerError.js';
 import testContext from './testContext.js';
@@ -35,7 +35,7 @@ const mockReqResponses = {
   req_error: new Error('mock error'),
 };
 
-const mockCallRequest = jest.fn();
+const mockCallRequest = vi.fn();
 const mockCallRequestImp = ({ requestId }) => {
   return new Promise((resolve, reject) => {
     if (requestId === 'req_error') {
@@ -150,6 +150,7 @@ test('callRequest, payload operators are evaluated', async () => {
   expect(mockCallRequest.mock.calls[0][0]).toEqual({
     blockId: 'block_id',
     pageId: 'page1',
+    readOnly: false,
     requestId: 'req_one',
     payload: {
       event: { event: true },
@@ -382,7 +383,7 @@ test('callRequest request does not exist', async () => {
 
 test('update function should be called', async () => {
   const pageConfig = getPageConfig();
-  const updateFunction = jest.fn();
+  const updateFunction = vi.fn();
   const context = await testContext({
     lowdefy,
     pageConfig,
@@ -395,7 +396,7 @@ test('update function should be called', async () => {
 
 test('update function should be called before all requests are fired and once for every request return', async () => {
   const pageConfig = getPageConfig();
-  const updateFunction = jest.fn();
+  const updateFunction = vi.fn();
   const context = await testContext({
     lowdefy,
     pageConfig,
@@ -413,7 +414,7 @@ test('update function should be called before all requests are fired and once fo
 
 test('update function should be called if error', async () => {
   const pageConfig = getPageConfig();
-  const updateFunction = jest.fn();
+  const updateFunction = vi.fn();
   const context = await testContext({
     lowdefy,
     pageConfig,
@@ -437,7 +438,7 @@ test('fetch should set call query every time it is called', async () => {
   });
   context._internal.lowdefy._internal.callRequest = mockCallRequest;
   context._internal.RootSlots = {
-    update: jest.fn(),
+    update: vi.fn(),
   };
   await context._internal.Requests.callRequest({ requestId: 'req_one', onlyNew: true, blockId });
   expect(mockCallRequest).toHaveBeenCalledTimes(1);
@@ -619,7 +620,7 @@ test('callRequest holdValue retains previous response on error', async () => {
   const pageConfig = getPageConfig();
   const context = await testContext({ lowdefy, pageConfig });
   let call = 0;
-  context._internal.lowdefy._internal.callRequest = jest.fn().mockImplementation(
+  context._internal.lowdefy._internal.callRequest = vi.fn().mockImplementation(
     ({ requestId }) =>
       new Promise((resolve, reject) => {
         call += 1;
@@ -705,7 +706,7 @@ test('callRequest stores a decoded server error without its dev error, which get
       '~e': { name: 'RequestError', message: 'connect ECONNREFUSED', requestId: 'rid-1' },
     },
   });
-  context._internal.lowdefy._internal.callRequest = jest.fn(() => Promise.reject(decoded));
+  context._internal.lowdefy._internal.callRequest = vi.fn(() => Promise.reject(decoded));
 
   await expect(
     context._internal.Requests.callRequest({ requestId: 'req_error', blockId })
@@ -715,4 +716,16 @@ test('callRequest stores a decoded server error without its dev error, which get
   expect(storedError).toBe(decoded);
   expect(Object.getOwnPropertyNames(storedError)).not.toContain('devError');
   expect(getDevError(storedError).message).toBe('connect ECONNREFUSED');
+});
+
+test('callRequest keeps only historyLimits.calls responses per request id', async () => {
+  const context = await testContext({
+    lowdefy: { ...lowdefy, _internal: { ...lowdefy._internal, historyLimits: { calls: 2 } } },
+    pageConfig: getPageConfig(),
+  });
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  for (let i = 0; i < 4; i += 1) {
+    await context._internal.Requests.callRequest({ requestId: 'req_one', blockId });
+  }
+  expect(context.requests.req_one).toHaveLength(2);
 });

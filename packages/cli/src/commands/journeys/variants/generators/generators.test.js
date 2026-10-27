@@ -17,6 +17,7 @@
 import doubleSubmit from './doubleSubmit.js';
 import interrupt from './interrupt.js';
 import negative from './negative.js';
+import { expect, test } from 'vitest';
 
 function exercised({ requests = [], endpoints = [], events = [] } = {}) {
   return { pages: ['tickets'], appEvents: true, requests, endpoints, events, rendered: {} };

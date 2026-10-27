@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 import MongoDBFindOne from './MongoDBFindOne.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBFindOne.meta;
 const schema = MongoDBFindOne.schema;
@@ -99,7 +100,7 @@ test('findOne mongodb error', async () => {
     read: true,
   };
   await expect(MongoDBFindOne({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBFindOne command on collection "findOne" as malformed.'
+    'MongoDB rejected the MongoDBFindOne command on collection "findOne" as malformed.'
   );
 });
 

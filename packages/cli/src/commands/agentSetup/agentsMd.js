@@ -18,7 +18,7 @@ import agentsMdSkills from './agentsMdSkills.js';
 import devServerRules from './devServerRules.js';
 import TESTING_RULES from './testingRules.js';
 
-function agentsMd({ skills }) {
+function agentsMd({ cliVersion, skills }) {
   return `## Lowdefy
 
 This project contains a [Lowdefy](https://lowdefy.com) app, or several: a web app defined in YAML config files
@@ -28,7 +28,7 @@ like \`_if\`, \`_get\`, \`_state\`), **actions** (event handlers), and **connect
 
 ### The dev server
 
-${devServerRules()}
+${devServerRules({ cliVersion })}
 
 ### Looking up types, schemas, and docs
 
@@ -71,14 +71,6 @@ installed in this project (including local plugins).
 ### Testing a change
 
 ${TESTING_RULES}
-
-### Visual feedback
-
-While the dev server is running, developers can press \`Cmd/Ctrl+/\` in the browser to point at,
-draw on, and comment on the running app; the annotation helper copies an agent-readable feedback
-block to their clipboard, which they paste into the agent session. Pasted blocks start with
-"Feedback:" and include the config file and line each annotation refers to — treat them as
-precise UI feedback.
 
 ${agentsMdSkills({ skills })}`;
 }

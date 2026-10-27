@@ -1,0 +1,29 @@
+# The seeded database (scripts/seed-journeys.mjs) holds a pending invitation
+# to org-b for invitee@example.test, under the id journey-invitation.
+- name: an invitee signs in by magic link and accepts their pending invitation to the pinned organization
+  pageId: login
+  user: none
+  timeout: 30000
+  steps:
+    # Invite-only admits the email because the invitation is pending, and the
+    # session carries no active organization until they accept.
+    - fill: { blockId: email, value: invitee@example.test }
+    - click: magic_link_button
+    - expect: { url: { contains: /check-email } }
+    - email: { to: invitee@example.test, subject: Your sign-in link }
+    - click: { text: Sign in }
+    - expect: { url: { contains: /home } }
+    # Awaiting the organization widens no access: protected pages refuse them.
+    - goto: dashboard
+    - expect: { url: { contains: /404 } }
+    # Opened without the emailed link: the server answers the accept page as a
+    # caller awaiting org-b and names the pending invitation, so the page both
+    # loads (its request is answered as the user it renders) and fills the id.
+    - goto: accept-invitation
+    - expect: { state: { path: caller.awaiting_organization, equals: true } }
+    - expect: { state: { path: invitationId, equals: journey-invitation } }
+    - click: accept_button
+    - expect: { visible: accept_result_html }
+    - goto: dashboard
+    - expect: { url: { contains: /dashboard } }
+    - expect: { text: { blockId: user_details, contains: invitee@example.test } }

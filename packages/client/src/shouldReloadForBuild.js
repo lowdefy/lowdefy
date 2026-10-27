@@ -14,36 +14,18 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { shouldReloadForBuild as shouldReloadForBuildCore } from '@lowdefy/client-core';
 
-// sessionStorage key holding the server build this tab last reloaded for.
-const RELOADED_FOR_BUILD_KEY = 'lowdefy.reloadedForBuild';
+import createWebStore from './host/createWebStore.js';
 
-// True when the server answered from a different build than the bundle this
-// tab is running, so the tab must do a full load to pick up the current
-// bundle. Without this a page config from the new build can reference _js
-// functions the old bundle never shipped, and the old page's requests can
-// name requests, endpoints or auth routes the new build renamed or removed.
-//
-// A tab reloads at most once per server build: if the freshly loaded bundle
-// still disagrees with the server (a rolling deploy answering from mixed
-// versions, a proxy caching old HTML), reloading again would loop forever.
-// The old-config-on-old-bundle throw is the lesser failure in that case.
+// shouldReloadForBuild over the tab's sessionStorage, for the server templates'
+// page navigation and auth fetch.
 function shouldReloadForBuild({ bundleBuildId, serverBuildId, window }) {
-  if (type.isNone(serverBuildId) || serverBuildId === bundleBuildId) {
-    return false;
-  }
-  try {
-    if (window.sessionStorage.getItem(RELOADED_FOR_BUILD_KEY) === serverBuildId) {
-      return false;
-    }
-    window.sessionStorage.setItem(RELOADED_FOR_BUILD_KEY, serverBuildId);
-  } catch (error) {
-    // Browsers with storage disabled throw on sessionStorage access. Without
-    // the once-per-build record the loop guard cannot work, so do not reload.
-    return false;
-  }
-  return true;
+  return shouldReloadForBuildCore({
+    bundleBuildId,
+    serverBuildId,
+    sessionStorage: createWebStore(() => window.sessionStorage),
+  });
 }
 
 export default shouldReloadForBuild;

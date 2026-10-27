@@ -1,0 +1,20 @@
+id: today
+type: Box
+blocks:
+  - id: heading
+    type: Title
+    properties:
+      content: Today
+  - id: summary
+    type: Paragraph
+    properties:
+      content: Nothing due.
+  - id: open_jobs
+    type: Button
+    properties:
+      title: Open jobs
+    events:
+      onClick:
+        - id: go
+          type: Link
+          params: jobs

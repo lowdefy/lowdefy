@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 import buildApi from './buildApi.js';
 import testContext from '../../test-utils/testContext.js';
 
-const mockLogWarn = jest.fn();
-const mockLog = jest.fn();
+const mockLogWarn = vi.fn();
+const mockLog = vi.fn();
 
 const logger = {
   warn: mockLogWarn,
@@ -433,6 +433,66 @@ test('api endpoint declaring both webhook and payloadSchema throws', () => {
     ],
   };
   expect(() => buildApi({ components: withVerify, context })).toThrow(message);
+});
+
+test('api link endpoint with a payloadSchema is valid', () => {
+  const components = {
+    api: [
+      {
+        id: 'files/inline',
+        type: 'Api',
+        link: true,
+        routine: [],
+        payloadSchema: { type: 'object', properties: { path: { type: 'string' } } },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('api link endpoint on an InternalApi endpoint throws', () => {
+  const components = {
+    api: [{ id: 'files', type: 'InternalApi', link: true, routine: [] }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint "files" declares "link" but is type "InternalApi". Only an Api endpoint can be a link endpoint.'
+  );
+});
+
+test('api link endpoint declaring webhook throws', () => {
+  const message =
+    'Endpoint "files" declares both "link" and "webhook". A link endpoint answers a signed-in GET with a redirect; a webhook answers a third-party POST.';
+  expect(() =>
+    buildApi({
+      components: { api: [{ id: 'files', type: 'Api', link: true, webhook: true, routine: [] }] },
+      context,
+    })
+  ).toThrow(message);
+  expect(() =>
+    buildApi({
+      components: {
+        api: [
+          {
+            id: 'files',
+            type: 'Api',
+            link: true,
+            webhook: { verify: { type: 'StripeVerify' } },
+            routine: [],
+          },
+        ],
+      },
+      context,
+    })
+  ).toThrow(message);
+});
+
+test('api link endpoint declaring async throws', () => {
+  const components = {
+    api: [{ id: 'files', type: 'Api', link: true, async: true, routine: [] }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint "files" declares both "link" and "async". A link endpoint answers with the URL its routine returns, so the routine cannot run in the background.'
+  );
 });
 
 test('api endpoint with webhook false and a payloadSchema is valid', () => {

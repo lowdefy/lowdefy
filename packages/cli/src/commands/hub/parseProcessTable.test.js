@@ -15,6 +15,7 @@
 */
 
 import parseProcessTable from './parseProcessTable.js';
+import { expect, test } from 'vitest';
 
 test('parseProcessTable reads pid, ppid, pgid, the start time in epoch milliseconds, and the command', () => {
   const text = [

@@ -20,7 +20,7 @@
 // template file) so it ships verbatim — a real source file would be transpiled by the CLI's swc
 // build, stripping these comments. Its `../src/initServer.js` import and the chdir to `..` resolve
 // to the server directory inside the function, where the assembly places src/, build/, lib/ and the
-// traced dependency closure. Its `ws` and `@hono/node-server` imports resolve because the traced
+// traced dependency closure; its lib/server/log imports resolve there too. Its `ws` and `@hono/node-server` imports resolve because the traced
 // src/index.js imports both. It imports no Sentry package: initServer loads the SDK only when
 // SENTRY_DSN is set.
 const apiHandler = `/*
@@ -63,6 +63,13 @@ process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 // sets logger.sentry.serverTracing: tracing's start-up cost would land on every cold start.
 const { default: initServer } = await import('../src/initServer.js');
 const { createApp, sentry } = await initServer({ serverless: true });
+// The last-chance catch below writes to stderr past pino and its line scrub, so it writes the
+// error the way the server's error sink falls back: the log projection (no library fields such
+// as an axios error's config.auth), scrubbed of every secret the server holds.
+const { default: serializeErrorForLog } = await import(
+  '../lib/server/log/serializeErrorForLog.js'
+);
+const { default: scrubSecrets } = await import('../lib/server/scrubSecrets.js');
 // Vercel's edge sets x-real-ip to the client address on every request, replacing any value the
 // client sent, so the app takes the address from it instead of the connection (which is Vercel's
 // own proxy).
@@ -101,7 +108,7 @@ async function handleRequest(req, res) {
   response.headers.forEach((value, key) => res.appendHeader(key, value));
   if (response.body) {
     const reader = response.body.getReader();
-    // A GET stream (the MCP notification stream, an SSE feed) exists only for its client, and
+    // A GET stream (an SSE feed) exists only for its client, and
     // would otherwise hold the function until maxDuration, so it stops when the client goes. The
     // body of any other response is the tail of work that must finish (an agent run), so it is
     // read to the end.
@@ -151,7 +158,9 @@ function flushSentry(res) {
 function requestListener(req, res) {
   handleRequest(req, res)
     .catch((error) => {
-      if (!req.destroyed) console.error(error);
+      if (!req.destroyed) {
+        console.error(scrubSecrets(JSON.stringify(serializeErrorForLog(error))));
+      }
       if (res.headersSent) {
         res.destroy();
         return;

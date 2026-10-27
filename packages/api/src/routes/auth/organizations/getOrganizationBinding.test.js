@@ -18,6 +18,7 @@ import getOrganizationBinding, {
   registerOrganizationBinding,
   setPinnedOrganization,
 } from './getOrganizationBinding.js';
+import { expect, test } from 'vitest';
 
 test('getOrganizationBinding returns the registered policy with no pinned org yet', () => {
   const auth = {};

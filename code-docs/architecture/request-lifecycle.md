@@ -154,7 +154,7 @@ class Requests {
 
 ### 5. HTTP Transport
 
-**File:** `packages/client/src/createCallRequest.js`
+**File:** `packages/client-core/src/createCallRequest.js`
 
 ```javascript
 function createCallRequest({ basePath }) {
@@ -253,7 +253,9 @@ async function callRequestResolver(
     if (error.isLowdefyError) throw error; // pass-through — no redundant wrapping
     if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') throw new UserError(...);
     if (ServiceError.isServiceError(error)) throw new ServiceError(...);
-    throw new RequestError(error.message, { cause: error, ... });
+    // cause: the resolver's error summarised (summarisedError) — no request properties,
+    // no driver fields; the whole error is kept only as non-enumerable devCause
+    throw new RequestError(cause.message, { cause, ... });
   }
 }
 ```
@@ -591,7 +593,7 @@ Two additive controls decouple routine execution from the response:
 | Event Trigger        | `packages/engine/src/Events.js`                           |
 | Action Runner        | `packages/engine/src/Actions.js`                          |
 | Request Manager      | `packages/engine/src/Requests.js`                         |
-| HTTP Client          | `packages/client/src/createCallRequest.js`                |
+| HTTP Client          | `packages/client-core/src/createCallRequest.js`                |
 | Server Handler       | `packages/api/src/routes/request/callRequest.js`          |
 | Connection Resolver  | `packages/api/src/routes/request/getConnection.js`        |
 | Request Resolver     | `packages/api/src/routes/request/getRequestResolver.js`   |
@@ -615,6 +617,10 @@ Two additive controls decouple routine execution from the response:
 6. **Error Handling**: Try/catch with catch actions
 7. **Serialization**: Complex objects serialized for transport
 8. **Routine-frame isolation**: `steps`, `payload`, and `state` live on `routineContext`, not the request `context`. Each routine invocation (page request, top-level endpoint, `CallApi` step, resolver `callApi`) gets its own frame. Two frames in the same request never share these values — `:set_state` in one frame is invisible to a sibling.
+
+## Link endpoints (`link: true`)
+
+A `GET` on `/api/endpoints/<endpointId>/<path...>` serves an `Api` endpoint declared `link: true`. The build validates the flag (`validateEndpoint`: `Api` only, not with `webhook` or `async`) and writes `linkEndpoints.json`, `[{ endpointId, segments }]` sorted longest id first and always written (also as `[]`), so `runLinkEndpoint` matches the decoded path segments by prefix without probing endpoint configs, and an id with slashes (`a/b`) wins over a shorter one it starts with. The segments after the id, joined with `/`, are `path`. The routine runs as the session caller, `authorizeApiEndpoint` applies, and the payload `{ path, query }` is checked against any `payloadSchema` (an outside caller's mistake: 400 with no body, logged at debug without the path). `buildMcp` refuses a link endpoint as an MCP tool, since `callEndpoint` refuses every non-GET call to it. `createLinkAnswer` turns the outcome into the answer: a 302 to the returned URL, a `:reject` `:status` (the build allows `:status`, not `:body`, in a link endpoint's routine), 400 for a failed `ValidateSchema`, or 500 with a fixed message; a `:return` that is not an absolute http(s) URL or an origin path is logged as a `ConfigError`. The info log `call_link_endpoint` carries the endpoint id only, never the path, which can be a file name.
 
 ## Webhook endpoints (`webhook: true`)
 

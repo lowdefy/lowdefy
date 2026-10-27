@@ -35,7 +35,7 @@ const { block, methods, makeCssClass } = mockBlock({
 });
 
 // block contains mock block instance
-// methods contains Jest mock functions
+// methods contains vitest mock functions (vi.fn)
 // makeCssClass is mocked CSS generator
 ```
 
@@ -63,7 +63,7 @@ const { block, methods, makeCssClass } = mockBlock({
 
 ### runBlockSchemaTests({ examples, schema })
 
-Run Jest schema validation tests:
+Run vitest schema validation tests:
 
 ```javascript
 import { runBlockSchemaTests } from '@lowdefy/block-dev';
@@ -106,7 +106,7 @@ describe('Button Render', () => {
     ],
     Block: Button,
     methods: {
-      triggerEvent: jest.fn(),
+      triggerEvent: vi.fn(),
     },
   });
 });
@@ -221,8 +221,7 @@ window.TransitionEvent = function () {};
 - `@lowdefy/helpers` (4.4.0)
 - `@testing-library/react`
 - `@testing-library/dom`
-- `jest` (28.1.3)
-- `@emotion/jest`
+- `vitest` (4.1.12): the helpers register their tests with vitest's `test`, `expect` and `beforeEach`
 
 ## Usage Examples
 

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockGetRows = jest.fn();
+const mockGetRows = vi.fn();
 
-jest.unstable_mockModule('../getSheet', () => {
+vi.doMock('../getSheet', () => {
   return {
     default: () => ({
       getRows: mockGetRows,

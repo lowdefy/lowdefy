@@ -17,6 +17,7 @@
 import compileCondition from '@lowdefy/blocks-antd/table/compileCondition.js';
 
 import createSearchMatcher from './createSearchMatcher.js';
+import resolveRelativeDates from './resolveRelativeDates.js';
 
 // The filter and the search as one row test, or null when neither constrains anything.
 function createRowTest({ condition, search, context, searchColumns }) {
@@ -24,7 +25,11 @@ function createRowTest({ condition, search, context, searchColumns }) {
   const matchesFilter =
     condition === null
       ? null
-      : compileCondition({ condition, columnsByKey: context.columnsByKey, user: context.user });
+      : compileCondition({
+          condition: resolveRelativeDates({ condition }),
+          columnsByKey: context.columnsByKey,
+          user: context.user,
+        });
   if (matchesFilter === null) return matchesSearch;
   if (matchesSearch === null) return matchesFilter;
   return (row) => matchesFilter(row) && matchesSearch(row);

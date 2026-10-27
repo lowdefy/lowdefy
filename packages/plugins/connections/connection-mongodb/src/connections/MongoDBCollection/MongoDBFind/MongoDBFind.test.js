@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 import MongoDBFind from './MongoDBFind.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBFind.meta;
 const schema = MongoDBFind.schema;
@@ -76,7 +77,7 @@ test('find mongodb error', async () => {
     read: true,
   };
   await expect(MongoDBFind({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBFind command on collection "find" as malformed.'
+    'MongoDB rejected the MongoDBFind command on collection "find" as malformed.'
   );
 });
 

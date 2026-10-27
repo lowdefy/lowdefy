@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { validate } from '@lowdefy/ajv';
 
-const mockCreateOpenAI = jest.fn();
+const mockCreateOpenAI = vi.fn();
 
-jest.unstable_mockModule('@ai-sdk/openai', () => ({
+vi.doMock('@ai-sdk/openai', () => ({
   createOpenAI: mockCreateOpenAI,
 }));
 
 test('OpenAI create returns provider with apiKey', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateOpenAI.mockReturnValue(mockProvider);
 
   const { default: OpenAI } = await import('./OpenAI.js');
@@ -36,7 +36,7 @@ test('OpenAI create returns provider with apiKey', async () => {
 });
 
 test('OpenAI create passes baseURL when provided', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateOpenAI.mockReturnValue(mockProvider);
 
   const { default: OpenAI } = await import('./OpenAI.js');
@@ -53,7 +53,7 @@ test('OpenAI create passes baseURL when provided', async () => {
 });
 
 test('OpenAI create handles undefined connection', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateOpenAI.mockReturnValue(mockProvider);
 
   const { default: OpenAI } = await import('./OpenAI.js');
@@ -65,7 +65,7 @@ test('OpenAI create handles undefined connection', async () => {
 });
 
 test('OpenAI create returns the connection maxOutputTokens and timeout for its agents', async () => {
-  const mockProvider = jest.fn();
+  const mockProvider = vi.fn();
   mockCreateOpenAI.mockReturnValue(mockProvider);
 
   const { default: OpenAI } = await import('./OpenAI.js');

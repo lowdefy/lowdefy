@@ -15,9 +15,12 @@
 */
 import { type } from '@lowdefy/helpers';
 
+import createLogger from '../server/log/createLogger.js';
 import loadFrameworkHazards from './loadFrameworkHazards.js';
 import normalizeTypeKind from './normalizeTypeKind.js';
 import readBuildArtifact from './readBuildArtifact.js';
+
+const logger = createLogger();
 
 // Where each kind's plugin-declared hazards land in the build: block metas
 // pick them from meta.hazards, request metas ride along whole, operators
@@ -74,7 +77,7 @@ function hazardApplies({ hazard, kind, typeName, connectionId }) {
   if (type.isNone(condition)) {
     if (!warnedUnknownWhen.has(when)) {
       warnedUnknownWhen.add(when);
-      console.warn(
+      logger.warn(
         `Hazard "${hazard.id}" declares unknown when condition ${JSON.stringify(
           when
         )} and was skipped.`

@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import updateServerPackageJson from './updateServerPackageJson.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let root;
 

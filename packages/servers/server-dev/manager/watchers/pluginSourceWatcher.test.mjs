@@ -17,26 +17,23 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import waitFor from '../../test-utils/waitFor.mjs';
 
+const mockClearPluginTypeCache = vi.fn();
+vi.doMock('../utils/pluginTypeCache.mjs', () => ({
+  clearPluginTypeCache: mockClearPluginTypeCache,
+}));
 const { default: pluginSourceWatcher } = await import('./pluginSourceWatcher.mjs');
 
 // macOS can hold file events back for tens of seconds on a busy machine.
-jest.setTimeout(180000);
+vi.setConfig({ testTimeout: 180000, hookTimeout: 180000 });
 
 let root;
 let context;
 let watcher;
-
-function writeCustomTypesMap(customTypesMap) {
-  fs.writeFileSync(
-    path.join(context.directories.build, 'customTypesMap.json'),
-    JSON.stringify(customTypesMap)
-  );
-}
 
 function writeLowdefyYaml(pluginNames) {
   fs.writeFileSync(
@@ -65,20 +62,20 @@ function addLinkedPackage(name) {
 }
 
 beforeEach(() => {
+  mockClearPluginTypeCache.mockClear();
   root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-plugin-watcher-test-'));
   const config = path.join(root, 'app');
   const server = path.join(config, '.lowdefy', 'dev');
   fs.mkdirSync(path.join(server, 'node_modules'), { recursive: true });
   fs.mkdirSync(path.join(server, 'build'), { recursive: true });
   context = {
-    buildActivity: { setBusy: jest.fn() },
+    buildActivity: { setBusy: vi.fn() },
     directories: { build: path.join(server, 'build'), config, server },
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
-    lowdefyBuild: jest.fn(async () => {}),
-    reloadClients: jest.fn(async () => {}),
-    syncServer: jest.fn(async () => {}),
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    lowdefyBuild: vi.fn(async () => {}),
+    reloadClients: vi.fn(async () => {}),
+    syncServer: vi.fn(async () => {}),
   };
-  writeCustomTypesMap({});
 });
 
 afterEach(async () => {
@@ -95,25 +92,104 @@ test('pluginSourceWatcher watches nothing when lowdefy.yaml lists no local plugi
   await expect(pluginSourceWatcher(context)).resolves.toBeUndefined();
 });
 
+// The server imports a plugin's server-side types of a kind through the
+// build's plugin import file for that kind, here src/server.js, which imports
+// src/find.js. Without a kind the server imports nothing from the plugin.
+function writePlugin(dir, kind) {
+  const exports = { './blocks': './src/blocks.js' };
+  if (kind) {
+    exports[`./${kind}`] = './src/server.js';
+  }
+  fs.writeFileSync(
+    path.join(dir, 'package.json'),
+    JSON.stringify({ name: '@app/plugin', type: 'module', exports })
+  );
+  fs.writeFileSync(
+    path.join(dir, 'src', 'server.js'),
+    "export { default as Find } from './find.js';\n"
+  );
+  fs.writeFileSync(path.join(dir, 'src', 'blocks.js'), "export { default } from './Fancy.js';\n");
+  fs.writeFileSync(path.join(dir, 'src', 'find.js'), 'export default 1;');
+  fs.writeFileSync(path.join(dir, 'src', 'Fancy.js'), 'export default 1;');
+  fs.mkdirSync(path.join(context.directories.build, 'plugins'), { recursive: true });
+  fs.writeFileSync(
+    path.join(context.directories.build, 'plugins', 'blocks.js'),
+    "import Fancy from '@app/plugin/blocks';\nexport default { Fancy };\n"
+  );
+  if (kind) {
+    fs.writeFileSync(
+      path.join(context.directories.build, 'plugins', `${kind}.js`),
+      `import { Find as Find } from '@app/plugin/${kind}';\nexport default { Find };\n`
+    );
+  }
+}
+
 test.each([
-  ['a server-side plugin rebuilds and restarts the server', 'requests', 'src/find.js', true],
-  ['a block-only plugin rebuilds without a restart', 'blocks', 'src/Fancy.js', false],
-  ['a plugin imported from its build output rebuilds', 'blocks', 'dist/Fancy.js', false],
+  ['a server-side plugin rebuilds and restarts the server', 'connections', 'src/find.js', true],
+  ['a plugin that only holds steps rebuilds and restarts the server', 'steps', 'src/find.js', true],
+  ['a block-only plugin rebuilds without a restart', null, 'src/Fancy.js', false],
+  ['a plugin imported from its build output rebuilds', null, 'dist/Fancy.js', false],
+  [
+    'a block in a plugin with server-side types rebuilds without a restart',
+    'connections',
+    'src/Fancy.js',
+    false,
+  ],
+  [
+    'the package.json of a plugin with server-side types rebuilds and restarts',
+    'connections',
+    'package.json',
+    true,
+  ],
+  [
+    'the package.json of a block-only plugin rebuilds without a restart',
+    null,
+    'package.json',
+    false,
+  ],
 ])('editing %s', async (_, kind, file, restart) => {
   const dir = addLinkedPackage('@app/plugin');
-  fs.writeFileSync(path.join(dir, file), 'export default 1;');
+  writePlugin(dir, kind);
+  if (file !== 'package.json') {
+    fs.writeFileSync(path.join(dir, file), 'export default 1;');
+  }
   writeLowdefyYaml(['@app/plugin']);
-  writeCustomTypesMap({ [kind]: { Type: { package: '@app/plugin', version: '1.0.0' } } });
 
   await startWatcher();
-  fs.writeFileSync(path.join(dir, file), 'export default 2;');
+  if (file === 'package.json') {
+    fs.appendFileSync(path.join(dir, file), '\n');
+  } else {
+    fs.writeFileSync(path.join(dir, file), 'export default 2;');
+  }
   await waitFor(() => context.reloadClients.mock.calls.length > 0, {
     description: 'clients to reload',
   });
 
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
+  expect(mockClearPluginTypeCache).toHaveBeenCalledTimes(1);
+  expect(mockClearPluginTypeCache.mock.invocationCallOrder[0]).toBeLessThan(
+    context.lowdefyBuild.mock.invocationCallOrder[0]
+  );
   expect(context.syncServer).toHaveBeenCalledWith({ restart });
   expect(context.buildActivity.setBusy.mock.calls[0]).toEqual([true]);
+});
+
+test('editing a server-side plugin whose server code imports a computed path restarts the server', async () => {
+  const dir = addLinkedPackage('@app/plugin');
+  writePlugin(dir, 'connections');
+  fs.writeFileSync(
+    path.join(dir, 'src', 'find.js'),
+    'export default (name) => import(`./handlers/${name}.js`);'
+  );
+  writeLowdefyYaml(['@app/plugin']);
+
+  await startWatcher();
+  fs.writeFileSync(path.join(dir, 'src', 'Fancy.js'), 'export default 2;');
+  await waitFor(() => context.reloadClients.mock.calls.length > 0, {
+    description: 'clients to reload',
+  });
+
+  expect(context.syncServer).toHaveBeenCalledWith({ restart: true });
 });
 
 test('a fix to a plugin whose edit failed the build rebuilds again', async () => {

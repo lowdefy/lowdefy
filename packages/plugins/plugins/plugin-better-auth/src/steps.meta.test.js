@@ -15,6 +15,7 @@
 */
 
 import * as steps from './steps.js';
+import { expect, test } from 'vitest';
 
 // The whole authority map, written out so a new step arrives with a declaration
 // or fails here - the floor that reads meta.authority has no fallback for a step
@@ -44,7 +45,9 @@ const authorities = {
     targetUser: 'userId',
   },
   RevokeUserSessions: { scope: 'org', permissions: { session: ['revoke'] }, targetUser: 'userId' },
+  SuspendMember: { scope: 'org', permissions: { member: ['suspend'] } },
   UnbanUser: { scope: 'org', permissions: { user: ['ban'] }, targetUser: 'userId' },
+  UnsuspendMember: { scope: 'org', permissions: { member: ['suspend'] } },
   UpdateMemberAttributes: { scope: 'org', permissions: { member: ['update'] } },
   UpdateMemberOrgRole: { scope: 'org', permissions: { member: ['update'] } },
   UpdateMemberRoles: { scope: 'org', permissions: { member: ['update'] } },

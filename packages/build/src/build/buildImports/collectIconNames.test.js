@@ -15,6 +15,7 @@
 */
 
 import collectIconNames from './collectIconNames.js';
+import { expect, test } from 'vitest';
 
 function collectJson(value) {
   return [...collectIconNames({ text: JSON.stringify(value) })].sort();

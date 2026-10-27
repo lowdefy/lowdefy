@@ -17,10 +17,12 @@
 import { type } from '@lowdefy/helpers';
 import { getMediaViewport } from '@lowdefy/operators';
 
+import getGlobals from '../getGlobals.js';
+
 // The media values a resize can change, as the _media operator reads them. Null where there is no
 // browser window (server rendering, engine harnesses), where _media itself can not evaluate.
 function readMediaViewport({ lowdefy }) {
-  const window = lowdefy._internal.globals?.window;
+  const { window } = getGlobals(lowdefy);
   if (type.isNone(window?.innerWidth)) {
     return null;
   }

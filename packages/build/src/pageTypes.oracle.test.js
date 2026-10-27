@@ -19,6 +19,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { getOperatorType, serializer, type } from '@lowdefy/helpers';
+import { expect, test } from 'vitest';
 
 // The production client loads each page's own client types. An operator missing
 // from them is not an error - WebParser passes unknown operators through as data
@@ -107,14 +108,34 @@ test.each(fixtures)('page type sets cover every client type each page uses: %s',
   const appTypes = snapshot['types.json'];
   const pageTypeSets = snapshot['pageTypeSets.json'];
   const pageKeys = Object.keys(snapshot).filter((key) => /^pages\/[^/]+\.json$/.test(key));
+  const mobileTypesKeys = new Map(
+    snapshot['mobile/pageIndex.json'].map((entry) => [entry.pageId, entry.typesKey])
+  );
   pageKeys.forEach((pageKey) => {
     // Snapshots hold the written (serialized) form; the client reads it deserialized.
     const page = serializer.deserialize(snapshot[pageKey]);
-    const pageTypeSet = pageTypeSets[page.pageId];
     const used = { actions: new Set(), blocks: new Set(), operators: new Set() };
     walkBlock(page, used);
     // Only installed operators evaluate; the rest stay data everywhere.
     const clientOperators = [...used.operators].filter((op) => appTypes.operators.client[op]);
+    // A shell renders mobile and shared pages from the native type set in mobile/typeSets.json.
+    if (page.target === 'mobile' || page.target === 'both') {
+      const mobileTypeSet = snapshot['mobile/typeSets.json'][mobileTypesKeys.get(page.pageId)];
+      const names = (category) => mobileTypeSet[category].map((entry) => entry.type);
+      expect({
+        page: page.pageId,
+        missing: {
+          actions: [...used.actions].filter((t) => !names('actions').includes(t)),
+          blocks: [...used.blocks].filter((t) => !names('blocks').includes(t)),
+          operators: clientOperators.filter((t) => !names('operators').includes(t)),
+        },
+      }).toEqual({ page: page.pageId, missing: { actions: [], blocks: [], operators: [] } });
+    }
+    if (page.target === 'mobile') {
+      expect(pageTypeSets[page.pageId]).toBeUndefined();
+      return;
+    }
+    const pageTypeSet = pageTypeSets[page.pageId];
     expect({
       page: page.pageId,
       missing: [...used.blocks].filter((t) => !pageTypeSet.blocks.includes(t)),
@@ -148,6 +169,10 @@ test.each(fixtures)(
     const pageKeys = Object.keys(snapshot).filter((key) => /^pages\/[^/]+\.json$/.test(key));
     pageKeys.forEach((pageKey) => {
       const page = serializer.deserialize(snapshot[pageKey]);
+      // A mobile page has no web icon set.
+      if (page.target === 'mobile') {
+        return;
+      }
       const pageIcons = pageTypeSets[page.pageId].icons;
       const used = new Set(menuIcons);
       walkIconNames(page, used);

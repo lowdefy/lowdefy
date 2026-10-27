@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Style \"display\" in slot \"block\" on block \"list\" on page \"jobs\" is not supported on mobile. \"display: grid\" is web-only: React Native views lay out with flex. Use \"flex\" or \"none\"."
+      ],
+      "errorContains": [
+        "Style \"display\" in slot \"block\" on block \"list\" on page \"jobs\" is not supported on mobile.",
+        "{{fixturesDir}}/MB7-mobile-grid-style/lowdefy.yaml:15"
+      ]
+    }
+  ]
+}

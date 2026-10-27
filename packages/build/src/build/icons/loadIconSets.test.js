@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockImportPluginModule = jest.fn();
-jest.unstable_mockModule('../writePluginImports/importPluginModule.js', () => ({
+const mockImportPluginModule = vi.fn();
+vi.doMock('../writePluginImports/importPluginModule.js', () => ({
   default: mockImportPluginModule,
 }));
 
@@ -129,7 +129,7 @@ test('loadIconSets throws for a set id that is not kebab-case', async () => {
 });
 
 test('loadIconSets reads no icon data', async () => {
-  const loadIcons = jest.fn(async () => ({ Pencil: { node } }));
+  const loadIcons = vi.fn(async () => ({ Pencil: { node } }));
   mockImportPluginModule.mockResolvedValue({
     default: { tabler: setDefinition(['Pencil'], { loadIcons }) },
   });

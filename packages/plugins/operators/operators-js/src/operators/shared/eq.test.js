@@ -15,6 +15,7 @@
 */
 
 import eq from './eq.js';
+import { expect, test } from 'vitest';
 
 const location = 'location';
 

@@ -14,33 +14,33 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-jest.unstable_mockModule('fs', () => ({
+vi.doMock('fs', () => ({
   default: {
-    existsSync: jest.fn(),
+    existsSync: vi.fn(),
   },
 }));
 
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  cleanDirectory: jest.fn(),
-  readFile: jest.fn(),
+vi.doMock('@lowdefy/node-utils', () => ({
+  cleanDirectory: vi.fn(),
+  readFile: vi.fn(),
 }));
 
-jest.unstable_mockModule('./fetchNpmTarball.js', () => ({
-  default: jest.fn(),
+vi.doMock('./fetchNpmTarball.js', () => ({
+  default: vi.fn(),
 }));
 
 const createContext = () => ({
   lowdefyVersion: '1.2.3',
   logger: {
-    warn: jest.fn(),
-    info: jest.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
   },
 });
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 test('skip fetch when running local version', async () => {

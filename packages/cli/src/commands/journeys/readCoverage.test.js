@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import readCoverage from './readCoverage.js';
+import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let root;
 beforeEach(() => {

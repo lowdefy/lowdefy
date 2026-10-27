@@ -19,8 +19,14 @@ import { ConfigError, UserError } from '@lowdefy/errors';
 
 import createUserAfterHook from './createUserAfterHook.js';
 import createUserBeforeHook from './createUserBeforeHook.js';
+import { expect, test } from 'vitest';
 
-const hook = { id: 'test-hook', point: 'user.create.before', endpointId: 'auth/test' };
+const hook = {
+  id: 'test-hook',
+  point: 'user.create.before',
+  endpointId: 'auth/test',
+  '~k': 'hook_key',
+};
 
 test('before hook wraps :return data as { data }', async () => {
   const userHook = createUserBeforeHook({
@@ -49,6 +55,35 @@ test('before hook throws a ConfigError when :return data is not an object', asyn
   );
 });
 
+test('before hook names the hook config and leaves out the record it returned', async () => {
+  const userHook = createUserBeforeHook({
+    dispatch: async () => ({ status: 'return', response: ['planted@example.com'] }),
+    hook,
+  });
+  const error = await userHook({ name: 'A' }).catch((caught) => caught);
+  expect(error.configKey).toBe('hook_key');
+  expect(error.received).toBeUndefined();
+  expect(error.message).toContain('returned a array.');
+  expect(JSON.stringify(error)).not.toContain('planted@example.com');
+});
+
+test.each([
+  ['before', () => createUserBeforeHook],
+  ['after', () => createUserAfterHook],
+])('%s hook turns an expected routine error into a 400 APIError', async (_, getFactory) => {
+  const routineError = new UserError('Sign-ups are closed.');
+  const userHook = getFactory()({
+    dispatch: async () => ({ status: 'error', error: routineError }),
+    hook,
+  });
+  const error = await userHook({ name: 'A' }).catch((caught) => caught);
+  expect(error).toBeInstanceOf(APIError);
+  expect(error.statusCode).toBe(400);
+  expect(error.message).toBe('Sign-ups are closed.');
+  expect(error.body.code).toBe('AUTH_HOOK_REJECTED');
+  expect(error.cause).toBe(routineError);
+});
+
 test('before hook maps :reject to an APIError with the reject message', async () => {
   const userHook = createUserBeforeHook({
     dispatch: async () => ({ status: 'reject', error: new Error('blocked') }),
@@ -56,6 +91,17 @@ test('before hook maps :reject to an APIError with the reject message', async ()
   });
   await expect(userHook({ name: 'A' })).rejects.toThrow(APIError);
   await expect(userHook({ name: 'A' })).rejects.toThrow('blocked');
+});
+
+test('before hook gives a :reject the AUTH_HOOK_REJECTED code, so a refused sign-in redirects', async () => {
+  const userHook = createUserBeforeHook({
+    dispatch: async () => ({ status: 'reject', error: new Error('blocked') }),
+    hook,
+  });
+  await expect(userHook({ name: 'A' })).rejects.toMatchObject({
+    statusCode: 400,
+    body: { code: 'AUTH_HOOK_REJECTED', message: 'blocked' },
+  });
 });
 
 test('before hook rethrows the routine error on error status', async () => {
@@ -87,6 +133,9 @@ test('after hook maps :reject to an APIError and rethrows routine errors', async
     dispatch: async () => ({ status: 'error', error: routineError }),
   });
   await expect(rejected({ id: 's1' })).rejects.toThrow(APIError);
+  await expect(rejected({ id: 's1' })).rejects.toMatchObject({
+    body: { code: 'AUTH_HOOK_REJECTED', message: 'no' },
+  });
   await expect(errored({ id: 's1' })).rejects.toBe(routineError);
 });
 

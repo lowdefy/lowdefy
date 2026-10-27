@@ -17,13 +17,27 @@
 import { MCP_SERVER_NAME } from './mcpServerNames.js';
 
 // The dev-server rules both AGENTS.md and the skill teach. One text, so the
-// two never disagree.
-function devServerRules() {
+// two never disagree. The fallback hub commands pin cliVersion like .mcp.json
+// does: an unversioned `npx lowdefy` can resolve a stale cached CLI.
+function devServerRules({ cliVersion }) {
+  const hub = `npx --yes lowdefy@${cliVersion} hub`;
   return `Your Lowdefy tools come from the \`${MCP_SERVER_NAME}\` MCP server (\`lowdefy mcp\`, see \`.mcp.json\`). It routes every
 \`lowdefy_\` tool to the dev server of the app and git checkout you are working in, and starts that server when needed.
 
 - Never run \`lowdefy dev\` yourself, never choose a port, and never kill processes by port or name. Use
   \`lowdefy_dev_start\`, \`lowdefy_dev_stop\`, \`lowdefy_dev_status\` and \`lowdefy_dev_logs\`.
+- No \`lowdefy_\` tools in your session (the MCP server did not start, or dropped)? Still never run
+  \`lowdefy dev\` or the app's dev script. For an app in this checkout or one of its git worktrees, run
+  \`${hub} start <app>\` (\`--restart\` to restart): the hub starts the same server
+  the tools would and prints its \`url\` once its \`state\` is \`ready\`. A \`queued\` or not-ready answer
+  means run it again; an error that dependencies are not installed names the install command to run first.
+  \`--restart\` leaves a server the developer started in a terminal as it is. After every config edit, read
+  \`<url>/lowdefy-docs/build-status?wait=true\`; types and docs are under \`<url>/lowdefy-docs\`, and logs come
+  from \`${hub} logs <app>\`. Stop it with \`${hub} stop <app>\`.
+  Tell the developer the tools are missing, and that \`npx lowdefy@${cliVersion} agent-setup --user\` registers
+  them for every session.
+- To show the app in a browser or preview pane, open the \`url\` the server reports. Never configure the pane
+  to start a server of its own: that is a second dev server for the same app, outside the hub.
 - Restart (\`lowdefy_dev_start\` with \`restart: true\`) only when the server seems stuck or build status looks
   stale, or after secrets a wrapper (for example infisical) injects have changed. \`.env\` edits and local
   plugin code are picked up without a restart.

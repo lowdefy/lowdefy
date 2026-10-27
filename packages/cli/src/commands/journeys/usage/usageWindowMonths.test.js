@@ -15,6 +15,7 @@
 */
 
 import usageWindowMonths from './usageWindowMonths.js';
+import { expect, test } from 'vitest';
 
 test('usageWindowMonths lists the months ending at the anchor, oldest first', () => {
   expect(usageWindowMonths({ anchor: '2026-10', months: 3 })).toEqual([

@@ -16,6 +16,7 @@
 
 import coerceCellValue from './coerceCellValue.js';
 import getEditorKind from './getEditorKind.js';
+import { expect, test } from 'vitest';
 
 function spec(type, extra = {}) {
   return { type, kind: getEditorKind(type), max: 5, options: undefined, ...extra };

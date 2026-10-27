@@ -62,18 +62,20 @@ function createEnsureUniqueIndexes({ getDb, getFieldName, getModelName }) {
       if (existing.some((index) => isEquivalentUniqueIndex({ index, keys }))) {
         continue;
       }
+      const name = `lowdefy_unique_${Object.keys(keys).join('_')}`;
       try {
-        await collection.createIndex(keys, {
-          unique: true,
-          name: `lowdefy_unique_${Object.keys(keys).join('_')}`,
-        });
+        await collection.createIndex(keys, { unique: true, name });
       } catch (error) {
-        throw new Error(
-          `Could not create the unique index on collection "${collectionName}" over ${JSON.stringify(
+        // The driver's message quotes a duplicate key's values (an E11000 names the email that is
+        // stored twice), so the message names the index and the code; the cause keeps the rest.
+        const failure = new Error(
+          `Could not create the unique index "${name}" on collection "${collectionName}" over ${JSON.stringify(
             Object.keys(keys)
-          )}: ${error.message}`,
+          )} (MongoDB code ${error.code}).`,
           { cause: error }
         );
+        failure.code = error.code;
+        throw failure;
       }
     }
   };

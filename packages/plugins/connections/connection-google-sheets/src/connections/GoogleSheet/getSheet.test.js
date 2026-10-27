@@ -14,21 +14,21 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { wait } from '@lowdefy/helpers';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
 // google-spreadsheet v4+ takes auth in the constructor, so we record the
 // constructor args instead of the removed useApiKey / useServiceAccountAuth calls.
-const mockGoogleSpreadsheet = jest.fn();
-const mockJWT = jest.fn();
-const mockLoadInfo = jest.fn();
+const mockGoogleSpreadsheet = vi.fn();
+const mockJWT = vi.fn();
+const mockLoadInfo = vi.fn();
 
 let mockSheetsById = {};
 let mockSheetsByIndex = {};
 
-jest.unstable_mockModule('google-spreadsheet', () => ({
+vi.doMock('google-spreadsheet', () => ({
   GoogleSpreadsheet: function GoogleSpreadsheet(spreadsheetId, auth) {
     mockGoogleSpreadsheet(spreadsheetId, auth);
     this.loadInfo = mockLoadInfo;
@@ -37,7 +37,7 @@ jest.unstable_mockModule('google-spreadsheet', () => ({
   },
 }));
 
-jest.unstable_mockModule('google-auth-library', () => ({
+vi.doMock('google-auth-library', () => ({
   JWT: function JWT(config) {
     mockJWT(config);
     // Tag so we can assert the doc was constructed with the JWT instance.
@@ -55,7 +55,7 @@ const loadInfoDefaultImp = async () => {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockSheetsById = {};
   mockSheetsByIndex = {};
   mockLoadInfo.mockImplementation(loadInfoDefaultImp);

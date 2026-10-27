@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import CancelInvitation from './CancelInvitation.js';
 import createMockAuth from '../../test/createMockAuth.js';
@@ -22,7 +22,7 @@ import createMockAuth from '../../test/createMockAuth.js';
 const acting = { system: true, user: null };
 
 test('CancelInvitation passes invitationId through as body to the org cancelInvitation endpoint', async () => {
-  const cancelInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1', status: 'canceled' });
+  const cancelInvitation = vi.fn().mockResolvedValue({ id: 'invitation-1', status: 'canceled' });
   const { auth } = createMockAuth({ organizationEndpoints: { cancelInvitation } });
   const result = await CancelInvitation({
     acting,

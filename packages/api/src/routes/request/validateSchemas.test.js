@@ -15,6 +15,7 @@
 */
 
 import validateSchemas from './validateSchemas.js';
+import { expect, test } from 'vitest';
 
 const requestSchema = {
   type: 'object',

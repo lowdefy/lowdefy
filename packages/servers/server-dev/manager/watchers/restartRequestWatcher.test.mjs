@@ -17,15 +17,16 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { jest } from '@jest/globals';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import waitFor from '../../test-utils/waitFor.mjs';
 
 const { default: restartRequestWatcher } = await import('./restartRequestWatcher.mjs');
+const { importPluginModule } = await import('../utils/pluginTypeCache.mjs');
 
 // macOS can hold file events back for tens of seconds on a busy machine.
-jest.setTimeout(180000);
+vi.setConfig({ testTimeout: 180000, hookTimeout: 180000 });
 
 let fixtureDir;
 let context;
@@ -37,10 +38,10 @@ beforeEach(async () => {
   await flushFsEvents();
   context = {
     directories: { build: path.join(fixtureDir, 'build') },
-    logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
-    buildActivity: { setBusy: jest.fn() },
-    lowdefyBuild: jest.fn(async () => {}),
-    syncServer: jest.fn(async () => {}),
+    logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    buildActivity: { setBusy: vi.fn() },
+    lowdefyBuild: vi.fn(async () => {}),
+    syncServer: vi.fn(async () => {}),
   };
 });
 
@@ -108,4 +109,40 @@ test('a restart request restarts the server when the config build fails', async 
   });
 
   expect(context.syncServer).toHaveBeenCalledTimes(1);
+});
+
+test('a block added to a local plugin file its types re-export is defined after a restart request', async () => {
+  const pluginDir = path.join(fixtureDir, 'plugin');
+  fs.mkdirSync(pluginDir);
+  fs.writeFileSync(
+    path.join(pluginDir, 'package.json'),
+    JSON.stringify({ name: '@app/plugin', version: '1.0.0', type: 'module' })
+  );
+  fs.writeFileSync(path.join(pluginDir, 'blocks.js'), 'export const Card = {};\n');
+  const entryPath = path.join(pluginDir, 'types.js');
+  fs.writeFileSync(
+    entryPath,
+    "import * as blocks from './blocks.js';\nexport default { blocks: Object.keys(blocks) };\n"
+  );
+  // The config build reads the plugin's types through the manager's cache.
+  let types;
+  context.lowdefyBuild.mockImplementation(async () => {
+    types = await importPluginModule({ entryPath, packageName: '@app/plugin' });
+  });
+  await context.lowdefyBuild();
+  // The entry file is unchanged, so only clearing the cache sees the new block.
+  fs.appendFileSync(path.join(pluginDir, 'blocks.js'), 'export const Fancy = {};\n');
+  await context.lowdefyBuild();
+  expect(types).toEqual({ blocks: ['Card'] });
+
+  watcher = await restartRequestWatcher(context);
+  fs.writeFileSync(
+    path.join(fixtureDir, 'build', '.restart'),
+    JSON.stringify({ reason: 'Added a block type' })
+  );
+  await waitFor(() => context.syncServer.mock.calls.length > 0, {
+    description: 'the server restart',
+  });
+
+  expect(types).toEqual({ blocks: ['Card', 'Fancy'] });
 });

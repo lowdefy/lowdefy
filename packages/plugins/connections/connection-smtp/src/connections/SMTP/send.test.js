@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockSendMail = jest.fn();
-const mockClose = jest.fn();
-const mockCreateTransport = jest.fn();
+const mockSendMail = vi.fn();
+const mockClose = vi.fn();
+const mockCreateTransport = vi.fn();
 
-jest.unstable_mockModule('nodemailer', () => ({
+vi.doMock('nodemailer', () => ({
   default: {
     createTransport: mockCreateTransport,
   },

@@ -21,6 +21,7 @@ import MongoDBTableQuery from './MongoDBTableQuery.js';
 import compileTableQuery from './compileTableQuery.js';
 import getTestCollection from '../../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { beforeAll, describe, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBTableQuery.meta;
 const schema = MongoDBTableQuery.schema;
@@ -486,6 +487,7 @@ describe('aggregates', () => {
       rows: [],
       total: 0,
       aggregates: { amount: 0, created: null, name: 0 },
+      sentence: 'stage is nothing',
     });
   });
 });
@@ -583,7 +585,7 @@ describe('errors', () => {
 
   test('a base pipeline MongoDB rejects is mapped', async () => {
     await expect(query({ pipeline: [{ $badStage: {} }] })).rejects.toThrow(
-      'MongoDB: MongoDB rejected the MongoDBTableQuery command on collection "tableQuery" as malformed.'
+      'MongoDB rejected the MongoDBTableQuery command on collection "tableQuery" as malformed.'
     );
   });
 });
@@ -627,7 +629,7 @@ describe('schema', () => {
     expect(() =>
       validate({ schema, data: { fields: { a: { type: 'text', serach: true } } } })
     ).toThrow(
-      'MongoDBTableQuery request field should only have "type", "path", "search", "sortable", "filterable" and "groupable".'
+      'MongoDBTableQuery request field should only have "type", "path", "search", "sortable", "filterable", "groupable", "title" and "options".'
     );
   });
 

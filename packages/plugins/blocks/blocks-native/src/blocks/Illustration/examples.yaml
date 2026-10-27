@@ -1,0 +1,118 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only. An animated vector drawing.
+
+- title: A sun that turns and a cloud that drifts
+  blocks:
+    - id: weather_art
+      type: Illustration
+      properties:
+        width: 160
+        title: Sun behind a cloud
+        svg: |
+          <svg viewBox="0 0 80 50">
+            <g id="sun">
+              <circle cx="30" cy="22" r="11" fill="var(--sun)"/>
+              <path d="M30 4v5M30 35v5M12 22h5M43 22h5M17 9l3 3M40 32l3 3M17 35l3-3M40 12l3-3"
+                stroke="var(--sun)" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+            <path id="cloud" d="M38 42h28a8 8 0 0 0 0-16 11 11 0 0 0-21-2 9 9 0 0 0-7 18z"
+              fill="var(--cloud)"/>
+          </svg>
+        colors:
+          sun: gold
+          cloud: '#FFFFFF'
+        colorsDark:
+          cloud: '#8E8E93'
+        animations:
+          - target: sun
+            property: rotate
+            keyframes:
+              - at: 0
+                value: 0
+              - at: 1
+                value: 45
+            duration: 9000
+            easing: linear
+            origin: [30, 22]
+          - target: cloud
+            property: translateX
+            keyframes:
+              - at: 0
+                value: 0
+              - at: 0.5
+                value: -4
+              - at: 1
+                value: 0
+            duration: 6000
+
+- title: Pixel frames beside a large title, scrolling away with it
+  blocks:
+    # In a Screen's headerBackdrop slot it sits behind the large title, at the right edge, its
+    # bottom 24pt below the top of the content.
+    - id: corner_art
+      type: Illustration
+      style:
+        .element:
+          alignSelf: flex-end
+          marginBottom: -24
+      properties:
+        width: 120
+        height: 90
+        svg: |
+          <svg viewBox="0 0 40 30">
+            <g id="bird">
+              <path d="M14 12h10v12h-10z" fill="var(--colorLabel)"/>
+              <path d="M24 15h4v2h-4z" fill="var(--beak)"/>
+              <g id="eye_open"><path d="M20 14h2v2h-2z" fill="var(--colorSystemBackground)"/></g>
+              <g id="eye_closed"><path d="M20 15h2v1h-2z" fill="var(--colorSystemBackground)"/></g>
+            </g>
+          </svg>
+        colors:
+          beak: orange
+        animations:
+          - target: eye_open
+            property: opacity
+            easing: step
+            duration: 4000
+            keyframes:
+              - at: 0
+                value: 1
+              - at: 0.5
+                value: 0
+              - at: 0.53
+                value: 1
+          - target: eye_closed
+            property: opacity
+            easing: step
+            duration: 4000
+            keyframes:
+              - at: 0
+                value: 0
+              - at: 0.5
+                value: 1
+              - at: 0.53
+                value: 0
+          - target: bird
+            property: translateY
+            easing: step
+            duration: 4000
+            keyframes:
+              - at: 0
+                value: 0
+              - at: 0.75
+                value: -2
+              - at: 0.8
+                value: 0

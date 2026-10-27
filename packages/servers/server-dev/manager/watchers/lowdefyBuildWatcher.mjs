@@ -23,6 +23,7 @@ import findBuildFilesOutsideWatch from '../utils/findBuildFilesOutsideWatch.mjs'
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import loadSkeletonSourceFiles from '../utils/loadSkeletonSourceFiles.mjs';
 import pagePathChanged from '../utils/pagePathChanged.mjs';
+import { clearPluginTypeCache } from '../utils/pluginTypeCache.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 import updatePageTailwindCss from '../utils/updatePageTailwindCss.mjs';
 
@@ -72,6 +73,10 @@ async function lowdefyBuildWatcher(context) {
         context.logger.warn('Lowdefy version changed. You should restart your development server.');
         process.exit();
       }
+      // The root lowdefy.yaml lists the plugins, and pluginSourceWatcher reads
+      // that list only at start, so a plugin added or changed here is read
+      // afresh. Other config edits keep the plugin type cache.
+      clearPluginTypeCache();
     }
 
     try {

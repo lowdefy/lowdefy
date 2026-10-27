@@ -3,7 +3,11 @@
     {
       "mode": "prod",
       "expectThrow": true,
-      "errorContains": ["var \"count\" must be type \"number\" but got \"string\"", "widget"]
+      "errorContains": [
+        "var \"count\" must be type \"number\" but got \"string\"",
+        "widget",
+        "lowdefy.yaml:6\n[ConfigError] Module \"widget\""
+      ]
     }
   ]
 }

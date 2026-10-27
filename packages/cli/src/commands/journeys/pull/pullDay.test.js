@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, describe, expect, test } from 'vitest';
 
 import PullStoppedError from './PullStoppedError.js';
 import pullDay from './pullDay.js';
@@ -27,7 +27,7 @@ describe('pullDay', () => {
   function createFakeClient({ events, unenriched = 0 }) {
     const calls = [];
     const client = {
-      query: jest.fn(async ({ query, values, filterTestAccounts }) => {
+      query: vi.fn(async ({ query, values, filterTestAccounts }) => {
         calls.push({ query, values, filterTestAccounts });
         if (query.includes('count()')) {
           return {

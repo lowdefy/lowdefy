@@ -19,6 +19,7 @@ import { validate } from '@lowdefy/ajv';
 import MongoDBTableChanges from './MongoDBTableChanges.js';
 import getTestCollection from '../../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
+import { describe, expect, test } from 'vitest';
 
 const { checkRead, checkWrite } = MongoDBTableChanges.meta;
 const schema = MongoDBTableChanges.schema;
@@ -383,8 +384,9 @@ describe('collection mode', () => {
       fields: { ...lineFields, _id: { type: 'text' } },
       changes: { added: [{ rowKey: 'a', _id: 'a', item: 'Duplicate' }] },
     }).catch((caught) => caught);
-    expect(error.name).toBe('ServiceError');
-    expect(error.message).toBe(`MongoDB: Duplicate key on collection "${connection.collection}".`);
+    expect(error.name).toBe('Error');
+    expect(error.code).toBe(11000);
+    expect(error.message).toBe(`Duplicate key on collection "${connection.collection}".`);
   });
 });
 

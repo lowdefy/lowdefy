@@ -16,6 +16,7 @@
 
 import inputContainsOperator from './inputContainsOperator.js';
 import valuesEqual from './valuesEqual.js';
+import { expect, test } from 'vitest';
 
 test('valuesEqual compares plain data by content', () => {
   expect(valuesEqual(1, 1)).toBe(true);

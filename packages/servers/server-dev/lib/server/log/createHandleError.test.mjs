@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 import { ConfigError, LowdefyInternalError, UserError } from '@lowdefy/errors';
 import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
-jest.unstable_mockModule('../../docs/serverErrorStore.js', () => ({
-  default: { push: jest.fn(), list: jest.fn(() => []) },
+vi.doMock('../../docs/serverErrorStore.js', () => ({
+  default: { push: vi.fn(), list: vi.fn(() => []) },
 }));
 
 const { default: serverErrorStore } = await import('../../docs/serverErrorStore.js');
@@ -39,10 +39,10 @@ const refMap = { ref_1: { path: 'pages/home.yaml' } };
 function testContext({ logger, readConfigFile, configDirectory } = {}) {
   return {
     configDirectory,
-    logger: logger ?? { error: jest.fn() },
+    logger: logger ?? { error: vi.fn() },
     readConfigFile:
       readConfigFile ??
-      jest.fn(async (path) => {
+      vi.fn(async (path) => {
         if (path === 'keyMap.json') return keyMap;
         if (path === 'refMap.json') return refMap;
         return null;
@@ -51,7 +51,7 @@ function testContext({ logger, readConfigFile, configDirectory } = {}) {
 }
 
 beforeEach(() => {
-  console.error = jest.fn();
+  console.error = vi.fn();
   serverErrorStore.push.mockReset();
 });
 
@@ -87,7 +87,7 @@ test('handleError marks a LowdefyInternalError handled even though it never gets
 
 test('handleError marks the error handled before it logs, so a throwing logger cannot skip the flag', async () => {
   const logger = {
-    error: jest.fn(() => {
+    error: vi.fn(() => {
       throw new Error('Log drain unreachable.');
     }),
   };
@@ -107,7 +107,7 @@ test('handleError marks the error handled before it logs, so a throwing logger c
 });
 
 test('handleError marks the error handled when location resolution rejects', async () => {
-  const readConfigFile = jest.fn(async () => {
+  const readConfigFile = vi.fn(async () => {
     throw new Error('keyMap.json unreadable.');
   });
   const context = testContext({ readConfigFile });
@@ -150,6 +150,7 @@ test('handleError pushes an error with a configKey into the server error store w
     source: 'pages/home.yaml:5',
     config: 'root.pages[0:home]',
     hint: null,
+    configKey: 'key_1',
     endpointId: 'get-customer',
     requestId: null,
     pageId: '_mcp',
@@ -171,6 +172,16 @@ test('handleError does not push a UserError into the server error store', async 
   expect(error.handled).toBe(true);
   expect(serverErrorStore.push).not.toHaveBeenCalled();
   expect(context.logger.error).toHaveBeenCalledWith(error);
+});
+
+test('handleError does not push an auth refusal into the server error store', async () => {
+  const context = testContext();
+  const handleError = createHandleError({ context });
+  const { AuthorizationError } = await import('@lowdefy/errors');
+
+  await handleError(new AuthorizationError('Not allowed.'));
+
+  expect(serverErrorStore.push).not.toHaveBeenCalled();
 });
 
 test('handleError does not push a LowdefyInternalError into the server error store', async () => {

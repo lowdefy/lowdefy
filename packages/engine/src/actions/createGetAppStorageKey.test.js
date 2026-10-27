@@ -15,6 +15,7 @@
 */
 
 import createGetAppStorageKey from './createGetAppStorageKey.js';
+import { expect, test } from 'vitest';
 
 test('getAppStorageKey returns the client app key for the name', () => {
   const context = {

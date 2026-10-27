@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 import { ConfigError, ServiceError } from '@lowdefy/errors';
 
 import ensureAuthIndexes from './ensureAuthIndexes.js';
@@ -24,23 +24,23 @@ function createAuth(options) {
 }
 
 test('ensureAuthIndexes asks the adapter once per auth instance', async () => {
-  const ensureUniqueIndexes = jest.fn(async () => {});
+  const ensureUniqueIndexes = vi.fn(async () => {});
   const auth = createAuth({ ensureUniqueIndexes });
-  const logger = { error: jest.fn(), warn: jest.fn() };
+  const logger = { error: vi.fn(), warn: vi.fn() };
   await ensureAuthIndexes({ auth, logger });
   await ensureAuthIndexes({ auth, logger });
   expect(ensureUniqueIndexes).toHaveBeenCalledTimes(1);
 });
 
 test('ensureAuthIndexes refuses at once during the cool-down after a failure and retries after it', async () => {
-  const now = jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
+  const now = vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
   try {
-    const ensureUniqueIndexes = jest
+    const ensureUniqueIndexes = vi
       .fn()
       .mockRejectedValueOnce(new Error('duplicate key'))
       .mockResolvedValueOnce();
     const auth = createAuth({ ensureUniqueIndexes });
-    const logger = { error: jest.fn(), warn: jest.fn() };
+    const logger = { error: vi.fn(), warn: vi.fn() };
     await expect(ensureAuthIndexes({ auth, logger })).rejects.toThrow(ConfigError);
     await expect(ensureAuthIndexes({ auth, logger })).rejects.toThrow(ConfigError);
     expect(ensureUniqueIndexes).toHaveBeenCalledTimes(1);
@@ -56,15 +56,15 @@ test('ensureAuthIndexes refuses at once during the cool-down after a failure and
 
 test('ensureAuthIndexes reports an unreachable database as a service error', async () => {
   const outage = Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' });
-  const auth = createAuth({ ensureUniqueIndexes: jest.fn().mockRejectedValue(outage) });
+  const auth = createAuth({ ensureUniqueIndexes: vi.fn().mockRejectedValue(outage) });
   await expect(
-    ensureAuthIndexes({ auth, logger: { error: jest.fn(), warn: jest.fn() } })
+    ensureAuthIndexes({ auth, logger: { error: vi.fn(), warn: vi.fn() } })
   ).rejects.toThrow(ServiceError);
 });
 
 test('ensureAuthIndexes warns once when the adapter can not create indexes', async () => {
   const auth = createAuth({ adapterConfig: {} });
-  const logger = { error: jest.fn(), warn: jest.fn() };
+  const logger = { error: vi.fn(), warn: vi.fn() };
   await ensureAuthIndexes({ auth, logger });
   await ensureAuthIndexes({ auth, logger });
   expect(logger.warn).toHaveBeenCalledTimes(1);

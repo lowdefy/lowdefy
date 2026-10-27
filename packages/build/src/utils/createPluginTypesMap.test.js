@@ -15,6 +15,7 @@
 */
 
 import createPluginTypesMap from './createPluginTypesMap.js';
+import { expect, test } from 'vitest';
 
 function createEmptyTypesMap() {
   return {

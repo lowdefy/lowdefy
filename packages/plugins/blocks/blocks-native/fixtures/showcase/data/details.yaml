@@ -1,0 +1,103 @@
+# What the issue page shows below its hero, by issue key: who opened it, the body markdown and the
+# activity (events and a comment thread, oldest first). Issues without their own use `default`.
+ACME-142:
+  opener:
+    name: Grace Hopper
+    picture: https://i.pravatar.cc/96?img=32
+    when: 4 days ago
+  estimate: 3
+  due: '2026-10-23T00:00:00.000Z'
+  body: |
+    ## What happens
+
+    Edits made while the phone is offline replay twice once it reconnects, so a comment edited on
+    a flight shows up two times. [ACME-118 Queue writes while offline](/ACME/issues/ACME-118)
+    added the queue; this makes each replay safe to run again.
+
+    [@Alan Turing](mention:alan) has the server half in
+    [ACME-147 Idempotency keys](/ACME/issues/ACME-147).
+
+    ## Plan
+
+    - [x] Give every queued write a client id
+    - [x] Drop a replay the server has already seen
+    - [ ] Clean up last week's duplicates
+    - [ ] Ship behind the `sync.idempotent` flag
+
+    > Repro: flight mode, edit a comment twice, turn flight mode off.
+  activity:
+    - id: ev-1
+      at: '2026-10-15T08:10:00Z'
+      tier: key
+      type: opened
+      by: { id: grace, name: Grace Hopper }
+      icon: CirclePlus
+      tone: neutral
+      text: '{actor} opened the issue in **Todo**'
+    - id: ev-2
+      at: '2026-10-15T08:12:00Z'
+      tier: detail
+      type: labelled
+      by: { id: grace, name: Grace Hopper }
+      icon: Tag
+      text: '{actor} added **Sync** and **Offline**'
+    - id: ev-3
+      at: '2026-10-16T09:30:00Z'
+      tier: key
+      type: status
+      by: { id: grace, name: Grace Hopper }
+      icon: CircleDot
+      tone: warning
+      text: '{actor} moved it to **In progress**'
+    - id: c-1
+      type: comment
+      at: '2026-10-17T09:20:00Z'
+      by: { id: grace, name: Grace Hopper }
+      body: |
+        Both edits replay, and the second one lands as a new comment. [[user:ada]] could you
+        review the fix? It builds on [ACME-118 Queue writes while offline](/ACME/issues/ACME-118).
+      mentions:
+        - { user_id: ada, name: Ada Lovelace, sees: true }
+      reactions:
+        - { emoji: 👀, user_ids: [alan, katherine] }
+        - { emoji: 🙏, user_ids: [ada] }
+      reply_count: 2
+      replies:
+        - id: r-1
+          at: '2026-10-17T10:02:00Z'
+          by: { id: alan, name: Alan Turing }
+          body: The server half is in [[ACME-147]], each write carries its client id now.
+        - id: r-2
+          at: '2026-10-17T11:45:00Z'
+          by: { id: katherine, name: Katherine Johnson }
+          body: Seen on iPad too. Two duplicates after five minutes in flight mode.
+    - id: ev-4
+      at: '2026-10-18T14:05:00Z'
+      tier: key
+      type: linked
+      by: { id: grace, name: Grace Hopper }
+      icon: GitPullRequest
+      tone: primary
+      text: '{actor} linked a pull request'
+      note: Make queued writes idempotent
+default:
+  opener:
+    name: Grace Hopper
+    picture: https://i.pravatar.cc/96?img=32
+    when: last week
+  estimate: 2
+  due: '2026-10-30T00:00:00.000Z'
+  body: |
+    _No description yet._
+
+    Add the steps to see it, what you expected and a screenshot, so whoever picks it up can start
+    straight away.
+  activity:
+    - id: ev-1
+      at: '2026-10-12T08:00:00Z'
+      tier: key
+      type: opened
+      by: { id: grace, name: Grace Hopper }
+      icon: CirclePlus
+      tone: neutral
+      text: '{actor} opened the issue'

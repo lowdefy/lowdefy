@@ -14,22 +14,73 @@
   limitations under the License.
 */
 
-import React, { Suspense } from 'react';
-import { Button, Popover } from 'antd';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
+import { Button, Drawer, Popover, Tooltip } from 'antd';
 
 import countConditions from './countConditions.js';
+import describeTableFilter from '../filtering/describeTableFilter.js';
+import focusFilterLeaf from './focusFilterLeaf.js';
 import LazyFilterBuilder from '../filtering/LazyFilterBuilder.js';
 import PopoverLoadingContent from '../../core/PopoverLoadingContent.js';
+import RecordCount from './RecordCount.js';
 import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
-// Opens the filter builder on the whole `view.filter`; the button counts its conditions. Edits go
-// through applyFiltering, the one filter write path.
-function FilterButton({ api }) {
+// The lazy builder can take a few frames to render the condition openFilter added. A focus
+// request that has not landed by then, or when the builder closes, is dropped, so a later plain
+// open never focuses an old condition.
+const FOCUS_FRAMES = 60;
+
+// Opens the filter builder on the whole `view.filter`; the button counts its conditions and shows
+// the filter in words as its tooltip. Edits go through applyFiltering, the one filter write path.
+// The `openFilter` method opens it too (api.filterButton), optionally focusing a new condition.
+// On a phone (`phone`) the builder opens as a full-height sheet, with the record count at its
+// foot following each edit.
+function FilterButton({ api, phone = false }) {
+  const [open, setOpen] = useState(false);
+  const [focus, setFocus] = useState(null);
+  const popoverRef = useRef(null);
+  function changeOpen(next) {
+    setOpen(next);
+    if (!next) setFocus(null);
+  }
+  api.filterButton = {
+    open({ focus: target }) {
+      LazyFilterBuilder.preload();
+      setFocus(target);
+      setOpen(true);
+    },
+  };
+  useEffect(
+    () => () => {
+      delete api.filterButton;
+    },
+    []
+  );
+  useEffect(() => {
+    if (!open || focus === null) return undefined;
+    let frame;
+    let frames = 0;
+    function tryFocus() {
+      if (focusFilterLeaf({ container: popoverRef.current, ...focus })) {
+        setFocus(null);
+        return;
+      }
+      frames += 1;
+      if (frames < FOCUS_FRAMES) {
+        frame = requestAnimationFrame(tryFocus);
+        return;
+      }
+      setFocus(null);
+    }
+    frame = requestAnimationFrame(tryFocus);
+    return () => cancelAnimationFrame(frame);
+  }, [open, focus]);
   const filter = api.state.filter ?? null;
+  const sentence = describeTableFilter({ condition: filter, columns: api.config.columns });
   const columns = api.config.columns.filter((column) => column.filterable);
   const content = (
-    <div className="lf-table-toolbar-popover" data-lf-toolbar-filter="">
+    <div className="lf-table-toolbar-popover" data-lf-toolbar-filter="" ref={popoverRef}>
       <Suspense fallback={<PopoverLoadingContent />}>
         <LazyFilterBuilder
           columns={columns}
@@ -41,11 +92,12 @@ function FilterButton({ api }) {
       </Suspense>
     </div>
   );
-  return (
-    <Popover content={content} placement="bottomLeft" trigger="click">
+  const button = (
+    <Tooltip title={phone ? null : sentence}>
       <Button
         data-lf-toolbar-button="filter"
         icon={<ToolbarIcon api={api} name="filter" />}
+        onClick={phone ? () => changeOpen(true) : undefined}
         onFocus={LazyFilterBuilder.preload}
         onPointerEnter={LazyFilterBuilder.preload}
         size="small"
@@ -53,6 +105,35 @@ function FilterButton({ api }) {
         Filter
         <ToolbarCount count={countConditions(filter)} />
       </Button>
+    </Tooltip>
+  );
+  if (phone) {
+    return (
+      <>
+        {button}
+        <Drawer
+          className="lf-table-filter-sheet"
+          footer={<RecordCount api={api} />}
+          onClose={() => changeOpen(false)}
+          open={open}
+          placement="bottom"
+          size="100%"
+          title="Filter"
+        >
+          {content}
+        </Drawer>
+      </>
+    );
+  }
+  return (
+    <Popover
+      content={content}
+      onOpenChange={changeOpen}
+      open={open}
+      placement="bottomLeft"
+      trigger="click"
+    >
+      {button}
     </Popover>
   );
 }

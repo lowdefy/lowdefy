@@ -15,6 +15,7 @@
 */
 
 import parseCallerStamp from './parseCallerStamp.js';
+import { expect, test } from 'vitest';
 
 test('parseCallerStamp reads every field of a full stamp', () => {
   expect(

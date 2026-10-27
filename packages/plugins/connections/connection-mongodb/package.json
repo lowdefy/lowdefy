@@ -48,7 +48,7 @@
     "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "vitest run"
   },
   "dependencies": {
     "@lowdefy/errors": "7.1.0",
@@ -59,16 +59,13 @@
     "saslprep": "1.0.3"
   },
   "devDependencies": {
-    "@jest/globals": "28.1.3",
     "@lowdefy/ajv": "7.1.0",
-    "@shelf/jest-mongodb": "4.3.2",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
-    "@swc/jest": "0.2.39",
-    "jest": "28.1.3",
-    "jest-environment-node": "28.1.3",
+    "mongodb-memory-server-core": "9.2.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "vitest": "4.1.12"
   },
   "publishConfig": {
     "access": "public"

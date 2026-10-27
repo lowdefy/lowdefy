@@ -15,11 +15,14 @@
 */
 
 import testContext from '../testContext.js';
+import { expect, test } from 'vitest';
 
 const pageId = 'one';
-const lowdefy = { pageId };
+// The host globals every test context shares; dispatch fills them for the length of a DOM event.
+const globals = {};
+const lowdefy = { pageId, _internal: { globals } };
 
-// window.event is the DOM event being dispatched; the node test environment has no window. Its path
+// window.event is the DOM event being dispatched, reached through the host globals. Its path
 // runs through the layout elements (`bl-<blockId>`) of these blocks, innermost first. fn may return
 // a promise: window.event stays the DOM event until it settles, as it does for the microtasks
 // (React's flush of effects) that run inside a DOM event listener.
@@ -27,13 +30,13 @@ function dispatch({ type, path }, fn) {
   const elements = path.map((blockId) => ({ id: `bl-${blockId}` }));
   const domEvent = type === 'message' ? new MessageEvent('message') : new Event(type);
   domEvent.composedPath = () => [...elements, { id: 'root' }];
-  global.window = { event: domEvent };
-  global.document = {
+  globals.window = { event: domEvent };
+  globals.document = {
     getElementById: (id) => elements.find((element) => element.id === id) ?? null,
   };
   function cleanUp() {
-    delete global.window;
-    delete global.document;
+    delete globals.window;
+    delete globals.document;
   }
   let result;
   try {

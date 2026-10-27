@@ -21,6 +21,7 @@ import _array from './array.js';
 import _function from './function.js';
 import _gt from './gt.js';
 import _sum from './sum.js';
+import { describe, expect, test } from 'vitest';
 
 const operators = {
   _args,
@@ -81,7 +82,7 @@ describe('_array.concat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.concat must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.concat must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -90,7 +91,7 @@ describe('_array.concat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.concat accepts one of the following types: array."`
+      `[Error: _array.concat accepts one of the following types: array.]`
     );
     expect(() =>
       _array({
@@ -99,7 +100,7 @@ describe('_array.concat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.concat accepts one of the following types: array."`
+      `[Error: _array.concat accepts one of the following types: array.]`
     );
   });
 });
@@ -144,7 +145,7 @@ describe('_array.copyWithin', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.copyWithin must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.copyWithin must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -153,7 +154,7 @@ describe('_array.copyWithin', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.copyWithin accepts one of the following types: array, object."`
+      `[Error: _array.copyWithin accepts one of the following types: array, object.]`
     );
   });
 });
@@ -227,7 +228,7 @@ describe('_array.every', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.every must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.every must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -243,7 +244,7 @@ describe('_array.every', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.every accepts one of the following types: array, object."`
+      `[Error: _array.every accepts one of the following types: array, object.]`
     );
   });
 });
@@ -295,7 +296,7 @@ describe('_array.fill', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.fill accepts one of the following types: array, object."`
+      `[Error: _array.fill accepts one of the following types: array, object.]`
     );
     expect(() =>
       _array({
@@ -304,7 +305,7 @@ describe('_array.fill', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.fill accepts one of the following types: array, object."`
+      `[Error: _array.fill accepts one of the following types: array, object.]`
     );
   });
 });
@@ -358,7 +359,7 @@ describe('_array.filter', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.filter must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.filter must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -374,7 +375,7 @@ describe('_array.filter', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.filter accepts one of the following types: array, object."`
+      `[Error: _array.filter accepts one of the following types: array, object.]`
     );
   });
 });
@@ -428,7 +429,7 @@ describe('_array.find', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.find must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.find must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -444,7 +445,7 @@ describe('_array.find', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.find accepts one of the following types: array, object."`
+      `[Error: _array.find accepts one of the following types: array, object.]`
     );
   });
 });
@@ -498,7 +499,7 @@ describe('_array.findIndex', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.findIndex must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.findIndex must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -514,7 +515,7 @@ describe('_array.findIndex', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.findIndex accepts one of the following types: array, object."`
+      `[Error: _array.findIndex accepts one of the following types: array, object.]`
     );
   });
 });
@@ -566,7 +567,7 @@ describe('_array.flat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.flat must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.flat must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -575,7 +576,7 @@ describe('_array.flat', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.flat accepts one of the following types: array, object."`
+      `[Error: _array.flat accepts one of the following types: array, object.]`
     );
   });
 });
@@ -634,7 +635,7 @@ describe('_array.includes', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.includes must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.includes must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -643,7 +644,7 @@ describe('_array.includes', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.includes accepts one of the following types: array, object."`
+      `[Error: _array.includes accepts one of the following types: array, object.]`
     );
   });
 });
@@ -702,7 +703,7 @@ describe('_array.indexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.indexOf must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.indexOf must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -711,7 +712,7 @@ describe('_array.indexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.indexOf accepts one of the following types: array, object."`
+      `[Error: _array.indexOf accepts one of the following types: array, object.]`
     );
   });
 });
@@ -763,7 +764,7 @@ describe('_array.join', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.join must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.join must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -772,7 +773,7 @@ describe('_array.join', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.join accepts one of the following types: array, object."`
+      `[Error: _array.join accepts one of the following types: array, object.]`
     );
   });
 });
@@ -824,7 +825,7 @@ describe('_array.lastIndexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.lastIndexOf must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.lastIndexOf must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -833,7 +834,7 @@ describe('_array.lastIndexOf', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.lastIndexOf accepts one of the following types: array, object."`
+      `[Error: _array.lastIndexOf accepts one of the following types: array, object.]`
     );
   });
 });
@@ -894,7 +895,7 @@ describe('_array.map', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.map must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.map must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -910,7 +911,7 @@ describe('_array.map', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.map accepts one of the following types: array, object."`
+      `[Error: _array.map accepts one of the following types: array, object.]`
     );
   });
 });
@@ -978,7 +979,9 @@ describe('_array.reduce', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`"Reduce of empty array with no initial value"`);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[TypeError: Reduce of empty array with no initial value]`
+    );
     expect(() =>
       _array({
         params: { on: 0 },
@@ -986,7 +989,7 @@ describe('_array.reduce', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reduce must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.reduce must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -1002,7 +1005,7 @@ describe('_array.reduce', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reduce accepts one of the following types: array, object."`
+      `[Error: _array.reduce accepts one of the following types: array, object.]`
     );
   });
 });
@@ -1065,7 +1068,9 @@ describe('_array.reduceRight', () => {
           location,
         })
       )
-    ).toThrowErrorMatchingInlineSnapshot(`"Reduce of empty array with no initial value"`);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[TypeError: Reduce of empty array with no initial value]`
+    );
     expect(() =>
       _array({
         params: { on: 0 },
@@ -1073,7 +1078,7 @@ describe('_array.reduceRight', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reduceRight must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.reduceRight must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -1089,7 +1094,7 @@ describe('_array.reduceRight', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reduceRight accepts one of the following types: array, object."`
+      `[Error: _array.reduceRight accepts one of the following types: array, object.]`
     );
   });
 });
@@ -1120,7 +1125,7 @@ describe('_array.reverse', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reverse accepts one of the following types: array, null."`
+      `[Error: _array.reverse accepts one of the following types: array, null.]`
     );
     expect(() =>
       _array({
@@ -1129,7 +1134,7 @@ describe('_array.reverse', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reverse accepts one of the following types: array, null."`
+      `[Error: _array.reverse accepts one of the following types: array, null.]`
     );
   });
 });
@@ -1181,7 +1186,7 @@ describe('_array.slice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.slice accepts one of the following types: array, object."`
+      `[Error: _array.slice accepts one of the following types: array, object.]`
     );
     expect(() =>
       _array({
@@ -1190,7 +1195,7 @@ describe('_array.slice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.slice accepts one of the following types: array, object."`
+      `[Error: _array.slice accepts one of the following types: array, object.]`
     );
   });
 });
@@ -1235,7 +1240,7 @@ describe('_array.splice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.splice takes an array as input argument for insert."`
+      `[Error: _array.splice takes an array as input argument for insert.]`
     );
     expect(() =>
       _array({
@@ -1244,7 +1249,7 @@ describe('_array.splice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.splice accepts one of the following types: array, object."`
+      `[Error: _array.splice accepts one of the following types: array, object.]`
     );
     expect(() =>
       _array({
@@ -1253,7 +1258,7 @@ describe('_array.splice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.splice accepts one of the following types: array, object."`
+      `[Error: _array.splice accepts one of the following types: array, object.]`
     );
   });
 });
@@ -1320,7 +1325,7 @@ describe('_array.some', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.some must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.some must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -1336,7 +1341,7 @@ describe('_array.some', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.some accepts one of the following types: array, object."`
+      `[Error: _array.some accepts one of the following types: array, object.]`
     );
   });
 });
@@ -1389,7 +1394,7 @@ describe('_array.sort', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.sort must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide an array instance as the first element in the operator argument array."`
+      `[Error: _array.sort must be evaluated on an array instance. For named args provide an array instance to the "on" property, for listed args provide an array instance as the first element in the operator argument array.]`
     );
     expect(() =>
       _array({
@@ -1398,7 +1403,7 @@ describe('_array.sort', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.sort accepts one of the following types: array."`
+      `[Error: _array.sort accepts one of the following types: array.]`
     );
     expect(() =>
       _array({
@@ -1407,7 +1412,7 @@ describe('_array.sort', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.sort accepts one of the following types: array."`
+      `[Error: _array.sort accepts one of the following types: array.]`
     );
   });
 });
@@ -1459,7 +1464,7 @@ describe('_array.length', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.length accepts one of the following types: array, null."`
+      `[Error: _array.length accepts one of the following types: array, null.]`
     );
     expect(() =>
       _array({
@@ -1468,14 +1473,14 @@ describe('_array.length', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.length accepts one of the following types: array, null."`
+      `[Error: _array.length accepts one of the following types: array, null.]`
     );
   });
 });
 
 test('_array called with no method or params', () => {
   expect(() => _array({ location: 'location' })).toThrowErrorMatchingInlineSnapshot(
-    `"_array requires a method. Use one of the following: at, concat, copyWithin, every, fill, filter, find, findIndex, findLast, findLastIndex, flat, flatMap, from, includes, indexOf, join, lastIndexOf, map, pop, push, reduce, reduceRight, reverse, shift, slice, some, sort, splice, unshift, length."`
+    `[Error: _array requires a method. Use one of the following: at, concat, copyWithin, every, fill, filter, find, findIndex, findLast, findLastIndex, flat, flatMap, from, includes, indexOf, join, lastIndexOf, map, pop, push, reduce, reduceRight, reverse, shift, slice, some, sort, splice, unshift, length.]`
   );
 });
 
@@ -1483,7 +1488,7 @@ test('_array invalid method', () => {
   expect(() =>
     _array({ params: [['a']], methodName: 'X', location: 'location' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_array.X is not supported, use one of the following: at, concat, copyWithin, every, fill, filter, find, findIndex, findLast, findLastIndex, flat, flatMap, from, includes, indexOf, join, lastIndexOf, map, pop, push, reduce, reduceRight, reverse, shift, slice, some, sort, splice, unshift, length."`
+    `[Error: _array.X is not supported, use one of the following: at, concat, copyWithin, every, fill, filter, find, findIndex, findLast, findLastIndex, flat, flatMap, from, includes, indexOf, join, lastIndexOf, map, pop, push, reduce, reduceRight, reverse, shift, slice, some, sort, splice, unshift, length.]`
   );
 });
 
@@ -1500,7 +1505,7 @@ describe('_array.push', () => {
     expect(() =>
       _array({ params: { on: [1], items: 2 }, methodName, location })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.push takes an array as input argument for items."`
+      `[Error: _array.push takes an array as input argument for items.]`
     );
   });
 });
@@ -1523,7 +1528,7 @@ describe('_array.pop', () => {
     expect(() =>
       _array({ params: { on: [1] }, methodName, location })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.pop accepts one of the following types: array, null."`
+      `[Error: _array.pop accepts one of the following types: array, null.]`
     );
   });
 });
@@ -1611,7 +1616,7 @@ describe('_array.from', () => {
   });
   test('from throws for a non array or object param', () => {
     expect(() => _array({ params: 3, methodName, location })).toThrowErrorMatchingInlineSnapshot(
-      `"_array.from accepts one of the following types: array, object."`
+      `[Error: _array.from accepts one of the following types: array, object.]`
     );
   });
 });

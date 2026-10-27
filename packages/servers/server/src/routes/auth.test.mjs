@@ -16,7 +16,7 @@
 
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 
 // The auth engine is replaced by one that echoes what reached it, so the route
 // is exercised on a real @hono/node-server connection: the request the engine
@@ -29,16 +29,16 @@ const echoAuth = {
       body: await request.text(),
     }),
 };
-jest.unstable_mockModule('../../lib/build/auth.js', () => ({ default: { configured: true } }));
-jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
-jest.unstable_mockModule('../../lib/server/auth/getAuth.js', () => ({
-  default: jest.fn(() => echoAuth),
+vi.doMock('../../lib/build/auth.js', () => ({ default: { configured: true } }));
+vi.doMock('../../lib/build/config.js', () => ({ default: {} }));
+vi.doMock('../../lib/server/auth/getAuth.js', () => ({
+  default: vi.fn(() => echoAuth),
 }));
 
 const { default: authMiddleware } = await import('./auth.js');
 const { default: getClientAddress } = await import('../../lib/server/getClientAddress.js');
 
-const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 let server;
 let baseUrl;

@@ -15,6 +15,7 @@
 */
 
 import parsePsStartTime from './parsePsStartTime.js';
+import { expect, test } from 'vitest';
 
 test('parsePsStartTime reads an lstart printed in UTC as epoch milliseconds', () => {
   expect(parsePsStartTime('Fri Oct  2 20:55:31 2026')).toEqual(Date.UTC(2026, 9, 2, 20, 55, 31));

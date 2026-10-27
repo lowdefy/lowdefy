@@ -24,10 +24,14 @@ import { type } from '@lowdefy/helpers';
 //
 // A 4xx is the auth server rejecting the caller's attempt: expected traffic,
 // one warn line, the same treatment the server error handler gives an
-// AuthenticationError. Anything else is a fault in the auth engine or its
-// adapter and stays at error level with the error object, so the cause chain
-// and stack are logged.
-function createOnAPIError({ logger }) {
+// AuthenticationError. Anything else is a fault in the auth engine, its
+// adapter or a hook, and goes to the error sink of a system context - this
+// callback cannot reach the request's own context - so it is located, logged
+// with its cause chain and sent to error tracking. A fault a hook routine
+// already reported (handled, set by handleError) is not reported twice.
+//
+// BetterAuth does not await onError, and handleError never rejects.
+function createOnAPIError({ createSystemContext, getAuth, logger }) {
   return function onAPIError(error) {
     const statusCode = error?.statusCode;
     if (type.isInt(statusCode) && statusCode >= 400 && statusCode < 500) {
@@ -37,7 +41,11 @@ function createOnAPIError({ logger }) {
       );
       return;
     }
-    logger.error(error);
+    if (error?.handled === true) {
+      return;
+    }
+    const context = createSystemContext({ auth: getAuth() });
+    context.handleError(error);
   };
 }
 

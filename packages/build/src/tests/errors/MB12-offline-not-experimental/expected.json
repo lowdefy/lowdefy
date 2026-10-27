@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Request \"save\" at page \"home\" \"offline\" is part of experimental mobile apps. Set \"config.experimental.mobile: true\" in lowdefy.yaml to use it."
+      ],
+      "errorContains": [
+        "Request \"save\" at page \"home\" \"offline\" is part of experimental mobile apps.",
+        "{{fixturesDir}}/MB12-offline-not-experimental/lowdefy.yaml:15"
+      ]
+    }
+  ]
+}

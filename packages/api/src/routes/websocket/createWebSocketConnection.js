@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { isExpectedError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import { runInCredentialScope } from '@lowdefy/node-utils';
 
@@ -148,13 +149,9 @@ function createWebSocketConnection(context, { closeSocket, headers, registry, se
       await handleFrame(frame);
     } catch (error) {
       logger.debug({ err: error }, error.message);
-      // Authentication and authorization refusals are expected traffic - one
-      // warn line, no error log or Sentry report, but the client is still told.
-      if (
-        ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
-          error.name
-        )
-      ) {
+      // Expected outcomes - an auth refusal, a UserError - are one warn line, as over HTTP:
+      // no error log or Sentry report, but the client is still told.
+      if (isExpectedError(error)) {
         logger.warn({ event: 'ws_refused', frameType: frame.type }, error.message);
       } else {
         context.handleError(error);

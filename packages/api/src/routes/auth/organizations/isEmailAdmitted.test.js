@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi, expect, test } from 'vitest';
 
 import isEmailAdmitted from './isEmailAdmitted.js';
 
@@ -25,32 +25,33 @@ const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' 
 
 function createMocks({
   member = null,
+  members = member ? [member] : [],
   invitations = [],
   organization = pinnedOrg,
   userById = { id: 'user_1', email: 'User@Example.com' },
   userByEmail = null,
 } = {}) {
   const adapter = {
-    findOne: jest.fn(async ({ model }) => {
+    findOne: vi.fn(async ({ model }) => {
       if (model === 'organization') {
         return organization;
       }
-      if (model === 'member') {
-        return member;
-      }
       throw new Error(`Unexpected findOne model ${model}.`);
     }),
-    findMany: jest.fn(async ({ model }) => {
+    findMany: vi.fn(async ({ model }) => {
+      if (model === 'member') {
+        return members;
+      }
       if (model === 'invitation') {
         return invitations;
       }
       throw new Error(`Unexpected findMany model ${model}.`);
     }),
-    create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
+    create: vi.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
   };
   const internalAdapter = {
-    findUserById: jest.fn(async () => userById),
-    findUserByEmail: jest.fn(async () => userByEmail),
+    findUserById: vi.fn(async () => userById),
+    findUserByEmail: vi.fn(async () => userByEmail),
   };
   const auth = { $context: Promise.resolve({ adapter, internalAdapter }) };
   return { auth, adapter, internalAdapter };
@@ -95,12 +96,13 @@ test('isEmailAdmitted returns true when a member row exists for the given userId
     internalAdapter,
   });
   expect(admitted).toBe(true);
-  expect(adapter.findOne).toHaveBeenCalledWith({
+  expect(adapter.findMany).toHaveBeenCalledWith({
     model: 'member',
     where: [
       { field: 'userId', value: 'user_1' },
       { field: 'organizationId', value: 'team-portal' },
     ],
+    limit: 1000,
   });
 });
 
@@ -118,13 +120,59 @@ test('isEmailAdmitted returns true when a member row exists for the user resolve
   });
   expect(admitted).toBe(true);
   expect(internalAdapter.findUserByEmail).toHaveBeenCalledWith('member@example.com');
-  expect(adapter.findOne).toHaveBeenCalledWith({
+  expect(adapter.findMany).toHaveBeenCalledWith({
     model: 'member',
     where: [
       { field: 'userId', value: 'user_9' },
       { field: 'organizationId', value: 'team-portal' },
     ],
+    limit: 1000,
   });
+});
+
+test('isEmailAdmitted refuses a suspended member with no invitation under pinned', async () => {
+  const { auth, adapter, internalAdapter } = createMocks({
+    member: { id: 'member_1', suspended: true },
+  });
+  const admitted = await isEmailAdmitted({
+    userId: 'user_1',
+    organizations: pinned,
+    auth,
+    adapter,
+    internalAdapter,
+  });
+  expect(admitted).toBe(false);
+});
+
+test('isEmailAdmitted admits a user suspended in one org who is a member of another under tenant', async () => {
+  const { auth, adapter, internalAdapter } = createMocks({
+    members: [
+      { id: 'member_1', organizationId: 'org_1', suspended: true },
+      { id: 'member_2', organizationId: 'org_2' },
+    ],
+  });
+  const admitted = await isEmailAdmitted({
+    userId: 'user_1',
+    organizations: tenant,
+    auth,
+    adapter,
+    internalAdapter,
+  });
+  expect(admitted).toBe(true);
+});
+
+test('isEmailAdmitted refuses a user suspended in every org under tenant', async () => {
+  const { auth, adapter, internalAdapter } = createMocks({
+    members: [{ id: 'member_1', organizationId: 'org_1', suspended: true }],
+  });
+  const admitted = await isEmailAdmitted({
+    userId: 'user_1',
+    organizations: tenant,
+    auth,
+    adapter,
+    internalAdapter,
+  });
+  expect(admitted).toBe(false);
 });
 
 test('isEmailAdmitted returns true for an email with a pending unexpired invitation and no member', async () => {
@@ -246,9 +294,10 @@ test('isEmailAdmitted admits a member of any org under tenant with no organizati
     internalAdapter,
   });
   expect(admitted).toBe(true);
-  expect(adapter.findOne).toHaveBeenCalledWith({
+  expect(adapter.findMany).toHaveBeenCalledWith({
     model: 'member',
     where: [{ field: 'userId', value: 'user_1' }],
+    limit: 1000,
   });
   expect(adapter.findOne).not.toHaveBeenCalledWith(
     expect.objectContaining({ model: 'organization' })
@@ -312,5 +361,7 @@ test('isEmailAdmitted admits a member of org A under tenant even with an expired
   expect(admitted).toBe(true);
   // Membership-anywhere short-circuits before the invitation lookup, so the
   // expired invitation is never consulted.
-  expect(adapter.findMany).not.toHaveBeenCalled();
+  expect(adapter.findMany).not.toHaveBeenCalledWith(
+    expect.objectContaining({ model: 'invitation' })
+  );
 });

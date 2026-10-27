@@ -16,6 +16,7 @@
 
 import buildServerItems from './buildServerItems.js';
 import createBlockCache from './createBlockCache.js';
+import { expect, test } from 'vitest';
 
 function fill({ cache, listKey, index, entries, total }) {
   const { generation } = cache.startLoad(listKey, index);

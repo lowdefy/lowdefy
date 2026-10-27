@@ -43,7 +43,7 @@ const controlTypes = {
     routine: [],
     optional: [':cause', ':status', ':body'],
     description:
-      'Ends the routine with a reject status. Not caught by :try/:catch — use :throw for failures a :catch should handle. In a webhook endpoint, or an InternalApi endpoint a webhook calls, :status (400 to 499) and :body set the HTTP answer.',
+      'Ends the routine with a reject status. Not caught by :try/:catch — use :throw for failures a :catch should handle. In a webhook endpoint, or an InternalApi endpoint a webhook calls, :status (400 to 499) and :body set the HTTP answer. In a link endpoint, :status sets the HTTP status, with no body.',
   },
   ':return': {
     required: [':return'],
@@ -134,19 +134,25 @@ function handleSwitch(control, endpointContext) {
   });
 }
 
-// :status and :body set a webhook's HTTP answer, so they are refused where no webhook route can
-// send them. A literal :status must be an integer from 400 to 499; an operator is checked when it
-// evaluates.
+// :status and :body set a webhook's HTTP answer, and :status a link endpoint's, so they are refused
+// where no such route can send them. A literal :status must be an integer from 400 to 499; an
+// operator is checked when it evaluates.
 function checkRejectAnswer(control, endpointContext) {
-  const { endpointId, rejectSetsStatus } = endpointContext;
+  const { endpointId, rejectSetsStatus, rejectSetsBody } = endpointContext;
   const answerKeys = [':status', ':body'].filter((key) => key in control);
   if (answerKeys.length === 0) return;
   if (rejectSetsStatus !== true) {
     throw new ConfigError(
       `:reject in endpoint ${endpointId} sets ${answerKeys.join(
         ' and '
-      )}, which only a webhook endpoint, or an InternalApi endpoint a webhook calls, answers with.`,
+      )}, which only a webhook or link endpoint, or an InternalApi endpoint one calls, answers with.`,
       { received: answerKeys, configKey: control['~k'] }
+    );
+  }
+  if (':body' in control && rejectSetsBody !== true) {
+    throw new ConfigError(
+      `:reject in endpoint ${endpointId} sets :body, which a link endpoint does not answer with. A link endpoint answers a :reject with its :status and no body.`,
+      { received: [':body'], configKey: control['~k'] }
     );
   }
   const status = control[':status'];

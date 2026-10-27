@@ -15,25 +15,25 @@
 */
 
 import { Hono } from 'hono';
-import { jest } from '@jest/globals';
+import { vi, beforeEach, expect, test } from 'vitest';
 
-const mockGetEndpointConfig = jest.fn();
-const mockRunWebhookEndpoint = jest.fn();
-jest.unstable_mockModule('@lowdefy/api', () => ({
-  callEndpoint: jest.fn(),
+const mockGetEndpointConfig = vi.fn();
+const mockRunWebhookEndpoint = vi.fn();
+vi.doMock('@lowdefy/api', () => ({
+  callEndpoint: vi.fn(),
   getEndpointConfig: mockGetEndpointConfig,
-  parseRequestBody: jest.fn(),
+  parseRequestBody: vi.fn(),
   runWebhookEndpoint: mockRunWebhookEndpoint,
 }));
 
 const { default: endpointsHandler } = await import('./endpoints.js');
 
-const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
 function createApp() {
   const app = new Hono();
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { logger, handleError: jest.fn() });
+    c.set('lowdefyContext', { logger, handleError: vi.fn() });
     await next();
   });
   app.all('/api/endpoints/*', endpointsHandler);
