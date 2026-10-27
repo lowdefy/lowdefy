@@ -1,5 +1,11 @@
 # @lowdefy/block-dev-e2e
 
+## 6.2.2
+
+### Patch Changes
+
+- @lowdefy/e2e-utils@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes

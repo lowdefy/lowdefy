@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.2.2
+
+### Patch Changes
+
+- @lowdefy/block-utils@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes

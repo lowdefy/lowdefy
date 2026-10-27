@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/engine",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -36,16 +36,16 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "6.2.1",
-    "@lowdefy/helpers": "6.2.1",
-    "@lowdefy/operators": "6.2.1"
+    "@lowdefy/errors": "6.2.2",
+    "@lowdefy/helpers": "6.2.2",
+    "@lowdefy/operators": "6.2.2"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
-    "@lowdefy/actions-core": "6.2.1",
-    "@lowdefy/build": "6.2.1",
-    "@lowdefy/operators-js": "6.2.1",
-    "@lowdefy/operators-mql": "6.2.1",
+    "@lowdefy/actions-core": "6.2.2",
+    "@lowdefy/build": "6.2.2",
+    "@lowdefy/operators-js": "6.2.2",
+    "@lowdefy/operators-mql": "6.2.2",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",

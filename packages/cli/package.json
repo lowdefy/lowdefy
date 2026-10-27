@@ -1,6 +1,6 @@
 {
   "name": "lowdefy",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
@@ -39,10 +39,10 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "6.2.1",
-    "@lowdefy/helpers": "6.2.1",
-    "@lowdefy/logger": "6.2.1",
-    "@lowdefy/node-utils": "6.2.1",
+    "@lowdefy/errors": "6.2.2",
+    "@lowdefy/helpers": "6.2.2",
+    "@lowdefy/logger": "6.2.2",
+    "@lowdefy/node-utils": "6.2.2",
     "@vercel/nft": "1.10.2",
     "axios": "1.18.0",
     "commander": "14.0.3",

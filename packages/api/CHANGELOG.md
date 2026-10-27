@@ -1,5 +1,18 @@
 # Change Log
 
+## 6.2.2
+
+### Patch Changes
+
+- @lowdefy/build@6.2.2
+- @lowdefy/operators@6.2.2
+- @lowdefy/operators-js@6.2.2
+- @lowdefy/ajv@6.2.2
+- @lowdefy/errors@6.2.2
+- @lowdefy/helpers@6.2.2
+- @lowdefy/node-utils@6.2.2
+- @lowdefy/nunjucks@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes

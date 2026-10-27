@@ -1,5 +1,11 @@
 # @lowdefy/plugin-gcp
 
+## 6.2.2
+
+### Patch Changes
+
+- @lowdefy/helpers@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes

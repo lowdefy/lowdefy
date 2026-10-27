@@ -1,5 +1,21 @@
 # Change Log
 
+## 6.2.2
+
+### Patch Changes
+
+- @lowdefy/operators@6.2.2
+- @lowdefy/blocks-basic@6.2.2
+- @lowdefy/blocks-loaders@6.2.2
+- @lowdefy/operators-js@6.2.2
+- @lowdefy/ai-utils@6.2.2
+- @lowdefy/ajv@6.2.2
+- @lowdefy/block-utils@6.2.2
+- @lowdefy/errors@6.2.2
+- @lowdefy/helpers@6.2.2
+- @lowdefy/node-utils@6.2.2
+- @lowdefy/nunjucks@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes

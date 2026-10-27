@@ -1,5 +1,16 @@
 # Change Log
 
+## 6.2.2
+
+### Patch Changes
+
+- @lowdefy/engine@6.2.2
+- @lowdefy/layout@6.2.2
+- @lowdefy/block-utils@6.2.2
+- @lowdefy/errors@6.2.2
+- @lowdefy/helpers@6.2.2
+- @lowdefy/logger@6.2.2
+
 ## 6.2.1
 
 ### Patch Changes
