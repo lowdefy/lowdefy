@@ -1,6 +1,6 @@
 ---
 '@lowdefy/build': patch
-'@lowdefy/cli': patch
+'lowdefy': patch
 '@lowdefy/errors': patch
 '@lowdefy/server-dev': patch
 ---
