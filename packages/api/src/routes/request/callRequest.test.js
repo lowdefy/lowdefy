@@ -170,6 +170,31 @@ test('call request, public auth', async () => {
   });
 });
 
+test('callRequest logs the request ids at debug, never the page payload', async () => {
+  mockReadConfigFile.mockImplementation(defaultReadConfigImp());
+  mockTestRequest.mockImplementation(defaultResolverImp);
+  const debug = jest.fn();
+  const requestContext = testContext({
+    connections,
+    logger: { debug, info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+    readConfigFile: mockReadConfigFile,
+    operators,
+    secrets,
+  });
+  await callRequest(requestContext, {
+    ...defaultParams,
+    blockId: 'blockId',
+    payload: { idNumber: '8001015009087' },
+  });
+  expect(debug).toHaveBeenCalledWith({
+    event: 'debug_request',
+    blockId: 'blockId',
+    pageId: 'pageId',
+    requestId: 'requestId',
+  });
+  expect(JSON.stringify(debug.mock.calls)).not.toContain('8001015009087');
+});
+
 test('call request, protected auth with user', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({

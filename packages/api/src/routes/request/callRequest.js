@@ -39,7 +39,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
   context.payload = requestPayload;
   context.evaluateOperators = createEvaluateOperators(context);
 
-  logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
+  logger.debug({ event: 'debug_request', blockId, pageId, requestId });
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
   const connectionConfig = await getConnectionConfig(context, {
     connectionId: requestConfig.connectionId,
