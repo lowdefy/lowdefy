@@ -62,10 +62,12 @@ blocks:
         application. Ask an administrator to invite you.</p>
   - id: login_error_html
     type: Html
+    # Gated on the message, not the code: only a refused sign-in (4xx) carries
+    # metaData.code, and a network failure or server fault must still show.
     visible:
       _and:
         - _ne:
-            - _state: login_error_code
+            - _state: login_error_message
             - null
         - _ne:
             - _state: login_error_code
@@ -74,7 +76,7 @@ blocks:
       html:
         _nunjucks:
           template: |
-            <p style="color:red">{{ message }} (code: {{ code }})</p>
+            <p style="color:red">{{ message }}{% if code %} (code: {{ code }}){% endif %}</p>
           on:
             message:
               _state: login_error_message
