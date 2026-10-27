@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-csv",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -44,7 +44,7 @@
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "7.1.0",
+    "@lowdefy/node-utils": "7.2.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32"
   },

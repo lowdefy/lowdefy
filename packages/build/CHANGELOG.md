@@ -1,5 +1,371 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- a41d898: feat(api): Agents mask patterns in the user's messages with `redact`
+
+  An agent's new `redact` property lists regular expressions the server masks in the text of every user message before the model, title generation, tools and `onFinish` hooks see it. Use it to keep ID numbers, email addresses and other personal information a user pastes into a chat away from the AI provider and out of chat history.
+
+  ```yaml
+  agents:
+    - id: support_agent
+      type: ClaudeAgent
+      connectionId: anthropic
+      redact:
+        replacement: '[removed]' # default
+        patterns:
+          - name: email
+            pattern: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+          - '\d(?:[ -]?\d){8,}'
+  ```
+
+  Patterns are strings or `{ name, pattern, flags }` objects, and may be operators. The build rejects a missing or empty `patterns` list, a pattern that is not a string, an invalid regular expression, the sticky flag `y` and a pattern that matches empty text; a pattern an operator returns is checked when the request runs. It applies to chat turns, not to sub-agent calls or the `CallAgent` step. Assistant messages, tool calls and files are left as they are, and the debug log counts replacements by name without the matched text.
+
+- afeec0b: feat(server-dev): Agent tools take a device
+
+  - `lowdefy_screenshot_page` and `lowdefy_run_journey` take `device`, a phone's tab id from the new `lowdefy_device list`. Steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot` and `expect` with `state`) run on the phone in Lowdefy Dev by block id. A screenshot is taken with `xcrun simctl io` on a simulator, `adb exec-out screencap` on an Android device, or by Lowdefy Dev from its own view on a paired phone, and says which.
+  - `lowdefy_inspect_state`, `lowdefy_snapshot_state` and `lowdefy_load_state` take `device` and read the phone's live state, or load a checkpoint into it.
+  - New `lowdefy_device` tool: `list` the connected phones, booted simulators and Android devices; `start` Lowdefy Dev on a simulator or emulator, as `lowdefy dev --ios` or `--android` does; `inject` a phone's next scan, photo, NFC read, location, permission answer, push or network state. On an iOS simulator a location and permission are also set with `simctl`, and a push is delivered with `simctl push`.
+  - `lowdefy_list_types` takes `target: web | mobile`; with `mobile` it lists the blocks, actions and client operators a native shell carries, which dev builds now write to `plugins/availableTypesMobile.json`.
+  - Client errors in `lowdefy_build_status` carry `surface` (`web` or `mobile`, with the phone's shell version).
+  - Lowdefy Dev names its platform and app id when it joins the dev server, and answers state checkpoint loads.
+  - The simulator and emulator helpers of `lowdefy dev --ios` and `--android` move to `@lowdefy/node-utils`, shared with the dev server.
+
+- b7b8445: feat: `mobile:` key in lowdefy.yaml, with per-target block types for mobile pages
+
+  The build understands a new `mobile:` key, the pages, menus and home page a native Lowdefy shell shows:
+
+  ```yaml
+  mobile:
+    homePageId: today
+    minShellVersion: 7.4.0
+    menus:
+      tabs:
+        - { pageId: today, icon: House, title: Today }
+        - { pageId: jobs, icon: ClipboardList, title: Jobs }
+    pages:
+      - _ref: mobile/today.yaml
+      - _ref: mobile/jobs.yaml
+  ```
+
+  - `menus` takes exactly one of `tabs` (2 to 5 items), `drawer` or `stack: true`. Items are `{ pageId, icon, title }` and must open a mobile page.
+  - `shells` lists the shells that open the app (`id`, `scheme`, `ios: { bundleId, teamId }`, `android: { package, sha256 }`), and `auth` is reserved for shell sign-in. An unknown key under `mobile:` fails the build.
+  - Pages share one id namespace across web and mobile. A page listed in both `pages` and `mobile.pages` (for example the same `_ref`) is shared and built once; with a different config under the same id the build fails.
+  - Mobile pages resolve their blocks, actions and client operators against the native block set, `@lowdefy/blocks-native`, and the `actions-core` actions. A mobile or shared page that uses a type with no native version fails the build, naming the page, block and type; `AgGrid` blocks and `Table` suggest `List` with `ListItem`. Requests, connections and server operators work on mobile pages as on web pages.
+  - `_js` on a mobile page builds into the page's own `_jsEntries`, since a shell cannot load the web client's `_js` module.
+  - The build writes `mobile/config.json` (home page, minimum shell version, menus with their icon data, shells), `mobile/pageIndex.json` (each mobile page's path, id, content hash and type set key) and `mobile/typeSets.json` (each type set's types with their plugin package and major version). An app without a `mobile:` key gets `{}` and `[]`. Mobile pages over 1 MB of JSON in total give a warning.
+  - Every built page now carries `target`: `web`, `mobile` or `both`.
+
+  `@lowdefy/blocks-native` is new: the native block set's types, metas and React Native components.
+
+- 8b0c8be: feat(api): Link endpoints serve a file at a stable URL, and Tiptap editors save it with `imageSrc`
+
+  An `Api` endpoint with `link: true` answers a `GET` on `/api/endpoints/<endpointId>/<path...>`: its routine runs as the signed-in caller, with `{ path, query }` as payload and the endpoint's `auth` applied, and the endpoint answers `302` to the URL its `:return` gives (an absolute http(s) URL or a path starting with `/`), with `Cache-Control: private, no-store`. Endpoint ids can hold slashes, so the longest link id the URL starts with wins. A signed-out caller on a protected link gets `401`, a caller without its roles `403`, a `:reject` its `:status` (default `400`), all with no body; an unknown id answers `404` (`401` to a signed-out caller on an app with auth), and any other error `500` with a fixed message. A payload its `payloadSchema` refuses answers `400` with no body. A `POST` to a link endpoint is refused as a missing endpoint, and the build refuses one as an MCP tool. The build refuses `link` on `InternalApi` and with `webhook` or `async`, and allows `:status`, not `:body`, on a `:reject` in a link endpoint. Link endpoints must have no side effects, since any page that embeds the URL can trigger the `GET`.
+
+  `TiptapInput` and `TiptapMentionInput` take an `imageSrc` `_function`, called with `{ key, bucket, name, type }` once an image is uploaded; its string is the inserted `src`. It takes precedence over `downloadPolicyRequestId`, so no download request runs. Pointing it at a link endpoint lets the bucket behind inline images stay private.
+
+- 02cf4b1: feat: `mobile.events` holds the app events a phone runs
+
+  A native shell no longer runs the root `events`. They stay web-only, so an action with no native version, like an analytics init, no longer fails on every launch with "Invalid action type ... at app". App events that run on a phone go in `mobile.events` (`onInit`, `onInitAsync`), with the same rules as the root events. The build fails when an action type in `mobile.events` has no native version, as it does on a mobile page, and their types join every mobile page's type set. Their `_js` reaches the shell as module text and stays out of the web client.
+
+- 7b06be6: feat: Phone apps sign in with ordinary sessions sent as bearers
+
+  An app with a `mobile:` section accepts its Better Auth session as `Authorization: Bearer <token>` on every route, for phone shells:
+
+  - A phone signs in on Better Auth's own routes, such as `/api/auth/sign-in/email-otp`, and reads the session token from the `set-auth-token` response header. The header goes only to requests with no `Origin` and no cookies, so page script in a browser never sees it.
+  - Bearer callers resolve like cookie callers, with the same roles, organization and caller stamp, and are read past the cookie cache: signing out, ending sessions or removing a member applies on the next call. Websockets accept the bearer on the upgrade.
+  - `/auth/mobile?shell=<id>&state=<s>` is the page a shell opens in a system sign-in sheet for every other sign-in method. It sends a signed-out person through the app's sign-in page, then redirects to the shell's scheme with a one-time token that lasts one minute and works once.
+  - The email code send is capped at 5 per address per 15 minutes.
+  - New `mobile.auth` keys: `emailCode`, `unlock`, `unlockAfter`, `sharedDevice` and `sessionExpiresIn`, which gives phone sessions their own lifetime. A shell `scheme` must be a lowercase URL scheme and not a web one.
+
+- 74122f0: Mobile apps are experimental: the `mobile` section and `offline` on requests build only when the app sets `config.experimental.mobile: true`. Without it the build fails with a message that names the flag. The new docs page, Mobile Apps (Experimental), covers the section, capability profiles, offline requests, sign-in and the phone dev loop.
+- f05943c: feat(shell): Native actions, `_js`, i18n and icons in the phone shell
+
+  Phone pages now run the same actions and operators as the web. `SetFocus`, `ScrollTo`, `CopyToClipboard` and the local storage actions have native bodies under the same names: focus goes to the control a block registers, `ScrollTo` scrolls the page to a block's measured place, the clipboard is the phone's, and local storage values live in the device store under the app's keys. `SetDarkMode` and `SetLocale` work as on the web. The shell registers the client operators of every default operator package (`_dayjs`, `_nunjucks`, `_mql`, `_jsonata`, `_uuid` and the rest).
+
+  `_js` on mobile pages and in app events runs on the phone: the build gives the app events' client `_js` to the mobile root as module text, as it does for mobile pages. The mobile root also carries the app's `i18n`, and the shell picks the locale as the web does, with dayjs locale data for every locale. Menu icons are drawn from the root's icon data with client-native's new `Icon`, which draws the web's icon data with `react-native-svg`. The shell now passes the root's `theme` and `classMap` to client-native, so classes and the theme mode style blocks on the phone.
+
+- 083821c: feat: Mobile pages carry the icon data of the icons they draw
+
+  Each built mobile or shared page now carries `_icons`, the icon data of the icons its blocks draw, resolved as web pages' icons are (semantic names, aliases and plugin sets such as `tabler:`), in the full build and in dev page builds. The shell adds a page's `_icons` to the icon map the native `Icon` renderer reads, so block icons draw on the phone. Web pages are unchanged.
+
+- 8158470: feat: Server routes for mobile shells
+
+  - `GET /api/mobile/root` returns what a mobile shell syncs on start: the `mobile.menus` frame with the items the caller may open, menu icon data, the index of the mobile pages the caller may open with each page's hash and type set key, those type sets, `minShellVersion`, and placeholder theme fields. It answers 404 for an app without a `mobile` key. The dev server lists page paths only, without hashes or type sets.
+  - `GET /api/page/*` sends an `ETag`, and both routes answer `304` to a matching `If-None-Match`.
+  - Pages are gated by surface: a request with `x-lowdefy-shell` gets only pages listed in `mobile.pages`, and a browser never gets a page listed only there. The other surface answers `404` with `{ pageConfig: null, surface }`. Page access still comes from `auth.pages`.
+  - `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` are served from `mobile.shells` when a shell declares iOS or Android signing details.
+  - The dev server builds mobile pages on demand, resolving their blocks against the native block set.
+
+- d80e12d: feat: The phone sign-in sheet asks to confirm, gives the phone its own session and returns by app link on Android
+
+  - `/auth/mobile` no longer hands a session to a shell on a GET. A signed-in person sees "Sign in to <app> on this device?", naming the shell and the account, with Continue and Cancel. The one-time token is minted only when the page posts back from the app's own origin with its CSRF token. Cancel returns `error=cancelled` to the shell.
+  - Continue creates a new session for the phone, with the browser session's active organization and the phone lifetime from `mobile.auth.sessionExpiresIn`. The browser's own session is never handed over, marked or extended, so signing out on the phone leaves the browser signed in. A browser session created inside this sign-in is ended once the phone has its own.
+  - Shells send `platform=ios` or `platform=android` (now required). Android returns by the https app link `<app url>/auth/mobile/callback`, verified through `assetlinks.json`, instead of the shell's scheme, so no other app can receive the token. An Android shell needs `android.package` and `android.sha256` in `mobile.shells`. If the link is not verified, `/auth/mobile/callback` asks the person to return to the app and never shows the token. iOS keeps the shell's scheme.
+  - The shell declares the app link in its Android manifest for each app's https url.
+
+- 3f8aa1f: feat(build): Mobile shells declare what a store build needs
+
+  A `mobile.shells` entry now takes `name`, `icon`, `color`, `profile`, `version`, `distribution` and `eas` beside `id`, `scheme`, `ios` and `android`. The build checks each one: the icon must exist, be a 1024×1024 PNG and have no alpha channel; `ios.bundleId` and `android.package` must be reverse-DNS ids; `version` is `major.minor`; `profile` is one of `basic`, `field`, `field-nfc` or `field-tracking`; and `distribution` is `private` (the default), `store` or `internal`. A shell with `ios` or `android` but no `android.sha256` builds with a warning, since the fingerprint exists only after the first Android upload. The built mobile config carries the new fields, with the icon as an absolute path, for `lowdefy mobile` to read.
+
+- 988fc30: feat(build): Mobile builds write the app's theme tokens and Tailwind class map, and check styles for native blocks
+
+  For an app with a `mobile` key, `lowdefy build` now writes `build/mobile/theme.json`, antd's computed tokens for light and dark mode, and `build/mobile/classMap.json`, every Tailwind class on mobile pages compiled to a React Native style with the app's own theme, including `dark:` and `sm:`/`md:`/`lg:` variants. Styles on mobile pages are checked against what React Native can do: px and rem become numbers and shorthands expand, while `display: grid`, `:hover`, `calc()`, `position: fixed`, transitions and `cursor` fail the build naming the page, block, slot and key. A class with no native form, such as `hover:` or `grid-cols-2`, fails the build naming the page, block and class. The new `@lowdefy/style-native` package holds the style converter the mobile shell shares. Web builds are unchanged.
+
+- 2f7a526: feat(blocks-native): Box swipe events and a PageDots block
+
+  - `Box` takes `onSwipeLeft` and `onSwipeRight` on mobile. Its PanResponder takes only clear horizontal swipes (across more than 40pt and more than twice as far across as down, or a fast flick) in a direction the Box has an event for, so vertical scrolls go on, and leaves drags that start within 20pt of the screen's left edge to the iOS back gesture. `swipeFeedback: true` moves the Box a little with the drag on a rubber band and springs it back. Screen readers get the swipes as accessibility actions.
+  - `PageDots` is a mobile-only display block, iOS's page control: `count` dots in `color` with the `index` dot in full colour, which slides to its place on a spring when the index changes. For a record's place among recents.
+
+- bd50d64: feat(blocks-native): ChipSelector block and the Screen `headerBottom` slot
+
+  - `ChipSelector` is a mobile-only input (`valueType: string`): a horizontally scrolling strip of 32pt chips, such as a space switcher. Options take `value`, `label`, an `icon` drawn in a 20pt rounded-square tile of the option's `color`, and a `badge`. `color` is a palette hue, token or hex colour (a tile with a white icon), or `{ fg, bg, fgDark, bgDark }`, a mark drawn fg on bg with its dark mode variants. The selected chip fills with a soft tint of its own colour, with a border and label of the colour. Chips scale as they are pressed, the strip fades at its edges and keeps the selected chip in view, and an optional `moreChip: { label, icon }` fires `onMore`. Picking a chip fires `onChange` with `{ value }`.
+  - `Screen` takes a `headerBottom` slot: blocks pinned directly under the header (under the large title or the search field), such as a ChipSelector and a SegmentedControl. They ride with the content as a large title collapses or the page is pulled to refresh, then stay under the header, on the screen's background with a hairline, as the page scrolls. Blocks in it sit at the 16pt screen inset; a ChipSelector runs edge to edge.
+  - `LowdefyPage` takes `headerInset`, where the header's bottom edge is in the page's scroll view; the shell passes the native stack's animated header height when the page scrolls under the bar, and hides the bar's own hairline for a page with a headerBottom.
+  - `@lowdefy/client-native` exports `EdgeInsetContext`, an area's horizontal padding that an edge-to-edge block cancels.
+
+- 8736703: feat(blocks-native): Native SegmentedControl, Sheet and Menu blocks, and Selector `variant: menu`
+
+  `@lowdefy/blocks-native` now draws the platform's own controls through `@expo/ui`, which the `basic` shell profile already links, so no native rebuild is needed.
+
+  - `SegmentedControl` is an input: a SwiftUI segmented picker on iOS and Material segmented buttons on Android. It takes `options` as a Selector does, fills its container's width, and fires `onChange` with `{ value }`.
+  - `Sheet` is a container presented as a native sheet: a SwiftUI sheet with medium and large detents on iOS and a Material modal bottom sheet on Android. It takes `title`, `detents` (`both`, `medium` or `large`), `dragToDismiss` and `closable`, a `content` slot and a `headerRight` slot. Its `open` and `close` methods are called with CallMethod, and it fires `onOpen` and `onClose`.
+  - `Menu` opens a native menu (a SwiftUI Menu, or a ContextMenu with `openOn: longPress`) from its `content` slot blocks or from an icon and title. Items take `id`, `title`, an SF Symbol `symbol`, `checked`, `destructive`, `disabled` and `hidden`; an item with `items` is a section, or a nested menu with `submenu: true`. Picking one fires `onSelect` with `{ id }`.
+  - Selector takes `variant: menu`: an iOS Settings-style row, the title at the left and the chosen option at the right with an up-down chevron, that opens a native menu of the options with the chosen one checked. Options can carry a `symbol`, an `icon` and `iconColor`, or an `avatar` drawn as initials.
+
+- f0209f6: feat(build): Warn when a mobile page sets a property the phone ignores
+
+  Native blocks accept the web properties a phone cannot honour (such as `hoverable`, `copyable`, a label's `align` or an input's `prefixIcon`), so a page shared by web and mobile stays valid. The build now warns when a mobile or shared page sets one: once per page for each block type and property, naming the page, the block and the property. `~ignoreBuildChecks: [native-ignored]` silences it.
+
+  - `extractBlockTypes` lists the property paths a meta marks `nativeIgnored: true` in the block meta it returns.
+  - The native list and input blocks now mark their ignored properties `nativeIgnored`, as the layout and display blocks do.
+
+- 54f0579: feat(blocks-native): Add an Illustration block, an animated vector drawing
+
+  - `Illustration` draws SVG markup with keyframe animations of its elements by id: `translateX`, `translateY`, `rotate`, `scale`, `scaleX`, `scaleY` and `opacity`, with `duration`, `delay`, `loop`, `origin` and an easing per animation or keyframe (`linear`, `ease`, `easeIn`, `easeOut`, `easeInOut`, or `step` for frames that swap, as pixel art does). Each animated element is drawn in a view of its own, so the animations run on React Native's native driver. It adds no native module.
+  - Colours are `var(--name)` references to `colors`, with `colorsDark` over them in dark mode; theme tokens work too (`var(--colorLabel)`).
+  - `position` (`{ top, right, bottom, left }`) draws the box at those offsets from the block's place without taking room, such as a Screen's first block reaching up beside the large title, where it scrolls away with the title. It never takes touches, holds still with Reduce Motion on, and is hidden from screen readers unless it has a `title`.
+
+- 048e010: feat(client-native): Native pages lay out, style and theme blocks as the web does
+
+  The new `@lowdefy/layout-native` package computes Lowdefy's 24-column layout as React Native styles: span, offset, order, push and pull per breakpoint, gaps that match the web's column widths, and flex blocks. A phone picks its breakpoint from its shorter side, so turning it to landscape keeps its layout; a tablet uses its width. The native renderer applies Tailwind `class:` values from the app's class map after operators run, with `dark:` and `sm:`/`md:`/`lg:` variants, and lays each slot's `style` over them; operator-produced and shared-page styles are converted to React Native values. `ThemeProvider` and `useTheme` give native blocks antd's computed tokens for the mode showing, following `theme.darkMode`, the `SetDarkMode` action and the device, and `_media: darkMode` works as on the web. The mobile root (`/api/mobile/root`) now sends the app's `theme` and `classMap`, in production and dev, and pages the dev server builds on request carry the class map entries of their own classes.
+
+- 78e54ea: feat(blocks-native): iOS lists and rows, and the Avatar and StatusIcon blocks
+
+  - `List` takes `variant`: `insetGrouped` (the default) draws each section as a rounded group of cells, inset 16pt on the grouped background, with separators inset to the row text; `plain` draws edge to edge rows with sticky section headers. Sections come from `header` (one section) or `sectionKey` with `sections` (`[{ key, title, count, status, footer }]`, in that order, empty ones hidden). `showCount` counts each section's items, and `headerVariant` picks Footnote upper case or Headline headers.
+  - `ListItem` takes `leading` (a status glyph, avatar or icon) and `trailing` (text, badges, a glyph, an icon or avatars) properties and slots, a `subtitle`, `titleLines`, an iOS press highlight, `swipeActions` (`leading` and `trailing` buttons with a full swipe, firing `onSwipeAction` with the id) and `contextMenu` (iOS's native long-press menu, firing `onContextMenu` with the id). It becomes a container block for its slots.
+  - `Avatar` draws a person's initials on a colour picked from their name, or their image, and stacks several with `avatars`.
+  - `StatusIcon` draws Linear-style status, priority and stage glyphs by name, coloured for light and dark mode.
+
+- 9e97d17: feat(blocks-native): Native Markdown block
+
+  `@lowdefy/blocks-native` now carries a read-only `Markdown` block that draws GitHub-flavoured markdown with React Native views: headings, emphasis, strikethrough, inline and fenced code, block quotes, ordered, unordered and task lists, tables, images and links.
+
+  - It takes the web `Markdown` block's `content` and `skipHtml`, so a page in both `pages` and `mobile.pages` can use it. Raw HTML shows as text, as the web block escapes it, and `skipHtml: true` leaves it out.
+  - A new `onLinkPress` event receives the pressed link's `href` as `_event: href`, and the block does not open the link. Without the event, a link opens in the system browser.
+  - Text, headings and code take the app's computed antd tokens in light and dark mode.
+  - It draws with `react-native-marked`, which is plain JavaScript. It needs no native module beyond the `basic` shell profile.
+
+- 2ce6fa5: feat(mobile): Offline request queue for `offline: queue` requests
+
+  A request with `offline: queue` is kept by a mobile shell while it has no signal, or when the send fails for the network, and sent in order when the signal returns or the app starts. The action resolves with `{ queued: true, id }`. The payload is evaluated once, when the action runs, and sent unchanged, so a `_uuid` in the payload is a stable idempotency key. A 2xx removes the request; any other server answer marks it failed with the server's message until `RetryRequestQueue` or `DiscardQueuedRequest`. The `onRequestQueue` app event and `GetRequestQueue` report `{ pending, failed, items }`. Sign-out clears the queue. On the web the key is ignored. The engine passes the request's `offline` to the core's `callRequest`, which sends it through a host's `requestQueue` when the host has one.
+
+- 2ce6fa5: feat(mobile): Push and actionable notifications in every shell
+
+  Every shell carries expo-notifications. `mobile.notifications` names the API endpoints the shell posts its push token to once signed in (`register`, with `{ token, expoToken, platform, provider, shellId, appVersion }`) and at sign-out (`unregister`), how a notification shows while the app is open (`foreground: banner | silent`), and categories of action buttons. A tap opens `data.path` and fires the `onNotificationAction` app event; a button with `endpointId` (Approve, or Reply with `input`) calls the endpoint without opening the app; `snooze: <minutes>` shows the notification again later. `onNotification` fires for a notification received while the app is open, and a push with `data.refreshWidgets` refreshes the widgets. New actions: `ScheduleNotification`, `CancelNotification`, `SetBadgeCount` and `RequestNotificationPermission`. `lowdefy_device inject` with kind `push` now shows the notification in Lowdefy Dev and can tap it or press a button; an APNs payload with `aps` still goes through `simctl push` on an iOS simulator.
+
+- 1663aa9: feat(client-native): A Screen headerBackdrop slot, and options reported before first paint
+
+  - A Screen's `headerBackdrop` slot draws blocks above the top of the content, behind the large title and the translucent bar, such as an Illustration beside the title. They scroll away with the title, take no room in the content and never take touches. The backdrop is lifted by a transform, so the scroll view's content keeps its layout.
+  - A Screen reports its header options in a layout effect, so the router enables a large title in the same update as the page's first content and the page opens with its large title expanded.
+  - `useScreenFocused` tells a block whether its screen is the one shown.
+  - An Illustration stops its animations while its screen is hidden, and draws each still layer only over the part of the drawing it covers, so a drawing split into many layers holds small backing stores.
+
+- bb7c249: feat(client-native): iOS Screen headers, tab bar icons and per-screen page state
+
+  - `Screen` takes `largeTitle` (an iOS large title that collapses as the page scrolls), `headerSearch` (a native search bar with `placeholder`, `autoFocus`, `debounce` and `hideWhenScrolling`, firing `onSearch` and `onSearchChange` with `_event: value`) and `headerActions` (`[{ id, icon, sfSymbol, title, placement, event, disabled }]`, compact icon buttons that iOS draws as native SF Symbol bar buttons, firing `onHeaderAction` with `_event: id` or their own `event`).
+  - `Screen` events `onRefresh` (pull-to-refresh, refreshing until the actions finish) and `onFocus` (each time the screen is shown: first show after onMount, a tab switch, back navigation).
+  - The `headerLeft` and `headerRight` slots draw their blocks at their natural size, so a header button is no longer a full-width capsule that truncates the title.
+  - Two screens of one page in a stack keep their own page state, keyed by route instance, and each reads `_url_query` and `_location` from its own route, not the focused one. A tab's page opened by a link keeps its query.
+  - `mobile.menus.tabs` items draw their icon in the native tab bar: an SF Symbol on iOS (`sfSymbol`, or the symbol mapped from the Lucide or semantic icon name), the Lucide icon elsewhere, the selected tab in the theme's primary colour. `role: search` makes an item iOS 26's search tab.
+  - The engine's `getContext` takes an `instanceId` and the screen's own `globals`.
+
+- 2ce6fa5: feat(mobile): Share out from every shell, share in with the `share` extension
+
+  The `Share` action opens the share sheet with text, a link, a file on the phone, an https file the shell downloads first, or `base64` content with a `name` (a PDF made on the page). `mobile.shells[].extensions: [share]` adds expo-sharing's share extension: text, links, images, videos and files shared into the app open `mobile.share.pageId` with the payload in the `shared` query key and fire the `onShare` app event. Shell extensions are a new opt-in list (`share`, `widgets`, `contacts`, `calendar`) on top of the profile, written into shell.json by `lowdefy mobile config` and named in the runtime version.
+
+- 2ce6fa5: feat(mobile): Widgets, quick actions, App Shortcuts and background fetch
+
+  `mobile.widgets` lists widget sources (`{ id, title, layout: count | list, endpointId, path }`) for shells with the `widgets` extension: iOS Home Screen and Lock Screen widgets in two fixed layouts, the source picked when the widget is added, refreshed from the endpoints at launch, on resume, on a push with `data.refreshWidgets`, on background fetch and on `RefreshWidgets`. `mobile.shortcuts` (up to 4) become the app icon's quick actions on iOS and Android and the options of one App Shortcuts intent ("Open <shortcut> in <app>") for Siri and Spotlight; choosing one opens its path and fires `onShortcut`. `mobile.background: { endpointId, interval }` runs background fetch while the app is closed: the endpoint's `{ badge, refreshWidgets }` is applied, the offline queue is sent and the cached pages refresh. The build checks every endpoint and page these name.
+
+- 20dd549: feat(api, build): The owner of a new organization can get app roles
+
+  A new signup under `organizations.policy: tenant` with `create: auto` became the `owner` of their own organization with no app roles, so in an app that gates pages, endpoints and menus on app roles, every gated page was closed to them in their own organization. The new `auth.organizations.creatorAppRoles` setting lists the app roles the owner of a new organization gets on their membership:
+
+  ```yaml
+  auth:
+    roles:
+      - id: workspace-admin
+    organizations:
+      policy: tenant
+      creatorAppRoles:
+        - workspace-admin
+  ```
+
+  It applies to the organization a tenant signup mints and to the `CreateOrganization` step when it is given a creator. The owner's organization tier stays `owner`; invited members and users auto-joined to a pinned organization are unchanged. Every listed id must be declared in `auth.roles`, or the build fails naming the unknown id. Unset, it defaults to `[]` and owners get no app roles, as before. Existing memberships are left as they are.
+
+- dfdb8ab: feat(auth): Organizations no longer stop at 100 open invitations; `auth.organizations.invitationLimit` sets a cap
+
+  BetterAuth's organization plugin refuses a new invitation once an organization has 100 open ones, with a 403. Under `pinned` every user of the deployment is invited into the one organization, so a busy app or a bulk invite run could hit the cap and stop inviting anyone. Lowdefy now defaults the cap to 1,000,000, effectively open. The new `invitationLimit` key sets a lower cap when you want one; it takes an integer (at least 1) and is validated at build time.
+
+  Only pending, unexpired invitations count. Past the cap, inviting fails with a 403 and code `INVITATION_LIMIT_REACHED`.
+
+  ```yaml
+  auth:
+    organizations:
+      policy: tenant
+      invitationLimit: 200
+  ```
+
+### Patch Changes
+
+- bb799e9: perf(build): Config builds no longer slow down with large YAML files
+
+  The build stamps every YAML node with its line number so errors can point at the defining line. It counted the newlines before each node by copying the file up to that node, so a file's cost grew with its size times its node count, and that took about a fifth of a large app's config build. Each file's newline offsets are now collected once, and every node's line is a binary search over them. Line numbers are unchanged.
+
+- 09dbbee: fix: A `_ref` that returns a list of actions, placed as one item of an event's action list, no longer crashes the build with `LowdefyInternalError: Cannot read properties of undefined (reading 'keyword')`
+
+  - `@lowdefy/ajv` keeps at most 20 errors per validation and lets the error count run ahead of them. A schema branch that passed after the cap reset the errors to its starting count, which grew the array with holes, and ajv-errors read a hole as an error. The reset now only shrinks the array, and ajv-errors' property message path is set only on a message that was kept. Any config with enough schema errors could hit this; several nested action lists in one block's events did.
+  - The build now names the mistake with its location: `Action list on event "onClick" on block "save" on page "home" holds a list at item 1, which is a list of actions, not an action.` Action lists are not flattened, since the engine runs each item as an action. Use the `_ref` as the whole list, or join lists with `_build.array.concat`.
+
+- 9c044eb: fix(api, plugin-better-auth): CreateOrganization writes the owner's app roles in one write
+
+  The `CreateOrganization` step now writes the organization and its creator's owner membership the same way a tenant signup does, with the `auth.organizations.creatorAppRoles` app roles on that membership from the start. It no longer creates the owner without app roles and adds them in a second write that had to be undone when it failed. If a run fails after writing the organization but before its owner, running the step again with the same creator and slug within ten minutes finishes it, instead of leaving an organization with no owner. Nothing is written until the database's unique indexes are in place.
+
+  The step now checks its properties itself. It takes `name` and `slug` (non-empty strings, required), `logo` (string), `metadata` (object) and `userId` (string), and refuses any other property, so options such as `keepCurrentActiveOrganization` are no longer accepted. A creator that is not a user, or a slug another organization holds, is refused before anything is written. A missing `userId` now always means an organization with no members; it is no longer taken from the caller. The result still lists the owner under `members`.
+
+- df6fa3c: fix(build, cli, errors, server-dev): Dev tools and build errors keep their cause and location
+
+  `@lowdefy/errors` exports `isExpectedError`, the one test for an expected outcome (a `UserError` or an auth refusal) versus a fault. The dev server's agent error feed uses it, so an auth refusal is no longer reported to an agent as an app error.
+
+  When the server explains a browser error with a plugin schema error ("property title must be type string"), the agent feed records that error instead of the original "Error rendering block". Feed entries from the browser and the server carry the same fields, including `hint` and `configKey`.
+
+  A dev tool (an MCP tool, a journey run, `run_endpoint`, the mutants route) that fails with an error of its own is logged with its stack, and the agent is told the tool failed rather than its app. Bad tool arguments are answered as `UserError`s. `run_endpoint` logs the caller's id instead of the whole user object.
+
+  A plugin that fails to import gives its reason (a syntax error, a missing dependency) in the build error, and the build status keeps the cause and stack of an internal fault. Module entry and module var errors point at their line in `lowdefy.yaml`, and an invalid `config` or `theme` is a located `ConfigError`. The dev server's warnings are no longer printed as `ERROR` lines, and a crash in the dev server is printed whole rather than in fragments. A build artifact that is there but unreadable is reported instead of read as empty, and an `_js` map that fails to load is logged.
+
+  The CLI's error telemetry sends the error name, a message cut to 300 characters and the stack frames, with the home directory replaced by `~`.
+
+- 3f4c3f8: fix(cli): `lowdefy mobile config` writes an `eas.json` that builds and submits without hand edits
+
+  Each build profile pins `pnpm` to the version that installed the shell project, so EAS no longer installs with its newest pnpm, which refuses packages published the same day. Each build profile sets its EAS `environment`: `production` for an environment named `prod` or `production`, `preview` for the rest. A shell's new `ios.ascAppId` (the App Store Connect app id) is written to every submit profile, so `submit --non-interactive` and `release --auto-submit` find the app. Environments without a `url` get no build or submit profile.
+
+- 7416223: fix(server, shell, client-core, build, api): Native faults reach the server log, and mobile config reports every error
+
+  The production `/api/client-error` route now admits a phone shell's report, which carries no `Origin`, so native faults are logged instead of refused with a 403; a cross-site browser post is still refused. The log line names the surface (`mobile` with the shell version, or `web`). The shell decodes a server error the way the web client does (`decodeErrorBody`, now exported by `@lowdefy/client-core`), so it keeps its class, request id and dev error, and an auth refusal stays an expected outcome. Shell faults that were swallowed (a failed sync, page load, push token registration, background fetch, widget or tracking post, app event) are reported through the core's `handleError`, and a render fault outside a block shows a retry screen instead of closing the app. A network failure is marked where the platform's fetch rejects, so a programming fault is no longer queued as "waiting for network". Sign-in shows "Could not reach the app's server" only for a network failure, a web page that could not be opened is no longer shown as "not found", and a dev page whose plugins are still installing is never cached. Camera, microphone, calendar and location refusals are `UserError`s. The browser error handler's seen set is capped at 500 keys. A mobile sign-in refused by the organization policy is logged as BetterAuth's own refusals are. `lowdefy build` now reports every error in the `mobile` section at once instead of stopping at the first, and a shell's `shell.json` url must be absolute.
+
+- 73fefe9: feat(blocks-native): Add the ActivityTimeline and Composer blocks
+
+  - `ActivityTimeline` draws a record's activity on a thin rail, as GitHub's iOS app draws an issue's. Events show an icon, the actor, a sentence and a relative time ("just now", "5m", "3h", "2d", then the date), refreshed every minute. `formatEvent` words each event type with simple templates (`{actor} moved it to **{what.to|humanize}**`), a rail icon and a tone, chosen by `when` matches; an entry can also carry its own `text`, `icon` and `tone`. Detail events by one actor in a row fold into one line that opens. Gaps read "14 earlier changes by A, B and 2 others" and raise `onExpandGap`; `earlier` adds "Show earlier activity" (`onShowEarlier`).
+  - Comment threads are cards with 28pt initials avatars, "via agent", "· edited", markdown bodies drawn by the Markdown block's renderer with mentions as @Name chips (muted for people who cannot see the record) and `[[KEY]]` record links (`onOpenRecord`). Replies sit flat under the first comment, the newest three with "Show N earlier replies" (`onLoadReplies`). Resolved threads fold to "Thread resolved by X · 3 replies". Reaction pills count, highlight the viewer's own and toggle at once (`onReact`). The ⋯ menu (a native menu) and a long press (the iOS action sheet) give React, Reply (`onReply`), Copy (`onCopy`), Edit on one's own (`onEdit`, in place), Resolve and Reopen (`onResolve`) and Delete on one's own or as an admin (`onDelete`, confirmed).
+  - `Composer` is a comment input whose value is markdown: a field that grows from one line to eight, stays above the keyboard and has a round send button. Typing @ at a word start offers the `mentions` who see the record, ranked like the web; a pick stores `[[user:<id>]]` (`mentionFormat`) and shows "@Name" in the field, and Backspace removes a mention whole. `[[` opens a record picker fed by `onLinkSearch` (debounced 200ms) and `links`. It takes a reply-to banner (`replyTo`, `onCancelReply`), a `warning` line, a counter near `maxLength` (4000), `placeholder`, `autoFocus` and the focus method (SetFocus). `onSubmit` sends `{ body, reply_to }`, and the text clears only when its actions succeed.
+
+- 8e4dfc8: feat: Native `AgentChat` starts a chat about a record from a seed
+
+  The `newChat` method takes `{ sharedState, welcome, input, tag, title }` as its args, so a record page can open a chat about its record: the welcome is laid over the block's `welcome` while the chat is empty, the composer holds the input to edit or send, and the shared state is merged under `sharedState` for that conversation. With `threads`, the thread is saved with the seed's tag in place of `threads.tag` and keeps the seed's title as its name. A new `seed` property takes the same object for a chat that mounts with no thread resumed.
+
+  ```yaml
+  - id: start_task_chat
+    type: CallMethod
+    params:
+      blockId: task_chat
+      method: newChat
+      args:
+        - sharedState:
+            task:
+              key: ACME-12
+          welcome:
+            title: ACME-12 Fix the menu
+          input: What is left on ACME-12?
+          tag: ACME-12
+          title: ACME-12 Fix the menu
+  ```
+
+- dd5c2b1: feat: A native `AgentChat` block, so an app's agent works on the phone as it does on the web
+
+  - `AgentChat` in `@lowdefy/blocks-native` talks to the same `/api/agent` route as the web block, through `@ai-sdk/react`'s `useChat`, with the web block's properties, events and methods where a phone can honour them. Replies stream in as markdown, reasoning sits behind a disclosure, tool calls are compact rows that open to their output, approvals have Reject and Approve, a failed reply has Try again, and a long press copies or regenerates. The composer sits in the Screen's footer above the keyboard, with stop while a reply streams, a new-chat button and the welcome prompts as chips. `update-page-state` writes into the page state, as on the web.
+  - `threads: { module: ai-assistant, scope }` keeps the conversations through the ai-assistant module's endpoints: the chat resumes the thread last opened, saves and names each one, and the `openThreads` method opens a sheet of recent chats where a row opens one and a swipe deletes it. `threads.endpoints` names an app's own endpoints of the same shape.
+  - Attachments are not on mobile yet: the `basic` shell profile has no file or image picker.
+  - Native blocks get `methods.streamFetch`, a server call whose answer streams (the shell's `expo/fetch`, with the bearer session and the shell header), and `useScreenFooter` from `@lowdefy/client-native` draws a block's own chrome in the page footer. A Screen with no footer slot now leaves the footer alone.
+
+- 64159ca: feat(blocks-native): iOS semantic theme, dark mode and native block polish
+
+  - The native theme tokens carry the iOS semantic colours for each mode: `colorGroupedBackground`, `colorCell`, `colorCellNested`, `colorCellPressed`, `colorSystemBackground`, `colorSeparator`, `colorOpaqueSeparator`, `colorLabel`, `colorSecondaryLabel`, `colorTertiaryLabel`, `colorQuaternaryLabel`, `colorSystemFill` to `colorQuaternarySystemFill`, `colorTint` (the mode's `colorPrimary`) and `colorTintFill`. An app sets any of them per mode in `theme.antd.token`, `lightToken` or `darkToken`, and `_theme` reads them.
+  - Dark mode works end to end: pages draw on the grouped background, the shell's navigators take a theme built from the tokens (in place of React Navigation's light grey default), the status bar follows the mode, and the app window takes a mode fixed by config or SetDarkMode so native bars and controls match.
+  - Text follows the iOS text styles in the system font. Title levels 1 to 5 are largeTitle, title1, title2, title3 and headline, and Title and Paragraph take `textStyle`.
+  - An input without a title shows no label, in place of its block id.
+  - `TextInput` takes `variant: search`, the iOS search field. `TextArea` takes `variant: composer`, which grows from one line to six and shows a send button that fires the new `onSend` event and clears the field when its actions succeed.
+  - `Tag` is a pill with `size` (small or default) and a leading `dot`. `Empty` is a ContentUnavailableView with `icon`, `title` and `description`. `Skeleton` shimmers and draws loading list rows with `count`, `rows` and `avatar`. `Button` takes the iOS styles (`solid` as filled, and `tinted`, `gray` and `plain`), iOS sizes and `iconPlacement`, and shows an icon alone when it has no title. `Alert` is an iOS callout, and `Card` an iOS grouped cell.
+
+- 0ccbe0c: feat(blocks-native): Add the native MultipleSelector block
+
+  - `MultipleSelector` on mobile picks several options in a bottom sheet of checkable rows. Its value is an array of the chosen options' values, as on the web.
+  - `variant: sheet` draws the field as the iOS Settings-style row a Selector `variant: sheet` draws: the title at the left, and the chosen labels joined with ", " at the right, "agent-rules, ui +2" when they overflow, or "None", then the up-down chevron. Other variants draw an input box under the title that opens the same sheet.
+  - The sheet shows `menuTitle` with Done at the right, a search field past `searchThreshold`, and the options with the tinted checkmark on the chosen ones. Tapping a row toggles it without closing the sheet. The options chosen when the sheet opens are listed first, and keep their place while rows are toggled. Options take `disabled`, `description`, `avatar`, `icon`, `symbol` and `iconColor` as in the Selector, and `maxCount` limits how many can be chosen.
+  - `onChange` fires once, as the sheet closes (Done, a swipe down, or its screen no longer being shown), when the set of values changed, with the new array as `_event: value`. `changeOn: toggle` fires it on each toggle instead. `onOpenChange` fires as the sheet opens and closes.
+  - `allowCreate: true` adds an "Add “text”" row at the top of the sheet while the search text is no option. `createPattern` (a regular expression) checks the text, and `createPatternMessage` shows in the row while it does not match. An added value is chosen, and stays an option while the block is shown.
+  - To a screen reader the rows are checkboxes with their checked state, and the field's value is the chosen labels.
+  - The Selector sheet's pieces (`PickerSheet`, `PickerOptionRow`, `PickerSearchField`, `getPickerSheetRows`) now serve both blocks; a Selector sheet looks and behaves as before.
+
+- 4210b1d: feat(blocks-native): Selector `variant: sheet`, a picker sheet that shows avatar pictures
+
+  - Selector takes `variant: sheet`: the property row of `variant: menu`, opening a bottom sheet of the options in place of a native menu, as the assignee pickers of Linear's and GitHub's iOS apps. Native menus draw SF Symbols only; the sheet draws each option's avatar picture (or its initials), SF Symbol or icon.
+  - The sheet centres `menuTitle` with a close button, shows a search field when there are more options than `searchThreshold` (default 7) that matches labels ignoring case and accents, and lists 52pt rows with an optional `description` and a checkmark in the tint colour on the chosen row. Options with `pinned: true` sit in a group at the top, under the placeholder item drawn as a dashed circle, above a hairline.
+  - A short list rests at the medium detent; a long list or one with a search field can be dragged to the large detent, which focusing the search field opens. Picking a row fires onChange (and onClear for the placeholder) as the menu does and closes the sheet.
+  - @lowdefy/build's native block types list the Selector's new fallback icons.
+
+- 3cd6d62: fix(client): a read the host fails is sent once more, and a non-JSON error says what happened
+
+  A host can answer a request itself before the app runs, with a plain-text body: a serverless platform's own 500 ("A server error has occurred"), a gateway error or the request timeout's 504. The client parsed every error body as JSON, so the action failed with `Unexpected token 'A', "A server e"... is not valid JSON`.
+
+  Such a response now becomes a `NonJsonResponseError` carrying the status and the start of the body. A 504 says "The request timed out. Try again." and any other status says "The server could not answer (status N). Try again." A page request that only reads is sent once more first, with a console warning: the build marks a request `readOnly` when its plugin's `requestMetas` say its type never writes and any pipeline it has is a literal list without `$out` or `$merge`. Writes, endpoint calls (`CallAPI`) and request types without metadata are never sent again, and a JSON error from the app is never retried.
+
+- Updated dependencies [ff71016]
+- Updated dependencies [afeec0b]
+- Updated dependencies [09dbbee]
+- Updated dependencies [163905d]
+- Updated dependencies [df6fa3c]
+- Updated dependencies [7e24234]
+- Updated dependencies [31d7de8]
+- Updated dependencies [ba2ab81]
+- Updated dependencies [988fc30]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [bb7c249]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [a461f7c]
+- Updated dependencies [3af2019]
+- Updated dependencies [7aec569]
+- Updated dependencies [d8f2f6d]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/ai-utils@7.2.0
+  - @lowdefy/node-utils@7.2.0
+  - @lowdefy/ajv@7.2.0
+  - @lowdefy/operators-js@7.2.0
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/style-native@7.2.0
+  - @lowdefy/block-utils@7.2.0
+  - @lowdefy/operators@7.2.0
+  - @lowdefy/blocks-basic@7.2.0
+  - @lowdefy/codemods@7.2.0
+  - @lowdefy/blocks-loaders@7.2.0
+  - @lowdefy/nunjucks@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

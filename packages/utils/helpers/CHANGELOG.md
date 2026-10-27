@@ -1,5 +1,50 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- b1d42ca: feat(helpers, blocks-table, connection-mongodb): A Table filter reads as one sentence, on the page and from `MongoDBTableQuery`
+
+  A saved view's filter was readable only by opening the filter builder, and a server routine running the view through `MongoDBTableQuery` had no way to say what it matched. `describeCondition({ condition, fields })`, new in `@lowdefy/helpers`, turns a filter condition into a sentence such as "Stage is any of Lead or Won and Name contains CX": field titles, operator words, option labels, relative dates in words, `$user` values as "me", and brackets for groups past the first level. A key that names no field reads "an unknown field, <key>," rather than being dropped. The Table's Filter button shows the sentence as its tooltip. `MongoDBTableQuery` fields accept `title` and `options` as Table columns do, and the response carries `sentence` when a filter is set, the same sentence the Table shows for the same titles and options.
+
+### Patch Changes
+
+- 31d7de8: fix(journeys): `row` and `column` targets work on `Table` and `TableInput` blocks
+
+  A journey step such as `click: { blockId: orders, row: 1, column: actions }` or
+  `expect: { blockId: orders, row: 0, column: name, text: Jane }` only worked on `AgGrid*` blocks.
+  It now finds the displayed row (zero-based) and the column `key` of a `Table` or `TableInput`
+  too, and a click on a row button in a `Table` is recorded with the same `row` and `column`.
+  Header rows, header cells and summary rows are not rows or cells. A `fill` in a `TableInput`
+  cell is not covered yet: the cell shows its input only once an edit starts.
+
+- dd5c2b1: feat: A native `AgentChat` block, so an app's agent works on the phone as it does on the web
+
+  - `AgentChat` in `@lowdefy/blocks-native` talks to the same `/api/agent` route as the web block, through `@ai-sdk/react`'s `useChat`, with the web block's properties, events and methods where a phone can honour them. Replies stream in as markdown, reasoning sits behind a disclosure, tool calls are compact rows that open to their output, approvals have Reject and Approve, a failed reply has Try again, and a long press copies or regenerates. The composer sits in the Screen's footer above the keyboard, with stop while a reply streams, a new-chat button and the welcome prompts as chips. `update-page-state` writes into the page state, as on the web.
+  - `threads: { module: ai-assistant, scope }` keeps the conversations through the ai-assistant module's endpoints: the chat resumes the thread last opened, saves and names each one, and the `openThreads` method opens a sheet of recent chats where a row opens one and a swipe deletes it. `threads.endpoints` names an app's own endpoints of the same shape.
+  - Attachments are not on mobile yet: the `basic` shell profile has no file or image picker.
+  - Native blocks get `methods.streamFetch`, a server call whose answer streams (the shell's `expo/fetch`, with the bearer session and the shell header), and `useScreenFooter` from `@lowdefy/client-native` draws a block's own chrome in the page footer. A Screen with no footer slot now leaves the footer alone.
+
+- 61ae799: feat: Dictation in the native Composer and AgentChat inputs
+
+  - The native Composer and AgentChat inputs have a microphone button. It runs on-device dictation through `expo-speech-recognition`, shows a listening row with the partial transcript, and asks for microphone access with a warning and a Settings link when it is off. A spoken "for Sam, ..." in a Composer turns into a mention as typed text does.
+  - The shell carries `expo-speech-recognition` 58.0.0 in the basic profile, with the microphone and speech recognition usage strings. The shell's `nativeVersion` is now 2, so this needs a new native build.
+  - In Lowdefy Dev, `lowdefy_device` action `inject` takes kind `transcript` (`{ partials, final }` or `{ error }`) for what the next dictation session hears. With no injected transcript, Lowdefy Dev uses the phone's microphone.
+  - Development builds hide the dev menu's floating tools button.
+
+- 3cd6d62: fix(client): a read the host fails is sent once more, and a non-JSON error says what happened
+
+  A host can answer a request itself before the app runs, with a plain-text body: a serverless platform's own 500 ("A server error has occurred"), a gateway error or the request timeout's 504. The client parsed every error body as JSON, so the action failed with `Unexpected token 'A', "A server e"... is not valid JSON`.
+
+  Such a response now becomes a `NonJsonResponseError` carrying the status and the start of the body. A 504 says "The request timed out. Try again." and any other status says "The server could not answer (status N). Try again." A page request that only reads is sent once more first, with a console warning: the build marks a request `readOnly` when its plugin's `requestMetas` say its type never writes and any pipeline it has is a literal list without `$out` or `$merge`. Writes, endpoint calls (`CallAPI`) and request types without metadata are never sent again, and a JSON error from the app is never retried.
+
+- Updated dependencies [df6fa3c]
+- Updated dependencies [f0209f6]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [7aec569]
+  - @lowdefy/errors@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

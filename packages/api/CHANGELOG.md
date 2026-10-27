@@ -1,5 +1,283 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- a41d898: feat(api): Agents mask patterns in the user's messages with `redact`
+
+  An agent's new `redact` property lists regular expressions the server masks in the text of every user message before the model, title generation, tools and `onFinish` hooks see it. Use it to keep ID numbers, email addresses and other personal information a user pastes into a chat away from the AI provider and out of chat history.
+
+  ```yaml
+  agents:
+    - id: support_agent
+      type: ClaudeAgent
+      connectionId: anthropic
+      redact:
+        replacement: '[removed]' # default
+        patterns:
+          - name: email
+            pattern: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+          - '\d(?:[ -]?\d){8,}'
+  ```
+
+  Patterns are strings or `{ name, pattern, flags }` objects, and may be operators. The build rejects a missing or empty `patterns` list, a pattern that is not a string, an invalid regular expression, the sticky flag `y` and a pattern that matches empty text; a pattern an operator returns is checked when the request runs. It applies to chat turns, not to sub-agent calls or the `CallAgent` step. Assistant messages, tool calls and files are left as they are, and the debug log counts replacements by name without the matched text.
+
+- 02842fe: feat(api): A block schema marks how it draws a string with `textKind` (`html` through `renderHtml`, `text` as escaped text), and a Dynamic blocks policy judges a marked value by it. In an HTML-drawn property, a markdown link target, a protocol-relative word (`//x.example`) and, unless the policy allows HTML, a CSS `url()` are words, not URLs; the `html` rule still applies. In a text-drawn property tag syntax is words too. A whole value with a loaded or script scheme (`https:`, `javascript:`, ...) is still checked, and unmarked values keep every check. `Descriptions` titles, labels and values, `Paragraph` and `Title` content, input titles and labels, `Selector`, `MultipleSelector` and `ButtonSelector` option labels and `Table` column titles, header tooltips and `emptyText` are marked `html`; the `ControlledList` title is marked `text`.
+- d143e29: feat(api): A Dynamic blocks policy checks a value as a URL only where it is used as a link or source (URL keys, `urlKind` marks, `Link` params, markdown links and CSS `url()`); everywhere else a URL is text. Text a block draws as HTML or text (`textKind`) no longer has its whole value judged as a URL. `SetState` values are data (only the operator rules apply), unless an input in the content whose value is an object (rich text, uploads, table inputs) draws them. A new `textKind: data` marks values a block stores but never draws (`dataWith` names a sibling the value is data only beside): `Selector`, `MultipleSelector` and shared option `value`s beside a `label`. A new `rowsKind` mark on `Table` and `TableLight` `data` makes the rows data when every column draws its cell as text, no `cell.colorFrom` reads a row field and no `expandable.template` is set. Tags stay checked wherever a property draws HTML.
+- 8b0c8be: feat(api): Link endpoints serve a file at a stable URL, and Tiptap editors save it with `imageSrc`
+
+  An `Api` endpoint with `link: true` answers a `GET` on `/api/endpoints/<endpointId>/<path...>`: its routine runs as the signed-in caller, with `{ path, query }` as payload and the endpoint's `auth` applied, and the endpoint answers `302` to the URL its `:return` gives (an absolute http(s) URL or a path starting with `/`), with `Cache-Control: private, no-store`. Endpoint ids can hold slashes, so the longest link id the URL starts with wins. A signed-out caller on a protected link gets `401`, a caller without its roles `403`, a `:reject` its `:status` (default `400`), all with no body; an unknown id answers `404` (`401` to a signed-out caller on an app with auth), and any other error `500` with a fixed message. A payload its `payloadSchema` refuses answers `400` with no body. A `POST` to a link endpoint is refused as a missing endpoint, and the build refuses one as an MCP tool. The build refuses `link` on `InternalApi` and with `webhook` or `async`, and allows `:status`, not `:body`, on a `:reject` in a link endpoint. Link endpoints must have no side effects, since any page that embeds the URL can trigger the `GET`.
+
+  `TiptapInput` and `TiptapMentionInput` take an `imageSrc` `_function`, called with `{ key, bucket, name, type }` once an image is uploaded; its string is the inserted `src`. It takes precedence over `downloadPolicyRequestId`, so no download request runs. Pointing it at a link endpoint lets the bucket behind inline images stay private.
+
+- 02cf4b1: feat: `mobile.events` holds the app events a phone runs
+
+  A native shell no longer runs the root `events`. They stay web-only, so an action with no native version, like an analytics init, no longer fails on every launch with "Invalid action type ... at app". App events that run on a phone go in `mobile.events` (`onInit`, `onInitAsync`), with the same rules as the root events. The build fails when an action type in `mobile.events` has no native version, as it does on a mobile page, and their types join every mobile page's type set. Their `_js` reaches the shell as module text and stays out of the web client.
+
+- 7b06be6: feat: Phone apps sign in with ordinary sessions sent as bearers
+
+  An app with a `mobile:` section accepts its Better Auth session as `Authorization: Bearer <token>` on every route, for phone shells:
+
+  - A phone signs in on Better Auth's own routes, such as `/api/auth/sign-in/email-otp`, and reads the session token from the `set-auth-token` response header. The header goes only to requests with no `Origin` and no cookies, so page script in a browser never sees it.
+  - Bearer callers resolve like cookie callers, with the same roles, organization and caller stamp, and are read past the cookie cache: signing out, ending sessions or removing a member applies on the next call. Websockets accept the bearer on the upgrade.
+  - `/auth/mobile?shell=<id>&state=<s>` is the page a shell opens in a system sign-in sheet for every other sign-in method. It sends a signed-out person through the app's sign-in page, then redirects to the shell's scheme with a one-time token that lasts one minute and works once.
+  - The email code send is capped at 5 per address per 15 minutes.
+  - New `mobile.auth` keys: `emailCode`, `unlock`, `unlockAfter`, `sharedDevice` and `sessionExpiresIn`, which gives phone sessions their own lifetime. A shell `scheme` must be a lowercase URL scheme and not a web one.
+
+- f05943c: feat(shell): Native actions, `_js`, i18n and icons in the phone shell
+
+  Phone pages now run the same actions and operators as the web. `SetFocus`, `ScrollTo`, `CopyToClipboard` and the local storage actions have native bodies under the same names: focus goes to the control a block registers, `ScrollTo` scrolls the page to a block's measured place, the clipboard is the phone's, and local storage values live in the device store under the app's keys. `SetDarkMode` and `SetLocale` work as on the web. The shell registers the client operators of every default operator package (`_dayjs`, `_nunjucks`, `_mql`, `_jsonata`, `_uuid` and the rest).
+
+  `_js` on mobile pages and in app events runs on the phone: the build gives the app events' client `_js` to the mobile root as module text, as it does for mobile pages. The mobile root also carries the app's `i18n`, and the shell picks the locale as the web does, with dayjs locale data for every locale. Menu icons are drawn from the root's icon data with client-native's new `Icon`, which draws the web's icon data with `react-native-svg`. The shell now passes the root's `theme` and `classMap` to client-native, so classes and the theme mode style blocks on the phone.
+
+- 8158470: feat: Server routes for mobile shells
+
+  - `GET /api/mobile/root` returns what a mobile shell syncs on start: the `mobile.menus` frame with the items the caller may open, menu icon data, the index of the mobile pages the caller may open with each page's hash and type set key, those type sets, `minShellVersion`, and placeholder theme fields. It answers 404 for an app without a `mobile` key. The dev server lists page paths only, without hashes or type sets.
+  - `GET /api/page/*` sends an `ETag`, and both routes answer `304` to a matching `If-None-Match`.
+  - Pages are gated by surface: a request with `x-lowdefy-shell` gets only pages listed in `mobile.pages`, and a browser never gets a page listed only there. The other surface answers `404` with `{ pageConfig: null, surface }`. Page access still comes from `auth.pages`.
+  - `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` are served from `mobile.shells` when a shell declares iOS or Android signing details.
+  - The dev server builds mobile pages on demand, resolving their blocks against the native block set.
+
+- d80e12d: feat: The phone sign-in sheet asks to confirm, gives the phone its own session and returns by app link on Android
+
+  - `/auth/mobile` no longer hands a session to a shell on a GET. A signed-in person sees "Sign in to <app> on this device?", naming the shell and the account, with Continue and Cancel. The one-time token is minted only when the page posts back from the app's own origin with its CSRF token. Cancel returns `error=cancelled` to the shell.
+  - Continue creates a new session for the phone, with the browser session's active organization and the phone lifetime from `mobile.auth.sessionExpiresIn`. The browser's own session is never handed over, marked or extended, so signing out on the phone leaves the browser signed in. A browser session created inside this sign-in is ended once the phone has its own.
+  - Shells send `platform=ios` or `platform=android` (now required). Android returns by the https app link `<app url>/auth/mobile/callback`, verified through `assetlinks.json`, instead of the shell's scheme, so no other app can receive the token. An Android shell needs `android.package` and `android.sha256` in `mobile.shells`. If the link is not verified, `/auth/mobile/callback` asks the person to return to the app and never shows the token. iOS keeps the shell's scheme.
+  - The shell declares the app link in its Android manifest for each app's https url.
+
+- 9aa9608: feat: `@lowdefy/shell`, the Expo app every Lowdefy phone app is built from
+
+  `@lowdefy/shell` is new: an Expo SDK 58 app (React Native 0.88, Hermes, New Architecture) that renders a Lowdefy app's mobile pages natively with `@lowdefy/client-native`. No `ios/` or `android/` folder is committed; Expo writes them at build time.
+
+  - `app.config.ts` reads the shell's `shell.json` from `LOWDEFY_SHELL_CONFIG` (shell id, profile, environment, store links and the one app it opens, with a url per environment), or `shell.dev.json` for Lowdefy Dev. The shell's version and its type manifest, every type it carries with its plugin package and major version, are bundled with its JavaScript.
+  - On start the shell renders the last root config and pages it showed from SQLite, cached per app, caller and roles, then syncs `GET /api/mobile/root` with `If-None-Match` and fetches every page whose hash changed, 4 at a time. Dynamic pages are fetched on each visit.
+  - A page needing a type the shell does not carry at the same major version shows "Update the app to open this page" with the store link, and the rest of the app works. `mobile.minShellVersion` above the shell's version shows that screen for every page.
+  - A page request refused for another server build syncs the root and changed pages and is retried once; a response from another caller drops the screens and opens home under that caller's cache.
+  - Navigation is Expo Router with one route for every page path: `mobile.menus.tabs` become native tabs with a stack each, `drawer` a stack with a menu button, and `stack` one stack. `Screen` pages set the header title, `headerRight` blocks and presentation. A `NoConnection` banner shows while the phone is offline.
+  - Calls carry `x-lowdefy-shell` and the session token as a bearer token, kept in the Keychain or Keystore.
+
+  `GET /api/mobile/root` now also carries the app's `lowdefyApp` (with its `buildId`), `lowdefyGlobal` and app `events`, as the web root config does.
+
+  `@lowdefy/blocks-native` lists the `Screen` page type, so the build accepts mobile pages of that type.
+
+- b54d521: feat(shell): Sign in on the phone by email code or the system sheet, with biometric unlock and sign-out
+
+  - An app with auth opens on a native sign-in screen: the person types their email, then the 6-digit code from the email, which iOS offers to fill in. The screen always says "If this email can sign in, a code is on its way", whether or not the address can. Resend waits 30 seconds.
+  - "Other ways to sign in", `mobile.auth.emailCode: false` and a person with a second factor go to the app's own sign-in page in an ephemeral system sheet. The shell sends a random state and a PKCE challenge, checks the state on the way back and exchanges the one-time token with the code verifier, which never leaves memory.
+  - The session token is kept in the Keychain or Keystore on this device only, behind Face ID or a fingerprint with `mobile.auth.unlock: biometric`, or readable after the first unlock for shells with background location work. It is read once per unlock. The shell sends no cookies.
+  - With `unlock: biometric`, a lock screen shows on launch and after `unlockAfter` seconds in the background, with "Sign in again" as the way out.
+  - Signing out, a Logout action, or the server refusing the session (a 401, or an answer as the signed-out caller) removes the token, every cached page of the app and the person's storage keys, and opens the app afresh. A 403 drops that organisation's cache. `mobile.auth.sharedDevice: true` signs out whenever the app is closed.
+  - The mobile root now carries `auth`: the app's `mobile.auth` settings a shell signs in and locks by, or null for an app without auth.
+
+- 5b19a85: feat: The phone sign-in sheet's one-time token is bound to PKCE
+
+  `/auth/mobile` now requires a PKCE challenge (RFC 7636, S256): `code_challenge`, the 43-character base64url SHA-256 of the shell's code verifier, and `code_challenge_method=S256`. Without them it answers 400. The challenge is stored with the one-time token, and `/api/auth/one-time-token/verify` exchanges the token only when the request also sends `code_verifier`, the verifier the challenge was made from. A missing or wrong verifier is refused and burns the token, so a token another app catches from the shell's custom scheme on Android cannot be exchanged.
+
+  `createPkceChallenge({ verifierBytes, sha256 })` in `@lowdefy/client-core` makes the verifier and challenge from random bytes and the platform's SHA-256.
+
+- 048e010: feat(client-native): Native pages lay out, style and theme blocks as the web does
+
+  The new `@lowdefy/layout-native` package computes Lowdefy's 24-column layout as React Native styles: span, offset, order, push and pull per breakpoint, gaps that match the web's column widths, and flex blocks. A phone picks its breakpoint from its shorter side, so turning it to landscape keeps its layout; a tablet uses its width. The native renderer applies Tailwind `class:` values from the app's class map after operators run, with `dark:` and `sm:`/`md:`/`lg:` variants, and lays each slot's `style` over them; operator-produced and shared-page styles are converted to React Native values. `ThemeProvider` and `useTheme` give native blocks antd's computed tokens for the mode showing, following `theme.darkMode`, the `SetDarkMode` action and the device, and `_media: darkMode` works as on the web. The mobile root (`/api/mobile/root`) now sends the app's `theme` and `classMap`, in production and dev, and pages the dev server builds on request carry the class map entries of their own classes.
+
+- 2ce6fa5: feat(mobile): Push and actionable notifications in every shell
+
+  Every shell carries expo-notifications. `mobile.notifications` names the API endpoints the shell posts its push token to once signed in (`register`, with `{ token, expoToken, platform, provider, shellId, appVersion }`) and at sign-out (`unregister`), how a notification shows while the app is open (`foreground: banner | silent`), and categories of action buttons. A tap opens `data.path` and fires the `onNotificationAction` app event; a button with `endpointId` (Approve, or Reply with `input`) calls the endpoint without opening the app; `snooze: <minutes>` shows the notification again later. `onNotification` fires for a notification received while the app is open, and a push with `data.refreshWidgets` refreshes the widgets. New actions: `ScheduleNotification`, `CancelNotification`, `SetBadgeCount` and `RequestNotificationPermission`. `lowdefy_device inject` with kind `push` now shows the notification in Lowdefy Dev and can tap it or press a button; an APNs payload with `aps` still goes through `simctl push` on an iOS simulator.
+
+- 2ce6fa5: feat(mobile): Share out from every shell, share in with the `share` extension
+
+  The `Share` action opens the share sheet with text, a link, a file on the phone, an https file the shell downloads first, or `base64` content with a `name` (a PDF made on the page). `mobile.shells[].extensions: [share]` adds expo-sharing's share extension: text, links, images, videos and files shared into the app open `mobile.share.pageId` with the payload in the `shared` query key and fire the `onShare` app event. Shell extensions are a new opt-in list (`share`, `widgets`, `contacts`, `calendar`) on top of the profile, written into shell.json by `lowdefy mobile config` and named in the runtime version.
+
+- 2ce6fa5: feat(mobile): Widgets, quick actions, App Shortcuts and background fetch
+
+  `mobile.widgets` lists widget sources (`{ id, title, layout: count | list, endpointId, path }`) for shells with the `widgets` extension: iOS Home Screen and Lock Screen widgets in two fixed layouts, the source picked when the widget is added, refreshed from the endpoints at launch, on resume, on a push with `data.refreshWidgets`, on background fetch and on `RefreshWidgets`. `mobile.shortcuts` (up to 4) become the app icon's quick actions on iOS and Android and the options of one App Shortcuts intent ("Open <shortcut> in <app>") for Siri and Spotlight; choosing one opens its path and fires `onShortcut`. `mobile.background: { endpointId, interval }` runs background fetch while the app is closed: the endpoint's `{ badge, refreshWidgets }` is applied, the offline queue is sent and the cached pages refresh. The build checks every endpoint and page these name.
+
+- 20dd549: feat(api, build): The owner of a new organization can get app roles
+
+  A new signup under `organizations.policy: tenant` with `create: auto` became the `owner` of their own organization with no app roles, so in an app that gates pages, endpoints and menus on app roles, every gated page was closed to them in their own organization. The new `auth.organizations.creatorAppRoles` setting lists the app roles the owner of a new organization gets on their membership:
+
+  ```yaml
+  auth:
+    roles:
+      - id: workspace-admin
+    organizations:
+      policy: tenant
+      creatorAppRoles:
+        - workspace-admin
+  ```
+
+  It applies to the organization a tenant signup mints and to the `CreateOrganization` step when it is given a creator. The owner's organization tier stays `owner`; invited members and users auto-joined to a pinned organization are unchanged. Every listed id must be declared in `auth.roles`, or the build fails naming the unknown id. Unset, it defaults to `[]` and owners get no app roles, as before. Existing memberships are left as they are.
+
+- dfdb8ab: feat(auth): Organizations no longer stop at 100 open invitations; `auth.organizations.invitationLimit` sets a cap
+
+  BetterAuth's organization plugin refuses a new invitation once an organization has 100 open ones, with a 403. Under `pinned` every user of the deployment is invited into the one organization, so a busy app or a bulk invite run could hit the cap and stop inviting anyone. Lowdefy now defaults the cap to 1,000,000, effectively open. The new `invitationLimit` key sets a lower cap when you want one; it takes an integer (at least 1) and is validated at build time.
+
+  Only pending, unexpired invitations count. Past the cap, inviting fails with a 403 and code `INVITATION_LIMIT_REACHED`.
+
+  ```yaml
+  auth:
+    organizations:
+      policy: tenant
+      invitationLimit: 200
+  ```
+
+- 12bb05c: feat(api, plugin-better-auth): Suspend a member in one organization without banning their login
+
+  Two new auth steps, `SuspendMember` and `UnsuspendMember` (`memberId`, and optionally `organizationId`), suspend and restore a membership. A suspended membership keeps its row, app roles, org tier and attributes, so the app's own queries still find the person, but Lowdefy treats it as no membership. The person resolves unauthenticated on every protected page, request and endpoint, their MCP tokens stop working, and a pinned app refuses their sign-in with `MEMBERSHIP_REQUIRED`. Under `tenant`, `ListOrganizations` leaves the organization out and the organization endpoints refuse it. `BanUser` covers every organization and app sharing the auth database, so use this when someone should lose access to only one of them.
+
+  The membership row stores the flag as `suspended: true` in `user-members`; rows without it are not suspended. Both steps need the new `member: [suspend]` permission, which `owner` and `admin` hold. An `owner` cannot be suspended (change their org tier with `UpdateMemberOrgRole` first), and a suspended member cannot be made an `owner`.
+
+### Patch Changes
+
+- ff71016: fix(ai-utils, api): Agent and endpoint logs leave chat text out
+
+  Agent and endpoint logs no longer write chat text, prompts, tool inputs or tool outputs. An agent error is logged as a summary: its name, code, status code and message (cut to 500 characters), the same for up to three causes, and the agent id and conversation id. The message of an AI SDK error is left out, apart from an `APICallError`'s, since errors such as `TypeValidationError` embed the conversation or a tool's input. A failed stream also logs its step count, and a debug line keeps the stack frames without the message. A mid-stream error, which the AI SDK used to write to the console whole, is logged the same way. A `CallAgent` step that fails on an AI SDK error throws a copy with only that summary's name, code and safe message, so the routine's error log cannot write the prompt. The `debug_endpoint` log names an API call by its ids and no longer writes its payload, so an agent chat's save-thread call no longer writes the whole thread there. Routine step debug logs no longer write the values they evaluate: `:set_state` logs the keys it sets, `:if`, `:switch` and `:while` log whether the condition held, `:for` and `:parallel_for` log the item count and index, and `:return`, a request step's result and a called endpoint's response are left out. A `CallAgent` prompt that is not a string is named by its type in the error, as are dynamic page contents that are not an array of blocks. A failed request step still logs its evaluated properties as the error's `received`, as every failed request does.
+
+- 9c044eb: fix(api, plugin-better-auth): CreateOrganization writes the owner's app roles in one write
+
+  The `CreateOrganization` step now writes the organization and its creator's owner membership the same way a tenant signup does, with the `auth.organizations.creatorAppRoles` app roles on that membership from the start. It no longer creates the owner without app roles and adds them in a second write that had to be undone when it failed. If a run fails after writing the organization but before its owner, running the step again with the same creator and slug within ten minutes finishes it, instead of leaving an organization with no owner. Nothing is written until the database's unique indexes are in place.
+
+  The step now checks its properties itself. It takes `name` and `slug` (non-empty strings, required), `logo` (string), `metadata` (object) and `userId` (string), and refuses any other property, so options such as `keepCurrentActiveOrganization` are no longer accepted. A creator that is not a user, or a slug another organization holds, is refused before anything is written. A missing `userId` now always means an organization with no members; it is no longer taken from the caller. The result still lists the owner under `members`.
+
+- 58f2500: fix(api): A Dynamic blocks policy no longer reads one-word values such as `INC:42`, `R:1` or `HH:mm` as URLs. In a value no schema marks as a URL, a whole value is a URL only when it starts with a scheme the browser loads or runs (`http(s):`, `ftp:`, `ws(s):`, `file:`, `blob:`, `filesystem:`, `data:`, `javascript:`, `vbscript:`) or is protocol-relative. URL-marked properties, markdown link targets and CSS `url()` are judged as before.
+- 82d304d: fix(api): A refused magic-link sign-in lands on the error page instead of raw JSON
+
+  A person whose sign-in was refused after following an emailed sign-in link saw BetterAuth's JSON error in the browser (`{"code":"BANNED_USER",...}`). That covered a banned user, an existing user with no membership under `signup: invite-only`, a sign-in that needed a new organization while the auth indexes were unavailable, and a sign-in refused by an auth hook's `:reject`. The sign-in link now redirects to the error callback URL (by default `auth.authPages.error`) with the refusal's code in `?error=` and its message in `?error_description=`, the same way an expired link lands with `?error=INVALID_TOKEN`.
+
+  - An auth hook's `:reject`, or an expected error such as a `:throw`, now carries the code `AUTH_HOOK_REJECTED`. A rejected sign-in through OAuth, or a magic-link sign-up refused at `user.create.before`, also lands on the error page with that code instead of showing JSON. A `Login` or `SignUp` action refused this way carries it as the error's `code`, as it does for every other auth refusal.
+  - A new user refused under `signup: invite-only` now gets the same message as an existing user without a membership, "You have not been granted access to this application.", instead of the bare code `MEMBERSHIP_REQUIRED`. The code is unchanged.
+
+- 2248ec5: fix(api,shell): A stranger can no longer keep a phone out of email-code sign-in
+
+  The phone email-code cap (5 per 15 minutes per address) could be kept full by anyone who knew the address, and parallel requests could get past it. Now:
+
+  - Each send takes a slot atomically, so the cap holds under parallel sends. Password-reset codes are capped too.
+  - The shell keeps a random device key in secure storage and sends it on its email-code calls. A phone that has signed in by code with an address before skips the address's cap and keeps a cap of its own.
+  - The server stores the key only as its SHA-256.
+  - A known phone's code is held for it until it expires. A stranger's send resends the same code rather than replacing it, and only that phone may try it, so wrong tries from anywhere else cannot use it up. The phone is recorded as known only once its sign-in keeps its session, after any second factor.
+  - When the cap is full, the sign-in screen asks for the newest code already sent, rather than staying on the email step.
+
+- 7416223: fix(server, shell, client-core, build, api): Native faults reach the server log, and mobile config reports every error
+
+  The production `/api/client-error` route now admits a phone shell's report, which carries no `Origin`, so native faults are logged instead of refused with a 403; a cross-site browser post is still refused. The log line names the surface (`mobile` with the shell version, or `web`). The shell decodes a server error the way the web client does (`decodeErrorBody`, now exported by `@lowdefy/client-core`), so it keeps its class, request id and dev error, and an auth refusal stays an expected outcome. Shell faults that were swallowed (a failed sync, page load, push token registration, background fetch, widget or tracking post, app event) are reported through the core's `handleError`, and a render fault outside a block shows a retry screen instead of closing the app. A network failure is marked where the platform's fetch rejects, so a programming fault is no longer queued as "waiting for network". Sign-in shows "Could not reach the app's server" only for a network failure, a web page that could not be opened is no longer shown as "not found", and a dev page whose plugins are still installing is never cached. Camera, microphone, calendar and location refusals are `UserError`s. The browser error handler's seen set is capped at 500 keys. A mobile sign-in refused by the organization policy is logged as BetterAuth's own refusals are. `lowdefy build` now reports every error in the `mobile` section at once instead of stopping at the first, and a shell's `shell.json` url must be absolute.
+
+- 8972d38: fix(api): Phone sign-in sheet's Continue is no longer refused
+
+  The sign-in sheet's confirmation page sent `Referrer-Policy: no-referrer`, under which a browser posts its form with `Origin: null`, so the same-origin check refused every Continue with 403 and sheet sign-in (passkeys, SSO, magic link) could not finish. The confirmation page now uses `same-origin`; its url carries no secret, and the redirect that carries the token still sends no Referer.
+
+  A request counts as a phone shell's own only when it also carries no `Sec-Fetch-Mode`, which every current browser sends and page script cannot remove. A same-origin GET from page script with `credentials: 'omit'` sent neither Origin nor Cookie, so script holding a magic-link token could read the session token a phone gets.
+
+- ab1f114: fix(api): The accept page works for a pinned app's invitee on the dev server
+
+  Under `organizations.policy: pinned`, a signed-in user with a pending invitation to the app's organization now resolves as an awaiting-organization caller, as it already did under `tenant`: `_user.awaiting_organization` is `true` and `_user.pending_invitation_id` names the invitation. The server used to resolve them as signed out while the page showed them signed in, so every request from the accept page looked like it came from another user. The page reloaded until it failed with "The server answered as a different user or organization than this page shows". Only an invitation to the app's own organization counts, a user who already holds a member row there signs in again instead, and the caller is still refused on every page that is not public.
+
+- 7c85b4b: fix(api, errors, server): A failed request no longer logs its inputs
+
+  A failed request, on a page or as an endpoint routine step, no longer writes the request's evaluated properties or the connection's error to the logs. The request properties were attached to the error as `received`, which the error log wrote at every log level, so a step that saved an agent chat's thread logged the whole thread when it failed. The connection's error, which can hold the document it rejected, is now carried as a summary: its name, code, status code and message cut to 500 characters, with the same for up to three causes. The error log also names the step by `endpointId`, `stepId` (a page request's id) and `connectionId`. In dev, the dev tools still show the connection's full error; the dev terminal shows the summary. A request type's `meta.credentialProperties` no longer has an effect, since no request property is kept. `errorSummaryForLog`, the error summary agent logs already used, moves to `@lowdefy/errors`.
+
+- a461f7c: fix(deps): Update dependencies for security advisories
+
+  - vite 8.0.16 -> 8.1.6: the dev server no longer serves files outside `server.fs.allow` when a project path matches a system path, and launch-editor's command handling is fixed.
+  - @modelcontextprotocol/sdk 1.31.0 -> 1.32.2: bounds request validation memory, ties experimental tasks to their session, checks a bearer token's audience and stops forwarding headers on cross-origin redirects.
+  - hono 4.13.7 -> 4.13.14: `serveStatic` no longer decodes the path a second time, which let a request bypass middleware.
+  - dompurify 3.4.16 -> 3.4.17: fixes three sanitizer bypasses, one critical.
+  - markdown-it 14.3.1 -> 14.3.3, nodemailer 10.0.13 -> 10.1.7 and undici 7.30.0 -> 7.30.1.
+
+- 3af2019: fix(api, servers, connection-mongodb): Server errors are classified, located and logged the same way everywhere
+
+  Every server site that tells an expected outcome from a fault now asks `isExpectedError`, so an auth refusal or a `UserError` is one warn line on every path: a nested `CallApi`, a websocket frame, a background run, an optional Dynamic block, an MCP tool call and the server error handlers. Faults reach a `handleError` sink instead of a raw `logger.error`: a background, detached or forwarded-cron run that fails, an optional Dynamic block that falls back, an unwalled connection that reaches walled data, an MCP `afterToolCall` hook that fails before its routine runs, an auth email send, and an auth engine error, which goes to a system context's sink. A detached `CallApi` whose dispatch `/api/detached` does not accept is now a fault rather than a completed dispatch. The request context is set before authentication runs, so a fault there is logged with the request id.
+
+  The prod log and Sentry no longer carry `received`, an operator's or control's evaluated input. BetterAuth's own log lines carry an error under `err` and name other values by type only. A connection error that is already typed leaves a request with the step's ids and its cause summarised, and a websocket source's failure is wrapped like a request's, without its evaluated properties. An auth hook that returns a non-object names its type, not the record.
+
+  A MongoDB error that refuses the request (a duplicate key, a malformed pipeline, a missing permission or collection) is now a `RequestError` with the same `code` and `hint`; only a time or memory limit stays a `ServiceError`. A failed unique index build at auth startup names the index and code instead of quoting the duplicate values.
+
+  Config faults carry their config location: endpoint control errors (`:for`, `:while`, `:if`, `:switch`, `:parallel_for`, `:log`) are `ConfigError`s at the control, and the detached `CRON_SECRET` check, cron forwarding, the auth secret, the invitation sender and the auth email connection name theirs. An auth hook's `:throw` now refuses the write with a 400 instead of a 500.
+
+  On the server, `_log` writes an info line through the request's logger instead of `console.log`, so secrets and values marked with `_credential` are removed from it like from every other log line. In the browser it still logs to the console.
+
+- Updated dependencies [a41d898]
+- Updated dependencies [afeec0b]
+- Updated dependencies [bb799e9]
+- Updated dependencies [b7b8445]
+- Updated dependencies [09dbbee]
+- Updated dependencies [163905d]
+- Updated dependencies [9c044eb]
+- Updated dependencies [df6fa3c]
+- Updated dependencies [7e24234]
+- Updated dependencies [31d7de8]
+- Updated dependencies [8b0c8be]
+- Updated dependencies [3f4c3f8]
+- Updated dependencies [ba2ab81]
+- Updated dependencies [02cf4b1]
+- Updated dependencies [7b06be6]
+- Updated dependencies [7416223]
+- Updated dependencies [74122f0]
+- Updated dependencies [f05943c]
+- Updated dependencies [083821c]
+- Updated dependencies [8158470]
+- Updated dependencies [d80e12d]
+- Updated dependencies [3f8aa1f]
+- Updated dependencies [988fc30]
+- Updated dependencies [73fefe9]
+- Updated dependencies [8e4dfc8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [2f7a526]
+- Updated dependencies [bd50d64]
+- Updated dependencies [8736703]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [54f0579]
+- Updated dependencies [64159ca]
+- Updated dependencies [048e010]
+- Updated dependencies [78e54ea]
+- Updated dependencies [9e97d17]
+- Updated dependencies [0ccbe0c]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [1663aa9]
+- Updated dependencies [bb7c249]
+- Updated dependencies [4210b1d]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [20dd549]
+- Updated dependencies [dfdb8ab]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [a461f7c]
+- Updated dependencies [3af2019]
+- Updated dependencies [7aec569]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/build@7.2.0
+  - @lowdefy/node-utils@7.2.0
+  - @lowdefy/ajv@7.2.0
+  - @lowdefy/operators-js@7.2.0
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/operators@7.2.0
+  - @lowdefy/connection-smtp@7.2.0
+  - @lowdefy/email-templates@7.2.0
+  - @lowdefy/nunjucks@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

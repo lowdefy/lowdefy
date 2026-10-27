@@ -1,5 +1,35 @@
 # @lowdefy/plugin-better-auth
 
+## 7.2.0
+
+### Minor Changes
+
+- 12bb05c: feat(api, plugin-better-auth): Suspend a member in one organization without banning their login
+
+  Two new auth steps, `SuspendMember` and `UnsuspendMember` (`memberId`, and optionally `organizationId`), suspend and restore a membership. A suspended membership keeps its row, app roles, org tier and attributes, so the app's own queries still find the person, but Lowdefy treats it as no membership. The person resolves unauthenticated on every protected page, request and endpoint, their MCP tokens stop working, and a pinned app refuses their sign-in with `MEMBERSHIP_REQUIRED`. Under `tenant`, `ListOrganizations` leaves the organization out and the organization endpoints refuse it. `BanUser` covers every organization and app sharing the auth database, so use this when someone should lose access to only one of them.
+
+  The membership row stores the flag as `suspended: true` in `user-members`; rows without it are not suspended. Both steps need the new `member: [suspend]` permission, which `owner` and `admin` hold. An `owner` cannot be suspended (change their org tier with `UpdateMemberOrgRole` first), and a suspended member cannot be made an `owner`.
+
+### Patch Changes
+
+- 9c044eb: fix(api, plugin-better-auth): CreateOrganization writes the owner's app roles in one write
+
+  The `CreateOrganization` step now writes the organization and its creator's owner membership the same way a tenant signup does, with the `auth.organizations.creatorAppRoles` app roles on that membership from the start. It no longer creates the owner without app roles and adds them in a second write that had to be undone when it failed. If a run fails after writing the organization but before its owner, running the step again with the same creator and slug within ten minutes finishes it, instead of leaving an organization with no owner. Nothing is written until the database's unique indexes are in place.
+
+  The step now checks its properties itself. It takes `name` and `slug` (non-empty strings, required), `logo` (string), `metadata` (object) and `userId` (string), and refuses any other property, so options such as `keepCurrentActiveOrganization` are no longer accepted. A creator that is not a user, or a slug another organization holds, is refused before anything is written. A missing `userId` now always means an organization with no members; it is no longer taken from the caller. The result still lists the owner under `members`.
+
+- Updated dependencies [df6fa3c]
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [7aec569]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/helpers@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

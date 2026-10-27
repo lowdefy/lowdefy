@@ -1,5 +1,103 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- a41d898: feat(api): Agents mask patterns in the user's messages with `redact`
+
+  An agent's new `redact` property lists regular expressions the server masks in the text of every user message before the model, title generation, tools and `onFinish` hooks see it. Use it to keep ID numbers, email addresses and other personal information a user pastes into a chat away from the AI provider and out of chat history.
+
+  ```yaml
+  agents:
+    - id: support_agent
+      type: ClaudeAgent
+      connectionId: anthropic
+      redact:
+        replacement: '[removed]' # default
+        patterns:
+          - name: email
+            pattern: '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+          - '\d(?:[ -]?\d){8,}'
+  ```
+
+  Patterns are strings or `{ name, pattern, flags }` objects, and may be operators. The build rejects a missing or empty `patterns` list, a pattern that is not a string, an invalid regular expression, the sticky flag `y` and a pattern that matches empty text; a pattern an operator returns is checked when the request runs. It applies to chat turns, not to sub-agent calls or the `CallAgent` step. Assistant messages, tool calls and files are left as they are, and the debug log counts replacements by name without the matched text.
+
+- 8b0c8be: feat(api): Link endpoints serve a file at a stable URL, and Tiptap editors save it with `imageSrc`
+
+  An `Api` endpoint with `link: true` answers a `GET` on `/api/endpoints/<endpointId>/<path...>`: its routine runs as the signed-in caller, with `{ path, query }` as payload and the endpoint's `auth` applied, and the endpoint answers `302` to the URL its `:return` gives (an absolute http(s) URL or a path starting with `/`), with `Cache-Control: private, no-store`. Endpoint ids can hold slashes, so the longest link id the URL starts with wins. A signed-out caller on a protected link gets `401`, a caller without its roles `403`, a `:reject` its `:status` (default `400`), all with no body; an unknown id answers `404` (`401` to a signed-out caller on an app with auth), and any other error `500` with a fixed message. A payload its `payloadSchema` refuses answers `400` with no body. A `POST` to a link endpoint is refused as a missing endpoint, and the build refuses one as an MCP tool. The build refuses `link` on `InternalApi` and with `webhook` or `async`, and allows `:status`, not `:body`, on a `:reject` in a link endpoint. Link endpoints must have no side effects, since any page that embeds the URL can trigger the `GET`.
+
+  `TiptapInput` and `TiptapMentionInput` take an `imageSrc` `_function`, called with `{ key, bucket, name, type }` once an image is uploaded; its string is the inserted `src`. It takes precedence over `downloadPolicyRequestId`, so no download request runs. Pointing it at a link endpoint lets the bucket behind inline images stay private.
+
+- 20dd549: feat(api, build): The owner of a new organization can get app roles
+
+  A new signup under `organizations.policy: tenant` with `create: auto` became the `owner` of their own organization with no app roles, so in an app that gates pages, endpoints and menus on app roles, every gated page was closed to them in their own organization. The new `auth.organizations.creatorAppRoles` setting lists the app roles the owner of a new organization gets on their membership:
+
+  ```yaml
+  auth:
+    roles:
+      - id: workspace-admin
+    organizations:
+      policy: tenant
+      creatorAppRoles:
+        - workspace-admin
+  ```
+
+  It applies to the organization a tenant signup mints and to the `CreateOrganization` step when it is given a creator. The owner's organization tier stays `owner`; invited members and users auto-joined to a pinned organization are unchanged. Every listed id must be declared in `auth.roles`, or the build fails naming the unknown id. Unset, it defaults to `[]` and owners get no app roles, as before. Existing memberships are left as they are.
+
+### Patch Changes
+
+- 163905d: fix(operators-js): `_base64` in the browser encodes and decodes UTF-8 text
+
+  `_base64.encode` and `_base64.decode` in the browser now read and write the UTF-8 bytes of a string, like the server and `_build` versions. Before, the browser used Latin-1: text with an accented letter encoded to a different value than on the server, decoding server-encoded text gave garbled characters, and text such as emoji or Chinese threw an `Invalid character` error. `_base64.decode` in the browser also accepts base64url and unpadded input, as the server does. Other characters outside the base64 alphabet still throw in the browser, where the server ignores them.
+
+  ASCII text encodes and decodes as before. Non-ASCII text that an earlier version encoded in the browser is Latin-1, not UTF-8, so `_base64.decode` in the browser now throws an error for it instead of returning the original text. Re-encode stored values like these. Base64 of bytes that are not UTF-8 text, such as binary files, also throws in the browser, where the server replaces the invalid bytes with U+FFFD.
+
+- c84f275: fix(client): A sign-in that stays on the page renders the signed-in user before the action returns
+
+  A sign-in with `callbackUrl: false`, which stays on the page, now finishes by asking the server who signed in, as `UpdateSession` does, and renders that user before the `Login` action returns. The next action in the chain, such as a request, is answered as the user the page shows. Before, that request could reload the page and lose the page's state. If the page cannot get the signed-in user from the server, it reloads in place rather than failing a sign-in that succeeded.
+
+- 74122f0: Mobile apps are experimental: the `mobile` section and `offline` on requests build only when the app sets `config.experimental.mobile: true`. Without it the build fails with a message that names the flag. The new docs page, Mobile Apps (Experimental), covers the section, capability profiles, offline requests, sign-in and the phone dev loop.
+- ab1f114: fix(api): The accept page works for a pinned app's invitee on the dev server
+
+  Under `organizations.policy: pinned`, a signed-in user with a pending invitation to the app's organization now resolves as an awaiting-organization caller, as it already did under `tenant`: `_user.awaiting_organization` is `true` and `_user.pending_invitation_id` names the invitation. The server used to resolve them as signed out while the page showed them signed in, so every request from the accept page looked like it came from another user. The page reloaded until it failed with "The server answered as a different user or organization than this page shows". Only an invitation to the app's own organization counts, a user who already holds a member row there signs in again instead, and the caller is still refused on every page that is not public.
+
+- d8f2f6d: feat(server-dev): A smaller dev server agent surface, so an agent session starts on about half the tokens.
+
+  Removed dev tools: `lowdefy_list_plugins`, `lowdefy_get_plugin_doc`, `lowdefy_overview`, `lowdefy_scaffold_page`, `lowdefy_checkpoint`, `lowdefy_revert_checkpoint`, `lowdefy_snapshot_state`, `lowdefy_load_state`, `lowdefy_list_state_checkpoints` and `lowdefy_checkpoint_to_mocks`. The config and state checkpoint stores, the `?_checkpoint=` URL and the dev mock registry go with them. Use git for config checkpoints, `list_types` for a type's package, and `get_doc` or `search_docs` for plugin docs. `lowdefy_restart` stays, hidden.
+
+  Merged: `lowdefy_eval_operator` is now the optional `expression` argument of `lowdefy_inspect_state`. It takes the same `pageId`, `pathParams`, `source`, `user` and `data` arguments, and returns `{ value, errors, source, reads }`, where `reads` names the paths the expression read. A dev server older than this release answers `expression` with plain state and no value.
+
+  Removed HTTP routes under `/lowdefy-docs` that only mirrored a tool: `app-map`, `checkpoints*`, `state-checkpoints*`, `eval-operator`, `run-request`, `run-endpoint`, `inspect-state`, `screenshot`, `plugins`, `schema`, `examples`, `search`, `icons`, `plugin-doc`, `content` and `:kind`. `build-status`, `journey`, `mutants`, `page-config`, `find`, `events`, `restart`, `mcp` and `GET /lowdefy-docs` stay.
+
+  The MCP instructions shrink from 7,000 to at most 2,500 characters, and the dev server's `tools/list` to at most 25,000. The journey step grammar is served only by `lowdefy_get_schema` with `kind: "journey-step"`. Tool results are compact JSON, and `lowdefy_get_page_config` now answers `{ page }`, or `{ block }` with the new optional `blockId` for one block's subtree, writing a page over 40,000 characters to `pageFile` instead. `GET /lowdefy-docs/page-config` still returns the full page.
+
+  fix(cli): `lowdefy mcp` logs each tool call to `tool-calls.jsonl` in the Lowdefy home: the tool, the app, the time, the duration and whether it worked, with no arguments or results. The file stays on your machine and rolls over at 1 MB. `lowdefy agent-setup` no longer repeats the dev server rules between AGENTS.md and the `lowdefy-config` skill. Tests hold the shim's `tools/list` for a current server to 40,000 characters.
+
+- 12bb05c: feat(api, plugin-better-auth): Suspend a member in one organization without banning their login
+
+  Two new auth steps, `SuspendMember` and `UnsuspendMember` (`memberId`, and optionally `organizationId`), suspend and restore a membership. A suspended membership keeps its row, app roles, org tier and attributes, so the app's own queries still find the person, but Lowdefy treats it as no membership. The person resolves unauthenticated on every protected page, request and endpoint, their MCP tokens stop working, and a pinned app refuses their sign-in with `MEMBERSHIP_REQUIRED`. Under `tenant`, `ListOrganizations` leaves the organization out and the organization endpoints refuse it. `BanUser` covers every organization and app sharing the auth database, so use this when someone should lose access to only one of them.
+
+  The membership row stores the flag as `suspended: true` in `user-members`; rows without it are not suspended. Both steps need the new `member: [suspend]` permission, which `owner` and `admin` hold. An `owner` cannot be suspended (change their org tier with `UpdateMemberOrgRole` first), and a suspended member cannot be made an `owner`.
+
+- 962ac05: feat(blocks-table): The Table cell details panel can load a cell's raw result on demand
+
+  An enrichment or ai cell keeps the provider's whole answer as its raw result, often many times the size of the value, and the rows sent to the browser carried it for every cell although only the details panel shows it. The new `rawEndpoint` property names an API endpoint that returns one cell's raw result: rows can leave `_enrich.<key>.raw` out, and the details panel calls the endpoint with `{ rowKey, key }` when it opens a finished cell whose row has none, showing "Loading the raw result…" meanwhile and an error if the call fails. It loads again when the cell finishes a new run. A table without `rawEndpoint`, or a row that carries the raw result, works as before. TableLight names `rawEndpoint` as a Table-only property.
+
+- f51a6cc: fix(blocks-table): The details panel, TableInput and openFilter fixes from the Table review
+
+  - An app with a Table builds again. The date column filter imported `getOperatorLabel` from a file that had moved to `@lowdefy/helpers`, so the client bundle failed with "Could not resolve './getOperatorLabel.js'".
+  - A raw result the details panel loads from `rawEndpoint` no longer offers to add its values as extract columns. Extract columns read the raw result from the row, which such rows leave out, so a column added that way stayed empty. The panel now says the result was loaded and shows it read-only. Switching the open panel to another cell no longer shows the previous cell's raw result for a frame.
+  - TableInput names `rawEndpoint` as a Table-only property, as TableLight does, so a TableInput config that sets it fails the build with that message instead of accepting a property it never uses.
+  - A condition `openFilter({ key })` asked to focus is dropped if it has not appeared after about a second, or when the builder closes. Before, the next plain click on Filter could focus that old condition. `openFilter` also preloads the builder, as hovering the Filter button does.
+
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/helpers@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

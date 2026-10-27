@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/email-templates",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -22,8 +22,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/helpers": "7.1.0",
-    "@lowdefy/nunjucks": "7.1.0",
+    "@lowdefy/helpers": "7.2.0",
+    "@lowdefy/nunjucks": "7.2.0",
     "@react-email/components": "1.0.12",
     "@react-email/render": "2.0.10",
     "markdown-it": "14.3.3"
@@ -33,7 +33,7 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "7.1.0",
+    "@lowdefy/ajv": "7.2.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "react": "18.2.0",

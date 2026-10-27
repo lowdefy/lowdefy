@@ -1,5 +1,77 @@
 # @lowdefy/docs-content
 
+## 7.2.0
+
+### Minor Changes
+
+- 20dd549: feat(api, build): The owner of a new organization can get app roles
+
+  A new signup under `organizations.policy: tenant` with `create: auto` became the `owner` of their own organization with no app roles, so in an app that gates pages, endpoints and menus on app roles, every gated page was closed to them in their own organization. The new `auth.organizations.creatorAppRoles` setting lists the app roles the owner of a new organization gets on their membership:
+
+  ```yaml
+  auth:
+    roles:
+      - id: workspace-admin
+    organizations:
+      policy: tenant
+      creatorAppRoles:
+        - workspace-admin
+  ```
+
+  It applies to the organization a tenant signup mints and to the `CreateOrganization` step when it is given a creator. The owner's organization tier stays `owner`; invited members and users auto-joined to a pinned organization are unchanged. Every listed id must be declared in `auth.roles`, or the build fails naming the unknown id. Unset, it defaults to `[]` and owners get no app roles, as before. Existing memberships are left as they are.
+
+### Patch Changes
+
+- afeec0b: feat(server-dev): Agent tools take a device
+
+  - `lowdefy_screenshot_page` and `lowdefy_run_journey` take `device`, a phone's tab id from the new `lowdefy_device list`. Steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot` and `expect` with `state`) run on the phone in Lowdefy Dev by block id. A screenshot is taken with `xcrun simctl io` on a simulator, `adb exec-out screencap` on an Android device, or by Lowdefy Dev from its own view on a paired phone, and says which.
+  - `lowdefy_inspect_state`, `lowdefy_snapshot_state` and `lowdefy_load_state` take `device` and read the phone's live state, or load a checkpoint into it.
+  - New `lowdefy_device` tool: `list` the connected phones, booted simulators and Android devices; `start` Lowdefy Dev on a simulator or emulator, as `lowdefy dev --ios` or `--android` does; `inject` a phone's next scan, photo, NFC read, location, permission answer, push or network state. On an iOS simulator a location and permission are also set with `simctl`, and a push is delivered with `simctl push`.
+  - `lowdefy_list_types` takes `target: web | mobile`; with `mobile` it lists the blocks, actions and client operators a native shell carries, which dev builds now write to `plugins/availableTypesMobile.json`.
+  - Client errors in `lowdefy_build_status` carry `surface` (`web` or `mobile`, with the phone's shell version).
+  - Lowdefy Dev names its platform and app id when it joins the dev server, and answers state checkpoint loads.
+  - The simulator and emulator helpers of `lowdefy dev --ios` and `--android` move to `@lowdefy/node-utils`, shared with the dev server.
+
+- 163905d: fix(operators-js): `_base64` in the browser encodes and decodes UTF-8 text
+
+  `_base64.encode` and `_base64.decode` in the browser now read and write the UTF-8 bytes of a string, like the server and `_build` versions. Before, the browser used Latin-1: text with an accented letter encoded to a different value than on the server, decoding server-encoded text gave garbled characters, and text such as emoji or Chinese threw an `Invalid character` error. `_base64.decode` in the browser also accepts base64url and unpadded input, as the server does. Other characters outside the base64 alphabet still throw in the browser, where the server ignores them.
+
+  ASCII text encodes and decodes as before. Non-ASCII text that an earlier version encoded in the browser is Latin-1, not UTF-8, so `_base64.decode` in the browser now throws an error for it instead of returning the original text. Re-encode stored values like these. Base64 of bytes that are not UTF-8 text, such as binary files, also throws in the browser, where the server replaces the invalid bytes with U+FFFD.
+
+- 0d53174: feat(server-dev): Remove the in-page annotation overlay
+
+  The dev server no longer has the Cmd/Ctrl+/ annotation overlay or its `POST /lowdefy-feedback` route. Point a coding agent at the page instead: it can take screenshots and read live state through the dev server's MCP tools. Option/Alt+click to open a block's yaml in VS Code stays. The dev server's start-up notice now names Option/Alt+click for it, where it said Cmd/Ctrl+click. `lowdefy agent-setup` no longer writes the visual feedback section into AGENTS.md and the skill.
+
+- d8f2f6d: feat(server-dev): A smaller dev server agent surface, so an agent session starts on about half the tokens.
+
+  Removed dev tools: `lowdefy_list_plugins`, `lowdefy_get_plugin_doc`, `lowdefy_overview`, `lowdefy_scaffold_page`, `lowdefy_checkpoint`, `lowdefy_revert_checkpoint`, `lowdefy_snapshot_state`, `lowdefy_load_state`, `lowdefy_list_state_checkpoints` and `lowdefy_checkpoint_to_mocks`. The config and state checkpoint stores, the `?_checkpoint=` URL and the dev mock registry go with them. Use git for config checkpoints, `list_types` for a type's package, and `get_doc` or `search_docs` for plugin docs. `lowdefy_restart` stays, hidden.
+
+  Merged: `lowdefy_eval_operator` is now the optional `expression` argument of `lowdefy_inspect_state`. It takes the same `pageId`, `pathParams`, `source`, `user` and `data` arguments, and returns `{ value, errors, source, reads }`, where `reads` names the paths the expression read. A dev server older than this release answers `expression` with plain state and no value.
+
+  Removed HTTP routes under `/lowdefy-docs` that only mirrored a tool: `app-map`, `checkpoints*`, `state-checkpoints*`, `eval-operator`, `run-request`, `run-endpoint`, `inspect-state`, `screenshot`, `plugins`, `schema`, `examples`, `search`, `icons`, `plugin-doc`, `content` and `:kind`. `build-status`, `journey`, `mutants`, `page-config`, `find`, `events`, `restart`, `mcp` and `GET /lowdefy-docs` stay.
+
+  The MCP instructions shrink from 7,000 to at most 2,500 characters, and the dev server's `tools/list` to at most 25,000. The journey step grammar is served only by `lowdefy_get_schema` with `kind: "journey-step"`. Tool results are compact JSON, and `lowdefy_get_page_config` now answers `{ page }`, or `{ block }` with the new optional `blockId` for one block's subtree, writing a page over 40,000 characters to `pageFile` instead. `GET /lowdefy-docs/page-config` still returns the full page.
+
+  fix(cli): `lowdefy mcp` logs each tool call to `tool-calls.jsonl` in the Lowdefy home: the tool, the app, the time, the duration and whether it worked, with no arguments or results. The file stays on your machine and rolls over at 1 MB. `lowdefy agent-setup` no longer repeats the dev server rules between AGENTS.md and the `lowdefy-config` skill. Tests hold the shim's `tools/list` for a current server to 40,000 characters.
+
+- 12bb05c: feat(api, plugin-better-auth): Suspend a member in one organization without banning their login
+
+  Two new auth steps, `SuspendMember` and `UnsuspendMember` (`memberId`, and optionally `organizationId`), suspend and restore a membership. A suspended membership keeps its row, app roles, org tier and attributes, so the app's own queries still find the person, but Lowdefy treats it as no membership. The person resolves unauthenticated on every protected page, request and endpoint, their MCP tokens stop working, and a pinned app refuses their sign-in with `MEMBERSHIP_REQUIRED`. Under `tenant`, `ListOrganizations` leaves the organization out and the organization endpoints refuse it. `BanUser` covers every organization and app sharing the auth database, so use this when someone should lose access to only one of them.
+
+  The membership row stores the flag as `suspended: true` in `user-members`; rows without it are not suspended. Both steps need the new `member: [suspend]` permission, which `owner` and `admin` hold. An `owner` cannot be suspended (change their org tier with `UpdateMemberOrgRole` first), and a suspended member cannot be made an `owner`.
+
+- 962ac05: feat(blocks-table): The Table cell details panel can load a cell's raw result on demand
+
+  An enrichment or ai cell keeps the provider's whole answer as its raw result, often many times the size of the value, and the rows sent to the browser carried it for every cell although only the details panel shows it. The new `rawEndpoint` property names an API endpoint that returns one cell's raw result: rows can leave `_enrich.<key>.raw` out, and the details panel calls the endpoint with `{ rowKey, key }` when it opens a finished cell whose row has none, showing "Loading the raw result…" meanwhile and an error if the call fails. It loads again when the cell finishes a new run. A table without `rawEndpoint`, or a row that carries the raw result, works as before. TableLight names `rawEndpoint` as a Table-only property.
+
+- f51a6cc: fix(blocks-table): The details panel, TableInput and openFilter fixes from the Table review
+
+  - An app with a Table builds again. The date column filter imported `getOperatorLabel` from a file that had moved to `@lowdefy/helpers`, so the client bundle failed with "Could not resolve './getOperatorLabel.js'".
+  - A raw result the details panel loads from `rawEndpoint` no longer offers to add its values as extract columns. Extract columns read the raw result from the row, which such rows leave out, so a column added that way stayed empty. The panel now says the result was loaded and shows it read-only. Switching the open panel to another cell no longer shows the previous cell's raw result for a frame.
+  - TableInput names `rawEndpoint` as a Table-only property, as TableLight does, so a TableInput config that sets it fails the build with that message instead of accepting a property it never uses.
+  - A condition `openFilter({ key })` asked to focus is dropped if it has not appeared after about a second, or when the builder closes. Before, the next plain click on Filter could focus that old condition. `openFilter` also preloads the builder, as hovering the Filter button does.
+  - @lowdefy/nunjucks@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

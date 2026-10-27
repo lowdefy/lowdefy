@@ -1,5 +1,67 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- 29fd1a6: feat(shell): Lowdefy Dev fakes device results for agents and records what you do on the phone
+
+  - The dev-tab client answers `inject` requests: the next scan, photo or NFC read, a location or a route of them, a permission answer, and network offline or online. While offline, every fetch the app makes fails as it does with no network. Push injection is refused until the shell carries `expo-notifications`.
+  - Device actions read injections through one helper, `injected(name)`, which returns nothing in a release shell. `GeolocationCurrentPosition` answers on the phone with an injected location, or a denied permission, in the web action's shape.
+  - Lowdefy Dev records clicks, changes, Enter presses and page views by block id in the web recorder's record shape, labelled with the device and shell version, so `lowdefy journeys session` lists and prints phone sessions. Password inputs are never recorded.
+  - The engine trace gains `reportInteraction` and `subscribeInteractions`, and the native renderer reports block presses and changes through them. The recorder's record building moves to `@lowdefy/client-core`, shared by the web and phone recorders.
+  - A release shell no longer links `expo-sensors`, `react-native-view-shot` or, unless its shell config's `capabilities` include `camera`, `expo-camera`, and asks for none of their permissions. `check:release-bundle` runs `expo prebuild` and fails a release shell that still links them or asks for the camera it does not need.
+
+- 2ce6fa5: feat(mobile): Offline request queue for `offline: queue` requests
+
+  A request with `offline: queue` is kept by a mobile shell while it has no signal, or when the send fails for the network, and sent in order when the signal returns or the app starts. The action resolves with `{ queued: true, id }`. The payload is evaluated once, when the action runs, and sent unchanged, so a `_uuid` in the payload is a stable idempotency key. A 2xx removes the request; any other server answer marks it failed with the server's message until `RetryRequestQueue` or `DiscardQueuedRequest`. The `onRequestQueue` app event and `GetRequestQueue` report `{ pending, failed, items }`. Sign-out clears the queue. On the web the key is ignored. The engine passes the request's `offline` to the core's `callRequest`, which sends it through a host's `requestQueue` when the host has one.
+
+- bb7c249: feat(client-native): iOS Screen headers, tab bar icons and per-screen page state
+
+  - `Screen` takes `largeTitle` (an iOS large title that collapses as the page scrolls), `headerSearch` (a native search bar with `placeholder`, `autoFocus`, `debounce` and `hideWhenScrolling`, firing `onSearch` and `onSearchChange` with `_event: value`) and `headerActions` (`[{ id, icon, sfSymbol, title, placement, event, disabled }]`, compact icon buttons that iOS draws as native SF Symbol bar buttons, firing `onHeaderAction` with `_event: id` or their own `event`).
+  - `Screen` events `onRefresh` (pull-to-refresh, refreshing until the actions finish) and `onFocus` (each time the screen is shown: first show after onMount, a tab switch, back navigation).
+  - The `headerLeft` and `headerRight` slots draw their blocks at their natural size, so a header button is no longer a full-width capsule that truncates the title.
+  - Two screens of one page in a stack keep their own page state, keyed by route instance, and each reads `_url_query` and `_location` from its own route, not the focused one. A tab's page opened by a link keeps its query.
+  - `mobile.menus.tabs` items draw their icon in the native tab bar: an SF Symbol on iOS (`sfSymbol`, or the symbol mapped from the Lucide or semantic icon name), the Lucide icon elsewhere, the selected tab in the theme's primary colour. `role: search` makes an item iOS 26's search tab.
+  - The engine's `getContext` takes an `instanceId` and the screen's own `globals`.
+
+### Patch Changes
+
+- 029208c: fix(engine): Every mounted copy of a page re-renders when its state changes.
+
+  A page context now keeps a set of React updaters per block (`createUpdaters`) instead of one, and each Block component adds its own while mounted and removes it on unmount. A native shell can show one page instance on two screens (in two tabs' stacks, or pushed again over itself); the copy that mounted last no longer takes the other's re-renders.
+
+- 9419d09: Cap the dev tab's event and call histories (dev only), close idle headless browsers after 45 s and keep at most 10 rendered instances per page in the tab list.
+- 31d7de8: fix(journeys): `row` and `column` targets work on `Table` and `TableInput` blocks
+
+  A journey step such as `click: { blockId: orders, row: 1, column: actions }` or
+  `expect: { blockId: orders, row: 0, column: name, text: Jane }` only worked on `AgGrid*` blocks.
+  It now finds the displayed row (zero-based) and the column `key` of a `Table` or `TableInput`
+  too, and a click on a row button in a `Table` is recorded with the same `row` and `column`.
+  Header rows, header cells and summary rows are not rows or cells. A `fill` in a `TableInput`
+  cell is not covered yet: the cell shows its input only once an edit starts.
+
+- 3cd6d62: fix(client): a read the host fails is sent once more, and a non-JSON error says what happened
+
+  A host can answer a request itself before the app runs, with a plain-text body: a serverless platform's own 500 ("A server error has occurred"), a gateway error or the request timeout's 504. The client parsed every error body as JSON, so the action failed with `Unexpected token 'A', "A server e"... is not valid JSON`.
+
+  Such a response now becomes a `NonJsonResponseError` carrying the status and the start of the body. A 504 says "The request timed out. Try again." and any other status says "The server could not answer (status N). Try again." A page request that only reads is sent once more first, with a console warning: the build marks a request `readOnly` when its plugin's `requestMetas` say its type never writes and any pipeline it has is a literal list without `$out` or `$merge`. Writes, endpoint calls (`CallAPI`) and request types without metadata are never sent again, and a JSON error from the app is never retried.
+
+- Updated dependencies [df6fa3c]
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [bb7c249]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [3af2019]
+- Updated dependencies [7aec569]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/operators@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

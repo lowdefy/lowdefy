@@ -1,5 +1,311 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- afeec0b: feat(server-dev): Agent tools take a device
+
+  - `lowdefy_screenshot_page` and `lowdefy_run_journey` take `device`, a phone's tab id from the new `lowdefy_device list`. Steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot` and `expect` with `state`) run on the phone in Lowdefy Dev by block id. A screenshot is taken with `xcrun simctl io` on a simulator, `adb exec-out screencap` on an Android device, or by Lowdefy Dev from its own view on a paired phone, and says which.
+  - `lowdefy_inspect_state`, `lowdefy_snapshot_state` and `lowdefy_load_state` take `device` and read the phone's live state, or load a checkpoint into it.
+  - New `lowdefy_device` tool: `list` the connected phones, booted simulators and Android devices; `start` Lowdefy Dev on a simulator or emulator, as `lowdefy dev --ios` or `--android` does; `inject` a phone's next scan, photo, NFC read, location, permission answer, push or network state. On an iOS simulator a location and permission are also set with `simctl`, and a push is delivered with `simctl push`.
+  - `lowdefy_list_types` takes `target: web | mobile`; with `mobile` it lists the blocks, actions and client operators a native shell carries, which dev builds now write to `plugins/availableTypesMobile.json`.
+  - Client errors in `lowdefy_build_status` carry `surface` (`web` or `mobile`, with the phone's shell version).
+  - Lowdefy Dev names its platform and app id when it joins the dev server, and answers state checkpoint loads.
+  - The simulator and emulator helpers of `lowdefy dev --ios` and `--android` move to `@lowdefy/node-utils`, shared with the dev server.
+
+- 3080390: feat(cli): `lowdefy dev --ios`, `--android` and `--lan` put the app on a phone
+
+  `lowdefy dev --ios` boots an iPhone simulator (or uses a booted one), installs Lowdefy Dev and opens the dev server in it. `--android` does the same on a connected phone or a running emulator, or starts the first Android virtual device, and connects it through `adb reverse`. Both reach the dev server on `localhost`, so nothing is exposed on the network. Until Lowdefy Dev builds are released, the build to install comes from `LOWDEFY_DEV_APP_IOS` (a simulator `.app`) or `LOWDEFY_DEV_APP_ANDROID` (an `.apk`). A missing `xcrun simctl` or `adb` stops the command with the install step to take.
+
+  `lowdefy dev --lan [interface]` lets a phone on the local network connect. The server also listens on the first private network address, or on the interface you name, and prints that interface with a QR code of a `lowdefy-dev://connect` link. The link carries a pairing token that lasts for the dev session. A request or websocket from another machine without the token is answered 401, and even with it the dev tools (`/lowdefy-docs` and its MCP endpoint, `/api/dev-inspect`, `/api/dev-recording`, `/api/dev-tools`, `/lowdefy-feedback`) refuse it and the headless-user cookie is ignored.
+
+  The dev mail sink prints the sign-in code of each email it catches (`code for ada@example.com: 482913`), which `lowdefy_dev_logs` also shows. `/api/client-error` in dev accepts requests with no Origin header, so errors from a simulator, a USB phone or a paired phone reach `lowdefy_build_status` like browser errors.
+
+- 8b0c8be: feat(api): Link endpoints serve a file at a stable URL, and Tiptap editors save it with `imageSrc`
+
+  An `Api` endpoint with `link: true` answers a `GET` on `/api/endpoints/<endpointId>/<path...>`: its routine runs as the signed-in caller, with `{ path, query }` as payload and the endpoint's `auth` applied, and the endpoint answers `302` to the URL its `:return` gives (an absolute http(s) URL or a path starting with `/`), with `Cache-Control: private, no-store`. Endpoint ids can hold slashes, so the longest link id the URL starts with wins. A signed-out caller on a protected link gets `401`, a caller without its roles `403`, a `:reject` its `:status` (default `400`), all with no body; an unknown id answers `404` (`401` to a signed-out caller on an app with auth), and any other error `500` with a fixed message. A payload its `payloadSchema` refuses answers `400` with no body. A `POST` to a link endpoint is refused as a missing endpoint, and the build refuses one as an MCP tool. The build refuses `link` on `InternalApi` and with `webhook` or `async`, and allows `:status`, not `:body`, on a `:reject` in a link endpoint. Link endpoints must have no side effects, since any page that embeds the URL can trigger the `GET`.
+
+  `TiptapInput` and `TiptapMentionInput` take an `imageSrc` `_function`, called with `{ key, bucket, name, type }` once an image is uploaded; its string is the inserted `src`. It takes precedence over `downloadPolicyRequestId`, so no download request runs. Pointing it at a link endpoint lets the bucket behind inline images stay private.
+
+- c23d09a: feat(shell): Lowdefy Dev connects to `lowdefy dev`, has a shake menu, and joins the dev tab channel so agents can drive it
+
+  - `LOWDEFY_SHELL_VARIANT=dev | release` decides whether a shell carries the developer features. Lowdefy Dev builds as `dev`, every other shell as `release`, whose bundle leaves them out. `pnpm --filter=@lowdefy/shell check:release-bundle` fails a release bundle that holds the dev-tab client.
+  - Lowdefy Dev connects to a dev server from a `lowdefy-dev://connect` link, a scanned QR code, a typed address or one of the last 5 servers. It asks "Connect to `<host>`?" before attaching to a server off the device; a simulator's localhost connects at once. A paired server's token goes with every request and websocket.
+  - Shake the phone (or open `lowdefy-dev://menu`) for reload, switch server, clear data, logs, the block gallery and the shell version.
+  - The open app joins the dev server's tab channel as a browser tab does: it reloads with empty page state when the dev server rebuilds, answers state inspection and operator evaluation in a browser tab's shape, and runs journey steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`) by block id, waiting for each action chain to finish.
+  - The dev server lets a phone paired with `lowdefy dev --lan` answer on `/api/dev-inspect` and post to `/api/dev-recording`; its other dev tools stay on this computer. A tab that cannot read an event stream can poll `/api/reload?transport=poll`.
+
+- 7b06be6: feat: Phone apps sign in with ordinary sessions sent as bearers
+
+  An app with a `mobile:` section accepts its Better Auth session as `Authorization: Bearer <token>` on every route, for phone shells:
+
+  - A phone signs in on Better Auth's own routes, such as `/api/auth/sign-in/email-otp`, and reads the session token from the `set-auth-token` response header. The header goes only to requests with no `Origin` and no cookies, so page script in a browser never sees it.
+  - Bearer callers resolve like cookie callers, with the same roles, organization and caller stamp, and are read past the cookie cache: signing out, ending sessions or removing a member applies on the next call. Websockets accept the bearer on the upgrade.
+  - `/auth/mobile?shell=<id>&state=<s>` is the page a shell opens in a system sign-in sheet for every other sign-in method. It sends a signed-out person through the app's sign-in page, then redirects to the shell's scheme with a one-time token that lasts one minute and works once.
+  - The email code send is capped at 5 per address per 15 minutes.
+  - New `mobile.auth` keys: `emailCode`, `unlock`, `unlockAfter`, `sharedDevice` and `sessionExpiresIn`, which gives phone sessions their own lifetime. A shell `scheme` must be a lowercase URL scheme and not a web one.
+
+- 8158470: feat: Server routes for mobile shells
+
+  - `GET /api/mobile/root` returns what a mobile shell syncs on start: the `mobile.menus` frame with the items the caller may open, menu icon data, the index of the mobile pages the caller may open with each page's hash and type set key, those type sets, `minShellVersion`, and placeholder theme fields. It answers 404 for an app without a `mobile` key. The dev server lists page paths only, without hashes or type sets.
+  - `GET /api/page/*` sends an `ETag`, and both routes answer `304` to a matching `If-None-Match`.
+  - Pages are gated by surface: a request with `x-lowdefy-shell` gets only pages listed in `mobile.pages`, and a browser never gets a page listed only there. The other surface answers `404` with `{ pageConfig: null, surface }`. Page access still comes from `auth.pages`.
+  - `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` are served from `mobile.shells` when a shell declares iOS or Android signing details.
+  - The dev server builds mobile pages on demand, resolving their blocks against the native block set.
+
+- d80e12d: feat: The phone sign-in sheet asks to confirm, gives the phone its own session and returns by app link on Android
+
+  - `/auth/mobile` no longer hands a session to a shell on a GET. A signed-in person sees "Sign in to <app> on this device?", naming the shell and the account, with Continue and Cancel. The one-time token is minted only when the page posts back from the app's own origin with its CSRF token. Cancel returns `error=cancelled` to the shell.
+  - Continue creates a new session for the phone, with the browser session's active organization and the phone lifetime from `mobile.auth.sessionExpiresIn`. The browser's own session is never handed over, marked or extended, so signing out on the phone leaves the browser signed in. A browser session created inside this sign-in is ended once the phone has its own.
+  - Shells send `platform=ios` or `platform=android` (now required). Android returns by the https app link `<app url>/auth/mobile/callback`, verified through `assetlinks.json`, instead of the shell's scheme, so no other app can receive the token. An Android shell needs `android.package` and `android.sha256` in `mobile.shells`. If the link is not verified, `/auth/mobile/callback` asks the person to return to the app and never shows the token. iOS keeps the shell's scheme.
+  - The shell declares the app link in its Android manifest for each app's https url.
+
+- 61ae799: feat: Dictation in the native Composer and AgentChat inputs
+
+  - The native Composer and AgentChat inputs have a microphone button. It runs on-device dictation through `expo-speech-recognition`, shows a listening row with the partial transcript, and asks for microphone access with a warning and a Settings link when it is off. A spoken "for Sam, ..." in a Composer turns into a mention as typed text does.
+  - The shell carries `expo-speech-recognition` 58.0.0 in the basic profile, with the microphone and speech recognition usage strings. The shell's `nativeVersion` is now 2, so this needs a new native build.
+  - In Lowdefy Dev, `lowdefy_device` action `inject` takes kind `transcript` (`{ partials, final }` or `{ error }`) for what the next dictation session hears. With no injected transcript, Lowdefy Dev uses the phone's microphone.
+  - Development builds hide the dev menu's floating tools button.
+
+- 2ce6fa5: feat(mobile): Push and actionable notifications in every shell
+
+  Every shell carries expo-notifications. `mobile.notifications` names the API endpoints the shell posts its push token to once signed in (`register`, with `{ token, expoToken, platform, provider, shellId, appVersion }`) and at sign-out (`unregister`), how a notification shows while the app is open (`foreground: banner | silent`), and categories of action buttons. A tap opens `data.path` and fires the `onNotificationAction` app event; a button with `endpointId` (Approve, or Reply with `input`) calls the endpoint without opening the app; `snooze: <minutes>` shows the notification again later. `onNotification` fires for a notification received while the app is open, and a push with `data.refreshWidgets` refreshes the widgets. New actions: `ScheduleNotification`, `CancelNotification`, `SetBadgeCount` and `RequestNotificationPermission`. `lowdefy_device inject` with kind `push` now shows the notification in Lowdefy Dev and can tap it or press a button; an APNs payload with `aps` still goes through `simctl push` on an iOS simulator.
+
+- 0d53174: feat(server-dev): Remove the in-page annotation overlay
+
+  The dev server no longer has the Cmd/Ctrl+/ annotation overlay or its `POST /lowdefy-feedback` route. Point a coding agent at the page instead: it can take screenshots and read live state through the dev server's MCP tools. Option/Alt+click to open a block's yaml in VS Code stays. The dev server's start-up notice now names Option/Alt+click for it, where it said Cmd/Ctrl+click. `lowdefy agent-setup` no longer writes the visual feedback section into AGENTS.md and the skill.
+
+- d8f2f6d: feat(server-dev): A smaller dev server agent surface, so an agent session starts on about half the tokens.
+
+  Removed dev tools: `lowdefy_list_plugins`, `lowdefy_get_plugin_doc`, `lowdefy_overview`, `lowdefy_scaffold_page`, `lowdefy_checkpoint`, `lowdefy_revert_checkpoint`, `lowdefy_snapshot_state`, `lowdefy_load_state`, `lowdefy_list_state_checkpoints` and `lowdefy_checkpoint_to_mocks`. The config and state checkpoint stores, the `?_checkpoint=` URL and the dev mock registry go with them. Use git for config checkpoints, `list_types` for a type's package, and `get_doc` or `search_docs` for plugin docs. `lowdefy_restart` stays, hidden.
+
+  Merged: `lowdefy_eval_operator` is now the optional `expression` argument of `lowdefy_inspect_state`. It takes the same `pageId`, `pathParams`, `source`, `user` and `data` arguments, and returns `{ value, errors, source, reads }`, where `reads` names the paths the expression read. A dev server older than this release answers `expression` with plain state and no value.
+
+  Removed HTTP routes under `/lowdefy-docs` that only mirrored a tool: `app-map`, `checkpoints*`, `state-checkpoints*`, `eval-operator`, `run-request`, `run-endpoint`, `inspect-state`, `screenshot`, `plugins`, `schema`, `examples`, `search`, `icons`, `plugin-doc`, `content` and `:kind`. `build-status`, `journey`, `mutants`, `page-config`, `find`, `events`, `restart`, `mcp` and `GET /lowdefy-docs` stay.
+
+  The MCP instructions shrink from 7,000 to at most 2,500 characters, and the dev server's `tools/list` to at most 25,000. The journey step grammar is served only by `lowdefy_get_schema` with `kind: "journey-step"`. Tool results are compact JSON, and `lowdefy_get_page_config` now answers `{ page }`, or `{ block }` with the new optional `blockId` for one block's subtree, writing a page over 40,000 characters to `pageFile` instead. `GET /lowdefy-docs/page-config` still returns the full page.
+
+  fix(cli): `lowdefy mcp` logs each tool call to `tool-calls.jsonl` in the Lowdefy home: the tool, the app, the time, the duration and whether it worked, with no arguments or results. The file stays on your machine and rolls over at 1 MB. `lowdefy agent-setup` no longer repeats the dev server rules between AGENTS.md and the `lowdefy-config` skill. Tests hold the shim's `tools/list` for a current server to 40,000 characters.
+
+### Patch Changes
+
+- 8d06d67: fix(servers): A session the server refuses no longer reloads the page until it fails
+
+  When the server resolves a signed-in session to no caller (a removed member, or an invitee whose invitation expired or was cancelled after sign-in), the browser used to render the session's user anyway. Every response then named a different caller than the page showed, so the page reloaded and failed with "The server answered as a different user or organization than this page shows". The page now renders no caller in that case, matching the server. After a client-side sign-in with no navigation, the page asks `/api/user` once for the signed-in caller instead of rendering the session's user without roles or organization.
+
+- c84f275: fix(client): A sign-in that stays on the page renders the signed-in user before the action returns
+
+  A sign-in with `callbackUrl: false`, which stays on the page, now finishes by asking the server who signed in, as `UpdateSession` does, and renders that user before the `Login` action returns. The next action in the chain, such as a request, is answered as the user the page shows. Before, that request could reload the page and lose the page's state. If the page cannot get the signed-in user from the server, it reloads in place rather than failing a sign-in that succeeded.
+
+- 9419d09: Cap the dev tab's event and call histories (dev only), close idle headless browsers after 45 s and keep at most 10 rendered instances per page in the tab list.
+- 5d27806: An idle dev server now stops its Vite web server after 3 minutes with no use and no open tab, freeing several hundred megabytes, and starts it again on the next page request, tool call or journey. Status reads and reconnecting streams get a quick "idle" answer instead of waking it, and edits made meanwhile are built but wait for that request. `lowdefy_dev_status` reports such a server as `idle`.
+- b596ef3: perf(server-dev): A fresh dev server answers after one config build, not two
+
+  On a fresh checkout, the dev server's first config build cannot check plugins that are not installed yet. It installs them and builds again to run their checks, and that second build ran before the server started, so a large app took two full config builds to answer. The server now starts after the first build, and the second runs once it answers: `lowdefy_build_status` with `wait: true` waits for it, and open pages are not reloaded, since the checks change nothing they show. The checks it runs and the warnings it gives are unchanged.
+
+- 8b1a252: The dev server keeps each plugin's type and message lists between config rebuilds, so a page or config edit no longer re-imports every plugin. A local plugin change, a `.env` change, a root `lowdefy.yaml` change and a `lowdefy_restart` read them afresh.
+- fc5e7ff: fix(server-dev): The dev server opens one `build/reload` watcher for all open tabs instead of one per tab. The agent docs routes and the docs index load in the background after the server first answers, so a restart is ready sooner.
+- df6fa3c: fix(build, cli, errors, server-dev): Dev tools and build errors keep their cause and location
+
+  `@lowdefy/errors` exports `isExpectedError`, the one test for an expected outcome (a `UserError` or an auth refusal) versus a fault. The dev server's agent error feed uses it, so an auth refusal is no longer reported to an agent as an app error.
+
+  When the server explains a browser error with a plugin schema error ("property title must be type string"), the agent feed records that error instead of the original "Error rendering block". Feed entries from the browser and the server carry the same fields, including `hint` and `configKey`.
+
+  A dev tool (an MCP tool, a journey run, `run_endpoint`, the mutants route) that fails with an error of its own is logged with its stack, and the agent is told the tool failed rather than its app. Bad tool arguments are answered as `UserError`s. `run_endpoint` logs the caller's id instead of the whole user object.
+
+  A plugin that fails to import gives its reason (a syntax error, a missing dependency) in the build error, and the build status keeps the cause and stack of an internal fault. Module entry and module var errors point at their line in `lowdefy.yaml`, and an invalid `config` or `theme` is a located `ConfigError`. The dev server's warnings are no longer printed as `ERROR` lines, and a crash in the dev server is printed whole rather than in fragments. A build artifact that is there but unreadable is reported instead of read as empty, and an `_js` map that fails to load is logged.
+
+  The CLI's error telemetry sends the error name, a message cut to 300 characters and the stack frames, with the home directory replaced by `~`.
+
+- e030f96: feat(cli): Test runs wait for a starting dev server, report their server's resources, and cap the data store's cache
+
+  - `lowdefy test`, `lowdefy journeys harden` and `lowdefy journeys variants` wait up to 5 minutes for a dev server in the worktree that is still starting (for example after `lowdefy hub start .`), instead of booting a second one. A starting server whose `<basePath>/api/ping` answers counts as ready. If it never becomes ready, the run fails with `The dev server in this worktree did not become ready. See: lowdefy hub logs <dir>`.
+  - When a run uses a running dev server, it warns about `--ref-resolver`, `--port`, `--dev-directory` or `--server-directory`, which that server ignores.
+  - A run that started its own server ends with `Resources (approximate): server peak 0.71 GB, CPU 94 s, including data store and browsers.`, measured with `ps` every 5 seconds over the server's process tree (not on Windows). A run on a shared dev server says `Resources: not measured (shared dev server).`
+  - The journey data store's MongoDB starts with a 0.25 GB WiredTiger cache, so it no longer grows toward half the machine's memory.
+
+- 31d7de8: fix(journeys): `row` and `column` targets work on `Table` and `TableInput` blocks
+
+  A journey step such as `click: { blockId: orders, row: 1, column: actions }` or
+  `expect: { blockId: orders, row: 0, column: name, text: Jane }` only worked on `AgGrid*` blocks.
+  It now finds the displayed row (zero-based) and the column `key` of a `Table` or `TableInput`
+  too, and a click on a row button in a `Table` is recorded with the same `row` and `column`.
+  Header rows, header cells and summary rows are not rows or cells. A `fill` in a `TableInput`
+  cell is not covered yet: the cell shows its input only once an edit starts.
+
+- 29fd1a6: feat(shell): Lowdefy Dev fakes device results for agents and records what you do on the phone
+
+  - The dev-tab client answers `inject` requests: the next scan, photo or NFC read, a location or a route of them, a permission answer, and network offline or online. While offline, every fetch the app makes fails as it does with no network. Push injection is refused until the shell carries `expo-notifications`.
+  - Device actions read injections through one helper, `injected(name)`, which returns nothing in a release shell. `GeolocationCurrentPosition` answers on the phone with an injected location, or a denied permission, in the web action's shape.
+  - Lowdefy Dev records clicks, changes, Enter presses and page views by block id in the web recorder's record shape, labelled with the device and shell version, so `lowdefy journeys session` lists and prints phone sessions. Password inputs are never recorded.
+  - The engine trace gains `reportInteraction` and `subscribeInteractions`, and the native renderer reports block presses and changes through them. The recorder's record building moves to `@lowdefy/client-core`, shared by the web and phone recorders.
+  - A release shell no longer links `expo-sensors`, `react-native-view-shot` or, unless its shell config's `capabilities` include `camera`, `expo-camera`, and asks for none of their permissions. `check:release-bundle` runs `expo prebuild` and fails a release shell that still links them or asks for the camera it does not need.
+
+- 5d21931: fix(server): the MCP endpoint answers `GET` with 405
+
+  The MCP server is stateless and pushes no notifications, but a `GET /api/mcp` opened an event stream nothing wrote to, which MCP clients held open until the host's time limit. On a serverless host each one held a function until `maxDuration`. A `GET` now answers 405 with `Allow: POST` after the auth checks, as the MCP spec allows for a server without a stream, and clients stop opening one.
+
+- 74122f0: Mobile apps are experimental: the `mobile` section and `offline` on requests build only when the app sets `config.experimental.mobile: true`. Without it the build fails with a message that names the flag. The new docs page, Mobile Apps (Experimental), covers the section, capability profiles, offline requests, sign-in and the phone dev loop.
+- 023c4e1: fix(server-dev): Editing a block in a local plugin no longer restarts the dev server
+
+  A local plugin with any server-side type (a connection, request, server operator, auth or agent type) restarted the dev server on every change to any of its files, blocks included. The restart drops page loads, screenshots and tool calls in flight until the new server answers, although Vite hot-replaces block code by itself. The dev server now restarts only when a changed file is one the server imports: it follows the imports of the build's server-side plugin import files through the local plugins' files, resolving package `exports` and `#` subpath `imports` the way the server does. This also restarts the server for code it imports that did not restart it before: a plugin that only holds steps, or a helper a connection imports from another local plugin. A changed `package.json` of a plugin the server imports from restarts it, and where the dev server cannot be sure (an import it cannot resolve, a dynamic import of a computed path), any change to that plugin restarts it as before. Every change still rebuilds the config.
+
+- a461f7c: fix(deps): Update dependencies for security advisories
+
+  - vite 8.0.16 -> 8.1.6: the dev server no longer serves files outside `server.fs.allow` when a project path matches a system path, and launch-editor's command handling is fixed.
+  - @modelcontextprotocol/sdk 1.31.0 -> 1.32.2: bounds request validation memory, ties experimental tasks to their session, checks a bearer token's audience and stops forwarding headers on cross-origin redirects.
+  - hono 4.13.7 -> 4.13.14: `serveStatic` no longer decodes the path a second time, which let a request bypass middleware.
+  - dompurify 3.4.16 -> 3.4.17: fixes three sanitizer bypasses, one critical.
+  - markdown-it 14.3.1 -> 14.3.3, nodemailer 10.0.13 -> 10.1.7 and undici 7.30.0 -> 7.30.1.
+
+- 6c53753: perf(server-dev): Vite skips the build artifact folders no module imports, and the editor hover resolves once per frame.
+
+  Vite no longer watches `build/pages`, `build/api`, `build/connections`, `build/agents` and `build/jitMaps`, which hold thousands of files in a large app that the server reads from disk and no module imports. The Option/Alt hover in the editor-link overlay now calls `elementFromPoint` and `getBoundingClientRect` at most once per animation frame instead of on every pointer move.
+
+- 3af2019: fix(api, servers, connection-mongodb): Server errors are classified, located and logged the same way everywhere
+
+  Every server site that tells an expected outcome from a fault now asks `isExpectedError`, so an auth refusal or a `UserError` is one warn line on every path: a nested `CallApi`, a websocket frame, a background run, an optional Dynamic block, an MCP tool call and the server error handlers. Faults reach a `handleError` sink instead of a raw `logger.error`: a background, detached or forwarded-cron run that fails, an optional Dynamic block that falls back, an unwalled connection that reaches walled data, an MCP `afterToolCall` hook that fails before its routine runs, an auth email send, and an auth engine error, which goes to a system context's sink. A detached `CallApi` whose dispatch `/api/detached` does not accept is now a fault rather than a completed dispatch. The request context is set before authentication runs, so a fault there is logged with the request id.
+
+  The prod log and Sentry no longer carry `received`, an operator's or control's evaluated input. BetterAuth's own log lines carry an error under `err` and name other values by type only. A connection error that is already typed leaves a request with the step's ids and its cause summarised, and a websocket source's failure is wrapped like a request's, without its evaluated properties. An auth hook that returns a non-object names its type, not the record.
+
+  A MongoDB error that refuses the request (a duplicate key, a malformed pipeline, a missing permission or collection) is now a `RequestError` with the same `code` and `hint`; only a time or memory limit stays a `ServiceError`. A failed unique index build at auth startup names the index and code instead of quoting the duplicate values.
+
+  Config faults carry their config location: endpoint control errors (`:for`, `:while`, `:if`, `:switch`, `:parallel_for`, `:log`) are `ConfigError`s at the control, and the detached `CRON_SECRET` check, cron forwarding, the auth secret, the invitation sender and the auth email connection name theirs. An auth hook's `:throw` now refuses the write with a 400 instead of a 500.
+
+  On the server, `_log` writes an info line through the request's logger instead of `console.log`, so secrets and values marked with `_credential` are removed from it like from every other log line. In the browser it still logs to the console.
+
+- 3be80ec: chore: Lowdefy's tests run on vitest instead of jest 28, and the dev server watches files with chokidar 4 instead of chokidar 3, so `braces` no longer comes in through either. `--watch` and `watchIgnore` globs still apply. `@lowdefy/block-dev`'s test helpers now register their tests with vitest and create their mocks with `vi.fn`, so a block package that uses them runs its tests on vitest.
+- Updated dependencies [ff71016]
+- Updated dependencies [a41d898]
+- Updated dependencies [afeec0b]
+- Updated dependencies [dc785ea]
+- Updated dependencies [029208c]
+- Updated dependencies [bb799e9]
+- Updated dependencies [b7b8445]
+- Updated dependencies [09dbbee]
+- Updated dependencies [163905d]
+- Updated dependencies [e1cf57e]
+- Updated dependencies [f9cafb7]
+- Updated dependencies [4d72041]
+- Updated dependencies [c84f275]
+- Updated dependencies [9c044eb]
+- Updated dependencies [9419d09]
+- Updated dependencies [df6fa3c]
+- Updated dependencies [02842fe]
+- Updated dependencies [d143e29]
+- Updated dependencies [58f2500]
+- Updated dependencies [344c002]
+- Updated dependencies [7e24234]
+- Updated dependencies [31d7de8]
+- Updated dependencies [8b0c8be]
+- Updated dependencies [29fd1a6]
+- Updated dependencies [3f4c3f8]
+- Updated dependencies [82d304d]
+- Updated dependencies [ba2ab81]
+- Updated dependencies [10903fd]
+- Updated dependencies [02cf4b1]
+- Updated dependencies [7b06be6]
+- Updated dependencies [2248ec5]
+- Updated dependencies [7416223]
+- Updated dependencies [74122f0]
+- Updated dependencies [f05943c]
+- Updated dependencies [083821c]
+- Updated dependencies [8158470]
+- Updated dependencies [8972d38]
+- Updated dependencies [d80e12d]
+- Updated dependencies [9aa9608]
+- Updated dependencies [b54d521]
+- Updated dependencies [3f8aa1f]
+- Updated dependencies [5b19a85]
+- Updated dependencies [988fc30]
+- Updated dependencies [73fefe9]
+- Updated dependencies [8e4dfc8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [2f7a526]
+- Updated dependencies [bd50d64]
+- Updated dependencies [8736703]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [54f0579]
+- Updated dependencies [64159ca]
+- Updated dependencies [048e010]
+- Updated dependencies [78e54ea]
+- Updated dependencies [9e97d17]
+- Updated dependencies [0ccbe0c]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [1663aa9]
+- Updated dependencies [bb7c249]
+- Updated dependencies [4210b1d]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [20dd549]
+- Updated dependencies [dfdb8ab]
+- Updated dependencies [ab1f114]
+- Updated dependencies [0d53174]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [0f0cd03]
+- Updated dependencies [a461f7c]
+- Updated dependencies [3af2019]
+- Updated dependencies [7aec569]
+- Updated dependencies [d8f2f6d]
+- Updated dependencies [12bb05c]
+- Updated dependencies [fcea703]
+- Updated dependencies [9226424]
+- Updated dependencies [26333a9]
+- Updated dependencies [ff7e31a]
+- Updated dependencies [1ffabe9]
+- Updated dependencies [b1d42ca]
+- Updated dependencies [4d548e9]
+- Updated dependencies [9085f6d]
+- Updated dependencies [70ef067]
+- Updated dependencies [c7c1693]
+- Updated dependencies [962ac05]
+- Updated dependencies [837d529]
+- Updated dependencies [f51a6cc]
+- Updated dependencies [9d5eb24]
+- Updated dependencies [732646e]
+- Updated dependencies [0dd2e9d]
+  - @lowdefy/api@7.2.0
+  - @lowdefy/build@7.2.0
+  - @lowdefy/node-utils@7.2.0
+  - @lowdefy/docs-content@7.2.0
+  - @lowdefy/blocks-aggrid@7.2.0
+  - @lowdefy/engine@7.2.0
+  - @lowdefy/client@7.2.0
+  - @lowdefy/operators-js@7.2.0
+  - @lowdefy/client-core@7.2.0
+  - @lowdefy/plugin-better-auth@7.2.0
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/blocks-antd@7.2.0
+  - @lowdefy/blocks-table@7.2.0
+  - @lowdefy/connection-mongodb@7.2.0
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/e2e-utils@7.2.0
+  - @lowdefy/blocks-tiptap@7.2.0
+  - @lowdefy/actions-core@7.2.0
+  - @lowdefy/block-utils@7.2.0
+  - @lowdefy/blocks-basic@7.2.0
+  - @lowdefy/blocks-markdown@7.2.0
+  - @lowdefy/operators-change-case@7.2.0
+  - @lowdefy/operators-cron@7.2.0
+  - @lowdefy/operators-dayjs@7.2.0
+  - @lowdefy/operators-diff@7.2.0
+  - @lowdefy/operators-mql@7.2.0
+  - @lowdefy/operators-nunjucks@7.2.0
+  - @lowdefy/operators-uuid@7.2.0
+  - @lowdefy/operators-yaml@7.2.0
+  - @lowdefy/connection-axios-http@7.2.0
+  - @lowdefy/logger@7.2.0
+  - @lowdefy/layout@7.2.0
+  - @lowdefy/blocks-antd-x@7.2.0
+  - @lowdefy/blocks-loaders@7.2.0
+  - @lowdefy/websockets-core@7.2.0
+  - @lowdefy/blocks-echarts@7.2.0
+  - @lowdefy/blocks-captcha@7.2.0
+
 ## 7.1.0
 
 ### Minor Changes

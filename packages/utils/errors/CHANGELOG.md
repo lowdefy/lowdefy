@@ -1,5 +1,38 @@
 # @lowdefy/errors
 
+## 7.2.0
+
+### Minor Changes
+
+- f0209f6: feat(build): Warn when a mobile page sets a property the phone ignores
+
+  Native blocks accept the web properties a phone cannot honour (such as `hoverable`, `copyable`, a label's `align` or an input's `prefixIcon`), so a page shared by web and mobile stays valid. The build now warns when a mobile or shared page sets one: once per page for each block type and property, naming the page, the block and the property. `~ignoreBuildChecks: [native-ignored]` silences it.
+
+  - `extractBlockTypes` lists the property paths a meta marks `nativeIgnored: true` in the block meta it returns.
+  - The native list and input blocks now mark their ignored properties `nativeIgnored`, as the layout and display blocks do.
+
+### Patch Changes
+
+- df6fa3c: fix(build, cli, errors, server-dev): Dev tools and build errors keep their cause and location
+
+  `@lowdefy/errors` exports `isExpectedError`, the one test for an expected outcome (a `UserError` or an auth refusal) versus a fault. The dev server's agent error feed uses it, so an auth refusal is no longer reported to an agent as an app error.
+
+  When the server explains a browser error with a plugin schema error ("property title must be type string"), the agent feed records that error instead of the original "Error rendering block". Feed entries from the browser and the server carry the same fields, including `hint` and `configKey`.
+
+  A dev tool (an MCP tool, a journey run, `run_endpoint`, the mutants route) that fails with an error of its own is logged with its stack, and the agent is told the tool failed rather than its app. Bad tool arguments are answered as `UserError`s. `run_endpoint` logs the caller's id instead of the whole user object.
+
+  A plugin that fails to import gives its reason (a syntax error, a missing dependency) in the build error, and the build status keeps the cause and stack of an internal fault. Module entry and module var errors point at their line in `lowdefy.yaml`, and an invalid `config` or `theme` is a located `ConfigError`. The dev server's warnings are no longer printed as `ERROR` lines, and a crash in the dev server is printed whole rather than in fragments. A build artifact that is there but unreadable is reported instead of read as empty, and an `_js` map that fails to load is logged.
+
+  The CLI's error telemetry sends the error name, a message cut to 300 characters and the stack frames, with the home directory replaced by `~`.
+
+- 7c85b4b: fix(api, errors, server): A failed request no longer logs its inputs
+
+  A failed request, on a page or as an endpoint routine step, no longer writes the request's evaluated properties or the connection's error to the logs. The request properties were attached to the error as `received`, which the error log wrote at every log level, so a step that saved an agent chat's thread logged the whole thread when it failed. The connection's error, which can hold the document it rejected, is now carried as a summary: its name, code, status code and message cut to 500 characters, with the same for up to three causes. The error log also names the step by `endpointId`, `stepId` (a page request's id) and `connectionId`. In dev, the dev tools still show the connection's full error; the dev terminal shows the summary. A request type's `meta.credentialProperties` no longer has an effect, since no request property is kept. `errorSummaryForLog`, the error summary agent logs already used, moves to `@lowdefy/errors`.
+
+- 7aec569: fix(errors): A request that times out is reported as a timeout, not a server 500
+
+  A `ServiceError` wrapped around a call that ran out of time now reads "Request timed out. The service may be slow, or the timeout too short." It finds the timeout (a `TimeoutError`, an `ETIMEDOUT`, or one of undici's connect, headers or body timeouts) anywhere down the retry wrapper's `lastError` and the cause chain. Before, some clients turned the cancelled call into an error carrying a 500 that no server sent, such as the AI gateway client. The `ServiceError` then read "Server returned error 500" and carried `statusCode: 500`. A timed-out `ServiceError` now leaves `statusCode` unset, unless one is passed, and error logs and the error sent to the client no longer carry the made-up status on its cause. The server's own request timeout now reads the same way. A real 5xx with no timeout under it still reads "Server returned error 5xx".
+
 ## 7.1.0
 
 ## 7.0.0

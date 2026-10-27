@@ -1,5 +1,15 @@
 # journey-fixture-walled-plugin
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [344c002]
+- Updated dependencies [3af2019]
+- Updated dependencies [b1d42ca]
+- Updated dependencies [837d529]
+  - @lowdefy/connection-mongodb@7.2.0
+
 ## 0.0.2
 
 ### Patch Changes
