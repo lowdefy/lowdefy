@@ -34,7 +34,7 @@ function htmlToText(html) {
   return html
     .replace(/<br\s*\/?>/gi, '\n')
     .replace(/<\/p>\s*<p[^>]*>/gi, '\n')
-    .replace(/<[^>]*>/g, '')
+    .replace(/<[^<>]*>/g, '')
     .replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (entity) => entities[entity]);
 }
 

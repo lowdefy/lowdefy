@@ -46,7 +46,11 @@ function createResolveUrl(lowdefy) {
     if (url.startsWith('/')) {
       return `${origin}${url}`;
     }
-    return `${base.replace(/\/+$/, '')}/${url}`;
+    let end = base.length;
+    while (base[end - 1] === '/') {
+      end -= 1;
+    }
+    return `${base.slice(0, end)}/${url}`;
   };
 }
 

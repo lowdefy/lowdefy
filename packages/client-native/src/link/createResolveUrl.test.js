@@ -54,3 +54,15 @@ test('an empty or missing url is returned as it is', () => {
   expect(resolveUrl('')).toBe('');
   expect(resolveUrl(undefined)).toBe(undefined);
 });
+
+test('a relative path drops the trailing slashes of the app server url', () => {
+  const trailing = createResolveUrl({ apiBase: 'https://example.com/crm//' });
+  expect(trailing('logo.png')).toBe('https://example.com/crm/logo.png');
+});
+
+test('a relative path is resolved under an app server url with a long run of slashes without backtracking', () => {
+  const slashes = createResolveUrl({ apiBase: `https://example.com/a${'/'.repeat(100000)}b` });
+  const start = performance.now();
+  expect(slashes('c.png')).toBe(`https://example.com/a${'/'.repeat(100000)}b/c.png`);
+  expect(performance.now() - start).toBeLessThan(1000);
+});

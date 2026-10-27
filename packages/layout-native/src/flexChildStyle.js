@@ -28,7 +28,7 @@ function flexFactor(value, fallback) {
 function flexBasis({ columnGap, size }) {
   if (type.isNumber(size)) return size + columnGap;
   if (type.isString(size)) {
-    const points = /^(-?\d*\.?\d+)px$/.exec(size.trim());
+    const points = /^(-?(?:\d+(?:\.\d+)?|\.\d+))px$/.exec(size.trim());
     if (points) return Number(points[1]) + columnGap;
     if (size.trim().endsWith('%')) return size.trim();
   }

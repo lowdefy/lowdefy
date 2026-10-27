@@ -29,7 +29,7 @@ function getOptionLabel({ option }) {
     return `${option}`;
   }
   if (type.isString(option.label)) {
-    return option.label.replace(/<[^>]*>/g, '');
+    return option.label.replace(/<[^<>]*>/g, '');
   }
   return `${option.value}`;
 }
