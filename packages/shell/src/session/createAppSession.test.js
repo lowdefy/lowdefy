@@ -19,6 +19,7 @@ import { jest } from '@jest/globals';
 import createAppSession from './createAppSession.js';
 import createFakeServer, { header } from '../test/createFakeServer.js';
 import createMemoryCacheStore from '../test/createMemoryCacheStore.js';
+import createNetworkError from '../test/createNetworkError.js';
 import createMemoryStore from '../host/createMemoryStore.js';
 import { createPages, createRoot } from '../test/fixtures.js';
 
@@ -147,7 +148,7 @@ describe('cache keying', () => {
     expect(state.cacheKey).toBe('field:c-ada:r-staff');
     expect(Object.keys(state.pages).sort()).toEqual(['job', 'jobs', 'today']);
     expect(offline.fetch).toHaveBeenCalled();
-    answer(Promise.reject(new Error('Network request failed')));
+    answer(Promise.reject(createNetworkError()));
     await started;
   });
 
@@ -157,17 +158,45 @@ describe('cache keying', () => {
     const kv = createMemoryStore();
     await createSession({ server, cacheStore, kv }).session.start();
     const offline = {
-      fetch: jest.fn(async () => Promise.reject(new TypeError('Network request failed'))),
+      fetch: jest.fn(async () => Promise.reject(createNetworkError())),
     };
     const { session } = createSession({ server: offline, cacheStore, kv });
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     await session.start();
     expect(session.getState().status).toBe('ready');
     expect(Object.keys(session.getState().pages)).toHaveLength(3);
+    // No signal is not a fault.
+    expect(consoleError).not.toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
+
+  test('a sync the server fails while the cache serves the app is reported', async () => {
+    const server = createServer();
+    const cacheStore = createMemoryCacheStore();
+    const kv = createMemoryStore();
+    await createSession({ server, cacheStore, kv }).session.start();
+    const failing = {
+      fetch: jest.fn(async () => ({
+        ok: false,
+        status: 500,
+        headers: { get: () => null },
+        json: async () => ({ message: 'Internal server error.' }),
+      })),
+    };
+    const { session } = createSession({ server: failing, cacheStore, kv });
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    await session.start();
+    expect(session.getState().status).toBe('ready');
+    // No page has made a core yet, so the report goes to the device console.
+    expect(consoleError).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Internal server error.', status: 500 })
+    );
+    consoleError.mockRestore();
   });
 
   test('with no signal and no cache the app shows the error', async () => {
     const offline = {
-      fetch: jest.fn(async () => Promise.reject(new TypeError('Network request failed'))),
+      fetch: jest.fn(async () => Promise.reject(createNetworkError())),
     };
     const { session } = createSession({ server: offline });
     await session.start();
@@ -184,8 +213,11 @@ describe('cache keying', () => {
       json: async () => ({}),
     }));
     const { session } = createSession({ server });
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     await session.start();
     expect(session.getState().error.message).toBe('This app has no mobile pages.');
+    expect(consoleError).toHaveBeenCalledWith(session.getState().error);
+    consoleError.mockRestore();
   });
 });
 

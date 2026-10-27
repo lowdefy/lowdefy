@@ -38,6 +38,7 @@ jest.mock('../../native/currentApp.js', () => ({
 jest.mock('../../native/callEndpoint.js', () => jest.fn());
 
 const callEndpoint = require('../../native/callEndpoint.js');
+const createNetworkError = require('../../test/createNetworkError.js').default;
 
 require('./index.js');
 
@@ -57,7 +58,7 @@ beforeEach(() => {
 });
 
 test('a location post that fails waits in the backlog and goes first on the next wake', async () => {
-  callEndpoint.mockRejectedValueOnce(new Error('offline'));
+  callEndpoint.mockRejectedValueOnce(createNetworkError());
   await mockTasks['lowdefy-location-tracking']({ data: { locations } });
   expect(backlog()).toHaveLength(1);
   callEndpoint.mockResolvedValue(null);
@@ -73,15 +74,21 @@ test('a post the server refuses is dropped, so it does not hold up the backlog',
     JSON.stringify([{ endpointId: 'trip', payload: { bad: true } }])
   );
   callEndpoint.mockRejectedValueOnce(refusal(400)).mockResolvedValueOnce(null);
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
   await mockTasks['lowdefy-location-tracking']({ data: { locations } });
   expect(backlog()).toEqual([]);
   expect(callEndpoint).toHaveBeenCalledTimes(2);
+  // Dropped, but reported: the app's endpoint or payload needs fixing.
+  expect(consoleError).toHaveBeenCalledWith(expect.objectContaining({ status: 400 }));
+  consoleError.mockRestore();
 });
 
 test('a post refused for a lost session stays for the next wake', async () => {
   callEndpoint.mockRejectedValueOnce(refusal(401));
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
   await mockTasks['lowdefy-location-tracking']({ data: { locations } });
   expect(backlog()).toHaveLength(1);
+  consoleError.mockRestore();
 });
 
 test('a geofence crossing raises onGeofence and posts to its endpoint', async () => {

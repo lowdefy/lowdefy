@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-import { getAuthorizationHeaders } from '@lowdefy/client-core';
+import { decodeErrorBody, getAuthorizationHeaders } from '@lowdefy/client-core';
 import { serializer, type } from '@lowdefy/helpers';
+
+import readServerError from '../host/readServerError.js';
 
 /**
  * Calls one of the app's API endpoints from the shell itself, with the session token: push token
@@ -38,18 +40,21 @@ async function callEndpoint({ app, endpointId, payload = {} }) {
     },
     body: JSON.stringify({ payload: serializer.serialize(payload) }),
   });
-  const body = await res.json();
   if (!res.ok) {
-    const error = new Error(body?.message ?? `Endpoint "${endpointId}" answered ${res.status}.`);
-    // The HTTP status, so background posts can tell a refusal that will not change from an outage.
-    error.status = res.status;
-    throw error;
+    throw await readServerError({
+      res,
+      message: `Endpoint "${endpointId}" answered ${res.status}.`,
+    });
   }
+  const body = await res.json();
   if (body.success === false) {
-    throw new Error(
-      type.isString(body.error?.message)
-        ? body.error.message
-        : `Endpoint "${endpointId}" answered ${body.status}.`
+    throw (
+      decodeErrorBody(body.error) ??
+      new Error(
+        type.isString(body.error?.message)
+          ? body.error.message
+          : `Endpoint "${endpointId}" answered ${body.status}.`
+      )
     );
   }
   return serializer.deserialize(body.response);

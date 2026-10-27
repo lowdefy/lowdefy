@@ -15,15 +15,20 @@
 */
 
 import send from '@lowdefy/connection-smtp/send';
-import { ServiceError } from '@lowdefy/errors';
+import { ConfigError, ServiceError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 
 // auth.email sends every auth email (verification, password reset, magic link)
 // through an SMTP connection. Resolving the connection per fire lets operators
 // and the connection's delivery filter apply, so failures - and filtering -
-// surface here at send time rather than at construction.
-function createSendEmail({ connectionId }) {
+// surface here at send time rather than at construction. A failure names the
+// connection and points at auth.email, never the recipient: the server's reply
+// quotes the address it refused.
+function createSendEmail({ authEmailConfig }) {
+  const { connectionId } = authEmailConfig;
+  const configKey = authEmailConfig['~k'];
   return async function sendEmail({ to, subject, html, text, context }) {
     const connectionConfig = await getConnectionConfig(context, { connectionId });
     const connection = context.evaluateOperators({
@@ -39,9 +44,14 @@ function createSendEmail({ connectionId }) {
         throw new ServiceError(undefined, {
           cause: error,
           service: 'SMTP',
+          configKey,
         });
       }
-      throw error;
+      const code = type.isNone(error?.code) ? '' : ` (${error.code})`;
+      throw new ConfigError(
+        `Auth email could not be sent through connection "${connectionId}"${code}. Check the SMTP connection auth.email.connectionId names.`,
+        { cause: error, configKey }
+      );
     }
   };
 }

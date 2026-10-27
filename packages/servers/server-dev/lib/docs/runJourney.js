@@ -28,6 +28,7 @@ import createDataSetRails from './rails/createDataSetRails.js';
 import createJourneyAppErrors from './observe/createJourneyAppErrors.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import getDataStore from './dataSets/getDataStore.js';
+import JourneyStepError from './JourneyStepError.js';
 import journeyRunRecording from './journeyRunRecording.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
@@ -37,6 +38,7 @@ import readBuildArtifact from './readBuildArtifact.js';
 import readDevAuthMode from './readDevAuthMode.js';
 import readConnectionPlugins from './readConnectionPlugins.js';
 import readPagePath from './readPagePath.js';
+import reportDevToolFault from './reportDevToolFault.js';
 import { registerRunBuffer, releaseRunBuffer } from './runErrorBuffers.js';
 import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
 import runJourneySteps from './runJourneySteps.js';
@@ -46,6 +48,12 @@ import validateJourneyMail from './validateJourneyMail.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
 import withBrowserSlot from './withBrowserSlot.js';
+import createLogger from '../server/log/createLogger.js';
+
+const logger = createLogger();
+
+// Not SyntaxError: JSON.parse of the app's own artifacts or data set input throws one.
+const PROGRAMMING_ERRORS = new Set(['RangeError', 'ReferenceError', 'TypeError']);
 
 // The final state is read even after a failure — it is what an agent needs to
 // write the next assertion. A page that has navigated away or crashed may not
@@ -326,7 +334,19 @@ async function runJourneyInBrowser({
     }
     return result;
   } catch (error) {
-    return { error: `Failed to run journey at "${url}": ${error.message}` };
+    // A failed step, a refused input or a page that would not open is the run's
+    // outcome. A programming error is the journey runner's own bug, which an
+    // agent would otherwise read as a failure of its app.
+    if (error instanceof JourneyStepError || !PROGRAMMING_ERRORS.has(error?.name)) {
+      return { error: `Failed to run journey at "${url}": ${error.message}` };
+    }
+    return {
+      error: `Failed to run journey at "${url}": ${reportDevToolFault({
+        error,
+        logger,
+        tool: 'journey',
+      })}`,
+    };
   } finally {
     if (!type.isUndefined(journey)) {
       if (runRecording.record !== false) {

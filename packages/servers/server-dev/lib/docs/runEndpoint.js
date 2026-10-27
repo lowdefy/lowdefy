@@ -15,7 +15,7 @@
 */
 
 import { callEndpoint, getEndpointConfig, runDetachedEndpoint } from '@lowdefy/api';
-import { ConfigError } from '@lowdefy/errors';
+import { UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
@@ -31,7 +31,7 @@ import withDataSession from './withDataSession.js';
 // Never throws for outcomes an agent should reason about: refusals, a :reject
 // or :throw in the routine, and faults that escape callEndpoint (auth
 // refusals, missing connections, InternalApi endpoints) all come back as data.
-// Only malformed input throws, as a ConfigError.
+// Only malformed input throws, as a UserError: the agent wrote it.
 //
 // system: true runs the routine through runDetachedEndpoint instead - the same
 // entry point POST /api/detached uses - so it executes as a system context
@@ -54,32 +54,32 @@ async function runEndpoint({
   honoContext,
 }) {
   if (type.isUndefined(endpointId) || !type.isString(endpointId)) {
-    throw new ConfigError(
+    throw new UserError(
       `run_endpoint requires an "endpointId" string. Received ${JSON.stringify(endpointId)}.`
     );
   }
 
   if (!type.isBoolean(saveResponse)) {
-    throw new ConfigError(
+    throw new UserError(
       `run_endpoint "saveResponse" must be a boolean. Received ${JSON.stringify(saveResponse)}.`
     );
   }
 
   if (!type.isNone(system) && !type.isBoolean(system)) {
-    throw new ConfigError(
+    throw new UserError(
       `run_endpoint "system" must be a boolean. Received ${JSON.stringify(system)}.`
     );
   }
 
   if (system === true && !type.isNone(user)) {
-    throw new ConfigError(
+    throw new UserError(
       'run_endpoint "system" cannot be combined with "user": a system run has no user (_user is undefined).'
     );
   }
 
   const caller = await resolveToolCaller({ user, data });
   if (!type.isUndefined(caller.error)) {
-    throw new ConfigError(`run_endpoint: ${caller.error}`);
+    throw new UserError(`run_endpoint: ${caller.error}`);
   }
 
   const allowed = await isWriteRequestsAllowed();
@@ -141,7 +141,13 @@ async function runEndpointInContext({
   // as a refusal rather than allowed to escape.
   try {
     await getEndpointConfig(context, { endpointId });
-  } catch {
+  } catch (error) {
+    // A miss is a ConfigError ("does not exist"), or an AuthenticationError
+    // when the app has auth and the tool runs signed out. Anything else is a
+    // fault, not a missing endpoint.
+    if (error.name !== 'ConfigError' && error.name !== 'AuthenticationError') {
+      throw error;
+    }
     return {
       refused: true,
       reason:
@@ -150,7 +156,13 @@ async function runEndpointInContext({
     };
   }
 
-  context.logger.info({ event: 'agent_run_endpoint', endpointId, user, system });
+  // The caller's id or data set user name, never the user object an agent passed.
+  context.logger.info({
+    event: 'agent_run_endpoint',
+    endpointId,
+    user: type.isObject(user) ? user.id ?? null : user,
+    system,
+  });
 
   try {
     // callEndpoint refuses InternalApi endpoints and enforces the endpoint's
@@ -175,6 +187,7 @@ async function runEndpointInContext({
       error: {
         name: error.name,
         message: error.message,
+        hint: error.hint,
         source: error.source,
         configKey: error.configKey,
       },

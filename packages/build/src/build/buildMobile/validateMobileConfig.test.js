@@ -104,6 +104,42 @@ test('validateMobileConfig ignores build marker keys', () => {
   ).not.toThrow();
 });
 
+test('validateMobileConfig collects every error, so one build reports them all', () => {
+  const collecting = { ...context, errors: [] };
+  validateMobileConfig({
+    context: collecting,
+    mobile: {
+      '~k': 'm1',
+      serverUrl: 'https://example.com',
+      minShellVersion: '7.4',
+      menus: {},
+      auth: { unlock: 'face' },
+      shortcuts: [{ id: 'a' }, { id: 'a', title: 'A' }],
+    },
+  });
+  expect(collecting.errors.map((error) => error.message)).toEqual([
+    'App "mobile" has unknown key "serverUrl". Allowed keys: homePageId, minShellVersion, menus, pages, events, shells, auth, notifications, share, widgets, shortcuts, background.',
+    'App "mobile.minShellVersion" should be a semver version, like "7.4.0".',
+    'App "mobile.menus" should have exactly one of tabs, drawer, stack. Received none.',
+    'App "mobile.auth.unlock" should be one of none, biometric.',
+    'App "mobile.shortcuts[0].title" should be a non-empty string.',
+    'App "mobile.shortcuts[1].id" "a" is used twice.',
+  ]);
+  expect(collecting.errors.every((error) => error.configKey === 'm1')).toBe(true);
+});
+
+test('validateMobileConfig reports a shell that is not an object and checks the next one', () => {
+  const collecting = { ...context, errors: [] };
+  validateMobileConfig({
+    context: collecting,
+    mobile: { shells: ['field', { id: 'store', color: 'blue' }] },
+  });
+  expect(collecting.errors.map((error) => error.message)).toEqual([
+    'App "mobile.shells[0]" should be an object.',
+    'App "mobile.shells[1].color" should be a colour like "#0B5FFF".',
+  ]);
+});
+
 test('validateMobileConfig throws when mobile is not an object', () => {
   expect(() => validateMobileConfig({ context, mobile: [] })).toThrow(
     'App "mobile" should be an object.'
@@ -133,6 +169,7 @@ test('validateMobileConfig throws when menus has no frame', () => {
 test('validateMobileConfig throws when menus has two frames', () => {
   expect(() =>
     validateMobileConfig({
+      context,
       mobile: { menus: { stack: true, drawer: [{ pageId: 'a' }] } },
     })
   ).toThrow(
@@ -168,6 +205,7 @@ test('validateMobileConfig throws when stack is not true', () => {
 test('validateMobileConfig throws on an unknown menu item key', () => {
   expect(() =>
     validateMobileConfig({
+      context,
       mobile: { menus: { drawer: [{ pageId: 'a', url: 'https://example.com' }] } },
     })
   ).toThrow(
@@ -219,6 +257,7 @@ test('validateMobileConfig throws when auth is not an object', () => {
 test('validateMobileConfig accepts a complete mobile.auth', () => {
   expect(() =>
     validateMobileConfig({
+      context,
       mobile: {
         auth: {
           emailCode: false,

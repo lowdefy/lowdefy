@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { decodeServerError } from '@lowdefy/engine';
-import { expectedErrorNames, lowdefyErrorTypes } from '@lowdefy/errors';
+import { isExpectedError } from '@lowdefy/errors';
 import { parseCallerStamp, translate, type } from '@lowdefy/helpers';
 
 import awaitUnlessUnloading from './awaitUnlessUnloading.js';
+import decodeErrorBody from './decodeErrorBody.js';
 import endBearerSession from './auth/endBearerSession.js';
 import getAuthorizationHeaders from './auth/getAuthorizationHeaders.js';
 import NonJsonResponseError from './NonJsonResponseError.js';
@@ -105,30 +105,23 @@ async function request({
       host.onBuildChanged({ serverBuildId: body.buildId });
       return new Promise(() => {});
     }
-    if (body?.['~e']) {
-      throw decodeServerError(body);
+    const error = decodeErrorBody(body);
+    if (error === null) {
+      throw new Error(body.message || translate({ key: 'client.requestError' }));
     }
-    // The server answers an expected outcome (an auth gate's 401 or 403, a
-    // UserError's 400) itself, as { name, message } with no serialized error.
-    // Rebuilding its class keeps the name the engine, handleError and the dev
-    // tools tell an expected outcome from a fault by.
-    if (expectedErrorNames.has(body?.name)) {
-      const ExpectedError = lowdefyErrorTypes[body.name];
-      const error = new ExpectedError(body.message);
-      if (
-        shouldReloadForAuthError({
-          error,
-          reloadOnAuthorizationError,
-          sessionStorage: host.sessionStorage,
-          user,
-        })
-      ) {
-        host.onCallerChanged(parseCallerStamp(serverCaller));
-        return new Promise(() => {});
-      }
-      throw error;
+    if (
+      isExpectedError(error) &&
+      shouldReloadForAuthError({
+        error,
+        reloadOnAuthorizationError,
+        sessionStorage: host.sessionStorage,
+        user,
+      })
+    ) {
+      host.onCallerChanged(parseCallerStamp(serverCaller));
+      return new Promise(() => {});
     }
-    throw new Error(body.message || translate({ key: 'client.requestError' }));
+    throw error;
   }
   return awaitUnlessUnloading({ lowdefy, promise: res.json() });
 }

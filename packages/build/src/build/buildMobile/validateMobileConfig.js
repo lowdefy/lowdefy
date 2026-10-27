@@ -18,7 +18,7 @@ import semver from 'semver';
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import collectExceptions from '../../utils/collectExceptions.js';
 import validateMobileBackground from './validateMobileBackground.js';
 import validateMobileNotifications from './validateMobileNotifications.js';
 import validateMobileShare from './validateMobileShare.js';
@@ -105,182 +105,273 @@ const REFUSED_SCHEMES = [
   'wss',
 ];
 
+// Every check collects its ConfigError (collectExceptions), so one build reports every mobile
+// config error, and returns whether the value passed: a check stops at a value that is not the
+// object or array it reads further.
+
 // Keys starting with "~" are build markers (~k, ~r, ~l, ~ignoreBuildChecks).
-function checkKeys({ object, allowed, path, configKey }) {
+function checkKeys({ object, allowed, path, configKey, context }) {
+  let valid = true;
   Object.keys(object).forEach((key) => {
     if (key.startsWith('~')) return;
     if (!allowed.includes(key)) {
-      throw new ConfigError(
-        `App "${path}" has unknown key "${key}". Allowed keys: ${allowed.join(', ')}.`,
-        { configKey }
+      valid = false;
+      collectExceptions(
+        context,
+        new ConfigError(
+          `App "${path}" has unknown key "${key}". Allowed keys: ${allowed.join(', ')}.`,
+          { configKey }
+        )
       );
     }
   });
+  return valid;
 }
 
-function checkObject({ value, path, configKey }) {
+function checkObject({ value, path, configKey, context }) {
   if (!type.isObject(value)) {
-    throw new ConfigError(`App "${path}" should be an object.`, { received: value, configKey });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be an object.`, { received: value, configKey })
+    );
+    return false;
   }
+  return true;
 }
 
-function checkOptionalString({ value, path, configKey }) {
-  if (!type.isUndefined(value) && !type.isString(value)) {
-    throw new ConfigError(`App "${path}" should be a string.`, { received: value, configKey });
+function checkArray({ value, path, configKey, context }) {
+  if (!type.isArray(value)) {
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be an array.`, { received: value, configKey })
+    );
+    return false;
   }
+  return true;
+}
+
+function checkOptionalString({ value, path, configKey, context }) {
+  if (!type.isUndefined(value) && !type.isString(value)) {
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be a string.`, { received: value, configKey })
+    );
+    return false;
+  }
+  return true;
 }
 
 // A tab may take a role; one tab at most is the search tab. A drawer item takes none.
-function validateMenuItemRoles({ items, path, configKey, roles }) {
+function validateMenuItemRoles({ items, path, configKey, roles, context }) {
   items.forEach((item, index) => {
     if (type.isUndefined(item.role)) return;
     if (!roles.includes(item.role)) {
       const allowed = roles.length === 0 ? 'none' : roles.join(', ');
-      throw new ConfigError(
-        `App "${path}[${index}].role" should be one of: ${allowed}. Received ${JSON.stringify(
-          item.role
-        )}.`,
-        { configKey: item['~k'] ?? configKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `App "${path}[${index}].role" should be one of: ${allowed}. Received ${JSON.stringify(
+            item.role
+          )}.`,
+          { configKey: item['~k'] ?? configKey }
+        )
       );
     }
   });
   const searchTabs = items.filter((item) => item.role === 'search');
   if (searchTabs.length > 1) {
-    throw new ConfigError(`App "${path}" should have at most one item with role "search".`, {
-      configKey: searchTabs[1]['~k'] ?? configKey,
-    });
-  }
-}
-
-function validateMenuItems({ items, path, configKey }) {
-  if (!type.isArray(items)) {
-    throw new ConfigError(`App "${path}" should be an array.`, { received: items, configKey });
-  }
-  items.forEach((item, index) => {
-    const itemPath = `${path}[${index}]`;
-    checkObject({ value: item, path: itemPath, configKey });
-    const itemConfigKey = item['~k'] ?? configKey;
-    checkKeys({ object: item, allowed: MENU_ITEM_KEYS, path: itemPath, configKey: itemConfigKey });
-    if (!type.isString(item.pageId)) {
-      throw new ConfigError(`App "${itemPath}.pageId" should be a string.`, {
-        received: item.pageId,
-        configKey: itemConfigKey,
-      });
-    }
-    checkOptionalString({ value: item.icon, path: `${itemPath}.icon`, configKey: itemConfigKey });
-    checkOptionalString({
-      value: item.sfSymbol,
-      path: `${itemPath}.sfSymbol`,
-      configKey: itemConfigKey,
-    });
-    checkOptionalString({ value: item.title, path: `${itemPath}.title`, configKey: itemConfigKey });
-  });
-}
-
-function validateMenus({ menus, configKey }) {
-  checkObject({ value: menus, path: 'mobile.menus', configKey });
-  const menusConfigKey = menus['~k'] ?? configKey;
-  checkKeys({ object: menus, allowed: MENU_KEYS, path: 'mobile.menus', configKey: menusConfigKey });
-  const frames = MENU_KEYS.filter((key) => !type.isUndefined(menus[key]));
-  if (frames.length !== 1) {
-    throw new ConfigError(
-      `App "mobile.menus" should have exactly one of ${MENU_KEYS.join(', ')}. Received ${
-        frames.length === 0 ? 'none' : frames.join(', ')
-      }.`,
-      { configKey: menusConfigKey }
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should have at most one item with role "search".`, {
+        configKey: searchTabs[1]['~k'] ?? configKey,
+      })
     );
   }
-  if (!type.isUndefined(menus.tabs)) {
-    validateMenuItems({ items: menus.tabs, path: 'mobile.menus.tabs', configKey: menusConfigKey });
+}
+
+// Returns whether every item is an object, so the roles and count can be read.
+function validateMenuItems({ items, path, configKey, context }) {
+  if (!checkArray({ value: items, path, configKey, context })) {
+    return false;
+  }
+  let itemsAreObjects = true;
+  items.forEach((item, index) => {
+    const itemPath = `${path}[${index}]`;
+    if (!checkObject({ value: item, path: itemPath, configKey, context })) {
+      itemsAreObjects = false;
+      return;
+    }
+    const itemConfigKey = item['~k'] ?? configKey;
+    const keyArgs = { configKey: itemConfigKey, context };
+    checkKeys({ object: item, allowed: MENU_ITEM_KEYS, path: itemPath, ...keyArgs });
+    if (!type.isString(item.pageId)) {
+      collectExceptions(
+        context,
+        new ConfigError(`App "${itemPath}.pageId" should be a string.`, {
+          received: item.pageId,
+          configKey: itemConfigKey,
+        })
+      );
+    }
+    checkOptionalString({ value: item.icon, path: `${itemPath}.icon`, ...keyArgs });
+    checkOptionalString({ value: item.sfSymbol, path: `${itemPath}.sfSymbol`, ...keyArgs });
+    checkOptionalString({ value: item.title, path: `${itemPath}.title`, ...keyArgs });
+  });
+  return itemsAreObjects;
+}
+
+function validateMenus({ menus, configKey, context }) {
+  if (!checkObject({ value: menus, path: 'mobile.menus', configKey, context })) {
+    return;
+  }
+  const menusConfigKey = menus['~k'] ?? configKey;
+  checkKeys({
+    object: menus,
+    allowed: MENU_KEYS,
+    path: 'mobile.menus',
+    configKey: menusConfigKey,
+    context,
+  });
+  const frames = MENU_KEYS.filter((key) => !type.isUndefined(menus[key]));
+  if (frames.length !== 1) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "mobile.menus" should have exactly one of ${MENU_KEYS.join(', ')}. Received ${
+          frames.length === 0 ? 'none' : frames.join(', ')
+        }.`,
+        { configKey: menusConfigKey }
+      )
+    );
+  }
+  if (
+    !type.isUndefined(menus.tabs) &&
+    validateMenuItems({
+      items: menus.tabs,
+      path: 'mobile.menus.tabs',
+      configKey: menusConfigKey,
+      context,
+    })
+  ) {
     validateMenuItemRoles({
       items: menus.tabs,
       path: 'mobile.menus.tabs',
       configKey: menusConfigKey,
       roles: TAB_ROLES,
+      context,
     });
     if (menus.tabs.length < 2 || menus.tabs.length > 5) {
-      throw new ConfigError(
-        `App "mobile.menus.tabs" should have 2 to 5 items. Received ${menus.tabs.length}.`,
-        { configKey: menus.tabs['~k'] ?? menusConfigKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `App "mobile.menus.tabs" should have 2 to 5 items. Received ${menus.tabs.length}.`,
+          { configKey: menus.tabs['~k'] ?? menusConfigKey }
+        )
       );
     }
   }
-  if (!type.isUndefined(menus.drawer)) {
+  if (
+    !type.isUndefined(menus.drawer) &&
     validateMenuItems({
       items: menus.drawer,
       path: 'mobile.menus.drawer',
       configKey: menusConfigKey,
-    });
+      context,
+    })
+  ) {
     validateMenuItemRoles({
       items: menus.drawer,
       path: 'mobile.menus.drawer',
       configKey: menusConfigKey,
       roles: [],
+      context,
     });
     if (menus.drawer.length === 0) {
-      throw new ConfigError('App "mobile.menus.drawer" should have at least one item.', {
-        configKey: menus.drawer['~k'] ?? menusConfigKey,
-      });
+      collectExceptions(
+        context,
+        new ConfigError('App "mobile.menus.drawer" should have at least one item.', {
+          configKey: menus.drawer['~k'] ?? menusConfigKey,
+        })
+      );
     }
   }
   if (!type.isUndefined(menus.stack) && menus.stack !== true) {
-    throw new ConfigError('App "mobile.menus.stack" should be true.', {
-      received: menus.stack,
-      configKey: menusConfigKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError('App "mobile.menus.stack" should be true.', {
+        received: menus.stack,
+        configKey: menusConfigKey,
+      })
+    );
   }
 }
 
-function checkOptionalEnum({ value, allowed, path, configKey }) {
+function checkOptionalEnum({ value, allowed, path, configKey, context }) {
   if (!type.isUndefined(value) && !allowed.includes(value)) {
-    throw new ConfigError(`App "${path}" should be one of ${allowed.join(', ')}.`, {
-      received: value,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be one of ${allowed.join(', ')}.`, {
+        received: value,
+        configKey,
+      })
+    );
   }
 }
 
-function checkOptionalPattern({ value, pattern, path, description, configKey }) {
-  checkOptionalString({ value, path, configKey });
+function checkOptionalPattern({ value, pattern, path, description, configKey, context }) {
+  if (!checkOptionalString({ value, path, configKey, context })) {
+    return;
+  }
   if (type.isString(value) && !pattern.test(value)) {
-    throw new ConfigError(`App "${path}" should be ${description}.`, {
-      received: value,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be ${description}.`, {
+        received: value,
+        configKey,
+      })
+    );
   }
 }
 
-function validateShellEas({ eas, path, configKey }) {
-  checkObject({ value: eas, path, configKey });
-  checkKeys({ object: eas, allowed: EAS_KEYS, path, configKey });
+function validateShellEas({ eas, path, configKey, context }) {
+  if (!checkObject({ value: eas, path, configKey, context })) {
+    return;
+  }
+  checkKeys({ object: eas, allowed: EAS_KEYS, path, configKey, context });
   EAS_KEYS.forEach((key) =>
-    checkOptionalString({ value: eas[key], path: `${path}.${key}`, configKey })
+    checkOptionalString({ value: eas[key], path: `${path}.${key}`, configKey, context })
   );
 }
 
-function validateShellIos({ ios, path, configKey }) {
-  checkObject({ value: ios, path, configKey });
-  checkKeys({ object: ios, allowed: IOS_KEYS, path, configKey });
+function validateShellIos({ ios, path, configKey, context }) {
+  if (!checkObject({ value: ios, path, configKey, context })) {
+    return;
+  }
+  checkKeys({ object: ios, allowed: IOS_KEYS, path, configKey, context });
   checkOptionalPattern({
     value: ios.bundleId,
     pattern: IOS_BUNDLE_ID_PATTERN,
     path: `${path}.bundleId`,
     description: 'a reverse-DNS bundle id of letters, digits and hyphens, like "com.example.app"',
     configKey,
+    context,
   });
-  checkOptionalString({ value: ios.teamId, path: `${path}.teamId`, configKey });
+  checkOptionalString({ value: ios.teamId, path: `${path}.teamId`, configKey, context });
   checkOptionalPattern({
     value: ios.ascAppId,
     pattern: ASC_APP_ID_PATTERN,
     path: `${path}.ascAppId`,
     description: 'the App Store Connect app id, digits only, like "6825509768"',
     configKey,
+    context,
   });
 }
 
-function validateShellAndroid({ android, path, configKey }) {
-  checkObject({ value: android, path, configKey });
-  checkKeys({ object: android, allowed: ANDROID_KEYS, path, configKey });
+function validateShellAndroid({ android, path, configKey, context }) {
+  if (!checkObject({ value: android, path, configKey, context })) {
+    return;
+  }
+  checkKeys({ object: android, allowed: ANDROID_KEYS, path, configKey, context });
   checkOptionalPattern({
     value: android.package,
     pattern: ANDROID_PACKAGE_PATTERN,
@@ -288,6 +379,7 @@ function validateShellAndroid({ android, path, configKey }) {
     description:
       'a reverse-DNS package name whose segments start with a letter and hold only letters, digits and underscores, like "com.example.app"',
     configKey,
+    context,
   });
   const { sha256 } = android;
   const validSha256 =
@@ -295,10 +387,13 @@ function validateShellAndroid({ android, path, configKey }) {
     type.isString(sha256) ||
     (type.isArray(sha256) && sha256.every((value) => type.isString(value)));
   if (!validSha256) {
-    throw new ConfigError(`App "${path}.sha256" should be a string or an array of strings.`, {
-      received: sha256,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}.sha256" should be a string or an array of strings.`, {
+        received: sha256,
+        configKey,
+      })
+    );
   }
 }
 
@@ -319,64 +414,108 @@ function warnMissingSha256({ shell, path, configKey, context }) {
   );
 }
 
-function validateShellPlugin({ plugin, path, configKey }) {
-  checkObject({ value: plugin, path, configKey });
+// Returns whether the plugin is an object with a name, which the duplicate and version checks
+// read.
+function validateShellPlugin({ plugin, path, configKey, context }) {
+  if (!checkObject({ value: plugin, path, configKey, context })) {
+    return false;
+  }
   const pluginConfigKey = plugin['~k'] ?? configKey;
-  checkKeys({ object: plugin, allowed: SHELL_PLUGIN_KEYS, path, configKey: pluginConfigKey });
+  checkKeys({
+    object: plugin,
+    allowed: SHELL_PLUGIN_KEYS,
+    path,
+    configKey: pluginConfigKey,
+    context,
+  });
   if (!type.isString(plugin.name)) {
-    throw new ConfigError(`App "${path}.name" should be a string.`, {
-      received: plugin.name,
-      configKey: pluginConfigKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}.name" should be a string.`, {
+        received: plugin.name,
+        configKey: pluginConfigKey,
+      })
+    );
+    return false;
   }
   if (!type.isString(plugin.version) || !PLUGIN_VERSION_PATTERN.test(plugin.version)) {
-    throw new ConfigError(
-      `App "${path}.version" of shell plugin "${plugin.name}" should be an exact version, like "2.1.0" or "2.1.0-beta.1". Ranges, dist-tags, git, "file:" and "workspace:" are refused.`,
-      { received: plugin.version, configKey: pluginConfigKey }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "${path}.version" of shell plugin "${plugin.name}" should be an exact version, like "2.1.0" or "2.1.0-beta.1". Ranges, dist-tags, git, "file:" and "workspace:" are refused.`,
+        { received: plugin.version, configKey: pluginConfigKey }
+      )
     );
   }
   checkOptionalString({
     value: plugin.typePrefix,
     path: `${path}.typePrefix`,
     configKey: pluginConfigKey,
+    context,
   });
   if (!type.isUndefined(plugin.options)) {
-    checkObject({ value: plugin.options, path: `${path}.options`, configKey: pluginConfigKey });
-  }
-}
-
-function validateShellPlugins({ plugins, path, configKey }) {
-  if (!type.isArray(plugins)) {
-    throw new ConfigError(`App "${path}" should be an array.`, { received: plugins, configKey });
-  }
-  const checkDuplicatePlugin = createCheckDuplicateId({
-    message: `Duplicate shell plugin "{{ id }}" in "${path}".`,
-  });
-  plugins.forEach((plugin, index) => {
-    const pluginPath = `${path}[${index}]`;
-    validateShellPlugin({ plugin, path: pluginPath, configKey });
-    checkDuplicatePlugin({ id: plugin.name, configKey: plugin['~k'] ?? configKey });
-  });
-}
-
-function validateShell({ shell, path, configKey, context }) {
-  checkObject({ value: shell, path, configKey });
-  const shellConfigKey = shell['~k'] ?? configKey;
-  checkKeys({ object: shell, allowed: SHELL_KEYS, path, configKey: shellConfigKey });
-  if (!type.isString(shell.id)) {
-    throw new ConfigError(`App "${path}.id" should be a string.`, {
-      received: shell.id,
-      configKey: shellConfigKey,
+    checkObject({
+      value: plugin.options,
+      path: `${path}.options`,
+      configKey: pluginConfigKey,
+      context,
     });
   }
-  checkOptionalString({ value: shell.name, path: `${path}.name`, configKey: shellConfigKey });
-  checkOptionalString({ value: shell.icon, path: `${path}.icon`, configKey: shellConfigKey });
+  return true;
+}
+
+// Returns whether every plugin is an object with a name.
+function validateShellPlugins({ plugins, path, configKey, context }) {
+  if (!checkArray({ value: plugins, path, configKey, context })) {
+    return false;
+  }
+  const names = new Set();
+  let pluginsAreNamed = true;
+  plugins.forEach((plugin, index) => {
+    const pluginPath = `${path}[${index}]`;
+    if (!validateShellPlugin({ plugin, path: pluginPath, configKey, context })) {
+      pluginsAreNamed = false;
+      return;
+    }
+    const name = plugin.name.toLowerCase();
+    if (names.has(name)) {
+      collectExceptions(
+        context,
+        new ConfigError(`Duplicate shell plugin "${plugin.name}" in "${path}".`, {
+          configKey: plugin['~k'] ?? configKey,
+        })
+      );
+    }
+    names.add(name);
+  });
+  return pluginsAreNamed;
+}
+
+// Returns whether the shell's plugins can be read by the version check.
+function validateShell({ shell, path, configKey, context }) {
+  if (!checkObject({ value: shell, path, configKey, context })) {
+    return false;
+  }
+  const shellConfigKey = shell['~k'] ?? configKey;
+  const keyArgs = { configKey: shellConfigKey, context };
+  checkKeys({ object: shell, allowed: SHELL_KEYS, path, ...keyArgs });
+  if (!type.isString(shell.id)) {
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}.id" should be a string.`, {
+        received: shell.id,
+        configKey: shellConfigKey,
+      })
+    );
+  }
+  checkOptionalString({ value: shell.name, path: `${path}.name`, ...keyArgs });
+  checkOptionalString({ value: shell.icon, path: `${path}.icon`, ...keyArgs });
   if (type.isString(shell.icon)) {
     validateShellIcon({
       icon: shell.icon,
       path: `${path}.icon`,
       configDirectory: context.directories.config,
-      configKey: shellConfigKey,
+      ...keyArgs,
     });
   }
   checkOptionalPattern({
@@ -384,90 +523,97 @@ function validateShell({ shell, path, configKey, context }) {
     pattern: COLOR_PATTERN,
     path: `${path}.color`,
     description: 'a colour like "#0B5FFF"',
-    configKey: shellConfigKey,
+    ...keyArgs,
   });
   checkOptionalEnum({
     value: shell.profile,
     allowed: SHELL_PROFILES,
     path: `${path}.profile`,
-    configKey: shellConfigKey,
+    ...keyArgs,
   });
   checkOptionalPattern({
     value: shell.version,
     pattern: STORE_VERSION_PATTERN,
     path: `${path}.version`,
     description: '"major.minor", like "1.4" (the patch is raised by each native build)',
-    configKey: shellConfigKey,
+    ...keyArgs,
   });
   checkOptionalEnum({
     value: shell.distribution,
     allowed: SHELL_DISTRIBUTIONS,
     path: `${path}.distribution`,
-    configKey: shellConfigKey,
+    ...keyArgs,
   });
-  checkOptionalString({ value: shell.scheme, path: `${path}.scheme`, configKey: shellConfigKey });
+  checkOptionalString({ value: shell.scheme, path: `${path}.scheme`, ...keyArgs });
   if (
     type.isString(shell.scheme) &&
     (!SCHEME_PATTERN.test(shell.scheme) || REFUSED_SCHEMES.includes(shell.scheme))
   ) {
-    throw new ConfigError(
-      `App "${path}.scheme" should be the shell's own URL scheme in lowercase, like "myapp", and not a web scheme.`,
-      { received: shell.scheme, configKey: shellConfigKey }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "${path}.scheme" should be the shell's own URL scheme in lowercase, like "myapp", and not a web scheme.`,
+        { received: shell.scheme, configKey: shellConfigKey }
+      )
     );
   }
   if (!type.isUndefined(shell.eas)) {
-    validateShellEas({ eas: shell.eas, path: `${path}.eas`, configKey: shellConfigKey });
+    validateShellEas({ eas: shell.eas, path: `${path}.eas`, ...keyArgs });
   }
   if (!type.isUndefined(shell.ios)) {
-    validateShellIos({ ios: shell.ios, path: `${path}.ios`, configKey: shellConfigKey });
+    validateShellIos({ ios: shell.ios, path: `${path}.ios`, ...keyArgs });
   }
   if (!type.isUndefined(shell.android)) {
-    validateShellAndroid({
-      android: shell.android,
-      path: `${path}.android`,
-      configKey: shellConfigKey,
-    });
+    validateShellAndroid({ android: shell.android, path: `${path}.android`, ...keyArgs });
   }
+  let pluginsAreNamed = true;
   if (!type.isUndefined(shell.plugins)) {
-    validateShellPlugins({
+    pluginsAreNamed = validateShellPlugins({
       plugins: shell.plugins,
       path: `${path}.plugins`,
-      configKey: shellConfigKey,
+      ...keyArgs,
     });
   }
   if (!type.isUndefined(shell.extensions)) {
     validateShellExtensions({
       extensions: shell.extensions,
       path: `${path}.extensions`,
-      configKey: shellConfigKey,
+      ...keyArgs,
     });
   }
-  warnMissingSha256({ shell, path, configKey: shellConfigKey, context });
+  warnMissingSha256({ shell, path, ...keyArgs });
+  return pluginsAreNamed;
 }
 
-function validateShellExtensions({ extensions, path, configKey }) {
-  if (!type.isArray(extensions)) {
-    throw new ConfigError(`App "${path}" should be an array.`, { received: extensions, configKey });
+function validateShellExtensions({ extensions, path, configKey, context }) {
+  if (!checkArray({ value: extensions, path, configKey, context })) {
+    return;
   }
   extensions.forEach((extension, index) => {
     if (!SHELL_EXTENSIONS.includes(extension)) {
-      throw new ConfigError(
-        `App "${path}[${index}]" should be one of ${SHELL_EXTENSIONS.join(', ')}.`,
-        { received: extension, configKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `App "${path}[${index}]" should be one of ${SHELL_EXTENSIONS.join(', ')}.`,
+          { received: extension, configKey }
+        )
       );
     }
   });
   if (new Set(extensions).size !== extensions.length) {
-    throw new ConfigError(`App "${path}" lists an extension twice.`, {
-      received: extensions,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" lists an extension twice.`, {
+        received: extensions,
+        configKey,
+      })
+    );
   }
 }
 
 // The server installs one copy of each plugin package, so a package has one
 // version across root plugins and every shell's plugins.
-function checkPluginVersions({ shells, rootPlugins, configKey }) {
+function checkPluginVersions({ shells, rootPlugins, configKey, context }) {
   const seen = new Map();
   (type.isArray(rootPlugins) ? rootPlugins : []).forEach((plugin, index) => {
     if (type.isObject(plugin) && type.isString(plugin.name) && !seen.has(plugin.name)) {
@@ -483,9 +629,12 @@ function checkPluginVersions({ shells, rootPlugins, configKey }) {
         return;
       }
       if (first.version !== plugin.version) {
-        throw new ConfigError(
-          `Plugin "${plugin.name}" is at version "${first.version}" in "${first.path}" and "${plugin.version}" in "${path}". An app runs one version of a plugin, so use the same version in both.`,
-          { configKey: plugin['~k'] ?? shell['~k'] ?? configKey }
+        collectExceptions(
+          context,
+          new ConfigError(
+            `Plugin "${plugin.name}" is at version "${first.version}" in "${first.path}" and "${plugin.version}" in "${path}". An app runs one version of a plugin, so use the same version in both.`,
+            { configKey: plugin['~k'] ?? shell['~k'] ?? configKey }
+          )
         );
       }
     });
@@ -493,24 +642,31 @@ function checkPluginVersions({ shells, rootPlugins, configKey }) {
 }
 
 function validateShells({ shells, configKey, context }) {
-  if (!type.isArray(shells)) {
-    throw new ConfigError('App "mobile.shells" should be an array.', {
-      received: shells,
-      configKey,
-    });
+  if (!checkArray({ value: shells, path: 'mobile.shells', configKey, context })) {
+    return;
   }
   const shellIds = new Set();
+  let shellsAreReadable = true;
   shells.forEach((shell, index) => {
     const path = `mobile.shells[${index}]`;
-    validateShell({ shell, path, configKey, context });
+    if (!validateShell({ shell, path, configKey, context })) {
+      shellsAreReadable = false;
+      return;
+    }
     if (shellIds.has(shell.id)) {
-      throw new ConfigError(`Duplicate mobile shell id "${shell.id}".`, {
-        configKey: shell['~k'] ?? configKey,
-      });
+      collectExceptions(
+        context,
+        new ConfigError(`Duplicate mobile shell id "${shell.id}".`, {
+          configKey: shell['~k'] ?? configKey,
+        })
+      );
     }
     shellIds.add(shell.id);
   });
-  checkPluginVersions({ shells, rootPlugins: context.plugins, configKey });
+  if (!shellsAreReadable) {
+    return;
+  }
+  checkPluginVersions({ shells, rootPlugins: context.plugins, configKey, context });
   // validateNativePageTypes reads which shells carry which plugins. buildPage
   // has no components. An in-process JIT page build runs on a copy of this
   // context; the dev server's page builds restore it from mobileShells.json.
@@ -520,111 +676,124 @@ function validateShells({ shells, configKey, context }) {
   }));
 }
 
-function checkOptionalBoolean({ value, path, configKey }) {
+function checkOptionalBoolean({ value, path, configKey, context }) {
   if (!type.isUndefined(value) && !type.isBoolean(value)) {
-    throw new ConfigError(`App "${path}" should be a boolean.`, { received: value, configKey });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be a boolean.`, { received: value, configKey })
+    );
   }
 }
 
-function checkOptionalInteger({ value, path, minimum, configKey }) {
+function checkOptionalInteger({ value, path, minimum, configKey, context }) {
   if (type.isUndefined(value)) {
     return;
   }
   if (!type.isInt(value) || value < minimum) {
-    throw new ConfigError(`App "${path}" should be an integer of ${minimum} or more.`, {
-      received: value,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be an integer of ${minimum} or more.`, {
+        received: value,
+        configKey,
+      })
+    );
   }
 }
 
-function validateAuth({ auth, configKey }) {
-  checkObject({ value: auth, path: 'mobile.auth', configKey });
+function validateAuth({ auth, configKey, context }) {
+  if (!checkObject({ value: auth, path: 'mobile.auth', configKey, context })) {
+    return;
+  }
   const authConfigKey = auth['~k'] ?? configKey;
-  checkKeys({ object: auth, allowed: AUTH_KEYS, path: 'mobile.auth', configKey: authConfigKey });
-  checkOptionalBoolean({
-    value: auth.emailCode,
-    path: 'mobile.auth.emailCode',
-    configKey: authConfigKey,
-  });
+  const keyArgs = { configKey: authConfigKey, context };
+  checkKeys({ object: auth, allowed: AUTH_KEYS, path: 'mobile.auth', ...keyArgs });
+  checkOptionalBoolean({ value: auth.emailCode, path: 'mobile.auth.emailCode', ...keyArgs });
   if (!type.isUndefined(auth.unlock) && !UNLOCK_MODES.includes(auth.unlock)) {
-    throw new ConfigError(`App "mobile.auth.unlock" should be one of ${UNLOCK_MODES.join(', ')}.`, {
-      received: auth.unlock,
-      configKey: authConfigKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "mobile.auth.unlock" should be one of ${UNLOCK_MODES.join(', ')}.`, {
+        received: auth.unlock,
+        configKey: authConfigKey,
+      })
+    );
   }
   checkOptionalInteger({
     value: auth.unlockAfter,
     path: 'mobile.auth.unlockAfter',
     minimum: 0,
-    configKey: authConfigKey,
+    ...keyArgs,
   });
-  checkOptionalBoolean({
-    value: auth.sharedDevice,
-    path: 'mobile.auth.sharedDevice',
-    configKey: authConfigKey,
-  });
+  checkOptionalBoolean({ value: auth.sharedDevice, path: 'mobile.auth.sharedDevice', ...keyArgs });
   checkOptionalInteger({
     value: auth.sessionExpiresIn,
     path: 'mobile.auth.sessionExpiresIn',
     minimum: 1,
-    configKey: authConfigKey,
+    ...keyArgs,
   });
 }
 
 // The schema check (testSchema) only warns, and a shell cannot open an app
 // whose mobile config it does not understand, so the mobile key is checked
-// here and an unknown key fails the build.
+// here and an unknown key fails the build. Every error is collected, so one
+// build reports them all.
 //
 // Purpose texts for the capabilities a shell's profile adds are checked once
 // mobile.permissions exists; until then a profile is accepted on its name.
 function validateMobileConfig({ mobile, context }) {
-  checkObject({ value: mobile, path: 'mobile' });
+  if (!checkObject({ value: mobile, path: 'mobile', context })) {
+    return;
+  }
   const configKey = mobile['~k'];
-  checkKeys({ object: mobile, allowed: MOBILE_KEYS, path: 'mobile', configKey });
-  checkOptionalString({ value: mobile.homePageId, path: 'mobile.homePageId', configKey });
-  if (!type.isUndefined(mobile.minShellVersion)) {
-    if (!type.isString(mobile.minShellVersion) || semver.valid(mobile.minShellVersion) === null) {
-      throw new ConfigError(
-        'App "mobile.minShellVersion" should be a semver version, like "7.4.0".',
-        { received: mobile.minShellVersion, configKey }
-      );
-    }
+  checkKeys({ object: mobile, allowed: MOBILE_KEYS, path: 'mobile', configKey, context });
+  checkOptionalString({
+    value: mobile.homePageId,
+    path: 'mobile.homePageId',
+    configKey,
+    context,
+  });
+  if (
+    !type.isUndefined(mobile.minShellVersion) &&
+    (!type.isString(mobile.minShellVersion) || semver.valid(mobile.minShellVersion) === null)
+  ) {
+    collectExceptions(
+      context,
+      new ConfigError('App "mobile.minShellVersion" should be a semver version, like "7.4.0".', {
+        received: mobile.minShellVersion,
+        configKey,
+      })
+    );
   }
   if (!type.isUndefined(mobile.menus)) {
-    validateMenus({ menus: mobile.menus, configKey });
+    validateMenus({ menus: mobile.menus, configKey, context });
   }
-  if (!type.isUndefined(mobile.pages)) {
-    if (!type.isArray(mobile.pages)) {
-      throw new ConfigError('App "mobile.pages" should be an array.', {
-        received: mobile.pages,
-        configKey,
-      });
-    }
+  if (
+    !type.isUndefined(mobile.pages) &&
+    checkArray({ value: mobile.pages, path: 'mobile.pages', configKey, context })
+  ) {
     mobile.pages.forEach((page, index) => {
-      checkObject({ value: page, path: `mobile.pages[${index}]`, configKey });
+      checkObject({ value: page, path: `mobile.pages[${index}]`, configKey, context });
     });
   }
   if (!type.isUndefined(mobile.shells)) {
     validateShells({ shells: mobile.shells, configKey, context });
   }
   if (!type.isUndefined(mobile.auth)) {
-    validateAuth({ auth: mobile.auth, configKey });
+    validateAuth({ auth: mobile.auth, configKey, context });
   }
   if (!type.isUndefined(mobile.notifications)) {
-    validateMobileNotifications({ notifications: mobile.notifications, configKey });
+    validateMobileNotifications({ notifications: mobile.notifications, configKey, context });
   }
   if (!type.isUndefined(mobile.share)) {
-    validateMobileShare({ share: mobile.share, configKey });
+    validateMobileShare({ share: mobile.share, configKey, context });
   }
   if (!type.isUndefined(mobile.widgets)) {
-    validateMobileWidgets({ widgets: mobile.widgets, configKey });
+    validateMobileWidgets({ widgets: mobile.widgets, configKey, context });
   }
   if (!type.isUndefined(mobile.shortcuts)) {
-    validateMobileShortcuts({ shortcuts: mobile.shortcuts, configKey });
+    validateMobileShortcuts({ shortcuts: mobile.shortcuts, configKey, context });
   }
   if (!type.isUndefined(mobile.background)) {
-    validateMobileBackground({ background: mobile.background, configKey });
+    validateMobileBackground({ background: mobile.background, configKey, context });
   }
 }
 

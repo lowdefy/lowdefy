@@ -1821,6 +1821,18 @@ test('runJourney returns an error and closes the context when the page fails to 
   );
 });
 
+test('runJourney reports a programming error in the runner as a dev tool fault', async () => {
+  mockOpenPage.mockRejectedValue(
+    new TypeError("Cannot read properties of undefined (reading 'main')")
+  );
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ click: 'x' }] });
+
+  expect(result.error).toEqual(
+    "Failed to run journey at \"http://localhost:3227/form\": TypeError: Cannot read properties of undefined (reading 'main') (a fault in the dev server's journey tool, not in the app; the dev server terminal has the stack)"
+  );
+});
+
 test('runJourney opens each actor the first time an as step names it and returns to earlier actors', async () => {
   const mainPage = createPage();
   const inviteePage = createPage();

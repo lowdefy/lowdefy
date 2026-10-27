@@ -18,21 +18,24 @@ import { expect, test } from 'vitest';
 import validateMobileBackground from './validateMobileBackground.js';
 import validateMobileShare from './validateMobileShare.js';
 
+// No errors array: collectExceptions throws the first error, as a build without one would.
+const context = {};
+
 test('validateMobileBackground accepts an endpoint and an interval of 15 minutes or more', () => {
   expect(() =>
-    validateMobileBackground({ background: { endpointId: 'refresh', interval: 30 } })
+    validateMobileBackground({ context, background: { endpointId: 'refresh', interval: 30 } })
   ).not.toThrow();
 });
 
 test('validateMobileBackground refuses an interval under 15 minutes', () => {
   expect(() =>
-    validateMobileBackground({ background: { endpointId: 'refresh', interval: 5 } })
+    validateMobileBackground({ context, background: { endpointId: 'refresh', interval: 5 } })
   ).toThrow('App "mobile.background.interval" should be a number of 15 or more.');
 });
 
 test('validateMobileShare needs the page shared items open', () => {
-  expect(() => validateMobileShare({ share: { pageId: 'inbox' } })).not.toThrow();
-  expect(() => validateMobileShare({ share: {} })).toThrow(
+  expect(() => validateMobileShare({ context, share: { pageId: 'inbox' } })).not.toThrow();
+  expect(() => validateMobileShare({ context, share: {} })).toThrow(
     'App "mobile.share.pageId" should be a non-empty string.'
   );
 });

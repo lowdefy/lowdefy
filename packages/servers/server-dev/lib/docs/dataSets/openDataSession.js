@@ -17,6 +17,7 @@
 import crypto from 'node:crypto';
 import { type } from '@lowdefy/helpers';
 
+import createLogger from '../../server/log/createLogger.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import drainSessionWork from './drainSessionWork.js';
 import getDataStore from './getDataStore.js';
@@ -25,6 +26,8 @@ import isDataStoreGone from './isDataStoreGone.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
+
+const logger = createLogger();
 
 const DRAIN_TIMEOUT_MS = 30000;
 
@@ -43,8 +46,7 @@ function createClose({ session, client }) {
     session.state = 'closing';
     const drained = await drainSessionWork({ work: session.work, timeoutMs: DRAIN_TIMEOUT_MS });
     if (!drained) {
-      // eslint-disable-next-line no-console
-      console.warn(
+      logger.warn(
         `Data set "${session.name}": background work was still running ${
           DRAIN_TIMEOUT_MS / 1000
         } s after its journey ended. Dropping its databases anyway; that work now fails.`

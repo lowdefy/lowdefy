@@ -15,6 +15,7 @@
 */
 
 import { vi, expect, test } from 'vitest';
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { callerHash, callerStamp } from '@lowdefy/helpers';
 
 import createLowdefyCore, { HOST_KEYS } from './createLowdefyCore.js';
@@ -194,10 +195,10 @@ test('createLowdefyCore names every host member that is missing', () => {
   expect(HOST_KEYS).toContain('fetch');
 });
 
-test('createLowdefyCore throws when the host is not an object', () => {
-  expect(() => createLowdefyCore({ basePath: '', lowdefy: {}, rootConfig: {}, types: {} })).toThrow(
-    'Lowdefy client host is not an object. Received undefined.'
-  );
+test('createLowdefyCore throws a LowdefyInternalError when the host is not an object', () => {
+  const create = () => createLowdefyCore({ basePath: '', lowdefy: {}, rootConfig: {}, types: {} });
+  expect(create).toThrow('Lowdefy client host is not an object. Received undefined.');
+  expect(create).toThrow(LowdefyInternalError);
 });
 
 function createBearerHost(token) {

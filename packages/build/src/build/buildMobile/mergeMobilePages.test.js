@@ -17,12 +17,15 @@
 import { expect, test } from 'vitest';
 import mergeMobilePages from './mergeMobilePages.js';
 
+// No errors array: collectExceptions throws the first error, as a build without one would.
+const context = {};
+
 test('mergeMobilePages appends mobile pages with target mobile', () => {
   const components = {
     pages: [{ id: 'home', type: 'Box' }],
     mobile: { pages: [{ id: 'today', type: 'Box' }] },
   };
-  mergeMobilePages({ components });
+  mergeMobilePages({ context, components });
   expect(components.pages).toEqual([
     { id: 'home', type: 'Box' },
     { id: 'today', type: 'Box', target: 'mobile' },
@@ -35,7 +38,7 @@ test('mergeMobilePages marks a page with the same id and config as shared', () =
     pages: [{ id: 'about', type: 'Box', '~r': 'r1' }],
     mobile: { pages: [{ id: 'about', type: 'Box', '~r': 'r2' }] },
   };
-  mergeMobilePages({ components });
+  mergeMobilePages({ context, components });
   expect(components.pages).toEqual([{ id: 'about', type: 'Box', '~r': 'r1', target: 'both' }]);
 });
 
@@ -44,7 +47,7 @@ test('mergeMobilePages throws when a shared page id has different config', () =>
     pages: [{ id: 'home', type: 'Box', properties: { title: 'Web' } }],
     mobile: { pages: [{ id: 'home', type: 'Box', properties: { title: 'Mobile' } }] },
   };
-  expect(() => mergeMobilePages({ components })).toThrow(
+  expect(() => mergeMobilePages({ context, components })).toThrow(
     'Page "home" is in both "pages" and "mobile.pages" with different config. A page shared by web and mobile must be the same config, for example the same _ref.'
   );
 });
@@ -54,6 +57,6 @@ test('mergeMobilePages appends a mobile page without a string id for buildPage t
     pages: [],
     mobile: { pages: [{ type: 'Box' }] },
   };
-  mergeMobilePages({ components });
+  mergeMobilePages({ context, components });
   expect(components.pages).toEqual([{ type: 'Box', target: 'mobile' }]);
 });

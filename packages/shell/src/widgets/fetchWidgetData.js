@@ -15,11 +15,13 @@
 */
 
 import callEndpoint from '../native/callEndpoint.js';
+import reportShellError from '../host/reportShellError.js';
 
 /**
  * Each mobile.widgets source's data, from its endpoint: { [id]: { title, layout, url, count, label,
  * items } }. A count source answers { count, label? }, a list source { items: [{ title, subtitle?
- * }] }. A source whose endpoint fails keeps showing nothing new (it is left out). The url a widget
+ * }] }. A source whose endpoint fails keeps showing nothing new (it is left out, and the failure is
+ * reported). The url a widget
  * opens is the source's path under the shell's scheme.
  *
  * @param {Object} params
@@ -46,6 +48,7 @@ async function fetchWidgetData({ app }) {
           },
         ];
       } catch (error) {
+        reportShellError({ error, session: app.session });
         return null;
       }
     })

@@ -207,7 +207,7 @@ plugins:
   mockImportFresh.mockRejectedValue(new Error('No "./types" export.'));
 
   await expect(createCustomPluginTypesMap({ directories, logger })).rejects.toThrow(
-    'Failed to import plugin "@example/lowdefy-mdm".'
+    'Failed to import plugin "@example/lowdefy-mdm": No "./types" export.'
   );
   expect(mockHasTypesExport).not.toHaveBeenCalled();
 });

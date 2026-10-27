@@ -19,6 +19,8 @@ import { KeyboardAvoidingView, ScrollView, Text, TextInput, View } from 'react-n
 
 import AuthButton from './AuthButton.js';
 import AuthLink from './AuthLink.js';
+import isNetworkError from '../host/isNetworkError.js';
+import reportShellError from '../host/reportShellError.js';
 import styles from './styles.js';
 import useSurfaceTokens from '../components/useSurfaceTokens.js';
 
@@ -33,6 +35,7 @@ const MESSAGES = {
     'Too many codes were sent to this email. Use the newest code in your email, or try again later.',
   sheetFailed: 'Sign-in did not finish. Try again.',
   unreachable: "Could not reach the app's server. Check your connection and try again.",
+  failed: 'Sign-in did not work. Try again later.',
 };
 
 /**
@@ -77,7 +80,14 @@ function SignInScreen({ appName, auth, settings }) {
     try {
       await task();
     } catch (taskError) {
-      setError(MESSAGES.unreachable);
+      // Only a call that never reached the server is a connection problem. Anything else (the
+      // server answered with an error, or signed in without a session token) is a fault.
+      if (isNetworkError(taskError)) {
+        setError(MESSAGES.unreachable);
+        return;
+      }
+      reportShellError({ error: taskError });
+      setError(MESSAGES.failed);
     } finally {
       setBusy(false);
     }

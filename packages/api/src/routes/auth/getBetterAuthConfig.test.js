@@ -607,11 +607,16 @@ test('does not add emailVerification when email is not configured', () => {
 // BETTER_AUTH_URL unset construct the options as the dev server does.
 describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
-  const sentinelContext = { system: true };
+  const sentinelContext = {
+    system: true,
+    handleError: vi.fn(async () => {}),
+    logger: { warn: vi.fn() },
+  };
   const createSystemContext = vi.fn(() => sentinelContext);
 
   afterEach(() => {
     createSystemContext.mockClear();
+    sentinelContext.handleError.mockClear();
     if (originalBetterAuthUrl === undefined) {
       delete process.env.BETTER_AUTH_URL;
     } else {
@@ -634,7 +639,9 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    expect(mockCreateSendEmail).toHaveBeenCalledWith({ connectionId: 'auth_email' });
+    expect(mockCreateSendEmail).toHaveBeenCalledWith({
+      authEmailConfig: expect.objectContaining({ connectionId: 'auth_email' }),
+    });
   });
 
   test('sendResetPassword renders the resetPassword flow and sends to the user email', async () => {
@@ -859,9 +866,10 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     );
   });
 
-  // Only the sign-in code has an email flow behind it; a request for any other
-  // OTP type is a wiring fault and must fail loudly rather than send nothing.
-  test('sendVerificationOTP throws a ConfigError for an OTP type other than sign-in', async () => {
+  // Only the sign-in code has an email flow behind it. The type comes from the caller's request,
+  // so another type is refused with one warning: no email, and no fault report a caller could
+  // flood error tracking with.
+  test('sendVerificationOTP refuses an OTP type other than sign-in with a warning and sends nothing', async () => {
     const options = getBetterAuthConfig({
       appMeta,
       dev: true,
@@ -882,13 +890,18 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
       secrets: baseSecrets,
     });
     const otpPlugin = options.plugins.find((p) => p.id === 'email-otp');
-    await expect(
-      otpPlugin.options.sendVerificationOTP({
-        email: 'user@example.com',
-        otp: '482913',
-        type: 'forget-password',
-      })
-    ).rejects.toThrow(ConfigError);
+    sentinelContext.handleError.mockClear();
+    sentinelContext.logger.warn.mockClear();
+    await otpPlugin.options.sendVerificationOTP({
+      email: 'user@example.com',
+      otp: '482913',
+      type: 'forget-password',
+    });
+    expect(sentinelContext.logger.warn).toHaveBeenCalledWith(
+      { event: 'auth_email_otp_type_refused', otpType: 'forget-password' },
+      expect.stringContaining('"forget-password"')
+    );
+    expect(sentinelContext.handleError).not.toHaveBeenCalled();
     expect(mockSendEmail).not.toHaveBeenCalled();
   });
 
@@ -1030,6 +1043,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     const options = getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson(),
+      createSystemContext,
       getAuth,
       logger: createLogger(),
       plugins: createPlugins(),
@@ -1042,6 +1056,10 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
         invitation: { id: 'inv_1' },
       })
     ).rejects.toThrow('Cannot send the invitation email. Configure "auth.email".');
+    // A fault, reported through the system context before BetterAuth sees it.
+    expect(sentinelContext.handleError).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'ConfigError' })
+    );
     expect(mockRenderAuthEmail).not.toHaveBeenCalled();
     expect(mockSendEmail).not.toHaveBeenCalled();
   });
@@ -1738,11 +1756,13 @@ describe('onAPIError.onError owns auth API error logging', () => {
     );
   });
 
-  test('logs a 5xx or non-API error at error level with the error object', () => {
+  test('reports a 5xx or non-API error through a system context error sink', () => {
     const logger = createLogger();
+    const handleError = vi.fn(async () => {});
     const options = getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson(),
+      createSystemContext: () => ({ handleError }),
       getAuth,
       logger,
       plugins: createPlugins(),
@@ -1754,7 +1774,7 @@ describe('onAPIError.onError owns auth API error logging', () => {
       expect.anything(),
       expect.stringContaining('Auth request rejected')
     );
-    expect(logger.error).toHaveBeenCalledWith(adapterError);
+    expect(handleError).toHaveBeenCalledWith(adapterError);
   });
 });
 

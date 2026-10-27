@@ -15,7 +15,7 @@
 */
 
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ServiceError } from '@lowdefy/errors';
 
 import findSchedule from './findSchedule.js';
 import getEndpointConfig from './getEndpointConfig.js';
@@ -35,27 +35,33 @@ async function forwardScheduledEndpoint(context, { environment, endpointId, cron
   const target = config?.environments?.[environment];
   if (!type.isObject(target)) {
     throw new ConfigError(
-      `Cron environment "${environment}" is not declared in config.environments.`
+      `Cron environment "${environment}" is not declared in config.environments.`,
+      { configKey: config?.environments?.['~k'] }
     );
   }
   if (environment === config.environment) {
     throw new ConfigError(
-      `Cron environment "${environment}" is this deployment's own environment: its crons run here, not forwarded.`
+      `Cron environment "${environment}" is this deployment's own environment: its crons run here, not forwarded.`,
+      { configKey: target['~k'] }
     );
   }
   if (target.cron?.enabled === false) {
-    throw new ConfigError(`Cron environment "${environment}" is disabled.`);
+    throw new ConfigError(`Cron environment "${environment}" is disabled.`, {
+      configKey: target['~k'],
+    });
   }
   const secretName = target.cron?.secret;
   if (type.isUndefined(secretName)) {
     throw new ConfigError(
-      `Cron environment "${environment}" has no cron.secret: crons are only forwarded to environments with one.`
+      `Cron environment "${environment}" has no cron.secret: crons are only forwarded to environments with one.`,
+      { configKey: target['~k'] }
     );
   }
   const secret = secrets?.[secretName];
   if (!type.isString(secret) || secret === '') {
     throw new ConfigError(
-      `Secret "${secretName}" holding the CRON_SECRET of cron environment "${environment}" is not set. Set the LOWDEFY_SECRET_${secretName} environment variable on this deployment.`
+      `Secret "${secretName}" holding the CRON_SECRET of cron environment "${environment}" is not set. Set the LOWDEFY_SECRET_${secretName} environment variable on this deployment.`,
+      { configKey: target.cron['~k'] ?? target['~k'] }
     );
   }
 
@@ -86,12 +92,17 @@ async function forwardScheduledEndpoint(context, { environment, endpointId, cron
     });
     // Drain the body so the connection is released; the target logs its own outcome.
     await response.arrayBuffer();
-    if (!response.ok) {
-      throw new Error(
-        `Forwarded cron for environment "${environment}" at ${url} responded ${response.status}.`
-      );
+    if (response.ok) {
+      return { status: response.status };
     }
-    return { status: response.status };
+    const message = `Forwarded cron for environment "${environment}" at ${url} responded ${response.status}.`;
+    // A failing or throttled environment passes with time. Any other answer - a 401 for a
+    // secret the environment does not share, a 404 for a url or basePath that does not serve
+    // the app - repeats until this deployment's config changes.
+    if (response.status === 429 || response.status >= 500) {
+      throw new ServiceError(message, { statusCode: response.status });
+    }
+    throw new ConfigError(message, { configKey: target['~k'] });
   });
 
   return {

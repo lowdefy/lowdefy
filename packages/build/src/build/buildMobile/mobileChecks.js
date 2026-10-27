@@ -17,95 +17,152 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-// Small shape checks the mobile feature validators share. Each throws a ConfigError naming the
-// config path and the value received. Keys starting with "~" are build markers.
+import collectExceptions from '../../utils/collectExceptions.js';
 
-function checkKeys({ object, allowed, path, configKey }) {
+// Small shape checks the mobile feature validators share. Each collects a ConfigError naming the
+// config path and the value received, so one build reports every mobile error, and returns
+// whether the value passed: a caller stops at a value that is not the object or array it reads
+// further. Keys starting with "~" are build markers.
+
+function checkKeys({ object, allowed, path, configKey, context }) {
+  let valid = true;
   Object.keys(object).forEach((key) => {
     if (key.startsWith('~')) return;
     if (!allowed.includes(key)) {
-      throw new ConfigError(
-        `App "${path}" has unknown key "${key}". Allowed keys: ${allowed.join(', ')}.`,
-        { configKey }
+      valid = false;
+      collectExceptions(
+        context,
+        new ConfigError(
+          `App "${path}" has unknown key "${key}". Allowed keys: ${allowed.join(', ')}.`,
+          { configKey }
+        )
       );
     }
   });
+  return valid;
 }
 
-function checkObject({ value, path, configKey }) {
+function checkObject({ value, path, configKey, context }) {
   if (!type.isObject(value)) {
-    throw new ConfigError(`App "${path}" should be an object.`, { received: value, configKey });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be an object.`, { received: value, configKey })
+    );
+    return false;
   }
+  return true;
 }
 
-function checkArray({ value, path, configKey }) {
+function checkArray({ value, path, configKey, context }) {
   if (!type.isArray(value)) {
-    throw new ConfigError(`App "${path}" should be an array.`, { received: value, configKey });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be an array.`, { received: value, configKey })
+    );
+    return false;
   }
+  return true;
 }
 
-function checkString({ value, path, configKey }) {
+function checkString({ value, path, configKey, context }) {
   if (!type.isString(value) || value === '') {
-    throw new ConfigError(`App "${path}" should be a non-empty string.`, {
-      received: value,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be a non-empty string.`, {
+        received: value,
+        configKey,
+      })
+    );
+    return false;
   }
+  return true;
 }
 
-function checkOptionalString({ value, path, configKey }) {
-  if (!type.isUndefined(value)) {
-    checkString({ value, path, configKey });
+function checkOptionalString({ value, path, configKey, context }) {
+  if (type.isUndefined(value)) {
+    return true;
   }
+  return checkString({ value, path, configKey, context });
 }
 
-function checkOptionalBoolean({ value, path, configKey }) {
+function checkOptionalBoolean({ value, path, configKey, context }) {
   if (!type.isUndefined(value) && !type.isBoolean(value)) {
-    throw new ConfigError(`App "${path}" should be a boolean.`, { received: value, configKey });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be a boolean.`, { received: value, configKey })
+    );
+    return false;
   }
+  return true;
 }
 
-function checkOptionalEnum({ value, allowed, path, configKey }) {
+function checkOptionalEnum({ value, allowed, path, configKey, context }) {
   if (!type.isUndefined(value) && !allowed.includes(value)) {
-    throw new ConfigError(`App "${path}" should be one of ${allowed.join(', ')}.`, {
-      received: value,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be one of ${allowed.join(', ')}.`, {
+        received: value,
+        configKey,
+      })
+    );
+    return false;
   }
+  return true;
 }
 
-function checkOptionalNumber({ value, minimum, path, configKey }) {
-  if (type.isUndefined(value)) return;
+function checkOptionalNumber({ value, minimum, path, configKey, context }) {
+  if (type.isUndefined(value)) {
+    return true;
+  }
   if (!type.isNumber(value) || value < minimum) {
-    throw new ConfigError(`App "${path}" should be a number of ${minimum} or more.`, {
-      received: value,
-      configKey,
-    });
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be a number of ${minimum} or more.`, {
+        received: value,
+        configKey,
+      })
+    );
+    return false;
   }
+  return true;
 }
 
-// Ids in one list are unique, so the shell can tell its entries apart.
-function checkUniqueIds({ items, path, configKey }) {
+// Ids in one list are unique, so the shell can tell its entries apart. The items are objects: a
+// caller checks them first.
+function checkUniqueIds({ items, path, configKey, context }) {
   const seen = new Set();
+  let valid = true;
   items.forEach((item, index) => {
     if (seen.has(item.id)) {
-      throw new ConfigError(`App "${path}[${index}].id" "${item.id}" is used twice.`, {
-        configKey: item['~k'] ?? configKey,
-      });
+      valid = false;
+      collectExceptions(
+        context,
+        new ConfigError(`App "${path}[${index}].id" "${item.id}" is used twice.`, {
+          configKey: item['~k'] ?? configKey,
+        })
+      );
     }
     seen.add(item.id);
   });
+  return valid;
 }
 
 // A page path the shell opens, like "/tasks/42": absolute, with no origin.
-function checkOptionalPath({ value, path, configKey }) {
-  checkOptionalString({ value, path, configKey });
-  if (type.isString(value) && !value.startsWith('/')) {
-    throw new ConfigError(`App "${path}" should be a page path starting with "/".`, {
-      received: value,
-      configKey,
-    });
+function checkOptionalPath({ value, path, configKey, context }) {
+  if (!checkOptionalString({ value, path, configKey, context })) {
+    return false;
   }
+  if (type.isString(value) && !value.startsWith('/')) {
+    collectExceptions(
+      context,
+      new ConfigError(`App "${path}" should be a page path starting with "/".`, {
+        received: value,
+        configKey,
+      })
+    );
+    return false;
+  }
+  return true;
 }
 
 export {

@@ -15,6 +15,7 @@
 */
 
 import { APIError } from 'better-auth/api';
+import { isExpectedError } from '@lowdefy/errors';
 
 // Translates the routine's terminal control for after and synthetic points.
 // These fire after the write committed, so `:return` data is ignored and a
@@ -32,6 +33,16 @@ function createUserAfterHook({ dispatch }) {
       });
     }
     if (result.status === 'error') {
+      // An expected outcome (a :throw, a nested call's refusal) is a 400 like :reject, not a
+      // 500. runRoutine has logged it as a warning.
+      if (isExpectedError(result.error)) {
+        throw new APIError('BAD_REQUEST', {
+          cause: result.error,
+          message: result.error.message,
+        });
+      }
+      // A fault runRoutine has already reported (handled), so createOnAPIError does not
+      // log it again.
       throw result.error;
     }
   };

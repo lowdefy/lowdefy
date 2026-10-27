@@ -14,10 +14,15 @@
   limitations under the License.
 */
 
-// A send that never reached the server: fetch rejects with a TypeError ("Network request failed")
-// when there is no connection, and Lowdefy Dev's offline injection does the same.
-function isNetworkError(error) {
-  return error instanceof TypeError;
+// A module entry is read from lowdefy.yaml, or a file it references, before
+// addKeys gives config nodes their keys. An error about an entry is located by
+// the file the ref walker read it from (its ~r ref) and the line the parser
+// stamped on it (~l), so it resolves to file:line like a keyed error does.
+function moduleEntryLocation({ entry, context }) {
+  return {
+    filePath: context.refMap[entry['~r']]?.path ?? 'lowdefy.yaml',
+    lineNumber: entry['~l'] ?? null,
+  };
 }
 
-export default isNetworkError;
+export default moduleEntryLocation;

@@ -59,6 +59,16 @@ function checkShellConfig({ configPath, shell }) {
       }". Received ${JSON.stringify(shell.app.urls)}.`
     );
   }
+  // The shell reads the server's origin from this url (src/host/getOrigin.js).
+  if (!/^[a-z][a-z0-9+.-]*:\/\/[^/?#]+/i.test(url)) {
+    throw new Error(
+      `${where} "app.urls.${
+        shell.environment
+      }" should be an absolute URL, like "https://app.example.com". Received ${JSON.stringify(
+        url
+      )}.`
+    );
+  }
   if (shell.profile !== undefined && typeof shell.profile !== 'string') {
     throw new Error(
       `${where} "profile" should be the name of a capability profile. Received ${JSON.stringify(

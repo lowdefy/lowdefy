@@ -252,6 +252,23 @@ test('a failed step is answered with its error', async () => {
   });
 });
 
+test('a failed step answers with the error class and its cause', async () => {
+  running = setup();
+  running.onStep.mockImplementation(async () => {
+    const error = new Error('Action "save" failed.', {
+      cause: new TypeError("Cannot read properties of undefined (reading 'id')"),
+    });
+    error.name = 'ActionError';
+    throw error;
+  });
+  running.stream.send('step-request', { requestId: 'r-class', step: { click: 'save' } });
+  await waitFor(() => expect(posts(running.fetch, '')).toHaveLength(1));
+  expect(posts(running.fetch, '')[0].result).toEqual({
+    error:
+      '[ActionError] Action "save" failed. Caused by: [TypeError] Cannot read properties of undefined (reading \'id\')',
+  });
+});
+
 test('an inject request fakes the next device result and posts what was queued', async () => {
   running = setup();
   running.stream.send('inject', {

@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
+
 // The app server's URL for the shell's environment (shell.json `environment`), without a trailing
-// slash. Each app's urls come from its environments; Lowdefy Dev reads lowdefy dev's.
+// slash. Each app's urls come from its environments; Lowdefy Dev reads lowdefy dev's. checkShellConfig
+// refuses a shell.json with no url for its environment, so a missing one is a Lowdefy wiring bug.
 function getAppApiBase({ app, environment }) {
   const url = app.urls?.[environment];
   if (typeof url !== 'string' || url.length === 0) {
-    throw new Error(
+    throw new LowdefyInternalError(
       `Shell app "${app.id}" has no url for environment "${environment}". Received ${JSON.stringify(
         app.urls
       )}.`

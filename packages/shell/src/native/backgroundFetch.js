@@ -22,6 +22,7 @@ import { type } from '@lowdefy/helpers';
 import callEndpoint from './callEndpoint.js';
 import { getCurrentApp } from './currentApp.js';
 import refreshWidgets from '../widgets/refreshWidgets.js';
+import reportShellError from '../host/reportShellError.js';
 
 const TASK = 'lowdefy-background-fetch';
 
@@ -54,10 +55,12 @@ async function runBackgroundFetch(app) {
 
 // Defined when the bundle loads, so a launch in the background finds it.
 TaskManager.defineTask(TASK, async () => {
+  const app = await getCurrentApp();
   try {
-    await runBackgroundFetch(await getCurrentApp());
+    await runBackgroundFetch(app);
     return BackgroundTask.BackgroundTaskResult.Success;
   } catch (error) {
+    reportShellError({ error, session: app.session });
     return BackgroundTask.BackgroundTaskResult.Failed;
   }
 });

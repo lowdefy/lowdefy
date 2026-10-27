@@ -83,6 +83,17 @@ test("a shell app without a url for the shell's environment is refused", () => {
   );
 });
 
+test('a shell app whose url for the environment is not absolute is refused', () => {
+  assert.throws(
+    () =>
+      checkShellConfig({
+        configPath,
+        shell: { ...shell, app: { ...app, urls: { production: 'field.example.com' } } },
+      }),
+    /"app.urls.production" should be an absolute URL, like "https:\/\/app.example.com". Received "field.example.com".$/
+  );
+});
+
 test('a store shell config with a profile, store version and EAS project is returned as it is', () => {
   const storeShell = {
     ...shell,

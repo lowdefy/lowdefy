@@ -103,3 +103,25 @@ test('clientError marks a browser error as web', async () => {
   expect(entry.surface).toEqual('web');
   expect(entry).not.toHaveProperty('shell');
 });
+
+test('clientError feeds the agent the schema ConfigError that explains a client error', async () => {
+  const { serializer } = await import('@lowdefy/helpers');
+  const { ConfigError } = await import('@lowdefy/errors');
+  const configError = new ConfigError('Block "Button" property "title" must be type "string".');
+  configError.hint = 'Set title to a string.';
+  mockLogClientError.mockResolvedValueOnce({
+    error: { name: 'BlockError', message: 'Block failed', configKey: 'k1', blockId: 'submit' },
+    source: 'pages/home.yaml:12',
+    configError: serializer.serialize(configError),
+  });
+  await post({ host: 'localhost:3000' });
+  const [entry] = mockPush.mock.calls.at(-1);
+  expect(entry).toMatchObject({
+    name: 'ConfigError',
+    message: 'Block "Button" property "title" must be type "string".',
+    hint: 'Set title to a string.',
+    configKey: 'k1',
+    blockId: 'submit',
+    source: 'pages/home.yaml:12',
+  });
+});

@@ -141,7 +141,9 @@ async function sweepEntryConfig({ moduleEntry, context }) {
     moduleEntry.varDefs,
     moduleEntry.consumerVars,
     moduleEntry.id,
-    moduleEntry.source
+    moduleEntry.source,
+    '',
+    moduleEntry.location
   );
 }
 

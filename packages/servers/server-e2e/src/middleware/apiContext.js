@@ -78,6 +78,9 @@ function apiContext() {
       websockets,
     };
     context.handleError = createHandleError({ context });
+    // Set as soon as the context can sink an error, so a fault below reaches the error
+    // handler with it.
+    c.set('lowdefyContext', context);
     // The cookie user is a pre-resolved caller substituting for
     // resolveAuthentication - normalizeInjectedCaller floors it to the
     // resolved-caller shape. An absent cookie stays a logged-out (null) caller.
@@ -92,7 +95,6 @@ function apiContext() {
       context.organization = { policy: authJson.organizations.policy, pinned: null };
     }
     logRequest({ context });
-    c.set('lowdefyContext', context);
     return next();
   };
 }

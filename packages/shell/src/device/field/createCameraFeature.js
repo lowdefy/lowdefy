@@ -16,6 +16,7 @@
 
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
+import { UserError } from '@lowdefy/errors';
 
 import scanRequests from './scanRequests.js';
 import ScannerView from './ScannerView.js';
@@ -30,7 +31,7 @@ function createCameraFeature() {
   async function allowCamera() {
     const { granted } = await Camera.requestCameraPermissionsAsync();
     if (!granted) {
-      throw new Error('Camera permission was denied.');
+      throw new UserError('Camera permission was denied.');
     }
   }
   return {

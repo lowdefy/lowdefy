@@ -16,6 +16,8 @@
 
 import { parseCallerStamp } from '@lowdefy/helpers';
 
+import readServerError from '../host/readServerError.js';
+
 // GET /api/mobile/root, revalidated with the ETag of the root the shell holds. Returns
 // { notModified, root, etag, stamp }: on a 304 the held root is current and root is null. The
 // stamp is the caller the server answered as, whichever the status.
@@ -30,7 +32,10 @@ async function fetchRoot({ apiBase, etag, fetchWithAuth }) {
     throw new Error('This app has no mobile pages.');
   }
   if (!res.ok) {
-    throw new Error(`The app's server answered ${res.status} to the mobile root request.`);
+    throw await readServerError({
+      res,
+      message: `The app's server answered ${res.status} to the mobile root request.`,
+    });
   }
   return { notModified: false, root: await res.json(), etag: res.headers.get('etag'), stamp };
 }

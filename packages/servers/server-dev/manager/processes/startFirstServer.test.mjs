@@ -15,6 +15,7 @@
 */
 
 import { EventEmitter } from 'node:events';
+import { PassThrough } from 'node:stream';
 
 import { vi, beforeEach, expect, test } from 'vitest';
 
@@ -41,7 +42,7 @@ const { default: syncServer } = await import('./syncServer.mjs');
 function createProcess() {
   return Object.assign(new EventEmitter(), {
     stdout: new EventEmitter(),
-    stderr: new EventEmitter(),
+    stderr: new PassThrough(),
   });
 }
 

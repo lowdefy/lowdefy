@@ -32,6 +32,7 @@ import createSqliteQueueStore from './queue/createSqliteQueueStore.js';
 import getAppApiBase from './config/getAppApiBase.js';
 import getDeviceLocales from './locale/getDeviceLocales.js';
 import networkStatus from './host/networkStatus.js';
+import withNetworkErrors from './host/withNetworkErrors.js';
 import withoutCookies from './auth/withoutCookies.js';
 import withShellHeader from './host/withShellHeader.js';
 
@@ -61,13 +62,13 @@ async function createShellApp({ onSignedOut, shell }) {
     wrapFetch: (baseFetch) => baseFetch,
   };
   const fetch = withShellHeader({
-    fetch: withoutCookies(transport.fetch),
+    fetch: withoutCookies(withNetworkErrors(transport.fetch)),
     shellVersion: shell.version,
   });
   // React Native's fetch buffers a response body; a block that reads its answer as a stream (the
   // AgentChat block's chat stream) calls through expo/fetch, sent the same way.
   const streamFetch = withShellHeader({
-    fetch: withoutCookies(transport.wrapFetch(expoFetch)),
+    fetch: withoutCookies(withNetworkErrors(transport.wrapFetch(expoFetch))),
     shellVersion: shell.version,
   });
 

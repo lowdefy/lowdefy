@@ -16,6 +16,8 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../../utils/collectExceptions.js';
+
 // The server installs shell plugins, and reads their native types, from a raw
 // read of lowdefy.yaml, before the build resolves refs. A shell plugin that
 // read could not see (mobile, shells or plugins under _ref) is not installed
@@ -27,9 +29,12 @@ function validateShellPluginsListed({ mobile, context }) {
       if (listed.has(plugin.name)) {
         return;
       }
-      throw new ConfigError(
-        `Shell "${shell.id}" lists plugin "${plugin.name}", which the server did not install. List shell plugins in lowdefy.yaml itself, not under _ref, as root plugins are.`,
-        { configKey: plugin['~k'] }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Shell "${shell.id}" lists plugin "${plugin.name}", which the server did not install. List shell plugins in lowdefy.yaml itself, not under _ref, as root plugins are.`,
+          { configKey: plugin['~k'] }
+        )
       );
     });
   });

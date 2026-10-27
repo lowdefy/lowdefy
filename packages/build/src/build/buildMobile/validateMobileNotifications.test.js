@@ -17,9 +17,13 @@
 import { expect, test } from 'vitest';
 import validateMobileNotifications from './validateMobileNotifications.js';
 
+// No errors array: collectExceptions throws the first error, as a build without one would.
+const context = {};
+
 test('validateMobileNotifications accepts endpoints, foreground and categories of buttons', () => {
   expect(() =>
     validateMobileNotifications({
+      context,
       notifications: {
         register: 'register-device',
         unregister: 'unregister-device',
@@ -45,27 +49,31 @@ test('validateMobileNotifications accepts endpoints, foreground and categories o
 });
 
 test('validateMobileNotifications refuses an unknown key', () => {
-  expect(() => validateMobileNotifications({ notifications: { badge: true } })).toThrow(
+  expect(() => validateMobileNotifications({ context, notifications: { badge: true } })).toThrow(
     'App "mobile.notifications" has unknown key "badge".'
   );
 });
 
 test('validateMobileNotifications refuses a foreground other than banner or silent', () => {
-  expect(() => validateMobileNotifications({ notifications: { foreground: 'alert' } })).toThrow(
-    'App "mobile.notifications.foreground" should be one of banner, silent.'
-  );
+  expect(() =>
+    validateMobileNotifications({ context, notifications: { foreground: 'alert' } })
+  ).toThrow('App "mobile.notifications.foreground" should be one of banner, silent.');
 });
 
 test('validateMobileNotifications refuses a category with more than four buttons', () => {
   const actions = [1, 2, 3, 4, 5].map((n) => ({ id: `a${n}`, title: `A${n}` }));
   expect(() =>
-    validateMobileNotifications({ notifications: { categories: [{ id: 'many', actions }] } })
+    validateMobileNotifications({
+      context,
+      notifications: { categories: [{ id: 'many', actions }] },
+    })
   ).toThrow('App "mobile.notifications.categories[0].actions" should have 1 to 4 actions.');
 });
 
 test('validateMobileNotifications refuses a snooze button that also calls an endpoint', () => {
   expect(() =>
     validateMobileNotifications({
+      context,
       notifications: {
         categories: [
           { id: 'c', actions: [{ id: 's', title: 'Snooze', snooze: 10, endpointId: 'x' }] },
@@ -78,6 +86,6 @@ test('validateMobileNotifications refuses a snooze button that also calls an end
 test('validateMobileNotifications refuses two categories with one id', () => {
   const category = { id: 'same', actions: [{ id: 'a', title: 'A' }] };
   expect(() =>
-    validateMobileNotifications({ notifications: { categories: [category, category] } })
+    validateMobileNotifications({ context, notifications: { categories: [category, category] } })
   ).toThrow('App "mobile.notifications.categories[1].id" "same" is used twice.');
 });

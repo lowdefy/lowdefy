@@ -549,3 +549,9 @@ test('readRetryAfter ends on a cyclic cause chain with no header', () => {
   error.cause = error;
   expect(ServiceError.readRetryAfter(error)).toBe(null);
 });
+
+test('isServiceError respects an error its connection classified as not a service error', () => {
+  const error = new Error('Collection "network_devices" refused the write.');
+  error.isServiceError = false;
+  expect(ServiceError.isServiceError(error)).toBe(false);
+});

@@ -22,6 +22,7 @@ import fetchRoot from '../sync/fetchRoot.js';
 import fetchUser from '../sync/fetchUser.js';
 import getCacheKey from '../cache/getCacheKey.js';
 import getLastCacheKeyName from '../cache/getLastCacheKeyName.js';
+import reportShellError from '../host/reportShellError.js';
 import runLimited from '../sync/runLimited.js';
 import toRootConfig from '../sync/toRootConfig.js';
 
@@ -121,7 +122,8 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
   }
 
   async function fetchChangedPages({ cacheKey, entries }) {
-    await runLimited({
+    // A page that failed keeps its held version, and is fetched again on the next sync or visit.
+    const failures = await runLimited({
       items: entries,
       limit: PAGE_FETCH_LIMIT,
       fn: async (entry) => {
@@ -142,6 +144,7 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
         setPage({ cacheKey, pageId: entry.pageId, page });
       },
     });
+    failures.forEach(({ error }) => reportShellError({ error, session: { getState } }));
   }
 
   async function runSync() {
@@ -211,6 +214,7 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
       await sync();
     } catch (error) {
       // With a cached root the app keeps working from the cache (no signal, a server down).
+      reportShellError({ error, session: { getState } });
       if (state.status !== 'ready') {
         setState({ status: 'error', error });
       }
@@ -268,6 +272,7 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
     try {
       await sync();
     } catch (error) {
+      reportShellError({ error, session: { getState } });
       setState({ status: 'error', error });
     }
   }

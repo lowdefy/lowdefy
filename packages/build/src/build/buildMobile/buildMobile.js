@@ -42,10 +42,21 @@ function buildMobile({ components, context }) {
     delete components.mobile;
     return components;
   }
-  validateMobileConfig({ mobile: components.mobile, context });
-  validateShellPluginsListed({ mobile: components.mobile, context });
-  mergeMobilePages({ components });
-  validateMobilePageRefs({ components });
+  // Each step collects every error it finds. A step reads the shape the one before it checked, so
+  // the next runs only when no new error was collected: one error is not reported again as others.
+  const steps = [
+    () => validateMobileConfig({ mobile: components.mobile, context }),
+    () => validateShellPluginsListed({ mobile: components.mobile, context }),
+    () => mergeMobilePages({ components, context }),
+    () => validateMobilePageRefs({ components, context }),
+  ];
+  for (const step of steps) {
+    const errorCount = context.errors.length;
+    step();
+    if (context.errors.length > errorCount) {
+      return components;
+    }
+  }
   return components;
 }
 

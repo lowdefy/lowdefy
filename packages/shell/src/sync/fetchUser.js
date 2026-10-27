@@ -14,12 +14,17 @@
   limitations under the License.
 */
 
+import readServerError from '../host/readServerError.js';
+
 // GET /api/user: the caller the pages render (the _user operator, and the caller the core checks
 // each response's stamp against).
 async function fetchUser({ apiBase, fetchWithAuth }) {
   const res = await fetchWithAuth(`${apiBase}/api/user`, { method: 'GET', headers: {} });
   if (!res.ok) {
-    throw new Error(`The app's server answered ${res.status} to the user request.`);
+    throw await readServerError({
+      res,
+      message: `The app's server answered ${res.status} to the user request.`,
+    });
   }
   const body = await res.json();
   return body.user ?? null;

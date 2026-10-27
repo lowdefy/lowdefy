@@ -24,6 +24,9 @@ vi.doMock('child_process', () => ({ spawn: mockSpawn, spawnSync: vi.fn() }));
 // installHeadlessShell keeps one install per process in module state, so the
 // tests below run in order against one module: the skipped calls first, then
 // the one install. The failure path is in installHeadlessShell.failure.test.mjs.
+const mockLogger = { info: vi.fn(), warn: vi.fn() };
+vi.doMock('../server/log/createLogger.js', () => ({ default: () => mockLogger }));
+
 const { default: installHeadlessShell } = await import('./installHeadlessShell.js');
 
 function createInstaller() {
@@ -31,7 +34,7 @@ function createInstaller() {
 }
 
 beforeEach(() => {
-  vi.spyOn(console, 'info').mockImplementation(() => {});
+  mockLogger.info.mockClear();
 });
 
 afterEach(() => {

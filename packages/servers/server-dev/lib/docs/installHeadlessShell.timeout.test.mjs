@@ -24,6 +24,9 @@ vi.doMock('child_process', () => ({ spawn: mockSpawn, spawnSync: mockSpawnSync }
 
 // A file of its own: installHeadlessShell keeps its one install per process
 // in module state.
+const mockLogger = { info: vi.fn(), warn: vi.fn() };
+vi.doMock('../server/log/createLogger.js', () => ({ default: () => mockLogger }));
+
 const { default: installHeadlessShell } = await import('./installHeadlessShell.js');
 
 test('installHeadlessShell kills an install that has not finished within 3 minutes and gives up', async () => {
@@ -45,8 +48,9 @@ test('installHeadlessShell kills an install that has not finished within 3 minut
       'clearTimeout',
     ],
   });
-  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-  vi.spyOn(console, 'info').mockImplementation(() => {});
+  const warn = mockLogger.warn;
+  warn.mockClear();
+  mockLogger.info.mockClear();
   try {
     const installer = Object.assign(new EventEmitter(), {
       pid: 4242,

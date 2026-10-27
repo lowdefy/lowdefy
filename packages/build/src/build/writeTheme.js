@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type, serializer } from '@lowdefy/helpers';
 
 import iconThemeDefaults from './icons/iconThemeDefaults.js';
@@ -23,7 +24,10 @@ async function writeTheme({ components, context }) {
     components.theme = {};
   }
   if (!type.isObject(components.theme)) {
-    throw new Error('Theme is not an object.');
+    throw new ConfigError('Theme is not an object.', {
+      configKey: components['~k'],
+      received: components.theme,
+    });
   }
   if (type.isNone(components.theme.darkMode)) {
     components.theme.darkMode = 'system';

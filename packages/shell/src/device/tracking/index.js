@@ -16,11 +16,13 @@
 
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
+import { UserError } from '@lowdefy/errors';
 
 import callEndpoint from '../../native/callEndpoint.js';
 import createBacklog from './createBacklog.js';
 import createDeviceStore from '../../host/createDeviceStore.js';
 import { getCurrentApp, peekCurrentApp } from '../../native/currentApp.js';
+import reportShellError from '../../host/reportShellError.js';
 
 const LOCATION_TASK = 'lowdefy-location-tracking';
 const GEOFENCE_TASK = 'lowdefy-geofencing';
@@ -52,8 +54,8 @@ function writeConfig(update) {
 }
 
 // A refusal the server will repeat however often the post is sent (bad payload, missing endpoint,
-// forbidden): the post is dropped, so one bad post does not hold up the backlog behind it. A lost
-// session (401), a timeout or rate limit, and server errors stay for the next wake.
+// forbidden): the post is dropped and reported, so one bad post does not hold up the backlog behind
+// it. A lost session (401), a timeout or rate limit, and server errors stay for the next wake.
 function isRefused(error) {
   const { status } = error ?? {};
   return status >= 400 && status < 500 && ![401, 408, 429].includes(status);
@@ -69,12 +71,14 @@ async function post({ endpointId, payload }) {
       await callEndpoint({ app, endpointId: entry.endpointId, payload: entry.payload });
     } catch (error) {
       if (!isRefused(error)) throw error;
+      reportShellError({ error, session: app.session });
     }
   };
   await backlog.flush(send);
   try {
     await send({ endpointId, payload });
   } catch (error) {
+    reportShellError({ error, session: app.session });
     backlog.add({ endpointId, payload });
   }
 }
@@ -94,7 +98,11 @@ function toPoint({ coords, timestamp }) {
 // Background tasks are defined when the bundle loads, so a launch in the background finds them.
 TaskManager.defineTask(LOCATION_TASK, async ({ data, error }) => {
   const { locationEndpointId } = readConfig();
-  if (error || typeof locationEndpointId !== 'string') return;
+  if (error) {
+    reportShellError({ error });
+    return;
+  }
+  if (typeof locationEndpointId !== 'string') return;
   await post({
     endpointId: locationEndpointId,
     payload: { locations: data.locations.map(toPoint) },
@@ -103,7 +111,10 @@ TaskManager.defineTask(LOCATION_TASK, async ({ data, error }) => {
 
 TaskManager.defineTask(GEOFENCE_TASK, async ({ data, error }) => {
   const { geofenceEndpointId } = readConfig();
-  if (error) return;
+  if (error) {
+    reportShellError({ error });
+    return;
+  }
   const event = {
     event: data.eventType === Location.GeofencingEventType.Enter ? 'enter' : 'exit',
     region: {
@@ -124,11 +135,11 @@ TaskManager.defineTask(GEOFENCE_TASK, async ({ data, error }) => {
 async function allowBackground() {
   const foreground = await Location.requestForegroundPermissionsAsync();
   if (!foreground.granted) {
-    throw new Error('Location permission was denied.');
+    throw new UserError('Location permission was denied.');
   }
   const background = await Location.requestBackgroundPermissionsAsync();
   if (!background.granted) {
-    throw new Error('Background location permission was denied.');
+    throw new UserError('Background location permission was denied.');
   }
 }
 

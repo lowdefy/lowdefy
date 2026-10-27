@@ -24,6 +24,7 @@ import DeviceHosts from '../device/DeviceHosts.js';
 import LoadingScreen from './LoadingScreen.js';
 import MessageScreen from './MessageScreen.js';
 import NoConnectionBanner from './NoConnectionBanner.js';
+import reportShellError from '../host/reportShellError.js';
 import ShellContext, { useSessionState } from '../ShellContext.js';
 import ShellThemeProvider from './ShellThemeProvider.js';
 import startAppServices from '../native/startAppServices.js';
@@ -60,27 +61,47 @@ function AppGate({ children }) {
 // person's kept.
 function AppProvider({ children, shell }) {
   const [value, setValue] = useState(null);
+  const [openError, setOpenError] = useState(null);
   const [openings, setOpenings] = useState(0);
   useEffect(() => {
     let active = true;
     let opened = null;
     let services = null;
     setValue(null);
+    setOpenError(null);
     const onSignedOut = () => setOpenings((count) => count + 1);
-    createShellApp({ onSignedOut, shell }).then((created) => {
-      if (!active) return;
-      const { auth, host, locale, session } = created;
-      opened = auth;
-      services = startAppServices({ app: { ...created, shell } });
-      setValue({ auth, host, locale, services, session, shell });
-      auth.start({ session });
-    });
+    createShellApp({ onSignedOut, shell })
+      .then((created) => {
+        if (!active) return;
+        const { auth, host, locale, session } = created;
+        opened = auth;
+        services = startAppServices({ app: { ...created, shell } });
+        setValue({ auth, host, locale, services, session, shell });
+        auth.start({ session });
+      })
+      .catch((error) => {
+        // Without this the app would wait on the loading screen for ever.
+        if (!active) return;
+        reportShellError({ error });
+        setOpenError(error);
+        SplashScreen.hideAsync();
+      });
     return () => {
       active = false;
       services?.stop();
       opened?.dispose();
     };
   }, [openings, shell]);
+  if (openError !== null) {
+    return (
+      <MessageScreen
+        action={{ title: 'Try again', onPress: () => setOpenings((count) => count + 1) }}
+        body={openError.message}
+        testID="shell-open-error"
+        title="This app could not be opened"
+      />
+    );
+  }
   if (value === null) {
     return <LoadingScreen />;
   }

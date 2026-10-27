@@ -28,6 +28,9 @@ installGetRandomValues();
 // from the server on a first launch).
 SplashScreen.preventAutoHideAsync();
 
+// A render fault outside a block is reported and shown with a retry, not a closed app.
+export { default as ErrorBoundary } from '../src/components/RouteErrorScreen.js';
+
 export default function RootLayout() {
   return DevShell ? <DevShell /> : <ShellRoot />;
 }

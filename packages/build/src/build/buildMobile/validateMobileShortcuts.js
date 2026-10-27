@@ -16,6 +16,7 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../../utils/collectExceptions.js';
 import {
   checkArray,
   checkKeys,
@@ -32,27 +33,54 @@ const MAX_SHORTCUTS = 4;
 
 // mobile.shortcuts: the app icon's long-press actions on iOS and Android, and the options of the
 // shell's App Shortcuts and Siri intent on iOS. Each opens its path and fires onShortcut.
-function validateMobileShortcuts({ shortcuts, configKey }) {
+function validateMobileShortcuts({ shortcuts, configKey, context }) {
   const path = 'mobile.shortcuts';
-  checkArray({ value: shortcuts, path, configKey });
+  if (!checkArray({ value: shortcuts, path, configKey, context })) {
+    return;
+  }
   if (shortcuts.length > MAX_SHORTCUTS) {
-    throw new ConfigError(
-      `App "${path}" should have at most ${MAX_SHORTCUTS} shortcuts. Received ${shortcuts.length}.`,
-      { configKey }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `App "${path}" should have at most ${MAX_SHORTCUTS} shortcuts. Received ${shortcuts.length}.`,
+        { configKey }
+      )
     );
   }
+  let itemsAreObjects = true;
   shortcuts.forEach((shortcut, index) => {
     const itemPath = `${path}[${index}]`;
-    checkObject({ value: shortcut, path: itemPath, configKey });
+    if (!checkObject({ value: shortcut, path: itemPath, configKey, context })) {
+      itemsAreObjects = false;
+      return;
+    }
     const key = shortcut['~k'] ?? configKey;
-    checkKeys({ object: shortcut, allowed: SHORTCUT_KEYS, path: itemPath, configKey: key });
-    checkString({ value: shortcut.id, path: `${itemPath}.id`, configKey: key });
-    checkString({ value: shortcut.title, path: `${itemPath}.title`, configKey: key });
-    checkOptionalString({ value: shortcut.subtitle, path: `${itemPath}.subtitle`, configKey: key });
-    checkOptionalString({ value: shortcut.icon, path: `${itemPath}.icon`, configKey: key });
-    checkOptionalPath({ value: shortcut.path, path: `${itemPath}.path`, configKey: key });
+    checkKeys({
+      object: shortcut,
+      allowed: SHORTCUT_KEYS,
+      path: itemPath,
+      configKey: key,
+      context,
+    });
+    checkString({ value: shortcut.id, path: `${itemPath}.id`, configKey: key, context });
+    checkString({ value: shortcut.title, path: `${itemPath}.title`, configKey: key, context });
+    checkOptionalString({
+      value: shortcut.subtitle,
+      path: `${itemPath}.subtitle`,
+      configKey: key,
+      context,
+    });
+    checkOptionalString({
+      value: shortcut.icon,
+      path: `${itemPath}.icon`,
+      configKey: key,
+      context,
+    });
+    checkOptionalPath({ value: shortcut.path, path: `${itemPath}.path`, configKey: key, context });
   });
-  checkUniqueIds({ items: shortcuts, path, configKey });
+  if (itemsAreObjects) {
+    checkUniqueIds({ items: shortcuts, path, configKey, context });
+  }
 }
 
 export default validateMobileShortcuts;

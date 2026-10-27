@@ -20,6 +20,7 @@ import {
   requestRecordingPermissionsAsync,
   setAudioModeAsync,
 } from 'expo-audio';
+import { UserError } from '@lowdefy/errors';
 
 import toPickedFile from '../basic/toPickedFile.js';
 
@@ -35,7 +36,7 @@ function createAudioFeature() {
     async start({ quality = 'high' } = {}) {
       const { granted } = await requestRecordingPermissionsAsync();
       if (!granted) {
-        throw new Error('Microphone permission was denied.');
+        throw new UserError('Microphone permission was denied.');
       }
       if (recorder !== null) {
         await recorder.stop();

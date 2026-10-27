@@ -41,7 +41,8 @@ beforeEach(() => {
 });
 
 test('scheduleBackground logs completion and failure, never rejects', async () => {
-  const context = { logger };
+  const handleError = vi.fn();
+  const context = { handleError, logger };
   await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => ({
     status: 'success',
   }));
@@ -54,10 +55,34 @@ test('scheduleBackground logs completion and failure, never rejects', async () =
   await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => {
     throw new Error('boom');
   });
-  expect(logger.error).toHaveBeenCalledWith(
+  expect(logger.info).toHaveBeenCalledWith({ event: 'bg_failed', endpointId: 'ep' });
+  // A fault reaches the error sink, so it is located and sent to error tracking.
+  expect(handleError).toHaveBeenCalledTimes(1);
+  expect(handleError.mock.calls[0][0].message).toBe('boom');
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('scheduleBackground does not report a fault the run already handled', async () => {
+  const handleError = vi.fn();
+  const error = new Error('logged by the routine');
+  error.handled = true;
+  await scheduleBackground({ handleError, logger }, { event: 'bg', endpointId: 'ep' }, async () => {
+    throw error;
+  });
+  expect(handleError).not.toHaveBeenCalled();
+});
+
+test('scheduleBackground logs an auth refusal at warn level, not through handleError', async () => {
+  const handleError = vi.fn();
+  const { AuthorizationError } = await import('@lowdefy/errors');
+  await scheduleBackground({ handleError, logger }, { event: 'bg', endpointId: 'ep' }, async () => {
+    throw new AuthorizationError('Forbidden.');
+  });
+  expect(logger.warn).toHaveBeenCalledWith(
     expect.objectContaining({ event: 'bg_failed', endpointId: 'ep' }),
-    'boom'
+    'Forbidden.'
   );
+  expect(handleError).not.toHaveBeenCalled();
 });
 
 test('scheduleBackground logs a UserError at warn level, not error', async () => {
@@ -94,9 +119,16 @@ test('acceptDetachedEndpoint logs a payload refused by the payloadSchema at erro
     principal: { user: serializer.serialize(null), system: true },
   });
   await waitUntil.mock.calls[0][0];
+  expect(logger.info).toHaveBeenCalledWith({
+    event: 'detached_run_failed',
+    endpointId: 'typed_child',
+  });
   expect(logger.error).toHaveBeenCalledWith(
-    expect.objectContaining({ event: 'detached_run_failed', endpointId: 'typed_child' }),
-    'Payload for endpoint "typed_child" does not match its payloadSchema at /count: must be number.'
+    expect.objectContaining({
+      name: 'ConfigError',
+      message:
+        'Payload for endpoint "typed_child" does not match its payloadSchema at /count: must be number.',
+    })
   );
   expect(logger.warn).not.toHaveBeenCalled();
 });
@@ -179,7 +211,11 @@ test.each([
 
 test('detached: true dispatches to /api/detached with CRON_SECRET and continues', async () => {
   process.env.CRON_SECRET = 'shhh';
-  const fetchMock = vi.fn(async () => ({ status: 200 }));
+  const fetchMock = vi.fn(async () => ({
+    ok: true,
+    status: 202,
+    arrayBuffer: async () => new ArrayBuffer(0),
+  }));
   global.fetch = fetchMock;
   const mockReadConfigFile = vi.fn((path) => {
     if (path === 'api/parent_ep.json') {
@@ -249,7 +285,11 @@ function detachedParentReadConfigFile(path) {
 
 async function dispatchDetached({ loopbackHeaders }) {
   process.env.CRON_SECRET = 'shhh';
-  const fetchMock = vi.fn(async () => ({ status: 200 }));
+  const fetchMock = vi.fn(async () => ({
+    ok: true,
+    status: 202,
+    arrayBuffer: async () => new ArrayBuffer(0),
+  }));
   global.fetch = fetchMock;
   const context = testContext({ logger, readConfigFile: vi.fn(detachedParentReadConfigFile) });
   context.origin = 'https://app.test';
@@ -298,6 +338,7 @@ test('detached: true without CRON_SECRET throws a ConfigError', async () => {
           {
             id: 'endpoint:parent_ep:spawn',
             stepId: 'spawn',
+            '~k': 'spawn_key',
             type: 'CallApi',
             properties: { endpointId: 'child_ep', detached: true },
           },
@@ -316,6 +357,38 @@ test('detached: true without CRON_SECRET throws a ConfigError', async () => {
   });
   expect(result.success).toBe(false);
   expect(result.error).toBeTruthy();
+  expect(logger.error).toHaveBeenCalledWith(
+    expect.objectContaining({ name: 'ConfigError', configKey: 'spawn_key' })
+  );
+});
+
+test('a detached dispatch the route does not accept is reported as a fault', async () => {
+  process.env.CRON_SECRET = 'shhh';
+  global.fetch = vi.fn(async () => ({
+    ok: false,
+    status: 401,
+    arrayBuffer: async () => new ArrayBuffer(0),
+  }));
+  const context = testContext({ logger, readConfigFile: vi.fn(detachedParentReadConfigFile) });
+  context.origin = 'https://app.test';
+  const handleError = vi.spyOn(context, 'handleError');
+  await callEndpoint(context, { blockId: 'b', endpointId: 'parent_ep', pageId: 'p', payload: {} });
+  await flush();
+  delete process.env.CRON_SECRET;
+  expect(logger.info).not.toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'detached_dispatch_done' })
+  );
+  expect(logger.info).toHaveBeenCalledWith({
+    event: 'detached_dispatch_failed',
+    endpointId: 'child_ep',
+  });
+  expect(handleError).toHaveBeenCalledWith(
+    expect.objectContaining({
+      message:
+        'Detached call to https://app.test/api/detached/child_ep answered 401, so the target endpoint did not run.',
+      statusCode: 401,
+    })
+  );
 });
 
 test('detached: true without a request origin on context is a LowdefyInternalError', async () => {
@@ -608,7 +681,9 @@ test('webhook with no verifier fails a nested protected Api CallApi (untrusted t
   // Untrusted (context.system unset): the nested protected call fails closed
   // exactly as an unauthenticated, caller-less call would - AuthenticationError.
   expect(result.status).toBe(500);
-  expect(logger.error.mock.calls[0][0].message).toContain('Authentication required');
+  // A refusal is an expected outcome, so it is a warning, not a fault.
+  expect(logger.warn.mock.calls[0][1]).toContain('Authentication required');
+  expect(logger.error).not.toHaveBeenCalled();
 });
 
 test('webhook with no verifier fails a nested protected InternalApi CallApi (untrusted throughout)', async () => {
@@ -643,7 +718,9 @@ test('webhook with no verifier fails a nested protected InternalApi CallApi (unt
   // special pass in an untrusted run, so this fails closed like any protected
   // caller-less call.
   expect(result.status).toBe(500);
-  expect(logger.error.mock.calls[0][0].message).toContain('Authentication required');
+  // A refusal is an expected outcome, so it is a warning, not a fault.
+  expect(logger.warn.mock.calls[0][1]).toContain('Authentication required');
+  expect(logger.error).not.toHaveBeenCalled();
 });
 
 test('webhook whose verify gate fails returns unauthorized and never runs the routine', async () => {

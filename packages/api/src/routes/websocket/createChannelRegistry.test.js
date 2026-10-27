@@ -361,6 +361,36 @@ test('resolver rejection sends an error frame to subscribers and restarts with b
   expect(registry.channels.size).toBe(1);
 });
 
+test('resolver rejection is reported as a RequestError without the evaluated properties', async () => {
+  const sourceError = new Error('source failed');
+  sourceError.document = { email: 'planted@example.com' };
+  const resolver = vi
+    .fn()
+    .mockRejectedValueOnce(sourceError)
+    .mockImplementation(() => new Promise(() => {}));
+  mockPrepare({ resolver, properties: { filter: { email: 'planted@example.com' } } });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    subscriber: createSubscriber('a'),
+  });
+  await flushMicrotasks();
+
+  const reported = context.handleError.mock.calls[0][0];
+  expect(reported.name).toBe('RequestError');
+  expect(reported.typeName).toBe('TestSource');
+  expect(reported.configKey).toBe('websockets.0');
+  expect(reported.received).toBeUndefined();
+  expect(reported.cause).not.toBe(sourceError);
+  expect(reported.cause.message).toBe('source failed');
+  expect(reported.cause.document).toBeUndefined();
+  expect(reported.devCause).toBe(sourceError);
+  expect(Object.keys(reported)).not.toContain('devCause');
+});
+
 test('resolver rejection translates the error message with each subscriber locale', async () => {
   const resolver = vi.fn().mockRejectedValueOnce(new Error('source failed'));
   mockPrepare({ resolver });

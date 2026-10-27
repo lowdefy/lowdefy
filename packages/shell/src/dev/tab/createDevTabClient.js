@@ -20,6 +20,7 @@ import devPassiveHeader from '@lowdefy/node-utils/devPassiveHeader.js';
 import answerEval from './answerEval.js';
 import answerInspect from './answerInspect.js';
 import DEV_CLIENT_MARKER from './devClientMarker.js';
+import describeTabError from './describeTabError.js';
 import getShownPage from './getShownPage.js';
 import readEventStream from './readEventStream.js';
 
@@ -151,7 +152,7 @@ function createDevTabClient({
       const result = await respond({ event, request });
       await post('', { requestId, result });
     } catch (error) {
-      await post('', { requestId, result: { error: error.message } });
+      await post('', { requestId, result: { error: describeTabError(error) } });
     }
   }
 

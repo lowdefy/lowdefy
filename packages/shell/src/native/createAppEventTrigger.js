@@ -14,6 +14,10 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
+
+import reportShellError from '../host/reportShellError.js';
+
 const RETRY_MS = 300;
 const MAX_TRIES = 100;
 
@@ -22,7 +26,8 @@ const MAX_TRIES = 100;
  * onGeofence, onRequestQueue) with an event object. The app context is made when the first page
  * renders, so an event that arrives before it (a notification tap that launched the app) waits for
  * it, trying every 300 ms for up to 30 seconds. Never throws: an app event's failure is reported by
- * the engine's own error handling.
+ * the engine's own error handling, and an event that never ran (no app context came, or the engine
+ * itself threw) is reported here.
  *
  * @param {Object} params
  * @param {Object} params.session The app session (createAppSession).
@@ -36,6 +41,14 @@ function createAppEventTrigger({ session }) {
         if (appContext === undefined || appContext === null) {
           tries += 1;
           if (tries > MAX_TRIES) {
+            reportShellError({
+              error: new LowdefyInternalError(
+                `App event "${name}" was dropped: no page created the app context within ${
+                  (RETRY_MS * MAX_TRIES) / 1000
+                } seconds.`
+              ),
+              session,
+            });
             resolve(null);
             return;
           }
@@ -43,7 +56,10 @@ function createAppEventTrigger({ session }) {
           return;
         }
         Promise.resolve(appContext._internal.triggerPageEvent({ name, event }))
-          .catch(() => null)
+          .catch((error) => {
+            reportShellError({ error, session });
+            return null;
+          })
           .then(resolve);
       }
       attempt();

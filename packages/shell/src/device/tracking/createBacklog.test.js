@@ -15,6 +15,7 @@
 */
 
 import createBacklog from './createBacklog.js';
+import createNetworkError from '../../test/createNetworkError.js';
 
 function memoryKv() {
   const values = new Map();
@@ -28,7 +29,7 @@ test('a backlog sends its posts oldest first and keeps the rest after a failure'
   backlog.add({ endpointId: 'a', payload: 3 });
   const sent = [];
   const count = await backlog.flush(async (entry) => {
-    if (entry.payload === 2) throw new Error('offline');
+    if (entry.payload === 2) throw createNetworkError();
     sent.push(entry.payload);
   });
   expect(count).toBe(1);

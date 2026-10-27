@@ -17,9 +17,13 @@
 import { logClientError, parseRequestBody } from '@lowdefy/api';
 
 import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
+import getRequestSurface from '../lib/getRequestSurface.js';
 import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
 
-const guardSameOrigin = createSameOriginGuard();
+// No Origin is allowed: a phone shell's fetch sends none, and refusing it lost
+// every native fault. A browser on another site always sends Origin or
+// Sec-Fetch-Site on a cross-site POST, so it is still refused.
+const guardSameOrigin = createSameOriginGuard({ allowNoOrigin: true });
 
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {
@@ -39,7 +43,15 @@ async function clientErrorHandler(c) {
   if (body?.['~e']) {
     delete body['~e'].received;
   }
-  const { error, ...response } = await logClientError(context, body);
+  // The log line says whether a phone shell ('mobile', with its shell version)
+  // or a browser ('web') reported the fault.
+  const surface = getRequestSurface(c);
+  const surfaceFields =
+    surface === 'mobile' ? { surface, shell: c.req.header('x-lowdefy-shell') } : { surface };
+  const { error, ...response } = await logClientError(
+    { ...context, logger: context.logger.child(surfaceFields) },
+    body
+  );
 
   // Capture client error to Sentry (no-op if Sentry not configured)
   captureSentryError({

@@ -17,6 +17,9 @@
 import { expect, test } from 'vitest';
 import validateMobilePageRefs from './validateMobilePageRefs.js';
 
+// No errors array: collectExceptions throws the first error, as a build without one would.
+const context = {};
+
 const pages = [
   { id: 'home', target: undefined },
   { id: 'today', target: 'mobile' },
@@ -31,7 +34,7 @@ test('validateMobilePageRefs accepts menu items and a home page that are mobile 
       menus: { tabs: [{ pageId: 'today' }, { pageId: 'about' }] },
     },
   };
-  expect(() => validateMobilePageRefs({ components })).not.toThrow();
+  expect(() => validateMobilePageRefs({ context, components })).not.toThrow();
 });
 
 test('validateMobilePageRefs throws when a menu item links to a web page', () => {
@@ -39,14 +42,14 @@ test('validateMobilePageRefs throws when a menu item links to a web page', () =>
     pages,
     mobile: { menus: { drawer: [{ pageId: 'home' }] } },
   };
-  expect(() => validateMobilePageRefs({ components })).toThrow(
+  expect(() => validateMobilePageRefs({ context, components })).toThrow(
     'Mobile menu item links to page "home", which is not a mobile page. List it in "mobile.pages".'
   );
 });
 
 test('validateMobilePageRefs throws when homePageId is not a mobile page', () => {
   const components = { pages, mobile: { homePageId: 'missing' } };
-  expect(() => validateMobilePageRefs({ components })).toThrow(
+  expect(() => validateMobilePageRefs({ context, components })).toThrow(
     'App "mobile.homePageId" is "missing", which is not a mobile page. List it in "mobile.pages".'
   );
 });

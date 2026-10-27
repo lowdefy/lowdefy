@@ -17,9 +17,13 @@
 import { expect, test } from 'vitest';
 import validateMobileWidgets from './validateMobileWidgets.js';
 
+// No errors array: collectExceptions throws the first error, as a build without one would.
+const context = {};
+
 test('validateMobileWidgets accepts count and list sources', () => {
   expect(() =>
     validateMobileWidgets({
+      context,
       widgets: [
         {
           id: 'open',
@@ -35,18 +39,22 @@ test('validateMobileWidgets accepts count and list sources', () => {
 });
 
 test('validateMobileWidgets refuses a source without an endpoint', () => {
-  expect(() => validateMobileWidgets({ widgets: [{ id: 'open', title: 'Open' }] })).toThrow(
-    'App "mobile.widgets[0].endpointId" should be a non-empty string.'
-  );
+  expect(() =>
+    validateMobileWidgets({ context, widgets: [{ id: 'open', title: 'Open' }] })
+  ).toThrow('App "mobile.widgets[0].endpointId" should be a non-empty string.');
 });
 
 test('validateMobileWidgets refuses an unknown layout and a path without a leading slash', () => {
   expect(() =>
     validateMobileWidgets({
+      context,
       widgets: [{ id: 'a', title: 'A', endpointId: 'e', layout: 'chart' }],
     })
   ).toThrow('App "mobile.widgets[0].layout" should be one of count, list.');
   expect(() =>
-    validateMobileWidgets({ widgets: [{ id: 'a', title: 'A', endpointId: 'e', path: 'tasks' }] })
+    validateMobileWidgets({
+      context,
+      widgets: [{ id: 'a', title: 'A', endpointId: 'e', path: 'tasks' }],
+    })
   ).toThrow('App "mobile.widgets[0].path" should be a page path starting with "/".');
 });

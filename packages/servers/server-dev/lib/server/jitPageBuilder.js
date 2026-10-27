@@ -73,12 +73,25 @@ let previousContextGeneration = 0;
 // bundle until the server restarts. JIT delivers the rest as data.
 let bundledIcons = null;
 
+// A missing artifact reads as null: a build writes some only when the app uses
+// them. An artifact that is there but unreadable is a fault, not an empty map: a
+// keyMap read as {} left every later error without its config location.
 function readJsonFile(filePath) {
+  let content;
   try {
-    const content = fs.readFileSync(filePath, 'utf8');
+    content = fs.readFileSync(filePath, 'utf8');
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  }
+  try {
     return serializer.deserialize(JSON.parse(content));
-  } catch {
-    return null;
+  } catch (error) {
+    throw new Error(`Build artifact ${filePath} is not valid JSON: ${error.message}`, {
+      cause: error,
+    });
   }
 }
 

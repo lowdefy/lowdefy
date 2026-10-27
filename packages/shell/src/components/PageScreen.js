@@ -37,6 +37,7 @@ import isPageUnderHeader from '../navigation/isPageUnderHeader.js';
 import LoadingScreen from './LoadingScreen.js';
 import MessageScreen from './MessageScreen.js';
 import OtherPageScreen from './OtherPageScreen.js';
+import reportShellError from '../host/reportShellError.js';
 import types from '../plugins/types.js';
 import UpdateScreen from './UpdateScreen.js';
 import { useSessionState, useShell } from '../ShellContext.js';
@@ -128,6 +129,15 @@ function PageScreen({ path, query = '' }) {
   const { searchBarRef, setAutoFocus } = useSearchAutoFocus({ focused });
   const { headerInset, updateHeaderInset } = useHeaderInset();
   const [loadError, setLoadError] = useState(null);
+  // A page that could not be fetched shows its error while the screen has nothing to draw, and is
+  // reported either way: a held page keeps showing when its newer version fails.
+  const failLoad = useCallback(
+    (error) => {
+      reportShellError({ error, session });
+      setLoadError(error);
+    },
+    [session]
+  );
   const view = getPageView({ path, shell, state });
   const fullPath = `/${path}${query ? `?${query}` : ''}`;
   const pageId = view.entry?.pageId ?? null;
@@ -154,8 +164,8 @@ function PageScreen({ path, query = '' }) {
     if (pageId === null) return;
     const entry = session.getState().root.pageIndex.find((item) => item.pageId === pageId);
     setLoadError(null);
-    session.loadPage({ entry, path }).catch((error) => setLoadError(error));
-  }, [pageId, path, session, state.cacheKey, state.generation]);
+    session.loadPage({ entry, path }).catch(failLoad);
+  }, [failLoad, pageId, path, session, state.cacheKey, state.generation]);
 
   const setStackOptions = useCallback(
     (options) => {
@@ -194,7 +204,7 @@ function PageScreen({ path, query = '' }) {
             title: 'Try again',
             onPress: () => {
               setLoadError(null);
-              session.loadPage({ entry: view.entry, path }).catch((error) => setLoadError(error));
+              session.loadPage({ entry: view.entry, path }).catch(failLoad);
             },
           }}
           body={loadError.message}

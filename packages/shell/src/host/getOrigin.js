@@ -14,11 +14,16 @@
   limitations under the License.
 */
 
-// The origin of the app server's URL: its scheme, host and port.
+import { LowdefyInternalError } from '@lowdefy/errors';
+
+// The origin of the app server's URL: its scheme, host and port. checkShellConfig refuses a
+// shell.json url that is not absolute, so one reaching here is a Lowdefy wiring bug.
 function getOrigin(url) {
   const match = /^[a-z][a-z0-9+.-]*:\/\/[^/?#]+/i.exec(url);
   if (match === null) {
-    throw new Error(`Shell app url is not an absolute URL. Received ${JSON.stringify(url)}.`);
+    throw new LowdefyInternalError(
+      `Shell app url is not an absolute URL. Received ${JSON.stringify(url)}.`
+    );
   }
   return match[0];
 }

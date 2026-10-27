@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import {
   EmailOTPEmail,
@@ -83,7 +83,8 @@ async function renderAuthEmail({ flow, vars, authEmailConfig, baseURL, context }
 
   const Template = stockTemplates[flow];
   if (!Template) {
-    throw new ConfigError(`Unknown auth email flow "${flow}".`);
+    // The flow names come from the engine's own callbacks, never from config.
+    throw new LowdefyInternalError(`Unknown auth email flow "${flow}".`);
   }
   const theme = resolveThemeLogo({ theme: app.email ?? {}, serverUrl, basePath });
   const { html, text } = await renderEmail({

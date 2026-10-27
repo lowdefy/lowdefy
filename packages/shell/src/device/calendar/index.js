@@ -16,6 +16,7 @@
 
 import { getCalendars, listEvents, requestCalendarPermissions } from 'expo-calendar';
 import { createEventInCalendarAsync } from 'expo-calendar/legacy';
+import { UserError } from '@lowdefy/errors';
 
 const HOUR = 60 * 60 * 1000;
 
@@ -42,7 +43,7 @@ const calendar = {
   async getEvents({ end, start }) {
     const { granted } = await requestCalendarPermissions();
     if (!granted) {
-      throw new Error('Calendar permission was denied.');
+      throw new UserError('Calendar permission was denied.');
     }
     const calendars = await getCalendars();
     const byId = Object.fromEntries(calendars.map((item) => [item.id, item.title]));

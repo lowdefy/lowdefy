@@ -294,6 +294,24 @@ test('handleError displays one server failure reaching it twice only once', asyn
   expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(1);
 });
 
+test('handleError starts its seen set afresh once it holds 500 errors, so a long session keeps a bounded set', async () => {
+  const lowdefy = createLowdefy();
+  const handleError = createHandleError(lowdefy);
+  const first = decodeWireError({ configKey: 'request:1', requestId: 'rid-0' });
+  await handleError(first);
+  for (let index = 1; index < 500; index += 1) {
+    await handleError(decodeWireError({ configKey: 'request:1', requestId: `rid-${index}` }));
+  }
+  // Still within the limit: the first failure is remembered.
+  await handleError(first);
+  expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(500);
+
+  // The 501st key clears the set, so the first failure is shown again.
+  await handleError(decodeWireError({ configKey: 'request:1', requestId: 'rid-500' }));
+  await handleError(first);
+  expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(502);
+});
+
 test('handleError in dev displays two different server failures of one action, as dev errors', async () => {
   const lowdefy = createLowdefy();
   const handleError = createHandleError(lowdefy);
