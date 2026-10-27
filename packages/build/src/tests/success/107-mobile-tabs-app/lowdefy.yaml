@@ -1,0 +1,53 @@
+# 107: Mobile App With Tabs
+# A web page plus three mobile pages framed by a tab bar. Mobile pages resolve
+# blocks against the native types map, get routes and auth like web pages, and
+# are listed in build/mobile/pageIndex.json with their native type sets.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Web home
+
+mobile:
+  homePageId: today
+  minShellVersion: 7.4.0
+  menus:
+    tabs:
+      - pageId: today
+        icon: House
+        title: Today
+      - pageId: jobs
+        icon: ClipboardList
+        title: Jobs
+      - pageId: profile
+        title: Profile
+  shells:
+    - id: field
+      scheme: field
+      ios:
+        bundleId: com.example.field
+        teamId: ABCDE12345
+      android:
+        package: com.example.field
+        sha256: 'AA:BB:CC'
+  pages:
+    - _ref: mobile/today.yaml
+    - _ref: mobile/jobs.yaml
+    - id: profile
+      type: Box
+      blocks:
+        - id: name
+          type: Title
+          properties:
+            content: Profile
+
+connections:
+  - id: api
+    type: AxiosHttp
+    properties:
+      baseURL: https://example.com
+config:
+  experimental:
+    mobile: true

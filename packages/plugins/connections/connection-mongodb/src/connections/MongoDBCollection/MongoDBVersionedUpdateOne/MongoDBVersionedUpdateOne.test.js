@@ -497,7 +497,7 @@ test('updateInsertOne mongodb error', async () => {
     write: true,
   };
   await expect(MongoDBVersionedUpdateOne({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBVersionedUpdateOne command on collection "updateInsertOne" as malformed.'
+    'MongoDB rejected the MongoDBVersionedUpdateOne command on collection "updateInsertOne" as malformed.'
   );
 });
 

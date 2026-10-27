@@ -33,7 +33,8 @@ const upgrade = upgradeWebSocket((c) => {
   return {
     onOpen(event, ws) {
       // The upgrade's headers stay with the connection: its caller is resolved
-      // from them again while the socket is open.
+      // from them again while the socket is open - a browser's session cookie,
+      // or a phone shell's "Authorization: Bearer" session, read the same way.
       connection = createWebSocketConnection(context, {
         closeSocket: ({ code, reason }) => ws.close(code, reason),
         headers: c.req.raw.headers,
@@ -57,7 +58,8 @@ const upgrade = upgradeWebSocket((c) => {
 });
 
 // Upgrades are accepted from the app's own pages and from clients that send no
-// Origin; isWebSocketOriginAllowed holds the rule and logs a refusal.
+// Origin (a phone shell sends the app's own); isWebSocketOriginAllowed holds the
+// rule and logs a refusal.
 function websocketHandler(c, next) {
   const context = c.get('lowdefyContext');
   if (!isWebSocketOriginAllowed({ context, getHeader: (name) => c.req.header(name) })) {

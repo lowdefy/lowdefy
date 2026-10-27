@@ -65,7 +65,7 @@ function Cell({ api, col, focused, lead, original, selected }) {
         style={col.style}
         tabIndex={focused ? 0 : -1}
       >
-        <col.Cell api={api} selected={selected} />
+        <col.Cell api={api} original={original} selected={selected} />
       </div>
     );
   }

@@ -11,7 +11,7 @@ Importantly, `:reject` does not trigger `:catch` blocks in [`:try`](/:try) state
 This makes `:reject` ideal for handling validation and business logic errors separately from system errors.
 Choose [`:throw`](/:throw) when a step failed and the routine may recover; choose `:reject` when the routine decided the request cannot be fulfilled.
 
-In a [webhook endpoint](/api#webhook-endpoints), `:status` and `:body` set the HTTP answer: the endpoint answers `:status` (an integer from 400 to 499, default 400) with `:body` sent as is. Without `:body`, the body is `{ "error": { "code": "rejected", "message": <the reject message> } }`. A `:reject` in an `InternalApi` endpoint the webhook calls with `CallApi` sets the answer the same way. On any other endpoint, `:status` and `:body` are a build error.
+In a [webhook endpoint](/api#webhook-endpoints), `:status` and `:body` set the HTTP answer: the endpoint answers `:status` (an integer from 400 to 499, default 400) with `:body` sent as is. Without `:body`, the body is `{ "error": { "code": "rejected", "message": <the reject message> } }`. A `:reject` in an `InternalApi` endpoint the webhook calls with `CallApi` sets the answer the same way. In a [link endpoint](/api#link-endpoints), `:status` sets the status the link answers with, and `:body` is a build error, since a link answers with no body. On any other endpoint, `:status` and `:body` are a build error.
 
 `:reject` also takes an Error as its message, such as the error a `:catch` caught: `:reject: { _error: true }`. The reject message is then "Something went wrong.", unless the error was a `UserError` or an auth refusal (`AuthenticationError`, `AuthorizationError` or `TwoFactorEnrolmentRequiredError`), whose message is kept. To reject with the caught error's real message, name it: `:reject: { _error: message }`. See [`_error`](/_error).
 
@@ -19,7 +19,7 @@ In a [webhook endpoint](/api#webhook-endpoints), `:status` and `:body` set the H
 
 - `:reject: string | Error`: __Required__ - The error message that will be returned in the response object of the API call result, or an Error whose message to use.
 - `:cause: any`: Additional metadata that will be returned with the error message.
-- `:status: integer`: In a webhook endpoint, or an `InternalApi` endpoint a webhook calls, the HTTP status the webhook answers with, from 400 to 499. Defaults to 400.
+- `:status: integer`: In a webhook or link endpoint, or an `InternalApi` endpoint one calls, the HTTP status the endpoint answers with, from 400 to 499. Defaults to 400.
 - `:body: any`: In a webhook endpoint, or an `InternalApi` endpoint a webhook calls, the body the webhook answers with, sent as is.
 
 #### Examples

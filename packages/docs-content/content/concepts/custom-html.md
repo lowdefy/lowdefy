@@ -25,7 +25,7 @@ To add [Google Analytics](/https://developers.google.com/analytics/devguides/col
 
 ```yaml
 name: google-analytics-example
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 # ...
 app:
   html:

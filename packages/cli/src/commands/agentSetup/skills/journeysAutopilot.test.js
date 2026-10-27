@@ -64,6 +64,14 @@ test('journeys-autopilot is one light agent that never touches production or the
   expect(skill).toContain('/loop /journeys-autopilot');
 });
 
+test('journeys-autopilot waits for run slots, backs off on exit 75 and warms through the hub', () => {
+  const skill = journeysAutopilot();
+  expect(skill).toContain('exit code 75');
+  expect(skill).toContain('Never loop');
+  expect(skill).toContain('lowdefy hub start .');
+  expect(skill).toContain('lowdefy hub stop .');
+});
+
 test('journeys-autopilot proves before keeping and never weakens or deletes a journey', () => {
   const skill = journeysAutopilot();
   expect(skill).toContain('**PASS** (three in a row)');

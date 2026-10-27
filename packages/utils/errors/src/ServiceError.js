@@ -14,6 +14,10 @@
   limitations under the License.
 */
 
+import findInErrorChain from './findInErrorChain.js';
+import hasTimeoutInChain from './hasTimeoutInChain.js';
+import isTimeoutError from './isTimeoutError.js';
+
 /**
  * Network error codes that indicate service issues (not config problems).
  */
@@ -49,15 +53,16 @@ function readHttpStatus(error) {
   );
 }
 
-// The first HTTP status down a retrying client's lastError and the cause chain.
-function findHttpStatus(error, seen = new Set()) {
-  if (!error || typeof error !== 'object' || seen.has(error)) return undefined;
-  seen.add(error);
-  return (
-    readHttpStatus(error) ??
-    findHttpStatus(error.lastError, seen) ??
-    findHttpStatus(error.cause, seen)
-  );
+// What failed, read once from the error and its chain. A call that ran out of time got no
+// answer, so any status attached above the cancellation is one a client made up, not a
+// server response: the AI gateway client reports 500 for an AbortSignal.timeout, and 408
+// for an undici timeout. A real 5xx or 429 wrapped around a timeout looks the same, so the
+// timeout wins.
+function classifyFailure(error) {
+  if (hasTimeoutInChain(error)) {
+    return { timedOut: true, statusCode: undefined };
+  }
+  return { timedOut: false, statusCode: findInErrorChain(error, readHttpStatus) };
 }
 
 // 5xx is a failing service; 429 is a service throttling its callers. Both pass with
@@ -116,10 +121,15 @@ class ServiceError extends Error {
   constructor(message, { cause, service, code, statusCode, configKey, hint, retryAfter } = {}) {
     // Extract info from wrapped error if provided
     const errorCode = code ?? cause?.code;
-    const errorStatusCode = statusCode ?? findHttpStatus(cause);
+    // A status passed in is the caller saying a service answered with it.
+    const failure =
+      statusCode === undefined || statusCode === null
+        ? classifyFailure(cause)
+        : { timedOut: false, statusCode };
 
     // Use provided message, or enhance wrapped error's message
-    const baseMessage = message ?? (cause ? ServiceError.enhanceMessage(cause) : 'Service error');
+    const baseMessage =
+      message ?? (cause ? ServiceError.enhanceMessage(cause, failure) : 'Service error');
 
     // Message without prefix - logger uses error.name for display
     // Include service in message if provided
@@ -132,7 +142,7 @@ class ServiceError extends Error {
     this.service = service;
     this.code = errorCode;
     this.hint = hint ?? cause?.hint ?? null;
-    this.statusCode = errorStatusCode;
+    this.statusCode = failure.statusCode;
     this.retryAfter = retryAfter ?? ServiceError.readRetryAfter(cause);
     // Extract from the wrapped error like PluginError does, so a ServiceError
     // wrapped around an error that already resolved its config location keeps it.
@@ -149,6 +159,11 @@ class ServiceError extends Error {
     if (!error || seen.has(error)) return false;
     seen.add(error);
 
+    // A connection that has already classified its error as the service refusing the request
+    // (a duplicate key, an invalid query) says so. The message checks below would otherwise
+    // match words in a collection name or in the document values a driver message quotes.
+    if (error.isServiceError === false) return false;
+
     // A client that retried and gave up (the AI SDK's RetryError) carries the
     // failure it retried on; its own message and fields hold no status.
     if (error.lastError) {
@@ -161,8 +176,8 @@ class ServiceError extends Error {
     }
 
     // A call cancelled because it ran out of time (AbortSignal.timeout, the AI SDK's
-    // timeout option, the server's request timeout).
-    if (error.name === 'TimeoutError') {
+    // timeout option, the server's request timeout, undici's timeouts).
+    if (isTimeoutError(error)) {
       return true;
     }
 
@@ -199,11 +214,13 @@ class ServiceError extends Error {
   /**
    * Enhances an error message with more helpful context.
    * @param {Error} error - The original error
+   * @param {Object} [failure] - Whether the call timed out and the status it failed with,
+   *   when the caller already worked them out
    * @returns {string} Enhanced error message
    */
-  static enhanceMessage(error) {
+  static enhanceMessage(error, failure = classifyFailure(error)) {
     const code = error.code;
-    const statusCode = findHttpStatus(error);
+    const { timedOut, statusCode } = failure;
 
     if (code === 'ECONNREFUSED') {
       return `Connection refused. The service may be down or the address may be incorrect. ${
@@ -218,6 +235,11 @@ class ServiceError extends Error {
     }
     if (code === 'ECONNRESET') {
       return `Connection reset by the server. ${error.message ?? ''}`;
+    }
+    if (timedOut) {
+      return `Request timed out. The service may be slow, or the timeout too short. ${
+        error.message ?? ''
+      }`;
     }
     if (statusCode === 429) {
       const retryAfter = ServiceError.readRetryAfter(error);
@@ -235,24 +257,19 @@ class ServiceError extends Error {
    * Reads the Retry-After header a throttling service sent, from the error, the
    * failure a retrying client gave up on, or its cause chain.
    * @param {Error} error - The error to read
-   * @param {Set} [seen] - Errors already read, so a cyclic cause chain ends
    * @returns {string|null} The header value (seconds or an HTTP date), or null
    */
-  static readRetryAfter(error, seen = new Set()) {
-    if (!error || typeof error !== 'object' || seen.has(error)) return null;
-    seen.add(error);
-    const retryAfter =
-      readRetryAfterHeader(error.responseHeaders) ??
-      readRetryAfterHeader(error.response?.headers) ??
-      readRetryAfterHeader(error.headers) ??
-      readRetryAfterHeader(error.$response?.headers);
-    if (retryAfter !== undefined && retryAfter !== null) {
-      return String(retryAfter);
-    }
-    return (
-      ServiceError.readRetryAfter(error.lastError, seen) ??
-      ServiceError.readRetryAfter(error.cause, seen)
+  static readRetryAfter(error) {
+    const retryAfter = findInErrorChain(
+      error,
+      (node) =>
+        readRetryAfterHeader(node.responseHeaders) ??
+        readRetryAfterHeader(node.response?.headers) ??
+        readRetryAfterHeader(node.headers) ??
+        readRetryAfterHeader(node.$response?.headers) ??
+        undefined
     );
+    return retryAfter === undefined ? null : String(retryAfter);
   }
 }
 

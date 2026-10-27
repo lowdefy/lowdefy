@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { isExpectedError } from '@lowdefy/errors';
+
 // Run work after the response is sent. Platforms that reap the invocation once
 // the response is flushed (Vercel fluid compute) inject context.waitUntil in
 // their server's apiContext middleware to keep the invocation alive until the
@@ -21,9 +23,10 @@
 // self-hosted there is no waitUntil and the promise simply runs detached on
 // the still-alive Node process.
 //
-// The outcome only exists in logs — completion and failure are logged through
-// the request logger so they reach the platform log stream (and any log
-// drains); a background failure must never surface as an unhandled rejection.
+// The outcome only exists in logs - completion is logged through the request logger so it
+// reaches the platform log stream (and any log drains). A failure is logged like a failure in
+// the request: an expected outcome as a warning, a fault through handleError, so it carries its
+// config location and reaches error tracking. It must never surface as an unhandled rejection.
 function scheduleBackground(context, { event, endpointId }, fn) {
   const { logger } = context;
   const promise = (async () => {
@@ -31,13 +34,14 @@ function scheduleBackground(context, { event, endpointId }, fn) {
       const result = await fn();
       logger.info({ event: `${event}_done`, endpointId, status: result?.status });
     } catch (err) {
-      // A UserError is the caller's mistake, not a fault: warn level, as on
-      // every other call path.
-      if (err.name === 'UserError') {
+      if (isExpectedError(err)) {
         logger.warn({ event: `${event}_failed`, endpointId, err }, err.message);
         return;
       }
-      logger.error({ event: `${event}_failed`, endpointId, err }, err.message);
+      logger.info({ event: `${event}_failed`, endpointId });
+      if (err?.handled !== true) {
+        await context.handleError(err);
+      }
     }
   })();
   if (context.waitUntil) {

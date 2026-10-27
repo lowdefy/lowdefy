@@ -17,6 +17,7 @@
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import createBuildHandleError from '../../utils/createBuildHandleError.js';
 import createHandleWarning from '../../utils/createHandleWarning.js';
+import createMobileTypeCounters from '../../utils/createMobileTypeCounters.js';
 import createTypeCounters from '../../utils/createTypeCounters.js';
 
 // The context one JIT page build runs on: the kept context's fields, its maps
@@ -75,6 +76,10 @@ function createPageBuildContext(keptContext) {
     unsetEnvReads: new Map(),
     pluginCheckSlugRefs: new Map(),
   };
+  // A mobile page's server types go to this build's own counters too.
+  pageBuildContext.typeCountersMobile = createMobileTypeCounters({
+    typeCounters: pageBuildContext.typeCounters,
+  });
   pageBuildContext.handleError = createBuildHandleError({ context: pageBuildContext });
   pageBuildContext.handleWarning = createHandleWarning({ context: pageBuildContext });
   return pageBuildContext;

@@ -1,0 +1,28 @@
+# MB2: Mobile Page With No Native Type
+# A mobile page that uses a block type the native set lacks fails the build,
+# naming the page, block and type. AgGrid types suggest List with ListItem.
+# An action type the native set lacks fails the same way.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  pages:
+    - id: jobs
+      type: Box
+      blocks:
+        - id: jobs_grid
+          type: AgGridAlpine
+        - id: note
+          type: Title
+          events:
+            onClick:
+              - id: log
+                type: Log
+              - id: copy
+                type: CopyToClipboard
+config:
+  experimental:
+    mobile: true

@@ -1,0 +1,9 @@
+id: about
+type: Box
+style:
+  padding: 8px 24px
+blocks:
+  - id: body
+    type: Paragraph
+    properties:
+      content: Shared by web and mobile.

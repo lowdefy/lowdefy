@@ -37,8 +37,9 @@ async function startUp({ context, options = {}, command }) {
   context.configDirectory = path.resolve(options.configDirectory || process.cwd());
   readDotEnv(context);
   context.requiresLowdefyYaml = !['init'].includes(command.name());
-  const { cliConfig, lowdefyVersion, plugins } = await getLowdefyYaml(context);
+  const { cliConfig, experimental, lowdefyVersion, plugins } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
+  context.experimental = experimental;
   context.lowdefyVersion = lowdefyVersion;
   context.plugins = plugins;
 

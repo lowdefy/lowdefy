@@ -809,3 +809,37 @@ test('tools/call keeps the reply and warns when the afterToolCall hook throws', 
     'MCP afterToolCall hook "record-tool-call" failed after tool "health": Authentication required for API endpoint "record-tool-call".'
   );
 });
+
+test('tools/call keeps the reply and reports a hook fault the routine never reached', async () => {
+  // A hook whose payloadSchema the call does not match is the app's own config fault.
+  const context = createHookContext({
+    hookConfig: {
+      ...recordToolCallConfig,
+      payloadSchema: { type: 'object', properties: { tool: { type: 'number' } } },
+    },
+  });
+  const handleError = vi.spyOn(context, 'handleError');
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBeFalsy();
+  expect(mockRecordRequest).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'warn_mcp_after_tool_call', hook: 'record-tool-call' }),
+    expect.stringContaining('does not match its payloadSchema')
+  );
+  expect(handleError).toHaveBeenCalledWith(expect.objectContaining({ name: 'ConfigError' }));
+});
+
+test('tools/call does not report a refused afterToolCall hook as a fault', async () => {
+  const context = createHookContext({
+    hookConfig: { ...recordToolCallConfig, auth: { public: false } },
+  });
+  const handleError = vi.spyOn(context, 'handleError');
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  await client.callTool({ name: 'health', arguments: {} });
+  expect(handleError).not.toHaveBeenCalled();
+});

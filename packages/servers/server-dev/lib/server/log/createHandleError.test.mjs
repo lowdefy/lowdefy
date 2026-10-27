@@ -150,6 +150,7 @@ test('handleError pushes an error with a configKey into the server error store w
     source: 'pages/home.yaml:5',
     config: 'root.pages[0:home]',
     hint: null,
+    configKey: 'key_1',
     endpointId: 'get-customer',
     requestId: null,
     pageId: '_mcp',
@@ -171,6 +172,16 @@ test('handleError does not push a UserError into the server error store', async 
   expect(error.handled).toBe(true);
   expect(serverErrorStore.push).not.toHaveBeenCalled();
   expect(context.logger.error).toHaveBeenCalledWith(error);
+});
+
+test('handleError does not push an auth refusal into the server error store', async () => {
+  const context = testContext();
+  const handleError = createHandleError({ context });
+  const { AuthorizationError } = await import('@lowdefy/errors');
+
+  await handleError(new AuthorizationError('Not allowed.'));
+
+  expect(serverErrorStore.push).not.toHaveBeenCalled();
 });
 
 test('handleError does not push a LowdefyInternalError into the server error store', async () => {

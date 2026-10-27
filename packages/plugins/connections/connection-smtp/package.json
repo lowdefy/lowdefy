@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-smtp",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -46,11 +46,11 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/helpers": "7.0.0",
-    "nodemailer": "10.0.13"
+    "@lowdefy/helpers": "7.1.0",
+    "nodemailer": "10.1.7"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "7.0.0",
+    "@lowdefy/ajv": "7.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "vitest": "4.1.12"

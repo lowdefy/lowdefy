@@ -53,6 +53,7 @@ class ServerParser {
     env,
     i18n,
     jsMap,
+    logger,
     lowdefyApp,
     markCredential,
     operators,
@@ -63,6 +64,7 @@ class ServerParser {
     this.env = env;
     this.i18n = i18n;
     this.jsMap = jsMap;
+    this.logger = logger;
     this.lowdefyApp = lowdefyApp;
     this.markCredential = markCredential;
     this.operators = operators;
@@ -176,6 +178,7 @@ class ServerParser {
           items,
           jsMap: this.jsMap,
           location,
+          logger: this.logger,
           lowdefyApp: this.lowdefyApp,
           markCredential: this.markCredential,
           methodName,

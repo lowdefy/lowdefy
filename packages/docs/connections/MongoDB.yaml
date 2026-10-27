@@ -1796,12 +1796,12 @@ _ref:
 
             ## Errors
 
-            When MongoDB rejects an operation, the request fails with a `ServiceError` that carries:
+            When MongoDB rejects an operation, the request fails with a `RequestError` that carries:
 
             - `code` — the MongoDB error code, for example `11000` for a duplicate key.
-            - `message` — a plain sentence naming the collection and the request type, like `MongoDB: Duplicate key on collection "orders".`
-            - `hint` — a sentence saying what to do about it, for example to insert with `MongoDBUpdateOne` and `upsert: true`, to add an index covering the filter, or to grant the database user a role.
+            - `message` — a plain sentence naming the collection and the request type, like `Duplicate key on collection "orders".`
+            - `hint` — a sentence saying what to do about it, for example to insert with `MongoDBUpdateOne` and `upsert: true`, or to grant the database user a role.
 
-            The driver's own message is never sent to the browser — it can quote values from the document that triggered the error. It is logged on the server instead, where the dev server terminal prints it under the located error line as `Caused by: MongoServerError: E11000 …`.
+            A time limit (codes `50` and `89`) or the aggregation memory limit (code `292`) is a `ServiceError` instead, with the same `code` and a `hint` such as adding an index covering the filter. Network, DNS and TLS failures are also `ServiceError`s, classified by the connection layer rather than by an error code. A `ServiceError` is an outage that can pass with time; a `RequestError` repeats until the request or the database changes.
 
-            Network, DNS and TLS failures are also `ServiceError`s, classified by the connection layer rather than by an error code.
+            The driver's own message is never sent to the browser — it can quote values from the document that triggered the error. The dev server terminal prints it under the located error line as `Caused by: MongoServerError: E11000 …`.

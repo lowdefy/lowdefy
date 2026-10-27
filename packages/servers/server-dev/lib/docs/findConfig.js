@@ -15,7 +15,7 @@
 */
 
 import path from 'node:path';
-import { ConfigError, resolveConfigLocation } from '@lowdefy/errors';
+import { UserError, resolveConfigLocation } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
@@ -221,7 +221,7 @@ function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope,
 // "no matches" as a normal result and try another id or pageId.
 async function findConfig({ id, pageId }) {
   if (type.isNone(id) || !type.isString(id)) {
-    throw new ConfigError(
+    throw new UserError(
       `findConfig requires an "id" string. Received ${JSON.stringify(id)}. ` +
         'Use GET /lowdefy-docs/find/:id.'
     );
@@ -232,8 +232,7 @@ async function findConfig({ id, pageId }) {
   const buildDirectory = path.join(process.cwd(), 'build');
 
   // A page's root block renders with blockId === pageId, so open-in-editor
-  // and feedback enrichment hit this branch for it — they read
-  // matches[0].location.source, so the page result must carry a match, not
+  // hits this branch for it — it reads matches[0].location.source, so the page result must carry a match, not
   // just the file field the docs/MCP consumers use.
   if (pageRegistry[id]) {
     const refPath = pageRegistry[id].refPath;

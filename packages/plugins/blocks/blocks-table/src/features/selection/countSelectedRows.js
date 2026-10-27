@@ -14,18 +14,31 @@
   limitations under the License.
 */
 
-// Counts against the filtered rows, the set the header checkbox selects (TanStack's select-all
-// toggles the pre-grouped rows, which come after filtering), so "all selected" means all the rows
-// the filter shows. In server mode filtering is manual, so these are the loaded rows; an
-// `{ all: true, except }` selection is told apart by `selectionMode` (getSelectAllState).
+import isRowSelectable from './isRowSelectable.js';
+
+// Counts against the filtered rows that `rowSelection.selectable` allows, the set the header
+// checkbox selects (TanStack's select-all toggles the pre-grouped rows, which come after
+// filtering), so "all selected" means all the selectable rows the filter shows. In server mode
+// filtering is manual, so these are the loaded rows; an `{ all: true, except }` selection is told
+// apart by `selectionMode` (getSelectAllState). Without a condition only the selected keys are
+// counted, not every row.
 function countSelectedRows({ api }) {
   const { rows, rowsById } = api.table.getFilteredRowModel();
   const selection = api.state.rowSelection;
   let selectedCount = 0;
-  Object.keys(selection).forEach((id) => {
-    if (selection[id] === true && rowsById[id]) selectedCount += 1;
+  if (api.config.rowSelection.isSelectable === null) {
+    Object.keys(selection).forEach((id) => {
+      if (selection[id] === true && rowsById[id]) selectedCount += 1;
+    });
+    return { selectedCount, total: rows.length };
+  }
+  let total = 0;
+  rows.forEach((row) => {
+    if (!isRowSelectable({ api, original: row.original })) return;
+    total += 1;
+    if (selection[row.id] === true) selectedCount += 1;
   });
-  return { selectedCount, total: rows.length };
+  return { selectedCount, total };
 }
 
 export default countSelectedRows;

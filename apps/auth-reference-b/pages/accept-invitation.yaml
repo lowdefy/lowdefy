@@ -1,6 +1,7 @@
 # Public page (like login): the pending-invitation carve-out admits an
-# invitee's session, but with no member row every protected page treats them
-# as logged out - this page is where they land to accept. The accept runs
+# invitee's session, but with no member row they are a caller awaiting the
+# organization, refused by every protected page - this page is where they
+# land to accept. The accept runs
 # through the AcceptInvitation catalog action (phase 9; this page posted to
 # the endpoint directly before) - BetterAuth still gates it itself: the
 # session email must match the invitation.
@@ -12,11 +13,29 @@ properties:
     margin: 60px auto
 events:
   onInit:
+    # The emailed link names the invitation. Set first, so a failed caller read
+    # below still leaves it filled.
     - id: set_invitation_id
       type: SetState
       params:
         invitationId:
           _url_query: invitationId
+    - id: read_caller
+      type: CallAPI
+      params:
+        endpointId: invitation-caller
+    # Without the link - an invitee who signed up directly and lost the email -
+    # the server still knows their pending invitation and hands its id to this
+    # page.
+    - id: set_caller
+      type: SetState
+      params:
+        caller:
+          _api: invitation-caller.response
+        invitationId:
+          _if_none:
+            - _state: invitationId
+            - _api: invitation-caller.response.pending_invitation_id
 blocks:
   - id: accept_title
     type: Title
@@ -28,9 +47,18 @@ blocks:
     properties:
       html: |
         <p>Sign in (or sign up) with the invited email address first, then
-        accept. Until you accept, protected pages treat you as logged out.</p>
-  # The block id IS the state key, so the onInit write from the url query
-  # fills this input.
+        accept. Until you accept, protected pages are closed to you.</p>
+  - id: caller_html
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>Awaiting organization: {{ caller.awaiting_organization | dump }}</p>
+          on:
+            caller:
+              _state: caller
+  # The block id IS the state key, so the onInit write fills this input.
   - id: invitationId
     type: TextInput
     properties:

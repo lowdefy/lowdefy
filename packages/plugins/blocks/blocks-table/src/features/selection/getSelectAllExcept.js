@@ -14,11 +14,27 @@
   limitations under the License.
 */
 
+import isRowSelectable from './isRowSelectable.js';
+
 // The `except` keys of an `{ all: true, except }` selection: the rows the user cleared since
 // selecting all (recorded by toggleRowSelected), including rows that are not loaded now (server
-// mode evicts and reloads blocks), plus exceptions the value set from outside.
+// mode evicts and reloads blocks), plus exceptions the value set from outside, plus the rows the
+// all selection covers that `rowSelection.selectable` rejects, so resolving the value leaves them
+// out too. Client-side those are the filtered rows; in server mode the loaded ones (the server
+// resolves rows that are not loaded, untested).
 function getSelectAllExcept({ api }) {
-  return [...api.selectionExcept.values()];
+  const except = new Map(api.selectionExcept);
+  if (api.config.rowSelection?.isSelectable) {
+    const { rows } = api.config.server
+      ? api.table.getCoreRowModel()
+      : api.table.getFilteredRowModel();
+    rows.forEach((row) => {
+      if (!isRowSelectable({ api, original: row.original })) {
+        except.set(row.id, api.config.getKey(row.original));
+      }
+    });
+  }
+  return [...except.values()];
 }
 
 export default getSelectAllExcept;

@@ -22,11 +22,7 @@ import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
 import isEmailAdmitted from './isEmailAdmitted.js';
-
-// How long a minted organization's owner row may take to follow it. A mint
-// writes both rows within one request, so a marker older than this is left
-// over from a mint that failed between its writes.
-const mintPendingMs = 10 * 60 * 1000;
+import mintOrganization from './mintOrganization.js';
 
 // The engine-tier session.create hook that applies the active-org policy.
 // session.create is the one provider-agnostic choke point - it fires for
@@ -41,8 +37,9 @@ const mintPendingMs = 10 * 60 * 1000;
 // tenant: the active org is the user's business - the oldest membership when
 // they hold several; a user with a pending invitation gets a session but no
 // org (they proceed to accept); a fresh signup under create: auto mints its
-// own organization lazily, as owner, through the org plugin's adapter layer
-// (the endpoint cannot serve the mint - see applyTenantPolicy).
+// own organization lazily, as owner, through mintOrganization (the endpoint
+// cannot serve the mint - see applyTenantPolicy), holding the app roles
+// auth.organizations.creatorAppRoles lists.
 function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   async function applyPinnedPolicy({ auth, adapter, internalAdapter, session, ctx }) {
     const organization = await ensureOrganization({ auth, logger, slug: organizations.org });
@@ -96,130 +93,26 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   }
 
   // The user's own organization under open + auto. The slugs derive from the
-  // user id - org-<userId>, then org-<userId>-2, -3 and on. There are no
-  // transactions to lean on (the adapter supports standalone MongoDB), so the
-  // mint is two writes made safe by unique indexes (ensureAuthIndexes) and a
-  // marker:
-  //
-  // - The organization row is written with mintPending: true. Only a marked
-  //   organization whose mint is still in progress (isMintInProgress) is ever
-  //   joined as its owner here: one minted for this user moments ago whose
-  //   owner row was never written - a mint that failed between its two
-  //   writes, or one a concurrent session of the same user (a double submit,
-  //   two tabs) is finishing right now. The marker is cleared once the owner
-  //   row exists, so an organization everyone later left - with its data and
-  //   pending invitations - is never handed back; the user moves on to the
-  //   next slug and gets a fresh organization.
-  // - Two sessions creating the same slug: the unique slug index rejects the
-  //   second, which reads the winner's row.
-  // - Two sessions writing the owner row, in any order around each other's
-  //   writes: the unique (user, organization) index rejects the second, which
-  //   reads the winner's row. The member row is always written before the
-  //   marker is cleared, so a session that sees the marker cleared finds the
-  //   member row.
-  async function findMember({ adapter, userId, organizationId }) {
-    return adapter.findOne({
-      model: 'member',
-      where: [
-        { field: 'userId', value: userId },
-        { field: 'organizationId', value: organizationId },
-      ],
-    });
-  }
-
-  async function findOrCreateOrganization({ adapter, name, slug }) {
-    const existing = await adapter.findOne({
-      model: 'organization',
-      where: [{ field: 'slug', value: slug }],
-    });
-    if (existing) {
-      return existing;
-    }
-    try {
-      return await adapter.create({
-        model: 'organization',
-        data: { name, slug, mintPending: true, createdAt: new Date() },
-      });
-    } catch (error) {
-      const winner = await adapter.findOne({
-        model: 'organization',
-        where: [{ field: 'slug', value: slug }],
-      });
-      if (!winner) {
-        throw error;
-      }
-      return winner;
-    }
-  }
-
-  async function joinAsOwner({ adapter, userId, organizationId }) {
-    try {
-      await adapter.create({
-        model: 'member',
-        data: { userId, organizationId, role: 'owner', createdAt: new Date() },
-      });
-    } catch (error) {
-      const winner = await findMember({ adapter, userId, organizationId });
-      if (type.isNone(winner)) {
-        throw error;
-      }
-    }
-  }
-
-  async function clearMintPending({ adapter, organization }) {
-    if (organization.mintPending !== true) {
-      return;
-    }
-    await adapter.update({
-      model: 'organization',
-      where: [{ field: 'id', value: organization.id }],
-      update: { mintPending: false },
-    });
-  }
-
-  // A marked organization is joined as owner only while its mint is in
-  // progress: minted within mintPendingMs and with no member other than the
-  // user. A marker older than that, or on an organization other people belong
-  // to, is left over from a mint that wrote the owner row and failed before
-  // clearing it - the organization has had an owner, so it is never handed
-  // back. The stale marker is cleared and the user moves on to the next slug.
-  async function isMintInProgress({ adapter, organization, userId }) {
-    if (organization.mintPending !== true) {
-      return false;
-    }
-    if (Date.now() - new Date(organization.createdAt).getTime() > mintPendingMs) {
-      return false;
-    }
-    const otherMembers = await adapter.count({
-      model: 'member',
-      where: [
-        { field: 'organizationId', value: organization.id },
-        { field: 'userId', value: userId, operator: 'ne' },
-      ],
-    });
-    return otherMembers === 0;
-  }
-
+  // user id - org-<userId>, then org-<userId>-2, -3 and on. Each slug is tried
+  // with mintOrganization, which takes it only when it is the user's own: new,
+  // already theirs, or a mint of theirs that stopped between its two writes.
+  // An organization everyone later left - with its data and pending
+  // invitations - is never handed back; the user moves on to the next slug and
+  // gets a fresh organization.
   async function findOrMintOwnOrganization({ adapter, session, user }) {
     const name = user?.name || user?.email || session.userId;
     for (let suffix = 1; ; suffix += 1) {
       const slug = suffix === 1 ? `org-${session.userId}` : `org-${session.userId}-${suffix}`;
-      const organization = await findOrCreateOrganization({ adapter, name, slug });
-      const member = await findMember({
+      const minted = await mintOrganization({
         adapter,
+        creatorAppRoles: organizations.creatorAppRoles,
+        keepMembership: true,
+        organization: { name, slug },
         userId: session.userId,
-        organizationId: organization.id,
       });
-      if (!type.isNone(member)) {
-        await clearMintPending({ adapter, organization });
-        return organization;
+      if (!type.isNone(minted)) {
+        return minted.organization;
       }
-      if (await isMintInProgress({ adapter, organization, userId: session.userId })) {
-        await joinAsOwner({ adapter, userId: session.userId, organizationId: organization.id });
-        await clearMintPending({ adapter, organization });
-        return organization;
-      }
-      await clearMintPending({ adapter, organization });
     }
   }
 

@@ -80,13 +80,13 @@ test('resolveSource marks a user combined with source "tab" as invalid input', (
 
 test('resolveSource names the calling function in the invalid-input error', () => {
   const result = resolveSource({
-    name: 'evalOperator',
+    name: 'screenshotPage',
     pageId: 'home',
     source: 'tab',
     user: { roles: ['admin'] },
   });
 
-  expect(result.error).toMatch(/^evalOperator cannot apply "user"/);
+  expect(result.error).toMatch(/^screenshotPage cannot apply "user"/);
 });
 
 test('resolveSource treats a null user as no user', () => {

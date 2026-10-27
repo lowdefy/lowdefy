@@ -22,8 +22,8 @@ import { expect, test } from 'vitest';
 function request({ headers, method = 'POST' }) {
   const app = new Hono();
   app.use('/lowdefy-docs/*', localDevToolsOnly());
-  app.all('/lowdefy-docs/run-endpoint', (c) => c.json({ allowed: true }));
-  return app.request('/lowdefy-docs/run-endpoint', { headers, method });
+  app.all('/lowdefy-docs/journey', (c) => c.json({ allowed: true }));
+  return app.request('/lowdefy-docs/journey', { headers, method });
 }
 
 test.each([
@@ -59,4 +59,37 @@ test.each([
 ])('localDevToolsOnly refuses the request when %s', async (_, headers) => {
   const res = await request({ headers });
   expect(res.status).toEqual(403);
+});
+
+test.each([
+  ['with no origin', { host: '192.168.1.20:4102', 'x-lowdefy-dev-remote': '1' }],
+  [
+    'from its own page',
+    {
+      host: '192.168.1.20:4102',
+      origin: 'http://192.168.1.20:4102',
+      'sec-fetch-site': 'same-origin',
+      'x-lowdefy-dev-remote': '1',
+    },
+  ],
+])(
+  'localDevToolsOnly refuses a paired phone (the proxy marked it remote) %s',
+  async (_, headers) => {
+    const res = await request({ headers });
+    expect(res.status).toEqual(403);
+    expect((await res.json()).error).toEqual(
+      'The dev tools answer only on the computer running lowdefy dev.'
+    );
+  }
+);
+
+test('localDevToolsOnly lets a paired phone through only where allowPaired says so', async () => {
+  const app = new Hono();
+  app.use('/api/dev-recording', localDevToolsOnly({ allowPaired: (c) => c.req.method === 'POST' }));
+  app.all('/api/dev-recording', (c) => c.json({ allowed: true }));
+  const headers = { host: '192.168.1.20:4102', 'x-lowdefy-dev-remote': '1' };
+  const posted = await app.request('/api/dev-recording', { headers, method: 'POST' });
+  const read = await app.request('/api/dev-recording', { headers, method: 'GET' });
+  expect(posted.status).toEqual(200);
+  expect(read.status).toEqual(403);
 });

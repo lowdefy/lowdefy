@@ -18,9 +18,12 @@ import { MongoClient } from 'mongodb';
 import { MongoMemoryReplSet } from 'mongodb-memory-server-core';
 import { DryMongoBinary } from 'mongodb-memory-server-core/lib/util/DryMongoBinary.js';
 
+import createLogger from '../../server/log/createLogger.js';
 import pickDataStorePort from './pickDataStorePort.js';
 import registerDataStoreShutdown from './registerDataStoreShutdown.js';
 import removeDataStoreFiles from './removeDataStoreFiles.js';
+
+const logger = createLogger();
 
 // One store per dev server process. Kept on globalThis because the journey route that opens a data
 // session and the API context that reads it may load as separate module instances (Vite's SSR
@@ -35,17 +38,22 @@ async function announceDownload() {
   const options = await DryMongoBinary.generateOptions();
   const binary = await DryMongoBinary.locateBinary(options);
   if (binary === undefined) {
-    // eslint-disable-next-line no-console
-    console.info(`Downloading MongoDB ${options.version} for journey data sets (once).`);
+    logger.info(`Downloading MongoDB ${options.version} for journey data sets (once).`);
   }
 }
+
+// WiredTiger's cache otherwise grows to half of (RAM - 1 GB), several GB on a laptop. Data sets
+// are small capped snapshots, so a quarter of a GB holds them.
+const CACHE_SIZE_GB = '0.25';
 
 // A replica set, not a standalone server: transactions and change streams need one, and the app's
 // own cluster is one. MONGOMS_VERSION, read by mongodb-memory-server, pins the MongoDB version.
 async function startDataStore() {
   await announceDownload();
   const replSet = await MongoMemoryReplSet.create({
-    instanceOpts: [{ port: await pickDataStorePort() }],
+    instanceOpts: [
+      { port: await pickDataStorePort(), args: ['--wiredTigerCacheSizeGB', CACHE_SIZE_GB] },
+    ],
     replSet: { count: 1, storageEngine: 'wiredTiger' },
   });
   const uri = replSet.getUri();

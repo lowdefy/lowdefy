@@ -1,0 +1,16 @@
+# MB3: Unknown Mobile Key
+# A key the mobile schema does not define fails the build.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  serverUrl: https://example.com
+  pages:
+    - id: today
+      type: Box
+config:
+  experimental:
+    mobile: true

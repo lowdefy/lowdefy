@@ -30,10 +30,19 @@ function usedTypeNames({ store }) {
   return used;
 }
 
-function flattenKind({ kind, availableTypes }) {
+const TARGETS = ['web', 'mobile'];
+
+// The kinds a native shell draws or runs itself. Every other kind (connections,
+// requests, server operators, agents, ...) runs on the app's server, the same
+// for a phone as for a browser.
+const SHELL_KINDS = ['blocks', 'actions'];
+
+function flattenKind({ kind, availableTypes, clientOperators }) {
   if (kind === 'operators') {
     const merged = {};
-    for (const [typeName, definition] of Object.entries(availableTypes.operators?.client ?? {})) {
+    for (const [typeName, definition] of Object.entries(
+      clientOperators ?? availableTypes.operators?.client ?? {}
+    )) {
       merged[typeName] = { ...definition, environments: ['client'] };
     }
     for (const [typeName, definition] of Object.entries(availableTypes.operators?.server ?? {})) {
@@ -48,7 +57,30 @@ function flattenKind({ kind, availableTypes }) {
   return availableTypes[kind] ?? {};
 }
 
-function listTypes({ kind }) {
+// The types of a kind a target can use. For `mobile`, blocks, actions and
+// client operators are the ones a native shell carries
+// (plugins/availableTypesMobile.json), not the app's installed web plugins.
+function availableForTarget({ kind, target, availableTypes, availableTypesMobile }) {
+  if (target !== 'mobile') {
+    return { definitions: flattenKind({ kind, availableTypes }), fromShell: false };
+  }
+  if (SHELL_KINDS.includes(kind)) {
+    return { definitions: availableTypesMobile[kind] ?? {}, fromShell: true };
+  }
+  if (kind === 'operators') {
+    return {
+      definitions: flattenKind({
+        kind,
+        availableTypes,
+        clientOperators: availableTypesMobile.operators?.client ?? {},
+      }),
+      fromShell: true,
+    };
+  }
+  return { definitions: flattenKind({ kind, availableTypes }), fromShell: false };
+}
+
+function listTypes({ kind, target }) {
   const normalizedKind = normalizeTypeKind({ kind });
   if (type.isNone(normalizedKind)) {
     throw new Error(
@@ -57,9 +89,14 @@ function listTypes({ kind }) {
       )}. Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets.`
     );
   }
+  if (!type.isNone(target) && !TARGETS.includes(target)) {
+    throw new Error(`Unknown target. Received ${JSON.stringify(target)}. Use "web" or "mobile".`);
+  }
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
+  const availableTypesMobile =
+    readBuildArtifact({ name: 'plugins/availableTypesMobile.json' }) ?? {};
   const types = readBuildArtifact({ name: 'types.json', deserialize: true }) ?? {};
-  const blockMetas = readBuildArtifact({ name: 'plugins/blockMetas.json' }) ?? {};
+  const webBlockMetas = readBuildArtifact({ name: 'plugins/blockMetas.json' }) ?? {};
   const { entries, typeDocs } = getDocsIndex();
 
   const docSlugsByType = new Map();
@@ -86,23 +123,36 @@ function listTypes({ kind }) {
     used = usedTypeNames({ store: types[normalizedKind] });
   }
 
-  const flattened = flattenKind({ kind: normalizedKind, availableTypes });
-  return Object.entries(flattened)
+  const { definitions, fromShell } = availableForTarget({
+    kind: normalizedKind,
+    target,
+    availableTypes,
+    availableTypesMobile,
+  });
+  const blockMetas = fromShell ? availableTypesMobile.blockMetas ?? {} : webBlockMetas;
+  const webDefinitions = flattenKind({ kind: normalizedKind, availableTypes });
+  return Object.entries(definitions)
     .map(([typeName, definition]) => {
       const entry = {
         type: typeName,
         kind: normalizedKind,
         package: definition.package,
         version: definition.version,
-        used: used.has(typeName),
       };
+      // types.json counts what web pages use, so it says nothing of a shell's types.
+      if (!fromShell) {
+        entry.used = used.has(typeName);
+      }
       if (definition.environments) {
         entry.environments = definition.environments;
       }
       if (normalizedKind === 'blocks' && blockMetas[typeName]?.category) {
         entry.category = blockMetas[typeName].category;
       }
-      if (docSlugsByType.has(typeName)) {
+      // A shell type documented by its web page only when it is the same package's type: a
+      // native Button is not the web one.
+      const sameAsWeb = webDefinitions[typeName]?.package === definition.package;
+      if (docSlugsByType.has(typeName) && (!fromShell || sameAsWeb)) {
         entry.docSlug = docSlugsByType.get(typeName);
       }
       return entry;

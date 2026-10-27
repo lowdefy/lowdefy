@@ -49,7 +49,7 @@ test('createRequestActivity writes the starting activity at once', () => {
   const onChange = vi.fn();
   createRequestActivity({ onChange });
   expect(onChange.mock.calls).toEqual([
-    [{ lastActivityAt: '2026-10-02T10:00:00.000Z', activeRequests: 0 }],
+    [{ lastActivityAt: '2026-10-02T10:00:00.000Z', activeRequests: 0, openTabs: 0 }],
   ]);
 });
 
@@ -67,6 +67,7 @@ test('createRequestActivity counts requests in and out of flight', () => {
   expect(onChange.mock.calls.at(-1)[0]).toEqual({
     lastActivityAt: '2026-10-02T10:00:15.000Z',
     activeRequests: 0,
+    openTabs: 0,
   });
 });
 
@@ -79,6 +80,7 @@ test('createRequestActivity writes a request starting on an idle record at once'
   expect(onChange.mock.calls[1][0]).toEqual({
     lastActivityAt: '2026-10-02T10:00:01.000Z',
     activeRequests: 1,
+    openTabs: 0,
   });
 });
 
@@ -91,6 +93,7 @@ test('createRequestActivity writes the end of the last request at once when the 
   expect(onChange.mock.calls.at(-1)[0]).toEqual({
     lastActivityAt: '2026-10-02T10:01:00.000Z',
     activeRequests: 0,
+    openTabs: 0,
   });
 });
 
@@ -109,6 +112,7 @@ test('createRequestActivity bounds the writes for a burst of short requests and 
   expect(onChange.mock.calls.at(-1)[0]).toEqual({
     lastActivityAt: new Date(Date.parse('2026-10-02T10:00:00.000Z') + 3980).toISOString(),
     activeRequests: 0,
+    openTabs: 0,
   });
 });
 
@@ -135,4 +139,37 @@ test('createRequestActivity trackResponse ends a request once, on finish or clos
   expect(onChange.mock.calls.at(-1)[0].activeRequests).toBe(0);
   activity.begin();
   expect(onChange.mock.calls.at(-1)[0].activeRequests).toBe(1);
+});
+
+test('createRequestActivity counts open tabs and writes each change at once', () => {
+  const onChange = vi.fn();
+  const activity = createRequestActivity({ onChange });
+  const first = new EventEmitter();
+  const second = new EventEmitter();
+  activity.trackTab(first);
+  activity.trackTab(second);
+  expect(onChange.mock.calls.at(-1)[0].openTabs).toBe(2);
+  expect(activity.snapshot().openTabs).toBe(2);
+  first.emit('close');
+  expect(onChange.mock.calls.at(-1)[0].openTabs).toBe(1);
+  expect(activity.snapshot().activeRequests).toBe(0);
+});
+
+test('createRequestActivity counts a tab closing as use', () => {
+  const onChange = vi.fn();
+  const activity = createRequestActivity({ onChange });
+  const tab = new EventEmitter();
+  activity.trackTab(tab);
+  vi.advanceTimersByTime(600000);
+  tab.emit('close');
+  expect(activity.snapshot()).toEqual({
+    activeRequests: 0,
+    lastActivityAt: Date.parse('2026-10-02T10:10:00.000Z'),
+    openTabs: 0,
+  });
+  expect(onChange.mock.calls.at(-1)[0]).toEqual({
+    lastActivityAt: '2026-10-02T10:10:00.000Z',
+    activeRequests: 0,
+    openTabs: 0,
+  });
 });

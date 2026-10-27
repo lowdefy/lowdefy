@@ -34,6 +34,7 @@
 - _ref: concepts/advanced/html-attributes.yaml
 - _ref: concepts/advanced/cli.yaml
 - _ref: concepts/advanced/api.yaml
+- _ref: concepts/advanced/mobile-apps.yaml
 - _ref: concepts/advanced/notifications.yaml
 - _ref: concepts/advanced/dynamic-page-content.yaml
 - _ref: concepts/advanced/ai-agent-docs.yaml

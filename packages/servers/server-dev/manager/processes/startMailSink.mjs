@@ -18,6 +18,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import getMailOutboxDirectory from '../../lib/docs/getMailOutboxDirectory.js';
+import findSignInCode from '../utils/findSignInCode.mjs';
 
 /*
 With LOWDEFY_DEV_SMTP_PORT set, the dev server receives mail over SMTP on that
@@ -29,7 +30,10 @@ filter, nodemailer, templates - runs exactly as in production. The manager owns
 the listener so it survives restarts of the server child, and tells each child
 it is listening (startServer passes LOWDEFY_SERVER_DEV_MAIL_SINK), so a port
 added to .env after start is not mistaken for a running sink. The outbox is
-cleared at start, so a test run only ever sees the mail it caused.
+cleared at start, so a test run only ever sees the mail it caused. A message
+that carries a sign-in code also prints it (`code for <to>: <code>`), so a
+person signing in on a phone, or an agent reading lowdefy_dev_logs, has it
+without opening the outbox.
 */
 
 function readSmtpPort() {
@@ -52,7 +56,7 @@ async function readStream(stream) {
   return Buffer.concat(chunks);
 }
 
-function createMessageWriter({ directory, PostalMime }) {
+function createMessageWriter({ directory, logger, PostalMime }) {
   let sequence = 0;
   return async function writeMessage({ raw, envelope }) {
     // Numbered on arrival, before the parse, so the outbox order is the order
@@ -72,6 +76,10 @@ function createMessageWriter({ directory, PostalMime }) {
     const filePath = path.join(directory, `${id}.json`);
     await fs.promises.writeFile(`${filePath}.tmp`, JSON.stringify(message, null, 2));
     await fs.promises.rename(`${filePath}.tmp`, filePath);
+    const code = findSignInCode({ text: message.text });
+    if (code !== null) {
+      logger.info(`code for ${message.to.join(', ')}: ${code}`);
+    }
   };
 }
 
@@ -110,7 +118,7 @@ async function startMailSink(context) {
   const directory = getMailOutboxDirectory({ configDirectory: context.directories.config });
   fs.rmSync(directory, { recursive: true, force: true });
   fs.mkdirSync(directory, { recursive: true });
-  const writeMessage = createMessageWriter({ directory, PostalMime });
+  const writeMessage = createMessageWriter({ directory, logger: context.logger, PostalMime });
 
   const server = new smtpServer.SMTPServer({
     authOptional: true,

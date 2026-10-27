@@ -18,6 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
+import createUpdaters from './createUpdaters.js';
 import DependencyTracker from './tracking/DependencyTracker.js';
 import readMediaViewport from './tracking/readMediaViewport.js';
 import Slots from './Slots.js';
@@ -85,7 +86,17 @@ const blockData = (config) => {
 // page context, and a block-less root carrying the app events for the app context.
 // instanceKey is where the context and its input are stored. organizationId is
 // the caller's organization a page context was built for (see getContext).
-function createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pathParams }) {
+// globals, when given, are the host globals of the screen the context is shown
+// on (getContext); otherwise the context reads the app's.
+function createContext({
+  config,
+  globals,
+  instanceKey,
+  jsMap,
+  lowdefy,
+  organizationId,
+  pathParams,
+}) {
   const { id } = config;
   const ctx = {
     id,
@@ -97,6 +108,7 @@ function createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pa
     requests: {},
     state: {},
     _internal: {
+      globals,
       lowdefy,
       // Config object reference for dynamic page memoization — identity marks
       // which fetch this context was built from.
@@ -109,11 +121,12 @@ function createContext({ config, instanceKey, jsMap, lowdefy, organizationId, pa
       readRecorder: null,
       rootBlock: blockData(config), // filter block to prevent circular structure
       update: () => {}, // Initialize update since Requests might call it during context creation
-      // React updaters register here per block id when the context's Block
-      // components mount — scoped per context so rebuilding over a live
-      // context (dynamic page navigation, reset) never notifies the previous
-      // context's still-mounted components.
-      updaters: {},
+      // React updaters register here per block id while the context's Block
+      // components are mounted, a set per block since a native shell can show
+      // one page instance on two screens (createUpdaters). Scoped per context
+      // so rebuilding over a live context (dynamic page navigation, reset)
+      // never notifies the previous context's still-mounted components.
+      updaters: createUpdaters(),
     },
   };
   const _internal = ctx._internal;

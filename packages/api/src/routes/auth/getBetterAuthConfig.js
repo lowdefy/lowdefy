@@ -35,8 +35,10 @@ import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import getCanonicalUrl from '../../context/getCanonicalUrl.js';
 import buildAdminPlugin from './buildAdminPlugin.js';
+import buildBearerPlugin from './mobile/buildBearerPlugin.js';
 import buildCaptchaPlugin from './buildCaptchaPlugin.js';
 import buildMcpTokenPlugin from './buildMcpTokenPlugin.js';
+import buildOneTimeTokenPlugin from './mobile/buildOneTimeTokenPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
 import buildOauthPostLogin from './buildOauthPostLogin.js';
@@ -51,6 +53,7 @@ import { CLIENT_ADDRESS_HEADER } from './handleAuthRequest.js';
 import modelNames from './modelNames.js';
 import renderAuthEmail from '../../email/renderAuthEmail.js';
 import resolveCookiePrefix from './resolveCookiePrefix.js';
+import runReportingFaults from './runReportingFaults.js';
 import sanitizeSessionResponse from './sanitizeSessionResponse.js';
 
 // Decision 4: under the "pinned" org policy, disable every mounted
@@ -220,7 +223,7 @@ function getBetterAuthConfig({
   if (!type.isString(authConfig.secret)) {
     throw new ConfigError(
       'Auth "secret" did not resolve to a string. Check the _secret operator reference and that the secret is set.',
-      { received: type.typeOf(authConfig.secret) }
+      { received: type.typeOf(authConfig.secret), configKey: authConfig['~k'] }
     );
   }
   // Secrets are opaque at build time; strength checks are startup warnings.
@@ -258,7 +261,7 @@ function getBetterAuthConfig({
 
   const sendEmail = type.isNone(authConfig.email)
     ? undefined
-    : createSendEmail({ connectionId: authConfig.email.connectionId });
+    : createSendEmail({ authEmailConfig: authConfig.email });
 
   // BetterAuth builds password-reset, magic-link and email-verification links,
   // and its trusted origins (the CSRF Origin check and the allowed
@@ -366,6 +369,15 @@ function getBetterAuthConfig({
     options.database = database;
   }
 
+  // Phone sessions are marked so they can be given their own lifetime
+  // (mobile.auth.sessionExpiresIn) - see createMobileSessionCreateHook. input:
+  // false keeps the mark out of every client-writable body.
+  if (type.isNumber(authConfig.mobile?.sessionExpiresIn)) {
+    options.session.additionalFields = {
+      mobile: { type: 'boolean', required: false, input: false },
+    };
+  }
+
   if (authConfig.session.crossSubDomainCookies.enabled === true) {
     options.advanced.crossSubDomainCookies = {
       enabled: true,
@@ -383,14 +395,19 @@ function getBetterAuthConfig({
     if (sendEmail) {
       options.emailAndPassword.sendResetPassword = async ({ user, url }) => {
         const context = createSystemContext({ auth: getAuth() });
-        const { subject, html, text } = await renderAuthEmail({
-          flow: 'resetPassword',
-          vars: { url },
-          authEmailConfig: authConfig.email,
-          baseURL: baseUrlOrigin,
+        await runReportingFaults({
           context,
+          run: async () => {
+            const { subject, html, text } = await renderAuthEmail({
+              flow: 'resetPassword',
+              vars: { url },
+              authEmailConfig: authConfig.email,
+              baseURL: baseUrlOrigin,
+              context,
+            });
+            await sendEmail({ to: user.email, subject, html, text, context });
+          },
         });
-        await sendEmail({ to: user.email, subject, html, text, context });
       };
     } else {
       // Password reset is implicit in emailAndPassword, so a missing email
@@ -405,14 +422,19 @@ function getBetterAuthConfig({
     options.emailVerification = {
       sendVerificationEmail: async ({ user, url }) => {
         const context = createSystemContext({ auth: getAuth() });
-        const { subject, html, text } = await renderAuthEmail({
-          flow: 'verifyEmail',
-          vars: { url },
-          authEmailConfig: authConfig.email,
-          baseURL: baseUrlOrigin,
+        await runReportingFaults({
           context,
+          run: async () => {
+            const { subject, html, text } = await renderAuthEmail({
+              flow: 'verifyEmail',
+              vars: { url },
+              authEmailConfig: authConfig.email,
+              baseURL: baseUrlOrigin,
+              context,
+            });
+            await sendEmail({ to: user.email, subject, html, text, context });
+          },
         });
-        await sendEmail({ to: user.email, subject, html, text, context });
       },
     };
   }
@@ -430,29 +452,34 @@ function getBetterAuthConfig({
         disableSignUp: authConfig.magicLink.disableSignUp,
         sendMagicLink: async ({ email, url }) => {
           const context = createSystemContext({ auth: getAuth() });
-          // One email serves both paths when the code is also configured: mail
-          // security that pre-fetches links burns the single-use magic-link
-          // token before the person clicks, and the code they type into the tab
-          // they started from survives that. createVerificationOTP is the
-          // plugin's server-only mint - it stores the sign-in code and returns
-          // it, sending nothing - so the code rides on the link email instead of
-          // arriving as a second one.
-          const otpVars = emailOTPEnabled
-            ? {
-                otp: await getAuth().api.createVerificationOTP({
-                  body: { email, type: 'sign-in' },
-                }),
-                expiresIn: authConfig.emailOTP.expiresIn,
-              }
-            : {};
-          const { subject, html, text } = await renderAuthEmail({
-            flow: 'magicLink',
-            vars: { url: buildMagicLinkUrl({ authConfig, config, url }), ...otpVars },
-            authEmailConfig: authConfig.email,
-            baseURL: baseUrlOrigin,
+          await runReportingFaults({
             context,
+            run: async () => {
+              // One email serves both paths when the code is also configured: mail
+              // security that pre-fetches links burns the single-use magic-link
+              // token before the person clicks, and the code they type into the tab
+              // they started from survives that. createVerificationOTP is the
+              // plugin's server-only mint - it stores the sign-in code and returns
+              // it, sending nothing - so the code rides on the link email instead of
+              // arriving as a second one.
+              const otpVars = emailOTPEnabled
+                ? {
+                    otp: await getAuth().api.createVerificationOTP({
+                      body: { email, type: 'sign-in' },
+                    }),
+                    expiresIn: authConfig.emailOTP.expiresIn,
+                  }
+                : {};
+              const { subject, html, text } = await renderAuthEmail({
+                flow: 'magicLink',
+                vars: { url: buildMagicLinkUrl({ authConfig, config, url }), ...otpVars },
+                authEmailConfig: authConfig.email,
+                baseURL: baseUrlOrigin,
+                context,
+              });
+              await sendEmail({ to: email, subject, html, text, context });
+            },
           });
-          await sendEmail({ to: email, subject, html, text, context });
         },
       })
     );
@@ -469,21 +496,36 @@ function getBetterAuthConfig({
         expiresIn: authConfig.emailOTP.expiresIn,
         allowedAttempts: authConfig.emailOTP.allowedAttempts,
         disableSignUp: authConfig.emailOTP.disableSignUp,
+        // With phones, a resend keeps the live code rather than replacing it, so
+        // a stranger's send cannot take a known phone's code away
+        // (holdEmailCode). Web-only apps keep BetterAuth's default.
+        ...(type.isNone(authConfig.mobile) ? {} : { resendStrategy: 'reuse' }),
         sendVerificationOTP: async ({ email, otp, type: otpType }) => {
-          if (otpType !== 'sign-in') {
-            throw new ConfigError(
-              `Auth "emailOTP" only wires the sign-in code. A "${otpType}" one-time code was requested, and the Lowdefy engine has no email flow for it.`
-            );
-          }
           const context = createSystemContext({ auth: getAuth() });
-          const { subject, html, text } = await renderAuthEmail({
-            flow: 'emailOTP',
-            vars: { otp, expiresIn: authConfig.emailOTP.expiresIn },
-            authEmailConfig: authConfig.email,
-            baseURL: baseUrlOrigin,
+          // The type is the caller's: BetterAuth's send-verification-otp endpoint takes it from
+          // the request body, so another type is a refused request, not an engine fault. BetterAuth
+          // may run this send in the background, where a throw is only its own error line, so the
+          // refusal is one warning and no email.
+          if (otpType !== 'sign-in') {
+            context.logger.warn(
+              { event: 'auth_email_otp_type_refused', otpType },
+              `Auth "emailOTP" only sends the sign-in code. A "${otpType}" one-time code was requested and not sent.`
+            );
+            return;
+          }
+          await runReportingFaults({
             context,
+            run: async () => {
+              const { subject, html, text } = await renderAuthEmail({
+                flow: 'emailOTP',
+                vars: { otp, expiresIn: authConfig.emailOTP.expiresIn },
+                authEmailConfig: authConfig.email,
+                baseURL: baseUrlOrigin,
+                context,
+              });
+              await sendEmail({ to: email, subject, html, text, context });
+            },
           });
-          await sendEmail({ to: email, subject, html, text, context });
         },
       })
     );
@@ -604,6 +646,15 @@ function getBetterAuthConfig({
     );
   }
 
+  // Phones hold ordinary sessions and send them as bearers. Both plugins are on
+  // only when the app has a mobile section, and neither changes what a browser
+  // sends or receives: the session token header goes to native requests only
+  // (buildBearerPlugin), and only the server mints one-time tokens
+  // (buildOneTimeTokenPlugin, minted by the mobile sign-in page).
+  if (!type.isNone(authConfig.mobile)) {
+    options.plugins.push(buildBearerPlugin(), buildOneTimeTokenPlugin());
+  }
+
   // The admin plugin is framework-controlled - it owns the user row's ban fields
   // and the endpoints the ban, delete and revoke-sessions steps call. Its whole
   // HTTP surface is disabled (see ADMIN_PATHS_DISABLED).
@@ -661,9 +712,16 @@ function getBetterAuthConfig({
   // build), the same stance as password reset. The accept URL is only
   // buildable when the origin is pinned AND authPages.acceptInvitation is set;
   // otherwise the stock InvitationEmail renders branded with no CTA button.
-  async function sendInvitationEmail({ email, organization, invitation }) {
+  async function sendInvitationEmail(args) {
+    const context = createSystemContext({ auth: getAuth() });
+    await runReportingFaults({ context, run: () => renderAndSendInvitation({ ...args, context }) });
+  }
+
+  async function renderAndSendInvitation({ email, organization, invitation, context }) {
     if (type.isNone(authConfig.email)) {
-      throw new ConfigError('Cannot send the invitation email. Configure "auth.email".');
+      throw new ConfigError('Cannot send the invitation email. Configure "auth.email".', {
+        configKey: authConfig['~k'],
+      });
     }
     const acceptPath = authConfig.authPages?.acceptInvitation;
     const canBuildAcceptUrl = type.isString(baseUrlOrigin) && type.isString(acceptPath);
@@ -671,7 +729,6 @@ function getBetterAuthConfig({
     const acceptUrl = canBuildAcceptUrl
       ? `${baseUrlOrigin}${basePath}${acceptPath}?invitationId=${invitation.id}`
       : undefined;
-    const context = createSystemContext({ auth: getAuth() });
     const { subject, html, text } = await renderAuthEmail({
       flow: 'invitation',
       vars: {
@@ -717,7 +774,7 @@ function getBetterAuthConfig({
 
   // Own the logging of auth API errors so a rejected attempt (4xx) is a warn
   // line, not an error - see createOnAPIError.
-  options.onAPIError = { onError: createOnAPIError({ logger }) };
+  options.onAPIError = { onError: createOnAPIError({ createSystemContext, getAuth, logger }) };
 
   // Decision 5: default every redirect-style auth error - chiefly an OAuth
   // failure - to the resolved authPages.error page, instead of BetterAuth's

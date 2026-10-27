@@ -15,7 +15,7 @@
 */
 
 import { vi, beforeEach, expect, test } from 'vitest';
-import { ServiceError } from '@lowdefy/errors';
+import { ConfigError, ServiceError } from '@lowdefy/errors';
 
 vi.doMock('@lowdefy/connection-smtp/send', () => ({
   default: vi.fn(async () => ({ messageId: 'test-message-id' })),
@@ -45,6 +45,8 @@ const connectionProperties = {
   auth: { user: 'user', pass: 'pass' },
 };
 
+const authEmailConfig = { connectionId: 'email', '~k': 'auth_email_key' };
+
 function makeContext() {
   return {
     logger,
@@ -66,7 +68,7 @@ test('resolves the connection by connectionId and sends the mail with resolved c
   };
   getConnectionConfig.mockResolvedValueOnce(connectionConfig);
 
-  const sendEmail = createSendEmail({ connectionId: 'email' });
+  const sendEmail = createSendEmail({ authEmailConfig });
   const result = await sendEmail({
     to: 'user@example.com',
     subject: 'Verify your email',
@@ -96,7 +98,7 @@ test('evaluates empty properties when the connection has none', async () => {
   const context = makeContext();
   getConnectionConfig.mockResolvedValueOnce({ id: 'connection:email', type: 'SMTP' });
 
-  const sendEmail = createSendEmail({ connectionId: 'email' });
+  const sendEmail = createSendEmail({ authEmailConfig });
   await sendEmail({ to: 'user@example.com', subject: 's', html: 'h', text: 't', context });
 
   expect(context.evaluateOperators).toHaveBeenCalledWith({ input: {}, location: 'email' });
@@ -107,7 +109,7 @@ test('returns the filtered result without throwing when a recipient is filtered 
   getConnectionConfig.mockResolvedValueOnce({ properties: {} });
   send.mockResolvedValueOnce({ messageId: null, filtered: true });
 
-  const sendEmail = createSendEmail({ connectionId: 'email' });
+  const sendEmail = createSendEmail({ authEmailConfig });
   const result = await sendEmail({
     to: 'blocked@other.com',
     subject: 's',
@@ -125,7 +127,7 @@ test('throws a ServiceError with service SMTP when send fails', async () => {
   const sendError = new Error('Connection refused');
   send.mockRejectedValueOnce(sendError);
 
-  const sendEmail = createSendEmail({ connectionId: 'email' });
+  const sendEmail = createSendEmail({ authEmailConfig });
   let thrown;
   try {
     await sendEmail({ to: 'user@example.com', subject: 's', html: 'h', text: 't', context });
@@ -134,22 +136,32 @@ test('throws a ServiceError with service SMTP when send fails', async () => {
   }
   expect(thrown).toBeInstanceOf(ServiceError);
   expect(thrown.service).toBe('SMTP');
+  expect(thrown.configKey).toBe('auth_email_key');
   expect(thrown.cause).toBe(sendError);
 });
 
-test('rethrows a non-service send failure unwrapped', async () => {
+test('wraps a non-service send failure in a ConfigError naming the connection, not the recipient', async () => {
   const context = makeContext();
   getConnectionConfig.mockResolvedValueOnce({ properties: {} });
-  const sendError = new Error('Invalid login: 535 Authentication credentials invalid');
+  const sendError = new Error(
+    "Can't send mail - all recipients were rejected: 550 <user@example.com>"
+  );
+  sendError.code = 'EENVELOPE';
+  sendError.rejected = ['user@example.com'];
   send.mockRejectedValueOnce(sendError);
 
-  const sendEmail = createSendEmail({ connectionId: 'email' });
+  const sendEmail = createSendEmail({ authEmailConfig });
   let thrown;
   try {
     await sendEmail({ to: 'user@example.com', subject: 's', html: 'h', text: 't', context });
   } catch (error) {
     thrown = error;
   }
-  expect(thrown).toBe(sendError);
-  expect(thrown).not.toBeInstanceOf(ServiceError);
+  expect(thrown).toBeInstanceOf(ConfigError);
+  expect(thrown.message).toBe(
+    'Auth email could not be sent through connection "email" (EENVELOPE). Check the SMTP connection auth.email.connectionId names.'
+  );
+  expect(thrown.configKey).toBe('auth_email_key');
+  expect(thrown.cause).toBe(sendError);
+  expect(thrown.message).not.toContain('user@example.com');
 });

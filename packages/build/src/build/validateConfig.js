@@ -16,10 +16,12 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import buildDependencyTracking from './buildDependencyTracking.js';
 import buildEnvironments from './buildEnvironments.js';
+import buildExperimental from './buildExperimental.js';
 import validateTrustedProxies from './validateTrustedProxies.js';
 
 function validateConfig({ components, context }) {
@@ -27,11 +29,17 @@ function validateConfig({ components, context }) {
     components.config = {};
   }
   if (!type.isObject(components.config)) {
-    throw new Error('lowdefy.config is not an object.');
+    throw new ConfigError('lowdefy.config is not an object.', {
+      configKey: components['~k'],
+      received: components.config,
+    });
   }
   if (type.isString(components.config.basePath)) {
     if (components.config.basePath[0] !== '/') {
-      throw new Error('Base path must start with "/".');
+      throw new ConfigError('Base path must start with "/".', {
+        configKey: components.config['~k'],
+        received: components.config.basePath,
+      });
     }
     // Every consumer joins paths onto the base path (`${basePath}/api/...`, the
     // dev server's Vite base and asset patterns, the dev instance url), so a
@@ -41,6 +49,7 @@ function validateConfig({ components, context }) {
   validateTrustedProxies({ components, context });
   buildEnvironments({ components, context });
   buildDependencyTracking({ components });
+  buildExperimental({ components, context });
   return components;
 }
 

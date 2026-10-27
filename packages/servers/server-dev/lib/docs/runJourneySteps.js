@@ -29,6 +29,7 @@ import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
 import hasNoEffect from './observe/hasNoEffect.js';
+import isDeepEqual from './isDeepEqual.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import nextJourneySequence from './nextJourneySequence.js';
@@ -36,24 +37,6 @@ import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
 import shownTextSelector from './shownTextSelector.js';
-
-// Structural equality over values that have already been through the JSON
-// round-trip getState performs in the page (no undefined, no Dates, no
-// functions) — so key order is the only thing that must not matter.
-function isDeepEqual(a, b) {
-  if (a === b) {
-    return true;
-  }
-  if (type.isArray(a) && type.isArray(b)) {
-    return a.length === b.length && a.every((item, index) => isDeepEqual(item, b[index]));
-  }
-  if (type.isObject(a) && type.isObject(b)) {
-    const keysA = Object.keys(a);
-    const keysB = Object.keys(b);
-    return keysA.length === keysB.length && keysA.every((key) => isDeepEqual(a[key], b[key]));
-  }
-  return false;
-}
 
 // Playwright colours its call log with ANSI escapes; the result is read by an
 // agent as JSON, where they are noise.
@@ -97,13 +80,12 @@ function capitalise(text) {
 // Playwright would never find it visible. The selectors live in
 // @lowdefy/helpers, where the engine's describe functions read them too.
 const {
-  cellAttribute: CELL_ATTRIBUTE,
   checkboxOption: CHECKBOX_OPTION,
   dropdownOption: DROPDOWN_OPTION,
+  gridSelector,
   interactiveControl: INTERACTIVE_CONTROL,
   layers: LAYERS,
   radioOption: RADIO_OPTION,
-  rowAttribute: ROW_ATTRIBUTE,
 } = journeyTargetSelectors;
 
 // A lazy block (createLazyBlock in @lowdefy/block-utils) shows its wrapper and
@@ -191,14 +173,11 @@ function describeTarget(target) {
   return parts.join(' ');
 }
 
-function attributeValue(value) {
-  return `"${String(value).replace(/["\\]/g, '\\$&')}"`;
-}
-
 // The element the target's scope keys name: the block wrapper, narrowed to a
-// grid row (`.ag-row[row-index]`, the row as displayed, which ag-grid renders
-// once per pinned/centre column container) and to a cell (`.ag-cell[col-id]`,
-// the column's field or colId). Undefined for a page-wide `text` target,
+// grid row (the row as displayed: ag-grid's `.ag-row[row-index]`, rendered once
+// per pinned/centre column container, or a Table's `.lf-table-row[data-row-index]`)
+// and to a cell (ag-grid's `.ag-cell[col-id]` or a Table's
+// `.lf-table-gridcell[data-col-key]`: the column's field, colId or key). Undefined for a page-wide `text` target,
 // which has no scope narrower than the page.
 function resolveScope({ page, target }) {
   if (type.isUndefined(target.blockId)) {
@@ -206,10 +185,10 @@ function resolveScope({ page, target }) {
   }
   let scope = getBlock(page, target.blockId);
   if (!type.isUndefined(target.row)) {
-    scope = scope.locator(`.ag-row[${ROW_ATTRIBUTE}=${attributeValue(target.row)}]`);
+    scope = scope.locator(gridSelector({ kind: 'row', value: target.row }));
   }
   if (!type.isUndefined(target.column)) {
-    scope = scope.locator(`.ag-cell[${CELL_ATTRIBUTE}=${attributeValue(target.column)}]`);
+    scope = scope.locator(gridSelector({ kind: 'cell', value: target.column }));
   }
   return scope;
 }

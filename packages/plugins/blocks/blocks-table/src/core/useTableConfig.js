@@ -26,9 +26,10 @@ import readTemplateCompiler from '@lowdefy/blocks-antd/table/readTemplateCompile
 import createColumnDefs from './createColumnDefs.js';
 import densityHeights from './densityHeights.js';
 import getColumnGroupRules from './getColumnGroupRules.js';
-import getHeaderLevels from './getHeaderLevels.js';
+import getHeaderAncestors from './getHeaderAncestors.js';
 import getProviderIds from './getProviderIds.js';
 import normalizeEnrichment from '../features/enrichment/normalizeEnrichment.js';
+import compileSelectable from '../features/selection/compileSelectable.js';
 import normalizeExpandable from '../features/expandable/normalizeExpandable.js';
 import normalizeServerData from '../features/serverData/normalizeServerData.js';
 import normalizeTree from '../features/tree/normalizeTree.js';
@@ -39,13 +40,15 @@ import useStableConfig from './useStableConfig.js';
 const DEFAULT_PAGE_SIZE = 50;
 
 // In server mode rows leave the block cache while they stay selected, so selection is always
-// preserved there.
-function normalizeRowSelection({ rowSelection, server }) {
+// preserved there. `isSelectable` is the compiled `selectable` condition, null when every row can
+// be selected.
+function normalizeRowSelection({ rowSelection, server, isSelectable }) {
   if (!type.isObject(rowSelection)) return null;
   return {
     type: rowSelection.type === 'radio' ? 'radio' : 'checkbox',
     preserve: rowSelection.preserve === true || Boolean(server),
     cascade: rowSelection.cascade === true,
+    isSelectable,
   };
 }
 
@@ -117,7 +120,7 @@ function useTableConfig({ methods, properties }) {
       columnDefs: createColumnDefs({ columns }),
       columnGroups: getColumnGroupRules({ headerGroups: normalized.headerGroups }),
       expandable: normalizeExpandable({ expandable, columns, user: configUser, compileTemplate }),
-      headerLevels: getHeaderLevels({ headerGroups: normalized.headerGroups }),
+      headerAncestors: getHeaderAncestors({ headerGroups: normalized.headerGroups }),
       rowRules: compileRules({
         rules: rowRules,
         columnsByKey: normalized.columnsByKey,
@@ -126,6 +129,15 @@ function useTableConfig({ methods, properties }) {
       user: configUser,
     };
   }, [normalized, compileTemplate, expandable, rowRules, user]);
+  const isSelectable = useMemo(
+    () =>
+      compileSelectable({
+        rowSelection,
+        columnsByKey: normalized.columnsByKey,
+        user: columnModel.user,
+      }),
+    [rowSelection, normalized, columnModel.user]
+  );
 
   return useMemo(() => {
     const server = normalizeServerData(serverData);
@@ -165,7 +177,11 @@ function useTableConfig({ methods, properties }) {
       reorderable: properties.reorderable !== false,
       rowHeight: properties.rowHeight,
       rowLink: type.isObject(rowLink) ? rowLink : null,
-      rowSelection: normalizeRowSelection({ rowSelection, server }),
+      rowSelection: normalizeRowSelection({
+        rowSelection,
+        server,
+        isSelectable,
+      }),
       rowVersionField: properties.rowVersionField,
       server,
       stickyHeader: properties.stickyHeader !== false,
@@ -179,6 +195,7 @@ function useTableConfig({ methods, properties }) {
     columnModel,
     defaultView,
     getKey,
+    isSelectable,
     properties.bordered,
     keyboard,
     methods.getUserStorageKey,

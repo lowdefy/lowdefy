@@ -41,12 +41,6 @@ vi.doMock('@lowdefy/api', () => ({
   runWebhookEndpoint: mockRunWebhookEndpoint,
 }));
 vi.doMock('../../lib/server/jitPageBuilder.js', () => ({ default: vi.fn() }));
-vi.doMock('../../lib/docs/devMockRegistry.js', () => ({
-  getMock: vi.fn(),
-  loadMocks: vi.fn(),
-}));
-vi.doMock('../../lib/docs/loadState.js', () => ({ default: vi.fn() }));
-vi.doMock('../../lib/docs/snapshotState.js', () => ({ default: vi.fn() }));
 
 const { default: createErrorHandler } = await import('../middleware/errorHandler.js');
 const routes = {
@@ -58,9 +52,6 @@ const routes = {
   '/api/endpoints/*': (await import('./endpoints.js')).default,
   '/api/request/*': (await import('./request.js')).default,
   '/api/usage': (await import('./usage.js')).default,
-  '/lowdefy-docs/state-checkpoints/load': (await import('./docs/loadState.js')).default,
-  '/lowdefy-docs/state-checkpoints/snapshot': (await import('./docs/snapshotState.js')).default,
-  '/lowdefy-feedback': (await import('./feedback.js')).default,
 };
 
 const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
@@ -91,7 +82,6 @@ afterAll(() => {
 const sameOrigin = { host: 'localhost', origin: 'http://localhost' };
 const notJson = JSON.stringify({ name: 'UserError', message: 'Request body is not valid JSON.' });
 
-// Paths outside /api/ get the error handler's plain-text answer.
 test.each([
   ['/api/endpoints/save', {}, notJson],
   ['/api/request/orders/load', {}, notJson],
@@ -101,9 +91,6 @@ test.each([
   ['/api/client-error', sameOrigin, notJson],
   ['/api/dev-inspect', sameOrigin, notJson],
   ['/api/dev-inspect/page', sameOrigin, notJson],
-  ['/lowdefy-docs/state-checkpoints/load', {}, 'Bad Request'],
-  ['/lowdefy-docs/state-checkpoints/snapshot', {}, 'Bad Request'],
-  ['/lowdefy-feedback', sameOrigin, 'Bad Request'],
 ])(
   'POST %s with a body that is not JSON answers 400 and logs a warning',
   async (path, headers, text) => {

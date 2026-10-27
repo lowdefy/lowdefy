@@ -167,10 +167,16 @@ export default {
         description:
           'Fix the editor height to exactly this many rows. Takes precedence over autoSize.',
       },
+      imageSrc: {
+        type: 'object',
+        description:
+          'Optional _function that receives { key, bucket, name, type } of an uploaded image and returns the src saved for it, typically a stable app URL such as a link endpoint (/api/endpoints/<endpointId>/<key>) that redirects the signed-in caller to a fresh presigned URL, so the bucket can stay private. Takes precedence over downloadPolicyRequestId: when set, no download request runs.',
+        docs: { displayType: 'yaml' },
+      },
       downloadPolicyRequestId: {
         type: 'string',
         description:
-          'Id of a download request (e.g. AwsS3PresignedGetObject) used to resolve the inserted image URL after upload. Inline images persist in saved content, so the request should set public: true (and the upload request the provider public-read acl) to return a stable, non-expiring URL. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated).',
+          'Id of a download request (e.g. AwsS3PresignedGetObject) used to resolve the inserted image URL after upload. Inline images persist in saved content, so the request should set public: true (and the upload request the provider public-read acl) to return a stable, non-expiring URL. Ignored when imageSrc is set, which takes precedence. When neither is set, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated).',
       },
       s3PostPolicyRequestId: {
         type: 'string',

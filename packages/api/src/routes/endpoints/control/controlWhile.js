@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 import runRoutine from '../runRoutine.js';
 
@@ -21,7 +23,9 @@ async function controlWhile(context, routineContext, { control }) {
   const { endpointId, logger } = context;
 
   if (!control[':do']) {
-    throw new Error(`Invalid :while in endpoint "${endpointId}" - missing :do.`);
+    throw new ConfigError(`Invalid :while in endpoint "${endpointId}" - missing :do.`, {
+      configKey: control['~k'],
+    });
   }
 
   // No array index is pushed onto routineContext.arrayIndices. A :while has no item to

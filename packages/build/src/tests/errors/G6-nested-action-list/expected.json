@@ -1,0 +1,16 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["is a list of actions, not an action"],
+      "errorContains": [
+        "Action list on event \"onClick\" on block \"save\" on page \"home\" holds a list at item 1",
+        "actions.yaml:1"
+      ]
+    },
+    {
+      "mode": "dev",
+      "errors": ["is a list of actions, not an action"]
+    }
+  ]
+}

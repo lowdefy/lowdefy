@@ -21,6 +21,7 @@ import { BuildError, ConfigError } from '@lowdefy/errors';
 import createContext from './createContext.js';
 import createInternalBuildError from './utils/createInternalBuildError.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
+import createPluginTypesMapMobile from './utils/createPluginTypesMapMobile.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
 import serializeBuildException from './utils/serializeBuildException.js';
@@ -43,6 +44,18 @@ import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
 import buildMcp from './build/buildMcp.js';
 import buildMenu from './build/buildMenu.js';
+import buildMobile from './build/buildMobile/buildMobile.js';
+import buildMobileAppEvents from './build/buildMobile/buildMobileAppEvents.js';
+import buildMobileAppJs from './build/buildMobile/buildMobileAppJs.js';
+import buildMobileClassMap from './build/buildMobile/buildMobileClassMap.js';
+import buildMobilePageIcons from './build/buildMobile/buildMobilePageIcons.js';
+import buildMobileTheme from './build/buildMobile/buildMobileTheme.js';
+import collectMobileClassCandidates from './build/buildMobile/collectMobileClassCandidates.js';
+import buildMobilePageIndex from './build/buildMobile/buildMobilePageIndex.js';
+import validateMobileEndpointRefs from './build/buildMobile/validateMobileEndpointRefs.js';
+import validateMobileMenuIcons from './build/buildMobile/validateMobileMenuIcons.js';
+import validateMobileStyles from './build/buildMobile/validateMobileStyles.js';
+import validateNativeIgnoredProperties from './build/buildMobile/validateNativeIgnoredProperties.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import { resolveModuleManifests } from './build/registerModules.js';
 import buildModules from './build/buildModules.js';
@@ -60,6 +73,7 @@ import buildSecurity from './build/buildSecurity/buildSecurity.js';
 import buildWebsockets from './build/buildWebsockets.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
+import buildTypesMobile from './build/buildTypesMobile.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
@@ -90,6 +104,7 @@ import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
+import writeMobile from './build/writeMobile.js';
 import writeRoutes from './build/writeRoutes.js';
 import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
@@ -181,12 +196,18 @@ async function build(options) {
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     // addKeys runs again to add keys to any new objects created by earlier build steps
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    // Mobile pages join components.pages here, so routes, auth and requests cover them.
+    tryBuildStep(buildMobile, 'buildMobile', { components, context });
     tryBuildStep(buildRoutes, 'buildRoutes', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(validateAuthPagePaths, 'validateAuthPagePaths', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildDynamicPolicies, 'buildDynamicPolicies', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    tryBuildStep(validateMobileEndpointRefs, 'validateMobileEndpointRefs', {
+      components,
+      context,
+    });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
@@ -201,8 +222,15 @@ async function build(options) {
       context,
     });
     tryBuildStep(buildPages, 'buildPages', { components, context });
+    // After buildPages: styles are keyed by slot (normalizeClassAndStyles).
+    tryBuildStep(validateMobileStyles, 'validateMobileStyles', { components, context });
+    tryBuildStep(validateNativeIgnoredProperties, 'validateNativeIgnoredProperties', {
+      components,
+      context,
+    });
     // After buildPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
+    tryBuildStep(buildMobileAppEvents, 'buildMobileAppEvents', { components, context });
     // Every type is counted by now, and buildJs has not yet replaced the
     // counted objects with copies.
     const { pending: pluginChecksPending } = await runPluginChecks({ components, context });
@@ -215,18 +243,31 @@ async function build(options) {
     // buildJs — jsMapParser replaces _js source with hashes, and class
     // candidates used only inside _js source would otherwise never be scanned.
     context.tailwindContentMap = new Map();
-    for (const page of components.pages ?? []) {
+    // A mobile page never renders in the web client, so its classes are not scanned.
+    for (const page of (components.pages ?? []).filter((item) => item.target !== 'mobile')) {
       const content = collectPageContent([page]);
       if (content) {
         context.tailwindContentMap.set(page.pageId, content);
       }
     }
+    // Mobile class candidates are collected here for the same reason.
+    tryBuildStep(collectMobileClassCandidates, 'collectMobileClassCandidates', {
+      components,
+      context,
+    });
+    tryBuildStep(buildMobileAppJs, 'buildMobileAppJs', { components, context });
     tryBuildStep(buildJs, 'buildJs', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    tryBuildStep(buildTypesMobile, 'buildTypesMobile', { components, context });
     // Icon sets load asynchronously; a bad theme.icons stops the build here,
     // since buildImports resolves every icon name against context.icons.
     await buildIconContext({ components, context });
+    buildMobileTheme({ components, context });
+    // Async (Tailwind's compiler), so it runs outside tryBuildStep; config
+    // faults are collected, not thrown.
+    await buildMobileClassMap({ components, context });
     logCollectedErrors(context);
+    tryBuildStep(validateMobileMenuIcons, 'validateMobileMenuIcons', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });
@@ -242,6 +283,9 @@ async function build(options) {
     // Per-page type sets are build output, not config: computed once every page
     // built cleanly, after the final addKeys pass.
     buildPageTypes({ components, context });
+    // Before the page index: a mobile page's hash covers its _icons.
+    await buildMobilePageIcons({ components, context });
+    buildMobilePageIndex({ components, context });
 
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });
@@ -273,6 +317,7 @@ async function build(options) {
     await writeTypes({ components, context });
     await writePluginImports({ components, context });
     await writePageTypes({ components, context });
+    await writeMobile({ components, context });
     await writeJs({ components, context });
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });
@@ -285,6 +330,6 @@ async function build(options) {
   }
 }
 
-export { createPluginTypesMap };
+export { createPluginTypesMap, createPluginTypesMapMobile };
 
 export default build;

@@ -14,12 +14,27 @@
   limitations under the License.
 */
 
+import { HTTPException } from 'hono/http-exception';
+
 // Splits the rest of a catch-all route into decoded segments, independent of
 // any configured basePath. Mirrors the Next.js [...param] query arrays —
 // nested ids (slashes in pageId or endpointId) are real.
+// A malformed percent escape (`%ZZ`, a bare `%`) is the caller's own URL, so it answers 400, not
+// the 500 decodeURIComponent's URIError would raise.
+function decodeSegment(segment) {
+  try {
+    return decodeURIComponent(segment);
+  } catch (error) {
+    if (error instanceof URIError) {
+      throw new HTTPException(400, { message: 'Malformed URL path.' });
+    }
+    throw error;
+  }
+}
+
 function getPathSegments(c, prefix) {
   const rest = c.req.path.split(prefix)[1] ?? '';
-  return rest.split('/').filter(Boolean).map(decodeURIComponent);
+  return rest.split('/').filter(Boolean).map(decodeSegment);
 }
 
 export default getPathSegments;

@@ -100,7 +100,7 @@ test('findOne mongodb error', async () => {
     read: true,
   };
   await expect(MongoDBFindOne({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBFindOne command on collection "findOne" as malformed.'
+    'MongoDB rejected the MongoDBFindOne command on collection "findOne" as malformed.'
   );
 });
 

@@ -17,8 +17,7 @@
 
 import { createRequire } from 'node:module';
 import path from 'path';
-import { get } from '@lowdefy/helpers';
-import { readFile } from '@lowdefy/node-utils';
+import { collectPluginDefinitions, readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 
 const require = createRequire(import.meta.url);
@@ -31,8 +30,7 @@ async function getPluginDefinitions({ directories }) {
   if (!lowdefyYaml) {
     return [];
   }
-  const lowdefy = YAML.parse(lowdefyYaml);
-  return get(lowdefy, 'plugins', { default: [] });
+  return collectPluginDefinitions({ lowdefy: YAML.parse(lowdefyYaml) }).plugins;
 }
 
 async function createCustomPluginMessagesMap({ directories }) {

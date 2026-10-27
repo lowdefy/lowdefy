@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
+import getGlobals from './getGlobals.js';
+
 // The client renders every block inside a layout element with the id `bl-<blockId>`
 // (packages/client/src/block). Its position on the DOM event's path, innermost first, or -1 when
-// the event did not pass through the block.
-function getPathIndex({ blockId, path }) {
-  const element = document.getElementById(`bl-${blockId}`);
+// the event did not pass through the block. Only reached with a DOM event, whose host has a document.
+function getPathIndex({ blockId, lowdefy, path }) {
+  const element = getGlobals(lowdefy).document.getElementById(`bl-${blockId}`);
   if (element === null) return -1;
   return path.indexOf(element);
 }

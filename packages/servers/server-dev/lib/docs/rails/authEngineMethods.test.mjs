@@ -27,7 +27,7 @@ test('authEngineMethods maps client auth methods to exactly the authEngineAction
 
 test('every method of authEngineMethods is a method the client creates', () => {
   const source = fs.readFileSync(
-    new URL('../../../../../client/src/auth/createAuthMethods.js', import.meta.url),
+    new URL('../../../../../client-core/src/auth/createAuthMethods.js', import.meta.url),
     'utf8'
   );
   const exported = source.slice(source.lastIndexOf('  return {'));

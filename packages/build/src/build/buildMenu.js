@@ -30,8 +30,9 @@ function buildDefaultMenu({ components, context }) {
   const patternedPageIds = new Set(
     context.routes.filter((route) => routeHasPlaceholders({ route })).map((route) => route.pageId)
   );
+  // A mobile page never opens in the web client, so the web menu leaves it out.
   const pages = (type.isArray(components.pages) ? components.pages : []).filter(
-    (page) => !patternedPageIds.has(page.pageId)
+    (page) => !patternedPageIds.has(page.pageId) && page.target !== 'mobile'
   );
   const menus = [
     {

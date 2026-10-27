@@ -20,6 +20,7 @@ const pageBuildOwnedFields = [
   'errors',
   'warnings',
   'typeCounters',
+  'typeCountersMobile',
   'pageTypeCounters',
   'linkActionRefs',
   'callApiActionRefs',

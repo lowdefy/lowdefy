@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, isExpectedError } from '@lowdefy/errors';
 
 import createEvaluateOperators from '../../../context/createEvaluateOperators.js';
 import invokeEndpoint from '../../endpoints/invokeEndpoint.js';
@@ -68,9 +68,9 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
   const policy = type.isNone(block.properties.policy)
     ? null
     : shared.artifacts.dynamicPolicies[block.properties.policy];
-  // A UserError the routine returns was logged as a warning and marked handled
-  // where it was raised (a failed ValidateDynamic step, a :reject, a :throw) or
-  // by runRoutine.
+  // An error the routine returns was logged and marked handled where it was raised
+  // (a failed ValidateDynamic step, a :reject, a :throw) or by runRoutine: an
+  // expected outcome as a warning, a fault through handleError.
   let loggedByRoutine = false;
   try {
     if (depth >= MAX_DYNAMIC_DEPTH) {
@@ -95,7 +95,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
       },
     });
     if (['error', 'reject'].includes(status)) {
-      loggedByRoutine = error?.name === 'UserError' && error.handled === true;
+      loggedByRoutine = error?.handled === true;
       throw (
         error ??
         new ConfigError(
@@ -151,19 +151,28 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
       );
     }
     if (!loggedByRoutine) {
-      const entry = {
-        event: 'dynamic_block_error',
-        blockId: block.blockId,
-        endpointId,
-        pageId: shared.pageId,
-        err: error,
-      };
-      const message = `Dynamic block "${block.blockId}" on page "${shared.pageId}" failed to resolve: ${error.message}`;
-      // A UserError is an expected outcome, not a fault.
-      if (error.name === 'UserError') {
-        logger.warn(entry, message);
+      if (isExpectedError(error)) {
+        logger.warn(
+          {
+            event: 'dynamic_block_error',
+            blockId: block.blockId,
+            endpointId,
+            pageId: shared.pageId,
+            err: error,
+          },
+          `Dynamic block "${block.blockId}" on page "${shared.pageId}" failed to resolve: ${error.message}`
+        );
       } else {
-        logger.error(entry, message);
+        // The fallback renders, but the failure is a fault: it is located at the Dynamic block
+        // and reported like any other.
+        if (error instanceof Object && !error.configKey) {
+          error.configKey = block['~k'];
+        }
+        // The log line and the Sentry tags name the block that fell back.
+        if (error instanceof Object && type.isNone(error.blockId)) {
+          error.blockId = block.blockId;
+        }
+        await context.handleError(error);
       }
     }
     const fallbackBlocks = block.slots?.fallback?.blocks ?? [];

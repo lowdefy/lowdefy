@@ -1,0 +1,248 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only.
+
+# A space switcher: each space carries its own colour and icon, as on the web. The colours are
+# the 16 colours of a space palette, each a mark drawn fg on bg with its dark mode variants. The
+# selected space is tinted with its colour; "All spaces" opens a sheet of every space.
+- title: Space switcher in the 16 palette colours
+  blocks:
+    - id: space_id
+      type: ChipSelector
+      properties:
+        title: Space
+        moreChip:
+          label: All spaces
+          icon: LayoutGrid
+        options:
+          # blue
+          - value: ACME
+            label: Acme
+            icon: Bird
+            color:
+              fg: '#0A6BC9'
+              bg: '#E2EDF9'
+              fgDark: '#85B5E4'
+              bgDark: '#1E3B59'
+            badge: 12
+          # green
+          - value: GRW
+            label: Growth
+            icon: Sprout
+            color:
+              fg: '#1E7F46'
+              bg: '#E4F0E9'
+              fgDark: '#8FBFA3'
+              bgDark: '#244134'
+          # orange
+          - value: MOB
+            label: Mobile
+            icon: Smartphone
+            color:
+              fg: '#B85A0D'
+              bg: '#F6EBE2'
+              fgDark: '#DCAD86'
+              bgDark: '#4F3724'
+            badge: 4
+          # purple
+          - value: DS
+            label: Design System
+            icon: Palette
+            color:
+              fg: '#7250CC'
+              bg: '#EEEAF9'
+              fgDark: '#B9A8E6'
+              bgDark: '#3B345A'
+          # teal
+          - value: DATA
+            label: Data Platform
+            icon: Database
+            color:
+              fg: '#0B7482'
+              bg: '#E2EEF0'
+              fgDark: '#85BAC1'
+              bgDark: '#1E3E45'
+            badge: 7
+          # pink
+          - value: MKT
+            label: Marketing
+            icon: Megaphone
+            color:
+              fg: '#C0306E'
+              bg: '#F7E6EE'
+              fgDark: '#E098B7'
+              bgDark: '#512B3F'
+          # gold
+          - value: BILL
+            label: Billing
+            icon: Coins
+            color:
+              fg: '#8F6A00'
+              bg: '#F2EDE0'
+              fgDark: '#C7B580'
+              bgDark: '#433B20'
+            badge: 2
+          # slate
+          - value: INFRA
+            label: Infrastructure
+            icon: Server
+            color:
+              fg: '#606C7A'
+              bg: '#ECEDEF'
+              fgDark: '#B0B6BD'
+              bgDark: '#363C43'
+          # sky
+          - value: WEB
+            label: Website
+            icon: Globe
+            color:
+              fg: '#0A7AAE'
+              bg: '#E2EFF5'
+              fgDark: '#85BDD7'
+              bgDark: '#1E4051'
+          # indigo
+          - value: ENG
+            label: Engineering
+            icon: Code
+            color:
+              fg: '#4452C8'
+              bg: '#E9EAF8'
+              fgDark: '#A2A9E4'
+              bgDark: '#2E3458'
+            badge: 21
+          # violet
+          - value: RES
+            label: Research
+            icon: FlaskConical
+            color:
+              fg: '#9340C4'
+              bg: '#F2E8F8'
+              fgDark: '#C9A0E2'
+              bgDark: '#452F57'
+          # rose
+          - value: HIRE
+            label: Hiring
+            icon: Users
+            color:
+              fg: '#C43450'
+              bg: '#F8E7EA'
+              fgDark: '#E29AA8'
+              bgDark: '#522C37'
+            badge: 3
+          # red
+          - value: INC
+            label: Incidents
+            icon: Siren
+            color:
+              fg: '#C22E2E'
+              bg: '#F8E6E6'
+              fgDark: '#E19797'
+              bgDark: '#522A2D'
+            badge: 1
+          # amber
+          - value: SUP
+            label: Support
+            icon: LifeBuoy
+            color:
+              fg: '#A66700'
+              bg: '#F4EDE0'
+              fgDark: '#D3B380'
+              bgDark: '#4A3A20'
+            badge: 9
+          # lime
+          - value: ONB
+            label: Onboarding
+            icon: Rocket
+            color:
+              fg: '#5A7F12'
+              bg: '#EBF0E3'
+              fgDark: '#ADBF89'
+              bgDark: '#354125'
+          # emerald
+          - value: FIN
+            label: Finance
+            icon: Landmark
+            color:
+              fg: '#0B7A5E'
+              bg: '#E2EFEC'
+              fgDark: '#85BDAF'
+              bgDark: '#1E403B'
+      events:
+        onChange:
+          - id: load_designs
+            type: Request
+            params: get_designs
+        onMore:
+          - id: open_spaces
+            type: CallMethod
+            params:
+              blockId: all_spaces
+              method: open
+    - id: all_spaces
+      type: Sheet
+      properties:
+        title: All spaces
+      blocks:
+        - id: all_spaces_hint
+          type: Paragraph
+          properties:
+            content: Every space you can see, to pick one or pin it to the strip.
+
+# Palette hue names: a tile of the hue with a white icon, and the hue at about 15% behind the
+# selected chip. A hex colour works the same way.
+- title: Palette hues
+  blocks:
+    - id: board
+      type: ChipSelector
+      properties:
+        options:
+          - value: backlog
+            label: Backlog
+            icon: CircleDashed
+            color: '#8E8E93'
+          - value: todo
+            label: Todo
+            icon: Circle
+            color: blue
+            badge: 8
+          - value: in_progress
+            label: In progress
+            icon: CircleDot
+            color: amber
+            badge: 3
+          - value: review
+            label: In review
+            icon: GitPullRequest
+            color: purple
+          - value: done
+            label: Done
+            icon: CircleCheck
+            color: green
+
+# Labels only: chips without icons or colours take the app's tint when selected.
+- title: Labels only
+  blocks:
+    - id: period
+      type: ChipSelector
+      properties:
+        options:
+          - value: today
+            label: Today
+          - value: week
+            label: This week
+          - value: month
+            label: This month
+          - value: quarter
+            label: This quarter

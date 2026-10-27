@@ -1568,11 +1568,38 @@ export default {
                 minimum: 'Auth "organizations.membershipLimit" should be at least 1.',
               },
             },
+            invitationLimit: {
+              type: 'integer',
+              minimum: 1,
+              description:
+                'The most open invitations an organization may have. Defaults to 1000000, effectively open. Creating an invitation is refused once an organization has this many pending, unexpired invitations.',
+              errorMessage: {
+                type: 'Auth "organizations.invitationLimit" should be an integer.',
+                minimum: 'Auth "organizations.invitationLimit" should be at least 1.',
+              },
+            },
+            creatorAppRoles: {
+              type: 'array',
+              description:
+                'App roles, declared in auth.roles, that the owner of a new organization gets on their member row. Applies where Lowdefy creates an organization and makes someone its owner: the tenant signup mint under "create: auto" and the CreateOrganization step with a creator. Defaults to [], an owner with no app roles.',
+              items: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "organizations.creatorAppRoles" should be an array of role ids.',
+                },
+              },
+              uniqueItems: true,
+              errorMessage: {
+                type: 'Auth "organizations.creatorAppRoles" should be an array of role ids.',
+                uniqueItems:
+                  'Auth "organizations.creatorAppRoles" should not list a role id more than once.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "organizations" should be an object.',
             additionalProperties:
-              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create", "invitationExpiresIn" and "membershipLimit".',
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create", "invitationExpiresIn", "membershipLimit", "invitationLimit" and "creatorAppRoles".',
           },
         },
         dev: {
@@ -2118,6 +2145,14 @@ export default {
             'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope) and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes. The transport is public, so the run starts untrusted; set webhook to { verify: <request plugin> } to earn trust (a system context) when the verifier passes the provider signature/secret check before the routine runs. The verifier receives { body, rawBody, query, headers }, where rawBody is the request body exactly as received, for checking a signature over the bytes the sender posted. A bare `true` runs untrusted throughout, so any nested protected CallApi fails closed. The route answers 200 with the return value (as text/plain when the :return sets :content_type: text/plain), the :status (400 to 499, default 400) and :body of a :reject (also one raised in a called endpoint), 400 for a failed ValidateSchema step, 401 for a failed verifier and 500 for any other error.',
           errorMessage: {
             _: 'Api endpoint "webhook" should be a boolean or an object with a "verify" request plugin.',
+          },
+        },
+        link: {
+          type: 'boolean',
+          description:
+            'Serve this endpoint at a stable link: a GET on /api/endpoints/<endpointId>/<path...> runs the routine as the signed-in caller, with { path, query } as payload, and answers 302 to the URL its :return gives (an absolute http(s) URL or a path starting with /). Use it to serve a private file at a URL that does not expire, such as an inline image. Only on type Api, and not with "webhook" or "async". The auth config applies as for any endpoint. A GET can be triggered by any page that embeds the URL, so the routine must have no side effects.',
+          errorMessage: {
+            type: 'Api endpoint "link" should be a boolean.',
           },
         },
         schedules: {
@@ -2856,6 +2891,14 @@ export default {
             type: 'Request "properties" should be an object.',
           },
         },
+        offline: {
+          enum: ['queue'],
+          description:
+            'Experimental, needs "config.experimental.mobile: true". On a mobile shell, keep the request while the phone has no signal and send it when it comes back (the request queue). The payload is evaluated once, when queued; the action resolves { queued: true, id }. Ignored on the web.',
+          errorMessage: {
+            enum: 'Request "offline" only accepts "queue".',
+          },
+        },
         tenant: {
           enum: ['none', 'authored'],
           errorMessage: {
@@ -2869,6 +2912,305 @@ export default {
           id: 'Request should have required property "id".',
           type: 'Request should have required property "type".',
           connectionId: 'Request should have required property "connectionId".',
+        },
+      },
+    },
+    mobileMenuItem: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['pageId'],
+      properties: {
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
+        '~r': {},
+        '~l': {},
+        pageId: {
+          type: 'string',
+          description: 'Id of the mobile page the item opens.',
+          errorMessage: {
+            type: 'Mobile menu item "pageId" should be a string.',
+          },
+        },
+        icon: {
+          type: 'string',
+          description:
+            'Icon name, as in web menus and blocks. A tab bar draws it as its SF Symbol on iOS (Inbox as tray, edit as pencil) and as the icon elsewhere.',
+          errorMessage: {
+            type: 'Mobile menu item "icon" should be a string.',
+          },
+        },
+        sfSymbol: {
+          type: 'string',
+          description:
+            'The SF Symbol an iOS tab bar draws for the item, such as "tray.full". Defaults to the symbol mapped from icon.',
+          errorMessage: {
+            type: 'Mobile menu item "sfSymbol" should be a string.',
+          },
+        },
+        title: {
+          type: 'string',
+          description: 'Item label.',
+          errorMessage: {
+            type: 'Mobile menu item "title" should be a string.',
+          },
+        },
+        role: {
+          type: 'string',
+          enum: ['search'],
+          description:
+            'A tab\'s role. "search" makes it the iOS 26 search tab, set apart at the right of the tab bar with a magnifier; elsewhere it is a tab with the search icon. Its page is a Screen with headerSearch (autoFocus). One tab at most.',
+          errorMessage: {
+            type: 'Mobile menu item "role" should be a string.',
+            enum: 'Mobile menu item "role" should be "search".',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Mobile menu item should be an object.',
+        required: {
+          pageId: 'Mobile menu item should have required property "pageId".',
+        },
+      },
+    },
+    mobileShell: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id'],
+      properties: {
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          description: 'Shell id.',
+          errorMessage: {
+            type: 'Mobile shell "id" should be a string.',
+          },
+        },
+        name: {
+          type: 'string',
+          description: 'The name the phone shows under the app icon and in the stores.',
+          errorMessage: {
+            type: 'Mobile shell "name" should be a string.',
+          },
+        },
+        icon: {
+          type: 'string',
+          description:
+            'Path to the app icon, relative to the config directory: a 1024×1024 PNG with no alpha channel.',
+          errorMessage: {
+            type: 'Mobile shell "icon" should be a string.',
+          },
+        },
+        color: {
+          type: 'string',
+          pattern: '^#[0-9A-Fa-f]{6}$',
+          description:
+            'Splash screen background and Android adaptive icon background, as "#RRGGBB".',
+          errorMessage: {
+            type: 'Mobile shell "color" should be a string.',
+            pattern: 'Mobile shell "color" should be a colour like "#0B5FFF".',
+          },
+        },
+        profile: {
+          type: 'string',
+          enum: ['basic', 'field', 'field-nfc', 'field-tracking'],
+          description: 'Capability profile: the fixed set of native modules the shell carries.',
+          errorMessage: {
+            type: 'Mobile shell "profile" should be a string.',
+            enum: 'Mobile shell "profile" should be one of "basic", "field", "field-nfc" or "field-tracking".',
+          },
+        },
+        version: {
+          type: 'string',
+          pattern: '^\\d+\\.\\d+$',
+          description:
+            'Store version as "major.minor", like "1.4". Each native build raises the patch.',
+          errorMessage: {
+            type: 'Mobile shell "version" should be a string.',
+            pattern: 'Mobile shell "version" should be "major.minor", like "1.4".',
+          },
+        },
+        distribution: {
+          type: 'string',
+          enum: ['private', 'store', 'internal'],
+          default: 'private',
+          description:
+            'How the shell reaches phones: "private" (a Custom App and a Managed Google Play private app), "store" (a public listing) or "internal" (TestFlight and Play testing only).',
+          errorMessage: {
+            type: 'Mobile shell "distribution" should be a string.',
+            enum: 'Mobile shell "distribution" should be one of "private", "store" or "internal".',
+          },
+        },
+        eas: {
+          type: 'object',
+          additionalProperties: false,
+          description: 'The Expo account and EAS project the shell builds in.',
+          properties: {
+            '~r': {},
+            '~l': {},
+            owner: {
+              type: 'string',
+              description: 'Expo account or organisation that owns the EAS project.',
+              errorMessage: {
+                type: 'Mobile shell "eas.owner" should be a string.',
+              },
+            },
+            projectId: {
+              type: 'string',
+              description: 'EAS project id.',
+              errorMessage: {
+                type: 'Mobile shell "eas.projectId" should be a string.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Mobile shell "eas" should be an object.',
+          },
+        },
+        scheme: {
+          type: 'string',
+          description: 'URL scheme the shell opens links with.',
+          errorMessage: {
+            type: 'Mobile shell "scheme" should be a string.',
+          },
+        },
+        ios: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~r': {},
+            '~l': {},
+            bundleId: {
+              type: 'string',
+              description: 'iOS bundle id, for example "com.example.app".',
+              errorMessage: {
+                type: 'Mobile shell "ios.bundleId" should be a string.',
+              },
+            },
+            teamId: {
+              type: 'string',
+              description: 'Apple developer team id.',
+              errorMessage: {
+                type: 'Mobile shell "ios.teamId" should be a string.',
+              },
+            },
+            ascAppId: {
+              type: 'string',
+              pattern: '^[0-9]+$',
+              description:
+                "The app's App Store Connect id (App Information, Apple ID), which a non-interactive submit uploads to.",
+              errorMessage: {
+                type: 'Mobile shell "ios.ascAppId" should be a string.',
+                pattern: 'Mobile shell "ios.ascAppId" should be digits only, like "6825509768".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Mobile shell "ios" should be an object.',
+          },
+        },
+        android: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~r': {},
+            '~l': {},
+            package: {
+              type: 'string',
+              description: 'Android package name, for example "com.example.app".',
+              errorMessage: {
+                type: 'Mobile shell "android.package" should be a string.',
+              },
+            },
+            sha256: {
+              type: ['string', 'array'],
+              items: {
+                type: 'string',
+              },
+              description: 'SHA-256 fingerprint of the app signing certificate, or a list of them.',
+            },
+          },
+          errorMessage: {
+            type: 'Mobile shell "android" should be an object.',
+          },
+        },
+        extensions: {
+          type: 'array',
+          description:
+            'Opt-in native extensions on top of the profile: share (receive shared items), widgets (Home Screen and Lock Screen widgets), contacts and calendar. Each is part of the runtime version.',
+          items: {
+            type: 'string',
+            enum: ['share', 'widgets', 'contacts', 'calendar'],
+          },
+          errorMessage: {
+            type: 'Mobile shell "extensions" should be an array.',
+          },
+        },
+        plugins: {
+          type: 'array',
+          description:
+            'Shell plugins: npm packages that add native code to this shell on top of its profile. A shell with plugins gets its own runtime version.',
+          items: {
+            $ref: '#/definitions/mobileShellPlugin',
+          },
+          errorMessage: {
+            type: 'Mobile shell "plugins" should be an array.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Mobile shell should be an object.',
+        required: {
+          id: 'Mobile shell should have required property "id".',
+        },
+      },
+    },
+    mobileShellPlugin: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['name', 'version'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          description: 'npm package name of the Lowdefy shell plugin.',
+          errorMessage: {
+            type: 'Mobile shell plugin "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          pattern: '^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$',
+          description:
+            'Exact version of the package, like "2.1.0" or "2.1.0-beta.1". Ranges, dist-tags, git, "file:" and "workspace:" are refused.',
+          errorMessage: {
+            type: 'Mobile shell plugin "version" should be a string.',
+            pattern:
+              'Mobile shell plugin "version" should be an exact version, like "2.1.0" or "2.1.0-beta.1".',
+          },
+        },
+        typePrefix: {
+          type: 'string',
+          description: "A prefix added to the plugin's type names, as for app plugins.",
+          errorMessage: {
+            type: 'Mobile shell plugin "typePrefix" should be a string.',
+          },
+        },
+        options: {
+          type: 'object',
+          description:
+            "Options passed to the plugin's config plugins. They are baked into the binary and change its runtime version, so they never hold secrets.",
+          errorMessage: {
+            type: 'Mobile shell plugin "options" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Mobile shell plugin should be an object.',
+        required: {
+          name: 'Mobile shell plugin should have required property "name".',
+          version: 'Mobile shell plugin should have required property "version".',
         },
       },
     },
@@ -2948,6 +3290,27 @@ export default {
           description: 'App base path to apply to all routes. Base path must start with "/".',
           errorMessage: {
             type: 'App "config.basePath" should be a string.',
+          },
+        },
+        experimental: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Opt in to features that are not yet stable. An experimental feature may change in a minor release.',
+          errorMessage: {
+            type: 'App "config.experimental" should be an object.',
+            additionalProperties:
+              'App "config.experimental" contains an unknown property. The known properties are "mobile".',
+          },
+          properties: {
+            mobile: {
+              type: 'boolean',
+              description:
+                'Build the "mobile" section, so the app runs in native iOS and Android shells, and allow "offline" on requests. Defaults to false.',
+              errorMessage: {
+                type: 'App "config.experimental.mobile" should be a boolean.',
+              },
+            },
           },
         },
         dependencyTracking: {
@@ -3515,6 +3878,208 @@ export default {
       },
       errorMessage: {
         type: 'App "menus" should be an array.',
+      },
+    },
+    mobile: {
+      type: 'object',
+      additionalProperties: false,
+      description:
+        'Experimental, needs "config.experimental.mobile: true". The mobile surface of the app: the pages, menus and home page a native shell shows.',
+      properties: {
+        '~ignoreBuildChecks': ignoreBuildChecksSchema,
+        '~r': {},
+        '~l': {},
+        homePageId: {
+          type: 'string',
+          description:
+            'Mobile home page id. Defaults to the first menu item, or else the first mobile page.',
+          errorMessage: {
+            type: 'App "mobile.homePageId" should be a string.',
+          },
+        },
+        minShellVersion: {
+          type: 'string',
+          description:
+            'Oldest shell version that may open the app, as a semver version. Older shells show an update screen on every page.',
+          errorMessage: {
+            type: 'App "mobile.minShellVersion" should be a string.',
+          },
+        },
+        menus: {
+          type: 'object',
+          additionalProperties: false,
+          description: 'The navigation frame: exactly one of tabs, drawer or stack.',
+          properties: {
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
+            '~r': {},
+            '~l': {},
+            tabs: {
+              type: 'array',
+              minItems: 2,
+              maxItems: 5,
+              items: {
+                $ref: '#/definitions/mobileMenuItem',
+              },
+              errorMessage: {
+                type: 'App "mobile.menus.tabs" should be an array.',
+                minItems: 'App "mobile.menus.tabs" should have 2 to 5 items.',
+                maxItems: 'App "mobile.menus.tabs" should have 2 to 5 items.',
+              },
+            },
+            drawer: {
+              type: 'array',
+              items: {
+                $ref: '#/definitions/mobileMenuItem',
+              },
+              errorMessage: {
+                type: 'App "mobile.menus.drawer" should be an array.',
+              },
+            },
+            stack: {
+              const: true,
+              errorMessage: {
+                const: 'App "mobile.menus.stack" should be true.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "mobile.menus" should be an object.',
+          },
+        },
+        pages: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/block',
+          },
+          errorMessage: {
+            type: 'App "mobile.pages" should be an array.',
+          },
+        },
+        events: {
+          type: 'object',
+          description:
+            'App events a native shell runs (onInit, onInitAsync), in place of the root "events", which stay web-only. Each action type must have a native version.',
+          errorMessage: {
+            type: 'App "mobile.events" should be an object.',
+          },
+        },
+        shells: {
+          type: 'array',
+          description:
+            'The shells that open this app. Each shell opens only this app, never another one.',
+          items: {
+            $ref: '#/definitions/mobileShell',
+          },
+          errorMessage: {
+            type: 'App "mobile.shells" should be an array.',
+          },
+        },
+        notifications: {
+          type: 'object',
+          description:
+            'Push and local notifications: the API endpoints push tokens are registered with ("register", "unregister"), how a notification shows while the app is open ("foreground": banner or silent), and "categories" of action buttons ({ id, actions: [{ id, title, endpointId?, input?, snooze?, destructive?, authenticationRequired? }] }). A button with endpointId calls it in the background; snooze shows the notification again after that many minutes; any other button opens the app and fires onNotificationAction.',
+          errorMessage: {
+            type: 'App "mobile.notifications" should be an object.',
+          },
+        },
+        share: {
+          type: 'object',
+          description:
+            'The page ({ pageId }) a shell with the share extension opens when text, links, images or files are shared into the app. The payload is in the onShare app event and the page query.',
+          errorMessage: {
+            type: 'App "mobile.share" should be an object.',
+          },
+        },
+        widgets: {
+          type: 'array',
+          description:
+            'Widget sources for shells with the widgets extension: [{ id, title, layout: count | list, endpointId, path? }]. The shell fetches each endpoint and shows its answer ({ count, label } or { items: [{ title, subtitle }] }) on the Home Screen and Lock Screen.',
+          errorMessage: {
+            type: 'App "mobile.widgets" should be an array.',
+          },
+        },
+        shortcuts: {
+          type: 'array',
+          description:
+            'Up to 4 app icon quick actions and App Shortcuts: [{ id, title, subtitle?, icon?, path? }]. Choosing one opens its path and fires onShortcut.',
+          errorMessage: {
+            type: 'App "mobile.shortcuts" should be an array.',
+          },
+        },
+        background: {
+          type: 'object',
+          description:
+            'Background fetch while the app is closed: { endpointId, interval } (minutes, at least 15). The endpoint answers { badge?, refreshWidgets? }; the shell also sends its offline queue and refreshes its cached pages.',
+          errorMessage: {
+            type: 'App "mobile.background" should be an object.',
+          },
+        },
+        auth: {
+          type: 'object',
+          additionalProperties: false,
+          description: 'How people sign in to the app on a phone and keep it locked.',
+          properties: {
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
+            '~r': {},
+            '~l': {},
+            emailCode: {
+              type: 'boolean',
+              default: true,
+              description:
+                'Show the native email-code sign-in screen when the app has auth.emailOTP on. When false, the shell opens the sign-in sheet directly.',
+              errorMessage: {
+                type: 'App "mobile.auth.emailCode" should be a boolean.',
+              },
+            },
+            unlock: {
+              type: 'string',
+              enum: ['none', 'biometric'],
+              default: 'none',
+              description:
+                'Ask for Face ID or a fingerprint before any page shows, after the app has been in the background for unlockAfter seconds.',
+              errorMessage: {
+                type: 'App "mobile.auth.unlock" should be a string.',
+                enum: 'App "mobile.auth.unlock" should be "none" or "biometric".',
+              },
+            },
+            unlockAfter: {
+              type: 'integer',
+              minimum: 0,
+              default: 300,
+              description:
+                'Seconds in the background after which the app asks to unlock again. Used when unlock is "biometric".',
+              errorMessage: {
+                type: 'App "mobile.auth.unlockAfter" should be an integer.',
+                minimum: 'App "mobile.auth.unlockAfter" should be 0 or more.',
+              },
+            },
+            sharedDevice: {
+              type: 'boolean',
+              default: false,
+              description:
+                'Sign out every time the app closes and skip biometric unlock, for phones that several people share.',
+              errorMessage: {
+                type: 'App "mobile.auth.sharedDevice" should be a boolean.',
+              },
+            },
+            sessionExpiresIn: {
+              type: 'integer',
+              minimum: 1,
+              description:
+                'Lifetime in seconds of sessions signed in on a phone. Defaults to auth.session.expiresIn.',
+              errorMessage: {
+                type: 'App "mobile.auth.sessionExpiresIn" should be an integer.',
+                minimum: 'App "mobile.auth.sessionExpiresIn" should be 1 or more.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "mobile.auth" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'App "mobile" should be an object.',
       },
     },
     pages: {

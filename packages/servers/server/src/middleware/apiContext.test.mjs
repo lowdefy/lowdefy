@@ -176,3 +176,21 @@ test('a request that answers within the timeout leaves its signal unaborted', as
   await new Promise((resolve) => setTimeout(resolve, 40));
   expect(signal.aborted).toBe(false);
 });
+
+test('a fault in authentication reaches the error handler with the request context', async () => {
+  const { resolveAuthentication } = await import('@lowdefy/api');
+  resolveAuthentication.mockRejectedValueOnce(new Error('Session store is down.'));
+  const app = new Hono();
+  let seen;
+  app.onError((error, c) => {
+    seen = c.get('lowdefyContext');
+    return c.text('failed', 500);
+  });
+  app.use('*', apiContext());
+  app.get('/api/ping', (c) => c.text('ok'));
+  const response = await app.request('/api/ping', { headers: { 'x-request-id': 'rid-1' } });
+  expect(response.status).toBe(500);
+  expect(seen?.rid).toBe('rid-1');
+  expect(seen?.handleError).toBeInstanceOf(Function);
+  expect(response.headers.get('x-request-id')).toBe('rid-1');
+});

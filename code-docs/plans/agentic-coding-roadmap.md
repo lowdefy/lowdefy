@@ -2,6 +2,8 @@
 
 How Lowdefy becomes exceptional to use with AI coding agents (Claude Code, Cursor, etc.). Based on codebase exploration and a 2025–2026 industry survey (Next.js devtools MCP, Vercel MCP, Laravel Boost, Svelte MCP, shadcn MCP, Expo MCP, Angular CLI MCP, llms.txt adoption, AGENTS.md/skills conventions).
 
+> History: the shipped list below names tools and routes since removed (LDF-786): `lowdefy_scaffold_page`, `lowdefy_overview`, the checkpoint tools, `lowdefy_eval_operator` (now `expression` on `lowdefy_inspect_state`) and the `/lowdefy-docs` routes that only mirrored a tool. MCP is the agent interface.
+
 ## Why this matters
 
 - Harness/tooling quality swings agent success rates 10–20 points on identical models (Artificial Analysis Coding Agent Index, 2026).

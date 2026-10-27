@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { UserError } from '@lowdefy/errors';
 
 import findConfig from '../../../lib/docs/findConfig.js';
 
-// findConfig throws a ConfigError only for a missing or non-string id; every
+// findConfig throws a UserError only for a missing or non-string id; every
 // other failure is a fault and propagates to the error handler rather than
 // being reported to the caller as bad input.
 async function docsFindHandler(c) {
@@ -28,7 +28,7 @@ async function docsFindHandler(c) {
     const result = await findConfig({ id, pageId });
     return c.json(result);
   } catch (error) {
-    if (error instanceof ConfigError) {
+    if (error instanceof UserError) {
       return c.json({ error: error.message }, 400);
     }
     throw error;

@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
-import createPairingBuffer from './createPairingBuffer.js';
-import createPasswordRedactor from './createPasswordRedactor.js';
-import createRecordBatcher from './createRecordBatcher.js';
-import createRecordingSession from './createRecordingSession.js';
+import {
+  createPairingBuffer,
+  createPasswordRedactor,
+  createRecordBatcher,
+  createRecordingSession,
+  sendRecords,
+} from '@lowdefy/client-core';
+
+import isPasswordElement from './isPasswordElement.js';
 import keyChord from './keyChord.js';
-import sendRecords from './sendRecords.js';
 
 // Dev tools draw their own UI over the app; clicks on it are not the app.
-const IGNORED_ROOTS = '[data-lowdefy-feedback]';
+const IGNORED_ROOTS = '[data-lowdefy-dev-tools]';
 
 function elementOf(target) {
   if (target === null || target === undefined) return null;
@@ -67,7 +71,7 @@ function createRecorder({ basePath, lowdefy, recording, window, getTrace }) {
     getSession: () => session.getId(),
     getRoles: () => lowdefy.user?.roles ?? [],
     getBuild: () => lowdefy._devBuildId ?? null,
-    redactor: createPasswordRedactor(),
+    redactor: createPasswordRedactor({ isPassword: isPasswordElement }),
   });
   let pageId = null;
   // A pageview waits here until the page it shows is on screen, because only

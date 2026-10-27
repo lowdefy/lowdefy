@@ -27,6 +27,7 @@ export const placeholder = {
 
 export const inputTitle = {
   type: 'string',
+  textKind: 'html',
   description:
     'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
 };

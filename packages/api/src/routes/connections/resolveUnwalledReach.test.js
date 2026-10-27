@@ -16,7 +16,7 @@
 
 import resolveUnwalledReach from './resolveUnwalledReach.js';
 import testContext from '../../test/testContext.js';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 
 const walledUri = 'mongodb://host-a:27017,host-b:27017/app?replicaSet=rs';
 const sessionUri = 'mongodb://127.0.0.1:5555/?replicaSet=testset';
@@ -36,6 +36,7 @@ const buildArtifacts = {
     properties: { databaseUri: walledUri, collection: 'rows' },
   },
   'connections/plugin.json': {
+    '~k': 'plugin_key',
     connectionId: 'plugin',
     type: 'Plugin',
     properties: { nested: { uri: 'mongodb://host-b:27017,host-a:27017/app' } },
@@ -135,4 +136,16 @@ test('resolveUnwalledReach keeps its refusal when a wrapped reader hides the rea
     createContext({ config: {}, readConfigFile: hidingReader })
   );
   expect(reach).toEqual(expectedReach);
+});
+
+test('resolveUnwalledReach reports a reaching connection through handleError at its config location', async () => {
+  const context = createContext({ config: {}, readConfigFile: plainReader });
+  const handleError = vi.spyOn(context, 'handleError');
+  await resolveUnwalledReach(context);
+  expect(handleError).toHaveBeenCalledTimes(1);
+  const [error] = handleError.mock.calls[0];
+  expect(error.name).toBe('ConfigError');
+  expect(error.configKey).toBe('plugin_key');
+  expect(error.connectionId).toBe('plugin');
+  expect(error.message).toBe(expectedReach.get('plugin'));
 });

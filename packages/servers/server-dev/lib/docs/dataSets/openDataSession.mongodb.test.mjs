@@ -29,6 +29,9 @@ import readDataSet from './readDataSet.js';
 import applyDataSetRedirect from '../../server/applyDataSetRedirect.js';
 import { journeyActorToken } from '../../server/auth/journeyActor.js';
 
+const mockLogger = vi.hoisted(() => ({ info: vi.fn(), warn: vi.fn() }));
+vi.mock('../../server/log/createLogger.js', () => ({ default: () => mockLogger }));
+
 vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
 let store;
@@ -454,7 +457,8 @@ test('close() waits for background work added to the session', async () => {
 test('close() drops after 30 s with a warning when background work never settles', async () => {
   const { session, close } = await openDataSession({ dataSet: makeDataSet({}) });
   await sessionDb(session).collection('kept').insertOne({ _id: 1 });
-  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  const warn = mockLogger.warn;
+  warn.mockClear();
   session.work.add(new Promise(() => {}));
   vi.useFakeTimers({
     toFake: [

@@ -42,6 +42,9 @@ vi.doMock('./template.js', () => ({
 }));
 
 const { default: renderPage } = await import('./renderPage.js');
+// The mobile sign-in route reaches the auth engine, which these tests never start.
+vi.doMock('../routes/mobileSignIn.js', () => ({ default: () => null }));
+vi.doMock('../routes/mobileSignInCallback.js', () => ({ default: () => null }));
 const { default: mountPageRoutes } = await import('../routes/mountPageRoutes.js');
 
 const routes = [

@@ -14,21 +14,5 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-function serializeQuery(query) {
-  if (type.isNone(query) || query === '') {
-    return '';
-  }
-  if (type.isString(query)) {
-    return query;
-  }
-  return new URLSearchParams(query).toString();
-}
-
-function createUrl({ basePath = '', pathname, query }) {
-  const serializedQuery = serializeQuery(query);
-  return `${basePath}${pathname}${serializedQuery ? `?${serializedQuery}` : ''}`;
-}
-
-export { createUrl, serializeQuery };
+// The server templates import the URL helpers from here.
+export { createUrl, serializeQuery } from '@lowdefy/client-core';

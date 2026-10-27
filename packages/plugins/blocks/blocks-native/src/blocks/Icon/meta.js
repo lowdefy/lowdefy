@@ -1,0 +1,84 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+export default {
+  category: 'display',
+  icons: ['loading'],
+  valueType: null,
+  cssKeys: {
+    element: 'The Icon element.',
+  },
+  events: {
+    onClick:
+      'Trigger actions when icon is clicked. The icon then takes keyboard focus, and Enter or Space trigger it too.',
+  },
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      color: {
+        type: 'string',
+        description:
+          'Primary icon color. On mobile a palette hue (`blue`, `amber`), a theme token (`colorPrimary`, `colorTint`) or a colour value.',
+        docs: {
+          displayType: 'color',
+        },
+      },
+      name: {
+        type: 'string',
+        description:
+          'Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. Add your own semantic names with `theme.icons.aliases`.',
+      },
+      nonScalingStroke: {
+        type: 'boolean',
+        description:
+          'Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`.',
+      },
+      rotate: {
+        type: 'number',
+        description: 'Number of degrees to rotate the icon.',
+      },
+      size: {
+        type: ['string', 'number'],
+        description: 'Size of the icon.',
+        docs: {
+          displayType: 'number',
+        },
+      },
+      strokeWidth: {
+        type: 'number',
+        description:
+          'Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2).',
+      },
+      spin: {
+        type: 'boolean',
+        default: false,
+        description: 'Continuously spin icon with animation.',
+      },
+      title: {
+        type: 'string',
+        description:
+          'Icon hover title for accessibility. On mobile, the label screen readers read.',
+      },
+      disableLoadingIcon: {
+        type: 'boolean',
+        default: false,
+        description:
+          "While loading after the icon has been clicked, don't render the loading icon.",
+      },
+    },
+  },
+};

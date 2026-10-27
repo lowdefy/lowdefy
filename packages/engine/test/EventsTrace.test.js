@@ -163,18 +163,14 @@ test('a handledBy return emits nothing for the outer block', async () => {
   const elements = ['button', 'card', 'root'].map((blockId) => ({ id: `bl-${blockId}` }));
   const domEvent = new Event('click');
   domEvent.composedPath = () => elements;
-  global.window = { event: domEvent };
-  global.document = { getElementById: (id) => elements.find((el) => el.id === id) ?? null };
-  let results;
-  try {
-    results = await Promise.all([
-      button.triggerEvent({ name: 'onClick' }),
-      card.triggerEvent({ name: 'onClick' }),
-    ]);
-  } finally {
-    delete global.window;
-    delete global.document;
-  }
+  context._internal.lowdefy._internal.globals = {
+    window: { event: domEvent },
+    document: { getElementById: (id) => elements.find((el) => el.id === id) ?? null },
+  };
+  const results = await Promise.all([
+    button.triggerEvent({ name: 'onClick' }),
+    card.triggerEvent({ name: 'onClick' }),
+  ]);
   expect(results[1].handledBy).toBe('button');
   expect(payloads.map((payload) => payload.blockId)).toEqual(['button']);
 });
@@ -407,4 +403,30 @@ test('an app onInit failure is replayed to a replay subscriber that subscribes a
     success: false,
     stateBefore: undefined,
   });
+});
+
+test('history and eventLog are capped by lowdefy._internal.historyLimits.events', async () => {
+  const lowdefy = createLowdefy();
+  lowdefy._internal.historyLimits = { events: 3, calls: 2 };
+  const context = await testContext({
+    lowdefy,
+    pageConfig: buttonPage([setState('set', { clicked: true })]),
+  });
+  const { button } = context._internal.RootSlots.map;
+  for (let i = 0; i < 5; i += 1) {
+    await button.triggerEvent({ name: 'onClick' });
+  }
+  expect(context.eventLog).toHaveLength(3);
+});
+
+test('history and eventLog are uncapped when no historyLimits are set', async () => {
+  const context = await testContext({
+    lowdefy: createLowdefy(),
+    pageConfig: buttonPage([setState('set', { clicked: true })]),
+  });
+  const { button } = context._internal.RootSlots.map;
+  for (let i = 0; i < 5; i += 1) {
+    await button.triggerEvent({ name: 'onClick' });
+  }
+  expect(context.eventLog).toHaveLength(5);
 });

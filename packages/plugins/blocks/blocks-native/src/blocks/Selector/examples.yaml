@@ -1,0 +1,97 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Mobile only.
+
+# A property row in an inset card that opens a native menu. Native menus draw SF Symbols only, so
+# an option with an avatar shows the person symbol in the menu.
+- title: Status row with a native menu
+  blocks:
+    - id: properties_card
+      type: Card
+      properties:
+        padding: none
+      blocks:
+        - id: status
+          type: Selector
+          properties:
+            title: Status
+            variant: menu
+            menuTitle: Set status
+            allowClear: false
+            options:
+              - label: Todo
+                value: todo
+                symbol: circle
+                icon: Circle
+              - label: In progress
+                value: in_progress
+                symbol: circle.lefthalf.filled
+                icon: CircleDot
+                iconColor: '#F59E0B'
+              - label: Done
+                value: done
+                symbol: checkmark.circle.fill
+                icon: CircleCheck
+                iconColor: '#22C55E'
+
+# The same row opening a picker sheet, as an assignee picker: each person shows their picture
+# (or their initials), "Assign to me" is pinned at the top under "Unassigned", and the list has
+# a search field because it holds more than searchThreshold options.
+- title: Assignee picker sheet with pictures and search
+  blocks:
+    - id: assignee_card
+      type: Card
+      properties:
+        padding: none
+      blocks:
+        - id: assignee
+          type: Selector
+          properties:
+            title: Assignee
+            variant: sheet
+            menuTitle: Assign to
+            placeholder: Unassigned
+            searchThreshold: 5
+            options:
+              - label: Assign to me
+                value: me
+                pinned: true
+                avatar:
+                  name: Pieter van Dam
+                  src: https://i.pravatar.cc/96?img=1
+              - label: Sam Taylor
+                value: sam
+                description: Engineer
+                avatar:
+                  name: Sam Taylor
+                  src: https://i.pravatar.cc/96?img=5
+              - label: Ada Lovelace
+                value: ada
+                description: ada@example.com
+                avatar:
+                  name: Ada Lovelace
+              - label: Grace Hopper
+                value: grace
+                description: grace@example.com
+                avatar:
+                  name: Grace Hopper
+              - label: José Núñez
+                value: jose
+                avatar:
+                  name: José Núñez
+              - label: Zoë Smit
+                value: zoe
+                avatar:
+                  name: Zoë Smit

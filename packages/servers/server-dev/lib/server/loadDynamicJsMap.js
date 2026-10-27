@@ -18,6 +18,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
+import createLogger from './log/createLogger.js';
+
+const logger = createLogger();
 
 // Dynamic JS map loading for JIT-built pages — the build rewrites
 // serverJsMap.js when a JIT page discovers new _js operators.
@@ -39,7 +42,13 @@ function loadDynamicJsMap(buildDirectory) {
     fn(exports);
     cachedJsMap = { ...staticJsMap, ...(exports.default ?? {}) };
     return cachedJsMap;
-  } catch {
+  } catch (error) {
+    // The last good map keeps serving, but an _js function that fails to load
+    // must be visible: it is logged once per change of the file (the mtime is
+    // already cached, so the next call returns before reaching here).
+    if (error.code !== 'ENOENT') {
+      logger.error(error);
+    }
     return cachedJsMap;
   }
 }

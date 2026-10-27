@@ -16,20 +16,24 @@
 
 import { inspect } from 'node:util';
 
-import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
+import {
+  LowdefyInternalError,
+  isExpectedError,
+  loadAndResolveErrorLocation,
+} from '@lowdefy/errors';
 import { scrubCredentials } from '@lowdefy/node-utils';
 
 import errorRecordingStamp from '../recording/errorRecordingStamp.js';
 import serverErrorStore from '../../docs/serverErrorStore.js';
 
-// A UserError is an expected outcome of user interaction (a rejected payload,
-// a :reject) and a LowdefyInternalError never carries a config location, so
-// neither belongs in the agent's feedback channel.
+// An expected outcome (a rejected payload, a :reject, an auth refusal) is not a
+// fault, and a LowdefyInternalError never carries a config location, so neither
+// belongs in the agent's feedback channel.
 function shouldStore(error) {
   if (error instanceof LowdefyInternalError) {
     return false;
   }
-  return error.name !== 'UserError';
+  return !isExpectedError(error);
 }
 
 function createHandleError({ context }) {
@@ -72,6 +76,7 @@ function createHandleError({ context }) {
           source: error.source ?? null,
           config: error.config ?? null,
           hint: error.hint ?? null,
+          configKey: error.configKey ?? null,
           endpointId: context.endpointId ?? null,
           requestId: context.requestId ?? null,
           pageId: context.pageId ?? null,

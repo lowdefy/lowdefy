@@ -19,16 +19,19 @@ import { mergeObjects } from '@lowdefy/helpers';
 import createBuildHandleError from './utils/createBuildHandleError.js';
 import createHandleWarning from './utils/createHandleWarning.js';
 import createImportAppCode from './utils/createImportAppCode.js';
+import createMobileTypeCounters from './utils/createMobileTypeCounters.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createTypeCounters from './utils/createTypeCounters.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultMessagesMap from './defaultMessagesMap.js';
 import defaultPackages from './defaultPackages.js';
 import defaultTypesMap from './defaultTypesMap.js';
+import defaultTypesMapMobile from './defaultTypesMapMobile.js';
 
 function createContext({
   customMessagesMap,
   customTypesMap,
+  customTypesMapMobile = {},
   directories,
   logger,
   pluginInstallFollows = false,
@@ -48,6 +51,9 @@ function createContext({
     walledTargets: new Map(),
     sharedTargets: new Map(),
     notificationIds: new Set(),
+    // config.experimental opt-ins, set by buildExperimental (validateConfig), or restored onto a
+    // dev page build. Empty until then: no experimental feature is on.
+    experimental: {},
     websocketIds: new Set(),
     directories,
     // Null prototype: policy ids come from app config.
@@ -83,10 +89,19 @@ function createContext({
     pluginModuleCache: new Map(),
     typeCounters: createTypeCounters(),
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
+    // The client types a native shell carries (defaultPackagesMobile), plus
+    // the native types of the shell plugins mobile.shells[].plugins lists
+    // (createPluginTypesMapMobile). Mobile pages resolve blocks, actions and
+    // client operators against it. Other app plugins do not register into it,
+    // since a shell carries no app code. Its plugins key names the shell
+    // plugins the server read, which validateShellPluginsListed checks.
+    typesMapMobile: mergeObjects([defaultTypesMapMobile, customTypesMapMobile]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
   };
 
+  context.typeCountersMobile = createMobileTypeCounters({ typeCounters: context.typeCounters });
   context.blockMetas = context.typesMap.blockMetas ?? {};
+  context.blockMetasMobile = context.typesMapMobile.blockMetas ?? {};
 
   // A check run must never touch the build directory. The no-op makes that
   // structural instead of relying on every validation step to stay write-free.

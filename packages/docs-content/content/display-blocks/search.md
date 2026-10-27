@@ -296,6 +296,62 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
             _event: pageId
 ```
 
+```yaml
+- id: example_search_sections
+  type: Search
+  properties:
+    indexUrl: /search-index.json
+    recentResults: true
+    recentResultsCount: 4
+    footer: Enter to open · mod+Enter to ask
+    result:
+      title: title
+      description: snippet
+      category: section
+      pageId: pageId
+    groups:
+      - label: Concepts
+        match:
+          section: Concepts
+        limit: 3
+        seeAll:
+          label: See all
+          pageId: docs-search
+          urlQuery:
+            q: "{query}"
+      - label: Blocks
+        match:
+          section: Blocks
+        limit: 3
+    pinned:
+      title: "Ask the assistant: {query}"
+      icon: Sparkles
+      shortcut: mod+enter
+  events:
+    onSelect:
+      - id: navigate
+        type: Link
+        params:
+          pageId:
+            _event: pageId
+    onSeeAll:
+      - id: see_all
+        type: Link
+        params:
+          pageId:
+            _event: pageId
+          urlQuery:
+            _event: urlQuery
+    onPinned:
+      - id: ask
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Ask: "
+              - _event: query
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `indexUrl` | string \| array | - | URL or array of URLs to pre-built search index JSON files. |
@@ -322,29 +378,53 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 | `placeholder` | string | `"Search..."` | Search input placeholder text. |
 | `shortcut` | string | `"mod+k"` | Keyboard shortcut to open the modal. Renders a shortcut badge on the trigger button (see showShortcut). Use "mod" for Cmd on Mac, Ctrl elsewhere. |
 | `width` | number | `640` | Modal width in pixels. |
-| `maxResults` | number | `20` | Maximum number of results displayed. |
+| `maxResults` | number | `20` | Maximum number of results displayed. When any group sets a `limit`, it instead caps each group that sets none, and "Other". |
 | `result` | object | - | Maps index fields to result UI slots. |
 | `result.title` | string | `"title"` | Field name for result title. |
 | `result.description` | string | - | Field name for result description/snippet. |
 | `result.category` | string | - | Field name for result grouping category. |
-| `result.icon` | string | - | Field name for result icon name. |
+| `result.icon` | string | - | Field name for the result icon. The field holds an icon name, or Icon properties such as `{ name, color }`. Results without it show the document icon. |
 | `result.pageId` | string | - | Field name for Lowdefy page navigation. |
 | `result.url` | string | - | Field name for external URL navigation. |
 | `groups` | array | - | Result grouping definitions. |
 | `groups.$.label` | string | - | Group display label. |
 | `groups.$.match` | object | - | Field/value pairs to match results to this group. |
 | `groups.$.icon` | string | - | Icon for the group header. |
+| `groups.$.limit` | number | - | Number of results shown for the group. The heading then shows the number of matches, and a "See all N" row follows the shown rows when there are more. |
+| `groups.$.seeAll` | object \| string | - | The "See all N" row of a group with a `limit`. An object fires `onSeeAll` with `{ group, count, query, pageId, urlQuery }`; a string is the name of the event to fire instead, with the same payload. |
+| `groups.$.seeAll.label` | string | `"See all"` | Row text before the count. |
+| `groups.$.seeAll.pageId` | string | - | Page id sent in the event, for a Link action. |
+| `groups.$.seeAll.urlQuery` | object | - | Url query sent in the event. `{query}` in a string is replaced by the typed search term. |
+| `pinned` | object | - | An action row kept last in the list while a query is typed. It is selected when nothing matches, reached with the arrow keys, and fires `onPinned` with `{ query }`. |
+| `pinned.title` | string | - | Row text. `{query}` is replaced by the typed search term. |
+| `pinned.icon` | string \| object | `"search"` | Row icon: a semantic name, a Lucide icon name, or properties of an Icon block. |
+| `pinned.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `pinned.icon.color` | string | - | Icon color. |
+| `pinned.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `pinned.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `pinned.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `pinned.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `pinned.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `pinned.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `pinned.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `pinned.shortcut` | string | - | Keyboard shortcut that selects the row from any row, such as `mod+enter`. Shown as a badge on the row. |
+| `pinned.event` | string | - | Name of the event to fire instead of `onPinned`. |
+| `footer` | string | - | A line of key hints shown below the results. |
 | `noResultsMessage` | string | `"No results found."` | Message shown when no results match. |
 | `highlightMatches` | boolean | `true` | Highlight matched terms in results. |
 | `recentSearches` | boolean | `true` | Show recent searches when input is empty. |
 | `recentSearchesKey` | string | `"search"` | localStorage key prefix for recent searches. Recent searches are kept per app and per signed-in user, and cleared at sign-out. |
 | `recentSearchesCount` | number | `5` | Maximum number of recent searches stored. |
+| `recentResults` | boolean | `false` | Remember the results a person selects and list them when the input is empty, in place of recent searches. Kept per app and per signed-in user, like recent searches, and cleared at sign-out. |
+| `recentResultsCount` | number | `4` | Maximum number of recent results stored and listed. |
 | `theme` | object | - | Antd design token overrides for the trigger Button, the search Modal and its Input, e.g. `borderRadius`, `colorPrimary`, `colorBgElevated` or `fontSize`. See [antd design tokens](https://ant.design/components/overview#design-token). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onSelect` | `{ query, resultCount }` | Trigger actions when a search result is selected. Result item stored fields are spread into the event object. |
 | `onSearch` | `{ value, resultCount }` | Trigger actions when the search query changes. |
+| `onPinned` | `{ query }` | Trigger actions when the pinned row is selected, by click, Enter or its shortcut. Fires the event named by `pinned.event` instead when that is set. |
+| `onSeeAll` | `{ group, count, query, pageId, urlQuery }` | Trigger actions when a group's "See all" row is clicked and the group's `seeAll` is an object. When `seeAll` is a string, the event of that name fires instead. |
 | `onOpen` | \- | Trigger actions when the search modal opens. |
 | `onClose` | \- | Trigger actions when the search modal closes. |
 
@@ -359,6 +439,10 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 | `/results` | The scrollable results list. |
 | `/group` | A result group container. |
 | `/groupHeading` | A group heading label. |
+| `/groupCount` | The match count in a group heading (shown when the group has a limit). |
+| `/seeAll` | A group's "See all N" row. |
+| `/pinned` | The pinned last row. |
+| `/footer` | The footer line of key hints. |
 | `/item` | A result item row. |
 | `/itemIcon` | The icon in a result item. |
 | `/itemTitle` | The title in a result item. |

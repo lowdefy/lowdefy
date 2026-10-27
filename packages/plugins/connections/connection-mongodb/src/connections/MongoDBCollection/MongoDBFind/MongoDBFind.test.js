@@ -77,7 +77,7 @@ test('find mongodb error', async () => {
     read: true,
   };
   await expect(MongoDBFind({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBFind command on collection "find" as malformed.'
+    'MongoDB rejected the MongoDBFind command on collection "find" as malformed.'
   );
 });
 

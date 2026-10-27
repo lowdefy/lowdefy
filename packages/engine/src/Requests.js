@@ -108,6 +108,10 @@ class Requests {
       request.holdValue = true;
     }
     this.context.requests[requestId].unshift(request);
+    const callLimit = this.context._internal.lowdefy._internal?.historyLimits?.calls;
+    if (callLimit && this.context.requests[requestId].length > callLimit) {
+      this.context.requests[requestId].length = callLimit;
+    }
     reportChange(`request:${requestId}`);
     return this.fetch(request);
   }
@@ -120,6 +124,9 @@ class Requests {
       const response = await this.context._internal.lowdefy._internal.callRequest({
         actionId: request.actionId,
         blockId: request.blockId,
+        // offline: queue lets a host with a request queue (a native shell) keep the call while
+        // it has no signal; the response is then { queued: true, id }.
+        offline: this.requestConfig[request.requestId]?.offline,
         pageId: this.context.pageId,
         payload: serializer.serialize(request.payload),
         readOnly: this.requestConfig[request.requestId].readOnly,

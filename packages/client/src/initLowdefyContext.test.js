@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
+import { vi, expect, test } from 'vitest';
 import { getHtmlEnhancements } from '@lowdefy/block-utils/registerHtmlEnhancements.js';
 
 import initLowdefyContext from './initLowdefyContext.js';
-import { expect, test } from 'vitest';
 
 function baseArgs(overrides = {}) {
   const lowdefy = {};
@@ -38,7 +38,7 @@ function baseArgs(overrides = {}) {
     router: { basePath: '' },
     stage: 'production',
     types: { actions: {}, blocks: {}, icons: {}, operators: {} },
-    window: { document: {}, fetch: () => undefined },
+    window: { addEventListener: vi.fn(), document: {}, fetch: () => undefined },
   };
 }
 
@@ -192,4 +192,53 @@ test('initLowdefyContext keeps user storage of the person signed in', () => {
   args.window = window;
   initLowdefyContext(args);
   expect(window.localStorage.getItem('lowdefy:sales::lowdefy_user:u1:views')).toBe('{}');
+});
+
+test('initLowdefyContext defaults apiBase to the router basePath', () => {
+  const args = baseArgs();
+  args.router.basePath = '/base';
+  const result = initLowdefyContext(args);
+  expect(result.apiBase).toBe('/base');
+  expect(result.basePath).toBe('/base');
+});
+
+test('initLowdefyContext sets apiBase apart from basePath when passed', () => {
+  const args = baseArgs();
+  args.apiBase = 'https://app.example.com';
+  const result = initLowdefyContext(args);
+  expect(result.apiBase).toBe('https://app.example.com');
+  expect(result.basePath).toBe('');
+});
+
+test('initLowdefyContext builds the context on the browser host', () => {
+  const args = baseArgs();
+  const result = initLowdefyContext(args);
+  expect(result._internal.globals).toEqual({
+    document: args.window.document,
+    fetch: args.window.fetch,
+    window: args.window,
+  });
+  expect(result._internal.router).toBe(args.router);
+  expect(result._internal.host.router).toBe(args.router);
+  expect(result._internal.components.handleError).toBe(result._internal.handleError);
+});
+
+test('initLowdefyContext leaves historyLimits undefined and keeps one set before it runs', () => {
+  const args = baseArgs();
+  initLowdefyContext(args);
+  expect(args.lowdefy._internal.historyLimits).toBeUndefined();
+
+  const dev = baseArgs();
+  dev.lowdefy._internal = { historyLimits: { events: 200, calls: 20 } };
+  initLowdefyContext(dev);
+  expect(dev.lowdefy._internal.historyLimits).toEqual({ events: 200, calls: 20 });
+});
+
+test('initLowdefyContext watches the page unload once across renders', () => {
+  const args = baseArgs();
+  initLowdefyContext(args);
+  initLowdefyContext(args);
+  expect(args.lowdefy.pageUnload.isLeaving()).toBe(false);
+  const events = args.window.addEventListener.mock.calls.map(([name]) => name);
+  expect(events).toEqual(['beforeunload', 'pagehide', 'pageshow']);
 });

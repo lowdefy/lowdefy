@@ -225,3 +225,32 @@ test('trace actionView has subscribe and the describe functions and no engine-on
   expect(trace.actionView.hasSubscribers).toBeUndefined();
   expect(trace.actionView).toBe(trace.actionView);
 });
+
+test('trace reportInteraction calls interaction listeners with the time it was reported', () => {
+  const trace = getTrace({});
+  const listener = vi.fn();
+  const unsubscribe = trace.subscribeInteractions(listener);
+  const before = Date.now();
+  trace.reportInteraction({ kind: 'change', blockId: 'name', value: 'Ada' });
+  expect(listener).toHaveBeenCalledTimes(1);
+  const [interaction] = listener.mock.calls[0];
+  expect(interaction).toMatchObject({ kind: 'change', blockId: 'name', value: 'Ada' });
+  expect(interaction.t).toBeGreaterThanOrEqual(before);
+  unsubscribe();
+  trace.reportInteraction({ kind: 'click', blockId: 'save' });
+  expect(listener).toHaveBeenCalledTimes(1);
+});
+
+test('trace reportInteraction with no interaction listener does nothing, and a throwing listener does not stop the others', () => {
+  const trace = getTrace({});
+  expect(() => trace.reportInteraction({ kind: 'click', blockId: 'save' })).not.toThrow();
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  const second = vi.fn();
+  trace.subscribeInteractions(() => {
+    throw new Error('broken');
+  });
+  trace.subscribeInteractions(second);
+  trace.reportInteraction({ kind: 'click', blockId: 'save' });
+  expect(second).toHaveBeenCalledTimes(1);
+  warn.mockRestore();
+});

@@ -363,7 +363,7 @@ blocks:
 The `LOWDEFY_SERVER_BASE_PATH` environment variable configuration option has been removed. To configure a base path, use the `config.basePath` configuration option.
 
 ``yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 
 config:
   basePath: /foo
@@ -371,7 +371,7 @@ config:
 
 The `_build.env` operator can be used to set the base path using an environment variable:
 ```yaml
-lowdefy: 7.0.0
+lowdefy: 7.1.0
 
 config:
   basePath:

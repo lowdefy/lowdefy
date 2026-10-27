@@ -23,7 +23,7 @@ vi.doMock('@lowdefy/logger/node', () => ({
   createNodeLogger: vi.fn(() => 'logger'),
 }));
 vi.doMock('./createCustomPluginTypesMap.mjs', () => ({
-  default: vi.fn().mockResolvedValue({}),
+  default: vi.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;

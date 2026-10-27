@@ -64,6 +64,19 @@ function buildRoleCatalog({ components }) {
     });
   });
 
+  const creatorAppRoles = components.auth.organizations?.creatorAppRoles ?? [];
+  creatorAppRoles.forEach((roleName) => {
+    if (!authoredIds.has(roleName)) {
+      throw new ConfigError(
+        `Auth "organizations.creatorAppRoles" lists role "${roleName}", which is not declared in auth.roles. List app roles declared in auth.roles.`,
+        {
+          configKey:
+            creatorAppRoles['~k'] ?? components.auth.organizations?.['~k'] ?? components.auth['~k'],
+        }
+      );
+    }
+  });
+
   components.auth.roles = normalizeRoleCatalog(authoredRoles);
 
   return components;

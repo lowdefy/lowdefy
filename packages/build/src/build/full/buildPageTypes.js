@@ -38,6 +38,11 @@ function buildPageTypes({ components, context }) {
   components.pageTypeSets = {};
   const getPageIcons = createGetPageIcons({ components, context });
   (components.pages ?? []).forEach((page) => {
+    // A mobile page never loads in the web client; buildMobilePageIndex
+    // computes its native type set.
+    if (page.target === 'mobile') {
+      return;
+    }
     const pageCounters = context.pageTypeCounters.get(page.pageId);
     const typeSet = {};
     const imports = {};

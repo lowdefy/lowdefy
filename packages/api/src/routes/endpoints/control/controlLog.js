@@ -40,8 +40,9 @@ async function controlLog(context, routineContext, { control }) {
     });
   }
   if (!logger[logLevel]) {
-    throw new Error(
-      `Invalid :log in endpoint "${endpointId}" - unrecognised log level. Received "${logLevel}".`
+    throw new ConfigError(
+      `Invalid :log in endpoint "${endpointId}" - unrecognised log level. Received "${logLevel}".`,
+      { configKey: control['~k'] }
     );
   }
 

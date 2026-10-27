@@ -16,10 +16,11 @@
 
 import crypto from 'crypto';
 import { serializer } from '@lowdefy/helpers';
-import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 
 import createWireProjection from '../../response/createWireProjection.js';
 import prepareChannel from './prepareChannel.js';
+import wrapResolverError from '../request/wrapResolverError.js';
 
 const MAX_RETRIES = 5;
 const RETRY_BASE_MS = 1000;
@@ -64,26 +65,21 @@ function createChannelRegistry() {
     });
   }
 
-  function wrapResolverError({ channel, error }) {
+  // Wrapped like a request step's error: the evaluated properties stay out of it, and the
+  // source's own error is summarised, since both are logged and sent to Sentry.
+  function wrapSourceError({ channel, error }) {
     if (!error.configKey) {
       error.configKey = channel.websocketConfig['~k'];
     }
     if (error.isLowdefyError) {
       return error;
     }
-    if (ServiceError.isServiceError(error)) {
-      return new ServiceError(undefined, {
-        cause: error,
-        service: channel.websocketConfig.connectionId ?? channel.websocketConfig.type,
-        configKey: channel.websocketConfig['~k'],
-      });
-    }
-    return new PluginError(error.message, {
-      cause: error,
-      typeName: channel.websocketConfig.type,
-      received: channel.properties,
-      location: channel.websocketConfig.websocketId,
+    return wrapResolverError(error, {
       configKey: channel.websocketConfig['~k'],
+      fields: { connectionId: channel.websocketConfig.connectionId },
+      location: channel.websocketConfig.websocketId,
+      service: channel.websocketConfig.connectionId ?? channel.websocketConfig.type,
+      typeName: channel.websocketConfig.type,
     });
   }
 
@@ -105,7 +101,7 @@ function createChannelRegistry() {
       );
       return;
     }
-    const wrapped = wrapResolverError({ channel, error });
+    const wrapped = wrapSourceError({ channel, error });
     channel.logger.debug({ err: wrapped }, wrapped.message);
     channel.context.handleError(wrapped);
     broadcastError(channel, wrapped);

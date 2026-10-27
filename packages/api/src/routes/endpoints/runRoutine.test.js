@@ -373,15 +373,22 @@ test('an invalid routine throws a LowdefyInternalError', async () => {
 });
 
 test.each([
-  ['a thrown UserError nobody logged is logged here as a warning', false, 1],
-  ['a UserError already logged where it was raised is not logged again', true, 0],
+  ['a thrown UserError nobody logged is logged here as a warning', 'UserError', false, 1],
+  ['a UserError already logged where it was raised is not logged again', 'UserError', true, 0],
+  [
+    'an auth refusal from a nested call is logged here as a warning',
+    'AuthorizationError',
+    false,
+    1,
+  ],
+  ['an unauthenticated nested call is logged here as a warning', 'AuthenticationError', false, 1],
 ])(
   '%s and returned as an error status, never through handleError',
-  async (_, handled, warnings) => {
+  async (_, errorName, handled, warnings) => {
     const { default: runRoutine } = await import('./runRoutine.js');
-    const { UserError } = await import('@lowdefy/errors');
+    const errors = await import('@lowdefy/errors');
     const handleError = vi.fn();
-    const error = new UserError('Nested payload refused.');
+    const error = new errors[errorName]('Nested payload refused.');
     error.handled = handled || undefined;
     const routine = {
       id: 'endpoint:nested',

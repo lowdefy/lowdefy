@@ -19,6 +19,7 @@ import { getPossibleOperators } from '@lowdefy/operators';
 
 import checkValue from './checkValue.js';
 import isUnderState from './isUnderState.js';
+import overlapsStatePath from './overlapsStatePath.js';
 
 function isLiteralObject({ value, walk }) {
   return (
@@ -126,6 +127,50 @@ function checkSetState({ params, path, walk }) {
   });
 }
 
+// A CallAPI's params are sent to the server and an action's skip is read as a
+// condition, so a _state read in them draws nothing.
+function checkActionValue({ action, path, walk }) {
+  Object.keys(action).forEach((key) => {
+    if (key.startsWith('~')) return;
+    const undrawn = key === 'skip' || (key === 'params' && action.type === 'CallAPI');
+    checkValue({
+      value: action[key],
+      key,
+      path: `${path}.${key}`,
+      walk: undrawn ? { ...walk, undrawn: true } : walk,
+    });
+  });
+}
+
+// SetState values under the policy's state are data: the page around the
+// Dynamic block owns that state and treats it as input, and no block property
+// can read it back (properties are literal), so only the operator rules apply.
+// A content _state read that would draw a data key is refused at the end of
+// the walk (checkPolicy). Without a state path the content may write any page
+// state, which the page may draw, so every value keeps every check. So does a
+// value bound to a content input whose value is an object (walk.objectValueIds:
+// a rich text editor, an upload, a table input), which draws it as markup,
+// links or images. checkSetState has judged the keys.
+function checkSetStateValues({ action, path, walk }) {
+  const { params, ...rest } = action;
+  checkActionValue({ action: rest, path, walk });
+  Object.keys(params).forEach((key) => {
+    if (key.startsWith('~')) return;
+    const isData =
+      !type.isNone(walk.policy.state) &&
+      !walk.objectValueIds.some((id) => overlapsStatePath({ key, id }));
+    if (isData) {
+      walk.dataStateKeys.push(key);
+    }
+    checkValue({
+      value: params[key],
+      key,
+      path: `${path}.params.${key}`,
+      walk: isData ? { ...walk, isData: true } : walk,
+    });
+  });
+}
+
 const ACTION_RULES = {
   CallAPI: checkCallApi,
   Link: checkLink,
@@ -163,7 +208,11 @@ function checkAction({ action, path, walk }) {
     });
   }
   ACTION_RULES[action.type]?.({ params: action.params, path: `${path}.params`, walk });
-  checkValue({ value: action, path, walk });
+  if (action.type === 'SetState' && isLiteralObject({ value: action.params, walk })) {
+    checkSetStateValues({ action, path, walk });
+    return;
+  }
+  checkActionValue({ action, path, walk });
 }
 
 export default checkAction;

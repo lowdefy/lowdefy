@@ -298,14 +298,17 @@ test('resolveDynamicContent renders fallback when the endpoint does not exist', 
   });
   const pageConfig = makePageConfig(dynamicBlock);
   const context = createTestContext({ files: baseFiles({}) });
+  vi.spyOn(context, 'handleError');
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(dynamicBlock.slots.content.blocks).toHaveLength(1);
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
   expect(dynamicBlock.slots.fallback).toBe(undefined);
   expect(dynamicBlock.properties.endpointId).toBe(undefined);
+  // A fault: reported through handleError, not only written to the log.
+  expect(context.handleError).toHaveBeenCalledTimes(1);
   expect(logger.error).toHaveBeenCalledTimes(1);
-  expect(logger.error.mock.calls[0][1]).toContain(
-    'Dynamic block "section_1" on page "page1" failed to resolve'
+  expect(logger.error.mock.calls[0][0].message).toBe(
+    'API Endpoint "resolve_section" does not exist.'
   );
 });
 
@@ -345,7 +348,9 @@ test('resolveDynamicContent falls back when the endpoint returns a bad shape', a
   });
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
-  expect(logger.error.mock.calls[0][1]).toContain('must return an object with a "blocks" array');
+  expect(logger.error.mock.calls[0][0].message).toContain(
+    'must return an object with a "blocks" array'
+  );
 });
 
 test('resolveDynamicContent falls back when the routine rejects', async () => {
@@ -380,9 +385,8 @@ test('resolveDynamicContent logs a payload its endpoint refuses as an error: the
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
   expect(logger.warn).not.toHaveBeenCalled();
   expect(logger.error).toHaveBeenCalledTimes(1);
-  expect(logger.error.mock.calls[0][0].event).toBe('dynamic_block_error');
-  expect(logger.error.mock.calls[0][0].err.name).toBe('ConfigError');
-  expect(logger.error.mock.calls[0][1]).toContain('at /params/area: must be number.');
+  expect(logger.error.mock.calls[0][0].name).toBe('ConfigError');
+  expect(logger.error.mock.calls[0][0].message).toContain('at /params/area: must be number.');
 });
 
 test('resolveDynamicContent logs a nested CallApi payload its target refuses as an error, not a warning', async () => {
@@ -431,7 +435,7 @@ test('resolveDynamicContent falls back when resolved content uses an unbundled b
   });
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
-  expect(logger.error.mock.calls[0][1]).toContain(
+  expect(logger.error.mock.calls[0][0].message).toContain(
     'uses block type "AgGridAlpine" which is not included'
   );
 });
@@ -452,7 +456,7 @@ test('resolveDynamicContent falls back when resolved content defines requests', 
   });
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(dynamicBlock.slots.content.blocks).toEqual([]);
-  expect(logger.error.mock.calls[0][1]).toContain('must not define requests');
+  expect(logger.error.mock.calls[0][0].message).toContain('must not define requests');
 });
 
 test('resolveDynamicContent falls back when a Request action references an undefined page request', async () => {
@@ -477,7 +481,7 @@ test('resolveDynamicContent falls back when a Request action references an undef
   });
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(dynamicBlock.slots.content.blocks).toEqual([]);
-  expect(logger.error.mock.calls[0][1]).toContain('references request "other_request"');
+  expect(logger.error.mock.calls[0][0].message).toContain('references request "other_request"');
 });
 
 test('resolveDynamicContent allows Request actions referencing page requests', async () => {
@@ -558,8 +562,8 @@ test('resolveDynamicContent stops self-referencing resolution at the depth limit
   });
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(
-    logger.error.mock.calls.some(([, message]) =>
-      message.includes('exceeded the maximum dynamic nesting depth of 5')
+    logger.error.mock.calls.some(([error]) =>
+      error.message.includes('exceeded the maximum dynamic nesting depth of 5')
     )
   ).toBe(true);
 });
@@ -590,8 +594,8 @@ test('resolveDynamicContent resolves the page root when it is a Dynamic block', 
 });
 
 function dynamicBlockError() {
-  const call = logger.error.mock.calls.find(([entry]) => entry?.event === 'dynamic_block_error');
-  return call?.[1];
+  const call = logger.error.mock.calls.find(([entry]) => entry instanceof Error);
+  return call?.[0].message;
 }
 
 function resolveWithRoutine(routine, { urlQuery = {}, extraEndpoints = {}, payloadSchema } = {}) {

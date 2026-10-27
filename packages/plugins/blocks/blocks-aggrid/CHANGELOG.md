@@ -1,5 +1,23 @@
 # Change Log
 
+## 7.1.0
+
+### Patch Changes
+
+- 96d6f1c: fix(blocks-aggrid): Show the tick in ticked AgGrid checkboxes
+
+  A ticked checkbox in an AgGrid Balham block, including a read-only boolean cell and a row-selection checkbox, showed no tick. The antd theme draws the ticked box in the primary colour, and the Balham block drew the tick in that same colour, so a ticked box read as empty and a read-only one as a plain grey square. The other blocks drew the tick in the background colour, so it turned dark in dark mode. Every AgGrid block now draws a white tick on the primary colour, as antd's Checkbox does.
+
+- b1d58df: fix(blocks-aggrid): AgGrid columns accept named filters and components
+
+  The build warned `columnDefs.N.filter must be type "boolean"` on every AgGrid column whose `filter` named an AG Grid filter, such as `filter: agDateColumnFilter`, though the grid filtered correctly. `filter` now takes `true`, `false` or a provided filter name: `agTextColumnFilter`, `agNumberColumnFilter` or `agDateColumnFilter`. Any other name, such as a misspelt one or an Enterprise filter this block does not include, still warns. `cellRenderer` and `tooltipComponent` likewise accept the name of a registered component, such as the cell renderer `agAnimateShowChangeCellRenderer`.
+
+- Updated dependencies [c6d665a]
+- Updated dependencies [3df29f3]
+  - @lowdefy/blocks-antd@7.1.0
+  - @lowdefy/block-utils@7.1.0
+  - @lowdefy/helpers@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

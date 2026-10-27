@@ -23,7 +23,7 @@ vi.doMock('@lowdefy/logger/node', () => ({
   createNodeLogger: vi.fn(() => 'logger'),
 }));
 vi.doMock('./createCustomPluginTypesMap.mjs', () => ({
-  default: vi.fn().mockResolvedValue({}),
+  default: vi.fn().mockResolvedValue({ customTypesMap: {}, customTypesMapMobile: {} }),
 }));
 vi.doMock('./createCustomPluginMessagesMap.mjs', () => ({
   default: vi.fn().mockResolvedValue({}),

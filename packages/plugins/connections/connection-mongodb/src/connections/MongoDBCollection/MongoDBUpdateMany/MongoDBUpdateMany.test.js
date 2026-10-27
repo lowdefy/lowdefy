@@ -445,7 +445,7 @@ test('updateMany mongodb error', async () => {
     write: true,
   };
   await expect(MongoDBUpdateMany({ request, connection })).rejects.toThrow(
-    'MongoDB: MongoDB rejected the MongoDBUpdateMany command on collection "updateMany" as malformed.'
+    'MongoDB rejected the MongoDBUpdateMany command on collection "updateMany" as malformed.'
   );
 });
 

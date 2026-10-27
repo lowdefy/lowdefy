@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigWarning } from '@lowdefy/errors';
 
 function validateSlots(block, pageContext) {
-  const blockMeta = pageContext.context.blockMetas?.[block.type];
+  const blockMeta = pageContext.blockMetas[block.type];
   if (!blockMeta) return;
   if (blockMeta.slots === false) return;
   if (!type.isArray(blockMeta.slots) && !type.isObject(blockMeta.slots)) return;
@@ -32,7 +32,9 @@ function validateSlots(block, pageContext) {
     if (!validSlots.has(slotKey)) {
       pageContext.context.handleWarning(
         new ConfigWarning(
-          `Block "${block.blockId}" (${block.type}): Unknown slot "${slotKey}". Valid slots: ${[...validSlots].join(', ')}.`,
+          `Block "${block.blockId}" (${block.type}): Unknown slot "${slotKey}". Valid slots: ${[
+            ...validSlots,
+          ].join(', ')}.`,
           { configKey: block.slots[slotKey]?.['~k'] ?? block['~k'] }
         )
       );

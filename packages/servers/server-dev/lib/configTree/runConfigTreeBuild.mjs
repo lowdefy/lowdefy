@@ -55,13 +55,14 @@ async function runConfigTreeBuild({
   await prepareScratchServer({ devDirectory, serverDirectory: directories.server });
   let result;
   try {
-    const [customTypesMap, customMessagesMap] = await Promise.all([
+    const [{ customTypesMap, customTypesMapMobile }, customMessagesMap] = await Promise.all([
       createCustomPluginTypesMap({ directories, logger }),
       createCustomPluginMessagesMap({ directories, logger }),
     ]);
     await build({
       customMessagesMap,
       customTypesMap,
+      customTypesMapMobile,
       directories,
       logger,
       refResolver,

@@ -116,7 +116,13 @@
     # A missing path reads as null, so the list is checked to be there first.
     - expect: { state: { path: members.members.0.user.email, equals: switch-owner@example.test } }
     - expect: { state: { path: members.members.1, equals: null } }
+    # Their session lives on, active in the organization they were removed
+    # from, so the server answers it as nobody - and so does the page, which
+    # can still be opened: its request is answered as the caller it shows.
     - as: member
+    - goto: caller
+    - expect: { text: { blockId: server_caller_html, contains: 'Server answers: null' } }
+    - expect: { text: { blockId: rendered_user_html, contains: 'Page renders: null' } }
     - goto: notes
     - expect: { url: { contains: /login } }
     # Signing in again lands them in the organization they still belong to.

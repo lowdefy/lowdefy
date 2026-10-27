@@ -1,0 +1,116 @@
+id: shared
+type: Box
+blocks:
+  - id: heading
+    type: Title
+    properties:
+      content: Display blocks
+      level: 2
+  - id: intro
+    type: Paragraph
+    properties:
+      content: The same page on the web and on a phone.
+      ellipsis:
+        rows: 2
+        expandable: true
+    events:
+      onExpand:
+        - id: note_expand
+          type: SetState
+          params:
+            expanded: true
+  - id: rule
+    type: Divider
+    properties:
+      title: Order
+      titlePlacement: start
+  - id: order
+    type: Card
+    properties:
+      title: Order 42
+      size: small
+    events:
+      onClick:
+        - id: open_order
+          type: SetState
+          params:
+            opened: true
+    slots:
+      extra:
+        blocks:
+          - id: order_status
+            type: Tag
+            properties:
+              title: Shipped
+              color: green
+              icon: House
+      content:
+        blocks:
+          - id: order_tabs
+            type: Tabs
+            properties:
+              tabs:
+                - key: items
+                  title: Items
+                - key: history
+                  title: History
+            events:
+              onChange:
+                - id: set_tab
+                  type: SetState
+                  params:
+                    tab:
+                      _event: activeKey
+            slots:
+              items:
+                blocks:
+                  - id: item_icon
+                    type: Icon
+                    properties:
+                      name: House
+                      size: 20
+                  - id: item_text
+                    type: Paragraph
+                    properties:
+                      content: Two items
+              history:
+                blocks:
+                  - id: history_alert
+                    type: Alert
+                    properties:
+                      type: info
+                      message: Shipped on Monday
+                      closable: true
+  - id: loading_row
+    type: Skeleton
+    properties:
+      height: 16
+  - id: busy
+    type: Spinner
+    properties:
+      size: small
+  - id: notes
+    type: Markdown
+    properties:
+      content: |
+        ## Notes
+
+        Read the [delivery terms](https://example.com/terms) before you ship.
+
+        - [x] Packed
+        - [ ] Collected
+
+        | Box | Weight |
+        | --- | ------ |
+        | A   | 2 kg   |
+    events:
+      onLinkPress:
+        - id: open_terms
+          type: SetState
+          params:
+            last_link:
+              _event: href
+  - id: footer
+    type: Box
+    properties:
+      content: End of page

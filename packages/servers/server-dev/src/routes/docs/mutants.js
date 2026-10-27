@@ -16,6 +16,8 @@
 
 import path from 'node:path';
 
+import { type } from '@lowdefy/helpers';
+
 import buildPageIfNeeded from '../../../lib/server/jitPageBuilder.js';
 import getBuildId from '../../../lib/docs/getBuildId.js';
 import listMutants from '../../../lib/server/mutants/listMutants.js';
@@ -53,6 +55,11 @@ async function docsMutantsHandler(c) {
         removedPages.add(pageId);
       }
     } catch (error) {
+      // A build error says what is wrong with the page; any other error is a
+      // fault of this route, for the error handler to log, not a page to fix.
+      if (type.isNone(error.buildErrors) && error.isLowdefyError !== true) {
+        throw error;
+      }
       return c.json(
         {
           error: `Page "${pageId}" fails to build, so its mutants cannot be listed until the errors are fixed.`,

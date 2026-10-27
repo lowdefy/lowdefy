@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import getGlobals from '../getGlobals.js';
+
 // Dependency tracking is on unless one of these switches turns it off:
 //   - lowdefy._internal.dependencyTracking === false: an engine option, so a harness can run the
 //     same page tracked and with full passes.
@@ -27,8 +29,7 @@ function isDependencyTrackingEnabled({ lowdefy }) {
   if (lowdefy.lowdefyApp?.dependencyTracking === false) {
     return false;
   }
-  // The engine reaches the browser window only through lowdefy._internal.globals.
-  return lowdefy._internal.globals?.window?.__lowdefyFullEvaluation !== true;
+  return getGlobals(lowdefy).window?.__lowdefyFullEvaluation !== true;
 }
 
 export default isDependencyTrackingEnabled;

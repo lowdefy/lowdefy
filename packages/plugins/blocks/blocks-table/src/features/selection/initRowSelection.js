@@ -19,15 +19,18 @@ import { type } from '@lowdefy/helpers';
 import isSelectAllValue from './isSelectAllValue.js';
 
 // Accepts both value shapes: `rowKey[]`, and `{ all: true, except: rowKey[] }` (every loaded row
-// except those keys; the shape server mode needs, where not every row is loaded).
-function initRowSelection({ value, rows, getKey }) {
+// except those keys and the rows `rowSelection.selectable` rejects; the shape server mode needs,
+// where not every row is loaded).
+function initRowSelection({ value, rows, getKey, config }) {
   const selected = value?.selected;
   const selection = {};
   if (isSelectAllValue(selected)) {
     const except = new Set((selected.except ?? []).map(String));
+    const isSelectable = config?.rowSelection?.isSelectable ?? null;
     rows.forEach((row) => {
       const id = String(getKey(row));
-      if (!except.has(id)) selection[id] = true;
+      if (except.has(id)) return;
+      if (isSelectable === null || isSelectable(row)) selection[id] = true;
     });
     return selection;
   }

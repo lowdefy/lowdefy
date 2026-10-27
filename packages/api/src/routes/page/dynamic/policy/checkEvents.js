@@ -41,7 +41,7 @@ function checkActionList({ actions, path, walk }) {
   actions.forEach((item, index) => {
     const itemPath = `${path}.${index}`;
     if (type.isObject(item) && ':if' in item) {
-      checkValue({ value: item[':if'], path: `${itemPath}.:if`, walk });
+      checkValue({ value: item[':if'], path: `${itemPath}.:if`, walk: { ...walk, undrawn: true } });
       count += checkActionList({ actions: item[':then'] ?? [], path: `${itemPath}.:then`, walk });
       count += checkActionList({ actions: item[':else'] ?? [], path: `${itemPath}.:else`, walk });
       return;
@@ -53,7 +53,11 @@ function checkActionList({ actions, path, walk }) {
       }
       item[':switch'].forEach((caseObject, caseIndex) => {
         const casePath = `${itemPath}.:switch.${caseIndex}`;
-        checkValue({ value: caseObject?.[':case'], path: `${casePath}.:case`, walk });
+        checkValue({
+          value: caseObject?.[':case'],
+          path: `${casePath}.:case`,
+          walk: { ...walk, undrawn: true },
+        });
         count += checkActionList({
           actions: caseObject?.[':then'] ?? [],
           path: `${casePath}.:then`,

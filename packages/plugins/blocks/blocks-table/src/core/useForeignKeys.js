@@ -17,16 +17,27 @@
 import { useEffect } from 'react';
 import { type } from '@lowdefy/helpers';
 
+import isRowSelectable from '../features/selection/isRowSelectable.js';
 import isSelectAllValue from '../features/selection/isSelectAllValue.js';
 
 // Selected keys can name rows that are not loaded (`rowSelection.preserve`). TanStack keeps them
 // as string ids; this remembers each key's own value so the selection writes back unchanged. The
-// same holds for the `except` keys of an `{ all: true, except }` selection.
+// same holds for the `except` keys of an `{ all: true, except }` selection, less the loaded rows
+// `rowSelection.selectable` rejects: getSelectAllExcept adds those to every value it writes.
 function useForeignKeys({ api, selected }) {
   useEffect(() => {
     if (isSelectAllValue(selected)) {
+      const { rowsById } = api.table.getCoreRowModel();
       api.selectionExcept = new Map(
-        (selected.except ?? []).filter((key) => !type.isNone(key)).map((key) => [String(key), key])
+        (selected.except ?? [])
+          .filter((key) => !type.isNone(key))
+          .filter((key) => {
+            const row = rowsById[String(key)];
+            return (
+              !row || !api.config.rowSelection || isRowSelectable({ api, original: row.original })
+            );
+          })
+          .map((key) => [String(key), key])
       );
       return;
     }

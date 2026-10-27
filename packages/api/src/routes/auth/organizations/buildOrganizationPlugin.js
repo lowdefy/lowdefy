@@ -17,10 +17,12 @@
 import { organization } from 'better-auth/plugins';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
+import createBeforeCreateInvitationHook from './createBeforeCreateInvitationHook.js';
 import modelNames from '../modelNames.js';
 import { ac, roles } from './organizationAccessControl.js';
 
 const DEFAULT_MEMBERSHIP_LIMIT = 1000000;
+const DEFAULT_INVITATION_LIMIT = 1000000;
 
 // Organizations are always on - the membership and boundary mechanism for every
 // app. member.role carries BetterAuth's org-authority tier and nothing else, so
@@ -77,16 +79,23 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     membershipLimit: Number.isFinite(authConfig.organizations?.membershipLimit)
       ? authConfig.organizations.membershipLimit
       : DEFAULT_MEMBERSHIP_LIMIT,
+    // BetterAuth's own cap of 100 open invitations is held open: its count
+    // never goes past the adapter's default page of 100 rows, so it cannot
+    // enforce a larger limit. createBeforeCreateInvitationHook enforces
+    // auth.organizations.invitationLimit instead.
+    invitationLimit: DEFAULT_INVITATION_LIMIT,
     schema: {
       organization: {
         modelName: modelNames.organization,
         additionalFields: {
-          // Set while a tenant signup mint has written the organization but
-          // not yet its owner's member row (createActiveOrgPolicyHook). Only a
-          // marked organization is ever joined as owner by the mint, so one
-          // that everyone has left is never handed back. Server-only: never
-          // accepted from a request body, never returned by an endpoint.
+          // Set while an engine mint has written the organization but not yet
+          // its owner's member row (mintOrganization). Only a marked
+          // organization is ever joined as owner by a mint, and only by the
+          // creator in mintCreatorId, so one that everyone has left is never
+          // handed back. Server-only: never accepted from a request body,
+          // never returned by an endpoint.
           mintPending: { type: 'boolean', required: false, input: false, returned: false },
+          mintCreatorId: { type: 'string', required: false, input: false, returned: false },
         },
       },
       member: {
@@ -142,6 +151,17 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     },
     organizationHooks: {
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
+      // Registered only when a limit is set: unset, the cap is the
+      // effectively open DEFAULT_INVITATION_LIMIT above, and every invite
+      // would pay for a count that can never refuse.
+      ...(Number.isFinite(authConfig.organizations?.invitationLimit)
+        ? {
+            beforeCreateInvitation: createBeforeCreateInvitationHook({
+              getAuth,
+              invitationLimit: authConfig.organizations.invitationLimit,
+            }),
+          }
+        : {}),
     },
     sendInvitationEmail,
   };

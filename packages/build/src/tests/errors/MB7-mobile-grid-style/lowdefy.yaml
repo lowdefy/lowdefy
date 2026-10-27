@@ -1,0 +1,21 @@
+# MB7: Mobile Page With A Grid Style
+# A style key React Native cannot honour fails the build, naming the page,
+# block, slot and key.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  pages:
+    - id: jobs
+      type: Box
+      blocks:
+        - id: list
+          type: Box
+          style:
+            display: grid
+config:
+  experimental:
+    mobile: true

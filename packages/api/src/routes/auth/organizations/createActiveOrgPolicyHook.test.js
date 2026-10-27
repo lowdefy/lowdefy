@@ -18,6 +18,7 @@ import { vi, expect, test } from 'vitest';
 import { APIError } from 'better-auth/api';
 
 import createActiveOrgPolicyHook from './createActiveOrgPolicyHook.js';
+import createMemoryAuth from '../../../test/createMemoryAuth.js';
 
 const future = new Date(Date.now() + 3600 * 1000).toISOString();
 const past = new Date(Date.now() - 3600 * 1000).toISOString();
@@ -74,7 +75,7 @@ function createMockAuth({
 }
 
 const pinned = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
-const tenant = { policy: 'tenant', signup: 'open', create: 'auto' };
+const tenant = { policy: 'tenant', signup: 'open', create: 'auto', creatorAppRoles: [] };
 
 test('pinned: a member of the pinned org gets it as the active organization', async () => {
   const { auth } = createMockAuth({ member: { id: 'member_1', role: 'admin' } });
@@ -160,84 +161,6 @@ test('tenant: a pending invitation admits the session and mints nothing', async 
   expect(adapter.create).not.toHaveBeenCalled();
 });
 
-// An in-memory auth database holding the unique indexes ensureAuthIndexes
-// creates - one organization per slug, one member row per (user, org) - so the
-// mint's recovery from a lost race runs against the same rejection a real
-// database gives. `before` pauses an operation until the test releases it,
-// which fixes the interleaving of two concurrent sessions.
-function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexes } = {}) {
-  const db = { organization: [...organizations], member: [...members] };
-  const pauses = [];
-  let ids = 0;
-  function matches(row, where) {
-    return where.every(({ field, value, operator }) =>
-      operator === 'ne' ? row[field] !== value : row[field] === value
-    );
-  }
-  async function pause(operation, args) {
-    const found = pauses.find((entry) => entry.match(operation, args));
-    if (found) {
-      pauses.splice(pauses.indexOf(found), 1);
-      found.reached();
-      await found.released;
-    }
-  }
-  const adapter = {
-    options: {
-      ensureUniqueIndexes: ensureUniqueIndexes ?? vi.fn(async () => {}),
-    },
-    findOne: vi.fn(async ({ model, where }) => {
-      await pause('findOne', { model, where });
-      return db[model].find((row) => matches(row, where)) ?? null;
-    }),
-    findMany: vi.fn(async ({ model, where }) => {
-      if (model === 'invitation') return [];
-      return db[model].filter((row) => matches(row, where));
-    }),
-    create: vi.fn(async ({ model, data }) => {
-      await pause('create', { model, data });
-      const duplicate =
-        model === 'organization'
-          ? db.organization.some((row) => row.slug === data.slug)
-          : db.member.some(
-              (row) => row.userId === data.userId && row.organizationId === data.organizationId
-            );
-      if (duplicate) {
-        throw new Error(`E11000 duplicate key error collection: ${model}`);
-      }
-      ids += 1;
-      const row = { id: `${model}_${ids}`, ...data };
-      db[model].push(row);
-      return { ...row };
-    }),
-    count: vi.fn(async ({ model, where }) => db[model].filter((row) => matches(row, where)).length),
-    update: vi.fn(async ({ model, where, update }) => {
-      const row = db[model].find((candidate) => matches(candidate, where));
-      Object.assign(row, update);
-      return { ...row };
-    }),
-  };
-  const internalAdapter = {
-    findUserById: vi.fn(async (id) => ({ id, email: `${id}@example.com`, name: 'User One' })),
-  };
-  const auth = { $context: Promise.resolve({ adapter, internalAdapter }) };
-  // Pause the next operation matching `match` until release() is called;
-  // reached resolves once a session is waiting there.
-  function before(match) {
-    const entry = { match };
-    const reached = new Promise((resolve) => {
-      entry.reached = resolve;
-    });
-    let release;
-    entry.released = new Promise((resolve) => {
-      release = resolve;
-    });
-    pauses.push(entry);
-    return { reached, release };
-  }
-  return { auth, adapter, db, before };
-}
-
 function mintHook(auth) {
   return createActiveOrgPolicyHook({
     getAuth: () => auth,
@@ -262,6 +185,30 @@ test('tenant: a fresh signup mints its own organization as owner and clears the 
   expect(result).toEqual({
     data: { userId: 'user_1', activeOrganizationId: db.organization[0].id },
   });
+});
+
+test('tenant: a fresh signup owner row holds the creatorAppRoles app roles', async () => {
+  const { auth, db } = createMemoryAuth();
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    logger: { error: vi.fn(), warn: vi.fn() },
+    organizations: { ...tenant, creatorAppRoles: ['workspace-admin', 'billing'] },
+  });
+  await hook({ userId: 'user_1' });
+  expect(db.member).toEqual([
+    expect.objectContaining({
+      userId: 'user_1',
+      role: 'owner',
+      appRoles: ['workspace-admin', 'billing'],
+    }),
+  ]);
+});
+
+test('tenant: a fresh signup owner row carries no appRoles field when creatorAppRoles is empty', async () => {
+  const { auth, db } = createMemoryAuth();
+  await mintHook(auth)({ userId: 'user_1' });
+  expect(db.member).toHaveLength(1);
+  expect('appRoles' in db.member[0]).toBe(false);
 });
 
 test('tenant: a retried mint joins the marked organization a failed member write left behind', async () => {

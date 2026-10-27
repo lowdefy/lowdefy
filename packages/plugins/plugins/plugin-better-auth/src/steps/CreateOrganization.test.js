@@ -14,226 +14,173 @@
   limitations under the License.
 */
 
-import { vi, beforeEach, expect, test } from 'vitest';
+import { vi, expect, test } from 'vitest';
 
 import createMockAuth from '../../test/createMockAuth.js';
+import CreateOrganization from './CreateOrganization.js';
 
-vi.doMock('better-auth/plugins', () => ({
-  getOrgAdapter: vi.fn(),
-}));
-
-const { getOrgAdapter } = await import('better-auth/plugins');
-const { default: CreateOrganization } = await import('./CreateOrganization.js');
-
-const sessionCaller = {
-  system: false,
-  user: {
-    id: 'user-1',
-    email: 'user1@example.com',
-    name: 'User One',
-    image: null,
-    email_verified: true,
-    active_organization_id: null,
-  },
+const provisioned = {
+  organization: { id: 'org-1', name: 'Org One', slug: 'org-one', createdAt: new Date() },
+  member: null,
 };
 
-const systemCaller = { system: true, user: null };
+function setup({ result = provisioned, users = {} } = {}) {
+  const { auth, authContext } = createMockAuth();
+  authContext.internalAdapter = { findUserById: vi.fn(async (id) => users[id] ?? null) };
+  const provisionOrganization = vi.fn(async () => result);
+  return { auth, authContext, provisionOrganization };
+}
 
-beforeEach(() => {
-  getOrgAdapter.mockReset();
-});
-
-test('CreateOrganization invokes the endpoint as a system action with no session and no headers', async () => {
-  const createOrganization = vi.fn().mockResolvedValue({ id: 'org-1', name: 'Org One' });
-  const { auth } = createMockAuth({ organizationEndpoints: { createOrganization } });
+test('CreateOrganization provisions the organization with its creator and returns the owner under members', async () => {
+  const member = { id: 'member-1', userId: 'user-9', organizationId: 'org-1', role: 'owner' };
+  const { auth, provisionOrganization } = setup({
+    result: { ...provisioned, member },
+    users: { 'user-9': { id: 'user-9' } },
+  });
   const result = await CreateOrganization({
-    acting: systemCaller,
     auth,
     properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
+    provisionOrganization,
   });
-  expect(result).toEqual({ id: 'org-1', name: 'Org One' });
-  const input = createOrganization.mock.calls[0][0];
-  expect(input.body).toEqual({ name: 'Org One', slug: 'org-one', userId: 'user-9' });
-  // A system action must present NO session and NO headers key at all - the
-  // endpoint 401s any headers-bearing call without a session.
-  expect('headers' in input).toBe(false);
-  expect(input.context.session).toBe(undefined);
-  // A resolvable creator takes the endpoint path, never the adapter-direct write.
-  expect(getOrgAdapter).not.toHaveBeenCalled();
+  expect(provisionOrganization).toHaveBeenCalledWith({
+    organization: { name: 'Org One', slug: 'org-one' },
+    userId: 'user-9',
+  });
+  expect(result).toEqual({ ...provisioned.organization, members: [member] });
 });
 
-test('CreateOrganization defaults body.userId to the acting caller id', async () => {
-  const createOrganization = vi.fn().mockResolvedValue({ id: 'org-1' });
-  const { auth } = createMockAuth({ organizationEndpoints: { createOrganization } });
-  await CreateOrganization({
-    acting: sessionCaller,
+test('CreateOrganization creator-less provisions with no userId and returns the organization alone', async () => {
+  const { auth, authContext, provisionOrganization } = setup();
+  const result = await CreateOrganization({
     auth,
     properties: { name: 'Org One', slug: 'org-one' },
+    provisionOrganization,
   });
-  expect(createOrganization.mock.calls[0][0].body).toEqual({
+  expect(provisionOrganization).toHaveBeenCalledWith({
+    organization: { name: 'Org One', slug: 'org-one' },
+    userId: undefined,
+  });
+  expect(authContext.internalAdapter.findUserById).not.toHaveBeenCalled();
+  expect(result).toEqual(provisioned.organization);
+});
+
+test('CreateOrganization passes logo and metadata through to the organization row', async () => {
+  const { auth, provisionOrganization } = setup();
+  await CreateOrganization({
+    auth,
+    properties: { name: 'Org One', slug: 'org-one', logo: 'logo.png', metadata: { tier: 'gold' } },
+    provisionOrganization,
+  });
+  expect(provisionOrganization.mock.calls[0][0].organization).toEqual({
     name: 'Org One',
     slug: 'org-one',
-    userId: 'user-1',
+    logo: 'logo.png',
+    metadata: { tier: 'gold' },
   });
-  expect(getOrgAdapter).not.toHaveBeenCalled();
 });
 
-test('CreateOrganization rethrows APIError-shaped failures with the rail message', async () => {
-  const apiError = new Error('generic');
-  apiError.status = 'BAD_REQUEST';
-  apiError.body = { code: 'ORGANIZATION_ALREADY_EXISTS', message: 'Organization already exists' };
-  const createOrganization = vi.fn().mockRejectedValue(apiError);
-  const { auth } = createMockAuth({ organizationEndpoints: { createOrganization } });
+test('CreateOrganization throws and provisions nothing when the creator is not a user', async () => {
+  const { auth, provisionOrganization } = setup();
   await expect(
     CreateOrganization({
-      acting: systemCaller,
+      auth,
+      properties: { name: 'Org One', slug: 'org-one', userId: 'user-404' },
+      provisionOrganization,
+    })
+  ).rejects.toThrow('CreateOrganization creator "user-404" is not a user.');
+  expect(provisionOrganization).not.toHaveBeenCalled();
+});
+
+test('CreateOrganization throws when the slug belongs to another organization', async () => {
+  const { auth, provisionOrganization } = setup({
+    result: null,
+    users: { 'user-9': { id: 'user-9' } },
+  });
+  await expect(
+    CreateOrganization({
       auth,
       properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
+      provisionOrganization,
     })
-  ).rejects.toThrow('Organization already exists');
-});
-
-test('CreateOrganization writes the organization row adapter-direct and mints no member when creator-less', async () => {
-  const createOrganization = vi
-    .fn()
-    .mockResolvedValue({ id: 'org-1', name: 'Org One', slug: 'org-one' });
-  const createMember = vi.fn();
-  getOrgAdapter.mockReturnValue({ createOrganization, createMember });
-  const { auth, authContext } = createMockAuth();
-  const result = await CreateOrganization({
-    acting: systemCaller,
-    auth,
-    properties: { name: 'Org One', slug: 'org-one' },
-  });
-  expect(result).toEqual({ id: 'org-1', name: 'Org One', slug: 'org-one' });
-  // The adapter is obtained from the resolved auth context and the org plugin options.
-  expect(getOrgAdapter).toHaveBeenCalledWith(authContext, {});
-  expect(createOrganization).toHaveBeenCalledTimes(1);
-  const { organization } = createOrganization.mock.calls[0][0];
-  expect(organization.name).toBe('Org One');
-  expect(organization.slug).toBe('org-one');
-  expect(organization.createdAt).toBeInstanceOf(Date);
-  // No userId reaches the adapter, and no member row is minted.
-  expect('userId' in organization).toBe(false);
-  expect(createMember).not.toHaveBeenCalled();
-});
-
-test('CreateOrganization creator-less forwards a caller id and metadata to the adapter', async () => {
-  const createOrganization = vi.fn().mockResolvedValue({ id: 'chosen-id' });
-  getOrgAdapter.mockReturnValue({ createOrganization });
-  const { auth } = createMockAuth();
-  const result = await CreateOrganization({
-    acting: systemCaller,
-    auth,
-    properties: {
-      id: 'chosen-id',
-      name: 'Org One',
-      slug: 'org-one',
-      metadata: { tier: 'gold' },
-    },
-  });
-  expect(result).toEqual({ id: 'chosen-id' });
-  const { organization } = createOrganization.mock.calls[0][0];
-  expect(organization.id).toBe('chosen-id');
-  expect(organization.metadata).toEqual({ tier: 'gold' });
-  expect(organization.name).toBe('Org One');
-  expect(organization.slug).toBe('org-one');
-});
-
-test('CreateOrganization creator-less throws naming the required fields when name is missing', async () => {
-  const createOrganization = vi.fn();
-  getOrgAdapter.mockReturnValue({ createOrganization });
-  const { auth } = createMockAuth();
-  await expect(
-    CreateOrganization({ acting: systemCaller, auth, properties: { slug: 'org-one' } })
   ).rejects.toThrow(
-    'CreateOrganization requires "name" and "slug" when run without a userId (creator-less provisioning).'
+    'CreateOrganization refused - an organization with slug "org-one" already exists.'
   );
-  expect(createOrganization).not.toHaveBeenCalled();
 });
 
-test('CreateOrganization creator-less throws naming the required fields when slug is missing', async () => {
-  const createOrganization = vi.fn();
-  getOrgAdapter.mockReturnValue({ createOrganization });
-  const { auth } = createMockAuth();
-  await expect(
-    CreateOrganization({ acting: systemCaller, auth, properties: { name: 'Org One' } })
-  ).rejects.toThrow(
-    'CreateOrganization requires "name" and "slug" when run without a userId (creator-less provisioning).'
-  );
-  expect(createOrganization).not.toHaveBeenCalled();
-});
-
-test('CreateOrganization creator-less surfaces the unique-index error on a duplicate slug', async () => {
-  const createOrganization = vi
-    .fn()
-    .mockRejectedValue(new Error('E11000 duplicate key error: slug'));
-  getOrgAdapter.mockReturnValue({ createOrganization });
-  const { auth } = createMockAuth();
+test('CreateOrganization surfaces a provisioning failure', async () => {
+  const { auth, provisionOrganization } = setup();
+  provisionOrganization.mockRejectedValue(new Error('index missing'));
   await expect(
     CreateOrganization({
-      acting: systemCaller,
       auth,
       properties: { name: 'Org One', slug: 'org-one' },
+      provisionOrganization,
     })
-  ).rejects.toThrow('E11000 duplicate key error: slug');
+  ).rejects.toThrow('index missing');
 });
 
-test('CreateOrganization creator-less invokes the org plugin afterCreateOrganization hook with the endpoint payload shape', async () => {
-  const created = { id: 'org-1', name: 'Org One', slug: 'org-one' };
-  const createOrganization = vi.fn().mockResolvedValue(created);
-  getOrgAdapter.mockReturnValue({ createOrganization });
-  const afterCreateOrganization = vi.fn();
-  const { auth } = createMockAuth();
-  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
-    afterCreateOrganization,
-  };
-  const result = await CreateOrganization({
-    acting: systemCaller,
-    auth,
-    properties: { name: 'Org One', slug: 'org-one' },
-  });
-  // The endpoint passes { organization, member, user }; a provisioned org has
-  // no creator, so member and user are null.
-  expect(afterCreateOrganization).toHaveBeenCalledWith({
-    organization: created,
-    member: null,
-    user: null,
-  });
-  expect(result).toBe(created);
-});
-
-test('CreateOrganization creator-less surfaces an afterCreateOrganization hook failure', async () => {
-  const createOrganization = vi.fn().mockResolvedValue({ id: 'org-1' });
-  getOrgAdapter.mockReturnValue({ createOrganization });
-  const { auth } = createMockAuth();
-  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
-    afterCreateOrganization: vi.fn().mockRejectedValue(new Error('hook failed')),
-  };
-  await expect(
-    CreateOrganization({
-      acting: systemCaller,
-      auth,
-      properties: { name: 'Org One', slug: 'org-one' },
-    })
-  ).rejects.toThrow('hook failed');
-});
-
-test('CreateOrganization with a userId leaves hook invocation to the endpoint', async () => {
-  const createOrganizationEndpoint = vi.fn().mockResolvedValue({ id: 'org-1' });
-  const afterCreateOrganization = vi.fn();
-  const { auth } = createMockAuth({
-    organizationEndpoints: { createOrganization: createOrganizationEndpoint },
-  });
-  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
-    afterCreateOrganization,
-  };
+test('CreateOrganization ignores a null optional property', async () => {
+  const { auth, provisionOrganization } = setup();
   await CreateOrganization({
-    acting: systemCaller,
     auth,
-    properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
+    properties: { name: 'Org One', slug: 'org-one', logo: null, userId: null },
+    provisionOrganization,
   });
-  // The endpoint fires organizationHooks itself - a step-side call would run
-  // the hook twice.
-  expect(afterCreateOrganization).not.toHaveBeenCalled();
+  expect(provisionOrganization).toHaveBeenCalledWith({
+    organization: { name: 'Org One', slug: 'org-one' },
+    userId: null,
+  });
+});
+
+test.each([
+  [
+    'an endpoint option',
+    { name: 'Org One', slug: 'org-one', keepCurrentActiveOrganization: true },
+    'CreateOrganization does not take "keepCurrentActiveOrganization". It takes "name", "slug", "logo", "metadata" and "userId".',
+  ],
+  [
+    'server-only fields',
+    { name: 'Org One', slug: 'org-one', id: 'chosen-id', mintPending: true },
+    'CreateOrganization does not take "id", "mintPending". It takes "name", "slug", "logo", "metadata" and "userId".',
+  ],
+  ['a missing name', { slug: 'org-one' }, 'CreateOrganization requires a "name" string property.'],
+  [
+    'a number name',
+    { name: 123, slug: 'org-one' },
+    'CreateOrganization requires a "name" string property.',
+  ],
+  [
+    'a missing slug',
+    { name: 'Org One', userId: 'user-9' },
+    'CreateOrganization requires a "slug" string property.',
+  ],
+  [
+    'an empty slug',
+    { name: 'Org One', slug: '' },
+    'CreateOrganization requires a "slug" string property.',
+  ],
+  [
+    'a number logo',
+    { name: 'Org One', slug: 'org-one', logo: 7 },
+    'CreateOrganization requires a "logo" string property.',
+  ],
+  [
+    'a string metadata',
+    { name: 'Org One', slug: 'org-one', metadata: '{"tier":"gold"}' },
+    'CreateOrganization requires a "metadata" object property.',
+  ],
+  [
+    'a number userId',
+    { name: 'Org One', slug: 'org-one', userId: 9 },
+    'CreateOrganization requires "userId" to be a user id string.',
+  ],
+])('CreateOrganization refuses %s and provisions nothing', async (_label, properties, message) => {
+  const { auth, authContext, provisionOrganization } = setup({
+    users: { 'user-9': { id: 'user-9' } },
+  });
+  await expect(CreateOrganization({ auth, properties, provisionOrganization })).rejects.toThrow(
+    message
+  );
+  expect(authContext.internalAdapter.findUserById).not.toHaveBeenCalled();
+  expect(provisionOrganization).not.toHaveBeenCalled();
 });

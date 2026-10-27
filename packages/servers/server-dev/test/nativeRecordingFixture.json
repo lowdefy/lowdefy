@@ -1,0 +1,126 @@
+{
+  "records": [
+    {
+      "v": 1,
+      "session": "20261018T090000Z-ph0ne1",
+      "t": "2026-10-18T09:00:00.000Z",
+      "kind": "pageview",
+      "scope": "page",
+      "page_id": "ticket",
+      "roles": [],
+      "person": null,
+      "org": null,
+      "target": null,
+      "event": null,
+      "build": "build-1",
+      "url": "/ticket?from=list",
+      "path_params": {},
+      "device": "ios",
+      "shell_version": "7.4.0"
+    },
+    {
+      "v": 1,
+      "session": "20261018T090000Z-ph0ne1",
+      "t": "2026-10-18T09:00:01.000Z",
+      "kind": "change",
+      "scope": "page",
+      "page_id": "ticket",
+      "roles": [],
+      "person": null,
+      "org": null,
+      "target": {
+        "block_id": "title",
+        "block_type": "TextInput",
+        "row": null,
+        "column": null,
+        "text": null,
+        "nth": null,
+        "option": false
+      },
+      "event": {
+        "name": "onChange",
+        "block_id": "title",
+        "success": true,
+        "actions": ["SetState"],
+        "requests": [],
+        "endpoints": [],
+        "state_writes": [
+          {
+            "path": "echo",
+            "type": "string",
+            "value": "Pump"
+          }
+        ],
+        "url_after": "/ticket?from=list"
+      },
+      "build": "build-1",
+      "value": "Pump",
+      "device": "ios",
+      "shell_version": "7.4.0"
+    },
+    {
+      "v": 1,
+      "session": "20261018T090000Z-ph0ne1",
+      "t": "2026-10-18T09:00:02.000Z",
+      "kind": "change",
+      "scope": "page",
+      "page_id": "ticket",
+      "roles": [],
+      "person": null,
+      "org": null,
+      "target": {
+        "block_id": "priority",
+        "block_type": "Selector",
+        "row": null,
+        "column": null,
+        "text": null,
+        "nth": null,
+        "option": false
+      },
+      "event": null,
+      "build": "build-1",
+      "value": "high",
+      "device": "ios",
+      "shell_version": "7.4.0"
+    },
+    {
+      "v": 1,
+      "session": "20261018T090000Z-ph0ne1",
+      "t": "2026-10-18T09:00:03.000Z",
+      "kind": "click",
+      "scope": "page",
+      "page_id": "ticket",
+      "roles": [],
+      "person": null,
+      "org": null,
+      "target": {
+        "block_id": "save",
+        "block_type": "Button",
+        "row": null,
+        "column": null,
+        "text": null,
+        "nth": null,
+        "option": false
+      },
+      "event": {
+        "name": "onClick",
+        "block_id": "save",
+        "success": true,
+        "actions": ["SetState"],
+        "requests": [],
+        "endpoints": [],
+        "state_writes": [
+          {
+            "path": "saved",
+            "type": "boolean",
+            "value": true
+          }
+        ],
+        "url_after": "/ticket?from=list"
+      },
+      "build": "build-1",
+      "device": "ios",
+      "shell_version": "7.4.0"
+    }
+  ]
+}

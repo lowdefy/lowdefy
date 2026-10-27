@@ -27,6 +27,7 @@ const bindingByAuth = new WeakMap();
 
 function registerOrganizationBinding({ auth, database = false, organizations }) {
   bindingByAuth.set(auth, {
+    creatorAppRoles: organizations.creatorAppRoles,
     database,
     policy: organizations.policy,
     slug: organizations.org ?? null,
@@ -34,8 +35,9 @@ function registerOrganizationBinding({ auth, database = false, organizations }) 
   });
 }
 
-// The raw registered entry (policy, slug, database, pinned) - used by
-// resolvePinnedOrganization to decide whether an ensure is needed.
+// The raw registered entry (policy, slug, database, pinned, creatorAppRoles) -
+// used by resolvePinnedOrganization to decide whether an ensure is needed, and
+// by provisionOrganization for the app roles a new organization's owner gets.
 function getRegisteredOrganization({ auth }) {
   if (type.isNone(auth)) {
     return null;

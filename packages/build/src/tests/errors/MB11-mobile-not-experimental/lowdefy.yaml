@@ -1,0 +1,12 @@
+# MB11: Mobile Without The Experimental Opt-In
+# Mobile apps are experimental: a mobile key without config.experimental.mobile fails the build.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  pages:
+    - id: today
+      type: Box

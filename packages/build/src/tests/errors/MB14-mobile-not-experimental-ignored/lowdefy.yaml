@@ -1,0 +1,13 @@
+# MB14: Mobile Opt-In Is Not A Build Check
+# ~ignoreBuildChecks does not stand in for config.experimental.mobile.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  ~ignoreBuildChecks: true
+  pages:
+    - id: today
+      type: Box

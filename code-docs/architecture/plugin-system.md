@@ -13,13 +13,13 @@ The plugin system enables:
 
 ## Plugin Types
 
-| Type        | Purpose                  | Registry Location                   |
-| ----------- | ------------------------ | ----------------------------------- |
-| Blocks      | UI components            | `lowdefy._internal.blockComponents` |
-| Connections | Data sources             | `lowdefy._internal.connections`     |
-| Operators   | Expression evaluators    | `lowdefy._internal.operators`       |
-| Actions     | Event handlers           | `lowdefy._internal.actions`         |
-| Auth        | Authentication providers | `context.authOptions`               |
+| Type        | Purpose                  | Registry Location                    |
+| ----------- | ------------------------ | ------------------------------------ |
+| Blocks      | UI components            | `lowdefy._internal.blockComponents`  |
+| Connections | Data sources             | `lowdefy._internal.connections`      |
+| Operators   | Expression evaluators    | `lowdefy._internal.operators`        |
+| Actions     | Event handlers           | `lowdefy._internal.actions`          |
+| Auth        | Authentication providers | `context.authOptions`                |
 | Icon sets   | Icon data (build-time)   | `types.icons` via `plugins/icons.js` |
 
 ## Plugin Declaration
@@ -44,6 +44,16 @@ plugins:
 | `name`       | string | Yes      | Package name       |
 | `version`    | string | Yes      | Version constraint |
 | `typePrefix` | string | No       | Namespace prefix   |
+
+### Shell Plugins
+
+A phone shell can carry native code beyond its capability profile through `mobile.shells[].plugins` (`{ name, version, typePrefix?, options? }`). The server installs these packages too, so the build can read their `./types`:
+
+- **One read, four readers.** `lowdefy.yaml` is read raw (refs unresolved) before the build, by the CLI (`utils/getLowdefyYaml.js`, whose `plugins` `addCustomPluginsAsDeps.js` writes into the server `package.json`) and by each server's `createCustomPluginTypesMap` (`server/lowdefy`, `server-e2e/lowdefy`, and server-dev's `manager/utils/readPluginDefinitions.mjs`). All of them call `collectPluginDefinitions` from `@lowdefy/node-utils`, which returns `plugins` (root `plugins`, then each shell-only package, once per name) and `shellPlugins` (each package any shell lists, once). A package listed at two versions, or given two typePrefixes by two shells, fails there, before install: the server holds one copy of each package, and one mobile types map serves every shell.
+- **Web types.** Every installed plugin's `./types` goes into the web map with `createPluginTypesMap`, with root's `typePrefix` (a shell-only plugin uses its shell entry's). A shell-only entry carries `shellOnly: true` and may be native-only: when its package.json exports no `./types` (`hasTypesExport` in `@lowdefy/node-utils`), the readers give it no types instead of importing it. Root plugins must export `./types`.
+- **Native types.** A shell plugin's `./types` may export `native: { blocks, actions, blockMetas, icons }`. `createPluginTypesMapMobile` reads only that key into `customTypesMapMobile`, with the shell entry's `typePrefix`, so `PrinterLabel` resolves on mobile pages and the plugin's web blocks never do. A native block or action named like a built-in native type (`defaultTypesMapMobile`) throws a `ConfigError` naming the plugin, the type and its `typePrefix`, since the merge would otherwise quietly replace the built-in. The map's `plugins` key lists the shell plugin names the server read. Each server passes the map to the build beside `customTypesMap`; the dev skeleton build writes it to `customTypesMapMobile.json`, which JIT page builds read.
+- **Shell plugins under `_ref`.** The raw read cannot see them, so they are neither installed nor typed. `validateShellPluginsListed` (in `buildMobile`) fails the build for a resolved shell plugin missing from `typesMapMobile.plugins`: list shell plugins in `lowdefy.yaml` itself, as root plugins are.
+- **Native peers stay out.** A shell plugin's native modules and `expo` are optional `peerDependencies`, which pnpm does not install, so the web server only gets the small JavaScript package. `lowdefy mobile config` installs them into the shell project.
 
 ## Plugin Resolution During Build
 
@@ -285,21 +295,21 @@ export { default as SetState } from './actions/SetState/SetState.js';
 
 **File:** `packages/build/src/build/writePluginImports/`
 
-| Output File                    | Generator                   | Purpose                |
-| ------------------------------ | --------------------------- | ---------------------- |
-| `plugins/blocks.js`            | `writeBlockImports.js`      | Block components       |
-| `plugins/connections.js`       | `writeConnectionImports.js` | Connection handlers    |
-| `plugins/actions.js`           | `writeActionImports.js`     | Action handlers        |
-| `plugins/operators/client.js`  | `writeOperatorImports.js`   | Client operators       |
-| `plugins/operators/server.js`  | `writeOperatorImports.js`   | Server operators       |
-| `plugins/auth/*.js`            | `writeAuthImports.js`       | Auth components        |
-| `plugins/blockMetas.json`      | `writeBlockSchemaMap.js`    | Block runtime metadata |
-| `plugins/icons.js`             | `writeIconImports.js`       | Icon data (`IconData`), every icon the app bundles |
-| `plugins/blockSchemas.json`    | `writeBlockSchemaMap.js`    | Block property schemas |
-| `plugins/actionSchemas.json`   | `writeActionSchemaMap.js`   | Action param schemas   |
-| `plugins/operatorSchemas.json` | `writeOperatorSchemaMap.js` | Operator param schemas |
+| Output File                    | Generator                   | Purpose                                                 |
+| ------------------------------ | --------------------------- | ------------------------------------------------------- |
+| `plugins/blocks.js`            | `writeBlockImports.js`      | Block components                                        |
+| `plugins/connections.js`       | `writeConnectionImports.js` | Connection handlers                                     |
+| `plugins/actions.js`           | `writeActionImports.js`     | Action handlers                                         |
+| `plugins/operators/client.js`  | `writeOperatorImports.js`   | Client operators                                        |
+| `plugins/operators/server.js`  | `writeOperatorImports.js`   | Server operators                                        |
+| `plugins/auth/*.js`            | `writeAuthImports.js`       | Auth components                                         |
+| `plugins/blockMetas.json`      | `writeBlockSchemaMap.js`    | Block runtime metadata                                  |
+| `plugins/icons.js`             | `writeIconImports.js`       | Icon data (`IconData`), every icon the app bundles      |
+| `plugins/blockSchemas.json`    | `writeBlockSchemaMap.js`    | Block property schemas                                  |
+| `plugins/actionSchemas.json`   | `writeActionSchemaMap.js`   | Action param schemas                                    |
+| `plugins/operatorSchemas.json` | `writeOperatorSchemaMap.js` | Operator param schemas                                  |
 | `plugins/pageTypes/<hash>.js`  | `full/writePageTypes.js`    | One page type set, with its icons as data (prod client) |
-| `plugins/pageTypes.js`         | `full/writePageTypes.js`    | Type-set chunk registry (prod client) |
+| `plugins/pageTypes.js`         | `full/writePageTypes.js`    | Type-set chunk registry (prod client)                   |
 
 ### Import Template
 
@@ -598,11 +608,11 @@ export default {
 
 **Build-time collection:** `writePluginImports` generates schema map JSON files:
 
-| Plugin Type | Build Artifact                 | Schema Key   |
-| ----------- | ------------------------------ | ------------ |
+| Plugin Type | Build Artifact                 | Schema Key                                                     |
+| ----------- | ------------------------------ | -------------------------------------------------------------- |
 | Blocks      | `plugins/blockSchemas.json`    | `properties` (generated from `meta.js` via `buildBlockSchema`) |
-| Actions     | `plugins/actionSchemas.json`   | `params`     |
-| Operators   | `plugins/operatorSchemas.json` | `params`     |
+| Actions     | `plugins/actionSchemas.json`   | `params`                                                       |
+| Operators   | `plugins/operatorSchemas.json` | `params`                                                       |
 
 **Runtime validation flow:** When a `BlockError`, `ActionError`, or `OperatorError` reaches the server via `/api/client-error`, `logClientError` reads the schema map, validates the `received` data, and produces a `ConfigError` with a human-readable message if validation fails. See [api.md](../packages/api.md#client-error-logging--plugin-schema-validation).
 

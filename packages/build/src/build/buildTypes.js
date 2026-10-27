@@ -14,41 +14,9 @@
   limitations under the License.
 */
 
-import { ConfigError, ConfigWarning } from '@lowdefy/errors';
-
-import findSimilarString from '../utils/findSimilarString.js';
+import buildTypeClass from '../utils/buildTypeClass.js';
 import jsAccessorOperators from './jsAccessorOperators.js';
 import mandatoryClientTypes from './mandatoryClientTypes.js';
-
-function buildTypeClass(
-  context,
-  { counter, definitions, store, typeClass, warnIfMissing = false }
-) {
-  const counts = counter.getCounts();
-  const definedTypes = Object.keys(definitions);
-  Object.keys(counts).forEach((typeName) => {
-    if (!definitions[typeName]) {
-      const configKey = counter.getLocation(typeName);
-
-      let message = `${typeClass} type "${typeName}" was used but is not defined.`;
-      const suggestion = findSimilarString({ input: typeName, candidates: definedTypes });
-      if (suggestion) {
-        message += ` Did you mean "${suggestion}"?`;
-      }
-      if (warnIfMissing) {
-        context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'types' }));
-        return;
-      }
-      throw new ConfigError(message, { configKey, checkSlug: 'types' });
-    }
-    store[typeName] = {
-      originalTypeName: definitions[typeName].originalTypeName ?? typeName,
-      package: definitions[typeName].package,
-      version: definitions[typeName].version,
-      count: counts[typeName],
-    };
-  });
-}
 
 function buildTypes({ components, context }) {
   const { typeCounters } = context;

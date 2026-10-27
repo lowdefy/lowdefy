@@ -82,7 +82,7 @@ function isMcpPath(path) {
 // renderer's cookie user is. A `dataSession` option runs a call the dev
 // server makes itself (run_request, run_endpoint on a data set) on that data
 // session's databases, as a journey's cookie does for its browser requests.
-async function createLowdefyContext({ c, user, dataSession: callDataSession }) {
+async function createLowdefyContext({ c, user, dataSession: callDataSession, onContext }) {
   // A journey on a data set: this request, and only this one, reads the session's databases.
   // Read before anything else, so a request that outlived its session never reaches any database.
   const dataSession = callDataSession ?? readDataSession(c.req.header('cookie'));
@@ -148,6 +148,10 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession }) {
   // it, so a journey run claims only its own (see createHandleError).
   context.recording = readRecordingCookie(c.req.header('cookie'));
   context.handleError = createHandleError({ context });
+  // The request's own middleware takes the context as soon as it can sink an
+  // error: the auth steps below can throw, and the error handler reads the
+  // context back to log the fault with its request id and location.
+  onContext?.(context);
   const mockUser = getMockUser();
   const headlessCaller = getHeadlessUser(c);
   if (!type.isNone(user)) {

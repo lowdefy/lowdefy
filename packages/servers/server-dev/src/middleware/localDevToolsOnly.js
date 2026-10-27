@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { remoteCallerHeader } from '../../lib/server/pairingHeaders.js';
 import createSameOriginGuard from './createSameOriginGuard.js';
 
 // The dev tools under /lowdefy-docs run requests, endpoints and journeys
@@ -25,8 +26,19 @@ import createSameOriginGuard from './createSameOriginGuard.js';
 // reaches here: Vite's host check refuses a Host that is not local first.
 const guardSameOrigin = createSameOriginGuard({ allowNoOrigin: true });
 
-function localDevToolsOnly() {
+// A phone paired with `lowdefy dev --lan` reaches the app, never the dev tools:
+// the pairing token lets a device in, not a second developer. The manager's
+// proxy marks such a request with remoteCallerHeader. allowPaired names the
+// few tab-channel requests a paired phone makes as a dev tab (answering what
+// the dev server asks it, posting its recording), which it may send.
+function localDevToolsOnly({ allowPaired = () => false } = {}) {
   return async function localDevToolsOnlyMiddleware(c, next) {
+    if (c.req.header(remoteCallerHeader) !== undefined && !allowPaired(c)) {
+      return c.json(
+        { error: 'The dev tools answer only on the computer running lowdefy dev.' },
+        403
+      );
+    }
     const refusal = guardSameOrigin(c);
     if (refusal !== null) {
       return refusal;

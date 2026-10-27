@@ -11,16 +11,17 @@ properties:
     margin: 60px auto
 events:
   onInit:
+    # Pinned disables the org plugin's /organization/list-members route, so
+    # the list loads through the ListMembers step.
     - id: load_members
-      type: Fetch
+      type: CallAPI
       params:
-        url: /api/auth/organization/list-members
-        responseFunction: json
+        endpointId: list-members-step
     - id: set_members
       type: SetState
       params:
         members:
-          _actions: load_members.response
+          _api: list-members-step.response
 blocks:
   - id: members_title
     type: Title
@@ -172,3 +173,45 @@ blocks:
           on:
             response:
               _state: update_response
+  - id: cancel_invitation_title
+    type: Title
+    properties:
+      content: Cancel an invitation
+      level: 4
+  - id: cancel_invitation_id
+    type: TextInput
+    properties:
+      title: Invitation id
+  - id: cancel_invitation_button
+    type: Button
+    properties:
+      title: Cancel invitation
+      block: true
+    events:
+      onClick:
+        - id: cancel_invitation
+          type: CallAPI
+          params:
+            endpointId: cancel-invitation
+            payload:
+              invitationId:
+                _state: cancel_invitation_id
+        - id: show_cancel_response
+          type: SetState
+          params:
+            cancel_response:
+              _api: cancel-invitation.response
+  - id: cancel_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: cancel_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: cancel_response

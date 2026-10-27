@@ -17,6 +17,9 @@
 import { serializer } from '@lowdefy/helpers';
 
 import buildPage from '../buildPages/buildPage.js';
+import collectMobileClassCandidates from '../buildMobile/collectMobileClassCandidates.js';
+import validateMobileStyles from '../buildMobile/validateMobileStyles.js';
+import validateNativeIgnoredProperties from '../buildMobile/validateNativeIgnoredProperties.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import removeRequestServerKeys from '../../utils/removeRequestServerKeys.js';
@@ -64,6 +67,12 @@ function buildShallowPages({ components, context }) {
     sourcelessPages.push(page);
   });
 
+  // After buildPage, which keys styles by slot (normalizeClassAndStyles), and
+  // before content is stripped below, as in the full build.
+  validateMobileStyles({ components: { pages: sourcelessPages }, context });
+  validateNativeIgnoredProperties({ components: { pages: sourcelessPages }, context });
+  collectMobileClassCandidates({ components: { pages: sourcelessPages }, context });
+
   validatePageReferences({
     components,
     pages: sourcelessPages,
@@ -97,11 +106,9 @@ function buildShallowPages({ components, context }) {
       return { requestId: request.requestId, requestJson };
     });
 
-    return {
-      pageId: builtPage.pageId,
-      pageJson: serializer.serializeToString(builtPage),
-      requests,
-    };
+    // The page is serialized when written (writeSourcelessPages), after
+    // shallowBuild adds a mobile page's _icons.
+    return { pageId: builtPage.pageId, page: builtPage, requests };
   });
 
   return { pageRegistry, sourcelessPageArtifacts };

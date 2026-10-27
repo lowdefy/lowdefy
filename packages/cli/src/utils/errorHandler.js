@@ -17,6 +17,8 @@
 import axios from 'axios';
 import createCliLogger from '@lowdefy/logger/cli';
 
+import redactTelemetryError from './redactTelemetryError.js';
+
 async function logError({ error, context = {} }) {
   try {
     await axios.request({
@@ -30,9 +32,7 @@ async function logError({ error, context = {} }) {
         cliVersion: context.cliVersion,
         command: context.command,
         lowdefyVersion: context.lowdefyVersion,
-        message: error.message,
-        name: error.name,
-        stack: error.stack,
+        ...redactTelemetryError(error),
       },
     });
   } catch (_) {

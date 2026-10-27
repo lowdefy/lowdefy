@@ -1,0 +1,67 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import NonJsonResponseError from './NonJsonResponseError.js';
+import request from './request.js';
+
+// A read-only request (the build marks one whose type only reads) is sent once
+// more when the host fails it before the app answers. A write is never sent
+// again: the host's failure can come after the app wrote.
+//
+// A request with `offline: queue` goes through the host's request queue when it has one (a native
+// shell, src/queue in @lowdefy/shell): the queue sends it at once when it can, and otherwise keeps
+// it and answers { queued: true, id } as the response. The web host has no queue, so it sends as
+// any request.
+function createCallRequest(lowdefy) {
+  const { apiBase, buildId } = lowdefy;
+  function send({ actionId, blockId, pageId, payload, requestId }) {
+    return request({
+      buildId,
+      url: `${apiBase}/api/request/${pageId}/${requestId}`,
+      method: 'POST',
+      body: { actionId, blockId, payload },
+      reloadOnAuthorizationError: true,
+      lowdefy,
+    });
+  }
+  async function callRequest({ actionId, blockId, offline, pageId, payload, readOnly, requestId }) {
+    const { requestQueue } = lowdefy._internal.host;
+    if (offline === 'queue' && requestQueue) {
+      return requestQueue.send({
+        body: { actionId, blockId, payload },
+        buildId,
+        pageId,
+        requestId,
+        send: () => send({ actionId, blockId, pageId, payload, requestId }),
+        url: `${apiBase}/api/request/${pageId}/${requestId}`,
+      });
+    }
+    try {
+      return await send({ actionId, blockId, pageId, payload, requestId });
+    } catch (error) {
+      if (readOnly !== true || !(error instanceof NonJsonResponseError)) {
+        throw error;
+      }
+      lowdefy._internal.logger.warn(
+        `Request "${requestId}" on page "${pageId}" failed with status ${error.status} before the app answered. Sending it again. ${error.responseText}`
+      );
+      return send({ actionId, blockId, pageId, payload, requestId });
+    }
+  }
+  return callRequest;
+}
+
+export default createCallRequest;

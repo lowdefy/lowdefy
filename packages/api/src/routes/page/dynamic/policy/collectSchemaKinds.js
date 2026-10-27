@@ -1,0 +1,163 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+// The schemas that can describe a value: the schema itself and its oneOf,
+// anyOf and allOf branches, however nested.
+function expandSchema(schema) {
+  const schemas = [];
+  const pending = [schema];
+  while (pending.length > 0) {
+    const candidate = pending.pop();
+    if (type.isObject(candidate)) {
+      schemas.push(candidate);
+      [...(candidate.oneOf ?? []), ...(candidate.anyOf ?? []), ...(candidate.allOf ?? [])].forEach(
+        (branch) => pending.push(branch)
+      );
+    }
+  }
+  return schemas;
+}
+
+function childSchemas({ schemas, key }) {
+  return schemas.flatMap((schema) => {
+    if (type.isObject(schema.properties?.[key])) {
+      return [schema.properties[key]];
+    }
+    if (type.isObject(schema.additionalProperties)) {
+      return [schema.additionalProperties];
+    }
+    return [];
+  });
+}
+
+// The kind the schemas give a value under keyword: a string when one marks it,
+// null when one opts it out with false, undefined when none says.
+function findKind({ schemas, keyword }) {
+  const marked = schemas.find((candidate) => type.isString(candidate[keyword]));
+  if (marked) {
+    return marked[keyword];
+  }
+  if (schemas.some((candidate) => candidate[keyword] === false)) {
+    return null;
+  }
+  return undefined;
+}
+
+// A 'data' value with dataWith is data only beside a string at that sibling
+// key: an option value is drawn in place of a missing label. Without it the
+// value is unmarked, so it keeps every check.
+function applyDataWith({ kind, schemas, parent }) {
+  if (kind !== 'data') {
+    return kind;
+  }
+  const withKey = schemas.find((candidate) => type.isString(candidate.dataWith))?.dataWith;
+  if (type.isUndefined(withKey) || type.isString(parent?.[withKey])) {
+    return kind;
+  }
+  return undefined;
+}
+
+// Records, by path, the kind a block schema gives the value there under each
+// keyword, so the policy judges a value by what its property is, not by what it
+// is called. A marked array holds one value of that kind per item; false records
+// null; a value no schema marks either way is not recorded. Returns a Map per
+// keyword; one walk reads them all, since it runs on every Dynamic block.
+//
+// urlKind marks URL-valued properties ('url' and 'href' navigate, 'url' the way
+// the engine's link resolver does; 'src' loads; 'srcSet' lists sources), and
+// urlKind: false a property whose name looks like a URL key but whose value is
+// not a URL. textKind marks how a block draws a string: 'html' through
+// renderHtml (sanitised HTML, never markdown or a link), 'text' as escaped
+// text, and 'data' a value the block stores or compares but never draws (an
+// option value), so every string in it, however nested, is text. dataWith
+// names a sibling key the value is data only beside (applyDataWith). Values
+// neither marks fall back to the key-name and text rules.
+function collectSchemaKinds({ value, schema, path, keywords }) {
+  const kindsByKeyword = Object.fromEntries(keywords.map((keyword) => [keyword, new Map()]));
+  const pending = [{ value, schema, path, keywords }];
+  while (pending.length > 0) {
+    const item = pending.pop();
+    const schemas = expandSchema(item.schema);
+    // The keywords a mark has not settled here, read again in the children.
+    const open = item.keywords.filter((keyword) => {
+      const kinds = kindsByKeyword[keyword];
+      const kind = applyDataWith({
+        kind: findKind({ schemas, keyword }),
+        schemas,
+        parent: item.parent,
+      });
+      if (kind === null) {
+        // Another schema branch may already have marked it.
+        if (!kinds.has(item.path)) {
+          kinds.set(item.path, null);
+        }
+        return false;
+      }
+      if (type.isString(kind) && type.isArray(item.value)) {
+        item.value.forEach((_, index) => kinds.set(`${item.path}.${index}`, kind));
+        return false;
+      }
+      if (type.isString(kind) && !type.isObject(item.value)) {
+        kinds.set(item.path, kind);
+        return false;
+      }
+      if (type.isObject(item.value)) {
+        // An object under a branch that marks strings is an operator, which the
+        // policy judges by a urlKind mark (it must be literal), or an object
+        // whose properties other branches mark (an option that is a string or a
+        // { label, value } object), so it is walked too.
+        if (type.isString(kind)) {
+          kinds.set(item.path, kind);
+        }
+        return true;
+      }
+      return type.isArray(item.value);
+    });
+    if (open.length === 0) {
+      continue;
+    }
+    if (type.isArray(item.value)) {
+      const itemSchemas = schemas.map((candidate) => candidate.items).filter(type.isObject);
+      item.value.forEach((child, index) =>
+        itemSchemas.forEach((itemSchema) =>
+          pending.push({
+            value: child,
+            schema: itemSchema,
+            path: `${item.path}.${index}`,
+            keywords: open,
+          })
+        )
+      );
+    } else {
+      Object.keys(item.value).forEach((key) => {
+        childSchemas({ schemas, key }).forEach((childSchema) =>
+          pending.push({
+            value: item.value[key],
+            schema: childSchema,
+            path: `${item.path}.${key}`,
+            parent: item.value,
+            keywords: open,
+          })
+        );
+      });
+    }
+  }
+  return kindsByKeyword;
+}
+
+export default collectSchemaKinds;
