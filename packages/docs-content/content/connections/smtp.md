@@ -1,6 +1,6 @@
 # SMTP Email
 
-The `SMTP` connection sends email over any SMTP server — Amazon SES, Postmark, Mailgun, Resend, SendGrid's SMTP relay, or a self-hosted server. One connection type covers every provider.
+The `SMTP` connection sends email over any SMTP server — Amazon SES, Postmark, Mailgun, Resend, SendGrid's SMTP relay, Groundmail, or a self-hosted server. One connection type covers every provider.
 
 The `SMTP` connector uses the [nodemailer](https://nodemailer.com/) library. Connection properties are passed through to nodemailer's transport, so any [transport option](https://nodemailer.com/smtp/) nodemailer accepts (pooling, TLS options, a `service` shortcut, a connection `url`) can be set alongside the documented properties.
 
