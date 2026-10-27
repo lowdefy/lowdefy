@@ -131,7 +131,7 @@ Scope, required permission, and target for every auth step. Permissions are chec
 | `RevokeUserSessions` | org | `session: [revoke]` | `userId` | Sign a user out of all sessions. |
 | `ResetUserTwoFactor` | org | `user: [reset-two-factor]` | `userId` | Clear a user's two-factor enrolment and trust-device records. |
 | `RevokeUserPasskeys` | org | `user: [revoke-passkeys]` | `userId` | Remove a user's passkeys (`passkeyId` to target one). |
-| `CreateOrganization` | system | — | — | Create an organization (tenant provisioning). Needs `userId`, or `name`+`slug` for creator-less provisioning. The creator becomes its `owner`, with the app roles in [`auth.organizations.creatorAppRoles`](/organizations#app-roles-for-a-new-organizations-owner). |
+| `CreateOrganization` | system | — | — | Create an organization (tenant provisioning). Takes `name` and `slug` (required), `logo`, `metadata` and an optional creator `userId`. The creator becomes its `owner`, with the app roles in [`auth.organizations.creatorAppRoles`](/organizations#app-roles-for-a-new-organizations-owner); without one the organization has no members until someone accepts an invitation. A slug another organization holds is refused. If a run fails after writing the organization but before its owner, running it again with the same creator and slug within ten minutes finishes it. |
 | `ListUsers` | system | — | — | List every user in the deployment. |
 | `LeaveOrganization` | caller | — | — | End the caller's own membership of the named organization (`organizationId`, required). [Leaving from a routine](#leaving-an-organization-from-a-routine). |
 | `RevokeMcpGrant` | caller | — | — | Revoke the calling assistant's own [MCP grant](/mcp-oauth#switching-organization-from-the-assistant). |

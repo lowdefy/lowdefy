@@ -136,6 +136,7 @@ test('AuthStep step runs the step function and stores the result in steps', asyn
     organization: pinnedOrganization,
     organizationId: 'org_pinned',
     properties: { name: 'ci key' },
+    provisionOrganization: expect.any(Function),
   });
 });
 
@@ -154,6 +155,7 @@ test('AuthStep step does not pass a userAdminRole key to the step function', asy
     'organization',
     'organizationId',
     'properties',
+    'provisionOrganization',
   ]);
 });
 

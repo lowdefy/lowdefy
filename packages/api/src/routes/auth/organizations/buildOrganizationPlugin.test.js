@@ -15,15 +15,10 @@
 */
 
 import buildOrganizationPlugin from './buildOrganizationPlugin.js';
-import { expect, test, vi } from 'vitest';
+import { expect, test } from 'vitest';
 
 const authConfig = {
-  organizations: {
-    policy: 'pinned',
-    org: 'default',
-    signup: 'invite-only',
-    creatorAppRoles: [],
-  },
+  organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
   roles: [{ id: 'auditor' }, { id: 'branch-manager' }],
 };
 
@@ -103,29 +98,6 @@ test('buildOrganizationPlugin does not mention $lowdefy-system anywhere in the b
     });
   }
   walk(plugin);
-});
-
-test('buildOrganizationPlugin binds the afterCreateOrganization hook that grants creatorAppRoles', async () => {
-  const update = vi.fn(async () => ({}));
-  const auth = { $context: Promise.resolve({ adapter: { update } }) };
-  const plugin = buildOrganizationPlugin({
-    authConfig: {
-      ...authConfig,
-      organizations: { ...authConfig.organizations, creatorAppRoles: ['auditor'] },
-    },
-    getAuth: () => auth,
-    sendInvitationEmail: async () => {},
-  });
-  await plugin.options.organizationHooks.afterCreateOrganization({
-    organization: { id: 'org_1' },
-    member: { id: 'member_1' },
-    user: { id: 'user_1' },
-  });
-  expect(update).toHaveBeenCalledWith({
-    model: 'member',
-    where: [{ field: 'id', value: 'member_1' }],
-    update: { appRoles: ['auditor'] },
-  });
 });
 
 test('buildOrganizationPlugin blocks client-driven organization creation', () => {
@@ -281,9 +253,46 @@ test('buildOrganizationPlugin enforces auth.organizations.invitationLimit in the
   ).rejects.toMatchObject({ statusCode: 403, body: { code: 'INVITATION_LIMIT_REACHED' } });
 });
 
-test('buildOrganizationPlugin uses the plugin defaults when organizations sets no expiry or limit', () => {
+// mintOrganization writes organizations and their owners through the adapter,
+// skipping the createOrganization endpoint, so anything the endpoint would apply
+// on that path would be skipped without an error. Declaring one of these means
+// mintOrganization has to apply it too.
+test.each([{}, { organizations: { ...authConfig.organizations, invitationLimit: 5 } }])(
+  'buildOrganizationPlugin declares none of the createOrganization options the engine mint skips (%o)',
+  (overrides) => {
+    const plugin = buildOrganizationPlugin({
+      authConfig: { ...authConfig, ...overrides },
+      getAuth: () => ({}),
+      sendInvitationEmail: async () => {},
+    });
+    expect(plugin.options.creatorRole).toBeUndefined();
+    expect(plugin.options.organizationLimit).toBeUndefined();
+    expect(plugin.options.teams).toBeUndefined();
+    const skippedHooks = [
+      'beforeCreateOrganization',
+      'afterCreateOrganization',
+      'beforeAddMember',
+      'afterAddMember',
+    ];
+    expect(
+      Object.keys(plugin.options.organizationHooks).filter((hook) => skippedHooks.includes(hook))
+    ).toEqual([]);
+  }
+);
+
+test('buildOrganizationPlugin declares the mint marker fields server-only', () => {
   const plugin = buildOrganizationPlugin({
-    authConfig: { organizations: { creatorAppRoles: [] } },
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  const { mintCreatorId, mintPending } = plugin.options.schema.organization.additionalFields;
+  expect(mintPending).toEqual({ type: 'boolean', required: false, input: false, returned: false });
+  expect(mintCreatorId).toEqual({ type: 'string', required: false, input: false, returned: false });
+});
+
+test('buildOrganizationPlugin tolerates a missing authConfig', () => {
+  const plugin = buildOrganizationPlugin({
     getAuth: () => ({}),
     sendInvitationEmail: async () => {},
   });

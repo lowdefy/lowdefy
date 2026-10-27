@@ -286,8 +286,8 @@ test('buildRoleCatalog uses the role entry config key when an authored id is inv
 test('buildRoleCatalog passes when every creatorAppRoles id is declared', () => {
   const components = {
     auth: {
-      roles: [{ id: 'owner' }, { id: 'admin' }],
-      organizations: { policy: 'tenant', creatorAppRoles: ['owner', 'admin'] },
+      roles: [{ id: 'workspace-admin' }, { id: 'billing' }],
+      organizations: { policy: 'tenant', creatorAppRoles: ['workspace-admin', 'billing'] },
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
@@ -297,12 +297,12 @@ test('buildRoleCatalog passes when every creatorAppRoles id is declared', () => 
 });
 
 test('buildRoleCatalog throws a located error when creatorAppRoles lists an undeclared role', () => {
-  const creatorAppRoles = ['owner', 'founder'];
+  const creatorAppRoles = ['workspace-admin', 'founder'];
   Object.defineProperty(creatorAppRoles, '~k', { value: 'creator-app-roles-key' });
   const components = {
     auth: {
       '~k': 'auth-key',
-      roles: [{ id: 'owner' }],
+      roles: [{ id: 'workspace-admin' }],
       organizations: { policy: 'tenant', creatorAppRoles },
       pages: { roles: {} },
       api: { roles: {} },

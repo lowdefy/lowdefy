@@ -17,7 +17,6 @@
 import { organization } from 'better-auth/plugins';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
-import createAfterCreateOrganizationHook from './createAfterCreateOrganizationHook.js';
 import createBeforeCreateInvitationHook from './createBeforeCreateInvitationHook.js';
 import modelNames from '../modelNames.js';
 import { ac, roles } from './organizationAccessControl.js';
@@ -89,12 +88,14 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
       organization: {
         modelName: modelNames.organization,
         additionalFields: {
-          // Set while a tenant signup mint has written the organization but
-          // not yet its owner's member row (createActiveOrgPolicyHook). Only a
-          // marked organization is ever joined as owner by the mint, so one
-          // that everyone has left is never handed back. Server-only: never
-          // accepted from a request body, never returned by an endpoint.
+          // Set while an engine mint has written the organization but not yet
+          // its owner's member row (mintOrganization). Only a marked
+          // organization is ever joined as owner by a mint, and only by the
+          // creator in mintCreatorId, so one that everyone has left is never
+          // handed back. Server-only: never accepted from a request body,
+          // never returned by an endpoint.
           mintPending: { type: 'boolean', required: false, input: false, returned: false },
+          mintCreatorId: { type: 'string', required: false, input: false, returned: false },
         },
       },
       member: {
@@ -150,10 +151,6 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     },
     organizationHooks: {
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
-      afterCreateOrganization: createAfterCreateOrganizationHook({
-        creatorAppRoles: authConfig.organizations.creatorAppRoles,
-        getAuth,
-      }),
       // Registered only when a limit is set: unset, the cap is the
       // effectively open DEFAULT_INVITATION_LIMIT above, and every invite
       // would pay for a count that can never refuse.
