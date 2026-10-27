@@ -1,5 +1,47 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- 344c002: feat(connection-mongodb): MongoDBEnrichmentEnqueue dry run counts a run before it starts
+
+  An app that pays a data provider per enrichment cell had no way to learn how many cells a run would queue without queueing them, so it could not show what a run would cost and ask first. `MongoDBEnrichmentEnqueue` now takes `dryRun: true`: it reads and plans exactly as a run does and returns `{ dryRun: true, queued, missingInputs, skipped, byColumn }`, writing nothing. Over `maxCells` it throws as a run would. A run's response gains the same `byColumn`, each column's queued and missing input counts, so an app can price each column with its own provider cost and compare the estimate with what ran.
+
+- b1d42ca: feat(helpers, blocks-table, connection-mongodb): A Table filter reads as one sentence, on the page and from `MongoDBTableQuery`
+
+  A saved view's filter was readable only by opening the filter builder, and a server routine running the view through `MongoDBTableQuery` had no way to say what it matched. `describeCondition({ condition, fields })`, new in `@lowdefy/helpers`, turns a filter condition into a sentence such as "Stage is any of Lead or Won and Name contains CX": field titles, operator words, option labels, relative dates in words, `$user` values as "me", and brackets for groups past the first level. A key that names no field reads "an unknown field, <key>," rather than being dropped. The Table's Filter button shows the sentence as its tooltip. `MongoDBTableQuery` fields accept `title` and `options` as Table columns do, and the response carries `sentence` when a filter is set, the same sentence the Table shows for the same titles and options.
+
+- 837d529: feat(blocks-table, connection-mongodb): Table `before` and `after` filters take relative dates
+
+  A Table date filter could say "within the last 3 months", but `before` and `after` took only a fixed date, so a saved view such as "not contacted in 3 months" went stale the next day. `before` and `after` now also take the relative value `within` takes, `{ last | next: n, unit: day | week | month | year }`, resolved each time the filter runs: `{ op: before, value: { last: 3, unit: month } }` reads "before 3 months ago". A relative bound compares whole days, in the browser's days in client mode and in the request's `timezone` in `MongoDBTableQuery`. The filter builder offers Date or Relative for `before` and `after`, a date column's filter menu picks `within`, `before` or `after` under Relative, and `MongoDBTableQuery` refuses a bad relative value with the message it gives for `within`.
+
+### Patch Changes
+
+- 3af2019: fix(api, servers, connection-mongodb): Server errors are classified, located and logged the same way everywhere
+
+  Every server site that tells an expected outcome from a fault now asks `isExpectedError`, so an auth refusal or a `UserError` is one warn line on every path: a nested `CallApi`, a websocket frame, a background run, an optional Dynamic block, an MCP tool call and the server error handlers. Faults reach a `handleError` sink instead of a raw `logger.error`: a background, detached or forwarded-cron run that fails, an optional Dynamic block that falls back, an unwalled connection that reaches walled data, an MCP `afterToolCall` hook that fails before its routine runs, an auth email send, and an auth engine error, which goes to a system context's sink. A detached `CallApi` whose dispatch `/api/detached` does not accept is now a fault rather than a completed dispatch. The request context is set before authentication runs, so a fault there is logged with the request id.
+
+  The prod log and Sentry no longer carry `received`, an operator's or control's evaluated input. BetterAuth's own log lines carry an error under `err` and name other values by type only. A connection error that is already typed leaves a request with the step's ids and its cause summarised, and a websocket source's failure is wrapped like a request's, without its evaluated properties. An auth hook that returns a non-object names its type, not the record.
+
+  A MongoDB error that refuses the request (a duplicate key, a malformed pipeline, a missing permission or collection) is now a `RequestError` with the same `code` and `hint`; only a time or memory limit stays a `ServiceError`. A failed unique index build at auth startup names the index and code instead of quoting the duplicate values.
+
+  Config faults carry their config location: endpoint control errors (`:for`, `:while`, `:if`, `:switch`, `:parallel_for`, `:log`) are `ConfigError`s at the control, and the detached `CRON_SECRET` check, cron forwarding, the auth secret, the invitation sender and the auth email connection name theirs. An auth hook's `:throw` now refuses the write with a 400 instead of a 500.
+
+  On the server, `_log` writes an info line through the request's logger instead of `console.log`, so secrets and values marked with `_credential` are removed from it like from every other log line. In the browser it still logs to the console.
+
+- Updated dependencies [df6fa3c]
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [7aec569]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/helpers@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

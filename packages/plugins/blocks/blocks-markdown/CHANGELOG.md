@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.2.0
+
+### Patch Changes
+
+- a461f7c: fix(deps): Update dependencies for security advisories
+
+  - vite 8.0.16 -> 8.1.6: the dev server no longer serves files outside `server.fs.allow` when a project path matches a system path, and launch-editor's command handling is fixed.
+  - @modelcontextprotocol/sdk 1.31.0 -> 1.32.2: bounds request validation memory, ties experimental tasks to their session, checks a bearer token's audience and stops forwarding headers on cross-origin redirects.
+  - hono 4.13.7 -> 4.13.14: `serveStatic` no longer decodes the path a second time, which let a request bypass middleware.
+  - dompurify 3.4.16 -> 3.4.17: fixes three sanitizer bypasses, one critical.
+  - markdown-it 14.3.1 -> 14.3.3, nodemailer 10.0.13 -> 10.1.7 and undici 7.30.0 -> 7.30.1.
+
+- Updated dependencies [f0209f6]
+- Updated dependencies [a461f7c]
+  - @lowdefy/block-utils@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/engine",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -38,16 +38,16 @@
     "test:full": "vitest run --config vitest.full.config.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "7.1.0",
-    "@lowdefy/helpers": "7.1.0",
-    "@lowdefy/operators": "7.1.0"
+    "@lowdefy/errors": "7.2.0",
+    "@lowdefy/helpers": "7.2.0",
+    "@lowdefy/operators": "7.2.0"
   },
   "devDependencies": {
-    "@lowdefy/actions-core": "7.1.0",
-    "@lowdefy/build": "7.1.0",
-    "@lowdefy/e2e-utils": "7.1.0",
-    "@lowdefy/operators-js": "7.1.0",
-    "@lowdefy/operators-mql": "7.1.0",
+    "@lowdefy/actions-core": "7.2.0",
+    "@lowdefy/build": "7.2.0",
+    "@lowdefy/e2e-utils": "7.2.0",
+    "@lowdefy/operators-js": "7.2.0",
+    "@lowdefy/operators-mql": "7.2.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "jsdom": "19.0.0",

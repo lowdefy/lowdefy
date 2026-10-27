@@ -1,5 +1,13 @@
 # @lowdefy/blocks-captcha
 
+## 7.2.0
+
+### Patch Changes
+
+- Updated dependencies [f0209f6]
+- Updated dependencies [a461f7c]
+  - @lowdefy/block-utils@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

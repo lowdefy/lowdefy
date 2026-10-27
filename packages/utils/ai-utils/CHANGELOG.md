@@ -1,5 +1,41 @@
 # @lowdefy/ai-utils
 
+## 7.2.0
+
+### Patch Changes
+
+- ff71016: fix(ai-utils, api): Agent and endpoint logs leave chat text out
+
+  Agent and endpoint logs no longer write chat text, prompts, tool inputs or tool outputs. An agent error is logged as a summary: its name, code, status code and message (cut to 500 characters), the same for up to three causes, and the agent id and conversation id. The message of an AI SDK error is left out, apart from an `APICallError`'s, since errors such as `TypeValidationError` embed the conversation or a tool's input. A failed stream also logs its step count, and a debug line keeps the stack frames without the message. A mid-stream error, which the AI SDK used to write to the console whole, is logged the same way. A `CallAgent` step that fails on an AI SDK error throws a copy with only that summary's name, code and safe message, so the routine's error log cannot write the prompt. The `debug_endpoint` log names an API call by its ids and no longer writes its payload, so an agent chat's save-thread call no longer writes the whole thread there. Routine step debug logs no longer write the values they evaluate: `:set_state` logs the keys it sets, `:if`, `:switch` and `:while` log whether the condition held, `:for` and `:parallel_for` log the item count and index, and `:return`, a request step's result and a called endpoint's response are left out. A `CallAgent` prompt that is not a string is named by its type in the error, as are dynamic page contents that are not an array of blocks. A failed request step still logs its evaluated properties as the error's `received`, as every failed request does.
+
+- 7c85b4b: fix(api, errors, server): A failed request no longer logs its inputs
+
+  A failed request, on a page or as an endpoint routine step, no longer writes the request's evaluated properties or the connection's error to the logs. The request properties were attached to the error as `received`, which the error log wrote at every log level, so a step that saved an agent chat's thread logged the whole thread when it failed. The connection's error, which can hold the document it rejected, is now carried as a summary: its name, code, status code and message cut to 500 characters, with the same for up to three causes. The error log also names the step by `endpointId`, `stepId` (a page request's id) and `connectionId`. In dev, the dev tools still show the connection's full error; the dev terminal shows the summary. A request type's `meta.credentialProperties` no longer has an effect, since no request property is kept. `errorSummaryForLog`, the error summary agent logs already used, moves to `@lowdefy/errors`.
+
+- a461f7c: fix(deps): Update dependencies for security advisories
+
+  - vite 8.0.16 -> 8.1.6: the dev server no longer serves files outside `server.fs.allow` when a project path matches a system path, and launch-editor's command handling is fixed.
+  - @modelcontextprotocol/sdk 1.31.0 -> 1.32.2: bounds request validation memory, ties experimental tasks to their session, checks a bearer token's audience and stops forwarding headers on cross-origin redirects.
+  - hono 4.13.7 -> 4.13.14: `serveStatic` no longer decodes the path a second time, which let a request bypass middleware.
+  - dompurify 3.4.16 -> 3.4.17: fixes three sanitizer bypasses, one critical.
+  - markdown-it 14.3.1 -> 14.3.3, nodemailer 10.0.13 -> 10.1.7 and undici 7.30.0 -> 7.30.1.
+
+- Updated dependencies [afeec0b]
+- Updated dependencies [df6fa3c]
+- Updated dependencies [7e24234]
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [a461f7c]
+- Updated dependencies [7aec569]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/node-utils@7.2.0
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/helpers@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

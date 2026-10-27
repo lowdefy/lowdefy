@@ -1,5 +1,15 @@
 # @lowdefy/connection-test
 
+## 7.2.0
+
+### Patch Changes
+
+- Updated dependencies [df6fa3c]
+- Updated dependencies [f0209f6]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [7aec569]
+  - @lowdefy/errors@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes
