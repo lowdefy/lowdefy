@@ -89,6 +89,20 @@ test('a breakpoint change re-evaluates the blocks that read _media size, and no 
   expect(renderedIds).not.toEqual(expect.arrayContaining(['height']));
 });
 
+test('a page created in a hidden tab at width 0 re-evaluates to the real size once it is shown', async () => {
+  const { context, resize } = await mediaContext({
+    pageConfig: mediaPage,
+    recording: 'parser',
+    width: 0,
+  });
+  const { size, width } = context._internal.RootSlots.map;
+  expect(size.propertiesEval.output).toEqual({ content: 'xs' });
+  expect(width.propertiesEval.output).toEqual({ content: 0 });
+  resize({ width: 1400 });
+  expect(size.propertiesEval.output).toEqual({ content: 'xl' });
+  expect(width.propertiesEval.output).toEqual({ content: 1400 });
+});
+
 test('a resize within a breakpoint does not re-evaluate blocks that only read _media size', async () => {
   const { context, resize } = await mediaContext({ pageConfig: mediaPage, width: 800 });
   const { counts } = countEvaluations(context);
