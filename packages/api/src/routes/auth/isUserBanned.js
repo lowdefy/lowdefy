@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-// The admin plugin's ban rule: a ban applies while banned is true and banExpires
-// is unset or still ahead. A ban with an expiry in the past no longer applies.
+// The admin plugin's ban rule, as its session.create.before applies it: any truthy
+// banned is a ban, and only a banExpires that reads as a past date lifts it. The
+// truthiness checks are deliberate - a user this calls unbanned while the plugin
+// refuses them would be sent an email the sign-in then rejects.
 function isUserBanned({ user }) {
-  if (user.banned !== true) {
+  if (!user.banned) {
     return false;
   }
-  return type.isNone(user.banExpires) || new Date(user.banExpires) > new Date();
+  const expired = Boolean(user.banExpires) && new Date(user.banExpires).getTime() < Date.now();
+  return !expired;
 }
 
 export default isUserBanned;

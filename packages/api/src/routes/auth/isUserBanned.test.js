@@ -38,4 +38,17 @@ test('isUserBanned returns true for a ban that expires in the future', () => {
 
 test('isUserBanned returns false for a ban that has expired', () => {
   expect(isUserBanned({ user: { banned: true, banExpires: past } })).toBe(false);
+  expect(isUserBanned({ user: { banned: true, banExpires: new Date(past) } })).toBe(false);
+});
+
+// The admin plugin refuses these at session create, so the helper has to as well.
+test('isUserBanned treats a truthy non-boolean banned as banned, like the admin plugin', () => {
+  expect(isUserBanned({ user: { banned: 1 } })).toBe(true);
+  expect(isUserBanned({ user: { banned: 'true' } })).toBe(true);
+  expect(isUserBanned({ user: { banned: 0 } })).toBe(false);
+});
+
+test('isUserBanned keeps a ban whose banExpires is not a readable past date, like the admin plugin', () => {
+  expect(isUserBanned({ user: { banned: true, banExpires: 'not-a-date' } })).toBe(true);
+  expect(isUserBanned({ user: { banned: true, banExpires: '' } })).toBe(true);
 });
