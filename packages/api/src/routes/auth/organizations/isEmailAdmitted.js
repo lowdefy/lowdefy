@@ -22,8 +22,9 @@ import isActiveMember from './isActiveMember.js';
 import MEMBER_ROWS_LIMIT from './memberRowsLimit.js';
 
 // The one admission predicate, shared by all three enforcement points: the
-// session.create wall (which passes a userId), the user.create.before gate and
-// the magic-link send gate (which pass an email, before any user exists).
+// session.create wall (which passes a userId), the user.create.before gate
+// (which passes an email, before any user exists) and the email send gate
+// (which passes the email, and the userId when the address has a user).
 //
 // Admission is restrictive under invite-only (either policy). Open signup
 // auto-joins under both policies, so the predicate short-circuits to true and
@@ -50,9 +51,10 @@ async function isEmailAdmitted({ email, userId, organizations, auth, adapter, in
   const normalizedEmail = type.isString(email) ? email.toLowerCase() : undefined;
 
   // The member row is keyed by user id. The wall holds the session userId; the
-  // create and send gates hold only an email, so resolve the existing user (if
-  // any) from it. Conversely the wall needs the email for the invitation lookup,
-  // so resolve it from the userId when the caller did not pass one.
+  // create gate, and the send gate for an address with no user, hold only an
+  // email, so resolve the existing user (if any) from it. Conversely the wall
+  // needs the email for the invitation lookup, so resolve it from the userId
+  // when the caller did not pass one.
   let memberUserId = userId;
   let invitationEmail = normalizedEmail;
   if (type.isNone(memberUserId) && !type.isNone(normalizedEmail)) {

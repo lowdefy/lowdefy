@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import isEmailAdmitted from './isEmailAdmitted.js';
+import isUserBanned from '../isUserBanned.js';
 
 // The engine-tier request hooks.before that gates a public, unauthenticated
 // email send - the magic-link send and the one-time-code send. Both are
@@ -35,9 +36,14 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 // answers { success: true }), so the caller names it: a uniform response is what
 // makes the "check your email" screen identical whether or not anything was
 // sent, and a body that did not match the route's own would give the difference
-// away. When admitted it falls through and the normal send proceeds. A no-op
-// under open signup (isEmailAdmitted returns admitted).
-function createEmailSendGate({ getAuth, organizations, successBody }) {
+// away. When admitted it falls through and the normal send proceeds.
+//
+// A banned user gets the same success body under every signup policy, open
+// signup included (where isEmailAdmitted admits everyone): session creation
+// would refuse them anyway, so the email could only fail. The ban is checked
+// here rather than in isEmailAdmitted because the session-create wall must keep
+// answering BANNED_USER, which is what shows the banned message.
+function createEmailSendGate({ getAuth, logger, organizations, successBody }) {
   return async function emailSendGate(ctx) {
     const email = ctx.body?.email;
     // No email is the route's own validation error, not an admission decision -
@@ -47,8 +53,18 @@ function createEmailSendGate({ getAuth, organizations, successBody }) {
     }
     const auth = getAuth();
     const { adapter, internalAdapter } = await auth.$context;
+    const found = await internalAdapter.findUserByEmail(email.toLowerCase());
+    const userId = found?.user?.id;
+    if (!type.isNone(found?.user) && isUserBanned({ user: found.user })) {
+      logger.info(
+        { event: 'auth_email_send_banned', userId },
+        `Sign-in email not sent: user "${userId}" is banned.`
+      );
+      return successBody;
+    }
     const admitted = await isEmailAdmitted({
       email,
+      userId,
       organizations,
       auth,
       adapter,

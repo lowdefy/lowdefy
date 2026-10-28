@@ -45,7 +45,7 @@ import resolveTwoFactorPageUrl from './resolveTwoFactorPageUrl.js';
 // for every path. Whether a registration is added stays conditional on config,
 // and those conditions live here so there is one place to read what the engine
 // hooks into.
-function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }) {
+function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth, logger }) {
   const before = [];
   const after = [];
 
@@ -73,6 +73,7 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
       matches: (path) => path === '/sign-in/magic-link',
       handler: createEmailSendGate({
         getAuth,
+        logger,
         organizations: authConfig.organizations,
         // The magic-link route's own success body.
         successBody: { status: true },
@@ -114,6 +115,7 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
       matches: (path) => path === '/email-otp/send-verification-otp',
       handler: createEmailSendGate({
         getAuth,
+        logger,
         organizations: authConfig.organizations,
         // The OTP send route's own success body - a different shape from the
         // magic-link route's, and the suppressed response has to match it.
