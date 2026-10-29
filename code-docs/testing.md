@@ -251,6 +251,44 @@ pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in
   and can run repeatedly; `compareBuilds` takes `comparers`, a map from a server-relative file
   (`build/keyMap.json`) to a comparer used in place of the byte comparison.
 
+### Bench report
+
+After the comparison the harness measures both sides and prints a markdown report, ready to
+paste into a pull request: the output verdict first, then sizes, timing and the top of the
+profile. The report (`report.md`), `report.json`, the probe lines, logs and every
+`.cpuprofile` land in `_server/bench/<app-slug>/<timestamp>/`.
+
+```bash
+pnpm bench:build packages/docs --runs 3       # timed runs per side (default 5)
+pnpm bench:build packages/docs --no-compare   # measure only
+pnpm bench:build packages/docs --no-time      # skip the timed runs
+pnpm bench:build packages/docs --no-profile   # skip the CPU profile runs
+```
+
+- **Probe.** Every Node process of a measured build loads `scripts/lib/bench/probe.mjs`
+  through `NODE_OPTIONS=--import`, beside the buildId pin, and appends one JSON line at exit:
+  argv, pid, start and end time, exit code and `maxRSS`. Neither side's code changes. A
+  config pass is a process running the server's `lowdefy/build.mjs`; the pass count comes
+  from these lines, never from the CLI log. The total runs from the first process's start to
+  the last one's end (the CLI's own span, installs included).
+- **Timing.** One warm-up build per side, discarded, then `--runs` builds per side,
+  alternating, so machine load falls on both sides alike. Each row is the median with its
+  min and max: config pass wall time (summed when there are two), the whole
+  `lowdefy build`, and the config pass's peak memory. Other builds on the machine add noise;
+  when the docs medians of two unchanged sides differ by more than 10%, run again later.
+- **Profile.** One more build per side with `--cpu-prof`. The config passes' main-thread
+  profiles are summarised by self time: per npm package (the nearest `package.json` with a
+  name, so linked `@lowdefy/*` packages are named too; node's own modules as `(node)`, V8
+  built-ins as `(native)`), per `@lowdefy/build` file (top 20), and `(garbage collector)`,
+  `(program)` and `(idle)`, each in seconds and as a share of the profiled passes.
+- **Sizes.** `build/keyMap.json`, `build/refMap.json` and the whole `build/` folder.
+- **In a pull request**, paste `report.md` for each app the change was measured on, and say
+  when the run shared the machine with other builds. Never name a client app.
+- **It cannot show the second config pass.** The linked `@lowdefy/build` finds every default
+  plugin in the monorepo's install, so no plugin is pending and both sides run one pass,
+  where a published `@lowdefy/build` runs two. The report counts passes and claims no saving
+  from fewer of them.
+
 ## Ports
 
 Port 3000 is the default for a developer's own dev server; tests and agents never bind it.
