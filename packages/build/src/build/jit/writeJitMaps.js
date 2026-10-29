@@ -49,7 +49,8 @@ async function writeJitMaps({ context, since }) {
     `jitMaps/${context.jitMaps.name}-${context.jitMaps.writes}.json`,
     serializer.serializeToString({
       keyMap: pickEntries({ map: context.keyMap, ids: keyIds }),
-      refMap: pickEntries({ map: context.refMap, ids: refIds }),
+      // Sorted like refMap.json, since refs are added in the order they resolve.
+      refMap: pickEntries({ map: context.refMap, ids: [...refIds].sort() }),
     }),
     // The dev server's readers list jitMaps/ while other page builds write to
     // it, so a file must never be seen half-written.
