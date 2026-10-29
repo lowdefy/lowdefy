@@ -285,15 +285,19 @@ pnpm bench:build packages/docs --no-profile   # skip the CPU profile runs
 
 - **Probe.** Every Node process of a measured build loads `scripts/lib/bench/probe.mjs`
   through `NODE_OPTIONS=--import`, beside the buildId pin, and appends one JSON line at exit:
-  argv, pid, start and end time, exit code and `maxRSS`. Neither side's code changes. A
+  argv, pid, start and end time, exit code, `maxRSS` and user and system CPU time. Neither side's code changes. A
   config pass is a process running the server's `lowdefy/build.mjs`; the pass count comes
   from these lines, never from the CLI log. The total runs from the first process's start to
   the last one's end (the CLI's own span, installs included).
 - **Timing.** One warm-up build per side, discarded, then `--runs` builds per side,
   alternating, so machine load falls on both sides alike. Each row is the median with its
-  min and max: config pass wall time (summed when there are two), the whole
-  `lowdefy build`, and the config pass's peak memory. Other builds on the machine add noise;
-  when the docs medians of two unchanged sides differ by more than 10%, run again later.
+  min and max: config pass wall time (summed when there are two), the config pass's CPU time
+  (user + system, summed the same way), the whole `lowdefy build`, and the config pass's peak
+  memory. Other builds on the machine add noise; when the docs medians of two unchanged sides
+  differ by more than 10%, run again later. CPU time leaves out the time the config pass
+  waited for a core, so on a shared machine it is the number to judge a small change by. It
+  still counts slower running: on Apple silicon a pass that other load pushes onto efficiency
+  cores shows more CPU time too, so compare the ranges and run again while they overlap.
 - **Profile.** One more build per side with `--cpu-prof`. The config passes' main-thread
   profiles are summarised by self time: per npm package (the nearest `package.json` with a
   name, so linked `@lowdefy/*` packages are named too; node's own modules as `(node)`, V8
