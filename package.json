@@ -40,6 +40,7 @@
     "app:build": "node scripts/build.mjs --config-directory app",
     "app:start": "node scripts/start.mjs",
     "bench:build": "node scripts/bench-build.mjs",
+    "bench:keymap": "node scripts/bench-keymap.mjs",
     "docs:dev": "node scripts/dev.mjs --config-directory packages/docs",
     "docs:dev:log": "pnpm docs:dev 2>&1 | tee log.txt",
     "docs:build": "node scripts/build.mjs --config-directory packages/docs",
