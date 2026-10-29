@@ -766,8 +766,9 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
 
   // The landing page keeps the single-use token unspent until a real click -
   // mail-security scanners GET the emailed link at delivery time, and the verify
-  // endpoint consumes the token on that first GET.
-  test('sendMagicLink links at the landing page, carrying the whole verify query', async () => {
+  // endpoint consumes the token on that first GET. The params sit in the
+  // fragment, which no browser sends, so no request log holds the token.
+  test('sendMagicLink links at the landing page, carrying the whole verify query in the fragment', async () => {
     const options = getBetterAuthConfig({
       appMeta,
       dev: true,
@@ -792,7 +793,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
       expect.objectContaining({
         flow: 'magicLink',
         vars: {
-          url: 'https://app.example.com/base/magic-link?token=mmm&callbackURL=%2Fbase%2Freports&errorCallbackURL=%2Fbase%2Fauth%2Ferror',
+          url: 'https://app.example.com/base/magic-link#token=mmm&callbackURL=%2Fbase%2Freports&errorCallbackURL=%2Fbase%2Fauth%2Ferror',
         },
       })
     );
@@ -823,7 +824,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     });
     expect(mockRenderAuthEmail).toHaveBeenCalledWith(
       expect.objectContaining({
-        vars: { url: 'https://derived.example.com/magic-link?token=mmm' },
+        vars: { url: 'https://derived.example.com/magic-link#token=mmm' },
       })
     );
   });
