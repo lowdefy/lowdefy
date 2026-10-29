@@ -239,7 +239,10 @@ pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in
   It is only ever built: `pnpm bench:build apps/build-bench`. Its README says how it is
   generated.
 - **Baseline.** A detached worktree at `../lowdefy-bench-<sha7>`, installed and built on first
-  use and reused after. One left half-built by an interrupted run is rebuilt.
+  use and reused after. One left half-built by an interrupted run is rebuilt. Runs that need
+  the same baseline at once share it: one sets it up under a lock
+  (`../lowdefy-bench-<sha7>.lock`, holding its pid) while the others wait, and a lock whose
+  process has died is taken over.
 - **Each side** prepares its server at `_server/bench/<app-slug>/<side>/workspace/server`
   with this checkout's `scripts/lib`, linked through `<side>/lowdefy` (a symlink to that
   side's checkout), then runs its own CLI: `lowdefy build --no-client-build`. The same layout
