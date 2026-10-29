@@ -13,11 +13,11 @@ See `code-docs/testing.md` for the harness.
 
 The `apps/demo` app of [lowdefy/modules-mongodb](https://github.com/lowdefy/modules-mongodb) at tag `v1.4.1`, with its entity modules repeated in sets, so that the build is the size of a large production app.
 
-| Sets (N) | `keyMap.json` | `refMap.json` | `build/` | Config build |
-| -------- | ------------- | ------------- | -------- | ------------ |
-| 10       | 309 MB        | 12 MB         | 374 MB   | about 34s    |
+| Sets (N) | `keyMap.json` | `refMap.json` | `build/` | Config build | Peak memory |
+| -------- | ------------- | ------------- | -------- | ------------ | ----------- |
+| 9        | 307 MB        | 15 MB         | 369 MB   | 33s to 37s   | 3.5 GB      |
 
-Measured on an M-series laptop that was running other builds at the time, so the config build time is an upper bound.
+Measured on 2026-10-29 with Lowdefy at `756bcab` (deterministic ref ids), on an M-series laptop that was running other builds at the time, so the times are an upper bound. The build has no errors and 59 warnings, all from the demo's and the modules' own config: 14 once and 5 in every set.
 
 - **Shared modules, once**: layout, user-account, notifications, ai-assistant, events and files.
 - **Repeated in sets**: activities, ai-reporting, companies, contacts, deals, release-notes, support, user-admin (with a second instance, `customer-user-admin`), walkthroughs and workflows. Set 1 has the demo's ids. Set _k_ suffixes each id with `-k` (`companies-3`), and its `dependencies:` wire it to its own set and to the shared modules.
@@ -35,7 +35,7 @@ The app is about 85k distinct YAML lines (77k in the modules at `v1.4.1`, 8k of 
 Everything that repeats per set is written by `scripts/generate.mjs` and checked in as plain YAML. The build never runs the script.
 
 ```bash
-node apps/build-bench/scripts/generate.mjs --sets 10
+node apps/build-bench/scripts/generate.mjs --sets 9
 ```
 
 It writes:
