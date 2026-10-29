@@ -209,1766 +209,1653 @@
   ],
   "keyMap.json": {
     "4": {
-      "key": "root",
-      "~k_parent": "3",
-      "~l": 2
+      "s": "root",
+      "p": "3",
+      "l": 2
     },
     "5": {
-      "key": "root.connections",
-      "~k_parent": "4",
-      "~l": 5
+      "s": ".connections",
+      "p": "4",
+      "l": 5
     },
     "6": {
-      "key": "root.connections[0:db:MongoDBCollection]",
-      "~k_parent": "5",
-      "~l": 6
+      "s": "[0:db:MongoDBCollection]",
+      "p": "5",
+      "l": 6
     },
     "7": {
-      "key": "root.connections[0:db:MongoDBCollection].properties",
-      "~k_parent": "6",
-      "~l": 8
+      "s": ".properties",
+      "p": "6",
+      "l": 8
     },
     "8": {
-      "key": "root.menus",
-      "~k_parent": "4",
-      "~l": 13
+      "s": ".menus",
+      "p": "4",
+      "l": 13
     },
     "9": {
-      "key": "root.menus[0:default]",
-      "~k_parent": "8",
-      "~l": 14
+      "s": "[0:default]",
+      "p": "8",
+      "l": 14
     },
     "10": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[0:title:Title]",
-      "~k_parent": "z",
-      "~r": "pages.0",
-      "~l": 33
+      "s": "[0:title:Title]",
+      "p": "z",
+      "l": 33
     },
     "11": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[0:title:Title].properties",
-      "~k_parent": "10",
-      "~r": "pages.0",
-      "~l": 35
+      "s": ".properties",
+      "p": "10",
+      "l": 35
     },
     "12": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[1:addBtn:Button]",
-      "~k_parent": "z",
-      "~r": "pages.0",
-      "~l": 37
+      "s": "[1:addBtn:Button]",
+      "p": "z",
+      "l": 37
     },
     "13": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[1:addBtn:Button].properties",
-      "~k_parent": "12",
-      "~r": "pages.0",
-      "~l": 39
+      "s": ".properties",
+      "p": "12",
+      "l": 39
     },
     "14": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[1:addBtn:Button].events",
-      "~k_parent": "12",
-      "~r": "pages.0",
-      "~l": 42
+      "s": ".events",
+      "p": "12",
+      "l": 42
     },
     "15": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[1:addBtn:Button].events.onClick",
-      "~k_parent": "14",
-      "~r": "pages.0",
-      "~l": 43
+      "s": ".onClick",
+      "p": "14",
+      "l": 43
     },
     "16": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[1:addBtn:Button].events.onClick[0:goToCreate:Link]",
-      "~k_parent": "15",
-      "~r": "pages.0",
-      "~l": 44
+      "s": "[0:goToCreate:Link]",
+      "p": "15",
+      "l": 44
     },
     "17": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[1:addBtn:Button].events.onClick[0:goToCreate:Link].params",
-      "~k_parent": "16",
-      "~r": "pages.0",
-      "~l": 46
+      "s": ".params",
+      "p": "16",
+      "l": 46
     },
     "18": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List]",
-      "~k_parent": "x",
-      "~r": "pages.0",
-      "~l": 48
+      "s": "[1:userList:List]",
+      "p": "x",
+      "l": 48
     },
     "19": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].properties",
-      "~k_parent": "18",
-      "~r": "pages.0",
-      "~l": 50
+      "s": ".properties",
+      "p": "18",
+      "l": 50
     },
     "20": {
-      "key": "root.pages[1:create-user:Box].requests",
-      "~k_parent": "1y",
-      "~r": "pages.1",
-      "~l": 5
+      "s": ".requests",
+      "p": "1y",
+      "l": 5
     },
     "21": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne]",
-      "~k_parent": "20",
-      "~r": "pages.1",
-      "~l": 6
+      "s": "[0:db:MongoDBInsertOne]",
+      "p": "20",
+      "l": 6
     },
     "22": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].payload",
-      "~k_parent": "21",
-      "~r": "pages.1",
-      "~l": 9
+      "s": ".payload",
+      "p": "21",
+      "l": 9
     },
     "23": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].payload.name",
-      "~k_parent": "22",
-      "~r": "pages.1",
-      "~l": 10
+      "s": ".name",
+      "p": "22",
+      "l": 10
     },
     "24": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].payload.email",
-      "~k_parent": "22",
-      "~r": "pages.1",
-      "~l": 12
+      "s": ".email",
+      "p": "22",
+      "l": 12
     },
     "25": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties",
-      "~k_parent": "21",
-      "~r": "pages.1",
-      "~l": 14
+      "s": ".properties",
+      "p": "21",
+      "l": 14
     },
     "26": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties.doc",
-      "~k_parent": "25",
-      "~r": "pages.1",
-      "~l": 15
+      "s": ".doc",
+      "p": "25",
+      "l": 15
     },
     "27": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties.doc.name",
-      "~k_parent": "26",
-      "~r": "pages.1",
-      "~l": 16
+      "s": ".name",
+      "p": "26",
+      "l": 16
     },
     "28": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties.doc.email",
-      "~k_parent": "26",
-      "~r": "pages.1",
-      "~l": 18
+      "s": ".email",
+      "p": "26",
+      "l": 18
     },
     "29": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties.doc.createdAt",
-      "~k_parent": "26",
-      "~r": "pages.1",
-      "~l": 20
+      "s": ".createdAt",
+      "p": "26",
+      "l": 20
     },
     "30": {
-      "key": "root.pages[2:edit-user:Box].properties",
-      "~k_parent": "2z",
-      "~r": "pages.2",
-      "~l": 3
+      "s": ".properties",
+      "p": "2z",
+      "l": 3
     },
     "31": {
-      "key": "root.pages[2:edit-user:Box].requests",
-      "~k_parent": "2z",
-      "~r": "pages.2",
-      "~l": 5
+      "s": ".requests",
+      "p": "2z",
+      "l": 5
     },
     "32": {
-      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne]",
-      "~k_parent": "31",
-      "~r": "pages.2",
-      "~l": 6
+      "s": "[0:db:MongoDBFindOne]",
+      "p": "31",
+      "l": 6
     },
     "33": {
-      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].payload",
-      "~k_parent": "32",
-      "~r": "pages.2",
-      "~l": 9
+      "s": ".payload",
+      "p": "32",
+      "l": 9
     },
     "34": {
-      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].payload.id",
-      "~k_parent": "33",
-      "~r": "pages.2",
-      "~l": 10
+      "s": ".id",
+      "p": "33",
+      "l": 10
     },
     "35": {
-      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].properties",
-      "~k_parent": "32",
-      "~r": "pages.2",
-      "~l": 12
+      "s": ".properties",
+      "p": "32",
+      "l": 12
     },
     "36": {
-      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].properties.query",
-      "~k_parent": "35",
-      "~r": "pages.2",
-      "~l": 13
+      "s": ".query",
+      "p": "35",
+      "l": 13
     },
     "37": {
-      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].properties.query._id",
-      "~k_parent": "36",
-      "~r": "pages.2",
-      "~l": 14
+      "s": "._id",
+      "p": "36",
+      "l": 14
     },
     "38": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne]",
-      "~k_parent": "31",
-      "~r": "pages.2",
-      "~l": 16
+      "s": "[1:db:MongoDBUpdateOne]",
+      "p": "31",
+      "l": 16
     },
     "39": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].payload",
-      "~k_parent": "38",
-      "~r": "pages.2",
-      "~l": 19
+      "s": ".payload",
+      "p": "38",
+      "l": 19
     },
     "40": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[1:email:TextInput].properties",
-      "~k_parent": "3z",
-      "~r": "pages.2",
-      "~l": 66
+      "s": ".properties",
+      "p": "3z",
+      "l": 66
     },
     "41": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button]",
-      "~k_parent": "3w",
-      "~r": "pages.2",
-      "~l": 68
+      "s": "[2:submitBtn:Button]",
+      "p": "3w",
+      "l": 68
     },
     "42": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].properties",
-      "~k_parent": "41",
-      "~r": "pages.2",
-      "~l": 70
+      "s": ".properties",
+      "p": "41",
+      "l": 70
     },
     "43": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].events",
-      "~k_parent": "41",
-      "~r": "pages.2",
-      "~l": 73
+      "s": ".events",
+      "p": "41",
+      "l": 73
     },
     "44": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].events.onClick",
-      "~k_parent": "43",
-      "~r": "pages.2",
-      "~l": 74
+      "s": ".onClick",
+      "p": "43",
+      "l": 74
     },
     "45": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].events.onClick[0:validate:Validate]",
-      "~k_parent": "44",
-      "~r": "pages.2",
-      "~l": 75
+      "s": "[0:validate:Validate]",
+      "p": "44",
+      "l": 75
     },
     "46": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].events.onClick[1:update:Request]",
-      "~k_parent": "44",
-      "~r": "pages.2",
-      "~l": 77
+      "s": "[1:update:Request]",
+      "p": "44",
+      "l": 77
     },
     "47": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].events.onClick[2:redirect:Link]",
-      "~k_parent": "44",
-      "~r": "pages.2",
-      "~l": 80
+      "s": "[2:redirect:Link]",
+      "p": "44",
+      "l": 80
     },
     "48": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].events.onClick[2:redirect:Link].params",
-      "~k_parent": "47",
-      "~r": "pages.2",
-      "~l": 82
+      "s": ".params",
+      "p": "47",
+      "l": 82
     },
     "50": {
-      "key": "root.pages[0:users:Box].events.onInit",
-      "~k_parent": "u"
+      "s": ".onInit",
+      "p": "u",
+      "r": null
     },
     "51": {
-      "key": "root.pages[0:users:Box].events.onInit.catch",
-      "~k_parent": "50"
+      "s": ".catch",
+      "p": "50"
     },
     "52": {
-      "key": "root.pages[0:users:Box].auth",
-      "~k_parent": "4z"
+      "s": ".auth",
+      "p": "4z"
     },
     "53": {
-      "key": "root.pages[0:users:Box].slots",
-      "~k_parent": "4z"
+      "s": ".slots",
+      "p": "4z"
     },
     "54": {
-      "key": "root.pages[0:users:Box].slots.content",
-      "~k_parent": "53"
+      "s": ".content",
+      "p": "53"
     },
     "55": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].slots",
-      "~k_parent": "y"
+      "s": ".slots",
+      "p": "y",
+      "r": null
     },
     "56": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].slots.content",
-      "~k_parent": "55"
+      "s": ".content",
+      "p": "55"
     },
     "57": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[1:addBtn:Button].events.onClick",
-      "~k_parent": "14"
+      "s": ".onClick",
+      "p": "14",
+      "r": null
     },
     "58": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks[1:addBtn:Button].events.onClick.catch",
-      "~k_parent": "57"
+      "s": ".catch",
+      "p": "57"
     },
     "59": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].slots",
-      "~k_parent": "18"
+      "s": ".slots",
+      "p": "18",
+      "r": null
     },
     "60": {
-      "key": "root.pages[1:create-user:Box].subscriptions",
-      "~k_parent": "5o"
+      "s": ".subscriptions",
+      "p": "5o"
     },
     "61": {
-      "key": "root.pages[1:create-user:Box].requests",
-      "~k_parent": "5o"
+      "s": ".requests",
+      "p": "5o"
     },
     "62": {
-      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].auth",
-      "~k_parent": "21"
+      "s": ".auth",
+      "p": "21",
+      "r": null
     },
     "63": {
-      "key": "root.pages[2:edit-user:Box]",
-      "~k_parent": "4y"
+      "s": "[2:edit-user:Box]",
+      "p": "4y"
     },
     "64": {
-      "key": "root.pages[2:edit-user:Box].events.onInit",
-      "~k_parent": "3l"
+      "s": ".onInit",
+      "p": "3l",
+      "r": null
     },
     "65": {
-      "key": "root.pages[2:edit-user:Box].events.onInit.catch",
-      "~k_parent": "64"
+      "s": ".catch",
+      "p": "64"
     },
     "66": {
-      "key": "root.pages[2:edit-user:Box].auth",
-      "~k_parent": "63"
+      "s": ".auth",
+      "p": "63"
     },
     "67": {
-      "key": "root.pages[2:edit-user:Box].slots",
-      "~k_parent": "63"
+      "s": ".slots",
+      "p": "63"
     },
     "68": {
-      "key": "root.pages[2:edit-user:Box].slots.content",
-      "~k_parent": "67"
+      "s": ".content",
+      "p": "67"
     },
     "69": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].slots",
-      "~k_parent": "3v"
+      "s": ".slots",
+      "p": "3v",
+      "r": null
     },
     "70": {
-      "key": "root.events",
-      "~k_parent": "4"
+      "s": ".events",
+      "p": "4"
     },
     "71": {
-      "key": "root.types",
-      "~k_parent": "4"
+      "s": ".types",
+      "p": "4"
     },
     "72": {
-      "key": "root.types.actions",
-      "~k_parent": "71"
+      "s": ".actions",
+      "p": "71"
     },
     "73": {
-      "key": "root.types.actions.Request",
-      "~k_parent": "72"
+      "s": ".Request",
+      "p": "72"
     },
     "74": {
-      "key": "root.types.actions.Link",
-      "~k_parent": "72"
+      "s": ".Link",
+      "p": "72"
     },
     "75": {
-      "key": "root.types.actions.Validate",
-      "~k_parent": "72"
+      "s": ".Validate",
+      "p": "72"
     },
     "76": {
-      "key": "root.types.actions.SetState",
-      "~k_parent": "72"
+      "s": ".SetState",
+      "p": "72"
     },
     "77": {
-      "key": "root.types.actions.SetDarkMode",
-      "~k_parent": "72"
+      "s": ".SetDarkMode",
+      "p": "72"
     },
     "78": {
-      "key": "root.types.agents",
-      "~k_parent": "71"
+      "s": ".agents",
+      "p": "71"
     },
     "79": {
-      "key": "root.types.auth",
-      "~k_parent": "71"
+      "s": ".auth",
+      "p": "71"
     },
     "80": {
-      "key": "root.types.blocks.SkeletonInput",
-      "~k_parent": "7d"
+      "s": ".SkeletonInput",
+      "p": "7d"
     },
     "81": {
-      "key": "root.types.blocks.SkeletonParagraph",
-      "~k_parent": "7d"
+      "s": ".SkeletonParagraph",
+      "p": "7d"
     },
     "82": {
-      "key": "root.types.blocks.Spinner",
-      "~k_parent": "7d"
+      "s": ".Spinner",
+      "p": "7d"
     },
     "83": {
-      "key": "root.types.blocks.Message",
-      "~k_parent": "7d"
+      "s": ".Message",
+      "p": "7d"
     },
     "84": {
-      "key": "root.types.connections",
-      "~k_parent": "71"
+      "s": ".connections",
+      "p": "71"
     },
     "85": {
-      "key": "root.types.connections.MongoDBCollection",
-      "~k_parent": "84"
+      "s": ".MongoDBCollection",
+      "p": "84"
     },
     "86": {
-      "key": "root.types.notifications",
-      "~k_parent": "71"
+      "s": ".notifications",
+      "p": "71"
     },
     "87": {
-      "key": "root.types.requests",
-      "~k_parent": "71"
+      "s": ".requests",
+      "p": "71"
     },
     "88": {
-      "key": "root.types.requests.MongoDBFind",
-      "~k_parent": "87"
+      "s": ".MongoDBFind",
+      "p": "87"
     },
     "89": {
-      "key": "root.types.requests.MongoDBDeleteOne",
-      "~k_parent": "87"
+      "s": ".MongoDBDeleteOne",
+      "p": "87"
     },
     "90": {
-      "key": "root.imports.auth.providers",
-      "~k_parent": "8y"
+      "s": ".providers",
+      "p": "8y"
     },
     "91": {
-      "key": "root.imports.auth.strategies",
-      "~k_parent": "8y"
+      "s": ".strategies",
+      "p": "8y"
     },
     "92": {
-      "key": "root.imports.blocks",
-      "~k_parent": "8q"
+      "s": ".blocks",
+      "p": "8q"
     },
     "93": {
-      "key": "root.imports.blocks[0]",
-      "~k_parent": "92"
+      "s": "[0]",
+      "p": "92"
     },
     "94": {
-      "key": "root.imports.blocks[1]",
-      "~k_parent": "92"
+      "s": "[1]",
+      "p": "92"
     },
     "95": {
-      "key": "root.imports.blocks[2]",
-      "~k_parent": "92"
+      "s": "[2]",
+      "p": "92"
     },
     "96": {
-      "key": "root.imports.blocks[3]",
-      "~k_parent": "92"
+      "s": "[3]",
+      "p": "92"
     },
     "97": {
-      "key": "root.imports.blocks[4]",
-      "~k_parent": "92"
+      "s": "[4]",
+      "p": "92"
     },
     "98": {
-      "key": "root.imports.blocks[5]",
-      "~k_parent": "92"
+      "s": "[5]",
+      "p": "92"
     },
     "99": {
-      "key": "root.imports.blocks[6]",
-      "~k_parent": "92"
+      "s": "[6]",
+      "p": "92"
     },
     "a": {
-      "key": "root.menus[0:default].links",
-      "~k_parent": "9",
-      "~l": 15
+      "s": ".links",
+      "p": "9",
+      "l": 15
     },
     "b": {
-      "key": "root.menus[0:default].links[0:users:MenuLink]",
-      "~k_parent": "a",
-      "~l": 16
+      "s": "[0:users:MenuLink]",
+      "p": "a",
+      "l": 16
     },
     "c": {
-      "key": "root.menus[0:default].links[0:users:MenuLink].properties",
-      "~k_parent": "b",
-      "~l": 19
+      "s": ".properties",
+      "p": "b",
+      "l": 19
     },
     "d": {
-      "key": "root.menus[0:default].links[1:create:MenuLink]",
-      "~k_parent": "a",
-      "~l": 22
+      "s": "[1:create:MenuLink]",
+      "p": "a",
+      "l": 22
     },
     "e": {
-      "key": "root.menus[0:default].links[1:create:MenuLink].properties",
-      "~k_parent": "d",
-      "~l": 25
+      "s": ".properties",
+      "p": "d",
+      "l": 25
     },
     "f": {
-      "key": "root.pages",
-      "~k_parent": "4",
-      "~l": 29
+      "s": ".pages",
+      "p": "4",
+      "l": 29
     },
     "g": {
-      "key": "root.pages[0:users:Box]",
-      "~k_parent": "f",
-      "~r": "pages.0",
-      "~l": 1
+      "s": "[0:users:Box]",
+      "p": "f",
+      "r": "pages.0",
+      "l": 1
     },
     "h": {
-      "key": "root.pages[0:users:Box].properties",
-      "~k_parent": "g",
-      "~r": "pages.0",
-      "~l": 3
+      "s": ".properties",
+      "p": "g",
+      "l": 3
     },
     "i": {
-      "key": "root.pages[0:users:Box].requests",
-      "~k_parent": "g",
-      "~r": "pages.0",
-      "~l": 5
+      "s": ".requests",
+      "p": "g",
+      "l": 5
     },
     "j": {
-      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind]",
-      "~k_parent": "i",
-      "~r": "pages.0",
-      "~l": 6
+      "s": "[0:db:MongoDBFind]",
+      "p": "i",
+      "l": 6
     },
     "k": {
-      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].properties",
-      "~k_parent": "j",
-      "~r": "pages.0",
-      "~l": 9
+      "s": ".properties",
+      "p": "j",
+      "l": 9
     },
     "l": {
-      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].properties.query",
-      "~k_parent": "k",
-      "~r": "pages.0",
-      "~l": 10
+      "s": ".query",
+      "p": "k",
+      "l": 10
     },
     "m": {
-      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].properties.options",
-      "~k_parent": "k",
-      "~r": "pages.0",
-      "~l": 11
+      "s": ".options",
+      "p": "k",
+      "l": 11
     },
     "n": {
-      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].properties.options.sort",
-      "~k_parent": "m",
-      "~r": "pages.0",
-      "~l": 12
+      "s": ".sort",
+      "p": "m",
+      "l": 12
     },
     "o": {
-      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne]",
-      "~k_parent": "i",
-      "~r": "pages.0",
-      "~l": 14
+      "s": "[1:db:MongoDBDeleteOne]",
+      "p": "i",
+      "l": 14
     },
     "p": {
-      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].payload",
-      "~k_parent": "o",
-      "~r": "pages.0",
-      "~l": 17
+      "s": ".payload",
+      "p": "o",
+      "l": 17
     },
     "q": {
-      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].payload.id",
-      "~k_parent": "p",
-      "~r": "pages.0",
-      "~l": 18
+      "s": ".id",
+      "p": "p",
+      "l": 18
     },
     "r": {
-      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].properties",
-      "~k_parent": "o",
-      "~r": "pages.0",
-      "~l": 20
+      "s": ".properties",
+      "p": "o",
+      "l": 20
     },
     "s": {
-      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].properties.filter",
-      "~k_parent": "r",
-      "~r": "pages.0",
-      "~l": 21
+      "s": ".filter",
+      "p": "r",
+      "l": 21
     },
     "t": {
-      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].properties.filter._id",
-      "~k_parent": "s",
-      "~r": "pages.0",
-      "~l": 22
+      "s": "._id",
+      "p": "s",
+      "l": 22
     },
     "u": {
-      "key": "root.pages[0:users:Box].events",
-      "~k_parent": "g",
-      "~r": "pages.0",
-      "~l": 24
+      "s": ".events",
+      "p": "g",
+      "l": 24
     },
     "v": {
-      "key": "root.pages[0:users:Box].events.onInit",
-      "~k_parent": "u",
-      "~r": "pages.0",
-      "~l": 25
+      "s": ".onInit",
+      "p": "u",
+      "l": 25
     },
     "w": {
-      "key": "root.pages[0:users:Box].events.onInit[0:fetchUsers:Request]",
-      "~k_parent": "v",
-      "~r": "pages.0",
-      "~l": 26
+      "s": "[0:fetchUsers:Request]",
+      "p": "v",
+      "l": 26
     },
     "x": {
-      "key": "root.pages[0:users:Box].blocks",
-      "~k_parent": "g",
-      "~r": "pages.0",
-      "~l": 29
+      "s": ".blocks",
+      "p": "g",
+      "l": 29
     },
     "y": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box]",
-      "~k_parent": "x",
-      "~r": "pages.0",
-      "~l": 30
+      "s": "[0:header:Box]",
+      "p": "x",
+      "l": 30
     },
     "z": {
-      "key": "root.pages[0:users:Box].blocks[0:header:Box].blocks",
-      "~k_parent": "y",
-      "~r": "pages.0",
-      "~l": 32
+      "s": ".blocks",
+      "p": "y",
+      "l": 32
     },
     "1a": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].properties.data",
-      "~k_parent": "19",
-      "~r": "pages.0",
-      "~l": 51
+      "s": ".data",
+      "p": "19",
+      "l": 51
     },
     "1b": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks",
-      "~k_parent": "18",
-      "~r": "pages.0",
-      "~l": 53
+      "s": ".blocks",
+      "p": "18",
+      "l": 53
     },
     "1c": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card]",
-      "~k_parent": "1b",
-      "~r": "pages.0",
-      "~l": 54
+      "s": "[0:userCard:Card]",
+      "p": "1b",
+      "l": 54
     },
     "1d": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].properties",
-      "~k_parent": "1c",
-      "~r": "pages.0",
-      "~l": 56
+      "s": ".properties",
+      "p": "1c",
+      "l": 56
     },
     "1e": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].properties.title",
-      "~k_parent": "1d",
-      "~r": "pages.0",
-      "~l": 57
+      "s": ".title",
+      "p": "1d",
+      "l": 57
     },
     "1f": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks",
-      "~k_parent": "1c",
-      "~r": "pages.0",
-      "~l": 59
+      "s": ".blocks",
+      "p": "1c",
+      "l": 59
     },
     "1g": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[0:email:Paragraph]",
-      "~k_parent": "1f",
-      "~r": "pages.0",
-      "~l": 60
+      "s": "[0:email:Paragraph]",
+      "p": "1f",
+      "l": 60
     },
     "1h": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[0:email:Paragraph].properties",
-      "~k_parent": "1g",
-      "~r": "pages.0",
-      "~l": 62
+      "s": ".properties",
+      "p": "1g",
+      "l": 62
     },
     "1i": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[0:email:Paragraph].properties.content",
-      "~k_parent": "1h",
-      "~r": "pages.0",
-      "~l": 63
+      "s": ".content",
+      "p": "1h",
+      "l": 63
     },
     "1j": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box]",
-      "~k_parent": "1f",
-      "~r": "pages.0",
-      "~l": 65
+      "s": "[1:actions:Box]",
+      "p": "1f",
+      "l": 65
     },
     "1k": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks",
-      "~k_parent": "1j",
-      "~r": "pages.0",
-      "~l": 67
+      "s": ".blocks",
+      "p": "1j",
+      "l": 67
     },
     "1l": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button]",
-      "~k_parent": "1k",
-      "~r": "pages.0",
-      "~l": 68
+      "s": "[0:editBtn:Button]",
+      "p": "1k",
+      "l": 68
     },
     "1m": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].properties",
-      "~k_parent": "1l",
-      "~r": "pages.0",
-      "~l": 70
+      "s": ".properties",
+      "p": "1l",
+      "l": 70
     },
     "1n": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].events",
-      "~k_parent": "1l",
-      "~r": "pages.0",
-      "~l": 72
+      "s": ".events",
+      "p": "1l",
+      "l": 72
     },
     "1o": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].events.onClick",
-      "~k_parent": "1n",
-      "~r": "pages.0",
-      "~l": 73
+      "s": ".onClick",
+      "p": "1n",
+      "l": 73
     },
     "1p": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].events.onClick[0:goToEdit:Link]",
-      "~k_parent": "1o",
-      "~r": "pages.0",
-      "~l": 74
+      "s": "[0:goToEdit:Link]",
+      "p": "1o",
+      "l": 74
     },
     "1q": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].events.onClick[0:goToEdit:Link].params",
-      "~k_parent": "1p",
-      "~r": "pages.0",
-      "~l": 76
+      "s": ".params",
+      "p": "1p",
+      "l": 76
     },
     "1r": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].events.onClick[0:goToEdit:Link].params.urlQuery",
-      "~k_parent": "1q",
-      "~r": "pages.0",
-      "~l": 78
+      "s": ".urlQuery",
+      "p": "1q",
+      "l": 78
     },
     "1s": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].events.onClick[0:goToEdit:Link].params.urlQuery.id",
-      "~k_parent": "1r",
-      "~r": "pages.0",
-      "~l": 79
+      "s": ".id",
+      "p": "1r",
+      "l": 79
     },
     "1t": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[1:deleteBtn:Button]",
-      "~k_parent": "1k",
-      "~r": "pages.0",
-      "~l": 81
+      "s": "[1:deleteBtn:Button]",
+      "p": "1k",
+      "l": 81
     },
     "1u": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[1:deleteBtn:Button].properties",
-      "~k_parent": "1t",
-      "~r": "pages.0",
-      "~l": 83
+      "s": ".properties",
+      "p": "1t",
+      "l": 83
     },
     "1v": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[1:deleteBtn:Button].events",
-      "~k_parent": "1t",
-      "~r": "pages.0",
-      "~l": 86
+      "s": ".events",
+      "p": "1t",
+      "l": 86
     },
     "1w": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[1:deleteBtn:Button].events.onClick",
-      "~k_parent": "1v",
-      "~r": "pages.0",
-      "~l": 87
+      "s": ".onClick",
+      "p": "1v",
+      "l": 87
     },
     "1x": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[1:deleteBtn:Button].events.onClick[0:confirmDelete:Request]",
-      "~k_parent": "1w",
-      "~r": "pages.0",
-      "~l": 88
+      "s": "[0:confirmDelete:Request]",
+      "p": "1w",
+      "l": 88
     },
     "1y": {
-      "key": "root.pages[1:create-user:Box]",
-      "~k_parent": "f",
-      "~r": "pages.1",
-      "~l": 1
+      "s": "[1:create-user:Box]",
+      "p": "f",
+      "r": "pages.1",
+      "l": 1
     },
     "1z": {
-      "key": "root.pages[1:create-user:Box].properties",
-      "~k_parent": "1y",
-      "~r": "pages.1",
-      "~l": 3
+      "s": ".properties",
+      "p": "1y",
+      "l": 3
     },
     "2a": {
-      "key": "root.pages[1:create-user:Box].blocks",
-      "~k_parent": "1y",
-      "~r": "pages.1",
-      "~l": 22
+      "s": ".blocks",
+      "p": "1y",
+      "l": 22
     },
     "2b": {
-      "key": "root.pages[1:create-user:Box].blocks[0:title:Title]",
-      "~k_parent": "2a",
-      "~r": "pages.1",
-      "~l": 23
+      "s": "[0:title:Title]",
+      "p": "2a",
+      "l": 23
     },
     "2c": {
-      "key": "root.pages[1:create-user:Box].blocks[0:title:Title].properties",
-      "~k_parent": "2b",
-      "~r": "pages.1",
-      "~l": 25
+      "s": ".properties",
+      "p": "2b",
+      "l": 25
     },
     "2d": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card]",
-      "~k_parent": "2a",
-      "~r": "pages.1",
-      "~l": 27
+      "s": "[1:form:Card]",
+      "p": "2a",
+      "l": 27
     },
     "2e": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks",
-      "~k_parent": "2d",
-      "~r": "pages.1",
-      "~l": 29
+      "s": ".blocks",
+      "p": "2d",
+      "l": 29
     },
     "2f": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[0:name:TextInput]",
-      "~k_parent": "2e",
-      "~r": "pages.1",
-      "~l": 30
+      "s": "[0:name:TextInput]",
+      "p": "2e",
+      "l": 30
     },
     "2g": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[0:name:TextInput].properties",
-      "~k_parent": "2f",
-      "~r": "pages.1",
-      "~l": 33
+      "s": ".properties",
+      "p": "2f",
+      "l": 33
     },
     "2h": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[1:email:TextInput]",
-      "~k_parent": "2e",
-      "~r": "pages.1",
-      "~l": 35
+      "s": "[1:email:TextInput]",
+      "p": "2e",
+      "l": 35
     },
     "2i": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[1:email:TextInput].properties",
-      "~k_parent": "2h",
-      "~r": "pages.1",
-      "~l": 38
+      "s": ".properties",
+      "p": "2h",
+      "l": 38
     },
     "2j": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box]",
-      "~k_parent": "2e",
-      "~r": "pages.1",
-      "~l": 40
+      "s": "[2:actions:Box]",
+      "p": "2e",
+      "l": 40
     },
     "2k": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks",
-      "~k_parent": "2j",
-      "~r": "pages.1",
-      "~l": 42
+      "s": ".blocks",
+      "p": "2j",
+      "l": 42
     },
     "2l": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button]",
-      "~k_parent": "2k",
-      "~r": "pages.1",
-      "~l": 43
+      "s": "[0:submitBtn:Button]",
+      "p": "2k",
+      "l": 43
     },
     "2m": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].properties",
-      "~k_parent": "2l",
-      "~r": "pages.1",
-      "~l": 45
+      "s": ".properties",
+      "p": "2l",
+      "l": 45
     },
     "2n": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].events",
-      "~k_parent": "2l",
-      "~r": "pages.1",
-      "~l": 48
+      "s": ".events",
+      "p": "2l",
+      "l": 48
     },
     "2o": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].events.onClick",
-      "~k_parent": "2n",
-      "~r": "pages.1",
-      "~l": 49
+      "s": ".onClick",
+      "p": "2n",
+      "l": 49
     },
     "2p": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].events.onClick[0:validate:Validate]",
-      "~k_parent": "2o",
-      "~r": "pages.1",
-      "~l": 50
+      "s": "[0:validate:Validate]",
+      "p": "2o",
+      "l": 50
     },
     "2q": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].events.onClick[1:create:Request]",
-      "~k_parent": "2o",
-      "~r": "pages.1",
-      "~l": 52
+      "s": "[1:create:Request]",
+      "p": "2o",
+      "l": 52
     },
     "2r": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].events.onClick[2:redirect:Link]",
-      "~k_parent": "2o",
-      "~r": "pages.1",
-      "~l": 55
+      "s": "[2:redirect:Link]",
+      "p": "2o",
+      "l": 55
     },
     "2s": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].events.onClick[2:redirect:Link].params",
-      "~k_parent": "2r",
-      "~r": "pages.1",
-      "~l": 57
+      "s": ".params",
+      "p": "2r",
+      "l": 57
     },
     "2t": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[1:cancelBtn:Button]",
-      "~k_parent": "2k",
-      "~r": "pages.1",
-      "~l": 59
+      "s": "[1:cancelBtn:Button]",
+      "p": "2k",
+      "l": 59
     },
     "2u": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[1:cancelBtn:Button].properties",
-      "~k_parent": "2t",
-      "~r": "pages.1",
-      "~l": 61
+      "s": ".properties",
+      "p": "2t",
+      "l": 61
     },
     "2v": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[1:cancelBtn:Button].events",
-      "~k_parent": "2t",
-      "~r": "pages.1",
-      "~l": 63
+      "s": ".events",
+      "p": "2t",
+      "l": 63
     },
     "2w": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[1:cancelBtn:Button].events.onClick",
-      "~k_parent": "2v",
-      "~r": "pages.1",
-      "~l": 64
+      "s": ".onClick",
+      "p": "2v",
+      "l": 64
     },
     "2x": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[1:cancelBtn:Button].events.onClick[0:goBack:Link]",
-      "~k_parent": "2w",
-      "~r": "pages.1",
-      "~l": 65
+      "s": "[0:goBack:Link]",
+      "p": "2w",
+      "l": 65
     },
     "2y": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[1:cancelBtn:Button].events.onClick[0:goBack:Link].params",
-      "~k_parent": "2x",
-      "~r": "pages.1",
-      "~l": 67
+      "s": ".params",
+      "p": "2x",
+      "l": 67
     },
     "2z": {
-      "key": "root.pages[2:edit-user:Box]",
-      "~k_parent": "f",
-      "~r": "pages.2",
-      "~l": 1
+      "s": "[2:edit-user:Box]",
+      "p": "f",
+      "r": "pages.2",
+      "l": 1
     },
     "3a": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].payload.id",
-      "~k_parent": "39",
-      "~r": "pages.2",
-      "~l": 20
+      "s": ".id",
+      "p": "39",
+      "l": 20
     },
     "3b": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].payload.name",
-      "~k_parent": "39",
-      "~r": "pages.2",
-      "~l": 22
+      "s": ".name",
+      "p": "39",
+      "l": 22
     },
     "3c": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].payload.email",
-      "~k_parent": "39",
-      "~r": "pages.2",
-      "~l": 24
+      "s": ".email",
+      "p": "39",
+      "l": 24
     },
     "3d": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties",
-      "~k_parent": "38",
-      "~r": "pages.2",
-      "~l": 26
+      "s": ".properties",
+      "p": "38",
+      "l": 26
     },
     "3e": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.filter",
-      "~k_parent": "3d",
-      "~r": "pages.2",
-      "~l": 27
+      "s": ".filter",
+      "p": "3d",
+      "l": 27
     },
     "3f": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.filter._id",
-      "~k_parent": "3e",
-      "~r": "pages.2",
-      "~l": 28
+      "s": "._id",
+      "p": "3e",
+      "l": 28
     },
     "3g": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update",
-      "~k_parent": "3d",
-      "~r": "pages.2",
-      "~l": 30
+      "s": ".update",
+      "p": "3d",
+      "l": 30
     },
     "3h": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update.$set",
-      "~k_parent": "3g",
-      "~r": "pages.2",
-      "~l": 31
+      "s": ".$set",
+      "p": "3g",
+      "l": 31
     },
     "3i": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update.$set.name",
-      "~k_parent": "3h",
-      "~r": "pages.2",
-      "~l": 32
+      "s": ".name",
+      "p": "3h",
+      "l": 32
     },
     "3j": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update.$set.email",
-      "~k_parent": "3h",
-      "~r": "pages.2",
-      "~l": 34
+      "s": ".email",
+      "p": "3h",
+      "l": 34
     },
     "3k": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update.$set.updatedAt",
-      "~k_parent": "3h",
-      "~r": "pages.2",
-      "~l": 36
+      "s": ".updatedAt",
+      "p": "3h",
+      "l": 36
     },
     "3l": {
-      "key": "root.pages[2:edit-user:Box].events",
-      "~k_parent": "2z",
-      "~r": "pages.2",
-      "~l": 38
+      "s": ".events",
+      "p": "2z",
+      "l": 38
     },
     "3m": {
-      "key": "root.pages[2:edit-user:Box].events.onInit",
-      "~k_parent": "3l",
-      "~r": "pages.2",
-      "~l": 39
+      "s": ".onInit",
+      "p": "3l",
+      "l": 39
     },
     "3n": {
-      "key": "root.pages[2:edit-user:Box].events.onInit[0:fetchUser:Request]",
-      "~k_parent": "3m",
-      "~r": "pages.2",
-      "~l": 40
+      "s": "[0:fetchUser:Request]",
+      "p": "3m",
+      "l": 40
     },
     "3o": {
-      "key": "root.pages[2:edit-user:Box].events.onInit[1:setState:SetState]",
-      "~k_parent": "3m",
-      "~r": "pages.2",
-      "~l": 43
+      "s": "[1:setState:SetState]",
+      "p": "3m",
+      "l": 43
     },
     "3p": {
-      "key": "root.pages[2:edit-user:Box].events.onInit[1:setState:SetState].params",
-      "~k_parent": "3o",
-      "~r": "pages.2",
-      "~l": 45
+      "s": ".params",
+      "p": "3o",
+      "l": 45
     },
     "3q": {
-      "key": "root.pages[2:edit-user:Box].events.onInit[1:setState:SetState].params.name",
-      "~k_parent": "3p",
-      "~r": "pages.2",
-      "~l": 46
+      "s": ".name",
+      "p": "3p",
+      "l": 46
     },
     "3r": {
-      "key": "root.pages[2:edit-user:Box].events.onInit[1:setState:SetState].params.email",
-      "~k_parent": "3p",
-      "~r": "pages.2",
-      "~l": 48
+      "s": ".email",
+      "p": "3p",
+      "l": 48
     },
     "3s": {
-      "key": "root.pages[2:edit-user:Box].blocks",
-      "~k_parent": "2z",
-      "~r": "pages.2",
-      "~l": 50
+      "s": ".blocks",
+      "p": "2z",
+      "l": 50
     },
     "3t": {
-      "key": "root.pages[2:edit-user:Box].blocks[0:title:Title]",
-      "~k_parent": "3s",
-      "~r": "pages.2",
-      "~l": 51
+      "s": "[0:title:Title]",
+      "p": "3s",
+      "l": 51
     },
     "3u": {
-      "key": "root.pages[2:edit-user:Box].blocks[0:title:Title].properties",
-      "~k_parent": "3t",
-      "~r": "pages.2",
-      "~l": 53
+      "s": ".properties",
+      "p": "3t",
+      "l": 53
     },
     "3v": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card]",
-      "~k_parent": "3s",
-      "~r": "pages.2",
-      "~l": 55
+      "s": "[1:form:Card]",
+      "p": "3s",
+      "l": 55
     },
     "3w": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks",
-      "~k_parent": "3v",
-      "~r": "pages.2",
-      "~l": 57
+      "s": ".blocks",
+      "p": "3v",
+      "l": 57
     },
     "3x": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[0:name:TextInput]",
-      "~k_parent": "3w",
-      "~r": "pages.2",
-      "~l": 58
+      "s": "[0:name:TextInput]",
+      "p": "3w",
+      "l": 58
     },
     "3y": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[0:name:TextInput].properties",
-      "~k_parent": "3x",
-      "~r": "pages.2",
-      "~l": 61
+      "s": ".properties",
+      "p": "3x",
+      "l": 61
     },
     "3z": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[1:email:TextInput]",
-      "~k_parent": "3w",
-      "~r": "pages.2",
-      "~l": 63
+      "s": "[1:email:TextInput]",
+      "p": "3w",
+      "l": 63
     },
     "4a": {
-      "key": "root.pages",
-      "~k_parent": "4"
+      "s": ".pages",
+      "p": "4"
     },
     "4b": {
-      "key": "root.pages[3:404:Result]",
-      "~k_parent": "4a"
+      "s": "[3:404:Result]",
+      "p": "4a"
     },
     "4c": {
-      "key": "root.pages[3:404:Result].style",
-      "~k_parent": "4b"
+      "s": ".style",
+      "p": "4b"
     },
     "4d": {
-      "key": "root.pages[3:404:Result].properties",
-      "~k_parent": "4b"
+      "s": ".properties",
+      "p": "4b"
     },
     "4e": {
-      "key": "root.pages[3:404:Result].properties.icon",
-      "~k_parent": "4d"
+      "s": ".icon",
+      "p": "4d"
     },
     "4f": {
-      "key": "root.pages[3:404:Result].slots",
-      "~k_parent": "4b"
+      "s": ".slots",
+      "p": "4b"
     },
     "4g": {
-      "key": "root.pages[3:404:Result].slots.extra",
-      "~k_parent": "4f"
+      "s": ".extra",
+      "p": "4f"
     },
     "4h": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks",
-      "~k_parent": "4g"
+      "s": ".blocks",
+      "p": "4g"
     },
     "4i": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks[0:home:Button]",
-      "~k_parent": "4h"
+      "s": "[0:home:Button]",
+      "p": "4h"
     },
     "4j": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks[0:home:Button].properties",
-      "~k_parent": "4i"
+      "s": ".properties",
+      "p": "4i"
     },
     "4k": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks[0:home:Button].events",
-      "~k_parent": "4i"
+      "s": ".events",
+      "p": "4i"
     },
     "4l": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks[0:home:Button].events.onClick",
-      "~k_parent": "4k"
+      "s": ".onClick",
+      "p": "4k"
     },
     "4m": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
-      "~k_parent": "4l"
+      "s": "[0:home:Link]",
+      "p": "4l"
     },
     "4n": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
-      "~k_parent": "4m"
+      "s": ".params",
+      "p": "4m"
     },
     "4o": {
-      "key": "root.app",
-      "~k_parent": "4"
+      "s": ".app",
+      "p": "4"
     },
     "4p": {
-      "key": "root.app.html",
-      "~k_parent": "4o"
+      "s": ".html",
+      "p": "4o"
     },
     "4q": {
-      "key": "root.app.email",
-      "~k_parent": "4o"
+      "s": ".email",
+      "p": "4o"
     },
     "4r": {
-      "key": "root.appMeta",
-      "~k_parent": "4"
+      "s": ".appMeta",
+      "p": "4"
     },
     "4s": {
-      "key": "root.config",
-      "~k_parent": "4"
+      "s": ".config",
+      "p": "4"
     },
     "4t": {
-      "key": "root.logger",
-      "~k_parent": "4"
+      "s": ".logger",
+      "p": "4"
     },
     "4v": {
-      "key": "root.menus[0:default].links",
-      "~k_parent": "9"
+      "s": ".links",
+      "p": "9"
     },
     "4w": {
-      "key": "root.menus[0:default].links[0:users:MenuLink].auth",
-      "~k_parent": "b"
+      "s": ".auth",
+      "p": "b"
     },
     "4x": {
-      "key": "root.menus[0:default].links[1:create:MenuLink].auth",
-      "~k_parent": "d"
+      "s": ".auth",
+      "p": "d"
     },
     "4y": {
-      "key": "root.pages",
-      "~k_parent": "4"
+      "s": ".pages",
+      "p": "4"
     },
     "4z": {
-      "key": "root.pages[0:users:Box]",
-      "~k_parent": "4y"
+      "s": "[0:users:Box]",
+      "p": "4y"
     },
     "5a": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].slots.content",
-      "~k_parent": "59"
+      "s": ".content",
+      "p": "59"
     },
     "5b": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].slots",
-      "~k_parent": "1c"
+      "s": ".slots",
+      "p": "1c",
+      "r": null
     },
     "5c": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].slots.content",
-      "~k_parent": "5b"
+      "s": ".content",
+      "p": "5b"
     },
     "5d": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].slots",
-      "~k_parent": "1j"
+      "s": ".slots",
+      "p": "1j",
+      "r": null
     },
     "5e": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].slots.content",
-      "~k_parent": "5d"
+      "s": ".content",
+      "p": "5d"
     },
     "5f": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].events.onClick",
-      "~k_parent": "1n"
+      "s": ".onClick",
+      "p": "1n",
+      "r": null
     },
     "5g": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[0:editBtn:Button].events.onClick.catch",
-      "~k_parent": "5f"
+      "s": ".catch",
+      "p": "5f"
     },
     "5h": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[1:deleteBtn:Button].events.onClick",
-      "~k_parent": "1v"
+      "s": ".onClick",
+      "p": "1v",
+      "r": null
     },
     "5i": {
-      "key": "root.pages[0:users:Box].blocks[1:userList:List].blocks[0:userCard:Card].blocks[1:actions:Box].blocks[1:deleteBtn:Button].events.onClick.catch",
-      "~k_parent": "5h"
+      "s": ".catch",
+      "p": "5h"
     },
     "5j": {
-      "key": "root.pages[0:users:Box].subscriptions",
-      "~k_parent": "4z"
+      "s": ".subscriptions",
+      "p": "4z"
     },
     "5k": {
-      "key": "root.pages[0:users:Box].requests",
-      "~k_parent": "4z"
+      "s": ".requests",
+      "p": "4z"
     },
     "5l": {
-      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].payload",
-      "~k_parent": "j"
+      "s": ".payload",
+      "p": "j",
+      "r": null
     },
     "5m": {
-      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].auth",
-      "~k_parent": "j"
+      "s": ".auth",
+      "p": "j",
+      "r": null
     },
     "5n": {
-      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].auth",
-      "~k_parent": "o"
+      "s": ".auth",
+      "p": "o",
+      "r": null
     },
     "5o": {
-      "key": "root.pages[1:create-user:Box]",
-      "~k_parent": "4y"
+      "s": "[1:create-user:Box]",
+      "p": "4y"
     },
     "5p": {
-      "key": "root.pages[1:create-user:Box].auth",
-      "~k_parent": "5o"
+      "s": ".auth",
+      "p": "5o"
     },
     "5q": {
-      "key": "root.pages[1:create-user:Box].slots",
-      "~k_parent": "5o"
+      "s": ".slots",
+      "p": "5o"
     },
     "5r": {
-      "key": "root.pages[1:create-user:Box].slots.content",
-      "~k_parent": "5q"
+      "s": ".content",
+      "p": "5q"
     },
     "5s": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].slots",
-      "~k_parent": "2d"
+      "s": ".slots",
+      "p": "2d",
+      "r": null
     },
     "5t": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].slots.content",
-      "~k_parent": "5s"
+      "s": ".content",
+      "p": "5s"
     },
     "5u": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].slots",
-      "~k_parent": "2j"
+      "s": ".slots",
+      "p": "2j",
+      "r": null
     },
     "5v": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].slots.content",
-      "~k_parent": "5u"
+      "s": ".content",
+      "p": "5u"
     },
     "5w": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].events.onClick",
-      "~k_parent": "2n"
+      "s": ".onClick",
+      "p": "2n",
+      "r": null
     },
     "5x": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[0:submitBtn:Button].events.onClick.catch",
-      "~k_parent": "5w"
+      "s": ".catch",
+      "p": "5w"
     },
     "5y": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[1:cancelBtn:Button].events.onClick",
-      "~k_parent": "2v"
+      "s": ".onClick",
+      "p": "2v",
+      "r": null
     },
     "5z": {
-      "key": "root.pages[1:create-user:Box].blocks[1:form:Card].blocks[2:actions:Box].blocks[1:cancelBtn:Button].events.onClick.catch",
-      "~k_parent": "5y"
+      "s": ".catch",
+      "p": "5y"
     },
     "6a": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].slots.content",
-      "~k_parent": "69"
+      "s": ".content",
+      "p": "69"
     },
     "6b": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].events.onClick",
-      "~k_parent": "43"
+      "s": ".onClick",
+      "p": "43",
+      "r": null
     },
     "6c": {
-      "key": "root.pages[2:edit-user:Box].blocks[1:form:Card].blocks[2:submitBtn:Button].events.onClick.catch",
-      "~k_parent": "6b"
+      "s": ".catch",
+      "p": "6b"
     },
     "6d": {
-      "key": "root.pages[2:edit-user:Box].subscriptions",
-      "~k_parent": "63"
+      "s": ".subscriptions",
+      "p": "63"
     },
     "6e": {
-      "key": "root.pages[2:edit-user:Box].requests",
-      "~k_parent": "63"
+      "s": ".requests",
+      "p": "63"
     },
     "6f": {
-      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].auth",
-      "~k_parent": "32"
+      "s": ".auth",
+      "p": "32",
+      "r": null
     },
     "6g": {
-      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].auth",
-      "~k_parent": "38"
+      "s": ".auth",
+      "p": "38",
+      "r": null
     },
     "6h": {
-      "key": "root.pages[3:404:Result]",
-      "~k_parent": "4y"
+      "s": "[3:404:Result]",
+      "p": "4y"
     },
     "6i": {
-      "key": "root.pages[3:404:Result].style",
-      "~k_parent": "6h"
+      "s": ".style",
+      "p": "6h"
     },
     "6j": {
-      "key": "root.pages[3:404:Result].style.block",
-      "~k_parent": "6i"
+      "s": ".block",
+      "p": "6i"
     },
     "6k": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks[0:home:Button].events.onClick",
-      "~k_parent": "4k"
+      "s": ".onClick",
+      "p": "4k"
     },
     "6l": {
-      "key": "root.pages[3:404:Result].slots.extra.blocks[0:home:Button].events.onClick.catch",
-      "~k_parent": "6k"
+      "s": ".catch",
+      "p": "6k"
     },
     "6m": {
-      "key": "root.pages[3:404:Result].auth",
-      "~k_parent": "6h"
+      "s": ".auth",
+      "p": "6h"
     },
     "6n": {
-      "key": "root.pages[3:404:Result].subscriptions",
-      "~k_parent": "6h"
+      "s": ".subscriptions",
+      "p": "6h"
     },
     "6o": {
-      "key": "root.pages[3:404:Result].requests",
-      "~k_parent": "6h"
+      "s": ".requests",
+      "p": "6h"
     },
     "6p": {
-      "key": "root.auth",
-      "~k_parent": "4"
+      "s": ".auth",
+      "p": "4"
     },
     "6q": {
-      "key": "root.auth.api",
-      "~k_parent": "6p"
+      "s": ".api",
+      "p": "6p"
     },
     "6r": {
-      "key": "root.auth.api.roles",
-      "~k_parent": "6q"
+      "s": ".roles",
+      "p": "6q"
     },
     "6s": {
-      "key": "root.auth.pages",
-      "~k_parent": "6p"
+      "s": ".pages",
+      "p": "6p"
     },
     "6t": {
-      "key": "root.auth.pages.roles",
-      "~k_parent": "6s"
+      "s": ".roles",
+      "p": "6s"
     },
     "6u": {
-      "key": "root.auth.websockets",
-      "~k_parent": "6p"
+      "s": ".websockets",
+      "p": "6p"
     },
     "6v": {
-      "key": "root.auth.websockets.roles",
-      "~k_parent": "6u"
+      "s": ".roles",
+      "p": "6u"
     },
     "6w": {
-      "key": "root.auth.providers",
-      "~k_parent": "6p"
+      "s": ".providers",
+      "p": "6p"
     },
     "6x": {
-      "key": "root.auth.roles",
-      "~k_parent": "6p"
+      "s": ".roles",
+      "p": "6p"
     },
     "6y": {
-      "key": "root.mcp",
-      "~k_parent": "4"
+      "s": ".mcp",
+      "p": "4"
     },
     "6z": {
-      "key": "root.mcp.endpoints",
-      "~k_parent": "6y"
+      "s": ".endpoints",
+      "p": "6y"
     },
     "7a": {
-      "key": "root.types.auth.adapters",
-      "~k_parent": "79"
+      "s": ".adapters",
+      "p": "79"
     },
     "7b": {
-      "key": "root.types.auth.providers",
-      "~k_parent": "79"
+      "s": ".providers",
+      "p": "79"
     },
     "7c": {
-      "key": "root.types.auth.strategies",
-      "~k_parent": "79"
+      "s": ".strategies",
+      "p": "79"
     },
     "7d": {
-      "key": "root.types.blocks",
-      "~k_parent": "71"
+      "s": ".blocks",
+      "p": "71"
     },
     "7e": {
-      "key": "root.types.blocks.Box",
-      "~k_parent": "7d"
+      "s": ".Box",
+      "p": "7d"
     },
     "7f": {
-      "key": "root.types.blocks.Title",
-      "~k_parent": "7d"
+      "s": ".Title",
+      "p": "7d"
     },
     "7g": {
-      "key": "root.types.blocks.Button",
-      "~k_parent": "7d"
+      "s": ".Button",
+      "p": "7d"
     },
     "7h": {
-      "key": "root.types.blocks.List",
-      "~k_parent": "7d"
+      "s": ".List",
+      "p": "7d"
     },
     "7i": {
-      "key": "root.types.blocks.Card",
-      "~k_parent": "7d"
+      "s": ".Card",
+      "p": "7d"
     },
     "7j": {
-      "key": "root.types.blocks.Paragraph",
-      "~k_parent": "7d"
+      "s": ".Paragraph",
+      "p": "7d"
     },
     "7k": {
-      "key": "root.types.blocks.TextInput",
-      "~k_parent": "7d"
+      "s": ".TextInput",
+      "p": "7d"
     },
     "7l": {
-      "key": "root.types.blocks.Result",
-      "~k_parent": "7d"
+      "s": ".Result",
+      "p": "7d"
     },
     "7m": {
-      "key": "root.types.blocks.Anchor",
-      "~k_parent": "7d"
+      "s": ".Anchor",
+      "p": "7d"
     },
     "7n": {
-      "key": "root.types.blocks.ClickableHtml",
-      "~k_parent": "7d"
+      "s": ".ClickableHtml",
+      "p": "7d"
     },
     "7o": {
-      "key": "root.types.blocks.DangerousHtml",
-      "~k_parent": "7d"
+      "s": ".DangerousHtml",
+      "p": "7d"
     },
     "7p": {
-      "key": "root.types.blocks.Dynamic",
-      "~k_parent": "7d"
+      "s": ".Dynamic",
+      "p": "7d"
     },
     "7q": {
-      "key": "root.types.blocks.Html",
-      "~k_parent": "7d"
+      "s": ".Html",
+      "p": "7d"
     },
     "7r": {
-      "key": "root.types.blocks.Icon",
-      "~k_parent": "7d"
+      "s": ".Icon",
+      "p": "7d"
     },
     "7s": {
-      "key": "root.types.blocks.Img",
-      "~k_parent": "7d"
+      "s": ".Img",
+      "p": "7d"
     },
     "7t": {
-      "key": "root.types.blocks.PollingTimer",
-      "~k_parent": "7d"
+      "s": ".PollingTimer",
+      "p": "7d"
     },
     "7u": {
-      "key": "root.types.blocks.Span",
-      "~k_parent": "7d"
+      "s": ".Span",
+      "p": "7d"
     },
     "7v": {
-      "key": "root.types.blocks.Throw",
-      "~k_parent": "7d"
+      "s": ".Throw",
+      "p": "7d"
     },
     "7w": {
-      "key": "root.types.blocks.ProgressBar",
-      "~k_parent": "7d"
+      "s": ".ProgressBar",
+      "p": "7d"
     },
     "7x": {
-      "key": "root.types.blocks.Skeleton",
-      "~k_parent": "7d"
+      "s": ".Skeleton",
+      "p": "7d"
     },
     "7y": {
-      "key": "root.types.blocks.SkeletonAvatar",
-      "~k_parent": "7d"
+      "s": ".SkeletonAvatar",
+      "p": "7d"
     },
     "7z": {
-      "key": "root.types.blocks.SkeletonButton",
-      "~k_parent": "7d"
+      "s": ".SkeletonButton",
+      "p": "7d"
     },
     "8a": {
-      "key": "root.types.requests.MongoDBInsertOne",
-      "~k_parent": "87"
+      "s": ".MongoDBInsertOne",
+      "p": "87"
     },
     "8b": {
-      "key": "root.types.requests.MongoDBFindOne",
-      "~k_parent": "87"
+      "s": ".MongoDBFindOne",
+      "p": "87"
     },
     "8c": {
-      "key": "root.types.requests.MongoDBUpdateOne",
-      "~k_parent": "87"
+      "s": ".MongoDBUpdateOne",
+      "p": "87"
     },
     "8d": {
-      "key": "root.types.steps",
-      "~k_parent": "71"
+      "s": ".steps",
+      "p": "71"
     },
     "8e": {
-      "key": "root.types.websockets",
-      "~k_parent": "71"
+      "s": ".websockets",
+      "p": "71"
     },
     "8f": {
-      "key": "root.types.api",
-      "~k_parent": "71"
+      "s": ".api",
+      "p": "71"
     },
     "8g": {
-      "key": "root.types.operators",
-      "~k_parent": "71"
+      "s": ".operators",
+      "p": "71"
     },
     "8h": {
-      "key": "root.types.operators.client",
-      "~k_parent": "8g"
+      "s": ".client",
+      "p": "8g"
     },
     "8i": {
-      "key": "root.types.operators.client._state",
-      "~k_parent": "8h"
+      "s": "._state",
+      "p": "8h"
     },
     "8j": {
-      "key": "root.types.operators.client._request",
-      "~k_parent": "8h"
+      "s": "._request",
+      "p": "8h"
     },
     "8k": {
-      "key": "root.types.operators.client._url_query",
-      "~k_parent": "8h"
+      "s": "._url_query",
+      "p": "8h"
     },
     "8l": {
-      "key": "root.types.operators.client._not",
-      "~k_parent": "8h"
+      "s": "._not",
+      "p": "8h"
     },
     "8m": {
-      "key": "root.types.operators.client._type",
-      "~k_parent": "8h"
+      "s": "._type",
+      "p": "8h"
     },
     "8n": {
-      "key": "root.types.operators.server",
-      "~k_parent": "8g"
+      "s": ".server",
+      "p": "8g"
     },
     "8o": {
-      "key": "root.types.operators.server._payload",
-      "~k_parent": "8n"
+      "s": "._payload",
+      "p": "8n"
     },
     "8p": {
-      "key": "root.types.operators.server._date",
-      "~k_parent": "8n"
+      "s": "._date",
+      "p": "8n"
     },
     "8q": {
-      "key": "root.imports",
-      "~k_parent": "4"
+      "s": ".imports",
+      "p": "4"
     },
     "8r": {
-      "key": "root.imports.actions",
-      "~k_parent": "8q"
+      "s": ".actions",
+      "p": "8q"
     },
     "8s": {
-      "key": "root.imports.actions[0]",
-      "~k_parent": "8r"
+      "s": "[0]",
+      "p": "8r"
     },
     "8t": {
-      "key": "root.imports.actions[1]",
-      "~k_parent": "8r"
+      "s": "[1]",
+      "p": "8r"
     },
     "8u": {
-      "key": "root.imports.actions[2]",
-      "~k_parent": "8r"
+      "s": "[2]",
+      "p": "8r"
     },
     "8v": {
-      "key": "root.imports.actions[3]",
-      "~k_parent": "8r"
+      "s": "[3]",
+      "p": "8r"
     },
     "8w": {
-      "key": "root.imports.actions[4]",
-      "~k_parent": "8r"
+      "s": "[4]",
+      "p": "8r"
     },
     "8x": {
-      "key": "root.imports.agents",
-      "~k_parent": "8q"
+      "s": ".agents",
+      "p": "8q"
     },
     "8y": {
-      "key": "root.imports.auth",
-      "~k_parent": "8q"
+      "s": ".auth",
+      "p": "8q"
     },
     "8z": {
-      "key": "root.imports.auth.adapters",
-      "~k_parent": "8y"
+      "s": ".adapters",
+      "p": "8y"
     },
     "9a": {
-      "key": "root.imports.blocks[7]",
-      "~k_parent": "92"
+      "s": "[7]",
+      "p": "92"
     },
     "9b": {
-      "key": "root.imports.blocks[8]",
-      "~k_parent": "92"
+      "s": "[8]",
+      "p": "92"
     },
     "9c": {
-      "key": "root.imports.blocks[9]",
-      "~k_parent": "92"
+      "s": "[9]",
+      "p": "92"
     },
     "9d": {
-      "key": "root.imports.blocks[10]",
-      "~k_parent": "92"
+      "s": "[10]",
+      "p": "92"
     },
     "9e": {
-      "key": "root.imports.blocks[11]",
-      "~k_parent": "92"
+      "s": "[11]",
+      "p": "92"
     },
     "9f": {
-      "key": "root.imports.blocks[12]",
-      "~k_parent": "92"
+      "s": "[12]",
+      "p": "92"
     },
     "9g": {
-      "key": "root.imports.blocks[13]",
-      "~k_parent": "92"
+      "s": "[13]",
+      "p": "92"
     },
     "9h": {
-      "key": "root.imports.blocks[14]",
-      "~k_parent": "92"
+      "s": "[14]",
+      "p": "92"
     },
     "9i": {
-      "key": "root.imports.blocks[15]",
-      "~k_parent": "92"
+      "s": "[15]",
+      "p": "92"
     },
     "9j": {
-      "key": "root.imports.blocks[16]",
-      "~k_parent": "92"
+      "s": "[16]",
+      "p": "92"
     },
     "9k": {
-      "key": "root.imports.blocks[17]",
-      "~k_parent": "92"
+      "s": "[17]",
+      "p": "92"
     },
     "9l": {
-      "key": "root.imports.blocks[18]",
-      "~k_parent": "92"
+      "s": "[18]",
+      "p": "92"
     },
     "9m": {
-      "key": "root.imports.blocks[19]",
-      "~k_parent": "92"
+      "s": "[19]",
+      "p": "92"
     },
     "9n": {
-      "key": "root.imports.blocks[20]",
-      "~k_parent": "92"
+      "s": "[20]",
+      "p": "92"
     },
     "9o": {
-      "key": "root.imports.blocks[21]",
-      "~k_parent": "92"
+      "s": "[21]",
+      "p": "92"
     },
     "9p": {
-      "key": "root.imports.blocks[22]",
-      "~k_parent": "92"
+      "s": "[22]",
+      "p": "92"
     },
     "9q": {
-      "key": "root.imports.blocks[23]",
-      "~k_parent": "92"
+      "s": "[23]",
+      "p": "92"
     },
     "9r": {
-      "key": "root.imports.blocks[24]",
-      "~k_parent": "92"
+      "s": "[24]",
+      "p": "92"
     },
     "9s": {
-      "key": "root.imports.blocks[25]",
-      "~k_parent": "92"
+      "s": "[25]",
+      "p": "92"
     },
     "9t": {
-      "key": "root.imports.connections",
-      "~k_parent": "8q"
+      "s": ".connections",
+      "p": "8q"
     },
     "9u": {
-      "key": "root.imports.connections[0]",
-      "~k_parent": "9t"
+      "s": "[0]",
+      "p": "9t"
     },
     "9v": {
-      "key": "root.imports.icons",
-      "~k_parent": "8q"
+      "s": ".icons",
+      "p": "8q"
     },
     "9w": {
-      "key": "root.imports.notifications",
-      "~k_parent": "8q"
+      "s": ".notifications",
+      "p": "8q"
     },
     "9x": {
-      "key": "root.imports.requests",
-      "~k_parent": "8q"
+      "s": ".requests",
+      "p": "8q"
     },
     "9y": {
-      "key": "root.imports.requests[0]",
-      "~k_parent": "9x"
+      "s": "[0]",
+      "p": "9x"
     },
     "9z": {
-      "key": "root.imports.requests[1]",
-      "~k_parent": "9x"
+      "s": "[1]",
+      "p": "9x"
     },
     "a0": {
-      "key": "root.imports.requests[2]",
-      "~k_parent": "9x"
+      "s": "[2]",
+      "p": "9x"
     },
     "a1": {
-      "key": "root.imports.requests[3]",
-      "~k_parent": "9x"
+      "s": "[3]",
+      "p": "9x"
     },
     "a2": {
-      "key": "root.imports.requests[4]",
-      "~k_parent": "9x"
+      "s": "[4]",
+      "p": "9x"
     },
     "a3": {
-      "key": "root.imports.steps",
-      "~k_parent": "8q"
+      "s": ".steps",
+      "p": "8q"
     },
     "a4": {
-      "key": "root.imports.websockets",
-      "~k_parent": "8q"
+      "s": ".websockets",
+      "p": "8q"
     },
     "a5": {
-      "key": "root.imports.operators",
-      "~k_parent": "8q"
+      "s": ".operators",
+      "p": "8q"
     },
     "a6": {
-      "key": "root.imports.operators.client",
-      "~k_parent": "a5"
+      "s": ".client",
+      "p": "a5"
     },
     "a7": {
-      "key": "root.imports.operators.client[0]",
-      "~k_parent": "a6"
+      "s": "[0]",
+      "p": "a6"
     },
     "a8": {
-      "key": "root.imports.operators.client[1]",
-      "~k_parent": "a6"
+      "s": "[1]",
+      "p": "a6"
     },
     "a9": {
-      "key": "root.imports.operators.client[2]",
-      "~k_parent": "a6"
+      "s": "[2]",
+      "p": "a6"
     },
     "aa": {
-      "key": "root.imports.operators.client[3]",
-      "~k_parent": "a6"
+      "s": "[3]",
+      "p": "a6"
     },
     "ab": {
-      "key": "root.imports.operators.client[4]",
-      "~k_parent": "a6"
+      "s": "[4]",
+      "p": "a6"
     },
     "ac": {
-      "key": "root.imports.operators.server",
-      "~k_parent": "a5"
+      "s": ".server",
+      "p": "a5"
     },
     "ad": {
-      "key": "root.imports.operators.server[0]",
-      "~k_parent": "ac"
+      "s": "[0]",
+      "p": "ac"
     },
     "ae": {
-      "key": "root.imports.operators.server[1]",
-      "~k_parent": "ac"
+      "s": "[1]",
+      "p": "ac"
     }
   },
   "layer-order.css": "/* Generated by Lowdefy build */\n@layer theme, base, antd, components, utilities;\n",

@@ -27,10 +27,12 @@ When Lowdefy throws errors (client, server, or build), developers need to trace 
 
 The build pipeline tracks the origin of every config value:
 
-| Artifact      | Purpose                                | Contents                                                            |
-| ------------- | -------------------------------------- | ------------------------------------------------------------------- |
-| `keyMap.json` | Maps internal keys to config locations | `{ "abc123": { key: "pages.0.blocks.0", "~r": "ref1", "~l": 15 } }` |
-| `refMap.json` | Maps ref IDs to source files           | `{ "ref1": { path: "pages/home.yaml" } }`                           |
+| Artifact      | Purpose                                | Contents                                                           |
+| ------------- | -------------------------------------- | ------------------------------------------------------------------ |
+| `keyMap.json` | Maps internal keys to config locations | `{ "abc123": { s: "[0:header]", p: "abc122", r: "ref1", l: 15 } }` |
+| `refMap.json` | Maps ref IDs to source files           | `{ "ref1": { path: "pages/home.yaml" } }`                          |
+
+A key map entry stores its own path segment (`s`) and its parent's id (`p`); `r` (ref id) is written only where it differs from the parent's resolved ref, with `r: null` for a node with no ref under a parent that has one (build-created nodes such as `events.onMountAsync` resolve to `lowdefy.yaml`); `l` is the line and `i` the `~ignoreBuildChecks` value. The readers in `@lowdefy/errors`, `resolveKeyEntry` and `createKeyPathResolver`, rebuild the full path (`root.pages[0:home].blocks[0:header]`) and ref from the parent chain, and nothing else reads entry fields. They also read the full shape older builds wrote (`{ key, '~k_parent', '~r', '~l', '~ignoreBuildChecks' }`), which journeys scope can meet; that branch can go once no supported version writes it. See [errors.md](../utils/errors.md#key-map-readers).
 
 **Property markers added during build:**
 
@@ -615,7 +617,7 @@ The `~ignoreBuildChecks` property allows developers to suppress specific or all 
 
 **Available Check Slugs:** the built-in slugs are `VALID_CHECK_SLUGS` in `utils/errors/src/shouldSuppressBuildCheck.js`. Plugin rule ids are slugs too, and `plugin-checks` names every plugin rule. The schema and `addKeys` accept any kebab-case slug; `addKeys` records slugs that are not built-in on `context.pluginCheckSlugRefs`. Printed errors and warnings show their slug: `[ConfigError · if-test] message`. The plugin schema check (`build/pluginChecks/runSchemaChecks.js`, run by `runPluginChecks`) reports with slug `plugin-schema` and group `plugin-checks`, as a warning unless the package's `./checks` export sets `schemaLevel: 'error'`. It validates block `properties`, action `params` and operator params with `getConfigSchemaErrors` from `@lowdefy/ajv`, against schemas from `writePluginImports/loadPluginTypeSchema.js`, the loader the schema-map writers use, and locates each finding at the deepest `~k` on the error's path.
 
-**Implementation:** `shouldSuppressBuildCheck(error, keyMap)` walks up the `~k_parent` chain looking for `~ignoreBuildChecks` settings, matching a listed slug against the error's `checkSlug` or `checkGroup`.
+**Implementation:** `shouldSuppressBuildCheck(error, keyMap)` walks up the key map parent chain (`p`) looking for `~ignoreBuildChecks` settings (stored as `i`), matching a listed slug against the error's `checkSlug` or `checkGroup`.
 
 ### Circular Reference Detection (`recursiveBuild.js`)
 
