@@ -102,12 +102,13 @@ test('a request that runs past the timeout answers 504 and reports nothing when 
   expect(await res.text()).toEqual('Gateway Timeout');
   // The handler answers after the 504 went out, and the middleware around it runs again.
   await lateHandler;
-  await new Promise((resolve) => setTimeout(resolve, 10));
+  await vi.waitFor(() =>
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringMatching(/^Dropped an error after the request timed out: POST \/api\/request/)
+    )
+  );
   expect(captureException).not.toHaveBeenCalled();
   expect(logger.error).not.toHaveBeenCalled();
-  expect(logger.warn).toHaveBeenCalledWith(
-    expect.stringMatching(/^Dropped an error after the request timed out: POST \/api\/request/)
-  );
 });
 
 test('a response in time is still compressed', async () => {
