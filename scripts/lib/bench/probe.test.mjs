@@ -40,7 +40,7 @@ function runProbed(script) {
   };
 }
 
-test('probe records argv, times, exit code and peak memory of a process', () => {
+test('probe records argv, times, exit code, peak memory and CPU time of a process', () => {
   const before = Date.now();
   const { cleanup, records, result, scriptFile } = runProbed('process.exitCode = 3;\n');
   assert.equal(result.status, 3);
@@ -52,6 +52,24 @@ test('probe records argv, times, exit code and peak memory of a process', () => 
   assert.ok(record.start >= before - 1000 && record.start <= record.end);
   assert.ok(record.end <= Date.now());
   assert.ok(Number.isInteger(record.maxRssKb) && record.maxRssKb > 1000);
+  assert.ok(Number.isInteger(record.userCpuUs) && record.userCpuUs > 0);
+  assert.ok(Number.isInteger(record.systemCpuUs) && record.systemCpuUs >= 0);
+  cleanup();
+});
+
+test('probe counts CPU time the process spent, not time it waited', () => {
+  const { cleanup, records } = runProbed(
+    // Spins until it has used 200 ms of CPU, however long other load makes
+    // that take, then sleeps 600 ms.
+    'const spin = () => { const { user, system } = process.cpuUsage(); return user + system; };\n' +
+      'while (spin() < 200000);\n' +
+      'await new Promise((resolve) => setTimeout(resolve, 600));\n'
+  );
+  const [record] = records;
+  const cpuMs = (record.userCpuUs + record.systemCpuUs) / 1000;
+  const wallMs = record.end - record.start;
+  assert.ok(cpuMs >= 200, `CPU time ${cpuMs} ms`);
+  assert.ok(wallMs - cpuMs >= 500, `CPU time ${cpuMs} ms of ${wallMs} ms`);
   cleanup();
 });
 
