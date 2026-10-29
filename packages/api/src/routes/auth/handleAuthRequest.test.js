@@ -170,7 +170,8 @@ test('handleAuthRequest accepts a magic-link post from a configured trusted orig
 test.each([
   ['a foreign Origin', { origin: 'https://evil.example.com' }],
   ['no Origin', {}],
-  ['a null Origin', { origin: 'null' }],
+  ['a null Origin with no Sec-Fetch-Site', { origin: 'null' }],
+  ['a null Origin from another site', { origin: 'null', 'sec-fetch-site': 'cross-site' }],
   ['a cross-site fetch', { origin: 'https://app.example.com', 'sec-fetch-site': 'cross-site' }],
 ])(
   'handleAuthRequest refuses a magic-link post with %s and spends no token',
@@ -225,4 +226,15 @@ test('handleAuthRequest matches the magic-link post under a basePath', async () 
     url: 'https://app.example.com/base/api/auth/magic-link/verify?token=tok123',
     method: 'GET',
   });
+});
+
+// Referrer-Policy: no-referrer makes a browser send Origin: null on a
+// same-origin form post; Sec-Fetch-Site still says where it came from.
+test('handleAuthRequest accepts a magic-link post with a null Origin from the same origin', async () => {
+  const result = await handleAuthRequest({
+    auth: echoAuth,
+    clientAddress: null,
+    request: createVerifyPost({ headers: { origin: 'null', 'sec-fetch-site': 'same-origin' } }),
+  });
+  expect(result.method).toBe('GET');
 });
