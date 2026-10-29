@@ -24,12 +24,14 @@ The build pipeline is an 8-phase process (Phases 0–7) that:
 1. getServer() - Fetch @lowdefy/server package
 2. resetServerPackageJson() - Reset to clean state
 3. addCustomPluginsAsDeps() - Register custom plugins
-4. installServer() - Run npm install
+4. installServer() - Run pnpm install, unless the last install already satisfies package.json
 5. runLowdefyBuild() - Execute core build (pnpm run build:lowdefy)
-6. installServer() - Second install for updated deps
+6. installServer() - Second install for updated deps, with the same skip
 7. runLowdefyBuild() - Again, only when pluginChecksNeedRebuild() says the install gave something new to check, and plugin checks are not skipped
 8. runClientBuild() - Vite client build (pnpm run build:client → vite build)
 ```
+
+Both installs pass `skipIfInstalled` to `installIfPackageJsonChanged` (`@lowdefy/node-utils`). Every install, by any caller, records what it installed in `node_modules/.lowdefy-install-state.json`: the `dependencies` and `devDependencies` (name to spec) and a hash of the install settings, which are the rest of `package.json`, `pnpm-workspace.yaml` and `.npmrc`, the workspace files read after the install since pnpm may rewrite `pnpm-workspace.yaml` while it installs. With `skipIfInstalled`, an install is skipped when the settings hash matches and every dependency in `package.json` was recorded with the identical spec in the same field; extra recorded packages do not count, since the server loads only what `writePluginImports` lists. So the reset `package.json` at step 4, a subset of what the last build installed, no longer installs and so removes the app's plugins, and step 6 installs only what is new. A plugin the app stopped using stays installed until the next real install prunes it. Without the option (`lowdefy dev`, the dev server's `installPlugins.mjs`, the mobile shell) only an exact match of the `.lowdefy-install-hash` skips. Both files live in `node_modules`, so deleting it, or `getServer` cleaning the folder for another server package or version, forces an install. `lowdefy emails` runs the same steps 2 to 6 with the same skip.
 
 A default Lowdefy plugin is never pending: its schemas and whether it has `./checks` ship with the build in `defaultTypesMap` (see [plugin-system.md](./plugin-system.md)), so the first build checks it whether or not it is installed. Custom plugins are installed before step 5, so in practice nothing is pending and `lowdefy build` and the dev server build once; what follows is the safety net for a package that is neither default nor installed. Such a plugin can't be checked, so the build lists it in `build/plugin-checks-pending.json` as `{ name, schemaChecked }`, `schemaChecked` being whether it owns a block, action or operator type. Step 6 installs it. Step 7 builds once more only when that checks something new: `pluginChecksNeedRebuild` (`@lowdefy/node-utils`) is true when a listed package is schema-checked or now resolves `./checks` from the server directory. A plugin that only adds connections or requests and ships no rules costs no second build. There is no third pass.
 

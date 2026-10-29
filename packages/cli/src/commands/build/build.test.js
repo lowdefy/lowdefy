@@ -111,6 +111,19 @@ test('build runs the Lowdefy build once when no plugin checks are pending', asyn
   );
 });
 
+test('build skips both server installs the last install already satisfies', async () => {
+  mockRunLowdefyBuild.mockImplementation(async () => {
+    calls.push('runLowdefyBuild');
+  });
+  const context = createContext();
+  await build({ context });
+  expect(mockInstallServer).toHaveBeenCalledTimes(2);
+  expect(mockInstallServer.mock.calls).toEqual([
+    [{ context, directory: serverDirectory, skipIfInstalled: true }],
+    [{ context, directory: serverDirectory, skipIfInstalled: true }],
+  ]);
+});
+
 test('build runs the Lowdefy build again after the install when plugin checks are pending', async () => {
   mockRunLowdefyBuild.mockImplementationOnce(async () => {
     calls.push('runLowdefyBuild');
