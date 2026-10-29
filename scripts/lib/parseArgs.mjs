@@ -26,13 +26,14 @@ const sharedOptions = {
 };
 
 function parse(extraOptions = {}) {
-  const { values } = parseArgs({
+  const { values, positionals } = parseArgs({
     options: { ...sharedOptions, ...extraOptions },
     strict: false,
   });
   return {
     configDirectory: path.resolve(values['config-directory']),
     logLevel: values['log-level'],
+    positionals,
     skipBuild: values['skip-build'],
     values,
   };
