@@ -49,16 +49,29 @@ function isMagicLinkVerifyPost({ auth, request }) {
 // on the GET path. BetterAuth checks no Origin on a GET, so the post's Origin
 // is checked here: a post from another site would sign the visitor in to the
 // account whose token that site holds. The origins accepted are the request's
-// own host and the pinned base URL (the origins BetterAuth trusts), as for the
-// mobile sign-in confirmation.
-async function getMagicLinkVerifyRequest({ auth, request, headers }) {
-  const sameOrigin = isSameOriginRequest({
-    getHeader: (name) => request.headers.get(name),
+// own host, the pinned base URL and any trusted origins configured as strings
+// (the origins BetterAuth trusts), as for the mobile sign-in confirmation.
+//
+// Under Referrer-Policy: no-referrer a browser sends Origin: null on a
+// same-origin form post. BetterAuth accepts that when Sec-Fetch-Site, which
+// page script cannot set, says same-origin, and so does this check; without
+// Sec-Fetch-Site a null Origin is refused.
+function isMagicLinkPostAllowed({ auth, request }) {
+  const getHeader = (name) => request.headers.get(name);
+  if (getHeader('origin') === 'null') {
+    return getHeader('sec-fetch-site') === 'same-origin';
+  }
+  return isSameOriginRequest({
+    getHeader,
     publicOrigins: [
       auth.options.baseURL,
       ...(type.isArray(auth.options.trustedOrigins) ? auth.options.trustedOrigins : []),
     ].filter((origin) => type.isString(origin)),
   });
+}
+
+async function getMagicLinkVerifyRequest({ auth, request, headers }) {
+  const sameOrigin = isMagicLinkPostAllowed({ auth, request });
   if (!sameOrigin) {
     return { response: new Response('Forbidden.', { status: 403 }) };
   }
