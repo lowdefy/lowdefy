@@ -172,16 +172,19 @@ test.each([
   ['no Origin', {}],
   ['a null Origin', { origin: 'null' }],
   ['a cross-site fetch', { origin: 'https://app.example.com', 'sec-fetch-site': 'cross-site' }],
-])('handleAuthRequest refuses a magic-link post with %s and spends no token', async (_, headers) => {
-  const auth = createCountingAuth();
-  const response = await handleAuthRequest({
-    auth,
-    clientAddress: null,
-    request: createVerifyPost({ headers }),
-  });
-  expect(response.status).toBe(403);
-  expect(auth.calls).toHaveLength(0);
-});
+])(
+  'handleAuthRequest refuses a magic-link post with %s and spends no token',
+  async (_, headers) => {
+    const auth = createCountingAuth();
+    const response = await handleAuthRequest({
+      auth,
+      clientAddress: null,
+      request: createVerifyPost({ headers }),
+    });
+    expect(response.status).toBe(403);
+    expect(auth.calls).toHaveLength(0);
+  }
+);
 
 test('handleAuthRequest refuses an oversized magic-link post', async () => {
   const auth = createCountingAuth();

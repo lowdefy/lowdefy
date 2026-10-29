@@ -48,12 +48,12 @@ export default {
       token: {
         type: 'string',
         description:
-          'The single-use magic-link token. Defaults to the "token" parameter in the landing page's URL fragment. The action fails when neither is a string, because there is nothing to verify.',
+          'The single-use magic-link token. Defaults to the "token" parameter in the URL fragment of the landing page. The action fails when neither is a string, because there is nothing to verify.',
       },
       callbackUrl: {
         type: 'object',
         description:
-          'Where a successful sign-in lands. Defaults to the "callbackURL" parameter the sign-in email carried in the landing page's URL fragment, and to BetterAuth\'s own default when that is absent too. "false" is not valid here - verification redirects through a hop the app does not control, so there is no staying put.',
+          'Where a successful sign-in lands. Defaults to the "callbackURL" parameter the sign-in email carried in the URL fragment of the landing page, and to BetterAuth\'s own default when that is absent too. "false" is not valid here - verification redirects through a hop the app does not control, so there is no staying put.',
         properties: callbackTargetProperties,
       },
       newUserCallbackUrl: {

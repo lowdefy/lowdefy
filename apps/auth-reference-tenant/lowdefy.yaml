@@ -76,6 +76,7 @@ auth:
       - signup
       - check-email
       - verify-email
+      - magic-link
       - accept-invitation
       - home
       - caller
@@ -84,6 +85,8 @@ auth:
     signIn: /login
     signUp: /signup
     verifyEmail: /verify-email
+    # The magic-link email links here, with the token in the URL fragment.
+    magicLink: /magic-link
     # With the origin pinned (BETTER_AUTH_URL), the invitation email links
     # here with the invitation id; unpinned, it carries no link.
     acceptInvitation: /accept-invitation
@@ -131,6 +134,7 @@ pages:
   - _ref: pages/signup.yaml
   - _ref: pages/check-email.yaml
   - _ref: pages/verify-email.yaml
+  - _ref: pages/magic-link.yaml
   - _ref: pages/accept-invitation.yaml
   - _ref: pages/dashboard.yaml
   - _ref: pages/organizations.yaml
