@@ -110,7 +110,7 @@ A verification email links to Better Auth's verify endpoint, which confirms the 
 
 `authPages.magicLink` is opt-in, and it exists for one reason: Better Auth's magic-link verify endpoint consumes the single-use token on the **first** `GET` of the URL. Corporate mail security — Microsoft Defender Safe Links, Proofpoint URL Defense, Mimecast — fetches every link in a message at delivery time, so that first `GET` is a scanner and the person clicking arrives to `INVALID_TOKEN`.
 
-Set the key and the sign-in email links to a page of your own instead, with the token and the callback destinations carried on its URL query. Fetching a Lowdefy page is harmless, so the token stays unspent until a real click runs [`MagicLinkVerify`](/MagicLinkVerify):
+Set the key and the sign-in email links to a page of your own instead, with the token and the callback destinations carried in its URL fragment (after the `#`), which a browser never sends, so the token stays out of request logs. Fetching a Lowdefy page is harmless, so the token stays unspent until a real click runs [`MagicLinkVerify`](/MagicLinkVerify):
 
 ```yaml
 lowdefy: 7.1.0
