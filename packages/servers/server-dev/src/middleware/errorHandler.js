@@ -70,6 +70,17 @@ function createErrorHandler({ basePath = '', logger }) {
       logger.warn(`${error.status} answered by the route: ${c.req.method} ${c.req.path}`);
       return error.getResponse();
     }
+    // The request timeout (requestTimeout.js) answered 504 while the handler ran on. When the
+    // handler returns, the middleware around it runs on a response that is already sent:
+    // setting a header there rebuilds it from a body the 504 has used, and throws. The handler
+    // may also fail late. Nobody receives this answer and the timeout is already logged, so
+    // the error is one warning line, not a fault.
+    if (c.get('requestTimeoutSignal')?.aborted) {
+      logger.warn(
+        `Dropped an error after the request timed out: ${c.req.method} ${c.req.path} - ${error.message}`
+      );
+      return c.text('Gateway Timeout', 504);
+    }
     const context = c.get('lowdefyContext');
     if (context) {
       await context.handleError(error);

@@ -438,3 +438,33 @@ test('errorHandler does not capture to Sentry when Sentry was not started', asyn
 
   expect(captureException).not.toHaveBeenCalled();
 });
+
+// A request the timeout already answered: the error comes from work that finished after the
+// 504 was sent, so it is neither handled as a fault nor captured.
+test('errorHandler drops an error raised after the request timed out', async () => {
+  sentrySdk.current = { captureException };
+  const context = { handleError: vi.fn() };
+  const logger = createLogger();
+  const controller = new AbortController();
+  controller.abort();
+  const app = new Hono();
+  app.use('*', async (c, next) => {
+    c.set('lowdefyContext', context);
+    c.set('requestTimeoutSignal', controller.signal);
+    await next();
+  });
+  app.all('*', () => {
+    throw new TypeError('Response body object should not be disturbed or locked');
+  });
+  app.onError(createErrorHandler({ logger }));
+  const res = await app.request('/api/request/getUsers');
+
+  expect(res.status).toEqual(504);
+  expect(context.handleError).not.toHaveBeenCalled();
+  expect(captureException).not.toHaveBeenCalled();
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    'Dropped an error after the request timed out: GET /api/request/getUsers - Response body object should not be disturbed or locked'
+  );
+  sentrySdk.current = null;
+});

@@ -400,3 +400,30 @@ test('errorHandler treats a basePath prefixed page path as a page path', async (
   expect(res.status).toEqual(500);
   expect(await res.text()).toEqual('Internal Server Error');
 });
+
+// A request the timeout already answered: the error comes from work that finished after the
+// 504 was sent, so it is not handled as a fault.
+test('errorHandler drops an error raised after the request timed out', async () => {
+  const context = { handleError: vi.fn() };
+  const logger = createLogger();
+  const controller = new AbortController();
+  controller.abort();
+  const app = new Hono();
+  app.use('*', async (c, next) => {
+    c.set('lowdefyContext', context);
+    c.set('requestTimeoutSignal', controller.signal);
+    await next();
+  });
+  app.all('*', () => {
+    throw new TypeError('Response body object should not be disturbed or locked');
+  });
+  app.onError(createErrorHandler({ logger }));
+  const res = await app.request('/api/request/getUsers');
+
+  expect(res.status).toEqual(504);
+  expect(context.handleError).not.toHaveBeenCalled();
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    'Dropped an error after the request timed out: GET /api/request/getUsers - Response body object should not be disturbed or locked'
+  );
+});
