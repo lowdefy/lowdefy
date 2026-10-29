@@ -23,11 +23,14 @@ import createBuildEnv from './createBuildEnv.mjs';
 // Runs one side's own CLI build on a server prepareServer made: installs, every
 // config pass, no client build. Callable any number of times on the same
 // server. stdout and stderr go to one log file, in the order written.
-// Resolves to { ok, exitCode, logFile, output, wallMs }.
+// probeFile and cpuProfileDirectory turn on the probe and CPU profiles
+// (createBuildEnv). Resolves to { ok, exitCode, logFile, output, wallMs }.
 async function buildSide({
   configDirectory,
+  cpuProfileDirectory,
   env = {},
   logFile,
+  probeFile,
   repoRoot,
   server,
   serverDirectory,
@@ -52,7 +55,7 @@ async function buildSide({
   const exitCode = await new Promise((resolve, reject) => {
     const child = spawn(process.execPath, args, {
       cwd: configDirectory,
-      env: { ...createBuildEnv(), ...env },
+      env: { ...createBuildEnv({ cpuProfileDirectory, probeFile }), ...env },
       stdio: ['ignore', fd, fd],
     });
     child.on('error', reject);
