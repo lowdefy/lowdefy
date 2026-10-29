@@ -40,6 +40,7 @@ function createContext({
   skipPluginChecks = false,
   stage = 'prod',
   validateOnly = false,
+  writeCompressedMaps = false,
 }) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
@@ -83,6 +84,9 @@ function createContext({
     seenSourceLines: new Set(),
     stage,
     validateOnly,
+    // Set by the production server build scripts: writeMaps also writes
+    // keyMap.json.gz and refMap.json.gz, which deploy output ships.
+    writeCompressedMaps,
     pageTypeCounters: new Map(),
     // ~ignoreBuildChecks slugs that are not built-in, mapped to the ~k of each
     // node listing them. The plugin rules runner checks them once rules load.

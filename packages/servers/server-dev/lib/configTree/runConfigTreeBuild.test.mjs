@@ -147,6 +147,11 @@ test('runConfigTreeBuild builds base and head into scratch directories and write
   );
   expect(headPage).toContain('Head');
   expect(basePage).toContain('Base');
+  // Only production server builds gzip the maps; a scope build ships nothing.
+  const headBuildFiles = fs.readdirSync(path.join(root, 'builds', 'head', 'build'));
+  expect(headBuildFiles).toEqual(expect.arrayContaining(['keyMap.json', 'refMap.json']));
+  expect(headBuildFiles).not.toContain('keyMap.json.gz');
+  expect(headBuildFiles).not.toContain('refMap.json.gz');
   expect(
     JSON.parse(fs.readFileSync(path.join(root, 'builds', 'head', 'result.json'), 'utf8')).status
   ).toEqual('ok');
