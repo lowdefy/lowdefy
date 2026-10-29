@@ -427,3 +427,25 @@ test('errorHandler drops an error raised after the request timed out', async () 
     'Dropped an error after the request timed out: GET /api/request/getUsers - Response body object should not be disturbed or locked'
   );
 });
+
+// The timeout middleware sets the signal on every request it covers; only one that has fired
+// drops the error.
+test('errorHandler handles a fault as before while the request timeout has not fired', async () => {
+  const context = { handleError: vi.fn() };
+  const logger = createLogger();
+  const app = new Hono();
+  app.use('*', async (c, next) => {
+    c.set('lowdefyContext', context);
+    c.set('requestTimeoutSignal', new AbortController().signal);
+    await next();
+  });
+  app.all('*', () => {
+    throw new Error('Request failed.');
+  });
+  app.onError(createErrorHandler({ logger }));
+  const res = await app.request('/api/request/getUsers');
+
+  expect(res.status).toEqual(500);
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(logger.warn).not.toHaveBeenCalled();
+});

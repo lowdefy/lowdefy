@@ -105,6 +105,9 @@ test('a request that runs past the timeout answers 504 and reports nothing when 
   await new Promise((resolve) => setTimeout(resolve, 10));
   expect(captureException).not.toHaveBeenCalled();
   expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.stringMatching(/^Dropped an error after the request timed out: POST \/api\/request/)
+  );
 });
 
 test('a response in time is still compressed', async () => {
