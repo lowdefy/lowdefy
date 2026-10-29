@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { resolveKeyEntry } from '@lowdefy/errors';
 
 // Walk up from ~r to find the page's source file for JIT re-resolution.
 // Templates receive vars (they need id, title, etc. from the page file),
@@ -78,9 +79,9 @@ function createPageRegistry({ components, context }) {
   const unresolvedRefVars = context.unresolvedRefVars ?? {};
 
   (components.pages ?? []).forEach((page) => {
-    // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
-    const keyMapEntry = context.keyMap[page['~k']];
-    const refId = keyMapEntry?.['~r'] ?? null;
+    // addKeys moves ~r into the keyMap and deletes it from objects. A page
+    // inline in a ref file carries no ref of its own, so resolve it.
+    const refId = resolveKeyEntry({ keyMap: context.keyMap, configKey: page['~k'] })?.refId ?? null;
     const sourceRef = !type.isNone(refId)
       ? findPageSourceRef(refId, context.refMap, unresolvedRefVars)
       : null;

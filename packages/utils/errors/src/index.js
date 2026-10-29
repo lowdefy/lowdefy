@@ -74,6 +74,10 @@
  *   loadAndResolveErrorLocation - Async: reads keyMap/refMap files at runtime
  *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
  *
+ * Key Map Readers (entries in the full or the short shape; nothing else reads entry fields):
+ *   resolveKeyEntry           - One entry → {path, refId, line, parentId, ignoreBuildChecks}
+ *   createKeyPathResolver     - Memoised resolver for scans over the whole key map
+ *
  * Error Field Utilities:
  *   errorSummaryForLog        - {name, message, code, statusCode, cause} an error may log
  *   expectedErrorNames        - Set of error class names that are expected outcomes, not faults
@@ -90,6 +94,7 @@ import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
+import createKeyPathResolver from './createKeyPathResolver.js';
 import errorSummaryForLog from './errorSummaryForLog.js';
 import errorToDisplayString from './errorToDisplayString.js';
 import expectedErrorNames from './expectedErrorNames.js';
@@ -104,6 +109,7 @@ import RequestError from './RequestError.js';
 import resolveConfigLocation from './resolveConfigLocation.js';
 import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
+import resolveKeyEntry from './resolveKeyEntry.js';
 import ServiceError from './ServiceError.js';
 import shouldSuppressBuildCheck, {
   PLUGIN_CHECKS_SLUG,
@@ -122,6 +128,7 @@ export {
   BuildError,
   ConfigError,
   ConfigWarning,
+  createKeyPathResolver,
   errorSummaryForLog,
   errorToDisplayString,
   expectedErrorNames,
@@ -138,6 +145,7 @@ export {
   resolveConfigLocation,
   loadAndResolveErrorLocation,
   resolveErrorLocation,
+  resolveKeyEntry,
   ServiceError,
   shouldSuppressBuildCheck,
   TenantIntegrityError,
