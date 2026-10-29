@@ -69,3 +69,46 @@ test('a group slug on the node itself suppresses its errors', () => {
   const keyMap = { child: { key: 'pages.0', '~ignoreBuildChecks': ['plugin-checks'] } };
   expect(shouldSuppressBuildCheck(pluginError, keyMap)).toBe(true);
 });
+
+// The same chain, three deep, with the ignore value on the grandparent, in
+// each key map entry shape.
+const grandparentKeyMaps = [
+  [
+    'full',
+    (ignored) => ({
+      grandparent: { key: 'root.pages[0:home]', '~ignoreBuildChecks': ignored },
+      parent: { key: 'root.pages[0:home].blocks', '~k_parent': 'grandparent' },
+      child: { key: 'root.pages[0:home].blocks[0:if_box:Box]', '~k_parent': 'parent' },
+    }),
+  ],
+  [
+    'short',
+    (ignored) => ({
+      grandparent: { s: '[0:home]', p: 'pages', i: ignored },
+      parent: { s: '.blocks', p: 'grandparent' },
+      child: { s: '[0:if_box:Box]', p: 'parent' },
+    }),
+  ],
+];
+
+test.each(grandparentKeyMaps)(
+  'a rule slug on a grandparent suppresses in the %s shape',
+  (_, keyMapOf) => {
+    expect(shouldSuppressBuildCheck(pluginError, keyMapOf(['if-test']))).toBe(true);
+    const otherRule = { ...pluginError, checkSlug: 'switch-branches', checkGroup: undefined };
+    expect(shouldSuppressBuildCheck(otherRule, keyMapOf(['if-test']))).toBe(false);
+  }
+);
+
+test.each(grandparentKeyMaps)(
+  'plugin-checks on a grandparent suppresses the group in the %s shape',
+  (_, keyMapOf) => {
+    expect(shouldSuppressBuildCheck(pluginError, keyMapOf(['plugin-checks']))).toBe(true);
+    const builtIn = { configKey: 'child', checkSlug: 'state-refs' };
+    expect(shouldSuppressBuildCheck(builtIn, keyMapOf(['plugin-checks']))).toBe(false);
+  }
+);
+
+test.each(grandparentKeyMaps)('true on a grandparent suppresses in the %s shape', (_, keyMapOf) => {
+  expect(shouldSuppressBuildCheck({ configKey: 'child' }, keyMapOf(true))).toBe(true);
+});
