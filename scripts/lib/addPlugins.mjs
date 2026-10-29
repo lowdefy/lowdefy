@@ -17,6 +17,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import readNpmPeerDependencies from './readNpmPeerDependencies.mjs';
+
 function readLowdefyYaml(configDirectory) {
   for (const filename of ['lowdefy.yaml', 'lowdefy.yml']) {
     const filePath = path.join(configDirectory, filename);
@@ -82,7 +84,35 @@ function stripYamlQuotes(value) {
   return value;
 }
 
-function addPlugins({ configDirectory, targetDir, logger }) {
+// The server installs with autoInstallPeers off (createWorkspace), so a peer an
+// npm plugin imports and the server does not depend on would be missing. Each
+// such peer becomes a server dependency: the link: override when the server
+// links that package, else the range the plugin declares. A workspace plugin
+// is linked, so it resolves its peers from its own install.
+function addPeerDependencies({ jsonPaths, logger, peerDependencies, plugin }) {
+  for (const jsonPath of jsonPaths) {
+    const pkg = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    let changed = false;
+    for (const [peer, range] of Object.entries(peerDependencies)) {
+      if (pkg.dependencies[peer] !== undefined) continue;
+      pkg.dependencies[peer] = pkg.pnpm?.overrides?.[peer] ?? range;
+      changed = true;
+      if (jsonPath === jsonPaths[0]) {
+        logger.info(`    peer ${peer} → ${pkg.dependencies[peer]} (for ${plugin.name})`);
+      }
+    }
+    if (changed) {
+      fs.writeFileSync(jsonPath, JSON.stringify(pkg, null, 2) + '\n');
+    }
+  }
+}
+
+function addPlugins({
+  configDirectory,
+  targetDir,
+  logger,
+  getPeerDependencies = readNpmPeerDependencies,
+}) {
   const yamlContent = readLowdefyYaml(configDirectory);
   if (!yamlContent) return;
 
@@ -116,7 +146,20 @@ function addPlugins({ configDirectory, targetDir, logger }) {
   for (const plugin of plugins) {
     const version = plugin.version ?? 'latest';
 
-    if (version.startsWith('workspace:')) {
+    const existingLink = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8')).pnpm?.overrides?.[
+      plugin.name
+    ];
+    if (version.startsWith('workspace:') && existingLink?.startsWith('link:')) {
+      // A plugin rewriteDeps already links (an @lowdefy/* package, like the
+      // docs' own plugin) keeps that link, to the Lowdefy checkout the server
+      // was prepared from.
+      for (const jsonPath of [pkgJsonPath, origPkgJsonPath]) {
+        const pkg = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+        pkg.dependencies[plugin.name] = existingLink;
+        fs.writeFileSync(jsonPath, JSON.stringify(pkg, null, 2) + '\n');
+      }
+      logger.info(`  ${plugin.name} → ${existingLink} (Lowdefy package)`);
+    } else if (version.startsWith('workspace:')) {
       const workspaceRoot = findPnpmWorkspaceRoot(configDirectory);
       if (!workspaceRoot) {
         logger.warn(
@@ -144,6 +187,16 @@ function addPlugins({ configDirectory, targetDir, logger }) {
         fs.writeFileSync(jsonPath, JSON.stringify(pkg, null, 2) + '\n');
       }
       logger.info(`  ${plugin.name} → ${version} (npm)`);
+      addPeerDependencies({
+        jsonPaths: [pkgJsonPath, origPkgJsonPath],
+        logger,
+        peerDependencies: getPeerDependencies({
+          cwd: configDirectory,
+          name: plugin.name,
+          version,
+        }),
+        plugin,
+      });
     }
   }
 }
