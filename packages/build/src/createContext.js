@@ -23,6 +23,7 @@ import createMobileTypeCounters from './utils/createMobileTypeCounters.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createTypeCounters from './utils/createTypeCounters.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
+import mergeTypesMaps from './utils/mergeTypesMaps.js';
 import defaultMessagesMap from './defaultMessagesMap.js';
 import defaultPackages from './defaultPackages.js';
 import defaultTypesMap from './defaultTypesMap.js';
@@ -91,7 +92,7 @@ function createContext({
     // Each plugin module imported for its schemas, by specifier. Dev page builds share it.
     pluginModuleCache: new Map(),
     typeCounters: createTypeCounters(),
-    typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
+    typesMap: mergeTypesMaps({ defaultTypesMap, customTypesMap }),
     // The client types a native shell carries (defaultPackagesMobile), plus
     // the native types of the shell plugins mobile.shells[].plugins lists
     // (createPluginTypesMapMobile). Mobile pages resolve blocks, actions and
