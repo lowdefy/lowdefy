@@ -8375,14 +8375,14 @@
     "2": {
       "parent": null
     },
-    "pages.0": {
-      "parent": "2",
-      "lineNumber": 8,
-      "path": "pages/about.yaml"
-    },
     "mobile.pages.0": {
       "parent": "2",
       "lineNumber": 16,
+      "path": "pages/about.yaml"
+    },
+    "pages.0": {
+      "parent": "2",
+      "lineNumber": 8,
       "path": "pages/about.yaml"
     }
   },

@@ -7473,10 +7473,10 @@
     "3": {
       "parent": null
     },
-    "connections.0": {
+    "agents.0": {
       "parent": "2",
-      "lineNumber": 9,
-      "path": "<CONFIG_DIR>/modules/assistant/connections/ai.yaml"
+      "lineNumber": 18,
+      "path": "<CONFIG_DIR>/modules/assistant/agents/assistant.yaml"
     },
     "api.0": {
       "parent": "2",
@@ -7498,10 +7498,10 @@
       "lineNumber": 15,
       "path": "<CONFIG_DIR>/modules/assistant/api/run-assistant.yaml"
     },
-    "agents.0": {
+    "connections.0": {
       "parent": "2",
-      "lineNumber": 18,
-      "path": "<CONFIG_DIR>/modules/assistant/agents/assistant.yaml"
+      "lineNumber": 9,
+      "path": "<CONFIG_DIR>/modules/assistant/connections/ai.yaml"
     },
     "pages.0": {
       "parent": "2",
