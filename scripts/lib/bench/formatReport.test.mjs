@@ -21,8 +21,8 @@ import formatReport from './formatReport.mjs';
 
 const MB = 1024 * 1024;
 
-function run({ passesMs, passCount = 1 }) {
-  return { passCount, passesMs, peakRssKb: 800 * 1024, totalMs: passesMs + 5000 };
+function run({ passesMs, passesCpuMs = passesMs * 1.2, passCount = 1 }) {
+  return { passCount, passesCpuMs, passesMs, peakRssKb: 800 * 1024, totalMs: passesMs + 5000 };
 }
 
 function profileSummary({ yaml }) {
@@ -59,8 +59,16 @@ const report = {
   timing: {
     runs: 3,
     results: {
-      baseline: [run({ passesMs: 10000 }), run({ passesMs: 11000 }), run({ passesMs: 12000 })],
-      current: [run({ passesMs: 9000 }), run({ passesMs: 9900 }), run({ passesMs: 10500 })],
+      baseline: [
+        run({ passesMs: 10000, passesCpuMs: 14000 }),
+        run({ passesMs: 30000, passesCpuMs: 14500 }),
+        run({ passesMs: 12000, passesCpuMs: 15000 }),
+      ],
+      current: [
+        run({ passesMs: 9000, passesCpuMs: 13500 }),
+        run({ passesMs: 9900, passesCpuMs: 14100 }),
+        run({ passesMs: 10500, passesCpuMs: 14400 }),
+      ],
     },
   },
   profile: {
@@ -88,7 +96,7 @@ test('formatReport shows each timing median with its range and the change', () =
   const lines = formatReport({ report }).split('\n');
   assert.ok(
     lines.includes(
-      '| Config pass, wall time | 11.00 s (10.00 s–12.00 s) | 9.90 s (9.00 s–10.50 s) | -10.0% |'
+      '| Config pass, wall time | 12.00 s (10.00 s–30.00 s) | 9.90 s (9.00 s–10.50 s) | -17.5% |'
     )
   );
   assert.ok(lines.includes('| Config passes | 1 | 1 |  |'));
@@ -100,6 +108,16 @@ test('formatReport shows profile time in seconds and as a share of the pass', ()
   assert.ok(lines.includes('| yaml | 4.00 s | 40.0% | 2.00 s | 20.0% |'));
   assert.ok(lines.includes('| dist/build/addKeys.js | 1.50 s | 15.0% | 1.50 s | 15.0% |'));
   assert.ok(lines.includes('| (garbage collector) | 0.80 s | 8.0% | 0.80 s | 8.0% |'));
+});
+
+test('formatReport shows the config pass CPU time right under its wall time', () => {
+  const lines = formatReport({ report }).split('\n');
+  const wall = lines.findIndex((line) => line.startsWith('| Config pass, wall time |'));
+  assert.equal(
+    lines[wall + 1],
+    '| Config pass, CPU time (user + system) | 14.50 s (14.00 s–15.00 s) | ' +
+      '14.10 s (13.50 s–14.40 s) | -2.8% |'
+  );
 });
 
 test('formatReport lists the differences when the output is not identical', () => {

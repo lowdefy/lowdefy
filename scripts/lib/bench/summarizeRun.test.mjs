@@ -31,10 +31,14 @@ test('summarizeRun counts each lowdefy/build.mjs process as a config pass', () =
   const summary = summarizeRun({ records });
   assert.equal(summary.passCount, 2);
   assert.deepEqual(summary.passes, [
-    { pid: 84233, wallMs: 31420, maxRssKb: 1605328, exitCode: 0 },
-    { pid: 84390, wallMs: 28000, maxRssKb: 1702112, exitCode: 0 },
+    { pid: 84233, wallMs: 31420, cpuMs: 41612.574, maxRssKb: 1605328, exitCode: 0 },
+    { pid: 84390, wallMs: 28000, cpuMs: 35900, maxRssKb: 1702112, exitCode: 0 },
   ]);
   assert.equal(summary.passesMs, 59420);
+});
+
+test("summarizeRun sums the config passes' user and system CPU time, other processes left out", () => {
+  assert.equal(summarizeRun({ records }).passesCpuMs, 77512.574);
 });
 
 test('summarizeRun takes the total from the first start to the last end', () => {

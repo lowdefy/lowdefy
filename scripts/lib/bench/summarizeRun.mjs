@@ -24,8 +24,11 @@ function isConfigPass(record) {
 }
 
 // One build's numbers from its probe records:
-// - passes: each config pass in start order, { pid, wallMs, maxRssKb, exitCode };
-// - passCount and passesMs, the passes' wall time summed;
+// - passes: each config pass in start order,
+//   { pid, wallMs, cpuMs, maxRssKb, exitCode }, cpuMs its user and system CPU
+//   time together;
+// - passCount, passesMs (the passes' wall time summed) and passesCpuMs (their
+//   CPU time summed);
 // - totalMs: from the first process's start to the last one's end, the whole
 //   `lowdefy build`, installs included;
 // - peakRssKb: the largest maxRSS of the config passes.
@@ -39,6 +42,7 @@ function summarizeRun({ records }) {
     .map((record) => ({
       pid: record.pid,
       wallMs: record.end - record.start,
+      cpuMs: (record.userCpuUs + record.systemCpuUs) / 1000,
       maxRssKb: record.maxRssKb,
       exitCode: record.exitCode,
     }));
@@ -51,6 +55,7 @@ function summarizeRun({ records }) {
     passes,
     passCount: passes.length,
     passesMs: passes.reduce((sum, pass) => sum + pass.wallMs, 0),
+    passesCpuMs: passes.reduce((sum, pass) => sum + pass.cpuMs, 0),
     totalMs: end - start,
     peakRssKb: Math.max(...passes.map((pass) => pass.maxRssKb)),
   };

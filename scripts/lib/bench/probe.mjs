@@ -21,19 +21,24 @@ import { isMainThread } from 'node:worker_threads';
 // (NODE_OPTIONS=--import, see createBuildEnv), so neither side's code changes.
 // At exit each process appends one JSON line to the file named by
 // LOWDEFY_BENCH_PROBE_FILE: its argv, pid, start and end time (ms since the
-// epoch), exit code and peak memory (process.resourceUsage().maxRSS, in KB).
+// epoch), exit code, peak memory (process.resourceUsage().maxRSS, in KB) and
+// CPU time (its userCPUTime and systemCPUTime, in microseconds), which other
+// load on the machine changes far less than wall time.
 // One line per process: a worker thread shares its process's pid and memory,
 // so only the main thread writes.
 if (isMainThread) {
   const probeFile = process.env.LOWDEFY_BENCH_PROBE_FILE;
   process.on('exit', (exitCode) => {
+    const usage = process.resourceUsage();
     const record = {
       argv: process.argv,
       pid: process.pid,
       start: performance.timeOrigin,
       end: performance.timeOrigin + performance.now(),
       exitCode,
-      maxRssKb: process.resourceUsage().maxRSS,
+      maxRssKb: usage.maxRSS,
+      userCpuUs: usage.userCPUTime,
+      systemCpuUs: usage.systemCPUTime,
     };
     fs.appendFileSync(probeFile, JSON.stringify(record) + '\n');
   });
