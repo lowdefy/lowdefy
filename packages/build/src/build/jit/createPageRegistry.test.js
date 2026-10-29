@@ -294,3 +294,25 @@ test('createPageRegistry handles missing refMap entry gracefully', () => {
   expect(entry.refPath).toBeNull();
   expect(entry.unresolvedVars).toBeNull();
 });
+
+test('createPageRegistry reads the ref a short-shape page entry inherits from its parent', () => {
+  // pages.yaml (no vars) holds the pages array inline, so a page entry in the
+  // short key map shape carries no ref of its own.
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    'ref-pages': { parent: 'ref-root', path: 'pages.yaml' },
+  });
+  const page = { id: 'home', auth: { public: true }, type: 'Box' };
+  Object.defineProperty(page, '~k', { value: 'k-home', enumerable: false, writable: true });
+  const keyMap = {
+    'k-root': { s: 'root', p: 'k-unwritten' },
+    'k-pages': { s: '.pages', p: 'k-root', r: 'ref-pages', l: 1 },
+    'k-home': { s: '[0:home:Box]', p: 'k-pages', l: 2 },
+  };
+  const registry = createPageRegistry({
+    components: { pages: [page] },
+    context: { keyMap, refMap, unresolvedRefVars: {} },
+  });
+  expect(registry.get('home').refId).toBe('ref-pages');
+  expect(registry.get('home').refPath).toBe('pages.yaml');
+});
