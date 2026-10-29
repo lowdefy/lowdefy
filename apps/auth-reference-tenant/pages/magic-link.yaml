@@ -1,6 +1,7 @@
 # The landing page the magic-link email points at (auth.authPages.magicLink).
 # The email carries the token in the URL fragment, which no browser sends, so
 # the page reads it with _url_hash, and MagicLinkVerify posts it on a click.
+# _url_query covers a link emailed in the older ?token= form.
 id: magic-link
 type: Box
 properties:
@@ -15,7 +16,9 @@ blocks:
         _if:
           test:
             _eq:
-              - _url_hash: token
+              - _if_none:
+                  - _url_hash: token
+                  - _url_query: token
               - null
           then: warning
           else: info
@@ -24,18 +27,22 @@ blocks:
         _if:
           test:
             _eq:
-              - _url_hash: token
+              - _if_none:
+                  - _url_hash: token
+                  - _url_query: token
               - null
           then: This link carries no sign-in token. Ask for a new link from the login page.
           else: Click the button below to finish signing in.
-    areas:
+    slots:
       extra:
         blocks:
           - id: magic_link_verify_button
             type: Button
             visible:
               _ne:
-                - _url_hash: token
+                - _if_none:
+                    - _url_hash: token
+                    - _url_query: token
                 - null
             properties:
               title: Sign in
