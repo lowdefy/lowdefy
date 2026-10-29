@@ -2691,6 +2691,9 @@ importers:
       '@lowdefy/websockets-core':
         specifier: 7.1.0
         version: link:../../plugins/websockets/websockets-core
+      '@modelcontextprotocol/sdk':
+        specifier: 1.32.2
+        version: 1.32.2(zod@4.6.7)
       '@sentry/browser':
         specifier: 10.57.0
         version: 10.57.0
