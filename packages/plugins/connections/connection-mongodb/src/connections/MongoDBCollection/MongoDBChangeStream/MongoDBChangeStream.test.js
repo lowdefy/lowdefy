@@ -331,13 +331,14 @@ test('MongoDBChangeStream starts a new retry window after a stream that ran heal
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(0);
   const first = createFakeStream({ failWith: serverError(11602) });
-  // Reaches the server, runs for 31 s, then fails.
+  // The server answers it for 31 s, then it fails.
   const second = createFakeStream({
     failWith: serverError(11602),
     onIterate: (stream) => {
       vi.setSystemTime(1000);
       stream.emit('resumeTokenChanged', { _data: 'token-2' });
       vi.setSystemTime(32000);
+      stream.emit('resumeTokenChanged', { _data: 'token-3' });
     },
   });
   const third = createFakeStream();
@@ -356,6 +357,32 @@ test('MongoDBChangeStream starts a new retry window after a stream that ran heal
   await expect(run).resolves.toBeUndefined();
   vi.useRealTimers();
   expect(collection.watch).toHaveBeenCalledTimes(3);
+});
+
+test('MongoDBChangeStream keeps the retry window when the driver blocked after the last answer', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(0);
+  const first = createFakeStream({ failWith: serverError(11602) });
+  // Answered once, then the driver waits 31 s for a primary and fails.
+  const second = createFakeStream({
+    failWith: serverError(11602),
+    onIterate: (stream) => {
+      vi.setSystemTime(1000);
+      stream.emit('resumeTokenChanged', { _data: 'token-2' });
+      vi.setSystemTime(32000);
+    },
+  });
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const error = await MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test', collection: 'items' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  }).catch((e) => e);
+  vi.useRealTimers();
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+  expect(error.code).toEqual(11602);
 });
 
 test('MongoDBChangeStream stops waiting to retry when aborted', async () => {
