@@ -52,7 +52,15 @@ In dev, `keyMap.json` and `refMap.json` hold only what the config build wrote. A
 
 The dev server keeps the `jitMaps/` files of its current and previous build contexts only (`pruneJitMaps`, run when a page edit drops the context), and a config publish removes them all as stale files. A key from an older context may stop resolving; it is then logged without a location. The JIT page builder also skips `jitMaps/` writes (and any `keyMap.json`/`refMap.json` write) when the live `idCounter.json` prefix is no longer the one its build context was created from, so a page build that outlives a rebuild cannot leave files describing the old build (`server-dev/lib/server/skipStaleMapWrites.js`). For that check to hold, the manager's `publishBuildDirectory` moves `idCounter.json` into the live build directory before any other file, so the new prefix is live before the new maps are.
 
-Dev readers resolve a key against the skeleton maps plus every `jitMaps/` file (`server-dev/lib/server/readMergedMaps.js`): server errors through `createHandleError` and client errors through `logClientError`, both via the request context's `readMaps`, and `/lowdefy-docs/find/{id}`. `loadAndResolveErrorLocation` takes `readMaps` as an option and reads `keyMap.json`/`refMap.json` without it, so production and e2e servers are unchanged.
+Dev readers resolve a key against the skeleton maps plus every `jitMaps/` file (`server-dev/lib/server/readMergedMaps.js`): server errors through `createHandleError` and client errors through `logClientError`, both via the request context's `readMaps`, and `/lowdefy-docs/find/{id}`. `loadAndResolveErrorLocation` takes `readMaps` as an option and reads `keyMap.json`/`refMap.json` without it through `readConfigFile` without it.
+
+#### Production and e2e servers read the gzipped maps
+
+The production and e2e servers resolve keys from `keyMap.json.gz` and `refMap.json.gz`, the gzipped copies their build scripts ask the build to write, and never read the plain maps, which deploy output leaves out. `readMaps` (`servers/{server,server-e2e}/lib/server/log/readMaps.js`) reads both with `fs`, gunzips them with `zlib` and parses them with `JSON.parse`: the short key map entries carry no serializer markers, and `JSON.parse` is about 5 times faster on a large map. `zlib` stays out of `@lowdefy/errors`, which the browser bundle imports, and `readConfigFile` cannot read them, since it decodes every file as UTF-8.
+
+The maps load once per process, on the first error that carries a `configKey`, and stay in a module-level promise, not in the 100-entry `fileCache` LRU behind `readConfigFile`, which would evict them on a large app. Errors that arrive while the first load runs share it. `createHandleError` imports `readMaps` rather than reading the context, because `@lowdefy/api`'s `createSystemContext` builds the auth-hook context from a fixed field list; `apiContext` sets `context.readMaps` for `logClientError`.
+
+A build without the `.gz` files (one from before them, or a deploy that strips them) is remembered: the first `ENOENT` resolves to no maps, and no later error touches the filesystem, so a request that logs an error does not pay for two failed reads each time. Any other fault (a read error, a bad gzip, invalid JSON) may be transient: it is logged once per process at `warn`, and the next error reads again. Either way the error is logged without a location.
 
 ### Location Resolution
 
@@ -213,7 +221,7 @@ Three-layer safety net: resolve + log → log without resolve → console.error.
 
 **Server handleError** (`packages/servers/*/lib/server/log/createHandleError.js`):
 
-Per-request, async. Reads keyMap/refMap from build artifacts (in dev, merged with the JIT page builds' `jitMaps/` files through the context's `readMaps`), resolves location, logs with request metadata (user, URL, headers), captures to Sentry. It also sets `error.handled = true` — the signal the browser reads to know this error was already logged server-side. Once `handleError` has run, the error crosses the wire under the wire policy in [Readers and their policies](#readers-and-their-policies).
+Per-request, async. Reads keyMap/refMap from build artifacts (in dev, merged with the JIT page builds' `jitMaps/` files through the context's `readMaps`; in production and e2e, the gzipped maps, loaded once per process), resolves location, logs with request metadata (user, URL, headers), captures to Sentry. It also sets `error.handled = true` — the signal the browser reads to know this error was already logged server-side. Once `handleError` has run, the error crosses the wire under the wire policy in [Readers and their policies](#readers-and-their-policies).
 
 **Browser handleError** (`packages/client-core/src/createHandleError.js`):
 
@@ -729,7 +737,7 @@ The native shell's own faults (a failed sync, a push token the server refused, a
    - Reads schema from build artifact (e.g., `plugins/blockSchemas.json`)
    - Validates `received` data against the plugin's JSON schema
    - If invalid, formats AJV errors into readable messages and creates a `ConfigError` with the original error as `cause`
-3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts (through `context.readMaps` when the context has one: the dev server's adds `jitMaps/`)
+3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap through `context.readMaps`: the dev server's adds `jitMaps/`, the production and e2e servers' read the gzipped maps
 4. Sets `error.source` and `error.config`
 5. Logs the `ConfigError` (if schema validation failed) or original error via `logger.error()`
 6. Returns `{ source, configError }` to client — client logs the `ConfigError` if present
@@ -915,6 +923,7 @@ traverseConfig({
 - `packages/servers/server/lib/server/log/createLogger.js` — Prod logger: allowlist serializer and `streamWrite` scrub
 - `packages/servers/*/src/middleware/errorHandler.js` — Hono app-level handler; 500 responses for `/api/` paths
 - `packages/servers/*/lib/server/log/createHandleError.js` — Server error handler; resolves location, logs, sets `handled`
+- `packages/servers/{server,server-e2e}/lib/server/log/readMaps.js` — The production and e2e servers' maps: the gzipped copies, loaded once per process
 - `packages/api/src/routes/log/logClientError.js` — Client error endpoint (client-originated only)
 
 ### Sentry Integration
