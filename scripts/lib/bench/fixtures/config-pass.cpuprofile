@@ -1,0 +1,137 @@
+{
+ "nodes": [
+  {
+   "id": 1,
+   "callFrame": {
+    "functionName": "(root)",
+    "scriptId": "0",
+    "url": "",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 0,
+   "children": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "id": 2,
+   "callFrame": {
+    "functionName": "(program)",
+    "scriptId": "0",
+    "url": "",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 1
+  },
+  {
+   "id": 3,
+   "callFrame": {
+    "functionName": "(garbage collector)",
+    "scriptId": "0",
+    "url": "",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 1
+  },
+  {
+   "id": 4,
+   "callFrame": {
+    "functionName": "(idle)",
+    "scriptId": "0",
+    "url": "",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 1
+  },
+  {
+   "id": 5,
+   "callFrame": {
+    "functionName": "composeNode",
+    "scriptId": "0",
+    "url": "file:///bench/server/node_modules/.pnpm/yaml@2.8.1/node_modules/yaml/dist/compose/compose-node.js",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 2
+  },
+  {
+   "id": 6,
+   "callFrame": {
+    "functionName": "addKeys",
+    "scriptId": "0",
+    "url": "file:///bench/lowdefy/packages/build/dist/build/addKeys.js",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 1
+  },
+  {
+   "id": 7,
+   "callFrame": {
+    "functionName": "readFileSync",
+    "scriptId": "0",
+    "url": "node:fs",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 1
+  },
+  {
+   "id": 8,
+   "callFrame": {
+    "functionName": "parse",
+    "scriptId": "0",
+    "url": "",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 1
+  },
+  {
+   "id": 9,
+   "callFrame": {
+    "functionName": "run",
+    "scriptId": "0",
+    "url": "file:///bench/server/lowdefy/build.mjs",
+    "lineNumber": 0,
+    "columnNumber": 0
+   },
+   "hitCount": 1
+  }
+ ],
+ "startTime": 1000,
+ "endTime": 7500,
+ "samples": [
+  5,
+  5,
+  6,
+  7,
+  3,
+  2,
+  4,
+  9,
+  8
+ ],
+ "timeDeltas": [
+  0,
+  1000,
+  1000,
+  2000,
+  500,
+  500,
+  500,
+  200,
+  300
+ ]
+}

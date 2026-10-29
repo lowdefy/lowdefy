@@ -18,9 +18,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Written once install and build both finished, so a worktree left half-built
-// by an interrupted run is never mistaken for a ready one.
-const READY_MARKER = '.lowdefy-bench-ready';
+import setUpOnce from './setUpOnce.mjs';
 
 function git({ args, cwd }) {
   return execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
@@ -60,32 +58,35 @@ function removeWorktree({ directory, repoRoot }) {
   }
 }
 
-function ensureBaselineWorktree({ logger, ref, repoRoot }) {
+// Several harness runs may need the same baseline at once; setUpOnce lets one
+// of them create, install and build it while the others wait.
+async function ensureBaselineWorktree({ logger, ref, repoRoot }) {
   const sha = resolveBaselineSha({ ref, repoRoot });
   const directory = getBaselineDirectory({ repoRoot, sha });
-  const markerPath = path.join(directory, READY_MARKER);
 
-  if (fs.existsSync(markerPath) && fs.readFileSync(markerPath, 'utf8').trim() === sha) {
-    logger.info(`Reusing baseline worktree ${directory} at ${sha.slice(0, 7)}.`);
-    return { directory, reused: true, sha };
-  }
-
-  if (fs.existsSync(directory)) {
-    logger.warn(`Baseline worktree ${directory} was not finished; rebuilding it.`);
-    removeWorktree({ directory, repoRoot });
-  }
-
-  logger.info(`Creating baseline worktree ${directory} at ${sha.slice(0, 7)}.`);
-  git({ args: ['worktree', 'add', '--detach', directory, sha], cwd: repoRoot });
-  run({
-    command: 'pnpm',
-    args: ['install', '--frozen-lockfile', '--prefer-offline'],
-    cwd: directory,
+  const { reused } = await setUpOnce({
+    directory,
+    logger,
+    sha,
+    create: () => {
+      if (fs.existsSync(directory)) {
+        logger.warn(`Baseline worktree ${directory} was not finished; rebuilding it.`);
+        removeWorktree({ directory, repoRoot });
+      }
+      logger.info(`Creating baseline worktree ${directory} at ${sha.slice(0, 7)}.`);
+      git({ args: ['worktree', 'add', '--detach', directory, sha], cwd: repoRoot });
+      run({
+        command: 'pnpm',
+        args: ['install', '--frozen-lockfile', '--prefer-offline'],
+        cwd: directory,
+      });
+      run({ command: 'pnpm', args: ['build'], cwd: directory });
+    },
   });
-  run({ command: 'pnpm', args: ['build'], cwd: directory });
-  fs.writeFileSync(markerPath, `${sha}\n`);
-  return { directory, reused: false, sha };
+  if (reused) {
+    logger.info(`Reusing baseline worktree ${directory} at ${sha.slice(0, 7)}.`);
+  }
+  return { directory, reused, sha };
 }
 
-export { READY_MARKER };
 export default ensureBaselineWorktree;

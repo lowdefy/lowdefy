@@ -77,17 +77,17 @@ function readArgs() {
   };
 }
 
-function getOldErrorsDirectory({ oldErrors }) {
+async function getOldErrorsDirectory({ oldErrors }) {
   if (oldErrors !== undefined) {
     return oldErrors;
   }
-  const baseline = ensureBaselineWorktree({ logger, repoRoot: REPO_ROOT });
+  const baseline = await ensureBaselineWorktree({ logger, repoRoot: REPO_ROOT });
   return path.join(baseline.directory, ERRORS_DIST);
 }
 
 async function main() {
   const args = readArgs();
-  const oldErrors = getOldErrorsDirectory(args);
+  const oldErrors = await getOldErrorsDirectory(args);
   const newErrors = args.newErrors ?? path.join(REPO_ROOT, ERRORS_DIST);
   logger.info(`Old: ${args.oldLocation}, read with ${oldErrors}`);
   logger.info(`New: ${args.newLocation}, read with ${newErrors}`);

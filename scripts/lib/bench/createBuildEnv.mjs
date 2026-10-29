@@ -18,6 +18,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const pinBuildInputsUrl = pathToFileURL(path.join(import.meta.dirname, 'pinBuildInputs.mjs')).href;
+const probeUrl = pathToFileURL(path.join(import.meta.dirname, 'probe.mjs')).href;
 
 // The caller's environment passes through (an app may need
 // LOWDEFY_ENVIRONMENT or its own variables), with the inputs that would
@@ -27,12 +28,20 @@ const pinBuildInputsUrl = pathToFileURL(path.join(import.meta.dirname, 'pinBuild
 // - the buildId, through the pinBuildInputs preload.
 // - CI: it switches the CLI to plain output, which drops the level of each
 //   line, and the build's warnings and errors are read from that output.
-function createBuildEnv({ env = process.env } = {}) {
-  const buildEnv = {
-    ...env,
-    LOWDEFY_GIT_SHA: 'bench',
-    NODE_OPTIONS: [env.NODE_OPTIONS, `--import=${pinBuildInputsUrl}`].filter(Boolean).join(' '),
-  };
+// probeFile loads the probe into every Node process, which records itself in
+// that file; cpuProfileDirectory has every Node process write a CPU profile
+// there.
+function createBuildEnv({ cpuProfileDirectory, env = process.env, probeFile } = {}) {
+  const nodeOptions = [env.NODE_OPTIONS, `--import=${pinBuildInputsUrl}`];
+  const buildEnv = { ...env, LOWDEFY_GIT_SHA: 'bench' };
+  if (probeFile !== undefined) {
+    nodeOptions.push(`--import=${probeUrl}`);
+    buildEnv.LOWDEFY_BENCH_PROBE_FILE = probeFile;
+  }
+  if (cpuProfileDirectory !== undefined) {
+    nodeOptions.push('--cpu-prof', `--cpu-prof-dir=${JSON.stringify(cpuProfileDirectory)}`);
+  }
+  buildEnv.NODE_OPTIONS = nodeOptions.filter(Boolean).join(' ');
   delete buildEnv.CI;
   return buildEnv;
 }
