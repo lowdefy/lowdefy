@@ -850,25 +850,35 @@ function createAuthMethods(lowdefy, auth) {
   // the chain stops here, like every other navigating method - a step after it
   // would race the page being replaced.
   //
-  // The engine copied the verify URL's whole query onto the landing URL, so the
-  // token and the three destinations are already on this page. The params exist
-  // to override them; each falls back to the query value, and errorCallbackURL
-  // falls back once more to the app's authPages.error, mirroring the default
-  // Login applies when it asks for the link.
+  // The engine wrote the verify URL's whole query into the landing URL's
+  // fragment, so the token and the three destinations are already on this page.
+  // A link emailed before the fragment carried them has them in the page query
+  // instead, so each falls back to that. The params exist to override them, and
+  // errorCallbackURL falls back once more to the app's authPages.error,
+  // mirroring the default Login applies when it asks for the link.
+  //
+  // The token travels in a form post, never in a URL: a browser sends no
+  // fragment, and the server turns the post into BetterAuth's verify request
+  // (handleAuthRequest), so no request log or Referer header holds the token.
+  // The fragment is cleared first, so the token stays out of browser history.
   function magicLinkVerify({ callbackUrl, errorCallbackUrl, newUserCallbackUrl, token } = {}) {
-    const win = lowdefy._internal?.globals?.window;
-    const pageQuery = new URLSearchParams(win?.location?.search ?? '');
-    const verifyToken = type.isString(token) ? token : pageQuery.get('token');
+    const { globals } = lowdefy._internal;
+    const win = globals.window;
+    const doc = globals.document;
+    const linkFragment = new URLSearchParams(win.location.hash.replace(/^#/, ''));
+    const linkQuery = new URLSearchParams(win.location.search);
+    const readLinkParam = (key) => linkFragment.get(key) ?? linkQuery.get(key);
+    const verifyToken = type.isString(token) ? token : readLinkParam('token');
     if (!type.isString(verifyToken) || verifyToken === '') {
       throw new Error(
-        'MagicLinkVerify requires a "token" param, or a "token" URL query parameter on the landing page the sign-in email links to.'
+        'MagicLinkVerify requires a "token" param, or a "token" in the URL fragment of the landing page the sign-in email links to.'
       );
     }
     // Every destination here is spent by BetterAuth as a later redirect hop, so
     // "stay put" cannot be honored - the browser has already left.
     assertCallbackUrlNavigable({ callbackUrl, method: 'MagicLinkVerify' });
 
-    const verifyQuery = new URLSearchParams({ token: verifyToken });
+    const fields = new URLSearchParams({ token: verifyToken });
     const params = {
       callbackURL: callbackUrl,
       newUserCallbackURL: newUserCallbackUrl,
@@ -876,12 +886,12 @@ function createAuthMethods(lowdefy, auth) {
     };
     Object.entries(params).forEach(([key, param]) => {
       const explicit = serializeTarget(resolveTarget({ lowdefy, target: param, name: key }));
-      const resolved = type.isNone(explicit) ? pageQuery.get(key) : explicit;
+      const resolved = type.isNone(explicit) ? readLinkParam(key) : explicit;
       if (!type.isNone(resolved)) {
-        verifyQuery.set(key, resolved);
+        fields.set(key, resolved);
       }
     });
-    if (!verifyQuery.has('errorCallbackURL')) {
+    if (!fields.has('errorCallbackURL')) {
       const errorPage = auth.authConfig?.authPages?.error;
       const errorTarget = type.isString(errorPage)
         ? serializeTarget(
@@ -889,14 +899,31 @@ function createAuthMethods(lowdefy, auth) {
           )
         : undefined;
       if (!type.isNone(errorTarget)) {
-        verifyQuery.set('errorCallbackURL', errorTarget);
+        fields.set('errorCallbackURL', errorTarget);
       }
     }
 
-    // The same address the email used to carry: basePath, then BetterAuth's
-    // mount, which AuthConfigured gives the client as `${basePath}/api/auth`.
-    const url = `${lowdefy.basePath ?? ''}/api/auth/magic-link/verify?${verifyQuery.toString()}`;
-    lowdefy._internal.globals.window.location.assign(url);
+    win.history.replaceState(
+      win.history.state,
+      '',
+      `${win.location.pathname}${win.location.search}`
+    );
+
+    // BetterAuth's mount, which AuthConfigured gives the client as
+    // `${basePath}/api/auth`.
+    const url = `${lowdefy.basePath ?? ''}/api/auth/magic-link/verify`;
+    const form = doc.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    fields.forEach((value, name) => {
+      const input = doc.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    });
+    doc.body.appendChild(form);
+    form.submit();
     return stopChain({ url });
   }
 
