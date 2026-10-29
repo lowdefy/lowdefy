@@ -196,7 +196,8 @@ example `infisical run --env=local --path=/apps/my-app -- node scripts/dev.mjs .
 - **The app's repository must be installed** (`pnpm install` there). Plugins in
   `lowdefy.yaml` with a `workspace:` version are linked from the app's pnpm workspace as they
   are, so they need their `node_modules` and a built `dist`. Other plugins install from npm
-  into the server copy.
+  into the server copy, with any peer they declare that the server does not depend on (the
+  copy installs with `autoInstallPeers: false`).
 - **Build scripts.** pnpm 11 fails an install on a dependency build script that is neither
   allowed nor ignored. The server copy's `pnpm-workspace.yaml` carries the build approvals
   (`allowBuilds`, `onlyBuiltDependencies`, `ignoredBuiltDependencies`) of the app's own
@@ -211,6 +212,44 @@ example `infisical run --env=local --path=/apps/my-app -- node scripts/dev.mjs .
   dev server at a time (the server records itself in `<app>/.lowdefy/instance.json` and
   refuses a second), so to run a second copy of an app, or to keep the app's own checkout
   untouched, point the scripts at a separate git worktree of the app's repository.
+
+## Build bench
+
+`pnpm bench:build <app-dir>` builds an app with a baseline Lowdefy and with this checkout, and
+says whether the build output is identical. It is the proof for a change that should not alter
+build output. It needs the network and takes minutes, so it never runs in CI.
+
+```bash
+pnpm bench:build packages/docs                    # baseline: merge-base of HEAD and origin/develop
+pnpm bench:build packages/docs --self-check       # build the baseline twice; must be identical
+pnpm bench:build ../my-app --baseline v7.1.0      # any commit as baseline, any app folder
+pnpm bench:build packages/docs --skip-build       # this checkout is already built
+pnpm bench:build packages/docs --server e2e       # @lowdefy/server-e2e instead of the server
+pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in current
+```
+
+| Exit code | Meaning                                         |
+| --------- | ----------------------------------------------- |
+| 0         | Identical                                       |
+| 1         | Any difference                                  |
+| 2         | A build (or the harness) failed; its log prints |
+
+- **Baseline.** A detached worktree at `../lowdefy-bench-<sha7>`, installed and built on first
+  use and reused after. One left half-built by an interrupted run is rebuilt.
+- **Each side** prepares its server at `_server/bench/<app-slug>/<side>/workspace/server`
+  with this checkout's `scripts/lib`, linked through `<side>/lowdefy` (a symlink to that
+  side's checkout), then runs its own CLI: `lowdefy build --no-client-build`. The same layout
+  for both sides keeps every relative path in the output equal. Logs land in
+  `_server/bench/<app-slug>/logs/`.
+- **Compared**: every file in the server's `build/`, its `package.json`, and the warnings and
+  errors in the CLI log, sorted. Each side's server path is replaced with `<server>`; nothing
+  else is normalised. `LOWDEFY_GIT_SHA` and the buildId are pinned; the rest of the
+  environment passes through, so `LOWDEFY_ENVIRONMENT=local pnpm bench:build <dir>` works.
+- **A self-check difference is a bug**, in the harness or the build, to fix at its source.
+  Never skip a file.
+- **Parts** (`scripts/lib/bench/`): `buildSide` runs one side's CLI build on a prepared server
+  and can run repeatedly; `compareBuilds` takes `comparers`, a map from a server-relative file
+  (`build/keyMap.json`) to a comparer used in place of the byte comparison.
 
 ## Ports
 
