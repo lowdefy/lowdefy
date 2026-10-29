@@ -153,7 +153,11 @@ async function main() {
     logger.info('Building this checkout...');
     execSync('pnpm build:turbo', { cwd: REPO_ROOT, stdio: 'inherit' });
   }
-  const baseline = ensureBaselineWorktree({ logger, ref: args.baselineRef, repoRoot: REPO_ROOT });
+  const baseline = await ensureBaselineWorktree({
+    logger,
+    ref: args.baselineRef,
+    repoRoot: REPO_ROOT,
+  });
   const slug = getAppSlug({ configDirectory: args.configDirectory, repoRoot: REPO_ROOT });
   const [baselineSide, currentSide] = getSides({ baseline, selfCheck: args.selfCheck });
 
