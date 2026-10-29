@@ -369,7 +369,7 @@ Used by server-side `logClientError` to resolve client-reported errors.
 | Full  | `{ key, '~k_parent', '~r'?, '~l'?, '~ignoreBuildChecks'? }` | `key`, the full path from the root                 | `~r`, the entry's own; absent means no ref                                                  |
 | Short | `{ s, p, r?, l?, i? }`                                      | the parent's path joined with `s`, its own segment | `r` where it differs from the parent's resolved ref, else inherited; `r: null` means no ref |
 
-Both shapes are read because the map that a reader gets may come from another Lowdefy version: journeys scope builds with the app's own builder and reads the result with the CLI's `@lowdefy/errors`, and cached scope builds under `.lowdefy/scope/builds/` keep the shape they were built in. The full-shape branch can go once no supported version writes it.
+`addKeys` writes the short shape. Both shapes are read because the map that a reader gets may come from another Lowdefy version: journeys scope builds with the app's own builder and reads the result with the CLI's `@lowdefy/errors`, and cached scope builds under `.lowdefy/scope/builds/` keep the shape they were built in. The full-shape branch can go once no supported version writes it.
 
 Nothing outside `@lowdefy/errors` reads entry fields; it goes through one of these:
 
