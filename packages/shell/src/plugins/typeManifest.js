@@ -735,6 +735,10 @@ const typeManifest = {
       package: '@lowdefy/operators-js',
       version: 7,
     },
+    _url_hash: {
+      package: '@lowdefy/operators-js',
+      version: 7,
+    },
     _url_query: {
       package: '@lowdefy/operators-js',
       version: 7,

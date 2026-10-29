@@ -1,0 +1,91 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _url_hash
+    pageTitle: _url_hash
+    filePath: operators/_url_hash.yaml
+    env: Client Only
+    types: |
+      ```
+      (key: string): any
+      (all: boolean): any
+      (arguments: {
+        all?: boolean,
+        key?: string,
+        default?: any,
+      }): any
+      ```
+    description: |
+      The `_url_hash` operator gets a value from the [fragment](https://en.wikipedia.org/wiki/URI_fragment) of the page URL, the part after the `#`, parsed as a query string. It takes the same arguments as [`_url_query`](/_url_query), and parses values the same way: a URL ending `#token=abc123&step=2` gives `{ token: "abc123", step: 2 }`.
+
+      A browser never sends the fragment to the server, so a value in it stays out of the server's request logs, a host's firewall logs and `Referer` headers. The [magic-link landing page](/auth-configuration#the-magic-link-landing-page) uses this: the sign-in email carries the token in the fragment, and the page reads it with `_url_hash: token`. The fragment is still visible to the person and to scripts on the page, and stays in browser history, so do not put anything in it you would not show the person.
+
+      As with `_url_query`, a key named `__proto__`, `constructor`, `prototype`, `__defineGetter__`, `__defineSetter__`, `__lookupGetter__` or `__lookupSetter__` is skipped, and a value that cannot be deserialized is kept as the raw string.
+
+    arguments: |
+      ###### string
+      If the `_url_hash` operator is called with a string argument, the value of the key in the fragment is returned. If the value is not found, `null` is returned. Dot notation and [block list indexes](/lists) are supported, as for [`_url_query`](/_url_query).
+
+      ###### boolean
+      If the `_url_hash` operator is called with boolean argument `true`, the whole fragment is returned as an object.
+
+      ###### object
+        - `all: boolean`: If `all` is set to `true`, the whole fragment is returned as an object. One of `all` or `key` are required.
+        - `key: string`: The value of the key in the fragment is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
+        - `default: any`: A value to return if the `key` is not found in the fragment. By default, `null` is returned if a value is not found.
+
+    examples: |
+      ###### Get the value of `token` from the fragment:
+      ```yaml
+      _url_hash: token
+      ```
+      ```yaml
+      _url_hash:
+        key: token
+      ```
+      Returns: `"abc123"` on a URL ending `#token=abc123`.
+
+      ###### Show a button only when the link carried a token:
+      ```yaml
+      - id: verify_button
+        type: Button
+        visible:
+          _ne:
+            - _url_hash: token
+            - null
+        properties:
+          title: Sign in
+        events:
+          onClick:
+            - id: verify
+              type: MagicLinkVerify
+      ```
+
+      ###### Get the whole fragment:
+      ```yaml
+      _url_hash: true
+      ```
+      Returns: The fragment parsed as an object.
+
+      ###### Return a default value if the value is not found:
+      ```yaml
+      _url_hash:
+        key: step
+        default: 1
+      ```
+      Returns: The value of `step`, or `1`.
