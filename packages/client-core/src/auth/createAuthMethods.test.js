@@ -579,34 +579,94 @@ test('a ?callbackUrl= query hiding another host behind a tab falls back to the h
   expect(assign.mock.calls).toEqual([['/home-page']]);
 });
 
-// The magic-link landing page: the engine put the verify query on this page's
-// URL, so the defaults come from there and the action only has to walk to the
-// verify endpoint on a real click.
-test('magicLinkVerify navigates to the verify endpoint with the token from the URL query', () => {
-  const { auth, lowdefy, assign } = setup();
-  lowdefy._internal.globals.window.location.search = '?token=abc123';
+// The magic-link landing page: the engine put the verify query in this page's
+// URL fragment, so the defaults come from there and the action posts them to the
+// verify route on a real click. A fake document records the form it submits.
+function setupVerify({ hash = '', search = '' } = {}) {
+  const context = setup();
+  const { window: win } = context.lowdefy._internal.globals;
+  Object.assign(win.location, { hash, search, pathname: '/magic-link' });
+  win.history = { state: { key: 'k1' }, replaceState: vi.fn() };
+  const submitted = [];
+  const createElement = (tag) => {
+    const element = { tag, children: [], appendChild: (child) => element.children.push(child) };
+    if (tag === 'form') {
+      element.submit = vi.fn(() =>
+        submitted.push({
+          method: element.method,
+          action: element.action,
+          fields: Object.fromEntries(element.children.map((input) => [input.name, input.value])),
+          types: element.children.map((input) => input.type),
+        })
+      );
+    }
+    return element;
+  };
+  context.lowdefy._internal.globals.document = {
+    body: { appendChild: vi.fn() },
+    createElement: vi.fn(createElement),
+  };
+  return { ...context, submitted, history: win.history };
+}
+
+test('magicLinkVerify posts the token from the URL fragment to the verify route', () => {
+  const { auth, lowdefy, assign, submitted } = setupVerify({ hash: '#token=abc123' });
   const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
-  magicLinkVerify();
-  expect(assign.mock.calls).toEqual([['/api/auth/magic-link/verify?token=abc123']]);
+  const result = magicLinkVerify();
+  expect(submitted).toEqual([
+    {
+      method: 'POST',
+      action: '/api/auth/magic-link/verify',
+      fields: { token: 'abc123' },
+      types: ['hidden'],
+    },
+  ]);
+  expect(assign).not.toHaveBeenCalled();
+  expect(result.response).toEqual({ url: '/api/auth/magic-link/verify' });
 });
 
-test('magicLinkVerify carries the callback destinations from the URL query, basePath-prefixed', () => {
-  const { auth, lowdefy, assign } = setup();
+test('magicLinkVerify carries the callback destinations from the URL fragment, basePath-prefixed', () => {
+  const { auth, lowdefy, submitted } = setupVerify({
+    hash: '#token=abc123&callbackURL=%2Fbase%2Freports&newUserCallbackURL=%2Fbase%2Fwelcome&errorCallbackURL=%2Fbase%2Fauth%2Ferror',
+  });
   lowdefy.basePath = '/base';
-  lowdefy._internal.globals.window.location.search =
-    '?token=abc123&callbackURL=%2Fbase%2Freports&newUserCallbackURL=%2Fbase%2Fwelcome&errorCallbackURL=%2Fbase%2Fauth%2Ferror';
   const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
   magicLinkVerify();
-  expect(assign.mock.calls).toEqual([
-    [
-      '/base/api/auth/magic-link/verify?token=abc123&callbackURL=%2Fbase%2Freports&newUserCallbackURL=%2Fbase%2Fwelcome&errorCallbackURL=%2Fbase%2Fauth%2Ferror',
-    ],
+  expect(submitted).toEqual([
+    expect.objectContaining({
+      action: '/base/api/auth/magic-link/verify',
+      fields: {
+        token: 'abc123',
+        callbackURL: '/base/reports',
+        newUserCallbackURL: '/base/welcome',
+        errorCallbackURL: '/base/auth/error',
+      },
+    }),
   ]);
 });
 
-test('magicLinkVerify prefers explicit params over the URL query values', () => {
-  const { auth, lowdefy, assign } = setup();
-  lowdefy._internal.globals.window.location.search = '?token=fromquery&callbackURL=%2Ffromquery';
+// A link emailed before the release has the params in the page query; it still
+// signs in for the 30 minutes it lives.
+test('magicLinkVerify falls back to the URL query for a link in the old ?token= form', () => {
+  const { auth, lowdefy, submitted } = setupVerify({
+    search: '?token=abc123&callbackURL=%2Freports',
+  });
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  magicLinkVerify();
+  expect(submitted[0].fields).toEqual({ token: 'abc123', callbackURL: '/reports' });
+});
+
+test('magicLinkVerify clears the fragment from the address bar before it posts', () => {
+  const { auth, lowdefy, history } = setupVerify({ hash: '#token=abc123', search: '?a=1' });
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  magicLinkVerify();
+  expect(history.replaceState.mock.calls).toEqual([[{ key: 'k1' }, '', '/magic-link?a=1']]);
+});
+
+test('magicLinkVerify prefers explicit params over the URL fragment values', () => {
+  const { auth, lowdefy, submitted } = setupVerify({
+    hash: '#token=fromhash&callbackURL=%2Ffromhash',
+  });
   const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
   magicLinkVerify({
     token: 'fromparam',
@@ -614,43 +674,41 @@ test('magicLinkVerify prefers explicit params over the URL query values', () => 
     newUserCallbackUrl: { url: '/welcome' },
     errorCallbackUrl: { url: '/oops' },
   });
-  expect(assign.mock.calls).toEqual([
-    [
-      '/api/auth/magic-link/verify?token=fromparam&callbackURL=%2Freports&newUserCallbackURL=%2Fwelcome&errorCallbackURL=%2Foops',
-    ],
-  ]);
+  expect(submitted[0].fields).toEqual({
+    token: 'fromparam',
+    callbackURL: '/reports',
+    newUserCallbackURL: '/welcome',
+    errorCallbackURL: '/oops',
+  });
 });
 
 // The default Login applies when it asks for the link, applied again here so a
 // failed verify lands on the app's error page with ?error= intact.
-test('magicLinkVerify defaults errorCallbackURL to authPages.error when the query has none', () => {
-  const { auth, lowdefy, assign } = setup();
+test('magicLinkVerify defaults errorCallbackURL to authPages.error when the link has none', () => {
+  const { auth, lowdefy, submitted } = setupVerify({ hash: '#token=abc123' });
   auth.authConfig = { providers: [], authPages: { error: '/auth/error' } };
-  lowdefy._internal.globals.window.location.search = '?token=abc123';
   const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
   magicLinkVerify();
-  expect(assign.mock.calls).toEqual([
-    ['/api/auth/magic-link/verify?token=abc123&errorCallbackURL=%2Fauth%2Ferror'],
-  ]);
+  expect(submitted[0].fields).toEqual({ token: 'abc123', errorCallbackURL: '/auth/error' });
 });
 
-test('magicLinkVerify throws when neither a token param nor a ?token= query is present', () => {
-  const { auth, lowdefy, assign } = setup();
+test('magicLinkVerify throws when neither a token param nor a token in the link is present', () => {
+  const { auth, lowdefy, submitted, history } = setupVerify();
   const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
   expect(() => magicLinkVerify()).toThrow(
-    'MagicLinkVerify requires a "token" param, or a "token" URL query parameter on the landing page the sign-in email links to.'
+    'MagicLinkVerify requires a "token" param, or a "token" in the URL fragment of the landing page the sign-in email links to.'
   );
-  expect(assign).not.toHaveBeenCalled();
+  expect(submitted).toEqual([]);
+  expect(history.replaceState).not.toHaveBeenCalled();
 });
 
 test('magicLinkVerify rejects callbackUrl false, which the verify redirect cannot honor', () => {
-  const { auth, lowdefy, assign } = setup();
-  lowdefy._internal.globals.window.location.search = '?token=abc123';
+  const { auth, lowdefy, submitted } = setupVerify({ hash: '#token=abc123' });
   const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
   expect(() => magicLinkVerify({ callbackUrl: false })).toThrow(
     'Invalid callbackUrl: "false" is not valid for MagicLinkVerify, which redirects through an external hop. Give a destination.'
   );
-  expect(assign).not.toHaveBeenCalled();
+  expect(submitted).toEqual([]);
 });
 
 test('twoFactorDisable calls auth.twoFactorDisable with the password', async () => {
