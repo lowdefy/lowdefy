@@ -103,6 +103,7 @@ function formatTiming({ sides, timing }) {
   ];
   [
     ['Config pass, wall time', (run) => run.passesMs, formatSeconds],
+    ['Config pass, CPU time (user + system)', (run) => run.passesCpuMs, formatSeconds],
     ['`lowdefy build`, installs included', (run) => run.totalMs, formatSeconds],
     ['Peak memory, config pass', (run) => run.peakRssKb * 1024, formatMegabytes],
   ].forEach(([label, pick, format]) => {
