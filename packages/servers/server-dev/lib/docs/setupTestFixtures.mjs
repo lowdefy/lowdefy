@@ -223,64 +223,41 @@ function setupTestFixtures() {
   // page build runs addKeys on the page object itself and writes its keys to a
   // jitMaps/ file — so page CONTENT keys are `root.blocks[...]` with no page
   // segment, one `root`-keyed subtree per built page, distinguishable only via
-  // the ~k_parent chain. Tree roots reference a parent id that is never written.
+  // the parent chain. Tree roots reference a parent id that is never written.
+  // Entries are in the short shape (`s` own path segment, `p` parent id, `r`
+  // ref where it differs from the parent's, `l` line), except page "other"'s
+  // JIT map below, which keeps the full shape so findConfig reads both.
   write('build/keyMap.json', {
-    'key-root': { key: 'root', '~k_parent': 'key-root-parent' },
-    'key-pages': { key: 'root.pages', '~k_parent': 'key-root', '~r': 'ref-home' },
-    'key-home-stub': {
-      key: 'root.pages[0:home]',
-      '~k_parent': 'key-pages',
-      '~r': 'ref-home',
-      '~l': 1,
-    },
-    'key-other-stub': {
-      key: 'root.pages[1:other]',
-      '~k_parent': 'key-pages',
-      '~r': 'ref-other',
-      '~l': 1,
-    },
+    'key-root': { s: 'root', p: 'key-root-parent' },
+    'key-pages': { s: '.pages', p: 'key-root', r: 'ref-home' },
+    'key-home-stub': { s: '[0:home]', p: 'key-pages', l: 1 },
+    'key-other-stub': { s: '[1:other]', p: 'key-pages', r: 'ref-other', l: 1 },
     // Skeleton-built page (like the default 404) — content is keyed inside
     // the global config tree with the page segment inline, and chains to the
     // shared config root rather than a page-specific one.
-    'key-legal': {
-      key: 'root.pages[2:legal]',
-      '~k_parent': 'key-pages',
-      '~r': 'ref-legal',
-      '~l': 1,
-    },
-    'key-legal-button': {
-      key: 'root.pages[2:legal].blocks[0:legal_button:Button]',
-      '~k_parent': 'key-legal',
-      '~r': 'ref-legal',
-      '~l': 3,
-    },
+    'key-legal': { s: '[2:legal]', p: 'key-pages', r: 'ref-legal', l: 1 },
+    'key-legal-button': { s: '.blocks[0:legal_button:Button]', p: 'key-legal', l: 3 },
   });
 
   // JIT subtree for page "home".
   write('build/jitMaps/abc123-1-1.json', {
     keyMap: {
-      'key-home': { key: 'root', '~k_parent': 'key-home-jit-parent', '~r': 'ref-home', '~l': 1 },
-      'key-button': {
-        key: 'root.blocks[2:my_button:Button]',
-        '~k_parent': 'key-home',
-        '~r': 'ref-home',
-        '~l': 5,
-      },
+      'key-home': { s: 'root', p: 'key-home-jit-parent', r: 'ref-home', l: 1 },
+      'key-button': { s: '.blocks[2:my_button:Button]', p: 'key-home', l: 5 },
       // List item block — config ids inside lists carry the `$` placeholder;
       // runtime block ids have array indices applied (`my_list.0.item_title`).
       'key-list-item': {
-        key: 'root.blocks[3:my_list:List].blocks[0:my_list.$.item_title:Title]',
-        '~k_parent': 'key-home',
-        '~r': 'ref-home',
-        '~l': 9,
+        s: '.blocks[3:my_list:List].blocks[0:my_list.$.item_title:Title]',
+        p: 'key-home',
+        l: 9,
       },
     },
     refMap: {},
   });
 
-  // JIT subtree for page "other" — holds a block id that also exists on
-  // home, with an IDENTICAL key shape. findConfig must scope pageId scans
-  // via the ~k_parent chain, not the key path.
+  // JIT subtree for page "other", in the full key map entry shape — holds a
+  // block id that also exists on home, with an IDENTICAL config path.
+  // findConfig must scope pageId scans via the parent chain, not the path.
   write('build/jitMaps/abc123-1-2.json', {
     keyMap: {
       'key-other': {

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import readKeyEntryFields from './readKeyEntryFields.js';
+
 /**
  * Valid check slugs for ~ignoreBuildChecks.
  * Keys are the slug names, values are descriptions for error messages.
@@ -61,7 +63,7 @@ export const PLUGIN_SCHEMA_SLUG = 'plugin-schema';
  * `plugin-checks` silences every plugin rule.
  *
  * @param {Object} error - Error/warning object with configKey and optional checkSlug and checkGroup
- * @param {Object} keyMap - The keyMap from build context
+ * @param {Object} keyMap - The keyMap from build context, entries in either shape
  * @returns {boolean} True if the check should be suppressed
  */
 function shouldSuppressBuildCheck(error, keyMap) {
@@ -76,7 +78,9 @@ function shouldSuppressBuildCheck(error, keyMap) {
     const entry = keyMap[currentKey];
     if (!entry) break;
 
-    const ignoredChecks = entry['~ignoreBuildChecks'];
+    // Only the parent id and the ignore value are needed at each ancestor, so
+    // the entry's own fields are read without resolving its full path.
+    const { parentId, ignoreBuildChecks: ignoredChecks } = readKeyEntryFields(entry);
 
     if (ignoredChecks === true) {
       return true;
@@ -87,7 +91,7 @@ function shouldSuppressBuildCheck(error, keyMap) {
       if (checkGroup && ignoredChecks.includes(checkGroup)) return true;
     }
 
-    currentKey = entry['~k_parent'];
+    currentKey = parentId;
     depth++;
   }
 

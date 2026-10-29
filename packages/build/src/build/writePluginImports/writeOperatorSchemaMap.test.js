@@ -51,7 +51,9 @@ test('writeOperatorSchemaMap uses typesMap schemas for custom plugins', async ()
     },
   };
   const context = {
-    typesMap: { schemas: { operators: { _custom: customSchema } } },
+    typesMap: {
+      schemas: { operators: { _custom: { package: 'custom-plugin', schema: customSchema } } },
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeOperatorSchemaMap({ components, context });
@@ -80,7 +82,9 @@ test('writeOperatorSchemaMap typesMap schemas take priority over package schemas
     },
   };
   const context = {
-    typesMap: { schemas: { operators: { _if: customSchema } } },
+    typesMap: {
+      schemas: { operators: { _if: { package: '@lowdefy/operators-js', schema: customSchema } } },
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeOperatorSchemaMap({ components, context });
@@ -164,7 +168,14 @@ test('writeOperatorSchemaMap deduplicates operators across client and server', a
     },
   };
   const context = {
-    typesMap: { schemas: { operators: { _if: ifSchema, _get: getSchema } } },
+    typesMap: {
+      schemas: {
+        operators: {
+          _if: { package: 'custom-plugin', schema: ifSchema },
+          _get: { package: 'custom-plugin', schema: getSchema },
+        },
+      },
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeOperatorSchemaMap({ components, context });

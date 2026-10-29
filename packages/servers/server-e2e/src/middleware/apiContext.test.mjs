@@ -15,16 +15,26 @@
 */
 
 import fs from 'fs';
+import fsPromises from 'fs/promises';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import zlib from 'zlib';
 
 import { Hono } from 'hono';
+import { serializer } from '@lowdefy/helpers';
 import { vi, afterAll, expect, test } from 'vitest';
 
 const secret = 'planted-e2e-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
 
+// The client-error route runs the real logClientError, so a test can follow a
+// client error's location through context.readMaps.
+const actualApi = await vi.importActual('@lowdefy/api');
 vi.doMock('@lowdefy/api', () => ({
+  isSameOriginRequest: actualApi.isSameOriginRequest,
+  logClientError: actualApi.logClientError,
+  parseRequestBody: actualApi.parseRequestBody,
   createApiContext: vi.fn(),
   createRequestSignal: vi.fn(({ clientSignal }) => clientSignal),
   normalizeInjectedCaller: vi.fn((user) => user),
@@ -36,13 +46,18 @@ vi.doMock('../../lib/build/i18n.js', () => ({ default: {} }));
 vi.doMock('../../lib/server/log/createHandleError.js', () => ({
   default: vi.fn(() => vi.fn()),
 }));
+const loggers = [];
 vi.doMock('../../lib/server/log/createLogger.js', () => ({
-  default: vi.fn(() => ({
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  })),
+  default: vi.fn(() => {
+    const logger = {
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+    };
+    loggers.push(logger);
+    return logger;
+  }),
 }));
 vi.doMock('../../lib/server/fileCache.js', () => ({ default: {} }));
 vi.doMock('../../lib/server/getE2eSecrets.js', () => ({
@@ -117,4 +132,96 @@ test('apiContext scrubSecrets redacts a planted secret', async () => {
   expect(res.status).toEqual(200);
   const body = await res.json();
   expect(body.scrubbed).toEqual('token [REDACTED] end');
+});
+
+// Each client-error test loads apiContext afresh, so readMaps' per-process load
+// starts unmade, and runs it with its working directory on a temp app whose
+// build folder holds the maps or not.
+async function createClientErrorApp({ withMaps }) {
+  const appDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-e2e-api-context-'));
+  const buildDirectory = path.join(appDirectory, 'build');
+  fs.mkdirSync(buildDirectory);
+  if (withMaps) {
+    const keyMap = {
+      k1: { s: 'root', p: 'k0', r: 'ref_0', l: 1 },
+      k2: { s: '.pages[0:home]', p: 'k1', r: 'ref_1', l: 1 },
+      k3: { s: '.blocks[0:header]', p: 'k2', l: 5 },
+    };
+    const refMap = { ref_0: { path: 'lowdefy.yaml' }, ref_1: { path: 'pages/home.yaml' } };
+    fs.writeFileSync(
+      path.join(buildDirectory, 'keyMap.json.gz'),
+      zlib.gzipSync(JSON.stringify(keyMap))
+    );
+    fs.writeFileSync(
+      path.join(buildDirectory, 'refMap.json.gz'),
+      zlib.gzipSync(JSON.stringify(refMap))
+    );
+  }
+  vi.spyOn(process, 'cwd').mockReturnValue(appDirectory);
+  vi.resetModules();
+  const { default: freshApiContext } = await import('./apiContext.js');
+  const { default: clientErrorHandler } = await import('../routes/clientError.js');
+  const app = new Hono();
+  app.use('*', freshApiContext());
+  app.all('/api/client-error', clientErrorHandler);
+  return { app, appDirectory };
+}
+
+function postClientError(app) {
+  const error = new Error('Block failed');
+  error.configKey = 'k3';
+  return app.request('http://localhost/api/client-error', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      host: 'localhost',
+      origin: 'http://localhost',
+      'sec-fetch-site': 'same-origin',
+    },
+    body: JSON.stringify(serializer.serialize(error)),
+  });
+}
+
+function lastLoggedError() {
+  const logger = loggers.at(-1);
+  return logger.error.mock.calls.at(-1)[0];
+}
+
+function mapReads(readFile) {
+  return readFile.mock.calls
+    .map(([filePath]) => path.basename(String(filePath)))
+    .filter((name) => name.startsWith('keyMap.json') || name.startsWith('refMap.json'));
+}
+
+test('a client error resolves its location from the gzipped maps through context.readMaps', async () => {
+  const { app, appDirectory } = await createClientErrorApp({ withMaps: true });
+  try {
+    const res = await postClientError(app);
+    expect(res.status).toEqual(200);
+    const logged = lastLoggedError();
+    expect(logged.message).toEqual('Block failed');
+    expect(logged.source).toEqual(path.join(appDirectory, 'pages/home.yaml:5'));
+    expect(logged.config).toEqual('root.pages[0:home].blocks[0:header]');
+  } finally {
+    vi.restoreAllMocks();
+    fs.rmSync(appDirectory, { recursive: true, force: true });
+  }
+});
+
+test('a second client error on a build with no maps reads no map file', async () => {
+  const { app, appDirectory } = await createClientErrorApp({ withMaps: false });
+  const readFile = vi.spyOn(fsPromises, 'readFile');
+  try {
+    expect((await postClientError(app)).status).toEqual(200);
+    expect(lastLoggedError().source).toBeUndefined();
+    expect(mapReads(readFile).sort()).toEqual(['keyMap.json.gz', 'refMap.json.gz']);
+
+    readFile.mockClear();
+    expect((await postClientError(app)).status).toEqual(200);
+    expect(lastLoggedError().source).toBeUndefined();
+    expect(mapReads(readFile)).toEqual([]);
+  } finally {
+    vi.restoreAllMocks();
+    fs.rmSync(appDirectory, { recursive: true, force: true });
+  }
 });

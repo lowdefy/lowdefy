@@ -22,7 +22,19 @@ import { serializer, type } from '@lowdefy/helpers';
 // then round-trips it through the serializer as the dev server reads a build
 // artifact, so ~k comes back non-enumerable. Objects listed in `unkeyed` (by
 // identity) stay without a ~k, like objects the build makes itself.
-function keyArtifact({ value, prefix = 'k1_', unkeyed = [], keyMap = {}, refs = {} }) {
+//
+// Entries are in the short shape, `{ s, p }`: the node's own path segment
+// (everything its path adds to the nearest keyed ancestor's) and that
+// ancestor's id; the root's parent id is never written. `shape: 'full'` writes
+// the full shape instead, `{ key, '~k_parent' }`, which readers still accept.
+function keyArtifact({
+  value,
+  prefix = 'k1_',
+  unkeyed = [],
+  keyMap = {},
+  refs = {},
+  shape = 'short',
+}) {
   let counter = 0;
   function nextKey() {
     counter += 1;
@@ -35,28 +47,34 @@ function keyArtifact({ value, prefix = 'k1_', unkeyed = [], keyMap = {}, refs = 
     if (item.type) segment = `${segment}:${item.type}`;
     return `${arrayPath}[${segment}]`;
   }
-  function mark(node, path) {
+  // Keys the node and returns the keyed ancestor its children chain to.
+  function mark(node, path, parent) {
     if (unkeyed.includes(node)) {
-      return;
+      return parent;
     }
     const key = nextKey();
-    keyMap[key] = { key: path, ...(refs[path] ?? {}) };
+    if (shape === 'full') {
+      keyMap[key] = { key: path, '~k_parent': parent.key, ...(refs[path] ?? {}) };
+    } else {
+      keyMap[key] = { s: path.slice(parent.path.length), p: parent.key, ...(refs[path] ?? {}) };
+    }
     Object.defineProperty(node, '~k', { value: key, enumerable: false, configurable: true });
+    return { key, path };
   }
-  function walk(node, path) {
+  function walk(node, path, parent) {
     if (type.isArray(node)) {
-      mark(node, path);
+      const keyed = mark(node, path, parent);
       node.forEach((item, index) => {
-        if (type.isObject(item)) walk(item, itemPath(path, index, item));
-        else if (type.isArray(item)) walk(item, `${path}[${index}]`);
+        if (type.isObject(item)) walk(item, itemPath(path, index, item), keyed);
+        else if (type.isArray(item)) walk(item, `${path}[${index}]`, keyed);
       });
       return;
     }
     if (!type.isObject(node)) return;
-    mark(node, path);
-    Object.keys(node).forEach((key) => walk(node[key], `${path}.${key}`));
+    const keyed = mark(node, path, parent);
+    Object.keys(node).forEach((key) => walk(node[key], `${path}.${key}`, keyed));
   }
-  walk(value, 'root');
+  walk(value, 'root', { key: `${prefix}parent`, path: '' });
   return { root: serializer.deserialize(serializer.serialize(value)), keyMap };
 }
 

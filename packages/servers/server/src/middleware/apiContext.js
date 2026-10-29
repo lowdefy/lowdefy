@@ -40,6 +40,7 @@ import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
+import readMaps from '../../lib/server/log/readMaps.js';
 import loggerConfig from '../../lib/build/logger.js';
 import scrubSecrets from '../../lib/server/scrubSecrets.js';
 import notifications, {
@@ -128,6 +129,9 @@ function apiContext({ clientAddressHeader } = {}) {
       websockets,
     };
     context.handleError = createHandleError({ context });
+    // logClientError resolves a client error's location through it.
+    context.readMaps = () =>
+      readMaps({ buildDirectory: context.buildDirectory, logger: context.logger });
     // Set as soon as the context can sink an error: the auth steps below can throw, and the
     // error handler reads the context back to log a fault with the request id and its location
     // rather than raw.

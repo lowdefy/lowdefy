@@ -235,6 +235,8 @@ Build artifacts go to `.lowdefy/build/`:
 ├── types.json         # Type definitions map
 ├── keyMap.json        # Config key → source location mapping (for error tracing)
 ├── refMap.json        # Ref ID → source file mapping (for error tracing)
+├── keyMap.json.gz     # keyMap.json gzipped (production server builds only: writeCompressedMaps)
+├── refMap.json.gz     # refMap.json gzipped (production server builds only: writeCompressedMaps)
 ├── api/               # API endpoint configs (one per endpoint)
 ├── connections/       # Connection configs (one per connection)
 ├── pages/             # Page configs (one per page)
@@ -256,15 +258,17 @@ Build artifacts go to `.lowdefy/build/`:
 
 ### Error Tracing Artifacts
 
-`keyMap.json` and `refMap.json` enable config-aware error tracing:
+`keyMap.json` and `refMap.json` enable config-aware error tracing. With the `writeCompressedMaps` build option, which the production and e2e server build scripts set, `writeMaps` also writes `keyMap.json.gz` and `refMap.json.gz` from the same strings, for deploys to ship:
 
 ```javascript
-// keyMap.json - maps internal keys to config locations
+// keyMap.json - maps internal keys to config locations, one short entry per node
 {
+  "abc122": { "s": "root", "p": "abc121", "r": "ref0" },
   "abc123": {
-    "key": "pages.0.blocks.0.type",
-    "~r": "ref1",    // Reference to refMap entry
-    "~l": 15         // Line number in source file
+    "s": ".pages",   // Own path segment, joined onto the parent's path
+    "p": "abc122",   // Parent id
+    "r": "ref1",     // Ref id, only where it differs from the parent's (null: none)
+    "l": 15          // Line number in source file
   }
 }
 
@@ -274,7 +278,7 @@ Build artifacts go to `.lowdefy/build/`:
 }
 ```
 
-Used by `resolveConfigLocation()` to produce human-readable errors:
+Read only through `resolveKeyEntry` / `createKeyPathResolver` in `@lowdefy/errors`, which rebuild the full path and ref from the parent chain and also read the full shape older builds wrote (`{ key, '~k_parent', '~r', '~l' }`; that branch can go once no supported version writes it). Used by `resolveConfigLocation()` to produce human-readable errors:
 
 ```
 [Config Error] Block type "Buton" not found.

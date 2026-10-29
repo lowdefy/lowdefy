@@ -201,8 +201,9 @@ function runRules({ context, targets, loaded }) {
 // operators against their plugin schemas, on the config nodes the type
 // counters recorded. Runs once the counting steps are done and before buildJs
 // replaces the counted objects. Returns the packages the app uses that are not
-// installed yet, for writePluginChecksPending, each with whether it owns a type
-// the schema check covers. A dev build passes allSlugPackages (see
+// installed yet and are not default packages (whose schemas ship with the
+// build), for writePluginChecksPending, each with whether it owns a type the
+// schema check covers. A dev build passes allSlugPackages (see
 // collectSlugPackages).
 async function runPluginChecks({ context, allSlugPackages = false }) {
   const targets = collectRuleTargets({ context });

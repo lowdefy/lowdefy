@@ -26,6 +26,7 @@ const defaultTypesMap = {
     blocks: {},
     operators: {},
   },
+  hasChecks: {},
 };
 
 export default defaultTypesMap;

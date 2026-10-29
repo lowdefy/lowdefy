@@ -19,6 +19,7 @@ import path from 'path';
 import { cleanDirectory, copyFileOrDirectory, writeFile } from '@lowdefy/node-utils';
 
 import copyTracedFiles from '../../utils/copyTracedFiles.js';
+import createSkipPlainMapsFilter from '../../utils/createSkipPlainMapsFilter.js';
 import findTraceBase from '../../utils/findTraceBase.js';
 
 // The boot script chdirs into the server directory inside the output (it is nested when the app
@@ -77,10 +78,14 @@ async function dockerOutput({ context }) {
 
   // 1. The runtime file closure of the Hono server, traced with @vercel/nft — the app source, the
   //    build-generated plugin import files, and exactly the node_modules files they resolve to
-  //    (through pnpm's symlinks, which are preserved).
+  //    (through pnpm's symlinks, which are preserved). The server's path.join(process.cwd(),
+  //    'build') makes nft trace the whole build folder, so the trace skips the plain error maps
+  //    too: the server reads the gzipped copies.
+  const skipPlainMaps = createSkipPlainMapsFilter({ buildDirectory });
   const fileCount = await copyTracedFiles({
     base,
     entrypoints,
+    filter: skipPlainMaps,
     functionDirectory: outputDirectory,
     logger,
     processCwd: serverDirectory,
@@ -98,7 +103,9 @@ async function dockerOutput({ context }) {
     path.join(serverDirectory, 'lib'),
     path.join(outputServerDirectory, 'lib')
   );
-  await copyFileOrDirectory(buildDirectory, path.join(outputServerDirectory, 'build'));
+  await copyFileOrDirectory(buildDirectory, path.join(outputServerDirectory, 'build'), {
+    filter: skipPlainMaps,
+  });
   await copyFileOrDirectory(clientDirectory, path.join(outputServerDirectory, 'dist', 'client'));
   await copyFileOrDirectory(
     path.join(serverDirectory, 'package.json'),

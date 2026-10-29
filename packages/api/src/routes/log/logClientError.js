@@ -98,8 +98,9 @@ async function logClientError(context, serializedError) {
     }
   }
 
-  // The dev server's context reads its JIT page builds' maps as well; other
-  // servers have none and read keyMap.json and refMap.json.
+  // Each server's context says where the maps come from: the dev server's adds
+  // its JIT page builds' maps, the production and e2e servers' read the gzipped
+  // maps once per process.
   const location = await loadAndResolveErrorLocation({
     error,
     readConfigFile: context.readConfigFile,
