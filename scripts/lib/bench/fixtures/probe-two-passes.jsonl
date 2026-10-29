@@ -1,0 +1,4 @@
+{"argv":["/usr/local/bin/node","/bench/app/baseline/workspace/server/lowdefy/build.mjs"],"pid":84233,"start":1793269842100.5,"end":1793269873520.5,"exitCode":0,"maxRssKb":1605328}
+{"argv":["/usr/local/bin/node","/bench/app/baseline/workspace/server/node_modules/esbuild/install.js"],"pid":84301,"start":1793269874000,"end":1793269874400,"exitCode":0,"maxRssKb":60112}
+{"argv":["/usr/local/bin/node","/bench/app/baseline/workspace/server/lowdefy/build.mjs"],"pid":84390,"start":1793269876000,"end":1793269904000,"exitCode":0,"maxRssKb":1702112}
+{"argv":["/usr/local/bin/node","/bench/app/baseline/lowdefy/packages/cli/dist/index.js","build","--config-directory","/bench/docs","--server-directory","/bench/app/baseline/workspace/server","--no-client-build","--disable-telemetry"],"pid":84084,"start":1793269837300,"end":1793269904600,"exitCode":0,"maxRssKb":151568}
