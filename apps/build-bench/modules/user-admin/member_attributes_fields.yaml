@@ -1,0 +1,14 @@
+# This app's attribute field blocks — written to the `member` row via
+# UpdateMemberAttributes. Ids prefixed `member_attributes.` bind to
+# state.member_attributes.*. (Renamed from app_attributes_fields.yaml.)
+- id: member_attributes.team
+  type: Selector
+  properties:
+    title: Team
+    options:
+      - label: Alpha
+        value: alpha
+      - label: Beta
+        value: beta
+      - label: Gamma
+        value: gamma

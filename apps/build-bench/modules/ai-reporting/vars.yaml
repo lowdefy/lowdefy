@@ -1,0 +1,71 @@
+# Reporting module config for the demo. `catalog` is the required collections
+# catalog (data dictionary + authorization boundary); the collection names and
+# model use the module defaults. The
+# reports-store, conversations-store and reporting-data connections are remapped
+# onto MONGODB_URI-backed app connections on the module entry (see modules.yaml),
+# so no REPORTING_MONGODB_URI / REPORTING_DATA_MONGODB_URI secrets are needed.
+# The `ai` connection keeps the module's bundled AI gateway connection
+# (AI_GATEWAY_API_KEY); the agent uses the default model (anthropic/claude-sonnet-5
+# — set `model: anthropic/claude-haiku-4.5` here to switch).
+catalog:
+  _ref: modules/ai-reporting/catalog.yaml
+
+# Holders of this role may publish a saved report to the whole app (and retract
+# anyone's published report). Set here so the demo exercises the enabled path —
+# leaving it unset builds a routine that rejects every publish, which is the
+# other half of the behaviour and is what an app without publishing gets.
+share_roles:
+  - report-publisher
+
+# The report page's AI summary is opt-in. On here so the demo exercises the
+# header button, the drawer and the summarize-report endpoint (the e2e suite
+# proves the model-free half); an app that leaves it off gets no button and an
+# endpoint that rejects.
+ai_summary: true
+
+# Project context for the agent's instructions — the things the catalog can't
+# say: what this app is, the words users will actually type, and the business
+# conventions to assume. Per-field mechanics (types, enum values, which array
+# holds the current stage) belong in the catalog, not here.
+app_context: >
+  This is the Lowdefy modules demo app, over a synthetic CRM-shaped dataset.
+  Two independent domains share the database: `demo_orders` is the sales side
+  (flat, one document per order), and everything else models customer
+  engagement — companies, the contacts who belong to them, activities logged
+  against companies, and workflows made up of actions assigned to contacts.
+  There is no link between orders and companies, so don't try to join them.
+
+
+  Vocabulary users will type: "customers" and "accounts" mean companies;
+  "people" and "users" mean contacts; "tasks" mean workflow actions;
+  "revenue" or "sales" mean the sum of `demo_orders.total`.
+
+
+  Conventions to assume unless the user says otherwise: revenue excludes
+  cancelled orders; "open" work means a current stage that is not done,
+  cancelled or not-required; the fiscal year is the calendar year; time series
+  run on the created date and are ordered oldest-first; report across all
+  regions, categories and channels together unless one is named.
+
+# Chat empty-state copy, set PARTIALLY on purpose. Only `data_scope` and the
+# explore track's `explore_label` / `explore_starters` are overridden here; the
+# other leaves (`title`, and the whole report track — `report_label`,
+# `report_starters`) are left unset so they resolve to the module's shipped
+# defaults. That partial shape is the point: the `welcome` var fills each leaf
+# from its own default independently, and a partial entry is exactly where a
+# regression in that per-leaf resolution would slip through unnoticed. Setting
+# one track and leaving the other lets a single build prove BOTH paths at once —
+# the overridden leaves and the defaulted ones appear side by side in the built
+# chat page. `data_scope` has no default (there is no sentence true of every
+# app), so it must be set here or the line never renders; it is written in the
+# same vocabulary app_context teaches the agent, and the explore starters are
+# written against the real demo data so a click resolves to a real answer.
+welcome:
+  data_scope: >-
+    I can see your orders, and the companies, contacts, activities and workflow
+    actions in your CRM.
+  explore_label: Get a quick answer
+  explore_starters:
+    - Which region has the highest total sales?
+    - How many activities were logged in the last month?
+    - List the top 5 companies by number of contacts.

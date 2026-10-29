@@ -1,0 +1,356 @@
+# Demo dispatch routine for the notifications module's send-notification endpoint.
+# One aggregation per handled event type on the events collection shapes
+# production-shaped notification docs (minus email fields); the step after it
+# inserts them into the notifications collection. An empty $match shapes
+# nothing and the insert is skipped, so every other event type is a no-op.
+# See designs/demo-notifications/design.md.
+#
+# Tenant wall: send-notification runs as the signed-in caller whose action
+# emitted the events, so both halves keep the wall. Under policy: tenant the
+# aggregation reads the caller's organization's events and the insert stamps
+# each doc with that organization. The docs are written by a separate insert
+# rather than a $merge stage, because the wall can not stamp or check the rows
+# a $merge writes and refuses it on a walled connection.
+- id: notify_quote_approved
+  type: MongoDBAggregation
+  connectionId:
+    _module.connectionId:
+      id: events-collection
+      module: events
+  properties:
+    pipeline:
+      # ── select the handled events ──
+      - $match:
+          _id:
+            $in:
+              _payload: event_ids
+          type: action-approve
+          metadata.action_type: send-quote
+      # ── join the send-quote action (action_ids may include
+      #    cascade-touched actions, so filter by type) ──
+      # The new-event endpoint flattens the `references` payload onto the event
+      # doc's top level (_object.assign), so reference arrays are top-level
+      # fields (action_ids, deal_ids, …), not nested under `references`.
+      - $lookup:
+          from: actions
+          let:
+            action_ids: $action_ids
+          pipeline:
+            - $match:
+                $expr:
+                  $and:
+                    - $in:
+                        - $_id
+                        - $$action_ids
+                    - $eq:
+                        - $type
+                        - send-quote
+          as: quote_action
+      - $set:
+          quote_action:
+            $first: $quote_action
+      # ── recipient: the submit transition's user (last in-review entry) ──
+      - $set:
+          recipient_id:
+            $let:
+              vars:
+                submit_entry:
+                  $last:
+                    $filter:
+                      input: $quote_action.status
+                      as: entry
+                      cond:
+                        $eq:
+                          - $$entry.stage
+                          - in-review
+              in: $$submit_entry.created.user.id
+      # ── shape the notification doc ──
+      - $project:
+          _id:
+            $function:
+              body: |
+                function(){
+                  return UUID().toString().split('"')[1]
+                }
+              args: []
+              lang: js
+          key:
+            $concat:
+              - $_id
+              - ":"
+              - $recipient_id
+              - ":"
+              - $dateToString:
+                  date: $created.timestamp
+          # Surface quote-approved as a popup toast (per-notification opt-in).
+          popup:
+            $literal: true
+          contact_id: $recipient_id
+          title: Quote approved
+          description:
+            $concat:
+              - $created.user.name
+              - " approved your quote."
+          body: "<p>Your quote was approved.</p>"
+          links:
+            button:
+              pageId: deals/view
+              urlQuery:
+                _id:
+                  $first: $deal_ids
+          type: quote-approved
+          event_type: action-approve
+          event_id: $_id
+          created:
+            _ref:
+              module: events
+              component: change_stamp
+          read:
+            $literal: false
+          priority:
+            $literal: 50
+- :if:
+    _gt:
+      - _array.length:
+          _step: notify_quote_approved
+      - 0
+  :then:
+    - id: insert_quote_approved
+      type: MongoDBInsertMany
+      connectionId:
+        _module.connectionId:
+          id: notifications-collection
+          module: notifications
+      properties:
+        docs:
+          _step: notify_quote_approved
+
+# Invite mock — the inbox notification stands in for the production invite email.
+- id: notify_invite
+  type: MongoDBAggregation
+  connectionId:
+    _module.connectionId:
+      id: events-collection
+      module: events
+  properties:
+    pipeline:
+      - $match:
+          _id:
+            $in:
+              _payload: event_ids
+          type:
+            $in:
+              - invite-user
+              - resend-user-invite
+      - $set:
+          recipient_id:
+            $first: $contact_ids
+      - $project:
+          _id:
+            $function:
+              body: |
+                function(){
+                  return UUID().toString().split('"')[1]
+                }
+              args: []
+              lang: js
+          key:
+            $concat:
+              - $_id
+              - ":"
+              - $recipient_id
+              - ":"
+              - $dateToString:
+                  date: $created.timestamp
+          popup:
+            $literal: false
+          contact_id: $recipient_id
+          title:
+            $cond:
+              - $eq:
+                  - $type
+                  - invite-user
+              - "You've been invited to the demo app"
+              - "Your demo app invite was resent"
+          description: Sign in with your email address to get started.
+          body: "<p>You've been invited to the demo app. Sign in with your email address to get started.</p>"
+          links:
+            button:
+              pageId:
+                _module.pageId:
+                  id: login
+                  module: user-account
+          type: user-invite
+          event_type: $type
+          event_id: $_id
+          created:
+            _ref:
+              module: events
+              component: change_stamp
+          read:
+            $literal: false
+          priority:
+            $literal: 50
+- :if:
+    _gt:
+      - _array.length:
+          _step: notify_invite
+      - 0
+  :then:
+    - id: insert_invite
+      type: MongoDBInsertMany
+      connectionId:
+        _module.connectionId:
+          id: notifications-collection
+          module: notifications
+      properties:
+        docs:
+          _step: notify_invite
+
+# Two-factor reset — recovery notification to the affected user after an admin
+# clears their authenticator and revokes their sessions.
+- id: notify_two_factor_reset
+  type: MongoDBAggregation
+  connectionId:
+    _module.connectionId:
+      id: events-collection
+      module: events
+  properties:
+    pipeline:
+      - $match:
+          _id:
+            $in:
+              _payload: event_ids
+          type: two-factor-reset
+      - $set:
+          recipient_id:
+            $first: $user_ids
+      - $project:
+          _id:
+            $function:
+              body: |
+                function(){
+                  return UUID().toString().split('"')[1]
+                }
+              args: []
+              lang: js
+          key:
+            $concat:
+              - $_id
+              - ":"
+              - $recipient_id
+              - ":"
+              - $dateToString:
+                  date: $created.timestamp
+          popup:
+            $literal: false
+          contact_id: $recipient_id
+          title: Two-factor authentication reset
+          description: An administrator reset your two-factor authentication.
+          body: "<p>An administrator reset your two-factor authentication. You'll be asked to set it up again next time you sign in.</p>"
+          links:
+            button:
+              pageId:
+                _module.pageId:
+                  id: login
+                  module: user-account
+          type: two-factor-reset
+          event_type: two-factor-reset
+          event_id: $_id
+          created:
+            _ref:
+              module: events
+              component: change_stamp
+          read:
+            $literal: false
+          priority:
+            $literal: 50
+- :if:
+    _gt:
+      - _array.length:
+          _step: notify_two_factor_reset
+      - 0
+  :then:
+    - id: insert_two_factor_reset
+      type: MongoDBInsertMany
+      connectionId:
+        _module.connectionId:
+          id: notifications-collection
+          module: notifications
+      properties:
+        docs:
+          _step: notify_two_factor_reset
+
+# Passkeys revoked — recovery notification to the affected user after an admin
+# revokes their passkeys and revokes their sessions.
+- id: notify_passkeys_revoked
+  type: MongoDBAggregation
+  connectionId:
+    _module.connectionId:
+      id: events-collection
+      module: events
+  properties:
+    pipeline:
+      - $match:
+          _id:
+            $in:
+              _payload: event_ids
+          type: passkeys-revoked
+      - $set:
+          recipient_id:
+            $first: $user_ids
+      - $project:
+          _id:
+            $function:
+              body: |
+                function(){
+                  return UUID().toString().split('"')[1]
+                }
+              args: []
+              lang: js
+          key:
+            $concat:
+              - $_id
+              - ":"
+              - $recipient_id
+              - ":"
+              - $dateToString:
+                  date: $created.timestamp
+          popup:
+            $literal: false
+          contact_id: $recipient_id
+          title: Passkeys revoked
+          description: An administrator revoked your passkeys.
+          body: "<p>An administrator revoked your passkeys. Sign in again to continue.</p>"
+          links:
+            button:
+              pageId:
+                _module.pageId:
+                  id: login
+                  module: user-account
+          type: passkeys-revoked
+          event_type: passkeys-revoked
+          event_id: $_id
+          created:
+            _ref:
+              module: events
+              component: change_stamp
+          read:
+            $literal: false
+          priority:
+            $literal: 50
+- :if:
+    _gt:
+      - _array.length:
+          _step: notify_passkeys_revoked
+      - 0
+  :then:
+    - id: insert_passkeys_revoked
+      type: MongoDBInsertMany
+      connectionId:
+        _module.connectionId:
+          id: notifications-collection
+          module: notifications
+      properties:
+        docs:
+          _step: notify_passkeys_revoked

@@ -1,0 +1,121 @@
+## The demo's menus. scripts/generate.mjs writes them to menus.yaml with a
+## menu group for each extra set in place of the marker line below.
+- id: default
+  links:
+    - id: crm-group
+      type: MenuGroup
+      properties:
+        title: CRM
+        icon: Contact
+      links:
+        _build.array.concat:
+          - _ref:
+              module: deals
+              menu: default
+          - _ref:
+              module: companies
+              menu: default
+          - _ref:
+              module: contacts
+              menu: default
+          - _ref:
+              module: activities
+              menu: default
+    - id: reporting-group
+      type: MenuGroup
+      properties:
+        title: Reporting
+        icon: chart
+      links:
+        - id: reporting-home
+          type: MenuLink
+          pageId: reporting-demo
+          properties:
+            title: Overview
+            icon: Gauge
+        - id: reporting-chat
+          type: MenuLink
+          pageId:
+            _module.pageId:
+              module: ai-reporting
+              id: chat
+          properties:
+            title: Chat
+            icon: message
+        - id: reporting-reports
+          type: MenuLink
+          pageId:
+            _module.pageId:
+              module: ai-reporting
+              id: reports-list
+          properties:
+            title: Saved reports
+            icon: document
+    - id: assistant-demo
+      type: MenuLink
+      pageId: assistant-demo
+      properties:
+        title: AI Assistant
+        icon: bot
+    - id: walkthroughs
+      type: MenuLink
+      pageId: walkthroughs-demo
+      properties:
+        title: Walkthroughs
+        icon: SquarePlay
+    - id: admin-group
+      type: MenuGroup
+      properties:
+        title: Admin
+        icon: settings
+      links:
+        _ref:
+          module: user-admin
+          menu: default
+    # {{ set menu groups }}
+
+- id: profile
+  links:
+    _build.array.concat:
+      - - id: profile
+          type: MenuLink
+          pageId:
+            _module.pageId:
+              module: user-account
+              id: view
+          properties:
+            title: Profile
+            icon: user
+        - id: release-notes
+          type: MenuLink
+          pageId:
+            _module.pageId:
+              module: release-notes
+              id: view
+          properties:
+            title: Release Notes
+            icon: document
+      - _ref:
+          module: support
+          menu: default
+      - - id: users
+          type: MenuLink
+          pageId:
+            _module.pageId:
+              module: user-admin
+              id: all
+          properties:
+            title: User Admin
+            icon: users
+        - id: logout-divider
+          type: MenuDivider
+        - id: logout
+          type: MenuLink
+          pageId:
+            _module.pageId:
+              module: user-account
+              id: logout
+          properties:
+            title: Logout
+            icon: logout
+            danger: true

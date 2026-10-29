@@ -1,0 +1,44 @@
+# entity_view.slot for the company-setup workflow (read-only).
+#
+# Baked by makeActionPages into the company-setup form pages (RHS Details section)
+# and the check page (middle review subject). It reads the entity fields the
+# workflow's `entity.data` routine returns, surfaced server-side on the
+# get_workflow_action response's `entity` object (an object, so no `.0`).
+# Display only, NO inputs and NO save handlers (entity_view is read-only).
+#
+# Rendered with SmartDescriptions (the idiomatic read-only data view): the
+# Industry selector renders as a tag, the rest as plain values. `fields` controls
+# exactly which keys show and their labels. `name` is omitted — it already drives
+# the breadcrumb entity crumb.
+- id: company_detail_slot
+  type: SmartDescriptions
+  properties:
+    column: 1
+    size: small
+    data:
+      _request: get_workflow_action.entity
+    fields:
+      - id: industry
+        type: Selector
+        properties:
+          title: Industry
+          options:
+            - Manufacturing
+            - Services
+            - Retail
+      - id: description
+        type: TextInput
+        properties:
+          title: Description
+      - id: primary_email
+        type: TextInput
+        properties:
+          title: Primary email
+      - id: website
+        type: TextInput
+        properties:
+          title: Website
+      - id: billing_email
+        type: TextInput
+        properties:
+          title: Billing email

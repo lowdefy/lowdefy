@@ -1,0 +1,281 @@
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: user-components-demo
+    title: User components
+    breadcrumbs:
+      - home: true
+        icon: home
+      - label: User components
+    # A component gallery wants a bare header: drop the module-wide header
+    # blocks (search, switcher) on this page only.
+    header_blocks: []
+    requests:
+      - id: message_composer_policy
+        type: AwsS3PresignedPostPolicy
+        connectionId: files/files-bucket
+        payload:
+          name:
+            _event: file.name
+          type:
+            _event: file.type
+        properties:
+          key:
+            _string.concat:
+              - user-components-demo/message-composer/
+              - _uuid: true
+              - /
+              - _payload: name
+          fields:
+            Content-Type:
+              _payload: type
+          conditions:
+            - - content-length-range
+              - 1
+              - 10485760
+      # Fails on the server (unknown pipeline stage), so the SupportContext
+      # card can show a failed request in its error list.
+      - id: support_demo_failing_request
+        type: MongoDBAggregation
+        connectionId: demo-contacts
+        properties:
+          pipeline:
+            - $supportDemoNotAStage: {}
+    events:
+      # With ?support_demo_error=1, logs an error while the page initialises,
+      # before any block has rendered. The SupportContext snapshot still has it.
+      onInit:
+        - id: log_support_demo_error
+          type: SetState
+          params:
+            support_demo_logged:
+              _js:
+                fn: |
+                  if (String(args[0]) !== "1") return false;
+                  console.error("SupportContext demo: logged from onInit");
+                  return true;
+                args:
+                  - _url_query: support_demo_error
+    blocks:
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: user-avatar
+            blocks:
+              # Populated picture + name → renders the image and the name.
+              - _ref:
+                  module: user-account
+                  component: user-avatar
+                  vars:
+                    user:
+                      profile:
+                        name: Ada Lovelace
+                        picture: "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'128'%20height%3D'128'%3E%3Crect%20width%3D'128'%20height%3D'128'%20fill%3D'%231565c0'%2F%3E%3Ctext%20x%3D'64'%20y%3D'64'%20dominant-baseline%3D'central'%20text-anchor%3D'middle'%20fill%3D'white'%20font-family%3D'sans-serif'%20font-size%3D'48'%20font-weight%3D'bold'%3EAL%3C%2Ftext%3E%3C%2Fsvg%3E"
+              # No picture → falls back to the Avatar block's user icon,
+              # which is what an invitee who has not onboarded renders as.
+              - _ref:
+                  module: user-account
+                  component: user-avatar
+                  vars:
+                    user:
+                      profile:
+                        name: Grace Hopper
+              # show_name: false → avatar only, no name beside it.
+              - _ref:
+                  module: user-account
+                  component: user-avatar
+                  vars:
+                    show_name: false
+                    user:
+                      profile:
+                        name: Alan Turing
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: user-multi-selector
+            blocks:
+              - _ref:
+                  module: user-account
+                  component: user-multi-selector
+                  vars:
+                    label: Assignees
+              - id: assignees_readback
+                type: Html
+                properties:
+                  html:
+                    _nunjucks:
+                      template: "<strong>Selected ids (array):</strong> {{ ids | dump }}"
+                      on:
+                        ids:
+                          _state: user-multi-selector
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: NotificationSound
+            blocks:
+              # The viewer's pick of notification sound, from the same list the
+              # notifications module plays from. Picking one turns sound on;
+              # the inbox's Sound switch turns it off.
+              - id: notification_sound_picker
+                type: NotificationSound
+                properties:
+                  app:
+                    _build.app: slug
+                  picker: true
+                  sounds:
+                    _ref: modules/notifications/sounds.yaml
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: ChatThread
+            blocks:
+              # Two author types (reporter is own, team is the other side),
+              # an image attachment, a file chip and a chip with no url.
+              - id: demo_chat_thread
+                type: ChatThread
+                properties:
+                  ownAuthorType: reporter
+                  maxHeight: 360
+                  emptyText: No messages yet
+                  messages:
+                    - _id: m1
+                      author_type: reporter
+                      author:
+                        name: Ada Lovelace
+                      body: The export button on the reports page does nothing.
+                      seq: "2026-01-12T09:02:00.000Z"
+                    - _id: m2
+                      author_type: reporter
+                      author:
+                        name: Ada Lovelace
+                      body: Here is what I see.
+                      seq: "2026-01-12T09:03:00.000Z"
+                      attachments:
+                        - name: reports-page.svg
+                          mime: image/svg+xml
+                          key: demo/m2/reports-page.svg
+                          url: "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'240'%20height%3D'140'%3E%3Crect%20width%3D'240'%20height%3D'140'%20fill%3D'%23ede9fe'%2F%3E%3Crect%20x%3D'16'%20y%3D'16'%20width%3D'120'%20height%3D'14'%20rx%3D'4'%20fill%3D'%237c3aed'%2F%3E%3Crect%20x%3D'16'%20y%3D'44'%20width%3D'208'%20height%3D'80'%20rx%3D'6'%20fill%3D'white'%2F%3E%3C%2Fsvg%3E"
+                    - _id: m3
+                      author_type: team
+                      author:
+                        name: Grace Hopper
+                        avatar_color: green
+                      body: Thanks. Could you send the file you were exporting? The steps are at https://example.com/help/export
+                      seq: "2026-01-12T10:15:00.000Z"
+                    - _id: m4
+                      author_type: reporter
+                      author:
+                        name: Ada Lovelace
+                      body: Attached.
+                      seq: "2026-01-13T08:40:00.000Z"
+                      attachments:
+                        - name: quarterly-report.pdf
+                          mime: application/pdf
+                          key: demo/m4/quarterly-report.pdf
+                          url: https://example.com/quarterly-report.pdf
+                        - name: removed-file.pdf
+                          mime: application/pdf
+                          url: null
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: MessageComposer
+            blocks:
+              # Type, paste or drop an image or PDF, then press Ctrl or Cmd
+              # with Enter. The message and the files are read back below.
+              - id: demo_composer.message
+                type: MessageComposer
+                properties:
+                  placeholder: Write a message
+                  s3PostPolicyRequestId: message_composer_policy
+                  files:
+                    _if_none:
+                      - _state: demo_composer.files
+                      - []
+                events:
+                  onUploaded:
+                    - id: demo_composer_add_file
+                      type: SetState
+                      params:
+                        demo_composer.files:
+                          _event: files
+                  onRemove:
+                    - id: demo_composer_remove_file
+                      type: SetState
+                      params:
+                        demo_composer.files:
+                          _event: files
+                  onSubmit:
+                    - id: demo_composer_sent
+                      type: SetState
+                      params:
+                        demo_composer_sent:
+                          message:
+                            _event: message
+                          files:
+                            _event: files
+                        demo_composer.message: null
+                        demo_composer.files: []
+              - id: demo_composer_readback
+                type: Html
+                properties:
+                  html:
+                    _nunjucks:
+                      template: "<strong>Sent:</strong> {{ sent | dump }}"
+                      on:
+                        sent:
+                          _state: demo_composer_sent
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: SupportContext
+            blocks:
+              # Renders nothing. Its snapshot method reads the browser's
+              # details and the tab's recent errors into its value.
+              - id: support_context
+                type: SupportContext
+              - id: support_context_buttons
+                type: Box
+                layout:
+                  gap: 8
+                blocks:
+                  - id: support_context_snapshot
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      title: Take a snapshot
+                    events:
+                      onClick:
+                        - id: take_snapshot
+                          type: CallMethod
+                          params:
+                            blockId: support_context
+                            method: snapshot
+                  - id: support_context_fail_request
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      title: Run a failing request
+                    events:
+                      onClick:
+                        - id: run_failing_request
+                          type: Request
+                          params: support_demo_failing_request
+              - id: support_context_value
+                type: Html
+                properties:
+                  html:
+                    _nunjucks:
+                      template: '<pre style="white-space: pre-wrap; font-size: 12px">{{ snapshot | dump(2) }}</pre>'
+                      on:
+                        snapshot:
+                          _state: support_context
