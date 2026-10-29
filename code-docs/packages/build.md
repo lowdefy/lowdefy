@@ -235,6 +235,8 @@ Build artifacts go to `.lowdefy/build/`:
 ├── types.json         # Type definitions map
 ├── keyMap.json        # Config key → source location mapping (for error tracing)
 ├── refMap.json        # Ref ID → source file mapping (for error tracing)
+├── keyMap.json.gz     # keyMap.json gzipped (production server builds only: writeCompressedMaps)
+├── refMap.json.gz     # refMap.json gzipped (production server builds only: writeCompressedMaps)
 ├── api/               # API endpoint configs (one per endpoint)
 ├── connections/       # Connection configs (one per connection)
 ├── pages/             # Page configs (one per page)
@@ -256,7 +258,7 @@ Build artifacts go to `.lowdefy/build/`:
 
 ### Error Tracing Artifacts
 
-`keyMap.json` and `refMap.json` enable config-aware error tracing:
+`keyMap.json` and `refMap.json` enable config-aware error tracing. With the `writeCompressedMaps` build option, which the production and e2e server build scripts set, `writeMaps` also writes `keyMap.json.gz` and `refMap.json.gz` from the same strings, for deploys to ship:
 
 ```javascript
 // keyMap.json - maps internal keys to config locations, one short entry per node
