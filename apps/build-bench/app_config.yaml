@@ -1,0 +1,3 @@
+# Deployment capability, read by every searchable module entry. This app runs
+# against a MongoDB with Atlas Search — see docs/shared/search.md.
+atlas_search: true

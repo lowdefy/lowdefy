@@ -1,0 +1,40 @@
+type: track-company-setup
+# title overrides the derived "Track Company Setup" — the card reads better
+# labelled as the thing being tracked (docs/workflows/reference/authoring-grammar.md#titles).
+title: Company Setup
+kind: tracker
+action_group: conversion
+blocked_by:
+  - upload-po
+description: Tracks the company-setup workflow on the deal's customer company.
+access:
+  demo:
+    view: true
+    edit: true # the start link
+tracker:
+  child_workflow_type: company-setup
+  # Engine-links carry only the action_id + entity_id sentinels, so the company
+  # id can't ride along here — the start page resolves it from the deal. Unlike
+  # the leads flow (which pointed at companies/new to *create* the company), this
+  # targets an app page that starts company-setup on the deal's EXISTING company.
+  start_link:
+    pageId: start-company-setup
+    urlQuery:
+      action_id: true # → tracker action _id (the parent_action_id)
+      entity_id: true # → deal _id (the start page reads its company_id)
+status_map:
+  blocked:
+    demo:
+      message: Start company setup once the purchase order is uploaded.
+  action-required:
+    demo:
+      message: Start the customer's company setup.
+  in-progress:
+    demo:
+      message: Company setup in progress.
+  done:
+    demo:
+      message: Company setup complete.
+  not-required:
+    demo:
+      message: Company setup skipped.

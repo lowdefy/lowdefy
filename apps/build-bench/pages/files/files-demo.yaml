@@ -1,0 +1,559 @@
+# Files module showcase — demonstrates the three exported components
+# (file-card, file-manager, file-list) plus the E1 upload-modal form slot and
+# the E3 onDownload hook. All surfaces key files by { collection: entity_type,
+# doc_id: entity_id }; the file-card and file-list below share one entity so the
+# list mirrors what the card manages.
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: files-demo
+    title: Files
+    breadcrumbs:
+      - home: true
+        icon: home
+      - label: Files
+    requests:
+      - id: support_screenshot_policy
+        type: AwsS3PresignedPostPolicy
+        connectionId: files/files-bucket
+        payload:
+          name:
+            _event: file.name
+        properties:
+          key:
+            _string.concat:
+              - files-demo/support-screenshot/
+              - _uuid: true
+              - /
+              - _payload: name
+          fields:
+            Content-Type: image/png
+          conditions:
+            - - content-length-range
+              - 1
+              - 10485760
+    blocks:
+      - id: intro
+        type: Paragraph
+        properties:
+          content: >
+            The files module manages entity attachments — S3 upload/download,
+            a MongoDB metadata record, and audit events. It exports three
+            components: **file-card** (the pre-wired card most consumers use),
+            **file-manager** (the raw drag-drop block), and **file-list** (a
+            lightweight read-only list). Files are keyed by an entity
+            (`entity_type` + `entity_id`); the card and list below share one
+            entity, so the list is a read-only view of the card's files.
+
+      # ── metadata_tags (static test data — no backend) ────────────────────
+      - id: tag_test_divider
+        type: Divider
+        properties:
+          orientation: left
+          title: metadata_tags (static test data)
+      - id: tag_test_note
+        type: Paragraph
+        properties:
+          type: secondary
+          content: >
+            A read-only file-manager fed a hardcoded `files` array (no S3/Mongo)
+            so the `metadata_tags` badge is visible without a backend. Rows whose
+            `metadata.available_to_client` is `true` show the green
+            "Available to client" tag; the others do not.
+      - id: tag_test_manager
+        type: FileManager
+        properties:
+          viewOnly: true
+          metadataTags:
+            - key: available_to_client
+              label: Available to client
+              color: green
+          files:
+            - _id: test-1
+              file:
+                name: client-contract.pdf
+                key: files-demo/test-1/client-contract.pdf
+                bucket: demo
+                size: 245678
+                type: application/pdf
+              file_title: Signed contract
+              file_category: contract
+              metadata:
+                available_to_client: true
+              created:
+                timestamp: 1722800000000
+                user:
+                  name: Alice Test
+                  id: user-1
+            - _id: test-2
+              file:
+                name: internal-notes.pdf
+                key: files-demo/test-2/internal-notes.pdf
+                bucket: demo
+                size: 88123
+                type: application/pdf
+              file_title: Internal notes
+              file_category: notes
+              metadata:
+                available_to_client: false
+              created:
+                timestamp: 1722810000000
+                user:
+                  name: Bob Test
+                  id: user-2
+            - _id: test-3
+              file:
+                name: site-photo.jpg
+                key: files-demo/test-3/site-photo.jpg
+                bucket: demo
+                size: 512000
+                type: image/jpeg
+              file_title: Site photo
+              file_category: photo
+              metadata:
+                available_to_client: true
+              created:
+                timestamp: 1722820000000
+                user:
+                  name: Alice Test
+                  id: user-1
+
+      # ── file-card ───────────────────────────────────────────────────────
+      - id: file_card_divider
+        type: Divider
+        properties:
+          orientation: left
+          title: file-card
+      - id: file_card_note
+        type: Paragraph
+        properties:
+          type: secondary
+          content: >
+            The recommended component: a titled card wrapping file-manager. This
+            instance uses an upload-modal form slot (E1) — after each upload a
+            modal collects a category (which sets the file's `file_category`) and
+            an "available to client" flag (stored in `metadata`) — a
+            `metadata_tags` entry that renders a green "Available to client" tag
+            on rows whose flag is set, and an `on_download` hook (E3) that shows
+            a message on download.
+      - _ref:
+          module: files
+          component: file-card
+          vars:
+            block_id: demo_file_card
+            title: Documents
+            entity_type: files-demo
+            entity_id: showcase
+            modal_title: File details
+            ok_text: Save file
+            metadata_tags:
+              - key: available_to_client
+                label: Available to client
+                when: true
+                color: green
+            form_fields:
+              - id: demo_file_card.form.file_category
+                type: Selector
+                required: true
+                properties:
+                  title: Category
+                  options:
+                    - label: Contract
+                      value: contract
+                    - label: Drawing
+                      value: drawing
+                    - label: Photo
+                      value: photo
+              - id: demo_file_card.form.available_to_client
+                type: Switch
+                properties:
+                  title: Available to client
+            on_download:
+              - id: notify_download
+                type: DisplayMessage
+                params:
+                  content:
+                    _nunjucks:
+                      template: "Downloading {{ fileDoc.file.name }}"
+                      on:
+                        fileDoc:
+                          _event: fileDoc
+
+      # ── file-manager ────────────────────────────────────────────────────
+      - id: file_manager_divider
+        type: Divider
+        properties:
+          orientation: left
+          title: file-manager
+      - id: file_manager_note
+        type: Paragraph
+        properties:
+          type: secondary
+          content: >
+            The raw block, without a card wrapper. Left: the default multi-file
+            manager. Right: single-file mode (`single_file: true`) restricted to
+            images — the dragger hides once a file is present.
+      - id: file_manager_row
+        type: Box
+        layout:
+          gap: 16
+        blocks:
+          - id: file_manager_multi_col
+            type: Box
+            layout:
+              span: 12
+              sm:
+                span: 24
+            blocks:
+              - _ref:
+                  module: files
+                  component: file-manager
+                  vars:
+                    block_id: demo_file_manager
+                    entity_type: files-demo
+                    entity_id: showcase-manager
+                    label:
+                      title: Attachments
+                    hint: Click or drag to attach files
+          - id: file_manager_single_col
+            type: Box
+            layout:
+              span: 12
+              sm:
+                span: 24
+            blocks:
+              - _ref:
+                  module: files
+                  component: file-manager
+                  vars:
+                    block_id: demo_file_manager_single
+                    entity_type: files-demo
+                    entity_id: showcase-avatar
+                    file_category: avatar
+                    single_file: true
+                    accept: image/*
+                    label:
+                      title: Avatar (single image)
+                    hint: Click or drag one image
+
+      # ── upload policy from an endpoint ──────────────────────────────────
+      - id: policy_event_divider
+        type: Divider
+        properties:
+          orientation: left
+          title: Upload policy from an endpoint
+      - id: policy_event_note
+        type: Paragraph
+        properties:
+          type: secondary
+          content: >
+            The raw block with `onUploadPolicy`: instead of a page request, the
+            page's actions get the upload policy from an API endpoint
+            (`files-demo-upload-policy`) and hand it to the block with
+            `setUploadPolicy`. The endpoint gives no policy for files over 1 MB,
+            so the block holds the upload and the page asks whether to send it
+            anyway: yes asks the endpoint again with `large: true` (up to 10 MB)
+            and resumes the held upload with `setUploadPolicy` and its `uid`, no
+            calls `cancelUpload`. A pasted screenshot arrives marked `pasted`,
+            and the endpoint names it `pasted-YYYYMMDD-HHmmss.png`.
+      - id: demo_policy_event_manager
+        type: FileManager
+        properties:
+          hint: Click, drag or paste a file (up to 1 MB, or 10 MB if you confirm)
+        events:
+          onUploadPolicy:
+            - id: get_policy
+              type: CallAPI
+              params:
+                endpointId: files-demo-upload-policy
+                payload:
+                  name:
+                    _event: file.name
+                  content_type:
+                    _event: file.type
+                  size:
+                    _event: file.size
+                  pasted:
+                    _event: pasted
+            - id: hold_large
+              type: SetState
+              skip:
+                _ne:
+                  - _actions: get_policy.response.response.upload
+                  - null
+              params:
+                held_upload:
+                  uid:
+                    _event: file.uid
+                  name:
+                    _event: file.name
+                  content_type:
+                    _event: file.type
+                  size:
+                    _event: file.size
+                  pasted:
+                    _event: pasted
+            - id: ask_large
+              type: CallMethod
+              skip:
+                _ne:
+                  - _actions: get_policy.response.response.upload
+                  - null
+              params:
+                blockId: large_upload_modal
+                method: toggleOpen
+            - id: set_policy
+              type: CallMethod
+              skip:
+                _eq:
+                  - _actions: get_policy.response.response.upload
+                  - null
+              params:
+                blockId: demo_policy_event_manager
+                method: setUploadPolicy
+                args:
+                  - _actions: get_policy.response.response.upload
+          onSave:
+            - id: uploaded
+              type: DisplayMessage
+              params:
+                status: success
+                content:
+                  _nunjucks:
+                    template: "Uploaded {{ file.key }}{% if file.pasted %} (pasted){% endif %}"
+                    on:
+                      file:
+                        _event: file
+      - id: large_upload_modal
+        type: Modal
+        properties:
+          title: Upload a large file?
+          okText: Upload
+          cancelText: Don't upload
+        events:
+          onOk:
+            - id: get_large_policy
+              type: CallAPI
+              params:
+                endpointId: files-demo-upload-policy
+                payload:
+                  name:
+                    _state: held_upload.name
+                  content_type:
+                    _state: held_upload.content_type
+                  size:
+                    _state: held_upload.size
+                  pasted:
+                    _state: held_upload.pasted
+                  large: true
+            - id: too_large
+              type: DisplayMessage
+              skip:
+                _ne:
+                  - _actions: get_large_policy.response.response.upload
+                  - null
+              params:
+                status: warning
+                content: That file is over 10 MB, so it was not uploaded.
+            - id: cancel_too_large
+              type: CallMethod
+              skip:
+                _ne:
+                  - _actions: get_large_policy.response.response.upload
+                  - null
+              params:
+                blockId: demo_policy_event_manager
+                method: cancelUpload
+                args:
+                  - _state: held_upload.uid
+            - id: resume_upload
+              type: CallMethod
+              skip:
+                _eq:
+                  - _actions: get_large_policy.response.response.upload
+                  - null
+              params:
+                blockId: demo_policy_event_manager
+                method: setUploadPolicy
+                args:
+                  - _actions: get_large_policy.response.response.upload
+                  - _state: held_upload.uid
+          onCancel:
+            - id: cancel_upload
+              type: CallMethod
+              params:
+                blockId: demo_policy_event_manager
+                method: cancelUpload
+                args:
+                  - _state: held_upload.uid
+        blocks:
+          - id: large_upload_message
+            type: Paragraph
+            properties:
+              content:
+                _nunjucks:
+                  template: "{{ name }} is over 1 MB. Upload it anyway (up to 10 MB)?"
+                  on:
+                    name:
+                      _state: held_upload.name
+
+      # ── support screenshot ──────────────────────────────────────────────
+      - id: support_screenshot_divider
+        type: Divider
+        properties:
+          orientation: left
+          title: SupportScreenshot
+      - id: support_screenshot_note
+        type: Paragraph
+        properties:
+          type: secondary
+          content: >
+            Takes a screenshot of this page and uploads it to the files bucket.
+            The password below, the box and the canvas marked `data-support-mask`
+            show as solid grey boxes in the screenshot, and the badge passed in
+            `hideSelectors` is left out of it. In the editor, Blur blurs each box
+            you drag and Crop keeps only the box you drag.
+      - id: support_screenshot_row
+        type: Box
+        layout:
+          gap: 16
+        blocks:
+          - id: support_demo_password
+            type: PasswordInput
+            layout:
+              span: 8
+              sm:
+                span: 24
+            properties:
+              title: Password
+          - id: support_demo_masked
+            type: Html
+            layout:
+              span: 8
+              sm:
+                span: 24
+            properties:
+              html: >-
+                <div data-support-mask style="padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px">
+                Account number: 4000 1234 5678 9010</div>
+          - id: support_demo_hidden
+            type: Html
+            layout:
+              span: 8
+              sm:
+                span: 24
+            properties:
+              html: >-
+                <div class="support-demo-hidden" style="display: inline-block; padding: 8px 12px; background: #ff00ff; color: #fff; border-radius: 6px">
+                Not in the screenshot</div>
+          - id: support_demo_canvas
+            type: Html
+            layout:
+              span: 8
+              sm:
+                span: 24
+            properties:
+              html: >-
+                <canvas class="support-demo-canvas" data-support-mask width="240" height="40"
+                style="display: block; border: 1px solid #d9d9d9; border-radius: 6px"></canvas>
+      - id: support_screenshot
+        type: SupportScreenshot
+        properties:
+          s3PostPolicyRequestId: support_screenshot_policy
+          hideSelectors:
+            - .support-demo-hidden
+        events:
+          onUse:
+            - id: set_last_screenshot
+              type: SetState
+              params:
+                support_last_screenshot:
+                  _event: file
+            - id: screenshot_uploaded
+              type: DisplayMessage
+              params:
+                status: success
+                content:
+                  _nunjucks:
+                    template: "Uploaded {{ file.key }}"
+                    on:
+                      file:
+                        _event: file
+          onError:
+            - id: screenshot_failed
+              type: DisplayMessage
+              params:
+                status: error
+                content:
+                  _event: message
+
+      # ── file-list ───────────────────────────────────────────────────────
+      - id: file_list_divider
+        type: Divider
+        properties:
+          orientation: left
+          title: file-list (deprecated)
+      - id: file_list_note
+        type: Alert
+        properties:
+          type: warning
+          showIcon: true
+          message: file-list is deprecated
+          description: >
+            A lightweight read-only list built from standard Lowdefy blocks (no
+            plugin). It is kept for backwards compatibility — prefer a read-only
+            (`view_only: true`) file-card or file-manager going forward, which
+            render richer file rows (icons, thumbnails, uploader/date). Both a
+            preferred read-only file-card and the deprecated file-list are shown
+            below, pointed at the same entity as the file-card at the top of the
+            page. They fetch on mount, so reload the page after uploading via
+            that card to see new files here.
+      - id: file_list_compare_row
+        type: Box
+        layout:
+          gap: 16
+        blocks:
+          # Preferred replacement for file-list: a read-only file-card.
+          - id: preferred_readonly_col
+            type: Box
+            layout:
+              span: 12
+              sm:
+                span: 24
+            blocks:
+              - _ref:
+                  module: files
+                  component: file-card
+                  vars:
+                    block_id: demo_readonly_card
+                    title: Documents (read-only file-card — preferred)
+                    entity_type: files-demo
+                    entity_id: showcase
+                    view_only: true
+                    metadata_tags:
+                      - key: available_to_client
+                        label: Available to client
+                        when: true
+                        color: green
+          # Deprecated file-list, for comparison.
+          - id: deprecated_list_col
+            type: Box
+            layout:
+              span: 12
+              sm:
+                span: 24
+            blocks:
+              - _ref:
+                  module: layout
+                  component: card
+                  vars:
+                    title: Documents (file-list — deprecated)
+                    blocks:
+                      - _ref:
+                          module: files
+                          component: file-list
+                          vars:
+                            block_id: demo_file_list
+                            entity_type: files-demo
+                            entity_id: showcase

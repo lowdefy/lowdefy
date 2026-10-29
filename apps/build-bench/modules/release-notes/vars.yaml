@@ -1,0 +1,12 @@
+region: us-east-1
+# The groups Pelican's announce form offers besides everyone: a filter over
+# each person's user-members row.
+audiences:
+  - id: managers
+    label: Managers
+    query:
+      app_roles: manager
+  - id: team-alpha
+    label: Team Alpha
+    query:
+      attributes.team: alpha

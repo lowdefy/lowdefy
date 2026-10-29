@@ -1,0 +1,105 @@
+atlas_search:
+  _ref:
+    path: app_config.yaml
+    key: atlas_search
+event_display:
+  demo:
+    create-activity: "{{ user.profile.name }} logged a {{ target.type_label }}: {{ target.title }}"
+    update-activity: "{{ user.profile.name }} updated a {{ target.type_label }}: {{ target.title }}"
+    complete-activity: "{{ user.profile.name }} completed a {{ target.type_label }}: {{ target.title }}"
+    cancel-activity: "{{ user.profile.name }} cancelled a {{ target.type_label }}: {{ target.title }}"
+    reopen-activity: "{{ user.profile.name }} reopened a {{ target.type_label }}: {{ target.title }}"
+    delete-activity: "{{ user.profile.name }} deleted a {{ target.type_label }}: {{ target.title }}"
+
+# --- PR #93 extension points, exercised for the demo ---------------------
+#
+# Type behavior flags: a consumer-registered "Site Visit" type made fully
+# meeting-like via flags — `agenda` (Agenda Topics section), `duration`
+# (Duration meta field), and a `contact_label` retitling the contacts
+# selector. No code change keys off the type id; the built-ins keep their
+# own flags as defaults.
+activity_types:
+  site_visit:
+    title: Site Visit
+    color: "#fa8c16"
+    icon: location
+    default_stage: done
+    type: complex
+    agenda: true
+    duration: true
+    contact_label: Attendees
+
+fields:
+  # Global custom fields — render for every type that has no per-type list.
+  attributes:
+    - id: attributes.outcome
+      type: TextInput
+      properties:
+        title: Outcome
+  # Per-type custom fields — a type with an entry renders this list instead
+  # of the global `attributes` array (form + detail view); other types fall
+  # back to the global list.
+  attributes_by_type:
+    site_visit:
+      - id: attributes.site_ref
+        type: TextInput
+        properties:
+          title: Site Reference
+      # This field *is* the deal link, so it must render in the capture modal — a
+      # `visible: false` there would delete the reference the host prefilled. Hence
+      # its own options request; `form_requests` are page-only. Not shown in the view.
+      - id: references.deal_ids
+        type: MultipleSelector
+        visible:
+          _ne:
+            - _state: activity_form_context
+            - view
+        requests:
+          - id: selector_deals_inline
+            type: MongoDBAggregation
+            connectionId:
+              _module.connectionId:
+                { id: deals-collection, module: { _var: ids.deals } }
+            properties:
+              pipeline:
+                - $match:
+                    removed:
+                      $ne: true
+                - $project:
+                    _id: 0
+                    value: $_id
+                    label: $name
+                - $sort:
+                    label: 1
+        events:
+          onMount:
+            - id: fetch_deal_options
+              type: Request
+              params: selector_deals_inline
+        properties:
+          title: Related Deal
+          disabled:
+            _ne:
+              - _state: activity_form_context
+              - page
+          options:
+            _request: selector_deals_inline
+
+# Post-create hook: runs after every successful create (new page + capture
+# modal) with the new activity id at `_state: activity_id`. This one just
+# surfaces a toast; it leaves `on_created_handled` unset, so the built-in
+# reset + navigate-to-view tail still runs on the new page.
+hooks:
+  on_created:
+    - id: activity_created_toast
+      type: DisplayMessage
+      params:
+        status: info
+        content:
+          _string.concat:
+            - "on_created hook fired for activity "
+            - _state: activity_id
+
+# Attachment slots (`components.form_attachments` / `components.view_attachments`)
+# are left at their defaults, which wire the files module's file-manager /
+# file-card — the demo already exercises those slots through the defaults.

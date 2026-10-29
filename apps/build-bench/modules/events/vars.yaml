@@ -1,0 +1,26 @@
+contact_page_id: contacts/view
+actions_collection: actions
+contacts_collection: user-contacts
+event_types:
+  _ref: modules/events/event_types.yaml
+change_stamp:
+  timestamp:
+    _date: now
+  user:
+    name:
+      _if_none:
+        - _user: name
+        - _if_none:
+            - _user: profile.name
+            - _var: default_name
+    id:
+      _if_none:
+        - _user: id
+        - _var: default_id
+  app_name:
+    _build.app: slug
+  # The demo reads these from its package.json. This app has none: it is
+  # never published and builds with this repository's Lowdefy.
+  version:
+    app: 0.0.0
+    lowdefy: local

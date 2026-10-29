@@ -7006,16 +7006,6 @@
     "4": {
       "parent": null
     },
-    "slots.0": {
-      "parent": "1",
-      "lineNumber": 30,
-      "path": null,
-      "original": {
-        "module": "provider",
-        "component": "policy-badge",
-        "~l": 30
-      }
-    },
     "": {
       "parent": "slots.0",
       "lineNumber": 11,
@@ -7025,6 +7015,16 @@
       "parent": "3",
       "lineNumber": 11,
       "path": "<CONFIG_DIR>/modules/consumer/pages/main.yaml"
+    },
+    "slots.0": {
+      "parent": "1",
+      "lineNumber": 30,
+      "path": null,
+      "original": {
+        "module": "provider",
+        "component": "policy-badge",
+        "~l": 30
+      }
     }
   },
   "routes.json": [

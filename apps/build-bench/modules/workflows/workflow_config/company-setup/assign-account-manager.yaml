@@ -1,0 +1,24 @@
+type: assign-account-manager
+kind: check
+action_group: setup
+# Picking the person IS the work here, so the assignees field is the whole point —
+# but there is no deadline to track, so the due-date field is noise. Paired with
+# kickoff-call below (which declares the opposite) this proves the presence list
+# is per-action even though both actions are served by the ONE
+# `company-setup-action` page.
+universal_fields: [assignees]
+description: |
+  Match on **region and industry** first, then current book size — don't assign
+  a manager already at capacity. The assignee owns the kickoff call and the
+  customer relationship from here on.
+access:
+  demo:
+    view: true
+    edit: true
+status_map:
+  action-required:
+    demo:
+      message: Assign an account manager.
+  done:
+    demo:
+      message: Account manager assigned.
