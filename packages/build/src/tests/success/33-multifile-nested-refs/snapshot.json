@@ -10218,6 +10218,26 @@
       "lineNumber": 12,
       "path": "pages/dashboard.yaml"
     },
+    "pages.0.blocks.0": {
+      "parent": "pages.0",
+      "lineNumber": 6,
+      "path": "blocks/page-header.yaml"
+    },
+    "pages.0.blocks.1.blocks.0": {
+      "parent": "pages.0",
+      "lineNumber": 10,
+      "path": "components/metric-card.yaml"
+    },
+    "pages.0.blocks.1.blocks.1": {
+      "parent": "pages.0",
+      "lineNumber": 15,
+      "path": "components/metric-card.yaml"
+    },
+    "pages.0.blocks.2": {
+      "parent": "pages.0",
+      "lineNumber": 20,
+      "path": "blocks/page-footer.yaml"
+    },
     "pages.1": {
       "parent": "2",
       "lineNumber": 13,
@@ -10241,26 +10261,6 @@
     "pages.1.blocks.2": {
       "parent": "pages.1",
       "lineNumber": 22,
-      "path": "blocks/page-footer.yaml"
-    },
-    "pages.0.blocks.0": {
-      "parent": "pages.0",
-      "lineNumber": 6,
-      "path": "blocks/page-header.yaml"
-    },
-    "pages.0.blocks.1.blocks.0": {
-      "parent": "pages.0",
-      "lineNumber": 10,
-      "path": "components/metric-card.yaml"
-    },
-    "pages.0.blocks.1.blocks.1": {
-      "parent": "pages.0",
-      "lineNumber": 15,
-      "path": "components/metric-card.yaml"
-    },
-    "pages.0.blocks.2": {
-      "parent": "pages.0",
-      "lineNumber": 20,
       "path": "blocks/page-footer.yaml"
     }
   },
