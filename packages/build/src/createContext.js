@@ -70,6 +70,9 @@ function createContext({
     pluginInstallFollows,
     // Null prototype prevents pollution via attacker-controlled entry.id.
     modules: Object.create(null),
+    // Each YAML and JSON config file's parsed tree, by path, with the content it
+    // was parsed from (getParsedConfigFile). Dev page builds share it.
+    parsedConfigCache: new Map(),
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
