@@ -50,6 +50,8 @@
  * @property {HostLocation} location
  * @property {number} innerWidth The viewport width, for `_media` and its dependency tracking.
  * @property {number} innerHeight The viewport height, for `_media`.
+ * @property {{ state: *, replaceState: Function }} [history] The browser's history, which the
+ *   MagicLinkVerify action uses to clear the sign-in token from the URL fragment. Web only.
  * @property {Event} [event] The DOM event whose listeners are running (the browser's
  *   `window.event`). A host without DOM events leaves it out: no event bubbles through nested
  *   blocks there, so no block's event is skipped as a copy of another's (claimDomEvent).
@@ -64,6 +66,9 @@
  * @typedef {Object} HostDocument
  * @property {(id: string) => (Object|null)} [getElementById] Finds a block's layout element
  *   (`bl-<blockId>`) on a DOM event's path. Needed only with `window.event`.
+ * @property {(tag: string) => Object} [createElement] With body, used by the MagicLinkVerify
+ *   action to post the sign-in token as a form. Web only.
+ * @property {Object} [body]
  * @property {(selector: string) => (Object|null)} [querySelector] Used by the SetFocus and
  *   ScrollTo actions on the web.
  * @property {'visible'|'hidden'} [visibilityState] Whether the app is in front, read by the page

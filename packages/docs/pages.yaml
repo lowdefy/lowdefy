@@ -366,6 +366,7 @@
 - _ref: operators/_theme.yaml
 - _ref: operators/_type.yaml
 - _ref: operators/_uri.yaml
+- _ref: operators/_url_hash.yaml
 - _ref: operators/_url_query.yaml
 - _ref: operators/_user.yaml
 - _ref: operators/_uuid.yaml

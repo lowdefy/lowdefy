@@ -43,29 +43,29 @@ export default {
   params: {
     type: 'object',
     description:
-      'Parameters for spending the magic-link token. All are optional: the sign-in email links to the landing page named by "auth.authPages.magicLink" with the token and the callback destinations already on its URL query, and this action reads its defaults from there. Set a parameter only to override what the email carried.',
+      'Parameters for spending the magic-link token. All are optional: the sign-in email links to the landing page named by "auth.authPages.magicLink" with the token and the callback destinations already in its URL fragment, which a browser never sends, and this action reads its defaults from there (falling back to the URL query, for links emailed in the older form). The action clears the fragment and posts the token in a form, so it appears in no URL the server receives. Set a parameter only to override what the email carried.',
     properties: {
       token: {
         type: 'string',
         description:
-          'The single-use magic-link token. Defaults to the "token" URL query parameter of the landing page. The action fails when neither is a string, because there is nothing to verify.',
+          'The single-use magic-link token. Defaults to the "token" parameter in the URL fragment of the landing page. The action fails when neither is a string, because there is nothing to verify.',
       },
       callbackUrl: {
         type: 'object',
         description:
-          'Where a successful sign-in lands. Defaults to the "callbackURL" URL query parameter the sign-in email carried onto the landing page, and to BetterAuth\'s own default when that is absent too. "false" is not valid here - verification redirects through a hop the app does not control, so there is no staying put.',
+          'Where a successful sign-in lands. Defaults to the "callbackURL" parameter the sign-in email carried in the URL fragment of the landing page, and to BetterAuth\'s own default when that is absent too. "false" is not valid here - verification redirects through a hop the app does not control, so there is no staying put.',
         properties: callbackTargetProperties,
       },
       newUserCallbackUrl: {
         type: 'object',
         description:
-          'Where a sign-in that creates a new account lands, for a first-run or onboarding page. Defaults to the "newUserCallbackURL" URL query parameter, and to callbackUrl when neither is set.',
+          'Where a sign-in that creates a new account lands, for a first-run or onboarding page. Defaults to the "newUserCallbackURL" parameter in the URL fragment, and to callbackUrl when neither is set.',
         properties: callbackTargetProperties,
       },
       errorCallbackUrl: {
         type: 'object',
         description:
-          'Where a failed verification lands, with the reason in "?error=". Defaults to the "errorCallbackURL" URL query parameter, then to the app\'s "auth.authPages.error" page.',
+          'Where a failed verification lands, with the reason in "?error=". Defaults to the "errorCallbackURL" parameter in the URL fragment, then to the app\'s "auth.authPages.error" page.',
         properties: callbackTargetProperties,
       },
     },
