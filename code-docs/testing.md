@@ -251,6 +251,17 @@ pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in
   and can run repeatedly; `compareBuilds` takes `comparers`, a map from a server-relative file
   (`build/keyMap.json`) to a comparer used in place of the byte comparison.
 
+**Key map by meaning.** A change that reshapes `keyMap.json` on purpose proves itself with
+`pnpm bench:build <app-dir> --keymap`: `keyMap.json` must hold the same key ids, and every id
+must resolve to the same source file, line and config path, each side's map read with that
+side's own `resolveConfigLocation` (from its `packages/utils/errors/dist`). Every other file,
+`refMap.json` included, stays byte-identical. `pnpm bench:keymap <old> <new>` runs the same
+check on two build folders (each holding `keyMap.json` and `refMap.json`) or two fixture
+`snapshot.json` files; `--old-errors <dist>` and `--new-errors <dist>` pick the readers, by
+default the baseline worktree's and this checkout's. It exits 0 when the maps say the same, 1
+when they differ, and reports the counts and the first 20 differences. A million keys take
+seconds.
+
 ## Ports
 
 Port 3000 is the default for a developer's own dev server; tests and agents never bind it.
