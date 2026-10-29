@@ -26,6 +26,7 @@
     pnpm bench:build <app-dir> --server e2e           # @lowdefy/server-e2e instead of the server
     pnpm bench:build <app-dir> --self-check           # build the baseline twice and compare
     pnpm bench:build <app-dir> --expect-added keyMap.json.gz   # repeatable
+    pnpm bench:build <app-dir> --keymap               # keyMap.json by meaning, not bytes
 
   Exit codes: 0 identical, 1 any difference, 2 a build (or the harness) failed.
 
@@ -44,10 +45,12 @@ import path from 'node:path';
 
 import buildSide from './lib/bench/buildSide.mjs';
 import compareBuilds from './lib/bench/compareBuilds.mjs';
+import createKeyMapComparer from './lib/bench/createKeyMapComparer.mjs';
 import createSideDirectories from './lib/bench/createSideDirectories.mjs';
 import ensureBaselineWorktree from './lib/bench/ensureBaselineWorktree.mjs';
 import formatComparison from './lib/bench/formatComparison.mjs';
 import getAppSlug from './lib/bench/getAppSlug.mjs';
+import loadResolveConfigLocation from './lib/bench/loadResolveConfigLocation.mjs';
 import prepareServer from './lib/bench/prepareServer.mjs';
 import parse, { REPO_ROOT } from './lib/parseArgs.mjs';
 
@@ -59,6 +62,7 @@ const EXIT_FAILED = 2;
 const benchOptions = {
   baseline: { type: 'string' },
   'expect-added': { type: 'string', multiple: true, default: [] },
+  keymap: { type: 'boolean', default: false },
   'self-check': { type: 'boolean', default: false },
   server: { type: 'string', default: 'prod' },
 };
@@ -88,6 +92,7 @@ function readArgs() {
     baselineRef: values.baseline,
     configDirectory,
     expectAdded: values['expect-added'],
+    keymap: values.keymap,
     selfCheck: values['self-check'],
     server: values.server,
     skipBuild,
@@ -141,6 +146,20 @@ async function prepareAndBuild({ args, side, slug }) {
   return { ...result, serverDirectory };
 }
 
+// --keymap: keyMap.json is compared by meaning, each side's map read with
+// that side's own resolveConfigLocation.
+async function createComparers({ args, sides }) {
+  if (!args.keymap) {
+    return {};
+  }
+  const errorsDirectory = (side) => path.join(side.repoRoot, 'packages', 'utils', 'errors', 'dist');
+  const resolve = {
+    baseline: await loadResolveConfigLocation({ errorsDirectory: errorsDirectory(sides[0]) }),
+    current: await loadResolveConfigLocation({ errorsDirectory: errorsDirectory(sides[1]) }),
+  };
+  return { 'build/keyMap.json': createKeyMapComparer({ logger, resolve }) };
+}
+
 function reportFailedBuild({ result, side }) {
   console.error(`\nThe ${side.label} build failed (exit code ${result.exitCode}).`);
   console.error(`Log: ${result.logFile}\n`);
@@ -156,6 +175,7 @@ async function main() {
   const baseline = ensureBaselineWorktree({ logger, ref: args.baselineRef, repoRoot: REPO_ROOT });
   const slug = getAppSlug({ configDirectory: args.configDirectory, repoRoot: REPO_ROOT });
   const [baselineSide, currentSide] = getSides({ baseline, selfCheck: args.selfCheck });
+  const comparers = await createComparers({ args, sides: [baselineSide, currentSide] });
 
   const results = [];
   for (const side of [baselineSide, currentSide]) {
@@ -169,6 +189,7 @@ async function main() {
 
   const comparison = await compareBuilds({
     baseline: results[0],
+    comparers,
     current: results[1],
     expectAdded: args.expectAdded,
   });
