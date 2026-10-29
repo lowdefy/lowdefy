@@ -41,7 +41,8 @@ async function timeSides({ build, logger, runDirectory, runs, sides }) {
     const label = warmUp ? 'warm-up' : `run ${run}/${runs}`;
     logger.info(
       `Timed ${side.label} ${label}: config pass ${formatSeconds(summary.passesMs)} ` +
-        `(${summary.passCount}), total ${formatSeconds(summary.totalMs)}.`
+        `(${summary.passCount}, CPU ${formatSeconds(summary.passesCpuMs)}), ` +
+        `total ${formatSeconds(summary.totalMs)}.`
     );
     if (!warmUp) {
       results[side.name].push(summary);
