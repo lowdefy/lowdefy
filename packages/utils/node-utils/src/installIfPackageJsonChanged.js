@@ -18,10 +18,14 @@ import crypto from 'crypto';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
+import hashInstallSettings from './hashInstallSettings.js';
+import isInstallSatisfied from './isInstallSatisfied.js';
 import readFile from './readFile.js';
+import readInstallFiles from './readInstallFiles.js';
 import writeFile from './writeFile.js';
+import writeInstallState from './writeInstallState.js';
 
-async function installIfPackageJsonChanged({ directory, install }) {
+async function installIfPackageJsonChanged({ directory, install, skipIfInstalled = false }) {
   if (!type.isString(directory)) {
     throw new Error(
       `installIfPackageJsonChanged requires a directory string. Received ${JSON.stringify(
@@ -32,30 +36,47 @@ async function installIfPackageJsonChanged({ directory, install }) {
   if (!type.isFunction(install)) {
     throw new Error('installIfPackageJsonChanged requires an install function.');
   }
-  const packageJsonContent = await readFile(path.join(directory, 'package.json'));
-  if (packageJsonContent === null) {
-    throw new Error(`Could not read package.json in ${directory}.`);
+  if (!type.isBoolean(skipIfInstalled)) {
+    throw new Error(
+      `installIfPackageJsonChanged skipIfInstalled must be a boolean. Received ${JSON.stringify(
+        skipIfInstalled
+      )}.`
+    );
   }
-  // A server that installs as its own workspace takes its overrides, patches
-  // and build allowlists from pnpm-workspace.yaml, and its registries from
-  // .npmrc, so a change there also needs an install.
-  const workspaceYamlContent = await readFile(path.join(directory, 'pnpm-workspace.yaml'));
-  const npmrcContent = await readFile(path.join(directory, '.npmrc'));
+  const { packageJsonContent, workspaceYamlContent, npmrcContent } = await readInstallFiles({
+    directory,
+  });
+  // Both files are stored inside node_modules so deleting node_modules also
+  // clears them, forcing the next run to install.
+  const hashPath = path.join(directory, 'node_modules', '.lowdefy-install-hash');
+  const statePath = path.join(directory, 'node_modules', '.lowdefy-install-state.json');
+  if (skipIfInstalled) {
+    const installStateContent = await readFile(statePath);
+    if (installStateContent !== null) {
+      const packageJson = JSON.parse(packageJsonContent);
+      const satisfied = isInstallSatisfied({
+        installState: JSON.parse(installStateContent),
+        packageJson,
+        settingsHash: hashInstallSettings({ packageJson, workspaceYamlContent, npmrcContent }),
+      });
+      if (satisfied) {
+        return false;
+      }
+    }
+  }
   const hash = crypto
     .createHash('sha1')
     .update(packageJsonContent)
     .update(workspaceYamlContent ?? '')
     .update(npmrcContent ?? '')
     .digest('base64');
-  // Stored inside node_modules so deleting node_modules also clears the hash,
-  // forcing the next run to install.
-  const hashPath = path.join(directory, 'node_modules', '.lowdefy-install-hash');
   const previousHash = await readFile(hashPath);
   if (previousHash === hash) {
     return false;
   }
   await install();
   await writeFile(hashPath, hash);
+  await writeInstallState({ directory, packageJson: JSON.parse(packageJsonContent), statePath });
   return true;
 }
 
