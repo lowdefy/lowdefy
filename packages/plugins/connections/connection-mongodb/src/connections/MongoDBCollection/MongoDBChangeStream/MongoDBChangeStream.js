@@ -25,7 +25,9 @@ import schema from './schema.js';
 
 // Wait before reopening a stream that failed: 0.5 s, 1 s, 2 s, then every 4 s.
 const RETRY_DELAYS_MS = [500, 1000, 2000, 4000];
-// Give up when the stream has not reached the server for this long, and throw as before.
+// Give up once the stream has kept failing for this long, and throw as before. A stream
+// that reached the server and then ran this long before it failed was healthy, and its
+// failure starts a new window.
 const RETRY_WINDOW_MS = 30000;
 
 // Websocket source resolver — opens a MongoDB change stream and publishes
@@ -63,11 +65,11 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
     } catch (error) {
       throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
     }
-    // The driver updates the stream's resume token on every server response, so the
-    // stream is healthy again and a later failure starts a new retry window.
+    // The driver updates the resume token when the server answers the stream's
+    // aggregate or getMore, so the first update says the stream reached the server.
+    let reachedServerAt = null;
     stream.on('resumeTokenChanged', () => {
-      failingSince = null;
-      retries = 0;
+      reachedServerAt ??= Date.now();
     });
     const closeStream = () =>
       stream.close().catch(() => {
@@ -85,7 +87,11 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
       if (signal.aborted) {
         return;
       }
-      failingSince ??= Date.now();
+      const wasHealthy = reachedServerAt !== null && Date.now() - reachedServerAt > RETRY_WINDOW_MS;
+      if (failingSince === null || wasHealthy) {
+        failingSince = Date.now();
+        retries = 0;
+      }
       if (!isResumableChangeStreamError(error) || Date.now() - failingSince > RETRY_WINDOW_MS) {
         throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
       }

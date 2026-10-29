@@ -24,19 +24,24 @@ vi.doMock('../getCollection.js', () => ({
 }));
 
 // A fake change stream: yields queued changes, then waits until close() ends it.
-function createFakeStream({ changes = [], failWith = null } = {}) {
+function createFakeStream({ changes = [], failWith = null, onIterate = null } = {}) {
   let closed = false;
   let release;
   const closedPromise = new Promise((resolve) => {
     release = resolve;
   });
-  return {
-    on: vi.fn(),
+  const listeners = {};
+  const stream = {
+    on: vi.fn((event, listener) => {
+      listeners[event] = listener;
+    }),
+    emit: (event, value) => listeners[event]?.(value),
     close: vi.fn(async () => {
       closed = true;
       release();
     }),
     async *[Symbol.asyncIterator]() {
+      onIterate?.(stream);
       for (const change of changes) {
         yield change;
       }
@@ -50,6 +55,7 @@ function createFakeStream({ changes = [], failWith = null } = {}) {
       }
     },
   };
+  return stream;
 }
 
 function createHarness({ changes, failWith, streams } = {}) {
@@ -187,7 +193,7 @@ test('MongoDBChangeStream resumes after the last change on a replica set electio
     signal: abortController.signal,
   });
   // The first retry waits 0.5 s.
-  await new Promise((resolve) => setTimeout(resolve, 700));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   abortController.abort();
   await expect(run).resolves.toBeUndefined();
 
@@ -216,7 +222,7 @@ test('MongoDBChangeStream reopens fresh when no change came before a network err
     publish,
     signal: abortController.signal,
   });
-  await new Promise((resolve) => setTimeout(resolve, 700));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   abortController.abort();
   await expect(run).resolves.toBeUndefined();
   expect(collection.watch).toHaveBeenCalledTimes(2);
@@ -236,7 +242,7 @@ test('MongoDBChangeStream resumes on an error labelled ResumableChangeStreamErro
     publish,
     signal: abortController.signal,
   });
-  await new Promise((resolve) => setTimeout(resolve, 700));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   abortController.abort();
   await expect(run).resolves.toBeUndefined();
   expect(collection.watch).toHaveBeenCalledTimes(2);
@@ -276,12 +282,13 @@ test('MongoDBChangeStream does not resume a non-resumable server error', async (
 
 test('MongoDBChangeStream gives up when the stream keeps failing for 30 s', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
-  const now = vi.spyOn(Date, 'now');
-  now.mockReturnValueOnce(0); // first failure starts the window
-  now.mockReturnValueOnce(0);
-  now.mockReturnValue(31000); // the second failure is past it
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(0);
   const first = createFakeStream({ failWith: serverError(11602) });
-  const second = createFakeStream({ failWith: serverError(11602) });
+  const second = createFakeStream({
+    failWith: serverError(11602),
+    onIterate: () => vi.setSystemTime(31000),
+  });
   const { abortController, collection, publish } = createHarness({ streams: [first, second] });
   const error = await MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test', collection: 'items' },
@@ -289,22 +296,49 @@ test('MongoDBChangeStream gives up when the stream keeps failing for 30 s', asyn
     publish,
     signal: abortController.signal,
   }).catch((e) => e);
-  now.mockRestore();
+  vi.useRealTimers();
   expect(collection.watch).toHaveBeenCalledTimes(2);
   expect(error.code).toEqual(11602);
 });
 
-test('MongoDBChangeStream starts a new retry window once the stream reaches the server', async () => {
+test('MongoDBChangeStream keeps the retry window when a reopened stream fails right after reaching the server', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
-  const now = vi.spyOn(Date, 'now');
-  now.mockReturnValueOnce(0);
-  now.mockReturnValueOnce(0);
-  now.mockReturnValue(31000);
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(0);
   const first = createFakeStream({ failWith: serverError(11602) });
-  const second = createFakeStream({ failWith: serverError(11602) });
-  // The reopened stream reports a server response before it fails.
-  second.on.mockImplementation((event, listener) => {
-    if (event === 'resumeTokenChanged') listener({ _data: 'token-2' });
+  // A flapping primary: the aggregate answers, then the getMore fails.
+  const second = createFakeStream({
+    failWith: serverError(11602),
+    onIterate: (stream) => {
+      vi.setSystemTime(31000);
+      stream.emit('resumeTokenChanged', { _data: 'token-2' });
+    },
+  });
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const error = await MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test', collection: 'items' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  }).catch((e) => e);
+  vi.useRealTimers();
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+  expect(error.code).toEqual(11602);
+});
+
+test('MongoDBChangeStream starts a new retry window after a stream that ran healthy fails', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(0);
+  const first = createFakeStream({ failWith: serverError(11602) });
+  // Reaches the server, runs for 31 s, then fails.
+  const second = createFakeStream({
+    failWith: serverError(11602),
+    onIterate: (stream) => {
+      vi.setSystemTime(1000);
+      stream.emit('resumeTokenChanged', { _data: 'token-2' });
+      vi.setSystemTime(32000);
+    },
   });
   const third = createFakeStream();
   const { abortController, collection, publish } = createHarness({
@@ -317,10 +351,10 @@ test('MongoDBChangeStream starts a new retry window once the stream reaches the 
     signal: abortController.signal,
   });
   // Retries wait 0.5 s, then (with the window reset) 0.5 s again.
-  await new Promise((resolve) => setTimeout(resolve, 1300));
+  await new Promise((resolve) => setTimeout(resolve, 1600));
   abortController.abort();
   await expect(run).resolves.toBeUndefined();
-  now.mockRestore();
+  vi.useRealTimers();
   expect(collection.watch).toHaveBeenCalledTimes(3);
 });
 

@@ -78,7 +78,7 @@ test('MongoDBChangeStream resumes when getMore fails with 11602 and no resumable
     runError = error;
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   await client.db('test').collection('failpoint').insertOne({ name: 'before' });
   await waitFor(() => published.length === 1, 10000);
 
@@ -117,7 +117,7 @@ test('MongoDBChangeStream carries on when the primary steps down', async () => {
   });
 
   // Give the stream time to open before the first write.
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   await insertOnPrimary({ name: 'before' });
   await waitFor(() => published.length === 1, 10000);
 
