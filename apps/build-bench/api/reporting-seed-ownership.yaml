@@ -1,0 +1,167 @@
+# Seeds the ownership substrate: six reports covering every list scope and both
+# sides of the owner / non-owner split, so the visibility, favourite, duplicate
+# and recovery surfaces can be explored by hand without driving the chat agent.
+#
+# Separate from reporting-seed-example-report because that file is about the
+# PRESENTATION contract — which section types and filter controls exist — and this
+# one is about ownership. Mixing them would make both files' comments harder to
+# read, and each has a different reason to be re-run.
+#
+# Every fixture gets a real, resolving spec (a trimmed version of the example
+# report's shape) rather than a stub. A fixture that lists but 404s on open is
+# worse than no fixture, because it reads as a module bug rather than as seed
+# data. Each spec goes through validateReportSpec for the same reason the example
+# seed does: the store holds the validator's output, so a raw-seeded document would
+# be in the old shape.
+#
+# The second user is a fixed synthetic identity. It does not need to be a user the
+# demo can sign in as — for the non-owner VIEW what matters is only that the
+# signed-in user is not the owner.
+#
+# Idempotent: deterministic per-user ids, cleared then reinserted, so re-seeding
+# never duplicates and every report keeps a stable URL.
+id: reporting-seed-ownership
+type: Api
+routine:
+  - :if:
+      _eq:
+        - _user: id
+        - null
+    :then:
+      - :reject: You must be signed in to seed the ownership fixtures.
+  # One trimmed spec reused by every fixture: a KPI and a table bound to a status
+  # filter. Enough to resolve and to exercise a filter, small enough that the
+  # interesting thing about each fixture is its ownership, not its contents.
+  - :set_state:
+      validated:
+        _analytics.validateReportSpec:
+          spec:
+            title: Ownership fixture
+            description: >
+              Seeded to exercise report ownership — visibility, favourites and
+              recovery. The contents are deliberately minimal; what matters is
+              who owns this report and who may see it.
+            sections:
+              - type: kpi
+                label: Total revenue
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: null
+                        total:
+                          $sum: $total
+                valueKey: total
+                format:
+                  style: currency
+                  currency: USD
+                filterBy:
+                  - status
+              - type: table
+                label: Revenue by region
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: $region
+                        revenue:
+                          $sum: $total
+                    - $project:
+                        _id: 0
+                        region: $_id
+                        revenue: 1
+                columns:
+                  - key: region
+                    label: Region
+                  - key: revenue
+                    label: Revenue
+                    format:
+                      style: currency
+                      currency: USD
+                filterBy:
+                  - status
+              - type: filter
+                control: select
+                field: status
+                label: Status
+          catalog:
+            _ref: modules/ai-reporting/catalog.yaml
+          roles:
+            _user: roles
+  - id: clear
+    type: MongoDBDeleteMany
+    connectionId: reporting-reports
+    properties:
+      # Matched on the id prefix rather than on owner, because two of the six are
+      # owned by the synthetic second user and would otherwise survive a re-seed
+      # and accumulate.
+      filter:
+        _id:
+          $regex:
+            _string.concat:
+              - "^ownership-fixture-.*-"
+              - _user: id
+              - "$"
+  - id: insert_fixtures
+    type: MongoDBInsertMany
+    connectionId: reporting-reports
+    properties:
+      docs:
+        # The mine-only baseline: visible in Mine, in All, and nowhere else.
+        - _ref:
+            path: api/reporting_ownership_fixture.yaml
+            vars:
+              key: private-own
+              title: My private report
+              owner_is_caller: true
+              visibility: private
+        # Proves publishing does not remove a report from Mine — this one is in
+        # Mine AND Shared.
+        - _ref:
+            path: api/reporting_ownership_fixture.yaml
+            vars:
+              key: shared-own
+              title: My published report
+              owner_is_caller: true
+              visibility: shared
+        # The non-owner view: read-plus-duplicate, no edit actions, "Published
+        # by" naming someone else.
+        - _ref:
+            path: api/reporting_ownership_fixture.yaml
+            vars:
+              key: shared-other
+              title: Someone else's published report
+              owner_is_caller: false
+              visibility: shared
+        # The All scope's negative case. If this ever appears in a list, the
+        # scope match is leaking.
+        - _ref:
+            path: api/reporting_ownership_fixture.yaml
+            vars:
+              key: private-other
+              title: Someone else's private report
+              owner_is_caller: false
+              visibility: private
+        # Favourites working on a report the caller does not own.
+        - _ref:
+            path: api/reporting_ownership_fixture.yaml
+            vars:
+              key: favourite-other
+              title: Someone else's report, favourited
+              owner_is_caller: false
+              visibility: shared
+              favourited: true
+        # The recovery surface, with a real deleted stamp rather than an empty
+        # state.
+        - _ref:
+            path: api/reporting_ownership_fixture.yaml
+            vars:
+              key: deleted-own
+              title: My deleted report
+              owner_is_caller: true
+              visibility: private
+              is_deleted: true
+  - :return:
+      ok: true
+      inserted:
+        _step: insert_fixtures.insertedCount

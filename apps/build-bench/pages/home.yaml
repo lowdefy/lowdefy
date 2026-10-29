@@ -1,0 +1,181 @@
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: home
+    title:
+      _app: name
+    breadcrumbs:
+      - home: true
+        icon: home
+    # The attachment requests the assistant's composer calls.
+    requests:
+      _ref: modules/ai-assistant/attachment_requests.yaml
+    events:
+      onInit:
+        # The docked assistant's state contract — required on any page that
+        # mounts the module's panel.
+        - _ref:
+            module: ai-assistant
+            component: state
+    blocks:
+      - id: description
+        type: Paragraph
+        properties:
+          content: |
+            Explore the modules in this monorepo. Each card opens a working demo of that module.
+
+      # The ai-assistant module's open-with-prompt: a button outside the panel
+      # that opens it on a new thread and sends the prompt, whether the panel
+      # is open, closed or not yet opened.
+      - id: ask_assistant_tour
+        type: Button
+        properties:
+          title: Ask the assistant for a tour
+          icon: bot
+          type: default
+        events:
+          onClick:
+            _ref:
+              module: ai-assistant
+              component: open-with-prompt
+              vars:
+                prompt: Give me a short tour of the modules in this demo app, and say which one to open first.
+
+      - id: module_cards
+        type: Masonry
+        properties:
+          columns:
+            xs: 1
+            sm: 2
+            md: 3
+          gutter: 16
+        blocks:
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: deals
+                icon: Presentation
+                title: Deals
+                description: Deal pipeline — capture, progress, and win or lose.
+                note: Demonstrates the Deals module orchestrating Workflows, Companies, Contacts, Files & Activities.
+                pageId: deals/all
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: companies
+                icon: Store
+                title: Companies
+                description: Company records — list, detail, edit, and create.
+                pageId:
+                  _module.pageId:
+                    module: companies
+                    id: all
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: contacts
+                icon: Contact
+                title: Contacts
+                description: Contact management with a reusable picker.
+                pageId:
+                  _module.pageId:
+                    module: contacts
+                    id: all
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: activities
+                icon: Flag
+                title: Activities
+                description: Calls, meetings, and emails linked to records.
+                pageId:
+                  _module.pageId:
+                    module: activities
+                    id: all
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: files
+                icon: attach
+                title: Files
+                description: Entity attachments — file-card, file-manager, file-list.
+                note: Showcases the files module components, form slot, and download logging.
+                pageId: files-demo
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: walkthroughs
+                icon: SquarePlay
+                title: Walkthroughs
+                description: Step-by-step guides — capture, edit, publish, and play.
+                note: Screenshot upload needs AWS credentials, which the demo doesn't have.
+                pageId: walkthroughs-demo
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: notifications
+                icon: bell
+                title: Notifications
+                description: Inbox, bell, and deep-link routing.
+                pageId:
+                  _module.pageId:
+                    module: notifications
+                    id: all
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: path_params
+                icon: Link
+                title: Path parameters
+                description: A page whose address carries its item id, opened from notification links.
+                pageId: path-params-demo
+                pathParams:
+                  item_id: item-1
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: user_admin
+                icon: users
+                title: User Admin
+                description: Invite, list, and manage app users.
+                pageId:
+                  _module.pageId:
+                    module: user-admin
+                    id: all
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: release_notes
+                icon: document
+                title: Release Notes
+                description: Changelog rendered from CHANGELOG.md.
+                pageId:
+                  _module.pageId:
+                    module: release-notes
+                    id: view
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: ai_assistant
+                icon: bot
+                title: AI Assistant
+                description: Agent chat with persisted, per-user threads.
+                note: The docked launcher is live on this page (bottom right); the card opens the embedded variant.
+                pageId: assistant-demo
+          - _ref:
+              path: pages/components/explore_card.yaml.njk
+              vars:
+                id: reporting
+                icon: chart
+                title: AI Chat Reporting
+                description: Chat to your data; generate saved, navigable reports.
+                note: Seed the demo dataset first, then open a surface.
+                pageId: reporting-demo
+
+      # The module's docked variant, live on this page: corner launcher bottom
+      # right. The assistant-demo page shows the embedded variant — one shell
+      # per page, never both.
+      - _ref:
+          module: ai-assistant
+          component: panel

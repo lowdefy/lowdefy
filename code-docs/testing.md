@@ -234,6 +234,10 @@ pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in
 | 1         | Any difference                                  |
 | 2         | A build (or the harness) failed; its log prints |
 
+- **The large app.** `apps/build-bench` is the modules-mongodb demo app with its entity
+  modules repeated in sets, sized like a large production app (a key map of about 300 MB).
+  It is only ever built: `pnpm bench:build apps/build-bench`. Its README says how it is
+  generated.
 - **Baseline.** A detached worktree at `../lowdefy-bench-<sha7>`, installed and built on first
   use and reused after. One left half-built by an interrupted run is rebuilt. Runs that need
   the same baseline at once share it: one sets it up under a lock

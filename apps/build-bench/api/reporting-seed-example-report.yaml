@@ -1,0 +1,781 @@
+# Seeds a worked-example saved report into the reporting module's reports-store
+# for the signed-in user, so the open-engine report surface is reproducible
+# without driving the chat agent.
+#
+# Two jobs at once, which is why it is long. It is the reference for every
+# consumer-facing capability the presentation contract adds, AND it is the one
+# report that exercises every row of the compiler's layout-derivation table — so
+# a regression in either shows up on a page a person can look at rather than only
+# in a unit test.
+#
+# It sits at exactly the 24-section cap validateReportSpec enforces. Adding a
+# section here means taking one out; the two jobs above are what decide which.
+#
+# ── The presentation contract it demonstrates ────────────────────────────────
+#   - every filter control: a Region multiselect (options from the catalog's enum
+#     `values`), a Created daterange on demo_orders.order_date, a Channel single
+#     select, an Activity type single select, and two multiselects over scalar
+#     foreign-key arrays — all bound via filterBy, which drives the server-built
+#     $match prepend re-query path;
+#   - both match modes, each on a field where the mode is actually observable.
+#     `match: any` ($in) goes on demo_activities.company_ids and `match: all`
+#     ($all) on demo_contacts.global_attributes.company_ids — not the other way
+#     round: both are declared arrays, but the seed puts exactly one id in every
+#     activity, so `all` there could never match a multi-company selection,
+#     while 4 of the 12 contacts belong to two companies;
+#   - a query-sourced options list with looked-up labels — both company filters'
+#     optionsQuery projects id/name pairs from demo_companies, so the dropdowns
+#     list company names, not raw ids;
+#   - the document-not-element rule made concrete: each array filter is bound
+#     only to sections that count DOCUMENTS (activities, contacts) rather than
+#     unwinding the filtered array;
+#   - filter co-location: each control compiles inline directly above the first
+#     section it drives (not into a shared top row), so the orders controls sit
+#     above the orders numbers, the activity controls above the activity count,
+#     and the contacts control above the contacts table — three visible groups,
+#     each next to what it scopes;
+#   - the line each group closes on. Region and Created drive the same eleven
+#     sections, so that scope is stated ONCE in a muted "Also filters: …" line
+#     under the group's controls; Channel, which drives only the four KPIs,
+#     keeps a note of its own beside them, because a shared line cannot speak
+#     for it. The other two groups drive one section each, which position
+#     already answers for, so their closing line is the Reset alone. Every group
+#     carries that Reset, which returns the sections it drives to the report as
+#     it opened;
+#   - currency-formatted KPIs and table columns sourced from the catalog's
+#     demo_orders.total display hint (format: currency USD);
+#   - all three chart kinds, including a stacked multi-series bar (`stacked:
+#     true`) whose series are parts of a whole;
+#   - CSV download sections (pipeline only, no contract).
+#
+# ── The layout rules it exercises ────────────────────────────────────────────
+# Layout is derived at every open from section type, position in run, and the
+# shape of the resolved rows — the spec carries no widths. Section ORDER is the
+# only channel an author has into it, so the order below is load-bearing:
+#   - a run of four KPIs, which is one 4-up row, and a run of two, which halves
+#     the column;
+#   - three charts that each need the whole column, one per trigger: a temporal
+#     x axis (revenue by month), more than four series (the eight-category
+#     stack), and more than eight distinct categories (units per order);
+#   - two adjacent narrow charts, which pair into half-width boxes — and a pie
+#     as the second of them, since a pie never needs the width whatever it
+#     summarises;
+#   - a narrow chart with nothing to pair with, promoted to the full column;
+#   - markdown between two narrow charts, which is what stops them pairing:
+#     adjacency is read off the spec, so prose between two charts separates
+#     their runs;
+#   - a six-column table and a two-column one, both full width, so the column
+#     flex fill is visible at both ends (no blank gutter, no clipped header);
+#   - two adjacent downloads, which compile into one titled Downloads card.
+#
+# ── Colour identity ─────────────────────────────────────────────────────────
+# The eight category names are the report's entities: they are the stacked
+# bar's series AND the pie's slices, so each wears one hue across both sections.
+# The pie has eight slices against a cap of seven, so it draws the top six and
+# folds the rest into a neutral "Other" — the aggregate deliberately sits
+# outside the palette, since an "Other" in an identity hue reads as a seventh
+# entity.
+#
+# It reads demo_orders (seed it first with the "Seed demo orders" button) and
+# demo_activities / demo_contacts / demo_companies (seed with
+# "pnpm --filter @lowdefy/modules-demo reporting:seed").
+#
+# Stores validateReportSpec's OUTPUT, exactly as generate-report does. Not for
+# safety — resolve-report revalidates every pipeline through AnalyticsPipeline at
+# view time regardless — but because that output IS the document shape: section
+# ids are assigned once and become durable identities, and display defaults
+# freeze at create time rather than being re-applied from current constants on
+# every read. Seeding a raw spec here would write a document in the old shape and
+# make this file a divergent second reference instead of a working one.
+#
+# Nested $-prefixed pipeline keys live inside the report doc (MongoDB 5.0+); the
+# validator returns every pipeline unchanged, so nothing is sanitized either way.
+#
+# Idempotent: a deterministic per-user _id is cleared then reinserted, so the
+# report keeps a stable URL across re-seeds and never duplicates.
+id: reporting-seed-example-report
+type: Api
+routine:
+  - :if:
+      _eq:
+        - _user: id
+        - null
+    :then:
+      - :reject: You must be signed in to seed the example report.
+  - id: clear
+    type: MongoDBDeleteMany
+    connectionId: reporting-reports
+    properties:
+      # Matched on the _id alone, which already carries the seeder's user id and
+      # so can only ever name their own copy. An owner clause on top of it reads
+      # as a safety belt and is really a trap: a document that predates the
+      # current owner shape — or one an interrupted insert left half-written —
+      # stops matching, survives the clear, and then collides with the insert as
+      # a duplicate-key error that names an index rather than the stale document
+      # causing it. The seed's whole promise is that re-running it works.
+      filter:
+        _id:
+          _string.concat:
+            - "example-orders-report-"
+            - _user: id
+  # The validator is what makes this seed a working reference for the insert
+  # shape rather than a divergent second one: the store holds its output, so a
+  # raw-seeded report would be a document in the old shape. It also throws on a
+  # spec this file has broken, which is a faster signal than a report that
+  # lists but will not open.
+  - :set_state:
+      validated:
+        _analytics.validateReportSpec:
+          spec:
+            title: Orders overview (seeded example)
+            description: >
+              Revenue, order mix and fulfilment across the synthetic demo_orders
+              dataset, plus activity and contact counts by company. Region and
+              Created scope the orders sections, Channel the headline numbers;
+              Activity type and Activity companies scope the activities count,
+              and Contact companies the contacts table.
+            sections:
+              # ── Filters ───────────────────────────────────────────────────
+              # A multiselect whose options come from demo_orders.region's enum
+              # `values` in the catalog (no options, no optionsQuery — the
+              # scalar multi-select case). Bound to every orders section below.
+              - type: filter
+                label: Region
+                control: multiselect
+                field: region
+              # A daterange on the catalogued demo_orders date field, bound to
+              # the same eleven orders sections as Region — so one shared scope
+              # line speaks for both, and the report shows a range and a
+              # multi-select side by side.
+              - type: filter
+                label: Created
+                control: daterange
+                field: order_date
+              # A single-value select ($eq) bound to the four KPIs ONLY. It
+              # shares its row and its anchor with Region and Created but not
+              # their scope, which is what keeps a note of its own beside the
+              # group's shared line: the sections a control moves cannot be
+              # inferred from the sections its neighbours move.
+              - type: filter
+                label: Channel
+                control: select
+                field: channel
+              # A single-value select over demo_activities.type's catalog enum
+              # `values`, bound to the SAME section as the Activity companies
+              # multiselect below — so the two controls sit side by side over one
+              # dataset and the difference between them is the control and the
+              # op, nothing else. Filtering on `type` is also the
+              # base-collection-field rule in miniature: the $match is prepended
+              # before any $group, so it reads the raw document field.
+              - type: filter
+                label: Activity type
+                control: select
+                field: type
+              # A multiselect over demo_activities.company_ids (a scalar
+              # foreign-key array) with match: any (the $in triple — any
+              # selected company matches) and an optionsQuery joining
+              # demo_companies so the dropdown lists company names, not raw
+              # ids. Bound to the activities-grain section, NOT to
+              # demo_activities_report — that view's catalog entry carries no
+              # company_ids.
+              - type: filter
+                label: Activity companies (any of)
+                control: multiselect
+                field: company_ids
+                match: any
+                optionsQuery:
+                  collection: demo_companies
+                  pipeline:
+                    - $project:
+                        company_id: $_id
+                        name: 1
+                    - $sort:
+                        name: 1
+                  valueKey: company_id
+                  labelKey: name
+              # The same shape with match: all (the $all triple — a contact must
+              # belong to EVERY selected company, not any of them). It filters
+              # demo_contacts, NOT demo_activities: the catalog declares
+              # activities.company_ids an array, but the seed writes exactly one
+              # id into all 36 of them, so `all` there could only ever match a
+              # single-company selection — any/all would be indistinguishable at
+              # best and zero rows at worst. 4 of the 12 contacts belong to two
+              # companies, which is what makes `all` observable.
+              #
+              # Only the pairs that actually co-occur return anything:
+              # C-0001+C-0002, C-0004+C-0005, C-0002+C-0003, C-0005+C-0001
+              # (Northwind+Contoso, Adventure+Tailspin, Contoso+Fabrikam,
+              # Tailspin+Northwind). Any other pair correctly matches nothing —
+              # that is `all` working, not a broken filter.
+              - type: filter
+                label: Contact companies (all of)
+                control: multiselect
+                field: global_attributes.company_ids
+                match: all
+                optionsQuery:
+                  collection: demo_companies
+                  pipeline:
+                    - $project:
+                        company_id: $_id
+                        name: 1
+                    - $sort:
+                        name: 1
+                  valueKey: company_id
+                  labelKey: name
+              # ── The orders story ──────────────────────────────────────────
+              # Short on purpose. Prose is what a reader skims on the way to
+              # the numbers; the mechanics of the filters belong in this file's
+              # comments, not on the rendered page. It says what the header's
+              # title and description cannot: which controls move what.
+              - type: markdown
+                content: >
+                  ## How the book is trading
+
+                  Revenue, mix and fulfilment over the seeded `demo_orders`
+                  collection. Each filter scopes only the sections that
+                  subscribe to it — **Region** and **Created** move everything
+                  below, **Channel** moves the four headline numbers.
+              # Four headline numbers, adjacent so they compile into ONE 4-up
+              # tile row. All four subscribe to the same three filters, so all
+              # three controls anchor here and none lands between two tiles —
+              # a control anchored on the second tile would split the row.
+              - type: kpi
+                label: Total revenue
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: null
+                        total:
+                          $sum: $total
+                valueKey: total
+                format:
+                  style: currency
+                  currency: USD
+                  locale: en-US
+                  decimals: 2
+                filterBy:
+                  - region
+                  - order_date
+                  - channel
+              - type: kpi
+                label: Orders
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: null
+                        orders:
+                          $sum: 1
+                valueKey: orders
+                format:
+                  style: decimal
+                  decimals: 0
+                filterBy:
+                  - region
+                  - order_date
+                  - channel
+              - type: kpi
+                label: Units sold
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: null
+                        units:
+                          $sum: $quantity
+                valueKey: units
+                format:
+                  style: decimal
+                  decimals: 0
+                filterBy:
+                  - region
+                  - order_date
+                  - channel
+              # $divide over two accumulators from the same $group. A filter that
+              # narrows to nothing leaves $group with _id: null emitting no
+              # document at all, so the tile falls back to 0 rather than
+              # dividing by zero.
+              - type: kpi
+                label: Average order value
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: null
+                        orders:
+                          $sum: 1
+                        revenue:
+                          $sum: $total
+                    - $project:
+                        _id: 0
+                        average:
+                          $divide:
+                            - $revenue
+                            - $orders
+                valueKey: average
+                format:
+                  style: currency
+                  currency: USD
+                  locale: en-US
+                  decimals: 2
+                filterBy:
+                  - region
+                  - order_date
+                  - channel
+              # Full column because its x axis is temporal: "YYYY-MM" strings
+              # get a time axis whose dense ticks are what need the room, and
+              # the rows keep pipeline order rather than being re-sorted by
+              # value. Single series, so it draws as a line with a gradient wash
+              # under it and a dot on the latest point.
+              - type: chart
+                label: Revenue by month
+                chart: line
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: $month
+                        revenue:
+                          $sum: $total
+                    - $project:
+                        _id: 0
+                        month: $_id
+                        revenue: 1
+                    - $sort:
+                        month: 1
+                x: month
+                y:
+                  - revenue
+                filterBy:
+                  - region
+                  - order_date
+              # Full column because it carries more than four series: past four,
+              # the legend would cost more than the plot beside it is worth.
+              # `stacked: true` because the series are parts of a whole — each
+              # region's bar stacks to its total revenue — where unrelated
+              # measures would stay grouped. The eight series names are the
+              # report's entities: they are the pie's slices too, and each wears
+              # one hue across both. Its filterBy is also what exercises the
+              # stacked chart-data re-query path.
+              - type: chart
+                label: Revenue by region and category
+                chart: bar
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: $region
+                        electronics:
+                          $sum:
+                            $cond:
+                              - $eq: [$category, Electronics]
+                              - $total
+                              - 0
+                        clothing:
+                          $sum:
+                            $cond:
+                              - $eq: [$category, Clothing]
+                              - $total
+                              - 0
+                        home:
+                          $sum:
+                            $cond:
+                              - $eq: [$category, Home]
+                              - $total
+                              - 0
+                        toys:
+                          $sum:
+                            $cond:
+                              - $eq: [$category, Toys]
+                              - $total
+                              - 0
+                        sports:
+                          $sum:
+                            $cond:
+                              - $eq: [$category, Sports]
+                              - $total
+                              - 0
+                        garden:
+                          $sum:
+                            $cond:
+                              - $eq: [$category, Garden]
+                              - $total
+                              - 0
+                        books:
+                          $sum:
+                            $cond:
+                              - $eq: [$category, Books]
+                              - $total
+                              - 0
+                        beauty:
+                          $sum:
+                            $cond:
+                              - $eq: [$category, Beauty]
+                              - $total
+                              - 0
+                    - $project:
+                        _id: 0
+                        region: $_id
+                        electronics: 1
+                        clothing: 1
+                        home: 1
+                        toys: 1
+                        sports: 1
+                        garden: 1
+                        books: 1
+                        beauty: 1
+                x: region
+                y:
+                  - electronics
+                  - clothing
+                  - home
+                  - toys
+                  - sports
+                  - garden
+                  - books
+                  - beauty
+                stacked: true
+                filterBy:
+                  - region
+                  - order_date
+              # Full column because it has ten distinct categories: past eight, a
+              # half-width axis tilts its labels and then collides them.
+              - type: chart
+                label: Orders by units per order
+                chart: bar
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: $quantity
+                        orders:
+                          $sum: 1
+                    - $project:
+                        _id: 0
+                        units_per_order: $_id
+                        orders: 1
+                    - $sort:
+                        units_per_order: 1
+                x: units_per_order
+                y:
+                  - orders
+                filterBy:
+                  - region
+                  - order_date
+              # These two are adjacent and neither needs the width — four
+              # categories and one series here, a pie next — so they pair into
+              # half-width boxes on one line. The pie pairs however many rows it
+              # summarises: it has no axis to label and fills whatever square it
+              # is given.
+              - type: chart
+                label: Revenue by region
+                chart: bar
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: $region
+                        revenue:
+                          $sum: $total
+                    - $project:
+                        _id: 0
+                        region: $_id
+                        revenue: 1
+                    - $sort:
+                        revenue: -1
+                x: region
+                y:
+                  - revenue
+                filterBy:
+                  - region
+                  - order_date
+              # Eight categories against a slice cap of seven, so this draws the
+              # top six by revenue and folds the rest into a neutral "Other".
+              # The six it keeps are named exactly as the stacked bar's series
+              # above, which is what makes one hue per category visible on
+              # screen.
+              - type: chart
+                label: Revenue share by category
+                chart: pie
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: $category
+                        revenue:
+                          $sum: $total
+                    - $project:
+                        _id: 0
+                        category: $_id
+                        revenue: 1
+                    - $sort:
+                        revenue: -1
+                x: category
+                y:
+                  - revenue
+                filterBy:
+                  - region
+                  - order_date
+              # Prose between two narrow charts, which is what stops them
+              # pairing: adjacency is read off the spec exactly as written, so
+              # the pie above and the status chart below are separate runs and
+              # the status chart is promoted to the full column instead of
+              # sitting beside a twelve-column hole.
+              - type: markdown
+                content: >
+                  ### Fulfilment
+
+                  Where the orders sit in the pipeline, and which
+                  region-and-category pairs carry the revenue.
+              - type: chart
+                label: Orders by status
+                chart: bar
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id: $status
+                        orders:
+                          $sum: 1
+                    - $project:
+                        _id: 0
+                        status: $_id
+                        orders: 1
+                    - $sort:
+                        orders: -1
+                x: status
+                y:
+                  - orders
+                filterBy:
+                  - region
+                  - order_date
+              # Six columns, two of them currency-formatted from the catalog
+              # hint. Tables are always full width and their columns flex to
+              # fill it, so this one and the two-column table below are the two
+              # ends of that: neither clips a header nor leaves a blank gutter.
+              - type: table
+                label: Top region and category pairs
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $group:
+                        _id:
+                          region: $region
+                          category: $category
+                        orders:
+                          $sum: 1
+                        units:
+                          $sum: $quantity
+                        revenue:
+                          $sum: $total
+                    - $project:
+                        _id: 0
+                        region: $_id.region
+                        category: $_id.category
+                        orders: 1
+                        units: 1
+                        revenue: 1
+                        average:
+                          $divide:
+                            - $revenue
+                            - $orders
+                    - $sort:
+                        revenue: -1
+                    - $limit: 10
+                columns:
+                  - key: region
+                    label: Region
+                  - key: category
+                    label: Category
+                  - key: orders
+                    label: Orders
+                  - key: units
+                    label: Units
+                  - key: revenue
+                    label: Revenue
+                    format:
+                      style: currency
+                      currency: USD
+                      locale: en-US
+                      decimals: 2
+                  - key: average
+                    label: Average order value
+                    format:
+                      style: currency
+                      currency: USD
+                      locale: en-US
+                      decimals: 2
+                filterBy:
+                  - region
+                  - order_date
+              # ── The relationships behind the orders ───────────────────────
+              # Two adjacent KPIs, so half the column each. Only the FIRST is
+              # filtered, which is what keeps the pair on one line: a control
+              # anchors above its first subscriber, so a filter bound to the
+              # second tile would render between them.
+              #
+              # Activities counts demo_activities DOCUMENTS rather than
+              # unwinding company_ids — the documented handling for an
+              # array-match filter, since counting elements would inflate the
+              # total whenever an activity links to more than one company. It
+              # reads demo_activities (the raw collection, which carries
+              # company_ids), not demo_activities_report (the view, whose
+              # catalog entry does not).
+              - type: kpi
+                label: Activities
+                query:
+                  collection: demo_activities
+                  pipeline:
+                    - $group:
+                        _id: null
+                        activities:
+                          $sum: 1
+                valueKey: activities
+                format:
+                  style: decimal
+                  decimals: 0
+                filterBy:
+                  - type
+                  - company_ids
+              - type: kpi
+                label: Contacts
+                query:
+                  collection: demo_contacts
+                  pipeline:
+                    - $group:
+                        _id: null
+                        contacts:
+                          $sum: 1
+                valueKey: contacts
+                format:
+                  style: decimal
+                  decimals: 0
+                filterBy: []
+              # Contacts-grain section for the match: all filter — again counting
+              # DOCUMENTS (contacts per surname), so the document-level $match
+              # lines up with the section's rows. Co-location is what makes this
+              # binding legible: the control renders directly above this table,
+              # so a selection that narrows it to nothing is obviously this
+              # filter working rather than a broken section elsewhere.
+              - type: table
+                label: Contacts by surname
+                query:
+                  collection: demo_contacts
+                  pipeline:
+                    - $group:
+                        _id: $profile.family_name
+                        contacts:
+                          $sum: 1
+                    - $project:
+                        _id: 0
+                        surname: $_id
+                        contacts: 1
+                    - $sort:
+                        contacts: -1
+                columns:
+                  - key: surname
+                    label: Surname
+                  - key: contacts
+                    label: Contacts
+                filterBy:
+                  - global_attributes.company_ids
+              # Two adjacent downloads, which compile into ONE titled Downloads
+              # card with a button each — a run of exports is one place to go for
+              # the raw rows, not two sections that happen to be buttons. Both
+              # are pipeline only, no presentation contract; headers come from
+              # the row keys.
+              - type: download
+                label: Download orders CSV
+                query:
+                  collection: demo_orders
+                  pipeline:
+                    - $project:
+                        _id: 0
+                        region: 1
+                        category: 1
+                        status: 1
+                        channel: 1
+                        month: 1
+                        total: 1
+                        quantity: 1
+              - type: download
+                label: Download activities CSV
+                query:
+                  collection: demo_activities
+                  pipeline:
+                    - $project:
+                        _id: 0
+                        type: 1
+                        title: 1
+                        company_ids: 1
+          catalog:
+            _ref: modules/ai-reporting/catalog.yaml
+          roles:
+            _user: roles
+  - id: insert_report
+    type: MongoDBInsertOne
+    connectionId: reporting-reports
+    properties:
+      doc:
+        _id:
+          _string.concat:
+            - "example-orders-report-"
+            - _user: id
+        owner:
+          user_id:
+            _user: id
+          name:
+            _user: profile.name
+        title: Orders overview (seeded example)
+        description: >
+          A worked example over the seeded demo_orders, demo_activities,
+          demo_contacts and demo_companies collections — six KPIs in three tile
+          rows, six charts (a temporal line, a stacked eight-series bar, a wide
+          distribution, a paired bar-and-pie, and a promoted narrow bar), a
+          six-column and a two-column table, two CSV downloads, and six filters
+          in three co-located groups. Copy the section shapes for your own
+          reports.
+        # Point at a seeded conversation (reporting-seed-conversations writes it
+        # with this same deterministic _id) so opening it from the chat rail shows
+        # the "Saved from this chat" section with this report as a navigating row —
+        # the re-visit path end to end. A plain string match, no FK, so it holds
+        # regardless of which seed runs first.
+        conversation_id:
+          _string.concat:
+            - "seed-conversation-today-"
+            - _user: id
+        created:
+          timestamp:
+            _date: now
+          user:
+            name:
+              _user: profile.name
+            id:
+              _user: id
+        updated:
+          timestamp:
+            _date: now
+          user:
+            name:
+              _user: profile.name
+            id:
+              _user: id
+        spec:
+          sections:
+            _state: validated.sections
+        # Written on insert by every creator; nothing branches on it yet, and it
+        # cannot be backfilled meaningfully later.
+        spec_version: 1
+        visibility: private
+        favourite_of: []
+  - :return:
+      ok: true
+      report_id:
+        _string.concat:
+          - "example-orders-report-"
+          - _user: id
+      url:
+        _string.concat:
+          - "/ai-reporting/report?report_id=example-orders-report-"
+          - _user: id

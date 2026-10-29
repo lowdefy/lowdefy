@@ -1,0 +1,27 @@
+id: router
+type: Box
+events:
+  onMount:
+    - id: router
+      type: Link
+      params:
+        pageId:
+          _switch:
+            branches:
+              - if:
+                  _eq:
+                    - _user: true
+                    - null
+                then:
+                  _module.pageId:
+                    module: user-account
+                    id: login
+              - if:
+                  _ne:
+                    - _user: profile.profile_created
+                    - true
+                then:
+                  _module.pageId:
+                    module: user-account
+                    id: onboarding
+            default: home

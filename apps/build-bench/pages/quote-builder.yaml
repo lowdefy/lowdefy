@@ -1,0 +1,327 @@
+# Quote builder — the app-owned working surface for the sales-pipeline workflow's
+# `send-quote` custom action (deals-module-rework, task 9).
+#
+# The send-quote action's `link:` cell (workflow_config/sales-pipeline/send-quote.yaml)
+# points here with ?action_id=<id>. This page loads the action, derives
+# edit/review/view mode from the action's stage + the caller's allowed verbs,
+# and renders a single quote-value + note field — deliberately flat (a
+# line-items builder would be out of scope), per the design's "lightweight"
+# requirement for this demo.
+#
+# On save it persists the quote to the deal, then calls the workflows module's
+# sales-pipeline-submit endpoint to advance the action (two non-atomic requests —
+# the documented recommended path; see modules/workflows/templates/edit.yaml.njk
+# for the same two-step pattern). The deal id and the back-nav target both come
+# off get_workflow_action.entity / entity_link — never hardcoded — since this
+# page lives in the demo app, not inside the deals module.
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: quote-builder
+    title: Quote builder
+    content_width: 760
+    breadcrumbs:
+      - home: true
+        icon: home
+      - label: Deals
+        pageId: deals/all
+      - label: Quote builder
+    requests:
+      - id: get_workflow_action
+        type: GetWorkflowAction
+        connectionId:
+          _module.connectionId:
+            id: workflow-api
+            module: workflows
+        payload:
+          action_id:
+            _url_query: action_id
+        properties:
+          action_id:
+            _payload: action_id
+      - id: get_deal
+        type: MongoDBAggregation
+        connectionId:
+          _module.connectionId:
+            id: deals-collection
+            module: deals
+        payload:
+          deal_id:
+            _state: current_action.entity.id
+        properties:
+          pipeline:
+            - $match:
+                _id:
+                  _payload: deal_id
+                removed: null
+            - $limit: 1
+      - id: update_deal_quote
+        type: MongoDBUpdateOne
+        connectionId:
+          _module.connectionId:
+            id: deals-collection
+            module: deals
+        payload:
+          deal_id:
+            _state: current_action.entity.id
+          quote_value:
+            _state: quote.value
+          quote_notes:
+            _state: quote.notes
+        properties:
+          filter:
+            _id:
+              _payload: deal_id
+          update:
+            $set:
+              quote:
+                value:
+                  _payload: quote_value
+                notes:
+                  _payload: quote_notes
+                updated:
+                  _ref:
+                    module: events
+                    component: change_stamp
+    events:
+      onMount:
+        # Guard: no action_id → bounce back to the deals list.
+        - id: redirect_no_action
+          type: Link
+          skip:
+            _ne:
+              - _url_query: action_id
+              - null
+          params:
+            pageId: deals/all
+        - id: load_action
+          type: Request
+          params: get_workflow_action
+        # Spread the response + derive mode in ONE SetState (the engine's own
+        # action.yaml.njk ladder: error → view; in-review + review verb →
+        # review; the editable stages + edit verb → edit; otherwise view).
+        - id: set_current_action
+          type: SetState
+          params:
+            current_action:
+              _request: get_workflow_action
+            current_action.mode:
+              _if:
+                test:
+                  _eq:
+                    - _request: get_workflow_action.status.0.stage
+                    - error
+                then: view
+                else:
+                  _if:
+                    test:
+                      _and:
+                        - _eq:
+                            - _request: get_workflow_action.status.0.stage
+                            - in-review
+                        - _eq:
+                            - _request: get_workflow_action.allowed.review
+                            - true
+                    then: review
+                    else:
+                      _if:
+                        test:
+                          _and:
+                            - _array.includes:
+                                - - action-required
+                                  - in-progress
+                                  - changes-required
+                                - _request: get_workflow_action.status.0.stage
+                            - _eq:
+                                - _request: get_workflow_action.allowed.edit
+                                - true
+                        then: edit
+                        else: view
+        # Load the deal's current quote (now that entity.id is in state).
+        - id: load_deal
+          type: Request
+          params: get_deal
+        # Seed the editable quote state from the deal.
+        - id: seed_quote
+          type: SetState
+          params:
+            quote.value:
+              _if_none:
+                - _request: get_deal.0.quote.value
+                - null
+            quote.notes:
+              _if_none:
+                - _request: get_deal.0.quote.notes
+                - ""
+    blocks:
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title:
+              _state: current_action.message
+            blocks:
+              # ── Edit surface: single quote value + note ──────────────────────
+              - id: quote.value
+                type: NumberInput
+                required: true
+                visible:
+                  _eq:
+                    - _state: current_action.mode
+                    - edit
+                properties:
+                  title: Quote value
+              - id: quote.notes
+                type: TextArea
+                visible:
+                  _eq:
+                    - _state: current_action.mode
+                    - edit
+                properties:
+                  title: Notes
+              # ── Read-only summary (review / view modes) ───────────────────────
+              - id: quote_readonly
+                type: Html
+                visible:
+                  _ne:
+                    - _state: current_action.mode
+                    - edit
+                properties:
+                  html:
+                    _nunjucks:
+                      template: |
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                          <div style="display: flex; justify-content: space-between;">
+                            <span>Quote value</span>
+                            <span>{{ value }}</span>
+                          </div>
+                          {% if notes %}<p style="color: rgba(0,0,0,0.45);">{{ notes }}</p>{% endif %}
+                        </div>
+                      on:
+                        value:
+                          _state: quote.value
+                        notes:
+                          _state: quote.notes
+      - _ref:
+          module: layout
+          component: floating-actions
+          vars:
+            actions:
+              # ── Actor (edit mode): persist the quote, then submit for review ──
+              - id: submit_quote_btn
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                visible:
+                  _eq:
+                    - _state: current_action.mode
+                    - edit
+                properties:
+                  title: Send for approval
+                  type: primary
+                  icon: send
+                events:
+                  onClick:
+                    - id: validate_quote_value
+                      type: Validate
+                      params:
+                        regex: ^quote\.value$
+                    - id: persist_quote
+                      type: Request
+                      params: update_deal_quote
+                    - id: submit_for_review
+                      type: CallAPI
+                      params:
+                        endpointId:
+                          _module.endpointId:
+                            id: sales-pipeline-submit
+                            module: workflows
+                        payload:
+                          action_id:
+                            _url_query: action_id
+                          signal: submit
+                          current_key:
+                            _state: current_action.key
+                      messages:
+                        success: Quote sent for approval.
+                    - id: back_to_deal
+                      type: Link
+                      params:
+                        pageId:
+                          _state: current_action.entity_link.pageId
+                        urlQuery:
+                          _state: current_action.entity_link.urlQuery
+              # ── Reviewer (review mode): approve or request changes ────────────
+              - id: approve_quote_btn
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                visible:
+                  _eq:
+                    - _state: current_action.mode
+                    - review
+                properties:
+                  title: Approve
+                  type: primary
+                events:
+                  onClick:
+                    - id: approve_quote
+                      type: CallAPI
+                      params:
+                        endpointId:
+                          _module.endpointId:
+                            id: sales-pipeline-submit
+                            module: workflows
+                        payload:
+                          action_id:
+                            _url_query: action_id
+                          signal: approve
+                          current_key:
+                            _state: current_action.key
+                      messages:
+                        success: Quote approved.
+                    - id: back_to_deal_approve
+                      type: Link
+                      params:
+                        pageId:
+                          _state: current_action.entity_link.pageId
+                        urlQuery:
+                          _state: current_action.entity_link.urlQuery
+              - id: request_changes_btn
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                visible:
+                  _eq:
+                    - _state: current_action.mode
+                    - review
+                properties:
+                  title: Request changes
+                  type: default
+                  danger: true
+                  ghost: true
+                events:
+                  onClick:
+                    - id: request_changes
+                      type: CallAPI
+                      params:
+                        endpointId:
+                          _module.endpointId:
+                            id: sales-pipeline-submit
+                            module: workflows
+                        payload:
+                          action_id:
+                            _url_query: action_id
+                          signal: request_changes
+                          current_key:
+                            _state: current_action.key
+                      messages:
+                        success: Changes requested.
+                    - id: back_to_deal_changes
+                      type: Link
+                      params:
+                        pageId:
+                          _state: current_action.entity_link.pageId
+                        urlQuery:
+                          _state: current_action.entity_link.urlQuery

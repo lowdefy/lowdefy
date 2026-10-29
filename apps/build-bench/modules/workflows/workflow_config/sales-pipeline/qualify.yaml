@@ -1,0 +1,239 @@
+type: qualify
+kind: form
+action_group: qualification
+# Authored action description — markdown, rendered read-time as the
+# chrome-less lead-in at the top of the action's content card. Carries the
+# *criteria* for qualifying (context the form fields don't state), not a
+# restate of the fields themselves.
+description: |
+  Qualify before advancing — a deal that fails a criterion should be parked,
+  not quoted:
+
+  - **Budget** — spend is in range for a standard package
+  - **Authority** — you're talking to the decision-maker, not a researcher
+  - **Need** — a concrete problem we solve, with a deadline behind it
+
+  Flag a **site visit** only when the install is non-standard — multiple sites,
+  restricted access, or bespoke hardware. Routine installs skip it.
+access:
+  demo:
+    view: true
+    edit: true
+form:
+  # Keys are full state paths including the form. prefix — field components
+  # bind block id verbatim from the key, and the edit template primes/submits
+  # the form state subtree. Hooks receive the values under the payload's
+  # form bag (without the prefix): _payload: form.site_visit_required.
+  - key: form.contact
+    component: contact
+    title: Contact
+    required: true
+  # Role-scoped single-select — a dropdown of contacts holding the given app
+  # role, stored as a denormalized (view-renderable) value.
+  - key: form.account_manager
+    component: role_contact
+    title: Account manager
+    roles:
+      - manager
+  - key: form.notes
+    component: text_area
+    title: Qualification notes
+  # Checkable tree: product categories are parent nodes (no value, not
+  # selectable), products are leaves. primaryKey/parentKey build the hierarchy
+  # from the flat options; SHOW_CHILD stores only the leaf values, so checking a
+  # category cascades to its products without storing the category itself.
+  - key: form.products_interested
+    component: tree_multiple_selector
+    title: Products of interest
+    placeholder: Search products
+    primaryKey: id
+    parentKey: parentId
+    options:
+      - id: hardware
+        label: Hardware
+        parentId: null
+        selectable: false
+      - id: sensor
+        value: sensor
+        label: Sensor unit
+        parentId: hardware
+      - id: gateway
+        value: gateway
+        label: Gateway
+        parentId: hardware
+      - id: software
+        label: Software
+        parentId: null
+        selectable: false
+      - id: dashboard
+        value: dashboard
+        label: Dashboard licence
+        parentId: software
+      - id: api
+        value: api
+        label: API access
+        parentId: software
+  - key: form.estimated_value
+    component: number
+    title: Estimated value
+    extra: Approximate deal size, in dollars.
+  # date_selector with disabled_dates — a close date can't be in the past, so
+  # min disables everything before today. disabled_dates passes straight through
+  # to the block's disabledDates property (min/max/dates/ranges).
+  - key: form.expected_close_date
+    component: date_selector
+    title: Expected close date
+    disabled_dates:
+      min:
+        _date: now
+  - key: form.site_visit_required
+    component: yes_no_selector
+    title: Site visit needed?
+  # Nested controlled_list — deployment sites, each carrying its own list of
+  # install locations. Lists nest to any depth: each level adds its own `$` to
+  # the key (form.sites.$.locations.$.area), resolved per row index while
+  # editing and again when the saved data renders on the view/review pages
+  # (DataDescriptions). `itemTitle` is a Nunjucks template rendered against
+  # each item (its fields are the template context) titling the item's card on
+  # view/review/overview; it may reference multiple fields and emit HTML, and
+  # falls back to `Item N` when its render is empty. Each nesting level takes
+  # its own.
+  - key: form.sites
+    component: controlled_list
+    title: Deployment sites
+    # label_span pushes the list into the input column (span 24 - 6) so it lines
+    # up with the labelled fields above it.
+    label_span: 6
+    itemTitle: "<b>{{ name }}</b> — {{ locations | length }} location(s)"
+    form:
+      - key: form.sites.$.name
+        component: text_input
+        title: Site name
+      - key: form.sites.$.locations
+        component: controlled_list
+        title: Install locations
+        itemTitle: "{{ area }}"
+        form:
+          - key: form.sites.$.locations.$.area
+            component: text_input
+            title: Area
+          - key: form.sites.$.locations.$.sensor_count
+            component: number
+            title: Sensors
+  # Raw inline Lowdefy block — the escape hatch for a one-off field the library
+  # doesn't cover. No `component:`, so it's emitted as a block; `key` becomes
+  # the block id (and the form_meta key, so the value round-trips), and `title`
+  # is the overview label. The visible label is the block's own
+  # `properties.title` — the module can't inject one, since not every block
+  # type accepts it.
+  - key: form.confidence
+    title: Confidence
+    type: RatingSlider
+    properties:
+      title: Confidence
+      max: 5
+      disableIcons: true
+  # Consumer-supplied field component — same authoring vocabulary as the
+  # library, contributed from the app side. See the file for why the seam lives
+  # here rather than behind a `component:` name.
+  - _ref:
+      path: modules/workflows/fields/deal_temperature.yaml
+      key: config
+      vars:
+        key: form.deal_temperature
+        title: Deal temperature
+hooks:
+  submit:
+    pre:
+      routine:
+        - :return:
+            actions:
+              _if:
+                test:
+                  _eq:
+                    - _payload: form.site_visit_required
+                    - true
+                then:
+                  # Site visit needed: activate spawns it, require reopens it if
+                  # a prior edit left it not-required. upsert keeps both safe when
+                  # it doesn't exist yet.
+                  - type: site-visit
+                    signal: activate
+                    upsert: true
+                  - type: site-visit
+                    signal: require
+                    upsert: true
+                else:
+                  # No longer needed: mark it not-required (no-ops on done).
+                  - type: site-visit
+                    signal: not_required
+                    upsert: true
+    # Post-submit: persist the values the form captured — the point of contact
+    # and the deal value. The `contact` field already collects a 0-or-1 array
+    # of denormalized {contact_id, name, email} snapshots, which is exactly how
+    # the deals module stores role-scoped people (see
+    # modules/deals/actions/set_deal_people.yaml), so it is written verbatim
+    # under `main_point_of_contact` — no `.0` extraction.
+    #
+    # `value` is the generic estimated deal size the deals module now reads
+    # off the stored document (no more computed pricing math) — this is where
+    # it gets stamped.
+    #
+    # The deal's *pipeline status* advance lives on the qualification group's
+    # `on_complete` (see sales-pipeline.yaml) — the phase completing owns the
+    # status change, not this action.
+    #
+    # Uses aggregation-pipeline update syntax; the $set of contact/value/stamp
+    # always applies, so a re-submit from the edit page re-persists cleanly.
+    # Filter is a plain _id match, so it always matches; no guard needed.
+    post:
+      routine:
+        - id: persist_qualification_fields
+          type: MongoDBUpdateOne
+          connectionId:
+            _module.connectionId: { id: deals-collection, module: { _var: ids.deals } }
+          properties:
+            filter:
+              _id:
+                _payload: context.workflow.entity.id
+            update:
+              - $set:
+                  main_point_of_contact:
+                    _payload: form.contact
+                  value:
+                    _payload: form.estimated_value
+                  updated:
+                    _ref:
+                      module: events
+                      component: change_stamp
+        - :return:
+            deal_id:
+              _payload: context.workflow.entity.id
+pages:
+  edit:
+    buttons:
+      extra:
+        - id: open_help
+          type: Button
+          layout:
+            flex: 0 1 auto
+          properties:
+            title: Help
+            icon: help
+          events:
+            onClick:
+              - id: nav_help
+                type: Link
+                params:
+                  url: https://docs.lowdefy.com
+                  newTab: true
+status_map:
+  action-required:
+    demo:
+      message: Qualify the deal.
+  in-progress:
+    demo:
+      message: Qualifying the deal.
+  done:
+    demo:
+      message: Deal qualified.

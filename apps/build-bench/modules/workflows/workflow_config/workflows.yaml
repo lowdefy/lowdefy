@@ -1,0 +1,15 @@
+- _ref:
+    path: modules/workflows/workflow_config/sales-pipeline/sales-pipeline.yaml
+    vars:
+      ids:
+        _var: ids
+- _ref:
+    path: modules/workflows/workflow_config/onboarding/onboarding.yaml
+    vars:
+      ids:
+        _var: ids
+- _ref:
+    path: modules/workflows/workflow_config/company-setup/company-setup.yaml
+    vars:
+      ids:
+        _var: ids
