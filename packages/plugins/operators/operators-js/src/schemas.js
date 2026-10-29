@@ -72,6 +72,7 @@ export { default as _menu } from './operators/client/menu.schema.js';
 export { default as _path_params } from './operators/client/path_params.schema.js';
 export { default as _request } from './operators/client/request.schema.js';
 export { default as _request_details } from './operators/client/request_details.schema.js';
+export { default as _url_hash } from './operators/client/url_hash.schema.js';
 export { default as _url_query } from './operators/client/url_query.schema.js';
 
 // Server operators
