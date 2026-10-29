@@ -15,7 +15,12 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError, PLUGIN_CHECKS_SLUG, VALID_CHECK_SLUGS } from '@lowdefy/errors';
+import {
+  ConfigError,
+  PLUGIN_CHECKS_SLUG,
+  resolveKeyEntry,
+  VALID_CHECK_SLUGS,
+} from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
@@ -47,20 +52,66 @@ function recordPluginCheckSlug({ context, slug, configKey }) {
   }
 }
 
-function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
+// The ref a node resolves to: its own ~r, or none. The parent's ref is not
+// inherited: a node the build creates under a _ref'd parent has no ~r, and it
+// resolves to lowdefy.yaml.
+function ownRef(node) {
+  return node['~r'] ?? null;
+}
+
+// Short key map entry, { s, p, r?, l? }: the node's own path segment and its
+// parent's id. r is written only where the node's ref differs from its
+// parent's resolved ref (null for no ref under a parent that has one), so the
+// readers in @lowdefy/errors inherit it down the chain.
+function createEntry({ node, segment, parentKeyMapId, parentRef }) {
+  const entry = { s: segment, p: parentKeyMapId };
+  const ref = ownRef(node);
+  if (ref !== parentRef) entry.r = ref;
+  if (node['~l'] !== undefined) entry.l = node['~l'];
+  return entry;
+}
+
+// The resolved ref of a node keyed on an earlier pass. Under the parent it was
+// keyed under, its entry inherits from the ref passed down; a node a build step
+// moved under another parent resolves its own chain once.
+function keyedRef({ keyMap, keyMapId, parentKeyMapId, parentRef }) {
+  const entry = keyMap[keyMapId];
+  if (entry?.p === parentKeyMapId) {
+    return entry.r !== undefined ? entry.r : parentRef;
+  }
+  return resolveKeyEntry({ keyMap, configKey: keyMapId })?.refId ?? null;
+}
+
+function arrayItemSegment({ index, item }) {
+  let segment = `[${index}]`;
+  // TODO: Convert all artifacts to not modify id.
+  const id =
+    item.blockId ??
+    item.menuId ??
+    item.menuItemId ??
+    item.requestId ??
+    item.connectionId ??
+    item.id;
+  if (id) {
+    segment = `${segment.slice(0, -1)}:${id}]`;
+  }
+  if (item.type) {
+    segment = `${segment.slice(0, -1)}:${item.type}]`;
+  }
+  return segment;
+}
+
+function recArray({ array, segment, keyMap, parentKeyMapId, parentRef, context }) {
   let arrayKeyMapId;
+  let arrayRef;
 
   if (array['~k']) {
     arrayKeyMapId = array['~k'];
+    arrayRef = keyedRef({ keyMap, keyMapId: arrayKeyMapId, parentKeyMapId, parentRef });
   } else {
     arrayKeyMapId = makeId.next();
-    const entry = {
-      key: arrayKey,
-      '~k_parent': parentKeyMapId,
-    };
-    if (array['~r'] !== undefined) entry['~r'] = array['~r'];
-    if (array['~l'] !== undefined) entry['~l'] = array['~l'];
-    keyMap[arrayKeyMapId] = entry;
+    keyMap[arrayKeyMapId] = createEntry({ node: array, segment, parentKeyMapId, parentRef });
+    arrayRef = ownRef(array);
     Object.defineProperty(array, '~k', {
       value: arrayKeyMapId,
       enumerable: false,
@@ -73,58 +124,40 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
 
   array.forEach((item, index) => {
     if (type.isObject(item)) {
-      let path = `${arrayKey}[${index}]`;
-      // TODO: Convert all artifacts to not modify id.
-      const id =
-        item.blockId ??
-        item.menuId ??
-        item.menuItemId ??
-        item.requestId ??
-        item.connectionId ??
-        item.id;
-      if (id) {
-        path = `${path.slice(0, -1)}:${id}]`;
-      }
-      if (item.type) {
-        path = `${path.slice(0, -1)}:${item.type}]`;
-      }
       recAddKeys({
         object: item,
-        key: path,
-        keyMap: keyMap,
+        segment: arrayItemSegment({ index, item }),
+        keyMap,
         parentKeyMapId: arrayKeyMapId,
+        parentRef: arrayRef,
         context,
       });
     }
     if (type.isArray(item)) {
       recArray({
         array: item,
-        arrayKey: `${arrayKey}[${index}]`,
+        segment: `[${index}]`,
         keyMap,
         parentKeyMapId: arrayKeyMapId,
+        parentRef: arrayRef,
         context,
       });
     }
   });
 }
 
-function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
+function recAddKeys({ object, segment, keyMap, parentKeyMapId, parentRef, context }) {
   let keyMapId;
-  let storedKey = key;
+  let objectRef;
 
   // Skip objects that already have a ~k (already processed)
   if (object['~k']) {
     keyMapId = object['~k'];
-    // Use the stored key from keyMap for correct child paths
-    storedKey = keyMap[keyMapId]?.key ?? key;
+    objectRef = keyedRef({ keyMap, keyMapId, parentKeyMapId, parentRef });
   } else {
     keyMapId = makeId.next();
-    const entry = {
-      key,
-      '~k_parent': parentKeyMapId,
-    };
-    if (object['~r'] !== undefined) entry['~r'] = object['~r'];
-    if (object['~l'] !== undefined) entry['~l'] = object['~l'];
+    const entry = createEntry({ node: object, segment, parentKeyMapId, parentRef });
+    objectRef = ownRef(object);
 
     // Add entry to keyMap BEFORE validation so errors can resolve location
     keyMap[keyMapId] = entry;
@@ -161,7 +194,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
         );
       }
 
-      entry['~ignoreBuildChecks'] = checks;
+      entry.i = checks;
     }
     setNonEnumerableProperty(object, '~k', keyMapId);
     delete object['~r'];
@@ -174,18 +207,20 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     if (type.isObject(object[nextKey])) {
       recAddKeys({
         object: object[nextKey],
-        key: `${storedKey}.${nextKey}`,
-        keyMap: keyMap,
+        segment: `.${nextKey}`,
+        keyMap,
         parentKeyMapId: keyMapId,
+        parentRef: objectRef,
         context,
       });
     }
     if (type.isArray(object[nextKey])) {
       recArray({
         array: object[nextKey],
-        arrayKey: `${storedKey}.${nextKey}`,
+        segment: `.${nextKey}`,
         keyMap,
         parentKeyMapId: keyMapId,
+        parentRef: objectRef,
         context,
       });
     }
@@ -196,9 +231,10 @@ function addKeys({ components, context }) {
   const keyMapId = makeId.next();
   recAddKeys({
     object: components,
-    key: 'root',
+    segment: 'root',
     keyMap: context.keyMap,
     parentKeyMapId: keyMapId,
+    parentRef: null,
     context,
   });
 }
