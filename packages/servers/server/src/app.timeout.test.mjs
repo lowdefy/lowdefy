@@ -21,17 +21,18 @@ const REQUEST_TIMEOUT_MS = 50;
 
 const captureException = vi.fn();
 const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
-let lateHandler;
+// How the slow request route answers, set by each test.
+let lateAnswer;
+// Settles once the handler and every middleware inside apiContext have run on the late answer.
+let lateChain;
 
 function handler(c) {
   return c.json({ ok: true });
 }
-// Answers well after the timeout, with a body large enough to be compressed.
-function slowHandler(c) {
-  lateHandler = new Promise((resolve) => setTimeout(resolve, REQUEST_TIMEOUT_MS * 3)).then(() =>
-    c.json({ rows: 'x'.repeat(4096) })
-  );
-  return lateHandler;
+// Answers well after the timeout.
+async function slowHandler(c) {
+  await new Promise((resolve) => setTimeout(resolve, REQUEST_TIMEOUT_MS * 3));
+  return lateAnswer(c);
 }
 function largeHandler(c) {
   return c.json({ rows: 'x'.repeat(4096) });
@@ -69,7 +70,8 @@ vi.doMock('./middleware/apiContext.js', () => ({
         captureException(error);
       },
     });
-    return next();
+    lateChain = next();
+    return lateChain;
   },
 }));
 vi.doMock('./middleware/sentry.js', () => ({ default: passThrough }));
@@ -92,23 +94,42 @@ beforeEach(() => {
   sentrySdk.current = { captureException };
 });
 
-test('a request that runs past the timeout answers 504 and reports nothing when it finishes', async () => {
+async function requestPastTimeout() {
   const res = await createApp().request('/api/request/home/get_data', {
     method: 'POST',
     headers: { 'accept-encoding': 'gzip' },
   });
   expect(res.status).toEqual(504);
   // Sending the 504 reads its body, as the Node server does.
-  expect(await res.text()).toEqual('Gateway Timeout');
-  // The handler answers after the 504 went out, and the middleware around it runs again.
-  await lateHandler;
-  await vi.waitFor(() =>
-    expect(logger.warn).toHaveBeenCalledWith(
-      expect.stringMatching(/^Dropped an error after the request timed out: POST \/api\/request/)
-    )
-  );
+  expect(await res.text()).toEqual('');
+  // The handler answers after the 504 went out, and the middleware around it finishes.
+  await lateChain;
+  // compress, outside apiContext, finishes on the next turn.
+  await new Promise((resolve) => setImmediate(resolve));
+}
+
+test('a request whose handler answers after the timeout answers 504 and reports nothing', async () => {
+  lateAnswer = (c) => c.json({ rows: 'x'.repeat(4096) });
+  await requestPastTimeout();
   expect(captureException).not.toHaveBeenCalled();
   expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('a handler that sets a header after the timeout reports nothing', async () => {
+  lateAnswer = (c) => c.redirect('/home', 302);
+  await requestPastTimeout();
+  expect(captureException).not.toHaveBeenCalled();
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('a handler that fails after the timeout is still reported', async () => {
+  const fault = new Error('The upstream write failed.');
+  lateAnswer = () => {
+    throw fault;
+  };
+  await requestPastTimeout();
+  expect(captureException).toHaveBeenCalledTimes(1);
+  expect(captureException).toHaveBeenCalledWith(fault);
 });
 
 test('a response in time is still compressed', async () => {

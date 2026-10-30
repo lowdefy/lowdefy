@@ -124,6 +124,13 @@ test('request says a 504 with a plain-text body timed out', async () => {
   );
 });
 
+test('request says the server request timeout 504, which has no body, timed out', async () => {
+  mockFetchResponse({ ok: false, status: 504, body: '' });
+  await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toThrow(
+    'The request timed out. Try again.'
+  );
+});
+
 test('request treats a JSON error body that is not an object as a NonJsonResponseError', async () => {
   mockFetchResponse({ ok: false, status: 502, body: '"Bad gateway"' });
   await expect(request({ lowdefy: createLowdefy(null), url: '/api/test' })).rejects.toBeInstanceOf(
