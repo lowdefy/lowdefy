@@ -74,6 +74,14 @@ export default {
           'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the icon to the right of the maximum side of the slider.',
       },
       label,
+      marks: {
+        type: 'object',
+        description:
+          'Tick marks on the slider. Keys are slider values and values are labels: a string, or `{ style, label }` as antd takes. Replaces the marks `showMarks` draws, including the blank mark one step below `min`. Example: { 0: "0", 5: "5", 10: "10" }.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
       min: {
         type: 'number',
         default: 0,
