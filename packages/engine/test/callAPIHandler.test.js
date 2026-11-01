@@ -221,5 +221,19 @@ test('callAPIHandler reports the endpoint change to every context the app holds'
   await callAPIHandler(context, { blockId: 'block_id', params: { endpointId: 'ep_one' } });
   expect(context._internal.DependencyTracker.takeChanges()).toEqual(['api:ep_one']);
   expect(other._internal.DependencyTracker.takeChanges()).toEqual(['api:ep_one']);
-  expect(context._internal.update).toHaveBeenCalledWith();
+  expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
+});
+
+test('callAPIHandler runs a tracked pass over the blocks that read the endpoint', async () => {
+  const callAPI = vi
+    .fn()
+    .mockResolvedValue({ response: { a: 1 }, status: 'success', success: true });
+  const context = createContext({ callAPI });
+  const passes = [];
+  context._internal.update = vi.fn((options) => {
+    passes.push(context._internal.DependencyTracker.beginUpdate(options));
+  });
+  await callAPIHandler(context, { params: { endpointId: 'ep_one', payload: {} } });
+  expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
+  expect(passes.at(-1)).toEqual({ full: false, changes: ['api:ep_one'] });
 });
