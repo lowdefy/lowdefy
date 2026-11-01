@@ -66,6 +66,26 @@ test.each([
   }
 );
 
+test.each([
+  'return new Date;',
+  'return Date();',
+  'const D = Date; return new D(state("at"));',
+  'return Date[name](1);',
+  "return new Date(state('at')) < new Date();",
+])('isVolatileJsSource marks Date use that can read the clock %s volatile', (source) => {
+  expect(isVolatileJsSource(source)).toBe(true);
+});
+
+test.each([
+  "return new Date(state('expires')).getTime();",
+  "return new Date(state('at').timestamp || state('at')).toLocaleDateString('en-GB');",
+  "return Date.parse(state('at'));",
+  'return Date.UTC(2026, 0, 1);',
+  "return state('at') instanceof Date;",
+])('isVolatileJsSource leaves Date use that only parses a value %s pure', (source) => {
+  expect(isVolatileJsSource(source)).toBe(false);
+});
+
 test.each(['return Math.max(a, b) + Math.PI;', 'return Math.round(state("total") * 100) / 100;'])(
   'isVolatileJsSource leaves pure Math use %s pure',
   (source) => {

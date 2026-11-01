@@ -90,6 +90,29 @@ const pureMathMembers = new Set([
   'SQRT2',
 ]);
 
+// Date members that never read the clock. Date.now does, and so does any other use - aliasing
+// like `const D = Date` included.
+const pureDateMembers = new Set(['parse', 'UTC', 'prototype']);
+
+// Date reads the clock only through Date.now(), a Date() call without new, and new Date with no
+// arguments. Parsing a value (new Date(value), Date.parse) and type checks (x instanceof Date) are
+// pure, and treating them as volatile would re-evaluate every block that formats a stored date on
+// every pass.
+function isPureDateUse({ tokens, index }) {
+  const previous = tokens[index - 1];
+  const next = tokens[index + 1];
+  const afterNext = tokens[index + 2];
+  if (previous && previous.type.label === 'instanceof') {
+    return true;
+  }
+  if (previous && previous.type.label === 'new') {
+    return Boolean(next && next.type.label === '(' && afterNext && afterNext.type.label !== ')');
+  }
+  return Boolean(
+    next && next.type.label === '.' && afterNext && pureDateMembers.has(afterNext.value)
+  );
+}
+
 // Tokenized, not pattern-matched: comments and string contents are not code (a comment saying
 // "the welcome screen" must not make a function volatile), template literal expressions are, and
 // a name after "." is a property (obj.screen), not the global.
@@ -119,6 +142,9 @@ function isVolatileJsSource(source) {
       const next = tokens[index + 1];
       const member = tokens[index + 2];
       return !(next && next.type.label === '.' && member && pureMathMembers.has(member.value));
+    }
+    if (token.value === 'Date') {
+      return !isPureDateUse({ tokens, index });
     }
     return volatileIdentifiers.has(token.value);
   });
