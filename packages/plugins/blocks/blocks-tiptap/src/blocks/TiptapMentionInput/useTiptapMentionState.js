@@ -71,7 +71,9 @@ function useTiptapMentionState({ value, methods, hasDownloadRequest, imageSrc })
     // chained commands run against a destroyed editor and throw.
     if (editor.isDestroyed) return;
     // Show the image from the chosen file until its stored src answers (see buildExtensions).
-    editor.storage.image.previews.set(url, URL.createObjectURL(file));
+    // With the Image extension disabled there is no image storage, and no image to preview.
+    const previews = editor.storage.image?.previews;
+    if (previews) previews.set(url, URL.createObjectURL(file));
     editor
       .chain()
       .insertContentAt(pos, [

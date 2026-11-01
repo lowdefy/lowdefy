@@ -51,11 +51,11 @@ afterEach(() => {
   });
 });
 
-function createEditor(content = '') {
+function createEditor(content = '', properties = {}) {
   const editor = new Editor({
     element: document.createElement('div'),
     extensions: buildExtensions({
-      properties: {},
+      properties,
       getPlaceholder: () => '',
       insertImage: () => {},
       uploadEnabled: false,
@@ -98,6 +98,18 @@ describe.each([
     expect(saved.markdown).not.toContain('blob:');
     expect(saved.fileList).toEqual([expect.objectContaining({ url: STABLE_SRC })]);
     expect(editor.view.dom.querySelector('a').getAttribute('href')).toBe(STABLE_SRC);
+  });
+
+  test('with the Image extension disabled, an upload makes no preview and does not throw', async () => {
+    const editor = createEditor('', { image: { disabled: true } });
+    const { insertImage } = useState({
+      value: null,
+      methods: createMethods(),
+      hasDownloadRequest: false,
+    });
+
+    await expect(insertImage(editor, file, 0)).resolves.not.toThrow();
+    expect(URL.createObjectURL).not.toHaveBeenCalled();
   });
 });
 
