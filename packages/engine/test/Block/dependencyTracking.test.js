@@ -67,6 +67,18 @@ test('setValue evaluates only the input and the blocks that read its value', asy
   });
 });
 
+test('SetState renders only the blocks whose output changed', async () => {
+  const context = await trackingContext({ lowdefy: { pageId }, pageConfig: formPage });
+  const blocks = Object.values(context._internal.RootSlots.map);
+  const evalsBefore = new Map(blocks.map((block) => [block, block.eval]));
+  setState(context, { name: 'Ann' });
+  const rendered = blocks
+    .filter((block) => block.eval !== evalsBefore.get(block))
+    .map((block) => block.blockId)
+    .sort();
+  expect(rendered).toEqual(['greeting', 'name']);
+});
+
 test('a block records its operator reads and the engine reads for its own value', async () => {
   const context = await trackingContext({ lowdefy: { pageId }, pageConfig: formPage });
   const { greeting, name } = context._internal.RootSlots.map;

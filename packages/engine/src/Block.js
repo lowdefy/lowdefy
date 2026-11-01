@@ -279,8 +279,10 @@ class Block {
     this.showValidation = showValidation;
   };
 
+  // Reset does not mark the block for render: the pass that follows evaluates every block whose
+  // value, validation or reads changed, and evaluateSelf marks it when its output differs. Marking
+  // every block here re-rendered the whole page on each SetState.
   reset = (parentSubSlots, initWithState, writtenPaths = []) => {
-    this.update = true;
     this.setShowValidation(false);
     if (this.isInput() || this.isList()) {
       let blockValue = get(initWithState, this.blockId);
