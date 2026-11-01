@@ -70,6 +70,8 @@ function useTiptapMentionState({ value, methods, hasDownloadRequest, imageSrc })
     // surrounding page navigated away before the upload resolved), otherwise the
     // chained commands run against a destroyed editor and throw.
     if (editor.isDestroyed) return;
+    // Show the image from the chosen file until its stored src answers (see buildExtensions).
+    editor.storage.image.previews.set(url, URL.createObjectURL(file));
     editor
       .chain()
       .insertContentAt(pos, [
