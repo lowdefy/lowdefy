@@ -15,6 +15,12 @@
 id: tiptap-input
 type: Box
 
+requests:
+  # The spec answers this request, the upload and the image src with page.route.
+  - id: upload_policy
+    type: TestLog
+    connectionId: tiptap_test
+
 events:
   onMount:
     - id: seed_content
@@ -51,3 +57,19 @@ blocks:
 
   - id: tiptap_typing
     type: TiptapInput
+
+  - id: tiptap_upload
+    type: TiptapInput
+    properties:
+      uploadPolicyRequestId: upload_policy
+      imageSrc:
+        _function:
+          __string.concat:
+            - /e2e-unsaved-image/
+            - __args: 0.key
+
+  - id: tiptap_upload_html
+    type: Span
+    properties:
+      content:
+        _state: tiptap_upload.html
