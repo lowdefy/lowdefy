@@ -275,13 +275,15 @@ class Block {
   setShowValidation = (showValidation) => {
     if (this.showValidation !== showValidation) {
       this.forceEvaluate = true;
+      this.update = true;
     }
     this.showValidation = showValidation;
   };
 
-  // Reset does not mark the block for render: the pass that follows evaluates every block whose
-  // value, validation or reads changed, and evaluateSelf marks it when its output differs. Marking
-  // every block here re-rendered the whole page on each SetState.
+  // Reset marks the block for render only when what it renders changed outside its eval: its
+  // validation display, or a list's rows. The pass that follows evaluates every block whose value
+  // or reads changed, and evaluateSelf marks it when its output differs. Marking every block here
+  // re-rendered the whole page on each SetState.
   reset = (parentSubSlots, initWithState, writtenPaths = []) => {
     this.setShowValidation(false);
     if (this.isInput() || this.isList()) {
@@ -323,6 +325,9 @@ class Block {
           parentSubSlots[this.id] = this.subSlots;
         }
         if (type.isArray(blockValue)) {
+          if (blockValue.length !== this.subSlots.length) {
+            this.update = true;
+          }
           blockValue.forEach((item, i) => {
             if (!this.subSlots[i]) {
               this.subSlots.push(
