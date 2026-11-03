@@ -691,6 +691,7 @@ function getBetterAuthConfig({
     basePath: config.basePath ?? '',
     baseUrlOrigin,
     getAuth,
+    logger,
   });
 
   // Phone login sends SMS through the "phone.otp.send" hook binding - there

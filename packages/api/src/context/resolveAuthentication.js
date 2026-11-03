@@ -24,6 +24,7 @@ import { normalizeCaller, type } from '@lowdefy/helpers';
 import findPendingInvitation from '../routes/auth/organizations/findPendingInvitation.js';
 import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
 import isActiveMember from '../routes/auth/organizations/isActiveMember.js';
+import isUserBanned from '../routes/auth/isUserBanned.js';
 import { getAsIssuer, getMcpResourceUri } from '../routes/mcp/getMcpUri.js';
 import getMcpJwks from '../routes/mcp/getMcpJwks.js';
 import readMemberships from './readMemberships.js';
@@ -255,16 +256,6 @@ function hasMcpAudienceBearer({ context, headers }) {
   return rejected;
 }
 
-// A banned user is refused on every MCP bearer, OAuth or member token: a ban
-// deletes the user's sessions, but nothing else on the bearer path would read
-// it. A ban with an expiry in the past no longer applies.
-function isBanned({ user }) {
-  if (user.banned !== true) {
-    return false;
-  }
-  return type.isNone(user.banExpires) || new Date(user.banExpires) > new Date();
-}
-
 // The user read, ban check and membership wall both MCP bearers share once
 // each has settled which user and organization it acts for. Returns the
 // resolved caller, or null when the user is gone, banned or not a member.
@@ -281,7 +272,9 @@ async function resolveBearerMember(context, { adapter, auth, memberId, organizat
     );
     return null;
   }
-  if (isBanned({ user })) {
+  // A banned user is refused on every MCP bearer, OAuth or member token: a ban
+  // deletes the user's sessions, but nothing else on the bearer path would read it.
+  if (isUserBanned({ user })) {
     context.logger.debug(
       { event: 'auth_mcp_user_banned', organizationId },
       `MCP bearer rejected: user "${userId}" is banned.`
