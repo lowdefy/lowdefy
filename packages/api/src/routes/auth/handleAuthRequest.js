@@ -86,18 +86,17 @@ async function readLimitedBody({ request, limit }) {
   const decoder = new TextDecoder();
   let body = '';
   let length = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) {
-      return body + decoder.decode();
-    }
-    length += value.byteLength;
+  let chunk = await reader.read();
+  while (!chunk.done) {
+    length += chunk.value.byteLength;
     if (length > limit) {
       await reader.cancel();
       return null;
     }
-    body += decoder.decode(value, { stream: true });
+    body += decoder.decode(chunk.value, { stream: true });
+    chunk = await reader.read();
   }
+  return body + decoder.decode();
 }
 
 async function getMagicLinkVerifyRequest({ auth, request, headers }) {
