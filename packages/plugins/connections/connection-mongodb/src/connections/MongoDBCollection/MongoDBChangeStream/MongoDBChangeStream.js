@@ -27,8 +27,8 @@ import schema from './schema.js';
 
 // Wait before reopening a stream that failed: 0.5 s, 1 s, 2 s, then every 4 s.
 const RETRY_DELAYS_MS = [500, 1000, 2000, 4000];
-// Give up once the stream has kept failing for this long, and throw as before. A stream
-// the server kept answering for this long was healthy, and its failure starts a new window.
+// Give up once no reopened stream has been answered for this long, and throw as before.
+// A stream the server kept answering for this long was healthy, and resets the wait.
 const RETRY_WINDOW_MS = 30000;
 
 // Websocket source resolver — opens a MongoDB change stream and publishes
@@ -38,9 +38,9 @@ const RETRY_WINDOW_MS = 30000;
 // deployments).
 //
 // A replica set election ends the stream with an error the driver does not
-// resume (code 11602). The resolver then reopens the stream after the last
-// published change (resumeAfter), so subscribers keep their channel instead
-// of all reconnecting and reloading at once.
+// resume (code 11602). The resolver then reopens the stream at the driver's
+// last resume token (resumeAfter), so subscribers keep their channel instead
+// of all reconnecting and reloading at once, and miss no change.
 async function MongoDBChangeStream({ connection, properties, publish, signal, tenant }) {
   let { fullDocument, pipeline } = deserialize(properties ?? {});
   if (tenant) {
@@ -66,12 +66,16 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
     } catch (error) {
       throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
     }
-    // The driver updates the resume token when the server answers the stream's
-    // aggregate or getMore, so these say when the stream was answered. Time the
-    // driver spends blocked (waiting for a primary) is not counted as healthy.
+    // The driver updates the resume token on each change and each answer to the
+    // stream's aggregate or getMore (the post-batch token), so a reopen after it
+    // misses no change, even on a quiet stream that published none yet. An answer
+    // also ends the failing window. Time the driver spends blocked (waiting for a
+    // primary) is not counted as healthy.
     let firstAnsweredAt = null;
     let lastAnsweredAt = null;
-    stream.on('resumeTokenChanged', () => {
+    stream.on('resumeTokenChanged', (token) => {
+      resumeToken = token;
+      failingSince = null;
       lastAnsweredAt = Date.now();
       firstAnsweredAt ??= lastAnsweredAt;
     });
@@ -82,7 +86,6 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
     signal.addEventListener('abort', closeStream, { once: true });
     try {
       for await (const change of stream) {
-        resumeToken = change._id;
         publish({ data: serialize(change) });
       }
       return;
@@ -91,12 +94,12 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
       if (signal.aborted) {
         return;
       }
-      const wasHealthy =
-        !type.isNone(firstAnsweredAt) && lastAnsweredAt - firstAnsweredAt > RETRY_WINDOW_MS;
-      if (type.isNone(failingSince) || wasHealthy) {
-        failingSince = Date.now();
+      // Only a healthy run resets the wait, so a primary that answers and then fails
+      // again is retried every 4 s rather than every 0.5 s.
+      if (!type.isNone(firstAnsweredAt) && lastAnsweredAt - firstAnsweredAt > RETRY_WINDOW_MS) {
         retries = 0;
       }
+      failingSince ??= Date.now();
       if (!isResumableChangeStreamError(error) || Date.now() - failingSince > RETRY_WINDOW_MS) {
         throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
       }
