@@ -42,14 +42,21 @@ const DEFAULTS = {
 
 // An uploaded image's stored src can answer only once the content is saved, such as a link
 // endpoint that signs a key only once it is in a saved record. So insertImage maps the stored src
-// to an object URL of the file the person chose (storage.previews), and the editor draws the
+// to an object URL of the file the person chose (storage.setPreview), and the editor draws the
 // image from that preview. The document keeps the stored src, so getHTML, the JSON and the
 // markdown never hold a blob: URL. Previews stay when an image is deleted, so undo still shows
 // it, and are revoked when the editor is destroyed. After a reload there is no preview and the
 // image loads from its stored src.
 const PreviewImage = Image.extend({
   addStorage() {
-    return { previews: new Map() };
+    const previews = new Map();
+    return {
+      previews,
+      setPreview(src, file) {
+        if (previews.has(src)) URL.revokeObjectURL(previews.get(src));
+        previews.set(src, URL.createObjectURL(file));
+      },
+    };
   },
 
   addNodeView() {
@@ -152,7 +159,9 @@ function buildExtensions({
     extensions.push(mentionExtension);
   }
 
-  if (uploadEnabled) {
+  // An uploaded file is inserted as an image node, so without the Image extension there is
+  // nothing to upload into.
+  if (uploadEnabled && !image.disabled) {
     extensions.push(
       FileHandler.configure({
         onDrop: (editor, files, pos) => {

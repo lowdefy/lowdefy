@@ -26,6 +26,7 @@ vi.doMock('react', () => ({ useRef: (value) => ({ current: value }) }));
 vi.doMock('./fileUpload.js', () => ({ default: vi.fn(async () => STABLE_SRC) }));
 
 const { Editor } = await import('@tiptap/core');
+const { closeHistory } = await import('@tiptap/pm/history');
 const { default: buildExtensions } = await import('./buildExtensions.js');
 const { default: useTiptapState } = await import('../TiptapInput/useTiptapState.js');
 const { default: useTiptapMentionState } = await import(
@@ -66,6 +67,9 @@ function createEditor(content = '', properties = {}) {
   return editor;
 }
 
+// The state hooks preview only an imageSrc src; fileUpload is mocked, so this is not called.
+const imageSrc = () => STABLE_SRC;
+
 function createMethods() {
   return { setValue: vi.fn(), triggerEvent: vi.fn() };
 }
@@ -79,7 +83,7 @@ describe.each([
   test('saves the stable src and shows the chosen file as a blob: preview', async () => {
     const editor = createEditor();
     const methods = createMethods();
-    const { insertImage } = useState({ value: null, methods, hasDownloadRequest: false });
+    const { insertImage } = useState({ value: null, methods, hasDownloadRequest: false, imageSrc });
 
     await insertImage(editor, file, 0);
 
@@ -100,16 +104,34 @@ describe.each([
     expect(editor.view.dom.querySelector('a').getAttribute('href')).toBe(STABLE_SRC);
   });
 
-  test('with the Image extension disabled, an upload makes no preview and does not throw', async () => {
-    const editor = createEditor('', { image: { disabled: true } });
+  test('a download-policy src makes no preview, since it loads at once', async () => {
+    const editor = createEditor();
+    const { insertImage } = useState({
+      value: null,
+      methods: createMethods(),
+      hasDownloadRequest: true,
+    });
+
+    await insertImage(editor, file, 0);
+
+    expect(URL.createObjectURL).not.toHaveBeenCalled();
+    expect(editor.view.dom.querySelector('img').getAttribute('src')).toBe(STABLE_SRC);
+  });
+
+  test('uploading to the same src again revokes the earlier preview', async () => {
+    const editor = createEditor();
     const { insertImage } = useState({
       value: null,
       methods: createMethods(),
       hasDownloadRequest: false,
+      imageSrc,
     });
 
-    await expect(insertImage(editor, file, 0)).resolves.not.toThrow();
-    expect(URL.createObjectURL).not.toHaveBeenCalled();
+    await insertImage(editor, file, 0);
+    await insertImage(editor, file, 0);
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:http://localhost/preview-1');
+    expect(editor.storage.image.previews.get(STABLE_SRC)).toBe('blob:http://localhost/preview-2');
   });
 });
 
@@ -119,16 +141,29 @@ test('a deleted image shows its preview again after undo', async () => {
     value: null,
     methods: createMethods(),
     hasDownloadRequest: false,
+    imageSrc,
   });
   await insertImage(editor, file, 0);
+  // Without it, the insert and the delete land in one undo step.
+  editor.view.dispatch(closeHistory(editor.state.tr));
 
-  editor.commands.setContent('', { emitUpdate: false });
+  editor.commands.clearContent(true);
   expect(editor.view.dom.querySelector('img')).toBe(null);
-  editor.commands.setContent(`<img src="${STABLE_SRC}">`, { emitUpdate: false });
+  editor.commands.undo();
 
   expect(editor.view.dom.querySelector('img').getAttribute('src')).toBe(
     'blob:http://localhost/preview-1'
   );
+});
+
+test('with the Image extension disabled, pasted or dropped files are not uploaded', () => {
+  const extensions = buildExtensions({
+    properties: { image: { disabled: true } },
+    getPlaceholder: () => '',
+    insertImage: () => {},
+    uploadEnabled: true,
+  });
+  expect(extensions.map((extension) => extension.name)).not.toContain('fileHandler');
 });
 
 test('a saved value loads its images from the stored src', () => {
@@ -142,6 +177,7 @@ test('destroying the editor revokes its previews', async () => {
     value: null,
     methods: createMethods(),
     hasDownloadRequest: false,
+    imageSrc,
   });
   await insertImage(editor, file, 0);
   const { previews } = editor.storage.image;
