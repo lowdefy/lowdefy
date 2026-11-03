@@ -27,6 +27,7 @@ function createSetState({ arrayIndices, context }) {
     const changes = paths.map((path) => `state:${path}`);
     // SetState with nothing to set is used to refresh the page, so it stays a full pass.
     if (changes.length === 0) {
+      context._internal.RootSlots.markAllForRender();
       context._internal.update();
       return;
     }

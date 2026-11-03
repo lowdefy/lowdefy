@@ -281,7 +281,8 @@ class Block {
   };
 
   // Reset marks the block for render only when what it renders changed outside its eval: its
-  // validation display, or a list's rows. The pass that follows evaluates every block whose value
+  // validation display, or a list's rows (the list block renders its state value, which is not part
+  // of its eval). The pass that follows evaluates every block whose value
   // or reads changed, and evaluateSelf marks it when its output differs. Marking every block here
   // re-rendered the whole page on each SetState.
   reset = (parentSubSlots, initWithState, writtenPaths = []) => {
@@ -325,8 +326,10 @@ class Block {
           parentSubSlots[this.id] = this.subSlots;
         }
         if (type.isArray(blockValue)) {
-          if (blockValue.length !== this.subSlots.length) {
+          const rows = serializer.serializeToString(blockValue);
+          if (rows !== this.rows) {
             this.update = true;
+            this.rows = rows;
           }
           blockValue.forEach((item, i) => {
             if (!this.subSlots[i]) {
@@ -678,7 +681,6 @@ class Block {
 
   resetValidation = () => {
     this.setShowValidation(false);
-    this.update = true;
   };
 
   render = () => {

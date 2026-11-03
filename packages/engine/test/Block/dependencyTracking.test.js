@@ -101,6 +101,38 @@ test('SetState renders a list whose rows were added or removed', async () => {
   expect(items.eval).not.toBe(evalBeforeRemove);
 });
 
+test('SetState renders a list whose rows changed but kept their count', async () => {
+  const listPage = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'items',
+        type: 'List',
+        blocks: [{ id: 'items.$.text', type: 'TextInput' }],
+      },
+    ],
+  };
+  const context = await trackingContext({ lowdefy: { pageId }, pageConfig: listPage });
+  const { items } = context._internal.RootSlots.map;
+  setState(context, { items: [{ text: 'a' }] });
+  const evalBeforeChange = items.eval;
+  setState(context, { items: [{ text: 'b' }] });
+  expect(items.eval).not.toBe(evalBeforeChange);
+  const evalBeforeOther = items.eval;
+  setState(context, { other: 1 });
+  expect(items.eval).toBe(evalBeforeOther);
+});
+
+test('SetState with nothing to set renders every block', async () => {
+  const context = await trackingContext({ lowdefy: { pageId }, pageConfig: formPage });
+  const blocks = Object.values(context._internal.RootSlots.map);
+  const evalsBefore = new Map(blocks.map((block) => [block, block.eval]));
+  setState(context, {});
+  const unrendered = blocks.filter((block) => block.eval === evalsBefore.get(block));
+  expect(unrendered).toEqual([]);
+});
+
 test('SetState renders an input whose validation was showing, so the validation hides', async () => {
   const requiredPage = {
     id: 'root',
