@@ -248,6 +248,23 @@ test('MongoDBChangeStream resumes on an error labelled ResumableChangeStreamErro
   expect(collection.watch).toHaveBeenCalledTimes(2);
 });
 
+test('MongoDBChangeStream resumes when the primary shuts down in a rolling restart', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  const first = createFakeStream({ failWith: serverError(11600) });
+  const second = createFakeStream();
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+});
+
 test('MongoDBChangeStream throws when a resume finds the history lost', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
   const first = createFakeStream({

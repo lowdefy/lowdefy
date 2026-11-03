@@ -16,10 +16,19 @@
 
 import { MongoError, MongoNetworkError, MongoServerSelectionError } from 'mongodb';
 
-// Replica set state changes: the stream's server stopped being primary, or is shutting down.
-// InterruptedDueToReplStateChange (11602), NotWritablePrimary (10107),
-// NotPrimaryNoSecondaryOk (13435), PrimarySteppedDown (189), ShutdownInProgress (91).
-const RESUMABLE_CODES = new Set([11602, 10107, 13435, 189, 91]);
+// The codes the driver resumes on for servers before 4.4 (GET_MORE_RESUMABLE_CODES, not exported).
+// A 4.4+ server can send them without the ResumableChangeStreamError label, as it does 11602 in an
+// election and 11600 when a primary shuts down in a rolling restart.
+// Replica set state changes: InterruptedDueToReplStateChange (11602), NotWritablePrimary (10107),
+// NotPrimaryNoSecondaryOk (13435), NotPrimaryOrSecondary (13436), PrimarySteppedDown (189),
+// ShutdownInProgress (91), InterruptedAtShutdown (11600).
+// Network and routing: HostUnreachable (6), HostNotFound (7), NetworkTimeout (89),
+// SocketException (9001), ExceededTimeLimit (262), FailedToSatisfyReadPreference (133).
+// Sharding and cursors: StaleShardVersion (63), StaleEpoch (150), StaleConfig (13388),
+// RetryChangeStream (234), CursorNotFound (43).
+const RESUMABLE_CODES = new Set([
+  11602, 10107, 13435, 13436, 189, 91, 11600, 6, 7, 89, 9001, 262, 133, 63, 150, 13388, 234, 43,
+]);
 
 // The resume token is gone from the oplog (ChangeStreamHistoryLost, 286), or the server says
 // the stream can not go on (ChangeStreamFatalError, 280). Subscribers must reconnect and reload.

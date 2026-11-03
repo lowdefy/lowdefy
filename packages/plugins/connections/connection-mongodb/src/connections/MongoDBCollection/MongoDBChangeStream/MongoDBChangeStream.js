@@ -16,6 +16,8 @@
 
 import { setTimeout as wait } from 'node:timers/promises';
 
+import { type } from '@lowdefy/helpers';
+
 import applyTenantToChangeStream from '../tenant/applyTenantToChangeStream.js';
 import getCollection from '../getCollection.js';
 import isResumableChangeStreamError from './isResumableChangeStreamError.js';
@@ -55,7 +57,7 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
   let retries = 0;
   while (!signal.aborted) {
     const options = { fullDocument: fullDocument ?? 'updateLookup' };
-    if (resumeToken !== null) {
+    if (!type.isNone(resumeToken)) {
       options.resumeAfter = resumeToken;
     }
     let stream;
@@ -90,8 +92,8 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
         return;
       }
       const wasHealthy =
-        firstAnsweredAt !== null && lastAnsweredAt - firstAnsweredAt > RETRY_WINDOW_MS;
-      if (failingSince === null || wasHealthy) {
+        !type.isNone(firstAnsweredAt) && lastAnsweredAt - firstAnsweredAt > RETRY_WINDOW_MS;
+      if (type.isNone(failingSince) || wasHealthy) {
         failingSince = Date.now();
         retries = 0;
       }
