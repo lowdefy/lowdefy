@@ -18,9 +18,12 @@ import { installIfPackageJsonChanged, spawnProcess } from '@lowdefy/node-utils';
 
 import installWorkspacePlugins from './installWorkspacePlugins.js';
 
-async function installServer({ context, directory }) {
+// skipIfInstalled skips an install the last one already satisfies, for callers
+// that reset package.json before each build of the same server folder.
+async function installServer({ context, directory, skipIfInstalled = false }) {
   const installed = await installIfPackageJsonChanged({
     directory,
+    skipIfInstalled,
     install: async () => {
       await installWorkspacePlugins({ context, directory });
       context.logger.info({ spin: 'start' }, 'Installing dependencies.');

@@ -44,8 +44,9 @@ function findConfigKey({ nodeConfigKey, data, error }) {
 // Validates each block, action and operator node the type counters recorded
 // against its type's plugin schema, judged by getConfigSchemaErrors. Returns
 // the findings as { level, configKey, message }, at the package's schemaLevel
-// (warning unless its ./checks export raises it). A package that is not
-// installed has no schemas to check against.
+// (warning unless its ./checks export raises it). A pending package (neither
+// installed nor a default package, whose schemas ship with the build) has no
+// schemas to check against.
 async function runSchemaChecks({ context, targets, loaded }) {
   const findings = [];
   for (const { kind, typeName, originalTypeName, packageName, nodes } of targets) {

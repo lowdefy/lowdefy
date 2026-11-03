@@ -27,7 +27,10 @@ This package provides:
 ├── resolveConfigLocation.js        # configKey → { source, config }
 ├── resolveErrorLocation.js         # Unified resolver (configKey or filePath)
 ├── loadAndResolveErrorLocation.js  # Async: reads keyMap/refMap at runtime
-└── shouldSuppressBuildCheck.js     # ~ignoreBuildChecks walker
+├── shouldSuppressBuildCheck.js     # ~ignoreBuildChecks walker
+├── resolveKeyEntry.js              # One key map entry → { path, refId, ... }
+├── createKeyPathResolver.js        # Memoised resolver for whole-map scans
+└── readKeyEntryFields.js           # Internal: one entry's own fields, either shape
 ```
 
 **Single entry point:** `import { ConfigError, errorToDisplayString, ... } from '@lowdefy/errors'`
@@ -357,6 +360,24 @@ const location = await loadAndResolveErrorLocation({
 
 Used by server-side `logClientError` to resolve client-reported errors.
 
+## Key Map Readers
+
+`keyMap.json` holds one entry per keyed config object or array (see `addKeys` in `packages/build/src/build/addKeys.js`). Entries come in two shapes, and the readers accept both, entry by entry:
+
+| Shape | Fields                                                      | Path                                               | Ref                                                                                         |
+| ----- | ----------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Full  | `{ key, '~k_parent', '~r'?, '~l'?, '~ignoreBuildChecks'? }` | `key`, the full path from the root                 | `~r`, the entry's own; absent means no ref                                                  |
+| Short | `{ s, p, r?, l?, i? }`                                      | the parent's path joined with `s`, its own segment | `r` where it differs from the parent's resolved ref, else inherited; `r: null` means no ref |
+
+`addKeys` writes the short shape. Both shapes are read because the map that a reader gets may come from another Lowdefy version: journeys scope builds with the app's own builder and reads the result with the CLI's `@lowdefy/errors`, and cached scope builds under `.lowdefy/scope/builds/` keep the shape they were built in. The full-shape branch can go once no supported version writes it.
+
+Nothing outside `@lowdefy/errors` reads entry fields; it goes through one of these:
+
+- **`resolveKeyEntry({ keyMap, configKey })`** resolves one entry to `{ path, refId, line, parentId, ignoreBuildChecks }`, or `null` when `configKey` is missing or not in the map. A short entry walks its parent chain, joining segments and taking the nearest `r`; the walk ends at a parent id not in the map (addKeys gives each tree root a parent id it never writes), at a full-shape ancestor (which carries its whole path and ref), or where a corrupt map cycles. `line`, `parentId` and `ignoreBuildChecks` are the entry's own. Used by `resolveConfigLocation` and `createPageRegistry`.
+- **`createKeyPathResolver({ keyMap })`** returns a function of a key id that gives the same result, memoising every entry it resolves, so a scan over the whole map reads and resolves each entry once. Used by `findConfig` (dev server find-config tool) and `collectSharedIds` (config mutants).
+
+`shouldSuppressBuildCheck` needs only each ancestor's parent id and ignore value, so it reads those through the internal `readKeyEntryFields` without resolving paths.
+
 ## shouldSuppressBuildCheck
 
 Walks up the keyMap parent chain looking for `~ignoreBuildChecks` settings.
@@ -371,7 +392,7 @@ if (shouldSuppressBuildCheck(error, context.keyMap)) {
 
 **Signature:** `shouldSuppressBuildCheck(error, keyMap)` — takes the error object (reads `configKey`, `checkSlug` and `checkGroup`) and the keyMap.
 
-**Walk logic:** Starting from `error.configKey`, walks up `~k_parent` entries (max 100 depth). At each entry, checks `~ignoreBuildChecks`:
+**Walk logic:** Starting from `error.configKey`, walks up the parent chain (`~k_parent` or `p`, max 100 depth). At each entry, checks its ignore value (`~ignoreBuildChecks` or `i`):
 
 - `true` → suppress all checks
 - `['state-refs', 'types', ...]` → suppress if `error.checkSlug` or `error.checkGroup` is in the array
@@ -403,6 +424,8 @@ See [helpers.md](./helpers.md) for serializer details.
 | `src/resolveErrorLocation.js`        | Unified sync resolver (mutates error)         |
 | `src/loadAndResolveErrorLocation.js` | Async resolver (reads build artifacts)        |
 | `src/shouldSuppressBuildCheck.js`    | ~ignoreBuildChecks walker + VALID_CHECK_SLUGS |
+| `src/resolveKeyEntry.js`             | One key map entry, either shape → path, ref   |
+| `src/createKeyPathResolver.js`       | Memoised key map reader for whole-map scans   |
 
 ## See Also
 

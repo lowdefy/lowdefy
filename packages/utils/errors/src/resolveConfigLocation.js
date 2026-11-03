@@ -16,12 +16,14 @@
 
 import path from 'path';
 
+import resolveKeyEntry from './resolveKeyEntry.js';
+
 /**
  * Resolves a config key (~k) to source and config location.
  *
  * @param {Object} params
  * @param {string} params.configKey - The ~k value from the config object
- * @param {Object} params.keyMap - The keyMap from build output
+ * @param {Object} params.keyMap - The keyMap from build output, entries in either shape
  * @param {Object} params.refMap - The refMap from build output
  * @param {string} [params.configDirectory] - Absolute path to config directory for clickable links
  * @returns {Object|null} Location object with source and config, or null if not resolvable
@@ -29,7 +31,10 @@ import path from 'path';
  * @example
  * const location = resolveConfigLocation({
  *   configKey: 'abc123',
- *   keyMap: { 'abc123': { key: 'root.pages[0:home].blocks[0:header]', '~r': 'ref1', '~l': 5 } },
+ *   keyMap: {
+ *     'k0': { s: 'root', p: 'k_root' },
+ *     'abc123': { s: '.pages[0:home].blocks[0:header]', p: 'k0', r: 'ref1', l: 5 },
+ *   },
  *   refMap: { 'ref1': { path: 'pages/home.yaml' } },
  *   configDirectory: '/Users/dev/myapp'
  * });
@@ -57,17 +62,16 @@ function resolveRefPath({ refId, refMap }) {
 }
 
 function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
-  if (!configKey || !keyMap || !keyMap[configKey]) {
+  const keyEntry = resolveKeyEntry({ keyMap, configKey });
+  if (keyEntry === null) {
     return null;
   }
 
-  const keyEntry = keyMap[configKey];
-  const refId = keyEntry['~r'];
-  const lineNumber = keyEntry['~l'];
-  const filePath = resolveRefPath({ refId, refMap });
+  const lineNumber = keyEntry.line;
+  const filePath = resolveRefPath({ refId: keyEntry.refId, refMap });
 
   // config: the config path (e.g., "root.pages[0:home].blocks[0:header]")
-  const config = keyEntry.key;
+  const config = keyEntry.path;
 
   // Use absolute path when configDirectory is available for clickable terminal links
   let resolvedPath = filePath;

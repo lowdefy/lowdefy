@@ -20,7 +20,7 @@ import keyArtifact from './keyArtifact.mjs';
 // slots, actions in events try/catch, and the JIT copy of each request with
 // its properties still in it. Event and slot containers are made by the
 // build, so they carry no ~k.
-function pageFixture({ prefix = 'k1_' } = {}) {
+function pageFixture({ prefix = 'k1_', shape } = {}) {
   const onInit = {
     try: [{ id: 'init_state', type: 'SetState', params: { tab: 'open' } }],
     catch: [],
@@ -102,6 +102,7 @@ function pageFixture({ prefix = 'k1_' } = {}) {
   return keyArtifact({
     value,
     prefix,
+    shape,
     unkeyed: [events, onInit, onClick, slots, content, boxSlots, boxSlot],
   });
 }

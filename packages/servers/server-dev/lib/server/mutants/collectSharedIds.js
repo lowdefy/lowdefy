@@ -14,17 +14,21 @@
   limitations under the License.
 */
 
+import { createKeyPathResolver } from '@lowdefy/errors';
+
 import configPathSegments from './configPathSegments.js';
 
 // The array items, across a build's keyMap, whose id and type label is shared
 // by a sibling at another index. Their position-free path keeps the index,
 // since the label alone would name two nodes.
 function collectSharedIds({ keyMap }) {
+  const resolveKeyPath = createKeyPathResolver({ keyMap });
   const indices = new Map();
-  Object.values(keyMap).forEach((entry) => {
-    const segments = configPathSegments(entry.key ?? '');
+  Object.keys(keyMap).forEach((keyId) => {
+    const configPath = resolveKeyPath(keyId)?.path ?? '';
+    const segments = configPathSegments(configPath);
     const last = segments[segments.length - 1];
-    if (last === undefined || last.label === '' || last.end !== entry.key.length) {
+    if (last === undefined || last.label === '' || last.end !== configPath.length) {
       return;
     }
     const sibling = `${last.prefix}[${last.label}]`;

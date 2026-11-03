@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import zlib from 'zlib';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import { expect, test } from 'vitest';
 
@@ -53,5 +54,27 @@ test('writeFileIfChanged writes when content differs and returns true', async ()
   const changed = await writeFileIfChanged(filePath, 'new content');
   expect(changed).toBe(true);
   expect(fs.readFileSync(filePath, 'utf8')).toEqual('new content');
+  fs.unlinkSync(filePath);
+});
+
+test('writeFileIfChanged compares a Buffer as bytes and skips identical content', async () => {
+  const filePath = path.resolve(baseDir, 'unchanged.gz');
+  const content = zlib.gzipSync('same content');
+  await writeFileIfChanged(filePath, content);
+  const statBefore = fs.statSync(filePath);
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  const changed = await writeFileIfChanged(filePath, Buffer.from(content));
+  const statAfter = fs.statSync(filePath);
+  expect(changed).toBe(false);
+  expect(statAfter.mtimeMs).toEqual(statBefore.mtimeMs);
+  fs.unlinkSync(filePath);
+});
+
+test('writeFileIfChanged writes a Buffer whose bytes differ', async () => {
+  const filePath = path.resolve(baseDir, 'changed.gz');
+  await writeFileIfChanged(filePath, zlib.gzipSync('old content'));
+  const changed = await writeFileIfChanged(filePath, zlib.gzipSync('new content'));
+  expect(changed).toBe(true);
+  expect(zlib.gunzipSync(fs.readFileSync(filePath)).toString('utf8')).toEqual('new content');
   fs.unlinkSync(filePath);
 });

@@ -403,6 +403,8 @@ resolvers, transformers, `.js` refs, module resolvers and the global ref resolve
 build `ranAppCode`: app code can read anything, so such a page rebuilds after every change
 event.
 
+**Key entries.** A page build's key entries are in the short shape (`{ s, p, r?, l?, i? }`, see [errors.md](../utils/errors.md#key-map-readers)) and chain within their own JIT tree: the page root's parent id is never written. `findConfig` and the mutants read them through `createKeyPathResolver`, so they rebuild each path once per scan.
+
 **Budget.** Every page build adds entries to the context's `keyMap` and `refMap`, released
 only with the context. When the entries added since the context was made (counted from
 `context.jitMaps`) pass `contextMapBudget` (`lib/server/contextMapBudget.js`, 48,000: about

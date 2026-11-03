@@ -16,6 +16,7 @@
 
 import path from 'path';
 import { vi, beforeEach, expect, test } from 'vitest';
+import { createKeyPathResolver } from '@lowdefy/errors';
 
 const realNodeUtils = await import('@lowdefy/node-utils');
 const mockWriteFile = vi.fn();
@@ -796,13 +797,22 @@ blocks:
   const writes = jitMapsWrites();
   expect(writes).toHaveLength(1);
   expect(writes[0].filePath).toBe('jitMaps/jit-1.json');
-  // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction")
-  const actionEntry = Object.values(writes[0].keyMap).find(
-    (entry) => entry.key && entry.key.includes('UndefinedAction')
+  // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction").
+  // Entries are in the short shape and chain within the jitMaps file.
+  const jitKeyMap = writes[0].keyMap;
+  const resolveKeyPath = createKeyPathResolver({ keyMap: jitKeyMap });
+  const actionKey = Object.keys(jitKeyMap).find((keyId) =>
+    resolveKeyPath(keyId).path.includes('UndefinedAction')
   );
-  expect(actionEntry).toBeDefined();
-  expect(actionEntry['~l']).toBe(8);
-  expect(writes[0].refMap[actionEntry['~r']].path).toBe('page-with-action.yaml');
+  expect(actionKey).toBeDefined();
+  expect(jitKeyMap[actionKey].key).toBeUndefined();
+  expect(jitKeyMap[actionKey].s).toEqual('[0:my_action:UndefinedAction]');
+  const actionEntry = resolveKeyPath(actionKey);
+  expect(actionEntry.path).toEqual(
+    'root.blocks[0:btn1:Button].events.onClick[0:my_action:UndefinedAction]'
+  );
+  expect(actionEntry.line).toBe(8);
+  expect(writes[0].refMap[actionEntry.refId].path).toBe('page-with-action.yaml');
 });
 
 test("buildPageJit writes only the entries its build added, not the config build's", async () => {

@@ -14,14 +14,37 @@
   limitations under the License.
 */
 
+import fs from 'fs/promises';
+import path from 'path';
+
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
+
+async function readFileBuffer(filePath) {
+  try {
+    return await fs.readFile(path.resolve(filePath));
+  } catch (error) {
+    if (error.code === 'ENOENT' || error.code === 'EISDIR') {
+      return null;
+    }
+    throw error;
+  }
+}
+
+async function isUnchanged(filePath, content) {
+  // A Buffer (a gzipped artifact) is compared as bytes: decoded as UTF-8 it
+  // would never equal the new content.
+  if (Buffer.isBuffer(content)) {
+    const existing = await readFileBuffer(filePath);
+    return existing !== null && existing.equals(content);
+  }
+  return (await readFile(filePath)) === content;
+}
 
 // Skipping byte-identical writes keeps file mtimes stable so watchers (Vite
 // module graph, chokidar) do not react to rebuilds that changed nothing.
 async function writeFileIfChanged(filePath, content) {
-  const existing = await readFile(filePath);
-  if (existing === content) {
+  if (await isUnchanged(filePath, content)) {
     return false;
   }
   await writeFile(filePath, content);
