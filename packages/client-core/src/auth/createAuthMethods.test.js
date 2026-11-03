@@ -663,6 +663,24 @@ test('magicLinkVerify clears the fragment from the address bar before it posts',
   expect(history.replaceState.mock.calls).toEqual([[{ key: 'k1' }, '', '/magic-link?a=1']]);
 });
 
+test('magicLinkVerify drops a ?token= query from the address bar and keeps the rest', () => {
+  const { auth, lowdefy, history } = setupVerify({
+    search: '?token=abc123&callbackURL=%2Freports',
+  });
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  magicLinkVerify();
+  expect(history.replaceState.mock.calls).toEqual([
+    [{ key: 'k1' }, '', '/magic-link?callbackURL=%2Freports'],
+  ]);
+});
+
+test('magicLinkVerify leaves no empty query when the token was the only query param', () => {
+  const { auth, lowdefy, history } = setupVerify({ search: '?token=abc123' });
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  magicLinkVerify();
+  expect(history.replaceState.mock.calls).toEqual([[{ key: 'k1' }, '', '/magic-link']]);
+});
+
 test('magicLinkVerify prefers explicit params over the URL fragment values', () => {
   const { auth, lowdefy, submitted } = setupVerify({
     hash: '#token=fromhash&callbackURL=%2Ffromhash',

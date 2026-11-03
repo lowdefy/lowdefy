@@ -860,7 +860,7 @@ function createAuthMethods(lowdefy, auth) {
   // The token travels in a form post, never in a URL: a browser sends no
   // fragment, and the server turns the post into BetterAuth's verify request
   // (handleAuthRequest), so no request log or Referer header holds the token.
-  // The fragment is cleared first, so the token stays out of browser history.
+  // The token is cleared from the URL first, so it stays out of browser history.
   function magicLinkVerify({ callbackUrl, errorCallbackUrl, newUserCallbackUrl, token } = {}) {
     const { globals } = lowdefy._internal;
     const win = globals.window;
@@ -903,10 +903,14 @@ function createAuthMethods(lowdefy, auth) {
       }
     }
 
+    // A link in the older ?token= form carries the token in the query, so it
+    // is dropped there too, which also keeps it out of the post's Referer.
+    linkQuery.delete('token');
+    const search = linkQuery.toString();
     win.history.replaceState(
       win.history.state,
       '',
-      `${win.location.pathname}${win.location.search}`
+      `${win.location.pathname}${search === '' ? '' : `?${search}`}`
     );
 
     // BetterAuth's mount, which AuthConfigured gives the client as
