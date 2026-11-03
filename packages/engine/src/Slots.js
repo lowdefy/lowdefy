@@ -227,6 +227,16 @@ class Slots {
     this.renderBlocks(); // finally update cache
   };
 
+  // A refresh re-renders every block: some blocks read the locale or theme in the component (the
+  // DateSelector formats with getLocale), outside their eval, so an unchanged eval is no sign their
+  // output is unchanged.
+  markAllForRender = () => {
+    this.loopBlocks((block) => {
+      block.update = true;
+    });
+    this.loopSubSlots((subSlotsClass) => subSlotsClass.markAllForRender());
+  };
+
   renderBlocks = () => {
     this.loopBlocks((block) => block.render());
     this.loopSubSlots((subSlotsClass) => subSlotsClass.renderBlocks());
