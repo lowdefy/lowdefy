@@ -71,6 +71,7 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
+    "@lowdefy/ajv": "7.1.0",
     "@lowdefy/block-dev-e2e": "7.1.0",
     "@lowdefy/e2e-utils": "7.1.0",
     "@lowdefy/node-utils": "7.1.0",
