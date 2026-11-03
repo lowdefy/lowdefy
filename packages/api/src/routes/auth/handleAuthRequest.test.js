@@ -201,6 +201,34 @@ test('handleAuthRequest refuses an oversized magic-link post', async () => {
   expect(auth.calls).toHaveLength(0);
 });
 
+test('handleAuthRequest refuses a magic-link post whose Content-Length is over the limit', async () => {
+  const auth = createCountingAuth();
+  const response = await handleAuthRequest({
+    auth,
+    clientAddress: null,
+    request: createVerifyPost({
+      headers: { origin: 'https://app.example.com', 'content-length': '9000' },
+    }),
+  });
+  expect(response.status).toBe(413);
+  expect(auth.calls).toHaveLength(0);
+});
+
+test('handleAuthRequest accepts a magic-link post from the forwarded host behind a proxy', async () => {
+  const result = await handleAuthRequest({
+    auth: echoAuth,
+    clientAddress: null,
+    request: createVerifyPost({
+      headers: {
+        origin: 'https://x.app.github.dev',
+        host: 'localhost:3000',
+        'x-forwarded-host': 'x.app.github.dev',
+      },
+    }),
+  });
+  expect(result.method).toBe('GET');
+});
+
 test('handleAuthRequest passes a GET verify request through unchanged', async () => {
   const result = await handleAuthRequest({
     auth: echoAuth,

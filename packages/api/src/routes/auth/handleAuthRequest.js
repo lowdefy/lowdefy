@@ -51,6 +51,8 @@ function isMagicLinkVerifyPost({ auth, request }) {
 // account whose token that site holds. The origins accepted are the request's
 // own host, the pinned base URL and any trusted origins configured as strings
 // (the origins BetterAuth trusts), as for the mobile sign-in confirmation.
+// The first X-Forwarded-Host is accepted too, for a proxy that rewrites Host:
+// a form post from another site cannot set that header.
 //
 // Under Referrer-Policy: no-referrer a browser sends Origin: null on a
 // same-origin form post. BetterAuth accepts that when Sec-Fetch-Site, which
@@ -63,6 +65,7 @@ function isMagicLinkPostAllowed({ auth, request }) {
   }
   return isSameOriginRequest({
     getHeader,
+    acceptForwardedHost: true,
     publicOrigins: [
       auth.options.baseURL,
       ...(type.isArray(auth.options.trustedOrigins) ? auth.options.trustedOrigins : []),
@@ -70,14 +73,40 @@ function isMagicLinkPostAllowed({ auth, request }) {
   });
 }
 
+// Reads the body a chunk at a time and stops past the limit, so an oversized
+// post is refused without holding it in memory. Returns null when too large.
+async function readLimitedBody({ request, limit }) {
+  if (Number(request.headers.get('content-length')) > limit) {
+    return null;
+  }
+  if (type.isNone(request.body)) {
+    return '';
+  }
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let body = '';
+  let length = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      return body + decoder.decode();
+    }
+    length += value.byteLength;
+    if (length > limit) {
+      await reader.cancel();
+      return null;
+    }
+    body += decoder.decode(value, { stream: true });
+  }
+}
+
 async function getMagicLinkVerifyRequest({ auth, request, headers }) {
   const sameOrigin = isMagicLinkPostAllowed({ auth, request });
   if (!sameOrigin) {
     return { response: new Response('Forbidden.', { status: 403 }) };
   }
-  // Read through a Response: the stand-in @hono/node-server passes may not carry text().
-  const body = await new Response(request.body).text();
-  if (body.length > MAX_MAGIC_LINK_FORM_LENGTH) {
+  const body = await readLimitedBody({ request, limit: MAX_MAGIC_LINK_FORM_LENGTH });
+  if (body === null) {
     return { response: new Response('Request too large.', { status: 413 }) };
   }
   const form = new URLSearchParams(body);
