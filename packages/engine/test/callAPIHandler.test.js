@@ -244,3 +244,21 @@ test('callAPIHandler runs a tracked pass over the blocks that read the endpoint'
     DependencyTracker.enabled = trackerEnabled;
   }
 });
+
+test('callAPIHandler runs a pass while the call is loading, as a request does', async () => {
+  let resolveCall;
+  const callAPI = vi.fn(
+    () =>
+      new Promise((resolve) => {
+        resolveCall = resolve;
+      })
+  );
+  const context = createContext({ callAPI });
+  const call = callAPIHandler(context, { params: { endpointId: 'ep_one', payload: {} } });
+  expect(context._internal.update).toHaveBeenCalledTimes(1);
+  expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
+  expect(context._internal.lowdefy.apiResponses.ep_one[0].loading).toBe(true);
+  resolveCall({ response: {}, status: 'success', success: true });
+  await call;
+  expect(context._internal.update).toHaveBeenCalledTimes(2);
+});

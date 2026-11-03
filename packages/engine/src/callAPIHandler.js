@@ -50,6 +50,9 @@ async function callAPIHandler(context, { actionId, blockId, params }) {
     context._internal.lowdefy.apiResponses[api.endpointId].length = callLimit;
   }
   reportAppChange({ context, key: `api:${api.endpointId}` });
+  // Renders the loading entry at once, as a request does, so _api reads show the in-flight
+  // state for the whole call instead of only if another pass happens to run during it.
+  context._internal.update({ changes: [] });
 
   let apiResponse;
 
