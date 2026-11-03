@@ -17,19 +17,29 @@
 */
 
 /**
- * Give every new publishable package the npm trusted publisher the release workflow needs.
+ * Give every new publishable package a working npm trusted publisher for the release
+ * workflow. Run it by hand, right before a release: `pnpm release:trusted-publishers`.
  *
- * The release workflow publishes through OIDC only, so a package with no trusted publisher
- * for `release.yaml` cannot be published from CI: the release fails on it with
- * `E404 Not Found - PUT` after every other package is already live. A package's first
- * publish happens by hand in `pnpm release:experimental`, which runs this script afterwards,
- * so a new package gets its trusted publisher the moment it first exists on npm.
+ * The release workflow publishes through OIDC only, so a package with no working trusted
+ * publisher for `release.yaml` cannot be published from CI: the release fails on it with
+ * `E404 Not Found - PUT` after every other package is already live.
+ *
+ * npm expires a trusted publisher that has not published within 2 days of being created, but
+ * still lists it in `npm trust list`. So a trusted publisher is only known to work once a
+ * version was published through it, which the registry records on each version as
+ * `_npmUser.trustedPublisher.oidcConfigId`.
  *
  * - A package that is in the latest `v*` release tag was published from CI, which only
  *   works through its trusted publisher, so it is not checked. The release workflow tags a
  *   commit only after every package is live. Reading this from git needs no npm calls.
- * - Every other package is new. It is checked with `npm trust list`, and given the trusted
- *   publisher with `npm trust github` when it has none.
+ * - Every other package is new. It is checked with `npm trust list`:
+ *   - With the release trusted publisher, and a version on npm published through it: done.
+ *   - With the release trusted publisher, but nothing ever published through it: it may have
+ *     expired, so it is revoked and created again, which starts a new 2-day window.
+ *   - With no trusted publisher: it is created with `npm trust github`.
+ *
+ * Every trusted publisher this script creates expires unless the release publishes within 2
+ * days, so run it right before merging the release pull request, not days ahead.
  *
  * Needs npm 11.15 or later and a person logged in to npm with 2FA, but only when there are
  * new packages. Tick "skip 2FA for 5 minutes" on the first prompt to cover the rest of the
@@ -48,6 +58,10 @@ const PAUSE_BETWEEN_CALLS_MS = 2000;
 // A package published moments ago can lag in the registry.
 const NOT_FOUND_RETRIES = 5;
 const NOT_FOUND_RETRY_DELAY_MS = 5000;
+const REGISTRY = (process.env.npm_config_registry ?? 'https://registry.npmjs.org').replace(
+  /\/$/,
+  ''
+);
 const RELEASE_TRUST = {
   repository: 'lowdefy/lowdefy',
   file: 'release.yaml',
@@ -211,6 +225,40 @@ async function listTrustConfigs({ name }) {
   return null;
 }
 
+// The ids of the trusted publishers that have published a version of the package. A trusted
+// publisher with one of these ids has been used, so npm will not expire it.
+async function getUsedTrustIds({ name }) {
+  const response = await fetch(`${REGISTRY}/${name.replace('/', '%2f')}`, { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`Reading ${name} from ${REGISTRY} failed with status ${response.status}.`);
+  }
+  const packument = await response.json();
+  const ids = new Set();
+  Object.values(packument.versions ?? {}).forEach((version) => {
+    const id = version._npmUser?.trustedPublisher?.oidcConfigId;
+    // Older versions record the id with an `oidc:` prefix that `npm trust list` does not show.
+    if (id) ids.add(id.replace(/^oidc:/, ''));
+  });
+  return ids;
+}
+
+async function revokeTrustedPublisher({ name, config }) {
+  if (typeof config.id !== 'string') {
+    throw new Error(
+      `\`npm trust list ${name} --json\` returned a trusted publisher without an id. Received ${JSON.stringify(
+        config
+      )}.`
+    );
+  }
+  const result = await npmTrust({
+    args: ['revoke', name, '--id', config.id],
+    stdio: 'inherit',
+  });
+  if (result.status !== 0) {
+    throw new Error(`\`npm trust revoke ${name} --id ${config.id}\` failed.`);
+  }
+}
+
 async function setTrustedPublisher({ name }) {
   const result = await npmTrust({ args: ['github', name, ...TRUST_GITHUB_ARGS], stdio: 'inherit' });
   return result.status === 0;
@@ -235,9 +283,18 @@ checkNpm();
 
 const alreadySet = [];
 const set = [];
+const renewed = [];
 const otherTrust = [];
 const notOnNpm = [];
 const failed = [];
+
+async function createTrustedPublisher({ pkg, done }) {
+  if (await setTrustedPublisher(pkg)) {
+    done.push(pkg);
+  } else {
+    failed.push(pkg);
+  }
+}
 
 async function ensureTrustedPublisher({ pkg }) {
   const configs = await listTrustConfigs(pkg);
@@ -245,21 +302,29 @@ async function ensureTrustedPublisher({ pkg }) {
     notOnNpm.push(pkg);
     return;
   }
-  if (configs.some((config) => isReleaseTrust({ config }))) {
-    alreadySet.push(pkg);
-    return;
-  }
-  if (configs.length > 0) {
+  const releaseConfigs = configs.filter((config) => isReleaseTrust({ config }));
+  if (releaseConfigs.length === 0 && configs.length > 0) {
     // Revoking someone else's configuration is a call for a person to make.
     otherTrust.push({ pkg, configs });
     return;
   }
-  console.log(`\nSetting trusted publisher on ${pkg.name}...`);
-  if (await setTrustedPublisher(pkg)) {
-    set.push(pkg);
-  } else {
-    failed.push(pkg);
+  if (releaseConfigs.length === 0) {
+    console.log(`\nSetting trusted publisher on ${pkg.name}...`);
+    await createTrustedPublisher({ pkg, done: set });
+    return;
   }
+  const usedIds = await getUsedTrustIds(pkg);
+  if (releaseConfigs.some((config) => usedIds.has(config.id))) {
+    alreadySet.push(pkg);
+    return;
+  }
+  console.log(
+    `\n${pkg.name} has the trusted publisher, but nothing was ever published through it, so it may have expired. Replacing it...`
+  );
+  for (const config of releaseConfigs) {
+    await revokeTrustedPublisher({ name: pkg.name, config });
+  }
+  await createTrustedPublisher({ pkg, done: renewed });
 }
 
 for (const pkg of newPackages) {
@@ -274,12 +339,16 @@ for (const pkg of newPackages) {
 
 console.log('');
 if (alreadySet.length > 0) {
-  console.log('Already had the trusted publisher:');
+  console.log('Already published from CI through its trusted publisher:');
   alreadySet.forEach((pkg) => console.log(`  ${pkg.name}`));
 }
 if (set.length > 0) {
   console.log('Trusted publisher set:');
   set.forEach((pkg) => console.log(`  ${pkg.name}`));
+}
+if (renewed.length > 0) {
+  console.log('Trusted publisher replaced (it had never published, so it may have expired):');
+  renewed.forEach((pkg) => console.log(`  ${pkg.name}`));
 }
 if (otherTrust.length > 0) {
   console.error(
@@ -291,7 +360,7 @@ if (otherTrust.length > 0) {
 }
 if (notOnNpm.length > 0) {
   console.error(
-    'Not on npm yet, so no trusted publisher can be set (publish an experimental first):'
+    'Not on npm yet, so no trusted publisher can be set. Publish an experimental first (`pnpm release:experimental`), then run this again:'
   );
   notOnNpm.forEach((pkg) => console.error(`  ${pkg.name}`));
 }
@@ -300,5 +369,10 @@ if (failed.length > 0) {
   failed.forEach((pkg) => console.error(`  ${pkg.name}`));
 }
 if (otherTrust.length > 0 || notOnNpm.length > 0 || failed.length > 0) {
-  fail({ message: 'Run `node scripts/ensure-trusted-publishers.mjs` again once fixed.' });
+  fail({ message: 'Run `pnpm release:trusted-publishers` again once fixed.' });
+}
+if (set.length > 0 || renewed.length > 0) {
+  console.log(
+    '\nnpm expires these unless they publish within 2 days. Merge the release pull request (or re-run a failed publish job) before then.'
+  );
 }

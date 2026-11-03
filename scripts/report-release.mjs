@@ -113,7 +113,8 @@ function describeFailure(job) {
 function getAdvice({ failedJobs, version }) {
   const steps = failedJobs.map((job) => job.step);
   if (steps.includes('Verify all packages published')) {
-    return `The packages were sent to npm, but npm did not show all of them in time. Once \`npm view lowdefy@${version.replace(/^v/, '')}\` finds them, re-run the failed jobs: the publish steps skip what is already on npm.`;
+    const npmVersion = version.replace(/^v/, '');
+    return `Some packages are not on npm at ${npmVersion}; the job log lists them. If the "Publish to npm" step shows \`E404 Not Found - PUT\` for them, their npm trusted publisher is missing or expired: run \`pnpm release:trusted-publishers\`, then re-run the failed jobs within 2 days (see "When a release fails with E404" in \`code-docs/releasing.md\`). Without an E404, npm was slow to show them: re-run the failed jobs once \`npm view lowdefy@${npmVersion}\` finds them. The publish steps skip what is already on npm.`;
   }
   if (TEST_RESULT && TEST_RESULT !== 'success') {
     return 'Tests failed, so nothing was published. If the failure is a flaky test, re-run the failed jobs; otherwise fix it on `develop` and release again.';

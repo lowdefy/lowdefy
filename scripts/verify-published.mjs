@@ -83,7 +83,9 @@ for (let attempt = 1; attempt <= RETRIES && missing.length > 0; attempt += 1) {
 if (missing.length > 0) {
   console.error('The following packages are not published at their release version:');
   missing.forEach((pkg) => console.error(`  ${pkg.name}@${pkg.version}`));
-  console.error('\nRelease is incomplete. Fix the cause and re-run the release to recover.');
+  console.error(
+    '\nRelease is incomplete. If the "Publish to npm" step shows `E404 Not Found - PUT` for these packages, their npm trusted publisher is missing or expired: run `pnpm release:trusted-publishers`, then re-run the failed jobs within 2 days. See "When a release fails with E404" in code-docs/releasing.md.'
+  );
   process.exit(1);
 }
 
