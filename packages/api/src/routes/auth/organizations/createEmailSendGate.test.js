@@ -38,15 +38,22 @@ function createMockAuth({ user = null, members = [], invitations = [] } = {}) {
 }
 
 function createLogger() {
-  return { info: vi.fn() };
+  return { debug: vi.fn() };
 }
 
 const pinned = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
+
+test('createEmailSendGate throws at construction without a logger', () => {
+  expect(() =>
+    createEmailSendGate({ getAuth: vi.fn(), organizations: pinned, successBody: { status: true } })
+  ).toThrow('No logger was provided to createEmailSendGate.');
+});
 
 test('createEmailSendGate falls through when the body has no email', async () => {
   const getAuth = vi.fn();
   const gate = createEmailSendGate({
     getAuth,
+    logger: createLogger(),
     organizations: pinned,
     successBody: { status: true },
   });
@@ -126,8 +133,8 @@ test.each(matrix)(
       user: { id: 'user_1', email: 'member@example.com', banned: true, banExpires: null },
     });
     expect(await result).toEqual(successBody);
-    expect(logger.info).toHaveBeenCalledTimes(1);
-    expect(logger.info).toHaveBeenCalledWith(
+    expect(logger.debug).toHaveBeenCalledTimes(1);
+    expect(logger.debug).toHaveBeenCalledWith(
       { event: 'auth_email_send_banned', userId: 'user_1' },
       expect.not.stringContaining('example.com')
     );
@@ -143,7 +150,7 @@ test.each(matrix)(
       user: { id: 'user_1', email: 'member@example.com', banned: true, banExpires: future },
     });
     expect(await result).toEqual(successBody);
-    expect(logger.info).toHaveBeenCalledWith(
+    expect(logger.debug).toHaveBeenCalledWith(
       { event: 'auth_email_send_banned', userId: 'user_1' },
       expect.any(String)
     );
@@ -159,7 +166,7 @@ test.each(matrix)(
       user: { id: 'user_1', email: 'member@example.com', banned: true, banExpires: past },
     });
     expect(await result).toBeUndefined();
-    expect(logger.info).not.toHaveBeenCalled();
+    expect(logger.debug).not.toHaveBeenCalled();
   }
 );
 
@@ -172,7 +179,7 @@ test.each(matrix)(
       user: { id: 'user_1', email: 'member@example.com', banned: false },
     });
     expect(await result).toBeUndefined();
-    expect(logger.info).not.toHaveBeenCalled();
+    expect(logger.debug).not.toHaveBeenCalled();
   }
 );
 
@@ -186,4 +193,42 @@ test('createEmailSendGate looks the user up by the lowercased email', async () =
   });
   await gate({ body: { email: 'Member@Example.com' } });
   expect(internalAdapter.findUserByEmail).toHaveBeenCalledWith('member@example.com');
+});
+
+// The ban is checked after admission, so a banned member costs the same reads as
+// an unbanned one and the response time does not give the ban away.
+test('createEmailSendGate runs the admission reads for a banned member', async () => {
+  const banned = createMockAuth({
+    user: { id: 'user_1', email: 'member@example.com', banned: true },
+    members: [memberRow],
+  });
+  const unbanned = createMockAuth({
+    user: { id: 'user_1', email: 'member@example.com', banned: false },
+    members: [memberRow],
+  });
+  for (const { auth } of [banned, unbanned]) {
+    const gate = createEmailSendGate({
+      getAuth: () => auth,
+      logger: createLogger(),
+      organizations: pinned,
+      successBody: { status: true },
+    });
+    await gate({ body: { email: 'member@example.com' } });
+  }
+  expect(banned.adapter.findMany.mock.calls).toEqual(unbanned.adapter.findMany.mock.calls);
+  expect(banned.adapter.findMany).toHaveBeenCalledWith(
+    expect.objectContaining({ model: 'member' })
+  );
+});
+
+test('createEmailSendGate looks an address with no user up once', async () => {
+  const { auth, internalAdapter } = createMockAuth();
+  const gate = createEmailSendGate({
+    getAuth: () => auth,
+    logger: createLogger(),
+    organizations: pinned,
+    successBody: { status: true },
+  });
+  await gate({ body: { email: 'stranger@example.com' } });
+  expect(internalAdapter.findUserByEmail).toHaveBeenCalledTimes(1);
 });

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import isEmailAdmitted from './isEmailAdmitted.js';
@@ -42,8 +43,15 @@ import isUserBanned from '../isUserBanned.js';
 // signup included (where isEmailAdmitted admits everyone): session creation
 // would refuse them anyway, so the email could only fail. The ban is checked
 // here rather than in isEmailAdmitted because the session-create wall must keep
-// answering BANNED_USER, which is what shows the banned message.
+// answering BANNED_USER, which is what shows the banned message. It is checked
+// after admission, so a banned address does the same lookups as an unbanned one
+// and the response time does not tell them apart.
 function createEmailSendGate({ getAuth, logger, organizations, successBody }) {
+  // Only the banned branch logs, so a missing logger would pass every other test
+  // and turn a banned send into a 500 - a response that gives the ban away.
+  if (type.isNone(logger)) {
+    throw new LowdefyInternalError('No logger was provided to createEmailSendGate.');
+  }
   return async function emailSendGate(ctx) {
     const email = ctx.body?.email;
     // No email is the route's own validation error, not an admission decision -
@@ -54,26 +62,28 @@ function createEmailSendGate({ getAuth, logger, organizations, successBody }) {
     const auth = getAuth();
     const { adapter, internalAdapter } = await auth.$context;
     const found = await internalAdapter.findUserByEmail(email.toLowerCase());
-    const userId = found?.user?.id;
-    if (!type.isNone(found?.user) && isUserBanned({ user: found.user })) {
-      logger.info(
-        { event: 'auth_email_send_banned', userId },
-        `Sign-in email not sent: user "${userId}" is banned.`
-      );
-      return successBody;
-    }
+    // null, not undefined, for an address with no user: it tells isEmailAdmitted
+    // the lookup is done, so it does not repeat it.
+    const user = found?.user ?? null;
     const admitted = await isEmailAdmitted({
       email,
-      userId,
+      user,
       organizations,
       auth,
       adapter,
       internalAdapter,
     });
-    if (admitted) {
-      return undefined;
+    if (!admitted) {
+      return successBody;
     }
-    return successBody;
+    if (!type.isNone(user) && isUserBanned({ user })) {
+      logger.debug(
+        { event: 'auth_email_send_banned', userId: user.id },
+        `Sign-in email not sent: user "${user.id}" is banned.`
+      );
+      return successBody;
+    }
+    return undefined;
   };
 }
 

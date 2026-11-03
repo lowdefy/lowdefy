@@ -24,7 +24,8 @@ import MEMBER_ROWS_LIMIT from './memberRowsLimit.js';
 // The one admission predicate, shared by all three enforcement points: the
 // session.create wall (which passes a userId), the user.create.before gate
 // (which passes an email, before any user exists) and the email send gate
-// (which passes the email, and the userId when the address has a user).
+// (which passes the email and the user it already looked up, null when the
+// address has none).
 //
 // Admission is restrictive under invite-only (either policy). Open signup
 // auto-joins under both policies, so the predicate short-circuits to true and
@@ -38,7 +39,15 @@ import MEMBER_ROWS_LIMIT from './memberRowsLimit.js';
 // The email is lowercased once at entry to match BetterAuth's lowercased-stored
 // user.email and the org plugin's lowercased invitation storage, so no
 // case-variant address is wrongly suppressed or wrongly admitted.
-async function isEmailAdmitted({ email, userId, organizations, auth, adapter, internalAdapter }) {
+async function isEmailAdmitted({
+  email,
+  user,
+  userId,
+  organizations,
+  auth,
+  adapter,
+  internalAdapter,
+}) {
   if (organizations.signup !== 'invite-only') {
     return true;
   }
@@ -50,14 +59,15 @@ async function isEmailAdmitted({ email, userId, organizations, auth, adapter, in
 
   const normalizedEmail = type.isString(email) ? email.toLowerCase() : undefined;
 
-  // The member row is keyed by user id. The wall holds the session userId; the
-  // create gate, and the send gate for an address with no user, hold only an
-  // email, so resolve the existing user (if any) from it. Conversely the wall
-  // needs the email for the invitation lookup, so resolve it from the userId
-  // when the caller did not pass one.
-  let memberUserId = userId;
+  // The member row is keyed by user id. The wall holds the session userId and
+  // the send gate the user it looked up; the create gate holds only an email,
+  // so resolve the existing user (if any) from it. A user of null means the
+  // caller looked and found none, so there is nothing to resolve. Conversely the
+  // wall needs the email for the invitation lookup, so resolve it from the
+  // userId when the caller did not pass one.
+  let memberUserId = type.isNone(user) ? userId : user.id;
   let invitationEmail = normalizedEmail;
-  if (type.isNone(memberUserId) && !type.isNone(normalizedEmail)) {
+  if (type.isNone(memberUserId) && type.isUndefined(user) && !type.isNone(normalizedEmail)) {
     const found = await internalAdapter.findUserByEmail(normalizedEmail);
     memberUserId = found?.user?.id;
   }

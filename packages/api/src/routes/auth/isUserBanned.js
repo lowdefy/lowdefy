@@ -17,7 +17,9 @@
 // The admin plugin's ban rule, as its session.create.before applies it: any truthy
 // banned is a ban, and only a banExpires that reads as a past date lifts it. The
 // truthiness checks are deliberate - a user this calls unbanned while the plugin
-// refuses them would be sent an email the sign-in then rejects.
+// refuses them would be sent an email the sign-in then rejects. They are an
+// exception to the type.isNone() rule: type.isNone(banExpires) would read a
+// banExpires of 0 as a 1970 expiry and lift a ban the plugin keeps.
 function isUserBanned({ user }) {
   if (!user.banned) {
     return false;
