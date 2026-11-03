@@ -15,6 +15,7 @@
 */
 
 import { tokenizer } from 'acorn';
+import { type } from '@lowdefy/helpers';
 
 // Globals whose value can change with no update the engine sees: the clock, randomness and browser
 // state. A client _js function that references one is re-evaluated on every pass.
@@ -102,21 +103,18 @@ function isPureDateUse({ tokens, index }) {
   const previous = tokens[index - 1];
   const next = tokens[index + 1];
   const afterNext = tokens[index + 2];
-  if (previous && previous.type.label === 'instanceof') {
+  if (!type.isNone(previous) && previous.type.label === 'instanceof') {
     return true;
   }
-  if (previous && previous.type.label === 'new') {
-    return Boolean(
-      next &&
-        next.type.label === '(' &&
-        afterNext &&
-        afterNext.type.label !== ')' &&
-        afterNext.type.label !== '...'
+  if (type.isNone(next) || type.isNone(afterNext)) {
+    return false;
+  }
+  if (!type.isNone(previous) && previous.type.label === 'new') {
+    return (
+      next.type.label === '(' && afterNext.type.label !== ')' && afterNext.type.label !== '...'
     );
   }
-  return Boolean(
-    next && next.type.label === '.' && afterNext && pureDateMembers.has(afterNext.value)
-  );
+  return next.type.label === '.' && pureDateMembers.has(afterNext.value);
 }
 
 // Tokenized, not pattern-matched: comments and string contents are not code (a comment saying
