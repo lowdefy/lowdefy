@@ -72,6 +72,9 @@ test.each([
   'const D = Date; return new D(state("at"));',
   'return Date[name](1);',
   "return new Date(state('at')) < new Date();",
+  "return new Date(...(state('parts') ?? []));",
+  'return Date.prototype.constructor();',
+  'const D = Date.prototype.constructor; return new D();',
 ])('isVolatileJsSource marks Date use that can read the clock %s volatile', (source) => {
   expect(isVolatileJsSource(source)).toBe(true);
 });

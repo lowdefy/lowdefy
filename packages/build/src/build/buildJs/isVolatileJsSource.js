@@ -91,13 +91,13 @@ const pureMathMembers = new Set([
 ]);
 
 // Date members that never read the clock. Date.now does, and so does any other use - aliasing
-// like `const D = Date` included.
-const pureDateMembers = new Set(['parse', 'UTC', 'prototype']);
+// like `const D = Date` included. Not prototype: Date.prototype.constructor is Date itself.
+const pureDateMembers = new Set(['parse', 'UTC']);
 
 // Date reads the clock only through Date.now(), a Date() call without new, and new Date with no
 // arguments. Parsing a value (new Date(value), Date.parse) and type checks (x instanceof Date) are
 // pure, and treating them as volatile would re-evaluate every block that formats a stored date on
-// every pass.
+// every pass. A spread argument (new Date(...parts)) can be empty, so it counts as no arguments.
 function isPureDateUse({ tokens, index }) {
   const previous = tokens[index - 1];
   const next = tokens[index + 1];
@@ -106,7 +106,13 @@ function isPureDateUse({ tokens, index }) {
     return true;
   }
   if (previous && previous.type.label === 'new') {
-    return Boolean(next && next.type.label === '(' && afterNext && afterNext.type.label !== ')');
+    return Boolean(
+      next &&
+        next.type.label === '(' &&
+        afterNext &&
+        afterNext.type.label !== ')' &&
+        afterNext.type.label !== '...'
+    );
   }
   return Boolean(
     next && next.type.label === '.' && afterNext && pureDateMembers.has(afterNext.value)
