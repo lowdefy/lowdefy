@@ -26,9 +26,12 @@ import parseRefContent from './parseRefContent.js';
 // context across edits and swaps in only a fresh read cache, so an edited file
 // arrives with new content and is parsed again. Only a tree that parsed and
 // passed the reserved key check is stored, so a bad file throws at every ref.
+// The stored content is the read cache's own string; a hit after a dev rebuild
+// takes the fresh read's string, so only one copy stays held.
 async function getParsedConfigFile({ context, content, refDef }) {
   const entry = context.parsedConfigCache.get(refDef.path);
   if (entry?.content === content) {
+    entry.content = content;
     return cloneWithMarkers(entry.parsed);
   }
   const parsed = await parseRefContent({ content, refDef });

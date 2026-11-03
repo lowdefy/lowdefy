@@ -16,7 +16,7 @@
 
 // The version @lowdefy/build's package.json pins for a default plugin package.
 function getPackageVersion({ packageFile, packageName }) {
-  return packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
+  return packageFile.devDependencies?.[packageName] ?? packageFile.dependencies?.[packageName];
 }
 
 export default getPackageVersion;

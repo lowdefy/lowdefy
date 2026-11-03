@@ -308,6 +308,28 @@ test('installIfPackageJsonChanged with skipIfInstalled installs a subset on a se
   });
 });
 
+test.each([
+  ['truncated JSON', '{"settingsHash":'],
+  ['JSON that is not an object', 'null'],
+])(
+  'installIfPackageJsonChanged with skipIfInstalled installs and rewrites a state file that is %s',
+  async (_, content) => {
+    const install = await installFirst();
+    fs.writeFileSync(statePath(), content);
+    writePackageJson({ name: 'server', dependencies: { a: '^1.0.0' } });
+    const installed = await installIfPackageJsonChanged({
+      directory: baseDir,
+      install,
+      skipIfInstalled: true,
+    });
+    expect(installed).toBe(true);
+    expect(install).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(fs.readFileSync(statePath(), 'utf8')).dependencies).toEqual({
+      a: '^1.0.0',
+    });
+  }
+);
+
 test('installIfPackageJsonChanged leaves the state file unchanged after a skip', async () => {
   const install = await installFirst();
   const stateBefore = fs.readFileSync(statePath(), 'utf8');

@@ -25,6 +25,22 @@ import readInstallFiles from './readInstallFiles.js';
 import writeFile from './writeFile.js';
 import writeInstallState from './writeInstallState.js';
 
+// The last install's state, or null when there is none or it cannot be read
+// (truncated or hand-edited): an unreadable state means not satisfied, so the
+// install runs and writes a fresh one.
+async function readInstallState(statePath) {
+  const content = await readFile(statePath);
+  if (content === null) {
+    return null;
+  }
+  try {
+    const installState = JSON.parse(content);
+    return type.isObject(installState) ? installState : null;
+  } catch {
+    return null;
+  }
+}
+
 async function installIfPackageJsonChanged({ directory, install, skipIfInstalled = false }) {
   if (!type.isString(directory)) {
     throw new Error(
@@ -51,11 +67,11 @@ async function installIfPackageJsonChanged({ directory, install, skipIfInstalled
   const hashPath = path.join(directory, 'node_modules', '.lowdefy-install-hash');
   const statePath = path.join(directory, 'node_modules', '.lowdefy-install-state.json');
   if (skipIfInstalled) {
-    const installStateContent = await readFile(statePath);
-    if (installStateContent !== null) {
+    const installState = await readInstallState(statePath);
+    if (installState !== null) {
       const packageJson = JSON.parse(packageJsonContent);
       const satisfied = isInstallSatisfied({
-        installState: JSON.parse(installStateContent),
+        installState,
         packageJson,
         settingsHash: hashInstallSettings({ packageJson, workspaceYamlContent, npmrcContent }),
       });
