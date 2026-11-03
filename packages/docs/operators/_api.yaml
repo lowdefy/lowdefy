@@ -115,42 +115,44 @@ _ref:
             type: CallAPI
             params:
               endpointId: get_products
+              holdValue: true # Without holdValue, _api returns null while the call is loading
           - id: set_products_list
             type: SetState
             params:
-              products_list
-                _api: fetch_products.response.products
+              products_list:
+                _api: get_products.response.products
 
       blocks:
         - id: loading_text
           type: Html
           visible:
-            _api: fetch_products.loading # Show loading text while API is loading
+            _api: get_products.loading # Show loading text while API is loading
           properties:
             html: '<div class="secondary">Loading...</div>'
 
         - id: error_message
           type: Alert
           visible:
-            _not:
-              _api: fetch_products.success
+            _eq: # success is null while the call is loading
+              - _api: get_products.success
+              - false
           properties:
             type: error
             message:
               _if:
                 test:
-                  _api: fetch_products.error
+                  _api: get_products.error
                 then:
-                  _api: fetch_products.error.message
+                  _api: get_products.error.message
                 else: 'An error occurred'
 
         - id: products_list
           type: List
           visible:
             _and:
-              - _api: fetch_products.success
+              - _api: get_products.success
               - _not:
-                  _api: fetch_products.loading
+                  _api: get_products.loading
       ```
 
       ###### Working with multiple API calls:
