@@ -224,16 +224,23 @@ test('callAPIHandler reports the endpoint change to every context the app holds'
   expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
 });
 
+// About a tracked pass, so it holds even when the suite runs with test:full.
 test('callAPIHandler runs a tracked pass over the blocks that read the endpoint', async () => {
-  const callAPI = vi
-    .fn()
-    .mockResolvedValue({ response: { a: 1 }, status: 'success', success: true });
-  const context = createContext({ callAPI });
-  const passes = [];
-  context._internal.update = vi.fn((options) => {
-    passes.push(context._internal.DependencyTracker.beginUpdate(options));
-  });
-  await callAPIHandler(context, { params: { endpointId: 'ep_one', payload: {} } });
-  expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
-  expect(passes.at(-1)).toEqual({ full: false, changes: ['api:ep_one'] });
+  const trackerEnabled = DependencyTracker.enabled;
+  DependencyTracker.enabled = true;
+  try {
+    const callAPI = vi
+      .fn()
+      .mockResolvedValue({ response: { a: 1 }, status: 'success', success: true });
+    const context = createContext({ callAPI });
+    const passes = [];
+    context._internal.update = vi.fn((options) => {
+      passes.push(context._internal.DependencyTracker.beginUpdate(options));
+    });
+    await callAPIHandler(context, { params: { endpointId: 'ep_one', payload: {} } });
+    expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
+    expect(passes.at(-1)).toEqual({ full: false, changes: ['api:ep_one'] });
+  } finally {
+    DependencyTracker.enabled = trackerEnabled;
+  }
 });

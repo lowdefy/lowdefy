@@ -88,8 +88,8 @@ async function callAPIHandler(context, { actionId, blockId, params }) {
   api.endTimestamp = new Date();
   api.responseTime = api.endTimestamp - api.startTimestamp;
 
-  // The response reaches blocks only through _api, which reads the api: key reported above, so
-  // the pass evaluates just those blocks.
+  // The response reaches blocks only through _api, which reads the api: key reported here, so the
+  // pass evaluates those blocks (and the volatile and untracked ones), not the whole page.
   reportAppChange({ context, key: `api:${api.endpointId}` });
   context._internal.update({ changes: [] });
 
