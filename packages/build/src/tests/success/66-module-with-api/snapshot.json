@@ -7186,6 +7186,11 @@
     "3": {
       "parent": null
     },
+    "api.0": {
+      "parent": "2",
+      "lineNumber": 20,
+      "path": "<CONFIG_DIR>/modules/inviter/api/send-invite.yaml"
+    },
     "connections.0": {
       "parent": "2",
       "lineNumber": 14,
@@ -7195,11 +7200,6 @@
       "parent": "2",
       "lineNumber": 17,
       "path": "<CONFIG_DIR>/modules/inviter/pages/invite.yaml"
-    },
-    "api.0": {
-      "parent": "2",
-      "lineNumber": 20,
-      "path": "<CONFIG_DIR>/modules/inviter/api/send-invite.yaml"
     }
   },
   "routes.json": [

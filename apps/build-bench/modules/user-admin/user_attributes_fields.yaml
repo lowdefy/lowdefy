@@ -1,0 +1,8 @@
+# Global (cross-app) attribute field blocks — written to the `user` row via
+# UpdateUserAttributes. Ids prefixed `user_attributes.` bind to
+# state.user_attributes.*. (Renamed from global_attributes_fields.yaml.)
+- id: user_attributes.notes
+  type: TextArea
+  properties:
+    title: Notes
+    rows: 3

@@ -1,0 +1,135 @@
+# A page served at path-params-demo/{item_id}. Each item id is its own page
+# instance, so the note typed on one item stays with that item. "Notify me"
+# stores a notification that links back here with the item's path value: the
+# popup's View button (a notifications module link) and the notification
+# landing page both open this page on that item.
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: path-params-demo
+    path: path-params-demo/{item_id}
+    title: Path parameters
+    content_width: 720
+    breadcrumbs:
+      - home: true
+        icon: home
+      - label: Path parameters
+    requests:
+      - _ref: pages/path-params-demo/requests/insert_item_notification.yaml
+    blocks:
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title:
+              _string.concat:
+                - "Item "
+                - _path_params: item_id
+            blocks:
+              - id: item_intro
+                type: Html
+                properties:
+                  html:
+                    _nunjucks:
+                      template: |
+                        <p>This page is served at <code>/path-params-demo/{{ item_id }}</code>.
+                        The item id comes from the address, not the query string.</p>
+                      on:
+                        item_id:
+                          _path_params: item_id
+              - id: note
+                type: TextInput
+                properties:
+                  title: Note for this item
+                  placeholder: Typed text stays with this item
+              - id: item_links
+                type: Box
+                layout:
+                  gap: 8
+                blocks:
+                  - id: go_item_1
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      title: Item 1
+                      type: default
+                    events:
+                      onClick:
+                        - id: link_item_1
+                          type: Link
+                          params:
+                            pageId: path-params-demo
+                            pathParams:
+                              item_id: item-1
+                  - id: go_item_2
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      title: Item 2
+                      type: default
+                    events:
+                      onClick:
+                        - id: link_item_2
+                          type: Link
+                          params:
+                            pageId: path-params-demo
+                            pathParams:
+                              item_id: item-2
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: Notification link
+            blocks:
+              - id: notify_intro
+                type: Paragraph
+                properties:
+                  content: Store a notification about this item, then open it from the popup (after the next navigation) or from its landing link.
+              - id: notify_actions
+                type: Box
+                layout:
+                  gap: 8
+                blocks:
+                  - id: notify_me
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      title: Notify me about this item
+                      type: primary
+                      icon: bell
+                    events:
+                      onClick:
+                        - id: insert_notification
+                          type: Request
+                          messages:
+                            success: Notification stored.
+                            error: Could not store the notification.
+                          params: insert_item_notification
+                  - id: open_landing_link
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    visible:
+                      _ne:
+                        - _request: insert_item_notification.insertedId
+                        - null
+                    properties:
+                      title: Open the notification link
+                      type: default
+                      icon: link
+                    events:
+                      onClick:
+                        - id: link_landing
+                          type: Link
+                          params:
+                            pageId:
+                              _module.pageId:
+                                module: notifications
+                                id: link
+                            urlQuery:
+                              _id:
+                                _request: insert_item_notification.insertedId

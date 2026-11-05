@@ -1,0 +1,15 @@
+type: kickoff
+kind: check
+action_group: onboarding
+description: Run the customer kickoff call to start onboarding.
+access:
+  demo:
+    view: true
+    edit: true
+status_map:
+  action-required:
+    demo:
+      message: Schedule and run the kickoff call.
+  done:
+    demo:
+      message: Kickoff call complete.

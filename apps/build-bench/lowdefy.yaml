@@ -1,0 +1,324 @@
+lowdefy: local
+name: Module Demo App
+slug: demo
+
+# The Lowdefy build benchmark app: the modules-mongodb demo app (v1.4.1) with
+# its entity modules repeated in sets. It is built by `pnpm bench:build` and
+# never run. See README.md.
+
+theme:
+  antd:
+    algorithm: compact
+    token:
+      colorPrimary: "#7c3aed"
+
+config:
+  homePageId: router
+
+global:
+  enums:
+    event_types:
+      _ref:
+        module: events
+        component: event_types
+
+plugins:
+  # @lowdefy/community-plugin-mongodb dropped (design task 1): the built-in
+  # @lowdefy/connection-mongodb (vendored, supportsJSON) now serves every MongoDB
+  # connection/request in the demo — including the companies module's
+  # MongoDBInsertConsecutiveId — plus the auth.database MongoDBAuthAdapter. The
+  # community plugin is fully superseded; the built-in is auto-included (no pin).
+  - name: "@lowdefy/community-plugin-xlsx"
+    version: 1.1.0
+  - name: "@lowdefy/community-plugin-nodemailer"
+    version: 1.1.4
+  - name: "@lowdefy/modules-mongodb-plugins"
+    version: 1.4.1
+  # From this repository, so both sides of a bench build use their own.
+  - name: "@lowdefy/plugin-aws"
+    version: workspace:*
+  - name: "@lowdefy/connection-ai-gateway"
+    version: workspace:*
+
+auth:
+  secret:
+    _secret: AUTH_SECRET
+  database:
+    id: mdb_adapter
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: MONGODB_URI
+  # Full method matrix so every _build.authConfig-gated branch in the login
+  # page and account workspace resolves and builds into a demo artifact (task
+  # 01). No real OAuth secrets are needed — ldf:b reads only the config
+  # projection.
+  emailAndPassword:
+    enabled: true
+    requireEmailVerification: true
+    minPasswordLength: 8
+  magicLink:
+    enabled: true
+    expiresIn: 1800
+  twoFactor:
+    enabled: true
+    required: true
+    # Strict posture: a second factor on every login. Disabling trust-device
+    # hides the "trust this device 30 days" switch and trusts no device server-side.
+    trustDevice: false
+  passkey:
+    enabled: true
+    rpId: localhost
+    rpName: Module Demo App
+  providers:
+    - id: github
+      type: GitHub
+      properties:
+        clientId:
+          _secret: GITHUB_CLIENT_ID
+        clientSecret:
+          _secret: GITHUB_CLIENT_SECRET
+  # Auth emails (verify, reset, magic-link, invite) send through the `auth-smtp`
+  # SMTP connection (see connections below): the runtime resolves it by
+  # connectionId at send time and the connection owns from/transport/filter. An
+  # optional `templates` map (verifyEmail/resetPassword/magicLink/invitation →
+  # notification ids) can override the default copy.
+  email:
+    connectionId: auth-smtp
+  # The user-account module contributes its own authPages (login, signup,
+  # verify-email, …) and public pages (two-factor, logout) via its manifest, so
+  # they are NOT repeated in `pages.public` below; app config would win on
+  # collision.
+  # Pinned-org policy: this app's own organization, ensured by slug at startup
+  # with its id set to that slug. A user-admin instance names the organization it
+  # administers through its own `org_slug` var, so the instance administering this
+  # one repeats the value below rather than inheriting it. Other module reads
+  # scope on the policy-portable `_user: organization_id`, so the same modules
+  # serve `apps/tenant-demo`.
+  organizations:
+    policy: pinned
+    org: demo
+    # open: uninvited self-signup is admitted — a user.create.after hook auto-joins
+    # the pinned org with the org plugin's built-in (inert) `member` role, so the
+    # hard wall lets them in while role-gated pages still gate. invite-only is the
+    # secure default (a non-member is rejected with MEMBERSHIP_REQUIRED until an
+    # admin invites them); open lets the demo exercise the full signup→verify flow.
+    signup: open
+  # Authored role catalog (role-catalog design) — the single source of truth for
+  # assignable roles, their labels, and help text. Every gate reference must be
+  # declared here.
+  #
+  # Each set's user-admin roles come from auth.yaml, which
+  # scripts/generate.mjs writes.
+  roles:
+    _build.array.concat:
+      - _ref:
+          path: auth.yaml
+          key: roles
+      - - id: admin
+          label: Admin
+          description: Application administrator.
+        - id: manager
+          label: Manager
+          description: Team manager.
+        - id: user
+          label: User
+          description: Standard application user.
+  # App-level page gate: every page requires a session except this public list.
+  # Modules contribute their own public pages (user-account: login/signup/…,
+  # two-factor, logout; notifications: link, invalid, file-download), so this
+  # list is only the app's own public surface — the 404 and router entry pages.
+  #
+  # One glob per user-admin instance is the read side's whole authorization: the
+  # organization an instance administers is welded into its reads at build time,
+  # so no per-request check remains. `**` is what makes one line enough — it
+  # covers every item the instance ships now and every one added later, while
+  # stopping at the instance boundary (`*` does not cross a slash, `**` does), so
+  # neither surface can reach the other organization's members.
+  pages:
+    protected: true
+    public:
+      - "404"
+      - router
+    # One glob per user-admin instance in every set, from auth.yaml.
+    roles:
+      _ref:
+        path: auth.yaml
+        key: pages_roles
+  # The endpoint gate is required, not defence in depth: an admin instance's
+  # endpoints answering without its role would hand its organization's members,
+  # emails and export to any signed-in user. The write steps are floored
+  # separately by the engine against the caller's member row in the
+  # organization each step names; reads have no such floor.
+  #
+  # Listing public endpoints makes every unlisted one need a session. The one
+  # public endpoint is Pelican's support webhook: it has no session, its verify
+  # gate checks the signature, and Lowdefy requires a webhook listed here.
+  api:
+    # Every set's support webhook and user-admin globs, from auth.yaml.
+    public:
+      _ref:
+        path: auth.yaml
+        key: api_public
+    roles:
+      _ref:
+        path: auth.yaml
+        key: api_roles
+
+modules:
+  _ref: modules.yaml
+
+# Every set's ai-reporting report policy, from policies.yaml, which
+# scripts/generate.mjs writes.
+policies:
+  dynamicBlocks:
+    _ref: policies.yaml
+
+menus:
+  _ref: menus.yaml
+
+connections:
+  - id: auth-smtp
+    type: SMTP
+    properties:
+      from:
+        _secret: AUTH_FROM_ADDRESS
+      host:
+        _secret: SMTP_HOST
+      port:
+        _secret: SMTP_PORT
+      secure:
+        _eq:
+          - _secret: SMTP_SECURE
+          - "true"
+      auth:
+        user:
+          _secret: SMTP_USER
+        pass:
+          _secret: SMTP_PASS
+  - id: demo-contacts
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: user-contacts
+  # Model connection for the demo-assistant agent (ai-assistant module demo).
+  # Build needs no key; the secret is only read at runtime.
+  - id: ai_gateway
+    type: AIGateway
+    properties:
+      apiKey:
+        _secret: AI_GATEWAY_API_KEY
+  # Sales-pipeline workflow entity connection — the `deals` id the deals module's
+  # GetEntityWorkflows queries match on (module r/w the collection via deals-collection).
+  - id: deals
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: deals
+      write: true
+      changeLog:
+        collection: log-changes
+        meta:
+          user:
+            _user: true
+  # Write side of the reporting demo dataset — seeded by reporting-seed-orders.
+  # The reporting module reads the same collection through reporting-analytics
+  # (below), which its reporting-data connection is remapped to.
+  - id: demo-orders
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: demo_orders
+      write: true
+  # The reporting module's own connections default to REPORTING_MONGODB_URI /
+  # REPORTING_DATA_MONGODB_URI so an app can keep reporting storage and its
+  # analytics source on separate databases. The demo has one database, so we
+  # remap all three module connections (on the reporting module entry) to these
+  # MONGODB_URI-backed connections instead of introducing new secrets.
+  - id: reporting-reports # module reports-store — saved report specs
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: report_layouts
+      write: true
+  - id: reporting-conversations # module conversations-store — chat conversations
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: conversations
+      write: true
+  - id: reporting-analytics # module reporting-data — read-only analytics source
+    type: ReportingData
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      # The module binds the collections catalog on its own reporting-data
+      # connection via _module.var, but remapping reporting-data onto this
+      # app connection replaces that definition — so the catalog must be bound
+      # here too, or validatePipeline gets no catalog and rejects every
+      # collection. Same file the module var references (modules/ai-reporting/
+      # catalog.yaml), so the two can't drift.
+      catalog:
+        _ref: modules/ai-reporting/catalog.yaml
+
+api:
+  - _ref: api/reporting-seed-orders.yaml
+  - _ref: api/reporting-seed-example-report.yaml
+  - _ref: api/reporting-seed-ownership.yaml
+  - _ref: api/reporting-seed-conversations.yaml
+  - _ref: api/files-demo-upload-policy.yaml
+  - _ref: api/assistant-file-links.yaml
+  - _ref: api/release-notes-sweep.yaml
+
+agents:
+  # The agent behind the ai-assistant module demo. The module brings the chat
+  # shell and thread lifecycle; the agent — model, prompt, tools — is the app's.
+  - id: demo-assistant
+    type: AIGatewayAgent
+    connectionId: ai_gateway
+    properties:
+      model: anthropic/claude-haiku-4-5
+      maxSteps: 4
+      instructions:
+        _build.string.concat:
+          - >-
+            You are the assistant in the Lowdefy modules-mongodb demo app.
+            Answer briefly and concretely. The repo ships reusable Lowdefy
+            modules backed by MongoDB: layout, events, files, notifications,
+            user-account, user-admin, contacts, companies, activities, deals,
+            workflows, release-notes, support, and this ai-assistant. When asked
+            about specifics you cannot know, say so and point at the repo docs.
+          - "\n\n"
+          - _ref:
+              module: support
+              component: agent-instructions
+    # The support module's tools, under the names its brief uses.
+    tools:
+      _ref:
+        module: support
+        component: agent-tools
+    # Stores each finished reply on its thread from the server, so a reply that
+    # lands after the person has left the page is there when they come back.
+    hooks:
+      onFinish:
+        - ai-assistant/save-thread-on-finish
+
+pages:
+  - _ref: pages/router.yaml
+  - _ref: pages/avatar.yaml
+  - _ref: pages/user-components-demo.yaml
+  - _ref: pages/404.yaml
+  - _ref: pages/home.yaml
+  - _ref: pages/assistant-demo.yaml
+  - _ref: pages/reporting/reporting-demo.yaml
+  - _ref: pages/files/files-demo.yaml
+  - _ref: pages/quote-builder.yaml
+  - _ref: pages/start-company-setup.yaml
+  - _ref: pages/walkthroughs/walkthroughs-demo.yaml
+  - _ref: pages/walkthroughs/walkthrough-editor-demo.yaml
+  - _ref: pages/path-params-demo/path-params-demo.yaml

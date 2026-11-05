@@ -1,0 +1,51 @@
+# send-quote — a kind:custom action.
+#
+# The quote is line items + a live total + notes — richer than a flat form can
+# express — so its working surface is the app-owned `quote-builder` page
+# rather than the shared check page. The engine routes the `link:` cell below
+# into the per-verb links map: an actor (edit) and the admin reviewer (review)
+# land on quote-builder; an observer (view) falls back to the shared
+# `sales-pipeline-action` page (no view_link is authored — the default observer
+# path).
+type: send-quote
+kind: custom
+action_group: quoting
+blocked_by:
+  - qualify
+description: Build and send the deal a quote; reviewer approves before send.
+access:
+  demo:
+    view: true
+    edit: true
+    review:
+      - admin
+# No hooks — the demo's deal stages are prospecting / closing / complete (see
+# apps/demo/modules/deals/vars.yaml), and the qualification group's
+# `on_complete` already advances the deal to `closing` before this action
+# unblocks. There's no finer-grained stage for "quoted" to advance to, so
+# quote approval doesn't stamp status — it just unblocks schedule-followup /
+# upload-po via `blocked_by`.
+status_map:
+  blocked:
+    demo:
+      message: Build and send the quote once the deal is qualified.
+  action-required:
+    demo:
+      message: Build and send the quote.
+      link: { pageId: quote-builder, urlQuery: { action_id: true } }
+  in-progress:
+    demo:
+      message: Quote in progress.
+      link: { pageId: quote-builder, urlQuery: { action_id: true } }
+  in-review:
+    demo:
+      message: Quote awaiting approval.
+      link: { pageId: quote-builder, urlQuery: { action_id: true } }
+  changes-required:
+    demo:
+      message: Reviewer requested changes.
+      link: { pageId: quote-builder, urlQuery: { action_id: true } }
+  done:
+    demo:
+      message: Quote approved and sent.
+      link: { pageId: quote-builder, urlQuery: { action_id: true } }

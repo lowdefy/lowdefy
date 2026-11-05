@@ -67,6 +67,11 @@ test('createWorkspace writes the server build allowlist for an app in no pnpm wo
   assert.equal(workspace.overrides, undefined);
 });
 
+test('createWorkspace turns off automatic peer installs', () => {
+  const workspace = setup();
+  assert.equal(workspace.autoInstallPeers, false);
+});
+
 test("createWorkspace carries the app workspace's build approvals, the app's choice winning", () => {
   const workspace = setup({
     appWorkspaceYaml: [

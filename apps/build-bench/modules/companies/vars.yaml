@@ -1,0 +1,67 @@
+label: Company
+label_plural: Companies
+atlas_search:
+  _ref:
+    path: app_config.yaml
+    key: atlas_search
+hierarchy:
+  enabled: true
+fields:
+  registration:
+    _ref: modules/companies/field-presets/registration-sa.yaml
+  contact:
+    _ref: modules/companies/field-presets/contact-default.yaml
+  address:
+    _ref: modules/companies/field-presets/address-text.yaml
+  attributes:
+    - id: attributes.industry
+      type: Selector
+      properties:
+        title: Industry
+        options:
+          - Manufacturing
+          - Services
+          - Retail
+event_display:
+  demo:
+    create-company: "{{ user.profile.name }} created company {{ target.name }}"
+    update-company: "{{ user.profile.name }} updated company {{ target.name }}"
+# PR #93: consumer stages spliced into the company-selector aggregation
+# after the base active-company $match and before the label projection, so
+# they can filter on raw document fields — here, keeping app-archived
+# companies out of selector pickers (harmless on demo data where no doc
+# carries the marker; demonstrates the extension point).
+request_stages:
+  selector:
+    - $match:
+        archived:
+          $ne: true
+on_create_routine:
+  # company-setup is started by the deal's track-company-setup tracker (via the
+  # start-company-setup page) on the deal's existing company — NOT on every
+  # company creation. Guarded on a parent action_id so a plain company create
+  # doesn't spawn an orphan company-setup workflow.
+  - ":if":
+      _ne:
+        - _payload: url_query.action_id
+        - null
+    ":then":
+      - id: start_company_setup
+        type: CallApi
+        properties:
+          endpointId:
+            _module.endpointId:
+              { id: company-setup-start, module: { _var: ids.workflows } }
+          payload:
+            entity:
+              id:
+                _step: insert.insertedId
+            parent_action_id:
+              _payload: url_query.action_id
+components:
+  sidebar_slots:
+    _ref:
+      path: modules/companies/sidebar_slots.yaml.njk
+      vars:
+        ids:
+          _var: ids

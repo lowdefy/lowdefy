@@ -1,0 +1,70 @@
+# The ai-assistant's `file_links_endpoint`: signs a fresh link for each stored chat file when a
+# thread is opened. The keys come from messages the browser saved, so only keys under the caller's
+# own upload prefix (see modules/ai-assistant/attachment_requests.yaml) are signed; any other key
+# gets url null and the chat keeps the link it stored.
+id: assistant-file-links
+type: InternalApi
+payloadSchema:
+  type: object
+  required:
+    - files
+  properties:
+    files:
+      type: array
+      items:
+        type: object
+        required:
+          - key
+        properties:
+          key:
+            type: string
+          filename:
+            type: string
+          mediaType:
+            type: string
+routine:
+  - :set_state:
+      prefix:
+        _string.concat:
+          - ai-assistant/
+          - _user: id
+          - /
+      links: []
+  - :for: file
+    :in:
+      _payload: files
+    :do:
+      - :if:
+          _string.startsWith:
+            - _item: file.key
+            - _state: prefix
+        :then:
+          - id: sign
+            type: AwsS3PresignedGetObject
+            connectionId: files/files-bucket
+            properties:
+              key:
+                _item: file.key
+              responseContentType:
+                _item: file.mediaType
+              expires: 604800
+          - :set_state:
+              links:
+                _array.concat:
+                  - _state: links
+                  - - key:
+                        _item: file.key
+                      # Inside :for a step's results are kept per iteration; `$` is this one.
+                      url:
+                        _step: sign.$
+        :else:
+          - :set_state:
+              links:
+                _array.concat:
+                  - _state: links
+                  - - key:
+                        _item: file.key
+                      url: null
+  - :return:
+      files:
+        _state: links

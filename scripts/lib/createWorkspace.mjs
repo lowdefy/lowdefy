@@ -80,9 +80,13 @@ function createWorkspace({ targetDir, configDirectory }) {
   const overrides = pkg.pnpm?.overrides ?? {};
   // packages: [] keeps the copy out of any workspace above it. pnpm 10 reads
   // onlyBuiltDependencies and ignoredBuiltDependencies; pnpm >=10.29 and 11
-  // read allowBuilds.
+  // read allowBuilds. pnpm 11.17 crashes (inheritedParentPkgBreaksPeerDiamond)
+  // resolving the peers of an npm plugin with @lowdefy/* peers against the
+  // link: overrides, so peers are not installed on their own: the server
+  // provides them, and addPlugins adds the ones a plugin needs beyond that.
   const workspace = {
     packages: [],
+    autoInstallPeers: false,
     onlyBuiltDependencies: namesWith({ allowBuilds, allowed: true }),
     ignoredBuiltDependencies: namesWith({ allowBuilds, allowed: false }),
     allowBuilds,

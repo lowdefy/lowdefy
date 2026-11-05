@@ -196,7 +196,8 @@ example `infisical run --env=local --path=/apps/my-app -- node scripts/dev.mjs .
 - **The app's repository must be installed** (`pnpm install` there). Plugins in
   `lowdefy.yaml` with a `workspace:` version are linked from the app's pnpm workspace as they
   are, so they need their `node_modules` and a built `dist`. Other plugins install from npm
-  into the server copy.
+  into the server copy, with any peer they declare that the server does not depend on (the
+  copy installs with `autoInstallPeers: false`).
 - **Build scripts.** pnpm 11 fails an install on a dependency build script that is neither
   allowed nor ignored. The server copy's `pnpm-workspace.yaml` carries the build approvals
   (`allowBuilds`, `onlyBuiltDependencies`, `ignoredBuiltDependencies`) of the app's own
@@ -211,6 +212,104 @@ example `infisical run --env=local --path=/apps/my-app -- node scripts/dev.mjs .
   dev server at a time (the server records itself in `<app>/.lowdefy/instance.json` and
   refuses a second), so to run a second copy of an app, or to keep the app's own checkout
   untouched, point the scripts at a separate git worktree of the app's repository.
+
+## Build bench
+
+`pnpm bench:build <app-dir>` builds an app with a baseline Lowdefy and with this checkout, and
+says whether the build output is identical. It is the proof for a change that should not alter
+build output. It needs the network and takes minutes, so it never runs in CI.
+
+```bash
+pnpm bench:build packages/docs                    # baseline: merge-base of HEAD and origin/develop
+pnpm bench:build packages/docs --self-check       # build the baseline twice; must be identical
+pnpm bench:build ../my-app --baseline v7.1.0      # any commit as baseline, any app folder
+pnpm bench:build packages/docs --skip-build       # this checkout is already built
+pnpm bench:build packages/docs --server e2e       # @lowdefy/server-e2e instead of the server
+pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in current
+```
+
+| Exit code | Meaning                                         |
+| --------- | ----------------------------------------------- |
+| 0         | Identical                                       |
+| 1         | Any difference                                  |
+| 2         | A build (or the harness) failed; its log prints |
+
+- **The large app.** `apps/build-bench` is the modules-mongodb demo app with its entity
+  modules repeated in sets, sized like a large production app (a key map of about 300 MB).
+  It is only ever built: `pnpm bench:build apps/build-bench`. Its README says how it is
+  generated.
+- **Baseline.** A detached worktree at `../lowdefy-bench-<sha7>`, installed and built on first
+  use and reused after. One left half-built by an interrupted run is rebuilt. Runs that need
+  the same baseline at once share it: one sets it up under a lock
+  (`../lowdefy-bench-<sha7>.lock`, holding its pid) while the others wait, and a lock whose
+  process has died is taken over.
+- **Each side** prepares its server at `_server/bench/<app-slug>/<side>/workspace/server`
+  with this checkout's `scripts/lib`, linked through `<side>/lowdefy` (a symlink to that
+  side's checkout), then runs its own CLI: `lowdefy build --no-client-build`. The same layout
+  for both sides keeps every relative path in the output equal. Logs land in
+  `_server/bench/<app-slug>/logs/`.
+- **Compared**: every file in the server's `build/`, its `package.json`, and the warnings and
+  errors in the CLI log, sorted. Each side's server path is replaced with `<server>`; nothing
+  else is normalised. `LOWDEFY_GIT_SHA` and the buildId are pinned; the rest of the
+  environment passes through, so `LOWDEFY_ENVIRONMENT=local pnpm bench:build <dir>` works.
+- **A self-check difference is a bug**, in the harness or the build, to fix at its source.
+  Never skip a file.
+- **Parts** (`scripts/lib/bench/`): `buildSide` runs one side's CLI build on a prepared server
+  and can run repeatedly; `compareBuilds` takes `comparers`, a map from a server-relative file
+  (`build/keyMap.json`) to a comparer used in place of the byte comparison.
+
+**Key map by meaning.** A change that reshapes `keyMap.json` on purpose proves itself with
+`pnpm bench:build <app-dir> --keymap`: `keyMap.json` must hold the same key ids, and every id
+must resolve to the same source file, line and config path, each side's map read with that
+side's own `resolveConfigLocation` (from its `packages/utils/errors/dist`). Every other file,
+`refMap.json` included, stays byte-identical. `pnpm bench:keymap <old> <new>` runs the same
+check on two build folders (each holding `keyMap.json` and `refMap.json`) or two fixture
+`snapshot.json` files; `--old-errors <dist>` and `--new-errors <dist>` pick the readers, by
+default the baseline worktree's and this checkout's. It exits 0 when the maps say the same, 1
+when they differ, and reports the counts and the first 20 differences. A million keys take
+seconds.
+
+### Bench report
+
+After the comparison the harness measures both sides and prints a markdown report, ready to
+paste into a pull request: the output verdict first, then sizes, timing and the top of the
+profile. The report (`report.md`), `report.json`, the probe lines, logs and every
+`.cpuprofile` land in `_server/bench/<app-slug>/<timestamp>/`.
+
+```bash
+pnpm bench:build packages/docs --runs 3       # timed runs per side (default 5)
+pnpm bench:build packages/docs --no-compare   # measure only
+pnpm bench:build packages/docs --no-time      # skip the timed runs
+pnpm bench:build packages/docs --no-profile   # skip the CPU profile runs
+```
+
+- **Probe.** Every Node process of a measured build loads `scripts/lib/bench/probe.mjs`
+  through `NODE_OPTIONS=--import`, beside the buildId pin, and appends one JSON line at exit:
+  argv, pid, start and end time, exit code, `maxRSS` and user and system CPU time. Neither side's code changes. A
+  config pass is a process running the server's `lowdefy/build.mjs`; the pass count comes
+  from these lines, never from the CLI log. The total runs from the first process's start to
+  the last one's end (the CLI's own span, installs included).
+- **Timing.** One warm-up build per side, discarded, then `--runs` builds per side,
+  alternating, so machine load falls on both sides alike. Each row is the median with its
+  min and max: config pass wall time (summed when there are two), the config pass's CPU time
+  (user + system, summed the same way), the whole `lowdefy build`, and the config pass's peak
+  memory. Other builds on the machine add noise; when the docs medians of two unchanged sides
+  differ by more than 10%, run again later. CPU time leaves out the time the config pass
+  waited for a core, so on a shared machine it is the number to judge a small change by. It
+  still counts slower running: on Apple silicon a pass that other load pushes onto efficiency
+  cores shows more CPU time too, so compare the ranges and run again while they overlap.
+- **Profile.** One more build per side with `--cpu-prof`. The config passes' main-thread
+  profiles are summarised by self time: per npm package (the nearest `package.json` with a
+  name, so linked `@lowdefy/*` packages are named too; node's own modules as `(node)`, V8
+  built-ins as `(native)`), per `@lowdefy/build` file (top 20), and `(garbage collector)`,
+  `(program)` and `(idle)`, each in seconds and as a share of the profiled passes.
+- **Sizes.** `build/keyMap.json`, `build/refMap.json` and the whole `build/` folder.
+- **In a pull request**, paste `report.md` for each app the change was measured on, and say
+  when the run shared the machine with other builds. Never name a client app.
+- **It cannot show the second config pass.** The linked `@lowdefy/build` finds every default
+  plugin in the monorepo's install, so no plugin is pending and both sides run one pass,
+  where a published `@lowdefy/build` runs two. The report counts passes and claims no saving
+  from fewer of them.
 
 ## Ports
 

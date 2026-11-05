@@ -41,6 +41,36 @@ test('writeMaps', async () => {
   ]);
 });
 
+test('writeMaps writes refMap ids in the same order whatever order refs resolved in', async () => {
+  const entries = {
+    'pages.0': { parent: '2', lineNumber: 1, path: 'pages/a.yaml' },
+    'pages.0~1': { parent: 'pages.0', lineNumber: 1, path: 'templates/page.yaml' },
+    'pages.1': { parent: '2', lineNumber: 2, path: 'pages/b.yaml' },
+    'pages.0.blocks.0': { parent: 'pages.0~1', lineNumber: 5, path: 'blocks/header.yaml' },
+  };
+  const written = [];
+  for (const order of [
+    ['pages.0', 'pages.0~1', 'pages.1', 'pages.0.blocks.0'],
+    ['pages.1', 'pages.0.blocks.0', 'pages.0', 'pages.0~1'],
+  ]) {
+    mockWriteBuildArtifact.mockReset();
+    context.keyMap = {};
+    context.refMap = {};
+    for (const id of order) {
+      context.refMap[id] = entries[id];
+    }
+    await writeMaps({ context });
+    written.push(mockWriteBuildArtifact.mock.calls[1][1]);
+  }
+  expect(written[0]).toEqual(written[1]);
+  expect(Object.keys(JSON.parse(written[0]))).toEqual([
+    'pages.0',
+    'pages.0.blocks.0',
+    'pages.0~1',
+    'pages.1',
+  ]);
+});
+
 test('keyMap is not an object', async () => {
   const context = {
     keyMap: 'keyMap',

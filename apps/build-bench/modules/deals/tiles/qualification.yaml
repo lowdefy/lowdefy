@@ -1,0 +1,72 @@
+# Values read through the workflow-type-keyed form-data alias
+# (`workflows.{workflow_type}.{action}.{field}`); a deal that has not reached
+# these actions shows em dashes rather than erroring.
+id: detail_cell_qualification
+type: Descriptions
+layout:
+  span: 12
+  sm:
+    span: 24
+style:
+  .label:
+    fontSize: 12px
+    lineHeight: 1.4
+    color: var(--ant-color-text-tertiary)
+    paddingRight: 8px
+    width: 110px
+    whiteSpace: nowrap
+  .content:
+    fontSize: 13px
+    lineHeight: 1.4
+    color: var(--ant-color-text)
+    fontWeight: 600
+    paddingRight: 4
+properties:
+  bordered: false
+  size: small
+  column: 1
+  layout: horizontal
+  colon: false
+  theme:
+    itemPaddingBottom: 2
+    itemPaddingEnd: 8
+    titleMarginBottom: 4
+    labelColor: var(--ant-color-text-tertiary)
+    contentColor: var(--ant-color-text)
+  title: '<div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ant-color-text-tertiary); margin-bottom: 4px;">Qualification</div>'
+  items:
+    - label: Estimated value
+      value:
+        _nunjucks:
+          template: "{% if v %}${{ (v | float(0)).toFixed(2) }}{% else %}—{% endif %}"
+          on:
+            v:
+              _request: get_selected_deal.0.workflows.sales-pipeline.qualify.estimated_value
+    - label: Confidence
+      value:
+        _nunjucks:
+          template: "{% if v %}{{ v }} / 5{% else %}—{% endif %}"
+          on:
+            v:
+              _request: get_selected_deal.0.workflows.sales-pipeline.qualify.confidence
+    - label: Site visit
+      value:
+        _if:
+          test:
+            _eq:
+              - _request: get_selected_deal.0.workflows.sales-pipeline.qualify.site_visit_required
+              - true
+          then: Required
+          else:
+            _if:
+              test:
+                _eq:
+                  - _request: get_selected_deal.0.workflows.sales-pipeline.qualify.site_visit_required
+                  - false
+              then: Not required
+              else: "—"
+    - label: PO number
+      value:
+        _if_none:
+          - _request: get_selected_deal.0.workflows.sales-pipeline.upload-po.po_number
+          - "—"

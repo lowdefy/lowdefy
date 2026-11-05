@@ -15,6 +15,16 @@
 */
 import { serializer, type } from '@lowdefy/helpers';
 
+// Refs are added to refMap as they resolve, in parallel, so its insertion order
+// follows I/O timing. Sorting the ids writes the same file for the same config.
+function sortRefMap(refMap) {
+  const sorted = {};
+  for (const id of Object.keys(refMap).sort()) {
+    sorted[id] = refMap[id];
+  }
+  return sorted;
+}
+
 async function writeMaps({ context }) {
   if (!type.isObject(context.keyMap)) {
     throw new Error('keyMap is not an object.');
@@ -23,7 +33,10 @@ async function writeMaps({ context }) {
     throw new Error('refMap is not an object.');
   }
   await context.writeBuildArtifact('keyMap.json', serializer.serializeToString(context.keyMap));
-  await context.writeBuildArtifact('refMap.json', serializer.serializeToString(context.refMap));
+  await context.writeBuildArtifact(
+    'refMap.json',
+    serializer.serializeToString(sortRefMap(context.refMap))
+  );
 }
 
 export default writeMaps;

@@ -1,0 +1,55 @@
+# Seeds the demo_orders collection the reporting data dictionary describes.
+# Clears the collection first so re-seeding is idempotent, then inserts a spread
+# of synthetic orders across regions, categories, statuses, channels and ~8
+# months. order_date is a real Date (the helpers serializer round-trips it to a
+# BSON date); month is the pre-bucketed "YYYY-MM" string used for time-series
+# grouping, since the analytics engine groups on raw field values.
+#
+# Eight categories, not a handful: the example report's pie groups by category,
+# and a pie only demonstrates the slice cap — six slices plus a neutral "Other" —
+# past seven distinct values. Eight is also what puts that report's stacked bar
+# over the four-series threshold at which a chart claims the full column, and it
+# is the widest set the eight-slot palette can give a stable hue to across
+# sections. Categories are the one field here with a plausible reason to hold
+# that many values, which is why the spread was widened rather than a new field
+# invented.
+id: reporting-seed-orders
+type: Api
+routine:
+  - id: clear
+    type: MongoDBDeleteMany
+    connectionId: demo-orders
+    properties:
+      filter: {}
+  - id: insert
+    type: MongoDBInsertMany
+    connectionId: demo-orders
+    properties:
+      docs:
+        _js: |
+          const regions = ['North', 'South', 'East', 'West'];
+          const categories = [
+            'Electronics', 'Clothing', 'Home', 'Toys',
+            'Sports', 'Garden', 'Books', 'Beauty',
+          ];
+          const statuses = ['pending', 'paid', 'shipped', 'cancelled'];
+          const channels = ['online', 'retail', 'partner'];
+          const now = Date.now();
+          const docs = [];
+          for (let i = 0; i < 120; i++) {
+            const d = new Date(now - i * 2 * 86400000);
+            docs.push({
+              region: regions[i % 4],
+              category: categories[Math.floor(i / 2) % 8],
+              status: statuses[Math.floor(i / 3) % 4],
+              channel: channels[i % 3],
+              month: d.toISOString().slice(0, 7),
+              order_date: d,
+              total: 50 + ((i * 37) % 950),
+              quantity: 1 + (i % 10),
+            });
+          }
+          return docs;
+  - :return:
+      inserted:
+        _step: insert.insertedCount

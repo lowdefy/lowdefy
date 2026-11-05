@@ -7630,6 +7630,11 @@
       "lineNumber": 10,
       "path": "<CONFIG_DIR>/modules/support/connections/users.yaml"
     },
+    "pages.0": {
+      "parent": "2",
+      "lineNumber": 23,
+      "path": "<CONFIG_DIR>/modules/support/pages/thread.yaml"
+    },
     "websockets.0": {
       "parent": "2",
       "lineNumber": 18,
@@ -7644,11 +7649,6 @@
       "parent": "2",
       "lineNumber": 20,
       "path": "<CONFIG_DIR>/modules/support/websockets/ticket-status.yaml"
-    },
-    "pages.0": {
-      "parent": "2",
-      "lineNumber": 23,
-      "path": "<CONFIG_DIR>/modules/support/pages/thread.yaml"
     }
   },
   "routes.json": [

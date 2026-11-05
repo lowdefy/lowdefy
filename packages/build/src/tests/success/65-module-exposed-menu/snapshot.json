@@ -7024,16 +7024,6 @@
       "lineNumber": 10,
       "path": "<CONFIG_DIR>/modules/admin/menus/default.yaml"
     },
-    "pages.0": {
-      "parent": "2",
-      "lineNumber": 13,
-      "path": "<CONFIG_DIR>/modules/admin/pages/settings.yaml"
-    },
-    "pages.1": {
-      "parent": "2",
-      "lineNumber": 14,
-      "path": "<CONFIG_DIR>/modules/admin/pages/users.yaml"
-    },
     "menus.0.links._build.array.concat.1": {
       "parent": "3",
       "lineNumber": 21,
@@ -7043,6 +7033,16 @@
         "menu": "default",
         "~l": 21
       }
+    },
+    "pages.0": {
+      "parent": "2",
+      "lineNumber": 13,
+      "path": "<CONFIG_DIR>/modules/admin/pages/settings.yaml"
+    },
+    "pages.1": {
+      "parent": "2",
+      "lineNumber": 14,
+      "path": "<CONFIG_DIR>/modules/admin/pages/users.yaml"
     }
   },
   "routes.json": [

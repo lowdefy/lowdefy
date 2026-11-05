@@ -1,0 +1,76 @@
+# Authors the walkthrough in `?id=`, or a new one with no id. Set in onMount, not onInit: see
+# docs/walkthroughs.
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: walkthrough-editor-demo
+    title: Walkthrough Editor
+    breadcrumbs:
+      - home: true
+        icon: home
+      - label: Walkthroughs
+        pageId: walkthroughs-demo
+      - label: Editor
+    events:
+      onMount:
+        _build.array.concat:
+          - - id: set_walkthrough_id
+              type: SetState
+              params:
+                walkthrough_id:
+                  _url_query: id
+          # After the id is set: the editor does not load itself.
+          - _ref:
+              module: walkthroughs
+              component: load
+    blocks:
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: Editor
+            blocks:
+              # Stands in for whatever the app needs settled before publishing (`publish_blocked`).
+              - id: demo_reviewed
+                type: Switch
+                properties:
+                  title: Reviewed
+              # A setting that goes live only with a publish (`publish_pending`).
+              - id: demo_featured
+                type: Switch
+                properties:
+                  title: Featured
+              - _ref:
+                  module: walkthroughs
+                  component: editor
+                  vars:
+                    publish_blocked:
+                      _ne:
+                        - _state: demo_reviewed
+                        - true
+                    publish_blocked_reason: Mark it reviewed before publishing.
+                    publish_pending:
+                      _ne:
+                        - _if_none:
+                            - _state: demo_featured
+                            - false
+                        - _if_none:
+                            - _state: demo_featured_published
+                            - false
+                    on_published:
+                      - id: hold_featured_published
+                        type: SetState
+                        params:
+                          demo_featured_published:
+                            _state: demo_featured
+                    on_unpublished:
+                      - id: say_unpublished
+                        type: DisplayMessage
+                        params:
+                          content: Unpublished. Its steps are kept as a draft.
+                    on_deleted:
+                      - id: back_to_list
+                        type: Link
+                        params:
+                          pageId: walkthroughs-demo

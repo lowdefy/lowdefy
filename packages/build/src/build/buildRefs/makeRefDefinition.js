@@ -14,18 +14,41 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 import getRefPath from './getRefPath.js';
 import makeId from '../../utils/makeId.js';
 
+// Refs that share a walker path (a file whose root content is itself a _ref, a
+// _ref in another ref's vars) take the first free `<base>~<n>`. Refs resolve in
+// parallel, so the base is chosen so that only refs registered in a fixed order
+// compete for it: a file's root ref builds on its parent's id, which holds the
+// same position, and any other shared position builds on the walker path.
+function makeSharedPathId({ walkerPath, parent, refMap }) {
+  const parentHoldsPath = parent === walkerPath || parent?.startsWith(`${walkerPath}~`);
+  const base = parentHoldsPath ? parent : walkerPath;
+  let suffix = 1;
+  while (refMap[`${base}~${suffix}`] !== undefined) {
+    suffix += 1;
+  }
+  return `${base}~${suffix}`;
+}
+
+// The walker path makes the id deterministic under parallel resolution. Refs
+// with no walker path (the root ref, module manifests, JIT page builds) take a
+// counter id.
+function makeRefId({ walkerPath, parent, refMap }) {
+  if (type.isNone(walkerPath)) {
+    return makeId.next();
+  }
+  if (type.isUndefined(refMap[walkerPath])) {
+    return walkerPath;
+  }
+  return makeSharedPathId({ walkerPath, parent, refMap });
+}
+
 function makeRefDefinition(refDefinition, parent, refMap, lineNumber, walkerPath) {
-  // Use walker tree path when available for deterministic IDs under parallel
-  // resolution. Falls back to counter for root ref and JIT-created refs.
-  // When a file's root content is itself a _ref, both the outer and inner refs
-  // share the same walker path. Fall back to counter to avoid overwriting the
-  // outer ref's refMap entry (which would create a self-referencing parent).
-  const id = walkerPath != null && refMap[walkerPath] === undefined ? walkerPath : makeId.next();
+  const id = makeRefId({ walkerPath, parent, refMap });
   const refDef = {
     parent,
     lineNumber,
