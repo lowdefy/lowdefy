@@ -54,7 +54,7 @@
     "tar": "7.5.21",
     "uuid": "14.0.0",
     "yaml": "2.9.0",
-    "zod": "3.25.76"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@lowdefy/server-dev": "7.1.0",
