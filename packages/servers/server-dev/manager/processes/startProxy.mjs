@@ -53,6 +53,13 @@ child (a refused connect, or a keep-alive socket the dying child had closed)
 is replayed through the hold rather than answered 502: a child can close its
 sockets before the manager sees it exit.
 
+Any other request that loses the child answers 502, and is never replayed: it
+may already have run. A live child does not cause this, since it leaves idle
+connections open for this proxy's agent to close (keepIdleConnectionsOpen).
+What the proxy answers itself, because the child could not, says so in
+x-lowdefy-child, and a journey reports it as a dev server failure rather than
+an app error (evaluateInvariants).
+
 A child stopped for being idle (createIdleChild) is started again only by a
 request that is use (isActivity), which is held as for a restart. A request
 that is not use - a passive read, an event-stream GET, a websocket upgrade -
@@ -178,7 +185,7 @@ function forwardRequest(
       return;
     }
     if (!up) {
-      res.writeHead(503, { 'content-type': 'application/json' });
+      res.writeHead(503, { 'content-type': 'application/json', 'x-lowdefy-child': 'restarting' });
       res.end(JSON.stringify({ message: 'Lowdefy dev server is restarting.' }));
       return;
     }
@@ -213,7 +220,7 @@ function forwardRequest(
         res.destroy();
         return;
       }
-      res.writeHead(502, { 'content-type': 'application/json' });
+      res.writeHead(502, { 'content-type': 'application/json', 'x-lowdefy-child': 'dropped' });
       res.end(JSON.stringify({ message: 'Lowdefy dev server connection dropped.' }));
     });
     // A body read to recognise a build-status wait is sent as read. A

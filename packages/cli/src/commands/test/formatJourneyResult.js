@@ -71,7 +71,7 @@ function appErrorLines({ failure }) {
 
 function failureLines({ failure, message }) {
   const lines = [];
-  if (failure?.kind === 'app-error') {
+  if (failure?.kind === 'app-error' || failure?.kind === 'dev-server') {
     return appErrorLines({ failure });
   }
   if (type.isObject(failure)) {
