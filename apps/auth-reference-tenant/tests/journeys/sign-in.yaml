@@ -37,5 +37,9 @@
     - expect: { url: { contains: /check-email } }
     - email: { to: signin-member@example.test, subject: Your sign-in link }
     - click: { text: Sign in }
+    # The link lands on the magic-link page with the token in the fragment;
+    # the token is spent only by the click, which posts it.
+    - expect: { url: { contains: /magic-link } }
+    - click: magic_link_verify_button
     - expect: { url: { contains: /dashboard } }
     - expect: { text: { blockId: user_details, contains: signin-member@example.test } }
