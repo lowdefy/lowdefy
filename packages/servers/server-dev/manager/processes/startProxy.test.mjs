@@ -147,9 +147,9 @@ test('startProxy sends requests back through the hold once a confirmed child goe
   // A POST's body was consumed by the failed forward, so it fails once, and
   // the next request waits for the child instead of failing too.
   await stopChildAndRestartSoon();
-  expect(
-    (await fetch(`http://localhost:${port}/save`, { method: 'POST', body: '{}' })).status
-  ).toBe(502);
+  const dropped = await fetch(`http://localhost:${port}/save`, { method: 'POST', body: '{}' });
+  expect(dropped.status).toBe(502);
+  expect(dropped.headers.get('x-lowdefy-child')).toBe('dropped');
   expect(await (await fetch(`http://localhost:${port}/c.js`)).text()).toBe('ok');
 
   // An exit the manager has seen sends the very next request through the hold.

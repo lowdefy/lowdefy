@@ -170,6 +170,32 @@ test('a server error entry is a server-error, or environment when its request us
   ).toEqual([['environment', 'info']]);
 });
 
+test('an answer from the proxy is a dev-server finding, and drops the errors that echo it', async () => {
+  const response = {
+    url: `${origin}/api/request/tickets/get_ticket`,
+    method: 'POST',
+    status: 502,
+    childState: 'dropped',
+  };
+  const findings = await evaluate({
+    window: quietWindow({
+      requests: [response],
+      responses: [response],
+      emits: [failedEmit('RequestError')],
+      errors: [{ store: 'client', message: 'Lowdefy dev server connection dropped.' }],
+    }),
+  });
+  expect(findings).toEqual([
+    expect.objectContaining({
+      kind: 'dev-server',
+      severity: 'error',
+      message: expect.stringContaining(
+        'POST /api/request/tickets/get_ticket got no answer from the app'
+      ),
+    }),
+  ]);
+});
+
 test('a 5xx from an app route is request-failed unless a server error entry for that request explains it', async () => {
   const response = {
     url: `${origin}/api/endpoints/assign_ticket`,

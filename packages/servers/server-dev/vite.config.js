@@ -22,6 +22,7 @@ import { WebSocketServer } from 'ws';
 import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 
 import createDevServerExclude from './lib/vite/createDevServerExclude.js';
+import keepIdleConnectionsOpen from './lib/vite/keepIdleConnectionsOpen.js';
 
 const devServerEntry = './src/app.js';
 
@@ -88,6 +89,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     lowdefyWebSocket(),
+    keepIdleConnectionsOpen(),
     devServer({
       entry: devServerEntry,
       exclude: createDevServerExclude({ basePath }),
