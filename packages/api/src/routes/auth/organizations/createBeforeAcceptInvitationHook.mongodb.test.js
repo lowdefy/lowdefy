@@ -112,7 +112,7 @@ async function setup({ organizations, cookieCache = false }) {
   auth = betterAuth(options);
   await ensureAuthIndexes({ auth, logger });
   const { adapter, internalAdapter } = await auth.$context;
-  return { adapter, auth, db: client.db(database), internalAdapter };
+  return { adapter, auth, db: client.db(database), internalAdapter, logger };
 }
 
 async function post({ auth, path, body, cookie }) {
@@ -236,7 +236,10 @@ test('accepting an invitation naming the contact the login holds succeeds', asyn
 });
 
 test('accepting an invitation naming a different contact is refused, leaving no member row and a pending invitation', async () => {
-  const { adapter, auth, db } = await setup({ organizations: tenantOpen, cookieCache: true });
+  const { adapter, auth, db, logger } = await setup({
+    organizations: tenantOpen,
+    cookieCache: true,
+  });
   const { invitation, organization } = await setupInvitation({ adapter, contactId: 'contact_9' });
   const { cookie, user } = await signUp({
     auth,
@@ -247,10 +250,20 @@ test('accepting an invitation naming a different contact is refused, leaving no 
   const response = await accept({ auth, cookie, invitationId: invitation.id });
   expect(response.status).toBe(400);
   const body = await response.json();
-  expect(body.code).toBe('CONTACT_LINK_MISMATCH');
-  expect(body.message).toContain(`Login "${user.id}"`);
-  expect(body.message).toContain('"contact_1"');
-  expect(body.message).toContain('"contact_9"');
+  expect(body).toMatchObject({
+    code: 'CONTACT_LINK_MISMATCH',
+    message: 'This invitation can not be accepted by this account.',
+  });
+  expect(logger.warn).toHaveBeenCalledWith(
+    {
+      event: 'invitation_contact_link_mismatch',
+      userId: user.id,
+      invitationId: invitation.id,
+      linkedContactId: 'contact_1',
+      invitationContactId: 'contact_9',
+    },
+    expect.any(String)
+  );
   expect(
     await db
       .collection('user-members')

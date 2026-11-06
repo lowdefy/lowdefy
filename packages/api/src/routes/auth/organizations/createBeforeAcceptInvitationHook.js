@@ -24,10 +24,10 @@ import checkInvitationContactLink from './checkInvitationContactLink.js';
 // link itself is set by createAfterAcceptInvitationHook once the member row
 // exists. An accept by someone already in the organization never reaches this
 // hook; createAcceptExistingMemberHook makes the same check.
-function createBeforeAcceptInvitationHook({ getAuth }) {
+function createBeforeAcceptInvitationHook({ getAuth, logger }) {
   return async function beforeAcceptInvitationHook({ invitation, user }) {
     const { adapter } = await getAuth().$context;
-    await checkInvitationContactLink({ adapter, invitation, userId: user.id });
+    await checkInvitationContactLink({ adapter, invitation, logger, userId: user.id });
   };
 }
 

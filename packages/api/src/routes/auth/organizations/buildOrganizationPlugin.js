@@ -51,7 +51,7 @@ const DEFAULT_INVITATION_LIMIT = 1000000;
 // creator-protection guards, which key on the member's role string. With app
 // roles out of that field and the fabricated acting member claiming "owner"
 // itself, there is nothing left to defend against.
-function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail }) {
+function buildOrganizationPlugin({ authConfig = {}, getAuth, logger, sendInvitationEmail }) {
   const options = {
     ac,
     roles,
@@ -162,7 +162,7 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
       // Refuses an invitation naming a different contact than the login is
       // linked to, before the member row is written: the link is set once.
-      beforeAcceptInvitation: createBeforeAcceptInvitationHook({ getAuth }),
+      beforeAcceptInvitation: createBeforeAcceptInvitationHook({ getAuth, logger }),
       // Keeps a suspended member out of the owner tier, so the plugin's owner
       // guards, which count every owner row, stay exact (SuspendMember).
       beforeUpdateMemberRole: createBeforeUpdateMemberRoleHook(),

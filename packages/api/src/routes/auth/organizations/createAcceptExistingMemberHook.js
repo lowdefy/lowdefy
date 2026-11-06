@@ -51,7 +51,7 @@ import isActiveMember from './isActiveMember.js';
 // away from an existing active organization). A suspended membership is left
 // as it is too, so the organization is never made active: it admits nobody,
 // and an org-less session at least keeps the caller awaiting an organization.
-function createAcceptExistingMemberHook() {
+function createAcceptExistingMemberHook({ logger }) {
   return async function acceptExistingMemberHook(ctx) {
     const invitationId = ctx.body?.invitationId;
     if (!type.isString(invitationId)) {
@@ -87,6 +87,7 @@ function createAcceptExistingMemberHook() {
     const setsContactLink = await checkInvitationContactLink({
       adapter,
       invitation,
+      logger,
       userId: session.user.id,
     });
     // The route's own compare-and-set: of two concurrent accepts only one

@@ -287,6 +287,7 @@ test('buildOrganizationPlugin refuses an invitation naming a different contact i
   const plugin = buildOrganizationPlugin({
     authConfig,
     getAuth: () => ({ $context: Promise.resolve({ adapter: { findOne } }) }),
+    logger: { warn: () => {} },
     sendInvitationEmail: async () => {},
   });
   await expect(

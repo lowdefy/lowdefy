@@ -28,7 +28,8 @@ const organization = { id: 'org_1' };
 
 test('beforeAcceptInvitationHook reads nothing when the invitation names no contact', async () => {
   const { auth, findOne } = createMockAuth({ userRow: { id: 'user_1', contactId: 'contact_1' } });
-  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth });
+  const logger = { warn: vi.fn() };
+  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth, logger });
 
   await expect(
     hook({ invitation: { id: 'inv_1' }, user: { id: 'user_1' }, organization })
@@ -38,7 +39,8 @@ test('beforeAcceptInvitationHook reads nothing when the invitation names no cont
 
 test('beforeAcceptInvitationHook allows a login with no link', async () => {
   const { auth, findOne } = createMockAuth();
-  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth });
+  const logger = { warn: vi.fn() };
+  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth, logger });
 
   await expect(
     hook({
@@ -55,7 +57,8 @@ test('beforeAcceptInvitationHook allows a login with no link', async () => {
 
 test('beforeAcceptInvitationHook allows a login already linked to the same contact', async () => {
   const { auth } = createMockAuth({ userRow: { id: 'user_1', contactId: 'contact_9' } });
-  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth });
+  const logger = { warn: vi.fn() };
+  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth, logger });
 
   await expect(
     hook({
@@ -66,28 +69,36 @@ test('beforeAcceptInvitationHook allows a login already linked to the same conta
   ).resolves.toBeUndefined();
 });
 
-test('beforeAcceptInvitationHook refuses a login linked to a different contact, naming the login and both contacts', async () => {
+test('beforeAcceptInvitationHook refuses a login linked to a different contact with a message that carries no ids, and logs them', async () => {
   const { auth } = createMockAuth({ userRow: { id: 'user_1', contactId: 'contact_1' } });
-  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth });
+  const logger = { warn: vi.fn() };
+  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth, logger });
 
-  const result = hook({
+  const error = await hook({
     invitation: { id: 'inv_1', contactId: 'contact_9' },
     user: { id: 'user_1' },
     organization,
-  });
-  await expect(result).rejects.toMatchObject({
+  }).catch((caught) => caught);
+  expect(error).toMatchObject({
     statusCode: 400,
     body: { code: 'CONTACT_LINK_MISMATCH' },
+    message: 'This invitation can not be accepted by this account.',
   });
-  await expect(result).rejects.toThrow(
-    'Login "user_1" is linked to contact "contact_1", but the invitation names contact "contact_9". Correct the login\'s contact link in the data before the invitation can be accepted.'
-  );
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toEqual({
+    event: 'invitation_contact_link_mismatch',
+    userId: 'user_1',
+    invitationId: 'inv_1',
+    linkedContactId: 'contact_1',
+    invitationContactId: 'contact_9',
+  });
 });
 
 // The session user may be a cookie-cached copy from before the link was set.
 test('beforeAcceptInvitationHook reads the link from the stored user row, not the session user', async () => {
   const { auth } = createMockAuth({ userRow: { id: 'user_1', contactId: 'contact_1' } });
-  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth });
+  const logger = { warn: vi.fn() };
+  const hook = createBeforeAcceptInvitationHook({ getAuth: () => auth, logger });
 
   await expect(
     hook({
