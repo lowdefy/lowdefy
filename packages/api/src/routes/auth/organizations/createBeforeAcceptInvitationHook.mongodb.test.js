@@ -186,7 +186,7 @@ async function accept({ auth, cookie, invitationId }) {
 const tenantOpen = { policy: 'tenant', signup: 'open', create: 'auto' };
 
 test('accepting sets the invitation contactId on a login with no link', async () => {
-  const { adapter, auth, db } = await setup({ organizations: tenantOpen });
+  const { adapter, auth } = await setup({ organizations: tenantOpen });
   const { invitation } = await setupInvitation({ adapter, contactId: 'contact_9' });
   const { cookie, user } = await signUp({ auth, adapter, email: 'invitee@example.com' });
   const response = await accept({ auth, cookie, invitationId: invitation.id });
@@ -199,7 +199,7 @@ test('accepting sets the invitation contactId on a login with no link', async ()
 });
 
 test('accepting an invitation with no contactId leaves the login link as it is', async () => {
-  const { adapter, auth, db } = await setup({ organizations: tenantOpen });
+  const { adapter, auth } = await setup({ organizations: tenantOpen });
   const { invitation } = await setupInvitation({ adapter });
   const { cookie, user } = await signUp({
     auth,
@@ -217,7 +217,7 @@ test('accepting an invitation with no contactId leaves the login link as it is',
 });
 
 test('accepting an invitation naming the contact the login holds succeeds', async () => {
-  const { adapter, auth, db } = await setup({ organizations: tenantOpen });
+  const { adapter, auth } = await setup({ organizations: tenantOpen });
   const { invitation } = await setupInvitation({ adapter, contactId: 'contact_9' });
   const { cookie, user } = await signUp({
     auth,
