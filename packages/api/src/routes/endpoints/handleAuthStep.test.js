@@ -778,6 +778,97 @@ test('AuthStep step refuses a self-target-exempt step with no target property wi
   expect(stepFn).not.toHaveBeenCalled();
 });
 
+test('AuthStep step refuses a self-targeting caller setting a selfTargetExemptUnless property without the authority', async () => {
+  const stepFn = createStepFn({
+    scope: 'org',
+    permissions: { user: ['update'] },
+    targetUser: 'userId',
+    selfTargetExempt: 'userId',
+    selfTargetExemptUnless: ['contactId'],
+  });
+  const { context } = createTestContext({
+    members: [{ userId: 'user_1', organizationId: 'org_pinned', role: 'member' }],
+    steps: { TestAuthStep: stepFn },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ properties: { userId: 'user_1', contactId: 'contact_9' } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" refused - the caller does not hold user: [update] in organization "org_pinned".'
+  );
+  expect(stepFn).not.toHaveBeenCalled();
+});
+
+test('AuthStep step lets a self-targeting caller with the authority set a selfTargetExemptUnless property', async () => {
+  const stepFn = createStepFn({
+    scope: 'org',
+    permissions: { user: ['update'] },
+    targetUser: 'userId',
+    selfTargetExempt: 'userId',
+    selfTargetExemptUnless: ['contactId'],
+  });
+  const { context } = createTestContext({
+    members: [{ userId: 'user_1', organizationId: 'org_pinned', role: 'admin' }],
+    steps: { TestAuthStep: stepFn },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ properties: { userId: 'user_1', contactId: 'contact_9' } }),
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(stepFn).toHaveBeenCalledTimes(1);
+});
+
+test('AuthStep step keeps the self-target exemption when the selfTargetExemptUnless properties are absent', async () => {
+  const stepFn = createStepFn({
+    scope: 'org',
+    permissions: { user: ['update'] },
+    targetUser: 'userId',
+    selfTargetExempt: 'userId',
+    selfTargetExemptUnless: ['contactId'],
+  });
+  const { adapter, context } = createTestContext({ members: [], steps: { TestAuthStep: stepFn } });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ properties: { userId: 'user_1', profile: { plan: 'pro' } } }),
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(adapter.findOne).not.toHaveBeenCalled();
+});
+
+test('AuthStep step lets an admin set a selfTargetExemptUnless property on another member', async () => {
+  const stepFn = createStepFn({
+    scope: 'org',
+    permissions: { user: ['update'] },
+    targetUser: 'userId',
+    selfTargetExempt: 'userId',
+    selfTargetExemptUnless: ['contactId'],
+  });
+  const { context } = createTestContext({
+    members: [
+      { userId: 'user_1', organizationId: 'org_pinned', role: 'admin' },
+      { userId: 'user_2', organizationId: 'org_pinned', role: 'member' },
+    ],
+    steps: { TestAuthStep: stepFn },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ properties: { userId: 'user_2', contactId: 'contact_9' } }),
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(stepFn).toHaveBeenCalledTimes(1);
+});
+
 test('AuthStep step skips the authorization checks for an org-scoped step in a system context', async () => {
   const stepFn = createStepFn();
   const { adapter, context } = createTestContext({
