@@ -14,39 +14,20 @@
   limitations under the License.
 */
 
-import { APIError } from 'better-auth/api';
-import { type } from '@lowdefy/helpers';
+import checkInvitationContactLink from './checkInvitationContactLink.js';
 
 // The engine-tier binding on the organization plugin's beforeAcceptInvitation
-// hook, which keeps the login's contactId a link that is set once. Apps compare
-// _user.contact_id in author and access checks, so the link is an
-// authorization input: accepting an invitation may set it on a login that has
-// none, and never changes one that is set. An invitation naming a different
-// contact is refused here, before BetterAuth moves the invitation off pending
-// or writes the member row, so a refusal leaves nothing half-written - the
-// invitation stays pending and no membership exists. A wrong link is corrected
-// in the data, then the invitation can be accepted.
-//
-// The hook's user is the session user, which may be a cookie-cached copy, so
-// the link is read from the stored user row.
+// hook, which keeps the login's contactId a link that is set once
+// (checkInvitationContactLink). It runs before BetterAuth moves the invitation
+// off pending or writes the member row, so a refusal leaves nothing
+// half-written - the invitation stays pending and no membership exists. The
+// link itself is set by createAfterAcceptInvitationHook once the member row
+// exists. An accept by someone already in the organization never reaches this
+// hook; createAcceptExistingMemberHook makes the same check.
 function createBeforeAcceptInvitationHook({ getAuth }) {
   return async function beforeAcceptInvitationHook({ invitation, user }) {
-    if (!type.isString(invitation.contactId)) {
-      return;
-    }
     const { adapter } = await getAuth().$context;
-    const userRow = await adapter.findOne({
-      model: 'user',
-      where: [{ field: 'id', value: user.id }],
-    });
-    const linkedContactId = userRow.contactId;
-    if (type.isNone(linkedContactId) || linkedContactId === invitation.contactId) {
-      return;
-    }
-    throw new APIError('BAD_REQUEST', {
-      code: 'CONTACT_LINK_MISMATCH',
-      message: `Login "${user.id}" is linked to contact "${linkedContactId}", but the invitation names contact "${invitation.contactId}". Correct the login's contact link in the data before the invitation can be accepted.`,
-    });
+    await checkInvitationContactLink({ adapter, invitation, userId: user.id });
   };
 }
 

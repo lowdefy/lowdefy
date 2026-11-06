@@ -184,6 +184,7 @@ async function accept({ auth, cookie, invitationId }) {
 }
 
 const tenantOpen = { policy: 'tenant', signup: 'open', create: 'auto' };
+const pinnedOpen = { policy: 'pinned', org: 'default', signup: 'open' };
 
 test('accepting sets the invitation contactId on a login with no link', async () => {
   const { adapter, auth } = await setup({ organizations: tenantOpen });
@@ -265,4 +266,60 @@ test('accepting an invitation naming a different contact is refused, leaving no 
     where: [{ field: 'id', value: user.id }],
   });
   expect(userRow.contactId).toBe('contact_1');
+});
+
+// Open signup auto-joins the pinned organization, so an invitation to it is
+// answered by createAcceptExistingMemberHook, never reaching the route's
+// beforeAcceptInvitation hook. The link is set once that way too.
+async function inviteExistingMember({ adapter, user, contactId }) {
+  return adapter.create({
+    model: 'invitation',
+    data: {
+      organizationId: 'default',
+      email: user.email,
+      role: 'member',
+      contactId,
+      status: 'pending',
+      inviterId: user.id,
+      expiresAt: new Date(Date.now() + 3600 * 1000),
+      createdAt: new Date(),
+    },
+  });
+}
+
+test('an existing member accepting an invitation naming a different contact is refused and the invitation stays pending', async () => {
+  const { adapter, auth } = await setup({ organizations: pinnedOpen });
+  const { cookie, user } = await signUp({
+    auth,
+    adapter,
+    email: 'joined@example.com',
+    contactId: 'contact_1',
+  });
+  const invitation = await inviteExistingMember({ adapter, user, contactId: 'contact_9' });
+  const response = await accept({ auth, cookie, invitationId: invitation.id });
+  expect(response.status).toBe(400);
+  expect((await response.json()).code).toBe('CONTACT_LINK_MISMATCH');
+  const invitationRow = await adapter.findOne({
+    model: 'invitation',
+    where: [{ field: 'id', value: invitation.id }],
+  });
+  expect(invitationRow.status).toBe('pending');
+  const userRow = await adapter.findOne({
+    model: 'user',
+    where: [{ field: 'id', value: user.id }],
+  });
+  expect(userRow.contactId).toBe('contact_1');
+});
+
+test('an existing member with no link takes the invitation contactId on accept', async () => {
+  const { adapter, auth } = await setup({ organizations: pinnedOpen });
+  const { cookie, user } = await signUp({ auth, adapter, email: 'joined@example.com' });
+  const invitation = await inviteExistingMember({ adapter, user, contactId: 'contact_9' });
+  const response = await accept({ auth, cookie, invitationId: invitation.id });
+  expect(response.status).toBe(200);
+  const userRow = await adapter.findOne({
+    model: 'user',
+    where: [{ field: 'id', value: user.id }],
+  });
+  expect(userRow.contactId).toBe('contact_9');
 });

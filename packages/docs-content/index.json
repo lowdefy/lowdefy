@@ -3301,7 +3301,7 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "e28d7f67ca8edfc3a5583691c103dc7086f740f4d7d49d96d9eff6f153218fe0"
+      "hash": "4e228693b282229b101beb97484a0d1a98148448e0c16d9e85c2e2c34adaf97e"
     },
     "user-authentication/auth-steps": {
       "files": [
@@ -3319,7 +3319,7 @@
       "files": [
         "users/user-object.yaml"
       ],
-      "hash": "79b6b4dc364d9364050e349838441c70452d9456fe47c8d88b0d3a9eccf99d4f"
+      "hash": "2add178495384079f06861c1f01b788470dc0ac1dfc9548868a267f8a35fccc4"
     },
     "user-authentication/auth-configuration": {
       "files": [

@@ -55,7 +55,7 @@ An equivalent unique index you created yourself, under any name, is accepted. If
 
 ### Invitations for existing members
 
-An invitation is how someone joins an organization, never how a membership changes. Accepting an invitation into an organization you already belong to (you joined another way after it was sent) succeeds and marks the invitation accepted, but leaves your membership exactly as it is: the invitation's role, app roles, attributes and contact link are not applied, and no second membership is written. If your session had no active organization, the accepted organization becomes active. To change an existing membership, use the [auth steps](/auth-steps) (`UpdateMemberOrgRole`, `UpdateMemberRoles`, `UpdateMemberAttributes`), which check the caller's authority at the time of the change.
+An invitation is how someone joins an organization, never how a membership changes. Accepting an invitation into an organization you already belong to (you joined another way after it was sent) succeeds and marks the invitation accepted, but leaves your membership exactly as it is: the invitation's role, app roles and attributes are not applied, and no second membership is written. If your session had no active organization, the accepted organization becomes active. The invitation's contact link is the exception: it belongs to the login, not the membership, so it follows the rules in [Invitations and the contact link](#invitations-and-the-contact-link). To change an existing membership, use the [auth steps](/auth-steps) (`UpdateMemberOrgRole`, `UpdateMemberRoles`, `UpdateMemberAttributes`), which check the caller's authority at the time of the change.
 
 ### Invitations and the contact link
 
@@ -65,7 +65,7 @@ An invitation may carry a `contactId`: the link from the login to the app's reco
 - An invitation with no `contactId`, or the same one the login already holds, leaves the link as it is.
 - An invitation naming a different contact than the login holds is refused with the code `CONTACT_LINK_MISMATCH`. No membership is written and the invitation stays pending. The error names the login and both contacts; correct the login's link in the data, then accept again.
 
-After that, only a caller with `user: [update]` authority in an organization the person belongs to changes the link, through `UpdateUserProfile`. A self-service `UpdateUserProfile` that sets `contactId` is refused.
+After that, only a caller with `user: [update]` authority in an organization the person belongs to changes the link, through `UpdateUserProfile`. That holds for your own login too: an `UpdateUserProfile` that sets `contactId` on yourself needs the same authority.
 
 ### Suspending a member
 
