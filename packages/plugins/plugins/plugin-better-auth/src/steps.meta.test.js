@@ -62,6 +62,7 @@ const authorities = {
     permissions: { user: ['update'] },
     targetUser: 'userId',
     selfTargetExempt: 'userId',
+    selfTargetExemptUnless: ['contactId'],
   },
 };
 

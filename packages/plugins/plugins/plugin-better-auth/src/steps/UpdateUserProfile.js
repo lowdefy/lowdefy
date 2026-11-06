@@ -29,7 +29,8 @@ const allowedProperties = ['contactId', 'image', 'name', 'organizationId', 'prof
 // the adapter's json additionalField transform handles storage on both ends.
 // name and image are the display copies. contactId is the link to the app's
 // canonical record for this person - a top-level field, so it is set outright
-// and never joins the profile merge. The step writes nothing else - not
+// and never joins the profile merge; only a caller with user:update authority
+// over the person may set it (see meta below). The step writes nothing else - not
 // email, not emailVerified, not attributes, not roles. Adapter-direct like
 // UpdateUserAttributes: fires NO user.update database hooks.
 async function UpdateUserProfile({ auth, organizationId, properties }) {
@@ -140,18 +141,23 @@ async function UpdateUserProfile({ auth, organizationId, properties }) {
 // compared to the caller's own id, and when properties.userId is that id the
 // floor skips its check entirely - evaluated before the scope check, so a
 // person saves their own profile without any org authority and without holding
-// a member row in the organization the request names. Profile, contactId, name
-// and image are display, link and app data - no authorization check reads any
-// of them, so the exemption holds for contactId too. Targeting anyone else
-// writes the deployment-wide user row, so it needs user:update authority in an
-// organization the target holds a member row in - membership is the
-// relationship that makes that person the caller's business.
+// a member row in the organization the request names. Profile, name and image
+// are display and app data that no authorization check reads. contactId is
+// different: apps compare _user.contact_id in author and access checks, so the
+// link is an authorization input, set once when an invitation is accepted.
+// selfTargetExemptUnless takes the exemption away from a call that carries
+// contactId, so a person can not relink their own login - changing it needs
+// user:update authority over them, like any call on someone else. Targeting
+// anyone else writes the deployment-wide user row, so it needs user:update
+// authority in an organization the target holds a member row in - membership
+// is the relationship that makes that person the caller's business.
 UpdateUserProfile.meta = {
   authority: {
     scope: 'org',
     permissions: { user: ['update'] },
     targetUser: 'userId',
     selfTargetExempt: 'userId',
+    selfTargetExemptUnless: ['contactId'],
   },
 };
 

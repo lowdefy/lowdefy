@@ -101,12 +101,13 @@ For every `org`-scoped step the floor resolves the target organization once, and
 2. `ListMembers` also accepts an **`organizationSlug`**, resolved to an id here.
 3. Otherwise the **pinned** organization is the default — **but under `policy: tenant` there is no pinned organization**, so an omitted `organizationId` is a runtime error naming the fix. Under `tenant`, always pass `organizationId` explicitly.
 
-## `targetUser` and `selfTargetExempt`
+## `targetUser`, `selfTargetExempt` and `selfTargetExemptUnless`
 
-Two refinements the floor reads from a step's declaration:
+Three refinements the floor reads from a step's declaration:
 
 - **`targetUser`** names the property holding the id of the user being acted on. Steps that write the shared `user` row declare it, so the floor can require that user to be a member of the target organization. An absent target-user property is the step's own required-property error, not the floor's.
 - **`selfTargetExempt`** lets a caller act on **their own** row without holding org authority — this is what makes `UpdateUserProfile` a self-service "save my profile" step as well as an admin one. When the named property equals the caller's own id, the org authority check is skipped.
+- **`selfTargetExemptUnless`** lists properties that take that exemption away. A call on your own row that sets one of them needs the same authority as a call on someone else. `UpdateUserProfile` lists `contactId`: apps compare `_user.contact_id` in author and access checks, so a person can not relink their own login.
 
 ## Step reference
 
@@ -114,7 +115,7 @@ Scope, required permission, and target for every auth step. Permissions are chec
 
 | Step | Scope | Permission | Target | What it does |
 | ---- | ----- | ---------- | ------ | ------------ |
-| `InviteMember` | org | `invitation: [create]` | — | Invite a member by email; carries `appRoles`, `orgRole`, `attributes`, `contactId`, `profile`; `resend` refreshes. |
+| `InviteMember` | org | `invitation: [create]` | — | Invite a member by email; carries `appRoles`, `orgRole`, `attributes`, `contactId`, `profile`; `resend` refreshes. Accept sets `contactId` only on a login with no contact link, and refuses one linked to a different contact. |
 | `CancelInvitation` | org | `invitation: [cancel]` | — | Cancel a pending invitation. |
 | `ListMembers` | org | `member: [list]` | — | List members of the organization (accepts `organizationSlug`). |
 | `RemoveMember` | org | `member: [delete]` | — | Remove a member from the organization. |
@@ -125,7 +126,7 @@ Scope, required permission, and target for every auth step. Permissions are chec
 | `UnsuspendMember` | org | `member: [suspend]` | — | Lift a suspension (`memberId`); the member keeps the roles they held. |
 | `UpdateOrganization` | org | `organization: [update]` | — | Update the organization row (name, slug, metadata). |
 | `RevokeOrgMcpToken` | org | `member: [update]` | — | Switch off any [member token](/mcp-oauth#tokens-for-scripts) in the organization (`id`). |
-| `UpdateUserProfile` | org | `user: [update]` | `userId` (self-exempt) | Update a member's display name/image (per-organization copy). Self-service save is exempt. |
+| `UpdateUserProfile` | org | `user: [update]` | `userId` (self-exempt) | Update a member's display name/image (per-organization copy), profile, or contact link. A self-service save of `name`, `image` and `profile` is exempt; setting `contactId` needs `user: [update]`, on your own login too. |
 | `UpdateUserAttributes` | org | `user: [set-attributes]` | `userId` | Set global user attributes. |
 | `BanUser` | org | `user: [ban]` | `userId` | Ban a user. |
 | `UnbanUser` | org | `user: [ban]` | `userId` | Lift a ban. |
