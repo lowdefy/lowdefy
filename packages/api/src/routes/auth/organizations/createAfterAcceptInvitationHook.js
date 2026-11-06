@@ -22,8 +22,11 @@ import { type } from '@lowdefy/helpers';
 // accepting shallow-merges it onto the accepting user's user.profile,
 // invitation winning per key - an opaque copy the engine never reads inside.
 // The merge is in-band: a failed copy fails the accept and the user retries.
-// invitation.contactId - the link to the app's record for this person - is the
-// third opaque copy, and rides the same user-row update as the profile merge.
+// invitation.contactId - the link to the app's record for this person - rides
+// the same user-row update as the profile merge, and is set only on a login
+// that has no link yet: the link is an authorization input, set once.
+// createBeforeAcceptInvitationHook has already refused an invitation naming a
+// different contact than the login's, before the member row was written.
 // Invite-time member attributes and app roles ride the invitation the same
 // way: accepting copies invitation.attributes and invitation.appRoles onto the
 // minted member row (one adapter-layer update, parallel to the opaque profile
@@ -41,20 +44,25 @@ function createAfterAcceptInvitationHook({ getAuth }) {
   return async function afterAcceptInvitationHook({ invitation, member, user }) {
     const { adapter, internalAdapter } = await getAuth().$context;
     const userUpdate = {};
-    if (type.isObject(invitation.profile)) {
+    const copiesProfile = type.isObject(invitation.profile);
+    const copiesContactId = type.isString(invitation.contactId);
+    if (copiesProfile || copiesContactId) {
       // The hook's user is the session user, which may be a cookie-cached
-      // copy - the merge base is read from the user row so a read-merge-write
-      // never resurrects a stale profile.
+      // copy - the merge base and the current link are read from the user row
+      // so a read-merge-write never resurrects a stale profile, and a link
+      // set since the session was cached is never overwritten.
       const userRow = await adapter.findOne({
         model: 'user',
         where: [{ field: 'id', value: user.id }],
       });
-      userUpdate.profile = { ...(userRow.profile ?? {}), ...invitation.profile };
-    }
-    // contactId is a top-level user field, so it is set outright - no read, no
-    // merge. An invitation that names no link leaves an existing one standing.
-    if (type.isString(invitation.contactId)) {
-      userUpdate.contactId = invitation.contactId;
+      if (copiesProfile) {
+        userUpdate.profile = { ...(userRow.profile ?? {}), ...invitation.profile };
+      }
+      // An invitation that names no link leaves an existing one standing, and
+      // the same link is not written again.
+      if (copiesContactId && type.isNone(userRow.contactId)) {
+        userUpdate.contactId = invitation.contactId;
+      }
     }
     if (Object.keys(userUpdate).length > 0) {
       await internalAdapter.updateUser(user.id, userUpdate);

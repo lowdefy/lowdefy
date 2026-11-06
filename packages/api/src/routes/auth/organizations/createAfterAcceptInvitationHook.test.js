@@ -68,7 +68,7 @@ test('afterAcceptInvitationHook shallow-merges the invitation profile with the i
   });
 });
 
-test('afterAcceptInvitationHook copies the invitation contactId onto the user row', async () => {
+test('afterAcceptInvitationHook sets the invitation contactId on a login with no link', async () => {
   const { auth, findOne, update, updateUser } = createMockAuth();
   const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
 
@@ -79,10 +79,66 @@ test('afterAcceptInvitationHook copies the invitation contactId onto the user ro
     organization: { id: 'org_1' },
   });
 
-  // A top-level set needs no merge base, so the contactId-only copy reads no row.
-  expect(findOne).not.toHaveBeenCalled();
+  // The link is read from the stored row, not the possibly cookie-cached
+  // session user.
+  expect(findOne).toHaveBeenCalledWith({
+    model: 'user',
+    where: [{ field: 'id', value: 'user_1' }],
+  });
   expect(updateUser).toHaveBeenCalledWith('user_1', { contactId: 'contact_9' });
   expect(update).not.toHaveBeenCalled();
+});
+
+test('afterAcceptInvitationHook writes nothing when the login already holds the invitation contactId', async () => {
+  const { auth, update, updateUser } = createMockAuth({
+    userRow: { id: 'user_1', contactId: 'contact_9' },
+  });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', contactId: 'contact_9' },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(updateUser).not.toHaveBeenCalled();
+  expect(update).not.toHaveBeenCalled();
+});
+
+// The before hook refuses a different contact; should a link land between the
+// two hooks, the after hook still never overwrites it.
+test('afterAcceptInvitationHook never overwrites a link the login already holds', async () => {
+  const { auth, updateUser } = createMockAuth({
+    userRow: { id: 'user_1', contactId: 'contact_1', profile: { locale: 'en' } },
+  });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', contactId: 'contact_9', profile: { plan: 'pro' } },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(updateUser).toHaveBeenCalledWith('user_1', { profile: { locale: 'en', plan: 'pro' } });
+});
+
+test('afterAcceptInvitationHook leaves the link as it is when the invitation names no contact', async () => {
+  const { auth, findOne, updateUser } = createMockAuth({
+    userRow: { id: 'user_1', contactId: 'contact_1' },
+  });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', attributes: { branch: 'north' } },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(findOne).not.toHaveBeenCalled();
+  expect(updateUser).not.toHaveBeenCalled();
 });
 
 test('afterAcceptInvitationHook copies contactId and merges profile in a single user update', async () => {

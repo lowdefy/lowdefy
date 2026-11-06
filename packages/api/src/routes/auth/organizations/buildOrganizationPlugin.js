@@ -17,6 +17,7 @@
 import { organization } from 'better-auth/plugins';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
+import createBeforeAcceptInvitationHook from './createBeforeAcceptInvitationHook.js';
 import createBeforeCreateInvitationHook from './createBeforeCreateInvitationHook.js';
 import createBeforeUpdateMemberRoleHook from './createBeforeUpdateMemberRoleHook.js';
 import modelNames from '../modelNames.js';
@@ -134,9 +135,10 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
         // invitation winning per key. Invite-time member attributes ride the
         // invitation the same way - accepting copies them onto the minted
         // member row, so an invited user's authorization parameters hold
-        // from their first session. contactId rides it as a third opaque
-        // copy, so an invitation can name the app record the invitee's login
-        // will point at before that person has ever signed in.
+        // from their first session. contactId rides it too, so an invitation
+        // can name the app record the invitee's login will point at before
+        // that person has ever signed in; accept sets it only on a login with
+        // no link (createBeforeAcceptInvitationHook).
         //
         // appRoles is declared without the input: false its member counterpart
         // carries. toZodSchema drops input: false fields when isClientSide is
@@ -158,6 +160,9 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
     },
     organizationHooks: {
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
+      // Refuses an invitation naming a different contact than the login is
+      // linked to, before the member row is written: the link is set once.
+      beforeAcceptInvitation: createBeforeAcceptInvitationHook({ getAuth }),
       // Keeps a suspended member out of the owner tier, so the plugin's owner
       // guards, which count every owner row, stay exact (SuspendMember).
       beforeUpdateMemberRole: createBeforeUpdateMemberRoleHook(),
