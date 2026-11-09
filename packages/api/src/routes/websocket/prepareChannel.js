@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import authorizeWebsocket from './authorizeWebsocket.js';
+import checkWebsocketAccess from './checkWebsocketAccess.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
@@ -32,11 +33,19 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 // websocket definition can produce user- or filter-specific channels. The
 // evaluated result is the channel identity — subscribers whose evaluation is
 // identical share one running source.
-async function prepareChannel(context, { websocketId, payload }) {
+//
+// A subscribe also runs the websocket's check endpoint, before anything is
+// evaluated for a caller it refuses. The check is per subscriber and not part
+// of the channel identity, so subscribers that each pass still share a source.
+// A publish is not checked: the check guards what a subscriber hears.
+async function prepareChannel(context, { checkAccess = false, websocketId, payload }) {
   context.evaluateOperators = createEvaluateOperators(context);
 
   const websocketConfig = await getWebsocketConfig(context, { websocketId });
   authorizeWebsocket(context, { websocketConfig });
+  if (checkAccess) {
+    await checkWebsocketAccess(context, { payload, websocketConfig });
+  }
   const websocketResolver = getWebsocketResolver(context, { websocketConfig });
 
   let connectionProperties = null;

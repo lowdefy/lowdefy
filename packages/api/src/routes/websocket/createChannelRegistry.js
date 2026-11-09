@@ -177,7 +177,7 @@ function createChannelRegistry() {
     }
 
     const { connectionProperties, properties, tenant, websocketConfig, websocketResolver } =
-      await prepareChannel(context, { websocketId, payload });
+      await prepareChannel(context, { checkAccess: true, websocketId, payload });
 
     const key = getChannelKey({ connectionProperties, properties, tenant, websocketId });
     let channel = channels.get(key);
