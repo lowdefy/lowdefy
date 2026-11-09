@@ -226,6 +226,7 @@ pnpm bench:build ../my-app --baseline v7.1.0      # any commit as baseline, any 
 pnpm bench:build packages/docs --skip-build       # this checkout is already built
 pnpm bench:build packages/docs --server e2e       # @lowdefy/server-e2e instead of the server
 pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in current
+pnpm bench:build packages/docs --keymap           # key and ref ids by what they point at
 ```
 
 | Exit code | Meaning                                         |
@@ -256,18 +257,33 @@ pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in
   Never skip a file.
 - **Parts** (`scripts/lib/bench/`): `buildSide` runs one side's CLI build on a prepared server
   and can run repeatedly; `compareBuilds` takes `comparers`, a map from a server-relative file
-  (`build/keyMap.json`) to a comparer used in place of the byte comparison.
+  (`build/keyMap.json`) to a comparer used in place of the byte comparison, and
+  `defaultComparer` for every other file.
 
-**Key map by meaning.** A change that reshapes `keyMap.json` on purpose proves itself with
-`pnpm bench:build <app-dir> --keymap`: `keyMap.json` must hold the same key ids, and every id
-must resolve to the same source file, line and config path, each side's map read with that
-side's own `resolveConfigLocation` (from its `packages/utils/errors/dist`). Every other file,
-`refMap.json` included, stays byte-identical. `pnpm bench:keymap <old> <new>` runs the same
-check on two build folders (each holding `keyMap.json` and `refMap.json`) or two fixture
-`snapshot.json` files; `--old-errors <dist>` and `--new-errors <dist>` pick the readers, by
-default the baseline worktree's and this checkout's. It exits 0 when the maps say the same, 1
-when they differ, and reports the counts and the first 20 differences. A million keys take
-seconds.
+**Key and ref ids by meaning.** A change that reshapes `keyMap.json` or renumbers key or ref
+ids on purpose proves itself with `pnpm bench:build <app-dir> --keymap`. Ids are compared by
+what they point at, not by value, each side's maps read with that side's own
+`resolveConfigLocation` (from its `packages/utils/errors/dist`):
+
+- Every JSON artifact is compared with each `~k` replaced by its source file, line and config
+  path, and each `~r` by its ref's file, line and parent chain. A file whose bytes match is
+  never decoded.
+- `keyMap.json` must describe the same locations, as many times each, whatever the ids:
+  a report lists the locations only one side has.
+- `refMap.json` must describe the same refs (file, line, original definition and parent
+  chain) the same way.
+
+So a build that numbers the same config differently (ids shifted by an earlier change, or a
+new id scheme) is identical, and a node that moved line or file is a difference in both the
+artifact holding it and `keyMap.json`. Every other file stays byte-identical.
+
+`pnpm bench:keymap <old> <new>` checks two key maps by id instead, for a change that keeps the
+ids and only reshapes the entries: every id must be on both sides and resolve to the same
+location. It reads two build folders (each holding `keyMap.json` and `refMap.json`) or two
+fixture `snapshot.json` files; `--old-errors <dist>` and `--new-errors <dist>` pick the
+readers, by default the baseline worktree's and this checkout's. It exits 0 when the maps say
+the same, 1 when they differ, and reports the counts and the first 20 differences. A million
+keys take seconds.
 
 ### Bench report
 

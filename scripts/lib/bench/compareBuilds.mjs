@@ -85,10 +85,17 @@ function checkAddedFile({ current, file }) {
 // (build/keyMap.json) to a comparer used in place of the byte comparison,
 // called as compare({ file, baseline, current }) with each side's
 // { serverDirectory, replacePath } and resolving to { identical, lines }.
+// defaultComparer, called the same way, compares every other file.
 // expectAdded lists build-relative files allowed in the current build only.
 // Resolves to { identical, onlyBaseline, onlyCurrent, added, differences,
 // compared }, differences and added being [{ file, identical, lines }].
-async function compareBuilds({ baseline, current, comparers = {}, expectAdded = [] }) {
+async function compareBuilds({
+  baseline,
+  current,
+  comparers = {},
+  defaultComparer = compareFileBytes,
+  expectAdded = [],
+}) {
   const sides = {
     baseline: createSide(baseline),
     current: createSide(current),
@@ -113,7 +120,7 @@ async function compareBuilds({ baseline, current, comparers = {}, expectAdded = 
   const shared = [...baselineFiles].filter((file) => currentFiles.has(file)).sort();
   const differences = [];
   for (const file of shared) {
-    const compare = comparers[file] ?? compareFileBytes;
+    const compare = comparers[file] ?? defaultComparer;
     const result = await compare({ file, baseline: sides.baseline, current: sides.current });
     if (!result.identical) {
       differences.push({ file, ...result });
