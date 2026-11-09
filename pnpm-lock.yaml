@@ -2790,6 +2790,9 @@ importers:
       '@lowdefy/actions-core':
         specifier: 7.1.0
         version: link:../../plugins/actions/actions-core
+      '@lowdefy/actions-pdf-make':
+        specifier: 7.1.0
+        version: link:../../plugins/actions/actions-pdf-make
       '@lowdefy/api':
         specifier: 7.1.0
         version: link:../../api
@@ -2811,15 +2814,27 @@ importers:
       '@lowdefy/blocks-captcha':
         specifier: 7.1.0
         version: link:../../plugins/blocks/blocks-captcha
+      '@lowdefy/blocks-diff':
+        specifier: 7.1.0
+        version: link:../../plugins/blocks/blocks-diff
       '@lowdefy/blocks-echarts':
         specifier: 7.1.0
         version: link:../../plugins/blocks/blocks-echarts
+      '@lowdefy/blocks-files':
+        specifier: 7.1.0
+        version: link:../../plugins/blocks/blocks-files
+      '@lowdefy/blocks-google-maps':
+        specifier: 7.1.0
+        version: link:../../plugins/blocks/blocks-google-maps
       '@lowdefy/blocks-loaders':
         specifier: 7.1.0
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
         specifier: 7.1.0
         version: link:../../plugins/blocks/blocks-markdown
+      '@lowdefy/blocks-qr':
+        specifier: 7.1.0
+        version: link:../../plugins/blocks/blocks-qr
       '@lowdefy/blocks-table':
         specifier: 7.1.0
         version: link:../../plugins/blocks/blocks-table
@@ -2880,6 +2895,9 @@ importers:
       '@lowdefy/operators-js':
         specifier: 7.1.0
         version: link:../../plugins/operators/operators-js
+      '@lowdefy/operators-jsonata':
+        specifier: 7.1.0
+        version: link:../../plugins/operators/operators-jsonata
       '@lowdefy/operators-mql':
         specifier: 7.1.0
         version: link:../../plugins/operators/operators-mql
@@ -2892,9 +2910,18 @@ importers:
       '@lowdefy/operators-yaml':
         specifier: 7.1.0
         version: link:../../plugins/operators/operators-yaml
+      '@lowdefy/plugin-aws':
+        specifier: 7.1.0
+        version: link:../../plugins/plugins/plugin-aws
       '@lowdefy/plugin-better-auth':
         specifier: 7.1.0
         version: link:../../plugins/plugins/plugin-better-auth
+      '@lowdefy/plugin-csv':
+        specifier: 7.1.0
+        version: link:../../plugins/plugins/plugin-csv
+      '@lowdefy/plugin-posthog':
+        specifier: 7.1.0
+        version: link:../../plugins/plugins/plugin-posthog
       '@lowdefy/websockets-core':
         specifier: 7.1.0
         version: link:../../plugins/websockets/websockets-core
