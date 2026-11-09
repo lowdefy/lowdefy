@@ -20,3 +20,5 @@ websockets:
 ```
 
 The endpoint runs as the subscriber, after the `auth.websockets` role check. Only a return value of exactly `true` lets the subscription continue; any other value, an error or an endpoint the subscriber may not call refuses it with the same response as a websocket that does not exist, and an error is also logged. The check runs on the first subscribe, the resubscribe after a reconnect and a `Subscribe` with a new payload, but not while a subscription stays open. It is not part of the channel identity, so subscribers who each pass still share one running source. Publishing is not checked. The build fails when `check.endpointId` names no endpoint in the app.
+
+fix: The server now deserializes a subscribe payload, as it already did a publish payload, so a Date the page sends reaches websocket `properties` and the check endpoint as a Date.

@@ -650,3 +650,19 @@ test('resolver errors after the channel is aborted are ignored', async () => {
   expect(context.handleError).not.toHaveBeenCalled();
   expect(subscriber.send).not.toHaveBeenCalled();
 });
+
+test('subscribe deserializes the payload and asks prepareChannel to run the access check', async () => {
+  const registry = createChannelRegistry();
+  mockPrepare({ resolver: createPendingResolver() });
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(createTestContext(), {
+    websocketId: 'ws1',
+    payload: { since: { '~d': 0 } },
+    subscriber,
+  });
+
+  const [, options] = mockPrepareChannel.mock.calls.at(-1);
+  expect(options.checkAccess).toBe(true);
+  expect(options.payload.since).toEqual(new Date(0));
+});

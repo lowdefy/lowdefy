@@ -36,7 +36,7 @@ async function checkWebsocketAccess(context, { payload, websocketConfig }) {
 
   let result;
   try {
-    const checkPayload = type.isUndefined(check.payload)
+    const checkPayload = type.isNone(check.payload)
       ? payload
       : context.evaluateOperators({
           input: check.payload,
@@ -45,10 +45,14 @@ async function checkWebsocketAccess(context, { payload, websocketConfig }) {
           state: {},
           steps: {},
         });
+    // The subscriber's client built the payload, so a payload the endpoint's
+    // schema refuses is that caller's mistake, as for a CallAPI with no page
+    // (validatePayload), not a fault to log at error level.
     result = await invokeEndpoint(context, {
       endpointId: check.endpointId,
       payload: checkPayload,
       endpointDepth: 0,
+      outsideCaller: true,
     });
   } catch (error) {
     // The endpoint refusing the caller is a refusal like any other. Anything

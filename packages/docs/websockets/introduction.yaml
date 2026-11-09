@@ -124,6 +124,8 @@ _ref:
 
                 Unauthorized subscriptions receive the same response as subscriptions to channels that do not exist.
 
+                An open connection follows the session. The server checks the caller again on every subscribe and at least once a minute. When the user signs out, the session ends, the membership is removed, the roles change or the user switches organization, the server closes the connection and the client reconnects straight away as the current caller. Subscriptions the current caller may not hold fail as they would on a freshly loaded page.
+
                 ### Checking access to a record
 
                 Roles decide who may hear a channel at all. A channel whose payload names a record, such as the events on one ticket, also needs to know whether this subscriber may see that ticket. A pipeline filter can not answer that, since it only sees the change event, so give the websocket a `check`: an endpoint that answers from your own data.
@@ -167,13 +169,11 @@ _ref:
                 ```
 
                 - The endpoint runs as the subscriber, with the same `_user`, roles and organization as a request from that session.
-                - Only a return value of exactly `true` lets the subscription continue. Any other value, an error, or an endpoint the subscriber may not call refuses it with the same response as a channel that does not exist. An error is also logged.
+                - Only a return value of exactly `true` lets the subscription continue. Any other value, an error, or an endpoint the subscriber may not call refuses it with the same response as a channel that does not exist. An error in the check or the endpoint is also logged.
                 - The check runs on every subscribe: the first one, the resubscribe after a reconnect, and a [`Subscribe`](/websocket-publish) with a new payload. It does not run again while a subscription stays open, so revoking access does not end a subscription that is already running.
                 - The check is not part of the channel identity. Subscribers whose evaluated `properties` match still share one running source, and each is checked on their own.
-                - A publish is not checked; `check` guards what a subscriber hears.
+                - A publish is not checked: `check` guards what a subscriber hears, and who may publish is decided by `auth.websockets` alone.
                 - A module websocket names its own endpoint with [`_module.endpointId`](/_module).
-
-                An open connection follows the session. The server checks the caller again on every subscribe and at least once a minute. When the user signs out, the session ends, the membership is removed, the roles change or the user switches organization, the server closes the connection and the client reconnects straight away as the current caller. Subscriptions the current caller may not hold fail as they would on a freshly loaded page.
 
                 ## What's Next
 

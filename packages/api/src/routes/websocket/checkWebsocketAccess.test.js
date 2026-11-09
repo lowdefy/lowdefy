@@ -275,3 +275,35 @@ test('checkWebsocketAccess runs the endpoint as the subscriber', async () => {
     checkWebsocketAccess(otherContext, { payload: {}, websocketConfig: config })
   ).rejects.toThrow(refusal);
 });
+
+test('checkWebsocketAccess sends the subscription payload when the check payload is null', async () => {
+  const context = createTestContext({
+    endpoint: returning({ _eq: [{ _payload: 'ticket_id' }, 't-1'] }),
+  });
+  await expect(
+    checkWebsocketAccess(context, {
+      payload: { ticket_id: 't-1' },
+      websocketConfig: websocketConfig({ endpointId: 'can-view-ticket', payload: null }),
+    })
+  ).resolves.toBeUndefined();
+});
+
+test('checkWebsocketAccess refuses a payload the endpoint schema rejects without an error log', async () => {
+  const context = createTestContext({
+    endpoint: {
+      ...returning(true),
+      payloadSchema: {
+        type: 'object',
+        properties: { ticket_id: { type: 'string' } },
+        required: ['ticket_id'],
+      },
+    },
+  });
+  await expect(
+    checkWebsocketAccess(context, {
+      payload: { ticket_id: 42 },
+      websocketConfig: websocketConfig({ endpointId: 'can-view-ticket' }),
+    })
+  ).rejects.toThrow(refusal);
+  expect(logger.error).not.toHaveBeenCalled();
+});

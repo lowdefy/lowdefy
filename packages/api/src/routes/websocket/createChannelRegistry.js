@@ -176,8 +176,14 @@ function createChannelRegistry() {
       unsubscribe({ websocketId, subscriber });
     }
 
+    // The client serializes the payload, as it does for a publish and a CallAPI,
+    // so properties and the check endpoint read Dates as Dates.
     const { connectionProperties, properties, tenant, websocketConfig, websocketResolver } =
-      await prepareChannel(context, { checkAccess: true, websocketId, payload });
+      await prepareChannel(context, {
+        checkAccess: true,
+        websocketId,
+        payload: serializer.deserialize(payload ?? {}),
+      });
 
     const key = getChannelKey({ connectionProperties, properties, tenant, websocketId });
     let channel = channels.get(key);

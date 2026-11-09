@@ -119,7 +119,12 @@ test('a subscriber the check refuses does not join a running channel', async () 
   ).rejects.toThrow('Websocket "ticket_events" does not exist.');
 
   expect(refused.subscriptions.size).toBe(0);
-  expect([...registry.channels.values()][0].subscribers.size).toBe(1);
+  const channel = [...registry.channels.values()][0];
+  expect(channel.subscribers.size).toBe(1);
+
+  channel.publish({ data: { event: 'reply' } });
+  expect(allowed.send).toHaveBeenCalledTimes(1);
+  expect(refused.send).not.toHaveBeenCalled();
 });
 
 test('a resubscribe runs the check again', async () => {
