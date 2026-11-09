@@ -1,0 +1,22 @@
+---
+'@lowdefy/api': minor
+'@lowdefy/build': minor
+'@lowdefy/docs': minor
+'@lowdefy/docs-content': patch
+---
+
+feat: A websocket can name a `check` endpoint that decides, on every subscribe, whether the subscriber may hear the channel. Use it for a channel whose payload names a record, such as the events on one ticket, where roles alone can not say whether this subscriber may see that record.
+
+```yaml
+websockets:
+  - id: ticket_events
+    type: MongoDBChangeStream
+    connectionId: events
+    check:
+      endpointId: can-view-ticket # Api or InternalApi
+      payload: # optional; defaults to the subscription payload
+        ticket_id:
+          _payload: ticket_id
+```
+
+The endpoint runs as the subscriber, after the `auth.websockets` role check. Only a return value of exactly `true` lets the subscription continue; any other value, an error or an endpoint the subscriber may not call refuses it with the same response as a websocket that does not exist, and an error is also logged. The check runs on the first subscribe, the resubscribe after a reconnect and a `Subscribe` with a new payload, but not while a subscription stays open. It is not part of the channel identity, so subscribers who each pass still share one running source. Publishing is not checked. The build fails when `check.endpointId` names no endpoint in the app.
