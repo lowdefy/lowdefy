@@ -17,10 +17,15 @@
 import { vi, expect, test } from 'vitest';
 
 const mockInstallIfPackageJsonChanged = vi.fn();
+const mockInstallWorkspacePlugins = vi.fn();
 
 vi.doMock('@lowdefy/node-utils', () => ({
   installIfPackageJsonChanged: mockInstallIfPackageJsonChanged,
   spawnProcess: vi.fn(),
+}));
+
+vi.doMock('./installWorkspacePlugins.js', () => ({
+  default: mockInstallWorkspacePlugins,
 }));
 
 const { default: installServer } = await import('./installServer.js');
@@ -47,4 +52,12 @@ test('installServer keeps exact matching when skipIfInstalled is not passed', as
     expect.objectContaining({ directory: '/server', skipIfInstalled: false })
   );
   expect(context.logger.info).not.toHaveBeenCalledWith('Dependencies unchanged.');
+});
+
+test('installServer installs workspace plugins when the server install is skipped', async () => {
+  mockInstallWorkspacePlugins.mockClear();
+  mockInstallIfPackageJsonChanged.mockResolvedValue(false);
+  const context = createContext();
+  await installServer({ context, directory: '/server', skipIfInstalled: true });
+  expect(mockInstallWorkspacePlugins).toHaveBeenCalledWith({ context, directory: '/server' });
 });
