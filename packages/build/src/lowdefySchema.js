@@ -2227,6 +2227,36 @@ export default {
               'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use. ("authored" is aggregation-only; change streams are always scoped mechanically.)',
           },
         },
+        check: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['endpointId'],
+          description:
+            'An API endpoint that runs as the subscriber on every subscribe. The subscription continues only when it returns true.',
+          properties: {
+            '~ignoreBuildChecks': ignoreBuildChecksSchema,
+            '~r': {},
+            '~l': {},
+            endpointId: {
+              type: 'string',
+              description: 'The Api or InternalApi endpoint to call.',
+              errorMessage: {
+                type: 'Websocket "check.endpointId" should be a string.',
+              },
+            },
+            payload: {
+              description:
+                'The payload sent to the endpoint, evaluated on the server with _payload, _user and _secret. Defaults to the subscription payload.',
+            },
+          },
+          errorMessage: {
+            type: 'Websocket "check" should be an object.',
+            additionalProperties: 'Websocket "check" should only have "endpointId" and "payload".',
+            required: {
+              endpointId: 'Websocket "check" should have required property "endpointId".',
+            },
+          },
+        },
       },
       errorMessage: {
         type: 'Websocket should be an object.',

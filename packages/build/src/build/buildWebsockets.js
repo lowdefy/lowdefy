@@ -130,6 +130,47 @@ function validateProperties(websocket, context) {
   return true;
 }
 
+// The check endpoint runs on every subscribe, so a missing one would refuse
+// every subscriber at runtime. Runs after buildApi, which sets endpointId.
+function validateCheck(websocket, components, context) {
+  if (type.isNone(websocket.check)) return true;
+  if (!type.isObject(websocket.check)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Websocket check is not an object at websocket "${websocket.id}".`, {
+        received: websocket.check,
+        configKey: websocket['~k'],
+      })
+    );
+    return false;
+  }
+  const configKey = websocket.check['~k'] ?? websocket['~k'];
+  if (!type.isString(websocket.check.endpointId)) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Websocket check endpointId is not a string at websocket "${websocket.id}".`,
+        { received: websocket.check.endpointId, configKey }
+      )
+    );
+    return false;
+  }
+  const endpointExists = (components.api ?? []).some(
+    (endpoint) => endpoint.endpointId === websocket.check.endpointId
+  );
+  if (!endpointExists) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Websocket "${websocket.id}" check references endpoint "${websocket.check.endpointId}" which does not exist.`,
+        { configKey }
+      )
+    );
+    return false;
+  }
+  return true;
+}
+
 function buildWebsockets({ components, context }) {
   if (components.websockets && !type.isArray(components.websockets)) {
     throw new ConfigError('Websockets is not an array.', {
@@ -158,6 +199,7 @@ function buildWebsockets({ components, context }) {
 
     if (!validateConnectionRef(websocket, components, context)) return;
     if (!validateProperties(websocket, context)) return;
+    if (!validateCheck(websocket, components, context)) return;
 
     // Rename id to internal format
     websocket.websocketId = websocket.id;
@@ -166,6 +208,9 @@ function buildWebsockets({ components, context }) {
 
     // Count server operators in properties
     countOperators(websocket.properties, {
+      counter: context.typeCounters.operators.server,
+    });
+    countOperators(websocket.check?.payload, {
       counter: context.typeCounters.operators.server,
     });
   });
