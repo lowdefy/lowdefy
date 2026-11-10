@@ -94,15 +94,24 @@ function locateErrors({ error, context, configDirectory }) {
   }
 }
 
-// generation names the build context the page was built on, and checkedAt the
-// change event counter when its build started: what it read is current as of
-// that event.
-async function record({ pageId, context, configDirectory, generation, checkedAt, build }) {
+// generation names the config build the page was built in, contextName the
+// build context it ran on (its jitMaps files), and checkedAt the change event
+// counter when its build started: what it read is current as of that event.
+async function record({
+  pageId,
+  context,
+  configDirectory,
+  contextName,
+  generation,
+  checkedAt,
+  build,
+}) {
   const reads = { files: new Map(), ranAppCode: false };
   const builtAt = Date.now();
   const describe = (errors) => ({
     builtAt,
     checkedAt,
+    contextName,
     errors,
     files: reads.files,
     generation,
@@ -128,4 +137,15 @@ function get(pageId) {
   return records.get(pageId) ?? null;
 }
 
-export default { get, record, trackFileReads, trackReadConfigFile };
+// The build contexts the latest builds of a generation's pages ran on.
+function contextNames({ generation }) {
+  const names = new Set();
+  for (const pageRecord of records.values()) {
+    if (pageRecord.generation === generation && pageRecord.contextName) {
+      names.add(pageRecord.contextName);
+    }
+  }
+  return [...names];
+}
+
+export default { contextNames, get, record, trackFileReads, trackReadConfigFile };

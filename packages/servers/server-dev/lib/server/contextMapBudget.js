@@ -15,10 +15,13 @@
 */
 
 // Key and ref map entries the dev server's kept JIT build context may add
-// before it is recreated. Every page build adds entries to both maps and they
-// are released only with the context, so this bounds one dev server's memory.
-// Measured on the docs app: about 530 entries and 400-750 KB of retained heap
-// per page build, so this is about 90 page builds and 35-65 MB.
-const contextMapBudget = 48000;
+// before it is released and the next page build makes a new one. Every page
+// build adds entries to both maps and they are freed only with the context, so
+// this bounds one dev server's memory. Retained heap measured about 290 bytes
+// an entry, so this is about 140 MB. A new context costs 4-16 s on a large
+// app, so the budget is high enough that editing a page of 50,000 entries
+// usually rebuilds it on the kept context. The docs app adds about 530 entries
+// a page build, so this is about 900 page builds.
+const contextMapBudget = 480000;
 
 export default contextMapBudget;
