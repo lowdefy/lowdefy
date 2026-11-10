@@ -352,6 +352,41 @@ describe('subscribe ack timers', () => {
     expect(sentFrames(reopened).map((frame) => frame.websocketId)).toEqual(['chat', 'news']);
   });
 
+  test('a kept subscribe whose resubscribe is refused reports the error and stays subscribed like any resubscribe', async () => {
+    const { client, close, open, receive, sentFrames, sockets } = createTestClient();
+    const handlers = createHandlers();
+    client.connect();
+    open();
+    const subscribed = track(client.subscribe({ handlers, payload: {}, websocketId: 'chat' }));
+    vi.advanceTimersByTime(10000);
+    await flushPromises();
+    expect(subscribed.error.subscriptionKept).toBe(true);
+
+    // The fake clock runs a zero-delay timer set inside another timer 1ms later.
+    vi.advanceTimersByTime(1);
+    open();
+    receive({ type: 'error', websocketId: 'chat', requestId: 's2', error: { '~e': wireError } });
+    expect(handlers.onError).toHaveBeenCalledWith('Something went wrong.');
+    expect(handlers.onConnected).not.toHaveBeenCalled();
+
+    // The engine still holds the channel active, so the client keeps the feed
+    // for the page to unsubscribe, and the next connection sends it again.
+    close();
+    vi.advanceTimersByTime(0);
+    expect(sockets).toHaveLength(3);
+    const third = open();
+    expect(sentFrames(third)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's3' },
+    ]);
+    client.unsubscribe({ websocketId: 'chat' });
+    expect(sentFrames(third)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's3' },
+      { type: 'unsubscribe', websocketId: 'chat' },
+    ]);
+    vi.advanceTimersByTime(5000);
+    expect(third.close).toHaveBeenCalledTimes(1);
+  });
+
   test('a subscribe sent into a connection that closes and does not reopen within its ack timeout rejects and is sent when a connection opens', async () => {
     const { client, close, open, sentFrames, sockets } = createTestClient();
     client.connect();
