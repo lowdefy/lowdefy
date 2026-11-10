@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/style-native",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "license": "Apache-2.0",
   "description": "Converts Lowdefy style objects to React Native style objects, at build time and in the mobile shell",
   "homepage": "https://lowdefy.com",

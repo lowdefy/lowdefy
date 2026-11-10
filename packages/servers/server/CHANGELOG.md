@@ -1,5 +1,173 @@
 # @lowdefy/server-enterprise
 
+## 7.2.0
+
+### Minor Changes
+
+- 8b0c8be: feat(api): Link endpoints serve a file at a stable URL, and Tiptap editors save it with `imageSrc`
+
+  An `Api` endpoint with `link: true` answers a `GET` on `/api/endpoints/<endpointId>/<path...>`: its routine runs as the signed-in caller, with `{ path, query }` as payload and the endpoint's `auth` applied, and the endpoint answers `302` to the URL its `:return` gives (an absolute http(s) URL or a path starting with `/`), with `Cache-Control: private, no-store`. Endpoint ids can hold slashes, so the longest link id the URL starts with wins. A signed-out caller on a protected link gets `401`, a caller without its roles `403`, a `:reject` its `:status` (default `400`), all with no body; an unknown id answers `404` (`401` to a signed-out caller on an app with auth), and any other error `500` with a fixed message. A payload its `payloadSchema` refuses answers `400` with no body. A `POST` to a link endpoint is refused as a missing endpoint, and the build refuses one as an MCP tool. The build refuses `link` on `InternalApi` and with `webhook` or `async`, and allows `:status`, not `:body`, on a `:reject` in a link endpoint. Link endpoints must have no side effects, since any page that embeds the URL can trigger the `GET`.
+
+  `TiptapInput` and `TiptapMentionInput` take an `imageSrc` `_function`, called with `{ key, bucket, name, type }` once an image is uploaded; its string is the inserted `src`. It takes precedence over `downloadPolicyRequestId`, so no download request runs. Pointing it at a link endpoint lets the bucket behind inline images stay private.
+
+- 7b06be6: feat: Phone apps sign in with ordinary sessions sent as bearers
+
+  An app with a `mobile:` section accepts its Better Auth session as `Authorization: Bearer <token>` on every route, for phone shells:
+
+  - A phone signs in on Better Auth's own routes, such as `/api/auth/sign-in/email-otp`, and reads the session token from the `set-auth-token` response header. The header goes only to requests with no `Origin` and no cookies, so page script in a browser never sees it.
+  - Bearer callers resolve like cookie callers, with the same roles, organization and caller stamp, and are read past the cookie cache: signing out, ending sessions or removing a member applies on the next call. Websockets accept the bearer on the upgrade.
+  - `/auth/mobile?shell=<id>&state=<s>` is the page a shell opens in a system sign-in sheet for every other sign-in method. It sends a signed-out person through the app's sign-in page, then redirects to the shell's scheme with a one-time token that lasts one minute and works once.
+  - The email code send is capped at 5 per address per 15 minutes.
+  - New `mobile.auth` keys: `emailCode`, `unlock`, `unlockAfter`, `sharedDevice` and `sessionExpiresIn`, which gives phone sessions their own lifetime. A shell `scheme` must be a lowercase URL scheme and not a web one.
+
+- 8158470: feat: Server routes for mobile shells
+
+  - `GET /api/mobile/root` returns what a mobile shell syncs on start: the `mobile.menus` frame with the items the caller may open, menu icon data, the index of the mobile pages the caller may open with each page's hash and type set key, those type sets, `minShellVersion`, and placeholder theme fields. It answers 404 for an app without a `mobile` key. The dev server lists page paths only, without hashes or type sets.
+  - `GET /api/page/*` sends an `ETag`, and both routes answer `304` to a matching `If-None-Match`.
+  - Pages are gated by surface: a request with `x-lowdefy-shell` gets only pages listed in `mobile.pages`, and a browser never gets a page listed only there. The other surface answers `404` with `{ pageConfig: null, surface }`. Page access still comes from `auth.pages`.
+  - `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` are served from `mobile.shells` when a shell declares iOS or Android signing details.
+  - The dev server builds mobile pages on demand, resolving their blocks against the native block set.
+
+- d80e12d: feat: The phone sign-in sheet asks to confirm, gives the phone its own session and returns by app link on Android
+
+  - `/auth/mobile` no longer hands a session to a shell on a GET. A signed-in person sees "Sign in to <app> on this device?", naming the shell and the account, with Continue and Cancel. The one-time token is minted only when the page posts back from the app's own origin with its CSRF token. Cancel returns `error=cancelled` to the shell.
+  - Continue creates a new session for the phone, with the browser session's active organization and the phone lifetime from `mobile.auth.sessionExpiresIn`. The browser's own session is never handed over, marked or extended, so signing out on the phone leaves the browser signed in. A browser session created inside this sign-in is ended once the phone has its own.
+  - Shells send `platform=ios` or `platform=android` (now required). Android returns by the https app link `<app url>/auth/mobile/callback`, verified through `assetlinks.json`, instead of the shell's scheme, so no other app can receive the token. An Android shell needs `android.package` and `android.sha256` in `mobile.shells`. If the link is not verified, `/auth/mobile/callback` asks the person to return to the app and never shows the token. iOS keeps the shell's scheme.
+  - The shell declares the app link in its Android manifest for each app's https url.
+
+### Patch Changes
+
+- 8d06d67: fix(servers): A session the server refuses no longer reloads the page until it fails
+
+  When the server resolves a signed-in session to no caller (a removed member, or an invitee whose invitation expired or was cancelled after sign-in), the browser used to render the session's user anyway. Every response then named a different caller than the page showed, so the page reloaded and failed with "The server answered as a different user or organization than this page shows". The page now renders no caller in that case, matching the server. After a client-side sign-in with no navigation, the page asks `/api/user` once for the signed-in caller instead of rendering the session's user without roles or organization.
+
+- c84f275: fix(client): A sign-in that stays on the page renders the signed-in user before the action returns
+
+  A sign-in with `callbackUrl: false`, which stays on the page, now finishes by asking the server who signed in, as `UpdateSession` does, and renders that user before the `Login` action returns. The next action in the chain, such as a request, is answered as the user the page shows. Before, that request could reload the page and lose the page's state. If the page cannot get the signed-in user from the server, it reloads in place rather than failing a sign-in that succeeded.
+
+- 5d21931: fix(server): the MCP endpoint answers `GET` with 405
+
+  The MCP server is stateless and pushes no notifications, but a `GET /api/mcp` opened an event stream nothing wrote to, which MCP clients held open until the host's time limit. On a serverless host each one held a function until `maxDuration`. A `GET` now answers 405 with `Allow: POST` after the auth checks, as the MCP spec allows for a server without a stream, and clients stop opening one.
+
+- 7416223: fix(server, shell, client-core, build, api): Native faults reach the server log, and mobile config reports every error
+
+  The production `/api/client-error` route now admits a phone shell's report, which carries no `Origin`, so native faults are logged instead of refused with a 403; a cross-site browser post is still refused. The log line names the surface (`mobile` with the shell version, or `web`). The shell decodes a server error the way the web client does (`decodeErrorBody`, now exported by `@lowdefy/client-core`), so it keeps its class, request id and dev error, and an auth refusal stays an expected outcome. Shell faults that were swallowed (a failed sync, page load, push token registration, background fetch, widget or tracking post, app event) are reported through the core's `handleError`, and a render fault outside a block shows a retry screen instead of closing the app. A network failure is marked where the platform's fetch rejects, so a programming fault is no longer queued as "waiting for network". Sign-in shows "Could not reach the app's server" only for a network failure, a web page that could not be opened is no longer shown as "not found", and a dev page whose plugins are still installing is never cached. Camera, microphone, calendar and location refusals are `UserError`s. The browser error handler's seen set is capped at 500 keys. A mobile sign-in refused by the organization policy is logged as BetterAuth's own refusals are. `lowdefy build` now reports every error in the `mobile` section at once instead of stopping at the first, and a shell's `shell.json` url must be absolute.
+
+- 7c85b4b: fix(api, errors, server): A failed request no longer logs its inputs
+
+  A failed request, on a page or as an endpoint routine step, no longer writes the request's evaluated properties or the connection's error to the logs. The request properties were attached to the error as `received`, which the error log wrote at every log level, so a step that saved an agent chat's thread logged the whole thread when it failed. The connection's error, which can hold the document it rejected, is now carried as a summary: its name, code, status code and message cut to 500 characters, with the same for up to three causes. The error log also names the step by `endpointId`, `stepId` (a page request's id) and `connectionId`. In dev, the dev tools still show the connection's full error; the dev terminal shows the summary. A request type's `meta.credentialProperties` no longer has an effect, since no request property is kept. `errorSummaryForLog`, the error summary agent logs already used, moves to `@lowdefy/errors`.
+
+- a461f7c: fix(deps): Update dependencies for security advisories
+
+  - vite 8.0.16 -> 8.1.6: the dev server no longer serves files outside `server.fs.allow` when a project path matches a system path, and launch-editor's command handling is fixed.
+  - @modelcontextprotocol/sdk 1.31.0 -> 1.32.2: bounds request validation memory, ties experimental tasks to their session, checks a bearer token's audience and stops forwarding headers on cross-origin redirects.
+  - hono 4.13.7 -> 4.13.14: `serveStatic` no longer decodes the path a second time, which let a request bypass middleware.
+  - dompurify 3.4.16 -> 3.4.17: fixes three sanitizer bypasses, one critical.
+  - markdown-it 14.3.1 -> 14.3.3, nodemailer 10.0.13 -> 10.1.7 and undici 7.30.0 -> 7.30.1.
+
+- 3af2019: fix(api, servers, connection-mongodb): Server errors are classified, located and logged the same way everywhere
+
+  Every server site that tells an expected outcome from a fault now asks `isExpectedError`, so an auth refusal or a `UserError` is one warn line on every path: a nested `CallApi`, a websocket frame, a background run, an optional Dynamic block, an MCP tool call and the server error handlers. Faults reach a `handleError` sink instead of a raw `logger.error`: a background, detached or forwarded-cron run that fails, an optional Dynamic block that falls back, an unwalled connection that reaches walled data, an MCP `afterToolCall` hook that fails before its routine runs, an auth email send, and an auth engine error, which goes to a system context's sink. A detached `CallApi` whose dispatch `/api/detached` does not accept is now a fault rather than a completed dispatch. The request context is set before authentication runs, so a fault there is logged with the request id.
+
+  The prod log and Sentry no longer carry `received`, an operator's or control's evaluated input. BetterAuth's own log lines carry an error under `err` and name other values by type only. A connection error that is already typed leaves a request with the step's ids and its cause summarised, and a websocket source's failure is wrapped like a request's, without its evaluated properties. An auth hook that returns a non-object names its type, not the record.
+
+  A MongoDB error that refuses the request (a duplicate key, a malformed pipeline, a missing permission or collection) is now a `RequestError` with the same `code` and `hint`; only a time or memory limit stays a `ServiceError`. A failed unique index build at auth startup names the index and code instead of quoting the duplicate values.
+
+  Config faults carry their config location: endpoint control errors (`:for`, `:while`, `:if`, `:switch`, `:parallel_for`, `:log`) are `ConfigError`s at the control, and the detached `CRON_SECRET` check, cron forwarding, the auth secret, the invitation sender and the auth email connection name theirs. An auth hook's `:throw` now refuses the write with a 400 instead of a 500.
+
+  On the server, `_log` writes an info line through the request's logger instead of `console.log`, so secrets and values marked with `_credential` are removed from it like from every other log line. In the browser it still logs to the console.
+
+- Updated dependencies [ff71016]
+- Updated dependencies [a41d898]
+- Updated dependencies [afeec0b]
+- Updated dependencies [dc785ea]
+- Updated dependencies [029208c]
+- Updated dependencies [163905d]
+- Updated dependencies [e1cf57e]
+- Updated dependencies [f9cafb7]
+- Updated dependencies [4d72041]
+- Updated dependencies [c84f275]
+- Updated dependencies [9c044eb]
+- Updated dependencies [9419d09]
+- Updated dependencies [df6fa3c]
+- Updated dependencies [02842fe]
+- Updated dependencies [d143e29]
+- Updated dependencies [58f2500]
+- Updated dependencies [7e24234]
+- Updated dependencies [31d7de8]
+- Updated dependencies [8b0c8be]
+- Updated dependencies [82d304d]
+- Updated dependencies [ba2ab81]
+- Updated dependencies [02cf4b1]
+- Updated dependencies [7b06be6]
+- Updated dependencies [2248ec5]
+- Updated dependencies [7416223]
+- Updated dependencies [f05943c]
+- Updated dependencies [8158470]
+- Updated dependencies [8972d38]
+- Updated dependencies [d80e12d]
+- Updated dependencies [9aa9608]
+- Updated dependencies [b54d521]
+- Updated dependencies [5b19a85]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [048e010]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [20dd549]
+- Updated dependencies [dfdb8ab]
+- Updated dependencies [ab1f114]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [0f0cd03]
+- Updated dependencies [a461f7c]
+- Updated dependencies [3af2019]
+- Updated dependencies [7aec569]
+- Updated dependencies [12bb05c]
+- Updated dependencies [fcea703]
+- Updated dependencies [9226424]
+- Updated dependencies [26333a9]
+- Updated dependencies [ff7e31a]
+- Updated dependencies [1ffabe9]
+- Updated dependencies [b1d42ca]
+- Updated dependencies [4d548e9]
+- Updated dependencies [9085f6d]
+- Updated dependencies [70ef067]
+- Updated dependencies [c7c1693]
+- Updated dependencies [962ac05]
+- Updated dependencies [837d529]
+- Updated dependencies [f51a6cc]
+- Updated dependencies [9d5eb24]
+- Updated dependencies [732646e]
+- Updated dependencies [0dd2e9d]
+  - @lowdefy/api@7.2.0
+  - @lowdefy/node-utils@7.2.0
+  - @lowdefy/blocks-aggrid@7.2.0
+  - @lowdefy/client@7.2.0
+  - @lowdefy/operators-js@7.2.0
+  - @lowdefy/plugin-better-auth@7.2.0
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/blocks-antd@7.2.0
+  - @lowdefy/blocks-table@7.2.0
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/blocks-tiptap@7.2.0
+  - @lowdefy/actions-core@7.2.0
+  - @lowdefy/block-utils@7.2.0
+  - @lowdefy/blocks-basic@7.2.0
+  - @lowdefy/blocks-markdown@7.2.0
+  - @lowdefy/connection-anthropic@7.2.0
+  - @lowdefy/operators-nunjucks@7.2.0
+  - @lowdefy/blocks-files@7.2.0
+  - @lowdefy/logger@7.2.0
+  - @lowdefy/layout@7.2.0
+  - @lowdefy/blocks-antd-x@7.2.0
+  - @lowdefy/blocks-loaders@7.2.0
+  - @lowdefy/websockets-core@7.2.0
+  - @lowdefy/blocks-echarts@7.2.0
+  - @lowdefy/blocks-captcha@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

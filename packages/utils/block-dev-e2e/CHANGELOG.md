@@ -1,5 +1,12 @@
 # @lowdefy/block-dev-e2e
 
+## 7.2.0
+
+### Patch Changes
+
+- Updated dependencies [31d7de8]
+  - @lowdefy/e2e-utils@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes
