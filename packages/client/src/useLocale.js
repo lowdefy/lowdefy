@@ -62,7 +62,7 @@ function useLocale({ i18n, antdLocaleLoaders, antdXLocaleLoaders, dayjsLocaleMap
       readStorageItem({
         key: storageKey,
         legacyKey: 'lowdefy_locale',
-        storage: window.localStorage,
+        getStorage: () => window.localStorage,
       }) ?? 'auto'
     );
   });

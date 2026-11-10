@@ -77,7 +77,7 @@ function useDarkMode({ antd, configDarkMode, storageKey }) {
       readStorageItem({
         key: storageKey,
         legacyKey: 'lowdefy_darkMode',
-        storage: window.localStorage,
+        getStorage: () => window.localStorage,
       }) ?? 'system'
     );
   });
