@@ -130,9 +130,9 @@ function validateProperties(websocket, context) {
   return true;
 }
 
-// The check endpoint runs on every subscribe, so a missing one would refuse
-// every subscriber at runtime. Runs after buildApi, which sets endpointId.
-function validateCheck(websocket, components, context) {
+// The check endpoint runs on every subscribe and publish, so a missing one
+// would refuse every caller at runtime. Runs after buildApi, which sets endpointId.
+function validateCheck({ websocket, endpointIds, context }) {
   if (type.isNone(websocket.check)) return true;
   if (!type.isObject(websocket.check)) {
     collectExceptions(
@@ -155,10 +155,7 @@ function validateCheck(websocket, components, context) {
     );
     return false;
   }
-  const endpointExists = (components.api ?? []).some(
-    (endpoint) => endpoint.endpointId === websocket.check.endpointId
-  );
-  if (!endpointExists) {
+  if (!endpointIds.has(websocket.check.endpointId)) {
     collectExceptions(
       context,
       new ConfigError(
@@ -181,6 +178,7 @@ function buildWebsockets({ components, context }) {
   const websockets = type.isArray(components.websockets) ? components.websockets : [];
 
   context.websocketIds = new Set();
+  const endpointIds = new Set((components.api ?? []).map((endpoint) => endpoint.endpointId));
 
   const checkDuplicateWebsocketId = createCheckDuplicateId({
     message: 'Duplicate websocketId "{{ id }}".',
@@ -199,7 +197,7 @@ function buildWebsockets({ components, context }) {
 
     if (!validateConnectionRef(websocket, components, context)) return;
     if (!validateProperties(websocket, context)) return;
-    if (!validateCheck(websocket, components, context)) return;
+    if (!validateCheck({ websocket, endpointIds, context })) return;
 
     // Rename id to internal format
     websocket.websocketId = websocket.id;
