@@ -146,23 +146,45 @@ function createWebSocketClient(lowdefy) {
     subscription.ackTimer = null;
   }
 
+  // A subscribe that gets no ack on an open socket means the socket is dead:
+  // the platform ended the connection and the browser has not seen the close
+  // yet. Waiting for that close would leave every feed silent for as long as
+  // it takes, so the socket is dropped now and handleClose reconnects with
+  // backoff, which resubscribes every feed.
+  function dropUnresponsiveSocket() {
+    socket.onclose = null;
+    socket.onmessage = null;
+    socket.close();
+    handleClose({ code: null });
+  }
+
   function handleAckTimeout(subscription) {
     subscription.ackTimer = null;
     const error = new ServiceError(`Subscribe to "${subscription.websocketId}" timed out.`, {
       service: 'WebSocket',
     });
-    if (subscription.pending) {
-      subscriptions.delete(subscription.websocketId);
-      // The server handles the frame late, or not yet, and would open the feed
-      // for a caller that has given up on it.
-      if (isSocketOpen()) {
-        socket.send(JSON.stringify({ type: 'unsubscribe', websocketId: subscription.websocketId }));
-      }
-      scheduleIdleClose();
-      subscription.pending.reject(error);
+    if (!subscription.pending) {
+      subscription.handlers.onError(error.message);
       return;
     }
-    subscription.handlers.onError(error.message);
+    const { reject } = subscription.pending;
+    // A subscribe whose frame was never sent had no connection open within
+    // the timeout, so the feed is dropped.
+    if (type.isNone(subscription.requestId)) {
+      subscriptions.delete(subscription.websocketId);
+      scheduleIdleClose();
+      reject(error);
+      return;
+    }
+    // The frame was sent on a connection that has died or is dying. The feed
+    // is kept, so the reconnect sends it again and its ack calls onConnected;
+    // the caller still hears that this subscribe timed out.
+    subscription.pending = null;
+    error.subscriptionKept = true;
+    if (isSocketOpen()) {
+      dropUnresponsiveSocket();
+    }
+    reject(error);
   }
 
   // Every path that removes a subscription from the map or answers its

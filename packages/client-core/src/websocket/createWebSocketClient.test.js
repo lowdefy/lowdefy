@@ -291,24 +291,86 @@ describe('subscribe ack timers', () => {
     await flushPromises();
     expect(subscribed.state).toBe('rejected');
     expect(subscribed.error.message).toBe('WebSocket: Subscribe to "chat" timed out.');
+    expect(subscribed.error.subscriptionKept).toBeUndefined();
   });
 
-  test('a subscribe sent on an open connection that times out unsubscribes the feed and lets the socket close', async () => {
-    const { client, open, sentFrames } = createTestClient();
+  test('a subscribe sent on an open connection that times out rejects, closes the socket and is sent again on reconnect', async () => {
+    const { client, closeSocket, open, receive, sentFrames, sockets } = createTestClient();
+    const handlers = createHandlers();
     client.connect();
-    const socket = open();
-    const subscribed = track(
-      client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
-    );
+    const dying = open();
+    const subscribed = track(client.subscribe({ handlers, payload: {}, websocketId: 'chat' }));
     vi.advanceTimersByTime(10000);
     await flushPromises();
     expect(subscribed.state).toBe('rejected');
-    expect(sentFrames(socket)).toEqual([
+    expect(subscribed.error.message).toBe('WebSocket: Subscribe to "chat" timed out.');
+    expect(subscribed.error.subscriptionKept).toBe(true);
+    expect(dying.close).toHaveBeenCalledTimes(1);
+    expect(sentFrames(dying)).toEqual([
       { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's1' },
-      { type: 'unsubscribe', websocketId: 'chat' },
     ]);
-    vi.advanceTimersByTime(5000);
-    expect(socket.close).toHaveBeenCalledTimes(1);
+    expect(handlers.onDisconnected).toHaveBeenCalledTimes(1);
+
+    // The fake clock runs a zero-delay timer set inside another timer 1ms later.
+    vi.advanceTimersByTime(1);
+    expect(sockets).toHaveLength(2);
+    const reopened = open();
+    expect(sentFrames(reopened)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's2' },
+    ]);
+    receive({ type: 'subscribed', websocketId: 'chat', requestId: 's2' });
+    expect(handlers.onConnected).toHaveBeenCalledTimes(1);
+    receive({ type: 'message', websocketId: 'chat', payload: 'hello' });
+    expect(handlers.onMessage).toHaveBeenCalledWith('hello');
+
+    // The dropped socket finishing its close does not disconnect its replacement.
+    closeSocket(dying);
+    expect(handlers.onDisconnected).toHaveBeenCalledTimes(1);
+    expect(sockets).toHaveLength(2);
+  });
+
+  test('feeds subscribed together on a connection that stops answering are all sent again on reconnect', async () => {
+    const { client, open, sentFrames, sockets } = createTestClient();
+    client.connect();
+    const dying = open();
+    const chat = track(
+      client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
+    );
+    const news = track(
+      client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'news' })
+    );
+    vi.advanceTimersByTime(10000);
+    await flushPromises();
+    expect(chat.state).toBe('rejected');
+    expect(news.state).toBe('rejected');
+    expect(dying.close).toHaveBeenCalledTimes(1);
+
+    // The fake clock runs a zero-delay timer set inside another timer 1ms later.
+    vi.advanceTimersByTime(1);
+    expect(sockets).toHaveLength(2);
+    const reopened = open();
+    expect(sentFrames(reopened).map((frame) => frame.websocketId)).toEqual(['chat', 'news']);
+  });
+
+  test('a subscribe sent into a connection that closes and does not reopen within its ack timeout rejects and is sent when a connection opens', async () => {
+    const { client, close, open, sentFrames, sockets } = createTestClient();
+    client.connect();
+    open();
+    const subscribed = track(
+      client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
+    );
+    vi.advanceTimersByTime(6000);
+    close();
+    vi.advanceTimersByTime(4000);
+    await flushPromises();
+    expect(subscribed.state).toBe('rejected');
+    expect(subscribed.error.subscriptionKept).toBe(true);
+
+    expect(sockets).toHaveLength(2);
+    const reopened = open();
+    expect(sentFrames(reopened)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's2' },
+    ]);
   });
 
   test('a refused subscribe lets the idle socket close', async () => {

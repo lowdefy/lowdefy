@@ -204,9 +204,14 @@ class WebSockets {
         },
       });
     } catch (error) {
-      this.active.delete(websocketId);
-      this.replacing.delete(websocketId);
-      delete this.payloads[websocketId];
+      // A subscribe that timed out on a dying connection is kept by the
+      // client and sent again when it reconnects, so the channel stays active
+      // to take its messages and to be unsubscribed.
+      if (!error.subscriptionKept) {
+        this.active.delete(websocketId);
+        this.replacing.delete(websocketId);
+        delete this.payloads[websocketId];
+      }
       channel.error = { message: error.message };
       this.context._internal.update();
       if (error.isLowdefyError) {
