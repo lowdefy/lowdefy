@@ -26,20 +26,40 @@ import testContext from '../../test/testContext.js';
 const resolver = vi.fn(() => new Promise(() => {}));
 resolver.meta = { publish: false };
 
-// Only ticket t-1 may be seen, and only by user-1 and user-2.
-const canViewTicket = {
-  endpointId: 'can-view-ticket',
-  type: 'InternalApi',
-  auth: { public: true },
-  routine: {
-    ':return': {
-      _and: [
-        { _eq: [{ _payload: 'ticket_id' }, 't-1'] },
-        { '_array.includes': { on: ['user-1', 'user-2'], value: { _user: 'id' } } },
-      ],
+const channelResolver = vi.fn(() => new Promise(() => {}));
+channelResolver.meta = { publish: true };
+
+// Who may see ticket t-1, read on every check so a test can revoke access.
+let ticketViewers;
+
+// Only ticket t-1 may be seen, and only by the users in ticketViewers.
+function canViewTicket() {
+  return {
+    endpointId: 'can-view-ticket',
+    type: 'InternalApi',
+    auth: { public: true },
+    routine: {
+      ':return': {
+        _and: [
+          { _eq: [{ _payload: 'ticket_id' }, 't-1'] },
+          { '_array.includes': { on: ticketViewers, value: { _user: 'id' } } },
+        ],
+      },
     },
-  },
-};
+  };
+}
+
+// A check that does not read the payload: the caller is in the beta group.
+function isBeta() {
+  return {
+    endpointId: 'is-beta',
+    type: 'InternalApi',
+    auth: { public: true },
+    routine: {
+      ':return': { '_array.includes': { on: ['user-1'], value: { _user: 'id' } } },
+    },
+  };
+}
 
 const ticketEvents = {
   id: 'websocket:ticket_events',
@@ -50,9 +70,29 @@ const ticketEvents = {
   properties: { ticket_id: { _payload: 'ticket_id' } },
 };
 
+const betaRoom = {
+  id: 'websocket:beta_room',
+  type: 'TestChannel',
+  websocketId: 'beta_room',
+  auth: { public: true },
+  check: { endpointId: 'is-beta' },
+  properties: { publish: true },
+};
+
+const lobby = {
+  id: 'websocket:lobby',
+  type: 'TestSource',
+  websocketId: 'lobby',
+  auth: { public: true },
+  properties: {},
+};
+
 const readConfigFile = vi.fn((path) => {
-  if (path === 'api/can-view-ticket.json') return canViewTicket;
+  if (path === 'api/can-view-ticket.json') return canViewTicket();
+  if (path === 'api/is-beta.json') return isBeta();
   if (path === 'websockets/ticket_events.json') return ticketEvents;
+  if (path === 'websockets/beta_room.json') return betaRoom;
+  if (path === 'websockets/lobby.json') return lobby;
   return null;
 });
 
@@ -62,7 +102,7 @@ function createContext(userId) {
     readConfigFile,
     user: { id: userId, roles: [] },
   });
-  context.websockets = { TestSource: resolver };
+  context.websockets = { TestChannel: channelResolver, TestSource: resolver };
   return context;
 }
 
@@ -76,6 +116,7 @@ function checkCalls() {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  ticketViewers = ['user-1', 'user-2'];
 });
 
 test('two subscribers that each pass the check share one running source', async () => {
@@ -172,4 +213,114 @@ test('a subscribe with a new payload is checked again and refused for a record t
   // The replaced subscription was closed before the new one was checked.
   expect(subscriber.subscriptions.size).toBe(0);
   expect(registry.channels.size).toBe(0);
+});
+
+test('a caller the check refuses can not publish into the channel', async () => {
+  const registry = createChannelRegistry();
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(createContext('user-1'), {
+    websocketId: 'beta_room',
+    payload: {},
+    subscriber,
+  });
+  await expect(
+    registry.publish(createContext('user-3'), {
+      websocketId: 'beta_room',
+      payload: { data: 'spam' },
+    })
+  ).rejects.toThrow('Websocket "beta_room" does not exist.');
+  expect(subscriber.send).not.toHaveBeenCalled();
+
+  await registry.publish(createContext('user-1'), {
+    websocketId: 'beta_room',
+    payload: { data: 'hello' },
+  });
+  expect(subscriber.send).toHaveBeenCalledTimes(1);
+});
+
+test('a check that reads the payload refuses a publish, which has no payload', async () => {
+  const registry = createChannelRegistry();
+
+  await expect(
+    registry.publish(createContext('user-1'), { websocketId: 'ticket_events', payload: {} })
+  ).rejects.toThrow('Websocket "ticket_events" does not exist.');
+});
+
+test('the re-check keeps a subscription the caller may still see', async () => {
+  const registry = createChannelRegistry();
+  const subscriber = createSubscriber('a');
+  const context = createContext('user-1');
+
+  await registry.subscribe(context, {
+    websocketId: 'ticket_events',
+    payload: { ticket_id: 't-1' },
+    subscriber,
+  });
+  await registry.recheckAccess(context, { websocketId: 'ticket_events', subscriber });
+
+  expect(checkCalls()).toBe(2);
+  expect(subscriber.subscriptions.size).toBe(1);
+  expect(registry.channels.size).toBe(1);
+});
+
+test('the re-check closes a subscription whose access was revoked and leaves the others', async () => {
+  const registry = createChannelRegistry();
+  const revoked = createSubscriber('a');
+  const kept = createSubscriber('b');
+  const context = createContext('user-1');
+
+  await registry.subscribe(context, {
+    websocketId: 'ticket_events',
+    payload: { ticket_id: 't-1' },
+    subscriber: revoked,
+  });
+  await registry.subscribe(createContext('user-2'), {
+    websocketId: 'ticket_events',
+    payload: { ticket_id: 't-1' },
+    subscriber: kept,
+  });
+  ticketViewers = ['user-2'];
+
+  await expect(
+    registry.recheckAccess(context, { websocketId: 'ticket_events', subscriber: revoked })
+  ).rejects.toThrow('Websocket "ticket_events" does not exist.');
+
+  expect(revoked.subscriptions.size).toBe(0);
+  expect(registry.getCheckedWebsocketIds({ subscriber: revoked })).toEqual([]);
+  const channel = [...registry.channels.values()][0];
+  expect([...channel.subscribers]).toEqual([kept]);
+});
+
+test('only subscriptions to a websocket with a check are re-checked', async () => {
+  const registry = createChannelRegistry();
+  const subscriber = createSubscriber('a');
+  const context = createContext('user-1');
+
+  await registry.subscribe(context, { websocketId: 'lobby', payload: {}, subscriber });
+  await registry.subscribe(context, {
+    websocketId: 'ticket_events',
+    payload: { ticket_id: 't-1' },
+    subscriber,
+  });
+  expect(registry.getCheckedWebsocketIds({ subscriber })).toEqual(['ticket_events']);
+
+  registry.unsubscribe({ websocketId: 'ticket_events', subscriber });
+  expect(registry.getCheckedWebsocketIds({ subscriber })).toEqual([]);
+});
+
+test('the re-check of a subscription closed while it waited does nothing', async () => {
+  const registry = createChannelRegistry();
+  const subscriber = createSubscriber('a');
+  const context = createContext('user-1');
+
+  await registry.subscribe(context, {
+    websocketId: 'ticket_events',
+    payload: { ticket_id: 't-1' },
+    subscriber,
+  });
+  registry.unsubscribeAll({ subscriber });
+  await registry.recheckAccess(context, { websocketId: 'ticket_events', subscriber });
+
+  expect(checkCalls()).toBe(1);
 });

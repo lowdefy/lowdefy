@@ -34,18 +34,17 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 // evaluated result is the channel identity — subscribers whose evaluation is
 // identical share one running source.
 //
-// A subscribe also runs the websocket's check endpoint, before anything is
-// evaluated for a caller it refuses. The check is per subscriber and not part
-// of the channel identity, so subscribers that each pass still share a source.
-// A publish is not checked: the check guards what a subscriber hears.
-async function prepareChannel(context, { checkAccess = false, websocketId, payload }) {
+// After the role check, the websocket's check endpoint runs, before anything is
+// evaluated for a caller it refuses. The check is per caller and not part of the channel
+// identity, so subscribers that each pass still share a source. A publish is
+// checked too, with the same empty payload its properties are evaluated with,
+// so a caller the check refuses can not publish into a channel either.
+async function prepareChannel(context, { websocketId, payload }) {
   context.evaluateOperators = createEvaluateOperators(context);
 
   const websocketConfig = await getWebsocketConfig(context, { websocketId });
   authorizeWebsocket(context, { websocketConfig });
-  if (checkAccess) {
-    await checkWebsocketAccess(context, { payload, websocketConfig });
-  }
+  await checkWebsocketAccess(context, { payload, websocketConfig });
   const websocketResolver = getWebsocketResolver(context, { websocketConfig });
 
   let connectionProperties = null;

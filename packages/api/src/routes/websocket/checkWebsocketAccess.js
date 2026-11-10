@@ -22,7 +22,9 @@ import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 // Role rules decide who may hear a channel at all. A channel whose payload
 // names a record also needs to know whether this subscriber may see that
 // record, which only the app's own data can answer - so the websocket's check
-// endpoint runs as the subscriber and must answer exactly true.
+// endpoint runs as the subscriber and must answer exactly true. It runs on
+// every subscribe and publish, and again on the connection's periodic caller
+// check while a subscription stays open, so revoked access ends it.
 //
 // Every refusal reads as a missing websocket, as a role refusal does
 // (authorizeWebsocket), so a subscriber can not tell a record it may not see
@@ -34,7 +36,7 @@ async function checkWebsocketAccess(context, { payload, websocketConfig }) {
   }
   const { logger } = context;
 
-  let result;
+  let allowed = false;
   try {
     const checkPayload = type.isNone(check.payload)
       ? payload
@@ -48,12 +50,15 @@ async function checkWebsocketAccess(context, { payload, websocketConfig }) {
     // The subscriber's client built the payload, so a payload the endpoint's
     // schema refuses is that caller's mistake, as for a CallAPI with no page
     // (validatePayload), not a fault to log at error level.
-    result = await invokeEndpoint(context, {
+    const result = await invokeEndpoint(context, {
       endpointId: check.endpointId,
       payload: checkPayload,
       endpointDepth: 0,
       outsideCaller: true,
     });
+    // A routine that errored was logged by runRoutine.
+    allowed = result.status === 'return' && result.response === true;
+    logger.debug({ event: 'debug_websocket_check', websocketId, allowed, status: result.status });
   } catch (error) {
     // The endpoint refusing the caller is a refusal like any other. Anything
     // else is a fault in the check's config or the endpoint, which the
@@ -66,21 +71,11 @@ async function checkWebsocketAccess(context, { payload, websocketConfig }) {
       }
       await context.handleError(error);
     }
-    throw new AuthorizationError(`Websocket "${websocketId}" does not exist.`);
   }
 
-  // A routine that errored was logged by runRoutine.
-  if (result.status === 'return' && result.response === true) {
-    logger.debug({ event: 'debug_websocket_check', websocketId, allowed: true });
-    return;
+  if (!allowed) {
+    throw new AuthorizationError(`Websocket "${websocketId}" does not exist.`);
   }
-  logger.debug({
-    event: 'debug_websocket_check',
-    websocketId,
-    allowed: false,
-    status: result.status,
-  });
-  throw new AuthorizationError(`Websocket "${websocketId}" does not exist.`);
 }
 
 export default checkWebsocketAccess;

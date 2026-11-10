@@ -464,11 +464,7 @@ test('a subscribe runs the websocket check and continues when it answers true', 
   mockReadConfigFile.mockImplementation(checkedReadConfigImp({ allowed: true }));
   const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
 
-  const res = await prepareChannel(context, {
-    checkAccess: true,
-    websocketId: 'ws1',
-    payload: { room: 7 },
-  });
+  const res = await prepareChannel(context, { websocketId: 'ws1', payload: { room: 7 } });
   expect(res.properties).toEqual({ room: 7 });
   expect(mockReadConfigFile).toHaveBeenCalledWith('api/can-view.json');
 });
@@ -478,16 +474,17 @@ test('a subscribe the check refuses stops before the connection and properties a
   const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
 
   await expect(
-    prepareChannel(context, { checkAccess: true, websocketId: 'ws1', payload: { room: 7 } })
+    prepareChannel(context, { websocketId: 'ws1', payload: { room: 7 } })
   ).rejects.toThrow('Websocket "ws1" does not exist.');
   expect(mockReadConfigFile).not.toHaveBeenCalledWith('connections/testConnection.json');
 });
 
-test('a publish does not run the websocket check', async () => {
+test('a publish runs the websocket check and is refused when it does not answer true', async () => {
   mockReadConfigFile.mockImplementation(checkedReadConfigImp({ allowed: false }));
   const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
 
-  const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
-  expect(res.websocketConfig.websocketId).toBe('ws1');
-  expect(mockReadConfigFile).not.toHaveBeenCalledWith('api/can-view.json');
+  await expect(prepareChannel(context, { websocketId: 'ws1', payload: {} })).rejects.toThrow(
+    'Websocket "ws1" does not exist.'
+  );
+  expect(mockReadConfigFile).toHaveBeenCalledWith('api/can-view.json');
 });
