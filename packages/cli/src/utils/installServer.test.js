@@ -61,3 +61,25 @@ test('installServer installs workspace plugins when the server install is skippe
   await installServer({ context, directory: '/server', skipIfInstalled: true });
   expect(mockInstallWorkspacePlugins).toHaveBeenCalledWith({ context, directory: '/server' });
 });
+
+test('installServer installs no workspace plugins when an exact match needs no install', async () => {
+  mockInstallWorkspacePlugins.mockClear();
+  mockInstallIfPackageJsonChanged.mockResolvedValue(false);
+  const context = createContext();
+  await installServer({ context, directory: '/server' });
+  expect(mockInstallWorkspacePlugins).not.toHaveBeenCalled();
+});
+
+test('installServer installs workspace plugins before the server when an exact match installs', async () => {
+  mockInstallWorkspacePlugins.mockClear();
+  mockInstallIfPackageJsonChanged.mockImplementation(async ({ install }) => {
+    await install();
+    return true;
+  });
+  const context = createContext();
+  await installServer({ context, directory: '/server' });
+  expect(mockInstallWorkspacePlugins.mock.calls).toEqual([[{ context, directory: '/server' }]]);
+  expect(mockInstallWorkspacePlugins.mock.invocationCallOrder[0]).toBeLessThan(
+    context.logger.info.mock.invocationCallOrder[0]
+  );
+});

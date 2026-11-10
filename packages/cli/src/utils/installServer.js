@@ -21,14 +21,21 @@ import installWorkspacePlugins from './installWorkspacePlugins.js';
 // skipIfInstalled skips an install the last one already satisfies, for callers
 // that reset package.json before each build of the same server folder.
 async function installServer({ context, directory, skipIfInstalled = false }) {
-  // Workspace plugins install even when the server's install is skipped: a CI
-  // or Vercel build restores the server's node_modules from its cache, so the
-  // skip passes, but the checkout is fresh and the plugins have no build output.
-  await installWorkspacePlugins({ context, directory });
+  // Callers that skip a satisfied install (lowdefy build, lowdefy emails) run
+  // in CI and Vercel builds, which restore the server's node_modules from a
+  // cache: the skip passes, but the checkout is fresh and the workspace plugins
+  // have no build output. So for them the plugins install whether or not the
+  // server does. Other callers (lowdefy dev, lowdefy test) install the plugins
+  // only with the server, so starting them runs no install when nothing changed.
+  if (skipIfInstalled) {
+    await installWorkspacePlugins({ context, directory });
+  }
   const installed = await installIfPackageJsonChanged({
     directory,
     skipIfInstalled,
     install: async () => {
+      // Installs only the plugins this process has not installed yet.
+      await installWorkspacePlugins({ context, directory });
       context.logger.info({ spin: 'start' }, 'Installing dependencies.');
       try {
         await spawnProcess({
