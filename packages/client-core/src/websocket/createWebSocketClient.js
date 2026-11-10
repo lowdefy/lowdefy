@@ -97,6 +97,16 @@ function createWebSocketClient(lowdefy) {
     return subscriptions.size === 0 && pendingPublishes.size === 0;
   }
 
+  // The close event arrives after the closing handshake, when a new socket may
+  // already be connecting or open. A socket the client closes is finished
+  // with, so its events must not reach the client state that now belongs to
+  // the new socket.
+  function closeFinishedSocket() {
+    socket.onclose = null;
+    socket.onmessage = null;
+    socket.close();
+  }
+
   function scheduleIdleClose() {
     clearIdleTimer();
     if (!isIdle()) {
@@ -105,15 +115,9 @@ function createWebSocketClient(lowdefy) {
     // Grace period so rapid page navigation doesn't thrash connections.
     idleTimer = setTimeout(() => {
       if (isIdle() && socket) {
-        // The close event arrives after the closing handshake, when a new
-        // socket may already be connecting or open. This socket is finished
-        // with, so its events must not reach the client state that now
-        // belongs to the new socket.
-        socket.onclose = null;
-        socket.onmessage = null;
         clearTimeout(stableTimer);
         reconnectingAfterCallerChange = false;
-        socket.close();
+        closeFinishedSocket();
         socket = null;
         openPromise = null;
       }
@@ -152,9 +156,7 @@ function createWebSocketClient(lowdefy) {
   // it takes, so the socket is dropped now and handleClose reconnects with
   // backoff, which resubscribes every feed.
   function dropUnresponsiveSocket() {
-    socket.onclose = null;
-    socket.onmessage = null;
-    socket.close();
+    closeFinishedSocket();
     handleClose({ code: null });
   }
 
