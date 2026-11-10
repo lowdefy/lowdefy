@@ -26,7 +26,7 @@ Run journeys with \`lowdefy_run_tests\`, or \`lowdefy test --config-directory <a
 
 - While fixing, run only the journey you changed, with \`paths\` and \`filter\`.
 - Before you call the change done, run the journeys for the pages the change touches. \`lowdefy journeys scope\` lists those pages.
-- Run \`repeat: 3\` once, on a new or changed journey, after it passes. Repeat nothing else.
+- Run each journey once. Repeat runs belong to the journey skills, for a journey they write.
 - Run the full suite only when a person asks, or in the app's scheduled run.
 
 Terminal runs (\`lowdefy test\`, \`lowdefy journeys harden\`, \`lowdefy journeys variants\`) share the machine with other agents:

@@ -230,7 +230,10 @@ test('journeys-autopilot extends an existing data set and takes existing journey
   expect(skill).toContain('never edit\n   the existing file');
   expect(skill).toContain('**Journeys already in the suite**');
   expect(skill).toContain('Never rewrite, move, rename or duplicate one');
-  expect(skill).toContain('A failing or flaky one stays where it is');
+  expect(skill).toContain('A failing one stays where it is');
+  expect(skill).toContain(
+    'Run them once with `lowdefy test --config-directory <app>` (the whole suite)'
+  );
 });
 
 test('journeys-autopilot never edits a developer journey when a variant grants a role', () => {
