@@ -140,9 +140,9 @@ test('getParsedConfigFile throws the YAML parse error at every ref and caches no
   const content = 'key: [unclosed\n';
 
   for (let i = 0; i < 2; i += 1) {
-    const error = await getParsedConfigFile({ context, content, refDef }).catch((e) => e);
-    expect(error).toBeInstanceOf(ConfigError);
-    expect(error.message).toMatch('YAML parse error in "broken.yaml".');
+    const parse = () => getParsedConfigFile({ context, content, refDef });
+    expect(parse).toThrow(ConfigError);
+    expect(parse).toThrow('YAML parse error in "broken.yaml".');
   }
   expect(context.parsedConfigCache.has('broken.yaml')).toBe(false);
 });
@@ -153,9 +153,9 @@ test('getParsedConfigFile throws the reserved ~deferred key error at every ref a
   const content = 'block:\n  "~deferred": anything\n';
 
   for (let i = 0; i < 2; i += 1) {
-    const error = await getParsedConfigFile({ context, content, refDef }).catch((e) => e);
-    expect(error).toBeInstanceOf(ConfigError);
-    expect(error.message).toMatch('The key "~deferred" is reserved by the Lowdefy build');
+    const parse = () => getParsedConfigFile({ context, content, refDef });
+    expect(parse).toThrow(ConfigError);
+    expect(parse).toThrow('The key "~deferred" is reserved by the Lowdefy build');
   }
   expect(context.parsedConfigCache.has('reserved.yaml')).toBe(false);
 });

@@ -28,13 +28,18 @@ import parseRefContent from './parseRefContent.js';
 // passed the reserved key check is stored, so a bad file throws at every ref.
 // The stored content is the read cache's own string; a hit after a dev rebuild
 // takes the fresh read's string, so only one copy stays held.
-async function getParsedConfigFile({ context, content, refDef }) {
+//
+// The lookup, the parse and the store run with no await between them. The
+// walker resolves sibling refs in parallel, and refs that wait on the same
+// file read resume one after another: an await here would let each of them
+// miss the cache and parse the file again.
+function getParsedConfigFile({ context, content, refDef }) {
   const entry = context.parsedConfigCache.get(refDef.path);
   if (entry?.content === content) {
     entry.content = content;
     return cloneWithMarkers(entry.parsed);
   }
-  const parsed = await parseRefContent({ content, refDef });
+  const parsed = parseRefContent({ content, refDef });
   context.parsedConfigCache.set(refDef.path, { content, parsed });
   return cloneWithMarkers(parsed);
 }

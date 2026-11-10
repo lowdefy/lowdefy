@@ -57,6 +57,25 @@ test('getRefContent reads the file for every ref and parses it once', async () =
   expect(second).not.toBe(first);
 });
 
+test('getRefContent parses a file once for refs that wait on the same read', async () => {
+  const context = createContext({ 'shared.yaml': 'id: shared\n' });
+  const store = vi.spyOn(context.parsedConfigCache, 'set');
+  const refDef = { path: 'shared.yaml' };
+
+  // The walker resolves sibling refs in parallel, so they all resume once the
+  // read returns.
+  const results = await Promise.all(
+    ['a.yaml', 'b.yaml', 'c.yaml'].map((referencedFrom) =>
+      getRefContent({ context, refDef, referencedFrom })
+    )
+  );
+
+  expect(store).toHaveBeenCalledTimes(1);
+  expect(results).toEqual([{ id: 'shared' }, { id: 'shared' }, { id: 'shared' }]);
+  expect(results[1]).not.toBe(results[0]);
+  expect(results[2]).not.toBe(results[1]);
+});
+
 test('getRefContent parses lowdefy.yaml once for buildAppMeta and buildRefs', async () => {
   const context = createContext({ 'lowdefy.yaml': 'name: My app\nfield: value\n' });
 
