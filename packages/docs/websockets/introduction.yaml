@@ -80,7 +80,7 @@ _ref:
                 - `type: string`: __Required__ - The websocket type. `Channel` and `Interval` ship with Lowdefy; connection plugins provide types like [`MongoDBChangeStream`](/MongoDB).
                 - `connectionId: string`: The `id` of a [connection](/connections) for connection-backed types.
                 - `properties: object`: Settings for the type. __Operators are evaluated server-side per subscription__ — `_secret`, `_user`, and `_payload` are available.
-                - `check: object`: An [API endpoint](/api-endpoints) that decides, on every subscribe, whether this subscriber may hear the channel. See [Securing Channels](#securing-channels).
+                - `check: object`: An [API endpoint](/api-endpoints) that decides whether this caller may hear, or publish to, the channel. It runs on every subscribe and publish, and once a minute while a subscription stays open. See [Securing Channels](#securing-channels).
                   - `endpointId: string`: __Required__ - The `Api` or `InternalApi` endpoint to call. The build fails when the app has no endpoint with this id.
                   - `payload: object`: The payload sent to the endpoint, evaluated server-side with `_payload`, `_user` and `_secret`. Defaults to the subscription payload.
 
@@ -170,9 +170,9 @@ _ref:
 
                 - The endpoint runs as the subscriber, with the same `_user`, roles and organization as a request from that session.
                 - Only a return value of exactly `true` lets the subscription continue. Any other value, an error, or an endpoint the subscriber may not call refuses it with the same response as a channel that does not exist. An error in the check or the endpoint is also logged.
-                - The check runs on every subscribe: the first one, the resubscribe after a reconnect, and a [`Subscribe`](/websocket-publish) with a new payload. It does not run again while a subscription stays open, so revoking access does not end a subscription that is already running.
+                - The check runs on every subscribe: the first one, the resubscribe after a reconnect, and a [`Subscribe`](/websocket-publish) with a new payload. It runs again at least once a minute while a subscription stays open, so revoking access ends a running subscription within a minute: the subscription gets the refusal as an error and no further messages. Each open subscription calls the endpoint once a minute, so keep the check cheap.
                 - The check is not part of the channel identity. Subscribers whose evaluated `properties` match still share one running source, and each is checked on their own.
-                - A publish is not checked: `check` guards what a subscriber hears, and who may publish is decided by `auth.websockets` alone.
+                - A publish is checked too, with an empty payload, since a publish evaluates the websocket `properties` without one. A check that reads the payload therefore refuses every publish, and a check that does not, such as membership of a group, decides who may publish as well as who may hear.
                 - A module websocket names its own endpoint with [`_module.endpointId`](/_module).
 
                 ## What's Next
