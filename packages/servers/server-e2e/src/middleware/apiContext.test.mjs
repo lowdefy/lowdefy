@@ -22,6 +22,7 @@ import { fileURLToPath } from 'url';
 import zlib from 'zlib';
 
 import { Hono } from 'hono';
+import { encodeColumnarKeyMap } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 import { vi, afterAll, expect, test } from 'vitest';
 
@@ -150,7 +151,7 @@ async function createClientErrorApp({ withMaps }) {
     const refMap = { ref_0: { path: 'lowdefy.yaml' }, ref_1: { path: 'pages/home.yaml' } };
     fs.writeFileSync(
       path.join(buildDirectory, 'keyMap.json.gz'),
-      zlib.gzipSync(JSON.stringify(keyMap))
+      zlib.gzipSync(JSON.stringify(encodeColumnarKeyMap({ keyMap })))
     );
     fs.writeFileSync(
       path.join(buildDirectory, 'refMap.json.gz'),

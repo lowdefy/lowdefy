@@ -21,6 +21,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 import zlib from 'node:zlib';
 
+import encodeColumnarKeyMap from '../../../packages/utils/errors/src/encodeColumnarKeyMap.js';
 import compareBuilds, { BUILD_MESSAGES } from './compareBuilds.mjs';
 
 // Two server directories whose build/ files may hold their own server path,
@@ -91,40 +92,114 @@ test('compareBuilds lists files only one side has', async () => {
 });
 
 test('compareBuilds allows an expected added gzip file that gunzips to its plain file', async () => {
-  const keyMap = '{"a":{"key":"root"}}';
+  const refMap = '{"1":{"path":"pages/a.yaml"}}';
   const { baseline, current, cleanup } = setup({
-    baseline: { 'build/keyMap.json': keyMap, 'package.json': packageJson },
+    baseline: { 'build/refMap.json': refMap, 'package.json': packageJson },
     current: {
-      'build/keyMap.json': keyMap,
-      'build/keyMap.json.gz': zlib.gzipSync(keyMap),
+      'build/refMap.json': refMap,
+      'build/refMap.json.gz': zlib.gzipSync(refMap),
       'package.json': packageJson,
     },
   });
-  const comparison = await compareBuilds({ baseline, current, expectAdded: ['keyMap.json.gz'] });
+  const comparison = await compareBuilds({ baseline, current, expectAdded: ['refMap.json.gz'] });
   assert.equal(comparison.identical, true);
   assert.deepEqual(comparison.onlyCurrent, []);
   assert.deepEqual(comparison.added, [
-    { file: 'build/keyMap.json.gz', identical: true, lines: [] },
+    { file: 'build/refMap.json.gz', identical: true, lines: [] },
   ]);
   cleanup();
 });
 
 test('compareBuilds fails an expected added gzip file that does not match its plain file', async () => {
   const { baseline, current, cleanup } = setup({
-    baseline: { 'build/keyMap.json': '{}', 'package.json': packageJson },
+    baseline: { 'build/refMap.json': '{}', 'package.json': packageJson },
     current: {
-      'build/keyMap.json': '{}',
-      'build/keyMap.json.gz': zlib.gzipSync('{"other":1}'),
+      'build/refMap.json': '{}',
+      'build/refMap.json.gz': zlib.gzipSync('{"other":1}'),
+      'package.json': packageJson,
+    },
+  });
+  const comparison = await compareBuilds({ baseline, current, expectAdded: ['refMap.json.gz'] });
+  assert.equal(comparison.identical, false);
+  assert.deepEqual(comparison.added, [
+    {
+      file: 'build/refMap.json.gz',
+      identical: false,
+      lines: ['Does not gunzip to build/refMap.json.'],
+    },
+  ]);
+  cleanup();
+});
+
+const shortKeyMap = {
+  1: { s: 'root', p: '0' },
+  2: { s: '.pages', p: '1', r: 'r1', l: 3 },
+  3: { s: '[0:home]', p: '2', l: 4, i: ['state-refs'] },
+};
+
+test('compareBuilds reads keyMap.json with the serializer, so an ignore array with YAML markers matches the columns', async () => {
+  // The serializer writes an `i` array that came from YAML with its markers.
+  const keyMap = JSON.stringify({
+    ...shortKeyMap,
+    3: { ...shortKeyMap[3], i: { '~arr': ['state-refs'], '~r': '~4', '~l': 5 } },
+  });
+  const { baseline, current, cleanup } = setup({
+    baseline: { 'build/keyMap.json': keyMap, 'package.json': packageJson },
+    current: {
+      'build/keyMap.json': keyMap,
+      'build/keyMap.json.gz': zlib.gzipSync(
+        JSON.stringify(encodeColumnarKeyMap({ keyMap: shortKeyMap }))
+      ),
       'package.json': packageJson,
     },
   });
   const comparison = await compareBuilds({ baseline, current, expectAdded: ['keyMap.json.gz'] });
-  assert.equal(comparison.identical, false);
+  assert.deepEqual(comparison.added, [
+    { file: 'build/keyMap.json.gz', identical: true, lines: [] },
+  ]);
+  cleanup();
+});
+
+test('compareBuilds allows an expected added columnar keyMap.json.gz that resolves every key of keyMap.json', async () => {
+  const keyMap = JSON.stringify(shortKeyMap);
+  const { baseline, current, cleanup } = setup({
+    baseline: { 'build/keyMap.json': keyMap, 'package.json': packageJson },
+    current: {
+      'build/keyMap.json': keyMap,
+      'build/keyMap.json.gz': zlib.gzipSync(
+        JSON.stringify(encodeColumnarKeyMap({ keyMap: shortKeyMap }))
+      ),
+      'package.json': packageJson,
+    },
+  });
+  const comparison = await compareBuilds({ baseline, current, expectAdded: ['keyMap.json.gz'] });
+  assert.deepEqual(comparison.added, [
+    { file: 'build/keyMap.json.gz', identical: true, lines: [] },
+  ]);
+  cleanup();
+});
+
+test('compareBuilds fails a columnar keyMap.json.gz that resolves a key differently or lacks one', async () => {
+  const changed = { 1: shortKeyMap[1], 2: { ...shortKeyMap[2], l: 9 } };
+  const { baseline, current, cleanup } = setup({
+    baseline: { 'package.json': packageJson },
+    current: {
+      'build/keyMap.json': JSON.stringify(shortKeyMap),
+      'build/keyMap.json.gz': zlib.gzipSync(
+        JSON.stringify(encodeColumnarKeyMap({ keyMap: changed }))
+      ),
+      'package.json': packageJson,
+    },
+  });
+  const comparison = await compareBuilds({ baseline, current, expectAdded: ['keyMap.json.gz'] });
   assert.deepEqual(comparison.added, [
     {
       file: 'build/keyMap.json.gz',
       identical: false,
-      lines: ['Does not gunzip to build/keyMap.json.'],
+      lines: [
+        '2: line differs from keyMap.json',
+        '3: (not in the columns) differs from keyMap.json',
+      ],
     },
   ]);
   cleanup();

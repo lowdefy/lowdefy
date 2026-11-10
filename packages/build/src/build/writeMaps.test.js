@@ -16,6 +16,7 @@
 
 import zlib from 'zlib';
 
+import { createColumnarKeyMap, encodeColumnarKeyMap } from '@lowdefy/errors';
 import { vi, beforeEach, expect, test } from 'vitest';
 
 import writeMaps from './writeMaps.js';
@@ -88,7 +89,7 @@ test('writeMaps writes only the plain maps when writeCompressedMaps is not set',
   ]);
 });
 
-test('writeMaps writes gzipped maps that gunzip to the plain files when writeCompressedMaps is true', async () => {
+test('writeMaps writes a columnar gzipped key map and a gzipped plain ref map when writeCompressedMaps is true', async () => {
   context.writeCompressedMaps = true;
   context.keyMap = { 1: { s: 'pages.0', p: '0', l: 3 }, 2: { s: 'blocks.0', p: '1', r: '1' } };
   context.refMap = { 1: { path: 'pages/a.yaml', parent: '0', lineNumber: 4 } };
@@ -101,21 +102,23 @@ test('writeMaps writes gzipped maps that gunzip to the plain files when writeCom
     'refMap.json.gz',
   ]);
   expect(Buffer.isBuffer(artifacts['keyMap.json.gz'])).toBe(true);
-  expect(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8')).toBe(
-    artifacts['keyMap.json']
-  );
+  const columns = JSON.parse(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8'));
+  expect(columns).toEqual(encodeColumnarKeyMap({ keyMap: context.keyMap }));
+  expect(createColumnarKeyMap(columns).get('2')).toEqual(context.keyMap['2']);
   expect(zlib.gunzipSync(artifacts['refMap.json.gz']).toString('utf8')).toBe(
     artifacts['refMap.json']
   );
 });
 
-test('writeMaps writes gzipped empty maps that gunzip to {}', async () => {
+test('writeMaps writes empty columns and an empty gzipped ref map for empty maps', async () => {
   context.writeCompressedMaps = true;
   context.keyMap = {};
   context.refMap = {};
   await writeMaps({ context });
   const artifacts = writtenArtifacts();
-  expect(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8')).toBe('{}');
+  expect(JSON.parse(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8'))).toEqual(
+    encodeColumnarKeyMap({ keyMap: {} })
+  );
   expect(zlib.gunzipSync(artifacts['refMap.json.gz']).toString('utf8')).toBe('{}');
 });
 

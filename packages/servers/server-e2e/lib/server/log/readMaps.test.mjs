@@ -20,15 +20,14 @@ import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 
-import { loadAndResolveErrorLocation } from '@lowdefy/errors';
+import { encodeColumnarKeyMap, loadAndResolveErrorLocation } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
-// Key maps in both entry shapes: builds before the short shape wrote full
-// entries, and journeys scope can read either. The short map covers an entry
-// that inherits its parent's ref, one that names its own, one with r: null
-// under a parent that has a ref, one with no line, and a module ref with no
-// path of its own (resolved through its parent ref's file).
+// A short-shape key map, as the build that writes the gzipped maps writes it.
+// It covers an entry that inherits its parent's ref, one that names its own,
+// one with r: null under a parent that has a ref, one with no line, and a
+// module ref with no path of its own (resolved through its parent ref's file).
 const shortKeyMap = {
   k1: { s: 'root', p: 'k0', r: 'ref_0', l: 1 },
   k2: { s: '.pages', p: 'k1', l: 3 },
@@ -39,14 +38,6 @@ const shortKeyMap = {
   k7: { s: '[1:footer]', p: 'k4', r: 'ref_2', l: 9 },
   k8: { s: '.properties', p: 'k7', r: null, l: 2 },
   k9: { s: '[2:module]', p: 'k4', r: 'ref_3', l: 12, i: ['state-refs'] },
-};
-const fullKeyMap = {
-  f1: { key: 'root', '~k_parent': 'f0', '~r': 'ref_0', '~l': 1 },
-  f2: { key: 'root.pages[0:home]', '~k_parent': 'f1', '~r': 'ref_1', '~l': 1 },
-  f3: { key: 'root.pages[0:home].blocks[0:header]', '~k_parent': 'f2', '~r': 'ref_1', '~l': 5 },
-  f4: { key: 'root.pages[0:home].events', '~k_parent': 'f2', '~r': 'ref_1' },
-  f5: { key: 'root.menus', '~k_parent': 'f1' },
-  f6: { key: 'root.pages[0:home].blocks[2:module]', '~k_parent': 'f2', '~r': 'ref_3', '~l': 12 },
 };
 const refMap = {
   ref_0: { path: 'lowdefy.yaml' },
@@ -65,7 +56,10 @@ function writeMaps({ keyMap, gzip = true }) {
   fs.writeFileSync(path.join(buildDirectory, 'keyMap.json'), keyMapJson);
   fs.writeFileSync(path.join(buildDirectory, 'refMap.json'), refMapJson);
   if (gzip) {
-    fs.writeFileSync(path.join(buildDirectory, 'keyMap.json.gz'), zlib.gzipSync(keyMapJson));
+    fs.writeFileSync(
+      path.join(buildDirectory, 'keyMap.json.gz'),
+      zlib.gzipSync(JSON.stringify(encodeColumnarKeyMap({ keyMap })))
+    );
     fs.writeFileSync(path.join(buildDirectory, 'refMap.json.gz'), zlib.gzipSync(refMapJson));
   }
 }
@@ -89,15 +83,19 @@ afterEach(() => {
   fs.rmSync(buildDirectory, { recursive: true, force: true });
 });
 
-test('readMaps returns the same maps as JSON.parse of the plain files', async () => {
+test('readMaps returns the plain ref map and a columnar key map holding every plain entry', async () => {
   writeMaps({ keyMap: shortKeyMap });
 
   const maps = await readMaps({ buildDirectory, logger });
 
-  expect(maps).toEqual({
-    keyMap: JSON.parse(fs.readFileSync(path.join(buildDirectory, 'keyMap.json'), 'utf8')),
-    refMap: JSON.parse(fs.readFileSync(path.join(buildDirectory, 'refMap.json'), 'utf8')),
-  });
+  expect(maps.refMap).toEqual(
+    JSON.parse(fs.readFileSync(path.join(buildDirectory, 'refMap.json'), 'utf8'))
+  );
+  for (const [id, entry] of Object.entries(shortKeyMap)) {
+    // k0, the root's parent, is never written, so the root has no parent.
+    const expected = id === 'k1' ? { s: entry.s, r: entry.r, l: entry.l } : entry;
+    expect(maps.keyMap.get(id)).toEqual(expected);
+  }
 });
 
 test('readMaps reads no file on a second call', async () => {
@@ -123,7 +121,10 @@ test('readMaps calls made together before the first load resolves share one read
     readMaps({ buildDirectory, logger }),
   ]);
 
-  const mapTexts = [JSON.stringify(shortKeyMap), JSON.stringify(refMap)];
+  const mapTexts = [
+    JSON.stringify(encodeColumnarKeyMap({ keyMap: shortKeyMap })),
+    JSON.stringify(refMap),
+  ];
   expect(readFile).toHaveBeenCalledTimes(2);
   expect(parse.mock.calls.filter(([text]) => mapTexts.includes(text))).toHaveLength(2);
   expect(results[1]).toBe(results[0]);
@@ -195,36 +196,30 @@ test('readMaps reads invalid JSON again on the next call, warns once, and loads 
   expect(logger.warn).toHaveBeenCalledTimes(1);
 });
 
-test.each([
-  ['short', shortKeyMap],
-  ['full', fullKeyMap],
-])(
-  'every key of a %s-shape key map resolves to the same location from the gzipped maps as from the plain maps',
-  async (_shape, keyMap) => {
-    writeMaps({ keyMap });
+test('every key resolves to the same location from the gzipped maps as from the plain maps', async () => {
+  writeMaps({ keyMap: shortKeyMap });
 
-    for (const configDirectory of [undefined, '/Users/dev/app']) {
-      for (const configKey of Object.keys(keyMap)) {
-        const error = { configKey };
-        const plain = await loadAndResolveErrorLocation({
-          error,
-          readConfigFile,
-          configDirectory,
-        });
-        const gzipped = await loadAndResolveErrorLocation({
-          error,
-          readConfigFile: () => {
-            throw new Error('readConfigFile must not be called.');
-          },
-          configDirectory,
-          readMaps: () => readMaps({ buildDirectory, logger }),
-        });
-        expect(plain).not.toBeNull();
-        expect(gzipped).toEqual(plain);
-      }
+  for (const configDirectory of [undefined, '/Users/dev/app']) {
+    for (const configKey of Object.keys(shortKeyMap)) {
+      const error = { configKey };
+      const plain = await loadAndResolveErrorLocation({
+        error,
+        readConfigFile,
+        configDirectory,
+      });
+      const gzipped = await loadAndResolveErrorLocation({
+        error,
+        readConfigFile: () => {
+          throw new Error('readConfigFile must not be called.');
+        },
+        configDirectory,
+        readMaps: () => readMaps({ buildDirectory, logger }),
+      });
+      expect(plain).not.toBeNull();
+      expect(gzipped).toEqual(plain);
     }
   }
-);
+});
 
 test('a key that is not in the maps resolves to no location from the gzipped maps', async () => {
   writeMaps({ keyMap: shortKeyMap });

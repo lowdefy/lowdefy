@@ -19,6 +19,8 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import zlib from 'node:zlib';
 
+import { createColumnarKeyMap } from '@lowdefy/errors';
+
 const gunzip = promisify(zlib.gunzip);
 
 // One load per process, shared by every error: the maps of a large app take
@@ -38,11 +40,13 @@ async function readGzippedJson(filePath) {
 
 async function loadMaps({ buildDirectory, logger }) {
   try {
-    const [keyMap, refMap] = await Promise.all([
+    const [keyMapColumns, refMap] = await Promise.all([
       readGzippedJson(path.join(buildDirectory, 'keyMap.json.gz')),
       readGzippedJson(path.join(buildDirectory, 'refMap.json.gz')),
     ]);
-    return { keyMap, refMap };
+    // The key map stays in its columns: the server keeps it for its lifetime,
+    // and as plain objects a large app's key map holds over 100 MB.
+    return { keyMap: createColumnarKeyMap(keyMapColumns), refMap };
   } catch (error) {
     // A build without the maps (one from before they were gzipped, or a deploy
     // that strips them) stays that way for the life of the process, so the
@@ -63,8 +67,9 @@ async function loadMaps({ buildDirectory, logger }) {
   }
 }
 
-// The production server's key and ref maps, read from the gzipped copies the
-// server build writes. Only the error path calls it, on the first error that
+// The production server's key and ref maps, read from the gzipped maps the
+// server build writes: the key map in columns (encodeColumnarKeyMap), read
+// back as a columnar key map, and the ref map as plain JSON. Only the error path calls it, on the first error that
 // carries a configKey.
 function readMaps({ buildDirectory, logger }) {
   if (loading === null) {

@@ -15,6 +15,7 @@
 */
 
 import readKeyEntryFields from './readKeyEntryFields.js';
+import readKeyMapEntry from './readKeyMapEntry.js';
 
 /**
  * Valid check slugs for ~ignoreBuildChecks.
@@ -75,7 +76,7 @@ function shouldSuppressBuildCheck(error, keyMap) {
   const MAX_DEPTH = 100;
 
   while (currentKey && depth < MAX_DEPTH) {
-    const entry = keyMap[currentKey];
+    const entry = readKeyMapEntry({ keyMap, id: currentKey });
     if (!entry) break;
 
     // Only the parent id and the ignore value are needed at each ancestor, so

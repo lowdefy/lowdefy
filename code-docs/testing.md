@@ -255,6 +255,10 @@ pnpm bench:build packages/docs --keymap           # key and ref ids by what they
   environment passes through, so `LOWDEFY_ENVIRONMENT=local pnpm bench:build <dir>` works.
 - **A self-check difference is a bug**, in the harness or the build, to fix at its source.
   Never skip a file.
+- **Expected added files.** A file `--expect-added` names may exist in the current build only.
+  A `.gz` among them must gunzip to the plain file beside it, except `keyMap.json.gz`, which
+  holds the key map in columns: every key of `keyMap.json` must resolve from it to the same
+  path, ref, line and ignored checks, read by this checkout's `@lowdefy/errors`.
 - **Parts** (`scripts/lib/bench/`): `buildSide` runs one side's CLI build on a prepared server
   and can run repeatedly; `compareBuilds` takes `comparers`, a map from a server-relative file
   (`build/keyMap.json`) to a comparer used in place of the byte comparison, and

@@ -18,11 +18,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 
+import checkColumnarKeyMap from './checkColumnarKeyMap.mjs';
 import compareFileBytes from './compareFileBytes.mjs';
 import compareText from './compareText.mjs';
 import createPathReplacer from './createPathReplacer.mjs';
 import extractBuildMessages from './extractBuildMessages.mjs';
 
+const COLUMNAR_KEY_MAP = 'build/keyMap.json.gz';
 const SERVER_PLACEHOLDER = '<server>';
 // Not a file: the warnings and errors the build logged, compared like one.
 const BUILD_MESSAGES = 'build messages';
@@ -63,7 +65,8 @@ function createSide({ output, serverDirectory }) {
 }
 
 // A file only the current build has, which --expect-added allows. A gzip file
-// must hold exactly the plain file beside it.
+// must hold exactly the plain file beside it, except keyMap.json.gz, which
+// holds keyMap.json in columns and must resolve every key the same.
 function checkAddedFile({ current, file }) {
   if (!file.endsWith('.gz')) {
     return { file, identical: true, lines: [] };
@@ -74,6 +77,13 @@ function checkAddedFile({ current, file }) {
     return { file, identical: false, lines: [`${plainFile} is missing beside it.`] };
   }
   const unzipped = zlib.gunzipSync(fs.readFileSync(path.join(current.serverDirectory, file)));
+  if (file === COLUMNAR_KEY_MAP) {
+    const check = checkColumnarKeyMap({
+      plainText: fs.readFileSync(plainPath, 'utf8'),
+      columnsText: unzipped.toString('utf8'),
+    });
+    return { file, ...check };
+  }
   if (unzipped.equals(fs.readFileSync(plainPath))) {
     return { file, identical: true, lines: [] };
   }

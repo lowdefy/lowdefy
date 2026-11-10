@@ -15,6 +15,7 @@
 */
 
 import readKeyEntryFields from './readKeyEntryFields.js';
+import readKeyMapEntry from './readKeyMapEntry.js';
 
 /**
  * Resolves one key map entry, in either entry shape, to its full config path
@@ -29,17 +30,21 @@ import readKeyEntryFields from './readKeyEntryFields.js';
  * entry once.
  *
  * @param {Object} params
- * @param {Object} params.keyMap - The keyMap from build output
+ * @param {Object} params.keyMap - The keyMap from build output, or a columnar key map
  * @param {string} params.configKey - The ~k value from the config object
  * @returns {Object|null} { path, refId, line, parentId, ignoreBuildChecks }, or
  *   null when configKey is missing or not in the map. line, parentId and
  *   ignoreBuildChecks are the entry's own fields.
  */
 function resolveKeyEntry({ keyMap, configKey }) {
-  if (!configKey || !keyMap?.[configKey]) {
+  if (!configKey || !keyMap) {
     return null;
   }
-  const own = readKeyEntryFields(keyMap[configKey]);
+  const entry = readKeyMapEntry({ keyMap, id: configKey });
+  if (!entry) {
+    return null;
+  }
+  const own = readKeyEntryFields(entry);
   if (own.complete) {
     return {
       path: own.pathPart,
@@ -63,9 +68,10 @@ function resolveKeyEntry({ keyMap, configKey }) {
       refFound = true;
     }
     const parentId = fields.parentId;
-    const walkOn = !fields.complete && Boolean(keyMap[parentId]) && !seen.has(parentId);
+    const parentEntry =
+      fields.complete || seen.has(parentId) ? undefined : readKeyMapEntry({ keyMap, id: parentId });
     currentId = parentId;
-    fields = walkOn ? readKeyEntryFields(keyMap[parentId]) : null;
+    fields = parentEntry ? readKeyEntryFields(parentEntry) : null;
   }
   return {
     path: pathParts.reverse().join(''),

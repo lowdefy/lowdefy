@@ -16,6 +16,7 @@
 import { promisify } from 'util';
 import zlib from 'zlib';
 
+import { encodeColumnarKeyMap } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 const gzip = promisify(zlib.gzip);
@@ -45,11 +46,13 @@ async function writeMaps({ context }) {
   ];
   // Production servers ship the gzipped maps (vercel-output, docker-output) and
   // read them on their first error log. The plain files stay for build-folder
-  // readers like lowdefy journeys. The gzips run on the threadpool, alongside
-  // the plain writes.
+  // readers like lowdefy journeys. The gzipped key map holds the key map in
+  // columns: a server keeps it for its lifetime, and a large app's key map
+  // parsed as plain JSON is a million objects. The gzips run on the threadpool,
+  // alongside the plain writes.
   if (context.writeCompressedMaps === true) {
     writes.push(
-      gzip(keyMapString).then((compressed) =>
+      gzip(JSON.stringify(encodeColumnarKeyMap({ keyMap: context.keyMap }))).then((compressed) =>
         context.writeBuildArtifact('keyMap.json.gz', compressed)
       ),
       gzip(refMapString).then((compressed) =>

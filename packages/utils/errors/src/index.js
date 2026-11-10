@@ -78,6 +78,10 @@
  *   resolveKeyEntry           - One entry → {path, refId, line, parentId, ignoreBuildChecks}
  *   createKeyPathResolver     - Memoised resolver for scans over the whole key map
  *
+ * Columnar Key Maps (production servers hold the key map in columns, not a million objects):
+ *   encodeColumnarKeyMap      - Short-shape key map → columns (the build writes keyMap.json.gz)
+ *   createColumnarKeyMap      - Columns → a key map every reader above takes in place of keyMap
+ *
  * Error Field Utilities:
  *   errorSummaryForLog        - {name, message, code, statusCode, cause} an error may log
  *   expectedErrorNames        - Set of error class names that are expected outcomes, not faults
@@ -94,7 +98,9 @@ import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
+import createColumnarKeyMap from './createColumnarKeyMap.js';
 import createKeyPathResolver from './createKeyPathResolver.js';
+import encodeColumnarKeyMap from './encodeColumnarKeyMap.js';
 import errorSummaryForLog from './errorSummaryForLog.js';
 import errorToDisplayString from './errorToDisplayString.js';
 import expectedErrorNames from './expectedErrorNames.js';
@@ -128,7 +134,9 @@ export {
   BuildError,
   ConfigError,
   ConfigWarning,
+  createColumnarKeyMap,
   createKeyPathResolver,
+  encodeColumnarKeyMap,
   errorSummaryForLog,
   errorToDisplayString,
   expectedErrorNames,

@@ -20,6 +20,7 @@ import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 
+import { encodeColumnarKeyMap } from '@lowdefy/errors';
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 // This sink is the sole writer of `error.handled`. Two callers read the flag and
@@ -31,8 +32,8 @@ import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 // throw.
 
 const keyMap = {
-  key_0: { s: 'root', p: 'key_root', r: 'ref_0', l: 1 },
-  key_1: { s: '.pages[0:home]', p: 'key_0', r: 'ref_1', l: 5 },
+  k1: { s: 'root', p: 'k0', r: 'ref_0', l: 1 },
+  k2: { s: '.pages[0:home]', p: 'k1', r: 'ref_1', l: 5 },
 };
 const refMap = { ref_0: { path: 'lowdefy.yaml' }, ref_1: { path: 'pages/home.yaml' } };
 
@@ -41,7 +42,7 @@ let buildDirectory;
 function writeGzippedMaps() {
   fs.writeFileSync(
     path.join(buildDirectory, 'keyMap.json.gz'),
-    zlib.gzipSync(JSON.stringify(keyMap))
+    zlib.gzipSync(JSON.stringify(encodeColumnarKeyMap({ keyMap })))
   );
   fs.writeFileSync(
     path.join(buildDirectory, 'refMap.json.gz'),
@@ -92,7 +93,7 @@ test('handleError marks the error handled and resolves its location from the gzi
   } = await loadFresh();
   const context = testContext();
   const handleError = createHandleError({ context });
-  const error = new ConfigError('Bad config.', { configKey: 'key_1' });
+  const error = new ConfigError('Bad config.', { configKey: 'k2' });
 
   await handleError(error);
 
@@ -141,7 +142,7 @@ test('handleError marks the error handled before it logs, so a throwing logger c
   };
   const context = testContext({ logger });
   const handleError = createHandleError({ context });
-  const error = new ConfigError('Bad config.', { configKey: 'key_1' });
+  const error = new ConfigError('Bad config.', { configKey: 'k2' });
 
   await handleError(error);
 
@@ -163,7 +164,7 @@ test('handleError marks the error handled when the maps cannot be read', async (
   } = await loadFresh();
   const context = testContext();
   const handleError = createHandleError({ context });
-  const error = new ConfigError('Bad config.', { configKey: 'key_1' });
+  const error = new ConfigError('Bad config.', { configKey: 'k2' });
 
   await handleError(error);
 
@@ -185,7 +186,7 @@ test('handleError on a build with no maps logs every error without a location an
   const handleError = createHandleError({ context });
 
   for (let i = 0; i < 100; i += 1) {
-    const error = new ConfigError('Bad config.', { configKey: 'key_1' });
+    const error = new ConfigError('Bad config.', { configKey: 'k2' });
     await handleError(error);
     expect(error.source).toBeNull();
   }

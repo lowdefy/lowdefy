@@ -21,7 +21,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
-import { TenantIntegrityError } from '@lowdefy/errors';
+import { encodeColumnarKeyMap, TenantIntegrityError } from '@lowdefy/errors';
 
 const secret = 'planted-handle-error-secret';
 
@@ -122,7 +122,7 @@ let buildDirectory;
 function writeGzippedMaps() {
   fs.writeFileSync(
     path.join(buildDirectory, 'keyMap.json.gz'),
-    zlib.gzipSync(JSON.stringify(keyMap))
+    zlib.gzipSync(JSON.stringify(encodeColumnarKeyMap({ keyMap })))
   );
   fs.writeFileSync(
     path.join(buildDirectory, 'refMap.json.gz'),

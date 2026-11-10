@@ -15,6 +15,7 @@
 */
 
 import readKeyEntryFields from './readKeyEntryFields.js';
+import readKeyMapEntry from './readKeyMapEntry.js';
 import resolveKeyEntry from './resolveKeyEntry.js';
 
 /**
@@ -24,7 +25,7 @@ import resolveKeyEntry from './resolveKeyEntry.js';
  * a scan reads and resolves every entry once.
  *
  * @param {Object} params
- * @param {Object} params.keyMap - The keyMap from build output
+ * @param {Object} params.keyMap - The keyMap from build output, or a columnar key map
  * @returns {Function} (configKey) => { path, refId, line, parentId, ignoreBuildChecks } | null
  */
 function createKeyPathResolver({ keyMap }) {
@@ -35,7 +36,7 @@ function createKeyPathResolver({ keyMap }) {
     const seen = new Set();
     let currentId = configKey;
     while (!resolved.has(currentId)) {
-      const entry = keyMap[currentId];
+      const entry = readKeyMapEntry({ keyMap, id: currentId });
       if (!entry) {
         break;
       }

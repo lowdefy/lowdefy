@@ -378,6 +378,13 @@ Nothing outside `@lowdefy/errors` reads entry fields; it goes through one of the
 
 `shouldSuppressBuildCheck` needs only each ancestor's parent id and ignore value, so it reads those through the internal `readKeyEntryFields` without resolving paths.
 
+Every reader takes either a plain key map (an object keyed by id) or a **columnar key map**, and reads entries through the internal `readKeyMapEntry`:
+
+- **`encodeColumnarKeyMap({ keyMap })`** encodes a short-shape key map whose ids are base-36 counter ids in columns: `{ base, segments, segment, parent, line, refs, ignoreBuildChecks }`. It throws on any other id or on a full-shape entry. The build writes the result as `keyMap.json.gz`.
+- **`createColumnarKeyMap(columns)`** returns `{ get(id) }`, building each short-shape entry on request from typed-array columns. An entry whose parent is not in the map has no `p`. The production and e2e servers' `readMaps` returns one, so a large app's key map costs tens of MB in memory rather than a million objects.
+
+See [error-tracing.md](../architecture/error-tracing.md#columnar-key-map) for the layout and its numbers.
+
 ## shouldSuppressBuildCheck
 
 Walks up the keyMap parent chain looking for `~ignoreBuildChecks` settings.
