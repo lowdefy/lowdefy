@@ -2145,11 +2145,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../operators
       cron-parser:
-        specifier: 5.10.0
-        version: 5.10.0
+        specifier: 5.10.4
+        version: 5.10.4
       cronstrue:
-        specifier: 3.27.0
-        version: 3.27.0
+        specifier: 3.39.0
+        version: 3.39.0
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 7.2.0
@@ -9767,12 +9767,12 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
 
-  cron-parser@5.10.0:
-    resolution: {integrity: sha512-izNAxJyRWUP8ljBoDSub5WyrVOUlT4SLGShswE7eoRBpp6QUsSycYxLBMJlbshgPBMcPT/nrfgjNY2918ayv2A==}
+  cron-parser@5.10.4:
+    resolution: {integrity: sha512-TagNqYzoV/C7Ty7VAQjrQg+57WsEOuQEUh0tWT5Dc+l/GOuoAdWVIzFU0CqYdQswqdjUalrdmOvaMtQhErYZTA==}
     engines: {node: '>=18'}
 
-  cronstrue@3.27.0:
-    resolution: {integrity: sha512-AKhV4ilvx73NmicrZCGASdszUIf2ew0A/6jQQTh4pu3lIUzgWOGjT3Gv3CGIcTQ/p8Qy/tZuCmlaOftj8PXaNg==}
+  cronstrue@3.39.0:
+    resolution: {integrity: sha512-b5lKTLr5uFJZfkjjGx3k/XIHvi1xKmv1wVmHOC1hVUJCgf8SYX/EoX4SHeJKYPVQRXDVddN78lwhmwtnUbdn7w==}
     hasBin: true
 
   cross-spawn@7.0.6:
@@ -23656,11 +23656,11 @@ snapshots:
       - supports-color
       - ts-node
 
-  cron-parser@5.10.0:
+  cron-parser@5.10.4:
     dependencies:
       luxon: 3.7.2
 
-  cronstrue@3.27.0: {}
+  cronstrue@3.39.0: {}
 
   cross-spawn@7.0.6:
     dependencies:
@@ -24570,7 +24570,7 @@ snapshots:
       eslint: 8.54.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.54.0)
       eslint-plugin-react: 7.37.5(eslint@8.54.0)
       eslint-plugin-react-hooks: 5.2.0(eslint@8.54.0)
@@ -24604,7 +24604,7 @@ snapshots:
       tinyglobby: 0.2.17
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -24653,7 +24653,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
