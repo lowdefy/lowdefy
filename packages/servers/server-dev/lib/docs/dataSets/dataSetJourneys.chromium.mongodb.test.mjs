@@ -131,13 +131,8 @@ const { default: websocketHandler } = await import('../../../src/routes/websocke
 const { handleWebSocketUpgrade } = await import('../../../src/websocket/devWebSocket.js');
 const { getBrowser } = await import('../getBrowser.js');
 // The connection plugin keeps one driver client per URI for the life of the process; the suite
-// closes them so the test worker can exit. Imported by file: the package does not export it.
-const { closeClients } = await import(
-  path.join(
-    serverDevDirectory,
-    'node_modules/@lowdefy/connection-mongodb/dist/connections/MongoDBCollection/getClient.js'
-  )
-);
+// closes them so the test worker can exit.
+const { closeClients } = await import('@lowdefy/connection-mongodb/clients');
 const { default: getDataStore } = await import('./getDataStore.js');
 const { default: getBuildId } = await import('../getBuildId.js');
 const { serializer } = await import('@lowdefy/helpers');
