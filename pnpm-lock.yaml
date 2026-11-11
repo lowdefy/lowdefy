@@ -97,7 +97,7 @@ importers:
         version: 2.12.2(eslint@9.39.5(jiti@2.7.0))
       eslint-plugin-prettier:
         specifier: 5.5.7
-        version: 5.5.7(@types/eslint@8.4.10)(eslint-config-prettier@10.1.8(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))(prettier@3.1.0)
+        version: 5.5.7(@types/eslint@8.4.10)(eslint-config-prettier@10.1.8(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))(prettier@3.10.0)
       eslint-plugin-react:
         specifier: 7.37.5
         version: 7.37.5(eslint@9.39.5(jiti@2.7.0))
@@ -120,8 +120,8 @@ importers:
         specifier: 13.0.0
         version: 13.0.0
       prettier:
-        specifier: 3.1.0
-        version: 3.1.0
+        specifier: 3.10.0
+        version: 3.10.0
       turbo:
         specifier: 2.9.14
         version: 2.9.14
@@ -14632,8 +14632,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  prettier@3.1.0:
-    resolution: {integrity: sha512-TQLvXjq5IAibjh8EpBIkNKxO749UEWABoiIZehEPiY4GNpVdhaFKqSTu+QrlU6D2dPAfubRmtJTi4K4YkQ5eXw==}
+  prettier@3.10.0:
+    resolution: {integrity: sha512-mBi4765LgjO1PFjlEs7pUeK0nb1bw71c+N4/ItfeUWNdY5cV2pRKaFpbbFRYmDJMO+5ZwzGxHRqHxFZna7iv5w==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -26065,10 +26065,10 @@ snapshots:
       eslint: 9.39.5(jiti@2.7.0)
       globals: 17.14.0
 
-  eslint-plugin-prettier@5.5.7(@types/eslint@8.4.10)(eslint-config-prettier@10.1.8(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))(prettier@3.1.0):
+  eslint-plugin-prettier@5.5.7(@types/eslint@8.4.10)(eslint-config-prettier@10.1.8(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))(prettier@3.10.0):
     dependencies:
       eslint: 9.39.5(jiti@2.7.0)
-      prettier: 3.1.0
+      prettier: 3.10.0
       prettier-linter-helpers: 1.0.1
       synckit: 0.12.3
     optionalDependencies:
@@ -31027,7 +31027,7 @@ snapshots:
 
   prettier@2.8.8: {}
 
-  prettier@3.1.0: {}
+  prettier@3.10.0: {}
 
   prettier@3.9.5: {}
 
