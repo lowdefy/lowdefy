@@ -136,7 +136,7 @@
     "@lowdefy/websockets-core": "7.2.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
-    "pino": "10.3.1",
+    "pino": "10.4.0",
     "vitest": "4.1.12"
   },
   "publishConfig": {
