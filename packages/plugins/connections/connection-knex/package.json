@@ -50,7 +50,7 @@
     "knex": "3.3.0",
     "mysql2": "3.24.6",
     "pg": "8.23.1",
-    "tedious": "19.2.1"
+    "tedious": "20.3.8"
   },
   "devDependencies": {
     "@lowdefy/ajv": "7.2.0",
