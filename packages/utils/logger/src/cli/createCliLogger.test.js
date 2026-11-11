@@ -37,6 +37,7 @@ vi.doMock('ora', () => {
   const mockOraConstructor = vi.fn(() => mockSpinner);
   return {
     default: mockOraConstructor,
+    spinners: { dots: { interval: 80, frames: ['.', '..'] } },
   };
 });
 
