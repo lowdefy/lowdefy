@@ -76,6 +76,7 @@
  *
  * Error Field Utilities:
  *   errorSummaryForLog        - {name, message, code, statusCode, cause} an error may log
+ *   expectedAnswers           - The HTTP status, warning line and page text for each expected outcome
  *   expectedErrorNames        - Set of error class names that are expected outcomes, not faults
  *   isExpectedError           - The one test for an expected outcome versus a fault
  *   readErrorCodes            - {code, statusCode} from one error node's own fields
@@ -92,6 +93,7 @@ import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
 import errorSummaryForLog from './errorSummaryForLog.js';
 import errorToDisplayString from './errorToDisplayString.js';
+import expectedAnswers from './expectedAnswers.js';
 import expectedErrorNames from './expectedErrorNames.js';
 import isExpectedError from './isExpectedError.js';
 import LowdefyInternalError from './LowdefyInternalError.js';
@@ -124,6 +126,7 @@ export {
   ConfigWarning,
   errorSummaryForLog,
   errorToDisplayString,
+  expectedAnswers,
   expectedErrorNames,
   isExpectedError,
   LowdefyInternalError,
