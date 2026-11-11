@@ -47,7 +47,7 @@
     "clsx": "2.1.1",
     "dayjs": "1.11.23",
     "dompurify": "3.4.17",
-    "tailwind-merge": "3.5.0"
+    "tailwind-merge": "3.7.0"
   },
   "peerDependencies": {
     "react": ">=18",
