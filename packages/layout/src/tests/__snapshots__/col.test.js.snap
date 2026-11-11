@@ -60,7 +60,7 @@ exports[`column direction area 1`] = `
       <div
         class="lf-row lf-row-column"
         id="column direction area-content23456"
-        style="flex-direction: column; flex-wrap: wrap;"
+        style="flex-flow: column wrap;"
       >
         <div
           class="lf-col"

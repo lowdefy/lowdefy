@@ -102,7 +102,7 @@
     "hono": "4.13.18",
     "html-to-image": "1.11.13",
     "mongodb": "7.8.0",
-    "mongodb-memory-server-core": "9.2.0",
+    "mongodb-memory-server-core": "11.3.0",
     "opener": "1.5.2",
     "picomatch": "4.0.7",
     "pino": "10.4.0",
@@ -122,9 +122,9 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "jsdom": "19.0.0",
+    "jsdom": "31.0.0",
     "nodemailer": "10.5.0",
-    "vitest": "4.1.12"
+    "vitest": "5.1.0"
   },
   "engines": {
     "node": ">=24"

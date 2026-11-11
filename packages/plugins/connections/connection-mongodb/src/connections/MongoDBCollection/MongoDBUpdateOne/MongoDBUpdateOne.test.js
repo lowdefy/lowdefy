@@ -182,7 +182,7 @@ test('updateOne upsert false', async () => {
     collection,
     write: true,
   };
-  expect(async () => {
+  await expect(async () => {
     await MongoDBUpdateOne({ request, connection });
   }).rejects.toThrow('No matching record to update.');
 });
@@ -229,7 +229,7 @@ test('updateOne upsert default false', async () => {
     collection,
     write: true,
   };
-  expect(async () => {
+  await expect(async () => {
     await MongoDBUpdateOne({ request, connection });
   }).rejects.toThrow('No matching record to update.');
 });
@@ -344,7 +344,7 @@ test('updateOne disableNoMatchError false', async () => {
     collection,
     write: true,
   };
-  expect(async () => {
+  await expect(async () => {
     await MongoDBUpdateOne({ request, connection });
   }).rejects.toThrow('No matching record to update.');
 });

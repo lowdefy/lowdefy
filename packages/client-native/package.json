@@ -53,9 +53,9 @@
     "react-native-svg": "^15.16.0"
   },
   "devDependencies": {
-    "@babel/core": "7.29.6",
+    "@babel/core": "7.29.13",
     "@babel/plugin-transform-class-static-block": "7.29.7",
-    "@jest/globals": "29.7.0",
+    "@jest/globals": "30.5.2",
     "@lowdefy/actions-core": "7.2.0",
     "@lowdefy/operators-js": "7.2.0",
     "@react-native/babel-preset": "0.88.1",
@@ -63,8 +63,8 @@
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "@testing-library/react-native": "14.1.0",
-    "babel-jest": "29.7.0",
-    "jest": "29.7.0",
+    "babel-jest": "30.5.2",
+    "jest": "30.5.2",
     "react": "19.3.0",
     "react-native": "0.88.1",
     "react-native-svg": "15.16.0",
