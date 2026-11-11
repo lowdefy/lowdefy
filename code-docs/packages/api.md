@@ -18,7 +18,7 @@ import {
   callEndpoint, // Execute custom API endpoints
   callRequest, // Execute data requests
   createApiContext, // Create server context with auth info
-  createInjectedApiContext, // The same for an injected caller, with the organization policy from auth.json
+  createInjectedApiContext, // The same for an injected caller, with the organization policy and the gate's enforcement facts from auth.json
   getHomeAndMenus, // Fetch menu configuration
   getAuthConfig, // Auth.js configuration
   getPageConfig, // Fetch page configuration
@@ -173,14 +173,23 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 
 ### `/context/`
 
-| Module                        | Purpose                                                                                                               |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `createApiContext.js`         | Initializes context with user session, state, and helper functions (steps/payload live on routineContext, not here)   |
-| `createInjectedApiContext.js` | `createApiContext` for a caller no auth engine resolved; also binds `context.organization` from the built `auth.json` |
-| `createAuthorize.js`          | Creates authorization checker for role-based access                                                                   |
-| `createReadConfigFile.js`     | Utility to read build output files                                                                                    |
-| `createEvaluateOperators.js`  | Server-side operator evaluation; accepts `steps`/`payload` per call for routine isolation                             |
-| `errors.js`                   | Error types: ConfigurationError, RequestError, ServerError                                                            |
+| Module                        | Purpose                                                                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `createApiContext.js`         | Initializes context with user session, state, and helper functions (steps/payload live on routineContext, not here) |
+| `createInjectedApiContext.js` | `createApiContext` for a caller no auth engine resolved; see [Injected callers](#injected-callers)                  |
+| `createAuthorize.js`          | Creates authorization checker for role-based access                                                                 |
+| `createReadConfigFile.js`     | Utility to read build output files                                                                                  |
+| `createEvaluateOperators.js`  | Server-side operator evaluation; accepts `steps`/`payload` per call for routine isolation                           |
+| `errors.js`                   | Error types: ConfigurationError, RequestError, ServerError                                                          |
+
+#### Injected callers
+
+An injected caller is one no auth engine resolved: the dev server's mock and headless users and its data-session requests, the e2e server's cookie user (or no cookie), and a test harness user. `createApiContext` reads `context.organization` and `context.authEnforcement` from what the auth engine retained, so with no engine it leaves both null. `createInjectedApiContext(context, { authJson })` calls `createApiContext` and then takes both from the built `auth.json`, so the caller meets the gate production's caller does:
+
+- `context.authEnforcement` (`pagesProtectedByDefault`, `twoFactorEnrolPageId`, `twoFactorRequired`) when `authJson.configured` is true, through `routes/auth/createAuthEnforcement.js`, the one mapping `registerAuthEnforcement` also uses. `context.authorizeOutcome` closes over the facts it was built with, so it is built again.
+- `context.organization = { policy, pinned: null }` when the app declares organizations, so the tenant wall engages under `policy: tenant`.
+
+With the facts set, a signed-out injected caller is told to authenticate (`AuthenticationError`) for a missing or internal request or endpoint, gets `unauthenticated` for an unknown path when unlisted pages are protected, and a caller carrying `two_factor_enrolled: false` gets `enrol_required` under `twoFactor.required`. A caller with no `two_factor_enrolled` key passes the enrolment floor, as an API strategy caller does. An app with no auth configured keeps the null facts and the null organization. `server-dev` (`lib/server/createLowdefyContext.js`, when no engine ran), `server-e2e` (`src/middleware/apiContext.js`) and `@lowdefy/test-utils` call it; `@lowdefy/server` never does.
 
 ### `/routes/request/`
 
