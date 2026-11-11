@@ -473,8 +473,8 @@ importers:
         specifier: 1.10.2
         version: 1.10.2(encoding@0.1.13)
       axios:
-        specifier: 1.20.0
-        version: 1.20.0
+        specifier: 1.21.1
+        version: 1.21.1
       commander:
         specifier: 14.0.3
         version: 14.0.3
@@ -1758,8 +1758,8 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/helpers
       axios:
-        specifier: 1.20.0
-        version: 1.20.0
+        specifier: 1.21.1
+        version: 1.21.1
     devDependencies:
       '@lowdefy/ajv':
         specifier: 7.2.0
@@ -8911,8 +8911,8 @@ packages:
     resolution: {integrity: sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==}
     engines: {node: '>=4'}
 
-  axios@1.20.0:
-    resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
+  axios@1.21.1:
+    resolution: {integrity: sha512-6eI5Q/Y4u/Um9dDlsRoq5pY2rxnUTv+L4PpLitnbk/i4jb3MxLZ5CsN5Ih3IysbeRYK4pR+P7qfMsOQl9fwwFQ==}
 
   axobject-query@3.2.1:
     resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}
@@ -20553,7 +20553,7 @@ snapshots:
   '@sendgrid/client@8.1.6':
     dependencies:
       '@sendgrid/helpers': 8.0.0
-      axios: 1.20.0
+      axios: 1.21.1
     transitivePeerDependencies:
       - debug
       - supports-color
@@ -22407,7 +22407,7 @@ snapshots:
 
   axe-core@4.7.0: {}
 
-  axios@1.20.0:
+  axios@1.21.1:
     dependencies:
       follow-redirects: 1.16.2(debug@4.4.3)
       form-data: 4.0.6
