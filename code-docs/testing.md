@@ -167,6 +167,31 @@ the complete path, before every release (see [CI](#ci)). Run it when
 changing the journey runner, journey cookies or mutants. Which page, data set and test covers
 which journey feature is listed under "Fixture app" in `code-docs/architecture/journeys.md`.
 
+## Endpoint test harness
+
+`@lowdefy/test-utils` (`packages/utils/test-utils`) opens a production build of an app in the
+test's own process. Its suite runs with the unit tests, after `pnpm build`:
+
+```bash
+pnpm --filter=@lowdefy/test-utils test
+```
+
+The vitest global setup (`test/globalSetup.mjs`) builds three apps once per run, one at a
+time, with `node scripts/build.mjs --skip-build --no-client-build`, each into a server copy of
+its own, so `_server/prod` and `_server/dev` are left alone. A build takes about 10 seconds:
+
+| App                          | Server copy                                | What the suite reads from it                       |
+| ---------------------------- | ------------------------------------------ | -------------------------------------------------- |
+| `apps/journey-fixture`       | `_server/test-utils-journey-fixture`       | public pages, an endpoint gated to a role          |
+| `apps/auth-reference-tenant` | `_server/test-utils-auth-reference-tenant` | pages protected by default, a page gated to a role |
+| `apps/auth-reference`        | `_server/test-utils-auth-reference`        | a required second factor and its enrolment page    |
+
+Each app has a `tests/data/roles.yaml` data set whose users the access table tests check as. A
+test that needs to change a build or its config copies both to a temporary directory with
+`test/copyFixtureApp.mjs`, which links the built server's `node_modules` instead of copying it.
+`--no-client-build` leaves out the Vite build, as `lowdefy build --no-client-build` does: the
+harness reads only `build/` and the server's `node_modules`.
+
 ## An app from another repository
 
 To run an app that lives in another repository (Pelican, a modules-mongodb demo app) on this
