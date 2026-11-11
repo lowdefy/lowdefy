@@ -30,7 +30,6 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 // vite ships an exports map only, which the import plugin's node resolver cannot read.
-// eslint-disable-next-line import/no-unresolved
 import { build } from 'vite';
 
 const benchDir = path.dirname(fileURLToPath(import.meta.url));

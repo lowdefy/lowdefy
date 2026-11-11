@@ -75,7 +75,7 @@ function userMessageIds(messages) {
 function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
   const threadsConfig = properties.threads;
   const threadsKey = JSON.stringify(threadsConfig ?? null);
-  const endpoints = useMemo(() => getThreadEndpoints(threadsConfig), [threadsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const endpoints = useMemo(() => getThreadEndpoints(threadsConfig), [threadsKey]);
   const managed = endpoints !== null;
   const scope = type.isString(threadsConfig?.scope) ? threadsConfig.scope : null;
   const canResume = managed && threadsConfig.resume !== false && endpoints.getActiveThread !== null;
@@ -171,7 +171,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
     return () => {
       current = false;
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const saveThread = useCallback(
     async ({ id, messages, tag, title }) => {

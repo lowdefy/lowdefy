@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 function cleanRow(row) {
-  // eslint-disable-next-line no-unused-vars
   const { _sheet, ...rest } = row;
   return { ...rest };
 }

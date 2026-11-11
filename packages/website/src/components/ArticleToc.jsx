@@ -33,7 +33,6 @@ export default function ArticleToc({ toc }) {
     if (!hash) return;
     const matches = toc.some((h2) => h2.id === hash || h2.children.some((h3) => h3.id === hash));
     if (matches) setActiveId(hash);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally mount-only
   }, []);
 
   useEffect(() => {

@@ -33,7 +33,6 @@ import getSfSymbol from './getSfSymbol.js';
 function ListItemContextMenu({ children, isDark, items, onSelect, testID }) {
   // Required when drawn, not imported: SwiftUI views exist only on iOS, and ListItem draws this
   // menu only there (as @expo/ui's universal components load @expo/ui/swift-ui only on iOS).
-  // eslint-disable-next-line global-require
   const { Button, ContextMenu, Host, RNHostView } = require('@expo/ui/swift-ui');
   return (
     <Host

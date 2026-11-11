@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 /*
   Copyright 2020-2026 Lowdefy, Inc
 

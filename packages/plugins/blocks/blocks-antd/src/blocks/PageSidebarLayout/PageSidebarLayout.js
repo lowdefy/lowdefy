@@ -86,7 +86,6 @@ const PageSidebarLayout = ({
   // available.
   useEffect(() => {
     setSiderOpen(getInitialSiderState({ methods, properties }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     registerDarkModeMethod(methods);

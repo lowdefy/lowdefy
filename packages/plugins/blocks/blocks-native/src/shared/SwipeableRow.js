@@ -243,7 +243,6 @@ function SwipeableRow({
     });
     return { close, panResponder, runAction };
     // translateX is a ref value; everything else is read from `latest`.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const actions = [...leading, ...trailing];

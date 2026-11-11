@@ -230,7 +230,6 @@ function TableLightBlock({
   const overRowLimit = data.length > DEV_ROW_LIMIT;
   useEffect(() => {
     if (process.env.NODE_ENV === 'production' || !overRowLimit) return;
-    // eslint-disable-next-line no-console
     console.warn(
       `TableLight "${blockId}" renders every row; use Table above ~1,000 rows (this one has ${data.length}).`
     );

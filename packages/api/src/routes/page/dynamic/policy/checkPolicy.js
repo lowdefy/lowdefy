@@ -173,7 +173,6 @@ function checkBlock({ block, path, depth, walk }) {
     checkBlock({ block: block.skeleton, path: `${path}.skeleton`, depth: depth + 1, walk });
   }
   childBlockLists(block).forEach((list) => {
-    // eslint-disable-next-line no-use-before-define
     checkBlockList({ blocks: list.blocks, path: `${path}.${list.path}`, depth: depth + 1, walk });
   });
 }
