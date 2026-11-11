@@ -150,8 +150,8 @@ test.each([
   ['an empty errorCallbackURL', { callbackURL: '/home', errorCallbackURL: '' }],
   ['no callbackURL', {}],
   [
-    'an encoded errorCallbackURL',
-    { callbackURL: '/home', errorCallbackURL: '%2Fa%2Flogin%3Fx%3D1' },
+    'an encoded value in the errorCallbackURL query',
+    { callbackURL: '/home', errorCallbackURL: '/login?next=%2Fa%3Fx%3D1%26y%3D2' },
   ],
   ['an absolute errorCallbackURL', { callbackURL: '/home', errorCallbackURL: `${ORIGIN}/e?x=1` }],
 ])('a refusal lands where an expired link does, with %s', async (_, query) => {
