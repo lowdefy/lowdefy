@@ -106,7 +106,7 @@
     "opener": "1.5.2",
     "picomatch": "4.0.7",
     "pino": "10.3.1",
-    "playwright-core": "1.59.1",
+    "playwright-core": "1.65.0",
     "postal-mime": "4.0.8",
     "react": "18.2.0",
     "react-dom": "18.2.0",

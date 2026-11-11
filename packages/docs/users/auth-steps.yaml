@@ -137,7 +137,7 @@ _ref:
 
             | Step | Scope | Permission | Target | What it does |
             | ---- | ----- | ---------- | ------ | ------------ |
-            | `InviteMember` | org | `invitation: [create]` | — | Invite a member by email; carries `appRoles`, `orgRole`, `attributes`, `contactId`, `profile`; `resend` refreshes. |
+            | `InviteMember` | org | `invitation: [create]` | — | Invite a member by email; carries `appRoles`, `orgRole`, `attributes`, `contactId`, `profile`; `resend` refreshes. Accept sets `contactId` only on a login with no contact link, and refuses one linked to a different contact. |
             | `CancelInvitation` | org | `invitation: [cancel]` | — | Cancel a pending invitation. |
             | `ListMembers` | org | `member: [list]` | — | List members of the organization (accepts `organizationSlug`). |
             | `RemoveMember` | org | `member: [delete]` | — | Remove a member from the organization. |
@@ -148,7 +148,7 @@ _ref:
             | `UnsuspendMember` | org | `member: [suspend]` | — | Lift a suspension (`memberId`); the member keeps the roles they held. |
             | `UpdateOrganization` | org | `organization: [update]` | — | Update the organization row (name, slug, metadata). |
             | `RevokeOrgMcpToken` | org | `member: [update]` | — | Switch off any [member token](/mcp-oauth#tokens-for-scripts) in the organization (`id`). |
-            | `UpdateUserProfile` | org | `user: [update]` | `userId` (self-exempt) | Update a member's display name/image (per-organization copy). Self-service save is exempt. |
+            | `UpdateUserProfile` | org | `user: [update]` | `userId` (self-exempt) | Update a member's display name/image (per-organization copy) and profile. Self-service save is exempt. Does not write `contactId`, which only an accepted invitation sets. |
             | `UpdateUserAttributes` | org | `user: [set-attributes]` | `userId` | Set global user attributes. |
             | `BanUser` | org | `user: [ban]` | `userId` | Ban a user. |
             | `UnbanUser` | org | `user: [ban]` | `userId` | Lift a ban. |

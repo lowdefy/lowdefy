@@ -21,12 +21,13 @@ import fs from 'fs';
 // that was killed or crashed after the executable landed leaves a directory
 // without it: chromium.launch() checks only the executable and fails with a
 // launch error, while a new `playwright install` sees the missing marker and
-// installs again. The registry is Playwright's own (an exported subpath of the
-// pinned playwright-core), so the directory honours PLAYWRIGHT_BROWSERS_PATH.
+// installs again. The registry is Playwright's own (the `registry` namespace of
+// the pinned playwright-core's exported core bundle), so the directory honours
+// PLAYWRIGHT_BROWSERS_PATH.
 async function isHeadlessShellIncomplete() {
-  const { browserDirectoryToMarkerFilePath, registry } = await import(
-    'playwright-core/lib/server/registry/index'
-  );
+  const {
+    registry: { browserDirectoryToMarkerFilePath, registry },
+  } = await import('playwright-core/lib/coreBundle');
   const { directory } = registry.findExecutable('chromium-headless-shell');
   return fs.existsSync(directory) && !fs.existsSync(browserDirectoryToMarkerFilePath(directory));
 }

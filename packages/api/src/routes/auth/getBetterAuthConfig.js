@@ -314,11 +314,13 @@ function getBetterAuthConfig({
       // indexes, or reads inside it.
       //
       // contactId is the link to the app's canonical record for the human
-      // behind this login. It carries profile's opaque contract, not
-      // attributes' - stored, projected onto the caller, and otherwise
-      // ignored: never validated, indexed, or read by the platform, and never
-      // resolved to whatever it points at. That is module work, and which
-      // record the name means is the module's business. A first-class field
+      // behind this login. Apps compare it in author and access checks, so it
+      // is an authorization input and is set once: accepting an invitation
+      // sets it only on a login with no link and refuses an invitation naming
+      // a different contact (checkInvitationContactLink), and no auth step
+      // writes it after that. The platform never resolves it to whatever it
+      // points at - that is module work, and which record the name means is
+      // the module's business. A first-class field
       // rather than a key inside profile, because a link to another entity is
       // a different kind of thing from an opaque attribute bag - it belongs
       // with the user's other structural facts.

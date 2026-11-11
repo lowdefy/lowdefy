@@ -254,6 +254,32 @@ test('a member added by an operator gets the organization active when accepting 
   expect((await getSession.json()).session.activeOrganizationId).toBe(organization.id);
 });
 
+test('a member with no contact link takes the invitation contactId, also through the session cookie cache', async () => {
+  const { adapter, auth } = await setup({ organizations: pinnedOpen, cookieCache: true });
+  const { cookie, user } = await signUp({ auth, adapter, email: 'linked@example.com' });
+  const invitation = await adapter.create({
+    model: 'invitation',
+    data: {
+      organizationId: 'default',
+      email: 'linked@example.com',
+      role: 'member',
+      contactId: 'contact_1',
+      status: 'pending',
+      inviterId: user.id,
+      expiresAt: new Date(Date.now() + 3600 * 1000),
+      createdAt: new Date(),
+    },
+  });
+  const response = await accept({ auth, cookie, invitationId: invitation.id });
+  expect(response.status).toBe(200);
+  const getSession = await auth.handler(
+    new Request(`${ORIGIN}/api/auth/get-session`, {
+      headers: { cookie: mergeCookies(cookie, response), origin: ORIGIN },
+    })
+  );
+  expect((await getSession.json()).user.contactId).toBe('contact_1');
+});
+
 test('a member suspended in the organization accepting from an org-less session does not get it active', async () => {
   const { adapter, auth, db } = await setup({ organizations: tenantOpen });
   const owner = await adapter.create({

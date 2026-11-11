@@ -64,7 +64,7 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth, 
   before.push({
     id: 'acceptExistingMember',
     matches: (path) => path === '/organization/accept-invitation',
-    handler: createAcceptExistingMemberHook(),
+    handler: createAcceptExistingMemberHook({ logger }),
   });
 
   if (authConfig.magicLink?.enabled === true) {

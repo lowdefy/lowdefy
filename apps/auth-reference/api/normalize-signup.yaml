@@ -19,10 +19,11 @@ routine:
       - ':reject': Signups from blocked.example are not allowed.
   # Merge-on-signup: link a verified new signup to an existing contact
   # rather than duplicating it. Match by verified email only - an unverified
-  # match is an account-takeover vector - and only when the user carries no
-  # contactId yet, so an invitation-carried link always wins.
-  # Email/password signups are unverified here; their match runs at
-  # email.verified instead.
+  # match is an account-takeover vector - and only when the record carries no
+  # contactId yet. The link is set once: a later invitation naming a
+  # different contact is refused at accept (CONTACT_LINK_MISMATCH).
+  # Email/password signups are unverified here, and no hook links them
+  # later - they get their link by accepting an invitation.
   # _payload.user is the record BetterAuth is about to write, so its keys are
   # the logical camelCase ones (contactId, emailVerified) - the adapter maps
   # them to the snake_case columns on the way out. Only _user, the resolved
