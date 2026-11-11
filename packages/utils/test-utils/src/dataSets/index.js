@@ -18,6 +18,7 @@ import applyDataSetRedirect from './applyDataSetRedirect.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import getDataStore from './getDataStore.js';
+import getRunDataStore from './getRunDataStore.js';
 import openDataSession from './openDataSession.js';
 import readDataSet from './readDataSet.js';
 import sinkExternalConnections from './sinkExternalConnections.js';
@@ -29,6 +30,7 @@ export {
   createDataSetRefusal,
   dataSessionRegistry,
   getDataStore,
+  getRunDataStore,
   openDataSession,
   readDataSet,
   sinkExternalConnections,

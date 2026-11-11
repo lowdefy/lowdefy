@@ -22,19 +22,17 @@ import drainSessionWork from './drainSessionWork.js';
 import getDataStore from './getDataStore.js';
 import groupDataSetByCollection from './groupDataSetByCollection.js';
 import isDataStoreGone from './isDataStoreGone.js';
+import listSessionDatabases from './listSessionDatabases.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
 
 const DRAIN_TIMEOUT_MS = 30000;
 
-// Every database the session holds, the first included.
-function listSessionDatabases(session) {
-  return [...new Set([session.databaseName, ...session.databases.values()])];
-}
-
 async function dropSessionDatabases({ client, session }) {
-  await Promise.all(listSessionDatabases(session).map((name) => client.db(name).dropDatabase()));
+  await Promise.all(
+    listSessionDatabases({ session }).map((name) => client.db(name).dropDatabase())
+  );
 }
 
 function createClose({ session, client, logger }) {
@@ -69,11 +67,18 @@ function createClose({ session, client, logger }) {
 // openPage({ dataCookie }) writes into each actor's lowdefy_journey_data cookie. close() waits for
 // the session's background work (context.waitUntil), then drops the databases. `logger` is the
 // caller's own: close() warns on it when that work outlives the wait.
-async function openDataSession({ dataSet, logger }) {
-  const store = await getDataStore({ logger });
+//
+// `store` is a test run's store (getRunDataStore), which the endpoint test harness passes; the
+// dev server passes none and gets its own (getDataStore). On a run's store the run's other test
+// processes hold sessions too, so the prefix carries this process's pid (ld_p<pid>_<hex>) and
+// the orphan sweep leaves the databases of processes still running (sweepOrphanDatabases).
+async function openDataSession({ dataSet, logger, store: runStore }) {
+  const store = runStore ?? (await getDataStore({ logger }));
+  const perRun = store.perRun === true;
   const { client, uri } = store;
   const id = crypto.randomBytes(16).toString('hex');
-  const prefix = `ld_${crypto.randomBytes(6).toString('hex')}`;
+  const hex = crypto.randomBytes(6).toString('hex');
+  const prefix = perRun ? `ld_p${process.pid}_${hex}` : `ld_${hex}`;
   const databaseTargets = dataSet.databaseTargets ?? [];
   const session = {
     id,
@@ -92,7 +97,7 @@ async function openDataSession({ dataSet, logger }) {
   };
   dataSessionRegistry.set(id, session);
   try {
-    await sweepOrphanDatabases({ client });
+    await sweepOrphanDatabases({ client, perRun });
     const groups = groupDataSetByCollection({ dataSet });
     // allSettled, so no collection is still loading when a failed load drops the databases.
     const results = await Promise.allSettled(
@@ -115,10 +120,10 @@ async function openDataSession({ dataSet, logger }) {
       // mongod is gone, and every session on it with it. Stopping the store clears it, so the next
       // journey starts a fresh one instead of failing until the dev server restarts.
       await store.stop().catch(() => {});
-      throw new Error(
-        `The journey data store stopped responding (${error.message}). The next journey starts a new one.`,
-        { cause: error }
-      );
+      const message = perRun
+        ? `The test data store stopped responding (${error.message}). The next session joins a new one.`
+        : `The journey data store stopped responding (${error.message}). The next journey starts a new one.`;
+      throw new Error(message, { cause: error });
     }
     // Best effort: the load error is the one to report, and the next open's orphan sweep drops a
     // database this could not.

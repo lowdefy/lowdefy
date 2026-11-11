@@ -15,12 +15,11 @@
 */
 
 import { MongoClient } from 'mongodb';
-import { MongoMemoryReplSet } from 'mongodb-memory-server-core';
-import { DryMongoBinary } from 'mongodb-memory-server-core/lib/util/DryMongoBinary.js';
 
-import pickDataStorePort from './pickDataStorePort.js';
+import announceDataStoreDownload from './announceDataStoreDownload.js';
 import registerDataStoreShutdown from './registerDataStoreShutdown.js';
 import removeDataStoreFiles from './removeDataStoreFiles.js';
+import startDataStoreReplSet from './startDataStoreReplSet.js';
 
 // One store per dev server process. Kept on globalThis because the journey route that opens a data
 // session and the API context that reads it may load as separate module instances (Vite's SSR
@@ -31,28 +30,10 @@ const STORE_KEY = Symbol.for('lowdefy.devServer.dataStore');
 // store, and the journey should say so rather than wait the driver's default 30 s.
 const SERVER_SELECTION_TIMEOUT_MS = 5000;
 
-async function announceDownload({ logger }) {
-  const options = await DryMongoBinary.generateOptions();
-  const binary = await DryMongoBinary.locateBinary(options);
-  if (binary === undefined) {
-    logger.info(`Downloading MongoDB ${options.version} for journey data sets (once).`);
-  }
-}
-
-// WiredTiger's cache otherwise grows to half of (RAM - 1 GB), several GB on a laptop. Data sets
-// are small capped snapshots, so a quarter of a GB holds them.
-const CACHE_SIZE_GB = '0.25';
-
-// A replica set, not a standalone server: transactions and change streams need one, and the app's
-// own cluster is one. MONGOMS_VERSION, read by mongodb-memory-server, pins the MongoDB version.
+// The replica set and its cache cap are startDataStoreReplSet's, shared with a test run's store.
 async function startDataStore({ logger }) {
-  await announceDownload({ logger });
-  const replSet = await MongoMemoryReplSet.create({
-    instanceOpts: [
-      { port: await pickDataStorePort(), args: ['--wiredTigerCacheSizeGB', CACHE_SIZE_GB] },
-    ],
-    replSet: { count: 1, storageEngine: 'wiredTiger' },
-  });
+  await announceDataStoreDownload({ logger, purpose: 'journey data sets' });
+  const replSet = await startDataStoreReplSet();
   const uri = replSet.getUri();
   const client = new MongoClient(uri, { serverSelectionTimeoutMS: SERVER_SELECTION_TIMEOUT_MS });
   try {
