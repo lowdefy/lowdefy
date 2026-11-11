@@ -4952,7 +4952,7 @@
         "connections/KnexRequests.md",
         "connections/SQLite.yaml"
       ],
-      "hash": "54458b280163b0a29bdcf22facce0fc4844c155cc17294a32e5a17ed2b1035a7"
+      "hash": "e60d16cd883ad4ae61f42cd8f4f4707919c42a29832e3e4ce47381fc54883fcd"
     },
     "connections/stripe": {
       "files": [

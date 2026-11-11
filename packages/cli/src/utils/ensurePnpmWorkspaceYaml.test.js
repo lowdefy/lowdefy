@@ -78,15 +78,15 @@ test('ensurePnpmWorkspaceYaml writes pnpm-workspace.yaml when it does not exist'
       `packages:
   - '.'
 onlyBuiltDependencies:
-  - better-sqlite3
   - sharp
 ignoredBuiltDependencies:
   - '@sentry/cli'
+  - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
-  better-sqlite3: true
   sharp: true
   '@sentry/cli': false
+  better-sqlite3: false
   mongodb-memory-server: false
 `,
     ],
@@ -137,15 +137,15 @@ overrides:
 patchedDependencies:
   b@1.0.0: ../../../patches/b@1.0.0.patch
 onlyBuiltDependencies:
-  - better-sqlite3
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
-  better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  better-sqlite3: false
   mongodb-memory-server: false
 allowUnusedPatches: true
 `,
@@ -228,15 +228,15 @@ minimumReleaseAgeExclude:
       `packages:
   - .
 onlyBuiltDependencies:
-  - better-sqlite3
   - sharp
 ignoredBuiltDependencies:
   - "@sentry/cli"
+  - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
-  better-sqlite3: true
   sharp: true
   "@sentry/cli": false
+  better-sqlite3: false
   mongodb-memory-server: false
 minimumReleaseAgeExclude:
   - "@lowdefy/server-dev@7.0.1"

@@ -10,18 +10,21 @@ packages:
 onlyBuiltDependencies:
   - '@sentry/cli'
   - '@swc/core'
-  - better-sqlite3
   - esbuild
+
+# better-sqlite3 ships its binaries in the package and sets gypfile: false, but pnpm before
+# 11.28 still gives it a node-gyp rebuild install script, which fails without node-gyp.
+ignoredBuiltDependencies:
+  - better-sqlite3
 
 # allowBuilds replaces onlyBuiltDependencies in pnpm >=10.29 and pnpm 11.
 allowBuilds:
   '@sentry/cli': true
   '@swc/core': true
-  better-sqlite3: true
+  better-sqlite3: false
   esbuild: true
 
 overrides:
-  better-sqlite3: 12.11.1
   # Keep transitive copies on the patched releases the direct dependencies pin.
   '@hono/node-server@<2': ^2.1.7
   dompurify: 3.4.17
