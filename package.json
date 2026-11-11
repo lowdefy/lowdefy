@@ -74,7 +74,7 @@
     "mongodb-memory-server": "11.3.0",
     "node-gyp": "13.0.0",
     "prettier": "3.10.0",
-    "turbo": "2.9.14"
+    "turbo": "2.11.10"
   },
   "packageManager": "pnpm@10.29.2"
 }
