@@ -27,6 +27,9 @@ process.env.LOWDEFY_SECRET_TEST = secret;
 
 vi.doMock('@lowdefy/api', () => ({
   createApiContext: vi.fn(),
+  // getAuth is mocked to return no engine, so every context here is built by this one unless a
+  // test says otherwise.
+  createInjectedApiContext: vi.fn(),
   createRequestSignal: vi.fn(({ clientSignal, timeoutSignal }) =>
     timeoutSignal ? AbortSignal.any([clientSignal, timeoutSignal]) : clientSignal
   ),
@@ -114,7 +117,8 @@ afterAll(() => {
 const { default: createLowdefyContext } = await import('./createLowdefyContext.js');
 const { default: createSystemContext } = await import('./auth/createSystemContext.js');
 const { journeyActorToken } = await import('./auth/journeyActor.js');
-const { createApiContext } = await import('@lowdefy/api');
+const { createApiContext, createInjectedApiContext } = await import('@lowdefy/api');
+const { default: authJson } = await import('../build/auth.js');
 const { openMutantRun } = await import('./mutants/mutantRuns.js');
 
 function createHonoContext({
@@ -200,7 +204,7 @@ test('createLowdefyContext forwards no Cookie header when the request carries no
 
 test('createLowdefyContext serves the mutated artifact to a request whose cookie names an open mutant run', async () => {
   const artifact = { id: 'page:form', blocks: [] };
-  createApiContext.mockImplementationOnce((context) => {
+  createInjectedApiContext.mockImplementationOnce((context) => {
     context.readConfigFile = async () => artifact;
   });
   const opened = openMutantRun({
@@ -227,7 +231,7 @@ test('createLowdefyContext serves the mutated artifact to a request whose cookie
 
 test('createLowdefyContext leaves readConfigFile alone without a mutant cookie', async () => {
   const readConfigFile = async () => ({});
-  createApiContext.mockImplementationOnce((context) => {
+  createInjectedApiContext.mockImplementationOnce((context) => {
     context.readConfigFile = readConfigFile;
   });
   const context = await createLowdefyContext({ c: createHonoContext() });
@@ -264,7 +268,7 @@ describe('data sessions', () => {
 
   function mockReadConfigFile() {
     const readConfigFile = vi.fn(async () => realArtifact);
-    createApiContext.mockImplementationOnce((context) => {
+    createInjectedApiContext.mockImplementationOnce((context) => {
       context.readConfigFile = readConfigFile;
     });
     return readConfigFile;
@@ -302,7 +306,7 @@ describe('data sessions', () => {
 
   test('a data-session request refuses a connection whose type declares no dataSet, naming it', async () => {
     registerSession();
-    createApiContext.mockImplementationOnce((context) => {
+    createInjectedApiContext.mockImplementationOnce((context) => {
       context.readConfigFile = async () => ({
         connectionId: 'warehouse',
         type: 'Knex',
@@ -385,7 +389,7 @@ describe('data sessions', () => {
         message: `Data session ${id} has ended; this request outlived its journey.`,
       });
       expect(readConfigFile).not.toHaveBeenCalled();
-      createApiContext.mockReset();
+      createInjectedApiContext.mockReset();
     }
     expect(getAuth).not.toHaveBeenCalled();
   });
@@ -436,5 +440,51 @@ describe('who a headless caller is under a dev mock user', () => {
     });
     const context = await createLowdefyContext({ c: createHonoContext() });
     expect(context.user).toEqual({ id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] });
+  });
+});
+
+describe('which function builds the context', () => {
+  afterEach(() => {
+    delete authJson.organizations;
+  });
+
+  test('a mock user in a tenant-policy app gets the tenant policy binding, so the wall engages', async () => {
+    const actual = await vi.importActual('@lowdefy/api');
+    createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+    authJson.organizations = { policy: 'tenant' };
+    getMockUser.mockReturnValueOnce({ id: 'mock', roles: ['admin'] });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.auth).toBeNull();
+    expect(context.user).toEqual({ id: 'mock', roles: ['admin'] });
+    expect(context.organization).toEqual({ policy: 'tenant', pinned: null });
+    expect(createApiContext).not.toHaveBeenCalled();
+  });
+
+  test('a mock user in an app that declares no organizations gets no organization binding', async () => {
+    const actual = await vi.importActual('@lowdefy/api');
+    createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+    getMockUser.mockReturnValueOnce({ id: 'mock', roles: ['admin'] });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.organization).toBeNull();
+  });
+
+  test('a caller no auth engine resolved is built from the built auth config', async () => {
+    getHeadlessUser.mockReturnValueOnce({ user: { id: 'u_1', roles: [] }, explicit: true });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(createInjectedApiContext).toHaveBeenCalledTimes(1);
+    expect(createInjectedApiContext).toHaveBeenCalledWith(context, { authJson });
+    expect(createApiContext).not.toHaveBeenCalled();
+  });
+
+  test('a request the auth engine resolves is built by createApiContext, which reads the engine binding', async () => {
+    const auth = { api: {} };
+    getAuth.mockReturnValueOnce(auth);
+    authJson.organizations = { policy: 'tenant' };
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.auth).toBe(auth);
+    expect(createApiContext).toHaveBeenCalledTimes(1);
+    expect(createApiContext).toHaveBeenCalledWith(context);
+    expect(createInjectedApiContext).not.toHaveBeenCalled();
+    expect(context.organization).toBeUndefined();
   });
 });

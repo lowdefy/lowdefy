@@ -19,13 +19,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { Hono } from 'hono';
-import { vi, afterAll, expect, test } from 'vitest';
+import { vi, afterAll, afterEach, expect, test } from 'vitest';
 
 const secret = 'planted-e2e-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
 
 vi.doMock('@lowdefy/api', () => ({
-  createApiContext: vi.fn(),
+  createInjectedApiContext: vi.fn(),
   createRequestSignal: vi.fn(({ clientSignal }) => clientSignal),
   normalizeInjectedCaller: vi.fn((user) => user),
 }));
@@ -91,6 +91,9 @@ afterAll(() => {
 });
 
 const { default: apiContext } = await import('./apiContext.js');
+const { createInjectedApiContext } = await import('@lowdefy/api');
+const { default: authJson } = await import('../../lib/build/auth.js');
+const { default: getUser } = await import('../../lib/server/auth/getUser.js');
 
 function createApp() {
   const app = new Hono();
@@ -102,8 +105,16 @@ function createApp() {
       scrubbed: context.scrubSecrets(`token ${secret} end`),
     });
   });
+  app.get('/api/caller', (c) => {
+    const context = c.get('lowdefyContext');
+    return c.json({ organization: context.organization, user: context.user });
+  });
   return app;
 }
+
+afterEach(() => {
+  delete authJson.organizations;
+});
 
 test('apiContext sets mode to prod', async () => {
   const res = await createApp().request('/api/ping');
@@ -117,4 +128,32 @@ test('apiContext scrubSecrets redacts a planted secret', async () => {
   expect(res.status).toEqual(200);
   const body = await res.json();
   expect(body.scrubbed).toEqual('token [REDACTED] end');
+});
+
+test('apiContext builds every request context from the built auth config', async () => {
+  await createApp().request('/api/ping');
+  expect(createInjectedApiContext).toHaveBeenCalledTimes(1);
+  const [context, options] = createInjectedApiContext.mock.calls[0];
+  expect(context.mode).toEqual('prod');
+  expect(options).toEqual({ authJson });
+});
+
+test('a cookie user in a tenant-policy app gets the tenant policy binding, so the wall engages', async () => {
+  const actual = await vi.importActual('@lowdefy/api');
+  createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+  authJson.organizations = { policy: 'tenant' };
+  getUser.mockReturnValueOnce({ id: 'u_1', roles: ['admin'] });
+  const res = await createApp().request('/api/caller');
+  expect(await res.json()).toEqual({
+    organization: { policy: 'tenant', pinned: null },
+    user: { id: 'u_1', roles: ['admin'] },
+  });
+});
+
+test('a cookie user in an app that declares no organizations gets no organization binding', async () => {
+  const actual = await vi.importActual('@lowdefy/api');
+  createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+  getUser.mockReturnValueOnce({ id: 'u_1', roles: ['admin'] });
+  const res = await createApp().request('/api/caller');
+  expect(await res.json()).toEqual({ organization: null, user: { id: 'u_1', roles: ['admin'] } });
 });

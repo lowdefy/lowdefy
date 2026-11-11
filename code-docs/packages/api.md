@@ -18,6 +18,7 @@ import {
   callEndpoint, // Execute custom API endpoints
   callRequest, // Execute data requests
   createApiContext, // Create server context with auth info
+  createInjectedApiContext, // The same for an injected caller, with the organization policy from auth.json
   getHomeAndMenus, // Fetch menu configuration
   getAuthConfig, // Auth.js configuration
   getPageConfig, // Fetch page configuration
@@ -172,13 +173,14 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 
 ### `/context/`
 
-| Module                       | Purpose                                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `createApiContext.js`        | Initializes context with user session, state, and helper functions (steps/payload live on routineContext, not here) |
-| `createAuthorize.js`         | Creates authorization checker for role-based access                                                                 |
-| `createReadConfigFile.js`    | Utility to read build output files                                                                                  |
-| `createEvaluateOperators.js` | Server-side operator evaluation; accepts `steps`/`payload` per call for routine isolation                           |
-| `errors.js`                  | Error types: ConfigurationError, RequestError, ServerError                                                          |
+| Module                        | Purpose                                                                                                               |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `createApiContext.js`         | Initializes context with user session, state, and helper functions (steps/payload live on routineContext, not here)   |
+| `createInjectedApiContext.js` | `createApiContext` for a caller no auth engine resolved; also binds `context.organization` from the built `auth.json` |
+| `createAuthorize.js`          | Creates authorization checker for role-based access                                                                   |
+| `createReadConfigFile.js`     | Utility to read build output files                                                                                    |
+| `createEvaluateOperators.js`  | Server-side operator evaluation; accepts `steps`/`payload` per call for routine isolation                             |
+| `errors.js`                   | Error types: ConfigurationError, RequestError, ServerError                                                            |
 
 ### `/routes/request/`
 

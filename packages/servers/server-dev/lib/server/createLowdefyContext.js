@@ -17,6 +17,7 @@
 import path from 'node:path';
 import {
   createApiContext,
+  createInjectedApiContext,
   createRequestSignal,
   normalizeInjectedCaller,
   ensureMcpOauthResource,
@@ -215,7 +216,17 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
       });
     }
   }
-  createApiContext(context);
+  if (type.isNone(context.auth)) {
+    // No auth engine ran (a mock or headless caller, a data-session hop, an
+    // app with no auth), so createApiContext alone would retain no
+    // organization binding. createInjectedApiContext derives the policy from
+    // the built auth config so the tenant wall's policy gate still engages
+    // under policy: tenant (a mock caller there must carry organizationId, or
+    // the wall fails closed - loudly, as it should).
+    createInjectedApiContext(context, { authJson });
+  } else {
+    createApiContext(context);
+  }
   // A journey's browser contexts carry a mutant cookie while `lowdefy journeys
   // harden` runs a mutant through them: their requests, and only theirs, read
   // the mutated artifact. The developer's own tabs carry none.
@@ -236,14 +247,6 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
     });
     context.dataSet = dataSession.name;
     context.waitUntil = trackSessionWork({ session: dataSession });
-  }
-  if (!context.auth && authJson.organizations) {
-    // Mock and headless callers run no auth engine, so createApiContext
-    // retains no organization binding. Derive the policy from the built auth
-    // config so the tenant wall's policy gate still engages under
-    // policy: tenant (a mock caller there must carry organizationId, or the
-    // wall fails closed - loudly, as it should).
-    context.organization = { policy: authJson.organizations.policy, pinned: null };
   }
   // Under policy: tenant, report walled collections that hold unstamped rows
   // (lazily-run-once, logged once per offending collection). It never blocks or
