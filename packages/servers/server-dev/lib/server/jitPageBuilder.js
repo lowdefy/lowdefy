@@ -450,16 +450,20 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
 // Serves a page from its last JIT build while that build is current, else
 // builds it. Returns { result, buildContext }: result is false for a page not
 // in the registry, true for a page already current, or the build's result;
-// buildContext is the context the page was built on, which holds its _js
-// entries and icons even after a later request discards it.
+// buildContext holds the page's _js entries and icons even after a later
+// request discards it. It is the context a build ran on, or for a page already
+// current the kept context, or what the generation's contexts share while the
+// map budget has released it.
 export async function buildPageWithContext({ pageId, buildDirectory, configDirectory }) {
   for (;;) {
     const signals = syncBuildSignals({ buildDirectory, configDirectory });
     // A page current in this generation was built on the kept context or on
     // one the map budget released. Every context of the generation shares its
-    // _js entries and icons, which getPageJitEnrichment also finds while no
-    // context is kept.
-    const currentContext = keptContext;
+    // _js entries and icons, so while no context is kept the shared state
+    // stands in for one. Read here, with the signals: a config publish another
+    // request processes before this page is served clears the module's own
+    // reference, and the page would be served without them.
+    const currentContext = keptContext ?? generationShared;
     if (!signals.registry || !signals.registry[pageId]) {
       return { result: false, buildContext: null };
     }
@@ -529,8 +533,9 @@ function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData }) {
   return Object.keys(found).length > 0 ? found : undefined;
 }
 
-// Where a served page's _js entries and icons can be: the context the page was
-// built on, the kept one, and what the current generation's contexts share.
+// Where a served page's _js entries and icons can be: what the page's request
+// was handed (the context it was built on, or its generation's shared state),
+// the kept context, and what the current generation's contexts share.
 // The page config is read from disk after the build, so a build of the page on
 // a newer context can have written it meanwhile. _js keys are content hashes,
 // so an entry found in any of them is the page's own.
@@ -543,9 +548,9 @@ function enrichmentContexts(buildContext) {
 // Scope this page's JIT-discovered enrichment out of the build context it was
 // built on, so jitPageHandler can fold it into the page-config response the
 // client already awaits — removing the two secondary fetches that stalled
-// first paint. A request can discard that context while the page config is
-// read, so it is passed in (from buildPageWithContext) rather than taken from
-// the kept context.
+// first paint. A request can discard that context, and the generation's shared
+// state, while the page config is read, so buildContext is passed in (from
+// buildPageWithContext) rather than taken from the module's current state.
 export function getPageJitEnrichment({ pageConfig, buildContext }) {
   const contexts = enrichmentContexts(buildContext);
   // No build context (before the first build) means nothing JIT-discovered to

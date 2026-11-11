@@ -147,10 +147,37 @@ test('the _js entries of a page built on a released context reach the client and
   expect(clientJsMap).toContain('from a');
   expect(clientJsMap).toContain('from b');
 
-  // b's build passed the budget too, so no context is kept while a is served.
+  // b's build passed the budget too, so no context is kept while a is served:
+  // the request is handed what the generation's contexts share.
   const served = await app.requestWithContext('a');
-  expect(served).toEqual({ result: true, buildContext: null });
+  expect(served.result).toBe(true);
+  expect(served.buildContext).not.toHaveProperty('keyMap');
   const pageConfig = JSON.parse(fs.readFileSync(path.join(app.buildDirectory, 'pages', 'a.json')));
+  expect(
+    getPageJitEnrichment({ pageConfig, buildContext: served.buildContext }).jsEntries
+  ).toContain('from a');
+  app.remove();
+});
+
+test('a page served while its context is released keeps its _js entries when a config publish is processed before they are read', async () => {
+  const app = createApp({
+    'pages/a.yaml': 'id: a\ntype: Box\nproperties:\n  title:\n    _js: return "from a";\n',
+  });
+  await app.request('a');
+  // a's build passed the budget, so this request releases the context and
+  // serves a from its last build.
+  const served = await app.requestWithContext('a');
+  expect(served.result).toBe(true);
+  expect(served.buildContext).not.toHaveProperty('keyMap');
+  const pageConfig = JSON.parse(fs.readFileSync(path.join(app.buildDirectory, 'pages', 'a.json')));
+
+  // Another request processes a config publish before the page route folds
+  // the entries into its response.
+  const registryPath = path.join(app.buildDirectory, 'pageRegistry.json');
+  fs.copyFileSync(registryPath, `${registryPath}.staged`);
+  fs.renameSync(`${registryPath}.staged`, registryPath);
+  syncBuildSignals({ buildDirectory: app.buildDirectory, configDirectory: app.configDirectory });
+
   expect(
     getPageJitEnrichment({ pageConfig, buildContext: served.buildContext }).jsEntries
   ).toContain('from a');
