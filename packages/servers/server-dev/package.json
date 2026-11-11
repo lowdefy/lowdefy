@@ -107,10 +107,10 @@
     "picomatch": "4.0.7",
     "pino": "10.3.1",
     "playwright-core": "1.65.0",
-    "postal-mime": "4.0.8",
+    "postal-mime": "4.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "smtp-server": "3.19.13",
+    "smtp-server": "3.21.4",
     "swr": "2.2.4",
     "tailwindcss": "4.3.3",
     "tinykeys": "3.0.0",
@@ -123,7 +123,7 @@
   },
   "devDependencies": {
     "jsdom": "19.0.0",
-    "nodemailer": "10.1.7",
+    "nodemailer": "10.5.0",
     "vitest": "4.1.12"
   },
   "engines": {

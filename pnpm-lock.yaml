@@ -42,7 +42,6 @@ overrides:
   minimatch@>=3 <3.1.3: ^3.1.3
   minimatch@>=5 <5.1.8: ^5.1.8
   minimatch@>=9 <9.0.7: ^9.0.7
-  nodemailer@>=10 <10.1.4: ^10.1.7
   nanoid@>=3 <3.3.18: ^3.3.18
   picomatch@>=2 <2.3.2: ^2.3.2
   piscina@>=4 <4.9.4: ^4.9.4
@@ -181,8 +180,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       nodemailer:
-        specifier: 10.1.7
-        version: 10.1.7
+        specifier: 10.5.0
+        version: 10.5.0
     devDependencies:
       '@lowdefy/connection-mongodb':
         specifier: 7.2.0
@@ -2020,8 +2019,8 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/helpers
       nodemailer:
-        specifier: 10.1.7
-        version: 10.1.7
+        specifier: 10.5.0
+        version: 10.5.0
     devDependencies:
       '@lowdefy/ajv':
         specifier: 7.2.0
@@ -2950,8 +2949,8 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       postal-mime:
-        specifier: 4.0.8
-        version: 4.0.8
+        specifier: 4.2.1
+        version: 4.2.1
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2959,8 +2958,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       smtp-server:
-        specifier: 3.19.13
-        version: 3.19.13
+        specifier: 3.21.4
+        version: 3.21.4
       swr:
         specifier: 2.2.4
         version: 2.2.4(react@18.2.0)
@@ -2993,8 +2992,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       nodemailer:
-        specifier: 10.1.7
-        version: 10.1.7
+        specifier: 10.5.0
+        version: 10.5.0
       vitest:
         specifier: 4.1.12
         version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(jsdom@19.0.0)(vite@8.1.6(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0))
@@ -13514,8 +13513,8 @@ packages:
     resolution: {integrity: sha512-5qr2okC4ItAI0hG5SaV0HoYMpnM/Y6+Oqr7AmPYy/2uEoGvS+GbSKLeRxSS1uAdu59yz0ouzcuXievSgg///WA==}
     engines: {node: '>=18'}
 
-  nodemailer@10.1.7:
-    resolution: {integrity: sha512-OQa6FDln5fLttmqSbjDiRYvFDOFNrBqfiOwHPlEbURil3b+vPB1v8xpi+Sp46drzNDlsTnNsS502vthmz56r4w==}
+  nodemailer@10.5.0:
+    resolution: {integrity: sha512-L/w/HH5MqpzMDuZD7fQdt/+KqymuvrpaApaIjAH2XA3ILePwlcvXCVVvP75xVrXCEt2ggK2marrrHHFB5Qu0kA==}
     engines: {node: '>=20.0.0'}
 
   nodemon@3.1.0:
@@ -14011,8 +14010,8 @@ packages:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
 
-  postal-mime@4.0.8:
-    resolution: {integrity: sha512-nnAgc4a9hn7zYuQmX4C7LU+fN47kR5S8cE8zvB/vZ2NimNDbaj+ISZJ9qe3CKIfn2uOTwwz4nQeIyljvdFNgOA==}
+  postal-mime@4.2.1:
+    resolution: {integrity: sha512-uFQnu6TPJe5IGzj3ZIjzAYCk7qnVYM3KFvo0JpRFftJKtxJcUSMgTaWsIXDakTKfN71fUULhjNNVbNonim5f0Q==}
     engines: {node: '>=20'}
 
   postcss-import@15.1.0:
@@ -15029,8 +15028,8 @@ packages:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
 
-  smtp-server@3.19.13:
-    resolution: {integrity: sha512-W1CjNcrPqW4+1gUOYRyjPvTOxu7GgKR9+7l50yQBF0GM8v8jpYwheHFCHX7s+p7pYI8iXKQQZiF2Rv2Na/3i2g==}
+  smtp-server@3.21.4:
+    resolution: {integrity: sha512-FnkLEd4QAsuUJTd7AK6zSDB8y2Fn3T1EXIC0OIUMqYbUmCv4VH9p6opt8afCiEd6x+hxjlh/CUFCSJKMW+Nfyg==}
     engines: {node: '>=20.0.0'}
 
   socks@2.7.1:
@@ -28226,7 +28225,7 @@ snapshots:
 
   node-releases@2.0.59: {}
 
-  nodemailer@10.1.7: {}
+  nodemailer@10.5.0: {}
 
   nodemon@3.1.0:
     dependencies:
@@ -28776,7 +28775,7 @@ snapshots:
 
   possible-typed-array-names@1.1.0: {}
 
-  postal-mime@4.0.8: {}
+  postal-mime@4.2.1: {}
 
   postcss-import@15.1.0(postcss@8.5.23):
     dependencies:
@@ -30068,10 +30067,10 @@ snapshots:
 
   smart-buffer@4.2.0: {}
 
-  smtp-server@3.19.13:
+  smtp-server@3.21.4:
     dependencies:
       ipv6-normalize: 1.0.1
-      nodemailer: 10.1.7
+      nodemailer: 10.5.0
       punycode.js: 2.3.1
 
   socks@2.7.1:

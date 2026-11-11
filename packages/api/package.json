@@ -59,7 +59,7 @@
     "better-auth": "1.7.20",
     "jose": "^6.2.17",
     "mongodb-connection-string-url": "^7.0.2",
-    "nodemailer": "10.1.7"
+    "nodemailer": "10.5.0"
   },
   "devDependencies": {
     "@lowdefy/connection-mongodb": "7.2.0",
