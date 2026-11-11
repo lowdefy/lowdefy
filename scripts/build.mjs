@@ -23,6 +23,7 @@
     pnpm app:build --config-directory /path/to/app --log-level debug # external app
     pnpm app:build --skip-build                                      # skip monorepo build
     pnpm app:build --server-directory _server/prod-pelican           # a second copy beside _server/prod
+    pnpm app:build --no-client-build                                 # config build only, as `lowdefy build --no-client-build`
 
   How it works:
     1. Builds the monorepo (pnpm build:turbo)
@@ -32,7 +33,7 @@
     5. Runs pnpm install in the isolated copy
     6. Runs lowdefy build (generates build/ artifacts)
     7. Runs pnpm install again (build may add plugin deps)
-    8. Runs the Vite client build
+    8. Runs the Vite client build (not with --no-client-build)
 */
 
 import { execSync } from 'node:child_process';
@@ -55,10 +56,12 @@ const {
   skipBuild,
   values: args,
 } = parse({
+  'no-client-build': { type: 'boolean', default: false },
   'ref-resolver': { type: 'string' },
   'server-directory': { type: 'string', default: '_server/prod' },
 });
 
+const clientBuild = !args['no-client-build'];
 const refResolver = args['ref-resolver'];
 const prodDir = path.resolve(REPO_ROOT, args['server-directory']);
 
@@ -136,6 +139,14 @@ execSync('pnpm install --no-lockfile', { cwd: prodDir, stdio: 'inherit' });
 logger.info({ spin: 'succeed' }, 'Dependencies installed.');
 
 // -- Step 11: Run the Vite client build --
+
+// A build without the client serves no pages, so it cannot be started. It is
+// what an endpoint test reads (@lowdefy/test-utils): build/ and node_modules.
+if (!clientBuild) {
+  console.log('');
+  console.log('Build complete, without the client build.');
+  process.exit(0);
+}
 
 logger.info({ spin: 'start' }, 'Running client build...');
 execSync('pnpm run build:client', { cwd: prodDir, stdio: 'inherit', env: buildEnv });
