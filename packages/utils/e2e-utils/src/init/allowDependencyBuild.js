@@ -18,7 +18,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import yaml from 'js-yaml';
+import { dump, loadAll } from 'js-yaml';
 
 function findWorkspaceRoot(startDir) {
   let dir = startDir;
@@ -27,6 +27,13 @@ function findWorkspaceRoot(startDir) {
     dir = path.dirname(dir);
   }
   return null;
+}
+
+// loadAll, because js-yaml 5's load throws on a file with no document. An empty
+// pnpm-workspace.yaml, or one with only comments, is an empty config.
+function readWorkspaceConfig(workspacePath) {
+  const [config] = loadAll(fs.readFileSync(workspacePath, 'utf8'));
+  return config ?? {};
 }
 
 // pnpm no longer reads the "pnpm" field in package.json, and pnpm 11 fails installs
@@ -41,9 +48,7 @@ function allowDependencyBuild({ cwd, appPath, dependency }) {
   const targetDir = workspaceRoot ?? appDir;
   const workspacePath = path.join(targetDir, 'pnpm-workspace.yaml');
 
-  const config = workspaceRoot
-    ? yaml.load(fs.readFileSync(workspacePath, 'utf8')) ?? {}
-    : { packages: ['.'] };
+  const config = workspaceRoot ? readWorkspaceConfig(workspacePath) : { packages: ['.'] };
 
   const onlyBuiltDependencies = config.onlyBuiltDependencies ?? [];
   const allowBuilds = config.allowBuilds ?? {};
@@ -56,7 +61,7 @@ function allowDependencyBuild({ cwd, appPath, dependency }) {
   }
   config.allowBuilds = { ...allowBuilds, [dependency]: true };
 
-  fs.writeFileSync(workspacePath, yaml.dump(config));
+  fs.writeFileSync(workspacePath, dump(config));
   const label = workspaceRoot
     ? 'workspace root pnpm-workspace.yaml'
     : `${appPath}/pnpm-workspace.yaml`;

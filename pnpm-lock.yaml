@@ -3567,8 +3567,8 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       js-yaml:
-        specifier: ^4.3.2
-        version: 4.3.2
+        specifier: 5.5.0
+        version: 5.5.0
       prompts:
         specifier: 2.4.2
         version: 2.4.2
