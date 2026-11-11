@@ -42,9 +42,9 @@
     "test:mongodb": "vitest run --config vitest.mongodb.config.js"
   },
   "dependencies": {
-    "@better-auth/cimd": "1.7.7",
-    "@better-auth/oauth-provider": "1.7.7",
-    "@better-auth/passkey": "1.7.7",
+    "@better-auth/cimd": "1.7.20",
+    "@better-auth/oauth-provider": "1.7.20",
+    "@better-auth/passkey": "1.7.20",
     "@lowdefy/ajv": "7.2.0",
     "@lowdefy/build": "7.2.0",
     "@lowdefy/connection-smtp": "7.2.0",
@@ -56,7 +56,7 @@
     "@lowdefy/operators": "7.2.0",
     "@lowdefy/operators-js": "7.2.0",
     "@modelcontextprotocol/sdk": "1.32.2",
-    "better-auth": "1.7.7",
+    "better-auth": "1.7.20",
     "jose": "^6.2.3",
     "mongodb-connection-string-url": "^7.0.2",
     "nodemailer": "10.1.7"
