@@ -550,8 +550,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       tinykeys:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^4.0.1
+        version: 4.0.1
     devDependencies:
       '@lowdefy/vite-yaml-plugin':
         specifier: 7.2.0
@@ -2959,8 +2959,8 @@ importers:
         specifier: 4.3.5
         version: 4.3.5
       tinykeys:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 4.0.1
+        version: 4.0.1
       uuid:
         specifier: 14.0.3
         version: 14.0.3
@@ -15750,8 +15750,9 @@ packages:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
 
-  tinykeys@3.0.0:
-    resolution: {integrity: sha512-nazawuGv5zx6MuDfDY0rmfXjuOGhD5XU2z0GLURQ1nzl0RUe9OuCJq+0u8xxJZINHe+mr7nw8PWYYZ9WhMFujw==}
+  tinykeys@4.0.1:
+    resolution: {integrity: sha512-rClxhLQl+I5UMB5Ny7sfnZqDNa51u7h7h4gJV2UWslwADHEw75IuVPCnWrpO/otM7jHrHpwcZdRHd+//SiI55A==}
+    engines: {node: '>=22'}
 
   tinyrainbow@3.2.0:
     resolution: {integrity: sha512-LgO3D9yZJjApUiuUfl9iFAwrtaX4+lok3wJIqttGoKCHlWUqHqbQpnxCf82L8FjgKsh4iGo78hqJwgL8F6To2A==}
@@ -32324,7 +32325,7 @@ snapshots:
       fdir: 6.5.0(picomatch@4.0.7)
       picomatch: 4.0.7
 
-  tinykeys@3.0.0: {}
+  tinykeys@4.0.1: {}
 
   tinyrainbow@3.2.0: {}
 
