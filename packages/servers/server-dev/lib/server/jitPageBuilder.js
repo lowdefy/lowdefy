@@ -244,9 +244,11 @@ function createBuildContext(buildDirectory, configDirectory) {
   continueJitKeys({ idCounter, childId });
 
   // The context's page builds write the entries they add to jitMaps/, one file
-  // a build. Only the files the latest build of each of this generation's
-  // pages wrote are kept: they resolve the errors those pages report, and a
-  // page's earlier builds are superseded. A config publish removes the rest.
+  // a build. A new context keeps only the files the latest build of each of
+  // this generation's pages wrote: they resolve the errors those pages report,
+  // and a page's earlier builds are superseded. Rebuilds on this context add
+  // files until the next one, so the map budget bounds the folder's size. A
+  // config publish removes the rest.
   contextSerial += 1;
   context.jitMaps = createJitMaps({
     keyMap: context.keyMap,

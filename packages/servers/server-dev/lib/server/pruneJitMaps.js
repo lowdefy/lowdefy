@@ -17,9 +17,9 @@
 import fs from 'fs';
 import path from 'path';
 
-// Removes every jitMaps file but those named in `keep`, so the files on disk
-// stay bounded by one file per built page. A page build's temporary file
-// (written whole, then renamed to .json) is left for that build to rename.
+// Removes every jitMaps file but those named in `keep`. A page build's
+// temporary file (written whole, then renamed to .json) is left for that build
+// to rename.
 function pruneJitMaps({ buildDirectory, keep }) {
   const keptFiles = new Set(keep);
   const jitMapsDirectory = path.join(buildDirectory, 'jitMaps');
