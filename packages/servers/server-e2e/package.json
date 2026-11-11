@@ -95,7 +95,7 @@
     "tailwindcss": "4.3.5",
     "vitest": "4.1.12",
     "yaml": "2.9.0",
-    "yargs": "18.0.0"
+    "yargs": "18.2.0"
   },
   "engines": {
     "node": ">=24"
