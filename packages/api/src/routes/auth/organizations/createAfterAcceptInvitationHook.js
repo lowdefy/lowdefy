@@ -21,9 +21,15 @@ import { type } from '@lowdefy/helpers';
 // the member row is created). An invitation may carry an opaque profile bag;
 // accepting shallow-merges it onto the accepting user's user.profile,
 // invitation winning per key - an opaque copy the engine never reads inside.
-// The merge is in-band: a failed copy fails the accept and the user retries.
-// invitation.contactId - the link to the app's record for this person - is the
-// third opaque copy, and rides the same user-row update as the profile merge.
+// The hook runs after BetterAuth has consumed the invitation and written the
+// member row, and nothing reverts those when a copy here fails: the request
+// fails, the membership stands without the copies, and the invitation can not
+// be accepted again.
+// invitation.contactId - the link to the app's record for this person - rides
+// the same user-row update as the profile merge, and is set only on a login
+// that has no link yet: the link is an authorization input, set once.
+// createBeforeAcceptInvitationHook has already refused an invitation naming a
+// different contact than the login's, before the member row was written.
 // Invite-time member attributes and app roles ride the invitation the same
 // way: accepting copies invitation.attributes and invitation.appRoles onto the
 // minted member row (one adapter-layer update, parallel to the opaque profile
@@ -37,24 +43,49 @@ import { type } from '@lowdefy/helpers';
 // directly (crud-invites.mjs:324), never validating it against the registered
 // set - which is what makes the bootstrap recipe's hand-inserted role: 'owner'
 // work.
-function createAfterAcceptInvitationHook({ getAuth }) {
+function createAfterAcceptInvitationHook({ getAuth, logger }) {
   return async function afterAcceptInvitationHook({ invitation, member, user }) {
     const { adapter, internalAdapter } = await getAuth().$context;
     const userUpdate = {};
-    if (type.isObject(invitation.profile)) {
+    const copiesProfile = type.isObject(invitation.profile);
+    const copiesContactId = type.isString(invitation.contactId);
+    if (copiesProfile || copiesContactId) {
       // The hook's user is the session user, which may be a cookie-cached
-      // copy - the merge base is read from the user row so a read-merge-write
-      // never resurrects a stale profile.
+      // copy - the merge base and the current link are read from the user row
+      // so a read-merge-write never resurrects a stale profile, and a link
+      // set since the session was cached is never overwritten.
       const userRow = await adapter.findOne({
         model: 'user',
         where: [{ field: 'id', value: user.id }],
       });
-      userUpdate.profile = { ...(userRow.profile ?? {}), ...invitation.profile };
-    }
-    // contactId is a top-level user field, so it is set outright - no read, no
-    // merge. An invitation that names no link leaves an existing one standing.
-    if (type.isString(invitation.contactId)) {
-      userUpdate.contactId = invitation.contactId;
+      if (copiesProfile) {
+        userUpdate.profile = { ...(userRow.profile ?? {}), ...invitation.profile };
+      }
+      // An invitation that names no link leaves an existing one standing, and
+      // the same link is not written again.
+      if (copiesContactId && type.isNone(userRow.contactId)) {
+        userUpdate.contactId = invitation.contactId;
+      }
+      // createBeforeAcceptInvitationHook refused a different link already, so
+      // one seen here was written while this accept ran - another accept by the
+      // same login, or a write to the data. The membership is already written,
+      // so the invitation's link is dropped and logged, not refused.
+      if (
+        copiesContactId &&
+        !type.isNone(userRow.contactId) &&
+        userRow.contactId !== invitation.contactId
+      ) {
+        logger.warn(
+          {
+            event: 'invitation_contact_link_mismatch',
+            userId: user.id,
+            invitationId: invitation.id,
+            linkedContactId: userRow.contactId,
+            invitationContactId: invitation.contactId,
+          },
+          `Invitation "${invitation.id}" names contact "${invitation.contactId}", but login "${user.id}" was linked to contact "${userRow.contactId}" while it was accepted - the invitation's link was not applied.`
+        );
+      }
     }
     if (Object.keys(userUpdate).length > 0) {
       await internalAdapter.updateUser(user.id, userUpdate);

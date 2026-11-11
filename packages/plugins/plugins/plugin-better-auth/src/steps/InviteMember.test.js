@@ -262,3 +262,20 @@ test('InviteMember throws when contactId is not a string', async () => {
     })
   ).rejects.toThrow('InviteMember "contactId" is not a string.');
 });
+
+test('InviteMember throws when contactId is an empty string, before calling createInvitation', async () => {
+  const createInvitation = vi.fn();
+  const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
+  await expect(
+    InviteMember({
+      acting,
+      auth,
+      organizationId,
+      properties: {
+        email: 'new@example.com',
+        contactId: '',
+      },
+    })
+  ).rejects.toThrow('InviteMember "contactId" is an empty string.');
+  expect(createInvitation).not.toHaveBeenCalled();
+});

@@ -228,7 +228,7 @@ async function listTrustConfigs({ name }) {
 // The ids of the trusted publishers that have published a version of the package. A trusted
 // publisher with one of these ids has been used, so npm will not expire it.
 async function getUsedTrustIds({ name }) {
-  const response = await fetch(`${REGISTRY}/${name.replace('/', '%2f')}`, { cache: 'no-store' });
+  const response = await fetch(`${REGISTRY}/${encodeURIComponent(name)}`, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error(`Reading ${name} from ${REGISTRY} failed with status ${response.status}.`);
   }

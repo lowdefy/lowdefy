@@ -133,36 +133,16 @@ test('UpdateUserProfile sets the name and image display copies', async () => {
   });
 });
 
-test('UpdateUserProfile sets contactId as a top-level field, outside the profile bag', async () => {
-  const adapter = createAdapter({ user: { id: 'user-1', profile: { locale: 'en' } } });
+test('UpdateUserProfile refuses contactId, which only an accepted invitation sets', async () => {
+  const adapter = createAdapter({ user: { id: 'user-1' } });
   const { auth } = createMockAuth({ adapter });
-  await UpdateUserProfile({
-    auth,
-    properties: { userId: 'user-1', contactId: 'contact-1' },
-  });
-  expect(adapter.update).toHaveBeenCalledWith({
-    model: 'user',
-    where: [{ field: 'id', value: 'user-1' }],
-    update: { contactId: 'contact-1' },
-  });
+  await expect(
+    UpdateUserProfile({ auth, properties: { userId: 'user-1', contactId: 'contact-1' } })
+  ).rejects.toThrow('UpdateUserProfile received unknown properties "contactId".');
+  expect(adapter.update).not.toHaveBeenCalled();
 });
 
-// The link is not a profile key, so writing both must leave the bag untouched
-// by contactId - the whole point of promoting it out of profile.
-test('UpdateUserProfile keeps contactId out of the profile merge when both are written', async () => {
-  const adapter = createAdapter({ user: { id: 'user-1', profile: { locale: 'en' } } });
-  const { auth } = createMockAuth({ adapter });
-  await UpdateUserProfile({
-    auth,
-    properties: { userId: 'user-1', contactId: 'contact-1', profile: { plan: 'pro' } },
-  });
-  expect(adapter.update.mock.calls[0][0].update).toEqual({
-    profile: { locale: 'en', plan: 'pro' },
-    contactId: 'contact-1',
-  });
-});
-
-test('UpdateUserProfile writes only profile, contactId, name, and image - never other user fields', async () => {
+test('UpdateUserProfile writes only profile, name, and image - never other user fields', async () => {
   const adapter = createAdapter({ user: { id: 'user-1', email: 'a@example.com' } });
   const { auth } = createMockAuth({ adapter });
   await UpdateUserProfile({
@@ -170,14 +150,12 @@ test('UpdateUserProfile writes only profile, contactId, name, and image - never 
     properties: {
       userId: 'user-1',
       profile: { plan: 'pro' },
-      contactId: 'contact-1',
       name: 'New Name',
       image: 'https://img.example/a.png',
     },
   });
   expect(adapter.update.mock.calls[0][0].update).toEqual({
     profile: { plan: 'pro' },
-    contactId: 'contact-1',
     name: 'New Name',
     image: 'https://img.example/a.png',
   });
@@ -191,7 +169,7 @@ test('UpdateUserProfile refuses unknown properties', async () => {
       properties: { userId: 'user-1', profile: { a: 1 }, email: 'new@example.com' },
     })
   ).rejects.toThrow(
-    'UpdateUserProfile received unknown properties "email". Allowed properties are "userId", "profile", "contactId", "name", "image", and "organizationId".'
+    'UpdateUserProfile received unknown properties "email". Allowed properties are "userId", "profile", "name", "image", and "organizationId".'
   );
   await expect(
     UpdateUserProfile({
@@ -240,17 +218,10 @@ test('UpdateUserProfile throws when name or image is not a string', async () => 
   ).rejects.toThrow('UpdateUserProfile "image" is not a string.');
 });
 
-test('UpdateUserProfile throws when contactId is not a string', async () => {
-  const { auth } = createMockAuth();
-  await expect(
-    UpdateUserProfile({ auth, properties: { userId: 'user-1', contactId: { id: 'contact-1' } } })
-  ).rejects.toThrow('UpdateUserProfile "contactId" is not a string.');
-});
-
-test('UpdateUserProfile throws when no profile, contactId, name, or image is provided', async () => {
+test('UpdateUserProfile throws when no profile, name, or image is provided', async () => {
   const { auth } = createMockAuth();
   await expect(UpdateUserProfile({ auth, properties: { userId: 'user-1' } })).rejects.toThrow(
-    'UpdateUserProfile requires at least one of "profile", "contactId", "name", or "image" to write.'
+    'UpdateUserProfile requires at least one of "profile", "name", or "image" to write.'
   );
 });
 
@@ -318,7 +289,7 @@ test('UpdateUserProfile skips the member denorm when no organizationId is resolv
   expect(adapter.update.mock.calls[0][0].model).toEqual('user');
 });
 
-test('UpdateUserProfile skips the member denorm when only profile or contactId is written', async () => {
+test('UpdateUserProfile skips the member denorm when only profile is written', async () => {
   const adapter = {
     findOne: vi.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
     update: vi.fn().mockResolvedValue({ id: 'user-1' }),
@@ -328,7 +299,7 @@ test('UpdateUserProfile skips the member denorm when only profile or contactId i
   await UpdateUserProfile({
     auth,
     organizationId: 'org-a',
-    properties: { userId: 'user-1', profile: { locale: 'en' }, contactId: 'contact-1' },
+    properties: { userId: 'user-1', profile: { locale: 'en' } },
   });
 
   expect(adapter.update).toHaveBeenCalledTimes(1);

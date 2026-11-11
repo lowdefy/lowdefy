@@ -18,6 +18,7 @@ import { getSessionFromCtx } from 'better-auth/api';
 import { setSessionCookie } from 'better-auth/cookies';
 import { type } from '@lowdefy/helpers';
 
+import checkInvitationContactLink from './checkInvitationContactLink.js';
 import isActiveMember from './isActiveMember.js';
 
 // The engine-tier request hooks.before on /organization/accept-invitation for a
@@ -28,8 +29,12 @@ import isActiveMember from './isActiveMember.js';
 // then reverts the invitation and fails. Accepting is answered here instead:
 // the invitation is marked accepted and the membership is left exactly as it
 // is - no second row, and nothing from the invitation (role, app roles,
-// attributes, profile) is applied. BetterAuth treats an invitation as the way
-// to join, never as a role change: it refuses to invite an existing member,
+// attributes, profile) is applied - except the login's contact link, which is
+// the login's, not the membership's, and is set once whatever the way in: a
+// login with no link takes the invitation's, and an invitation naming a
+// different contact is refused before the invitation is consumed, as the
+// route's beforeAcceptInvitation hook refuses it. BetterAuth treats an
+// invitation as the way to join, never as a role change: it refuses to invite an existing member,
 // and role changes go through update-member-role, which checks the caller's
 // authority at the time of the change. An invitation written before the
 // membership existed must not override what an administrator set since.
@@ -46,7 +51,7 @@ import isActiveMember from './isActiveMember.js';
 // away from an existing active organization). A suspended membership is left
 // as it is too, so the organization is never made active: it admits nobody,
 // and an org-less session at least keeps the caller awaiting an organization.
-function createAcceptExistingMemberHook() {
+function createAcceptExistingMemberHook({ logger }) {
   return async function acceptExistingMemberHook(ctx) {
     const invitationId = ctx.body?.invitationId;
     if (!type.isString(invitationId)) {
@@ -79,6 +84,21 @@ function createAcceptExistingMemberHook() {
     if (type.isNone(member)) {
       return undefined;
     }
+    const setsContactLink = await checkInvitationContactLink({
+      adapter,
+      invitation,
+      logger,
+      userId: session.user.id,
+    });
+    // The link is written before the invitation is consumed, so a failed write
+    // leaves the invitation pending and the accept can be retried. Any other
+    // accept of this invitation is by the same login, so it sets the same link.
+    let user = session.user;
+    if (setsContactLink) {
+      user = await internalAdapter.updateUser(session.user.id, {
+        contactId: invitation.contactId,
+      });
+    }
     // The route's own compare-and-set: of two concurrent accepts only one
     // moves the invitation off pending, and the other falls through to the
     // route, which answers it as the used invitation it now is.
@@ -94,16 +114,21 @@ function createAcceptExistingMemberHook() {
     if (type.isNone(accepted)) {
       return undefined;
     }
-    if (type.isNone(session.session.activeOrganizationId) && isActiveMember({ member })) {
-      // Re-issued like the set-active-organization route does, so a session
-      // cookie cache does not keep serving the org-less session.
-      await setSessionCookie(ctx, {
-        session: await internalAdapter.updateSession(session.session.token, {
-          activeOrganizationId: invitation.organizationId,
-        }),
-        user: session.user,
+    const setsActiveOrganization =
+      type.isNone(session.session.activeOrganizationId) && isActiveMember({ member });
+    if (!setsContactLink && !setsActiveOrganization) {
+      return { invitation: accepted, member };
+    }
+    let sessionRow = session.session;
+    if (setsActiveOrganization) {
+      sessionRow = await internalAdapter.updateSession(session.session.token, {
+        activeOrganizationId: invitation.organizationId,
       });
     }
+    // Re-issued like the set-active-organization route does, so a session
+    // cookie cache does not keep serving the org-less session or the login
+    // without its link.
+    await setSessionCookie(ctx, { session: sessionRow, user });
     return { invitation: accepted, member };
   };
 }

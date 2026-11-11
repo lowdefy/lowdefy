@@ -3307,13 +3307,13 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "be6003a3d5dce08abc7e74e6766c5031d0710b73fc24204b8bd9a694bcdbaed8"
+      "hash": "a799ed56573f37a7374538657a5c523e8b0a3bd3e35dabed7492bf705ca26873"
     },
     "user-authentication/auth-steps": {
       "files": [
         "users/auth-steps.yaml"
       ],
-      "hash": "46c67f8c9ecf56a5f18ba4f109bb011beb956daa90a0844405ab7cb396e1cf4d"
+      "hash": "6a3fd58bb355b46f33246b84c6993d3dda0d60495bd56d94384f505873888903"
     },
     "user-authentication/mcp-oauth": {
       "files": [
@@ -3325,7 +3325,7 @@
       "files": [
         "users/user-object.yaml"
       ],
-      "hash": "8abd5b2a058647962e6bf8ea6e0a2deb64b369beb2a1bff8fe5aa79cb03dd06a"
+      "hash": "c56c01fd7f124bce78c8c920a96e09010fffe98e1b50e33638a277bfead730f6"
     },
     "user-authentication/auth-configuration": {
       "files": [
