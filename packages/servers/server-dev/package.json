@@ -111,7 +111,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "smtp-server": "3.19.13",
-    "swr": "2.2.4",
+    "swr": "2.5.1",
     "tailwindcss": "4.3.5",
     "tinykeys": "3.0.0",
     "uuid": "14.0.0",
