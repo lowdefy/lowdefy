@@ -1,0 +1,103 @@
+# One ownership fixture document, in the shape generate-report writes.
+#
+# Vars:
+#   key              — id suffix, unique per fixture
+#   title            — display title
+#   owner_is_caller  — true for the signed-in user, false for the synthetic
+#                      second user (whose identity is fixed so the provenance
+#                      line reads coherently across re-seeds)
+#   visibility       — "private" or "shared"
+#   favourited       — optional, true to put the signed-in user in favourite_of
+#   is_deleted       — optional, true to carry a deleted change stamp
+#
+# Every field the model defines is set, so a fixture is never distinguishable
+# from something the endpoints wrote — a seed missing favourite_of or
+# spec_version would pass exploration that a real document would fail.
+_id:
+  _string.concat:
+    - "ownership-fixture-"
+    - _var: key
+    - "-"
+    - _user: id
+owner:
+  _if:
+    test:
+      _var: owner_is_caller
+    then:
+      user_id:
+        _user: id
+      name:
+        _user: profile.name
+    else:
+      user_id: seed-second-user
+      name: Sam Taylor
+title:
+  _var: title
+description:
+  _state: validated.description
+spec:
+  sections:
+    _state: validated.sections
+spec_version: 1
+visibility:
+  _var: visibility
+favourite_of:
+  _if:
+    # Optional var: an unset `favourited` resolves to null, and this _if rejects
+    # a non-boolean test, so default it to false.
+    test:
+      _if_none:
+        - _var: favourited
+        - false
+    then:
+      - _user: id
+    else: []
+conversation_id: null
+deleted:
+  _if:
+    # Optional var, guarded like favourite_of above.
+    test:
+      _if_none:
+        - _var: is_deleted
+        - false
+    then:
+      timestamp:
+        _date: now
+      user:
+        name:
+          _user: profile.name
+        id:
+          _user: id
+    else: null
+# created names the OWNER, not the seeder, so "Published by" on a second-user
+# fixture reads coherently rather than crediting whoever pressed the button.
+created:
+  timestamp:
+    _date: now
+  user:
+    _if:
+      test:
+        _var: owner_is_caller
+      then:
+        name:
+          _user: profile.name
+        id:
+          _user: id
+      else:
+        name: Sam Taylor
+        id: seed-second-user
+updated:
+  timestamp:
+    _date: now
+  user:
+    _if:
+      test:
+        _var: owner_is_caller
+      then:
+        name:
+          _user: profile.name
+        id:
+          _user: id
+      else:
+        name: Sam Taylor
+        id: seed-second-user

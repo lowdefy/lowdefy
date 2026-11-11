@@ -15,6 +15,7 @@
 */
 
 import { vi, describe, expect, test } from 'vitest';
+import { serializer } from '@lowdefy/helpers';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -221,6 +222,14 @@ describe('Build Artifact Snapshots', () => {
         console.log(`  → Updated snapshot for ${fixtureDir}`);
       }
     }
+
+    // keyMap.json is read with plain JSON.parse when shipped compressed, so its
+    // entries carry no serializer marker and no ~ field.
+    const keyMap = sortedArtifacts['keyMap.json'];
+    expect(serializer.deserialize(keyMap)).toEqual(keyMap);
+    Object.values(keyMap).forEach((entry) => {
+      Object.keys(entry).forEach((field) => expect(field.startsWith('~')).toBe(false));
+    });
 
     // Compare with snapshot
     const snapshot = readSnapshot(fixtureDir);

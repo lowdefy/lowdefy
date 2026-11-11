@@ -1,0 +1,58 @@
+# user-admin module vars (BetterAuth rebuild). No app_name / roles / app_domain:
+# per-app scoping, the module role list, and app-built invite links all retired
+# (design Decisions 1, 7, 8). Roles now come from the app's auth.roles catalog.
+
+# The app's own `auth.organizations.org` — the organization the engine ensures at
+# startup, so this instance administers a slug that exists.
+org_slug: demo
+suspension: true
+download: true
+fields:
+  show_honorific: true
+  profile:
+    _ref: modules/shared/profile/fields.yaml
+  user_attributes:
+    _ref: modules/user-admin/user_attributes_fields.yaml
+  member_attributes:
+    _ref: modules/user-admin/member_attributes_fields.yaml
+components:
+  # Worked example of the `table_columns` slot — columns injected between the
+  # built-in content columns and the audit-date columns on the Members list. One
+  # per bag kind, each `field:` the same path string as the form block id that
+  # collects it: `profile.department` is `fields.profile`'s block id,
+  # `member_attributes.team` is `fields.member_attributes`'s.
+  table_columns:
+    - headerName: Department
+      field: profile.department
+      width: 140
+    # A bag column renders the STORED value, so an enum-backed field (a Selector
+    # over { label, value }) renders its slug — `alpha`, not `Alpha`. Prettifying
+    # is the column's job.
+    - headerName: Team
+      field: member_attributes.team
+      width: 120
+      cellRenderer:
+        _function:
+          __nunjucks:
+            template: >
+              {% if team %}<span style="display:inline-flex; padding:0 8px; border-radius:4px; font-size:12px; line-height:20px; border:1px solid var(--ant-color-border); background:var(--ant-color-fill-quaternary); color:var(--ant-color-text-secondary)">{{ labels[team] or team }}</span>{% endif %}
+            on:
+              team:
+                __args: 0.data.member_attributes.team
+              labels:
+                alpha: Alpha
+                beta: Beta
+                gamma: Gamma
+  # The export binds the same row paths. `type: String` exports the stored slug —
+  # a spreadsheet cell has no renderer, so the raw value is the honest export.
+  download_columns:
+    - column: department
+      value: profile.department
+      type: String
+      width: 20
+    - column: team
+      value: member_attributes.team
+      type: String
+      width: 14
+request_stages:
+  write: []

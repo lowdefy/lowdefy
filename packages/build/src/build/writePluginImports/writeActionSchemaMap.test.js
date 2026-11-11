@@ -44,7 +44,9 @@ test('writeActionSchemaMap uses typesMap schemas for custom plugins', async () =
     },
   };
   const context = {
-    typesMap: { schemas: { actions: { CustomAction: customSchema } } },
+    typesMap: {
+      schemas: { actions: { CustomAction: { package: 'custom-plugin', schema: customSchema } } },
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeActionSchemaMap({ components, context });
@@ -68,7 +70,9 @@ test('writeActionSchemaMap typesMap schemas take priority over package schemas',
     },
   };
   const context = {
-    typesMap: { schemas: { actions: { Wait: customSchema } } },
+    typesMap: {
+      schemas: { actions: { Wait: { package: '@lowdefy/actions-core', schema: customSchema } } },
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeActionSchemaMap({ components, context });

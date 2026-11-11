@@ -1,0 +1,8 @@
+- id: address.formatted_address
+  type: TextInput
+  properties:
+    title: Address
+- id: address.extra
+  type: TextInput
+  properties:
+    title: Building / Unit / Floor

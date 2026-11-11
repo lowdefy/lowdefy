@@ -1,0 +1,46 @@
+# entity_view.slot for the deal-entity workflows (read-only) — shared by
+# sales-pipeline and onboarding, which both point entity_view.slot here.
+#
+# Baked by makeActionPages into each workflow's form pages (RHS Details section)
+# and check page (middle review subject). It reads the entity
+# fields the workflow's `entity.data` routine returns, surfaced server-side on
+# the get_workflow_action response's `entity` object.
+#
+# Rendered with SmartDescriptions (the idiomatic read-only data view) rather
+# than hand-rolled HTML. `fields` controls exactly which keys show and their
+# labels.
+- id: deal_detail_slot
+  type: SmartDescriptions
+  properties:
+    column: 1
+    size: small
+    data:
+      _request: get_workflow_action.entity
+    fields:
+      - id: status
+        type: Selector
+        properties:
+          title: Stage
+          options:
+            - label: Prospecting
+              value: prospecting
+            - label: Closing
+              value: closing
+            - label: Complete
+              value: complete
+      - id: description
+        type: TextInput
+        properties:
+          title: Description
+      - id: sector
+        type: TextInput
+        properties:
+          title: Sector
+      - id: value
+        type: NumberInput
+        properties:
+          title: Value
+      - id: close_date
+        type: DateSelector
+        properties:
+          title: Close date

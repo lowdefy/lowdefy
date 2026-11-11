@@ -1,0 +1,14 @@
+# Restarts the delivery of any release note that stalled, every 10 minutes.
+id: release-notes-sweep
+type: InternalApi
+schedules:
+  - cron: "*/10 * * * *"
+routine:
+  - id: sweep
+    type: CallApi
+    properties:
+      endpointId:
+        _module.endpointId:
+          id: sweep
+          module: release-notes
+      payload: {}

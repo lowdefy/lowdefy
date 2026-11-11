@@ -1,0 +1,57 @@
+# Mints an S3 post policy for the FileManager onUploadPolicy example on the
+# files demo page. Files over 1 MB get no policy unless the payload says
+# large: true, which allows up to 10 MB; with no policy the block holds the
+# upload until the page resumes or cancels it. A pasted image is named
+# pasted-YYYYMMDD-HHmmss.png here, since clipboard files arrive with a generic
+# name.
+id: files-demo-upload-policy
+type: Api
+routine:
+  - :set_state:
+      max_size:
+        _if:
+          test:
+            _eq:
+              - _payload: large
+              - true
+          then: 10485760
+          else: 1048576
+  - :if:
+      _gt:
+        - _payload: size
+        - _state: max_size
+    :then:
+      - :return:
+          upload: null
+  - id: policy
+    type: AwsS3PresignedPostPolicy
+    connectionId: files/files-bucket
+    properties:
+      key:
+        _string.concat:
+          - files-demo/policy-event/
+          - _uuid: true
+          - /
+          - _if:
+              test:
+                _payload: pasted
+              then:
+                _string.concat:
+                  - pasted-
+                  - _dayjs.format:
+                      on:
+                        _date: now
+                      format: YYYYMMDD-HHmmss
+                  - .png
+              else:
+                _payload: name
+      fields:
+        Content-Type:
+          _payload: content_type
+      conditions:
+        - - content-length-range
+          - 1
+          - _state: max_size
+  - :return:
+      upload:
+        _step: policy

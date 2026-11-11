@@ -18,23 +18,36 @@ import { type } from '@lowdefy/helpers';
 import { getFileExtension } from '@lowdefy/node-utils';
 
 import getConfigFile from './getConfigFile.js';
+import getParsedConfigFile from './getParsedConfigFile.js';
 import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 import parseRefContent from './parseRefContent.js';
 import runRefResolver from './runRefResolver.js';
 
-async function getRefContent({ context, refDef, referencedFrom }) {
-  let content;
-  if (refDef.path === 'lowdefy.yaml' || refDef.path === 'lowdefy.yml') {
-    content = await getConfigFile({ context, refDef, referencedFrom });
-  } else if (refDef.resolver || context.refResolver) {
-    content = await runRefResolver({ context, refDef, referencedFrom });
-  } else if (type.isString(refDef.path) && getFileExtension(refDef.path) === 'js') {
-    return getUserJavascriptFunction({ context, filePath: refDef.path });
-  } else {
-    content = await getConfigFile({ context, refDef, referencedFrom });
-  }
+// Plain YAML and JSON files parse the same for every ref, so they go through the
+// parse cache. A .njk file renders with each ref's vars, and resolver content
+// cannot be keyed by path, so both are parsed per ref.
+const cachedExtensions = new Set(['yaml', 'yml', 'json']);
 
+async function readConfigFileContent({ context, refDef, referencedFrom }) {
+  const content = await getConfigFile({ context, refDef, referencedFrom });
+  if (cachedExtensions.has(getFileExtension(refDef.path))) {
+    return getParsedConfigFile({ context, content, refDef });
+  }
   return parseRefContent({ content, refDef });
+}
+
+async function getRefContent({ context, refDef, referencedFrom }) {
+  if (refDef.path === 'lowdefy.yaml' || refDef.path === 'lowdefy.yml') {
+    return readConfigFileContent({ context, refDef, referencedFrom });
+  }
+  if (refDef.resolver || context.refResolver) {
+    const content = await runRefResolver({ context, refDef, referencedFrom });
+    return parseRefContent({ content, refDef });
+  }
+  if (type.isString(refDef.path) && getFileExtension(refDef.path) === 'js') {
+    return getUserJavascriptFunction({ context, filePath: refDef.path });
+  }
+  return readConfigFileContent({ context, refDef, referencedFrom });
 }
 
 export default getRefContent;

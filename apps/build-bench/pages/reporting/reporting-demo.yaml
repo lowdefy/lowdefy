@@ -1,0 +1,278 @@
+# App-owned landing page for testing the reporting module. Seeds the demo_orders
+# collection the data dictionary describes, then links out to the module's own
+# surfaces (chat, saved reports). The surfaces themselves are standalone pages
+# exported by the reporting module.
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: reporting-demo
+    title: AI Chat Reporting
+    logo:
+      src: /logo-square-light-theme.png
+      alt: Reporting
+    breadcrumbs:
+      - home: true
+        icon: home
+      - label: Reporting
+    blocks:
+      - id: intro
+        type: Paragraph
+        properties:
+          content: >
+            Chat to your data and generate saved, navigable reports. Seed the
+            demo data below, then open one of the surfaces. The reporting agent
+            authors read-only MongoDB aggregation pipelines against the
+            collections catalog — here a flat synthetic `orders` collection plus
+            realistic linked base collections (companies, contacts, activities,
+            workflows, actions) whose declared relationships let the agent
+            author its own $lookups/$unwinds, and a few optional view-backed
+            collections that pre-bake a fixed grain for exact counts.
+
+      - id: secrets_note
+        type: Alert
+        properties:
+          type: info
+          showIcon: true
+          message: Configuration required
+          description: >
+            The module's storage and analytics connections are remapped onto the
+            demo's MONGODB_URI, so the only extra secret needed is
+            AI_GATEWAY_API_KEY (the AI gateway that backs the reporting agent).
+            Add it before the chat surface will work.
+
+      - id: seed_card
+        type: Card
+        properties:
+          title: Demo data
+        blocks:
+          - id: seed_help
+            type: Paragraph
+            properties:
+              content: >
+                Inserts 120 synthetic orders spread across ~8 months (clears the
+                collection first, so it is safe to re-run).
+          - id: seed_btn
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              title: Seed demo orders
+              icon: Database
+              type: primary
+            events:
+              onClick:
+                - id: seed
+                  type: CallAPI
+                  params:
+                    endpointId: reporting-seed-orders
+                  messages:
+                    success: Demo orders seeded.
+                    error: Seed failed — check the REPORTING/MONGODB secrets.
+                - id: store_count
+                  type: SetState
+                  params:
+                    seeded_count:
+                      _api: reporting-seed-orders.response.inserted
+          - id: seeded_result
+            type: Paragraph
+            visible:
+              _gt:
+                - _state: seeded_count
+                - 0
+            properties:
+              content:
+                _nunjucks:
+                  template: "✓ {{ n }} orders in the demo_orders collection."
+                  on:
+                    n:
+                      _state: seeded_count
+
+      - id: linked_card
+        type: Card
+        properties:
+          title: Linked demo data (joins, arrays, object-arrays)
+        blocks:
+          - id: linked_help
+            type: Paragraph
+            properties:
+              content: >
+                The richer datasets are backed by read-only MongoDB views over a
+                seeded, linked domain (companies, contacts, activities,
+                workflows, actions). Views can't be created from the app — they
+                are database DDL — so seed them with a one-off script that also
+                inserts the source data. Requires MONGODB_URI (pulled from
+                Infisical by the script).
+          - id: linked_cmd
+            type: Paragraph
+            properties:
+              content: "pnpm --filter @lowdefy/modules-demo reporting:seed"
+              style:
+                fontFamily: monospace
+                background: var(--ant-color-fill-tertiary)
+                padding: 8px 12px
+                borderRadius: 6px
+          - id: linked_note
+            type: Paragraph
+            properties:
+              content: >
+                Then ask the chat things like "how many activities per month",
+                "actions by workflow type", "workload per assignee", or
+                "contacts per company". Each view fixes its grain so the counts
+                are always exact. See docs/ai-reporting/how-to/complex-data.md for
+                the pattern.
+              style:
+                fontSize: 12px
+                color: var(--ant-color-text-secondary)
+                marginBottom: 0
+
+      - id: example_report_card
+        type: Card
+        properties:
+          title: Example saved report
+        blocks:
+          - id: example_report_help
+            type: Paragraph
+            properties:
+              content: >
+                Seeds a worked-example report over the demo_orders,
+                demo_activities and demo_contacts collections so the report
+                surface is reproducible without driving the chat agent. It
+                exercises the open engine's presentation contract end-to-end: a
+                currency-formatted KPI and table column (sourced from the
+                catalog's demo_orders.total display hint), a pipeline-backed
+                bar chart with an x/y contract, every filter control — a Region
+                multiselect, a Created daterange, an Activity type single
+                select, and two company multiselects whose options come from a
+                query over demo_companies (looked-up labels), one match: any
+                over activities and one match: all over contacts — and a CSV
+                download section. Activity type and Activity companies are bound
+                to the same sections, so a select and a multiselect can be
+                compared side by side, and every filter moves a KPI or chart
+                rather than only a table further down. Seed the demo orders and
+                the reporting domain first.
+          - id: seed_report_btn
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              title: Seed example report
+              icon: FilePlus
+              type: primary
+            events:
+              onClick:
+                - id: seed_report
+                  type: CallAPI
+                  params:
+                    endpointId: reporting-seed-example-report
+                  messages:
+                    success: Example report seeded — open it below.
+                    error: Seed failed — sign in and check the MONGODB secret.
+                - id: open_seeded_report
+                  type: Link
+                  params:
+                    pageId:
+                      _module.pageId:
+                        module: ai-reporting
+                        id: report
+                    urlQuery:
+                      report_id:
+                        _api: reporting-seed-example-report.response.report_id
+          - id: seed_ownership_help
+            type: Markdown
+            properties:
+              content: >
+                **Ownership fixtures** — six reports covering every list scope
+                and both sides of the owner / non-owner split: your own private
+                and published reports, a second user's published and private
+                ones, one of theirs you have favourited, and one of yours that
+                is soft-deleted. Two are owned by a synthetic second user, which
+                is what makes the non-owner view visible at all — read and
+                duplicate with no edit actions, and a "Published by" line naming
+                someone else. Seed the demo orders first so the reports resolve.
+          - id: seed_ownership_btn
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              title: Seed ownership fixtures
+              icon: users
+            events:
+              onClick:
+                - id: seed_ownership
+                  type: CallAPI
+                  params:
+                    endpointId: reporting-seed-ownership
+                  messages:
+                    success: Ownership fixtures seeded — open the reports list.
+                    error: Seed failed — sign in and check the MONGODB secret.
+          - id: seed_conversations_help
+            type: Markdown
+            properties:
+              content: >
+                **Conversation fixtures** — a handful of conversations for the
+                chat rail, spanning all three recency groups (Today, Previous 7
+                days, Older), plus one soft-deleted conversation that must stay
+                hidden. One of them carries a large table result, so opening it
+                shows the results panel's "first 200 of N rows" truncation line.
+                Seeded for the signed-in user; open the chat surface to see them.
+          - id: seed_conversations_btn
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              title: Seed conversation fixtures
+              icon: message
+            events:
+              onClick:
+                - id: seed_conversations
+                  type: CallAPI
+                  params:
+                    endpointId: reporting-seed-conversations
+                  messages:
+                    success: Conversation fixtures seeded — open the chat surface.
+                    error: Seed failed — sign in and check the MONGODB secret.
+
+      - id: surfaces_divider
+        type: Divider
+        properties:
+          orientation: left
+          title: Surfaces
+
+      - id: surface_buttons
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: open_chat
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              title: Chat
+              icon: message
+            events:
+              onClick:
+                - id: go_chat
+                  type: Link
+                  params:
+                    pageId:
+                      _module.pageId:
+                        module: ai-reporting
+                        id: chat
+          - id: open_reports
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              title: Saved reports
+              icon: document
+            events:
+              onClick:
+                - id: go_reports
+                  type: Link
+                  params:
+                    pageId:
+                      _module.pageId:
+                        module: ai-reporting
+                        id: reports-list

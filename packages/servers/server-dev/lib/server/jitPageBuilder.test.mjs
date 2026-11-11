@@ -18,7 +18,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { vi, expect, test } from 'vitest';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, createKeyPathResolver, resolveConfigLocation } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import buildPageIfNeeded, { getBuildContext } from './jitPageBuilder.js';
@@ -130,10 +130,65 @@ test('a JIT page build leaves keyMap.json and refMap.json as the config build wr
   expect(files).toHaveLength(1);
   expect(files[0]).toMatch(/^[0-9a-f]{6}-\d+-1\.json$/);
   const { keyMap } = await readMergedMaps({ buildDirectory });
-  const titleKey = Object.keys(keyMap).find((key) => keyMap[key].key?.includes('title'));
+  const resolveKeyPath = createKeyPathResolver({ keyMap });
+  const titleKey = Object.keys(keyMap).find((key) => resolveKeyPath(key).path.includes('title'));
   // Config build prefix, then this process's id: <cfg prefix><child id>_<counter>.
   expect(titleKey).toMatch(/^cfg1_[0-9a-f]{6}_[0-9a-z]+$/);
   fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('a JIT page build writes short key map entries that readMergedMaps and findConfig resolve', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: { home: 'id: home\ntype: Box\nblocks:\n  - id: title\n    type: Box\n' },
+  });
+  await buildPageIfNeeded({ pageId: 'home', buildDirectory, configDirectory });
+  const [jitMapsFile] = listJitMaps(buildDirectory);
+  const jitMaps = JSON.parse(
+    fs.readFileSync(path.join(buildDirectory, 'jitMaps', jitMapsFile), 'utf8')
+  );
+  const entries = Object.values(jitMaps.keyMap);
+  expect(entries.length).toBeGreaterThan(0);
+  entries.forEach((entry) => {
+    expect(entry).not.toHaveProperty('key');
+    expect(typeof entry.s).toBe('string');
+  });
+
+  const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
+  const resolveKeyPath = createKeyPathResolver({ keyMap });
+  const titleKey = Object.keys(keyMap).find(
+    (key) => resolveKeyPath(key).path === 'root.blocks[0:title:Box]'
+  );
+  expect(resolveConfigLocation({ configKey: titleKey, keyMap, refMap })).toEqual({
+    source: 'pages/home.yaml:4',
+    config: 'root.blocks[0:title:Box]',
+  });
+
+  // findConfig reads the build from process.cwd().
+  const cwd = process.cwd();
+  const configEnv = process.env.LOWDEFY_DIRECTORY_CONFIG;
+  process.chdir(path.dirname(buildDirectory));
+  process.env.LOWDEFY_DIRECTORY_CONFIG = configDirectory;
+  try {
+    const { default: findConfig } = await import('../docs/findConfig.js');
+    const result = await findConfig({ id: 'title', pageId: 'home' });
+    expect(result.matches.map(({ keyPath, location }) => ({ keyPath, location }))).toEqual([
+      {
+        keyPath: 'root.blocks[0:title:Box]',
+        location: {
+          source: `${path.join(configDirectory, 'pages', 'home.yaml')}:4`,
+          config: 'root.blocks[0:title:Box]',
+        },
+      },
+    ]);
+  } finally {
+    process.chdir(cwd);
+    if (configEnv === undefined) {
+      delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+    } else {
+      process.env.LOWDEFY_DIRECTORY_CONFIG = configEnv;
+    }
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('an error a failing JIT page build throws after its keys were added resolves to its source line', async () => {

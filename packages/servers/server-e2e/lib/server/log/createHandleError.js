@@ -16,6 +16,8 @@
 
 import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 
+import readMaps from './readMaps.js';
+
 function createHandleError({ context }) {
   return async function handleError(error) {
     try {
@@ -36,6 +38,10 @@ function createHandleError({ context }) {
               error,
               readConfigFile: context.readConfigFile,
               configDirectory: context.configDirectory,
+              // Imported, not read from context.readMaps, as the production
+              // server does for its auth-hook system context.
+              readMaps: () =>
+                readMaps({ buildDirectory: context.buildDirectory, logger: context.logger }),
             });
 
       // Attach resolved location to error for display layer

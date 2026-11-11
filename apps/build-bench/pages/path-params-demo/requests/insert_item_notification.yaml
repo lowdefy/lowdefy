@@ -1,0 +1,43 @@
+# Stores an inbox notification for the signed-in user whose button links back to
+# this page with the item's path value. It has the shape the demo send-routine
+# merges, so the popup's View button and the notification landing page
+# (`notifications/link?_id=…`) both read `links.button`.
+id: insert_item_notification
+type: MongoDBInsertOne
+connectionId:
+  _module.connectionId:
+    id: notifications-collection
+    module: notifications
+payload:
+  item_id:
+    _path_params: item_id
+properties:
+  doc:
+    _id:
+      _uuid: true
+    contact_id:
+      _user: id
+    user_id:
+      _user: id
+    type: path-params-demo
+    popup: true
+    read: false
+    title:
+      _string.concat:
+        - "Item "
+        - _payload: item_id
+    description:
+      _string.concat:
+        - "Open item "
+        - _payload: item_id
+        - " from this notification."
+    links:
+      button:
+        pageId: path-params-demo
+        pathParams:
+          item_id:
+            _payload: item_id
+    created:
+      _ref:
+        module: events
+        component: change_stamp

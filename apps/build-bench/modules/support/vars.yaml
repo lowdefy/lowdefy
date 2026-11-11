@@ -1,0 +1,29 @@
+# The demo talks to the Pelican deployment SUPPORT_PELICAN_URL names (staging,
+# or Pelican's local dev server), with its own test support app's key in
+# SUPPORT_PELICAN_KEY. The e2e server points it at a stub.
+pelican_url:
+  _build.env:
+    key: SUPPORT_PELICAN_URL
+    default: https://pelican.lowdefy.app
+environment:
+  _build.env:
+    key: STAGE
+    default: development
+app_version:
+  _build.env:
+    key: APP_VERSION
+    default: null
+# Chat uploads go under ai-assistant/<user id>/ (modules/ai-assistant/attachment_requests.yaml),
+# so the support agent tools send only chat files under the caller's own prefix.
+chat_files_prefix:
+  _string.concat:
+    - ai-assistant/
+    - _user: id
+    - /
+# Pelican's release.* events go to the release-notes module's receiver.
+release_notes_endpoint:
+  _build.string.concat:
+    - _var: ids.release-notes
+    - /receive
+# Pelican's users.lookup answers with the email and name of the members it names.
+user_lookup: true
