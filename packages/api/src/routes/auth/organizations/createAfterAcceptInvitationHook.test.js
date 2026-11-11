@@ -18,6 +18,10 @@ import { vi, expect, test } from 'vitest';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
 
+function createLogger() {
+  return { warn: vi.fn() };
+}
+
 function createMockAuth({ userRow = { id: 'user_1' } } = {}) {
   const updateUser = vi.fn(async () => ({}));
   const update = vi.fn(async () => ({}));
@@ -33,7 +37,7 @@ function createMockAuth({ userRow = { id: 'user_1' } } = {}) {
 
 test('afterAcceptInvitationHook writes the invitation profile as the bag when the user has no profile', async () => {
   const { auth, findOne, update, updateUser } = createMockAuth({ userRow: { id: 'user_1' } });
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', profile: { plan: 'pro' } },
@@ -54,7 +58,7 @@ test('afterAcceptInvitationHook shallow-merges the invitation profile with the i
   const { auth, updateUser } = createMockAuth({
     userRow: { id: 'user_1', profile: { theme: 'light', locale: 'en' } },
   });
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', profile: { theme: 'dark', plan: 'pro' } },
@@ -70,7 +74,7 @@ test('afterAcceptInvitationHook shallow-merges the invitation profile with the i
 
 test('afterAcceptInvitationHook sets the invitation contactId on a login with no link', async () => {
   const { auth, findOne, update, updateUser } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', contactId: 'contact_9' },
@@ -93,7 +97,7 @@ test('afterAcceptInvitationHook writes nothing when the login already holds the 
   const { auth, update, updateUser } = createMockAuth({
     userRow: { id: 'user_1', contactId: 'contact_9' },
   });
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', contactId: 'contact_9' },
@@ -107,12 +111,13 @@ test('afterAcceptInvitationHook writes nothing when the login already holds the 
 });
 
 // The before hook refuses a different contact; should a link land between the
-// two hooks, the after hook still never overwrites it.
-test('afterAcceptInvitationHook never overwrites a link the login already holds', async () => {
+// two hooks, the after hook still never overwrites it, and logs the dropped one.
+test('afterAcceptInvitationHook never overwrites a link the login already holds and logs the mismatch', async () => {
   const { auth, updateUser } = createMockAuth({
     userRow: { id: 'user_1', contactId: 'contact_1', profile: { locale: 'en' } },
   });
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const logger = createLogger();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger });
 
   await hook({
     invitation: { id: 'inv_1', contactId: 'contact_9', profile: { plan: 'pro' } },
@@ -122,13 +127,23 @@ test('afterAcceptInvitationHook never overwrites a link the login already holds'
   });
 
   expect(updateUser).toHaveBeenCalledWith('user_1', { profile: { locale: 'en', plan: 'pro' } });
+  expect(logger.warn).toHaveBeenCalledWith(
+    {
+      event: 'invitation_contact_link_mismatch',
+      userId: 'user_1',
+      invitationId: 'inv_1',
+      linkedContactId: 'contact_1',
+      invitationContactId: 'contact_9',
+    },
+    'Invitation "inv_1" names contact "contact_9", but login "user_1" was linked to contact "contact_1" while it was accepted - the invitation\'s link was not applied.'
+  );
 });
 
 test('afterAcceptInvitationHook leaves the link as it is when the invitation names no contact', async () => {
   const { auth, findOne, updateUser } = createMockAuth({
     userRow: { id: 'user_1', contactId: 'contact_1' },
   });
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', attributes: { branch: 'north' } },
@@ -145,7 +160,7 @@ test('afterAcceptInvitationHook copies contactId and merges profile in a single 
   const { auth, updateUser } = createMockAuth({
     userRow: { id: 'user_1', profile: { locale: 'en' } },
   });
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', contactId: 'contact_9', profile: { plan: 'pro' } },
@@ -163,7 +178,7 @@ test('afterAcceptInvitationHook copies contactId and merges profile in a single 
 
 test('afterAcceptInvitationHook does not write contactId when the invitation carries a non-string', async () => {
   const { auth, update, updateUser } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', contactId: { id: 'contact_9' } },
@@ -178,7 +193,7 @@ test('afterAcceptInvitationHook does not write contactId when the invitation car
 
 test('afterAcceptInvitationHook copies invitation attributes onto the minted member row', async () => {
   const { auth, update, updateUser } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
   const attributes = { branch: 'north' };
 
   await hook({
@@ -200,7 +215,7 @@ test('afterAcceptInvitationHook copies invitation attributes onto the minted mem
 // member attributes carries roles and nothing else on every invitation.
 test('afterAcceptInvitationHook copies invitation appRoles onto the minted member row when the invitation carries no attributes', async () => {
   const { auth, update, updateUser } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', appRoles: ['branch-manager'] },
@@ -219,7 +234,7 @@ test('afterAcceptInvitationHook copies invitation appRoles onto the minted membe
 
 test('afterAcceptInvitationHook copies attributes and appRoles in a single member update', async () => {
   const { auth, update } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
   const attributes = { branch: 'north' };
 
   await hook({
@@ -239,7 +254,7 @@ test('afterAcceptInvitationHook copies attributes and appRoles in a single membe
 
 test('afterAcceptInvitationHook copies an empty appRoles array, which is distinct from an absent field', async () => {
   const { auth, update } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', appRoles: [] },
@@ -257,7 +272,7 @@ test('afterAcceptInvitationHook copies an empty appRoles array, which is distinc
 
 test('afterAcceptInvitationHook merges profile and copies attributes when the invitation carries both', async () => {
   const { auth, update, updateUser } = createMockAuth({ userRow: { id: 'user_1' } });
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
   const attributes = { branch: 'north' };
 
   await hook({
@@ -277,7 +292,7 @@ test('afterAcceptInvitationHook merges profile and copies attributes when the in
 
 test('afterAcceptInvitationHook does nothing when the invitation carries no profile, contactId, attributes or appRoles', async () => {
   const { auth, findOne, update, updateUser } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1' },
@@ -293,7 +308,7 @@ test('afterAcceptInvitationHook does nothing when the invitation carries no prof
 
 test('afterAcceptInvitationHook does not update the user when profile is not a plain object', async () => {
   const { auth, update, updateUser } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', profile: 'not-an-object' },
@@ -308,7 +323,7 @@ test('afterAcceptInvitationHook does not update the user when profile is not a p
 
 test('afterAcceptInvitationHook does not update the member row when attributes is not a plain object', async () => {
   const { auth, update, updateUser } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', attributes: 'not-an-object' },
@@ -325,7 +340,7 @@ test('afterAcceptInvitationHook does not update the member row when attributes i
 // denormalizes nothing onto the user row, whatever role the invitation carried.
 test('afterAcceptInvitationHook writes nothing to the user row when the minted member is an org admin', async () => {
   const { auth, findOne, update, updateUser } = createMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await hook({
     invitation: { id: 'inv_1', role: 'admin' },
@@ -339,10 +354,10 @@ test('afterAcceptInvitationHook writes nothing to the user row when the minted m
   expect(updateUser).not.toHaveBeenCalled();
 });
 
-test('afterAcceptInvitationHook fails the accept in-band when the profile write fails', async () => {
+test('afterAcceptInvitationHook fails the request when the profile write fails', async () => {
   const { auth, updateUser } = createMockAuth();
   updateUser.mockRejectedValue(new Error('write failed'));
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, logger: createLogger() });
 
   await expect(
     hook({

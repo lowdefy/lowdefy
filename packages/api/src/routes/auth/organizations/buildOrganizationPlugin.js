@@ -159,7 +159,7 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, logger, sendInvitat
       },
     },
     organizationHooks: {
-      afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
+      afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth, logger }),
       // Refuses an invitation naming a different contact than the login is
       // linked to, before the member row is written: the link is set once.
       beforeAcceptInvitation: createBeforeAcceptInvitationHook({ getAuth, logger }),

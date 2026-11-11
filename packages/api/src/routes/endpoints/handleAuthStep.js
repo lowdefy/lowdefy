@@ -150,17 +150,10 @@ async function handleAuthStep(context, routineContext, { step }) {
   if (authority.scope === 'org' && acting.system !== true) {
     // Evaluated before the scope check: a person saves their own profile
     // without holding any org authority, and without holding a member row in
-    // the organization the request happens to name. selfTargetExemptUnless
-    // names the properties an authorization check reads (UpdateUserProfile's
-    // contactId): a call that sets one is not self-service, so it needs the
-    // same authority as a call on someone else.
+    // the organization the request happens to name.
     const selfTargetKey = authority.selfTargetExempt;
     const selfTargeted =
-      !type.isNone(selfTargetKey) &&
-      evaluatedProperties?.[selfTargetKey] === context.user.id &&
-      (authority.selfTargetExemptUnless ?? []).every((key) =>
-        type.isNone(evaluatedProperties[key])
-      );
+      !type.isNone(selfTargetKey) && evaluatedProperties?.[selfTargetKey] === context.user.id;
     if (!selfTargeted) {
       const { adapter } = await context.auth.$context;
       // The caller's authority is their member row in the TARGET organization,

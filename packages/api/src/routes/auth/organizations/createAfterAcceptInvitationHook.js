@@ -21,7 +21,10 @@ import { type } from '@lowdefy/helpers';
 // the member row is created). An invitation may carry an opaque profile bag;
 // accepting shallow-merges it onto the accepting user's user.profile,
 // invitation winning per key - an opaque copy the engine never reads inside.
-// The merge is in-band: a failed copy fails the accept and the user retries.
+// The hook runs after BetterAuth has consumed the invitation and written the
+// member row, and nothing reverts those when a copy here fails: the request
+// fails, the membership stands without the copies, and the invitation can not
+// be accepted again.
 // invitation.contactId - the link to the app's record for this person - rides
 // the same user-row update as the profile merge, and is set only on a login
 // that has no link yet: the link is an authorization input, set once.
@@ -40,7 +43,7 @@ import { type } from '@lowdefy/helpers';
 // directly (crud-invites.mjs:324), never validating it against the registered
 // set - which is what makes the bootstrap recipe's hand-inserted role: 'owner'
 // work.
-function createAfterAcceptInvitationHook({ getAuth }) {
+function createAfterAcceptInvitationHook({ getAuth, logger }) {
   return async function afterAcceptInvitationHook({ invitation, member, user }) {
     const { adapter, internalAdapter } = await getAuth().$context;
     const userUpdate = {};
@@ -62,6 +65,26 @@ function createAfterAcceptInvitationHook({ getAuth }) {
       // the same link is not written again.
       if (copiesContactId && type.isNone(userRow.contactId)) {
         userUpdate.contactId = invitation.contactId;
+      }
+      // createBeforeAcceptInvitationHook refused a different link already, so
+      // one seen here was written while this accept ran - another accept by the
+      // same login, or a write to the data. The membership is already written,
+      // so the invitation's link is dropped and logged, not refused.
+      if (
+        copiesContactId &&
+        !type.isNone(userRow.contactId) &&
+        userRow.contactId !== invitation.contactId
+      ) {
+        logger.warn(
+          {
+            event: 'invitation_contact_link_mismatch',
+            userId: user.id,
+            invitationId: invitation.id,
+            linkedContactId: userRow.contactId,
+            invitationContactId: invitation.contactId,
+          },
+          `Invitation "${invitation.id}" names contact "${invitation.contactId}", but login "${user.id}" was linked to contact "${userRow.contactId}" while it was accepted - the invitation's link was not applied.`
+        );
       }
     }
     if (Object.keys(userUpdate).length > 0) {

@@ -90,6 +90,15 @@ function createAcceptExistingMemberHook({ logger }) {
       logger,
       userId: session.user.id,
     });
+    // The link is written before the invitation is consumed, so a failed write
+    // leaves the invitation pending and the accept can be retried. Any other
+    // accept of this invitation is by the same login, so it sets the same link.
+    let user = session.user;
+    if (setsContactLink) {
+      user = await internalAdapter.updateUser(session.user.id, {
+        contactId: invitation.contactId,
+      });
+    }
     // The route's own compare-and-set: of two concurrent accepts only one
     // moves the invitation off pending, and the other falls through to the
     // route, which answers it as the used invitation it now is.
@@ -105,19 +114,21 @@ function createAcceptExistingMemberHook({ logger }) {
     if (type.isNone(accepted)) {
       return undefined;
     }
-    if (setsContactLink) {
-      await internalAdapter.updateUser(session.user.id, { contactId: invitation.contactId });
+    const setsActiveOrganization =
+      type.isNone(session.session.activeOrganizationId) && isActiveMember({ member });
+    if (!setsContactLink && !setsActiveOrganization) {
+      return { invitation: accepted, member };
     }
-    if (type.isNone(session.session.activeOrganizationId) && isActiveMember({ member })) {
-      // Re-issued like the set-active-organization route does, so a session
-      // cookie cache does not keep serving the org-less session.
-      await setSessionCookie(ctx, {
-        session: await internalAdapter.updateSession(session.session.token, {
-          activeOrganizationId: invitation.organizationId,
-        }),
-        user: session.user,
+    let sessionRow = session.session;
+    if (setsActiveOrganization) {
+      sessionRow = await internalAdapter.updateSession(session.session.token, {
+        activeOrganizationId: invitation.organizationId,
       });
     }
+    // Re-issued like the set-active-organization route does, so a session
+    // cookie cache does not keep serving the org-less session or the login
+    // without its link.
+    await setSessionCookie(ctx, { session: sessionRow, user });
     return { invitation: accepted, member };
   };
 }

@@ -59,13 +59,13 @@ An invitation is how someone joins an organization, never how a membership chang
 
 ### Invitations and the contact link
 
-An invitation may carry a `contactId`: the link from the login to the app's record for this person, read as [`_user.contact_id`](/user-object). Apps compare it in author and access checks, so it is set once and never changed by the person it belongs to:
+An invitation may carry a `contactId`: the link from the login to the app's record for this person, read as [`_user.contact_id`](/user-object). Apps compare it in author and access checks, so it is set once, by accepting an invitation:
 
 - Accepting an invitation sets the link on a login that has none.
 - An invitation with no `contactId`, or the same one the login already holds, leaves the link as it is.
-- An invitation naming a different contact than the login holds is refused with the code `CONTACT_LINK_MISMATCH`. No membership is written and the invitation stays pending. The person accepting sees a short message with no ids; the server logs a warning (`invitation_contact_link_mismatch`) with the login, the invitation and both contact ids, so whoever runs the app can find the case. Correcting the link is up to the app.
+- An invitation naming a different contact than the login holds is refused with the code `CONTACT_LINK_MISMATCH`. No membership is written and the invitation stays pending. The person accepting sees a short message with no ids; the server logs a warning (`invitation_contact_link_mismatch`) with the login, the invitation and both contact ids, so whoever runs the app can find the case.
 
-After that, only a caller with `user: [update]` authority in an organization the person belongs to changes the link, through `UpdateUserProfile`. That holds for your own login too: an `UpdateUserProfile` that sets `contactId` on yourself needs the same authority.
+The page that accepts should call `UpdateSession` after `AcceptInvitation`, so the browser's `_user` picks up the new link (and the new organization) straight away. No auth step changes the link after that: `UpdateUserProfile` does not write `contactId`. A wrong link is corrected in the data.
 
 ### Suspending a member
 
