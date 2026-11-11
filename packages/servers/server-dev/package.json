@@ -96,7 +96,7 @@
     "@vitejs/plugin-react": "6.3.0",
     "antd": "6.7.0",
     "better-auth": "1.7.20",
-    "chokidar": "4.0.3",
+    "chokidar": "6.0.0",
     "dayjs": "1.11.23",
     "dotenv": "18.0.10",
     "hono": "4.13.18",

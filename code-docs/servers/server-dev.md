@@ -32,7 +32,7 @@ Beyond production server:
 - `@lowdefy/build` - Build system
 - `@lowdefy/engine` - State engine
 - `@hono/vite-dev-server` (0.26.0) - Mounts the Hono app inside Vite
-- `chokidar` (3.5.3) - File watcher
+- `chokidar` (6.0.0) - File watcher
 - `dotenv` (16.3.1) - Env loading
 - `opener` (1.5.2) - Browser opener
 - `swr` (2.2.4) - Data fetching
@@ -199,7 +199,7 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 }
 
 await context.initialBuild();
-context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
+context.startWatchers(); // Not awaited — start-up does not need the initial scan
 // At the head of syncServer's queue: record the server artifacts,
 // optimizeDependencies, startServer, then wait for the child to answer. A
 // watcher batch during the optimise builds at once and its syncServer call
@@ -834,7 +834,7 @@ async function reloadHandler(c) {
 }
 ```
 
-Every stream shares one module-level chokidar watcher on `./build/reload`, started by the first subscriber and closed when the last one leaves, as `lib/docs/devEventBus.js` does for `buildStatus.json` (the close waits a tick, for the reason given there). A watcher per connection held one fs handle per open tab, headless journey and screenshot tabs included. There is no reload on unlink: a skeleton rebuild removes `build/reload` when it publishes the new build, and the reload comes from `reloadClients()` after.
+Every stream shares one module-level chokidar watcher on `./build/reload`, started by the first subscriber and closed when the last one leaves, as `lib/docs/devEventBus.js` does for `buildStatus.json`. A watcher per connection held one fs handle per open tab, headless journey and screenshot tabs included. There is no reload on unlink: a skeleton rebuild removes `build/reload` when it publishes the new build, and the reload comes from `reloadClients()` after.
 
 The 15s pings keep the connection alive; the route is registered before the api context middleware (it needs no request context) and dev has no compression middleware, so the stream is never buffered.
 
