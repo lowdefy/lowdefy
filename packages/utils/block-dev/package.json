@@ -38,9 +38,9 @@
   "dependencies": {
     "@lowdefy/block-utils": "7.2.0",
     "@lowdefy/helpers": "7.2.0",
-    "@testing-library/dom": "8.19.1",
-    "@testing-library/react": "13.4.0",
-    "@testing-library/user-event": "14.6.1",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.9",
     "ajv": "8.20.0",
     "ajv-errors": "3.0.0",
     "react": "18.2.0",
