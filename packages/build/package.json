@@ -72,7 +72,7 @@
     "@lowdefy/style-native": "7.2.0",
     "acorn": "8.16.0",
     "ajv": "8.20.0",
-    "antd": "6.6.5",
+    "antd": "6.7.0",
     "json5": "2.2.3",
     "lucide": "1.48.0",
     "picomatch": "4.0.4",

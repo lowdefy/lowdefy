@@ -78,7 +78,7 @@
     "@lowdefy/websockets-core": "7.2.0",
     "@tailwindcss/postcss": "4.3.3",
     "@vitejs/plugin-react": "6.0.2",
-    "antd": "6.6.5",
+    "antd": "6.7.0",
     "dayjs": "1.11.20",
     "hono": "4.13.14",
     "lightningcss": "1.32.0",
