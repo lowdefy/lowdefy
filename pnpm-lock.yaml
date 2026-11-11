@@ -879,7 +879,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.32)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@24.13.3)
+        version: 28.1.3(@types/node@25.9.9)
 
   packages/operators:
     dependencies:
@@ -1781,8 +1781,8 @@ importers:
   packages/plugins/connections/connection-elasticsearch:
     dependencies:
       '@elastic/elasticsearch':
-        specifier: 7.17.12
-        version: 7.17.12
+        specifier: 9.5.1
+        version: 9.5.1(apache-arrow@21.2.0)
       '@lowdefy/helpers':
         specifier: 7.2.0
         version: link:../../../utils/helpers
@@ -3778,7 +3778,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.32)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@25.9.9)
+        version: 28.1.3(@types/node@24.13.3)
 
   packages/utils/vite-yaml-plugin:
     dependencies:
@@ -4914,9 +4914,18 @@ packages:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
 
-  '@elastic/elasticsearch@7.17.12':
-    resolution: {integrity: sha512-iypJDSzlnA1dXcw6H77qy0pH1Et8Nrw/TA6UHA7ECjKwZ9iBxZKS3WgOX0KgtL6GWdmTQWhGEha7k+ELVHygjQ==}
-    engines: {node: '>=12'}
+  '@elastic/elasticsearch@9.5.1':
+    resolution: {integrity: sha512-2ZZqCmgGPjSYn+OphFRYm9g46KVINA0i8fRmlPHJC60RvJeFB6NSHO0nKKOOYhm3WRXyGkLu1xkdXe724fnmnA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      apache-arrow: 18.x - 21.x
+    peerDependenciesMeta:
+      apache-arrow:
+        optional: true
+
+  '@elastic/transport@9.6.0':
+    resolution: {integrity: sha512-6vDa4mrBACVNu85jdLCDA6xpbjLoHbbvus7QgnRdz//zuFdJbFFVd+qOJDmJGhAgph05kLtkyyv2Ndo/xl0X5w==}
+    engines: {node: '>=20'}
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -11839,8 +11848,9 @@ packages:
     resolution: {integrity: sha512-puUZAUKT5m8Zzvs72XWy3HtvVbTWljRE66cP60bxJzAqf2DgICo7lYTY2IHUmLnNpjYvw5bvmoHvPc0QO2a62w==}
     engines: {node: ^16.14.0 || >=18.0.0}
 
-  hpagent@0.1.2:
-    resolution: {integrity: sha512-ePqFXHtSQWAFXYmj+JtOTHr84iNrII4/QRlAAPPE+zqnKy4xJo7Ie1Y4kC7AdB+LxLxSTTzBMASsEcy0q8YyvQ==}
+  hpagent@1.2.0:
+    resolution: {integrity: sha512-A91dYTeIB6NoXG+PxTQpCCDDnfHsW9kc06Lvpu1TEe9gnd6ZFeiBoRO9JvzEv6xK7EX97/dUE8g/vBMTqTS3CA==}
+    engines: {node: '>=14'}
 
   html-dom-parser@5.1.8:
     resolution: {integrity: sha512-MCIUng//mF2qTtGHXJWr6OLfHWmg3Pm8ezpfiltF83tizPWY17JxT4dRLE8lykJ5bChJELoY3onQKPbufJHxYA==}
@@ -15159,8 +15169,8 @@ packages:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
     engines: {node: '>=4'}
 
-  secure-json-parse@2.6.0:
-    resolution: {integrity: sha512-B9osKohb6L+EZ6Kve3wHKfsAClzOC/iISA2vSuCe5Jx5NAKiwitfxx8ZKYapHXr0sYRj7UZInT7pLb3rp2Yx6A==}
+  secure-json-parse@4.1.1:
+    resolution: {integrity: sha512-lnd81MQEZKjhW/Gd2TQqdd4XP6QYNdDW/EP+I7nTrFHP9y2LmaGPIHk9xsnzcOiEr1c39c/e84xFgGviQKBTRw==}
 
   seek-bzip@2.0.0:
     resolution: {integrity: sha512-SMguiTnYrhpLdk3PwfzHeotrcwi8bNV4iemL9tx9poR/yeaMYwB9VzR1w7b57DuWpuqR8n6oZboi0hj3AxZxQg==}
@@ -18300,12 +18310,25 @@ snapshots:
 
   '@discoveryjs/json-ext@0.5.7': {}
 
-  '@elastic/elasticsearch@7.17.12':
+  '@elastic/elasticsearch@9.5.1(apache-arrow@21.2.0)':
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
-      hpagent: 0.1.2
+      '@elastic/transport': 9.6.0
+      tslib: 2.8.1
+    optionalDependencies:
+      apache-arrow: 21.2.0
+    transitivePeerDependencies:
+      - supports-color
+
+  '@elastic/transport@9.6.0':
+    dependencies:
+      '@opentelemetry/api': 1.9.1
+      '@opentelemetry/core': 2.9.0(@opentelemetry/api@1.9.1)
+      debug: 4.4.3
+      hpagent: 1.2.0
       ms: 2.1.3
-      secure-json-parse: 2.6.0
+      secure-json-parse: 4.1.1
+      tslib: 2.8.1
+      undici: 7.30.1
     transitivePeerDependencies:
       - supports-color
 
@@ -27344,7 +27367,7 @@ snapshots:
     dependencies:
       lru-cache: 10.3.0
 
-  hpagent@0.1.2: {}
+  hpagent@1.2.0: {}
 
   html-dom-parser@5.1.8:
     dependencies:
@@ -31754,7 +31777,7 @@ snapshots:
       extend-shallow: 2.0.1
       kind-of: 6.0.3
 
-  secure-json-parse@2.6.0: {}
+  secure-json-parse@4.1.1: {}
 
   seek-bzip@2.0.0:
     dependencies:
