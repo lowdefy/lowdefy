@@ -4913,7 +4913,7 @@
         "connections/KnexRequests.md",
         "connections/MSSQL.yaml"
       ],
-      "hash": "6f5d435000d9cd4131905ae83ea8cecee7b1316af22df950f7b73dc4f70a1926"
+      "hash": "8ec19a20990dd67d855922b0a823843a797cfb7876d836b32c6605b8a7f423ba"
     },
     "connections/mysql": {
       "files": [

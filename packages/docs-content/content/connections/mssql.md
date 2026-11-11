@@ -41,6 +41,31 @@ LOWDEFY_SECRET_MSSQL_USER = user
 LOWDEFY_SECRET_MSSQL_PASSWORD = password
 ```
 
+###### Encrypted connection:
+Knex turns encryption off for MSSQL unless you set it, and with encryption off the login, password included, and all queries are sent to the server unencrypted. Set `options.encrypt: true` in the connection object to encrypt the connection. The connection then fails with an `EENCRYPT` error if the server does not support encryption, and with a certificate error if the server's TLS certificate is not trusted. Azure SQL Database always requires encryption.
+```yaml
+connections:
+  - id: mssql
+    type: Knex
+    properties:
+      client: mssql
+      connection:
+        host:
+          _secret: MSSQL_HOST
+        database:
+          _secret: MSSQL_DB
+        user:
+          _secret: MSSQL_USER
+        password:
+          _secret: MSSQL_PASSWORD
+        options:
+          encrypt: true
+          # Only for a server with a self-signed certificate. The certificate is then
+          # not checked, so the connection is open to a man-in-the-middle.
+          # trustServerCertificate: true
+```
+Set `encrypt: false` only for a server that does not support encryption, on a network you trust. Use `encrypt: 'strict'` for servers that require TDS 8.0 strict encryption. In a connection string, add `?encrypt=true` (or `?encrypt=false`) to the URL. See the [`tedious` connection options](https://tediousjs.github.io/tedious/api-connection.html#function_newConnection) for the other `options`.
+
 ###### Secret connection string:
 ```yaml
 connections:
