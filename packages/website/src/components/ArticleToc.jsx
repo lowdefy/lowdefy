@@ -31,9 +31,7 @@ export default function ArticleToc({ toc }) {
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
-    const matches = toc.some(
-      (h2) => h2.id === hash || h2.children.some((h3) => h3.id === hash),
-    );
+    const matches = toc.some((h2) => h2.id === hash || h2.children.some((h3) => h3.id === hash));
     if (matches) setActiveId(hash);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally mount-only
   }, []);
@@ -68,7 +66,7 @@ export default function ArticleToc({ toc }) {
         }
         recomputeActive();
       },
-      { rootMargin: '-80px 0px -70% 0px', threshold: 0 },
+      { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
     );
 
     for (const h of allHeadings) observer.observe(h);

@@ -10,15 +10,13 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.md$/,
-      type: 'asset/source',
-    });
-    return config;
+  turbopack: {
+    rules: {
+      // Articles import their markdown source as a string.
+      '*.md': {
+        type: 'raw',
+      },
+    },
   },
 };
 

@@ -60,10 +60,7 @@ const markdownComponents = {
 
 export default function ArticlePage({ article, relatedArticles = [] }) {
   const author = authors[article.authorId];
-  const tocEntryCount = (article.toc ?? []).reduce(
-    (n, h2) => n + 1 + h2.children.length,
-    0,
-  );
+  const tocEntryCount = (article.toc ?? []).reduce((n, h2) => n + 1 + h2.children.length, 0);
   const showToc = article.tocEnabled !== false && tocEntryCount >= 2;
 
   return (
