@@ -4933,7 +4933,7 @@
       "files": [
         "connections/Redis.yaml"
       ],
-      "hash": "0f47932e7b3293029b234063a6547acb1920fccfe214cab56804a6bb052c85cb"
+      "hash": "7006e4cb5e7adfda545ab2f3fde59e4996cf3947367afadc6671d243e80225ee"
     },
     "connections/sendgridmail": {
       "files": [

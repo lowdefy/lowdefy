@@ -54,3 +54,9 @@ test('invalid connection schema', () => {
     'Redis connection property "connection" should be a string or object.'
   );
 });
+
+test('connection schema requires the connection property', () => {
+  expect(() => validate({ schema, data: {} })).toThrow(
+    'Redis connection should have required property "connection".'
+  );
+});

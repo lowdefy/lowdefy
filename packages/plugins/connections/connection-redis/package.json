@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
-    "redis": "4.6.11"
+    "redis": "6.3.1"
   },
   "devDependencies": {
     "@lowdefy/ajv": "7.2.0",
