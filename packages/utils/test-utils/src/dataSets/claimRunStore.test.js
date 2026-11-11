@@ -29,7 +29,7 @@ let recordPath;
 beforeEach(() => {
   directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-store-'));
   // In a folder that does not exist yet, as on a machine's first run.
-  recordPath = path.join(directory, 'lowdefy-test-utils', 'data-store-7.json');
+  recordPath = path.join(directory, 'lowdefy-test-store-501', 'data-store-7.json');
 });
 
 afterEach(() => {

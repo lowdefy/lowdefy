@@ -18,9 +18,12 @@ import os from 'node:os';
 import path from 'node:path';
 
 // Where a run's test processes find its data store: one small file per owner process, in the
-// machine's temporary directory.
+// machine's temporary directory. The folder is per user, since on Linux the temporary directory
+// is shared and one user cannot write into a folder another made; Windows has no user id and
+// a temporary directory per user.
 function getRunStoreRecordPath({ ownerPid }) {
-  return path.join(os.tmpdir(), 'lowdefy-test-utils', `data-store-${ownerPid}.json`);
+  const user = process.getuid?.() ?? 'user';
+  return path.join(os.tmpdir(), `lowdefy-test-store-${user}`, `data-store-${ownerPid}.json`);
 }
 
 export default getRunStoreRecordPath;

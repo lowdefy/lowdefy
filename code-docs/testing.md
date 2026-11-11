@@ -251,7 +251,7 @@ share one `mongod` (`getRunDataStore`), where the dev server has one per server 
 (`getDataStore`):
 
 - **Who starts it.** The first test process to open a session creates the run's record,
-  `<tmpdir>/lowdefy-test-utils/data-store-<owner pid>.json`, with the `wx` flag, so one process
+  `<tmpdir>/lowdefy-test-store-<uid>/data-store-<owner pid>.json`, with the `wx` flag, so one process
   wins, and starts the keeper (`dataStoreKeeperProcess.js`), detached and with no pipe to it.
   The keeper starts `mongod` with `startDataStoreReplSet`, the same replica set and
   `--wiredTigerCacheSizeGB 0.25` cap as the dev server's store, and writes its URI to the record.
