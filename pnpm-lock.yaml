@@ -489,8 +489,8 @@ importers:
         specifier: 7.5.21
         version: 7.5.21
       uuid:
-        specifier: 14.0.0
-        version: 14.0.0
+        specifier: 14.0.3
+        version: 14.0.3
       yaml:
         specifier: 2.9.0
         version: 2.9.0
@@ -2341,8 +2341,8 @@ importers:
         specifier: 7.2.0
         version: link:../../../operators
       uuid:
-        specifier: 14.0.0
-        version: 14.0.0
+        specifier: 14.0.3
+        version: 14.0.3
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 7.2.0
@@ -2742,8 +2742,8 @@ importers:
         specifier: 4.3.5
         version: 4.3.5
       uuid:
-        specifier: 14.0.0
-        version: 14.0.0
+        specifier: 14.0.3
+        version: 14.0.3
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0)
@@ -2971,8 +2971,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       uuid:
-        specifier: 14.0.0
-        version: 14.0.0
+        specifier: 14.0.3
+        version: 14.0.3
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0)
@@ -3113,8 +3113,8 @@ importers:
         specifier: 4.3.5
         version: 4.3.5
       uuid:
-        specifier: 14.0.0
-        version: 14.0.0
+        specifier: 14.0.3
+        version: 14.0.3
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0)
@@ -15946,8 +15946,8 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
-  uuid@14.0.0:
-    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
+  uuid@14.0.3:
+    resolution: {integrity: sha512-Sc5u1VVln93y1Xnz4R+CunOZc7R9LUcTmhj7Rc7Eg3HVcf7rVn2FOoa812fe0W8p3jD7xeoGSYbfqCGGH2B6xw==}
     hasBin: true
 
   uuid@7.0.3:
@@ -15957,6 +15957,7 @@ packages:
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uvu@0.5.6:
@@ -27652,7 +27653,7 @@ snapshots:
       roughjs: 4.6.6
       stylis: 4.3.6
       ts-dedent: 2.2.0
-      uuid: 14.0.0
+      uuid: 14.0.3
 
   metro-babel-transformer@0.87.1:
     dependencies:
@@ -31203,7 +31204,7 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
-  uuid@14.0.0: {}
+  uuid@14.0.3: {}
 
   uuid@7.0.3: {}
 
