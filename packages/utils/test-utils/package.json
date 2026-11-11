@@ -24,6 +24,7 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
+    "./assert": "./dist/assert/index.js",
     "./dataSets": "./dist/dataSets/index.js"
   },
   "files": [
