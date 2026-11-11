@@ -40,7 +40,10 @@ import getPublishablePackages from './lib/getPublishablePackages.mjs';
 const RETRIES = 20;
 const RETRY_DELAY_MS = 15000;
 const CONCURRENCY = 10;
-const REGISTRY = (process.env.npm_config_registry ?? 'https://registry.npmjs.org').replace(/\/$/, '');
+const REGISTRY = (process.env.npm_config_registry ?? 'https://registry.npmjs.org').replace(
+  /\/$/,
+  ''
+);
 
 async function isPublished({ name, version }) {
   // The version manifest endpoint is a single lightweight request: 200 = live, 404 = not there.
@@ -89,4 +92,6 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
-console.log(`All ${packages.length} publishable packages are live on npm at their release version.`);
+console.log(
+  `All ${packages.length} publishable packages are live on npm at their release version.`
+);

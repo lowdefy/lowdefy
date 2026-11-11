@@ -214,7 +214,6 @@ async function resolveRecordBody(ctx, id, record) {
   return value;
 }
 
-
 // Placeholder lifetime differs by record kind: component and menuLinks
 // placeholders persist by design (per-consumer resolution; JIT consumes them
 // from modules.json), and varDefault placeholders persist in varDefs
@@ -264,9 +263,7 @@ function assertNoPlaceholderLeaks(context) {
   const leaks = findPlaceholderLeaks(context);
   if (leaks.length > 0) {
     const detail = leaks.map((leak) => `"${leak.id}" at ${leak.location}`).join('; ');
-    throw new LowdefyInternalError(
-      `Deferred placeholder leaked past the final sweep: ${detail}.`
-    );
+    throw new LowdefyInternalError(`Deferred placeholder leaked past the final sweep: ${detail}.`);
   }
 }
 

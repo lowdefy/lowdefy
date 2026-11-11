@@ -89,7 +89,7 @@ function getSkeletonRows({ properties, size }) {
   const count = getSkeletonRowCount({
     bodyHeight: height - rowHeight,
     rowHeight,
-    pageSize: properties.pagination === false ? null : properties.pageSize ?? 50,
+    pageSize: properties.pagination === false ? null : (properties.pageSize ?? 50),
   });
   return Array.from({ length: count }, (_, index) => ({ __lfSkeleton: `__skeleton_${index}` }));
 }

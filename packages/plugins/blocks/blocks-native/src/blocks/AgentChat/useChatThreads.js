@@ -96,7 +96,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
   // is saved to its own.
   const streamThreadRef = useRef(null);
 
-  const conversationId = managed ? thread.id : properties.conversationId ?? thread.id;
+  const conversationId = managed ? thread.id : (properties.conversationId ?? thread.id);
 
   useEffect(() => {
     methods.registerEvent({
@@ -212,7 +212,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
     ({ conversationId: requestId, messages, trigger }) => {
       if (!managed) return;
       const current = threadRef.current;
-      const tag = current.id === requestId ? current.seed?.tag ?? null : null;
+      const tag = current.id === requestId ? (current.seed?.tag ?? null) : null;
       streamThreadRef.current = { id: requestId, tag };
       const last = messages[messages.length - 1];
       if (trigger !== 'submit-message' || last?.role !== 'user') return;

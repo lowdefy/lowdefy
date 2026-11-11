@@ -34,9 +34,7 @@ test.describe('Interval source', () => {
       .toBeGreaterThan(count1);
   });
 
-  test('channel state resets and resubscribes after navigating away and back', async ({
-    page,
-  }) => {
+  test('channel state resets and resubscribes after navigating away and back', async ({ page }) => {
     await navigateToTestPage(page, 'interval');
     await expect(getBlock(page, 'last_tick')).not.toHaveText('tick:none', { timeout: 10000 });
     await navigateToTestPage(page, 'chat');

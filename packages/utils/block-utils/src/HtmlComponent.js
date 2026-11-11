@@ -127,7 +127,7 @@ class HtmlComponent extends React.Component {
       return;
     }
     const { cleanups, portals, prepared } = runHtmlEnhancers({
-      dataEvents: type.isNone(this.props.onDataEvent) ? null : this.props.dataEvents ?? [],
+      dataEvents: type.isNone(this.props.onDataEvent) ? null : (this.props.dataEvents ?? []),
       enhancers: HTML_ENHANCERS,
       registration,
       root: this.div,

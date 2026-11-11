@@ -33,7 +33,7 @@ function getTabIcons({ items, platform }) {
     const sf =
       platform === 'ios' ? getSfSymbol({ icon: item.icon, sfSymbol: item.sfSymbol }) : null;
     return {
-      iconData: sf === null ? item.iconData ?? null : null,
+      iconData: sf === null ? (item.iconData ?? null) : null,
       pageId: item.pageId,
       sf,
     };

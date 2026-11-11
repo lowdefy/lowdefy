@@ -76,7 +76,7 @@ function getCellText({ column, value, row }) {
       );
     case 'boolean':
       if (type.isNone(value)) return '';
-      return value ? cell.trueLabel ?? 'Yes' : cell.falseLabel ?? 'No';
+      return value ? (cell.trueLabel ?? 'Yes') : (cell.falseLabel ?? 'No');
     case 'tag':
     case 'tags':
     case 'status':

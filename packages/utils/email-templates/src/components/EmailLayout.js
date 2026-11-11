@@ -15,7 +15,17 @@
 */
 
 import React from 'react';
-import { Body, Container, Head, Hr, Html, Img, Preview, Section, Text } from '@react-email/components';
+import {
+  Body,
+  Container,
+  Head,
+  Hr,
+  Html,
+  Img,
+  Preview,
+  Section,
+  Text,
+} from '@react-email/components';
 import { type } from '@lowdefy/helpers';
 
 const fontFamily =

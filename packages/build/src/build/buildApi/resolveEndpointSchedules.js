@@ -28,7 +28,7 @@ function resolveEndpointSchedules({ endpoint, environments }) {
   const names = getEnvironmentNames(environments);
   if (names.length === 0 || type.isUndefined(endpoint.schedules)) return;
   const authored = endpoint.schedules;
-  const inherited = type.isArray(authored) ? authored : authored.default ?? [];
+  const inherited = type.isArray(authored) ? authored : (authored.default ?? []);
   const resolved = { default: inherited };
   names.forEach((name) => {
     if (type.isArray(authored)) {

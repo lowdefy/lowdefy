@@ -51,7 +51,7 @@ export function optionDescriptions(question) {
   return Object.fromEntries(
     Object.entries(question.options ?? {}).map(([name, option]) => [
       name,
-      type.isObject(option) ? option.description ?? null : option,
+      type.isObject(option) ? (option.description ?? null) : option,
     ])
   );
 }

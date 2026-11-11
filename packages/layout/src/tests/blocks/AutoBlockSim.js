@@ -88,23 +88,14 @@ const AutoBlock = ({ block }) => {
         />
       );
     default:
-      return (
-        <Comp
-          blockId={`${block.id}${randomId()}`}
-          properties={block.properties}
-        />
-      );
+      return <Comp blockId={`${block.id}${randomId()}`} properties={block.properties} />;
   }
 };
 
 const BindAutoBlock = ({ block, state }) => {
   return (
     <Loading id={`${block.id}-loading`} showLoading>
-      <BlockLayout
-        id={`bl-${block.id}${randomId()}`}
-        layout={block.layout}
-        style={block.style}
-      >
+      <BlockLayout id={`bl-${block.id}${randomId()}`} layout={block.layout} style={block.style}>
         <AutoBlock block={block} state={state} />
       </BlockLayout>
     </Loading>

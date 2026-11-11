@@ -33,8 +33,8 @@ const CELL_RADIUS = 10;
 // iOS insets a cell's content 16 points (12 for a small card). antd's card padding tokens, set in
 // the block's theme, and a `padding` of compact or none override them, as on the web.
 function getPadding({ padding, small, tokens }) {
-  const header = small ? tokens.headerPaddingSM ?? 12 : tokens.headerPadding ?? 16;
-  const body = small ? tokens.bodyPaddingSM ?? 12 : tokens.bodyPadding ?? 16;
+  const header = small ? (tokens.headerPaddingSM ?? 12) : (tokens.headerPadding ?? 16);
+  const body = small ? (tokens.bodyPaddingSM ?? 12) : (tokens.bodyPadding ?? 16);
   switch (padding) {
     case 'compact':
       return { body: 12, header: 12 };
@@ -99,7 +99,7 @@ function Card({ content, events, methods, properties, styles = {} }) {
               backgroundColor: inner ? tokens.colorCellNested : tokens.headerBg,
               borderBottomWidth: StyleSheet.hairlineWidth,
               flexDirection: 'row',
-              minHeight: small ? tokens.headerHeightSM ?? 38 : tokens.headerHeight ?? 44,
+              minHeight: small ? (tokens.headerHeightSM ?? 38) : (tokens.headerHeight ?? 44),
               paddingHorizontal: padding.header,
             },
             styles.header,

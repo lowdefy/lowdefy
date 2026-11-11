@@ -56,7 +56,7 @@ function getCreateRow({ create, full, options, query }) {
   const valid = !type.isString(create.pattern) || new RegExp(create.pattern).test(text);
   return {
     create: true,
-    description: valid ? null : create.message ?? null,
+    description: valid ? null : (create.message ?? null),
     disabled: !valid || full,
     index: null,
     invalid: !valid,

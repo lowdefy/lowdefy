@@ -422,9 +422,8 @@ test('9.4 state isolation: caller state not visible in target, target writes do 
   const context = createContext({ endpointConfigs });
   // Drive directly via callEndpoint by calling invokeEndpoint at depth 0.
   const { default: invokeEndpoint } = await import('./endpoints/invokeEndpoint.js');
-  const { default: createEvaluateOperators } = await import(
-    '../context/createEvaluateOperators.js'
-  );
+  const { default: createEvaluateOperators } =
+    await import('../context/createEvaluateOperators.js');
   context.evaluateOperators = createEvaluateOperators(context);
   const result = await invokeEndpoint(context, {
     endpointId: 'outer_ep',

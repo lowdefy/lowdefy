@@ -60,9 +60,7 @@ function validatePayloadReferences({ page, context }) {
       // This handles dotted payload keys like "qc_state.chemical_analysis".
       const isValid = payloadKeys.some(
         (key) =>
-          fullValue === key ||
-          fullValue.startsWith(key + '.') ||
-          fullValue.startsWith(key + '[')
+          fullValue === key || fullValue.startsWith(key + '.') || fullValue.startsWith(key + '[')
       );
       if (isValid) return;
 

@@ -203,15 +203,15 @@ const ListSelector = ({
   const searchEnabled = type.isObject(search);
   const searchCaseSensitive = searchEnabled ? !!search.caseSensitive : false;
   const searchFields = searchEnabled ? search.fields : null;
-  const searchMinLength = searchEnabled ? search.minLength ?? 0 : 0;
-  const searchDebounce = searchEnabled ? search.debounce ?? 150 : 150;
+  const searchMinLength = searchEnabled ? (search.minLength ?? 0) : 0;
+  const searchDebounce = searchEnabled ? (search.debounce ?? 150) : 150;
   const searchSticky = searchEnabled ? search.sticky !== false : false;
   const searchAllowClear = searchEnabled ? search.allowClear !== false : true;
   const searchPlaceholder = searchEnabled
-    ? search.placeholder ?? methods.translate('blocks.listSelector.search.placeholder')
+    ? (search.placeholder ?? methods.translate('blocks.listSelector.search.placeholder'))
     : '';
   const noResultsText = searchEnabled
-    ? search.noResultsText ?? methods.translate('blocks.listSelector.search.noResults')
+    ? (search.noResultsText ?? methods.translate('blocks.listSelector.search.noResults'))
     : '';
   const noDataText = properties.noData ?? methods.translate('blocks.listSelector.noData');
 

@@ -716,7 +716,7 @@ function AgentChat({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
+        height: display === 'drawer' ? '100%' : (properties.height ?? 'calc(100dvh - 170px)'),
         maxWidth: properties.maxWidth ?? 800,
         margin: '0 auto',
         width: '100%',

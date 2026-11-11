@@ -18,9 +18,8 @@ import { Hono } from 'hono';
 import { vi, afterEach, expect, test } from 'vitest';
 
 const { default: getPageConfig } = await import('@lowdefy/api/routes/page/getPageConfig.js');
-const { default: createContentSecurityPolicy } = await import(
-  '@lowdefy/api/csp/createContentSecurityPolicy.js'
-);
+const { default: createContentSecurityPolicy } =
+  await import('@lowdefy/api/csp/createContentSecurityPolicy.js');
 const { default: addNonceToElements } = await import('@lowdefy/api/csp/addNonceToElements.js');
 
 const security = { contentSecurityPolicy: null };
