@@ -1836,8 +1836,8 @@ importers:
         specifier: 5.3.0
         version: 5.3.0(google-auth-library@9.15.1(encoding@0.1.13))
       mingo:
-        specifier: 7.2.1
-        version: 7.2.1
+        specifier: 7.2.7
+        version: 7.2.7
     devDependencies:
       '@lowdefy/ajv':
         specifier: 7.2.0
@@ -2287,8 +2287,8 @@ importers:
         specifier: 7.2.0
         version: link:../../../operators
       mingo:
-        specifier: 7.2.1
-        version: 7.2.1
+        specifier: 7.2.7
+        version: 7.2.7
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 7.2.0
@@ -13252,8 +13252,8 @@ packages:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
 
-  mingo@7.2.1:
-    resolution: {integrity: sha512-MEIQPOSJS2sVCueyQeE2rzgEeW3HpIIhizPbeuwD4v7+miVj7NI3ZVPqqw8t3YPIWCivpIaXA4KsoRI7koyNOA==}
+  mingo@7.2.7:
+    resolution: {integrity: sha512-4IRY2mkJlAv/RmnLrXJyP01T6JW9tmD8NmOC7ANgTUW6B1AU8enDySHWREdMvY2yBv0xuQ1hzA1d4fEHYgDoXw==}
 
   minimatch@10.2.5:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
@@ -27941,7 +27941,7 @@ snapshots:
 
   min-indent@1.0.1: {}
 
-  mingo@7.2.1: {}
+  mingo@7.2.7: {}
 
   minimatch@10.2.5:
     dependencies:
