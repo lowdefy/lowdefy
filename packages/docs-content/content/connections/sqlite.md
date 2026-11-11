@@ -10,7 +10,7 @@ Connection types:
 ### Knex
 
 #### Properties
-- `client: enum`: __Required__ - Should be `better-sqlite3` or `sqlite` (alias of `better-sqlite3`) to connect to SQLite. SQLite uses the [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) driver.
+- `client: enum`: __Required__ - Should be `better-sqlite3` or `sqlite` (alias of `better-sqlite3`) to connect to SQLite. SQLite uses the [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) driver, which ships prebuilt binaries for Linux (glibc and musl), macOS and Windows, on x64 and arm64. It does not work on other platforms, such as 32-bit ARM Linux.
 - `connection: object`:
   - `filename: string`:  __Required__ - The path to the SQLite file (relative to the project root).
 - `useNullAsDefault: boolean`: If true, undefined keys are replaced with NULL instead of DEFAULT.
