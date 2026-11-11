@@ -35,7 +35,7 @@
     "dev": "next dev -p 3006",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src --ext .js,.jsx"
+    "lint": "eslint src"
   },
   "dependencies": {
     "@ant-design/icons": "6.3.4",
@@ -61,7 +61,7 @@
     "@next/eslint-plugin-next": "16.4.6",
     "@playwright/test": "1.65.0",
     "autoprefixer": "^10.6.2",
-    "eslint": "8.54.0",
+    "eslint": "9.39.5",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0"
   },
