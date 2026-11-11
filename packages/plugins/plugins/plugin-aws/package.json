@@ -65,7 +65,7 @@
     "@aws-sdk/client-s3": "3.1166.0",
     "@aws-sdk/s3-presigned-post": "3.1166.0",
     "@aws-sdk/s3-request-presigner": "3.1166.0",
-    "undici": "7.30.1"
+    "undici": "8.12.4"
   },
   "peerDependencies": {
     "antd": ">=6",
