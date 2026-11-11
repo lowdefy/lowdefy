@@ -70,7 +70,7 @@
     "@lowdefy/operators": "7.2.0",
     "@lowdefy/operators-js": "7.2.0",
     "@lowdefy/style-native": "7.2.0",
-    "acorn": "8.16.0",
+    "acorn": "8.19.0",
     "ajv": "8.20.0",
     "antd": "6.6.5",
     "json5": "2.2.3",
