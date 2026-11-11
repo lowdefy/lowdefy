@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@lowdefy/errors": "7.2.0",
-    "change-case": "5.4.0",
+    "change-case": "5.4.4",
     "intl-messageformat": "11.2.7"
   },
   "devDependencies": {
