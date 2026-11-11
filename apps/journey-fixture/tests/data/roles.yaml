@@ -1,0 +1,6 @@
+# The users the access table tests of @lowdefy/test-utils check the fixture's pages and endpoints
+# as (packages/utils/test-utils/src/accessMatrix.test.js): auditor_only is gated to the auditor
+# role, and everything else is public. Change it only together with that test.
+users:
+  auditor: { id: u_auditor, roles: [auditor] }
+  member: { id: u_member, roles: [member] }
