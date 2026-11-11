@@ -122,7 +122,7 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "jsdom": "19.0.0",
+    "jsdom": "31.0.0",
     "nodemailer": "10.5.0",
     "vitest": "5.1.0"
   },

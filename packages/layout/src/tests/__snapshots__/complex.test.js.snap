@@ -231,7 +231,7 @@ exports[`Complex Example 1`] = `
                           >
                             <div
                               id="item_0_123456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               item_0_123456
                             </div>
@@ -243,7 +243,7 @@ exports[`Complex Example 1`] = `
                           >
                             <div
                               id="item_0_223456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               item_0_223456
                             </div>
@@ -255,7 +255,7 @@ exports[`Complex Example 1`] = `
                           >
                             <div
                               id="item_0_323456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               item_0_323456
                             </div>
@@ -267,7 +267,7 @@ exports[`Complex Example 1`] = `
                           >
                             <div
                               id="item_0_423456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               item_0_423456
                             </div>
@@ -325,7 +325,7 @@ The below config will fail for both the field on root and the field in the objec
                           >
                             <div
                               id="avatar23456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               avatar23456
                             </div>
@@ -649,7 +649,7 @@ exports[`Complex No Flex Field Example 1`] = `
                           >
                             <div
                               id="item_0_123456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               item_0_123456
                             </div>
@@ -661,7 +661,7 @@ exports[`Complex No Flex Field Example 1`] = `
                           >
                             <div
                               id="item_0_223456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               item_0_223456
                             </div>
@@ -673,7 +673,7 @@ exports[`Complex No Flex Field Example 1`] = `
                           >
                             <div
                               id="item_0_323456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               item_0_323456
                             </div>
@@ -685,7 +685,7 @@ exports[`Complex No Flex Field Example 1`] = `
                           >
                             <div
                               id="item_0_423456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               item_0_423456
                             </div>
@@ -743,7 +743,7 @@ The below config will fail for both the field on root and the field in the objec
                           >
                             <div
                               id="avatar23456"
-                              style="background: rgb(34, 102, 153); border: 2px solid #00aaee; text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
+                              style="background: rgb(34, 102, 153); border: 2px solid rgb(0, 170, 238); text-align: center; font-size: 12px; color: rgb(255, 255, 255);"
                             >
                               avatar23456
                             </div>
