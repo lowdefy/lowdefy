@@ -1,5 +1,114 @@
 # @lowdefy/blocks-table
 
+## 7.2.0
+
+### Minor Changes
+
+- 9226424: feat(blocks-table): Table server mode loads rows from an API endpoint with `data.endpoint`
+
+  Server mode loaded rows only from a request on the page, so an app whose data may only be read behind an endpoint's own checks could not use it. `data: { mode: server, endpoint }` now names an API endpoint in place of `request`: the table calls it with `CallAPI`, with the fetch event `{ startRow, endRow, view, groupPath, selected }` as its payload, and reads the routine's `{ rows, total, groups?, aggregates? }`, the shape `MongoDBTableQuery` returns. Give exactly one of `request` and `endpoint`. A response without rows shows the table's own error row.
+
+- 26333a9: feat(blocks-table): Table server mode adds the page's own fields to each fetch event with `data.payload`
+
+  A server-mode Table sent only its own fetch event, `{ startRow, endRow, view, groupPath, selected }`, so a filter the page keeps outside the table's view (a region picked above the table) had to be written into the view's filter, where it ended up in every saved view. `data.payload` is an object of fields the table adds to every fetch event, beside its own fields, which win on a clash. A changed payload starts the rows again from the top.
+
+- ff7e31a: feat(blocks-table): A Table's `emptyFiltered` slot replaces "No matching rows"
+
+  When a filter or search hid every row, the Table always showed "No matching rows" with Clear filters, before it looked at the `empty` slot. On a view whose filter is the point, such as a saved list, Clear filters throws the list away. Blocks in the new `emptyFiltered` slot now replace that state, for example "No deals match this view right now." with an Edit filter button. The `empty` slot keeps its meaning (no rows and no filter), and the wrapper keeps `data-lf-empty="filtered"` either way.
+
+- b1d42ca: feat(helpers, blocks-table, connection-mongodb): A Table filter reads as one sentence, on the page and from `MongoDBTableQuery`
+
+  A saved view's filter was readable only by opening the filter builder, and a server routine running the view through `MongoDBTableQuery` had no way to say what it matched. `describeCondition({ condition, fields })`, new in `@lowdefy/helpers`, turns a filter condition into a sentence such as "Stage is any of Lead or Won and Name contains CX": field titles, operator words, option labels, relative dates in words, `$user` values as "me", and brackets for groups past the first level. A key that names no field reads "an unknown field, <key>," rather than being dropped. The Table's Filter button shows the sentence as its tooltip. `MongoDBTableQuery` fields accept `title` and `options` as Table columns do, and the response carries `sentence` when a filter is set, the same sentence the Table shows for the same titles and options.
+
+- 9085f6d: feat(blocks-table): A Table's `openFilter` method opens its filter builder
+
+  Only the toolbar's Filter button opened the filter builder, so an Edit filter button elsewhere on the page, such as in a list's header or its empty state, had no way to start editing the filter. `CallMethod` with `openFilter` now opens the builder, anchored to the toolbar's Filter button as a click on it does. With `{ key }` it first adds an empty condition on that column and focuses it. On a Table whose toolbar has no filter item, it logs a warning and does nothing.
+
+- 70ef067: feat(blocks-table): A Table's view tabs and filter builder fit a phone
+
+  On a phone the saved view tabs ran off the screen and the filter builder opened as a popover too small to edit. Below 768px (antd's `md` breakpoint) the tabs are now one select showing the active view, with its menu and the changed-view strip beside it, and the toolbar's Filter button opens the builder as a full-height sheet with the record count at its foot, which follows each edit.
+
+- c7c1693: feat(blocks-table): A Table quick filter over a long option list has a search box
+
+  A quick filter chip on a column with `options` opened a plain checkbox list, so finding one name in a long list, such as an owner column listing every member of an organisation, meant scrolling. A list of more than 8 options now has a search box at its top that narrows the options by label as you type, case-insensitive. Ticked options stay listed while you search, Escape clears the search, and a list of 8 or fewer is unchanged.
+
+- 962ac05: feat(blocks-table): The Table cell details panel can load a cell's raw result on demand
+
+  An enrichment or ai cell keeps the provider's whole answer as its raw result, often many times the size of the value, and the rows sent to the browser carried it for every cell although only the details panel shows it. The new `rawEndpoint` property names an API endpoint that returns one cell's raw result: rows can leave `_enrich.<key>.raw` out, and the details panel calls the endpoint with `{ rowKey, key }` when it opens a finished cell whose row has none, showing "Loading the raw result…" meanwhile and an error if the call fails. It loads again when the cell finishes a new run. A table without `rawEndpoint`, or a row that carries the raw result, works as before. TableLight names `rawEndpoint` as a Table-only property.
+
+- 837d529: feat(blocks-table, connection-mongodb): Table `before` and `after` filters take relative dates
+
+  A Table date filter could say "within the last 3 months", but `before` and `after` took only a fixed date, so a saved view such as "not contacted in 3 months" went stale the next day. `before` and `after` now also take the relative value `within` takes, `{ last | next: n, unit: day | week | month | year }`, resolved each time the filter runs: `{ op: before, value: { last: 3, unit: month } }` reads "before 3 months ago". A relative bound compares whole days, in the browser's days in client mode and in the request's `timezone` in `MongoDBTableQuery`. The filter builder offers Date or Relative for `before` and `after`, a date column's filter menu picks `within`, `before` or `after` under Relative, and `MongoDBTableQuery` refuses a bad relative value with the message it gives for `within`.
+
+- 9d5eb24: feat(blocks-table): `rowSelection.selectable` limits row selection to rows that pass a condition
+
+  A `Table` or `TableInput` with `rowSelection` can now offer a checkbox only on some rows, as AgGrid's `isRowSelectable` does. Set `rowSelection.selectable` to a table condition (`{ key, op, value }`, or `and` / `or` lists). A row that fails it shows a disabled checkbox and cannot be selected by click, the header checkbox, a group checkbox or `selectAllMatching`, and the header checkbox reads checked when every selectable row is selected. An `{ all: true }` selection lists the rejected rows in `except` (in server mode, the loaded ones).
+
+- 732646e: feat(blocks-table): A Table can hand Save as to the app with `onViewSaveAs`
+
+  The Table's Save as opened its own popover with a title field and a Shared box, so saving a new view could ask for nothing else: not a unique name, a description, or a count of the rows it matches. A Table with `onViewSaveAs` actions now fires `onViewSaveAs { view }` from Save as instead of opening the popover, so the app opens its own dialog, stores the view and updates `views` and `activeView` as after `onViewSave`. Without `onViewSaveAs` actions, Save as works as before.
+
+- 0dd2e9d: feat(blocks-table): A Table's saved view tab menu takes its items from `viewMenu`
+
+  A saved view tab's menu offered only Delete view, and the only way to hide it was `locked`, which also hid Save. An app that archives views, because other features read them, could not offer Archive in place of Delete. `viewMenu: [{ key, label, danger, confirm }]` now sets the menu's items: picking one fires `onViewMenu { key, id }` with the view's id, after a confirmation when the item has `confirm` (`true` for "Are you sure?", or a message). Without `viewMenu` the menu is Delete view, firing `onViewDelete`, as before. `locked` still hides Save and disables only the default Delete. TableLight names `viewMenu` as a Table-only property.
+
+### Patch Changes
+
+- 02842fe: feat(api): A block schema marks how it draws a string with `textKind` (`html` through `renderHtml`, `text` as escaped text), and a Dynamic blocks policy judges a marked value by it. In an HTML-drawn property, a markdown link target, a protocol-relative word (`//x.example`) and, unless the policy allows HTML, a CSS `url()` are words, not URLs; the `html` rule still applies. In a text-drawn property tag syntax is words too. A whole value with a loaded or script scheme (`https:`, `javascript:`, ...) is still checked, and unmarked values keep every check. `Descriptions` titles, labels and values, `Paragraph` and `Title` content, input titles and labels, `Selector`, `MultipleSelector` and `ButtonSelector` option labels and `Table` column titles, header tooltips and `emptyText` are marked `html`; the `ControlledList` title is marked `text`.
+- d143e29: feat(api): A Dynamic blocks policy checks a value as a URL only where it is used as a link or source (URL keys, `urlKind` marks, `Link` params, markdown links and CSS `url()`); everywhere else a URL is text. Text a block draws as HTML or text (`textKind`) no longer has its whole value judged as a URL. `SetState` values are data (only the operator rules apply), unless an input in the content whose value is an object (rich text, uploads, table inputs) draws them. A new `textKind: data` marks values a block stores but never draws (`dataWith` names a sibling the value is data only beside): `Selector`, `MultipleSelector` and shared option `value`s beside a `label`. A new `rowsKind` mark on `Table` and `TableLight` `data` makes the rows data when every column draws its cell as text, no `cell.colorFrom` reads a row field and no `expandable.template` is set. Tags stay checked wherever a property draws HTML.
+- a461f7c: fix(deps): Update dependencies for security advisories
+
+  - vite 8.0.16 -> 8.1.6: the dev server no longer serves files outside `server.fs.allow` when a project path matches a system path, and launch-editor's command handling is fixed.
+  - @modelcontextprotocol/sdk 1.31.0 -> 1.32.2: bounds request validation memory, ties experimental tasks to their session, checks a bearer token's audience and stops forwarding headers on cross-origin redirects.
+  - hono 4.13.7 -> 4.13.14: `serveStatic` no longer decodes the path a second time, which let a request bypass middleware.
+  - dompurify 3.4.16 -> 3.4.17: fixes three sanitizer bypasses, one critical.
+  - markdown-it 14.3.1 -> 14.3.3, nodemailer 10.0.13 -> 10.1.7 and undici 7.30.0 -> 7.30.1.
+
+- fcea703: fix(blocks-antd): Table avatars are one size, round and readable
+
+  In `Table` and `TableLight` an `avatar` cell with a `descriptionField` drew a 32px avatar, and a row
+  without the description drew a 24px one, so a column mixed two sizes. The one-line avatar was also
+  cut flat at the top and bottom, because the single-line cell wrapper clipped the avatar where it
+  overhangs the text line. Every avatar in `avatar` and `people` cells is now 24px with the same gap
+  to the name, and these cells no longer clip their avatars.
+
+  Initials are 10px (were 11px), so two letters no longer fill the circle edge to edge. A `people`
+  group shows its avatars side by side with a 2px gap instead of overlapping them, so no avatar or
+  its ring cuts into the initials of the one before.
+
+- 1ffabe9: fix(blocks-table): The filter builder keeps its grouping when edits apply late
+
+  The Table's column filter, filter builder and options quick filter keep their own copy of the filter while the table applies each edit. They remembered only the latest edit they sent, so an earlier edit that the table applied after a newer one was taken as a filter change from outside and replaced the editor's copy. The column filter's builder then showed the whole condition wrapped in an extra "All of these conditions" group, one level deeper, which also cost a level of nesting. The editors now treat any edit they sent that the table has not caught up with as their own.
+
+- 4d548e9: fix(blocks-table): The Table header has one group row per level of the column groups it shows.
+
+  A collapsible column group with nested column groups made the header draw a group row for every level of the deepest group, even while the group was collapsed and its nested groups were hidden, so the collapsed table showed an empty band above the column titles. The number of group rows now follows the columns on screen: a collapsed group takes one row for its own title, and expanding it adds the rows its nested groups need. Hiding every column of a group from the column picker also removes the row it no longer needs.
+
+- f51a6cc: fix(blocks-table): The details panel, TableInput and openFilter fixes from the Table review
+
+  - An app with a Table builds again. The date column filter imported `getOperatorLabel` from a file that had moved to `@lowdefy/helpers`, so the client bundle failed with "Could not resolve './getOperatorLabel.js'".
+  - A raw result the details panel loads from `rawEndpoint` no longer offers to add its values as extract columns. Extract columns read the raw result from the row, which such rows leave out, so a column added that way stayed empty. The panel now says the result was loaded and shows it read-only. Switching the open panel to another cell no longer shows the previous cell's raw result for a frame.
+  - TableInput names `rawEndpoint` as a Table-only property, as TableLight does, so a TableInput config that sets it fails the build with that message instead of accepting a property it never uses.
+  - A condition `openFilter({ key })` asked to focus is dropped if it has not appeared after about a second, or when the builder closes. Before, the next plain click on Filter could focus that old condition. `openFilter` also preloads the builder, as hovering the Filter button does.
+
+- Updated dependencies [02842fe]
+- Updated dependencies [d143e29]
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [0f0cd03]
+- Updated dependencies [a461f7c]
+- Updated dependencies [fcea703]
+- Updated dependencies [b1d42ca]
+- Updated dependencies [962ac05]
+- Updated dependencies [0dd2e9d]
+  - @lowdefy/blocks-antd@7.2.0
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/block-utils@7.2.0
+  - @lowdefy/nunjucks@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

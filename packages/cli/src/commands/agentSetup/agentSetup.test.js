@@ -103,8 +103,9 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).toContain('Never configure the pane');
   expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
   expect(agentsMd).toContain('### Testing a change');
-  expect(agentsMd).toContain('Run `tier: common` first');
-  expect(agentsMd).toContain('`lowdefy test --config-directory <app> --tier common`');
+  expect(agentsMd).toContain('Test each change at the lowest level');
+  expect(agentsMd).toContain('`lowdefy test --config-directory <app>`');
+  expect(agentsMd).not.toContain('tier: edge');
   expect(agentsMd).not.toContain('localhost:');
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));

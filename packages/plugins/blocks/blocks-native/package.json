@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-native",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "license": "Apache-2.0",
   "description": "Lowdefy blocks for the native (React Native) runtime.",
   "homepage": "https://lowdefy.com",
@@ -48,10 +48,10 @@
   },
   "dependencies": {
     "@ai-sdk/react": "4.0.119",
-    "@lowdefy/block-utils": "7.1.0",
-    "@lowdefy/client-native": "7.1.0",
-    "@lowdefy/helpers": "7.1.0",
-    "@lowdefy/style-native": "7.1.0",
+    "@lowdefy/block-utils": "7.2.0",
+    "@lowdefy/client-native": "7.2.0",
+    "@lowdefy/helpers": "7.2.0",
+    "@lowdefy/style-native": "7.2.0",
     "ai": "7.0.116",
     "dayjs": "1.11.20",
     "react-native-marked": "8.3.2"
@@ -75,8 +75,8 @@
     "@babel/plugin-transform-class-static-block": "7.29.7",
     "@expo/ui": "58.0.20",
     "@jest/globals": "29.7.0",
-    "@lowdefy/actions-core": "7.1.0",
-    "@lowdefy/operators-js": "7.1.0",
+    "@lowdefy/actions-core": "7.2.0",
+    "@lowdefy/operators-js": "7.2.0",
     "@react-native/babel-preset": "0.88.0",
     "@react-native/jest-preset": "0.88.0",
     "@swc/cli": "0.8.1",

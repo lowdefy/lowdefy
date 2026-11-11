@@ -3176,7 +3176,7 @@
         "version.yaml",
         "websockets/introduction.yaml"
       ],
-      "hash": "9a3abf01a934df3610372700d1f888e1558e5b5287209b1691ffed1d1db504ec"
+      "hash": "949ab851163dc40decd06e30ad974087dea1115f91ab6791104a2c010b5a6197"
     },
     "websockets/websocket-subscriptions": {
       "files": [

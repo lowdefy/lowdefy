@@ -339,3 +339,122 @@ test('buildWebsockets names the config root when websockets is not an array', ()
   }
   expect(thrown.configKey).toBe('root');
 });
+
+test('buildWebsockets accepts a check that names an endpoint in the app', () => {
+  const context = createTestContext();
+  context.errors = [];
+  const components = {
+    api: [{ id: 'endpoint:can-view-ticket', endpointId: 'can-view-ticket' }],
+    websockets: [
+      {
+        id: 'ticket_events',
+        type: 'Channel',
+        check: { endpointId: 'can-view-ticket', payload: { ticket_id: { _payload: 'ticket_id' } } },
+      },
+    ],
+  };
+  const res = buildWebsockets({ components, context });
+  expect(context.errors).toEqual([]);
+  expect(res.websockets[0].check).toEqual({
+    endpointId: 'can-view-ticket',
+    payload: { ticket_id: { _payload: 'ticket_id' } },
+  });
+  expect(context.websocketIds).toEqual(new Set(['ticket_events']));
+});
+
+test('buildWebsockets accepts a module websocket check that names its module endpoint', () => {
+  const context = createTestContext();
+  context.errors = [];
+  const components = {
+    api: [{ id: 'endpoint:support/can-view-ticket', endpointId: 'support/can-view-ticket' }],
+    websockets: [
+      {
+        id: 'support/ticket_events',
+        type: 'Channel',
+        check: { endpointId: 'support/can-view-ticket' },
+      },
+    ],
+  };
+  buildWebsockets({ components, context });
+  expect(context.errors).toEqual([]);
+});
+
+test('buildWebsockets throws when check names an endpoint that does not exist', () => {
+  const context = createTestContext();
+  const components = {
+    api: [{ id: 'endpoint:other', endpointId: 'other' }],
+    websockets: [
+      {
+        id: 'ticket_events',
+        type: 'Channel',
+        '~k': 'k1',
+        check: { endpointId: 'can-view-ticket', '~k': 'k1.check' },
+      },
+    ],
+  };
+  let thrown;
+  try {
+    buildWebsockets({ components, context });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.message).toBe(
+    'Websocket "ticket_events" check references endpoint "can-view-ticket" which does not exist.'
+  );
+  expect(thrown.configKey).toBe('k1.check');
+});
+
+test('buildWebsockets throws when check names an endpoint and the app has no api', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [
+      { id: 'ticket_events', type: 'Channel', check: { endpointId: 'can-view-ticket' } },
+    ],
+  };
+  expect(() => buildWebsockets({ components, context })).toThrow(
+    'Websocket "ticket_events" check references endpoint "can-view-ticket" which does not exist.'
+  );
+});
+
+test('buildWebsockets throws when check is not an object', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: 'ticket_events', type: 'Channel', check: 'can-view-ticket' }],
+  };
+  expect(() => buildWebsockets({ components, context })).toThrow(
+    'Websocket check is not an object at websocket "ticket_events".'
+  );
+});
+
+test('buildWebsockets throws when check endpointId is not a string', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: 'ticket_events', type: 'Channel', check: { endpointId: 42 } }],
+  };
+  expect(() => buildWebsockets({ components, context })).toThrow(
+    'Websocket check endpointId is not a string at websocket "ticket_events".'
+  );
+});
+
+test('buildWebsockets counts server operators in the check payload', () => {
+  const context = createTestContext();
+  const components = {
+    api: [{ id: 'endpoint:can-view-ticket', endpointId: 'can-view-ticket' }],
+    websockets: [
+      {
+        id: 'ticket_events',
+        type: 'Channel',
+        properties: { ticket_id: { _payload: 'ticket_id' } },
+        check: {
+          endpointId: 'can-view-ticket',
+          payload: { ticket_id: { _payload: 'ticket_id' }, key: { _secret: 'CHECK_KEY' } },
+        },
+      },
+    ],
+  };
+  buildWebsockets({ components, context });
+  expect(context.typeCounters.operators.server.getCounts()).toEqual({
+    _payload: 2,
+    _secret: 1,
+  });
+});

@@ -36,7 +36,9 @@ const CALLER_CHECK_FAILED_CODE = 1011;
 // out, lost its membership, changed roles or switched organization, the socket
 // closes with code 4401; the client reconnects, which authenticates afresh.
 // Each check is a live session read - nothing is cached, so a revoked session
-// closes the socket within a minute.
+// closes the socket within a minute. The once-a-minute check also runs the
+// websocket check of every open subscription that has one, so revoked access to
+// a record ends that subscription within a minute.
 function createWebSocketConnection(context, { closeSocket, headers, registry, send, strategies }) {
   const { logger } = context;
   const callerFingerprint = getCallerFingerprint({ user: context.user });
@@ -141,6 +143,18 @@ function createWebSocketConnection(context, { closeSocket, headers, registry, se
     }
   }
 
+  function reportError({ error, frameType, requestId, websocketId }) {
+    logger.debug({ err: error }, error.message);
+    // Expected outcomes - an auth refusal, a UserError - are one warn line, as over HTTP:
+    // no error log or Sentry report, but the client is still told.
+    if (isExpectedError(error)) {
+      logger.warn({ event: 'ws_refused', frameType }, error.message);
+    } else {
+      context.handleError(error);
+    }
+    sendErrorPayload({ error, requestId, websocketId });
+  }
+
   async function processFrame(frame) {
     if (closed) {
       return;
@@ -148,19 +162,25 @@ function createWebSocketConnection(context, { closeSocket, headers, registry, se
     try {
       await handleFrame(frame);
     } catch (error) {
-      logger.debug({ err: error }, error.message);
-      // Expected outcomes - an auth refusal, a UserError - are one warn line, as over HTTP:
-      // no error log or Sentry report, but the client is still told.
-      if (isExpectedError(error)) {
-        logger.warn({ event: 'ws_refused', frameType: frame.type }, error.message);
-      } else {
-        context.handleError(error);
-      }
-      sendErrorPayload({
+      reportError({
         error,
+        frameType: frame.type,
         requestId: frame.requestId,
         websocketId: frame.websocketId,
       });
+    }
+  }
+
+  // A refused subscription is closed by the registry. The error frame carries no
+  // requestId, so the client reads it as the feed failing, as it does a source error.
+  async function recheckSubscription(websocketId) {
+    if (closed) {
+      return;
+    }
+    try {
+      await registry.recheckAccess(context, { websocketId, subscriber });
+    } catch (error) {
+      reportError({ error, frameType: 'recheck', websocketId });
     }
   }
 
@@ -200,9 +220,26 @@ function createWebSocketConnection(context, { closeSocket, headers, registry, se
     await enqueue(frame.websocketId, () => runInCredentialScope(() => processFrame(frame)));
   }
 
+  // A websocket check answers for one record, which the caller can lose access
+  // to without the caller changing, so the check runs again for every open
+  // subscription that has one. Each runs in its feed's queue, after any frame
+  // for that feed already waiting.
+  async function checkOpenConnection() {
+    if (!(await checkCaller())) {
+      return;
+    }
+    await Promise.all(
+      registry
+        .getCheckedWebsocketIds({ subscriber })
+        .map((websocketId) =>
+          enqueue(websocketId, () => runInCredentialScope(() => recheckSubscription(websocketId)))
+        )
+    );
+  }
+
   // One timer per connection, cleared by close. It does not keep the process
   // alive on its own.
-  const callerCheckTimer = setInterval(checkCaller, CALLER_CHECK_INTERVAL_MS);
+  const callerCheckTimer = setInterval(checkOpenConnection, CALLER_CHECK_INTERVAL_MS);
   callerCheckTimer.unref();
 
   logger.debug({ event: 'ws_connect' });

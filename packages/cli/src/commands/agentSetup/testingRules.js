@@ -14,17 +14,20 @@
   limitations under the License.
 */
 
-// How to verify a change with the app's journeys, which AGENTS.md and the
-// skill both teach. One text, so the two never disagree.
-const TESTING_RULES = `Verify a change by running the app's journeys (\`tests/journeys/\`) with \`lowdefy_run_tests\`:
+// How to verify a change, which AGENTS.md and the skill both teach. One text, so
+// the two never disagree.
+const TESTING_RULES = `Test each change at the lowest level that fails when the change breaks. A journey runs a real browser against the dev server, so it is the most expensive check you have.
 
-- Run \`tier: common\` first: the most-used journeys, ranked by production use, a quick check of the
-  happy paths.
-- Widen to \`tier: edge\` before you call the change done: the edge cases real users still reach.
-  Journeys with no production counts for their current steps run in every tier.
-- In a terminal the same runs are \`lowdefy test --config-directory <app> --tier common\` and
-  \`lowdefy test --config-directory <app> --tier edge\`.
-- A tier is refused when the app has too little production use pulled; then run without \`tier\`.
+- Logic, calculations, permissions and what a request writes: call the request or endpoint directly with \`lowdefy_run_request\` or \`lowdefy_run_endpoint\`, passing \`user\`. Add a regression test at that level where the app has one.
+- What a page shows, how it reacts and paths across pages: use a journey (\`tests/journeys/\`).
+- A table of who can reach what: don't turn it into a journey per role over every page.
+
+Run journeys with \`lowdefy_run_tests\`, or \`lowdefy test --config-directory <app>\` in a terminal:
+
+- While fixing, run only the journey you changed, with \`paths\` and \`filter\`.
+- Before you call the change done, run the journeys for the pages the change touches. \`lowdefy journeys scope\` lists those pages.
+- Run each journey once. Repeat runs belong to the journey skills, for a journey they write.
+- Run the full suite only when a person asks, or in the app's scheduled run.
 
 Terminal runs (\`lowdefy test\`, \`lowdefy journeys harden\`, \`lowdefy journeys variants\`) share the machine with other agents:
 
