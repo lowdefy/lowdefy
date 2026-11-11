@@ -1,0 +1,31 @@
+# F8: Websocket Check Names A Nonexistent Endpoint
+# ================================================
+# A websocket check runs its endpoint on every subscribe, so a check that names
+# an endpoint the app does not have would refuse every subscriber at runtime.
+# The build stops instead.
+#
+# Expected error:
+#   [Config Error] Websocket "ticket_events" check references endpoint "can-view-tickt" which does not exist.
+#
+# The error points to line 26 where the check is defined.
+
+lowdefy: local
+
+api:
+  - id: can-view-ticket
+    type: InternalApi
+    routine:
+      - :return: true
+
+websockets:
+  - id: ticket_events
+    type: Channel
+    properties:
+      ticket_id:
+        _payload: ticket_id
+    check:
+      endpointId: can-view-tickt
+
+pages:
+  - id: home
+    type: Box

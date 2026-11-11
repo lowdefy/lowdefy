@@ -434,3 +434,57 @@ test('a connection with read true accepts a subscription that reads it', async (
   const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
   expect(res.connectionProperties).toEqual({ read: true });
 });
+
+function checkedReadConfigImp({ allowed }) {
+  const base = defaultReadConfigImp({
+    websocketConfig: {
+      id: 'websocket:ws1',
+      type: 'TestSource',
+      websocketId: 'ws1',
+      connectionId: 'testConnection',
+      auth: { public: true },
+      check: { endpointId: 'can-view' },
+      properties: { room: { _payload: 'room' } },
+    },
+  });
+  return (path) => {
+    if (path === 'api/can-view.json') {
+      return {
+        endpointId: 'can-view',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: { ':return': allowed },
+      };
+    }
+    return base(path);
+  };
+}
+
+test('a subscribe runs the websocket check and continues when it answers true', async () => {
+  mockReadConfigFile.mockImplementation(checkedReadConfigImp({ allowed: true }));
+  const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
+
+  const res = await prepareChannel(context, { websocketId: 'ws1', payload: { room: 7 } });
+  expect(res.properties).toEqual({ room: 7 });
+  expect(mockReadConfigFile).toHaveBeenCalledWith('api/can-view.json');
+});
+
+test('a subscribe the check refuses stops before the connection and properties are evaluated', async () => {
+  mockReadConfigFile.mockImplementation(checkedReadConfigImp({ allowed: false }));
+  const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
+
+  await expect(
+    prepareChannel(context, { websocketId: 'ws1', payload: { room: 7 } })
+  ).rejects.toThrow('Websocket "ws1" does not exist.');
+  expect(mockReadConfigFile).not.toHaveBeenCalledWith('connections/testConnection.json');
+});
+
+test('a publish runs the websocket check and is refused when it does not answer true', async () => {
+  mockReadConfigFile.mockImplementation(checkedReadConfigImp({ allowed: false }));
+  const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
+
+  await expect(prepareChannel(context, { websocketId: 'ws1', payload: {} })).rejects.toThrow(
+    'Websocket "ws1" does not exist.'
+  );
+  expect(mockReadConfigFile).toHaveBeenCalledWith('api/can-view.json');
+});
