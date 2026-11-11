@@ -91,10 +91,12 @@ function apiContext() {
     const user = getUser(c);
     context.user = user ? normalizeInjectedCaller(user) : null;
     // No auth engine runs in the e2e server, so createApiContext alone would
-    // retain no organization binding. createInjectedApiContext derives the
-    // policy from the built auth config so the tenant wall's policy gate still
-    // engages for a tenant app; pinned stays null (no engine means no seeded
-    // organization row).
+    // retain no organization binding and no enforcement facts, and the caller
+    // would meet a looser gate than production's. createInjectedApiContext
+    // takes both from the built auth config: the tenant wall's policy gate
+    // still engages for a tenant app (pinned stays null: no engine means no
+    // seeded organization row), and a signed-out or unenrolled caller is
+    // answered as production answers one.
     createInjectedApiContext(context, { authJson });
     logRequest({ context });
     return next();

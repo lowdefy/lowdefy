@@ -219,10 +219,12 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
   if (type.isNone(context.auth)) {
     // No auth engine ran (a mock or headless caller, a data-session hop, an
     // app with no auth), so createApiContext alone would retain no
-    // organization binding. createInjectedApiContext derives the policy from
-    // the built auth config so the tenant wall's policy gate still engages
+    // organization binding and no enforcement facts, and the caller would meet
+    // a looser gate than production's. createInjectedApiContext takes both
+    // from the built auth config: the tenant wall's policy gate still engages
     // under policy: tenant (a mock caller there must carry organizationId, or
-    // the wall fails closed - loudly, as it should).
+    // the wall fails closed - loudly, as it should), and a signed-out or
+    // unenrolled injected caller is answered as a signed-in app answers one.
     createInjectedApiContext(context, { authJson });
   } else {
     createApiContext(context);
