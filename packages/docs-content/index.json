@@ -4880,7 +4880,7 @@
       "files": [
         "connections/Elasticsearch.yaml"
       ],
-      "hash": "0878003c3d56c920ffecc279eae556574f263de62ce54789ab8cdc4cf9f01fe0"
+      "hash": "c8e15ebc6e8ad0f2d828173deec5dab350c019bdad0520d50194ab794821b5df"
     },
     "connections/googlesheet": {
       "files": [
