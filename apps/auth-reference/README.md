@@ -273,19 +273,18 @@ the old one) so pre-phase-3 users do not confuse the wall.
     (`db["user-invitations"].updateOne({email: "<x>"}, {$set: {expires_at: new Date(0)}})`),
     then sign in as that (member-less) user on org-b - inline
     MEMBERSHIP_REQUIRED; recovery is a re-invite.
-25. **Merge-on-signup (both bindings)**: create a contact on `/contacts`
-    for `merge-pw@example.test`, then sign up with that email on org-a.
-    At create time the user is unverified so `user.create.before` skips
-    the match; after clicking the Mailpit link, the `email.verified`
-    binding links it - `db.users.find({email: "merge-pw@example.test"})`
-    shows `contact_id` (written through the `UpdateUserProfile` step's
-    `contactId` param). For the OAuth path, create a contact for your
-    Google address and "Continue with Google" - the signup arrives
+25. **Merge-on-signup (OAuth only)**: create a contact on `/contacts` for
+    your Google address and "Continue with Google" - the signup arrives
     verified, so `user.create.before` returns the record with `contactId`
     inline (a hook payload carries BetterAuth's logical camelCase keys; the
-    adapter stores it as `contact_id`). An invited user whose accept copied
-    a `contactId` (scenario 23) skips the merge - the hook only matches
-    users with no link.
+    adapter stores it as `contact_id`), and
+    `db.users.find({email: "<google address>"})` shows `contact_id`. Now
+    create a contact for `merge-pw@example.test` and sign up with that
+    email and a password on org-a: at create time the user is unverified,
+    so the hook skips the match, and after clicking the Mailpit link the
+    user row still has no `contact_id` - no step writes the link once the
+    row exists, so this login gets one only by accepting an invitation
+    (scenario 23).
 26. **Tenant policy - lazy minting**: on `auth-reference-tenant`, sign up
     and verify a fresh user; the tenant database's `user-organizations`
     stays empty until the first login (no tenants for abandoned signups).

@@ -25,7 +25,9 @@ async function InviteMember({ acting, auth, organizationId, properties }) {
   // appRoles, attributes, contactId and profile are registered invitation
   // additionalFields in the engine config; accepting the invitation
   // shallow-merges profile onto the user's profile bag (invitation wins per
-  // key), sets contactId on the user row, and copies attributes and appRoles
+  // key), sets contactId on a login that has no link yet (an invitation naming
+  // a different contact than the login holds is refused), and copies
+  // attributes and appRoles
   // onto the minted member row. Each is declared without input: false
   // precisely so this body may carry it.
   const { appRoles, attributes, contactId, email, orgRole, profile, resend } = properties;
@@ -49,6 +51,11 @@ async function InviteMember({ acting, auth, organizationId, properties }) {
   }
   if (!type.isNone(contactId) && !type.isString(contactId)) {
     throw new Error('InviteMember "contactId" is not a string.');
+  }
+  // Accepting sets the link once, so an empty link would stick and refuse
+  // every later invitation that names a contact.
+  if (contactId === '') {
+    throw new Error('InviteMember "contactId" is an empty string.');
   }
   // An omitted orgRole must still send something: createInvitation's body
   // schema declares role as required, so undefined fails the zod body, and ''
