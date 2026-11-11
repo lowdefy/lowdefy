@@ -46,9 +46,9 @@
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
     "dayjs": "1.11.20",
-    "google-auth-library": "9.15.1",
+    "google-auth-library": "11.3.4",
     "google-spreadsheet": "5.3.0",
-    "mingo": "7.2.1"
+    "mingo": "7.2.7"
   },
   "devDependencies": {
     "@lowdefy/ajv": "7.2.0",

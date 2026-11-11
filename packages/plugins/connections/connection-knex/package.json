@@ -47,9 +47,9 @@
     "@lowdefy/errors": "7.2.0",
     "@lowdefy/helpers": "7.2.0",
     "better-sqlite3": "12.9.0",
-    "knex": "3.2.9",
-    "mysql2": "3.23.1",
-    "pg": "8.20.0",
+    "knex": "3.3.0",
+    "mysql2": "3.24.6",
+    "pg": "8.23.1",
     "tedious": "19.2.1"
   },
   "devDependencies": {
