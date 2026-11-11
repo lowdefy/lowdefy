@@ -48,7 +48,7 @@
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/layout": "7.2.0",
     "antd": "6.7.0",
-    "dayjs": "1.11.20",
+    "dayjs": "1.11.23",
     "lucide-react": "1.48.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",

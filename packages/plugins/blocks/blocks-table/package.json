@@ -64,7 +64,7 @@
     "@lowdefy/nunjucks": "7.2.0",
     "@tanstack/react-table": "9.3.1",
     "@tanstack/react-virtual": "3.14.26",
-    "dayjs": "1.11.20"
+    "dayjs": "1.11.23"
   },
   "peerDependencies": {
     "antd": ">=6",

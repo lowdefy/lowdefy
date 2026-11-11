@@ -84,7 +84,7 @@
     "@lowdefy/operators-nunjucks": "7.2.0",
     "@lowdefy/operators-uuid": "7.2.0",
     "@lowdefy/operators-yaml": "7.2.0",
-    "dayjs": "1.11.20",
+    "dayjs": "1.11.23",
     "expo": "58.0.14",
     "expo-audio": "58.0.9",
     "expo-background-task": "58.0.11",

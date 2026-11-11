@@ -538,8 +538,8 @@ importers:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       lucide-react:
         specifier: 1.48.0
         version: 1.48.0(react@18.2.0)
@@ -968,8 +968,8 @@ importers:
         specifier: '>=6'
         version: 6.6.5(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -1023,8 +1023,8 @@ importers:
         specifier: 2.5.1
         version: 2.5.1
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       minisearch:
         specifier: 7.2.0
         version: 7.2.0
@@ -1189,8 +1189,8 @@ importers:
         specifier: '>=6'
         version: 6.6.5(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       diff:
         specifier: 5.2.2
         version: 5.2.2
@@ -1456,8 +1456,8 @@ importers:
         specifier: 7.0.116
         version: 7.0.116(zod@4.6.7)
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       react-native-marked:
         specifier: 8.3.2
         version: 8.3.2(react-native-svg@15.16.0(react-native@0.88.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0))(react-native@0.88.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)
@@ -1578,8 +1578,8 @@ importers:
         specifier: 3.14.26
         version: 3.14.26(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
     devDependencies:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
@@ -1828,8 +1828,8 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/helpers
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       google-auth-library:
         specifier: 9.15.1
         version: 9.15.1(encoding@0.1.13)
@@ -2176,8 +2176,8 @@ importers:
         specifier: 7.2.0
         version: link:../../../operators
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 7.2.0
@@ -2724,8 +2724,8 @@ importers:
         specifier: 1.7.7
         version: 1.7.7(@opentelemetry/api@1.9.1)(mongodb@7.2.0)(mysql2@3.23.1(@types/node@24.13.3))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(jsdom@19.0.0)(vite@8.1.6(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0)))
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       hono:
         specifier: 4.13.14
         version: 4.13.14
@@ -2920,8 +2920,8 @@ importers:
         specifier: 4.0.3
         version: 4.0.3
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
@@ -3095,8 +3095,8 @@ importers:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       hono:
         specifier: 4.13.14
         version: 4.13.14
@@ -3195,8 +3195,8 @@ importers:
         specifier: 7.2.0
         version: link:../plugins/operators/operators-yaml
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       expo:
         specifier: 58.0.14
         version: 58.0.14(@babel/core@7.29.6)(@expo/dom-webview@58.0.2)(@expo/metro-runtime@58.0.14)(expo-router@58.0.23)(expo-widgets@58.0.20)(react-dom@19.3.0(react@19.3.0))(react-native-worklets@0.13.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(react-native@0.88.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0))(react-native@0.88.0(@babel/core@7.29.6)(@react-native/metro-config@0.88.0(@babel/core@7.29.6))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(typescript@6.0.3)
@@ -3515,8 +3515,8 @@ importers:
         specifier: 2.1.1
         version: 2.1.1
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
       dompurify:
         specifier: 3.4.17
         version: 3.4.17
@@ -3734,8 +3734,8 @@ importers:
         specifier: 7.2.0
         version: link:../helpers
       dayjs:
-        specifier: 1.11.20
-        version: 1.11.20
+        specifier: 1.11.23
+        version: 1.11.23
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
@@ -20194,7 +20194,7 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@rc-component/picker@1.12.2(date-fns@2.29.3)(dayjs@1.11.20)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/picker@1.12.2(date-fns@2.29.3)(dayjs@1.11.23)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/overflow': 1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -20205,7 +20205,7 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
     optionalDependencies:
       date-fns: 2.29.3
-      dayjs: 1.11.20
+      dayjs: 1.11.23
       luxon: 3.7.2
 
   '@rc-component/picker@1.17.0(date-fns@2.29.3)(dayjs@1.11.20)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
@@ -22517,7 +22517,7 @@ snapshots:
       '@rc-component/mutate-observer': 2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/notification': 2.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/pagination': 1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/picker': 1.12.2(date-fns@2.29.3)(dayjs@1.11.20)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/picker': 1.12.2(date-fns@2.29.3)(dayjs@1.11.23)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/progress': 1.0.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/qrcode': 2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/rate': 1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -22537,7 +22537,7 @@ snapshots:
       '@rc-component/upload': 1.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/util': 1.13.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.1
-      dayjs: 1.11.20
+      dayjs: 1.11.23
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.1.0

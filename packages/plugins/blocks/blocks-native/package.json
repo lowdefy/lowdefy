@@ -53,7 +53,7 @@
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/style-native": "7.2.0",
     "ai": "7.0.116",
-    "dayjs": "1.11.20",
+    "dayjs": "1.11.23",
     "react-native-marked": "8.3.2"
   },
   "peerDependencies": {

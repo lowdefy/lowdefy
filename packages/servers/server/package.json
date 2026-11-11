@@ -85,7 +85,7 @@
     "@vitejs/plugin-react": "6.0.2",
     "antd": "6.7.0",
     "better-auth": "1.7.7",
-    "dayjs": "1.11.20",
+    "dayjs": "1.11.23",
     "hono": "4.13.14",
     "lightningcss": "1.32.0",
     "react": "18.2.0",
