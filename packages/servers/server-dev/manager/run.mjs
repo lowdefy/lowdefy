@@ -157,9 +157,11 @@ watchOwner({
 try {
   await context.initialBuild();
 
-  // Not awaited: chokidar's ready event is unreliable. Started now so an edit
-  // made during the rest of the start-up is seen; a batch that syncs before
-  // the first child start waits for it (see syncServer).
+  // Not awaited: the rest of the start-up does not need the watchers' initial
+  // scan, and chokidar before 6 could fail to fire ready (a symlink whose
+  // target passes through a file). Started now so an edit made during the rest
+  // of the start-up is seen; a batch that syncs before the first child start
+  // waits for it (see syncServer).
   context.startWatchers();
 
   // The manager is the component that binds the port, so it checks here to

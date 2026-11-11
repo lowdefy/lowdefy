@@ -199,7 +199,7 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 }
 
 await context.initialBuild();
-context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
+context.startWatchers(); // Not awaited — start-up does not need the initial scan
 // At the head of syncServer's queue: record the server artifacts,
 // optimizeDependencies, startServer, then wait for the child to answer. A
 // watcher batch during the optimise builds at once and its syncServer call
