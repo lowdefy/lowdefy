@@ -1,5 +1,5 @@
 {
-  "version": "7.1.0",
+  "version": "7.2.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -3361,7 +3361,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "94fd498047ff9b857bc2ac3d2c8832f39e83beeeff6fb107a950635278c96eb8"
+      "hash": "954e1aaacaf6abe246a4574fad5dee7e54b947b48652133da667e592e678f122"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3709,7 +3709,7 @@
         "blocks/input/RatingSlider.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9d27407b34aa8454525cb37e210a879f1e324fad8c777394f0cfc735c7a3f78c"
+      "hash": "f52c19b663d984b6d0c2d517603d3a8b21fd925563a9eba96790f6687b012dc5"
     },
     "input-blocks/segmentedselector": {
       "files": [
@@ -5293,7 +5293,7 @@
         "operators/_api.yaml",
         "templates/operators.yaml.njk"
       ],
-      "hash": "2194aa8b560f6c3789f57e591c7d91dc1a0c34099ba968e69397d993e4d34089"
+      "hash": "8181db4d7542c90ad8cc2be7db4eb94f545a8361f32a001aa7339bff336ad268"
     },
     "operators/_app": {
       "files": [
