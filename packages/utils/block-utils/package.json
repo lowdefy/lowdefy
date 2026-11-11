@@ -64,6 +64,8 @@
     "copyfiles": "2.4.1",
     "jest-serializer-html": "7.1.0",
     "jsdom": "19.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "vitest": "4.1.12"
   },
   "publishConfig": {
