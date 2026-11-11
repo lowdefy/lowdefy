@@ -35,9 +35,8 @@ let fixture;
 let changed;
 let tenant;
 
-async function readAll(session, connectionId, query = {}) {
-  const collection = await session.collection(connectionId);
-  return collection.find(query).sort({ _id: 1 }).toArray();
+function readAll(session, connectionId, query = {}) {
+  return session.collection(connectionId).find(query).sort({ _id: 1 }).toArray();
 }
 
 beforeAll(async () => {
@@ -104,7 +103,7 @@ test('reset restores the data set, empties sunk and keeps the session usable', a
   const dataSet = [{ _id: 'item-1', kind: 'item', page: 'home', name: 'Fixture item' }];
   expect(await readAll(session, 'fixture_db')).toEqual(dataSet);
 
-  const collection = await session.collection('fixture_db');
+  const collection = session.collection('fixture_db');
   await session.as('member').call('log_activity', { source: 'before reset' });
   await session.as('member').request('rails', 'call_external');
   await collection.deleteOne({ _id: 'item-1' });
@@ -124,12 +123,10 @@ test('two sessions of one app have databases of their own', async () => {
   const first = await fixture.openSession({ data: 'explore' });
   const second = await fixture.openSession();
   await first.as('member').call('log_activity', { source: 'first' });
-  expect(await (await first.collection('fixture_db')).countDocuments()).toEqual(2);
-  expect(await (await second.collection('fixture_db')).countDocuments()).toEqual(0);
-  expect((await first.collection('fixture_db')).dbName).not.toEqual(
-    (await second.collection('fixture_db')).dbName
-  );
-  expect((await first.collection('fixture_db')).dbName).toMatch(
+  expect(await first.collection('fixture_db').countDocuments()).toEqual(2);
+  expect(await second.collection('fixture_db').countDocuments()).toEqual(0);
+  expect(first.collection('fixture_db').dbName).not.toEqual(second.collection('fixture_db').dbName);
+  expect(first.collection('fixture_db').dbName).toMatch(
     new RegExp(`^ld_p${process.pid}_[0-9a-f]{12}_0$`)
   );
 });
@@ -151,10 +148,10 @@ test('seed adds documents a page request reads, and collection reads what a requ
   await expect(session.seed('fixture_db', { _id: 'n2' })).rejects.toThrow(
     'seed takes an array of documents.'
   );
-  await expect(session.collection('rails_external')).rejects.toThrow(
+  expect(() => session.collection('rails_external')).toThrow(
     'Connection "rails_external" (type AxiosHttp) has no collection to read'
   );
-  await expect(session.collection('nope')).rejects.toThrow(
+  expect(() => session.collection('nope')).toThrow(
     'Connection "nope" is not a connection in this app.'
   );
 });

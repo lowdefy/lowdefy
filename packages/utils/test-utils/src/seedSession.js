@@ -29,7 +29,7 @@ async function seedSession({ connectionId, docs, testSession }) {
       )} for connection "${connectionId}".`
     );
   }
-  const collection = await getSessionCollection({ connectionId, testSession });
+  const collection = getSessionCollection({ connectionId, testSession });
   if (docs.length > 0) {
     await collection.insertMany(docs);
   }

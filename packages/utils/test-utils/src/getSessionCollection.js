@@ -18,18 +18,16 @@ import { type } from '@lowdefy/helpers';
 
 import checkSessionOpen from './checkSessionOpen.js';
 import describeTargetKey from './dataSets/describeTargetKey.js';
-import readConnectionArtifacts from './dataSets/readConnectionArtifacts.js';
 import sessionDatabaseName from './dataSets/sessionDatabaseName.js';
 
 // The MongoDB driver's collection behind a connection, in the session database the connection's
 // requests read and write: the database of the connection's own target, as the gate picks it
 // (applyDataSetRedirect). It is the raw driver, past the tenant wall and every request type,
-// so a test reads exactly what was stored, the tenant stamp included.
-async function getSessionCollection({ connectionId, testSession }) {
+// so a test reads exactly what was stored, the tenant stamp included. Returned at once, not as
+// a promise, so a test chains the driver's own call: session.collection(id).findOne(...).
+function getSessionCollection({ connectionId, testSession }) {
   checkSessionOpen({ testSession });
-  const artifacts = await readConnectionArtifacts({
-    buildDirectory: testSession.testApp.directories.build,
-  });
+  const artifacts = testSession.connectionArtifacts;
   const artifact = artifacts[connectionId];
   if (type.isNone(artifact)) {
     throw new Error(

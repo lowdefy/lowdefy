@@ -28,6 +28,7 @@ import settleSession from './settleSession.js';
 import storeLogger from './storeLogger.js';
 import stubRequest from './stubRequest.js';
 import { openDataSession, readDataSet } from './dataSets/index.js';
+import readConnectionArtifacts from './dataSets/readConnectionArtifacts.js';
 import readEmptyDataSet from './dataSets/readEmptyDataSet.js';
 
 // What a connection refusal calls a session that was opened without a data set.
@@ -51,16 +52,19 @@ async function openSession({ data, testApp }) {
   }
   const { build, config } = testApp.directories;
   const named = type.isString(data);
-  const [runtime, dataSet] = await Promise.all([
+  const [runtime, dataSet, connectionArtifacts] = await Promise.all([
     loadSessionRuntime({ testApp }),
     named
       ? readDataSet({ configDirectory: config, buildDirectory: build, name: data })
       : readEmptyDataSet({ buildDirectory: build, name: NO_DATA_SET }),
+    readConnectionArtifacts({ buildDirectory: build }),
   ]);
   const store = await getSessionStore({ testApp });
   const dataSession = await openDataSession({ dataSet, logger: storeLogger, store });
   const testSession = {
     closed: false,
+    // The built connections by id, for collection() and seed().
+    connectionArtifacts,
     dataSession,
     dataSet,
     // Pause gates no routine has reached yet, by step id (pauseBefore).

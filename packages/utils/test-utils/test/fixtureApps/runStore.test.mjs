@@ -60,7 +60,7 @@ test('a member logs activity on a database of this file', async () => {
   const name = path.basename(import.meta.filename, '.test.mjs');
   const answer = await session.as('member').call('log_activity', { source: name });
   assert.equal(answer.status, 200);
-  const collection = await session.collection('fixture_db');
+  const collection = session.collection('fixture_db');
   assert.equal(await collection.countDocuments({ kind: 'activity' }), 1);
   fs.writeFileSync(
     path.join(process.env.TEST_REPORT_DIRECTORY, name + '.json'),
