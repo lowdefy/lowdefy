@@ -64,7 +64,7 @@
   },
   "peerDependencies": {
     "antd": ">=6",
-    "dayjs": "1.11.20",
+    "dayjs": "1.11.23",
     "react": ">=18",
     "react-dom": ">=18"
   },
