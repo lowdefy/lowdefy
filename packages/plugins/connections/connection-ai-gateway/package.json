@@ -45,7 +45,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@ai-sdk/gateway": "4.0.94",
+    "@ai-sdk/gateway": "4.0.142",
     "@lowdefy/ai-utils": "7.2.0"
   },
   "devDependencies": {

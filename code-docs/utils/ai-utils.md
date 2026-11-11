@@ -125,10 +125,10 @@ Exports `RESERVED_PLATFORM_TOOL_NAMES` and a guard used by `buildAgentTools` to 
 
 `decide({ model, backend, state, questions, options })` asks typed questions (`choice`, `yesno`, `score`) about a state and returns `{ answers, usage, providerMetadata }`. Each answer carries its value and a confidence (see `decideQuestions.js` for the answer fields per kind). `backend` picks how:
 
-| Backend             | Function                     | Model                                                                                                       |
-| ------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `evaluation`        | `decideWithEvaluation`       | an evaluation model (`provider.evaluationModel(id)`), via `experimental_evaluate`; probabilities per option |
-| `structured-output` | `decideWithStructuredOutput` | any language model (`provider(id)`), via `generateText` with an `Output.object` schema                      |
+| Backend             | Function                     | Model                                                                                                   |
+| ------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `evaluation`        | `decideWithEvaluation`       | an evaluation model (`provider.decisionModel(id)`), via `experimental_decide`; probabilities per option |
+| `structured-output` | `decideWithStructuredOutput` | any language model (`provider(id)`), via `generateText` with an `Output.object` schema                  |
 
 `providerMetadata` is the AI SDK result's; on the AI Gateway it carries `gateway.cost`, which a caller that caps spend reads. `options` are AI SDK call options (`maxOutputTokens`, `timeout`, `abortSignal`, `maxRetries`, `providerOptions`); the evaluation backend folds `timeout` into the abort signal and drops `maxOutputTokens`.
 

@@ -23,7 +23,7 @@ const mockJsonSchema = vi.fn((schema) => ({ wrapped: schema }));
 const mockOutputObject = vi.fn((spec) => ({ outputSpec: spec }));
 
 vi.doMock('ai', () => ({
-  experimental_evaluate: mockEvaluate,
+  experimental_decide: mockEvaluate,
   generateText: mockGenerateText,
   jsonSchema: mockJsonSchema,
   Output: { object: mockOutputObject },
@@ -53,7 +53,7 @@ function gateway() {
   const languageModel = { modelId: 'language' };
   const evaluationModel = { modelId: 'evaluation' };
   const provider = vi.fn().mockReturnValue(languageModel);
-  provider.evaluationModel = vi.fn().mockReturnValue(evaluationModel);
+  provider.decisionModel = vi.fn().mockReturnValue(evaluationModel);
   return { provider, languageModel, evaluationModel };
 }
 
@@ -103,7 +103,7 @@ test('Decide on the evaluation backend asks an evaluation model and shapes its a
     },
   });
 
-  expect(provider.evaluationModel).toHaveBeenCalledWith('typesafe-ai/jev');
+  expect(provider.decisionModel).toHaveBeenCalledWith('typesafe-ai/jev');
   expect(mockEvaluate).toHaveBeenCalledWith({
     model: evaluationModel,
     state,
@@ -200,7 +200,7 @@ test('Decide backend property picks structured output on a connection that defau
     request: { model: 'openai/gpt-5-mini', backend: 'structured-output', state: 'x', questions },
   });
   expect(mockEvaluate).not.toHaveBeenCalled();
-  expect(provider.evaluationModel).not.toHaveBeenCalled();
+  expect(provider.decisionModel).not.toHaveBeenCalled();
   // A missing answer reads back as nulls, never a crash.
   expect(result.team).toEqual({ choice: null, confidence: null, probabilities: null });
   expect(result.down).toEqual({ answer: null, probability: null, confidence: null });

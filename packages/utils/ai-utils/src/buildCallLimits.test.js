@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { Experimental_EvaluationMockModelV4, MockLanguageModelV4 } from 'ai/test';
+import { Experimental_DecisionMockModelV4, MockLanguageModelV4 } from 'ai/test';
 import { ServiceError } from '@lowdefy/errors';
 
 import buildCallLimits from './buildCallLimits.js';
@@ -93,12 +93,12 @@ function hangingModel() {
 }
 
 function hangingEvaluationModel() {
-  return new Experimental_EvaluationMockModelV4({ doEvaluate: untilAborted });
+  return new Experimental_DecisionMockModelV4({ doDecide: untilAborted });
 }
 
 function providerFor({ model, evaluationModel }) {
   const provider = () => model;
-  provider.evaluationModel = () => evaluationModel;
+  provider.decisionModel = () => evaluationModel;
   return () => provider;
 }
 

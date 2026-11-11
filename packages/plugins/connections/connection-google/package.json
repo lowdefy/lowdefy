@@ -45,7 +45,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@ai-sdk/google": "4.0.82",
+    "@ai-sdk/google": "4.0.117",
     "@lowdefy/ai-utils": "7.2.0"
   },
   "devDependencies": {
