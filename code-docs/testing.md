@@ -115,8 +115,9 @@ server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/te
 (`src/dataSets/openDataSession.mongodb.test.js`, which start the data store's own mongod), the
 data store's port, stop and replacement after its mongod dies (`getDataStore.mongodb.test.js`,
 which kills that mongod), a test run's data store (`getRunDataStore.mongodb.test.js`: one mongod
-for every join, the cache cap, the sweep by run, and the store gone once its owner process has
-exited, been killed or been interrupted) and a session put back to its data set
+for every join, the cache cap, the sweep by run, the store gone once its owner process has
+exited, been killed or been interrupted, and a test file whose runner was killed) and a session
+put back to its data set
 (`reloadDataSession.mongodb.test.js`). And it runs `@lowdefy/server-dev`'s `*.mongodb.test.mjs` suites
 (`pnpm --filter=@lowdefy/server-dev test:mongodb`): a data session read back through the journey
 data cookie (`lib/docs/dataSets/readDataSession.mongodb.test.mjs`) and the data set journeys end
@@ -299,11 +300,17 @@ share one `mongod` (`getRunDataStore`), where the dev server has one per server 
   every 250 ms and stops `mongod`, removing its directory and the record, once the owner is
   gone: finished, interrupted or killed. A killed keeper's `mongod` is stopped by
   mongodb-memory-server's own helper, and the next join replaces a record whose keeper is gone.
+- **A test file whose runner is gone owns its store.** A killed runner leaves its test files
+  running under another parent (process 1, or a process that adopts orphans), which never
+  exits. A file whose parent has changed since the harness loaded, or is process 1, is
+  therefore its own owner (`pickRunOwnerPid`), and the store it starts stops when it does. So a
+  run whose `node --test` is itself process 1, as a container's command, has a store per file.
 
 A run therefore holds one `mongod` and one keeper however many files run at once, and none
 after it. After any run that starts one, `pgrep -fl 'mongod-|mongod '` shows what is left; the
 binary's name carries a version suffix. A killed runner leaves its test file processes to
-finish on their own, as `node --test` does; their store is already gone.
+finish on their own, as `node --test` does; their store is already gone, and one that opens a
+session after that starts a store of its own, which stops with it.
 
 Measured on 11 Nov 2026 (10 cores, 16 GB, Node 26, 20 files of 5 tests over
 `apps/journey-fixture`): a test process peaks at about 263 MB resident (235 to 268), the run's

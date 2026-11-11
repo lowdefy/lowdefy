@@ -17,11 +17,13 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { once } from 'node:events';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { pathToFileURL } from 'node:url';
 
+import { type } from '@lowdefy/helpers';
 import { afterAll, expect, test, vi } from 'vitest';
 
 import dataSessionRegistry from './dataSessionRegistry.js';
@@ -96,6 +98,43 @@ async function startOwner({ hold }) {
   return { owner, ...JSON.parse(line) };
 }
 
+// A test file under a `node --test` runner (NODE_TEST_CONTEXT is set) that has not opened a
+// session yet when its runner goes: it loads the harness, says so, waits until it has another
+// parent, joins the run store, reports what it joined, and leaves.
+const orphanScript = `
+import fs from 'node:fs';
+import { setTimeout as sleep } from 'node:timers/promises';
+const { default: getRunDataStore } = await import(process.env.RUN_STORE_MODULE);
+const runnerPid = process.ppid;
+fs.writeFileSync(process.env.RUN_STORE_LOADED, '');
+while (process.ppid === runnerPid) {
+  await sleep(20);
+}
+const store = await getRunDataStore({ logger: { info() {}, warn() {} } });
+const admin = store.client.db('admin');
+const { pid } = await admin.command({ serverStatus: 1 });
+const { parsed } = await admin.command({ getCmdLineOpts: 1 });
+fs.writeFileSync(
+  process.env.RUN_STORE_REPORT,
+  JSON.stringify({ keeperPid: store.keeperPid, mongodPid: pid, dbPath: parsed.storage.dbPath })
+);
+await store.stop();
+`;
+
+// The runner of that test file: it starts the file in a process group of its own, says so, and
+// waits to be killed.
+const runnerScript = `
+import { spawn } from 'node:child_process';
+const file = spawn(process.execPath, ['--input-type=module', '--eval', process.env.ORPHAN_SCRIPT], {
+  detached: true,
+  env: { ...process.env, NODE_TEST_CONTEXT: 'child-v8' },
+  stdio: 'ignore',
+});
+file.unref();
+console.log(JSON.stringify({ filePid: file.pid }));
+setInterval(() => {}, 1000);
+`;
+
 function isGone({ dbPath, keeperPid, mongodPid }) {
   return (
     !isProcessAlive({ pid: mongodPid }) &&
@@ -169,6 +208,42 @@ test('the store stops when its owner process is interrupted', async () => {
   started.owner.kill('SIGINT');
   await once(started.owner, 'exit');
   expect(await waitFor(() => isGone(started))).toBe(true);
+});
+
+test('a test file whose runner was killed before it joined owns its store, which stops when the file exits', async () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-store-orphan-'));
+  const loadedPath = path.join(directory, 'loaded');
+  const reportPath = path.join(directory, 'report.json');
+  const runner = spawn(process.execPath, ['--input-type=module', '--eval', runnerScript], {
+    env: {
+      ...process.env,
+      ORPHAN_SCRIPT: orphanScript,
+      RUN_STORE_MODULE: pathToFileURL(path.join(import.meta.dirname, 'getRunDataStore.js')).href,
+      RUN_STORE_LOADED: loadedPath,
+      RUN_STORE_REPORT: reportPath,
+    },
+    stdio: ['ignore', 'pipe', 'inherit'],
+  });
+  const [line] = await once(createInterface({ input: runner.stdout }), 'line');
+  const { filePid } = JSON.parse(line);
+  let report;
+  try {
+    expect(await waitFor(() => fs.existsSync(loadedPath))).toBe(true);
+    runner.kill('SIGKILL');
+    await once(runner, 'exit');
+    expect(await waitFor(() => fs.existsSync(reportPath), { timeoutMs: 60000 })).toBe(true);
+    report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+    expect(await waitFor(() => !isProcessAlive({ pid: filePid }))).toBe(true);
+    // Owned by the process that adopted the file, the store would never stop.
+    expect(await waitFor(() => isGone(report))).toBe(true);
+  } finally {
+    if (isProcessAlive({ pid: filePid })) process.kill(filePid, 'SIGKILL');
+    // A keeper told to stop takes its mongod with it, so a failure here leaves none behind.
+    if (!type.isNone(report) && isProcessAlive({ pid: report.keeperPid })) {
+      process.kill(report.keeperPid, 'SIGTERM');
+    }
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test('a store whose keeper was killed is replaced by the next join, and its mongod does not outlive it', async () => {

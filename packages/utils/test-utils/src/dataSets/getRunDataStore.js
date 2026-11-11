@@ -33,7 +33,8 @@ const DOWNLOAD_TIMEOUT_MS = 900000;
 // join it; each opens data sessions with databases of its own (openDataSession({ store })). It
 // holds the same cache cap as the dev server's store (startDataStoreReplSet), and there is one
 // per run however many test files run at once. It stops when the run's owner process is gone:
-// the `node --test` runner, or this process when it has no runner above it (getRunOwnerPid).
+// the `node --test` runner, or this process when it has no runner above it or its runner is
+// gone (getRunOwnerPid).
 //
 // Returns this caller's own client on the store, with stop() to close it; the store stays up
 // for the run's other test processes. `logger` is told when the MongoDB binary still has to be

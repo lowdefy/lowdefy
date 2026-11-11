@@ -14,14 +14,22 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import pickRunOwnerPid from './pickRunOwnerPid.js';
 
-// The process a test run's data store lives and dies with. `node --test` runs each test file in
-// a child process and sets NODE_TEST_CONTEXT in it, so there the owner is the parent, the
-// runner, and every file of the run names the same one. Anywhere else (a file run directly,
-// --test-isolation=none, another test runner's worker) the owner is the process itself.
+// Read once, when the harness loads, which is as a test file starts: process.ppid is read live,
+// and it changes when the parent dies.
+const parentPidAtLoad = process.ppid;
+
+// The process a test run's data store lives and dies with: the `node --test` runner that
+// started this test file, or this process itself when it has no runner above it or its runner
+// is gone (pickRunOwnerPid).
 function getRunOwnerPid() {
-  return type.isNone(process.env.NODE_TEST_CONTEXT) ? process.pid : process.ppid;
+  return pickRunOwnerPid({
+    parentPid: process.ppid,
+    parentPidAtLoad,
+    pid: process.pid,
+    testContext: process.env.NODE_TEST_CONTEXT,
+  });
 }
 
 export default getRunOwnerPid;
