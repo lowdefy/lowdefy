@@ -16,7 +16,7 @@
 
 import path from 'node:path';
 
-const repositoryRoot = path.resolve(import.meta.dirname, '../../../..');
+const repositoryRoot = path.resolve(import.meta.dirname, '../../../../..');
 
 // The apps in this repository the suites read a production build of. The global setup builds
 // each one into its own server copy under _server/, which scripts/build.mjs fills as it does

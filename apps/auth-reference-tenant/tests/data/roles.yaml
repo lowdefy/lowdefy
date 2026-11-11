@@ -1,6 +1,7 @@
-# The users the access table tests of @lowdefy/test-utils check this app's pages and endpoints as
-# (packages/utils/test-utils/src/accessMatrix.test.js). They are injected callers, not accounts:
-# no journey signs in as them. Change it only together with that test.
+# The users the fixture access table tests of @lowdefy/test-utils check this app's pages and
+# endpoints as (packages/utils/test-utils/test/fixtureApps/accessMatrix.test.mjs). They are
+# injected callers, not accounts: no journey signs in as them. Change it only together with that
+# test.
 users:
   workspace_admin: { id: u_workspace_admin, roles: [workspace-admin], organization_id: org_a }
   member: { id: u_member, roles: [], organization_id: org_a }

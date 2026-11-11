@@ -14,247 +14,275 @@
   limitations under the License.
 */
 
-import { execFile } from 'node:child_process';
-import fs from 'node:fs';
-import path from 'node:path';
-import { pathToFileURL } from 'node:url';
-import { promisify } from 'node:util';
+import { afterEach, expect, test } from 'vitest';
 
-import { afterAll, afterEach, beforeAll, expect, test } from 'vitest';
-
-import copyFixtureApp from '../test/copyFixtureApp.mjs';
-import fixtureApps from '../test/fixtureApps.mjs';
+import writeTestBuild from '../test/writeTestBuild.mjs';
 import openTestApp from './openTestApp.js';
 
-const execFileAsync = promisify(execFile);
+// These tests run on a build written by hand (test/writeTestBuild.mjs), so they need no app
+// build. The same table over real builds of three apps is in test/fixtureApps (test:fixture).
 
-const apps = {};
-const copies = [];
+// Pages protected by default, a second factor required, and two-factor-enrol the enrolment page.
+// Written out of order, as a build may list them.
+const authJson = {
+  configured: true,
+  pagesProtectedByDefault: true,
+  twoFactor: { enabled: true, required: true },
+  authPages: { signIn: '/login', twoFactorEnrol: '/two-factor-enrol' },
+};
 
-function copyApp(app) {
-  const copy = copyFixtureApp({ app });
-  copies.push(copy);
-  return copy;
+const routes = [
+  { pageId: 'two-factor-enrol', path: 'two-factor-enrol', auth: { public: false } },
+  { pageId: 'home', path: 'home', auth: { public: true } },
+  { pageId: 'reports', path: 'reports', auth: { public: false, roles: ['auditor'] } },
+  { pageId: 'dashboard', path: 'dashboard', auth: { public: false } },
+  { pageId: 'Zebra', path: 'Zebra', auth: { public: true } },
+];
+
+const endpoints = [
+  { id: 'endpoint:whoami', type: 'Api', endpointId: 'whoami', auth: { public: true } },
+  {
+    id: 'endpoint:list-reports',
+    type: 'Api',
+    endpointId: 'list-reports',
+    auth: { public: false, roles: ['auditor'] },
+  },
+  // Built with auth.public true: only the app's own hooks call it.
+  {
+    id: 'endpoint:audit-login',
+    type: 'InternalApi',
+    endpointId: 'audit-login',
+    auth: { public: true },
+  },
+  {
+    id: 'endpoint:account-kit/save-profile',
+    type: 'Api',
+    endpointId: 'account-kit/save-profile',
+    auth: { public: false },
+  },
+];
+
+const dataSets = {
+  roles: {
+    users: {
+      unenrolled_auditor: { id: 'u_3', roles: ['auditor'], two_factor_enrolled: false },
+      member: { id: 'u_2', roles: ['member'], two_factor_enrolled: true },
+      auditor: { id: 'u_1', roles: ['auditor'], two_factor_enrolled: true },
+    },
+  },
+  personas: {
+    users: {
+      admin: { id: 'u_4', roles: ['admin'] },
+    },
+  },
+};
+
+const builds = [];
+
+async function openBuild(build) {
+  const written = writeTestBuild(build);
+  builds.push(written);
+  const { configDirectory, serverDirectory } = written;
+  return openTestApp({ configDirectory, serverDirectory });
 }
 
-beforeAll(async () => {
-  for (const [key, { configDirectory, serverDirectory }] of Object.entries(fixtureApps)) {
-    apps[key] = await openTestApp({ configDirectory, serverDirectory });
-  }
-});
-
 afterEach(() => {
-  copies.splice(0).forEach((copy) => copy.remove());
+  builds.splice(0).forEach((build) => build.remove());
 });
-
-afterAll(async () => {
-  await Promise.all(Object.values(apps).map((app) => app.close()));
-});
-
-// apps/journey-fixture: every page public, auditor_only gated to the auditor role.
 
 test('accessMatrix allows a public page for every user and for a signed out caller', async () => {
-  const matrix = await apps.journeyFixture.accessMatrix({ data: 'roles' });
-  expect(matrix.pages.home).toEqual({ auditor: 'allow', member: 'allow', none: 'allow' });
-  expect(matrix.pages.ticket).toEqual({ auditor: 'allow', member: 'allow', none: 'allow' });
-});
-
-test('accessMatrix allows a role-gated endpoint for its role and denies another role and a signed out caller', async () => {
-  const matrix = await apps.journeyFixture.accessMatrix({ data: 'roles' });
-  expect(matrix.endpoints.auditor_only).toEqual({ auditor: 'allow', member: 'deny', none: 'deny' });
-  expect(matrix.endpoints.notify).toEqual({ auditor: 'allow', member: 'allow', none: 'allow' });
-});
-
-test('accessMatrix lists every page route and every endpoint of the build, with sorted keys', async () => {
-  const matrix = await apps.journeyFixture.accessMatrix({ data: 'roles' });
-  expect(Object.keys(matrix)).toEqual(['pages', 'endpoints']);
-  expect(Object.keys(matrix.pages)).toEqual([
-    '404',
-    'app_errors',
-    'app_errors_open',
-    'containing_split',
-    'explore',
-    'explore_guarded',
-    'explore_pr',
-    'fill',
-    'generated',
-    'handoff',
-    'home',
-    'rails',
-    'second',
-    'selectors',
-    'shared_alpha',
-    'shared_beta',
-    'storage',
-    'targets',
-    'ticket',
-    'timing',
-    'walled',
-  ]);
-  expect(Object.keys(matrix.endpoints)).toEqual([
-    'auditor_only',
-    'detached_log',
-    'explode',
-    'log_activity',
-    'notify',
-    'save_walled',
-    'typed_order',
-  ]);
-  Object.values({ ...matrix.pages, ...matrix.endpoints }).forEach((outcomes) => {
-    expect(Object.keys(outcomes)).toEqual(['auditor', 'member', 'none']);
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.pages.home).toEqual({
+    auditor: 'allow',
+    member: 'allow',
+    none: 'allow',
+    unenrolled_auditor: 'allow',
   });
 });
 
-test('accessMatrix reads the users of the data set it is given', async () => {
-  const matrix = await apps.journeyFixture.accessMatrix({ data: 'personas' });
-  expect(matrix.endpoints.auditor_only).toEqual({ admin: 'deny', member: 'deny', none: 'deny' });
-});
-
-test('accessMatrix refuses a call that names no data set', async () => {
-  await expect(apps.journeyFixture.accessMatrix()).rejects.toThrow(
-    'accessMatrix requires "data", the name of a data set in tests/data whose users to check. Received undefined.'
-  );
-});
-
-test('accessMatrix refuses a data set that is not in tests/data, as a journey does', async () => {
-  await expect(apps.journeyFixture.accessMatrix({ data: 'missing' })).rejects.toThrow(
-    'Data set "missing" not found in tests/data.'
-  );
-});
-
-// apps/auth-reference-tenant: pages protected by default, workspace-settings gated to
-// workspace-admin.
-
-test('accessMatrix allows a role-gated page for its role and denies another user and a signed out caller', async () => {
-  const matrix = await apps.authReferenceTenant.accessMatrix({ data: 'roles' });
-  expect(matrix.pages['workspace-settings']).toEqual({
-    member: 'deny',
-    none: 'deny',
-    workspace_admin: 'allow',
-  });
+test('accessMatrix allows a role-gated page for its role and denies another role and a signed out caller', async () => {
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.pages.reports).toMatchObject({ auditor: 'allow', member: 'deny', none: 'deny' });
 });
 
 test('accessMatrix allows a protected page for every signed in user and denies a signed out caller', async () => {
-  const matrix = await apps.authReferenceTenant.accessMatrix({ data: 'roles' });
-  expect(matrix.pages.dashboard).toEqual({
-    member: 'allow',
-    none: 'deny',
-    workspace_admin: 'allow',
-  });
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.pages.dashboard).toMatchObject({ auditor: 'allow', member: 'allow', none: 'deny' });
 });
 
-test('accessMatrix allows the public pages and endpoints of a protected app for all', async () => {
-  const matrix = await apps.authReferenceTenant.accessMatrix({ data: 'roles' });
-  expect(matrix.pages.login).toEqual({ member: 'allow', none: 'allow', workspace_admin: 'allow' });
-  expect(matrix.pages.home).toEqual({ member: 'allow', none: 'allow', workspace_admin: 'allow' });
-  expect(matrix.endpoints.caller).toEqual({
+test('accessMatrix allows a role-gated endpoint for its role and denies another role and a signed out caller', async () => {
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.endpoints['list-reports']).toEqual({
+    auditor: 'allow',
+    member: 'deny',
+    none: 'deny',
+    unenrolled_auditor: 'enrol_required',
+  });
+  expect(matrix.endpoints.whoami).toEqual({
+    auditor: 'allow',
     member: 'allow',
     none: 'allow',
-    workspace_admin: 'allow',
+    unenrolled_auditor: 'allow',
   });
 });
 
-// apps/auth-reference: a second factor is required (auth.twoFactor.required), and
-// two-factor-enrol is the enrolment page.
-
 test('accessMatrix answers enrol_required for an unenrolled user on a page they could otherwise open', async () => {
-  const matrix = await apps.authReference.accessMatrix({ data: 'roles' });
-  expect(matrix.pages['audit-reports']).toEqual({
-    admin: 'deny',
-    auditor: 'allow',
-    none: 'deny',
-    unenrolled_auditor: 'enrol_required',
-  });
-  expect(matrix.pages.dashboard).toEqual({
-    admin: 'allow',
-    auditor: 'allow',
-    none: 'deny',
-    unenrolled_auditor: 'enrol_required',
-  });
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.pages.reports.unenrolled_auditor).toEqual('enrol_required');
+  expect(matrix.pages.dashboard.unenrolled_auditor).toEqual('enrol_required');
 });
 
 test('accessMatrix allows an unenrolled user on the enrolment page', async () => {
-  const matrix = await apps.authReference.accessMatrix({ data: 'roles' });
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
   expect(matrix.pages['two-factor-enrol']).toEqual({
-    admin: 'allow',
     auditor: 'allow',
+    member: 'allow',
     none: 'deny',
     unenrolled_auditor: 'allow',
   });
 });
 
 test('accessMatrix denies an unenrolled user a page their roles do not open, rather than asking them to enrol', async () => {
-  const matrix = await apps.authReference.accessMatrix({ data: 'roles' });
-  expect(matrix.pages.admin).toEqual({
-    admin: 'allow',
-    auditor: 'deny',
-    none: 'deny',
-    unenrolled_auditor: 'deny',
+  const app = await openBuild({
+    authJson,
+    dataSets,
+    endpoints,
+    routes: [{ pageId: 'admin', path: 'admin', auth: { public: false, roles: ['admin'] } }],
   });
-  expect(matrix.pages.login.unenrolled_auditor).toEqual('allow');
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.pages.admin.unenrolled_auditor).toEqual('deny');
 });
 
-test('accessMatrix answers for an endpoint gated by a role pattern', async () => {
-  const matrix = await apps.authReference.accessMatrix({ data: 'roles' });
-  expect(matrix.endpoints['admin-list-users']).toEqual({
-    admin: 'allow',
-    auditor: 'deny',
-    none: 'deny',
-    unenrolled_auditor: 'deny',
+test('accessMatrix asks no user to enrol when the app does not require a second factor', async () => {
+  const app = await openBuild({
+    authJson: { ...authJson, twoFactor: { enabled: true, required: false } },
+    dataSets,
+    endpoints,
+    routes,
   });
-  expect(matrix.endpoints.whoami).toEqual({
-    admin: 'allow',
-    auditor: 'allow',
-    none: 'allow',
-    unenrolled_auditor: 'allow',
-  });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.pages.reports.unenrolled_auditor).toEqual('allow');
+  expect(matrix.pages.dashboard.unenrolled_auditor).toEqual('allow');
 });
 
 test('accessMatrix denies every caller an InternalApi endpoint, whatever its auth says', async () => {
-  const matrix = await apps.authReference.accessMatrix({ data: 'roles' });
-  // Built with auth.public true: only the app's own hooks call it.
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
   expect(matrix.endpoints['audit-login']).toEqual({
-    admin: 'deny',
     auditor: 'deny',
+    member: 'deny',
     none: 'deny',
     unenrolled_auditor: 'deny',
   });
 });
 
-test("accessMatrix lists a module's pages and endpoints under their scoped ids", async () => {
-  const matrix = await apps.authReference.accessMatrix({ data: 'roles' });
-  expect(matrix.pages['account-kit/login']).toEqual({
-    admin: 'allow',
+test("accessMatrix lists a module's endpoint under its scoped id", async () => {
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.endpoints['account-kit/save-profile']).toMatchObject({
     auditor: 'allow',
     none: 'deny',
-    unenrolled_auditor: 'enrol_required',
   });
-  expect(Object.keys(matrix.endpoints)).toContain('account-kit/account-audit');
 });
 
-// The fixture scale-up: the journey fixture's build with 200 page routes, a quarter public and
-// the rest gated to one of ten roles, and a data set of 20 users over those roles.
-function scaleUp({ configDirectory, serverDirectory }) {
-  const routes = Array.from({ length: 200 }, (_, index) => ({
-    pageId: `page_${index}`,
-    path: `page_${index}`,
-    auth: index % 4 === 0 ? { public: true } : { public: false, roles: [`role_${index % 10}`] },
-  }));
-  fs.writeFileSync(path.join(serverDirectory, 'build', 'routes.json'), JSON.stringify(routes));
-  const users = Array.from(
-    { length: 20 },
-    (_, index) => `  user_${index}: { id: u_${index}, roles: [role_${index % 10}] }`
-  );
-  fs.writeFileSync(
-    path.join(configDirectory, 'tests', 'data', 'scale.yaml'),
-    `users:\n${users.join('\n')}\n`
-  );
-}
+test('accessMatrix lists every page route and every endpoint of the build, with sorted keys', async () => {
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(Object.keys(matrix)).toEqual(['pages', 'endpoints']);
+  // By code unit: an upper case letter sorts before every lower case one.
+  expect(Object.keys(matrix.pages)).toEqual([
+    'Zebra',
+    'dashboard',
+    'home',
+    'reports',
+    'two-factor-enrol',
+  ]);
+  expect(Object.keys(matrix.endpoints)).toEqual([
+    'account-kit/save-profile',
+    'audit-login',
+    'list-reports',
+    'whoami',
+  ]);
+  Object.values({ ...matrix.pages, ...matrix.endpoints }).forEach((outcomes) => {
+    expect(Object.keys(outcomes)).toEqual(['auditor', 'member', 'none', 'unenrolled_auditor']);
+  });
+});
 
+test('accessMatrix gives the same table, in the same order, from two separately opened apps', async () => {
+  const first = await openBuild({ authJson, dataSets, endpoints, routes });
+  const second = await openBuild({
+    authJson,
+    dataSets,
+    endpoints: [...endpoints].reverse(),
+    routes: [...routes].reverse(),
+  });
+  expect(JSON.stringify(await second.accessMatrix({ data: 'roles' }))).toEqual(
+    JSON.stringify(await first.accessMatrix({ data: 'roles' }))
+  );
+});
+
+test('accessMatrix reads the users of the data set it is given', async () => {
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  const matrix = await app.accessMatrix({ data: 'personas' });
+  expect(matrix.endpoints['list-reports']).toEqual({ admin: 'deny', none: 'deny' });
+});
+
+test('accessMatrix answers for a build with no endpoints', async () => {
+  const app = await openBuild({ authJson, dataSets, routes });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.endpoints).toEqual({});
+  expect(Object.keys(matrix.pages)).toHaveLength(5);
+});
+
+test('accessMatrix refuses a call that names no data set', async () => {
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  await expect(app.accessMatrix()).rejects.toThrow(
+    'accessMatrix requires "data", the name of a data set in tests/data whose users to check. Received undefined.'
+  );
+});
+
+test('accessMatrix refuses a data set that is not in tests/data, as a journey does', async () => {
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  await expect(app.accessMatrix({ data: 'missing' })).rejects.toThrow(
+    'Data set "missing" not found in tests/data.'
+  );
+});
+
+test('accessMatrix refuses a call on a closed test app', async () => {
+  const app = await openBuild({ authJson, dataSets, endpoints, routes });
+  await app.close();
+  await expect(app.accessMatrix({ data: 'roles' })).rejects.toThrow(
+    'The test app is closed. Open one with openTestApp.'
+  );
+});
+
+// 200 page routes, a quarter public and the rest gated to one of ten roles, and a data set of 20
+// users over those roles.
 test('accessMatrix answers 200 pages by 20 users in under a second', async () => {
-  const { configDirectory, serverDirectory } = copyApp(fixtureApps.journeyFixture);
-  scaleUp({ configDirectory, serverDirectory });
-  const app = await openTestApp({ configDirectory, serverDirectory });
+  const app = await openBuild({
+    authJson: { configured: true, pagesProtectedByDefault: true },
+    dataSets: {
+      scale: {
+        users: Object.fromEntries(
+          Array.from({ length: 20 }, (_, index) => [
+            `user_${index}`,
+            { id: `u_${index}`, roles: [`role_${index % 10}`] },
+          ])
+        ),
+      },
+    },
+    routes: Array.from({ length: 200 }, (_, index) => ({
+      pageId: `page_${index}`,
+      path: `page_${index}`,
+      auth: index % 4 === 0 ? { public: true } : { public: false, roles: [`role_${index % 10}`] },
+    })),
+  });
 
   const start = performance.now();
   const matrix = await app.accessMatrix({ data: 'scale' });
@@ -273,52 +301,4 @@ test('accessMatrix answers 200 pages by 20 users in under a second', async () =>
     user_13: 'allow',
   });
   expect(elapsed).toBeLessThan(1000);
-  await app.close();
-});
-
-test('accessMatrix gives the same table, in the same order, from two separately opened apps', async () => {
-  const { configDirectory, serverDirectory } = fixtureApps.authReference;
-  const first = await apps.authReference.accessMatrix({ data: 'roles' });
-  const again = await openTestApp({ configDirectory, serverDirectory });
-  const second = await again.accessMatrix({ data: 'roles' });
-  await again.close();
-  expect(JSON.stringify(second)).toEqual(JSON.stringify(first));
-});
-
-// The way an app uses it: `node --test`, in a process of its own, with the table kept as a
-// snapshot. The first run writes the snapshot and the second compares against it.
-const snapshotTest = `import { test } from 'node:test';
-
-const { openTestApp } = await import(process.env.TEST_UTILS_ENTRY);
-
-test('who can reach what', async (t) => {
-  const app = await openTestApp({
-    configDirectory: process.env.TEST_CONFIG_DIRECTORY,
-    serverDirectory: process.env.TEST_SERVER_DIRECTORY,
-  });
-  t.assert.snapshot(await app.accessMatrix({ data: 'roles' }));
-  await app.close();
-});
-`;
-
-test('t.assert.snapshot of the access table matches on a second node --test run', async () => {
-  const { configDirectory, serverDirectory } = copyApp(fixtureApps.authReference);
-  const testFile = path.join(configDirectory, 'tests', 'access.test.mjs');
-  fs.writeFileSync(testFile, snapshotTest);
-  const env = {
-    ...process.env,
-    TEST_CONFIG_DIRECTORY: configDirectory,
-    TEST_SERVER_DIRECTORY: serverDirectory,
-    TEST_UTILS_ENTRY: pathToFileURL(path.join(import.meta.dirname, 'index.js')).href,
-  };
-
-  await execFileAsync(process.execPath, ['--test', '--test-update-snapshots', testFile], { env });
-  const snapshot = fs.readFileSync(`${testFile}.snapshot`, 'utf8');
-  expect(snapshot).toContain('"unenrolled_auditor": "enrol_required"');
-
-  // A failing comparison exits non-zero, which rejects.
-  const { stdout } = await execFileAsync(process.execPath, ['--test', testFile], { env });
-  expect(stdout).toMatch(/pass 1\b/);
-  expect(stdout).toMatch(/fail 0\b/);
-  expect(fs.readFileSync(`${testFile}.snapshot`, 'utf8')).toEqual(snapshot);
 });
