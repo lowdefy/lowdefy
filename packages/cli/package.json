@@ -60,7 +60,7 @@
     "@lowdefy/server-dev": "7.2.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
-    "vitest": "4.1.12"
+    "vitest": "5.1.0"
   },
   "engines": {
     "node": ">=24"

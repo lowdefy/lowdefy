@@ -131,13 +131,13 @@ importers:
     dependencies:
       '@better-auth/cimd':
         specifier: 1.7.20
-        version: 1.7.20(2e7d424099d86b56ac861ce62be323ee)
+        version: 1.7.20(2ee8e06d8131ee060db2900b862ddf70)
       '@better-auth/oauth-provider':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))
       '@better-auth/passkey':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
       '@lowdefy/ajv':
         specifier: 7.2.0
         version: link:../utils/ajv
@@ -173,7 +173,7 @@ importers:
         version: 1.32.2(zod@4.6.7)
       better-auth:
         specifier: 1.7.20
-        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       jose:
         specifier: ^6.2.17
         version: 6.2.17
@@ -206,8 +206,8 @@ importers:
         specifier: 9.2.0
         version: 9.2.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/build:
     dependencies:
@@ -447,8 +447,8 @@ importers:
         specifier: 10.3.1
         version: 10.3.1
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/cli:
     dependencies:
@@ -508,8 +508,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/client:
     dependencies:
@@ -581,8 +581,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/client-core:
     dependencies:
@@ -609,8 +609,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/client-native:
     dependencies:
@@ -706,8 +706,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/docs-content:
     dependencies:
@@ -752,8 +752,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/ides/vscode:
     dependencies:
@@ -856,8 +856,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/layout-native:
     dependencies:
@@ -900,8 +900,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/actions/actions-core:
     dependencies:
@@ -928,8 +928,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/actions/actions-pdf-make:
     dependencies:
@@ -999,8 +999,8 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/blocks/blocks-antd:
     dependencies:
@@ -1063,8 +1063,8 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/blocks/blocks-antd-x:
     dependencies:
@@ -1615,8 +1615,8 @@ importers:
         specifier: 8.1.6
         version: 8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/blocks/blocks-tiptap:
     dependencies:
@@ -1706,8 +1706,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-ai-gateway:
     dependencies:
@@ -1728,8 +1728,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-anthropic:
     dependencies:
@@ -1750,8 +1750,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-axios-http:
     dependencies:
@@ -1775,8 +1775,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-elasticsearch:
     dependencies:
@@ -1797,8 +1797,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-google:
     dependencies:
@@ -1819,8 +1819,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-google-sheets:
     dependencies:
@@ -1850,8 +1850,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-knex:
     dependencies:
@@ -1887,8 +1887,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-mcp:
     devDependencies:
@@ -1902,8 +1902,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-mongodb:
     dependencies:
@@ -1915,7 +1915,7 @@ importers:
         version: link:../../../utils/helpers
       better-auth:
         specifier: 1.7.20
-        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       change-case:
         specifier: 5.4.0
         version: 5.4.0
@@ -1945,8 +1945,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-openai:
     dependencies:
@@ -1967,8 +1967,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-redis:
     dependencies:
@@ -1989,8 +1989,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-sendgrid:
     dependencies:
@@ -2011,8 +2011,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-smtp:
     dependencies:
@@ -2033,8 +2033,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-stripe:
     dependencies:
@@ -2055,8 +2055,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/connections/connection-test:
     dependencies:
@@ -2087,8 +2087,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/icons/icons-react-icons:
     devDependencies:
@@ -2105,8 +2105,8 @@ importers:
         specifier: 5.6.0
         version: 5.6.0(react@18.2.0)
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-change-case:
     dependencies:
@@ -2133,8 +2133,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-cron:
     dependencies:
@@ -2164,8 +2164,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-dayjs:
     dependencies:
@@ -2192,8 +2192,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-diff:
     dependencies:
@@ -2220,8 +2220,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-js:
     dependencies:
@@ -2251,8 +2251,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-jsonata:
     dependencies:
@@ -2276,8 +2276,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-mql:
     dependencies:
@@ -2301,8 +2301,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-nunjucks:
     dependencies:
@@ -2329,8 +2329,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-uuid:
     dependencies:
@@ -2357,8 +2357,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/operators/operators-yaml:
     dependencies:
@@ -2382,8 +2382,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/plugins/plugin-aws:
     dependencies:
@@ -2455,8 +2455,8 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/plugins/plugin-azure:
     dependencies:
@@ -2477,8 +2477,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/plugins/plugin-better-auth:
     dependencies:
@@ -2490,7 +2490,7 @@ importers:
         version: link:../../../utils/helpers
       better-auth:
         specifier: 1.7.20
-        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       jose:
         specifier: ^6.2.17
         version: 6.2.17
@@ -2502,8 +2502,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/plugins/plugin-csv:
     devDependencies:
@@ -2539,8 +2539,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/plugins/plugin-posthog:
     dependencies:
@@ -2576,8 +2576,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/plugins/websockets/websockets-core:
     dependencies:
@@ -2601,8 +2601,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/servers/server:
     dependencies:
@@ -2614,10 +2614,10 @@ importers:
         version: 2.9.0(antd@6.6.5(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@better-auth/oauth-provider':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))
       '@better-auth/passkey':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
       '@hono/mcp':
         specifier: 0.3.2
         version: 0.3.2(@modelcontextprotocol/sdk@1.32.2(zod@4.6.7))(hono-rate-limiter@0.5.3(hono@4.13.14))(hono@4.13.14)(zod@4.6.7)
@@ -2722,7 +2722,7 @@ importers:
         version: 6.6.5(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       better-auth:
         specifier: 1.7.20
-        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       dayjs:
         specifier: 1.11.20
         version: 1.11.20
@@ -2755,8 +2755,8 @@ importers:
         specifier: 7.2.0
         version: link:../../build
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
       yaml:
         specifier: 2.9.0
         version: 2.9.0
@@ -2774,10 +2774,10 @@ importers:
         version: 2.9.0(antd@6.6.5(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@better-auth/oauth-provider':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))
       '@better-auth/passkey':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
       '@hono/mcp':
         specifier: 0.3.2
         version: 0.3.2(@modelcontextprotocol/sdk@1.32.2(zod@4.6.7))(hono-rate-limiter@0.5.3(hono@4.13.14))(hono@4.13.14)(zod@4.6.7)
@@ -2915,7 +2915,7 @@ importers:
         version: 6.6.5(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       better-auth:
         specifier: 1.7.20
-        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       chokidar:
         specifier: 4.0.3
         version: 4.0.3
@@ -2996,8 +2996,8 @@ importers:
         specifier: 10.5.0
         version: 10.5.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/servers/server-e2e:
     dependencies:
@@ -3126,8 +3126,8 @@ importers:
         specifier: 7.2.0
         version: link:../../build
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
       yaml:
         specifier: 2.9.0
         version: 2.9.0
@@ -3410,8 +3410,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/ajv:
     dependencies:
@@ -3441,8 +3441,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/block-dev:
     dependencies:
@@ -3561,8 +3561,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/e2e-utils:
     dependencies:
@@ -3592,8 +3592,8 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/email-templates:
     dependencies:
@@ -3629,8 +3629,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/errors:
     devDependencies:
@@ -3641,8 +3641,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/helpers:
     dependencies:
@@ -3666,8 +3666,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/logger:
     dependencies:
@@ -3691,8 +3691,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/node-utils:
     dependencies:
@@ -3725,8 +3725,8 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/utils/nunjucks:
     dependencies:
@@ -3753,8 +3753,8 @@ importers:
         specifier: 0.2.3
         version: 0.2.3(@swc/core@1.15.32)(webpack@5.104.1)
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
       webpack:
         specifier: 5.104.1
         version: 5.104.1(@swc/core@1.15.32)(esbuild@0.28.1)(webpack-cli@5.1.4)
@@ -3793,8 +3793,8 @@ importers:
         specifier: 1.15.32
         version: 1.15.32
       vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
 
   packages/website:
     dependencies:
@@ -5836,9 +5836,6 @@ packages:
 
   '@jridgewell/source-map@0.3.5':
     resolution: {integrity: sha512-UTYAUj/wviwdsMfzoSJspJxbkH5o1snzwX0//0ENX1u/55kkZZkcTZP6u9bwKGkv+dkk9at4m1Cpt0uY80kcpQ==}
-
-  '@jridgewell/sourcemap-codec@1.5.5':
-    resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
 
   '@jridgewell/sourcemap-codec@1.6.0':
     resolution: {integrity: sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==}
@@ -8388,6 +8385,17 @@ packages:
       vite:
         optional: true
 
+  '@vitest/mocker@5.1.0':
+    resolution: {integrity: sha512-5umB9/jlWcqVS6fsrFmv5Gdnpu6wAUio/lEOwAmvB7v+lFo/IW2B9FhAD0p19GCULTgMzLCdUmuCDCnAzWgppQ==}
+    peerDependencies:
+      msw: ^2.4.9 || ^3.0.0
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
+    peerDependenciesMeta:
+      msw:
+        optional: true
+      vite:
+        optional: true
+
   '@vitest/pretty-format@4.1.12':
     resolution: {integrity: sha512-XW9O8+Mxx4VpCtkYdMJLZQQwsVryP9wk7cPKDxtXFfwSak6yRh5+2fep/Y0XF/ElBvJHq8bcYdi6aeuai0opZA==}
 
@@ -8399,6 +8407,9 @@ packages:
 
   '@vitest/spy@4.1.12':
     resolution: {integrity: sha512-RGq9x4JNGNTZHEJxvN0oSiJjeSCExm0n2gZKKJZHY9cX5AVA6M7VJILBT3ZJ/tJ/0J9uWT7fETV9/btoi//vSg==}
+
+  '@vitest/spy@5.1.0':
+    resolution: {integrity: sha512-2DPO5OMHWKrBngC+fCmTQqemNF0gidRhp3lxbBmRhW+M1XJrfgPpqNqWVevXtn2f2ufD5ZaR1B6B641aAlcX5A==}
 
   '@vitest/utils@4.1.12':
     resolution: {integrity: sha512-Q3awXrwOfEV+qc3WmO5ONyE0yO7Q1gQ9/oyHxGLZ/pl7N3NO/ZztqQwKLuwMkV+CA1JYSIeO3gkHnRDIo4AVaA==}
@@ -10263,6 +10274,9 @@ packages:
 
   es-module-lexer@2.3.1:
     resolution: {integrity: sha512-shc1dbU90Yl/xq1QrC7QRtfcwURZuVRfPhZbDoldJ1cn1gzDvBaBWlv0eFolj5+0znnPJz5TXLxsN77X/12KTA==}
+
+  es-module-lexer@2.3.2:
+    resolution: {integrity: sha512-poHGpORABojJJucnV9KbOavETW8lBVnphkW77ER5/BQ5Fz7oXSoCNek7IH3vR5nRjdsEz926ibFYX8KtLQmdyw==}
 
   es-object-atoms@1.1.1:
     resolution: {integrity: sha512-FGgH2h8zKNim9ljj7dankFPcICIK9Cp5bm+c2gQSYePhpaG5+esrLODihIorn+Pe6FGJzWhXQotPv73jTaldXA==}
@@ -12987,6 +13001,9 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
+  magic-string@1.4.5:
+    resolution: {integrity: sha512-oLLC2+YvQUfAa+vxoufE/yc1icb87M9iXIRqAoR/2EhE/8cb3SF/+Gi0c2By1B+5Vz2e2vQtUvHiu1+63Znh+w==}
+
   make-asynchronous@1.1.0:
     resolution: {integrity: sha512-ayF7iT+44LXdxJLTrTd3TLQpFDDvPCBxXxbv+pMUSuHA5Q8zyAfwkRP6aHHwNVFBUFWtxAHqwNJxF8vMZLAbVg==}
     engines: {node: '>=18'}
@@ -13775,6 +13792,10 @@ packages:
 
   obug@2.2.1:
     resolution: {integrity: sha512-XrsrhT5sybtKI6wakr2SPOlGZWWYbUXZ7a0jT8/QOeAPau+1X/bSegNe5YR75oJmEZQbKningirmGOEJCIk61Q==}
+    engines: {node: '>=12.20.0'}
+
+  obug@3.0.0:
+    resolution: {integrity: sha512-5vvB5+W7ePv+p3uqxi+RcW1XAzLW0/hxt3/4X4Lc4qHudzOhmBiBwOY6DRob4WnanAEGvNcLjF+KNOufrUoEQw==}
     engines: {node: '>=12.20.0'}
 
   on-exit-leak-free@2.1.2:
@@ -15682,8 +15703,16 @@ packages:
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
+  tinybench@6.2.3:
+    resolution: {integrity: sha512-Al01C2JIBnO2CXCAPbpAl6sUiOZHeThGtHYNTa51JRw9PyWOCdr+9Ong05R4qg/Sk3+H645E8ov1h2c58ityNw==}
+    engines: {node: '>=20.0.0'}
+
   tinyexec@1.1.2:
     resolution: {integrity: sha512-dAqSqE/RabpBKI8+h26GfLq6Vb3JVXs30XYQjdMjaj/c2tS8IYYMbIzP599KtRj7c57/wYApb3QjgRgXmrCukA==}
+    engines: {node: '>=18'}
+
+  tinyexec@1.3.1:
+    resolution: {integrity: sha512-GCvB3aoys96IuDFBMcTB46JOR6mdMtAToqwiW8JlWhsoh1mhHi/xn9ss/Dg7N555GiJyEt2qzoG/NHCwM6h1EA==}
     engines: {node: '>=18'}
 
   tinyglobby@0.2.15:
@@ -16172,6 +16201,47 @@ packages:
       jsdom:
         optional: true
 
+  vitest@5.1.0:
+    resolution: {integrity: sha512-MzmNFnrwa8v8lF1bLxw3UJ4EREwVOVb75VqJZmUDRjJ6EluK/x9th7qTbaeDk41WxE1GxWqmTXcdsfobfH5sOA==}
+    engines: {node: ^22.12.0 || ^24.0.0 || >=26.0.0}
+    hasBin: true
+    peerDependencies:
+      '@edge-runtime/vm': '*'
+      '@opentelemetry/api': ^1.9.0
+      '@types/node': ^22.0.0 || >=24.0.0
+      '@vitest/browser-playwright': 5.1.0
+      '@vitest/browser-preview': 5.1.0
+      '@vitest/browser-webdriverio': ^5.0.0-beta.5 || >=5.0.0
+      '@vitest/coverage-istanbul': 5.1.0
+      '@vitest/coverage-v8': 5.1.0
+      '@vitest/ui': 5.1.0
+      happy-dom: '*'
+      jsdom: '*'
+      vite: ^6.4.0 || ^7.0.0 || ^8.0.0
+    peerDependenciesMeta:
+      '@edge-runtime/vm':
+        optional: true
+      '@opentelemetry/api':
+        optional: true
+      '@types/node':
+        optional: true
+      '@vitest/browser-playwright':
+        optional: true
+      '@vitest/browser-preview':
+        optional: true
+      '@vitest/browser-webdriverio':
+        optional: true
+      '@vitest/coverage-istanbul':
+        optional: true
+      '@vitest/coverage-v8':
+        optional: true
+      '@vitest/ui':
+        optional: true
+      happy-dom:
+        optional: true
+      jsdom:
+        optional: true
+
   vlq@1.0.1:
     resolution: {integrity: sha512-gQpnTgkubC6hQgdIcRdYGDSDc+SaujOdyesZQMv6JlfQee/9Mp0Qhnys6WxDWvQnL5WZdT7o2Ul187aSt0Rq+w==}
 
@@ -16333,6 +16403,11 @@ packages:
   why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}
     engines: {node: '>=8'}
+    hasBin: true
+
+  why-is-node-running@3.2.1:
+    resolution: {integrity: sha512-Tb2FUhB4vUsGQlfSquQLYkApkuPAFQXGFzxWKHHumVz2dK+X1RUm/HnID4+TfIGYJ1kTcwOaCk/buYCEJr6YjQ==}
+    engines: {node: '>=20.11'}
     hasBin: true
 
   wildcard@2.0.0:
@@ -17185,7 +17260,7 @@ snapshots:
       '@babel/parser': 7.29.9
       '@babel/types': 7.29.8
       '@jridgewell/gen-mapping': 0.3.13
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/trace-mapping': 0.3.31
       jsesc: 3.1.0
 
   '@babel/generator@7.29.13':
@@ -17841,11 +17916,11 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@better-auth/cimd@1.7.20(2e7d424099d86b56ac861ce62be323ee)':
+  '@better-auth/cimd@1.7.20(2ee8e06d8131ee060db2900b862ddf70)':
     dependencies:
       '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
-      '@better-auth/oauth-provider': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))
-      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+      '@better-auth/oauth-provider': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))
+      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       better-call: 1.4.5(zod@4.6.7)
 
   '@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)':
@@ -17885,46 +17960,46 @@ snapshots:
     optionalDependencies:
       mongodb: 7.8.0
 
-  '@better-auth/oauth-provider@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))':
+  '@better-auth/oauth-provider@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))':
     dependencies:
       '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/utils': 0.5.1
       '@better-fetch/fetch': 1.3.3
-      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       better-call: 1.4.5(zod@4.6.7)
       jose: 6.2.17
       zod: 4.6.7
 
-  '@better-auth/oauth-provider@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))':
+  '@better-auth/oauth-provider@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))':
     dependencies:
       '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/utils': 0.5.1
       '@better-fetch/fetch': 1.3.3
-      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       better-call: 1.4.5(zod@4.6.7)
       jose: 6.2.17
       zod: 4.6.7
 
-  '@better-auth/passkey@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)':
+  '@better-auth/passkey@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)':
     dependencies:
       '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/utils': 0.5.1
       '@better-fetch/fetch': 1.3.3
       '@simplewebauthn/browser': 13.3.0
       '@simplewebauthn/server': 13.3.2
-      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       better-call: 1.4.5(zod@4.6.7)
       nanostores: 1.4.0
       zod: 4.6.7
 
-  '@better-auth/passkey@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)':
+  '@better-auth/passkey@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)':
     dependencies:
       '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/utils': 0.5.1
       '@better-fetch/fetch': 1.3.3
       '@simplewebauthn/browser': 13.3.0
       '@simplewebauthn/server': 13.3.2
-      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
+      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)))
       better-call: 1.4.5(zod@4.6.7)
       nanostores: 1.4.0
       zod: 4.6.7
@@ -18527,7 +18602,7 @@ snapshots:
       '@expo/spawn-async': 1.8.0
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/remapping': 2.3.5
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
       '@jridgewell/trace-mapping': 0.3.31
       '@react-native/js-polyfills': 0.88.1
       browserslist: 4.29.3
@@ -19171,7 +19246,7 @@ snapshots:
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/trace-mapping': 0.3.31
       '@types/node': 24.13.3
       chalk: 4.1.2
       collect-v8-coverage: 1.0.3
@@ -19201,7 +19276,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/trace-mapping': 0.3.31
       '@types/node': 24.13.3
       chalk: 4.1.2
       collect-v8-coverage: 1.0.3
@@ -19241,13 +19316,13 @@ snapshots:
 
   '@jest/source-map@28.1.2':
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/trace-mapping': 0.3.31
       callsites: 3.1.0
       graceful-fs: 4.2.11
 
   '@jest/source-map@29.6.3':
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/trace-mapping': 0.3.31
       callsites: 3.1.0
       graceful-fs: 4.2.11
 
@@ -19283,7 +19358,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.6
       '@jest/types': 28.1.3
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/trace-mapping': 0.3.31
       babel-plugin-istanbul: 6.1.1
       chalk: 4.1.2
       convert-source-map: 1.9.0
@@ -19349,8 +19424,8 @@ snapshots:
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/sourcemap-codec': 1.6.0
+      '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/remapping@2.3.5':
     dependencies:
@@ -19367,16 +19442,14 @@ snapshots:
   '@jridgewell/source-map@0.3.5':
     dependencies:
       '@jridgewell/gen-mapping': 0.3.13
-      '@jridgewell/trace-mapping': 0.3.30
-
-  '@jridgewell/sourcemap-codec@1.5.5': {}
+      '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
 
   '@jridgewell/trace-mapping@0.3.30':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
 
   '@jridgewell/trace-mapping@0.3.31':
     dependencies:
@@ -22565,7 +22638,7 @@ snapshots:
       debug: 4.4.3
       minimatch: 10.2.5
       semver: 7.7.4
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -22713,6 +22786,15 @@ snapshots:
     optionalDependencies:
       vite: 8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)
 
+  '@vitest/mocker@5.1.0(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))':
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      '@vitest/spy': 5.1.0
+      estree-walker: 3.0.3
+      magic-string: 1.4.5
+    optionalDependencies:
+      vite: 8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)
+
   '@vitest/pretty-format@4.1.12':
     dependencies:
       tinyrainbow: 3.2.0
@@ -22730,6 +22812,8 @@ snapshots:
       pathe: 2.0.3
 
   '@vitest/spy@4.1.12': {}
+
+  '@vitest/spy@5.1.0': {}
 
   '@vitest/utils@4.1.12':
     dependencies:
@@ -23690,7 +23774,7 @@ snapshots:
 
   baseline-browser-mapping@2.11.35: {}
 
-  better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))):
+  better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))):
     dependencies:
       '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/drizzle-adapter': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)
@@ -23716,11 +23800,11 @@ snapshots:
       pg: 8.23.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      vitest: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+      vitest: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
-  better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))):
+  better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@25.9.9))(next@15.5.28(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@25.9.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))):
     dependencies:
       '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/drizzle-adapter': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)
@@ -23746,7 +23830,7 @@ snapshots:
       pg: 8.23.1
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
-      vitest: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+      vitest: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
@@ -25099,6 +25183,8 @@ snapshots:
       safe-array-concat: 1.1.3
 
   es-module-lexer@2.3.1: {}
+
+  es-module-lexer@2.3.2: {}
 
   es-object-atoms@1.1.1:
     dependencies:
@@ -28622,7 +28708,11 @@ snapshots:
 
   magic-string@0.30.21:
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
+
+  magic-string@1.4.5:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.6.0
 
   make-asynchronous@1.1.0:
     dependencies:
@@ -29850,6 +29940,8 @@ snapshots:
       es-object-atoms: 1.1.1
 
   obug@2.2.1: {}
+
+  obug@3.0.0: {}
 
   on-exit-leak-free@2.1.2: {}
 
@@ -32003,7 +32095,7 @@ snapshots:
 
   terser-webpack-plugin@5.6.1(@swc/core@1.15.32)(esbuild@0.28.1)(webpack@5.104.1):
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.5.0
       terser: 5.43.1
@@ -32081,7 +32173,11 @@ snapshots:
 
   tinybench@2.9.0: {}
 
+  tinybench@6.2.3: {}
+
   tinyexec@1.1.2: {}
+
+  tinyexec@1.3.1: {}
 
   tinyglobby@0.2.15:
     dependencies:
@@ -32512,7 +32608,7 @@ snapshots:
 
   v8-to-istanbul@9.0.1:
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.30
+      '@jridgewell/trace-mapping': 0.3.31
       '@types/istanbul-lib-coverage': 2.0.6
       convert-source-map: 1.9.0
 
@@ -32574,6 +32670,29 @@ snapshots:
       tinyrainbow: 3.2.0
       vite: 8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)
       why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.1
+      '@types/node': 25.9.9
+      jsdom: 19.0.0
+    transitivePeerDependencies:
+      - msw
+
+  vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@25.9.9)(jsdom@19.0.0)(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)):
+    dependencies:
+      '@types/chai': 5.2.3
+      '@vitest/mocker': 5.1.0(vite@8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+      chai: 6.3.0
+      es-module-lexer: 2.3.2
+      expect-type: 1.4.0
+      magic-string: 1.4.5
+      obug: 3.0.0
+      picomatch: 4.0.7
+      std-env: 4.3.0
+      tinybench: 6.2.3
+      tinyexec: 1.3.1
+      tinyglobby: 0.2.17
+      vite: 8.1.6(@types/node@25.9.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)
+      why-is-node-running: 3.2.1
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 25.9.9
@@ -32833,6 +32952,8 @@ snapshots:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
+
+  why-is-node-running@3.2.1: {}
 
   wildcard@2.0.0: {}
 

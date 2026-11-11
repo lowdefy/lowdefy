@@ -64,7 +64,7 @@
     "copyfiles": "2.4.1",
     "jest-serializer-html": "7.1.0",
     "jsdom": "19.0.0",
-    "vitest": "4.1.12"
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"
