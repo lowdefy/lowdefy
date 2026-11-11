@@ -38,12 +38,13 @@ function readLiveKeyPrefix({ buildDirectory }) {
 // publish that cleared the old build's. The build's key prefix names the build
 // a context was created from.
 //
-// The JS map files are written whole from a context's jsMap, so a page build on
-// a context that is no longer the kept one (a config publish, or the map budget,
-// discarded it) would replace the entries pages built on the newer context
-// added. Pages built on the discarded context are rebuilt on their next request
-// or API call, which writes their entries again.
-function skipStaleMapWrites({ buildDirectory, context, keyPrefix, isKeptContext }) {
+// The JS map files are written whole from a context's jsMap. The contexts of one
+// generation share it, so a build on a context the map budget released writes
+// every entry. A build on a context of an earlier generation (a config publish
+// moved it) would replace the entries pages built since added, so it is
+// skipped. Pages built in that generation are rebuilt on their next request or
+// API call, which writes their entries again.
+function skipStaleMapWrites({ buildDirectory, context, keyPrefix, sharesCurrentJsMap }) {
   const writeBuildArtifact = context.writeBuildArtifact;
   context.writeBuildArtifact = async (filePath, content, options) => {
     if (isMapFile(filePath) && readLiveKeyPrefix({ buildDirectory }) !== keyPrefix) {
@@ -51,7 +52,7 @@ function skipStaleMapWrites({ buildDirectory, context, keyPrefix, isKeptContext 
     }
     if (
       jsMapFiles.has(filePath) &&
-      (!isKeptContext() || readLiveKeyPrefix({ buildDirectory }) !== keyPrefix)
+      (!sharesCurrentJsMap() || readLiveKeyPrefix({ buildDirectory }) !== keyPrefix)
     ) {
       return;
     }
