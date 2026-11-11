@@ -81,15 +81,18 @@ pnpm test:mongodb
 (`pnpm --filter=@lowdefy/api test:mongodb`, `vitest.mongodb.config.js`), which drive engine code
 through a real BetterAuth instance and the MongoDB auth adapter, for example the tenant signup
 mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it needs a real
-server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/server-dev`'s
-`*.mongodb.test.mjs` suites (`pnpm --filter=@lowdefy/server-dev test:mongodb`): the
-journey data sessions (`lib/docs/dataSets/openDataSession.mongodb.test.mjs`, which start the dev
-server's own data store), the data store's port, stop and replacement after its mongod dies
-(`getDataStore.mongodb.test.mjs`, which kills that mongod), and the data set journeys end to end
-(`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app with
-tenant auth and a local module, with a database on the suite's MongoDB server standing in for the
-developer's, auth collections included, snapshotted before and compared after; skipped without a
-Chromium). To reproduce a race deterministically,
+server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/test-utils`'s
+`*.mongodb.test.js` suites (`pnpm --filter=@lowdefy/test-utils test:mongodb`,
+`vitest.mongodb.config.js`, no global setup): the data sessions
+(`src/dataSets/openDataSession.mongodb.test.js`, which start the data store's own mongod) and the
+data store's port, stop and replacement after its mongod dies (`getDataStore.mongodb.test.js`,
+which kills that mongod). And it runs `@lowdefy/server-dev`'s `*.mongodb.test.mjs` suites
+(`pnpm --filter=@lowdefy/server-dev test:mongodb`): a data session read back through the journey
+data cookie (`lib/docs/dataSets/readDataSession.mongodb.test.mjs`) and the data set journeys end
+to end (`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app
+with tenant auth and a local module, with a database on the suite's MongoDB server standing in for
+the developer's, auth collections included, snapshotted before and compared after; skipped without
+a Chromium). To reproduce a race deterministically,
 pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
 run the other to completion before releasing it.
 
@@ -217,6 +220,15 @@ in `@lowdefy/api`), the build artifacts it reads (`routes.json`, `api/*.json`, `
 `roles.yaml` data sets. The three suites named `test:fixture` use different server copies, so
 this one can run beside the journey fixture suites. CI runs it on the complete path, before every
 release (see [CI](#ci)).
+
+The package also holds the data session code the dev server runs journeys on, under
+`src/dataSets/` (export `./dataSets`; see "Data sets" in `code-docs/architecture/journeys.md`).
+Its unit tests run in the default `test`, with no built app and no `mongod`. Its
+`*.mongodb.test.js` suites start a real `mongod`, so the default run leaves them out and
+`pnpm --filter=@lowdefy/test-utils test:mongodb` runs them, as part of `pnpm test:mongodb` (see
+[MongoDB tests](#mongodb-tests)). A change under `src/dataSets/` also needs
+`@lowdefy/server-dev`'s tests and the journey `test:fixture` suites (`@lowdefy/server-dev`,
+`lowdefy`), since the journey runner imports the built `dist/dataSets`.
 
 ## An app from another repository
 
@@ -428,6 +440,7 @@ commands in the pull request body:
 | any package                                    | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`) |
 | several packages, root config, the lockfile    | `pnpm test` (the dependency check and every package)                                                                            |
 | `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                             |
+| `test-utils/src/dataSets` (data sessions)      | `pnpm test:mongodb`, `@lowdefy/server-dev`'s tests and the journey `test:fixture` suites                                        |
 | the journey runner, journey cookies or mutants | the journey `test:fixture` suites (`@lowdefy/server-dev`, `lowdefy`)                                                            |
 | `test-utils`, the gate, the build it reads     | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))          |
 | blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                            |

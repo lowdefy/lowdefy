@@ -13,7 +13,8 @@ The designs behind it are in Pelican, under the LDF-133 (Journey loop) project.
 | `lowdefy test`, selection, lint                               | `packages/cli/src/commands/test/`                                                                                                                                |
 | `lowdefy journeys ...` commands                               | `packages/cli/src/commands/journeys/`                                                                                                                            |
 | Agent skills that write journeys                              | `packages/cli/src/commands/agentSetup/skills/`                                                                                                                   |
-| Runner, data sessions, rails, app errors, mutants, recorder   | `packages/servers/server-dev/` (`lib/docs/`, `lib/server/`, `client/`)                                                                                           |
+| Runner, rails, app errors, mutants, recorder                  | `packages/servers/server-dev/` (`lib/docs/`, `lib/server/`, `client/`)                                                                                           |
+| Data store, data sessions, data set loaders, connection gate  | `packages/utils/test-utils/src/dataSets/`, imported as `@lowdefy/test-utils/dataSets`                                                                            |
 | Fixture app                                                   | `apps/journey-fixture`                                                                                                                                           |
 
 ## The grammar
@@ -98,13 +99,15 @@ A journey fails at the step that causes an app error its own browsers raised, ev
 
 The file format and its rules are in `journey-data-sets.md`. `parseDataSet` (node-utils) is the one reader for the dev server, lint, variants, scope and coverage. It reads the files with `readDataSetFile` (which also refuses a `snapshot:` key), follows `extends` with `readDataSetFiles`, merges them with `mergeDataSetFiles`, then validates and expands `generate` (`validateDataSetGenerate`, `generateDataSetDocuments` in `dataSetGenerate/`). `adviseDataSetSize` gives the size advice.
 
-The dev server reads a data set through `lib/docs/dataSets/readDataSet.js`, which adds the checks that need the build, among them `checkSharedCollectionIds.js` for connections that share a collection. `openDataSession` opens a database on the dev server's own data store, and `loadDataSetCollection` loads indexes, then generated documents, then fixtures. A result's `data` is `{ name, loadMs, documents }`.
+The dev server reads a data set through `readDataSet`, which adds the checks that need the build, among them `checkSharedCollectionIds.js` for connections that share a collection. `openDataSession` opens a database on the dev server's own data store, and `loadDataSetCollection` loads indexes, then generated documents, then fixtures. A result's `data` is `{ name, loadMs, documents }`.
+
+That code lives in `@lowdefy/test-utils/dataSets` (`packages/utils/test-utils/src/dataSets/`), so the endpoint test harness loads data and gates connections with the same implementation: the store (`getDataStore`), sessions (`openDataSession`, `dataSessionRegistry`, `sweepOrphanDatabases`), the reader and loaders, and the gate below (`applyDataSetRedirect`, `createDataSetRefusal`, `sinkExternalConnections`, `trackSessionWork`). The dev server still owns the store for journeys: it starts it in its own process and passes its own logger (`getDataStore({ logger })`, `openDataSession({ dataSet, logger })`). What only the dev server needs stays in `server-dev/lib/docs/dataSets/`: `readDataSession` (the journey data cookie), `resolveJourneyDataSet` and `describeDataSetResult`.
 
 The agent dev tools take `user` and `data` in the journey forms, without lists: `resolveToolCaller` and `withDataSession` (`lib/docs/`) give `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_run_request` and `lowdefy_run_endpoint` a data session.
 
 ### Data-set modes
 
-Under a data session every connection read goes through one gate, `lib/server/applyDataSetRedirect.js`, which reads the connection type's `meta.dataSet`:
+Under a data session every connection read goes through one gate, `applyDataSetRedirect` (`@lowdefy/test-utils/dataSets`), which reads the connection type's `meta.dataSet`:
 
 - `redirect` merges the session database over the properties. A connection whose properties have a top-level operator key is refused.
 - `walled` passes unchanged: the type holds no database URI and reaches MongoDB only through the walled client (`walled(connectionId)` from `packages/api/src/routes/request/createWalledResolver.js`, with `getWalledCollection` from `@lowdefy/connection-mongodb/walled`). The walled connections it names are read through the same gate and redirected.
@@ -113,7 +116,7 @@ Under a data session every connection read goes through one gate, `lib/server/ap
 
 The tenant wall's unwalled-reach verdict (`packages/api/src/routes/connections/resolveUnwalledReach.js`) reads the build directly, so it is the same in and out of sessions.
 
-**Sinks.** `lib/server/sinkExternalConnections.js`, wired in `createLowdefyContext`, replaces every request resolver of an `external` connection type, and any single resolver that declares `external` on its own `meta`, with a sink. Each sunk request is recorded on the data session as `{ connectionId, connectionType, requestType, requestId, pageId, endpointId, request }`, with secrets scrubbed, and `runJourney` returns the list as `sunk`.
+**Sinks.** `sinkExternalConnections` (`@lowdefy/test-utils/dataSets`), wired in `createLowdefyContext`, replaces every request resolver of an `external` connection type, and any single resolver that declares `external` on its own `meta`, with a sink. Each sunk request is recorded on the data session as `{ connectionId, connectionType, requestType, requestId, pageId, endpointId, request }`, with secrets scrubbed, and `runJourney` returns the list as `sunk`.
 
 **Origin guard.** `guardJourneyOrigin.js` fails a data set journey that sends a request to the dev server under another host (`Journey left its origin ...`).
 
