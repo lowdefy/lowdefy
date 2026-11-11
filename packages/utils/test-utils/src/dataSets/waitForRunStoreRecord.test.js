@@ -114,6 +114,18 @@ test('waitForRunStoreRecord throws the reason a keeper could not start and remov
   expect(readRunStoreRecord({ recordPath })).toBeNull();
 });
 
+test('waitForRunStoreRecord throws the reason of a keeper that has exited, without starting another', async () => {
+  writeRunStoreRecord({
+    recordPath,
+    record: { ownerPid: 9, keeperPid: deadPid(), token: 't', uri: null, error: 'no binary' },
+  });
+  await expect(waitForRunStoreRecord({ ownerPid: 9, recordPath, timeoutMs: 5000 })).rejects.toThrow(
+    'The test data store could not start: no binary'
+  );
+  expect(readRunStoreRecord({ recordPath })).toBeNull();
+  expect(spawnDataStoreKeeper).not.toHaveBeenCalled();
+});
+
 test('waitForRunStoreRecord gives up after the timeout, naming the record', async () => {
   spawnDataStoreKeeper.mockImplementation(() => {});
   await expect(waitForRunStoreRecord({ ownerPid: 9, recordPath, timeoutMs: 200 })).rejects.toThrow(

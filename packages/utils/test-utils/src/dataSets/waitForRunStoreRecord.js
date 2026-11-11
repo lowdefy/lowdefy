@@ -36,7 +36,8 @@ function isStale(record) {
 
 // Waits for the run's data store and returns its record ({ uri, keeperPid }). The first test
 // process to arrive claims the record and starts the keeper; the rest find the claim and wait
-// for the URI. A stale record is removed and claimed again.
+// for the URI. A stale record is removed and claimed again. A keeper that could not start leaves
+// its reason in the record, which is thrown.
 async function waitForRunStoreRecord({ ownerPid, recordPath, timeoutMs }) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
@@ -46,11 +47,13 @@ async function waitForRunStoreRecord({ ownerPid, recordPath, timeoutMs }) {
       if (!type.isNone(token)) {
         spawnDataStoreKeeper({ ownerPid, recordPath, token });
       }
-    } else if (isStale(record)) {
-      fs.rmSync(recordPath, { force: true });
     } else if (!type.isNone(record.error)) {
+      // Read before the record is checked for a living keeper: a keeper that could not start
+      // has exited by now, and its reason must not be taken for a stale record and replaced.
       fs.rmSync(recordPath, { force: true });
       throw new Error(`The test data store could not start: ${record.error}`);
+    } else if (isStale(record)) {
+      fs.rmSync(recordPath, { force: true });
     } else if (type.isString(record.uri)) {
       return record;
     }
