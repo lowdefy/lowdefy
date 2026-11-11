@@ -1,6 +1,6 @@
 ---
-'@lowdefy/helpers': patch
-'@lowdefy/operators-js': patch
+'@lowdefy/helpers': major
+'@lowdefy/operators-js': major
 ---
 
 fix(deps): Update intl-messageformat to 12.1.5

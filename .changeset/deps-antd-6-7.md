@@ -1,11 +1,11 @@
 ---
-'@lowdefy/build': patch
-'@lowdefy/client': patch
-'@lowdefy/server': patch
-'@lowdefy/server-dev': patch
-'@lowdefy/server-e2e': patch
-'@lowdefy/blocks-antd': patch
-'@lowdefy/blocks-antd-x': patch
+'@lowdefy/build': major
+'@lowdefy/client': major
+'@lowdefy/server': major
+'@lowdefy/server-dev': major
+'@lowdefy/server-e2e': major
+'@lowdefy/blocks-antd': major
+'@lowdefy/blocks-antd-x': major
 ---
 
 fix(deps): Update antd to 6.7.0

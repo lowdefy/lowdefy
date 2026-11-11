@@ -1,5 +1,5 @@
 ---
-'@lowdefy/connection-knex': minor
+'@lowdefy/connection-knex': major
 ---
 
 fix(deps): Update tedious to 20.3.8

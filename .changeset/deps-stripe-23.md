@@ -1,5 +1,5 @@
 ---
-'@lowdefy/connection-stripe': minor
+'@lowdefy/connection-stripe': major
 ---
 
 fix(deps): Update stripe to 23.1.0

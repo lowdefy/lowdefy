@@ -1,6 +1,6 @@
 ---
-'@lowdefy/connection-mongodb': patch
-'@lowdefy/server-dev': patch
+'@lowdefy/connection-mongodb': major
+'@lowdefy/server-dev': major
 ---
 
 fix(deps): Update mongodb to 7.8.0
