@@ -249,6 +249,9 @@ test.describe('Button Block', () => {
 
   test('fires a held shortcut once, not on every key repeat', async ({ page }) => {
     const mod = await getShortcutModifier(page);
+    const display = getBlock(page, 'button_shortcut_counted_display');
+    // Wait for the page to render, so its shortcuts are bound before the keys are pressed.
+    await expect(display).toHaveText('counted:0');
     await page.keyboard.down(mod);
     // Playwright sends the second and later keydowns of a held key with repeat set.
     await page.keyboard.down('u');
@@ -256,9 +259,9 @@ test.describe('Button Block', () => {
     await page.keyboard.down('u');
     await page.keyboard.up('u');
     await page.keyboard.up(mod);
-    await expect(getBlock(page, 'button_shortcut_counted_display')).toHaveText('counted:1');
+    await expect(display).toHaveText('counted:1');
     await page.waitForTimeout(500);
-    await expect(getBlock(page, 'button_shortcut_counted_display')).toHaveText('counted:1');
+    await expect(display).toHaveText('counted:1');
   });
 
   test('fires a key sequence shortcut when its keys are pressed in order', async ({ page }) => {
