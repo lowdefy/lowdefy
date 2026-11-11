@@ -2895,6 +2895,9 @@ importers:
       '@lowdefy/plugin-better-auth':
         specifier: 7.2.0
         version: link:../../plugins/plugins/plugin-better-auth
+      '@lowdefy/test-utils':
+        specifier: 7.2.0
+        version: link:../../utils/test-utils
       '@lowdefy/websockets-core':
         specifier: 7.2.0
         version: link:../../plugins/websockets/websockets-core
@@ -2934,9 +2937,6 @@ importers:
       mongodb:
         specifier: 7.2.0
         version: 7.2.0
-      mongodb-memory-server-core:
-        specifier: 9.2.0
-        version: 9.2.0
       opener:
         specifier: 1.5.2
         version: 1.5.2
@@ -2992,6 +2992,9 @@ importers:
       jsdom:
         specifier: 19.0.0
         version: 19.0.0
+      mongodb-memory-server-core:
+        specifier: 9.2.0
+        version: 9.2.0
       nodemailer:
         specifier: 10.1.7
         version: 10.1.7
@@ -3782,13 +3785,28 @@ importers:
 
   packages/utils/test-utils:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 7.2.0
+        version: link:../errors
       '@lowdefy/helpers':
         specifier: 7.2.0
         version: link:../helpers
       '@lowdefy/node-utils':
         specifier: 7.2.0
         version: link:../node-utils
+      mongodb:
+        specifier: 7.2.0
+        version: 7.2.0
+      mongodb-memory-server-core:
+        specifier: 9.2.0
+        version: 9.2.0
     devDependencies:
+      '@lowdefy/api':
+        specifier: 7.2.0
+        version: link:../../api
+      '@lowdefy/operators-js':
+        specifier: 7.2.0
+        version: link:../../plugins/operators/operators-js
       '@lowdefy/server':
         specifier: 7.2.0
         version: link:../../servers/server

@@ -20,6 +20,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import buildCommand from './buildCommand.js';
+import getPackageName from './getPackageName.js';
 
 // Loads a package from the built server's own install, never from this package's dependencies:
 // the build was written by, and for, the releases the server installed, and classes and module
@@ -28,9 +29,15 @@ import buildCommand from './buildCommand.js';
 //
 // The package must be in <server>/node_modules itself. Node's resolution would otherwise go on
 // to the folders above the server (the app's own install) and to NODE_PATH, which pnpm sets for
-// the scripts it runs, and quietly load another copy.
+// the scripts it runs, and quietly load another copy. `name` is a package or one of its entries
+// ("@lowdefy/connection-mongodb/clients").
 async function importServerModule({ directories, name }) {
-  const installed = path.join(directories.server, 'node_modules', name, 'package.json');
+  const installed = path.join(
+    directories.server,
+    'node_modules',
+    getPackageName({ name }),
+    'package.json'
+  );
   if (!fs.existsSync(installed)) {
     throw new Error(
       `Could not find "${name}" in the Lowdefy server at "${directories.server}". Run "${buildCommand}" in the app's directory, which installs the server's packages, then run the tests again.`

@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import { parseDataSet } from '@lowdefy/node-utils';
 
 import checkSharedCollectionIds from './checkSharedCollectionIds.js';
 import describeTargetKey from './describeTargetKey.js';
+import listDatabaseTargets from './listDatabaseTargets.js';
 import readConnectionArtifacts from './readConnectionArtifacts.js';
 import resolveDataSetCollection from './resolveDataSetCollection.js';
 
@@ -30,23 +30,6 @@ function getKeyedConnectionIds({ dataSet }) {
       ...Object.keys(dataSet.indexes),
     ]),
   ];
-}
-
-// Sorts a URI's default database (no databaseName) before its named ones.
-function sortKey(key) {
-  const [uri, databaseName] = JSON.parse(key);
-  return [uri, databaseName ?? ''].join('\u0000');
-}
-
-// Every database target the built connections name, sorted, so each run numbers them alike and the
-// first one (the database a computed target reads) is the same on every run.
-function listDatabaseTargets({ artifacts }) {
-  const keys = new Set();
-  Object.values(artifacts).forEach((artifact) => {
-    const key = describeTargetKey({ properties: artifact.properties });
-    if (!type.isNone(key)) keys.add(key);
-  });
-  return [...keys].sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
 }
 
 // The data set checks only the dev build can make, on top of parseDataSet's: every connection the

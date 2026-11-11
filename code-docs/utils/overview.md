@@ -13,6 +13,7 @@ Shared utility packages used throughout Lowdefy.
 | `@lowdefy/block-utils`      | Block runtime utilities                     | Browser   |
 | `@lowdefy/block-dev`        | Block testing utilities                     | Node.js   |
 | `@lowdefy/e2e-utils`        | Playwright e2e testing for apps             | Node.js   |
+| `@lowdefy/test-utils`       | Endpoint tests, access table, data sessions | Node.js   |
 | `@lowdefy/nunjucks`         | Template engine wrapper                     | Universal |
 | `@lowdefy/email-templates`  | React Email rendering + safe interpolation  | Node.js   |
 | `@lowdefy/vite-yaml-plugin` | Vite plugin for `.yaml` imports in tests    | Node.js   |

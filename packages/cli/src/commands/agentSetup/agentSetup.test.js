@@ -104,6 +104,20 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
   expect(agentsMd).toContain('### Testing a change');
   expect(agentsMd).toContain('Test each change at the lowest level');
+  expect(agentsMd).toContain(
+    'call the request or endpoint on the dev server with `lowdefy_run_request` or `lowdefy_run_endpoint`, passing `user` and `data`'
+  );
+  expect(agentsMd).toContain('Never check these through a journey.');
+  expect(agentsMd).toContain(
+    'Where the app has endpoint tests (`tests/endpoints/`, Node tests on `@lowdefy/test-utils`): add or update one for such a change, and run them once, before you call the change done.'
+  );
+  expect(agentsMd).toContain('every config edit needs a build first');
+  expect(agentsMd).toContain(
+    "`lowdefy build --no-client-build && node --test --test-concurrency=4 'tests/endpoints/**/*.test.mjs'`"
+  );
+  expect(agentsMd).toContain(
+    'When a change alters the snapshot, update it and say in the pull request that it changed and why.'
+  );
   expect(agentsMd).toContain('`lowdefy test --config-directory <app>`');
   expect(agentsMd).not.toContain('tier: edge');
   expect(agentsMd).not.toContain('localhost:');

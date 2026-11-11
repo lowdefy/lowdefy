@@ -21,16 +21,13 @@ import { vi, afterAll, afterEach, beforeAll, beforeEach, describe, expect, test 
 import { MongoClient, ObjectId } from 'mongodb';
 import { parseDataSet } from '@lowdefy/node-utils';
 
+import applyDataSetRedirect from './applyDataSetRedirect.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import getDataStore from './getDataStore.js';
 import openDataSession from './openDataSession.js';
-import readDataSession from './readDataSession.js';
 import readDataSet from './readDataSet.js';
-import applyDataSetRedirect from '../../server/applyDataSetRedirect.js';
-import { journeyActorToken } from '../../server/auth/journeyActor.js';
 
-const mockLogger = vi.hoisted(() => ({ info: vi.fn(), warn: vi.fn() }));
-vi.mock('../../server/log/createLogger.js', () => ({ default: () => mockLogger }));
+const mockLogger = { info: vi.fn(), warn: vi.fn() };
 
 vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
@@ -38,7 +35,7 @@ let store;
 let client;
 
 beforeAll(async () => {
-  store = await getDataStore();
+  store = await getDataStore({ logger: mockLogger });
   client = new MongoClient(store.uri);
   await client.connect();
 });
@@ -64,10 +61,6 @@ function sessionDb(session) {
   return client.db(session.databaseName);
 }
 
-function cookieFor(id) {
-  return `lowdefy_journey_data=${journeyActorToken}.${id}`;
-}
-
 async function listDatabaseNames() {
   const { databases } = await client.db('admin').admin().listDatabases({ nameOnly: true });
   return databases.map((database) => database.name);
@@ -84,7 +77,7 @@ test('openDataSession creates indexes before documents, so a fixture duplicating
       ],
     },
   });
-  await expect(openDataSession({ dataSet })).rejects.toThrow(
+  await expect(openDataSession({ dataSet, logger: mockLogger })).rejects.toThrow(
     'Data set "sample" fixture tickets[1] breaks unique index "number_1": duplicate key {"number":7} held by document _id "f0".'
   );
   expect([...dataSessionRegistry.values()].filter((s) => s.name === 'sample')).toEqual([]);
@@ -112,7 +105,7 @@ test('openDataSession drops expireAfterSeconds, creates a text index and lets a 
       'events-archive': [{ key: { organizationId: 1 }, name: 'org_unique', unique: true }],
     },
   });
-  const { session, close } = await openDataSession({ dataSet });
+  const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
   try {
     const indexes = await sessionDb(session).collection('events').indexes();
     const byName = Object.fromEntries(indexes.map((index) => [index.name, index]));
@@ -148,7 +141,7 @@ test('openDataSession lets a later fixture replace one with the same _id and rev
       ],
     },
   });
-  const { session, close } = await openDataSession({ dataSet });
+  const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
   try {
     const tickets = sessionDb(session).collection('tickets');
     expect(await tickets.findOne({ _id: 't1' })).toEqual({ _id: 't1', title: 'from fixture' });
@@ -193,7 +186,7 @@ test('openDataSession loads fixtures and generated documents together, with gene
       name: 'sample',
       collections: { customers_db: 'customers', invoices_db: 'invoices' },
     });
-    const { session, close } = await openDataSession({ dataSet });
+    const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
     try {
       const customers = await sessionDb(session)
         .collection('customers')
@@ -236,7 +229,7 @@ test('openDataSession fails naming the generated document that breaks a unique i
       ],
     },
   });
-  await expect(openDataSession({ dataSet })).rejects.toThrow(
+  await expect(openDataSession({ dataSet, logger: mockLogger })).rejects.toThrow(
     'Data set "sample" generated tickets[2] (_id "g3") breaks unique index "status_1": duplicate key { status: "open" }.'
   );
 });
@@ -246,7 +239,7 @@ test('a session database runs a transaction and opens a change stream', async ()
     collections: { tickets: 'tickets' },
     fixtures: { tickets: [{ _id: 't1' }] },
   });
-  const { session, close } = await openDataSession({ dataSet });
+  const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
   const sessionClient = new MongoClient(session.databaseUri);
   await sessionClient.connect();
   try {
@@ -273,8 +266,8 @@ test('two sessions on one data set are isolated, and close() drops the database'
     collections: { tickets: 'tickets' },
     fixtures: { tickets: [{ _id: 't1' }] },
   });
-  const first = await openDataSession({ dataSet });
-  const second = await openDataSession({ dataSet });
+  const first = await openDataSession({ dataSet, logger: mockLogger });
+  const second = await openDataSession({ dataSet, logger: mockLogger });
   expect(first.session.databaseName).not.toEqual(second.session.databaseName);
   await sessionDb(first.session).collection('tickets').insertOne({ _id: 'written' });
   expect(await sessionDb(second.session).collection('tickets').countDocuments()).toBe(1);
@@ -347,7 +340,7 @@ indexes:
 
   test('each databaseUri secret loads into and reads its own session database, and close() drops both', async () => {
     const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'targets' });
-    const { session, close } = await openDataSession({ dataSet });
+    const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
     let names;
     try {
       const appDb = await redirectedDb({ session, connectionId: 'app_users' });
@@ -391,7 +384,7 @@ indexes:
     );
     try {
       const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'computed' });
-      const { session, close } = await openDataSession({ dataSet });
+      const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
       try {
         // AUTH_MONGODB_URI sorts first, so its database is the session's first.
         const authDb = await redirectedDb({ session, connectionId: 'auth_users' });
@@ -410,7 +403,7 @@ indexes:
 
   test('a session database the gate numbers after open survives a concurrent sweep and drops on close()', async () => {
     const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'targets' });
-    const first = await openDataSession({ dataSet });
+    const first = await openDataSession({ dataSet, logger: mockLogger });
     // A target the build did not name, as a config mutant's would be.
     artifacts.late = {
       connectionId: 'late',
@@ -426,7 +419,7 @@ indexes:
       delete artifacts.late;
     }
     expect(lateName).toEqual(`${first.session.prefix}_${dataSet.databaseTargets.length}`);
-    const second = await openDataSession({ dataSet });
+    const second = await openDataSession({ dataSet, logger: mockLogger });
     expect(await listDatabaseNames()).toContain(lateName);
     await second.close();
     await first.close();
@@ -435,7 +428,10 @@ indexes:
 });
 
 test('close() waits for background work added to the session', async () => {
-  const { session, close } = await openDataSession({ dataSet: makeDataSet({}) });
+  const { session, close } = await openDataSession({
+    dataSet: makeDataSet({}),
+    logger: mockLogger,
+  });
   let release;
   const work = new Promise((resolve) => {
     release = resolve;
@@ -455,7 +451,10 @@ test('close() waits for background work added to the session', async () => {
 });
 
 test('close() drops after 30 s with a warning when background work never settles', async () => {
-  const { session, close } = await openDataSession({ dataSet: makeDataSet({}) });
+  const { session, close } = await openDataSession({
+    dataSet: makeDataSet({}),
+    logger: mockLogger,
+  });
   await sessionDb(session).collection('kept').insertOne({ _id: 1 });
   const warn = mockLogger.warn;
   warn.mockClear();
@@ -494,18 +493,10 @@ test('close() drops after 30 s with a warning when background work never settles
 test('openDataSession sweeps an ld_ database no open session owns', async () => {
   await client.db('ld_orphan00000').collection('left').insertOne({ _id: 1 });
   await client.db('not_a_session').collection('kept').insertOne({ _id: 1 });
-  const { close } = await openDataSession({ dataSet: makeDataSet({}) });
+  const { close } = await openDataSession({ dataSet: makeDataSet({}), logger: mockLogger });
   const names = await listDatabaseNames();
   expect(names).not.toContain('ld_orphan00000');
   expect(names).toContain('not_a_session');
   await close();
   await client.db('not_a_session').dropDatabase();
-});
-
-test('readDataSession returns the open session, and { ended } once it closes', async () => {
-  const { id, cookie, session, close } = await openDataSession({ dataSet: makeDataSet({}) });
-  expect(cookie).toEqual(id);
-  expect(readDataSession(cookieFor(id))).toBe(session);
-  await close();
-  expect(readDataSession(cookieFor(id))).toEqual({ ended: id });
 });

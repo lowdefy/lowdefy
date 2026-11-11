@@ -15,12 +15,28 @@
 */
 
 import dataSessionRegistry from './dataSessionRegistry.js';
+import isProcessAlive from './isProcessAlive.js';
+
+const processPattern = /^ld_p(\d+)_/;
+
+// On a test run's store (getRunDataStore) every test process of the run holds sessions, and
+// this process's registry lists only its own. A session database there carries its process's
+// pid (ld_p<pid>_...), and it is another process's to keep for as long as that process lives.
+function isHeldByAnotherProcess(name) {
+  const pid = Number(processPattern.exec(name)?.[1]);
+  return Number.isInteger(pid) && pid !== process.pid && isProcessAlive({ pid });
+}
 
 // Drops every session database on the store that no registered session owns: one left behind by a
 // write that was still in flight when its session dropped its databases, or by a dev server that
 // stopped mid-run. A session owns every database under its prefix (<prefix>_<n>), including one it
 // numbers after this sweep lists them.
-async function sweepOrphanDatabases({ client }) {
+//
+// `perRun` is set for a test run's store, which the run's test processes share. The sweep then
+// drops by run, not by process: the databases of this process that no session owns, and those
+// of test processes of the run that have exited, and it leaves the databases of the ones still
+// running. The dev server never passes it: its store has one process.
+async function sweepOrphanDatabases({ client, perRun = false }) {
   const prefixes = [...dataSessionRegistry.values()].map((session) => `${session.prefix}_`);
   const { databases } = await client.db('admin').admin().listDatabases({ nameOnly: true });
   await Promise.all(
@@ -29,6 +45,7 @@ async function sweepOrphanDatabases({ client }) {
       .filter(
         (name) => name.startsWith('ld_') && !prefixes.some((prefix) => name.startsWith(prefix))
       )
+      .filter((name) => !perRun || !isHeldByAnotherProcess(name))
       .map((name) => client.db(name).dropDatabase())
   );
 }

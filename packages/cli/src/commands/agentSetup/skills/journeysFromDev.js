@@ -15,6 +15,7 @@
 */
 
 import appFolder from './appFolder.js';
+import testLevel from './testLevel.js';
 
 // The journeys-from-dev skill: a thin workflow over the CLI that reads the
 // session the developer means as a log, decides what they were proving, writes
@@ -36,6 +37,8 @@ ${appFolder()}
 
 You write the journeys. The runner decides whether they pass: keep only journeys that pass three
 runs in a row.
+
+${testLevel()}
 
 ## 1. Find the session
 

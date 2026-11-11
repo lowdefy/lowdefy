@@ -33,10 +33,11 @@ vi.doMock('./installHeadlessShell.js', () => ({ default: () => null }));
 // are mocked so the test checks who the page opens as and on which database.
 const mockReadDataSet = vi.fn();
 const mockOpenDataSession = vi.fn();
-vi.doMock('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
-vi.doMock('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
-vi.doMock('./dataSets/openDataSession.js', () => ({
-  default: mockOpenDataSession,
+vi.doMock('@lowdefy/test-utils/dataSets', async (importOriginal) => ({
+  ...(await importOriginal()),
+  getDataStore: async () => ({}),
+  openDataSession: mockOpenDataSession,
+  readDataSet: mockReadDataSet,
 }));
 
 // lib/build/config.js reads build/config.json from process.cwd() at import
@@ -271,6 +272,7 @@ test("screenshotPage renders as a data set user, on the data set's own database"
     expect(mockReadDataSet).toHaveBeenCalledWith(expect.objectContaining({ name: 'crm' }));
     expect(mockOpenDataSession).toHaveBeenCalledWith({
       dataSet: { name: 'crm', users: { member } },
+      logger: expect.anything(),
     });
     const headless = cookies.find((cookie) => cookie.name === 'lowdefy_headless_user');
     const caller = JSON.parse(Buffer.from(headless.value, 'base64').toString());

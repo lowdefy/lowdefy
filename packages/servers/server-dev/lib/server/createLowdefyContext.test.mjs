@@ -239,7 +239,7 @@ test('createLowdefyContext leaves readConfigFile alone without a mutant cookie',
   expect(context.readConfigFile).toBe(readConfigFile);
 });
 
-const { default: dataSessionRegistry } = await import('../docs/dataSets/dataSessionRegistry.js');
+const { dataSessionRegistry } = await import('@lowdefy/test-utils/dataSets');
 const { default: getAuth } = await import('./auth/getAuth.js');
 const { default: getHeadlessUser } = await import('./auth/getHeadlessUser.js');
 const { default: getMockUser } = await import('./auth/getMockUser.js');

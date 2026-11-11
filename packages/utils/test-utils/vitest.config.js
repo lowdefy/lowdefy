@@ -17,12 +17,13 @@
 import { configDefaults, defineConfig } from 'vitest/config';
 
 // The unit tests: they run on a build the test writes itself (test/writeTestBuild.mjs), with no
-// app build and no install. The suites over real builds of three apps are in test/fixtureApps
-// and run with `test:fixture` (vitest.fixture.config.js).
+// app build, no install and no mongod. The suites over real builds of three apps are in
+// test/fixtureApps and run with `test:fixture` (vitest.fixture.config.js); the suites that start
+// a mongod are *.mongodb.test.js and run with `test:mongodb` (vitest.mongodb.config.js).
 export default defineConfig({
   test: {
     environment: 'node',
-    exclude: [...configDefaults.exclude, 'dist/**', 'test/fixtureApps/**'],
+    exclude: [...configDefaults.exclude, 'dist/**', 'test/fixtureApps/**', '**/*.mongodb.test.js'],
     clearMocks: true,
     testTimeout: 30000,
     hookTimeout: 30000,

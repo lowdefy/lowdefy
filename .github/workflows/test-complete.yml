@@ -77,8 +77,9 @@ jobs:
           pnpm --filter=lowdefy test:fixture --reporter=default --reporter=json --outputFile.json="$RUNNER_TEMP/fixture-cli.json"
           node scripts/ci-check-tests-ran.mjs "$RUNNER_TEMP/fixture-cli.json"
       # The endpoint test harness over production builds of three apps, which its global setup
-      # builds into server copies of their own (_server/test-utils-<app>). It needs no Chromium
-      # and no MongoDB; it runs here because this job has the install and the package build.
+      # builds into server copies of their own (_server/test-utils-<app>). It needs no Chromium.
+      # Its session suites start a mongod of their own from the binaries cached above; it runs
+      # here because this job has them, the install and the package build.
       - name: Test-utils fixture suite
         run: |
           pnpm --filter=@lowdefy/test-utils test:fixture --reporter=default --reporter=json --outputFile.json="$RUNNER_TEMP/fixture-test-utils.json"

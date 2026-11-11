@@ -361,6 +361,11 @@
           pageId: journey-data-sets
           properties:
             title: Journey Data Sets
+        - id: endpoint-tests
+          type: MenuLink
+          pageId: endpoint-tests
+          properties:
+            title: Endpoint Tests
         - id: explore-pull-request
           type: MenuLink
           pageId: explore-pull-request

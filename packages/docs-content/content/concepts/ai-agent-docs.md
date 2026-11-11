@@ -265,7 +265,11 @@ Scheduled and detached-only endpoints are `InternalApi` by design, so a plain ru
 
 This is dev-only — enable it when you're comfortable with the agent writing to your dev data.
 
+Calling an endpoint or request directly is the way to check logic, calculations, permissions and what it writes while editing: pass `user` and `data` to act as a [data set](/journey-data-sets) user on a database of its own. To keep such a check as a regression test, write an [endpoint test](/endpoint-tests), which runs the built endpoint in a Node test with no dev server.
+
 ## Journeys — verify behaviour, not just layout
+
+A journey is for what only a browser shows: what a page shows, how it reacts and paths across pages. It drives a real browser, so it is the most expensive check an agent has. Logic, permissions and what a request or endpoint writes are checked with `lowdefy_run_request` and `lowdefy_run_endpoint` above.
 
 A screenshot shows what rendered; it cannot tell the agent whether the form submits, the modal opens or the filter works. `lowdefy_run_journey` (or `POST /lowdefy-docs/journey`) opens a page headless and drives it through a declarative list of steps — a tiny Playwright — then reports what happened as data. Blocks are addressed by their `blockId`, through the same `#bl-<blockId>` DOM contract `@lowdefy/e2e-utils` uses, so a journey reads like the config it tests:
 

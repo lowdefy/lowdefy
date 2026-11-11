@@ -17,30 +17,25 @@
 import crypto from 'node:crypto';
 import { type } from '@lowdefy/helpers';
 
-import createLogger from '../../server/log/createLogger.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import drainSessionWork from './drainSessionWork.js';
 import getDataStore from './getDataStore.js';
 import groupDataSetByCollection from './groupDataSetByCollection.js';
 import isDataStoreGone from './isDataStoreGone.js';
+import listSessionDatabases from './listSessionDatabases.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
 
-const logger = createLogger();
-
 const DRAIN_TIMEOUT_MS = 30000;
 
-// Every database the session holds, the first included.
-function listSessionDatabases(session) {
-  return [...new Set([session.databaseName, ...session.databases.values()])];
-}
-
 async function dropSessionDatabases({ client, session }) {
-  await Promise.all(listSessionDatabases(session).map((name) => client.db(name).dropDatabase()));
+  await Promise.all(
+    listSessionDatabases({ session }).map((name) => client.db(name).dropDatabase())
+  );
 }
 
-function createClose({ session, client }) {
+function createClose({ session, client, logger }) {
   let closing;
   async function close() {
     session.state = 'closing';
@@ -70,12 +65,20 @@ function createClose({ session, client }) {
 // prefix (ld_<hex>), so the orphan sweep and close() find them all; the first, <prefix>_0, is also
 // the database a target computed per request reads. `cookie` is the id, the payload
 // openPage({ dataCookie }) writes into each actor's lowdefy_journey_data cookie. close() waits for
-// the session's background work (context.waitUntil), then drops the databases.
-async function openDataSession({ dataSet }) {
-  const store = await getDataStore();
+// the session's background work (context.waitUntil), then drops the databases. `logger` is the
+// caller's own: close() warns on it when that work outlives the wait.
+//
+// `store` is a test run's store (getRunDataStore), which the endpoint test harness passes; the
+// dev server passes none and gets its own (getDataStore). On a run's store the run's other test
+// processes hold sessions too, so the prefix carries this process's pid (ld_p<pid>_<hex>) and
+// the orphan sweep leaves the databases of processes still running (sweepOrphanDatabases).
+async function openDataSession({ dataSet, logger, store: runStore }) {
+  const store = runStore ?? (await getDataStore({ logger }));
+  const perRun = store.perRun === true;
   const { client, uri } = store;
   const id = crypto.randomBytes(16).toString('hex');
-  const prefix = `ld_${crypto.randomBytes(6).toString('hex')}`;
+  const hex = crypto.randomBytes(6).toString('hex');
+  const prefix = perRun ? `ld_p${process.pid}_${hex}` : `ld_${hex}`;
   const databaseTargets = dataSet.databaseTargets ?? [];
   const session = {
     id,
@@ -94,7 +97,7 @@ async function openDataSession({ dataSet }) {
   };
   dataSessionRegistry.set(id, session);
   try {
-    await sweepOrphanDatabases({ client });
+    await sweepOrphanDatabases({ client, perRun });
     const groups = groupDataSetByCollection({ dataSet });
     // allSettled, so no collection is still loading when a failed load drops the databases.
     const results = await Promise.allSettled(
@@ -117,10 +120,10 @@ async function openDataSession({ dataSet }) {
       // mongod is gone, and every session on it with it. Stopping the store clears it, so the next
       // journey starts a fresh one instead of failing until the dev server restarts.
       await store.stop().catch(() => {});
-      throw new Error(
-        `The journey data store stopped responding (${error.message}). The next journey starts a new one.`,
-        { cause: error }
-      );
+      const message = perRun
+        ? `The test data store stopped responding (${error.message}). The next session joins a new one.`
+        : `The journey data store stopped responding (${error.message}). The next journey starts a new one.`;
+      throw new Error(message, { cause: error });
     }
     // Best effort: the load error is the one to report, and the next open's orphan sweep drops a
     // database this could not.
@@ -129,7 +132,13 @@ async function openDataSession({ dataSet }) {
   }
   session.state = 'open';
   // sunk is the session's own array, so requests sunk while the journey runs show in it.
-  return { id, cookie: id, session, sunk: session.sunk, close: createClose({ session, client }) };
+  return {
+    id,
+    cookie: id,
+    session,
+    sunk: session.sunk,
+    close: createClose({ session, client, logger }),
+  };
 }
 
 export default openDataSession;

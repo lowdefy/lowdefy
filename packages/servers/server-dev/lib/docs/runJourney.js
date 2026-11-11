@@ -22,17 +22,16 @@ import {
   normaliseJourneySteps,
   validateJourneySteps,
 } from '@lowdefy/node-utils';
+import { getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
 
 import collectExercised from './collectExercised.js';
 import createDataSetRails from './rails/createDataSetRails.js';
 import createJourneyAppErrors from './observe/createJourneyAppErrors.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
-import getDataStore from './dataSets/getDataStore.js';
 import JourneyStepError from './JourneyStepError.js';
 import journeyRunRecording from './journeyRunRecording.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
-import openDataSession from './dataSets/openDataSession.js';
 import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readDevAuthMode from './readDevAuthMode.js';
@@ -231,13 +230,13 @@ async function runJourneyInBrowser({
   let loadMs;
   if (!type.isUndefined(dataSet)) {
     try {
-      await getDataStore();
+      await getDataStore({ logger });
     } catch (error) {
       return { error: `Could not start the journey data store: ${error.message}` };
     }
     const loadStart = Date.now();
     try {
-      session = await openDataSession({ dataSet });
+      session = await openDataSession({ dataSet, logger });
     } catch (error) {
       return { error: error.message, refused: true };
     }

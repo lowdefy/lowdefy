@@ -17,8 +17,8 @@
 import { mergeObjects, type } from '@lowdefy/helpers';
 
 import createDataSetRefusal from './createDataSetRefusal.js';
-import describeTargetKey from '../docs/dataSets/describeTargetKey.js';
-import sessionDatabaseName from '../docs/dataSets/sessionDatabaseName.js';
+import describeTargetKey from './describeTargetKey.js';
+import sessionDatabaseName from './sessionDatabaseName.js';
 
 // Module connections are written under their module's folder (connections/<module>/<id>.json), so
 // the pattern matches every depth.
