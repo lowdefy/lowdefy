@@ -23,7 +23,9 @@ const mockElasticsearchClient = vi.fn(function () {
 mockElasticsearchClient.update = vi.fn(function () {
   return mockElasticsearchClient;
 });
-
+mockElasticsearchClient.close = vi.fn(function () {
+  return Promise.resolve();
+});
 vi.doMock('@elastic/elasticsearch', () => ({
   Client: vi.fn().mockImplementation(function () {
     return mockElasticsearchClient;
@@ -40,9 +42,7 @@ test('valid request schema', async () => {
   const schema = ElasticsearchUpdate.schema;
   const request = {
     id: '42',
-    body: {
-      doc: {},
-    },
+    doc: {},
   };
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
@@ -52,9 +52,7 @@ test('valid request schema, numeric ID', async () => {
   const schema = ElasticsearchUpdate.schema;
   const request = {
     id: 42,
-    body: {
-      doc: {},
-    },
+    doc: {},
   };
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
@@ -63,51 +61,65 @@ test('request no ID', async () => {
   const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
   const schema = ElasticsearchUpdate.schema;
   const request = {
-    body: {
-      doc: {},
-    },
+    doc: {},
   };
   expect(() => validate({ schema, data: request })).toThrow(
     'ElasticsearchUpdate request should have required property "id".'
   );
 });
 
-test('request no body', async () => {
+test('valid request schema, script', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const schema = ElasticsearchUpdate.schema;
+  const request = {
+    id: 42,
+    script: {
+      source: 'ctx._source.likes++',
+    },
+  };
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
+});
+
+test('request neither script nor doc', async () => {
   const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
   const schema = ElasticsearchUpdate.schema;
   const request = {
     id: 42,
   };
   expect(() => validate({ schema, data: request })).toThrow(
-    'ElasticsearchUpdate request should have required property "body".'
+    'ElasticsearchUpdate request should have required property "doc" or "script".'
   );
 });
 
-test('request neither script nor doc in body', async () => {
+test('request invalid script', async () => {
   const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
   const schema = ElasticsearchUpdate.schema;
   const request = {
     id: 42,
-    body: {},
+    script: {
+      foo: 'bar',
+    },
   };
   expect(() => validate({ schema, data: request })).toThrow(
-    'ElasticsearchUpdate request should have required property "body.doc" or "body.script".'
+    'ElasticsearchUpdate request should have required property "script.source" or "script.id".'
   );
 });
 
-test('request invalid script in body', async () => {
+test('request with body is rejected', async () => {
   const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
   const schema = ElasticsearchUpdate.schema;
   const request = {
     id: 42,
     body: {
-      script: {
+      doc: {
         foo: 'bar',
       },
     },
   };
-  expect(() => validate({ schema, data: request })).toThrow(
-    'must have required property \'source\'; ElasticsearchUpdate request should have required property "body.script.source" or "body.script.id".'
+  const { valid, errors } = validate({ schema, data: request, returnErrors: true });
+  expect(valid).toBe(false);
+  expect(errors.map((error) => error.message)).toContain(
+    'was removed in Lowdefy 8 (Elasticsearch client 9). Move the keys in "body" (like "doc" and "script") to the top level of the request properties'
   );
 });
 
@@ -127,27 +139,22 @@ test('ElasticsearchUpdate', async () => {
   const { Client } = await import('@elastic/elasticsearch');
   const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
   const responseData = {
-    body: {
-      _index: 'test',
-      _type: '_doc',
-      _id: '42',
-      _version: 1,
-      result: 'updated',
-      forced_refresh: true,
-      _shards: { total: 2, successful: 1, failed: 0 },
-      _seq_no: 1,
-      _primary_term: 1,
-    },
+    _index: 'test',
+    _id: '42',
+    _version: 1,
+    result: 'updated',
+    forced_refresh: true,
+    _shards: { total: 2, successful: 1, failed: 0 },
+    _seq_no: 1,
+    _primary_term: 1,
   };
   mockElasticsearchClient.update.mockImplementationOnce(function () {
     return Promise.resolve(responseData);
   });
   const request = {
     id: 42,
-    body: {
-      doc: {
-        foo: 'bar',
-      },
+    doc: {
+      foo: 'bar',
     },
   };
   const res = await ElasticsearchUpdate({ request, connection });
@@ -164,10 +171,8 @@ test('ElasticsearchUpdate', async () => {
       {
         index: 'test',
         id: 42,
-        body: {
-          doc: {
-            foo: 'bar',
-          },
+        doc: {
+          foo: 'bar',
         },
       },
     ],
@@ -176,7 +181,6 @@ test('ElasticsearchUpdate', async () => {
     id: '42',
     response: {
       _index: 'test',
-      _type: '_doc',
       _id: '42',
       _version: 1,
       result: 'updated',
@@ -186,4 +190,5 @@ test('ElasticsearchUpdate', async () => {
       _primary_term: 1,
     },
   });
+  expect(mockElasticsearchClient.close).toHaveBeenCalledTimes(1);
 });

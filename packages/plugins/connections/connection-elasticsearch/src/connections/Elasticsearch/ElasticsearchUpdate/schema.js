@@ -18,8 +18,16 @@ export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Lowdefy Request Schema - ElasticsearchUpdate',
   type: 'object',
-  description: 'Updates a document using the specified script.',
-  required: ['id', 'body'],
+  description: 'Updates a document with a partial document or a script.',
+  required: ['id'],
+  anyOf: [
+    {
+      required: ['doc'],
+    },
+    {
+      required: ['script'],
+    },
+  ],
   properties: {
     id: {
       anyOf: [
@@ -84,13 +92,16 @@ export default {
         {
           type: 'array',
         },
+        {
+          type: 'object',
+        },
       ],
       items: {
         type: 'string',
       },
       description:
-        'Set to false to disable source retrieval (default: true). You can also specify a comma-separated list of the fields you want to retrieve.',
-      default: true,
+        'Set to true to return the updated document in "response.get._source", or a list of the fields to return. Default: false.',
+      default: false,
     },
     _source_excludes: {
       type: 'array',
@@ -118,29 +129,45 @@ export default {
         'The number of shard copies that must be active before proceeding with the operation. Set to all or any positive integer up to the total number of shards in the index (number_of_replicas+1). Default: 1, the primary shard.',
       default: '1',
     },
+    doc: {
+      type: 'object',
+      additionalProperties: true,
+      description: 'A partial document to merge into the existing document.',
+    },
+    script: {
+      $ref: '#/definitions/Script',
+    },
+    upsert: {
+      type: 'object',
+      additionalProperties: true,
+      description:
+        'The document to index if the document does not exist. If it exists, the script runs instead.',
+    },
+    doc_as_upsert: {
+      type: 'boolean',
+      description: 'If true, use the contents of "doc" as the upsert value. Defaults to false.',
+      default: false,
+    },
+    scripted_upsert: {
+      type: 'boolean',
+      description: 'If true, run the script whether or not the document exists. Defaults to false.',
+      default: false,
+    },
+    detect_noop: {
+      type: 'boolean',
+      description:
+        'If true, the result in the response is "noop" when the document does not change. Defaults to true.',
+      default: true,
+    },
+    lang: {
+      type: 'string',
+      description: 'The script language. Defaults to painless.',
+      default: 'painless',
+    },
     body: {
-      description: 'The request definition requires either script or partial doc.',
-      anyOf: [
-        {
-          required: ['doc'],
-        },
-        {
-          required: ['script'],
-        },
-      ],
-      properties: {
-        doc: {
-          additionalProperties: true,
-          description: 'Partial document to update',
-        },
-        script: {
-          $ref: '#/definitions/Script',
-        },
-      },
-      errorMessage: {
-        anyOf:
-          'ElasticsearchUpdate request should have required property "body.doc" or "body.script".',
-      },
+      not: {},
+      errorMessage:
+        'was removed in Lowdefy 8 (Elasticsearch client 9). Move the keys in "body" (like "doc" and "script") to the top level of the request properties',
     },
   },
   definitions: {
@@ -176,18 +203,22 @@ export default {
             'Specifies any named parameters that are passed into the script as variables. Use parameters instead of hard-coded values to decrease compile time.',
           type: 'object',
         },
+        options: {
+          description: 'Options for the script language.',
+          type: 'object',
+        },
       },
       errorMessage: {
         anyOf:
-          'ElasticsearchUpdate request should have required property "body.script.source" or "body.script.id".',
+          'ElasticsearchUpdate request should have required property "script.source" or "script.id".',
       },
     },
   },
   errorMessage: {
     type: 'ElasticsearchUpdate request properties should be an object.',
+    anyOf: 'ElasticsearchUpdate request should have required property "doc" or "script".',
     required: {
       id: 'ElasticsearchUpdate request should have required property "id".',
-      body: 'ElasticsearchUpdate request should have required property "body".',
     },
   },
 };
