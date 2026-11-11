@@ -247,7 +247,7 @@ The PostHog plugin's `before_send` masks clicked text the page config does not s
 
 ## Agent skills
 
-`lowdefy agent-setup` writes the journey skills from `agentSetup/skills/` (`index.js` lists them): `journeys-from-dev`, `journeys-from-production`, `journeys-from-pr` (also the bug bash, given a goal sentence), `journeys-harden` and `journeys-autopilot`. Each keeps only journeys that pass `lowdefy test --repeat 3`. The skills read session logs, scope and config and write the journeys themselves.
+`lowdefy agent-setup` writes the journey skills from `agentSetup/skills/` (`index.js` lists them): `journeys-from-dev`, `journeys-from-production`, `journeys-from-pr` (also the bug bash, given a goal sentence), `journeys-harden` and `journeys-autopilot`. Each keeps only journeys that pass `lowdefy test --repeat 3`. The skills read session logs, scope and config and write the journeys themselves. Each carries the section `skills/testLevel.js` renders, "What is not a journey": logic, permissions and writes are proved with a direct request or endpoint call and, where the app has them, an endpoint test, and who can reach what by the access table snapshot (see [Test levels](../testing.md#test-levels)).
 
 ## Fixture app
 

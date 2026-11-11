@@ -3,6 +3,34 @@
 How to run and write tests in the monorepo, including from parallel git worktrees. Coding
 rules for tests (naming, co-location, ES module mocking) live in `CLAUDE.md`.
 
+## Test levels
+
+Test each change at the lowest level that fails when the change breaks. The first three levels
+are what a Lowdefy app's own tests use; this repository has suites that prove each of them.
+
+| Level            | Proves                                                                    | Runs on                                               | Cost                                         | Suites here that cover it                                                    |
+| ---------------- | ------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
+| Journey          | what a page shows, how it reacts, paths across pages, sign-up and sign-in | a dev server and a real Chromium                      | seconds to tens of seconds a journey         | [Journey fixture app](#journey-fixture-app), [Auth journeys](#auth-journeys) |
+| Endpoint test    | logic, calculations, permissions, what an endpoint or request writes      | a production build, in the test's process, a `mongod` | a build, then 2 to 3 seconds a test file     | [Endpoint test harness](#endpoint-test-harness)                              |
+| The access table | who can reach which page and endpoint, as one committed snapshot          | a production build, in the test's process             | a build, then milliseconds for the whole app | [Endpoint test harness](#endpoint-test-harness)                              |
+| Unit test        | one function of a package or plugin                                       | vitest, no app                                        | milliseconds                                 | [Unit tests](#unit-tests)                                                    |
+
+- **A journey is the most expensive check.** Never prove logic, a calculation, a permission or a
+  write through one, and never write a journey per role over every page: that table is the access
+  table's.
+- **Endpoint tests and the access table read a build**, so a config edit needs a build first. While
+  editing an app, call the endpoint on the dev server (`lowdefy_run_endpoint` or
+  `lowdefy_run_request` with `user` and `data`), and run the endpoint tests once before calling the
+  change done.
+- **The access table proves nothing until its snapshot is committed.** A changed snapshot is named
+  in the pull request.
+- Block behaviour is covered by e2e specs, not by any of these ([Block tests](#block-tests)).
+
+`lowdefy agent-setup` writes the same rules into an app's `AGENTS.md`
+(`packages/cli/src/commands/agentSetup/testingRules.js`), and the user docs for the two levels
+`@lowdefy/test-utils` adds are `packages/docs/testing/endpoint-tests.md`. The package is described
+in [utils/test-utils.md](./utils/test-utils.md).
+
 ## Getting a worktree ready
 
 ```bash
@@ -175,7 +203,8 @@ which journey feature is listed under "Fixture app" in `code-docs/architecture/j
 
 ## Endpoint test harness
 
-`@lowdefy/test-utils` (`packages/utils/test-utils`) opens a production build of an app in the
+`@lowdefy/test-utils` (`packages/utils/test-utils`, described in
+[utils/test-utils.md](./utils/test-utils.md)) opens a production build of an app in the
 test's own process: the access table (`app.accessMatrix`), and sessions (`app.openSession`) that
 run the app's built endpoints and page requests as a named user on an in-memory MongoDB. Its
 tests are in three suites, all run after `pnpm build`:
@@ -223,6 +252,12 @@ endpoints, stay as they are. The copy's operator map is the app's, so a hand-wri
 can use only operators the app already uses on the server. `--no-client-build` leaves out the Vite build, as `lowdefy build --no-client-build`
 does: the harness reads only `build/` and the server's `node_modules`. Add a test here only when
 it needs what a real build writes or a real install holds.
+
+`test/fixtureApps/docsSamples.test.mjs` runs every code sample of the user docs page
+(`packages/docs/testing/endpoint-tests.md`) on a copy of the `apps/journey-fixture` build, with the
+script and the snapshot command the page gives. The page uses that app's ids for this reason.
+Run it after any edit to the page's samples, and after a change to the fixture app's endpoints,
+`handoff`, `rails` or `ticket` pages, or its `explore` and `roles` data sets.
 
 Run `test` for any change to the package. Run `test:fixture` as well when the change touches what
 the harness reads from a build or how it loads the server's packages (`openTestApp`, the access
@@ -500,6 +535,7 @@ commands in the pull request body:
 | `test-utils/src/dataSets` (data sessions)      | `pnpm test:mongodb`, `@lowdefy/server-dev`'s tests, the journey `test:fixture` suites and `@lowdefy/test-utils`'s `test:fixture` |
 | the journey runner, journey cookies or mutants | the journey `test:fixture` suites (`@lowdefy/server-dev`, `lowdefy`)                                                             |
 | `test-utils`, the gate, the build it reads     | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))           |
+| the endpoint tests docs page's code samples    | `pnpm --filter=@lowdefy/test-utils test:fixture docsSamples`, then `pnpm docs:content` and `pnpm --filter=@lowdefy/docs test`    |
 | blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                             |
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
