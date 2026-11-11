@@ -75,7 +75,7 @@
     "antd": "6.6.5",
     "json5": "2.2.3",
     "lucide": "1.48.0",
-    "picomatch": "4.0.4",
+    "picomatch": "4.0.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "semver": "7.8.6",
