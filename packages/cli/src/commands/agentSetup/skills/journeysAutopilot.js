@@ -205,11 +205,11 @@ as Blocked.
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set is refused
    while auth is configured, because signing in would write to the real auth database).
 5. **Journeys already in the suite** (the app has journeys but no ledger): they are the developer's.
-   Replay them once with \`lowdefy test --config-directory <app> --repeat 3\` (the whole suite). Read each one's
+   Run them once with \`lowdefy test --config-directory <app>\` (the whole suite). Read each one's
    \`pageId\`, \`user\` and steps, and set every item it proves (each user in a \`user\` list, the
    page it opens, the write it asserts) \`covered\` with its file and \`note: developer's journey\`.
    Never rewrite, move, rename or duplicate one, and never write a second journey for an item one
-   already covers. A failing or flaky one stays where it is: set its item \`finding\` or
+   already covers. A failing one stays where it is: set its item \`finding\` or
    \`quarantined\` with the reason, and name it in the pull request. These items count as your
    first covered ones.
 6. Prove the harness with one journey of your own: the first \`todo\` page and role, as that role,
