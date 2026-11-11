@@ -79,6 +79,29 @@ test('journeys-autopilot leaves who can open which page to an access table snaps
   expect(autopilot).toContain('name a changed access table snapshot in the pull request');
 });
 
+test('journeys-autopilot asserts what a write stored in an endpoint test where the app has them, else in the journey', () => {
+  const autopilot = skills.find((skill) => skill.name === 'journeys-autopilot').render();
+  expect(autopilot).not.toContain('A write ends by asserting the stored result');
+  expect(autopilot).toContain(
+    'When it has endpoint tests (`tests/endpoints/`, see What is not a journey): a\n   journey for what only a browser shows (the control is there, the role can use it, the page shows\n   the result) and an endpoint test for what the write stored.'
+  );
+  expect(autopilot).toContain(
+    'When it has none: one journey, which\n   also asserts the stored result.'
+  );
+  expect(autopilot).toContain(
+    "each one's journey and, where the app has endpoint tests, the endpoint\ntest for what it stored"
+  );
+  expect(autopilot).toContain(
+    '- A write, where the app has endpoint tests (`tests/endpoints/`): the journey proves only what a\n  browser shows.'
+  );
+  expect(autopilot).toContain(
+    '- A write, where the app has no endpoint tests: the journey ends by asserting the stored result,'
+  );
+  expect(autopilot).toContain(
+    'A `write` item with an endpoint test is `covered` only when its journey and that test both\npass'
+  );
+});
+
 test('the testing rules are the same text for every CLI version, and name no server', () => {
   const rules = (cliVersion) => agentsMd({ cliVersion, skills }).split('### Testing a change')[1];
   expect(rules('7.0.0')).toEqual(rules('8.1.0'));

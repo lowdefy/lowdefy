@@ -14,6 +14,6 @@ The rules `lowdefy agent-setup` writes now tell agents to:
 - Add or update an endpoint test where the app has them, and run them once before calling the change done. They read a build, so they are not for the edit loop.
 - Say in the pull request when the access table snapshot changed, and why.
 
-Each journey skill carries the same rule. `journeys-autopilot` writes refusal journeys only for what an access table snapshot cannot show, when the app keeps one.
+Each journey skill carries the same rule. `journeys-autopilot` writes refusal journeys only for what an access table snapshot cannot show, when the app keeps one. Where the app has endpoint tests, its journey for a control that writes data covers what the browser shows, and an endpoint test asserts what the write stored. An app with none keeps the stored result in the journey.
 
 Rerun `npx lowdefy@<app version> agent-setup` to get the new text.
