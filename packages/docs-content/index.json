@@ -1,5 +1,5 @@
 {
-  "version": "7.1.0",
+  "version": "7.2.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -468,6 +468,12 @@
       "title": "Journey Data Sets",
       "section": "Testing",
       "path": "content/testing/journey-data-sets.md"
+    },
+    {
+      "slug": "testing/endpoint-tests",
+      "title": "Endpoint Tests",
+      "section": "Testing",
+      "path": "content/testing/endpoint-tests.md"
     },
     {
       "slug": "testing/explore-pull-request",
@@ -3120,7 +3126,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "1873730b81d22282eeec3ba15ea034117cf501c67c621a3bacf66ed89b8057cf"
+      "hash": "0655998000d95328d37568722f7aac1705c34e9795d11f6b27acc3b9d50de47f"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3361,7 +3367,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "94fd498047ff9b857bc2ac3d2c8832f39e83beeeff6fb107a950635278c96eb8"
+      "hash": "d4e28fb8f57add3b8b38e95f410ee0dd53b601bc8aa93edaa16c5346f37761ed"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3369,6 +3375,13 @@
         "testing/journey-data-sets.yaml"
       ],
       "hash": "b88281aa53a6a388dff04045c3be230aec6e959d2455f13dd8338cf040963c75"
+    },
+    "testing/endpoint-tests": {
+      "files": [
+        "testing/endpoint-tests.md",
+        "testing/endpoint-tests.yaml"
+      ],
+      "hash": "5af82c430b98441b9bcde6d1d2d4e170e81a89dce76dd08c1dd32f2784b7b286"
     },
     "testing/explore-pull-request": {
       "files": [
@@ -3709,7 +3722,7 @@
         "blocks/input/RatingSlider.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9d27407b34aa8454525cb37e210a879f1e324fad8c777394f0cfc735c7a3f78c"
+      "hash": "f52c19b663d984b6d0c2d517603d3a8b21fd925563a9eba96790f6687b012dc5"
     },
     "input-blocks/segmentedselector": {
       "files": [
@@ -5293,7 +5306,7 @@
         "operators/_api.yaml",
         "templates/operators.yaml.njk"
       ],
-      "hash": "2194aa8b560f6c3789f57e591c7d91dc1a0c34099ba968e69397d993e4d34089"
+      "hash": "8181db4d7542c90ad8cc2be7db4eb94f545a8361f32a001aa7339bff336ad268"
     },
     "operators/_app": {
       "files": [
