@@ -102,7 +102,7 @@
     "hono": "4.13.14",
     "html-to-image": "1.11.13",
     "mongodb": "7.8.0",
-    "mongodb-memory-server-core": "9.2.0",
+    "mongodb-memory-server-core": "11.3.0",
     "opener": "1.5.2",
     "picomatch": "4.0.7",
     "pino": "10.3.1",

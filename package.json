@@ -68,7 +68,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "espree": "11.2.0",
     "mongodb": "7.8.0",
-    "mongodb-memory-server": "9.2.0",
+    "mongodb-memory-server": "11.3.0",
     "node-gyp": "13.0.0",
     "prettier": "3.1.0",
     "turbo": "2.9.14"

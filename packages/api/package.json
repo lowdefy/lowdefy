@@ -68,7 +68,7 @@
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "mongodb": "7.8.0",
-    "mongodb-memory-server-core": "9.2.0",
+    "mongodb-memory-server-core": "11.3.0",
     "vitest": "5.1.0"
   },
   "publishConfig": {
