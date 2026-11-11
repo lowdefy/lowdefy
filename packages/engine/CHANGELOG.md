@@ -1,5 +1,29 @@
 # Change Log
 
+## 7.3.0
+
+### Patch Changes
+
+- 2972207: fix(engine): CallAPI renders its loading state when the call starts
+
+  CallAPI now runs a pass when the call starts, as a request does, so `_api: <endpointId>.loading` shows `true` for the whole call. Before, nothing re-rendered until the call answered, so a loading indicator never showed. `_api` reads without `holdValue` now go to `null` as soon as a call starts, the same as `_request`; before they did so only if another pass ran during the call. Call with `holdValue: true` to keep the previous response on screen and read `loading`.
+
+- e017420: perf(engine): CallAPI re-evaluates only the blocks that read its endpoint
+
+  A CallAPI made the updates before and after it full passes, and its handler ran a full pass itself when the call answered, so every block on the page re-evaluated on each of them. The handler already reports the endpoint it changed (`api:<endpointId>`), which `_api` reads, so CallAPI now runs dependency-tracked passes. On a page of about 330 blocks that loads a record through CallAPI, this removed two of the five full passes a click caused.
+
+- d1bd844: perf(engine): SetState re-renders only the blocks whose output changed
+
+  Every SetState resets the page's blocks from state, and the reset marked every block for render, so each SetState re-rendered the whole page. The pass that follows a reset already evaluates every block whose value, validation or reads changed, and marks it when its output differs, so the reset now marks only what that pass cannot see: a list whose rows changed, and a block whose validation display changed. A SetState or SetGlobal with nothing to set still refreshes every block, since some blocks read the locale or theme outside their eval. On a page of about 330 blocks this cut the main-thread time of a toggle by more than half.
+
+- 878bb92: fix: A live feed that subscribes as its connection is closing reconnects on its own
+
+  A live feed that started just as its websocket connection was closing went silent until the page was opened again. Serverless platforms close each connection after a set time (on Vercel, the function's maximum duration), so a page that subscribed in the last seconds of a connection got no answer, logged `Subscribe to "<id>" timed out.`, and never reconnected. The subscribe still reports the timeout, but the connection is now closed and opened again straight away and the feed is subscribed again, so its messages arrive without reopening the page.
+
+  - @lowdefy/operators@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

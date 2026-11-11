@@ -1,5 +1,12 @@
 # @lowdefy/email-templates
 
+## 7.3.0
+
+### Patch Changes
+
+- @lowdefy/helpers@7.3.0
+- @lowdefy/nunjucks@7.3.0
+
 ## 7.2.0
 
 ### Patch Changes

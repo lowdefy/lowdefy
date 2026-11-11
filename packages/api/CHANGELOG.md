@@ -1,5 +1,53 @@
 # Change Log
 
+## 7.3.0
+
+### Minor Changes
+
+- 023cb67: feat: A websocket can name a `check` endpoint that decides, on every subscribe and publish, whether the caller may use the channel. Use it for a channel whose payload names a record, such as the events on one ticket, where roles alone can not say whether this subscriber may see that record.
+
+  ```yaml
+  websockets:
+    - id: ticket_events
+      type: MongoDBChangeStream
+      connectionId: events
+      check:
+        endpointId: can-view-ticket # Api or InternalApi
+        payload: # optional; defaults to the subscription payload
+          ticket_id:
+            _payload: ticket_id
+  ```
+
+  The endpoint runs as the subscriber, after the `auth.websockets` role check. Only a return value of exactly `true` lets the subscription continue; any other value, an error or an endpoint the subscriber may not call refuses it with the same response as a websocket that does not exist, and an error is also logged. The check runs on the first subscribe, the resubscribe after a reconnect and a `Subscribe` with a new payload, and again once a minute while a subscription stays open, so revoking access ends a running subscription within a minute. A publish is checked too, with an empty payload, so a caller the check refuses can not publish into the channel. The check is not part of the channel identity, so subscribers who each pass still share one running source. The build fails when `check.endpointId` names no endpoint in the app.
+
+  fix: The server now deserializes a subscribe payload, as it already did a publish payload, so a Date the page sends reaches websocket `properties` and the check endpoint as a Date.
+
+### Patch Changes
+
+- 0631e60: fix: A banned user is no longer sent a sign-in email. The magic-link and one-time code sends answer as they do for an address that is not admitted: the "check your email" screen is the same, and nothing is sent or created. This holds under every signup policy, open signup included. A ban whose `banExpires` has passed sends as normal. Each suppressed send logs one `auth_email_send_banned` debug line with the user id. Signing in with a link or code sent before the ban still answers `BANNED_USER`.
+- ad4f4dd: fix(api,plugin-better-auth): The login's contact link is set only by accepting an invitation
+
+  `_user.contact_id` is compared in apps' author and access checks, so it is now treated as an authorization input. Accepting an invitation sets `contactId` only on a login that has none. An invitation naming a different contact than the login already holds is refused with `CONTACT_LINK_MISMATCH`, before any membership is written, and the invitation stays pending. The message carries no ids; the server logs the login, the invitation and both contact ids as an `invitation_contact_link_mismatch` warning.
+
+  **Breaking:** `UpdateUserProfile` no longer accepts `contactId`; a call that passes it fails with an unknown-property error. No auth step changes the link after the invitation sets it, and a wrong link is corrected in the data. An app that linked a login to a contact from a hook after the user was created, such as an `email.verified` match for email/password signups, can no longer do so: set the link in `user.create.before` or through an invitation. Saves of `name`, `image` and `profile` are unchanged, and self-service saves stay exempt from the org authority check.
+
+  `InviteMember` refuses an empty-string `contactId`, which accepting would otherwise set as the login's link for good.
+
+  An existing member who accepts an invitation that sets their link gets a session cookie carrying it, when the session cookie cache is on.
+
+- Updated dependencies [d5139ff]
+- Updated dependencies [023cb67]
+  - @lowdefy/build@7.3.0
+  - @lowdefy/operators@7.3.0
+  - @lowdefy/connection-smtp@7.3.0
+  - @lowdefy/operators-js@7.3.0
+  - @lowdefy/ajv@7.3.0
+  - @lowdefy/email-templates@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/node-utils@7.3.0
+  - @lowdefy/nunjucks@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes
