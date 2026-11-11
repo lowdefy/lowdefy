@@ -15,6 +15,7 @@
 */
 
 import appFolder from './appFolder.js';
+import testLevel from './testLevel.js';
 
 // The journeys-autopilot skill: one agent, started once and left running, that
 // builds an app's journeys from nothing and keeps hardening them. It keeps a
@@ -88,6 +89,8 @@ you open pull requests and never merge, and how to run you unattended:
 - **Commit small and often**, with the repository's conventions (\`git log\` shows them).
 - Never add \`wait: { ms }\`: wait on \`{ request }\` or \`{ state }\`. Lint L3 refuses it.
 
+${testLevel()}
+
 ## The ledger: \`tests/autopilot.yaml\`
 
 Committed in the app, outside \`tests/journeys/\` (which \`lowdefy test\` reads as journeys). It is the only
@@ -106,6 +109,7 @@ items:
     value: high               # high | medium | low
     state: covered            # todo | covered | quarantined | finding | skipped
     journey: tests/journeys/orders/admin-opens-orders.yaml
+    endpoint_test: null       # a write's endpoint test file, where the app has endpoint tests
     note: ''                  # quarantine/skip reason, or the finding and the failing step
 \`\`\`
 
@@ -200,7 +204,14 @@ as Blocked.
    page's requests, endpoints and event chains (\`lowdefy_get_page_config\`, \`lowdefy_app_map\`,
    \`lowdefy_find_config\`). Write one \`todo\` item for each page and role that can open it, one
    \`refusal\` item for each role that cannot, and one \`write\` item for each control that writes data
-   (a request or endpoint that inserts, updates or deletes). A signed-out visitor is not a data set
+   (a request or endpoint that inserts, updates or deletes). What a \`write\` item produces depends
+   on the app. When it has endpoint tests (\`tests/endpoints/\`, see What is not a journey): a
+   journey for what only a browser shows (the control is there, the role can use it, the page shows
+   the result) and an endpoint test for what the write stored. When it has none: one journey, which
+   also asserts the stored result. When the app keeps an access table
+   snapshot (see What is not a journey), it already proves which role opens which page: write
+   \`refusal\` items only for what it cannot show, which is a control hidden from a role, another
+   tenant's rows, and one page whose redirect a browser must see. A signed-out visitor is not a data set
    user: its items (a protected page's bounce, a public page opened signed out) are \`skipped\` with
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set is refused
    while auth is configured, because signing in would write to the real auth database).
@@ -224,7 +235,8 @@ at its cap (step 8): only re-check quarantines (the last part of step 7, which m
 journey to the suite), nothing else, then ship. Otherwise take up to 8
 \`todo\` items, in this order: **refusals and permissions** (a role that must not reach a page or
 control, and the other tenant's rows, proved between signed-in data set users); **writes** (create, edit, status
-changes, deletes by the app); the **views** people use most (home, lists, the pages the menu leads to);
+changes, deletes by the app: each one's journey and, where the app has endpoint tests, the endpoint
+test for what it stored); the **views** people use most (home, lists, the pages the menu leads to);
 then **edge cases** (empty state, bad input, a reload mid-flow). Within a tier, take the page
 that is the most-used first: the \`value: high\` items. When no \`todo\` items remain, go to step 6
 (a finding's fix may be ready), then step 7.
@@ -241,8 +253,16 @@ Follow the format in [config tests](/config-tests): \`name\` (at most 100 charac
 - **Assert a real fixture value**, never only that a block is visible or a page rendered: \`expect.text\`
   of a name, status or count only the fixtures hold, or \`expect.state\`. A page that renders empty
   must fail.
-- A write ends by asserting the stored result: the new value shown, or \`expect.state\` after
-  \`wait: { request }\`. A refusal asserts the landing page (\`expect.url\`) or \`expect.hidden\`
+- A write, where the app has endpoint tests (\`tests/endpoints/\`): the journey proves only what a
+  browser shows. The control is there for the role, the role uses it, and the page shows the result
+  with one \`expect\`. Fields, statuses and variants of the write stay out of the journey. What the
+  write stored is asserted in an endpoint test, \`tests/endpoints/<area>/<name>.test.mjs\`, in the
+  format of [endpoint tests](/endpoint-tests): on the same data set, as the same user, call the
+  request or endpoint the control runs, then read the stored document back and assert it. Write none
+  for a stored value an endpoint test already asserts.
+- A write, where the app has no endpoint tests: the journey ends by asserting the stored result,
+  which is the new value shown, or \`expect.state\` after \`wait: { request }\`.
+- A refusal asserts the landing page (\`expect.url\`) or \`expect.hidden\`
   paired with a presence check that proves the page loaded.
 - After a click whose chain moves to another page (a \`Link\`), wait on a request of the page it
   lands on: the page you left is gone, so its requests are not found.
@@ -269,7 +289,15 @@ Run \`lowdefy test --config-directory <app> --lint <app>/tests/journeys/_candida
   and run again. If the app is wrong, it is a **finding**: move the journey to
   \`tests/journeys/_findings/\`, set \`finding\` with the step, expected and actual in \`note\`.
 
-Commit after each batch of kept journeys, with the ledger.
+Endpoint tests you wrote for \`write\` items are proved once a batch, after its journeys: run the
+app's endpoint tests once ("Testing a change" in AGENTS.md has the command, which builds the app
+first). A \`write\` item with an endpoint test is \`covered\` only when its journey and that test both
+pass; record the test's file in \`endpoint_test\`. If your test is wrong, fix it and run them again.
+If the app stored the wrong value, it is a **finding**: set \`finding\` with the call, the expected
+and the stored value in \`note\`, and remove the test file, because a failing file in
+\`tests/endpoints/\` turns the app's endpoint tests red.
+
+Commit after each batch of kept journeys and endpoint tests, with the ledger.
 
 ### 6. Findings
 
@@ -286,7 +314,8 @@ For each finding, decide:
   origin/<default branch>\`, make the fix, and \`git mv tests/journeys/_findings/<file>
   tests/journeys/<area>/\`, so the pull request shows the journey turning green and leaves one copy.
   Before pushing, run \`lowdefy test --config-directory <app> --repeat 3 <file>\`, then the whole suite once
-  (\`lowdefy test --config-directory <app>\`: a fix can break a journey that asserted the old behaviour). Open a pull
+  (\`lowdefy test --config-directory <app>\`: a fix can break a journey that asserted the old behaviour). Where the
+  app has endpoint tests, run them once too, and name a changed access table snapshot in the pull request. Open a pull
   request titled \`fix: ...\` that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
   that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url (with no \`gh\`, the
   fix branch) in \`note\`, until that pull request merges; then set it \`covered\` with the journey's new path.

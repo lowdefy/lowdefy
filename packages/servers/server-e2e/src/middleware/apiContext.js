@@ -15,7 +15,11 @@
 */
 
 import path from 'node:path';
-import { createApiContext, createRequestSignal, normalizeInjectedCaller } from '@lowdefy/api';
+import {
+  createInjectedApiContext,
+  createRequestSignal,
+  normalizeInjectedCaller,
+} from '@lowdefy/api';
 import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
@@ -90,14 +94,14 @@ function apiContext() {
     // resolved-caller shape. An absent cookie stays a logged-out (null) caller.
     const user = getUser(c);
     context.user = user ? normalizeInjectedCaller(user) : null;
-    createApiContext(context);
-    // No auth engine runs in the e2e server, so createApiContext retains no
-    // organization binding. Derive the policy from the built auth config so
-    // the tenant wall's policy gate still engages for a tenant app; pinned
-    // stays null (no engine means no seeded organization row).
-    if (authJson.organizations) {
-      context.organization = { policy: authJson.organizations.policy, pinned: null };
-    }
+    // No auth engine runs in the e2e server, so createApiContext alone would
+    // retain no organization binding and no enforcement facts, and the caller
+    // would meet a looser gate than production's. createInjectedApiContext
+    // takes both from the built auth config: the tenant wall's policy gate
+    // still engages for a tenant app (pinned stays null: no engine means no
+    // seeded organization row), and a signed-out or unenrolled caller is
+    // answered as production answers one.
+    createInjectedApiContext(context, { authJson });
     logRequest({ context });
     return next();
   };

@@ -470,6 +470,12 @@
       "path": "content/testing/journey-data-sets.md"
     },
     {
+      "slug": "testing/endpoint-tests",
+      "title": "Endpoint Tests",
+      "section": "Testing",
+      "path": "content/testing/endpoint-tests.md"
+    },
+    {
       "slug": "testing/explore-pull-request",
       "title": "Exploring a Pull Request",
       "section": "Testing",
@@ -3120,7 +3126,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "67982e5e01dfa11e4591ba3569a8bf5df6f97f7c0f6557dff3e3bca209600e69"
+      "hash": "e9fce9fe187d41567391a1286d961dab53d89f9041100df15099872536c36d3e"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3361,7 +3367,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "954e1aaacaf6abe246a4574fad5dee7e54b947b48652133da667e592e678f122"
+      "hash": "55681b714f89ff02ed73296d211dc10902f77acef1e6af115fe107fae0775311"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3369,6 +3375,13 @@
         "testing/journey-data-sets.yaml"
       ],
       "hash": "b88281aa53a6a388dff04045c3be230aec6e959d2455f13dd8338cf040963c75"
+    },
+    "testing/endpoint-tests": {
+      "files": [
+        "testing/endpoint-tests.md",
+        "testing/endpoint-tests.yaml"
+      ],
+      "hash": "5af82c430b98441b9bcde6d1d2d4e170e81a89dce76dd08c1dd32f2784b7b286"
     },
     "testing/explore-pull-request": {
       "files": [

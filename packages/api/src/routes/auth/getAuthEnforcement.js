@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import createAuthEnforcement from './createAuthEnforcement.js';
+
 // The build-time auth facts the request-time authorization layers read. The gate
 // is built synchronously (createApiContext, applySystemTrust), so it cannot read
 // a build artifact - the servers hand auth.json to getBetterAuth, which retains
@@ -23,20 +25,8 @@ import { type } from '@lowdefy/helpers';
 // organizations binding is.
 const enforcementByAuth = new WeakMap();
 
-// authPages values are page paths ("/two-factor-enrol"); the gate compares
-// against a page id ("two-factor-enrol", "account/two-factor-enrol"), so strip
-// the leading slash once, here, rather than at every read.
-function toPageId(pagePath) {
-  if (!type.isString(pagePath)) return null;
-  return pagePath.startsWith('/') ? pagePath.slice(1) : pagePath;
-}
-
 function registerAuthEnforcement({ auth, authJson }) {
-  enforcementByAuth.set(auth, {
-    pagesProtectedByDefault: authJson.pagesProtectedByDefault === true,
-    twoFactorEnrolPageId: toPageId(authJson.authPages?.twoFactorEnrol),
-    twoFactorRequired: authJson.twoFactor?.required === true,
-  });
+  enforcementByAuth.set(auth, createAuthEnforcement({ authJson }));
 }
 
 function getAuthEnforcement({ auth }) {

@@ -103,11 +103,16 @@ test('every menu page has a docsSection, so no doc falls back to other/', () => 
 });
 
 test('the doc paths agents are told to request resolve in @lowdefy/docs-content', () => {
-  ['operators/_get', 'operators/_if', 'concepts/lowdefy-schema', 'concepts/blocks'].forEach(
-    (slug) => {
-      expect(manifestSlugs.has(slug)).toBe(true);
-    }
-  );
+  [
+    'operators/_get',
+    'operators/_if',
+    'concepts/lowdefy-schema',
+    'concepts/blocks',
+    'concepts/html-attributes',
+    'testing/endpoint-tests',
+  ].forEach((slug) => {
+    expect(manifestSlugs.has(slug)).toBe(true);
+  });
 });
 
 const fixtureMenus = [
