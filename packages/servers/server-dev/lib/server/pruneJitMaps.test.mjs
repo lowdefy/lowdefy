@@ -32,7 +32,7 @@ afterEach(() => {
   fs.rmSync(buildDirectory, { recursive: true, force: true });
 });
 
-test('pruneJitMaps keeps the named contexts and temporary files, removing every other jitMaps file', () => {
+test('pruneJitMaps keeps the named files and temporary files, removing every other jitMaps file', () => {
   for (const file of [
     'abc-1-1.json',
     'abc-2-1.json',
@@ -44,7 +44,7 @@ test('pruneJitMaps keeps the named contexts and temporary files, removing every 
     fs.writeFileSync(path.join(buildDirectory, 'jitMaps', file), '{}');
   }
 
-  pruneJitMaps({ buildDirectory, keep: ['abc-1', 'abc-3'] });
+  pruneJitMaps({ buildDirectory, keep: ['abc-1-1.json', 'abc-3-1.json'] });
 
   expect(fs.readdirSync(path.join(buildDirectory, 'jitMaps')).sort()).toEqual([
     '.abc-1-2.json.123.abcd1234.tmp',
@@ -55,5 +55,5 @@ test('pruneJitMaps keeps the named contexts and temporary files, removing every 
 
 test('pruneJitMaps does nothing when no page has been built', () => {
   fs.rmSync(path.join(buildDirectory, 'jitMaps'), { recursive: true });
-  expect(() => pruneJitMaps({ buildDirectory, keep: ['abc-1'] })).not.toThrow();
+  expect(() => pruneJitMaps({ buildDirectory, keep: ['abc-1-1.json'] })).not.toThrow();
 });

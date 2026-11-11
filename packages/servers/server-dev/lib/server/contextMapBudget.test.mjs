@@ -29,6 +29,7 @@ const {
   getPageJitEnrichment,
   syncBuildSignals,
 } = await import('./jitPageBuilder.js');
+const { default: pageBuildRecords } = await import('./pageBuildRecords.js');
 
 vi.setConfig({ testTimeout: 30000, hookTimeout: 30000 });
 
@@ -81,15 +82,6 @@ function createApp(files) {
       lastSignal += 1;
       writeFile(path.join(buildDirectory, 'invalidatePages'), String(lastSignal));
     },
-    jitMapsContexts: () =>
-      [
-        ...new Set(
-          fs
-            .readdirSync(path.join(buildDirectory, 'jitMaps'))
-            .filter((file) => file.endsWith('.json'))
-            .map((file) => Number(file.split('-')[1]))
-        ),
-      ].sort((a, b) => a - b),
     remove: () => fs.rmSync(root, { recursive: true, force: true }),
   };
 }
@@ -204,26 +196,35 @@ test('a warning is logged once across the contexts of a generation, and again af
   app.remove();
 });
 
-test('jitMaps files of a context no current page was built on are removed with the next context', async () => {
+test("a page's superseded jitMaps file is removed with the next context, also when its context holds another page's latest one", async () => {
   const app = createApp({
     'pages/a.yaml': 'id: a\ntype: Box\n',
     'pages/b.yaml': 'id: b\ntype: Box\n',
     'pages/c.yaml': 'id: c\ntype: Box\n',
   });
-  await app.request('a');
-  await app.request('b');
-  const [aContext, bContext] = app.jitMapsContexts();
+  const files = () =>
+    fs
+      .readdirSync(path.join(app.buildDirectory, 'jitMaps'))
+      .filter((file) => file.endsWith('.json'))
+      .sort();
+  // a and b build at once, so both run on the first context.
+  await Promise.all([app.request('a'), app.request('b')]);
+  const [firstA] = pageBuildRecords.get('a').mapsFiles;
+  const [firstB] = pageBuildRecords.get('b').mapsFiles;
+  expect(files()).toEqual([firstA, firstB].sort());
+  expect(firstA.split('-')[1]).toBe(firstB.split('-')[1]);
 
-  // a rebuilds on a third context, so a fourth no longer keeps a's first one.
+  // a rebuilds on a new context, and the context after that drops a's first
+  // file but keeps b's, which is still b's latest build.
   app.edit('pages/a.yaml', 'id: a\ntype: Box\nproperties:\n  title: Edited\n');
   await app.request('a');
-  const [, , rebuiltContext] = app.jitMapsContexts();
+  const [rebuiltA] = pageBuildRecords.get('a').mapsFiles;
   await app.request('c');
 
-  const contexts = app.jitMapsContexts();
-  expect(contexts).not.toContain(aContext);
-  expect(contexts).toContain(bContext);
-  expect(contexts).toContain(rebuiltContext);
+  const kept = files();
+  expect(kept).not.toContain(firstA);
+  expect(kept).toContain(firstB);
+  expect(kept).toContain(rebuiltA);
   app.remove();
 });
 

@@ -68,9 +68,6 @@ let contextGeneration = 1;
 // The map budget makes a new context within a generation, so a generation can
 // span several.
 let contextSerial = 0;
-let previousContextName = null;
-// The name of the context each build ran on, recorded with the page's build.
-const contextNames = new WeakMap();
 // What every build context of one generation shares, so a page built on a
 // context the map budget released still serves its _js entries and icons, and
 // a warning is logged once: the jsMap (written whole to the JS map files), the
@@ -246,26 +243,22 @@ function createBuildContext(buildDirectory, configDirectory) {
   const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
   continueJitKeys({ idCounter, childId });
 
-  // The context's page builds write the entries they add to jitMaps/. Kept
-  // besides its own: the files of the contexts this generation's pages were
-  // last built on, which resolve the errors those pages report, and the
-  // previous context's, for pages built just before a config publish.
+  // The context's page builds write the entries they add to jitMaps/, one file
+  // a build. Only the files the latest build of each of this generation's
+  // pages wrote are kept: they resolve the errors those pages report, and a
+  // page's earlier builds are superseded. A config publish removes the rest.
   contextSerial += 1;
-  const contextName = `${childId}-${contextSerial}`;
-  contextNames.set(context, contextName);
   context.jitMaps = createJitMaps({
     keyMap: context.keyMap,
     refMap: context.refMap,
-    name: contextName,
+    name: `${childId}-${contextSerial}`,
   });
   pruneJitMaps({
     buildDirectory,
-    keep: [
-      previousContextName,
-      ...pageBuildRecords.contextNames({ generation: contextGeneration }),
-    ].filter(Boolean),
+    keep: pageBuildRecords.mapsFiles({ generation: contextGeneration }),
   });
-  previousContextName = contextName;
+  // Inside skipStaleMapWrites, so a write it drops is not recorded.
+  pageBuildRecords.trackMapWrites({ context });
   const ownJsMap = context.jsMap;
   skipStaleMapWrites({
     buildDirectory,
@@ -414,7 +407,6 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
       pageId,
       context,
       configDirectory,
-      contextName: contextNames.get(context),
       generation,
       checkedAt,
       build: () => buildPageJit({ pageId, pageRegistry, context }),

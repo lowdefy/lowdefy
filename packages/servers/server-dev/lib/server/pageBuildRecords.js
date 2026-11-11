@@ -62,6 +62,21 @@ function trackReadConfigFile({ readConfigFile, configDirectory }) {
   };
 }
 
+// A page build writes the key and ref entries it added to one jitMaps/ file
+// (writeJitMaps), also when it fails. Recording its name lets the dev server
+// keep exactly the files that resolve the errors current pages report. A write
+// skipStaleMapWrites drops never reaches this wrapper, so it is not recorded.
+function trackMapWrites({ context }) {
+  const writeBuildArtifact = context.writeBuildArtifact;
+  context.writeBuildArtifact = async (filePath, content, options) => {
+    await writeBuildArtifact(filePath, content, options);
+    const reads = buildReads.getStore();
+    if (reads && filePath.startsWith('jitMaps/')) {
+      reads.mapsFiles.push(path.posix.basename(filePath));
+    }
+  };
+}
+
 function trackFileReads({ context, configDirectory }) {
   context.readConfigFile = trackReadConfigFile({
     readConfigFile: context.readConfigFile,
@@ -94,27 +109,19 @@ function locateErrors({ error, context, configDirectory }) {
   }
 }
 
-// generation names the config build the page was built in, contextName the
-// build context it ran on (its jitMaps files), and checkedAt the change event
-// counter when its build started: what it read is current as of that event.
-async function record({
-  pageId,
-  context,
-  configDirectory,
-  contextName,
-  generation,
-  checkedAt,
-  build,
-}) {
-  const reads = { files: new Map(), ranAppCode: false };
+// generation names the config build the page was built in, and checkedAt the
+// change event counter when its build started: what it read is current as of
+// that event.
+async function record({ pageId, context, configDirectory, generation, checkedAt, build }) {
+  const reads = { files: new Map(), mapsFiles: [], ranAppCode: false };
   const builtAt = Date.now();
   const describe = (errors) => ({
     builtAt,
     checkedAt,
-    contextName,
     errors,
     files: reads.files,
     generation,
+    mapsFiles: reads.mapsFiles,
     ranAppCode: reads.ranAppCode,
   });
   let result;
@@ -137,15 +144,22 @@ function get(pageId) {
   return records.get(pageId) ?? null;
 }
 
-// The build contexts the latest builds of a generation's pages ran on.
-function contextNames({ generation }) {
-  const names = new Set();
+// The jitMaps/ files the latest builds of a generation's pages wrote.
+function mapsFiles({ generation }) {
+  const names = [];
   for (const pageRecord of records.values()) {
-    if (pageRecord.generation === generation && pageRecord.contextName) {
-      names.add(pageRecord.contextName);
+    if (pageRecord.generation === generation) {
+      names.push(...pageRecord.mapsFiles);
     }
   }
-  return [...names];
+  return names;
 }
 
-export default { contextNames, get, record, trackFileReads, trackReadConfigFile };
+export default {
+  get,
+  mapsFiles,
+  record,
+  trackFileReads,
+  trackMapWrites,
+  trackReadConfigFile,
+};
