@@ -1407,8 +1407,8 @@ importers:
         specifier: 8.0.7
         version: 8.0.7(@types/react@18.2.38)(react@18.2.0)
       react-syntax-highlighter:
-        specifier: 15.5.0
-        version: 15.5.0(react@18.2.0)
+        specifier: 16.1.2
+        version: 16.1.2(react@18.2.0)
       rehype-raw:
         specifier: 6.1.1
         version: 6.1.1
@@ -14672,6 +14672,12 @@ packages:
 
   react-syntax-highlighter@16.1.1:
     resolution: {integrity: sha512-PjVawBGy80C6YbC5DDZJeUjBmC7skaoEUdvfFQediQHgCL7aKyVHe57SaJGfQsloGDac+gCpTfRdtxzWWKmCXA==}
+    engines: {node: '>= 16.20.2'}
+    peerDependencies:
+      react: '>= 0.14.0'
+
+  react-syntax-highlighter@16.1.2:
+    resolution: {integrity: sha512-4dM0+mYtfnhgwYWAvFx56fgyjIYk2yFopfiICFvMDhRfeSGRNd+ngFALdPD9q7llyGAmiE6pzOSOwI8Lf9ca1w==}
     engines: {node: '>= 16.20.2'}
     peerDependencies:
       react: '>= 0.14.0'
@@ -29839,15 +29845,6 @@ snapshots:
 
   react-refresh@0.14.2: {}
 
-  react-syntax-highlighter@15.5.0(react@18.2.0):
-    dependencies:
-      '@babel/runtime': 7.29.2
-      highlight.js: 10.7.3
-      lowlight: 1.20.0
-      prismjs: 1.30.0
-      react: 18.2.0
-      refractor: 3.6.0
-
   react-syntax-highlighter@15.5.0(react@19.3.0):
     dependencies:
       '@babel/runtime': 7.29.2
@@ -29858,6 +29855,16 @@ snapshots:
       refractor: 3.6.0
 
   react-syntax-highlighter@16.1.1(react@18.2.0):
+    dependencies:
+      '@babel/runtime': 7.29.2
+      highlight.js: 10.7.3
+      highlightjs-vue: 1.0.0
+      lowlight: 1.20.0
+      prismjs: 1.30.0
+      react: 18.2.0
+      refractor: 5.0.0
+
+  react-syntax-highlighter@16.1.2(react@18.2.0):
     dependencies:
       '@babel/runtime': 7.29.2
       highlight.js: 10.7.3
