@@ -53,7 +53,7 @@
     "semver": "7.7.4",
     "tar": "7.5.21",
     "uuid": "14.0.3",
-    "yaml": "2.9.0",
+    "yaml": "2.9.1",
     "zod": "4.6.7"
   },
   "devDependencies": {

@@ -56,7 +56,7 @@
     "diff": "5.2.2",
     "microdiff": "1.5.0",
     "pluralize": "8.0.0",
-    "yaml": "2.9.0"
+    "yaml": "2.9.1"
   },
   "peerDependencies": {
     "antd": ">=6",

@@ -45,7 +45,7 @@
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
     "minisearch": "^7.0.0",
-    "yaml": "2.9.0"
+    "yaml": "2.9.1"
   },
   "devDependencies": {
     "@lowdefy/docs-content": "workspace:*",
