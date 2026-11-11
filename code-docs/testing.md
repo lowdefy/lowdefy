@@ -84,9 +84,12 @@ mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it nee
 server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/test-utils`'s
 `*.mongodb.test.js` suites (`pnpm --filter=@lowdefy/test-utils test:mongodb`,
 `vitest.mongodb.config.js`, no global setup): the data sessions
-(`src/dataSets/openDataSession.mongodb.test.js`, which start the data store's own mongod) and the
+(`src/dataSets/openDataSession.mongodb.test.js`, which start the data store's own mongod), the
 data store's port, stop and replacement after its mongod dies (`getDataStore.mongodb.test.js`,
-which kills that mongod). And it runs `@lowdefy/server-dev`'s `*.mongodb.test.mjs` suites
+which kills that mongod), a test run's data store (`getRunDataStore.mongodb.test.js`: one mongod
+for every join, the cache cap, the sweep by run, and the store gone once its owner process has
+exited, been killed or been interrupted) and a session put back to its data set
+(`reloadDataSession.mongodb.test.js`). And it runs `@lowdefy/server-dev`'s `*.mongodb.test.mjs` suites
 (`pnpm --filter=@lowdefy/server-dev test:mongodb`): a data session read back through the journey
 data cookie (`lib/docs/dataSets/readDataSession.mongodb.test.mjs`) and the data set journeys end
 to end (`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app
@@ -173,17 +176,21 @@ which journey feature is listed under "Fixture app" in `code-docs/architecture/j
 ## Endpoint test harness
 
 `@lowdefy/test-utils` (`packages/utils/test-utils`) opens a production build of an app in the
-test's own process. Its tests are in two suites, both run after `pnpm build`:
+test's own process: the access table (`app.accessMatrix`), and sessions (`app.openSession`) that
+run the app's built endpoints and page requests as a named user on an in-memory MongoDB. Its
+tests are in three suites, all run after `pnpm build`:
 
 ```bash
 pnpm --filter=@lowdefy/test-utils test           # unit tests, a few seconds, part of `pnpm test`
 pnpm --filter=@lowdefy/test-utils test:fixture   # the same harness over real builds of three apps
+pnpm --filter=@lowdefy/test-utils test:mongodb   # the data stores and data sessions, part of `pnpm test:mongodb`
 ```
 
-| Suite          | Files                            | Needs                                    | Covers                                                                                                                                                                |
-| -------------- | -------------------------------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `test`         | `src/**/*.test.js`               | `pnpm build`; no app build, no install   | the access table's outcomes (`allow`, `deny`, `enrol_required`, `InternalApi`), key order, 200 pages by 20 users, and `openTestApp`'s refusals                        |
-| `test:fixture` | `test/fixtureApps/**/*.test.mjs` | `pnpm build`, three app builds, installs | the table over real build artifacts (every route and endpoint, module ids, tenant auth), a `server-e2e` install, and an app's own `node --test` snapshot of the table |
+| Suite          | Files                            | Needs                                                | Covers                                                                                                                                                                                                                                                                         |
+| -------------- | -------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `test`         | `src/**/*.test.js`               | `pnpm build`; no app build, no install, no `mongod`  | the access table's outcomes, key order, 200 pages by 20 users, `openTestApp`'s refusals; what a session is made of that needs no database: answers, the wire payload, test secrets, stubs, pause gates, the fault sink, the run store's record; and `./assert`                 |
+| `test:fixture` | `test/fixtureApps/**/*.test.mjs` | `pnpm build`, three app builds, installs, a `mongod` | the table over real build artifacts, a `server-e2e` install, an app's own `node --test` snapshot of the table; sessions over real builds (`sessions.test.mjs`); and `node --test` over three files sharing one data store, ended, killed and interrupted (`runStore.test.mjs`) |
+| `test:mongodb` | `src/**/*.mongodb.test.js`       | `pnpm build`, a `mongod`; no app build               | the data sessions and both data stores (see [MongoDB tests](#mongodb-tests))                                                                                                                                                                                                   |
 
 **`test`** writes its own build. `test/writeTestBuild.mjs` writes a config directory and a
 server directory to a temporary folder: `routes.json`, `api/*.json`, `auth.json`, `appMeta.json`
@@ -208,16 +215,23 @@ installs and takes about 10 seconds:
 Each app has a `tests/data/roles.yaml` data set whose users the access table tests check as. A
 test that needs to change a build or its config copies both to a temporary directory with
 `test/fixtureApps/copyFixtureApp.mjs`, which links the built server's `node_modules` instead of
-copying it. `--no-client-build` leaves out the Vite build, as `lowdefy build --no-client-build`
+copying it. The session suite needs things `apps/journey-fixture` does not have (a role-gated
+endpoint that writes, a connection type that declares no `meta.dataSet`, an agent, an
+`InternalApi` and an `async` endpoint): `test/fixtureApps/writeSessionFixtures.mjs` writes them
+into such a copy's build, so the app, and the journey suites that count its pages and
+endpoints, stay as they are. The copy's operator map is the app's, so a hand-written artifact
+can use only operators the app already uses on the server. `--no-client-build` leaves out the Vite build, as `lowdefy build --no-client-build`
 does: the harness reads only `build/` and the server's `node_modules`. Add a test here only when
 it needs what a real build writes or a real install holds.
 
 Run `test` for any change to the package. Run `test:fixture` as well when the change touches what
 the harness reads from a build or how it loads the server's packages (`openTestApp`, the access
-table, `importServerModule`), the gate it asks (`createInjectedApiContext` and `authorizeOutcome`
-in `@lowdefy/api`), the build artifacts it reads (`routes.json`, `api/*.json`, `auth.json`,
-`appMeta.json`, `refMap.json`), `scripts/build.mjs`, or the three apps' auth config and
-`roles.yaml` data sets. The three suites named `test:fixture` use different server copies, so
+table, `importServerModule`, `loadSessionRuntime`), sessions and the context a call runs in
+(`createCallContext`, `createSessionConnections`), the gate it asks (`createInjectedApiContext`
+and `authorizeOutcome` in `@lowdefy/api`), what `@lowdefy/api` does with a call (`callEndpoint`,
+`callRequest`, `runDetachedEndpoint`, the tenant wall), the build artifacts it reads
+(`routes.json`, `api/*.json`, `auth.json`, `appMeta.json`, `refMap.json`, `build/plugins/`),
+`scripts/build.mjs`, or the three apps' auth config and data sets. The three suites named `test:fixture` use different server copies, so
 this one can run beside the journey fixture suites. CI runs it on the complete path, before every
 release (see [CI](#ci)).
 
@@ -229,6 +243,49 @@ Its unit tests run in the default `test`, with no built app and no `mongod`. Its
 [MongoDB tests](#mongodb-tests)). A change under `src/dataSets/` also needs
 `@lowdefy/server-dev`'s tests and the journey `test:fixture` suites (`@lowdefy/server-dev`,
 `lowdefy`), since the journey runner imports the built `dist/dataSets`.
+
+### The data store of a test run
+
+An app runs its endpoint tests with `node --test`, one process a test file. The files of a run
+share one `mongod` (`getRunDataStore`), where the dev server has one per server process
+(`getDataStore`):
+
+- **Who starts it.** The first test process to open a session creates the run's record,
+  `<tmpdir>/lowdefy-test-utils/data-store-<owner pid>.json`, with the `wx` flag, so one process
+  wins, and starts the keeper (`dataStoreKeeperProcess.js`), detached and with no pipe to it.
+  The keeper starts `mongod` with `startDataStoreReplSet`, the same replica set and
+  `--wiredTigerCacheSizeGB 0.25` cap as the dev server's store, and writes its URI to the record.
+- **How the rest join.** They find the record and wait for the URI. Each has its own client and
+  its own databases, named `ld_p<pid>_<hex>_<n>`. `sweepOrphanDatabases({ perRun: true })` drops
+  this process's orphans and the databases of test processes that have exited, never those of a
+  file still running.
+- **How it exits.** The owner is the `node --test` runner (the parent of a process with
+  `NODE_TEST_CONTEXT` set), or the process itself outside one. The keeper polls the owner's pid
+  every 250 ms and stops `mongod`, removing its directory and the record, once the owner is
+  gone: finished, interrupted or killed. A killed keeper's `mongod` is stopped by
+  mongodb-memory-server's own helper, and the next join replaces a record whose keeper is gone.
+
+A run therefore holds one `mongod` and one keeper however many files run at once, and none
+after it. After any run that starts one, `pgrep -fl 'mongod-|mongod '` shows what is left; the
+binary's name carries a version suffix. A killed runner leaves its test file processes to
+finish on their own, as `node --test` does; their store is already gone.
+
+Measured on 11 Nov 2026 (10 cores, 16 GB, Node 26, 20 files of 5 tests over
+`apps/journey-fixture`): a test process peaks at about 263 MB resident (235 to 268), the run's
+`mongod` at about 100 MB and the keeper at about 92 MB. One file alone takes 2.1 to 2.6 s.
+
+| `--test-concurrency` | 20 files     | Test processes at once |
+| -------------------- | ------------ | ---------------------- |
+| 2                    | 12.3 s       | about 0.5 GB           |
+| 4                    | 8.0 to 8.8 s | about 1.1 GB           |
+| 8                    | 7.1 s        | about 2.1 GB           |
+| Node's default (9)   | 6.9 s        | about 2.4 GB           |
+
+The default the docs and the agent rules give an app is `--test-concurrency=4`: going from 4 to
+Node's default of one process per core saves about a fifth of the time for more than twice the
+memory, on a machine that usually also runs a dev server and an agent. `node --test` takes the
+flag from the app's script; the harness cannot set it, since it runs inside the test processes.
+A larger app's test processes are larger than the fixture's.
 
 ## An app from another repository
 
@@ -435,15 +492,15 @@ A release runs the complete path twice: on the Release pull request from `develo
 CI does not run on its own, so run what the change needs before you push, and list the
 commands in the pull request body:
 
-| Change touches                                 | Run                                                                                                                             |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| any package                                    | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`) |
-| several packages, root config, the lockfile    | `pnpm test` (the dependency check and every package)                                                                            |
-| `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                             |
-| `test-utils/src/dataSets` (data sessions)      | `pnpm test:mongodb`, `@lowdefy/server-dev`'s tests and the journey `test:fixture` suites                                        |
-| the journey runner, journey cookies or mutants | the journey `test:fixture` suites (`@lowdefy/server-dev`, `lowdefy`)                                                            |
-| `test-utils`, the gate, the build it reads     | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))          |
-| blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                            |
+| Change touches                                 | Run                                                                                                                              |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| any package                                    | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`)  |
+| several packages, root config, the lockfile    | `pnpm test` (the dependency check and every package)                                                                             |
+| `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                              |
+| `test-utils/src/dataSets` (data sessions)      | `pnpm test:mongodb`, `@lowdefy/server-dev`'s tests, the journey `test:fixture` suites and `@lowdefy/test-utils`'s `test:fixture` |
+| the journey runner, journey cookies or mutants | the journey `test:fixture` suites (`@lowdefy/server-dev`, `lowdefy`)                                                             |
+| `test-utils`, the gate, the build it reads     | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))           |
+| blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                             |
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
 
