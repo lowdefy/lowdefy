@@ -834,7 +834,7 @@ async function reloadHandler(c) {
 }
 ```
 
-Every stream shares one module-level chokidar watcher on `./build/reload`, started by the first subscriber and closed when the last one leaves, as `lib/docs/devEventBus.js` does for `buildStatus.json` (the close waits a tick, for the reason given there). A watcher per connection held one fs handle per open tab, headless journey and screenshot tabs included. There is no reload on unlink: a skeleton rebuild removes `build/reload` when it publishes the new build, and the reload comes from `reloadClients()` after.
+Every stream shares one module-level chokidar watcher on `./build/reload`, started by the first subscriber and closed when the last one leaves, as `lib/docs/devEventBus.js` does for `buildStatus.json`. A watcher per connection held one fs handle per open tab, headless journey and screenshot tabs included. There is no reload on unlink: a skeleton rebuild removes `build/reload` when it publishes the new build, and the reload comes from `reloadClients()` after.
 
 The 15s pings keep the connection alive; the route is registered before the api context middleware (it needs no request context) and dev has no compression middleware, so the stream is never buffered.
 
