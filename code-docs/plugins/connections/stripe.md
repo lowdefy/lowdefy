@@ -27,71 +27,31 @@ connections:
 
 ## Making Stripe API Calls
 
+The request properties are a path into the Stripe client, ending in an array of arguments for the method (or `null` for none). `StripeRequest` walks the path and calls the method with the arguments spread:
+
 ```yaml
 requests:
   - id: createCustomer
     type: StripeRequest
     connectionId: stripe
     properties:
-      resource: customers
-      method: create
-      params:
-        email:
-          _state: email
-        name:
-          _state: name
+      customers: # stripe.customers
+        create: # .create(params, options)
+          - email:
+              _state: email
+            name:
+              _state: name
 ```
 
-## Common Operations
+Nested resources nest further (`checkout: { sessions: { retrieve: [id] } }`). Arguments follow the client method's order: an ID first where it takes one, then params, then request options (`stripeAccount`, `idempotencyKey`, ...). Since stripe-node 22 options are only read from the argument after params, so a call with options and no params passes `null` as the params.
 
-### Create Payment Intent
+`getStripeMethod` resolves the path. Resources are own properties of the client, but methods live on each resource's class prototype, which `@lowdefy/helpers` `get` does not read (it reads own properties only). It refuses `_`-prefixed SDK internals and `Object.prototype` members.
 
-```yaml
-requests:
-  - id: createPayment
-    type: StripeRequest
-    connectionId: stripe
-    properties:
-      resource: paymentIntents
-      method: create
-      params:
-        amount: 2000 # $20.00 in cents
-        currency: usd
-        customer:
-          _state: customerId
-```
+## API Version
 
-### List Customers
+`apiVersion` is passed to the client as is. When it is not set, the client uses the API version the installed stripe-node major is pinned to, so a major stripe-node update changes request params and response shapes for apps that do not set it. Changesets for those updates tell app authors to set `apiVersion` to keep the old behaviour.
 
-```yaml
-requests:
-  - id: getCustomers
-    type: StripeRequest
-    connectionId: stripe
-    properties:
-      resource: customers
-      method: list
-      params:
-        limit: 10
-```
-
-### Create Subscription
-
-```yaml
-requests:
-  - id: subscribe
-    type: StripeRequest
-    connectionId: stripe
-    properties:
-      resource: subscriptions
-      method: create
-      params:
-        customer:
-          _state: customerId
-        items:
-          - price:
-              _state: priceId
-```
+Responses can hold `Stripe.Decimal` values (`*_decimal` fields, stripe-node 21+). They serialize to strings through their `toJSON`, as before. V2 (`v2.*`) responses can hold `BigInt` values for int64 fields, which the request response serializer cannot encode.
 
 ## Webhook Handling
 

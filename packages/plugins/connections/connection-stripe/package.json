@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
-    "stripe": "14.5.0"
+    "stripe": "23.1.0"
   },
   "devDependencies": {
     "@lowdefy/ajv": "7.2.0",

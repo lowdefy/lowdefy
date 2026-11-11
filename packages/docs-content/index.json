@@ -4958,7 +4958,7 @@
       "files": [
         "connections/Stripe.yaml"
       ],
-      "hash": "0188a47db3e6caa3e6286bf7916c88ac3fb985166066c467aa33e1138475d44f"
+      "hash": "e4037688c2fa8d02a73c965cacabee422b8c3e98cae12c79a5d35de01d0410b5"
     },
     "connections/treg": {
       "files": [
@@ -5812,7 +5812,7 @@
         "controls/if.yaml",
         "templates/controls.yaml.njk"
       ],
-      "hash": "fa49dc8d81e9a7cc9ce1b880b693db7e8ccd5335939fb38d299249b5cfbf41f1"
+      "hash": "d46b8123b53961968c7ecc01eb8861e210adeb026a63d2455bab711a4fa4038b"
     },
     "controls/log": {
       "files": [

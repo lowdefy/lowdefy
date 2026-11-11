@@ -2042,8 +2042,8 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/helpers
       stripe:
-        specifier: 14.5.0
-        version: 14.5.0
+        specifier: 23.1.0
+        version: 23.1.0(@types/node@26.6.6)
     devDependencies:
       '@lowdefy/ajv':
         specifier: 7.2.0
@@ -15651,9 +15651,14 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  stripe@14.5.0:
-    resolution: {integrity: sha512-MTt0P0VYDAj2VZyZMW41AxcXVs9s06EDFIHYat4UUkluJgnBHo4T4E2byPhnxoJCPvdzWBwBLnhWbSOg//VTpA==}
-    engines: {node: '>=12.*'}
+  stripe@23.1.0:
+    resolution: {integrity: sha512-fVUfMSfTPoukfoV//MUKAx2+YxyKmYaYtnAL9VkfnHfaPNQylFdWZMD+zgUFerI8rjbaiER8Vzj2XEUQ2AhAsQ==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@types/node': '>=20'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
 
   strnum@2.4.1:
     resolution: {integrity: sha512-M9eUSMT2dCB2cTNPG7UYj6KuK7RJR2SN2+yCV/fTW3xzTCS6EaGZ5pSMgDIjB7r8zSfTGk+dvvn9rTjpVS9Mwg==}
@@ -25842,7 +25847,7 @@ snapshots:
       eslint: 8.54.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.54.0)
       eslint-plugin-react: 7.37.5(eslint@8.54.0)
       eslint-plugin-react-hooks: 5.2.0(eslint@8.54.0)
@@ -25876,7 +25881,7 @@ snapshots:
       tinyglobby: 0.2.17
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -25925,7 +25930,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint@8.54.0))(eslint@8.54.0))(eslint@8.54.0):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.59.1(eslint@8.54.0)(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.54.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -32436,10 +32441,9 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  stripe@14.5.0:
-    dependencies:
-      '@types/node': 24.13.3
-      qs: 6.16.1
+  stripe@23.1.0(@types/node@26.6.6):
+    optionalDependencies:
+      '@types/node': 26.6.6
 
   strnum@2.4.1:
     dependencies:
