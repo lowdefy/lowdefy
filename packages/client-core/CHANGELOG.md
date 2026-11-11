@@ -1,5 +1,22 @@
 # @lowdefy/client-core
 
+## 7.3.0
+
+### Patch Changes
+
+- 878bb92: fix: A live feed that subscribes as its connection is closing reconnects on its own
+
+  A live feed that started just as its websocket connection was closing went silent until the page was opened again. Serverless platforms close each connection after a set time (on Vercel, the function's maximum duration), so a page that subscribed in the last seconds of a connection got no answer, logged `Subscribe to "<id>" timed out.`, and never reconnected. The subscribe still reports the timeout, but the connection is now closed and opened again straight away and the feed is subscribed again, so its messages arrive without reopening the page.
+
+- Updated dependencies [2972207]
+- Updated dependencies [e017420]
+- Updated dependencies [d1bd844]
+- Updated dependencies [878bb92]
+  - @lowdefy/engine@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/logger@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

@@ -1,5 +1,20 @@
 # @lowdefy/client-native
 
+## 7.3.0
+
+### Patch Changes
+
+- Updated dependencies [2972207]
+- Updated dependencies [e017420]
+- Updated dependencies [d1bd844]
+- Updated dependencies [878bb92]
+  - @lowdefy/engine@7.3.0
+  - @lowdefy/client-core@7.3.0
+  - @lowdefy/layout-native@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/style-native@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

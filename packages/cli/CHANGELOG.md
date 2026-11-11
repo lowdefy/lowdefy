@@ -1,5 +1,30 @@
 # Change Log
 
+## 7.3.0
+
+### Patch Changes
+
+- 886901e: feat(cli): Agent rules say which level of test to use
+
+  The rules `lowdefy agent-setup` writes told agents to verify every change by running journeys and to widen to `tier: edge` before calling it done. Journeys run a real browser, so agents spent long stretches checking logic and permissions that a direct call would cover, and journeys with no production counts run in every tier, so the wider tier could mean nearly the full suite. The rules now send logic, permissions and writes to a request or endpoint call and keep journeys for what needs a browser. Agents run only the journey they changed while fixing, the journeys a change touches before calling it done, and the full suite only when a person asks or in the app's scheduled run. Agents run each journey once: only the journey skills repeat a journey, and only one they wrote. journeys-autopilot now runs a developer's existing suite once instead of three times.
+
+- 9f56354: fix(deps): Security updates to dependencies
+
+  Updates `@hono/node-server`, `zod`, `postal-mime`, `@azure/identity` (and the `@azure/msal-node` it
+  uses), `serialize-javascript` and `@expo/cli` to releases that fix security advisories.
+
+- d4a0023: fix(server-dev): Journeys no longer fail on dropped dev server connections
+
+  Journeys failed now and then with the app error "Lowdefy dev server connection dropped.", and passed when run again. Synchronous work in the dev server's web server process, such as building a large page, can block its event loop for several seconds. A request the proxy had already sent on a reused connection was then lost, because Node's idle connection timer ran before the socket was read and closed the connection. The web server process now leaves idle connections open for the proxy to close, so the request waits for the block to end and is answered.
+
+  If the proxy still cannot reach the web server, for example because it crashed, the journey fails with `failure.kind: "dev-server"` and a `dev-server` line instead of an app error, since the result says nothing about the app. The proxy still does not replay a POST that may already have run.
+
+  - @lowdefy/ajv@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/logger@7.3.0
+  - @lowdefy/node-utils@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

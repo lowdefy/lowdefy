@@ -1,5 +1,24 @@
 # Change Log
 
+## 7.3.0
+
+### Patch Changes
+
+- a56b359: fix(client): Apps load when the browser blocks storage
+
+  An app failed to load, showing nothing, when the browser blocked site storage, such as a browser set to block cookies and site data, or a sandboxed frame. The dark mode and locale preferences read `window.localStorage` outside the guard meant to handle blocked storage, and reaching it threw a `SecurityError` at the app root. They now read it inside the guard and fall back to the defaults: the system colour scheme and the browser's language.
+
+- Updated dependencies [2972207]
+- Updated dependencies [e017420]
+- Updated dependencies [d1bd844]
+- Updated dependencies [878bb92]
+  - @lowdefy/engine@7.3.0
+  - @lowdefy/client-core@7.3.0
+  - @lowdefy/layout@7.3.0
+  - @lowdefy/block-utils@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

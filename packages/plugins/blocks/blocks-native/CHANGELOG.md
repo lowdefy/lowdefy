@@ -1,5 +1,14 @@
 # @lowdefy/blocks-native
 
+## 7.3.0
+
+### Patch Changes
+
+- @lowdefy/client-native@7.3.0
+- @lowdefy/block-utils@7.3.0
+- @lowdefy/helpers@7.3.0
+- @lowdefy/style-native@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

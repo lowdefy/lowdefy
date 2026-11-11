@@ -1,5 +1,48 @@
 # @lowdefy/server-e2e
 
+## 7.3.0
+
+### Patch Changes
+
+- 9f56354: fix(deps): Security updates to dependencies
+
+  Updates `@hono/node-server`, `zod`, `postal-mime`, `@azure/identity` (and the `@azure/msal-node` it
+  uses), `serialize-javascript` and `@expo/cli` to releases that fix security advisories.
+
+- Updated dependencies [0631e60]
+- Updated dependencies [a56b359]
+- Updated dependencies [676dade]
+- Updated dependencies [ad4f4dd]
+- Updated dependencies [0fc5a83]
+- Updated dependencies [4434a0e]
+- Updated dependencies [e68364d]
+- Updated dependencies [023cb67]
+  - @lowdefy/api@7.3.0
+  - @lowdefy/client@7.3.0
+  - @lowdefy/connection-mongodb@7.3.0
+  - @lowdefy/blocks-antd@7.3.0
+  - @lowdefy/blocks-table@7.3.0
+  - @lowdefy/blocks-tiptap@7.3.0
+  - @lowdefy/blocks-aggrid@7.3.0
+  - @lowdefy/blocks-antd-x@7.3.0
+  - @lowdefy/blocks-basic@7.3.0
+  - @lowdefy/blocks-echarts@7.3.0
+  - @lowdefy/blocks-loaders@7.3.0
+  - @lowdefy/blocks-markdown@7.3.0
+  - @lowdefy/websockets-core@7.3.0
+  - @lowdefy/layout@7.3.0
+  - @lowdefy/actions-core@7.3.0
+  - @lowdefy/blocks-captcha@7.3.0
+  - @lowdefy/connection-axios-http@7.3.0
+  - @lowdefy/operators-js@7.3.0
+  - @lowdefy/operators-nunjucks@7.3.0
+  - @lowdefy/operators-uuid@7.3.0
+  - @lowdefy/block-utils@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/logger@7.3.0
+  - @lowdefy/node-utils@7.3.0
+
 ## 7.2.0
 
 ### Patch Changes

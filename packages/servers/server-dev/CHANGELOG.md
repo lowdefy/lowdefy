@@ -1,5 +1,77 @@
 # Change Log
 
+## 7.3.0
+
+### Patch Changes
+
+- 9f56354: fix(deps): Security updates to dependencies
+
+  Updates `@hono/node-server`, `zod`, `postal-mime`, `@azure/identity` (and the `@azure/msal-node` it
+  uses), `serialize-javascript` and `@expo/cli` to releases that fix security advisories.
+
+- d4a0023: fix(server-dev): Journeys no longer fail on dropped dev server connections
+
+  Journeys failed now and then with the app error "Lowdefy dev server connection dropped.", and passed when run again. Synchronous work in the dev server's web server process, such as building a large page, can block its event loop for several seconds. A request the proxy had already sent on a reused connection was then lost, because Node's idle connection timer ran before the socket was read and closed the connection. The web server process now leaves idle connections open for the proxy to close, so the request waits for the block to end and is answered.
+
+  If the proxy still cannot reach the web server, for example because it crashed, the journey fails with `failure.kind: "dev-server"` and a `dev-server` line instead of an app error, since the result says nothing about the app. The proxy still does not replay a POST that may already have run.
+
+- 77fb753: fix(deps): Update Playwright to 1.65.0
+
+  Playwright 1.59 does not install browsers on Ubuntu 26.04, which is now what GitHub Actions' `ubuntu-latest` runs. Playwright 1.61 added Ubuntu 26.04 support. The dev server's browser tools (screenshots, journeys) and `@lowdefy/e2e-utils` now use Playwright 1.65.0. An app that pins `@playwright/test` for its e2e tests should update it to 1.65.0 to match the `@lowdefy/e2e-utils` peer dependency.
+
+- 980b181: fix: A request that runs past `config.requestTimeout` no longer reports a second error when its handler finally returns. The 504 still goes out on time, now with no body. The middleware that ran on the late result set a header on the 504 that had already been sent, and rebuilding it from its already-read body threw `TypeError: Response body object should not be disturbed or locked` (seen under `compress`). That error was logged and sent to Sentry under the request's route, hiding the timeout behind a misleading title. A real fault the handler raises after the timeout is still reported as before.
+- Updated dependencies [0631e60]
+- Updated dependencies [a56b359]
+- Updated dependencies [2972207]
+- Updated dependencies [e017420]
+- Updated dependencies [676dade]
+- Updated dependencies [ad4f4dd]
+- Updated dependencies [77fb753]
+- Updated dependencies [0fc5a83]
+- Updated dependencies [d1bd844]
+- Updated dependencies [4434a0e]
+- Updated dependencies [e68364d]
+- Updated dependencies [d5139ff]
+- Updated dependencies [023cb67]
+- Updated dependencies [878bb92]
+  - @lowdefy/api@7.3.0
+  - @lowdefy/client@7.3.0
+  - @lowdefy/engine@7.3.0
+  - @lowdefy/connection-mongodb@7.3.0
+  - @lowdefy/plugin-better-auth@7.3.0
+  - @lowdefy/docs-content@7.3.0
+  - @lowdefy/e2e-utils@7.3.0
+  - @lowdefy/blocks-antd@7.3.0
+  - @lowdefy/blocks-table@7.3.0
+  - @lowdefy/blocks-tiptap@7.3.0
+  - @lowdefy/build@7.3.0
+  - @lowdefy/client-core@7.3.0
+  - @lowdefy/blocks-aggrid@7.3.0
+  - @lowdefy/blocks-antd-x@7.3.0
+  - @lowdefy/blocks-basic@7.3.0
+  - @lowdefy/blocks-echarts@7.3.0
+  - @lowdefy/blocks-loaders@7.3.0
+  - @lowdefy/blocks-markdown@7.3.0
+  - @lowdefy/websockets-core@7.3.0
+  - @lowdefy/layout@7.3.0
+  - @lowdefy/actions-core@7.3.0
+  - @lowdefy/blocks-captcha@7.3.0
+  - @lowdefy/connection-axios-http@7.3.0
+  - @lowdefy/operators-change-case@7.3.0
+  - @lowdefy/operators-cron@7.3.0
+  - @lowdefy/operators-dayjs@7.3.0
+  - @lowdefy/operators-diff@7.3.0
+  - @lowdefy/operators-js@7.3.0
+  - @lowdefy/operators-mql@7.3.0
+  - @lowdefy/operators-nunjucks@7.3.0
+  - @lowdefy/operators-uuid@7.3.0
+  - @lowdefy/operators-yaml@7.3.0
+  - @lowdefy/block-utils@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/logger@7.3.0
+  - @lowdefy/node-utils@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

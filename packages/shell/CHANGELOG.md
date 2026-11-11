@@ -1,5 +1,36 @@
 # @lowdefy/shell
 
+## 7.3.0
+
+### Patch Changes
+
+- 6928a6c: fix(shell): Bump the shell's nativeVersion to 5 for @expo/log-box 58.0.15
+
+  The security update to `@expo/cli` 58.1.19 needs `@expo/log-box` 58.0.15, whose native iOS and Android code changed. Shells built on nativeVersion 4 cannot run JavaScript built against it, so the shell's runtime version moves to nativeVersion 5. Every shell needs a new native build before it takes over-the-air updates from this release.
+
+- Updated dependencies [2972207]
+- Updated dependencies [e017420]
+- Updated dependencies [d1bd844]
+- Updated dependencies [878bb92]
+  - @lowdefy/engine@7.3.0
+  - @lowdefy/client-core@7.3.0
+  - @lowdefy/client-native@7.3.0
+  - @lowdefy/blocks-native@7.3.0
+  - @lowdefy/actions-core@7.3.0
+  - @lowdefy/operators-change-case@7.3.0
+  - @lowdefy/operators-cron@7.3.0
+  - @lowdefy/operators-dayjs@7.3.0
+  - @lowdefy/operators-diff@7.3.0
+  - @lowdefy/operators-js@7.3.0
+  - @lowdefy/operators-jsonata@7.3.0
+  - @lowdefy/operators-mql@7.3.0
+  - @lowdefy/operators-nunjucks@7.3.0
+  - @lowdefy/operators-uuid@7.3.0
+  - @lowdefy/operators-yaml@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/node-utils@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes
