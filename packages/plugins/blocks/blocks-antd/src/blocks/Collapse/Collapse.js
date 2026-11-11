@@ -96,7 +96,6 @@ const CollapseBlock = ({
         showArrow: properties.showArrow,
         children: content[panel.key] && content[panel.key](),
       }))}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...additionalProps}
     />
   );

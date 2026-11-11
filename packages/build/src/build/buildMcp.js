@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable no-param-reassign */
-
 import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';

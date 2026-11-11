@@ -67,7 +67,6 @@ async function getPageConfig(context, { path, urlQuery, surface = 'web' }) {
   const pageConfig = await context.readConfigFile(`pages/${pageId}.json`);
   const outcome = context.authorizeOutcome(pageConfig, { pageId });
   if (outcome === 'allow') {
-    // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;
     if (!servesSurface({ target: rest.target, surface })) {
       return { status: 'wrong_surface', pageId, pathParams, surface: rest.target };

@@ -25,7 +25,7 @@ function getBlockData(node) {
   if (!type.isObject(node.properties)) return undefined;
   const isPageRoot = type.isString(node.pageId) && node.id === `page:${node.pageId}`;
   if (isPageRoot && 'title' in node.properties) {
-    const { title, ...properties } = node.properties; // eslint-disable-line no-unused-vars
+    const { title, ...properties } = node.properties;
     return properties;
   }
   return node.properties;

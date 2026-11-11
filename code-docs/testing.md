@@ -61,9 +61,9 @@ install, so only the published package (or a later lockfile change) breaks.
   webpack-bundled `@lowdefy/nunjucks`, listed in `scripts/lib/findUndeclaredImports.mjs`.
 - Tests import `vitest`, which every package with tests declares as a devDependency.
 
-The check reads what is declared, not what resolves: ESLint's
-`import/no-extraneous-dependencies` skips any import it cannot resolve, which in a pnpm
-workspace is most undeclared imports.
+The check reads what is declared, not what resolves: in a pnpm workspace most undeclared
+imports still resolve, so a resolver-based check (such as the ESLint import plugin the repo
+no longer uses) misses them. Lint and format checks are in [Linting](./linting.md).
 
 ## MongoDB tests
 
@@ -378,6 +378,7 @@ commands in the pull request body:
 | `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                             |
 | the journey runner, journey cookies or mutants | both `test:fixture` suites                                                                                                      |
 | blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                            |
+| any JavaScript file                            | `pnpm exec eslint <changed files>` and `pnpm format:check` ([Linting](./linting.md))                                            |
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
 

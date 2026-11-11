@@ -31,7 +31,6 @@ const LoadingContainer = ({
   skeleton,
 }) => {
   const content = {};
-  // eslint-disable-next-line prefer-destructuring
   Object.keys(skeleton.slots).forEach((slotKey, i) => {
     content[slotKey] = () => (
       <Area

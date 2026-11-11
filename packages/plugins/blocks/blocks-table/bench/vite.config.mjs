@@ -18,9 +18,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // vite and its React plugin ship exports maps only, which the import plugin's node resolver cannot
 // read.
-// eslint-disable-next-line import/no-unresolved
 import { defineConfig } from 'vite';
-// eslint-disable-next-line import/no-unresolved
 import react from '@vitejs/plugin-react';
 
 const benchDir = path.dirname(fileURLToPath(import.meta.url));

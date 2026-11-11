@@ -186,7 +186,6 @@ function useBackgroundTint({ backgroundTint, tint }) {
   useEffect(() => {
     tint.set(backgroundTint ?? null);
     // backgroundTint is read when its key changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tintKey, tint]);
   useEffect(() => () => tint.set(null), [tint]);
 }

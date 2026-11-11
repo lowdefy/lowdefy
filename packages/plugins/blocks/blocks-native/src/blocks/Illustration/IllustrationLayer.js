@@ -49,7 +49,6 @@ function DrawnLayer({ definitions, drawing, layer, viewBox }) {
   const bounds = useMemo(
     () => getLayerBounds({ layer, viewBox }) ?? viewBox,
     // viewBox is read when its key changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [layer, viewBoxKey]
   );
   const scale = drawing.width / viewBox[2];

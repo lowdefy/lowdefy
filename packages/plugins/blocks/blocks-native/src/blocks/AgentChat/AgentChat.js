@@ -147,7 +147,7 @@ function AgentChat({
         streamFetch: methods.streamFetch,
         urlQuery,
       }),
-    [agentId, conversationId, pageId, urlQueryKey, pathParamsKey, methods.streamFetch] // eslint-disable-line react-hooks/exhaustive-deps
+    [agentId, conversationId, pageId, urlQueryKey, pathParamsKey, methods.streamFetch]
   );
 
   const chat = useChat({
