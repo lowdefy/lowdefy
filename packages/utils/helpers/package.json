@@ -42,8 +42,8 @@
     "intl-messageformat": "12.1.5"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
     "jsdom": "31.0.0",
     "vitest": "5.1.0"
   },

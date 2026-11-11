@@ -65,8 +65,8 @@
     "@lowdefy/connection-mongodb": "7.2.0",
     "@lowdefy/plugin-better-auth": "7.2.0",
     "@opentelemetry/api": "1.9.1",
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
     "mongodb": "7.8.0",
     "mongodb-memory-server-core": "11.3.0",
     "vitest": "5.1.0"

@@ -199,11 +199,11 @@ importers:
         specifier: 1.9.1
         version: 1.9.1
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       mongodb:
         specifier: 7.8.0
         version: 7.8.0
@@ -443,11 +443,11 @@ importers:
         specifier: 7.2.0
         version: link:../plugins/websockets/websockets-core
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       pino:
         specifier: 10.4.0
         version: 10.4.0
@@ -507,11 +507,11 @@ importers:
         specifier: 7.2.0
         version: link:../servers/server-dev
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -562,11 +562,11 @@ importers:
         specifier: 7.2.0
         version: link:../utils/vite-yaml-plugin
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@testing-library/dom':
         specifier: 10.4.2
         version: 10.4.2
@@ -605,11 +605,11 @@ importers:
         version: link:../utils/logger
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -660,20 +660,20 @@ importers:
         specifier: 0.88.1
         version: 0.88.1(@babel/core@7.29.13)(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@testing-library/react-native':
         specifier: 14.1.0
-        version: 14.1.0(jest@30.5.2(@types/node@26.6.6))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))
+        version: 14.1.0(jest@30.5.2(@types/node@24.13.3))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))
       babel-jest:
         specifier: 30.5.2
         version: 30.5.2(@babel/core@7.29.13)
       jest:
         specifier: 30.5.2
-        version: 30.5.2(@types/node@26.6.6)
+        version: 30.5.2(@types/node@24.13.3)
       react:
         specifier: 19.3.0
         version: 19.3.0
@@ -705,11 +705,11 @@ importers:
         specifier: workspace:*
         version: link:../docs-content
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -748,11 +748,11 @@ importers:
         specifier: 7.2.0
         version: link:../plugins/operators/operators-mql
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -828,11 +828,11 @@ importers:
         specifier: 7.2.0
         version: link:../utils/vite-yaml-plugin
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@testing-library/dom':
         specifier: 10.4.2
         version: 10.4.2
@@ -865,14 +865,14 @@ importers:
         specifier: 30.5.2
         version: 30.5.2
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
+        version: 0.2.39(@swc/core@1.16.22(@swc/helpers@0.5.23))
       jest:
         specifier: 30.5.2
         version: 30.5.2(@types/node@26.6.6)
@@ -887,11 +887,11 @@ importers:
         version: link:../utils/helpers
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -915,11 +915,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -937,11 +937,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
 
   packages/plugins/blocks/blocks-aggrid:
     dependencies:
@@ -986,11 +986,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1050,11 +1050,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1102,11 +1102,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1142,11 +1142,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1164,11 +1164,11 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1216,11 +1216,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1253,11 +1253,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1296,11 +1296,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1339,11 +1339,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1373,11 +1373,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1422,11 +1422,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1483,11 +1483,11 @@ importers:
         specifier: 0.88.1
         version: 0.88.1(@babel/core@7.29.13)(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@testing-library/react-native':
         specifier: 14.1.0
         version: 14.1.0(jest@30.5.2(@types/node@26.6.6))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))
@@ -1544,11 +1544,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1587,11 +1587,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@vitejs/plugin-react':
         specifier: 6.3.0
         version: 6.3.0(babel-plugin-react-compiler@1.0.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1690,11 +1690,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1718,11 +1718,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1740,11 +1740,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1765,11 +1765,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/errors
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1787,11 +1787,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1809,11 +1809,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1840,11 +1840,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1877,11 +1877,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1892,11 +1892,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1926,11 +1926,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       mongodb-memory-server-core:
         specifier: 11.3.0
         version: 11.3.0(bare-buffer@3.7.1)
@@ -1957,11 +1957,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1979,11 +1979,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2001,11 +2001,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2023,11 +2023,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2045,11 +2045,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2077,11 +2077,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2089,11 +2089,11 @@ importers:
   packages/plugins/icons/icons-react-icons:
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2120,11 +2120,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2151,11 +2151,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2179,11 +2179,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2207,11 +2207,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2238,11 +2238,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2266,11 +2266,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2291,11 +2291,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2316,11 +2316,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2344,11 +2344,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2372,11 +2372,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2433,11 +2433,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/vite-yaml-plugin
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@testing-library/dom':
         specifier: 10.4.2
         version: 10.4.2
@@ -2467,11 +2467,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2492,11 +2492,11 @@ importers:
         version: 6.2.17
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2507,11 +2507,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/node-utils
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
 
   packages/plugins/plugins/plugin-gcp:
     dependencies:
@@ -2529,11 +2529,11 @@ importers:
         specifier: 7.2.0
         version: link:../../../utils/ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2560,11 +2560,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2591,11 +2591,11 @@ importers:
         specifier: 1.65.0
         version: 1.65.0
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3400,11 +3400,11 @@ importers:
         specifier: 7.2.0
         version: link:../ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3431,11 +3431,11 @@ importers:
         version: 5.1.0(ajv@8.20.0)
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3477,11 +3477,11 @@ importers:
         version: 0.9.0
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
 
   packages/utils/block-dev-e2e:
     dependencies:
@@ -3493,11 +3493,11 @@ importers:
         version: 1.65.0
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
 
   packages/utils/block-utils:
     dependencies:
@@ -3527,11 +3527,11 @@ importers:
         specifier: 7.2.0
         version: link:../ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@testing-library/dom':
         specifier: 10.4.2
         version: 10.4.2
@@ -3579,11 +3579,11 @@ importers:
         version: 2.4.2
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -3613,11 +3613,11 @@ importers:
         specifier: 7.2.0
         version: link:../ajv
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -3631,11 +3631,11 @@ importers:
   packages/utils/errors:
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3653,11 +3653,11 @@ importers:
         version: 12.1.5
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -3681,11 +3681,11 @@ importers:
         version: 10.4.0
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3709,11 +3709,11 @@ importers:
         version: 2.9.1
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       ajv:
         specifier: 8.20.0
         version: 8.20.0
@@ -3734,11 +3734,11 @@ importers:
         version: 1.11.23
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       clean-webpack-plugin:
         specifier: 4.0.0
         version: 4.0.0(webpack@5.104.1)
@@ -3747,13 +3747,13 @@ importers:
         version: 3.2.4
       swc-loader:
         specifier: 0.2.3
-        version: 0.2.3(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack@5.104.1)
+        version: 0.2.3(@swc/core@1.16.22(@swc/helpers@0.5.23))(webpack@5.104.1)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
       webpack:
         specifier: 5.104.1
-        version: 5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
+        version: 5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
       webpack-cli:
         specifier: 5.1.4
         version: 5.1.4(webpack@5.104.1)
@@ -3764,17 +3764,17 @@ importers:
         specifier: 30.5.2
         version: 30.5.2
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
+        version: 0.2.39(@swc/core@1.16.22(@swc/helpers@0.5.23))
       jest:
         specifier: 30.5.2
-        version: 30.5.2(@types/node@24.13.3)
+        version: 30.5.2(@types/node@26.6.6)
 
   packages/utils/vite-yaml-plugin:
     dependencies:
@@ -3783,11 +3783,11 @@ importers:
         version: 2.9.1
     devDependencies:
       '@swc/cli':
-        specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
       '@swc/core':
-        specifier: 1.15.32
-        version: 1.15.32(@swc/helpers@0.5.23)
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -7695,8 +7695,8 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@swc/cli@0.8.1':
-    resolution: {integrity: sha512-L+ACCGHCiS0VqHVep/INLVnvRvJ2XooQFLZq4L8snhxw1jsqz+XRcY313UsyPVturPPE1shW3jic7rt3qEQTSQ==}
+  '@swc/cli@0.8.2':
+    resolution: {integrity: sha512-4RAfbHx1oz/9zFutxIjm7famgfQeQ6s3Tc5rIWxXfB+QlA5y5rHKFi8NDCZ5iqZuZkMZTzMAHoWRRlioLO5i7Q==}
     engines: {node: '>= 20.19.0'}
     hasBin: true
     peerDependencies:
@@ -7706,86 +7706,86 @@ packages:
       chokidar:
         optional: true
 
-  '@swc/core-darwin-arm64@1.15.32':
-    resolution: {integrity: sha512-/YWMvJDPu+AAwuUsM2G+DNQ/7zhodURGzdQyewEqcvgklAdDHs3LwQmLLnyn6SJl8DT8UOxkbzK+D1PmPeelRg==}
+  '@swc/core-darwin-arm64@1.16.22':
+    resolution: {integrity: sha512-PddkOjOK3MK01AVOvqG309iAJ0hn5vK37ug9g5Zt5e2aWF3IhVLdDLjMePXts1zi8yc4ild2h9FYCkVYb5+Qcw==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@swc/core-darwin-x64@1.15.32':
-    resolution: {integrity: sha512-KOTXJXdAhWL+hZ77MYP3z+4pcMFaQhQ74yqyN1uz093q0YnbxpqMtYpPISbYvMHzVRNNx5kN+9RZAXEaadhWVA==}
+  '@swc/core-darwin-x64@1.16.22':
+    resolution: {integrity: sha512-Zzia5cuIQFLTfZyf5mC1JvRMPW1VlxbvkZ0qNESoD4okE6T6Us2ZNVZ5XMVELqkYNw9eL2GeuMJgDIHBdYo7Gg==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [darwin]
 
-  '@swc/core-linux-arm-gnueabihf@1.15.32':
-    resolution: {integrity: sha512-oOoxLweljlc0A4X8ybsgxV7cVaYTwBOg2iMDJcFR3Sr48C+lsv9VzSmqdK/IVIXF4W4GjLc3VqTAdSMXlfVLuQ==}
+  '@swc/core-linux-arm-gnueabihf@1.16.22':
+    resolution: {integrity: sha512-GI6VICiuYc7mb61XenLtiEGoOXTXDdUda8w0bu29Mh3Z6rhuTkAiBAdDFpdww2QNV0iACY5ylUSL127I6Nx8yQ==}
     engines: {node: '>=10'}
     cpu: [arm]
     os: [linux]
 
-  '@swc/core-linux-arm64-gnu@1.15.32':
-    resolution: {integrity: sha512-oDzEkdl6D6BAWdMtU5KGO7y3HR5fJcvByNLyEk9+ugj8nP5Ovb7P4kBcStBXc4MPExFGQryehiINMlmY8HlclA==}
+  '@swc/core-linux-arm64-gnu@1.16.22':
+    resolution: {integrity: sha512-Ic+qrMmV78QdlG9irJuc/37xSqY7+5ZFhg4kaYbF82UQkaEfWgqGSUbU75Y4To21eaBB07c05kbXmTWTrvPURA==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@swc/core-linux-arm64-musl@1.15.32':
-    resolution: {integrity: sha512-omcqjoZP/b8D8PuczVoRwJieC6ibj7qIxTftNYokz4/aSmKFHvsd7nIFfPk5ZvtzncbH4AY7+Dkr/Lp2gWxYeA==}
+  '@swc/core-linux-arm64-musl@1.16.22':
+    resolution: {integrity: sha512-ophleEwlj0SqkzYPDJ7xMPK0+MnWfc4+u9GzDYLLFG1TkIJuwj0rHNWto4MmKo00TylHFwGx9+5bLs/+YZ00IQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@swc/core-linux-ppc64-gnu@1.15.32':
-    resolution: {integrity: sha512-KGkTMyz/Tbn3PBNu0AVZ4GTDFKnICrYcTiNPZq8DrvK42pnFsf3GNDrIG9E5AtQlTmC0YigkWKmu0eMcfTrmgA==}
+  '@swc/core-linux-ppc64-gnu@1.16.22':
+    resolution: {integrity: sha512-/4kR7SafFsVqY8N4HSepTs4Ni9YA0OY6n/SVBk/V15PhDiw97stG9SVqvgc8EzC+3XOe4pTmwlvFLWzNYfuNWg==}
     engines: {node: '>=10'}
     cpu: [ppc64]
     os: [linux]
     libc: [glibc]
 
-  '@swc/core-linux-s390x-gnu@1.15.32':
-    resolution: {integrity: sha512-G3Aa4tVS/3OGZBkoNIwUF9F6RAy+Osb4GOlo62SinLmDiErz/ykmM7KH0wkz6l9kM8jJq1HyAM6atJTUEbBk7g==}
+  '@swc/core-linux-s390x-gnu@1.16.22':
+    resolution: {integrity: sha512-b3GQqKmHBHUFQby1sh/QLtNQMMXTSBUhnmXcJ5qSrWbkYnhljIW3Y+30eMrrxCfy7HXLLDug1sjlhJDhf3tPhA==}
     engines: {node: '>=10'}
     cpu: [s390x]
     os: [linux]
     libc: [glibc]
 
-  '@swc/core-linux-x64-gnu@1.15.32':
-    resolution: {integrity: sha512-ERsjfGcj6CBmj3vJnGDO8m8rTvw6RqMcWo1dogOtNx3/+/0+NNpJiXDobJrr1GwInI/BHAEkvSFIH6d2LqPcUQ==}
+  '@swc/core-linux-x64-gnu@1.16.22':
+    resolution: {integrity: sha512-u9hdfNEI3oI/dTRJ+In8G32EgfFpZDvMoI5elIERl6/XfaIzE9gpv4WomhKblAXA1+EYyLfDCS1EFFKQlBXTQQ==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@swc/core-linux-x64-musl@1.15.32':
-    resolution: {integrity: sha512-N4Ggahe/8SUbTX50P6EdhbW9YWcgbZVb52R4cq6MK+zsoMjRq7rGvV5ztA05QnbaCYqMYx8rTY7KAIA3Crdo4Q==}
+  '@swc/core-linux-x64-musl@1.16.22':
+    resolution: {integrity: sha512-C3YVRL717kKSSU8n6HaC7sesFSGnHjRuHN3609Wl4epPYVDDutzD6aj7CMcx9cg3WWJ/oE8woDZ8qrCfzmxvnw==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@swc/core-win32-arm64-msvc@1.15.32':
-    resolution: {integrity: sha512-01yN0o9jvo8xBTP12aPK2wW8b41jmOlGbDDlAnoynotc4pO6xA0zby9f1z6j++qXDpGBttLySq1omgVrlQKYcw==}
+  '@swc/core-win32-arm64-msvc@1.16.22':
+    resolution: {integrity: sha512-+MpNuE45LMFo+6RF8vMUqZPmaOfRQIuzCUHJ+jSXwEhiR5KHeZiQ9MaJglZRDeMuML67voCiFLrxqYTqGCbcCQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [win32]
 
-  '@swc/core-win32-ia32-msvc@1.15.32':
-    resolution: {integrity: sha512-fLagI9XZYNpTcmlqAcp3KBtmj7E19WCmYD80Jxj1Kn5tGNa7yxNLd3NNdWxuZGUPl5iC0/KqZru7g08gF6Fsrw==}
+  '@swc/core-win32-ia32-msvc@1.16.22':
+    resolution: {integrity: sha512-z1p/CMDSRqvsE5Gs7axHVl6p+2zjoQTYuGcZ/q+3PMjAxx2bo/+lkpG9ot+725e6lj9os3WwYQrncmOWKVDrEQ==}
     engines: {node: '>=10'}
     cpu: [ia32]
     os: [win32]
 
-  '@swc/core-win32-x64-msvc@1.15.32':
-    resolution: {integrity: sha512-gbc2bQ/T2CiR+w0OvcVKwLOFAcPZBvmWmolbwpg1E8UrpeC03DGtyMUApOHNXNYWA3SHFrYXCQtosrcMza1YFg==}
+  '@swc/core-win32-x64-msvc@1.16.22':
+    resolution: {integrity: sha512-IyBPJn/SpXsh7i5ZLfQUPJ+R+fuELPI7Sz51igmYMTv2wdnDn/tqnIlAUwQe6AgnclbuJdbOb6crUbyN/zwMzw==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [win32]
 
-  '@swc/core@1.15.32':
-    resolution: {integrity: sha512-/eWL0n43D64QWEUHLtTE+jDqjkJhyidjkDhv6f0uJohOUAhywxQ9wXYp845DNNds0JpCdI4Uo0a9bl+vbXf+ew==}
+  '@swc/core@1.16.22':
+    resolution: {integrity: sha512-kFqhtSmmNSZqJXIK0l9rF+oNg2efaZoeNbN/4qwbNTWfMRKApc6n7rKx827bw8K+4kmu7iH0LZ144QJTQzulHw==}
     engines: {node: '>=10'}
     peerDependencies:
       '@swc/helpers': '>=0.5.17'
@@ -7805,8 +7805,8 @@ packages:
     peerDependencies:
       '@swc/core': '*'
 
-  '@swc/types@0.1.26':
-    resolution: {integrity: sha512-lyMwd7WGgG79RS7EERZV3T8wMdmPq3xwyg+1nmAM64kIhx5yl+juO2PYIHb7vTiPgPCj8LYjsNV2T5wiQHUEaw==}
+  '@swc/types@0.1.28':
+    resolution: {integrity: sha512-V6Mnml8v09QALx6K0elJ7o9K/MkVDtW3t6L+7Ou/JcWtb3xwId2AH4FeOceySd2JaO87IMw4+6vSZxLm34LPbw==}
 
   '@tailwindcss/node@4.3.5':
     resolution: {integrity: sha512-yT53FzV4ke0cr/BguDxhWMpm5MJu1O2muzk+tKw6lKHjODAsYArBbWwFbJiaksfzFv1tpkO9QHGzmfs1hJT66g==}
@@ -9414,9 +9414,6 @@ packages:
 
   azure-devops-node-api@12.5.0:
     resolution: {integrity: sha512-R5eFskGvOm3U/GzeAuxRkUsAl0hrAwGgWn6zAd2KrZmrEhWZVqLew4OOupbQlXUuojUzpGtq62SmdhJ06N88og==}
-
-  b4a@1.6.7:
-    resolution: {integrity: sha512-OnAYlL5b7LEkALw87fUVafQw5rVR9RjwGd4KUwNQ6DrrNmaVaUCgLipfVlzrPQ4tWOR9P0IXGNOx50jYCCdSJg==}
 
   b4a@1.9.0:
     resolution: {integrity: sha512-dpfcF9fDNR6++cthXR67iyhgqWy9CBouAvIWhIntzBG6cvK/cnIPiZQjBwi/ZqjjBEDGfoNDtmB0kTjroOJ3pQ==}
@@ -15361,11 +15358,6 @@ packages:
     resolution: {integrity: sha512-GYrCADwpu6yV5OAvchkQ27Z5wwMxWAEMg5NNWjyHh/5DboFFqbdbvYNIvZouQpxXyeMPoTOh0vdPYKlf0ZswdQ==}
     hasBin: true
 
-  semver@7.7.4:
-    resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.8.6:
     resolution: {integrity: sha512-9lpSSU4Mly3mrtruwLs1eLK6+gzbzqeBFwRNjIjE+9LuDpWdYctrQlQ3ej1Ilgi7gknpsTRnPoLP8DpCHqHIJw==}
     engines: {node: '>=10'}
@@ -15621,9 +15613,6 @@ packages:
 
   stream-shift@1.0.3:
     resolution: {integrity: sha512-76ORR0DO1o1hlKwTbi/DM3EXWGf3ZJYO8cXX5RJwnul2DEg2oyoZyjLNoQM8WsvZiFKCRfC1O0J7iCvie3RZmQ==}
-
-  streamx@2.22.0:
-    resolution: {integrity: sha512-sLh1evHOzBy/iWRiR6d1zRcLao4gGZr3C1kzNz4fopCOKJb6xD9ub8Mpi9Mr1R6id5o43S+d93fI48UC5uM9aw==}
 
   streamx@2.28.1:
     resolution: {integrity: sha512-zEzXb0s5Cds7tqMH6rhZ05lcJydCWiQPEwiNngVqzsxCc962vLY4Uw+mW7od8kDH258k2Uz/JrOkdIAAhSh9VA==}
@@ -16759,6 +16748,10 @@ packages:
   write-file-atomic@5.0.1:
     resolution: {integrity: sha512-+QU2zd6OTD8XWIJCbffaiQeH9U73qIqafo1x6V1snCWYGJf6cVE0cDR4D8xRzcEnfI21IFrUPzPGtcPf8AC+Rw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+
+  write-file-atomic@7.0.1:
+    resolution: {integrity: sha512-OTIk8iR8/aCRWBqvxrzxR0hgxWpnYBblY1S5hDWBQfk/VFmJwzmJgQFN3WsoUKHISv2eAwe+PpbUzyL1CKTLXg==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   ws@7.5.13:
     resolution: {integrity: sha512-rsKI6xDBFVf4r/x8XyChGK04QR/XHroxs/jUcoWvtEZM8TPU/X/uIY9B1CsSzYws9ZJb/6bbBu7dPhFW00CAoA==}
@@ -22393,77 +22386,79 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@swc/cli@0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(chokidar@5.0.0)':
+  '@swc/cli@0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)':
     dependencies:
-      '@swc/core': 1.15.32(@swc/helpers@0.5.23)
+      '@swc/core': 1.16.22(@swc/helpers@0.5.23)
       '@swc/counter': 0.1.3
       '@xhmikosr/bin-wrapper': 14.4.0
       commander: 8.3.0
       minimatch: 9.0.9
       piscina: 4.9.4
-      semver: 7.7.4
+      semver: 7.8.6
       slash: 3.0.0
       source-map: 0.7.4
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.17
+      write-file-atomic: 7.0.1
     optionalDependencies:
       chokidar: 5.0.0
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
       - supports-color
 
-  '@swc/core-darwin-arm64@1.15.32':
+  '@swc/core-darwin-arm64@1.16.22':
     optional: true
 
-  '@swc/core-darwin-x64@1.15.32':
+  '@swc/core-darwin-x64@1.16.22':
     optional: true
 
-  '@swc/core-linux-arm-gnueabihf@1.15.32':
+  '@swc/core-linux-arm-gnueabihf@1.16.22':
     optional: true
 
-  '@swc/core-linux-arm64-gnu@1.15.32':
+  '@swc/core-linux-arm64-gnu@1.16.22':
     optional: true
 
-  '@swc/core-linux-arm64-musl@1.15.32':
+  '@swc/core-linux-arm64-musl@1.16.22':
     optional: true
 
-  '@swc/core-linux-ppc64-gnu@1.15.32':
+  '@swc/core-linux-ppc64-gnu@1.16.22':
     optional: true
 
-  '@swc/core-linux-s390x-gnu@1.15.32':
+  '@swc/core-linux-s390x-gnu@1.16.22':
     optional: true
 
-  '@swc/core-linux-x64-gnu@1.15.32':
+  '@swc/core-linux-x64-gnu@1.16.22':
     optional: true
 
-  '@swc/core-linux-x64-musl@1.15.32':
+  '@swc/core-linux-x64-musl@1.16.22':
     optional: true
 
-  '@swc/core-win32-arm64-msvc@1.15.32':
+  '@swc/core-win32-arm64-msvc@1.16.22':
     optional: true
 
-  '@swc/core-win32-ia32-msvc@1.15.32':
+  '@swc/core-win32-ia32-msvc@1.16.22':
     optional: true
 
-  '@swc/core-win32-x64-msvc@1.15.32':
+  '@swc/core-win32-x64-msvc@1.16.22':
     optional: true
 
-  '@swc/core@1.15.32(@swc/helpers@0.5.23)':
+  '@swc/core@1.16.22(@swc/helpers@0.5.23)':
     dependencies:
       '@swc/counter': 0.1.3
-      '@swc/types': 0.1.26
+      '@swc/types': 0.1.28
     optionalDependencies:
-      '@swc/core-darwin-arm64': 1.15.32
-      '@swc/core-darwin-x64': 1.15.32
-      '@swc/core-linux-arm-gnueabihf': 1.15.32
-      '@swc/core-linux-arm64-gnu': 1.15.32
-      '@swc/core-linux-arm64-musl': 1.15.32
-      '@swc/core-linux-ppc64-gnu': 1.15.32
-      '@swc/core-linux-s390x-gnu': 1.15.32
-      '@swc/core-linux-x64-gnu': 1.15.32
-      '@swc/core-linux-x64-musl': 1.15.32
-      '@swc/core-win32-arm64-msvc': 1.15.32
-      '@swc/core-win32-ia32-msvc': 1.15.32
-      '@swc/core-win32-x64-msvc': 1.15.32
+      '@swc/core-darwin-arm64': 1.16.22
+      '@swc/core-darwin-x64': 1.16.22
+      '@swc/core-linux-arm-gnueabihf': 1.16.22
+      '@swc/core-linux-arm64-gnu': 1.16.22
+      '@swc/core-linux-arm64-musl': 1.16.22
+      '@swc/core-linux-ppc64-gnu': 1.16.22
+      '@swc/core-linux-s390x-gnu': 1.16.22
+      '@swc/core-linux-x64-gnu': 1.16.22
+      '@swc/core-linux-x64-musl': 1.16.22
+      '@swc/core-win32-arm64-msvc': 1.16.22
+      '@swc/core-win32-ia32-msvc': 1.16.22
+      '@swc/core-win32-x64-msvc': 1.16.22
       '@swc/helpers': 0.5.23
 
   '@swc/counter@0.1.3': {}
@@ -22472,14 +22467,14 @@ snapshots:
     dependencies:
       tslib: 2.9.1
 
-  '@swc/jest@0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))':
+  '@swc/jest@0.2.39(@swc/core@1.16.22(@swc/helpers@0.5.23))':
     dependencies:
       '@jest/create-cache-key-function': 30.3.0
-      '@swc/core': 1.15.32(@swc/helpers@0.5.23)
+      '@swc/core': 1.16.22(@swc/helpers@0.5.23)
       '@swc/counter': 0.1.3
       jsonc-parser: 3.3.1
 
-  '@swc/types@0.1.26':
+  '@swc/types@0.1.28':
     dependencies:
       '@swc/counter': 0.1.3
 
@@ -22591,6 +22586,18 @@ snapshots:
       lz-string: 1.5.0
       picocolors: 1.1.1
       pretty-format: 27.5.1
+
+  '@testing-library/react-native@14.1.0(jest@30.5.2(@types/node@24.13.3))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))':
+    dependencies:
+      jest-matcher-utils: 30.5.2
+      picocolors: 1.1.1
+      pretty-format: 30.5.1
+      react: 19.3.0
+      react-native: 0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0)
+      redent: 3.0.0
+      test-renderer: 1.3.1(@types/react@18.2.38)(react@19.3.0)
+    optionalDependencies:
+      jest: 30.5.2(@types/node@24.13.3)
 
   '@testing-library/react-native@14.1.0(jest@30.5.2(@types/node@26.6.6))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))':
     dependencies:
@@ -23661,17 +23668,17 @@ snapshots:
 
   '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4)(webpack@5.104.1)':
     dependencies:
-      webpack: 5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
+      webpack: 5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.104.1)
 
   '@webpack-cli/info@2.0.2(webpack-cli@5.1.4)(webpack@5.104.1)':
     dependencies:
-      webpack: 5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
+      webpack: 5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.104.1)
 
   '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4)(webpack@5.104.1)':
     dependencies:
-      webpack: 5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
+      webpack: 5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.104.1)
 
   '@workflow/serde@4.1.0': {}
@@ -23694,6 +23701,7 @@ snapshots:
       '@xhmikosr/os-filter-obj': 4.1.0
       binary-version-check: 6.1.0
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
       - supports-color
 
@@ -23703,6 +23711,7 @@ snapshots:
       is-stream: 4.0.1
       tar-stream: 3.1.7
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
       - supports-color
 
@@ -23714,6 +23723,7 @@ snapshots:
       seek-bzip: 2.0.0
       unbzip2-stream: 1.4.3
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
       - supports-color
 
@@ -23723,6 +23733,7 @@ snapshots:
       file-type: 21.3.4
       is-stream: 4.0.1
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
       - supports-color
 
@@ -23743,6 +23754,7 @@ snapshots:
       graceful-fs: 4.2.11
       strip-dirs: 3.0.0
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
       - supports-color
 
@@ -23756,6 +23768,7 @@ snapshots:
       filenamify: 7.0.2
       got: 14.6.6
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
       - supports-color
 
@@ -24350,8 +24363,6 @@ snapshots:
     dependencies:
       tunnel: 0.0.6
       typed-rest-client: 1.8.11
-
-  b4a@1.6.7: {}
 
   b4a@1.9.0: {}
 
@@ -24970,7 +24981,7 @@ snapshots:
   clean-webpack-plugin@4.0.0(webpack@5.104.1):
     dependencies:
       del: 4.1.1
-      webpack: 5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
+      webpack: 5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
 
   cli-cursor@2.1.0:
     dependencies:
@@ -31987,8 +31998,6 @@ snapshots:
 
   semver@6.3.2: {}
 
-  semver@7.7.4: {}
-
   semver@7.8.6: {}
 
   send@0.19.2:
@@ -32302,15 +32311,6 @@ snapshots:
 
   stream-shift@1.0.3: {}
 
-  streamx@2.22.0:
-    dependencies:
-      fast-fifo: 1.3.2
-      text-decoder: 1.2.3
-    optionalDependencies:
-      bare-events: 2.5.4
-    transitivePeerDependencies:
-      - react-native-b4a
-
   streamx@2.28.1:
     dependencies:
       events-universal: 1.0.1
@@ -32567,10 +32567,10 @@ snapshots:
 
   svg-parser@2.1.0: {}
 
-  swc-loader@0.2.3(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack@5.104.1):
+  swc-loader@0.2.3(@swc/core@1.16.22(@swc/helpers@0.5.23))(webpack@5.104.1):
     dependencies:
-      '@swc/core': 1.15.32(@swc/helpers@0.5.23)
-      webpack: 5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
+      '@swc/core': 1.16.22(@swc/helpers@0.5.23)
+      webpack: 5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
 
   swr@2.4.1(react@18.2.0):
     dependencies:
@@ -32639,10 +32639,11 @@ snapshots:
 
   tar-stream@3.1.7:
     dependencies:
-      b4a: 1.6.7
+      b4a: 1.9.0
       fast-fifo: 1.3.2
-      streamx: 2.22.0
+      streamx: 2.28.1
     transitivePeerDependencies:
+      - bare-abort-controller
       - react-native-b4a
 
   tar-stream@3.2.2(bare-buffer@3.7.1):
@@ -32706,15 +32707,15 @@ snapshots:
       ansi-escapes: 4.3.2
       supports-hyperlinks: 2.3.0
 
-  terser-webpack-plugin@5.6.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack@5.104.1):
+  terser-webpack-plugin@5.6.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack@5.104.1):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.30
       jest-worker: 27.5.1
       schema-utils: 4.5.0
       terser: 5.43.1
-      webpack: 5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
+      webpack: 5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
     optionalDependencies:
-      '@swc/core': 1.15.32(@swc/helpers@0.5.23)
+      '@swc/core': 1.16.22(@swc/helpers@0.5.23)
       esbuild: 0.28.2
 
   terser-webpack-plugin@5.6.1(esbuild@0.28.2)(lightningcss@1.33.0)(webpack@5.104.1(esbuild@0.28.2)(lightningcss@1.33.0)):
@@ -33415,7 +33416,7 @@ snapshots:
       import-local: 3.1.0
       interpret: 3.1.1
       rechoir: 0.8.0
-      webpack: 5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
+      webpack: 5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4)
       webpack-merge: 5.8.0
 
   webpack-merge@5.8.0:
@@ -33425,7 +33426,7 @@ snapshots:
 
   webpack-sources@3.5.1: {}
 
-  webpack@5.104.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4):
+  webpack@5.104.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@5.1.4):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -33449,7 +33450,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.5.0
       tapable: 2.3.3
-      terser-webpack-plugin: 5.6.1(@swc/core@1.15.32(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack@5.104.1)
+      terser-webpack-plugin: 5.6.1(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack@5.104.1)
       watchpack: 2.4.4
       webpack-sources: 3.5.1
     optionalDependencies:
@@ -33640,6 +33641,10 @@ snapshots:
   write-file-atomic@5.0.1:
     dependencies:
       imurmurhash: 0.1.4
+      signal-exit: 4.1.0
+
+  write-file-atomic@7.0.1:
+    dependencies:
       signal-exit: 4.1.0
 
   ws@7.5.13: {}
