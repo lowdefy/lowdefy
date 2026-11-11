@@ -48,8 +48,8 @@
     "yaml": "2.9.1"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
     "ajv": "8.20.0",
     "copyfiles": "2.4.1",
     "vitest": "5.1.0"
