@@ -133,7 +133,7 @@
     "react-native-view-shot": "6.1.1"
   },
   "devDependencies": {
-    "@babel/core": "7.29.6",
+    "@babel/core": "7.29.13",
     "@babel/plugin-transform-class-static-block": "7.29.7",
     "@expo/fingerprint": "0.21.9",
     "@jest/globals": "30.5.2",

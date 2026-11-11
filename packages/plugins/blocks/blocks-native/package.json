@@ -71,7 +71,7 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "7.29.6",
+    "@babel/core": "7.29.13",
     "@babel/plugin-transform-class-static-block": "7.29.7",
     "@expo/ui": "58.0.28",
     "@jest/globals": "30.5.2",

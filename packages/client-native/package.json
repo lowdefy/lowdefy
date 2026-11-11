@@ -53,7 +53,7 @@
     "react-native-svg": "^15.16.0"
   },
   "devDependencies": {
-    "@babel/core": "7.29.6",
+    "@babel/core": "7.29.13",
     "@babel/plugin-transform-class-static-block": "7.29.7",
     "@jest/globals": "30.5.2",
     "@lowdefy/actions-core": "7.2.0",
