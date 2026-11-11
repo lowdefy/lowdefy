@@ -78,7 +78,10 @@
     "@playwright/test": "1.65.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
+    "antd": "6.7.0",
     "copyfiles": "2.4.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "vitest": "5.1.0"
   },
   "publishConfig": {
