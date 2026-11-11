@@ -179,7 +179,7 @@ Packages import each other's `dist/`, so when the update touches a package other
 pnpm --filter=@lowdefy/{dependent1} --filter=@lowdefy/{dependent2} test
 ```
 
-Always run `pnpm test:dependencies` too. Some suites need more than unit tests: `pnpm test:mongodb` for the MongoDB driver and connection, the block e2e suites (`code-docs/testing.md`) for a block library's rendering, `pnpm --filter=@lowdefy/shell test` for Expo and React Native. If tests fail, investigate and fix; a failure that needs real migration work is a "needs a task" outcome (see Batch mode).
+Always run `pnpm test:dependencies` too. Some suites need more than unit tests: `pnpm test:mongodb` for the MongoDB driver and connection, the block e2e suites (`code-docs/testing.md`) for a block library's rendering, `pnpm --filter=@lowdefy/shell test` for Expo and React Native. For ESLint, an ESLint plugin, `globals` or Prettier, run `pnpm lint` (it must run without crashing; compare the error counts by rule with the run before the update, `code-docs/linting.md`), `pnpm test:lint-rules` and `pnpm format:check`. The website (`packages/website`) also keeps its own `package-lock.json`: update it there with `npm install --package-lock-only`. If tests fail, investigate and fix; a failure that needs real migration work is a "needs a task" outcome (see Batch mode).
 
 ### 6. Changeset and commit
 
