@@ -45,7 +45,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "4.0.65",
+    "@ai-sdk/anthropic": "4.0.102",
     "@lowdefy/ai-utils": "7.2.0"
   },
   "devDependencies": {
