@@ -22,6 +22,7 @@ import { vi, afterEach, expect, test } from 'vitest';
 const create = vi.fn();
 const connect = vi.fn();
 const listDatabases = vi.fn();
+const logger = { info: vi.fn(), warn: vi.fn() };
 
 vi.doMock('mongodb-memory-server-core', () => ({
   MongoMemoryReplSet: { create },
@@ -92,8 +93,8 @@ afterEach(async () => {
 
 test('getDataStore starts one replica set and returns the same store on every call', async () => {
   create.mockResolvedValue(createReplSet());
-  const first = await getDataStore();
-  const second = await getDataStore();
+  const first = await getDataStore({ logger });
+  const second = await getDataStore({ logger });
   expect(first).toBe(second);
   expect(first.uri).toEqual('mongodb://127.0.0.1:50001/?replicaSet=x');
   expect(create).toHaveBeenCalledTimes(1);
@@ -105,7 +106,7 @@ test('getDataStore starts one replica set and returns the same store on every ca
 
 test('getDataStore binds the store to a port in the dynamic range, above the usual app ports', async () => {
   create.mockResolvedValue(createReplSet());
-  await getDataStore();
+  await getDataStore({ logger });
   const [[{ instanceOpts }]] = create.mock.calls;
   expect(instanceOpts[0].port).toBeGreaterThanOrEqual(MIN_PORT);
   expect(instanceOpts[0].port).toBeLessThanOrEqual(65535);
@@ -113,9 +114,9 @@ test('getDataStore binds the store to a port in the dynamic range, above the usu
 
 test('getDataStore clears a failed start so the next call retries', async () => {
   create.mockRejectedValueOnce(new Error('no mongod'));
-  await expect(getDataStore()).rejects.toThrow('no mongod');
+  await expect(getDataStore({ logger })).rejects.toThrow('no mongod');
   create.mockResolvedValueOnce(createReplSet({ uri: 'mongodb://127.0.0.1:50002/' }));
-  const store = await getDataStore();
+  const store = await getDataStore({ logger });
   expect(store.uri).toEqual('mongodb://127.0.0.1:50002/');
 });
 
@@ -126,7 +127,7 @@ test('a SIGTERM stops the store with cleanup, then raises the signal again', asy
     return true;
   });
   const before = snapshotListeners();
-  await getDataStore();
+  await getDataStore({ logger });
   const [onSigterm] = addedListeners('SIGTERM', before.SIGTERM);
   expect(addedListeners('SIGINT', before.SIGINT)).toHaveLength(1);
   expect(addedListeners('SIGHUP', before.SIGHUP)).toHaveLength(1);
@@ -147,7 +148,7 @@ test('a SIGHUP from a closed terminal stops the store with cleanup, then raises 
     return true;
   });
   const before = snapshotListeners();
-  await getDataStore();
+  await getDataStore({ logger });
   const [onSighup] = addedListeners('SIGHUP', before.SIGHUP);
   await onSighup('SIGHUP');
   expect(replSet.stop).toHaveBeenCalledWith({ doCleanup: true });
@@ -163,7 +164,7 @@ test('the exit hook kills mongod and removes its temporary directory when no sto
     createReplSet({ instanceInfo: { tmpDir, dbPath: tmpDir, instance: { mongodProcess } } })
   );
   const before = snapshotListeners();
-  await getDataStore();
+  await getDataStore({ logger });
   const [onExit] = addedListeners('exit', before.exit);
   onExit();
   expect(mongodProcess.kill).toHaveBeenCalledWith('SIGKILL');
@@ -174,34 +175,38 @@ test('a stopped store is replaced by a new one on the next getDataStore', async 
   const first = createReplSet({ uri: 'mongodb://127.0.0.1:50003/' });
   const second = createReplSet({ uri: 'mongodb://127.0.0.1:50004/' });
   create.mockResolvedValueOnce(first).mockResolvedValueOnce(second);
-  const store = await getDataStore();
+  const store = await getDataStore({ logger });
   await store.stop();
   await store.stop();
   expect(first.stop).toHaveBeenCalledTimes(1);
-  expect((await getDataStore()).uri).toEqual('mongodb://127.0.0.1:50004/');
+  expect((await getDataStore({ logger })).uri).toEqual('mongodb://127.0.0.1:50004/');
 });
 
 test('a store whose mongod died is stopped by the next data session, and the one after starts a new store', async () => {
   const dead = createReplSet({ uri: 'mongodb://127.0.0.1:50005/' });
   const fresh = createReplSet({ uri: 'mongodb://127.0.0.1:50006/' });
   create.mockResolvedValueOnce(dead).mockResolvedValueOnce(fresh);
-  await getDataStore();
+  await getDataStore({ logger });
   const gone = new Error('Server selection timed out after 5000 ms');
   gone.name = 'MongoServerSelectionError';
   listDatabases.mockRejectedValueOnce(gone);
-  const error = await openDataSession({ dataSet: { name: 'shop' } }).catch((caught) => caught);
+  const error = await openDataSession({ dataSet: { name: 'shop' }, logger }).catch(
+    (caught) => caught
+  );
   expect(error.message).toEqual(
     'The journey data store stopped responding (Server selection timed out after 5000 ms). The next journey starts a new one.'
   );
   expect(error.cause).toBe(gone);
   expect(dead.stop).toHaveBeenCalledWith({ doCleanup: true });
-  expect((await getDataStore()).uri).toEqual('mongodb://127.0.0.1:50006/');
+  expect((await getDataStore({ logger })).uri).toEqual('mongodb://127.0.0.1:50006/');
 });
 
 test('a data set that fails to load for another reason keeps the store', async () => {
   create.mockResolvedValueOnce(createReplSet());
-  const store = await getDataStore();
+  const store = await getDataStore({ logger });
   listDatabases.mockRejectedValueOnce(new Error('not authorized'));
-  await expect(openDataSession({ dataSet: { name: 'shop' } })).rejects.toThrow('not authorized');
-  expect(await getDataStore()).toBe(store);
+  await expect(openDataSession({ dataSet: { name: 'shop' }, logger })).rejects.toThrow(
+    'not authorized'
+  );
+  expect(await getDataStore({ logger })).toBe(store);
 });

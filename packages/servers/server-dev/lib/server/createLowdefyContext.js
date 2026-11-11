@@ -27,11 +27,15 @@ import {
 } from '@lowdefy/api';
 import { type } from '@lowdefy/helpers';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import {
+  applyDataSetRedirect,
+  sinkExternalConnections,
+  trackSessionWork,
+} from '@lowdefy/test-utils/dataSets';
 import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
-import applyDataSetRedirect from './applyDataSetRedirect.js';
 import authJson from '../build/auth.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
@@ -53,7 +57,6 @@ import readDataSession from '../docs/dataSets/readDataSession.js';
 import readMergedMaps from './readMergedMaps.js';
 import readRecordingCookie from './recording/readRecordingCookie.js';
 import scrubSecrets from './scrubSecrets.js';
-import sinkExternalConnections from './sinkExternalConnections.js';
 import notifications, {
   interpolateProperties,
   renderEmail,
@@ -61,7 +64,6 @@ import notifications, {
 import operators from '../../build/plugins/operators/server.js';
 import resolveHeadlessUser from './auth/resolveHeadlessUser.js';
 import steps from '../../build/plugins/steps.js';
-import trackSessionWork from './trackSessionWork.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();

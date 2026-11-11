@@ -21,13 +21,13 @@ import readBuiltArtifact from './readBuiltArtifact.js';
 import readRoutineSteps from '../readRoutineSteps.js';
 
 // The meta.dataSet declarations a data session runs against the session's databases (see
-// lib/server/applyDataSetRedirect.js): 'redirect' takes its target's session database, 'walled'
+// applyDataSetRedirect in @lowdefy/test-utils): 'redirect' takes its target's session database, 'walled'
 // reaches them only through walled connections. Every other declaration, or none, would reach a real service or
 // is refused by the gate.
 const CLICKABLE_DATA_SET_MODES = new Set(['redirect', 'walled']);
 
 // An 'external' type with request resolvers is clickable too: under a data session its requests
-// are sunk (recorded, never sent), see lib/server/sinkExternalConnections.js. An external type
+// are sunk (recorded, never sent), see sinkExternalConnections in @lowdefy/test-utils. An external type
 // with none (an Mcp config container) has nothing to sink and stays refused.
 function isSunk({ connections, connectionType, dataSet }) {
   if (dataSet !== 'external') return false;

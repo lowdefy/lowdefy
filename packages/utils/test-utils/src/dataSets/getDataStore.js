@@ -18,12 +18,9 @@ import { MongoClient } from 'mongodb';
 import { MongoMemoryReplSet } from 'mongodb-memory-server-core';
 import { DryMongoBinary } from 'mongodb-memory-server-core/lib/util/DryMongoBinary.js';
 
-import createLogger from '../../server/log/createLogger.js';
 import pickDataStorePort from './pickDataStorePort.js';
 import registerDataStoreShutdown from './registerDataStoreShutdown.js';
 import removeDataStoreFiles from './removeDataStoreFiles.js';
-
-const logger = createLogger();
 
 // One store per dev server process. Kept on globalThis because the journey route that opens a data
 // session and the API context that reads it may load as separate module instances (Vite's SSR
@@ -34,7 +31,7 @@ const STORE_KEY = Symbol.for('lowdefy.devServer.dataStore');
 // store, and the journey should say so rather than wait the driver's default 30 s.
 const SERVER_SELECTION_TIMEOUT_MS = 5000;
 
-async function announceDownload() {
+async function announceDownload({ logger }) {
   const options = await DryMongoBinary.generateOptions();
   const binary = await DryMongoBinary.locateBinary(options);
   if (binary === undefined) {
@@ -48,8 +45,8 @@ const CACHE_SIZE_GB = '0.25';
 
 // A replica set, not a standalone server: transactions and change streams need one, and the app's
 // own cluster is one. MONGOMS_VERSION, read by mongodb-memory-server, pins the MongoDB version.
-async function startDataStore() {
-  await announceDownload();
+async function startDataStore({ logger }) {
+  await announceDownload({ logger });
   const replSet = await MongoMemoryReplSet.create({
     instanceOpts: [
       { port: await pickDataStorePort(), args: ['--wiredTigerCacheSizeGB', CACHE_SIZE_GB] },
@@ -100,10 +97,11 @@ async function startDataStore() {
 // while the connection plugin's cached clients keep polling the old one. It stops, with its
 // temporary directory removed, when the dev server process shuts down. A failed start is not
 // cached, so the next call tries again, and a store found dead (openDataSession) is stopped, so the
-// next call starts a fresh one.
-function getDataStore() {
+// next call starts a fresh one. `logger` is the caller's own (the dev server's, for journeys): the
+// call that starts the store says so on it when the MongoDB binary still has to be downloaded.
+function getDataStore({ logger }) {
   if (globalThis[STORE_KEY] === undefined) {
-    globalThis[STORE_KEY] = startDataStore().catch((error) => {
+    globalThis[STORE_KEY] = startDataStore({ logger }).catch((error) => {
       delete globalThis[STORE_KEY];
       throw error;
     });

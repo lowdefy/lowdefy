@@ -17,7 +17,6 @@
 import crypto from 'node:crypto';
 import { type } from '@lowdefy/helpers';
 
-import createLogger from '../../server/log/createLogger.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import drainSessionWork from './drainSessionWork.js';
 import getDataStore from './getDataStore.js';
@@ -26,8 +25,6 @@ import isDataStoreGone from './isDataStoreGone.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
-
-const logger = createLogger();
 
 const DRAIN_TIMEOUT_MS = 30000;
 
@@ -40,7 +37,7 @@ async function dropSessionDatabases({ client, session }) {
   await Promise.all(listSessionDatabases(session).map((name) => client.db(name).dropDatabase()));
 }
 
-function createClose({ session, client }) {
+function createClose({ session, client, logger }) {
   let closing;
   async function close() {
     session.state = 'closing';
@@ -70,9 +67,10 @@ function createClose({ session, client }) {
 // prefix (ld_<hex>), so the orphan sweep and close() find them all; the first, <prefix>_0, is also
 // the database a target computed per request reads. `cookie` is the id, the payload
 // openPage({ dataCookie }) writes into each actor's lowdefy_journey_data cookie. close() waits for
-// the session's background work (context.waitUntil), then drops the databases.
-async function openDataSession({ dataSet }) {
-  const store = await getDataStore();
+// the session's background work (context.waitUntil), then drops the databases. `logger` is the
+// caller's own: close() warns on it when that work outlives the wait.
+async function openDataSession({ dataSet, logger }) {
+  const store = await getDataStore({ logger });
   const { client, uri } = store;
   const id = crypto.randomBytes(16).toString('hex');
   const prefix = `ld_${crypto.randomBytes(6).toString('hex')}`;
@@ -129,7 +127,13 @@ async function openDataSession({ dataSet }) {
   }
   session.state = 'open';
   // sunk is the session's own array, so requests sunk while the journey runs show in it.
-  return { id, cookie: id, session, sunk: session.sunk, close: createClose({ session, client }) };
+  return {
+    id,
+    cookie: id,
+    session,
+    sunk: session.sunk,
+    close: createClose({ session, client, logger }),
+  };
 }
 
 export default openDataSession;

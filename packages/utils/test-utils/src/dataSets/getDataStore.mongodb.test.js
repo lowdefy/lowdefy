@@ -23,6 +23,8 @@ import { MIN_PORT } from './pickDataStorePort.js';
 
 vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
+const logger = { info: vi.fn(), warn: vi.fn() };
+
 // The real memory replica set, in a process of its own (each test file runs in a worker of its own), so
 // killing its mongod here touches no other suite's store.
 
@@ -34,7 +36,7 @@ async function describeMongod(store) {
 }
 
 test('the data store binds a port in the dynamic range and removes its directory when it stops', async () => {
-  const store = await getDataStore();
+  const store = await getDataStore({ logger });
   const port = Number(new URL(store.uri).port);
   expect(port).toBeGreaterThanOrEqual(MIN_PORT);
   expect(port).toBeLessThanOrEqual(65535);
@@ -45,18 +47,19 @@ test('the data store binds a port in the dynamic range and removes its directory
 });
 
 test('a store whose mongod died is replaced: the next session reports it, the one after runs on a new store', async () => {
-  const dead = await getDataStore();
+  const dead = await getDataStore({ logger });
   const { pid, dbPath } = await describeMongod(dead);
   process.kill(pid, 'SIGKILL');
-  await expect(openDataSession({ dataSet: { name: 'shop' } })).rejects.toThrow(
+  await expect(openDataSession({ dataSet: { name: 'shop' }, logger })).rejects.toThrow(
     'The journey data store stopped responding'
   );
   expect(fs.existsSync(dbPath)).toBe(false);
-  const fresh = await getDataStore();
+  const fresh = await getDataStore({ logger });
   expect(fresh).not.toBe(dead);
   expect(fresh.uri).not.toEqual(dead.uri);
   const opened = await openDataSession({
     dataSet: { name: 'shop', fixtures: {}, generated: {}, indexes: {}, collections: {} },
+    logger,
   });
   await opened.close();
   await fresh.stop();
