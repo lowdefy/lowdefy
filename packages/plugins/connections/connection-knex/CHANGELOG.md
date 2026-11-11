@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.2.0
+
+### Patch Changes
+
+- Updated dependencies [df6fa3c]
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [7aec569]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/helpers@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

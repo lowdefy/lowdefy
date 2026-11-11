@@ -1,5 +1,64 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- 4d72041: refactor(client): Move the platform-free client into @lowdefy/client-core
+
+  The request, API call, error handling, page lifecycle, storage, websocket and auth code the web client and native shells share now lives in the new `@lowdefy/client-core`, which `@lowdefy/client` depends on. Web apps behave as before. A plugin that deep-imported one of these files from `@lowdefy/client` (such as `@lowdefy/client/request.js`, `createCallRequest.js`, `createHandleError.js`, `getContextKey.js`, `storage/*`, `websocket/*` or `auth/*`) imports it from `@lowdefy/client-core` instead.
+
+### Patch Changes
+
+- 029208c: fix(engine): Every mounted copy of a page re-renders when its state changes.
+
+  A page context now keeps a set of React updaters per block (`createUpdaters`) instead of one, and each Block component adds its own while mounted and removes it on unmount. A native shell can show one page instance on two screens (in two tabs' stacks, or pushed again over itself); the copy that mounted last no longer takes the other's re-renders.
+
+- e1cf57e: fix(client): A block render React throws away no longer keeps its updater
+
+  A block registers its updater on render, as the engine can update it before its first commit, but only an unmount removed it. A render React discarded, such as a subtree a parent error boundary throws away, kept its updater until the page context was rebuilt. A render's registration now removes itself when no commit follows within a second, and a first commit later than that re-renders once to catch up. The native renderer's blocks do the same.
+
+- f9cafb7: fix(client): Requests cancelled as the page unloads are no longer reported as errors
+
+  Reloading a page, following a link to another page or closing the tab while a request or endpoint call is still loading made the browser cancel the call, which failed with `Failed to fetch` (or `Load failed` in Safari). The `Request` or `CallAPI` action then ran its catch actions and the failure was reported to the server log and error tracking, although the request had often reached the server and succeeded. A call that fails while the page is leaving is now held: it never finishes if the page goes, and fails as before if the page stays open for 10 seconds (a file download or a `mailto:` link starts leaving but stays) or is shown again with the browser's Back button. Other errors raised while the page is leaving, such as a `Fetch` action the browser cancels, log to the browser console only and are not sent to the server log. A network failure while the page stays open still fails the action and is reported as before.
+
+- c84f275: fix(client): A sign-in that stays on the page renders the signed-in user before the action returns
+
+  A sign-in with `callbackUrl: false`, which stays on the page, now finishes by asking the server who signed in, as `UpdateSession` does, and renders that user before the `Login` action returns. The next action in the chain, such as a request, is answered as the user the page shows. Before, that request could reload the page and lose the page's state. If the page cannot get the signed-in user from the server, it reloads in place rather than failing a sign-in that succeeded.
+
+- 9419d09: Cap the dev tab's event and call histories (dev only), close idle headless browsers after 45 s and keep at most 10 rendered instances per page in the tab list.
+- 3cd6d62: fix(client): a read the host fails is sent once more, and a non-JSON error says what happened
+
+  A host can answer a request itself before the app runs, with a plain-text body: a serverless platform's own 500 ("A server error has occurred"), a gateway error or the request timeout's 504. The client parsed every error body as JSON, so the action failed with `Unexpected token 'A', "A server e"... is not valid JSON`.
+
+  Such a response now becomes a `NonJsonResponseError` carrying the status and the start of the body. A 504 says "The request timed out. Try again." and any other status says "The server could not answer (status N). Try again." A page request that only reads is sent once more first, with a console warning: the build marks a request `readOnly` when its plugin's `requestMetas` say its type never writes and any pipeline it has is a literal list without `$out` or `$merge`. Writes, endpoint calls (`CallAPI`) and request types without metadata are never sent again, and a JSON error from the app is never retried.
+
+- Updated dependencies [029208c]
+- Updated dependencies [4d72041]
+- Updated dependencies [9419d09]
+- Updated dependencies [df6fa3c]
+- Updated dependencies [31d7de8]
+- Updated dependencies [29fd1a6]
+- Updated dependencies [10903fd]
+- Updated dependencies [7416223]
+- Updated dependencies [5b19a85]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [2ce6fa5]
+- Updated dependencies [bb7c249]
+- Updated dependencies [7c85b4b]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [a461f7c]
+- Updated dependencies [7aec569]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/engine@7.2.0
+  - @lowdefy/client-core@7.2.0
+  - @lowdefy/errors@7.2.0
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/block-utils@7.2.0
+  - @lowdefy/layout@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes
