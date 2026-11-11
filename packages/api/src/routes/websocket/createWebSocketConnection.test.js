@@ -43,6 +43,8 @@ beforeAll(async () => {
 
 function setup({ mode = 'prod' } = {}) {
   const registry = {
+    getCheckedWebsocketIds: vi.fn(() => []),
+    recheckAccess: vi.fn(async () => {}),
     subscribe: vi.fn(async () => {}),
     unsubscribe: vi.fn(),
     unsubscribeAll: vi.fn(),
@@ -479,6 +481,8 @@ describe('caller re-check', () => {
 
   function setupWithAuth({ user = member } = {}) {
     const registry = {
+      getCheckedWebsocketIds: vi.fn(() => []),
+      recheckAccess: vi.fn(async () => {}),
       subscribe: vi.fn(async () => {}),
       unsubscribe: vi.fn(),
       unsubscribeAll: vi.fn(),
@@ -671,6 +675,62 @@ describe('caller re-check', () => {
     await flush();
 
     expect(closeSocket).not.toHaveBeenCalled();
+  });
+
+  test('the minute check runs the websocket check of every open subscription that has one', async () => {
+    const { connection, context, registry, send } = setupWithAuth();
+    registry.getCheckedWebsocketIds.mockReturnValue(['tickets', 'rooms']);
+
+    vi.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(registry.recheckAccess).toHaveBeenCalledTimes(2);
+    expect(registry.recheckAccess).toHaveBeenCalledWith(context, {
+      websocketId: 'tickets',
+      subscriber: connection.subscriber,
+    });
+    expect(registry.recheckAccess).toHaveBeenCalledWith(context, {
+      websocketId: 'rooms',
+      subscriber: connection.subscriber,
+    });
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  test('a subscription the minute check refuses is reported to the client without a requestId', async () => {
+    const { context, registry, send } = setupWithAuth();
+    registry.getCheckedWebsocketIds.mockReturnValue(['tickets']);
+    registry.recheckAccess.mockRejectedValue(
+      new AuthorizationError('Websocket "tickets" does not exist.')
+    );
+
+    vi.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(context.handleError).not.toHaveBeenCalled();
+    expect(context.logger.warn).toHaveBeenCalledWith(
+      { event: 'ws_refused', frameType: 'recheck' },
+      'Websocket "tickets" does not exist.'
+    );
+    const [frame] = sentFrames(send);
+    expect(frame.type).toBe('error');
+    expect(frame.websocketId).toBe('tickets');
+    expect(frame.requestId).toBeUndefined();
+    expect(frame.error['~e']).toMatchObject({
+      name: 'AuthorizationError',
+      message: 'Websocket "tickets" does not exist.',
+    });
+  });
+
+  test('the minute check does not run websocket checks for a caller that changed', async () => {
+    const { closeSocket, registry } = setupWithAuth();
+    registry.getCheckedWebsocketIds.mockReturnValue(['tickets']);
+    mockCurrentCaller = null;
+
+    vi.advanceTimersByTime(60 * 1000);
+    await flush();
+
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+    expect(registry.recheckAccess).not.toHaveBeenCalled();
   });
 
   test('a context without an auth engine keeps the caller it was built with', async () => {

@@ -24,7 +24,9 @@ import { afterAll, afterEach, expect, test } from 'vitest';
 const browsersPath = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shell-'));
 process.env.PLAYWRIGHT_BROWSERS_PATH = browsersPath;
 
-const { registry } = await import('playwright-core/lib/server/registry/index');
+const {
+  registry: { registry },
+} = await import('playwright-core/lib/coreBundle');
 const { default: isHeadlessShellIncomplete } = await import('./isHeadlessShellIncomplete.js');
 
 const { directory } = registry.findExecutable('chromium-headless-shell');

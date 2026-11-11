@@ -87,6 +87,7 @@ async function createBannedUserAuth({ withHooks = true, advanced, databaseHooks 
           organizations: { policy: 'tenant', signup: 'open' },
         },
         getAuth: () => auth,
+        logger: createLogger(),
       })
     : undefined;
   auth = betterAuth({
@@ -109,12 +110,16 @@ async function createBannedUserAuth({ withHooks = true, advanced, databaseHooks 
     body: { email: 'banned@example.com', name: 'Banned', password: 'a-long-password-123' },
   });
   const authContext = await auth.$context;
-  await authContext.internalAdapter.updateUser(user.id, { banned: true });
-  async function sendLink() {
+  // The link is sent before the ban: a banned user is sent no link at all
+  // (createEmailSendGate), so the refusal is met by a link already in the inbox.
+  async function sendLink({ ban = true } = {}) {
     await auth.api.signInMagicLink({
       body: { email: 'banned@example.com', callbackURL: '/home', errorCallbackURL: '/login' },
       headers: new Headers(),
     });
+    if (ban) {
+      await authContext.internalAdapter.updateUser(user.id, { banned: true });
+    }
     return links.at(-1);
   }
   return { auth, sendLink };
@@ -209,17 +214,14 @@ test("an app's session.create.before :reject is redirected to the error page", a
     dispatch: async () => ({ status: 'reject', error: new Error('Sign-in is closed today.') }),
     hook: { id: 'refuse-sign-in', point: 'session.create.before' },
   });
-  // The banned user is the only user, so lift the ban: the app hook is the
-  // refusal under test.
+  // The banned user is the only user, so leave the ban off: the app hook is
+  // the refusal under test.
   const { auth, sendLink } = await createBannedUserAuth({
     databaseHooks: {
       session: { create: { before: composeBeforeSlot({ hooks: [refuseSignIn] }) } },
     },
   });
-  const authContext = await auth.$context;
-  const { user } = await authContext.internalAdapter.findUserByEmail('banned@example.com');
-  await authContext.internalAdapter.updateUser(user.id, { banned: false });
-  const response = await auth.handler(new Request(await sendLink()));
+  const response = await auth.handler(new Request(await sendLink({ ban: false })));
   expect(response.status).toBe(302);
   const location = new URL(response.headers.get('location'));
   expect(location.pathname).toBe('/login');

@@ -28,7 +28,7 @@ test('readStorageItem returns the value under the key', () => {
     readStorageItem({
       key: 'lowdefy:app::lowdefy_locale',
       legacyKey: 'lowdefy_locale',
-      storage: window.localStorage,
+      getStorage: () => window.localStorage,
     })
   ).toBe('de-DE');
   expect(window.localStorage.getItem('lowdefy_locale')).toBe('fr-FR');
@@ -40,7 +40,7 @@ test('readStorageItem moves a value under the legacy key to the key', () => {
     readStorageItem({
       key: 'lowdefy:app::lowdefy_locale',
       legacyKey: 'lowdefy_locale',
-      storage: window.localStorage,
+      getStorage: () => window.localStorage,
     })
   ).toBe('de-DE');
   expect(window.localStorage.getItem('lowdefy:app::lowdefy_locale')).toBe('de-DE');
@@ -52,7 +52,7 @@ test('readStorageItem returns null when neither key holds a value', () => {
     readStorageItem({
       key: 'lowdefy:app::lowdefy_locale',
       legacyKey: 'lowdefy_locale',
-      storage: window.localStorage,
+      getStorage: () => window.localStorage,
     })
   ).toBeNull();
 });
@@ -63,5 +63,15 @@ test('readStorageItem returns null when the browser blocks storage', () => {
       throw new DOMException('The operation is insecure.', 'SecurityError');
     },
   };
-  expect(readStorageItem({ key: 'a', legacyKey: 'b', storage })).toBeNull();
+  expect(readStorageItem({ key: 'a', legacyKey: 'b', getStorage: () => storage })).toBeNull();
+});
+
+test('readStorageItem returns null when reaching the storage throws', () => {
+  const getStorage = () => {
+    throw new DOMException(
+      "Failed to read the 'localStorage' property from 'Window': Access is denied for this document.",
+      'SecurityError'
+    );
+  };
+  expect(readStorageItem({ key: 'a', legacyKey: 'b', getStorage })).toBeNull();
 });

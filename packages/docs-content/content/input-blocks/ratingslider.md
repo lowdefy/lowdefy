@@ -669,6 +669,7 @@ Rating slider with customizable range, icons, and N/A option.
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
+| `marks` | object | - | Tick marks on the slider. Keys are slider values and values are labels: a string, or `{ style, label }` as antd takes. Replaces the marks `showMarks` draws, including the blank mark one step below `min`. Example: { 0: "0", 5: "5", 10: "10" }. |
 | `min` | number | `0` | The minimum value of the slider. |
 | `max` | number | `10` | The maximum value of the slider. |
 | `notApplicableLabel` | string | `"N/A"` | Label shown at the null value of the slider. |

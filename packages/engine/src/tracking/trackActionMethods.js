@@ -18,8 +18,10 @@ import { type } from '@lowdefy/helpers';
 
 // Action methods that read, or that report every change they make. Actions reach page context only
 // through their methods, so every other method (auth, navigation, Reset, Validate, CallMethod,
-// CallAPI, WebSockets, and any method added later) makes the next update a full pass.
+// WebSockets, and any method added later) makes the next update a full pass. callAPI reports the
+// api: key of the endpoint it calls.
 const reportingMethods = new Set([
+  'callAPI',
   'displayMessage',
   'getActions',
   'getAppStorageKey',

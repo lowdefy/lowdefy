@@ -16,6 +16,7 @@
 
 import { useRef } from 'react';
 import TurndownService from 'turndown';
+import { type } from '@lowdefy/helpers';
 
 import fileUpload from '../utils/fileUpload.js';
 
@@ -61,6 +62,11 @@ function useTiptapState({ value, methods, hasDownloadRequest, imageSrc }) {
     // surrounding page navigated away before the upload resolved), otherwise the
     // chained commands run against a destroyed editor and throw.
     if (editor.isDestroyed) return;
+    // An imageSrc src can answer only once the content is saved, so show the image from the
+    // chosen file until then (see buildExtensions). Download-policy and legacy srcs load at once.
+    if (type.isFunction(imageSrc)) {
+      editor.storage.image.setPreview(url, file);
+    }
     editor
       .chain()
       .insertContentAt(pos, [

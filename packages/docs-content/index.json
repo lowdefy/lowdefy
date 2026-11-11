@@ -1,5 +1,5 @@
 {
-  "version": "7.1.0",
+  "version": "7.2.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -3176,7 +3176,7 @@
         "version.yaml",
         "websockets/introduction.yaml"
       ],
-      "hash": "9a3abf01a934df3610372700d1f888e1558e5b5287209b1691ffed1d1db504ec"
+      "hash": "949ab851163dc40decd06e30ad974087dea1115f91ab6791104a2c010b5a6197"
     },
     "websockets/websocket-subscriptions": {
       "files": [
@@ -3301,13 +3301,13 @@
       "files": [
         "users/organizations.yaml"
       ],
-      "hash": "be6003a3d5dce08abc7e74e6766c5031d0710b73fc24204b8bd9a694bcdbaed8"
+      "hash": "a799ed56573f37a7374538657a5c523e8b0a3bd3e35dabed7492bf705ca26873"
     },
     "user-authentication/auth-steps": {
       "files": [
         "users/auth-steps.yaml"
       ],
-      "hash": "46c67f8c9ecf56a5f18ba4f109bb011beb956daa90a0844405ab7cb396e1cf4d"
+      "hash": "6a3fd58bb355b46f33246b84c6993d3dda0d60495bd56d94384f505873888903"
     },
     "user-authentication/mcp-oauth": {
       "files": [
@@ -3319,7 +3319,7 @@
       "files": [
         "users/user-object.yaml"
       ],
-      "hash": "8abd5b2a058647962e6bf8ea6e0a2deb64b369beb2a1bff8fe5aa79cb03dd06a"
+      "hash": "c56c01fd7f124bce78c8c920a96e09010fffe98e1b50e33638a277bfead730f6"
     },
     "user-authentication/auth-configuration": {
       "files": [
@@ -3361,7 +3361,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "94fd498047ff9b857bc2ac3d2c8832f39e83beeeff6fb107a950635278c96eb8"
+      "hash": "954e1aaacaf6abe246a4574fad5dee7e54b947b48652133da667e592e678f122"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3709,7 +3709,7 @@
         "blocks/input/RatingSlider.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "9d27407b34aa8454525cb37e210a879f1e324fad8c777394f0cfc735c7a3f78c"
+      "hash": "f52c19b663d984b6d0c2d517603d3a8b21fd925563a9eba96790f6687b012dc5"
     },
     "input-blocks/segmentedselector": {
       "files": [
@@ -5293,7 +5293,7 @@
         "operators/_api.yaml",
         "templates/operators.yaml.njk"
       ],
-      "hash": "2194aa8b560f6c3789f57e591c7d91dc1a0c34099ba968e69397d993e4d34089"
+      "hash": "8181db4d7542c90ad8cc2be7db4eb94f545a8361f32a001aa7339bff336ad268"
     },
     "operators/_app": {
       "files": [

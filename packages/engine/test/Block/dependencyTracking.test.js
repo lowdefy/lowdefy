@@ -67,6 +67,87 @@ test('setValue evaluates only the input and the blocks that read its value', asy
   });
 });
 
+test('SetState renders only the blocks whose output changed', async () => {
+  const context = await trackingContext({ lowdefy: { pageId }, pageConfig: formPage });
+  const blocks = Object.values(context._internal.RootSlots.map);
+  const evalsBefore = new Map(blocks.map((block) => [block, block.eval]));
+  setState(context, { name: 'Ann' });
+  const rendered = blocks
+    .filter((block) => block.eval !== evalsBefore.get(block))
+    .map((block) => block.blockId)
+    .sort();
+  expect(rendered).toEqual(['greeting', 'name']);
+});
+
+test('SetState renders a list whose rows were added or removed', async () => {
+  const listPage = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'items',
+        type: 'List',
+        blocks: [{ id: 'items.$.text', type: 'TextInput' }],
+      },
+    ],
+  };
+  const context = await trackingContext({ lowdefy: { pageId }, pageConfig: listPage });
+  const { items } = context._internal.RootSlots.map;
+  const evalBeforeAdd = items.eval;
+  setState(context, { items: [{ text: 'a' }, { text: 'b' }] });
+  expect(items.eval).not.toBe(evalBeforeAdd);
+  const evalBeforeRemove = items.eval;
+  setState(context, { items: [{ text: 'a' }] });
+  expect(items.eval).not.toBe(evalBeforeRemove);
+});
+
+test('SetState renders a list whose rows changed but kept their count', async () => {
+  const listPage = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'items',
+        type: 'List',
+        blocks: [{ id: 'items.$.text', type: 'TextInput' }],
+      },
+    ],
+  };
+  const context = await trackingContext({ lowdefy: { pageId }, pageConfig: listPage });
+  const { items } = context._internal.RootSlots.map;
+  setState(context, { items: [{ text: 'a' }] });
+  const evalBeforeChange = items.eval;
+  setState(context, { items: [{ text: 'b' }] });
+  expect(items.eval).not.toBe(evalBeforeChange);
+  const evalBeforeOther = items.eval;
+  setState(context, { other: 1 });
+  expect(items.eval).toBe(evalBeforeOther);
+});
+
+test('SetState with nothing to set renders every block', async () => {
+  const context = await trackingContext({ lowdefy: { pageId }, pageConfig: formPage });
+  const blocks = Object.values(context._internal.RootSlots.map);
+  const evalsBefore = new Map(blocks.map((block) => [block, block.eval]));
+  setState(context, {});
+  const unrendered = blocks.filter((block) => block.eval === evalsBefore.get(block));
+  expect(unrendered).toEqual([]);
+});
+
+test('SetState renders an input whose validation was showing, so the validation hides', async () => {
+  const requiredPage = {
+    id: 'root',
+    type: 'Box',
+    blocks: [{ id: 'name', type: 'TextInput', required: true }],
+  };
+  const context = await trackingContext({ lowdefy: { pageId }, pageConfig: requiredPage });
+  const { name } = context._internal.RootSlots.map;
+  name.getValidate();
+  name.render();
+  expect(name.eval.validation.status).toBe('error');
+  setState(context, { other: 1 });
+  expect(name.eval.validation.status).toBe(null);
+});
+
 test('a block records its operator reads and the engine reads for its own value', async () => {
   const context = await trackingContext({ lowdefy: { pageId }, pageConfig: formPage });
   const { greeting, name } = context._internal.RootSlots.map;

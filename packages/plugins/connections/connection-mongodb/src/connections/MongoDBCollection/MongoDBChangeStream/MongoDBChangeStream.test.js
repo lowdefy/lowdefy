@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { vi, beforeEach, expect, test } from 'vitest';
+import { vi, afterEach, beforeEach, expect, test } from 'vitest';
+import { MongoNetworkError, MongoServerError } from 'mongodb';
 
 const mockGetCollection = vi.fn();
 
@@ -22,21 +23,30 @@ vi.doMock('../getCollection.js', () => ({
   default: mockGetCollection,
 }));
 
-// A fake change stream: yields queued changes, then waits until close() ends it.
-function createFakeStream({ changes = [], failWith = null } = {}) {
+// A fake change stream: yields queued changes, then waits until close() ends it. Like the
+// driver, it fires resumeTokenChanged with each change's _id before yielding it.
+function createFakeStream({ changes = [], failWith = null, onIterate = null } = {}) {
   let closed = false;
   let release;
   const closedPromise = new Promise((resolve) => {
     release = resolve;
   });
-  return {
-    watchCalls: [],
+  const listeners = {};
+  const stream = {
+    on: vi.fn((event, listener) => {
+      listeners[event] = listener;
+    }),
+    emit: (event, value) => listeners[event]?.(value),
     close: vi.fn(async () => {
       closed = true;
       release();
     }),
     async *[Symbol.asyncIterator]() {
+      onIterate?.(stream);
       for (const change of changes) {
+        if (change._id) {
+          stream.emit('resumeTokenChanged', change._id);
+        }
         yield change;
       }
       if (failWith) {
@@ -49,21 +59,35 @@ function createFakeStream({ changes = [], failWith = null } = {}) {
       }
     },
   };
+  return stream;
 }
 
-function createHarness({ changes, failWith } = {}) {
+function createHarness({ changes, failWith, streams } = {}) {
   const stream = createFakeStream({ changes, failWith });
-  const collection = { watch: vi.fn(() => stream) };
+  // Each watch call opens the next stream; the last one repeats.
+  const queue = streams ?? [stream];
+  let opened = 0;
+  const collection = {
+    watch: vi.fn(() => {
+      const next = queue[Math.min(opened, queue.length - 1)];
+      opened += 1;
+      return next;
+    }),
+  };
   // getCollection resolves { client, collection, logCollection } — the
   // resolver destructures collection off it.
   mockGetCollection.mockResolvedValue({ collection });
   const publish = vi.fn();
   const abortController = new AbortController();
-  return { abortController, collection, publish, stream };
+  return { abortController, collection, publish, stream: queue[0] };
 }
 
 beforeEach(() => {
   mockGetCollection.mockReset();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
 });
 
 test('MongoDBChangeStream publishes serialized change events', async () => {
@@ -150,4 +174,267 @@ test('MongoDBChangeStream rethrows stream errors when not aborted', async () => 
     })
   ).rejects.toThrow('stream broke');
   expect(stream.close).toHaveBeenCalled();
+});
+
+function serverError(code) {
+  return new MongoServerError({ code, errmsg: `server error ${code}` });
+}
+
+test('MongoDBChangeStream resumes after the last change on a replica set election', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  const first = createFakeStream({
+    changes: [
+      { _id: { _data: 'token-1' }, operationType: 'insert', fullDocument: { name: 'one' } },
+    ],
+    failWith: serverError(11602),
+  });
+  const second = createFakeStream({
+    changes: [
+      { _id: { _data: 'token-2' }, operationType: 'insert', fullDocument: { name: 'two' } },
+    ],
+  });
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: { pipeline: [{ $match: { operationType: 'insert' } }] },
+    publish,
+    signal: abortController.signal,
+  });
+  // The first retry waits 0.5 s.
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+  expect(collection.watch.mock.calls[0]).toEqual([
+    [{ $match: { operationType: 'insert' } }],
+    { fullDocument: 'updateLookup' },
+  ]);
+  expect(collection.watch.mock.calls[1]).toEqual([
+    [{ $match: { operationType: 'insert' } }],
+    { fullDocument: 'updateLookup', resumeAfter: { _data: 'token-1' } },
+  ]);
+  expect(first.close).toHaveBeenCalled();
+  expect(publish).toHaveBeenCalledTimes(2);
+  expect(publish.mock.calls[1][0].data.fullDocument.name).toEqual('two');
+});
+
+test('MongoDBChangeStream reopens fresh when the stream was never answered', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  const first = createFakeStream({ failWith: new MongoNetworkError('connection reset') });
+  const second = createFakeStream();
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+  expect(collection.watch.mock.calls[1]).toEqual([[], { fullDocument: 'updateLookup' }]);
+});
+
+test('MongoDBChangeStream resumes after the post-batch token when no change was published', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  // A quiet stream: the server answered the aggregate with a post-batch token and no change.
+  const first = createFakeStream({
+    failWith: serverError(11602),
+    onIterate: (stream) => stream.emit('resumeTokenChanged', { _data: 'post-batch-1' }),
+  });
+  const second = createFakeStream();
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+  expect(collection.watch.mock.calls[1]).toEqual([
+    [],
+    { fullDocument: 'updateLookup', resumeAfter: { _data: 'post-batch-1' } },
+  ]);
+  expect(publish).not.toHaveBeenCalled();
+});
+
+test('MongoDBChangeStream resumes on an error labelled ResumableChangeStreamError', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  const labelled = serverError(1);
+  labelled.addErrorLabel('ResumableChangeStreamError');
+  const first = createFakeStream({ failWith: labelled });
+  const second = createFakeStream();
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+});
+
+test('MongoDBChangeStream resumes when the primary shuts down in a rolling restart', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  const first = createFakeStream({ failWith: serverError(11600) });
+  const second = createFakeStream();
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+});
+
+test('MongoDBChangeStream throws when a resume finds the history lost', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  const first = createFakeStream({
+    changes: [{ _id: { _data: 'token-1' }, operationType: 'insert' }],
+    failWith: serverError(11602),
+  });
+  const second = createFakeStream({ failWith: serverError(286) });
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const error = await MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test', collection: 'items' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  }).catch((e) => e);
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+  expect(error.code).toEqual(286);
+  expect(second.close).toHaveBeenCalled();
+});
+
+test('MongoDBChangeStream does not resume a non-resumable server error', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  const { abortController, collection, publish } = createHarness({ failWith: serverError(13) });
+  const error = await MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test', collection: 'items' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  }).catch((e) => e);
+  expect(collection.watch).toHaveBeenCalledTimes(1);
+  expect(error.code).toEqual(13);
+});
+
+test('MongoDBChangeStream gives up when the stream keeps failing for 30 s', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(0);
+  const first = createFakeStream({ failWith: serverError(11602) });
+  const second = createFakeStream({
+    failWith: serverError(11602),
+    onIterate: () => vi.setSystemTime(31000),
+  });
+  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const error = await MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test', collection: 'items' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  }).catch((e) => e);
+  vi.useRealTimers();
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+  expect(error.code).toEqual(11602);
+});
+
+test('MongoDBChangeStream restarts the retry window once a reopened stream is answered', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(0);
+  const first = createFakeStream({ failWith: serverError(11602) });
+  // Answered at 10 s, then one blip at 35 s: more than 30 s after the first failure.
+  const second = createFakeStream({
+    failWith: serverError(11602),
+    onIterate: (stream) => {
+      vi.setSystemTime(10000);
+      stream.emit('resumeTokenChanged', { _data: 'token-2' });
+      vi.setSystemTime(35000);
+    },
+  });
+  const third = createFakeStream();
+  const { abortController, collection, publish } = createHarness({
+    streams: [first, second, third],
+  });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  });
+  // Retries wait 0.5 s, then 1 s: a short run does not reset the wait.
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  expect(collection.watch).toHaveBeenCalledTimes(2);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+  expect(collection.watch).toHaveBeenCalledTimes(3);
+  expect(collection.watch.mock.calls[2][1]).toEqual({
+    fullDocument: 'updateLookup',
+    resumeAfter: { _data: 'token-2' },
+  });
+});
+
+test('MongoDBChangeStream resets the wait after a stream that ran healthy fails', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(0);
+  const first = createFakeStream({ failWith: serverError(11602) });
+  // The server answers it for 31 s, then it fails.
+  const second = createFakeStream({
+    failWith: serverError(11602),
+    onIterate: (stream) => {
+      vi.setSystemTime(1000);
+      stream.emit('resumeTokenChanged', { _data: 'token-2' });
+      vi.setSystemTime(32000);
+      stream.emit('resumeTokenChanged', { _data: 'token-3' });
+    },
+  });
+  const third = createFakeStream();
+  const { abortController, collection, publish } = createHarness({
+    streams: [first, second, third],
+  });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  });
+  // Retries wait 0.5 s, then (with the wait reset) 0.5 s again.
+  await new Promise((resolve) => setTimeout(resolve, 1600));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+  vi.useRealTimers();
+  expect(collection.watch).toHaveBeenCalledTimes(3);
+});
+
+test('MongoDBChangeStream stops waiting to retry when aborted', async () => {
+  const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
+  const { abortController, collection, publish } = createHarness({
+    failWith: serverError(11602),
+  });
+  const run = MongoDBChangeStream({
+    connection: { databaseUri: 'mongodb://test' },
+    properties: {},
+    publish,
+    signal: abortController.signal,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  abortController.abort();
+  await expect(run).resolves.toBeUndefined();
+  expect(collection.watch).toHaveBeenCalledTimes(1);
 });

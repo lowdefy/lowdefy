@@ -15,9 +15,11 @@
 */
 
 import crypto from 'crypto';
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import checkWebsocketAccess from './checkWebsocketAccess.js';
+import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import createWireProjection from '../../response/createWireProjection.js';
 import prepareChannel from './prepareChannel.js';
 import wrapResolverError from '../request/wrapResolverError.js';
@@ -33,6 +35,10 @@ const HEALTHY_RESET_MS = 60 * 1000;
 // last one leaves.
 function createChannelRegistry() {
   const channels = new Map();
+  // subscriber → (websocketId → { payload, websocketConfig }) for the open
+  // subscriptions whose websocket has a check, so the check can run again while
+  // they stay open (recheckAccess).
+  const checkedSubscriptions = new WeakMap();
 
   function getChannelKey({ connectionProperties, properties, tenant, websocketId }) {
     // The tenant verdict is part of the channel identity: two callers whose
@@ -176,8 +182,11 @@ function createChannelRegistry() {
       unsubscribe({ websocketId, subscriber });
     }
 
+    // The client serializes the payload, as it does for a publish and a CallAPI,
+    // so properties and the check endpoint read Dates as Dates.
+    const deserializedPayload = serializer.deserialize(payload ?? {});
     const { connectionProperties, properties, tenant, websocketConfig, websocketResolver } =
-      await prepareChannel(context, { websocketId, payload });
+      await prepareChannel(context, { websocketId, payload: deserializedPayload });
 
     const key = getChannelKey({ connectionProperties, properties, tenant, websocketId });
     let channel = channels.get(key);
@@ -203,6 +212,14 @@ function createChannelRegistry() {
     }
     channel.subscribers.add(subscriber);
     subscriber.subscriptions.set(websocketId, key);
+    if (!type.isNone(websocketConfig.check)) {
+      if (!checkedSubscriptions.has(subscriber)) {
+        checkedSubscriptions.set(subscriber, new Map());
+      }
+      checkedSubscriptions
+        .get(subscriber)
+        .set(websocketId, { payload: deserializedPayload, websocketConfig });
+    }
     context.logger.debug({
       event: 'ws_subscribe',
       websocketId,
@@ -213,6 +230,7 @@ function createChannelRegistry() {
   function unsubscribe({ websocketId, subscriber }) {
     const key = subscriber.subscriptions.get(websocketId);
     subscriber.subscriptions.delete(websocketId);
+    checkedSubscriptions.get(subscriber)?.delete(websocketId);
     if (!key) {
       return;
     }
@@ -230,6 +248,29 @@ function createChannelRegistry() {
     [...subscriber.subscriptions.keys()].forEach((websocketId) => {
       unsubscribe({ websocketId, subscriber });
     });
+  }
+
+  function getCheckedWebsocketIds({ subscriber }) {
+    return [...(checkedSubscriptions.get(subscriber)?.keys() ?? [])];
+  }
+
+  // Access to a record can be revoked while a subscription to it stays open, so
+  // the connection runs the check again on its periodic caller check, with the
+  // payload and config the subscription was opened with. A refused
+  // subscription is closed and the refusal thrown for the caller to be told.
+  // The subscription may have been closed while this waited in its feed queue.
+  async function recheckAccess(context, { websocketId, subscriber }) {
+    const subscription = checkedSubscriptions.get(subscriber)?.get(websocketId);
+    if (type.isUndefined(subscription)) {
+      return;
+    }
+    context.evaluateOperators = createEvaluateOperators(context);
+    try {
+      await checkWebsocketAccess(context, subscription);
+    } catch (error) {
+      unsubscribe({ websocketId, subscriber });
+      throw error;
+    }
   }
 
   async function publish(context, { websocketId, payload }) {
@@ -265,7 +306,9 @@ function createChannelRegistry() {
   }
 
   return {
+    getCheckedWebsocketIds,
     publish,
+    recheckAccess,
     subscribe,
     unsubscribe,
     unsubscribeAll,

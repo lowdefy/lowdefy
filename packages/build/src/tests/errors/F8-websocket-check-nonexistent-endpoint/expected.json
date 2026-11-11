@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "description": "The build test environment installs no websocket types, so Channel is also reported as undefined; the check error is the one this fixture is for.",
+      "errors": ["which does not exist"],
+      "exactErrors": [
+        "{{fixturesDir}}/F8-websocket-check-nonexistent-endpoint/lowdefy.yaml:26\n[ConfigError] Websocket \"ticket_events\" check references endpoint \"can-view-tickt\" which does not exist."
+      ],
+      "noErrors": ["LowdefyInternalError"]
+    }
+  ]
+}
