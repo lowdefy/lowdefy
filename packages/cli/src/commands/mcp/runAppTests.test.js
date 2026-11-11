@@ -72,6 +72,16 @@ afterEach(() => {
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 
+// Every journey of the run, as .lowdefy/test/results.json holds them. A call
+// that ran nothing writes no file.
+function readResults(answer) {
+  if (answer.resultFile === undefined) {
+    return [];
+  }
+  const { results, skipped } = JSON.parse(fs.readFileSync(answer.resultFile, 'utf8'));
+  return [...results, ...skipped];
+}
+
 function writeJourney(fileName, journey) {
   fs.writeFileSync(
     path.join(configDirectory, 'tests', 'journeys', fileName),
@@ -91,16 +101,111 @@ test('runAppTests runs every journey against the dev server and reports each as 
     steps: [{ expect: { visible: 'refund' } }],
   });
 
-  const { summary, results } = await runAppTests({ configDirectory, url });
+  const answer = await runAppTests({ configDirectory, url });
 
-  expect(summary).toEqual('1 passed, 1 failed of 2 journeys');
-  expect(results[0]).toMatchObject({
+  expect(answer.summary).toEqual('1 passed, 1 failed of 2 journeys');
+  expect(answer.passed).toHaveLength(1);
+  expect(answer.passed[0]).toMatch(/^PASS {2}orders list {2}\(1 steps, \d+ms\)$/);
+  expect(answer.failed).toHaveLength(1);
+  expect(answer.failed[0]).toMatchObject({
+    name: 'refund button',
+    passed: false,
+    filePath: 'tests/journeys/refunds.yaml',
+    failure: { index: 0, expected: true, actual: false },
+  });
+  expect(answer.failed[0].report).toContain('refund is hidden');
+  expect(answer.skipped).toEqual([]);
+  expect(answer.omitted).toBeUndefined();
+  expect(answer.resultFile).toEqual(path.join(configDirectory, '.lowdefy', 'test', 'results.json'));
+});
+
+test('runAppTests writes every journey of the run to the result file', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  writeJourney('refunds.yaml', {
+    name: 'refund button',
+    pageId: 'refunds',
+    steps: [{ expect: { visible: 'refund' } }],
+  });
+
+  const answer = await runAppTests({ configDirectory, url });
+
+  const written = JSON.parse(fs.readFileSync(answer.resultFile, 'utf8'));
+  expect(written.summary).toEqual('1 passed, 1 failed of 2 journeys');
+  expect(written.results[0]).toMatchObject({
     name: 'orders list',
     passed: true,
     filePath: 'tests/journeys/orders.yaml',
+    stepCount: 1,
   });
-  expect(results[1]).toMatchObject({ name: 'refund button', passed: false });
-  expect(results[1].report).toContain('refund is hidden');
+  expect(written.results[0].report).toMatch(/^PASS {2}orders list/);
+  expect(written.results[1]).toMatchObject({ name: 'refund button', passed: false });
+  expect(written.results[1].report).toContain('refund is hidden');
+});
+
+test('runAppTests keeps the measured path out of the answer and the result file', async () => {
+  const exercised = {
+    pages: Array.from({ length: 2000 }, (_, index) => ({ pageId: `page-${index}` })),
+    requests: Array.from({ length: 2000 }, (_, index) => ({ requestId: `request-${index}` })),
+  };
+  server.removeAllListeners('request');
+  server.on('request', (req, res) => {
+    req.resume();
+    req.on('end', () => {
+      res.setHeader('Content-Type', 'application/json');
+      if (req.url === '/lowdefy-docs/build-status') {
+        res.end(JSON.stringify({ buildId: 'build-1' }));
+        return;
+      }
+      res.end(JSON.stringify({ passed: true, exercised }));
+    });
+  });
+  Array.from({ length: 40 }, (_, index) =>
+    writeJourney(`journey-${index}.yaml`, {
+      name: `journey ${index}`,
+      pageId: 'orders',
+      steps: [{ wait: { ms: 1 } }],
+    })
+  );
+
+  const answer = await runAppTests({ configDirectory, url });
+
+  expect(answer.summary).toEqual('40 passed, 0 failed of 40 journeys');
+  expect(answer.passed).toHaveLength(40);
+  expect(JSON.stringify(answer, null, 2)).not.toContain('page-1999');
+  expect(JSON.stringify(answer, null, 2).length).toBeLessThan(5000);
+  expect(fs.readFileSync(answer.resultFile, 'utf8')).not.toContain('page-1999');
+  // The path is still measured: lints, variants and harden read it from here.
+  const saved = JSON.parse(
+    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'exercised.json'), 'utf8')
+  );
+  expect(saved.journeys['tests/journeys/journey-0.yaml#journey 0'].exercised.pages).toHaveLength(
+    2000
+  );
+});
+
+test('runAppTests reports each journey as it finishes', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  writeJourney('refunds.yaml', {
+    name: 'refund button',
+    pageId: 'refunds',
+    steps: [{ expect: { visible: 'refund' } }],
+  });
+  const progress = [];
+
+  await runAppTests({ configDirectory, url, onProgress: (event) => progress.push(event) });
+
+  expect(progress).toEqual([
+    { done: 1, total: 2, name: 'orders list', class: 'PASS' },
+    { done: 2, total: 2, name: 'refund button', class: 'FAIL' },
+  ]);
 });
 
 test('runAppTests runs only the journeys matching the filter', async () => {
@@ -142,15 +247,16 @@ test('runAppTests honours paths and repeat and returns the class of each journey
     path.join(configDirectory, 'tests', 'journeys', '_candidates', 'refunds.yaml'),
     JSON.stringify({ name: 'refund button', pageId: 'refunds', steps: [{ wait: { ms: 1 } }] })
   );
-  const { summary, results } = await runAppTests({
+  const { summary, failed, passed } = await runAppTests({
     configDirectory,
     url,
     paths: ['tests/journeys/_candidates'],
     repeat: 2,
   });
   expect(summary).toEqual('0 passed, 1 failed of 1 journeys');
-  expect(results).toHaveLength(1);
-  expect(results[0]).toMatchObject({
+  expect(passed).toEqual([]);
+  expect(failed).toHaveLength(1);
+  expect(failed[0]).toMatchObject({
     name: 'refund button',
     class: 'FAIL',
     runs: 2,
@@ -162,11 +268,9 @@ test('runAppTests honours paths and repeat and returns the class of each journey
 test('runAppTests refuses a path outside the app directory and a repeat out of range', async () => {
   expect(await runAppTests({ configDirectory, url, paths: ['../x.yaml'] })).toEqual({
     summary: `Journey path "../x.yaml" is outside the config directory ${configDirectory}.`,
-    results: [],
   });
   expect(await runAppTests({ configDirectory, url, repeat: 20 })).toEqual({
     summary: '--repeat must be an integer from 1 to 10. Received 20.',
-    results: [],
   });
 });
 
@@ -235,8 +339,10 @@ function rankedJourney({ name, sessions, failures = 0, ...rest }) {
 test('runAppTests returns journey evidence and the PASS line that shows its tier', async () => {
   writeJourney('orders.yaml', rankedJourney({ name: 'orders list', sessions: 411, failures: 14 }));
 
-  const { results } = await runAppTests({ configDirectory, url });
+  const answer = await runAppTests({ configDirectory, url });
+  const results = readResults(answer);
 
+  expect(answer.passed[0]).toContain('common #1 · 13.7/day · 14 failed (3m)');
   expect(results[0].evidence.production.months[0].sessions).toBe(411);
   expect(results[0].usage).toEqual({
     tier: 'common',
@@ -272,8 +378,11 @@ test('runAppTests tier common runs the common and unranked journeys and skips de
   writeJourney('c.yaml', rankedJourney({ name: 'new' }));
   writeJourney('d.yaml', rankedJourney({ name: 'retired', sessions: 30, deprecated: true }));
 
-  const { summary, results } = await runAppTests({ configDirectory, url, tier: 'common' });
+  const answer = await runAppTests({ configDirectory, url, tier: 'common' });
+  const { summary } = answer;
+  const results = readResults(answer);
 
+  expect(answer.skipped).toEqual(['SKIP deprecated  retired  1.0/day (3m)']);
   expect(results.map((result) => result.name)).toEqual(['top', 'new', 'retired']);
   expect(results[2]).toEqual({
     name: 'retired',
@@ -293,7 +402,6 @@ test('runAppTests refuses a tier below 100 matches without running anything', as
   expect(result).toEqual({
     summary:
       'The selection has 30 journey matches in 2026-04 to 2026-09, fewer than the 100 tiers need. Use tier "full", or pull more production use.',
-    results: [],
   });
 });
 
@@ -316,15 +424,17 @@ test('runAppTests runs sub-folders in a full run, and a folder and its globs ali
     steps: [{ click: 'a' }],
   });
   const all = await runAppTests({ configDirectory, url });
-  expect(all.results.map((result) => result.name)).toEqual(['orders list', 'approves an order']);
+  expect(readResults(all).map((result) => result.name)).toEqual([
+    'orders list',
+    'approves an order',
+  ]);
   const names = async (paths) =>
-    (await runAppTests({ configDirectory, url, paths })).results.map((result) => result.name);
+    readResults(await runAppTests({ configDirectory, url, paths })).map((result) => result.name);
   expect(await names(['tests/journeys/review'])).toEqual(['approves an order']);
   expect(await names(['tests/journeys/review/**'])).toEqual(['approves an order']);
   expect(await names(['tests/journeys/review/*.yaml'])).toEqual(['approves an order']);
   expect(await runAppTests({ configDirectory, url, paths: ['tests/journeys/x/*.yaml'] })).toEqual({
     summary: 'Journey path "tests/journeys/x/*.yaml" matches no files.',
-    results: [],
   });
 });
 
@@ -347,7 +457,7 @@ test('runAppTests selects by tags and by a list of filters, and names them when 
     steps: [{ click: 'a' }],
   });
   const names = async (args) =>
-    (await runAppTests({ configDirectory, url, ...args })).results.map((result) => result.name);
+    readResults(await runAppTests({ configDirectory, url, ...args })).map((result) => result.name);
   expect(await names({ tags: ['smoke', 'nightly'] })).toEqual(['orders list', 'order totals']);
   expect(await names({ filter: ['totals', 'REFUND'] })).toEqual(['refund button', 'order totals']);
   expect(await names({ tags: ['nightly'], filter: 'orders' })).toEqual([]);
@@ -357,7 +467,6 @@ test('runAppTests selects by tags and by a list of filters, and names them when 
   expect(await runAppTests({ configDirectory, url, tags: ['Smoke'] })).toEqual({
     summary:
       'Tag "Smoke" should be lowercase letters, digits, "-" and "_", start with a letter or digit, and be at most 64 characters.',
-    results: [],
   });
 });
 
