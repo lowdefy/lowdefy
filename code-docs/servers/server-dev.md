@@ -32,7 +32,7 @@ Beyond production server:
 - `@lowdefy/build` - Build system
 - `@lowdefy/engine` - State engine
 - `@hono/vite-dev-server` (0.26.0) - Mounts the Hono app inside Vite
-- `chokidar` (3.5.3) - File watcher
+- `chokidar` (6.0.0) - File watcher
 - `dotenv` (16.3.1) - Env loading
 - `opener` (1.5.2) - Browser opener
 - `swr` (2.2.4) - Data fetching
