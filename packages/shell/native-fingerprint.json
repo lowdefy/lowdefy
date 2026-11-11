@@ -1,16 +1,16 @@
 {
-  "nativeVersion": 5,
-  "hash": "3d8275d3a48f4debdc906fbaa0026e2d3a179472",
+  "nativeVersion": 6,
+  "hash": "03e407c6bf72b8d5eda6a8254b7e1e94874ca3eb",
   "profiles": {
-    "basic": "3adbd78eea6c4ed06362f57c6dbc2f8ef9e4c5d6",
-    "field": "e51f3612c85cf4d5b4b31afec148223e7b9f8874",
-    "field-nfc": "2cd75aa4a8b86b183092dc637651addcc7887bd0",
-    "field-tracking": "b58427a02850bda9d282445a1ceea20554742e36",
-    "dev": "042acc90fe4f94922ad564c27916a6f734768698",
-    "development": "042acc90fe4f94922ad564c27916a6f734768698",
-    "basic+share": "426c35463e3b450f9e24ae3955a8e38c0da1d3e6",
-    "basic+widgets": "e76b868f7099b352ce40b336f502e24a3ae70617",
-    "basic+contacts": "9f4528481485de782b4da3704c93b67f92e1a9c7",
-    "basic+calendar": "7d402777262795e9ff5364fc301458c300fa4f2b"
+    "basic": "a9e1884af354cc2370706793bb3ffaf528844ed3",
+    "field": "73c5428ee3b1992c147d82a49aae1e7293893750",
+    "field-nfc": "08e016e3edd74f13aeb654f98a9b172ef26f9a9a",
+    "field-tracking": "294488fce8ee7a42f40c12a7bfe3e9b0f1b1b276",
+    "dev": "6bfb4b8d25cddf9ba06340243466908b183dbc83",
+    "development": "6bfb4b8d25cddf9ba06340243466908b183dbc83",
+    "basic+share": "725173745bbfac8cfef5703e1f1927539751dba6",
+    "basic+widgets": "6485c234a6c28740dbead2116b3a73c0ee56f786",
+    "basic+contacts": "da6ccef611433af34b3b5b049bae74848442bb73",
+    "basic+calendar": "e08ef80753133a77ab820f406221840d720c8e61"
   }
 }
