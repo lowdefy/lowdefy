@@ -263,8 +263,8 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
       lucide:
-        specifier: 1.48.0
-        version: 1.48.0
+        specifier: 1.72.0
+        version: 1.72.0
       picomatch:
         specifier: 4.0.4
         version: 4.0.4
@@ -541,8 +541,8 @@ importers:
         specifier: 1.11.23
         version: 1.11.23
       lucide-react:
-        specifier: 1.48.0
-        version: 1.48.0(react@18.2.0)
+        specifier: 1.72.0
+        version: 1.72.0(@types/react@18.2.38)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -13054,13 +13054,17 @@ packages:
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  lucide-react@1.48.0:
-    resolution: {integrity: sha512-R0CIKY/fXiC6y9xRBADgsK+VW2p/pcTJOMhLZf1T+uG+vJUvyUR02nGOgmIIC7MPkiNK4Ox8QDnbqF8rJYWPZQ==}
+  lucide-react@1.72.0:
+    resolution: {integrity: sha512-fbF5i1GU8GODETa3Q7rXqrJrcx3iPYrQtxthom103zGx+Z0BGwKYAW9s+9435ohYJ7hQm0av0PoZcqI1CRwNrg==}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
-  lucide@1.48.0:
-    resolution: {integrity: sha512-8FglIlGkcIItJjJfLUiqAufUCdbtnTOsdG02/fxXd4oIt+NrcrEVH8t0ZcKAfawxHckorO5qJ9XDfnJbdf0TOg==}
+  lucide@1.72.0:
+    resolution: {integrity: sha512-075vCJzyx+LU3xBzfaHjsvrtbiIvVUjbfsdJCG5rPeXs0O/07aH5cDz1zoWn0acupuffXsN/iG6OkvVqYTGunw==}
 
   luxon@3.7.2:
     resolution: {integrity: sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==}
@@ -27759,11 +27763,13 @@ snapshots:
     dependencies:
       react: 19.3.0
 
-  lucide-react@1.48.0(react@18.2.0):
+  lucide-react@1.72.0(@types/react@18.2.38)(react@18.2.0):
     dependencies:
       react: 18.2.0
+    optionalDependencies:
+      '@types/react': 18.2.38
 
-  lucide@1.48.0: {}
+  lucide@1.72.0: {}
 
   luxon@3.7.2: {}
 
