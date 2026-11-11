@@ -16,6 +16,7 @@
 
 import agentsMd from './agentsMd.js';
 import skills from './skills/index.js';
+import testLevel from './skills/testLevel.js';
 import { expect, test } from 'vitest';
 
 // Every app in a repository renders the same agent files, so the text names
@@ -43,4 +44,43 @@ test('journeys-autopilot stops and lists the apps instead of guessing', () => {
   expect(autopilot).toContain(
     'When that leaves several, stop and list the app folders instead of guessing.'
   );
+});
+
+const journeySkills = texts.filter(({ name }) => name.startsWith('journeys-'));
+
+test('there are five journey skills', () => {
+  expect(journeySkills.map(({ name }) => name).sort()).toEqual([
+    'journeys-autopilot',
+    'journeys-from-dev',
+    'journeys-from-pr',
+    'journeys-from-production',
+    'journeys-harden',
+  ]);
+});
+
+test.each(journeySkills)(
+  '$name proves logic, permissions and writes below a journey',
+  ({ text }) => {
+    expect(text).toContain(testLevel());
+    expect(text).toContain('## What is not a journey');
+    expect(text).toContain(
+      'Call the request or endpoint with `lowdefy_run_request` or `lowdefy_run_endpoint`, passing\n  `user` and `data`.'
+    );
+    expect(text).toContain('add or update one, and run them once before you call the work done');
+    expect(text).toContain('Say in the pull request when that snapshot changed, and why.');
+  }
+);
+
+test('journeys-autopilot leaves who can open which page to an access table snapshot', () => {
+  const autopilot = skills.find((skill) => skill.name === 'journeys-autopilot').render();
+  expect(autopilot).toContain(
+    'it already proves which role opens which page: write\n   `refusal` items only for what it cannot show'
+  );
+  expect(autopilot).toContain('name a changed access table snapshot in the pull request');
+});
+
+test('the testing rules are the same text for every CLI version, and name no server', () => {
+  const rules = (cliVersion) => agentsMd({ cliVersion, skills }).split('### Testing a change')[1];
+  expect(rules('7.0.0')).toEqual(rules('8.1.0'));
+  expect(rules('7.0.0')).not.toMatch(/localhost|127\.0\.0\.1|https?:\/\//);
 });

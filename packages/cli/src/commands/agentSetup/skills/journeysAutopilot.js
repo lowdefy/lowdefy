@@ -15,6 +15,7 @@
 */
 
 import appFolder from './appFolder.js';
+import testLevel from './testLevel.js';
 
 // The journeys-autopilot skill: one agent, started once and left running, that
 // builds an app's journeys from nothing and keeps hardening them. It keeps a
@@ -87,6 +88,8 @@ you open pull requests and never merge, and how to run you unattended:
   branches (\`journeys-autopilot/fix-<slug>\`). Never force a push, except the one case step 1 allows.
 - **Commit small and often**, with the repository's conventions (\`git log\` shows them).
 - Never add \`wait: { ms }\`: wait on \`{ request }\` or \`{ state }\`. Lint L3 refuses it.
+
+${testLevel()}
 
 ## The ledger: \`tests/autopilot.yaml\`
 
@@ -200,7 +203,10 @@ as Blocked.
    page's requests, endpoints and event chains (\`lowdefy_get_page_config\`, \`lowdefy_app_map\`,
    \`lowdefy_find_config\`). Write one \`todo\` item for each page and role that can open it, one
    \`refusal\` item for each role that cannot, and one \`write\` item for each control that writes data
-   (a request or endpoint that inserts, updates or deletes). A signed-out visitor is not a data set
+   (a request or endpoint that inserts, updates or deletes). When the app keeps an access table
+   snapshot (see What is not a journey), it already proves which role opens which page: write
+   \`refusal\` items only for what it cannot show, which is a control hidden from a role, another
+   tenant's rows, and one page whose redirect a browser must see. A signed-out visitor is not a data set
    user: its items (a protected page's bounce, a public page opened signed out) are \`skipped\` with
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set is refused
    while auth is configured, because signing in would write to the real auth database).
@@ -286,7 +292,8 @@ For each finding, decide:
   origin/<default branch>\`, make the fix, and \`git mv tests/journeys/_findings/<file>
   tests/journeys/<area>/\`, so the pull request shows the journey turning green and leaves one copy.
   Before pushing, run \`lowdefy test --config-directory <app> --repeat 3 <file>\`, then the whole suite once
-  (\`lowdefy test --config-directory <app>\`: a fix can break a journey that asserted the old behaviour). Open a pull
+  (\`lowdefy test --config-directory <app>\`: a fix can break a journey that asserted the old behaviour). Where the
+  app has endpoint tests, run them once too, and name a changed access table snapshot in the pull request. Open a pull
   request titled \`fix: ...\` that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
   that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url (with no \`gh\`, the
   fix branch) in \`note\`, until that pull request merges; then set it \`covered\` with the journey's new path.
