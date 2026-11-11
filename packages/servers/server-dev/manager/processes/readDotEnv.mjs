@@ -28,7 +28,7 @@ function readDotEnv(context) {
   return () => {
     dotenv.config({
       path: path.join(context.directories.config, '.env'),
-      silent: true,
+      quiet: true,
       override: loadedOnce,
     });
     loadedOnce = true;

@@ -18,7 +18,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 
 function readDotEnv(context) {
-  dotenv.config({ path: path.join(context.configDirectory, '.env'), silent: true });
+  dotenv.config({ path: path.join(context.configDirectory, '.env'), quiet: true });
 }
 
 export default readDotEnv;

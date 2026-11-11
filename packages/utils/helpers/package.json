@@ -39,7 +39,7 @@
   "dependencies": {
     "@lowdefy/errors": "7.2.0",
     "change-case": "5.4.0",
-    "intl-messageformat": "11.2.7"
+    "intl-messageformat": "12.1.5"
   },
   "devDependencies": {
     "@swc/cli": "0.8.1",

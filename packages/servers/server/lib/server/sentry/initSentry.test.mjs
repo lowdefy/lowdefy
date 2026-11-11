@@ -277,8 +277,10 @@ test('a transaction sent after the response is scrubbed of the credentials its r
   app.use('*', sentryMiddleware());
   app.post('/api/endpoints/create-app', async (c) => {
     markCredential(markedKey);
+    // Sentry filters query parameters with sensitive names such as `key` itself, so the
+    // credential goes in one it does not, to test that Lowdefy's scrub by value reaches it.
     const upstreamResponse = await fetch(
-      `http://127.0.0.1:${upstreamPort}/v1/apps?key=${markedKey}`
+      `http://127.0.0.1:${upstreamPort}/v1/apps?app=${markedKey}`
     );
     await upstreamResponse.text();
     return c.json({ ok: true });
@@ -304,9 +306,9 @@ test('a transaction sent after the response is scrubbed of the credentials its r
   expect(transaction).toBeDefined();
   const clientSpan = transaction.spans.find(({ op }) => op === 'http.client');
   expect(clientSpan.data['url.full']).toEqual(
-    `http://127.0.0.1:${upstreamPort}/v1/apps?key=[REDACTED]`
+    `http://127.0.0.1:${upstreamPort}/v1/apps?app=[REDACTED]`
   );
-  expect(clientSpan.data['http.query']).toEqual('key=[REDACTED]');
+  expect(clientSpan.data['http.query']).toEqual('app=[REDACTED]');
   expect(JSON.stringify(transaction)).not.toContain(markedKey);
 });
 
@@ -329,13 +331,13 @@ test('concurrent requests each scrub their transaction with their own marked cre
   app.post('/api/endpoints/first', async (c) => {
     markCredential(keyA);
     await bMarked;
-    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/first?key=${keyA}`)).text();
+    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/first?app=${keyA}`)).text();
     return c.json({ ok: true });
   });
   app.post('/api/endpoints/second', async (c) => {
     markCredential(keyB);
     markedB();
-    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/second?key=${keyB}`)).text();
+    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/second?app=${keyB}`)).text();
     return c.json({ ok: true });
   });
   const server = serve({ fetch: app.fetch, port: 0, hostname: '127.0.0.1' });
@@ -358,8 +360,8 @@ test('concurrent requests each scrub their transaction with their own marked cre
   const secondTransaction = transactions.find(
     ({ transaction: name }) => name === 'POST /api/endpoints/second'
   );
-  expect(JSON.stringify(firstTransaction)).toContain('/v1/first?key=[REDACTED]');
-  expect(JSON.stringify(secondTransaction)).toContain('/v1/second?key=[REDACTED]');
+  expect(JSON.stringify(firstTransaction)).toContain('/v1/first?app=[REDACTED]');
+  expect(JSON.stringify(secondTransaction)).toContain('/v1/second?app=[REDACTED]');
   expect(JSON.stringify([firstTransaction, secondTransaction])).not.toContain(keyA);
   expect(JSON.stringify([firstTransaction, secondTransaction])).not.toContain(keyB);
 });
