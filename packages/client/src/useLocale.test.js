@@ -196,3 +196,21 @@ test('writes window.__lowdefy_antd_locale as antd en_US when no i18n config', ()
   );
   expect(window.__lowdefy_antd_locale).toBe(antdEnUS);
 });
+
+test('starts on auto when the browser blocks storage', () => {
+  const localStorage = Object.getOwnPropertyDescriptor(window, 'localStorage');
+  Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    get: () => {
+      throw new DOMException('The operation is insecure.', 'SecurityError');
+    },
+  });
+  try {
+    const { result } = renderHook(() =>
+      useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap, storageKey })
+    );
+    expect(result.current.userPreference).toBe('auto');
+  } finally {
+    Object.defineProperty(window, 'localStorage', localStorage);
+  }
+});

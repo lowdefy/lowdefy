@@ -18,8 +18,11 @@ import { type } from '@lowdefy/helpers';
 
 // Reads key, moving a value left under legacyKey (written before keys were kept per app) to it
 // the first time. Returns null when neither holds a value or the browser blocks storage.
-function readStorageItem({ key, legacyKey, storage }) {
+// getStorage is called inside the try: a browser that blocks site data throws on reaching
+// window.localStorage itself, before getItem.
+function readStorageItem({ key, legacyKey, getStorage }) {
   try {
+    const storage = getStorage();
     const value = storage.getItem(key);
     if (!type.isNone(value)) return value;
     const legacyValue = storage.getItem(legacyKey);
