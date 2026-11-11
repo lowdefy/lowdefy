@@ -1,4 +1,4 @@
-extends: 'plugin:@next/next/core-web-vitals'
+extends: 'plugin:@next/next/core-web-vitals-legacy'
 settings:
   react:
     version: detect
