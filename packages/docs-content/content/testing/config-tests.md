@@ -145,6 +145,8 @@ FAIL  member saves a ticket
       action-error  Request "save_ticket" failed in save.onClick with ServiceError.  pages/tickets.yaml:88
 ```
 
+When the dev server loses its web server, a request gets no answer and the journey fails with a `dev-server` line instead. That says nothing about the app: check the dev server log for a restart or crash, then run the journey again.
+
 Each error line gives its kind, its message and the config file and line it came from, when known. Fix the app in most cases. When the error is the outcome the app means, such as a unique index violation that a `catch` action shows as "already exists", either make it a user error in config (a `Throw` action is one), or assert it with `expect: { error: text }` straight after the interaction:
 
 ```yaml
