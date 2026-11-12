@@ -10,10 +10,10 @@ feat!: Remove the react-icons icon set
 A react-icons name in config now fails the build at its config location with the Lucide name to use, from the same table the Lowdefy 7 upgrade codemod applies:
 
 ```
-Icon "react-icons:AiOutlineCreditCard" is a react-icons name. Lowdefy uses Lucide icons. Use "CreditCard". The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8.
+Icon "react-icons:AiOutlineCreditCard" is a react-icons name. Lowdefy uses Lucide icons. Use "CreditCard". The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8. Run `lowdefy upgrade` to migrate names automatically.
 ```
 
-`theme.icons.set: react-icons` fails the build too, with a message that says the set was removed.
+`theme.icons.set: react-icons` fails the build too, with a message that says the set was removed and to run `lowdefy upgrade`.
 
 To migrate an app that used the set, run `lowdefy upgrade`. Its Lowdefy 8 step, `remove-react-icons-set`, removes the plugin and `set: react-icons`, rewrites react-icons names (qualified and unqualified) with the same table, reports what it cannot fix, and finishes with a build. To migrate by hand:
 
