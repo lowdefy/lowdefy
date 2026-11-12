@@ -16,10 +16,9 @@
 
 import axios from 'axios';
 import { type } from '@lowdefy/helpers';
-import { findPlaceholderStep } from '@lowdefy/node-utils';
 
+import checkJourneyItem from './checkJourneyItem.js';
 import recordingJourneyName from './recordingJourneyName.js';
-import validateJourney from './validateJourney.js';
 
 function describeHttpError(error) {
   if (type.isNone(error.response)) {
@@ -39,41 +38,12 @@ function describeHttpError(error) {
 // run passes the config `mutant` to apply to this run's browsers.
 async function runJourney({ context, item, url, recordRun, mutant }) {
   const { filePath, journey } = item;
-  const name = journey?.name ?? filePath;
-  if (!type.isNone(item.error)) {
-    return {
-      name,
-      filePath,
-      passed: false,
-      refused: true,
-      stepCount: 0,
-      durationMs: 0,
-      message: item.error,
-    };
+  const refused = checkJourneyItem({ item });
+  if (!type.isUndefined(refused)) {
+    return refused;
   }
-  // A persona run is named `<name> [<user>]`; the name limit applies to the
-  // name as authored, which expandPersonas validated, never to the run name.
-  const validation = validateJourney({
-    journey: type.isNone(item.personaOf) ? journey : { ...journey, name: item.personaOf.name },
-  });
-  if (!validation.valid) {
-    return {
-      name,
-      filePath,
-      passed: false,
-      refused: true,
-      stepCount: 0,
-      durationMs: 0,
-      message: `Invalid journey file: ${validation.message}`,
-    };
-  }
+  const name = journey.name;
   const stepCount = journey.steps.length;
-  // The dev server refuses a placeholder too; checking here reports it without
-  // the round trip.
-  const { error: placeholderError } = findPlaceholderStep({ steps: journey.steps });
-  if (!type.isUndefined(placeholderError)) {
-    return { name, filePath, passed: false, stepCount, durationMs: 0, message: placeholderError };
-  }
   const start = Date.now();
   let response;
   try {

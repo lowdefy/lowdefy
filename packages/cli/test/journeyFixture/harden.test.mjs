@@ -50,8 +50,11 @@ function runCli(args) {
 
 function hashJourneyFiles() {
   const directory = path.join(configDirectory, 'tests', 'journeys');
+  // Sub-folders included (tests/journeys/_headless), so every journey file harden could touch is
+  // compared.
   return fs
-    .readdirSync(directory)
+    .readdirSync(directory, { recursive: true })
+    .filter((name) => fs.statSync(path.join(directory, name)).isFile())
     .sort()
     .map((name) => [
       name,
