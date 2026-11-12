@@ -36,6 +36,8 @@ const reportingMethods = new Set([
   'getState',
   'getUrlQuery',
   'getUser',
+  'mcpOpenLink',
+  'mcpSendMessage',
   'request',
   'setGlobal',
   'setState',

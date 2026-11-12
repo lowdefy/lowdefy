@@ -87,6 +87,14 @@ const typeManifest = {
       package: '@lowdefy/actions-core',
       version: 7,
     },
+    McpOpenLink: {
+      package: '@lowdefy/actions-core',
+      version: 7,
+    },
+    McpSendMessage: {
+      package: '@lowdefy/actions-core',
+      version: 7,
+    },
     OAuthConsent: {
       package: '@lowdefy/actions-core',
       version: 7,
@@ -640,6 +648,10 @@ const typeManifest = {
       version: 7,
     },
     _math: {
+      package: '@lowdefy/operators-js',
+      version: 7,
+    },
+    _mcp: {
       package: '@lowdefy/operators-js',
       version: 7,
     },
