@@ -16,7 +16,6 @@
 
 import appMeta from '../../lib/build/appMeta.js';
 import lowdefyConfig from '../../lib/build/config.js';
-import mcpJson from '../../lib/build/mcp.js';
 import getAssets from '../html/getAssets.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -29,15 +28,12 @@ const basePath = lowdefyConfig.basePath ?? '';
 // Public: the loader calls it before it holds a session, and the answer is the
 // same for every caller and names no user. Never stored, so a view always
 // starts the current build.
+//
+// Mounted only for an app with a view (app.js), whose build always has the view
+// entry (getAssets).
 function viewBootHandler(c) {
   c.header('Cache-Control', 'no-store');
-  if (mcpJson.views.configured !== true) {
-    return c.json({ name: 'NotFoundError', message: 'This app has no views.' }, 404);
-  }
   const { view } = getAssets();
-  if (view === null) {
-    return c.json({ name: 'NotFoundError', message: 'This build has no view entry.' }, 404);
-  }
   return c.json({
     buildId: appMeta.buildId,
     js: `${basePath}/${view.js}`,

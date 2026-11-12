@@ -41,6 +41,7 @@ import getRequestSurface from './lib/getRequestSurface.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import getViewOrigins from './lib/getViewOrigins.js';
 import lowdefyConfig from '../lib/build/config.js';
+import mcpJson from '../lib/build/mcp.js';
 import mcpHandler from './routes/mcp.js';
 import mobileConfig from '../lib/build/mobileConfig.js';
 import mobileRootHandler from './routes/mobileRoot.js';
@@ -206,8 +207,12 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.get('/api/page/*', apiPageHandler);
   app.get('/api/mobile/root', mobileRootHandler);
   app.get('/api/user', userHandler);
-  app.get('/api/view/boot', viewBootHandler);
-  app.get('/api/view/root', viewRootHandler);
+  // The view routes exist only in an app with an MCP App view. In any other app
+  // their paths are not routes, and answer as an unknown path does.
+  if (mcpJson.views.configured === true) {
+    app.get('/api/view/boot', viewBootHandler);
+    app.get('/api/view/root', viewRootHandler);
+  }
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.

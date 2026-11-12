@@ -48,13 +48,11 @@ function keepCssModuleSideEffects() {
 // An app with an MCP App view gets a second entry, which the view's loader
 // starts in the host's frame (client/view.jsx, named to the loader by
 // /api/view/boot). An app without one builds exactly what it did before.
-let hasViews = false;
-try {
-  const mcp = JSON.parse(fs.readFileSync('./build/mcp.json', 'utf8'));
-  hasViews = mcp.views?.configured === true;
-} catch (e) {
-  // No build yet (e.g. editor tooling) — no view entry.
-}
+// The Lowdefy build always writes mcp.json with views.configured, and the server
+// requires the view entry of an app with a view (src/html/getAssets.js), so a
+// missing artifact fails the client build here instead of building no entry.
+const mcp = JSON.parse(fs.readFileSync('./build/mcp.json', 'utf8'));
+const hasViews = mcp.views.configured === true;
 
 const uploadSourceMaps = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
