@@ -70,6 +70,8 @@ import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runLinkEndpoint from './routes/endpoints/runLinkEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
+import darkModeScript from './html/darkModeScript.js';
+import layerOrderScript from './html/layerOrderScript.js';
 
 export {
   addNonceToElements,
@@ -124,4 +126,6 @@ export {
   runLinkEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,
+  darkModeScript,
+  layerOrderScript,
 };
