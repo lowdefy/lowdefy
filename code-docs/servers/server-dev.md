@@ -745,7 +745,11 @@ Watches every file the build reads, through one chokidar watcher:
   as a file a local module refs with `../` from beside the module. The config build writes
   `refMap.json` and each JIT page build writes a new `jitMaps/` file, so a second watcher on
   the build directory (ignoring everything else in it) reads only the maps files that
-  changed and adds new files as they appear. `refMap.json` is scanned in full once, at start.
+  changed and adds new files as they appear. `refMap.json` is scanned in full once, at start,
+  and the files it lists are passed to the watcher with its directories (`setupWatcher`'s
+  `watchFiles`), so the watcher is ready only once it watches them. An add after ready would
+  restart macOS's FSEvents stream at a moment no caller can wait for, and an edit made during
+  the restart is lost.
 
 Each batch of changes is classified with `skeletonSourceFiles.json` (see the table above):
 a skeleton change runs `lowdefyBuild()`, anything else refreshes Tailwind candidates. Either
