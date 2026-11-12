@@ -39,7 +39,9 @@ import isInteractiveControl from './isInteractiveControl.js';
 import isMountEventName from './isMountEventName.js';
 import isTraceId from './isTraceId.js';
 import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
+import isViewSourceOrigin from './isViewSourceOrigin.js';
 import joinPath from './joinPath.js';
+import mcpViewOperators from './mcpViewOperators.js';
 import journeyTargetSelectors from './journeyTargetSelectors.js';
 import LRUCache from './LRUCache.js';
 import mapPlainValues from './mapPlainValues.js';
@@ -95,7 +97,9 @@ export {
   isMountEventName,
   isTraceId,
   isReserved,
+  isViewSourceOrigin,
   joinPath,
+  mcpViewOperators,
   journeyTargetSelectors,
   LRUCache,
   mapPlainValues,

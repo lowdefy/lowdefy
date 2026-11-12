@@ -19,6 +19,7 @@ import { createHash } from 'node:crypto';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { ConfigError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import createMcpServer from './createMcpServer.js';
@@ -161,6 +162,7 @@ function createContext({
   configs = {},
   mcpAuth = oauthMcpAuth(),
   mode = 'prod',
+  operators = operatorsServer,
   secrets = { ANALYTICS_ORIGIN: 'https://stats.example.com' },
   user = supportUser,
 } = {}) {
@@ -174,7 +176,7 @@ function createContext({
     },
     logger,
     mode,
-    operators: operatorsServer,
+    operators,
     readConfigFile: vi.fn((path) => allFiles[path] ?? null),
     secrets,
     user,
@@ -604,4 +606,79 @@ test('view metadata is left off when the app has no view host', async () => {
   const session = await client.callTool({ name: 'lowdefy_view_session', arguments: {} });
   expect(session.isError).toBe(true);
   expect(session.content[0].text).toEqual('Unknown tool "lowdefy_view_session".');
+});
+
+test('tools/call logs no operator message when a view operator throws a ConfigError', async () => {
+  const client = await connect(
+    createContext({
+      operators: {
+        ...operatorsServer,
+        _if_none: () => {
+          throw new ConfigError('Received the value "s3cret-token".');
+        },
+      },
+      configs: {
+        'mcp.json': {
+          ...mcpJson,
+          endpoints: [
+            {
+              id: 'open-task',
+              scope: 'mcp:read',
+              view: {
+                ...taskView,
+                urlQuery: { tab: { _if_none: [{ _payload: 'tab' }, 'files'] } },
+              },
+            },
+          ],
+        },
+      },
+    })
+  );
+  const result = await client.callTool({
+    name: 'open-task',
+    arguments: { key: 'OPS-1', spaceKey: 'OPS' },
+  });
+  expect(Object.keys(result)).toEqual(['content']);
+  expect(logger.warn.mock.calls).toEqual([
+    [
+      { event: 'warn_mcp_view_address', endpointId: 'open-task', pageId: 'task' },
+      'MCP tool "open-task" answered without its view: an operator in its view config failed.',
+    ],
+  ]);
+  expect(logger.error).toHaveBeenCalledTimes(1);
+});
+
+test('tools/call evaluates a view with the view operators alone: no secret, user or js reaches the address', async () => {
+  const client = await connect(
+    createContext({
+      configs: {
+        'mcp.json': {
+          ...mcpJson,
+          endpoints: [
+            {
+              id: 'open-task',
+              scope: 'mcp:read',
+              view: {
+                ...taskView,
+                urlQuery: {
+                  leak: { _secret: 'ANALYTICS_ORIGIN' },
+                  who: { _user: 'id' },
+                  tab: { '_string.toUpperCase': { _payload: 'tab' } },
+                },
+              },
+            },
+          ],
+        },
+      },
+    })
+  );
+  const result = await client.callTool({
+    name: 'open-task',
+    arguments: { key: 'OPS-1', spaceKey: 'OPS', tab: 'files' },
+  });
+  const { path } = result._meta['lowdefy/view'];
+  expect(path.startsWith('/OPS/tasks/OPS-1?')).toBe(true);
+  expect(path).toContain('tab=FILES');
+  expect(path).not.toContain('stats.example.com');
+  expect(path).not.toContain('user_1');
 });

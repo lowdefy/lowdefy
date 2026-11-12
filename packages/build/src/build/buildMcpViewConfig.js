@@ -16,12 +16,13 @@
 
 /* eslint-disable no-param-reassign */
 
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { getOperatorType, isViewSourceOrigin, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
+import validateMcpViewOperators from './validateMcpViewOperators.js';
 
 // The view config of the mcp block: its defaults and the checks that need no
 // built pages. viewPages, viewSources and viewEndpoints move to the context,
@@ -44,6 +45,7 @@ function buildMcpViewConfig({ components, context }) {
   viewTools.forEach((tool) => {
     const view = tool.view;
     view.entrypoint = view.entrypoint ?? false;
+    validateMcpViewOperators({ configKey, context, tool });
     // _payload and _response stay unevaluated: the server evaluates them after
     // each call, so they are server operators.
     countOperators(view.pathParams ?? {}, { counter: context.typeCounters.operators.server });
@@ -109,6 +111,17 @@ function buildMcpViewConfig({ components, context }) {
         new ConfigError(
           'MCP "viewSources" items should be origin strings, or a _build or _secret operator.',
           { received: source, configKey: source['~k'] ?? viewSources['~k'] ?? configKey }
+        )
+      );
+    }
+    // The entries become the content security policy of a view, so a literal
+    // is checked here. A _secret is checked by the server, once it has a value.
+    if (type.isString(source) && !isViewSourceOrigin(source)) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `MCP "viewSources" item "${source}" is not an origin. An item is one https or wss origin with no path, such as "https://files.example.com".`,
+          { received: source, configKey: viewSources['~k'] ?? configKey }
         )
       );
     }
