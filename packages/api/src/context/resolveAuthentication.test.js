@@ -208,6 +208,167 @@ test('resolves a session active in the pinned organization', async () => {
   expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ model: 'member' }));
 });
 
+describe('view sessions', () => {
+  // The consent row is the grant; the member rows come from findMany.
+  function mockViewAuth({ session, member, consent }) {
+    const { auth, findOne, findMany } = mockAuth({ session, member });
+    findOne.mockImplementation(async ({ model }) => (model === 'oauthConsent' ? consent : null));
+    return { auth, findOne, findMany };
+  }
+
+  function viewSession(overrides) {
+    return {
+      user: { id: 'user_1' },
+      session: {
+        id: 'sess_1',
+        activeOrganizationId: 'org_1',
+        createdAt: new Date(Date.now() - 60 * 1000),
+        view: true,
+        viewClientId: 'client_1',
+        viewScopes: 'mcp:read',
+        ...overrides,
+      },
+    };
+  }
+
+  const member = { id: 'member_1', role: 'member', appRoles: ['auditor'] };
+  const consent = { scopes: ['mcp:read', 'mcp:write', 'offline_access'] };
+
+  test('a view session resolves the member a browser session resolves, and names its grant on context.viewSession', async () => {
+    const { auth } = mockViewAuth({ session: viewSession(), member, consent });
+    const context = { logger: mockLogger() };
+    await resolveAuthentication(context, { auth, headers: {} });
+
+    const browser = mockAuth({
+      session: { user: { id: 'user_1' }, session: { id: 'sess_1', activeOrganizationId: 'org_1' } },
+      member,
+    });
+    const browserContext = { logger: mockLogger() };
+    await resolveAuthentication(browserContext, { auth: browser.auth, headers: {} });
+
+    expect(context.user).toEqual(browserContext.user);
+    expect(context.user.roles).toEqual(['auditor']);
+    expect(context.authSession).toEqual(browserContext.authSession);
+    expect(context.viewSession).toEqual({ clientId: 'client_1', grantedScopes: ['mcp:read'] });
+    expect(browserContext.viewSession).toBe(null);
+  });
+
+  test('a view session whose grant was revoked resolves unauthenticated and reads no member row', async () => {
+    const { auth, findMany } = mockViewAuth({ session: viewSession(), member, consent: null });
+    const context = { logger: mockLogger() };
+    await resolveAuthentication(context, { auth, headers: {} });
+    expect(context.user).toBe(null);
+    expect(context.viewSession).toBe(null);
+    expect(context.authSession).toBe(null);
+    expect(findMany).not.toHaveBeenCalled();
+  });
+
+  test('a view session with a revoked grant never falls through to the strategies', async () => {
+    const { auth } = mockViewAuth({ session: viewSession(), member, consent: null });
+    const context = { logger: mockLogger() };
+    const strategy = mockStrategy({ id: 'machine', match: { user: { id: 'apiKey:machine' } } });
+    await resolveAuthentication(context, { auth, headers: {}, strategies: [strategy] });
+    expect(context.user).toBe(null);
+    expect(strategy.verify).not.toHaveBeenCalled();
+  });
+
+  test('a view session of a removed or suspended member resolves unauthenticated with no viewSession', async () => {
+    const removed = mockViewAuth({ session: viewSession(), consent });
+    const removedContext = { logger: mockLogger() };
+    await resolveAuthentication(removedContext, { auth: removed.auth, headers: {} });
+    expect(removedContext.user).toBe(null);
+    expect(removedContext.viewSession).toBe(null);
+
+    const suspended = mockViewAuth({
+      session: viewSession(),
+      member: { ...member, suspended: true },
+      consent,
+    });
+    const suspendedContext = { logger: mockLogger() };
+    await resolveAuthentication(suspendedContext, { auth: suspended.auth, headers: {} });
+    expect(suspendedContext.user).toBe(null);
+    expect(suspendedContext.viewSession).toBe(null);
+  });
+
+  test('a view session of a banned user resolves unauthenticated', async () => {
+    const session = viewSession();
+    session.user.banned = true;
+    const { auth } = mockViewAuth({ session, member, consent });
+    const context = { logger: mockLogger() };
+    await resolveAuthentication(context, { auth, headers: {} });
+    expect(context.user).toBe(null);
+    expect(context.viewSession).toBe(null);
+  });
+
+  test('a view session older than fifteen minutes resolves unauthenticated even with a later expiry', async () => {
+    const { auth } = mockViewAuth({
+      session: viewSession({
+        createdAt: new Date(Date.now() - 16 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      }),
+      member,
+      consent,
+    });
+    const context = { logger: mockLogger() };
+    await resolveAuthentication(context, { auth, headers: {} });
+    expect(context.user).toBe(null);
+    expect(context.viewSession).toBe(null);
+  });
+
+  test('a pinned app refuses a view session active in another organization, grant there or not', async () => {
+    const { auth, findMany } = mockViewAuth({
+      session: viewSession({ activeOrganizationId: 'other' }),
+      member,
+      consent,
+    });
+    registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+    const context = { logger: mockLogger() };
+    await resolveAuthentication(context, { auth, headers: {} });
+    expect(context.user).toBe(null);
+    expect(context.viewSession).toBe(null);
+    expect(findMany).not.toHaveBeenCalled();
+  });
+
+  test('a pinned app resolves a view session active in its own organization', async () => {
+    const { auth } = mockViewAuth({
+      session: viewSession({ activeOrganizationId: 'team' }),
+      member,
+      consent,
+    });
+    registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+    const context = { logger: mockLogger() };
+    await resolveAuthentication(context, { auth, headers: {} });
+    expect(context.user.organization_id).toBe('team');
+    expect(context.viewSession).toEqual({ clientId: 'client_1', grantedScopes: ['mcp:read'] });
+  });
+
+  test('a view session with no active organization is never the awaiting caller', async () => {
+    const { auth } = mockViewAuth({
+      session: viewSession({ activeOrganizationId: null }),
+      member,
+      consent,
+    });
+    registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+    const context = { logger: mockLogger() };
+    await resolveAuthentication(context, { auth, headers: {} });
+    expect(context.user).toBe(null);
+    expect(context.viewSession).toBe(null);
+  });
+
+  test('context.viewSession is null when auth is off, no session resolves, or a strategy resolves the caller', async () => {
+    const off = { viewSession: { clientId: 'stale' } };
+    await resolveAuthentication(off, { auth: null, headers: {} });
+    expect(off.viewSession).toBe(null);
+
+    const { auth } = mockAuth({ session: null });
+    const strategyContext = { logger: mockLogger(), viewSession: { clientId: 'stale' } };
+    const strategy = mockStrategy({ id: 'machine', match: { user: { id: 'apiKey:machine' } } });
+    await resolveAuthentication(strategyContext, { auth, headers: {}, strategies: [strategy] });
+    expect(strategyContext.user).not.toBe(null);
+    expect(strategyContext.viewSession).toBe(null);
+  });
+});
+
 test('resolves any active organization under the tenant policy', async () => {
   const { auth } = mockAuth({
     session: {

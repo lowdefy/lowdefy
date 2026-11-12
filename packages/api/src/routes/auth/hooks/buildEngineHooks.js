@@ -22,6 +22,7 @@ import createAdmissionGateHook from '../organizations/createAdmissionGateHook.js
 import createAutoJoinHook from '../organizations/createAutoJoinHook.js';
 import createMobileSessionCreateHook from '../mobile/createMobileSessionCreateHook.js';
 import createMobileSessionRefreshHook from '../mobile/createMobileSessionRefreshHook.js';
+import createViewSessionRefreshHook from '../view/createViewSessionRefreshHook.js';
 
 // Engine-tier hook bindings - hard-coded framework behavior, not entries in
 // auth.hooks. Keyed by point; each point lists BetterAuth-native callbacks
@@ -38,7 +39,12 @@ function buildEngineHooks({ authConfig, getAuth, logger }) {
     // and only ever vetoes a switch away from an existing active organization,
     // so under pinned (one organization: accept re-sets the same id, or repairs
     // an org-less invitee session) it never bites.
-    'session.update.before': [createAcceptActiveOrgGuardHook({ logger })],
+    //
+    // A view session keeps the expiry it was minted with, in every app.
+    'session.update.before': [
+      createAcceptActiveOrgGuardHook({ logger }),
+      createViewSessionRefreshHook(),
+    ],
   };
 
   // The admission gate bites only under pinned + invite-only (the predicate

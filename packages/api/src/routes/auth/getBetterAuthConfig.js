@@ -192,6 +192,7 @@ function getBetterAuthConfig({
   dev = false,
   getAuth,
   logger,
+  mcpJson = {},
   plugins,
   secrets,
 }) {
@@ -371,13 +372,24 @@ function getBetterAuthConfig({
     options.database = database;
   }
 
+  // The marks of a view session - the bearer session an MCP App view signs in
+  // with (mintViewSession): the mark itself, and the client and scopes of the
+  // grant it was minted from. input: false keeps them out of every
+  // client-writable body, so only minting sets them. Declared for every app,
+  // with or without a view: the marks are what hold such a session to fifteen
+  // minutes and to its grant, and a session minted before a deploy that
+  // removed the app's views must still be read as one.
+  options.session.additionalFields = {
+    view: { type: 'boolean', required: false, input: false },
+    viewClientId: { type: 'string', required: false, input: false },
+    viewScopes: { type: 'string', required: false, input: false },
+  };
+
   // Phone sessions are marked so they can be given their own lifetime
   // (mobile.auth.sessionExpiresIn) - see createMobileSessionCreateHook. input:
   // false keeps the mark out of every client-writable body.
   if (type.isNumber(authConfig.mobile?.sessionExpiresIn)) {
-    options.session.additionalFields = {
-      mobile: { type: 'boolean', required: false, input: false },
-    };
+    options.session.additionalFields.mobile = { type: 'boolean', required: false, input: false };
   }
 
   if (authConfig.session.crossSubDomainCookies.enabled === true) {
@@ -648,13 +660,20 @@ function getBetterAuthConfig({
     );
   }
 
-  // Phones hold ordinary sessions and send them as bearers. Both plugins are on
-  // only when the app has a mobile section, and neither changes what a browser
-  // sends or receives: the session token header goes to native requests only
-  // (buildBearerPlugin), and only the server mints one-time tokens
+  // Phones hold ordinary sessions and send them as bearers, and an MCP App view
+  // sends its view session the same way. The bearer plugin is on when the app
+  // has a mobile section or a view (mcp.json views.configured, written by the
+  // build), and it changes nothing a browser sends or receives: the session
+  // token header goes to native requests only, and to nobody in an app with no
+  // mobile section - a view gets its token from the MCP tool that mints it
+  // (buildBearerPlugin). Only the server mints one-time tokens
   // (buildOneTimeTokenPlugin, minted by the mobile sign-in page).
-  if (!type.isNone(authConfig.mobile)) {
-    options.plugins.push(buildBearerPlugin(), buildOneTimeTokenPlugin());
+  const hasMobile = !type.isNone(authConfig.mobile);
+  if (hasMobile || mcpJson.views?.configured === true) {
+    options.plugins.push(buildBearerPlugin({ sendTokenToNative: hasMobile }));
+  }
+  if (hasMobile) {
+    options.plugins.push(buildOneTimeTokenPlugin());
   }
 
   // The admin plugin is framework-controlled - it owns the user row's ban fields

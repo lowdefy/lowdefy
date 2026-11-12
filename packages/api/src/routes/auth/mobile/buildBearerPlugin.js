@@ -18,7 +18,7 @@ import { bearer } from 'better-auth/plugins';
 
 import isNativeAuthRequest from './isNativeAuthRequest.js';
 
-// BetterAuth's bearer plugin, for phone shells: a request carrying
+// BetterAuth's bearer plugin, for phone shells and MCP App views: a request carrying
 // "Authorization: Bearer <signed session token>" is resolved as that session,
 // as a cookie would be. requireSignature refuses an unsigned token, so only
 // the signed value BetterAuth itself issued works; a JWT or another bearer
@@ -29,7 +29,11 @@ import isNativeAuthRequest from './isNativeAuthRequest.js';
 // read response headers, and Lowdefy keeps the token out of reach of page
 // script (sanitizeSessionResponse), so the header is sent only to native
 // requests: a phone signing in, or exchanging a one-time token.
-function buildBearerPlugin() {
+//
+// sendTokenToNative is false for an app with a view and no mobile section. No
+// phone signs in there, and a view never signs in over /api/auth - its token
+// comes from the MCP tool that mints it - so the header is sent to nobody.
+function buildBearerPlugin({ sendTokenToNative }) {
   const plugin = bearer({ requireSignature: true });
   return {
     ...plugin,
@@ -37,7 +41,8 @@ function buildBearerPlugin() {
       ...plugin.hooks,
       after: plugin.hooks.after.map((hook) => ({
         ...hook,
-        matcher: (ctx) => isNativeAuthRequest({ request: ctx.request }) && hook.matcher(ctx),
+        matcher: (ctx) =>
+          sendTokenToNative && isNativeAuthRequest({ request: ctx.request }) && hook.matcher(ctx),
       })),
     },
   };

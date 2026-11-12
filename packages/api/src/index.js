@@ -50,9 +50,11 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getMobileRootConfig from './routes/mobile/getMobileRootConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
+import getViewHosts from './routes/mcp/getViewHosts.js';
 import isSameOriginRequest from './context/isSameOriginRequest.js';
 import isWebSocketOriginAllowed from './context/isWebSocketOriginAllowed.js';
 import logClientError from './routes/log/logClientError.js';
+import mintViewSession from './routes/auth/view/mintViewSession.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
 import parseRequestBody from './context/parseRequestBody.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
@@ -103,9 +105,11 @@ export {
   registerMcpResourceBinding,
   getPageConfig,
   getRootConfig,
+  getViewHosts,
   isSameOriginRequest,
   isWebSocketOriginAllowed,
   logClientError,
+  mintViewSession,
   normalizeInjectedCaller,
   parseRequestBody,
   redactErrorResponse,
