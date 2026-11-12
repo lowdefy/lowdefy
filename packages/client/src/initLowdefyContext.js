@@ -36,11 +36,16 @@ import { createUrl } from './adapters/url.js';
 // carries.
 //
 // apiBase prefixes API calls; it defaults to the router's basePath.
+//
+// host is the @lowdefy/client-core host the page runs on. An entry that runs
+// the page somewhere other than a browser tab on the app's own origin passes
+// its own (createViewHost); without one the page gets the browser host.
 function initLowdefyContext({
   apiBase,
   auth,
   Components,
   config,
+  host,
   loadAllIcons,
   lowdefy,
   matchedPath,
@@ -60,7 +65,7 @@ function initLowdefyContext({
       apiBase,
       auth,
       basePath: router.basePath,
-      host: createWebHost({ router, window }),
+      host: host ?? createWebHost({ router, window }),
       lowdefy,
       rootConfig: config.rootConfig,
       types,

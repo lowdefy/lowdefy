@@ -60,7 +60,10 @@ function getAssets() {
   }
   assets = {
     js: entry.file,
-    css: entry.css ?? [],
+    // The entry's stylesheets and those of the chunks it imports statically.
+    // With one entry they are all on the entry itself; a second entry (the
+    // view's) moves the code the two share, and its CSS, into chunks of its own.
+    css: [...entryCss],
     icons: {
       js: [...iconsJs].filter((file) => !entryFiles.has(file)),
       css: [...iconsCss].filter((file) => !entryFiles.has(file)),

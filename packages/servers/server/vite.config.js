@@ -45,6 +45,17 @@ function keepCssModuleSideEffects() {
   };
 }
 
+// An app with an MCP App view gets a second entry, which the view's loader
+// starts in the host's frame (client/view.jsx, named to the loader by
+// /api/view/boot). An app without one builds exactly what it did before.
+let hasViews = false;
+try {
+  const mcp = JSON.parse(fs.readFileSync('./build/mcp.json', 'utf8'));
+  hasViews = mcp.views?.configured === true;
+} catch (e) {
+  // No build yet (e.g. editor tooling) — no view entry.
+}
+
 const uploadSourceMaps = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
 // The @lowdefy packages this server depends on. A linked plugin pinned to
@@ -92,7 +103,7 @@ export default defineConfig(({ mode }) => ({
     manifest: true,
     sourcemap: uploadSourceMaps,
     rollupOptions: {
-      input: 'client/main.jsx',
+      input: hasViews ? ['client/main.jsx', 'client/view.jsx'] : 'client/main.jsx',
     },
   },
   resolve: {
