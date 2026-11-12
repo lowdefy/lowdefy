@@ -14,16 +14,25 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { logClientError, parseRequestBody } from '@lowdefy/api';
 
 import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
 import getRequestSurface from '../lib/getRequestSurface.js';
+import getViewOrigins from '../lib/getViewOrigins.js';
 import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
 
 // No Origin is allowed: a phone shell's fetch sends none, and refusing it lost
 // every native fault. A browser on another site always sends Origin or
 // Sec-Fetch-Site on a cross-site POST, so it is still refused.
 const guardSameOrigin = createSameOriginGuard({ allowNoOrigin: true });
+
+// An MCP App view runs the app's client on its host's origin, so its faults
+// arrive cross-site. They are admitted only from a view's exact origin and
+// only with a view session: the origin alone is public knowledge.
+function isViewRequest({ c, context }) {
+  return !type.isNone(context.viewSession) && getViewOrigins().includes(c.req.header('origin'));
+}
 
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {
@@ -33,9 +42,11 @@ async function clientErrorHandler(c) {
   }
   const context = c.get('lowdefyContext');
 
-  const forbidden = guardSameOrigin(c);
-  if (forbidden) {
-    return forbidden;
+  if (!isViewRequest({ c, context })) {
+    const forbidden = guardSameOrigin(c);
+    if (forbidden) {
+      return forbidden;
+    }
   }
 
   const body = parseRequestBody({ text: await c.req.text() });
