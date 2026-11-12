@@ -265,6 +265,8 @@
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
 - _ref: actions/MagicLinkVerify.yaml
+- _ref: actions/McpOpenLink.yaml
+- _ref: actions/McpSendMessage.yaml
 - _ref: actions/PdfMake.yaml
 - _ref: actions/PostHogAlias.yaml
 - _ref: actions/PostHogCapture.yaml
@@ -336,6 +338,7 @@
 - _ref: operators/_lt.yaml
 - _ref: operators/_lte.yaml
 - _ref: operators/_math.yaml
+- _ref: operators/_mcp.yaml
 - _ref: operators/_media.yaml
 - _ref: operators/_menu.yaml
 - _ref: operators/_module.yaml
