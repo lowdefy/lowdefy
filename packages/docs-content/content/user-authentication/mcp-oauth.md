@@ -413,6 +413,152 @@ properties:
 
 For an owner's or admin's list, filter on `organization_id` alone. Pass a document's `_id` as `id` to the revoke steps.
 
+## Views
+
+A tool can name a page of the app as its **view**. When Claude calls the tool, the page opens inside the conversation, signed in as the person who connected the app. It is the app's real page: it loads the app's own client from the app's server and calls its requests and endpoints.
+
+Views work in Claude only. Other MCP clients get the tool's text result.
+
+### Config
+
+```yaml
+mcp:
+  endpoints:
+    - id: search-tickets
+      scope: mcp:read
+    - id: open_ticket
+      scope: mcp:read
+      annotations:
+        title: Open ticket
+      view:
+        pageId: ticket
+        pathParams:
+          ticket_id:
+            _payload: ticket_id
+        urlQuery:
+          tab:
+            _response: default_tab
+        entrypoint: false
+  viewPages:
+    - customer
+  viewSources:
+    - https://files.example.com
+  viewEndpoints:
+    - id: ticket-comments
+      scope: mcp:read
+```
+
+Here the `ticket` page has `path: /tickets/{ticket_id}`. A call to `open_ticket` with `ticket_id: T-42` runs the endpoint, then shows the page at `/tickets/T-42?tab=...`.
+
+`view` on an `endpoints` entry addresses a page the way the `Link` action does:
+
+- **`pageId`** *(required)*: the page that shows this tool. A fixed string, not an operator.
+- **`pathParams`**: a value for every placeholder in the page's `path`. The build fails if one is missing.
+- **`urlQuery`**: the page's URL query.
+- **`entrypoint`**: list the view in Claude outside a conversation. Default `false`. Claude calls an entry point with no arguments, so the build refuses `entrypoint: true` on a tool whose `payloadSchema` has required properties. Claude shows entry points only to organizations that have that feature.
+
+`pathParams` and `urlQuery` are evaluated on the server after each call. `_payload` is the arguments Claude passed. `_response` is what the endpoint's routine returned, and is used like `_payload`: `_response: default_tab`. The resulting address is sent to the MCP client, so only these operators are allowed there: `_payload`, `_response`, `_and`, `_array`, `_boolean`, `_eq`, `_get`, `_if`, `_if_none`, `_ne`, `_not`, `_number`, `_object`, `_or`, `_regex`, `_string`, `_switch`, `_type` and `_uri`. The build refuses any other, including `_secret`, `_user` and `_js`.
+
+If a path value comes out empty for a call, or an operator fails, the tool still answers with its text result and no view opens.
+
+The other three keys sit on `mcp`:
+
+- **`viewPages`**: more page ids a view may show without a tool of their own. Use it for pages reached by a link from a view.
+- **`viewSources`**: other origins a view page loads from or calls, such as a file store or a map tile server. Claude blocks every origin a view does not declare. Each entry must be exactly one `https://` or `wss://` origin, with no path and no wildcard. An entry may be a `_build` operator or a `_secret`; a secret is checked when the server starts.
+- **`viewEndpoints`**: a scope for each endpoint a view page calls that is not a tool. See [what a view can reach](#what-a-view-can-reach).
+
+A **view page** is a page some tool names in `view.pageId`, or one `viewPages` lists.
+
+The build also enforces:
+
+- **Views need `auth.oauthProvider`.** A view signs in with the OAuth grant, and its address is computed from the app's pinned public URL.
+- **The tool name `lowdefy_view_session` is reserved.** The server adds that tool itself; a view calls it to sign in. An endpoint whose id would become that name is refused.
+- A `view.pageId`, a `viewPages` entry and a `viewEndpoints` id must each exist.
+
+A view page cannot be a mobile page. A page with `target: mobile` is not shown in a view, even when a tool names it.
+
+### Put a view on a tool made for it
+
+Claude opens the view on every call of the tool. Agents call an app's read tools all the time, so a tool that only returns data should keep no view. Add a tool whose job is to show something, such as `open_ticket`, and put the view there. A tool that could show several pages is several tools.
+
+### Adding the connector
+
+Claude runs a connector's views on an origin it computes from the connector's URL. The server computes the same origin from the app's MCP URL. If they differ, Claude refuses to show the view.
+
+So add the connector with **exactly** the app's MCP URL: the pinned public URL (`BETTER_AUTH_URL`, else the current environment's `url`), then the `basePath`, then `/api/mcp`. The server logs it at start, with the view origin:
+
+```
+MCP views are on. Add the connector with exactly the URL https://app.example.com/api/mcp. Its views run on https://<hash>.claudemcpcontent.com.
+```
+
+If the app has no pinned public URL, the server logs a warning and serves its tools without views.
+
+### What a view can reach
+
+A view signs in by itself, as the person who connected, in the organization of their grant. Its session lasts 15 minutes and the view renews it without a prompt. It ends at once when the grant is revoked. A script using a member token cannot open a view.
+
+That session is limited to what the view pages need. It can reach:
+
+- **View pages only.** A link to a view page navigates in place. Every other page opens in the browser.
+- **The requests of view pages.**
+- **The endpoints and websocket channels that view pages use.** The build lists them from each view page's `CallAPI` actions and subscriptions.
+
+It cannot reach:
+
+- **An endpoint called with a computed id.** The build lists a `CallAPI` only when its `endpointId` is a fixed string. If `endpointId` is an operator, the call is refused in a view.
+- **Agents.** No agent is available on a view page. An agent chat on a view page is refused.
+- **Anything under `/api/auth`.** A view cannot sign out, change the account or switch organization.
+
+### Read-only connections
+
+A view never does more than the person granted. With `mcp:write`, the person's roles decide, as in the browser. With `mcp:read` only, the view reads:
+
+- **Requests.** Only a request type that declares itself a read and not a write runs, such as `MongoDBFind`, `MongoDBAggregation` or `ElasticsearchSearch`. Types that do not declare a read are refused even when your request only reads. That covers HTTP (`AxiosHttp`), SQL (`KnexRaw`, `KnexBuilder`), `Redis`, mail and payment requests.
+- **Aggregations.** A MongoDB aggregation that contains `$out` or `$merge` is refused.
+- **Endpoints.** An endpoint runs only when its scope is `mcp:read`. A tool has its scope already. For an endpoint that is not a tool, set it under `viewEndpoints`. **An endpoint with no scope counts as `mcp:write`.**
+- **Steps inside a read endpoint.** Tagging an endpoint `mcp:read` does not let it write. Its request steps follow the request rule above. Of the auth steps, only `ListMembers` and `ListUsers` run. A `CallAgent` step needs write access.
+- **Websockets.** Subscribing works. Publishing is a write.
+
+`CreateMcpToken` is refused in every view, with or without write access.
+
+A refused write shows the message "This connection is read-only. Reconnect with write access to make changes."
+
+**Say this on your `consentPage`.** When the person grants read-only access, tell them that views opened from this connection can show data but cannot change it, and that they need to grant write access to make changes from a view.
+
+### Pages that know they are in a view
+
+- [`_mcp: embedded`](/_mcp) is `true` inside a view and `null` in the browser. Use it to drop the app's own chrome, such as the menu and header.
+- [`_mcp: displayMode`](/_mcp) is how Claude shows the view: `inline`, `fullscreen` or `pip`.
+- [`McpSendMessage`](/McpSendMessage) sends Claude a message from the page.
+- [`McpOpenLink`](/McpOpenLink) opens a URL or a page of the app in the browser.
+
+The tool's arguments and result reach the page only as its path and URL query.
+
+### Limits inside a view
+
+The view runs in a sandbox on another origin than the app:
+
+- `alert`, `confirm`, `print` and file downloads do nothing.
+- Links to anything but a view page open in the browser. That includes `newTab` links, `target="_blank"` anchors and `window.open`. Only `http` and `https` links open.
+- The app's `appendHead` and `appendBody` HTML is not loaded.
+- Usage telemetry to the Lowdefy API is blocked, because the view may only call origins it declares. Add `https://api.lowdefy.net` to `viewSources` to send it.
+
+When a view cannot load or sign in, it shows the tool's title, its result as text and an **Open in browser** button. After a deploy, an open view shows "This app has been updated." with a button that loads the new version.
+
+### Testing a view
+
+The dev server serves no views. It serves the tools without them and logs why.
+
+Test against a built app that Claude can reach:
+
+1. Start a tunnel to the port the app will run on.
+2. Set `BETTER_AUTH_URL` to the tunnel's URL, so the view origin matches.
+3. Build and start the app.
+4. Copy the connector URL from the start-up log line and add it to Claude as a custom connector.
+5. Ask Claude to call the tool.
+
+Views were tested in Claude in a web browser. Claude Code calls tools as text and shows no view.
+
 ## Summary
 
 - The app is an OAuth 2.1 authorization server; enable it with `auth.oauthProvider`.
@@ -422,3 +568,4 @@ For an owner's or admin's list, filter on `organization_id` alone. Pass a docume
 - Consent is per `(client, user, organization)` and read live on every call, so `RevokeMcpGrant` and disconnecting take effect immediately.
 - `_user.auth_method` is `'mcp'` for assistant callers.
 - A script uses a member token (`CreateMcpToken`), served as its member and switched off with `RevokeMcpToken` or `RevokeOrgMcpToken`.
+- A tool with a `view` opens a page of the app inside Claude. A view reaches only view pages and what they use, and a read-only grant gives a read-only view.

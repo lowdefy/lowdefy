@@ -1,6 +1,6 @@
 # Operators
 
-Operators are functions written directly in config — they evaluate wherever they appear. All 70 operators, grouped by what they do. See [Operators](/operators) for how evaluation works.
+Operators are functions written directly in config — they evaluate wherever they appear. All 71 operators, grouped by what they do. See [Operators](/operators) for how evaluation works.
 
 Logic & control
 
