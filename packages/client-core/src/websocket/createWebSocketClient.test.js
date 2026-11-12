@@ -857,9 +857,11 @@ describe('a host that signs the handshake with subprotocols', () => {
     expect(host.websocketProtocols).toHaveBeenLastCalledWith({ renew: true });
     expect(currentSocket().args[1]).toEqual(['lowdefy.view', 'lowdefy.view.bearer.renewed']);
     // The new session is asked for once: the connect after it opens does not.
+    // This is the second reconnect in a row, so its backoff is up to a second.
     open();
     close({ code: 1006 });
-    await vi.advanceTimersByTimeAsync(500);
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(sockets).toHaveLength(3);
     expect(host.websocketProtocols).toHaveBeenLastCalledWith({ renew: false });
     vi.useRealTimers();
   });
