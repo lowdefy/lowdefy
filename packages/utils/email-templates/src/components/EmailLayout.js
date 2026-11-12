@@ -15,18 +15,17 @@
 */
 
 import React from 'react';
-import {
-  Body,
-  Container,
-  Head,
-  Hr,
-  Html,
-  Img,
-  Preview,
-  Section,
-  Text,
-} from '@react-email/components';
 import { type } from '@lowdefy/helpers';
+
+import Body from '../reactEmail/Body.js';
+import Container from '../reactEmail/Container.js';
+import Head from '../reactEmail/Head.js';
+import Hr from '../reactEmail/Hr.js';
+import Html from '../reactEmail/Html.js';
+import Img from '../reactEmail/Img.js';
+import Preview from '../reactEmail/Preview.js';
+import Section from '../reactEmail/Section.js';
+import Text from '../reactEmail/Text.js';
 
 const fontFamily =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
@@ -94,7 +93,7 @@ function EmailLayout({ theme = {}, preview, children }) {
           ) : null}
           {!type.isNone(theme.footer) ? (
             <Section>
-              <Hr style={{ borderColor: '#f0f0f0', margin: '16px 0' }} />
+              <Hr style={{ borderTop: '1px solid #f0f0f0', margin: '16px 0' }} />
               <Text style={footerStyle}>{theme.footer}</Text>
             </Section>
           ) : null}
