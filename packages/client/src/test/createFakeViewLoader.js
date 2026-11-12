@@ -18,9 +18,11 @@ import { vi } from 'vitest';
 
 // The object a view's loader hands the client entry (window.__LOWDEFY_VIEW__),
 // over a fake MCP Apps host. tokens are the session tokens the host's
-// lowdefy_view_session calls answer with, in order.
+// lowdefy_view_session calls answer with, in order, and expiresAt is when each
+// of them ends: a time, or a function that gives one per call.
 function createFakeViewLoader({
   basePath = '',
+  expiresAt = '2026-01-01T00:15:00.000Z',
   origin = 'https://app.example.com',
   path = '/tickets/12?tab=notes',
   tokens = ['token-1', 'token-2', 'token-3'],
@@ -58,7 +60,7 @@ function createFakeViewLoader({
           _meta: {
             'lowdefy/viewSession': {
               token: remaining.shift(),
-              expiresAt: '2026-01-01T00:15:00.000Z',
+              expiresAt: typeof expiresAt === 'function' ? expiresAt() : expiresAt,
             },
           },
         };

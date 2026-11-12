@@ -255,6 +255,68 @@ test('a websocket the server closes for an ended session reconnects with a newly
   expect(host.tokenStore.get()).toBe('token-2');
 });
 
+test('a websocket that cannot connect keeps the session it holds and mints no other', async () => {
+  vi.useFakeTimers();
+  const { host, lowdefy, sockets, view } = setup();
+  const handlers = {
+    onConnected: vi.fn(),
+    onDisconnected: vi.fn(),
+    onError: vi.fn(),
+    onMessage: vi.fn(),
+  };
+  await host.view.fetchApi('/api/user');
+  lowdefy._internal.websocketClient
+    .subscribe({ handlers, payload: {}, websocketId: 'feed' })
+    .catch(() => {});
+  await vi.advanceTimersByTimeAsync(0);
+  // The feed is live, then the app's socket goes away.
+  sockets[0].readyState = 1;
+  sockets[0].onopen();
+  sockets[0].onmessage({
+    data: JSON.stringify({ type: 'subscribed', websocketId: 'feed', requestId: 's1' }),
+  });
+  sockets[0].onclose({ code: 1006 });
+  await vi.advanceTimersByTimeAsync(15 * 1000);
+  // Every handshake now ends in a close.
+  for (let attempt = 2; attempt <= 12; attempt += 1) {
+    expect(sockets).toHaveLength(attempt);
+    sockets[attempt - 1].onclose({ code: 1006 });
+    await vi.advanceTimersByTimeAsync(15 * 1000);
+  }
+  expect(sockets).toHaveLength(13);
+  expect(mintCount(view)).toBe(1);
+  expect(readSocketToken(sockets[12].args[1][1])).toBe('token-1');
+  expect(host.tokenStore.get()).toBe('token-1');
+});
+
+test('a websocket the server keeps closing for a caller change mints three sessions and no more', async () => {
+  vi.useFakeTimers();
+  const { host, lowdefy, sockets, view } = setup({
+    tokens: ['token-1', 'token-2', 'token-3', 'token-4', 'token-5', 'token-6'],
+  });
+  const handlers = {
+    onConnected: vi.fn(),
+    onDisconnected: vi.fn(),
+    onError: vi.fn(),
+    onMessage: vi.fn(),
+  };
+  await host.view.fetchApi('/api/user');
+  lowdefy._internal.websocketClient
+    .subscribe({ handlers, payload: {}, websocketId: 'feed' })
+    .catch(() => {});
+  await vi.advanceTimersByTimeAsync(0);
+  for (let attempt = 1; attempt <= 8; attempt += 1) {
+    expect(sockets).toHaveLength(attempt);
+    sockets[attempt - 1].readyState = 1;
+    sockets[attempt - 1].onopen();
+    sockets[attempt - 1].onclose({ code: 4401 });
+    await vi.advanceTimersByTimeAsync(15 * 1000);
+  }
+  expect(mintCount(view)).toBe(4);
+  expect(host.tokenStore.get()).toBe('token-4');
+  expect(readSocketToken(sockets[8].args[1][1])).toBe('token-4');
+});
+
 test.each([
   {
     call: 'a page request',

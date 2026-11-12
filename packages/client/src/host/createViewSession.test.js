@@ -28,8 +28,8 @@ function respond(status) {
 }
 
 // fetch answers 200 to a call that carries one of validTokens and 401 to any other.
-function setup({ tokens, validTokens = ['token-1'] } = {}) {
-  const view = createFakeViewLoader({ basePath: '/base', tokens });
+function setup({ expiresAt, now, tokens, validTokens = ['token-1'] } = {}) {
+  const view = createFakeViewLoader({ basePath: '/base', expiresAt, tokens });
   const valid = new Set(validTokens);
   const fetch = vi.fn(async (_, init) => {
     const token = init?.headers?.Authorization?.replace('Bearer ', '');
@@ -41,6 +41,7 @@ function setup({ tokens, validTokens = ['token-1'] } = {}) {
     apiBase,
     bridge: createViewBridge({ view }),
     fetch,
+    now,
     onEnded,
     tokenStore,
   });
@@ -184,4 +185,94 @@ test('getToken rejects when no session can be minted, without ending the view', 
   const { onEnded, session } = setup({ tokens: [] });
   await expect(session.getToken()).rejects.toThrow('No session for you.');
   expect(onEnded).not.toHaveBeenCalled();
+});
+
+const MINUTE = 60 * 1000;
+
+// A clock the test moves, and sessions that end fifteen minutes after they are minted.
+function setupClock({ tokens = ['token-1', 'token-2', 'token-3', 'token-4', 'token-5'] } = {}) {
+  const clock = { time: Date.parse('2026-06-01T10:00:00.000Z') };
+  const context = setup({
+    expiresAt: () => new Date(clock.time + 15 * MINUTE).toISOString(),
+    now: () => clock.time,
+    tokens,
+  });
+  return { ...context, clock };
+}
+
+test('getToken keeps the held session until it reaches its expiry, then mints a new one', async () => {
+  const { clock, session, view } = setupClock();
+  await expect(session.getToken()).resolves.toBe('token-1');
+  clock.time += 15 * MINUTE - 1;
+  await expect(session.getToken()).resolves.toBe('token-1');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(1);
+  clock.time += 1;
+  await expect(session.getToken()).resolves.toBe('token-2');
+  await expect(session.getToken()).resolves.toBe('token-2');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(2);
+});
+
+test('getToken reads the expiry of a session minted for a refused call', async () => {
+  const { clock, session, valid, view } = setupClock();
+  await session.fetchApi('/api/user');
+  valid.delete('token-1');
+  valid.add('token-2');
+  clock.time += 10 * MINUTE;
+  await session.fetchApi('/api/user');
+  // token-2 was minted ten minutes in, so it outlives the expiry of token-1.
+  clock.time += 10 * MINUTE;
+  await expect(session.getToken()).resolves.toBe('token-2');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(2);
+});
+
+test('getToken with renew stops minting after three new sessions in fifteen minutes', async () => {
+  const { clock, session, view } = setupClock();
+  await session.getToken();
+  const renewed = [];
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    clock.time += 10 * 1000;
+    renewed.push(await session.getToken({ renew: true }));
+  }
+  expect(renewed).toEqual([
+    'token-2',
+    'token-3',
+    'token-4',
+    'token-4',
+    'token-4',
+    'token-4',
+    'token-4',
+    'token-4',
+  ]);
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(4);
+});
+
+test('getToken with renew mints again once the earlier renewals are fifteen minutes old', async () => {
+  const { clock, session, tokenStore, view } = setupClock({
+    tokens: ['token-1', 'token-2', 'token-3', 'token-4', 'token-5', 'token-6'],
+  });
+  await session.getToken();
+  await session.getToken({ renew: true });
+  await session.getToken({ renew: true });
+  await session.getToken({ renew: true });
+  clock.time += 14 * MINUTE;
+  await expect(session.getToken({ renew: true })).resolves.toBe('token-4');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(4);
+  clock.time += MINUTE;
+  // Fifteen minutes on, token-4 has also reached its expiry.
+  await expect(session.getToken({ renew: true })).resolves.toBe('token-5');
+  expect(tokenStore.get()).toBe('token-5');
+});
+
+test('getToken does not trust an expiry that had passed when the session was minted', async () => {
+  // The clock of the frame runs ahead of the app's: every session would read as ended.
+  const clock = { time: Date.parse('2026-06-01T10:00:00.000Z') };
+  const { session, view } = setup({
+    expiresAt: () => new Date(clock.time - MINUTE).toISOString(),
+    now: () => clock.time,
+  });
+  await expect(session.getToken()).resolves.toBe('token-1');
+  await expect(session.getToken()).resolves.toBe('token-1');
+  clock.time += 60 * MINUTE;
+  await expect(session.getToken()).resolves.toBe('token-1');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(1);
 });
