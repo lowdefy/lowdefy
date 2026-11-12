@@ -27,6 +27,7 @@ import seedSession from './seedSession.js';
 import settleSession from './settleSession.js';
 import storeLogger from './storeLogger.js';
 import stubRequest from './stubRequest.js';
+import testSessions from './testSessions.js';
 import { openDataSession, readDataSet } from './dataSets/index.js';
 import readConnectionArtifacts from './dataSets/readConnectionArtifacts.js';
 import readEmptyDataSet from './dataSets/readEmptyDataSet.js';
@@ -80,7 +81,7 @@ async function openSession({ data, testApp }) {
   };
   testApp.sessions.add(testSession);
 
-  return {
+  const session = {
     as: (user) => createSessionCaller({ testSession, user }),
     collection: (connectionId) => getSessionCollection({ connectionId, testSession }),
     pauseBefore: (stepId) => pauseBefore({ stepId, testSession }),
@@ -95,6 +96,8 @@ async function openSession({ data, testApp }) {
       call: (endpointId, payload) => callSystemEndpoint({ endpointId, payload, testSession }),
     }),
   };
+  testSessions.set(session, testSession);
+  return session;
 }
 
 export default openSession;
