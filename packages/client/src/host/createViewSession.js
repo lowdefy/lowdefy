@@ -16,6 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
+// A session that has not reached its expiry is replaced on request (renew) at
+// most this often. A websocket the server keeps closing for a caller change
+// asks each time it reconnects, and every mint is a session written by the app
+// and, past the grant's limit, one deleted from another open view.
+const RENEW_LIMIT = 3;
+const RENEW_WINDOW_MS = 15 * 60 * 1000;
+
 function bearer(token) {
   return `Bearer ${token}`;
 }
@@ -40,15 +47,45 @@ function sentToken(init) {
 //
 // Calls that fail together share one mint, and a call refused for a token that
 // has already been replaced is sent again with the current one.
-function createViewSession({ apiBase, bridge, fetch, onEnded, tokenStore }) {
+//
+// now is the clock, in milliseconds; a test gives its own.
+function createViewSession({
+  apiBase,
+  bridge,
+  fetch,
+  now = () => Date.now(),
+  onEnded,
+  tokenStore,
+}) {
   let minting = null;
+  // When the held session ends, in milliseconds, or null when that is not known.
+  let heldExpiresAt = null;
+  // When each new session asked for with renew was minted.
+  let renewals = [];
+
+  // The app says when a session ends by its own clock. A time that has passed
+  // by this clock as the session arrives means the two clocks disagree by more
+  // than the session lasts, so it is not kept: read against this clock, every
+  // session would look ended and be replaced at once.
+  function readExpiresAt(expiresAt) {
+    const time = type.isString(expiresAt) ? Date.parse(expiresAt) : NaN;
+    if (Number.isNaN(time) || time <= now()) {
+      return null;
+    }
+    return time;
+  }
+
+  function hasExpired() {
+    return heldExpiresAt !== null && now() >= heldExpiresAt;
+  }
 
   function mint() {
     if (minting === null) {
       minting = bridge
         .mintSession()
-        .then(({ token }) => {
+        .then(({ expiresAt, token }) => {
           tokenStore.set(token);
+          heldExpiresAt = readExpiresAt(expiresAt);
           return token;
         })
         .finally(() => {
@@ -115,14 +152,30 @@ function createViewSession({ apiBase, bridge, fetch, onEnded, tokenStore }) {
   }
 
   // The token for a call sessionFetch cannot send again, such as a websocket
-  // handshake: the one held, or a new session when none is held or the caller
-  // has reason to think the held one has ended (renew). A session that cannot
-  // be minted rejects and does not end the view: the next API call decides.
+  // handshake. No response tells such a call that its session has ended, so
+  // the session is replaced here when none is held or the held one has reached
+  // its expiry.
+  //
+  // renew asks for a new session though the held one has not expired: the
+  // caller was told the session is gone, as a websocket is by a close for a
+  // caller change. It is honoured RENEW_LIMIT times in RENEW_WINDOW_MS; past
+  // that the held token is given, so a caller that keeps asking stops minting.
+  // A session that cannot be minted rejects and does not end the view: the
+  // next API call decides.
   async function getToken({ renew } = {}) {
     const held = tokenStore.get();
-    if (renew !== true && !type.isNone(held)) {
+    if (type.isNone(held) || hasExpired()) {
+      return mint();
+    }
+    if (renew !== true) {
       return held;
     }
+    const time = now();
+    renewals = renewals.filter((mintedAt) => time - mintedAt < RENEW_WINDOW_MS);
+    if (renewals.length >= RENEW_LIMIT) {
+      return held;
+    }
+    renewals.push(time);
     return mint();
   }
 

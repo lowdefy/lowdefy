@@ -50,6 +50,9 @@ function createShellHost({
   const storage = createDeviceStore();
   return {
     authTransport: 'bearer',
+    // Endpoint calls carry no build id: a cached page and the offline outbox call endpoints
+    // across server builds (createCallAPI in @lowdefy/client-core).
+    callsEndpointsAcrossBuilds: true,
     fetch,
     globals: createShellGlobals({
       assign: (url) => Linking.openURL(url),

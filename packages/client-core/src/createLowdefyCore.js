@@ -45,6 +45,9 @@ const HOST_KEYS = [
 // for bearer, tokenStore: see validateAuthTransport. A host that keeps calls
 // while offline gives requestQueue, { send({ body, buildId, pageId, requestId,
 // send, url }) }, which `offline: queue` requests go through (createCallRequest).
+// A host whose pages outlive a server build (a native shell) gives
+// callsEndpointsAcrossBuilds: true, and its endpoint calls carry no build id
+// (createCallAPI).
 // A host whose WebSocket takes no headers signs the handshake with subprotocols
 // and gives websocketProtocols({ renew }), which resolves to them
 // (createWebSocketClient). A host that shows the page as a view gives view,

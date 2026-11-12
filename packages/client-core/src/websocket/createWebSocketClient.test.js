@@ -866,18 +866,29 @@ describe('a host that signs the handshake with subprotocols', () => {
     vi.useRealTimers();
   });
 
-  test('a connection that never opened asks for a new session before the next connect', async () => {
+  test('a connection that never opened reconnects without asking for a new session, however often it fails', async () => {
     vi.useFakeTimers();
-    const host = protocolHost(({ renew }) => (renew ? 'renewed' : 'ended'));
-    const { client, close, currentSocket, sockets } = createTestClient({ host });
+    const host = protocolHost(({ renew }) => (renew ? 'renewed' : 'held'));
+    const { client, close, currentSocket, open, receive, sockets } = createTestClient({ host });
     client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
     await vi.advanceTimersByTimeAsync(0);
-    expect(currentSocket().args[1]).toEqual(['lowdefy.view', 'lowdefy.view.bearer.ended']);
-    // The server refused the handshake: the browser reports only a close.
+    // The feed is live, then the app's socket goes away.
+    open();
+    receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
     close({ code: 1006 });
-    await vi.advanceTimersByTimeAsync(500);
-    expect(sockets).toHaveLength(2);
-    expect(currentSocket().args[1]).toEqual(['lowdefy.view', 'lowdefy.view.bearer.renewed']);
+    await vi.advanceTimersByTimeAsync(15 * 1000);
+    // Every handshake now fails: the browser reports only a close.
+    for (let attempt = 2; attempt <= 7; attempt += 1) {
+      expect(sockets).toHaveLength(attempt);
+      close({ code: 1006 });
+      await vi.advanceTimersByTimeAsync(15 * 1000);
+    }
+    expect(sockets).toHaveLength(8);
+    expect(currentSocket().args[1]).toEqual(['lowdefy.view', 'lowdefy.view.bearer.held']);
+    expect(host.websocketProtocols).toHaveBeenCalledTimes(8);
+    host.websocketProtocols.mock.calls.forEach(([options]) => {
+      expect(options).toEqual({ renew: false });
+    });
     vi.useRealTimers();
   });
 
@@ -902,6 +913,7 @@ describe('a host that signs the handshake with subprotocols', () => {
     await vi.advanceTimersByTimeAsync(500);
     expect(sockets).toHaveLength(1);
     expect(host.websocketProtocols).toHaveBeenCalledTimes(2);
+    expect(host.websocketProtocols).toHaveBeenLastCalledWith({ renew: false });
     vi.useRealTimers();
   });
 });

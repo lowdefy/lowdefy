@@ -69,6 +69,7 @@ async function renderPageScreen({
   });
   const host = {
     authTransport: 'bearer',
+    callsEndpointsAcrossBuilds: true,
     fetch: server.fetch,
     globals,
     onBuildChanged: jest.fn(),

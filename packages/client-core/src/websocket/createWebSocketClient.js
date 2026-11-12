@@ -68,7 +68,8 @@ function createWebSocketClient(lowdefy) {
   let openedAt = null;
   let reconnectingAfterCallerChange = false;
   // Whether the next handshake of a host that signs it with subprotocols asks
-  // for a new session first (createSocketWithProtocols).
+  // for a new session first: set by a close for a caller change
+  // (createSocketWithProtocols).
   let renewBeforeConnect = false;
   let publishCounter = 0;
   let subscribeCounter = 0;
@@ -94,11 +95,14 @@ function createWebSocketClient(lowdefy) {
   // with the subprotocols it gives. They are asked for on every connect, so a
   // reconnect carries the session held then.
   //
-  // A browser does not say why a handshake failed, and such a session is
-  // short: a connection that never opened, or that the server closed for a
-  // caller change, may have carried an ended session, and no other call may
-  // come along to replace it. So the connect after either asks the host for a
-  // new session first (renew).
+  // The host keeps the session current itself: it gives a new one when the one
+  // it holds has reached its expiry. renew asks for a new session whatever the
+  // expiry, and is set only after the server closed the connection for a
+  // caller change, which is how it ends a socket whose session is gone. A
+  // connection that never opened says nothing about the session (a browser
+  // does not say why a handshake failed), so it asks for none: an app whose
+  // socket cannot open would otherwise have a new session minted for every
+  // retry, for as long as the page is shown.
   async function createSocketWithProtocols() {
     const renew = renewBeforeConnect;
     renewBeforeConnect = false;
@@ -365,7 +369,6 @@ function createWebSocketClient(lowdefy) {
     clearIdleTimer();
     openPromise = new Promise((resolve, reject) => {
       function failConnect() {
-        renewBeforeConnect = true;
         openPromise = null;
         reject(new ServiceError('Connection failed.', { service: 'WebSocket' }));
       }
