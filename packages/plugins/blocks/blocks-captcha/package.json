@@ -46,8 +46,8 @@
     "@lowdefy/block-utils": "7.2.0"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@swc/cli": "0.8.2",

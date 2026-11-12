@@ -57,8 +57,8 @@
   },
   "peerDependencies": {
     "antd": ">=6",
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "7.2.0",

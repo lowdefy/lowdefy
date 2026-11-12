@@ -1054,7 +1054,7 @@ importers:
         specifier: 7.0.169
         version: 7.0.169(zod@4.6.7)
       antd:
-        specifier: 6.7.0
+        specifier: ^6
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
     devDependencies:
       '@lowdefy/block-dev-e2e':

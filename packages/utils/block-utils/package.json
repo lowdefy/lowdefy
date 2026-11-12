@@ -50,8 +50,8 @@
     "tailwind-merge": "3.7.0"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@babel/core": "7.29.13",
