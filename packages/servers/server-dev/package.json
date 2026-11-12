@@ -122,6 +122,7 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@lowdefy/journey-headless": "7.2.0",
     "jsdom": "19.0.0",
     "mongodb-memory-server-core": "9.2.0",
     "nodemailer": "10.1.7",

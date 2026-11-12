@@ -15,11 +15,14 @@
 */
 
 // An error the error sink took, as an error entry the shared invariants read
-// ({ message, name, source }).
-function toEntry(error) {
+// ({ message, name, source }), with the request or endpoint a server fault came from.
+function toEntry({ call, error }) {
   return {
+    endpointId: call?.endpointId ?? null,
     message: error?.message ?? String(error),
     name: error?.name ?? null,
+    pageId: call?.pageId ?? null,
+    requestId: call?.requestId ?? null,
     source: error?.source ?? null,
   };
 }

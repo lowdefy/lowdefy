@@ -32,7 +32,7 @@ async function runHeadlessCall({ actors, host, step }) {
     ? { endpointId: params.endpoint, kind: 'endpoint' }
     : { kind: 'request', pageId: params.pageId, requestId: params.requestId };
   const answer = await host.call({ ...call, payload, user: caller.user });
-  answer.faults.forEach((fault) => host.errorSink.add({ error: fault, source: 'server' }));
+  answer.faults.forEach((fault) => host.errorSink.add({ call, error: fault, source: 'server' }));
   caller.calls.push({
     ...call,
     payload,

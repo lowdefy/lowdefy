@@ -25,7 +25,9 @@ import readAnswer from './readAnswer.js';
 function createPageCalls({ calls, host, user }) {
   async function send({ call, record }) {
     const answer = await host.call({ ...call, user });
-    answer.faults.forEach((fault) => host.errorSink.add({ error: fault, source: 'server' }));
+    answer.faults.forEach((fault) =>
+      host.errorSink.add({ call: record, error: fault, source: 'server' })
+    );
     calls.push({
       ...record,
       payload: serializer.deserialize(call.payload),

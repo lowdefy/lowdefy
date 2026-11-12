@@ -37,11 +37,12 @@ function readOptionValue(option) {
 /**
  * Runs the browser's journey steps on a host without a DOM, by block id: the phone shell's answer
  * to a dev-tab step-request, and each step of a headless journey. A step acts through the engine,
- * as the block's own view does when it is pressed or typed in, and waits for the action chain it
- * started to finish:
+ * as the block's own view does when it is pressed or typed in, and waits for the page to settle
+ * (at most 5 s, never failing the step):
  * - `{ click: target }`: the block's onClick.
  * - `{ fill: { blockId, value } }`: sets the input's value, then its onChange.
- * - `{ select: { blockId, value } }`: the option whose label (or value) is `value`.
+ * - `{ select: { blockId, value } }`: the option whose label (or value) is `value`; a block whose
+ *   value is a list ticks it.
  * - `{ press: 'Enter' }`: the onPressEnter of the input filled last.
  * - `{ wait: { ms } | { request } | { state } }`.
  * - `{ screenshot: name? }`: the root view as a base64 PNG, on a host that passes `capture`.
@@ -80,12 +81,15 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
     return { ok: true, settled };
   }
 
+  // An event is started as the block's view starts it, without waiting on it: the step then waits
+  // for the page to settle, which is capped. So a trailing-edge debounce longer than the settle,
+  // or a chain that outlasts it, does not hold the step, as it does not hold a browser journey.
   async function click({ lowdefy, target }) {
     const { block } = await find({ lowdefy, target });
     if (block.eval.properties?.disabled === true) {
       throw new Error(`Block "${block.blockId}" is disabled.`);
     }
-    await block.triggerEvent({ name: 'onClick' });
+    block.triggerEvent({ name: 'onClick' });
     return settle(lowdefy);
   }
 
@@ -100,7 +104,7 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
   async function setInputValue({ block, lowdefy, value }) {
     block.setValue(value);
     lastInputBlockId = block.blockId;
-    await block.triggerEvent({ name: 'onChange' });
+    block.triggerEvent({ name: 'onChange' });
     return settle(lowdefy);
   }
 
@@ -128,7 +132,18 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
         )}.`
       );
     }
-    return setInputValue({ block, lowdefy, value: readOptionValue(option) });
+    const value = readOptionValue(option);
+    // A block whose value is a list (a checkbox group) ticks the option and never unticks it, as
+    // the browser's select does.
+    if (block.meta?.valueType === 'array') {
+      const ticked = type.isArray(block.value) ? block.value : [];
+      return setInputValue({
+        block,
+        lowdefy,
+        value: ticked.includes(value) ? ticked : [...ticked, value],
+      });
+    }
+    return setInputValue({ block, lowdefy, value });
   }
 
   async function press({ key, lowdefy }) {
@@ -139,7 +154,7 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
       throw new Error('Press "Enter" needs an input filled before it.');
     }
     const { block } = await find({ lowdefy, target: lastInputBlockId });
-    await block.triggerEvent({ name: 'onPressEnter' });
+    block.triggerEvent({ name: 'onPressEnter' });
     return settle(lowdefy);
   }
 

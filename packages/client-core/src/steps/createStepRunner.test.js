@@ -29,9 +29,17 @@ function createPage() {
   const state = {};
   const map = {};
 
-  function addBlock({ blockId, handlers = {}, input = false, properties = {}, visible = true }) {
+  function addBlock({
+    blockId,
+    handlers = {},
+    input = false,
+    meta,
+    properties = {},
+    visible = true,
+  }) {
     const block = {
       blockId,
+      meta,
       eval: { properties, visible },
       Events: { events: {} },
       triggerEvent: async ({ name }) => {
@@ -44,6 +52,7 @@ function createPage() {
     };
     if (input) {
       block.setValue = (value) => {
+        block.value = value;
         state[blockId] = value;
       };
     }
@@ -77,6 +86,20 @@ function createPage() {
         await pause(100);
         state.saved = true;
       },
+    },
+  });
+  addBlock({
+    blockId: 'regions',
+    input: true,
+    meta: { valueType: 'array' },
+    properties: { options: ['North', 'South'] },
+  });
+  addBlock({
+    blockId: 'search',
+    input: true,
+    handlers: {
+      // A trailing-edge debounce longer than any step: the event never finishes in the test.
+      onChange: () => new Promise(() => {}),
     },
   });
   addBlock({ blockId: 'locked', properties: { disabled: true } });
@@ -163,6 +186,27 @@ test('a select step matches the option label, or the value of an option without 
   expect(state.priority).toBe('high');
   await run({ select: { blockId: 'priority', value: 'none' } });
   expect(state.priority).toBe('none');
+});
+
+test('a select step on a block whose value is a list ticks the option and keeps the rest', async () => {
+  const { run, state } = createRunner();
+  await run({ select: { blockId: 'regions', value: 'North' } });
+  await run({ select: { blockId: 'regions', value: 'South' } });
+  await run({ select: { blockId: 'regions', value: 'North' } });
+  expect(state.regions).toEqual(['North', 'South']);
+});
+
+test('an event that does not finish within the settle does not hold the step', async () => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  try {
+    const { run, state } = createRunner();
+    const fill = run({ fill: { blockId: 'search', value: 'x' } });
+    await vi.advanceTimersByTimeAsync(6000);
+    expect(await fill).toEqual({ ok: true, settled: false });
+    expect(state.search).toBe('x');
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 test('a wait step takes ms, a request that finishes or state that is set', async () => {

@@ -28,10 +28,12 @@ import {
 import { type } from '@lowdefy/helpers';
 
 import createAppErrorWindows from './createAppErrorWindows.js';
+import checkStepReferences from './checkStepReferences.js';
 import createHeadlessActors from './createHeadlessActors.js';
 import runHeadlessStep from './runHeadlessStep.js';
 import toJsonValue from './toJsonValue.js';
 import toStepFailure from './toStepFailure.js';
+import usesSearchStage from './usesSearchStage.js';
 
 function isExpectError(step) {
   return getStepKey(step ?? {}) === 'expect' && getStepKey(step.expect) === 'error';
@@ -76,9 +78,13 @@ function countBrowserOnly(actors) {
   return actors.all().reduce((count, actor) => count + actor.browserOnly.length, 0);
 }
 
-function findBrowserOnly(actors) {
-  return actors.all().flatMap((actor) => actor.browserOnly)[0];
+function findBrowserOnly({ actors, from }) {
+  return actors.all().flatMap((actor) => actor.browserOnly)[from];
 }
+
+// The steps that open a new window for wait.request: an interaction, or a step that loads or
+// switches to a page, as in the browser runner. Before the first of them the window is the open.
+const REQUEST_WINDOW_STEP_KEYS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
 
 /**
  * Runs a page journey headless: its pages on the client engine in Node (createHeadlessActor), its
@@ -127,7 +133,11 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
   if (!type.isUndefined(unknownCaller)) {
     return { error: unknownCaller, refused: true };
   }
-  const windows = createAppErrorWindows({ configDirectory, errorSink: host.errorSink });
+  const windows = createAppErrorWindows({
+    configDirectory,
+    errorSink: host.errorSink,
+    usesSearchStage: (entry) => usesSearchStage({ entry, host }),
+  });
   const actors = createHeadlessActors({
     host,
     onTrace: windows.onTrace,
@@ -143,11 +153,14 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
   let held = null;
   // The answer of the last call or request step, which only the expect steps after it read.
   let answer;
+  // Each actor's call count when the current wait.request window opened.
+  let since = new Map();
 
   try {
     await actors.open();
     await actors.current().settle();
-    const findings = await windows.take({ pageId });
+    // The browser reads no trace events for the open, only the errors it caused.
+    const findings = await windows.take({ pageId, withEmits: false });
     if (findings.length > 0) {
       failure = toAppErrorFailure({ findings, phase: 'open' });
     }
@@ -172,9 +185,13 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
     if (!['expect', ...CALL_STEP_KEYS].includes(key)) {
       answer = undefined;
     }
+    if (REQUEST_WINDOW_STEP_KEYS.includes(key)) {
+      since = new Map(actors.all().map((actor) => [actor, actor.calls.length]));
+    }
     let stepFailure;
     try {
-      const stepAnswer = await runHeadlessStep({ actors, answer, host, step, stepTimeout });
+      checkStepReferences({ actor: actors.current(), host, journeyPageId: pageId, step });
+      const stepAnswer = await runHeadlessStep({ actors, answer, host, since, step, stepTimeout });
       if (CALL_STEP_KEYS.includes(key)) {
         answer = stepAnswer;
       }
@@ -183,7 +200,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
     }
     const durationMs = Date.now() - started;
     if (countBrowserOnly(actors) > triedBefore) {
-      browserOnly = { index, step, reason: `${findBrowserOnly(actors)} needs the browser.` };
+      browserOnly = { index, step, reason: findBrowserOnly({ actors, from: triedBefore }) };
       results.push({ index, step, status: 'browser-only', durationMs });
       continue;
     }

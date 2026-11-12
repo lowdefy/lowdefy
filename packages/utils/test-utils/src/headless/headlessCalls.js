@@ -27,7 +27,8 @@ import testSessions from '../testSessions.js';
 // request or an endpoint call as the page's client does, and find the documents an expect.db step
 // reads in the session's database, as the browser runner reads them (findSessionDocuments).
 // `user` takes the forms session.as() takes. buildDirectory is where the client plugins the build
-// wrote are imported from; userNames are the session's data set users.
+// wrote are imported from; dataSetName is the session's data set (null when it was opened with
+// none) and userNames are its users.
 function headlessCalls(session) {
   const testSession = testSessions.get(session);
   if (testSession === undefined) {
@@ -35,6 +36,7 @@ function headlessCalls(session) {
   }
   return {
     buildDirectory: testSession.testApp.directories.build,
+    dataSetName: testSession.named ? testSession.dataSet.name : null,
     call: ({ body, endpointId, kind, pageId, requestId, user }) =>
       callFromPage({
         body,
@@ -49,6 +51,7 @@ function headlessCalls(session) {
       checkSessionOpen({ testSession });
       return findSessionDocuments({
         buildDirectory: testSession.testApp.directories.build,
+        dataSetName: testSession.named ? testSession.dataSet.name : null,
         client: testSession.store.client,
         collection,
         connectionId,

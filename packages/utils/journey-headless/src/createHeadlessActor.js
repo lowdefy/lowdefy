@@ -22,6 +22,7 @@ import createActorClient from './createActorClient.js';
 import createLocation from './createLocation.js';
 import fireMountEvents from './fireMountEvents.js';
 import registerBlockStandIns from './registerBlockStandIns.js';
+import reportParseErrors from './reportParseErrors.js';
 
 // The settle after a step is capped, as the browser runner's is: it never fails a step.
 const SETTLE_MS = 5000;
@@ -51,7 +52,8 @@ function readQuery(query) {
 // - stepRunner is client-core's step runner on the shown page; idle() waits for a navigation the
 //   page started.
 // `calls`, `messages` and `navigations` record what the actor's pages did; leftApp is the URL of a
-// link out of the app; browserOnly lists the browser-only actions the pages tried to run.
+// link out of the app; browserOnly lists why a step needs the browser after all (an action only a
+// browser can carry out, a click a browser would land inside a block).
 function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }) {
   const rootConfig = serializer.deserialize(host.rootConfig);
   const pending = new Set();
@@ -136,6 +138,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       mounted: new Set(),
       openBlocks: new Set(),
       pageId: page.pageId,
+      reportedParseErrors: new Set(),
       urlQuery: urlQuery ?? {},
     };
     const progress = () => undefined;
@@ -149,6 +152,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       mounted: actor.page.mounted,
       openBlocks: actor.page.openBlocks,
     });
+    reportParseErrors({ handleError: lowdefy._internal.handleError, page: actor.page });
   }
 
   async function load({ pageId, path, pathParams, urlQuery }) {
@@ -157,7 +161,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     client = createActorClient({
       actor,
       host,
-      onBrowserOnly: (actionType) => actor.browserOnly.push(actionType),
+      onBrowserOnly: (reason) => actor.browserOnly.push(reason),
       onTrace,
       plugins,
       rootConfig,
@@ -217,11 +221,13 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       openBlocks: actor.page.openBlocks,
       setOpen,
     });
-    return waitForSettle({
+    const settled = await waitForSettle({
       getPageContext,
       lowdefy: client.lowdefy,
       timeout: Math.min(stepTimeout, SETTLE_MS),
     });
+    reportParseErrors({ handleError: client.lowdefy._internal.handleError, page: actor.page });
+    return settled;
   }
 
   actor.back = back;

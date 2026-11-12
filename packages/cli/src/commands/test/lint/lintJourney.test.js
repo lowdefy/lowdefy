@@ -303,3 +303,48 @@ test('L2 and L6 treat call and request as interactions, and expect status, error
     'the last step, step 1 (request "get_ticket" on "tickets"), is not an expect or wait: { request }.',
   ]);
 });
+
+test('L8 reports a target that reads the page on a block it already names, with the blockId to use', () => {
+  const problems = lintJourney({
+    journey: journey([
+      { click: { blockId: 'assign_button', text: 'Assign' } },
+      { expect: { visible: { blockId: 'assigned_alert', containing: 'Assigned' } } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(problems, 'L8')).toEqual([
+    {
+      rule: 'L8',
+      severity: 'warning',
+      stepIndex: 0,
+      message:
+        'step 0 (click "assign_button") names block "assign_button" and reads the page for its text: target { blockId: assign_button } alone and the journey runs headless.',
+    },
+    {
+      rule: 'L8',
+      severity: 'warning',
+      stepIndex: 1,
+      message:
+        'step 1 (expect: { visible }) names block "assigned_alert" and reads the page for its containing: target { blockId: assigned_alert } alone and the journey runs headless.',
+    },
+  ]);
+});
+
+test('L8 does not report a journey that a check of what the person sees keeps in the browser', () => {
+  const problems = lintJourney({
+    journey: journey([
+      { click: { blockId: 'assign_button', text: 'Assign' } },
+      { expect: { text: { blockId: 'assigned_alert', contains: 'Assigned' } } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(problems, 'L8')).toEqual([]);
+});
+
+test('L8 does not report a page-wide text target, a grid target or a journey that runs headless', () => {
+  const lint = (steps) =>
+    rules(lintJourney({ journey: journey(steps), exercisedEntry: entry() }), 'L8');
+  expect(lint([{ click: { text: 'Assign' } }])).toEqual([]);
+  expect(lint([{ click: { blockId: 'grid', row: 0, text: 'Open' } }])).toEqual([]);
+  expect(lint([{ click: 'assign_button' }, { expect: { visible: 'assigned_alert' } }])).toEqual([]);
+});
