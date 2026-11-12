@@ -20,8 +20,8 @@ import { type } from '@lowdefy/helpers';
 // (context.viewSession, set by resolveAuthentication). The dev server serves
 // no views, so it admits a view session on no /api route: the production
 // server opens the routes a view calls (its viewRoutes) and this server opens
-// none. Registered on /api/* after apiContext, which resolves the caller, and
-// before every route handler.
+// none. Registered after apiContext, which resolves the caller, and before the
+// handlers: on /api/*, and on the page routes, whose shell embeds the caller.
 //
 // A mock or headless caller resolves through no auth engine and carries no
 // view session. /api/auth resolves no caller here, so a view session is

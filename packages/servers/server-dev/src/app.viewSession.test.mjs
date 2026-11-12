@@ -70,10 +70,15 @@ function apiContext() {
 });
 vi.doMock('./routes/auth.js', () => ({ default: () => handler }));
 vi.doMock('./routes/docs/loadDocsRoutes.js', () => ({ default: async () => ({}) }));
-vi.doMock('./routes/mountDevPageRoutes.js', () => ({ default: () => {} }));
+// The page routes are the app's own; the mobile sign-in pages behind them are stubbed.
+vi.doMock('./routes/mobileSignIn.js', () => ({ default: handler }));
+vi.doMock('./routes/mobileSignInCallback.js', () => ({ default: handler }));
 vi.doMock('./routes/mountMobileWellKnown.js', () => ({ default: () => {} }));
 vi.doMock('./routes/mountOauthDiscovery.js', () => ({ default: () => {} }));
-vi.doMock('./html/renderDevPage.js', () => ({ default: (c) => c.html('<html></html>') }));
+// The dev shell embeds the resolved caller in its HTML.
+vi.doMock('./html/renderDevPage.js', () => ({
+  default: (c) => c.html(`<html>${JSON.stringify(c.get('lowdefyContext').user)}</html>`),
+}));
 vi.doMock('./middleware/apiContext.js', () => ({ default: apiContext }));
 vi.doMock('./middleware/localDevToolsOnly.js', () => ({ default: passThrough }));
 vi.doMock('./middleware/staleFlag.js', () => ({ default: passThrough }));
@@ -161,3 +166,34 @@ test('the dev server answers a caller without a view session on every /api route
     expect(res.status).toEqual(200);
   }
 });
+
+const shellRequests = [
+  ['GET', '/'],
+  ['GET', '/home'],
+  ['GET', '/tasks/LDF-1'],
+  ['GET', '/auth/mobile'],
+  ['POST', '/auth/mobile'],
+  ['GET', '/auth/mobile/callback'],
+];
+
+test.each(shellRequests)(
+  'the dev server refuses a view session on %s %s, outside /api, and sends no user',
+  async (method, url) => {
+    const res = await app.request(url, { method, headers: { 'x-test-view-session': 'true' } });
+    expect(res.status).toEqual(403);
+    const body = await res.text();
+    expect(JSON.parse(body)).toEqual({
+      name: 'AuthorizationError',
+      message: 'A view session cannot call this route.',
+    });
+    expect(body).not.toContain('user-1');
+  }
+);
+
+test.each(shellRequests)(
+  'the dev server answers %s %s for a caller without a view session',
+  async (method, url) => {
+    const res = await app.request(url, { method });
+    expect(res.status).toEqual(200);
+  }
+);
