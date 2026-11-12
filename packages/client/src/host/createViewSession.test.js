@@ -159,3 +159,29 @@ test('a 401 to a call that carried no token is returned as it is', async () => {
   expect(fetch).toHaveBeenCalledTimes(1);
   expect(view.host.callServerTool).not.toHaveBeenCalled();
 });
+
+test('getToken gives the token held, and mints the first session when none is held', async () => {
+  const { session, tokenStore, view } = setup();
+  await expect(session.getToken()).resolves.toBe('token-1');
+  await expect(session.getToken({ renew: false })).resolves.toBe('token-1');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(1);
+  expect(tokenStore.get()).toBe('token-1');
+});
+
+test('getToken with renew mints a new session and keeps it for the calls that follow', async () => {
+  const { fetch, session, tokenStore, view } = setup({ validTokens: ['token-1', 'token-2'] });
+  await session.getToken();
+  await expect(session.getToken({ renew: true })).resolves.toBe('token-2');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(2);
+  expect(tokenStore.get()).toBe('token-2');
+  await session.fetchApi('/api/user');
+  expect(fetch).toHaveBeenLastCalledWith('https://app.example.com/base/api/user', {
+    headers: { Authorization: 'Bearer token-2' },
+  });
+});
+
+test('getToken rejects when no session can be minted, without ending the view', async () => {
+  const { onEnded, session } = setup({ tokens: [] });
+  await expect(session.getToken()).rejects.toThrow('No session for you.');
+  expect(onEnded).not.toHaveBeenCalled();
+});

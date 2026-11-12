@@ -68,6 +68,7 @@ const ProgressBarController = ({ id, lowdefy, resetContext }) => {
   }
   return (
     <ProgressBar
+      apiBase={lowdefy.apiBase}
       basePath={lowdefy.basePath}
       blockId={id}
       components={lowdefy._internal.components}

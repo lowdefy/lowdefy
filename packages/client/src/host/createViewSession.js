@@ -114,7 +114,19 @@ function createViewSession({ apiBase, bridge, fetch, onEnded, tokenStore }) {
     });
   }
 
-  return { fetch: sessionFetch, fetchApi };
+  // The token for a call sessionFetch cannot send again, such as a websocket
+  // handshake: the one held, or a new session when none is held or the caller
+  // has reason to think the held one has ended (renew). A session that cannot
+  // be minted rejects and does not end the view: the next API call decides.
+  async function getToken({ renew } = {}) {
+    const held = tokenStore.get();
+    if (renew !== true && !type.isNone(held)) {
+      return held;
+    }
+    return mint();
+  }
+
+  return { fetch: sessionFetch, fetchApi, getToken };
 }
 
 export default createViewSession;

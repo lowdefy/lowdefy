@@ -784,3 +784,124 @@ describe('auth transport', () => {
     vi.useRealTimers();
   });
 });
+
+describe('a host that signs the handshake with subprotocols', () => {
+  function protocolHost(getToken) {
+    return {
+      websocketProtocols: vi.fn(async ({ renew }) => {
+        const token = await getToken({ renew });
+        return ['lowdefy.view', `lowdefy.view.bearer.${token}`];
+      }),
+    };
+  }
+
+  test('the socket is opened with the URL and the subprotocols the host gives, and no headers', async () => {
+    const host = protocolHost(() => 'first');
+    const { client, currentSocket, sockets } = createTestClient({
+      apiBase: 'https://app.example.com/crm',
+      host: { ...host, websocketUrl: (path) => path.replace(/^http/, 'ws') },
+    });
+    client.connect();
+    expect(sockets).toHaveLength(0);
+    await flushPromises();
+    expect(currentSocket().args).toEqual([
+      'wss://app.example.com/crm/api/websocket',
+      ['lowdefy.view', 'lowdefy.view.bearer.first'],
+    ]);
+    expect(host.websocketProtocols).toHaveBeenCalledWith({ renew: false });
+  });
+
+  test('a subscribe made while the subprotocols are asked for is sent once the socket opens', async () => {
+    const { client, open, sentFrames, sockets } = createTestClient({
+      host: protocolHost(() => 'first'),
+    });
+    const subscribed = track(
+      client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' })
+    );
+    await flushPromises();
+    expect(sockets).toHaveLength(1);
+    const socket = open();
+    expect(sentFrames(socket)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's1' },
+    ]);
+    expect(subscribed.state).toEqual('pending');
+  });
+
+  test('a reconnect after a drop carries the token held then, without asking for a new session', async () => {
+    vi.useFakeTimers();
+    let token = 'first';
+    const host = protocolHost(() => token);
+    const { client, close, currentSocket, open, sockets } = createTestClient({ host });
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    await vi.advanceTimersByTimeAsync(0);
+    open();
+    token = 'second';
+    close({ code: 1006 });
+    await vi.advanceTimersByTimeAsync(500);
+    expect(sockets).toHaveLength(2);
+    expect(currentSocket().args[1]).toEqual(['lowdefy.view', 'lowdefy.view.bearer.second']);
+    expect(host.websocketProtocols).toHaveBeenLastCalledWith({ renew: false });
+    vi.useRealTimers();
+  });
+
+  test('a reconnect after a caller change asks the host for a new session first', async () => {
+    vi.useFakeTimers();
+    const host = protocolHost(({ renew }) => (renew ? 'renewed' : 'first'));
+    const { client, close, currentSocket, open, sockets } = createTestClient({ host });
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    await vi.advanceTimersByTimeAsync(0);
+    open();
+    close({ code: 4401 });
+    await vi.advanceTimersByTimeAsync(500);
+    expect(sockets).toHaveLength(2);
+    expect(host.websocketProtocols).toHaveBeenLastCalledWith({ renew: true });
+    expect(currentSocket().args[1]).toEqual(['lowdefy.view', 'lowdefy.view.bearer.renewed']);
+    // The new session is asked for once: the connect after it opens does not.
+    // This is the second reconnect in a row, so its backoff is up to a second.
+    open();
+    close({ code: 1006 });
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(sockets).toHaveLength(3);
+    expect(host.websocketProtocols).toHaveBeenLastCalledWith({ renew: false });
+    vi.useRealTimers();
+  });
+
+  test('a connection that never opened asks for a new session before the next connect', async () => {
+    vi.useFakeTimers();
+    const host = protocolHost(({ renew }) => (renew ? 'renewed' : 'ended'));
+    const { client, close, currentSocket, sockets } = createTestClient({ host });
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(currentSocket().args[1]).toEqual(['lowdefy.view', 'lowdefy.view.bearer.ended']);
+    // The server refused the handshake: the browser reports only a close.
+    close({ code: 1006 });
+    await vi.advanceTimersByTimeAsync(500);
+    expect(sockets).toHaveLength(2);
+    expect(currentSocket().args[1]).toEqual(['lowdefy.view', 'lowdefy.view.bearer.renewed']);
+    vi.useRealTimers();
+  });
+
+  test('a host that cannot sign the handshake is a failed connect, retried with backoff', async () => {
+    vi.useFakeTimers();
+    let fail = true;
+    const host = {
+      websocketProtocols: vi.fn(async () => {
+        if (fail) {
+          throw new Error('No session for you.');
+        }
+        return ['lowdefy.view', 'lowdefy.view.bearer.first'];
+      }),
+    };
+    const handlers = createHandlers();
+    const { client, sockets } = createTestClient({ host });
+    client.subscribe({ handlers, payload: {}, websocketId: 'chat' });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(sockets).toHaveLength(0);
+    expect(handlers.onDisconnected).toHaveBeenCalledTimes(1);
+    fail = false;
+    await vi.advanceTimersByTimeAsync(500);
+    expect(sockets).toHaveLength(1);
+    expect(host.websocketProtocols).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
+  });
+});

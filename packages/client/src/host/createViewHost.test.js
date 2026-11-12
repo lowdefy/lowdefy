@@ -177,3 +177,19 @@ test('createViewHost builds the websocket URL from the absolute API path', () =>
   );
   expect(host.WebSocket).toBe(fakeWindow.WebSocket);
 });
+
+test('createViewHost signs a websocket handshake with the session as subprotocols', async () => {
+  const { host, view } = setup();
+  const decode = (protocol) =>
+    Buffer.from(protocol.slice('lowdefy.view.bearer.'.length), 'base64url').toString('utf8');
+  const first = await host.websocketProtocols({ renew: false });
+  expect(first[0]).toBe('lowdefy.view');
+  expect(decode(first[1])).toBe('token-1');
+  const renewed = await host.websocketProtocols({ renew: true });
+  expect(decode(renewed[1])).toBe('token-2');
+  expect(host.tokenStore.get()).toBe('token-2');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(2);
+  expect(host.websocketUrl('https://app.example.com/base/api/websocket')).toBe(
+    'wss://app.example.com/base/api/websocket'
+  );
+});
