@@ -194,6 +194,7 @@ lowdefy/
 
 - [Agent System](./architecture/agent-system.md) - AI agent orchestration, tools, and streaming
 - [Build Pipeline](./architecture/build-pipeline.md) - How YAML becomes a runnable server
+- [The App's MCP Server and Views](./architecture/mcp-server.md) - The production `/api/mcp` server, MCP App views, view sessions and what they may reach
 - [Request Lifecycle](./architecture/request-lifecycle.md) - Data flow from action to database
 - [How Pages Load Data](./architecture/page-data-loading.md) - Parallel requests, page instances, websocket subscriptions and their costs
 - [Journeys](./architecture/journeys.md) - Config tests: grammar, runner, data sets, traces, evidence, hardening

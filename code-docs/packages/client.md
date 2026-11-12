@@ -95,6 +95,26 @@ than its app. The production server's `client/view.jsx` entry passes `Client` th
   a "load the new version" button and to fetch the user, root config and page again.
 - `host.view` also carries `bridge`, `fetchApi(path, init)` (a signed-in fetch of an API path),
   `end({ message })` and `isEnded()`.
+- `host.view.openLink({ url })` opens a URL in the browser through the host. It lets only
+  absolute `http` and `https` URLs through (`createViewOpenLink.js`, `getOpenLinkUrl.js`) and
+  tells `host.view.onLinkRefused` listeners when the host refuses. `globals.window.open` is the
+  same gated opener. `host.view.captureLinks()` (`captureViewLinks.js`) catches
+  `target="_blank"` anchors, modified clicks, a block's `window.open` and any other navigation
+  of the frame, and sends each through it.
+- `websocketProtocols({ renew })` gives the two subprotocols a view's socket offers
+  (`getViewSocketProtocols.js`): the websocket client passes them to `new host.WebSocket` in
+  place of a header.
+
+`createMcp.js` builds `lowdefy._internal.mcp` (`getDisplayMode`, `onContextChange`, `openLink`,
+`sendMessage`) from `host.view.bridge`, and `null` on a host with no `view`. The `_mcp` operator
+and the `McpSendMessage` and `McpOpenLink` actions read it. `McpEffect.js`, mounted in
+`Context.js`, re-evaluates the blocks that read `_mcp: displayMode` when the host context changes.
+
+Every block gets `methods.fetchApi(path, init)` and the prop `apiBase`, so a block that calls the
+app or addresses a file from its root works on both hosts.
+
+The server side of a view, the loader and what a view session may reach are in
+[mcp-server.md](../architecture/mcp-server.md).
 
 `host/createViewBridge.js` is the only module that reads the loader's hand-over object
 (`window.__LOWDEFY_VIEW__`, written by `viewLoader` in `@lowdefy/api`) and the two `_meta` keys:
