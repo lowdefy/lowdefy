@@ -26,8 +26,10 @@ vi.doMock('./prepareChannel.js', () => ({
 // Stands in for the session read: each call resolves the caller the test has
 // set as current, the way resolveAuthentication writes it to the object passed.
 let mockCurrentCaller = null;
+let mockCurrentViewSession = null;
 const mockResolveAuthentication = vi.fn(async (target) => {
   target.user = mockCurrentCaller;
+  target.viewSession = mockCurrentViewSession;
 });
 vi.doMock('../../context/resolveAuthentication.js', () => ({
   default: mockResolveAuthentication,
@@ -479,7 +481,8 @@ describe('caller re-check', () => {
     }
   }
 
-  function setupWithAuth({ user = member } = {}) {
+  function setupWithAuth({ user = member, viewSession = null } = {}) {
+    mockCurrentViewSession = viewSession;
     const registry = {
       getCheckedWebsocketIds: vi.fn(() => []),
       recheckAccess: vi.fn(async () => {}),
@@ -498,6 +501,7 @@ describe('caller re-check', () => {
       auth: { api: {} },
       config: {},
       user,
+      viewSession,
       i18n: { active: 'en-US', messages: {} },
       logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
       handleError: vi.fn(),
@@ -521,7 +525,7 @@ describe('caller re-check', () => {
 
     expect(mockResolveAuthentication).toHaveBeenCalledTimes(1);
     expect(mockResolveAuthentication).toHaveBeenCalledWith(
-      { config: context.config, logger: context.logger, user: member },
+      { config: context.config, logger: context.logger, user: member, viewSession: null },
       { auth: context.auth, headers, strategies }
     );
     expect(mockResolveAuthentication.mock.invocationCallOrder[0]).toBeLessThan(
@@ -575,6 +579,52 @@ describe('caller re-check', () => {
     expect(closeSocket).toHaveBeenCalledTimes(1);
     expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
     expect(registry.unsubscribeAll).toHaveBeenCalledWith({ subscriber: connection.subscriber });
+  });
+
+  const fullGrant = { clientId: 'client_1', grantedScopes: ['mcp:read', 'mcp:write'] };
+
+  test('a publish from a view session whose grant was narrowed closes the socket with 4401 and publishes nothing', async () => {
+    const { closeSocket, connection, registry } = setupWithAuth({ viewSession: fullGrant });
+    mockCurrentViewSession = { clientId: 'client_1', grantedScopes: ['mcp:read'] };
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'publish', websocketId: 'ticker', requestId: 'p1', payload: {} })
+    );
+
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+    expect(registry.publish).not.toHaveBeenCalled();
+  });
+
+  test('a publish from a view session whose grant stands is published after the caller is resolved again', async () => {
+    const { closeSocket, connection, registry } = setupWithAuth({ viewSession: fullGrant });
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'publish', websocketId: 'ticker', requestId: 'p1', payload: {} })
+    );
+
+    expect(mockResolveAuthentication).toHaveBeenCalledTimes(1);
+    expect(registry.publish).toHaveBeenCalledTimes(1);
+    expect(closeSocket).not.toHaveBeenCalled();
+  });
+
+  test('a view session whose grant was narrowed is closed by the once-a-minute check', async () => {
+    const { closeSocket } = setupWithAuth({ viewSession: fullGrant });
+    mockCurrentViewSession = { clientId: 'client_1', grantedScopes: ['mcp:read'] };
+
+    vi.advanceTimersByTime(60 * 1000);
+    await flush();
+    expect(closeSocket).toHaveBeenCalledWith({ code: 4401, reason: 'caller-changed' });
+  });
+
+  test('a publish from a caller that is not a view session resolves no caller, as before', async () => {
+    const { connection, registry } = setupWithAuth();
+
+    await connection.handleMessage(
+      JSON.stringify({ type: 'publish', websocketId: 'ticker', requestId: 'p1', payload: {} })
+    );
+
+    expect(mockResolveAuthentication).not.toHaveBeenCalled();
+    expect(registry.publish).toHaveBeenCalledTimes(1);
   });
 
   test('an anonymous socket closes with 4401 when a session appears', async () => {

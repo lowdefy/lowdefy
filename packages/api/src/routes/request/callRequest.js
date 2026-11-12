@@ -18,6 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 
 import authorizeRequest from './authorizeRequest.js';
 import authorizeViewRequest from './authorizeViewRequest.js';
+import authorizeViewRequestProperties from '../auth/view/authorizeViewRequestProperties.js';
 import authorizeViewRequestResolver from '../auth/view/authorizeViewRequestResolver.js';
 import callRequestResolver from './callRequestResolver.js';
 import checkConnectionRead from './checkConnectionRead.js';
@@ -77,6 +78,10 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     routineContext,
   });
 
+  authorizeViewRequestProperties(context, {
+    requestId: requestId,
+    requestProperties,
+  });
   checkConnectionRead(context, {
     connectionConfig,
     connectionProperties,

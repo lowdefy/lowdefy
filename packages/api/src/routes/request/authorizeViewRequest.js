@@ -33,7 +33,13 @@ async function authorizeViewRequest(
   if (type.isNone(viewSession)) {
     return;
   }
-  const pageConfig = await readConfigFile(`pages/${pageId}.json`);
+  // The page id is the caller's. It is matched against the app's routes before
+  // any file is read, so it names a page of the app or nothing: a made-up id
+  // never becomes a path, and so can neither fail the read nor reach a file
+  // that is not a page's.
+  const routes = await readConfigFile('routes.json');
+  const isPage = (routes ?? []).some((route) => route.pageId === pageId);
+  const pageConfig = isPage ? await readConfigFile(`pages/${pageId}.json`) : null;
   if (isViewPage({ pageConfig }) && viewGrantCovers({ viewSession, scope: 'mcp:read' })) {
     return;
   }
