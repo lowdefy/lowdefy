@@ -304,6 +304,25 @@ test.each([
   }
 );
 
+test('an endpoint call from a view carries the build id of its bundle, and a newer build is told to the view', async () => {
+  const { fakeWindow, host, lowdefy } = setup({
+    answer: () => respond({ status: 409, body: { message: 'Build changed.', buildId: 'build-2' } }),
+  });
+  const buildChanged = vi.fn();
+  host.view.onBuildChange(buildChanged);
+  // The view holds its session by the time a page calls an endpoint.
+  await host.view.fetchApi('/api/user');
+  const settled = vi.fn();
+  lowdefy._internal
+    .callAPI({ endpointId: 'close_ticket', pageId: 'ticket', payload: {} })
+    .then(settled, settled);
+  await vi.waitFor(() => expect(buildChanged).toHaveBeenCalledWith({ serverBuildId: 'build-2' }));
+  const [url, init] = fakeWindow.fetch.mock.calls.at(-1);
+  expect(url).toBe('https://app.example.com/base/api/endpoints/close_ticket');
+  expect(init.headers['x-lowdefy-build']).toBe('build-1');
+  expect(settled).not.toHaveBeenCalled();
+});
+
 test('resolveTarget classes a URL under the origin and basePath of the app as a page of this app', () => {
   const { lowdefy } = setup();
   expect(
