@@ -67,6 +67,8 @@ Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct d
 
 `resolve.dedupe` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance — and for every `@lowdefy/*` package in the server's `package.json` dependencies. A linked workspace plugin pinned to another Lowdefy release otherwise brings its own `@lowdefy/helpers` and `@lowdefy/block-utils`: the dependency optimizer pre-bundles one copy per package for every importer (whichever its scan meets first), so the server's own client could load a plugin's older copy and fail on a missing export, and the client's HTML enhancements, registered in `@lowdefy/block-utils`, would not reach blocks that import another copy.
 
+**React version.** `server` and `server-dev` pin `react` and `react-dom` exactly (19.3.1), and that copy is the only React an app runs: `resolve.dedupe` makes every block plugin, custom and local ones included, import the server's React whatever version the plugin installs itself. So block plugins declare `react` and `react-dom` `^19` as peer dependencies, never as dependencies, and a plugin release only has to support the React of the Lowdefy release it ships with. React 19 throws when `react` and `react-dom` versions differ, so the two pins always move together, in both servers, `server-e2e`, `client`, `layout` and `build`.
+
 ## Scripts
 
 ```json

@@ -234,7 +234,7 @@ importers:
         version: 8.20.0
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       json5:
         specifier: 2.2.3
         version: 2.2.3
@@ -245,11 +245,11 @@ importers:
         specifier: 4.0.7
         version: 4.0.7
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       semver:
         specifier: 7.8.6
         version: 7.8.6
@@ -491,7 +491,7 @@ importers:
     dependencies:
       '@ant-design/icons':
         specifier: 6.3.4
-        version: 6.3.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.3.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@lowdefy/block-utils':
         specifier: 7.2.0
         version: link:../utils/block-utils
@@ -512,19 +512,19 @@ importers:
         version: link:../layout
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       dayjs:
         specifier: 1.11.23
         version: 1.11.23
       lucide-react:
         specifier: 1.72.0
-        version: 1.72.0(@types/react@18.2.38)(react@18.2.0)
+        version: 1.72.0(@types/react@18.2.38)(react@19.3.1)
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       tinykeys:
         specifier: ^4.0.1
         version: 4.0.1
@@ -543,7 +543,7 @@ importers:
         version: 10.4.2
       '@testing-library/react':
         specifier: 16.3.3
-        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@testing-library/user-event':
         specifier: 14.6.9
         version: 14.6.9(@testing-library/dom@10.4.2)
@@ -638,13 +638,13 @@ importers:
         version: 1.16.22(@swc/helpers@0.5.23)
       '@testing-library/react-native':
         specifier: 14.1.0
-        version: 14.1.0(jest@30.5.2(@types/node@26.6.6))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))
+        version: 14.1.0(jest@30.5.2(@types/node@24.13.3))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))
       babel-jest:
         specifier: 30.5.2
         version: 30.5.2(@babel/core@7.29.13)
       jest:
         specifier: 30.5.2
-        version: 30.5.2(@types/node@26.6.6)
+        version: 30.5.2(@types/node@24.13.3)
       react:
         specifier: 19.3.0
         version: 19.3.0
@@ -786,11 +786,11 @@ importers:
         specifier: 7.2.0
         version: link:../utils/helpers
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
     devDependencies:
       '@lowdefy/vite-yaml-plugin':
         specifier: 7.2.0
@@ -806,7 +806,7 @@ importers:
         version: 10.4.2
       '@testing-library/react':
         specifier: 16.3.3
-        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@testing-library/user-event':
         specifier: 14.6.9
         version: 14.6.9(@testing-library/dom@10.4.2)
@@ -927,7 +927,7 @@ importers:
         version: 33.3.2
       ag-grid-react:
         specifier: 33.3.2
-        version: 33.3.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 33.3.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       dayjs:
         specifier: 1.11.23
         version: 1.11.23
@@ -952,16 +952,16 @@ importers:
         version: 1.16.22(@swc/helpers@0.5.23)
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -979,7 +979,7 @@ importers:
         version: link:../../../utils/nunjucks
       '@rc-component/motion':
         specifier: 1.3.3
-        version: 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       classnames:
         specifier: 2.5.1
         version: 2.5.1
@@ -991,7 +991,7 @@ importers:
         version: 7.2.0
       react-virtuoso:
         specifier: 4.18.21
-        version: 4.18.21(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.18.21(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
     devDependencies:
       '@lowdefy/ajv':
         specifier: 7.2.0
@@ -1016,16 +1016,16 @@ importers:
         version: 1.16.22(@swc/helpers@0.5.23)
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1034,13 +1034,13 @@ importers:
     dependencies:
       '@ai-sdk/react':
         specifier: 4.0.173
-        version: 4.0.173(react@18.2.0)(zod@4.6.7)
+        version: 4.0.173(react@19.3.1)(zod@4.6.7)
       '@ant-design/x':
         specifier: 2.10.0
-        version: 2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ant-design/x-markdown':
         specifier: 2.10.0
-        version: 2.10.0(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.10.0(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@lowdefy/block-utils':
         specifier: 7.2.0
         version: link:../../../utils/block-utils
@@ -1054,8 +1054,8 @@ importers:
         specifier: 7.0.169
         version: 7.0.169(zod@4.6.7)
       antd:
-        specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^6
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
     devDependencies:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
@@ -1076,11 +1076,11 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-basic:
     dependencies:
@@ -1113,11 +1113,11 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-captcha:
     dependencies:
@@ -1135,11 +1135,11 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-diff:
     dependencies:
@@ -1182,16 +1182,16 @@ importers:
         version: 1.16.22(@swc/helpers@0.5.23)
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-echarts:
     dependencies:
@@ -1203,7 +1203,7 @@ importers:
         version: 6.1.0
       echarts-for-react:
         specifier: 3.0.6
-        version: 3.0.6(echarts@6.1.0)(react@18.2.0)
+        version: 3.0.6(echarts@6.1.0)(react@19.3.1)
     devDependencies:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
@@ -1224,11 +1224,11 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-files:
     dependencies:
@@ -1262,16 +1262,16 @@ importers:
         version: 1.16.22(@swc/helpers@0.5.23)
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-google-maps:
     dependencies:
@@ -1286,7 +1286,7 @@ importers:
         version: link:../../../utils/helpers
       '@react-google-maps/api':
         specifier: 2.20.8
-        version: 2.20.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.20.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
     devDependencies:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
@@ -1305,16 +1305,16 @@ importers:
         version: 1.16.22(@swc/helpers@0.5.23)
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-loaders:
     dependencies:
@@ -1344,11 +1344,11 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-markdown:
     dependencies:
@@ -1360,10 +1360,10 @@ importers:
         version: 3.4.17
       react-markdown:
         specifier: 10.1.0
-        version: 10.1.0(@types/react@18.2.38)(react@18.2.0)
+        version: 10.1.0(@types/react@18.2.38)(react@19.3.1)
       react-syntax-highlighter:
         specifier: 16.1.2
-        version: 16.1.2(react@18.2.0)
+        version: 16.1.2(react@19.3.1)
       rehype-raw:
         specifier: 7.0.0
         version: 7.0.0
@@ -1388,16 +1388,16 @@ importers:
         version: 1.16.22(@swc/helpers@0.5.23)
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-native:
     dependencies:
@@ -1515,11 +1515,11 @@ importers:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
 
   packages/plugins/blocks/blocks-table:
     dependencies:
@@ -1537,10 +1537,10 @@ importers:
         version: link:../../../utils/nunjucks
       '@tanstack/react-table':
         specifier: 9.3.1
-        version: 9.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tanstack/react-virtual':
         specifier: 3.14.26
-        version: 3.14.26(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 3.14.26(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       dayjs:
         specifier: 1.11.23
         version: 1.11.23
@@ -1565,16 +1565,16 @@ importers:
         version: 6.3.0(babel-plugin-react-compiler@1.0.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)
@@ -1628,7 +1628,7 @@ importers:
         version: 3.33.1
       '@tiptap/react':
         specifier: 3.33.1
-        version: 3.33.1(@floating-ui/dom@1.8.0)(@tiptap/core@3.33.1(@tiptap/pm@3.33.1))(@tiptap/pm@3.33.1)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 3.33.1(@floating-ui/dom@1.8.0)(@tiptap/core@3.33.1(@tiptap/pm@3.33.1))(@tiptap/pm@3.33.1)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tiptap/starter-kit':
         specifier: 3.33.1
         version: 3.33.1
@@ -1664,11 +1664,11 @@ importers:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -1879,7 +1879,7 @@ importers:
         version: link:../../../utils/helpers
       better-auth:
         specifier: 1.7.20
-        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
+        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
       change-case:
         specifier: 5.4.4
         version: 5.4.4
@@ -1903,11 +1903,11 @@ importers:
         specifier: 11.3.0
         version: 11.3.0(bare-buffer@3.7.1)
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2378,22 +2378,22 @@ importers:
         version: 10.4.2
       '@testing-library/react':
         specifier: 16.3.3
-        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@testing-library/user-event':
         specifier: 14.6.9
         version: 14.6.9(@testing-library/dom@10.4.2)
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2489,7 +2489,7 @@ importers:
         version: link:../../../utils/helpers
       posthog-js:
         specifier: 1.447.12
-        version: 1.447.12(@types/react@18.2.38)(preact-render-to-string@6.5.11)(react@18.2.0)
+        version: 1.447.12(@types/react@18.2.38)(preact-render-to-string@6.5.11)(react@19.3.1)
     devDependencies:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
@@ -2513,8 +2513,8 @@ importers:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -2548,16 +2548,16 @@ importers:
     dependencies:
       '@ant-design/cssinjs':
         specifier: 2.1.2
-        version: 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ant-design/x':
         specifier: 2.10.0
-        version: 2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@better-auth/oauth-provider':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))
       '@better-auth/passkey':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
       '@hono/mcp':
         specifier: 0.3.5
         version: 0.3.5(@modelcontextprotocol/sdk@1.32.2(zod@4.6.7))(hono-rate-limiter@0.5.3(hono@4.13.18))(hono@4.13.18)(zod@4.6.7)
@@ -2659,10 +2659,10 @@ importers:
         version: 6.3.0(babel-plugin-react-compiler@1.0.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       better-auth:
         specifier: 1.7.20
-        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
+        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
       dayjs:
         specifier: 1.11.23
         version: 1.11.23
@@ -2673,11 +2673,11 @@ importers:
         specifier: 1.33.0
         version: 1.33.0
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       tailwindcss:
         specifier: 4.3.5
         version: 4.3.5
@@ -2708,16 +2708,16 @@ importers:
     dependencies:
       '@ant-design/cssinjs':
         specifier: 2.1.2
-        version: 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ant-design/x':
         specifier: 2.10.0
-        version: 2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@better-auth/oauth-provider':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))
       '@better-auth/passkey':
         specifier: 1.7.20
-        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
+        version: 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)
       '@hono/mcp':
         specifier: 0.3.5
         version: 0.3.5(@modelcontextprotocol/sdk@1.32.2(zod@4.6.7))(hono-rate-limiter@0.5.3(hono@4.13.18))(hono@4.13.18)(zod@4.6.7)
@@ -2843,7 +2843,7 @@ importers:
         version: 1.32.2(zod@4.6.7)
       '@rc-component/qrcode':
         specifier: 2.0.0
-        version: 2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tailwindcss/postcss':
         specifier: 4.3.5
         version: 4.3.5
@@ -2852,10 +2852,10 @@ importers:
         version: 6.3.0(babel-plugin-react-compiler@1.0.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       better-auth:
         specifier: 1.7.20
-        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
+        version: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
       chokidar:
         specifier: 6.0.0
         version: 6.0.0
@@ -2893,17 +2893,17 @@ importers:
         specifier: 4.2.1
         version: 4.2.1
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       smtp-server:
         specifier: 3.21.4
         version: 3.21.4
       swr:
         specifier: 2.5.1
-        version: 2.5.1(react@18.2.0)
+        version: 2.5.1(react@19.3.1)
       tailwindcss:
         specifier: 4.3.5
         version: 4.3.5
@@ -2943,10 +2943,10 @@ importers:
     dependencies:
       '@ant-design/cssinjs':
         specifier: 2.1.2
-        version: 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ant-design/x':
         specifier: 2.10.0
-        version: 2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@hono/node-server':
         specifier: 2.1.7
         version: 2.1.7(hono@4.13.18)
@@ -3033,7 +3033,7 @@ importers:
         version: 6.3.0(babel-plugin-react-compiler@1.0.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
       antd:
         specifier: 6.7.0
-        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       dayjs:
         specifier: 1.11.23
         version: 1.11.23
@@ -3044,11 +3044,11 @@ importers:
         specifier: 1.33.0
         version: 1.33.0
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       tailwindcss:
         specifier: 4.3.5
         version: 4.3.5
@@ -3435,7 +3435,7 @@ importers:
         version: 10.4.2
       '@testing-library/react':
         specifier: 16.3.3
-        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@testing-library/user-event':
         specifier: 14.6.9
         version: 14.6.9(@testing-library/dom@10.4.2)
@@ -3449,11 +3449,11 @@ importers:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3499,7 +3499,7 @@ importers:
         version: link:../nunjucks
       '@react-email/render':
         specifier: 2.3.1
-        version: 2.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 2.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       markdown-it:
         specifier: 15.0.3
         version: 15.0.3
@@ -3514,11 +3514,11 @@ importers:
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
       react:
-        specifier: 18.2.0
-        version: 18.2.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3669,7 +3669,7 @@ importers:
         version: 0.2.39(@swc/core@1.16.22(@swc/helpers@0.5.23))
       jest:
         specifier: 30.5.2
-        version: 30.5.2(@types/node@24.13.3)
+        version: 30.5.2(@types/node@26.6.6)
 
   packages/utils/vite-yaml-plugin:
     dependencies:
@@ -13428,11 +13428,6 @@ packages:
   react-devtools-core@6.1.5:
     resolution: {integrity: sha512-ePrwPfxAnB+7hgnEr8vpKxL9cmnp7F322t8oqcPshbIQQhDKgFDW4tjhF2wjVbdXF9O/nyuy3sQWd9JGpiLPvA==}
 
-  react-dom@18.2.0:
-    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
-    peerDependencies:
-      react: ^18.2.0
-
   react-dom@19.3.1:
     resolution: {integrity: sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==}
     peerDependencies:
@@ -13596,10 +13591,6 @@ packages:
     peerDependencies:
       react: '>=16 || >=17 || >= 18 || >= 19'
       react-dom: '>=16 || >=17 || >= 18 || >=19'
-
-  react@18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
-    engines: {node: '>=0.10.0'}
 
   react@19.3.0:
     resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
@@ -13839,9 +13830,6 @@ packages:
   saxes@6.0.0:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
     engines: {node: '>=v12.22.7'}
-
-  scheduler@0.23.0:
-    resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
 
   scheduler@0.28.0:
     resolution: {integrity: sha512-juorfCmIkIw8tT+p5BXSm6PJjQF/ycEYmKyzURCIt/RaZIhL+PulbQ9Yu2z1HdOJDdqDTlxA1+xKBmHXJsczAw==}
@@ -15218,18 +15206,6 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@4.0.173(react@18.2.0)(zod@4.6.7)':
-    dependencies:
-      '@ai-sdk/mcp': 2.0.96(zod@4.6.7)
-      '@ai-sdk/provider': 4.0.37
-      '@ai-sdk/provider-utils': 5.0.79(zod@4.6.7)
-      ai: 7.0.169(zod@4.6.7)
-      react: 18.2.0
-      swr: 2.5.1(react@18.2.0)
-      throttleit: 2.1.0
-    transitivePeerDependencies:
-      - zod
-
   '@ai-sdk/react@4.0.173(react@19.3.0)(zod@4.6.7)':
     dependencies:
       '@ai-sdk/mcp': 2.0.96(zod@4.6.7)
@@ -15242,44 +15218,47 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
+  '@ai-sdk/react@4.0.173(react@19.3.1)(zod@4.6.7)':
+    dependencies:
+      '@ai-sdk/mcp': 2.0.96(zod@4.6.7)
+      '@ai-sdk/provider': 4.0.37
+      '@ai-sdk/provider-utils': 5.0.79(zod@4.6.7)
+      ai: 7.0.169(zod@4.6.7)
+      react: 19.3.1
+      swr: 2.5.1(react@19.3.1)
+      throttleit: 2.1.0
+    transitivePeerDependencies:
+      - zod
+
   '@alloc/quick-lru@5.2.0': {}
 
   '@ant-design/colors@8.0.1':
     dependencies:
       '@ant-design/fast-color': 3.0.1
 
-  '@ant-design/cssinjs-utils@2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@ant-design/cssinjs-utils@2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@ant-design/cssinjs': 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@ant-design/cssinjs': 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@babel/runtime': 7.29.13
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@ant-design/cssinjs@2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@ant-design/cssinjs@2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.13
       '@emotion/hash': 0.8.0
       '@emotion/unitless': 0.7.5
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
       csstype: 3.2.3
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       stylis: 4.3.6
 
   '@ant-design/fast-color@3.0.1': {}
 
   '@ant-design/icons-svg@4.6.0': {}
-
-  '@ant-design/icons@6.3.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@ant-design/colors': 8.0.1
-      '@ant-design/icons-svg': 4.6.0
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
 
   '@ant-design/icons@6.3.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
@@ -15290,45 +15269,45 @@ snapshots:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  '@ant-design/react-slick@2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@ant-design/react-slick@2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.13
       clsx: 2.1.1
       json2mq: 0.2.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       throttle-debounce: 5.0.2
 
-  '@ant-design/x-markdown@2.10.0(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@ant-design/x-markdown@2.10.0(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       clsx: 2.1.1
       dompurify: 3.4.17
-      html-react-parser: 5.2.17(@types/react@18.2.38)(react@18.2.0)
+      html-react-parser: 5.2.17(@types/react@18.2.38)(react@19.3.1)
       katex: 0.16.47
       marked: 16.4.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     transitivePeerDependencies:
       - '@types/react'
 
-  '@ant-design/x@2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@ant-design/x@2.10.0(antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@ant-design/colors': 8.0.1
-      '@ant-design/cssinjs': 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@ant-design/cssinjs-utils': 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@ant-design/cssinjs': 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@ant-design/cssinjs-utils': 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ant-design/fast-color': 3.0.1
-      '@ant-design/icons': 6.3.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@ant-design/icons': 6.3.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@babel/runtime': 7.29.13
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      antd: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      antd: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
       lodash.throttle: 4.1.1
       mermaid: 11.17.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-syntax-highlighter: 16.1.2(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      react-syntax-highlighter: 16.1.2(react@19.3.1)
 
   '@antfu/install-pkg@1.1.0':
     dependencies:
@@ -16312,16 +16291,6 @@ snapshots:
     optionalDependencies:
       mongodb: 7.8.0
 
-  '@better-auth/oauth-provider@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))':
-    dependencies:
-      '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
-      '@better-auth/utils': 0.5.1
-      '@better-fetch/fetch': 1.3.3
-      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
-      better-call: 1.4.5(zod@4.6.7)
-      jose: 6.2.17
-      zod: 4.6.7
-
   '@better-auth/oauth-provider@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))':
     dependencies:
       '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
@@ -16330,18 +16299,6 @@ snapshots:
       better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
       better-call: 1.4.5(zod@4.6.7)
       jose: 6.2.17
-      zod: 4.6.7
-
-  '@better-auth/passkey@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)':
-    dependencies:
-      '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
-      '@better-auth/utils': 0.5.1
-      '@better-fetch/fetch': 1.3.3
-      '@simplewebauthn/browser': 13.3.0
-      '@simplewebauthn/server': 13.3.2
-      better-auth: 1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)))
-      better-call: 1.4.5(zod@4.6.7)
-      nanostores: 1.4.0
       zod: 4.6.7
 
   '@better-auth/passkey@1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))))(better-call@1.4.5(zod@4.6.7))(nanostores@1.4.0)':
@@ -18327,342 +18284,335 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.13
 
-  '@rc-component/cascader@1.26.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/cascader@1.26.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/select': 1.12.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tree': 1.5.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/select': 1.12.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/tree': 1.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/checkbox@2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/checkbox@2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/collapse@1.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/collapse@1.3.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 8.0.5
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/color-picker@3.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/color-picker@3.1.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@ant-design/fast-color': 3.0.1
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/context@2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/context@2.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/dialog@1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/dialog@1.10.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/portal': 2.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/portal': 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/drawer@1.4.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/drawer@1.4.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/portal': 2.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/portal': 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/dropdown@2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/dropdown@2.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/form@1.8.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/form@1.8.6(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@rc-component/async-validator': 6.0.0
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/image@1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/image@1.10.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/portal': 2.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/portal': 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/input-number@1.8.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/input-number@1.8.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@rc-component/mini-decimal': 1.1.3
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/input@1.4.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/input@1.4.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/listy@1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/listy@1.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/portal': 2.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/virtual-list': 1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/portal': 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/virtual-list': 1.5.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/mentions@1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/mentions@1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/input': 1.4.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/menu': 1.6.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/input': 1.4.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/menu': 1.6.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/menu@1.6.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/menu@1.6.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/overflow': 1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/overflow': 1.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   '@rc-component/mini-decimal@1.1.3':
     dependencies:
       '@babel/runtime': 7.29.13
 
-  '@rc-component/motion@1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/motion@1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/mutate-observer@2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/mutate-observer@2.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/notification@2.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/notification@2.1.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/overflow@1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/overflow@1.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.13
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/pagination@1.7.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/pagination@1.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/picker@1.17.0(date-fns@2.29.3)(dayjs@1.11.23)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/picker@1.17.0(date-fns@2.29.3)(dayjs@1.11.23)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/overflow': 1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/overflow': 1.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       date-fns: 2.29.3
       dayjs: 1.11.23
       luxon: 3.7.2
 
-  '@rc-component/portal@2.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/portal@2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/progress@1.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/progress@1.1.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/qrcode@2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/qrcode@2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.13
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/rate@1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/rate@1.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/resize-observer@1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/resize-observer@1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/segmented@1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/segmented@1.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 8.0.5
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/select@1.12.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/select@1.12.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/overflow': 1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/virtual-list': 1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/overflow': 1.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/virtual-list': 1.5.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/slider@1.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/slider@1.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/steps@1.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/steps@1.2.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/switch@1.0.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/switch@1.0.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/table@1.12.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/table@1.12.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/context': 2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/virtual-list': 1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/context': 2.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/virtual-list': 1.5.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/tabs@2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/tabs@2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/dropdown': 2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/menu': 1.6.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/dropdown': 2.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/menu': 1.6.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/tooltip@1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/tooltip@1.5.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/tour@2.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/tour@2.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/portal': 2.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/portal': 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/tree-select@1.19.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/tree-select@1.19.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/select': 1.12.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tree': 1.5.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/select': 1.12.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/tree': 1.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/tree@1.5.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/tree@1.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/virtual-list': 1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/virtual-list': 1.5.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/trigger@3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/trigger@3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/portal': 2.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/portal': 2.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@rc-component/upload@1.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/upload@1.1.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
-  '@rc-component/util@1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      is-mobile: 5.0.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-is: 19.3.1
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   '@rc-component/util@1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
@@ -18671,25 +18621,25 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       react-is: 19.3.1
 
-  '@rc-component/virtual-list@1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/virtual-list@1.5.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 8.0.5
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@react-email/render@2.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@react-email/render@2.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       entities: 4.5.0
       html-to-text: 10.0.1
       html5parser: 3.0.0
       prettier: 3.10.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@react-google-maps/api@2.20.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@react-google-maps/api@2.20.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@googlemaps/js-api-loader': 1.16.8
       '@googlemaps/markerclusterer': 2.5.3
@@ -18697,8 +18647,8 @@ snapshots:
       '@react-google-maps/marker-clusterer': 2.20.0
       '@types/google.maps': 3.58.1
       invariant: 2.2.4
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   '@react-google-maps/infobox@2.20.0': {}
 
@@ -19363,26 +19313,26 @@ snapshots:
       postcss: 8.5.32
       tailwindcss: 4.3.5
 
-  '@tanstack/react-store@0.11.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@tanstack/react-store@0.11.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@tanstack/store': 0.11.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      use-sync-external-store: 1.6.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      use-sync-external-store: 1.6.0(react@19.3.1)
 
-  '@tanstack/react-table@9.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@tanstack/react-table@9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@tanstack/react-store': 0.11.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@tanstack/react-store': 0.11.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tanstack/table-core': 9.3.1
-      react: 18.2.0
+      react: 19.3.1
     transitivePeerDependencies:
       - react-dom
 
-  '@tanstack/react-virtual@3.14.26(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@tanstack/react-virtual@3.14.26(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@tanstack/virtual-core': 3.19.11
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   '@tanstack/store@0.11.2': {}
 
@@ -19403,6 +19353,18 @@ snapshots:
       picocolors: 1.1.1
       pretty-format: 27.5.1
 
+  '@testing-library/react-native@14.1.0(jest@30.5.2(@types/node@24.13.3))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))':
+    dependencies:
+      jest-matcher-utils: 30.5.2
+      picocolors: 1.1.1
+      pretty-format: 30.5.1
+      react: 19.3.0
+      react-native: 0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0)
+      redent: 3.0.0
+      test-renderer: 1.3.1(@types/react@18.2.38)(react@19.3.0)
+    optionalDependencies:
+      jest: 30.5.2(@types/node@24.13.3)
+
   '@testing-library/react-native@14.1.0(jest@30.5.2(@types/node@26.6.6))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(test-renderer@1.3.1(@types/react@18.2.38)(react@19.3.0))':
     dependencies:
       jest-matcher-utils: 30.5.2
@@ -19415,12 +19377,12 @@ snapshots:
     optionalDependencies:
       jest: 30.5.2(@types/node@26.6.6)
 
-  '@testing-library/react@16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@testing-library/react@16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.13
       '@testing-library/dom': 10.4.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 18.2.38
       '@types/react-dom': 18.2.7
@@ -19586,7 +19548,7 @@ snapshots:
       prosemirror-transform: 1.12.5
       prosemirror-view: 1.42.6
 
-  '@tiptap/react@3.33.1(@floating-ui/dom@1.8.0)(@tiptap/core@3.33.1(@tiptap/pm@3.33.1))(@tiptap/pm@3.33.1)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@tiptap/react@3.33.1(@floating-ui/dom@1.8.0)(@tiptap/core@3.33.1(@tiptap/pm@3.33.1))(@tiptap/pm@3.33.1)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@tiptap/core': 3.33.1(@tiptap/pm@3.33.1)
       '@tiptap/pm': 3.33.1
@@ -19594,9 +19556,9 @@ snapshots:
       '@types/react-dom': 18.2.7
       '@types/use-sync-external-store': 0.0.6
       fast-equals: 5.4.3
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      use-sync-external-store: 1.6.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      use-sync-external-store: 1.6.0(react@19.3.1)
     optionalDependencies:
       '@tiptap/extension-bubble-menu': 3.33.1(@tiptap/core@3.33.1(@tiptap/pm@3.33.1))(@tiptap/pm@3.33.1)
       '@tiptap/extension-floating-menu': 3.33.1(@floating-ui/dom@1.8.0)(@tiptap/core@3.33.1(@tiptap/pm@3.33.1))(@tiptap/pm@3.33.1)
@@ -20530,12 +20492,12 @@ snapshots:
     dependencies:
       ag-charts-types: 11.3.2
 
-  ag-grid-react@33.3.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  ag-grid-react@33.3.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       ag-grid-community: 33.3.2
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   agent-base@6.0.2:
     dependencies:
@@ -20612,56 +20574,56 @@ snapshots:
 
   ansi-styles@6.2.1: {}
 
-  antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  antd@6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       '@ant-design/colors': 8.0.1
-      '@ant-design/cssinjs': 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@ant-design/cssinjs-utils': 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@ant-design/cssinjs': 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@ant-design/cssinjs-utils': 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ant-design/fast-color': 3.0.1
-      '@ant-design/icons': 6.3.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@ant-design/react-slick': 2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@ant-design/icons': 6.3.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@ant-design/react-slick': 2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@babel/runtime': 7.29.13
-      '@rc-component/cascader': 1.26.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/checkbox': 2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/collapse': 1.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/color-picker': 3.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/dialog': 1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/drawer': 1.4.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/dropdown': 2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/form': 1.8.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/image': 1.10.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/input': 1.4.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/input-number': 1.8.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/listy': 1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/mentions': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/menu': 1.6.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/motion': 1.3.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/mutate-observer': 2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/notification': 2.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/pagination': 1.7.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/picker': 1.17.0(date-fns@2.29.3)(dayjs@1.11.23)(luxon@3.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/progress': 1.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/qrcode': 2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/rate': 1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/resize-observer': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/segmented': 1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/select': 1.12.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/slider': 1.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/steps': 1.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/switch': 1.0.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/table': 1.12.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tabs': 2.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tooltip': 1.5.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tour': 2.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tree': 1.5.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tree-select': 1.19.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/trigger': 3.10.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/upload': 1.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/util': 1.14.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/cascader': 1.26.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/checkbox': 2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/collapse': 1.3.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/color-picker': 3.1.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/dialog': 1.10.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/drawer': 1.4.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/dropdown': 2.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/form': 1.8.6(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/image': 1.10.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/input': 1.4.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/input-number': 1.8.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/listy': 1.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/mentions': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/menu': 1.6.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/motion': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/mutate-observer': 2.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/notification': 2.1.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/pagination': 1.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/picker': 1.17.0(date-fns@2.29.3)(dayjs@1.11.23)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/progress': 1.1.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/qrcode': 2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/rate': 1.0.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/resize-observer': 1.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/segmented': 1.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/select': 1.12.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/slider': 1.2.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/steps': 1.2.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/switch': 1.0.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/table': 1.12.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/tabs': 2.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/tooltip': 1.5.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/tour': 2.4.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/tree': 1.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/tree-select': 1.19.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/trigger': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/upload': 1.1.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@rc-component/util': 1.14.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
       dayjs: 1.11.23
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       scroll-into-view-if-needed: 3.1.0
       throttle-debounce: 5.0.2
     transitivePeerDependencies:
@@ -21018,36 +20980,6 @@ snapshots:
       is-alphabetical: 2.0.1
       is-alphanumerical: 2.0.1
       is-decimal: 2.0.1
-
-  better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.23.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))):
-    dependencies:
-      '@better-auth/core': 1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0)
-      '@better-auth/drizzle-adapter': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)
-      '@better-auth/kysely-adapter': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(kysely@0.29.3)
-      '@better-auth/memory-adapter': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)
-      '@better-auth/mongo-adapter': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(mongodb@7.8.0)
-      '@better-auth/prisma-adapter': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)
-      '@better-auth/telemetry': 1.7.20(@better-auth/core@1.7.20(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.5(zod@4.6.7))(jose@6.2.17)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)
-      '@better-auth/utils': 0.5.1
-      '@better-fetch/fetch': 1.3.3
-      '@noble/ciphers': 2.2.0
-      '@noble/hashes': 2.2.0
-      better-call: 1.4.5(zod@4.6.7)
-      defu: 6.1.7
-      jose: 6.2.17
-      kysely: 0.29.3
-      nanostores: 1.4.0
-      zod: 4.6.7
-    optionalDependencies:
-      mongodb: 7.8.0
-      mysql2: 3.24.6(@types/node@26.6.6)
-      next: 16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      pg: 8.23.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      vitest: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
-    transitivePeerDependencies:
-      - '@opentelemetry/api'
 
   better-auth@1.7.20(@opentelemetry/api@1.9.1)(mongodb@7.8.0)(mysql2@3.24.6(@types/node@26.6.6))(next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))):
     dependencies:
@@ -21982,11 +21914,11 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  echarts-for-react@3.0.6(echarts@6.1.0)(react@18.2.0):
+  echarts-for-react@3.0.6(echarts@6.1.0)(react@19.3.1):
     dependencies:
       echarts: 6.1.0
       fast-deep-equal: 3.1.3
-      react: 18.2.0
+      react: 19.3.1
       size-sensor: 1.0.1
       tslib: 2.9.1
 
@@ -23536,11 +23468,11 @@ snapshots:
 
   html-escaper@2.0.2: {}
 
-  html-react-parser@5.2.17(@types/react@18.2.38)(react@18.2.0):
+  html-react-parser@5.2.17(@types/react@18.2.38)(react@19.3.1):
     dependencies:
       domhandler: 5.0.3
       html-dom-parser: 5.1.8
-      react: 18.2.0
+      react: 19.3.1
       react-property: 2.0.2
       style-to-js: 1.1.21
     optionalDependencies:
@@ -24684,9 +24616,9 @@ snapshots:
 
   lru.min@1.1.4: {}
 
-  lucide-react@1.72.0(@types/react@18.2.38)(react@18.2.0):
+  lucide-react@1.72.0(@types/react@18.2.38)(react@19.3.1):
     dependencies:
-      react: 18.2.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 18.2.38
 
@@ -25553,6 +25485,14 @@ snapshots:
       lightningcss: 1.33.0
     optional: true
 
+  minimizer-webpack-plugin@5.14.0(webpack@5.112.2):
+    dependencies:
+      jest-worker: 27.5.1
+      schema-utils: 4.8.3(webpack@5.112.2)
+      terser: 5.51.2
+      webpack: 5.112.2
+    optional: true
+
   minipass@7.1.3: {}
 
   minisearch@7.2.0: {}
@@ -25708,35 +25648,6 @@ snapshots:
       - supports-color
 
   next-tick@1.1.0: {}
-
-  next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@next/env': 16.4.6
-      '@swc/helpers': 0.5.23
-      baseline-browser-mapping: 2.11.35
-      caniuse-lite: 1.0.30001826
-      postcss: 8.5.32
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.6(react@18.2.0)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 16.4.6
-      '@next/swc-darwin-x64': 16.4.6
-      '@next/swc-linux-arm64-gnu': 16.4.6
-      '@next/swc-linux-arm64-musl': 16.4.6
-      '@next/swc-linux-x64-gnu': 16.4.6
-      '@next/swc-linux-x64-musl': 16.4.6
-      '@next/swc-win32-arm64-msvc': 16.4.6
-      '@next/swc-win32-x64-msvc': 16.4.6
-      '@opentelemetry/api': 1.9.1
-      '@playwright/test': 1.65.0
-      babel-plugin-react-compiler: 1.0.0
-      sharp: 0.35.5(@types/node@26.6.6)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@types/node'
-      - babel-plugin-macros
-    optional: true
 
   next@16.4.6(@opentelemetry/api@1.9.1)(@playwright/test@1.65.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
@@ -26305,24 +26216,6 @@ snapshots:
     dependencies:
       xtend: 4.0.2
 
-  posthog-js@1.447.12(@types/react@18.2.38)(preact-render-to-string@6.5.11)(react@18.2.0):
-    dependencies:
-      '@posthog/browser-common': 0.10.8(preact-render-to-string@6.5.11)
-      '@posthog/core': 1.67.1
-      '@posthog/types': 1.424.0
-      core-js: 3.50.0
-      dompurify: 3.4.17
-      fflate: 0.4.9
-      preact: 10.29.8(preact-render-to-string@6.5.11)
-      query-selector-shadow-dom: 1.0.1
-      web-vitals: 6.2.2
-      web-vitals-soft-navs: web-vitals@6.2.1
-    optionalDependencies:
-      '@types/react': 18.2.38
-      react: 18.2.0
-    transitivePeerDependencies:
-      - preact-render-to-string
-
   posthog-js@1.447.12(@types/react@18.2.38)(preact-render-to-string@6.5.11)(react@19.3.1):
     dependencies:
       '@posthog/browser-common': 0.10.8(preact-render-to-string@6.5.11)
@@ -26563,12 +26456,6 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  react-dom@18.2.0(react@18.2.0):
-    dependencies:
-      loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.23.0
-
   react-dom@19.3.1(react@19.3.0):
     dependencies:
       react: 19.3.0
@@ -26592,24 +26479,6 @@ snapshots:
   react-is@18.3.1: {}
 
   react-is@19.3.1: {}
-
-  react-markdown@10.1.0(@types/react@18.2.38)(react@18.2.0):
-    dependencies:
-      '@types/hast': 3.0.4
-      '@types/mdast': 4.0.4
-      '@types/react': 18.2.38
-      devlop: 1.1.0
-      hast-util-to-jsx-runtime: 2.3.7
-      html-url-attributes: 3.0.1
-      mdast-util-to-hast: 13.2.1
-      react: 18.2.0
-      remark-parse: 11.0.0
-      remark-rehype: 11.1.2
-      unified: 11.0.5
-      unist-util-visit: 5.2.0
-      vfile: 6.0.3
-    transitivePeerDependencies:
-      - supports-color
 
   react-markdown@10.1.0(@types/react@18.2.38)(react@19.3.1):
     dependencies:
@@ -26789,16 +26658,6 @@ snapshots:
 
   react-refresh@0.14.2: {}
 
-  react-syntax-highlighter@16.1.2(react@18.2.0):
-    dependencies:
-      '@babel/runtime': 7.29.13
-      highlight.js: 10.7.3
-      highlightjs-vue: 1.0.0
-      lowlight: 1.20.0
-      prismjs: 1.30.0
-      react: 18.2.0
-      refractor: 5.0.0
-
   react-syntax-highlighter@16.1.2(react@19.3.1):
     dependencies:
       '@babel/runtime': 7.29.13
@@ -26809,14 +26668,10 @@ snapshots:
       react: 19.3.1
       refractor: 5.0.0
 
-  react-virtuoso@4.18.21(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  react-virtuoso@4.18.21(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
-  react@18.2.0:
-    dependencies:
-      loose-envify: 1.4.0
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   react@19.3.0: {}
 
@@ -27131,10 +26986,6 @@ snapshots:
     dependencies:
       xmlchars: 2.2.0
 
-  scheduler@0.23.0:
-    dependencies:
-      loose-envify: 1.4.0
-
   scheduler@0.28.0: {}
 
   schema-utils@4.8.3(webpack@5.112.2(esbuild@0.28.2)(lightningcss@1.33.0)):
@@ -27154,7 +27005,7 @@ snapshots:
       ajv-formats: 3.0.1(ajv@8.20.0)
       ajv-keywords: 5.1.0(ajv@8.20.0)
     optionalDependencies:
-      webpack: 5.112.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@7.3.1)
+      webpack: 5.112.2
 
   scope-analyzer@2.1.2:
     dependencies:
@@ -27610,12 +27461,6 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.9
 
-  styled-jsx@5.1.6(react@18.2.0):
-    dependencies:
-      client-only: 0.0.1
-      react: 18.2.0
-    optional: true
-
   styled-jsx@5.1.6(react@19.3.1):
     dependencies:
       client-only: 0.0.1
@@ -27670,17 +27515,17 @@ snapshots:
       '@swc/counter': 0.1.3
       webpack: 5.112.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@7.3.1)
 
-  swr@2.5.1(react@18.2.0):
-    dependencies:
-      dequal: 2.0.3
-      react: 18.2.0
-      use-sync-external-store: 1.6.0(react@18.2.0)
-
   swr@2.5.1(react@19.3.0):
     dependencies:
       dequal: 2.0.3
       react: 19.3.0
       use-sync-external-store: 1.6.0(react@19.3.0)
+
+  swr@2.5.1(react@19.3.1):
+    dependencies:
+      dequal: 2.0.3
+      react: 19.3.1
+      use-sync-external-store: 1.6.0(react@19.3.1)
 
   synckit@0.11.13:
     dependencies:
@@ -28155,13 +28000,13 @@ snapshots:
     dependencies:
       react: 19.3.0
 
-  use-sync-external-store@1.6.0(react@18.2.0):
-    dependencies:
-      react: 18.2.0
-
   use-sync-external-store@1.6.0(react@19.3.0):
     dependencies:
       react: 19.3.0
+
+  use-sync-external-store@1.6.0(react@19.3.1):
+    dependencies:
+      react: 19.3.1
 
   util-deprecate@1.0.2: {}
 
@@ -28294,6 +28139,44 @@ snapshots:
       wildcard: 2.0.1
 
   webpack-sources@3.7.0: {}
+
+  webpack@5.112.2:
+    dependencies:
+      '@types/estree': 1.0.8
+      '@types/json-schema': 7.0.15
+      '@webassemblyjs/ast': 1.14.1
+      '@webassemblyjs/wasm-edit': 1.14.1
+      '@webassemblyjs/wasm-parser': 1.14.1
+      browserslist: 4.29.5
+      chrome-trace-event: 1.0.3
+      enhanced-resolve: 5.26.1
+      es-module-lexer: 2.3.2
+      events: 3.3.0
+      graceful-fs: 4.2.11
+      mime-db: 1.54.0
+      minimizer-webpack-plugin: 5.14.0(webpack@5.112.2)
+      schema-utils: 4.8.3(webpack@5.112.2)
+      tapable: 2.3.3
+      watchpack: 2.6.4
+      webpack-sources: 3.7.0
+    transitivePeerDependencies:
+      - '@minify-html/node'
+      - '@napi-rs/image'
+      - '@swc/core'
+      - '@swc/css'
+      - '@swc/html'
+      - clean-css
+      - cssnano
+      - csso
+      - esbuild
+      - html-minifier-terser
+      - imagemin
+      - lightningcss
+      - postcss
+      - sharp
+      - svgo
+      - uglify-js
+    optional: true
 
   webpack@5.112.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(esbuild@0.28.2)(webpack-cli@7.3.1):
     dependencies:

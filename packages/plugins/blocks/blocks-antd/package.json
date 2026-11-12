@@ -67,8 +67,8 @@
   },
   "peerDependencies": {
     "antd": ">=6",
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@lowdefy/ajv": "7.2.0",
@@ -80,8 +80,8 @@
     "@swc/core": "1.16.22",
     "antd": "6.7.0",
     "copyfiles": "2.4.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "vitest": "5.1.0"
   },
   "publishConfig": {
