@@ -44,5 +44,27 @@ test.describe('MarkdownWithCode Block', () => {
     const body = getMarkdownBody(page, 'markdownwithcode_inline');
     const code = body.locator('code');
     await expect(code).toHaveText('console.log');
+    await expect(body.locator('pre')).toHaveCount(0);
+  });
+
+  test('highlights fenced code with a language in a single pre', async ({ page }) => {
+    const body = getMarkdownBody(page, 'markdownwithcode_codeblock');
+    await expect(body.locator('pre')).toHaveCount(1);
+    await expect(body.locator('pre > code.language-javascript')).toContainText('const x = 1;');
+    // The highlighter sets inline styles on the pre, so a plain markdown pre has none.
+    await expect(body.locator('pre')).toHaveAttribute('style', /background/);
+  });
+
+  test('highlights fenced and indented code without a language, not inline code', async ({
+    page,
+  }) => {
+    const body = getMarkdownBody(page, 'markdownwithcode_mixed');
+    const blocks = body.locator('pre');
+    await expect(blocks).toHaveCount(2);
+    await expect(blocks.nth(0)).toHaveAttribute('style', /background/);
+    await expect(blocks.nth(0)).toContainText('plain fence');
+    await expect(blocks.nth(1)).toHaveAttribute('style', /background/);
+    await expect(blocks.nth(1)).toContainText('indented block');
+    await expect(body.locator('p > code')).toHaveText('run()');
   });
 });

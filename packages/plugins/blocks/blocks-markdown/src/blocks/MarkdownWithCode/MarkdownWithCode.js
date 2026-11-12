@@ -57,19 +57,21 @@ SyntaxHighlighter.registerLanguage('yaml', lang(yaml));
 
 function makeComponents(isDark) {
   return {
-    code({ inline, className, children, ...props }) {
-      return !inline ? (
+    // react-markdown no longer tells the code component whether code is inline. Fenced and
+    // indented code blocks are the only code wrapped in a pre, so they are highlighted here and
+    // inline code keeps the default code element.
+    pre({ node }) {
+      const codeNode = node.children.find((child) => child.tagName === 'code');
+      const languageClass = (codeNode.properties.className ?? []).find((name) =>
+        name.startsWith('language-')
+      );
+      return (
         <SyntaxHighlighter
           style={isDark ? a11yDark : github}
-          language={String(className).replace('language-', '')}
-          {...props}
+          language={languageClass?.replace('language-', '')}
         >
-          {children}
+          {codeNode.children.map((child) => child.value).join('')}
         </SyntaxHighlighter>
-      ) : (
-        <code className={className} {...props}>
-          {children}
-        </code>
       );
     },
   };
@@ -90,14 +92,11 @@ const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => {
   const components = useMemo(() => makeComponents(isDark), [isDark]);
   return (
     <div id={blockId} className={classNames?.element} style={styles?.element}>
-      <ReactMarkdown
-        className={markdownStyles['markdown-body']}
-        skipHtml={properties.skipHtml}
-        remarkPlugins={[gfm]}
-        components={components}
-      >
-        {properties.content}
-      </ReactMarkdown>
+      <div className={markdownStyles['markdown-body']}>
+        <ReactMarkdown skipHtml={properties.skipHtml} remarkPlugins={[gfm]} components={components}>
+          {properties.content}
+        </ReactMarkdown>
+      </div>
     </div>
   );
 };

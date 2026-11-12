@@ -36,14 +36,13 @@ class DangerousMarkdown extends React.Component {
     const { blockId, classNames, properties, styles } = this.props;
     return (
       <div id={blockId} className={classNames?.element} style={styles?.element}>
-        <ReactMarkdown
+        <div
           className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
-          remarkPlugins={[gfm]}
-          rehypePlugins={[rehypeRaw]}
-          skipHtml={false}
         >
-          {DOMPurify.sanitize(this.props.properties.content, this.DOMPurifyOptions)}
-        </ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[gfm]} rehypePlugins={[rehypeRaw]} skipHtml={false}>
+            {DOMPurify.sanitize(this.props.properties.content, this.DOMPurifyOptions)}
+          </ReactMarkdown>
+        </div>
       </div>
     );
   }
