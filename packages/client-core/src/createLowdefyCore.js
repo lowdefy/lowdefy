@@ -23,6 +23,7 @@ import validateAuthTransport from './auth/validateAuthTransport.js';
 import createCallAPI from './createCallAPI.js';
 import createCallRequest from './createCallRequest.js';
 import createHandleError from './createHandleError.js';
+import fetchApi from './fetchApi.js';
 import createStorage from './storage/createStorage.js';
 import createWebSocketClient from './websocket/createWebSocketClient.js';
 
@@ -44,6 +45,10 @@ const HOST_KEYS = [
 // for bearer, tokenStore: see validateAuthTransport. A host that keeps calls
 // while offline gives requestQueue, { send({ body, buildId, pageId, requestId,
 // send, url }) }, which `offline: queue` requests go through (createCallRequest).
+// A host whose WebSocket takes no headers signs the handshake with subprotocols
+// and gives websocketProtocols({ renew }), which resolves to them
+// (createWebSocketClient). A host that shows the page as a view gives view,
+// whose fetchApi(path, init) is a signed-in call to the app (fetchApi).
 
 // Builds lowdefy._internal and the app-level state of the lowdefy object for a
 // renderer: requests, endpoint calls, the websocket client, auth methods,
@@ -125,6 +130,7 @@ function createLowdefyCore({ apiBase, auth, basePath, host, lowdefy, rootConfig,
   lowdefy._internal.websocketClient = createWebSocketClient(lowdefy);
   lowdefy._internal.translate = (key, values) => translate({ key, values, i18n: lowdefy.i18n });
   lowdefy._internal.logger = createBrowserLogger();
+  lowdefy._internal.fetchApi = (path, init) => fetchApi({ init, lowdefy, path });
   lowdefy._internal.handleError = createHandleError(lowdefy);
   return lowdefy;
 }
