@@ -25,13 +25,13 @@ import codeblockStyles from '../../codeblock.module.css';
 
 const Markdown = ({ blockId, classNames, properties, styles }) => (
   <div id={blockId} className={classNames?.element} style={styles?.element}>
-    <ReactMarkdown
+    <div
       className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
-      skipHtml={properties.skipHtml}
-      remarkPlugins={[gfm]}
     >
-      {properties.content}
-    </ReactMarkdown>
+      <ReactMarkdown skipHtml={properties.skipHtml} remarkPlugins={[gfm]}>
+        {properties.content}
+      </ReactMarkdown>
+    </div>
   </div>
 );
 
