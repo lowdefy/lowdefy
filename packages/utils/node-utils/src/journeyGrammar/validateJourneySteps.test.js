@@ -100,14 +100,14 @@ test('validateJourneySteps rejects steps that are not an array', () => {
 test('validateJourneySteps names the index and key of an unknown step', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
   );
 });
 
 test('validateJourneySteps rejects a step with more than one key', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
   expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
   );
 });
 
@@ -419,7 +419,7 @@ test('validateJourneySteps rejects malformed expect.calls', () => {
   );
   expect(error({ count: 1 })).toContain('requires exactly one of "request" or "endpoint"');
   expect(error({ endpoint: 'notify', pageId: 'tickets', count: 1 })).toBe(
-    'Step 0: Step "expect.calls" has unknown key "pageId". Keys are: endpoint, count.'
+    'Step 0: Step "expect.calls" has unknown key "pageId". Keys are: endpoint, count, payload, response.'
   );
   expect(error({ request: 'save', count: -1 })).toBe(
     'Step 0: Step "expect.calls" requires "count" to be a whole number of calls, 0 or more. Received -1.'
@@ -581,6 +581,186 @@ test('validateJourneySteps ends an expect error with examples of that expect kin
 
 test('validateJourneySteps lists the valid step names for an unknown step', () => {
   expect(validateJourneySteps({ steps: [{ browser_forward: true }] }).error).toBe(
-    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+  );
+});
+
+test('validateJourneySteps accepts call and request, with payload and as', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { call: { endpoint: 'tickets-add-comment' } },
+        {
+          call: { endpoint: 'tickets-add-comment', payload: { ticket_id: 'T-1' }, as: 'client_b' },
+        },
+        { call: { endpoint: 'tickets-list', as: 'none' } },
+        { call: { endpoint: 'tickets-list', as: { roles: ['admin'] } } },
+        { request: { pageId: 'ticket', requestId: 'get_ticket' } },
+        { request: { pageId: 'ticket', requestId: 'get_ticket', payload: { _id: { $ne: null } } } },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed call and request steps', () => {
+  function error(step) {
+    return validateJourneySteps({ steps: [step] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ call: 'tickets-list' })).toBe(
+    'Step 0: Step "call" requires { endpoint, payload?, as? }. Received "tickets-list".'
+  );
+  expect(error({ call: { endpoint: '' } })).toBe(
+    'Step 0: Step "call" requires "endpoint" to be a non-empty string. Received "".'
+  );
+  expect(error({ call: { endpoint: 'e', pageId: 'p' } })).toBe(
+    'Step 0: Step "call" has unknown key "pageId". Keys are: endpoint, payload, as.'
+  );
+  expect(error({ call: { endpoint: 'e', payload: 'x' } })).toBe(
+    'Step 0: Step "call" requires "payload" to be an object. Received "x".'
+  );
+  expect(error({ call: { endpoint: 'e', as: ['a', 'b'] } })).toBe(
+    'Step 0: Step "call" requires "as" to be a data set user\'s name, "none" to call signed out, or an inline user object. Received ["a","b"].'
+  );
+  expect(error({ call: { endpoint: 'e', as: '' } })).toContain('Step "call" requires "as" to be');
+  expect(error({ call: { endpoint: 'e', as: 3 } })).toContain('Received 3.');
+  expect(error({ request: { requestId: 'get_ticket' } })).toBe(
+    'Step 0: Step "request" requires "pageId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ request: { pageId: 'ticket' } })).toBe(
+    'Step 0: Step "request" requires "requestId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ request: [] })).toBe(
+    'Step 0: Step "request" requires { pageId, requestId, payload?, as? }. Received [].'
+  );
+  expect(validateJourneySteps({ steps: [{ request: {} }] }).error).toMatch(
+    / Example: \{"request":\{"pageId":"orders","requestId":"get_order"/
+  );
+});
+
+test('validateJourneySteps accepts expect.status and expect.error after a call or request, with expects between', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { call: { endpoint: 'tickets-add-comment' } },
+        { expect: { status: 404 } },
+        { expect: { error: 'Ticket not found.' } },
+        { expect: { db: { collection: 'log-events', match: {}, count: 0 } } },
+        { expect: { status: 404 } },
+        { request: { pageId: 'ticket', requestId: 'get_ticket' } },
+        { expect: { error: 'Not allowed.' } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects an expect.status with no call or request before it', () => {
+  expect(validateJourneySteps({ steps: [{ expect: { status: 403 } }] }).error).toBe(
+    'Step 0: Step "expect.status" must follow a "call" or "request" step, whose answer it reads; only expect steps may sit between them. Received it after the start of the journey.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ call: { endpoint: 'e' } }, { click: 'save' }, { expect: { status: 403 } }],
+    }).error
+  ).toBe(
+    'Step 2: Step "expect.status" must follow a "call" or "request" step, whose answer it reads; only expect steps may sit between them. Received it after a "click" step.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ call: { endpoint: 'e' } }, { wait: { ms: 10 } }, { expect: { error: 'x' } }],
+    }).error
+  ).toContain('Step 2: Step "expect.error" must directly follow an interaction step');
+  expect(
+    validateJourneySteps({ steps: [{ call: { endpoint: 'e' } }, { expect: { effect: true } }] })
+      .error
+  ).toContain('Step 1: Step "expect.effect" must directly follow an interaction step');
+});
+
+test.each([
+  [{ status: '403' }, 'Received "403".'],
+  [{ status: 99 }, 'Received 99.'],
+  [{ status: 600 }, 'Received 600.'],
+  [{ status: 403.5 }, 'Received 403.5.'],
+])('validateJourneySteps rejects expect %j', (expectation, message) => {
+  const result = validateJourneySteps({
+    steps: [{ call: { endpoint: 'e' } }, { expect: expectation }],
+  });
+  expect(result.error).toContain(
+    'Step 1: Step "expect.status" requires an HTTP status code, a whole number from 100 to 599, e.g. 403.'
+  );
+  expect(result.error).toContain(message);
+});
+
+test('validateJourneySteps accepts expect.calls with payload or response in place of count', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { calls: { request: 'save', payload: { status: 'Open' } } } },
+        { expect: { calls: { request: 'save', pageId: 'orders', response: { ok: true } } } },
+        { expect: { calls: { endpoint: 'sync', count: 1, payload: {}, response: null } } },
+      ],
+    })
+  ).toEqual({});
+  expect(
+    validateJourneySteps({ steps: [{ expect: { calls: { endpoint: 'sync' } } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
+  ).toBe(
+    'Step 0: Step "expect.calls" requires "count" to be a whole number of calls, 0 or more, or a "payload" or "response" to match. Received {"endpoint":"sync"}.'
+  );
+});
+
+test('validateJourneySteps accepts expect.db with count or equals', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { db: { collection: 'orders', match: {}, count: 0 } } },
+        {
+          expect: {
+            db: {
+              collection: 'orders',
+              connectionId: 'mongodb',
+              match: { status: 'Open' },
+              equals: [{ _id: 'ORD-1' }],
+            },
+          },
+        },
+        { expect: { db: { collection: 'orders', match: { _id: 'ORD-9' }, equals: [] } } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed expect.db', () => {
+  function error(db) {
+    return validateJourneySteps({ steps: [{ expect: { db } }] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ collection: 'orders', match: {}, count: 1, equals: [] })).toBe(
+    'Step 0: Step "expect.db" requires exactly one of "count" or "equals". Received {"collection":"orders","match":{},"count":1,"equals":[]}.'
+  );
+  expect(error({ collection: 'orders', match: {} })).toContain(
+    'requires exactly one of "count" or "equals"'
+  );
+  expect(error({ match: {}, count: 1 })).toBe(
+    'Step 0: Step "expect.db" requires "collection" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ collection: 'orders', count: 1 })).toBe(
+    'Step 0: Step "expect.db" requires "match" to be a query object, {} for every document. Received undefined.'
+  );
+  expect(error({ collection: 'orders', match: {}, connectionId: '', count: 1 })).toContain(
+    'requires "connectionId" to be a non-empty string'
+  );
+  expect(error({ collection: 'orders', match: {}, count: -1 })).toBe(
+    'Step 0: Step "expect.db" requires "count" to be a whole number of documents, 0 or more. Received -1.'
+  );
+  expect(error({ collection: 'orders', match: {}, equals: { _id: 1 } })).toBe(
+    'Step 0: Step "expect.db" requires "equals" to be a list of documents. Received {"_id":1}.'
+  );
+  expect(error({ collection: 'orders', match: {}, count: 1, where: {} })).toBe(
+    'Step 0: Step "expect.db" has unknown key "where". Keys are: collection, connectionId, match, count, equals.'
+  );
+  expect(error('orders')).toContain(
+    'Step "expect.db" requires { collection, connectionId?, match, count }'
   );
 });

@@ -274,3 +274,32 @@ test('L7 accepts switching to a second person and back', () => {
   });
   expect(rules(problems, 'L7')).toEqual([]);
 });
+
+test('L2 and L6 treat call and request as interactions, and expect status, error and db as assertions', () => {
+  const asserted = lintJourney({
+    journey: journey([
+      { call: { endpoint: 'tickets-add-comment', payload: { ticket_id: 'T-1' } } },
+      { expect: { status: 403 } },
+      { request: { pageId: 'tickets', requestId: 'get_ticket', as: 'client_b' } },
+      { expect: { error: 'Ticket not found.' } },
+      { expect: { db: { collection: 'log-events', match: { ticket_ids: 'T-1' }, count: 0 } } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(asserted, 'L2')).toEqual([]);
+  expect(rules(asserted, 'L6')).toEqual([]);
+  const unasserted = lintJourney({
+    journey: journey([
+      { call: { endpoint: 'tickets-add-comment' } },
+      { request: { pageId: 'tickets', requestId: 'get_ticket' } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(unasserted, 'L2').map(({ message }) => message)).toEqual([
+    'step 0 (call "tickets-add-comment") is not followed by an expect or wait: { request } before step 1.',
+    'step 1 (request "get_ticket" on "tickets") is not followed by an expect or wait: { request } before the journey ends.',
+  ]);
+  expect(rules(unasserted, 'L6').map(({ message }) => message)).toEqual([
+    'the last step, step 1 (request "get_ticket" on "tickets"), is not an expect or wait: { request }.',
+  ]);
+});

@@ -27,9 +27,14 @@ import { expect, test } from 'vitest';
 const ajv = new Ajv({ allErrors: true, strict: false });
 const validateSchema = ajv.compile(journeyStepSchema);
 
-// After a click, so expect.error and expect.effect are placed where they may be.
+// After a click, so expect.error and expect.effect are placed where they may be,
+// and expect.status after the call it reads.
 function validatorAccepts(step) {
-  return type.isUndefined(validateJourneySteps({ steps: [{ click: 'save' }, step] }).error);
+  const before =
+    type.isObject(step?.expect) && Object.hasOwn(step.expect, 'status')
+      ? { call: { endpoint: 'save' } }
+      : { click: 'save' };
+  return type.isUndefined(validateJourneySteps({ steps: [before, step] }).error);
 }
 
 const VALID_STEPS = [
@@ -83,6 +88,16 @@ const VALID_STEPS = [
   { expect: { title: { contains: 'Task' } } },
   { expect: { calls: { request: 'save', pageId: 'tickets', count: 1 } } },
   { expect: { calls: { endpoint: 'notify', count: 0 } } },
+  { expect: { calls: { request: 'save', payload: { status: 'Open' } } } },
+  { expect: { calls: { endpoint: 'notify', response: null, count: 1 } } },
+  { expect: { status: 403 } },
+  { expect: { db: { collection: 'orders', match: {}, count: 0 } } },
+  { expect: { db: { collection: 'orders', connectionId: 'db', match: {}, equals: [{}] } } },
+  { call: { endpoint: 'orders-cancel' } },
+  { call: { endpoint: 'orders-cancel', payload: { id: 1 }, as: 'none' } },
+  { call: { endpoint: 'orders-cancel', as: { roles: ['admin'] } } },
+  { request: { pageId: 'orders', requestId: 'get_order' } },
+  { request: { pageId: 'orders', requestId: 'get_order', payload: {}, as: 'client_b' } },
   ...Object.values(JOURNEY_STEP_EXAMPLES).flat(),
 ];
 
@@ -156,6 +171,27 @@ const INVALID_STEPS = [
   { expect: { calls: { request: '', count: 1 } } },
   { expect: { error: '' } },
   { expect: { effect: false } },
+  { expect: { calls: { request: 'save' } } },
+  { expect: { status: '403' } },
+  { expect: { status: 99 } },
+  { expect: { status: 403.5 } },
+  { expect: { db: { collection: 'orders', match: {}, count: 1, equals: [] } } },
+  { expect: { db: { collection: 'orders', match: {} } } },
+  { expect: { db: { collection: 'orders', count: 1 } } },
+  { expect: { db: { match: {}, count: 1 } } },
+  { expect: { db: { collection: 'orders', match: {}, equals: [1] } } },
+  { expect: { db: { collection: 'orders', match: [], count: 1 } } },
+  { expect: { db: { collection: 'orders', match: {}, count: 1, where: {} } } },
+  { call: 'orders-cancel' },
+  { call: {} },
+  { call: { endpoint: '' } },
+  { call: { endpoint: 'e', payload: 'x' } },
+  { call: { endpoint: 'e', as: ['a'] } },
+  { call: { endpoint: 'e', as: '' } },
+  { call: { endpoint: 'e', pageId: 'p' } },
+  { request: { requestId: 'get_order' } },
+  { request: { pageId: 'orders' } },
+  { request: { pageId: 'orders', requestId: 'r', endpoint: 'e' } },
 ];
 
 test.each(VALID_STEPS.map((step) => [step]))(

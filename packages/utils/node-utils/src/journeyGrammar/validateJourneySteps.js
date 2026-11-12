@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import JOURNEY_STEP_EXAMPLES from './journeyStepExamples.js';
+import validateJourneyUser from './validateJourneyUser.js';
 
 const STEP_KEYS = [
   'click',
@@ -31,10 +32,16 @@ const STEP_KEYS = [
   'wait',
   'screenshot',
   'expect',
+  'call',
+  'request',
 ];
 // The steps a person does to the page. An app error one causes can be
 // asserted by an expect.error step straight after it.
 const INTERACTION_STEP_KEYS = ['click', 'open', 'fill', 'select', 'press', 'back'];
+// The steps that call the server directly, with a payload the page would never
+// send. Their answer is read by the expect.error and expect.status steps after
+// them.
+const CALL_STEP_KEYS = ['call', 'request'];
 const EXPECT_KEYS = [
   'state',
   'visible',
@@ -45,6 +52,8 @@ const EXPECT_KEYS = [
   'calls',
   'error',
   'effect',
+  'status',
+  'db',
 ];
 const WAIT_KEYS = ['ms', 'request', 'state'];
 // `from` marks where a fill, select or expect.state value came from:
@@ -190,12 +199,13 @@ function validateClick(params) {
   return validateTargetObject({ key: 'click', params, extraKeys: ['count'] });
 }
 
-// expect.calls counts the calls the current actor has made to one request
+// expect.calls checks the calls the current actor has made to one request
 // (scoped to a page, which defaults to the page the actor is on) or one
-// endpoint since the journey started.
+// endpoint since the journey started: how many (`count`), and what the last
+// one sent (`payload`) and got back (`response`), each a partial match.
 function validateCalls(value) {
   if (!type.isObject(value)) {
-    return `Step "expect.calls" requires { request, pageId?, count } or { endpoint, count }. Received ${describe(
+    return `Step "expect.calls" requires { request, pageId?, count } or { endpoint, count }, where "payload" and "response" may join or replace "count". Received ${describe(
       value
     )}.`;
   }
@@ -209,7 +219,9 @@ function validateCalls(value) {
   const unknownKeys = findUnknownKeys({
     key: 'expect.calls',
     params: value,
-    allowed: isRequest ? ['request', 'pageId', 'count'] : ['endpoint', 'count'],
+    allowed: isRequest
+      ? ['request', 'pageId', 'count', 'payload', 'response']
+      : ['endpoint', 'count', 'payload', 'response'],
   });
   if (!type.isUndefined(unknownKeys)) {
     return unknownKeys;
@@ -225,9 +237,132 @@ function validateCalls(value) {
       value.pageId
     )}.`;
   }
+  if (type.isUndefined(value.count)) {
+    if (type.isUndefined(value.payload) && type.isUndefined(value.response)) {
+      return `Step "expect.calls" requires "count" to be a whole number of calls, 0 or more, or a "payload" or "response" to match. Received ${describe(
+        value
+      )}.`;
+    }
+    return undefined;
+  }
   if (!isIndex(value.count)) {
     return `Step "expect.calls" requires "count" to be a whole number of calls, 0 or more. Received ${describe(
       value.count
+    )}.`;
+  }
+  return undefined;
+}
+
+// call and request take `as`, who calls: a data set user's name, "none" for
+// signed out or an inline user object, as the journey's own `user` does. One
+// call has one caller, so a list is refused.
+function validateCallUser({ key, user }) {
+  if (type.isUndefined(user)) {
+    return undefined;
+  }
+  if (type.isArray(user) || !type.isUndefined(validateJourneyUser({ user }).error)) {
+    return `Step "${key}" requires "as" to be a data set user's name, "none" to call signed out, or an inline user object. Received ${describe(
+      user
+    )}.`;
+  }
+  return undefined;
+}
+
+// call: { endpoint, payload?, as? } calls an endpoint directly and request:
+// { pageId, requestId, payload?, as? } a page's request, as the journey's user
+// or the user named in `as`. They send what a page would never send (another
+// company's ids, operator objects, wrong types); a request the page sends is
+// reached through its own event instead.
+function validateCall({ key, params }) {
+  const idKeys = key === 'call' ? ['endpoint'] : ['pageId', 'requestId'];
+  if (!type.isObject(params)) {
+    return `Step "${key}" requires { ${idKeys.join(', ')}, payload?, as? }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key,
+    params,
+    allowed: [...idKeys, 'payload', 'as'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const missing = idKeys.find((idKey) => !type.isString(params[idKey]) || params[idKey] === '');
+  if (!type.isUndefined(missing)) {
+    return `Step "${key}" requires "${missing}" to be a non-empty string. Received ${describe(
+      params[missing]
+    )}.`;
+  }
+  if (!type.isUndefined(params.payload) && !type.isObject(params.payload)) {
+    return `Step "${key}" requires "payload" to be an object. Received ${describe(
+      params.payload
+    )}.`;
+  }
+  return validateCallUser({ key, user: params.as });
+}
+
+// expect.status reads the HTTP status of the last call or request's answer.
+function validateStatus(value) {
+  if (!type.isInt(value) || value < 100 || value > 599) {
+    return `Step "expect.status" requires an HTTP status code, a whole number from 100 to 599, e.g. 403. Received ${describe(
+      value
+    )}.`;
+  }
+  return undefined;
+}
+
+// expect.db reads the journey's data set database: the documents in
+// `collection` (on the connection `connectionId`, default the app's one
+// MongoDB connection) that `match` finds number `count`, or are the list
+// `equals`, each document holding at least the keys given.
+function validateDb(value) {
+  if (!type.isObject(value)) {
+    return `Step "expect.db" requires { collection, connectionId?, match, count } or { collection, connectionId?, match, equals }. Received ${describe(
+      value
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'expect.db',
+    params: value,
+    allowed: ['collection', 'connectionId', 'match', 'count', 'equals'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(value.collection) || value.collection === '') {
+    return `Step "expect.db" requires "collection" to be a non-empty string. Received ${describe(
+      value.collection
+    )}.`;
+  }
+  if (
+    !type.isUndefined(value.connectionId) &&
+    (!type.isString(value.connectionId) || value.connectionId === '')
+  ) {
+    return `Step "expect.db" requires "connectionId" to be a non-empty string. Received ${describe(
+      value.connectionId
+    )}.`;
+  }
+  if (!type.isObject(value.match)) {
+    return `Step "expect.db" requires "match" to be a query object, {} for every document. Received ${describe(
+      value.match
+    )}.`;
+  }
+  const hasCount = !type.isUndefined(value.count);
+  const hasEquals = !type.isUndefined(value.equals);
+  if (hasCount === hasEquals) {
+    return `Step "expect.db" requires exactly one of "count" or "equals". Received ${describe(
+      value
+    )}.`;
+  }
+  if (hasCount && !isIndex(value.count)) {
+    return `Step "expect.db" requires "count" to be a whole number of documents, 0 or more. Received ${describe(
+      value.count
+    )}.`;
+  }
+  if (hasEquals && (!type.isArray(value.equals) || !value.equals.every(type.isObject))) {
+    return `Step "expect.db" requires "equals" to be a list of documents. Received ${describe(
+      value.equals
     )}.`;
   }
   return undefined;
@@ -429,7 +564,7 @@ function validateExpectState(value) {
 
 function validateExpect(params) {
   if (!type.isObject(params)) {
-    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }, { effect }. Received ${describe(
+    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }, { effect }, { status }, { db }. Received ${describe(
       params
     )}.`;
   }
@@ -487,6 +622,10 @@ function validateExpect(params) {
         )}.`;
       }
       return undefined;
+    case 'status':
+      return validateStatus(value);
+    case 'db':
+      return validateDb(value);
     default:
       return undefined;
   }
@@ -499,24 +638,50 @@ const FOLLOWS_INTERACTION = {
   effect: 'whose effect it checks',
 };
 
+// The call or request whose answer an expect.error or expect.status at `index`
+// reads: the last step before it that is not an expect, when that is a call or
+// request. Several expects may read one answer, since it does not change.
+function findAnsweredCall({ steps, index }) {
+  for (let before = index - 1; before >= 0; before -= 1) {
+    const key = getStepKey(steps[before]);
+    if (key !== 'expect') {
+      return CALL_STEP_KEYS.includes(key) ? key : undefined;
+    }
+  }
+  return undefined;
+}
+
+function describePrevious(previousKey) {
+  return type.isUndefined(previousKey) ? 'the start of the journey' : `a "${previousKey}" step`;
+}
+
 // expect.error claims the app errors of the interaction just before it, and
 // expect.effect checks that interaction did something, so each must follow
-// one.
-function validatePlacement({ step, previous }) {
+// one. expect.error may read a call or request's answer instead, and
+// expect.status only reads one.
+function validatePlacement({ steps, index }) {
+  const step = steps[index];
   if (getStepKey(step) !== 'expect') {
     return undefined;
   }
   const expectKey = getStepKey(step.expect);
+  const previous = steps[index - 1];
+  const previousKey = type.isUndefined(previous) ? undefined : getStepKey(previous);
+  if (expectKey === 'status' && type.isUndefined(findAnsweredCall({ steps, index }))) {
+    return `Step "expect.status" must follow a "call" or "request" step, whose answer it reads; only expect steps may sit between them. Received it after ${describePrevious(
+      previousKey
+    )}.`;
+  }
   if (type.isUndefined(FOLLOWS_INTERACTION[expectKey])) {
     return undefined;
   }
-  const previousKey = type.isUndefined(previous) ? undefined : getStepKey(previous);
+  if (expectKey === 'error' && !type.isUndefined(findAnsweredCall({ steps, index }))) {
+    return undefined;
+  }
   if (!INTERACTION_STEP_KEYS.includes(previousKey)) {
     return `Step "expect.${expectKey}" must directly follow an interaction step (${INTERACTION_STEP_KEYS.join(
       ', '
-    )}), ${FOLLOWS_INTERACTION[expectKey]}. Received it after ${
-      type.isUndefined(previousKey) ? 'the start of the journey' : `a "${previousKey}" step`
-    }.`;
+    )}), ${FOLLOWS_INTERACTION[expectKey]}. Received it after ${describePrevious(previousKey)}.`;
   }
   return undefined;
 }
@@ -599,6 +764,9 @@ function validateStepParams({ key, params }) {
       return undefined;
     case 'expect':
       return validateExpect(params);
+    case 'call':
+    case 'request':
+      return validateCall({ key, params });
     default:
       return undefined;
   }
@@ -612,9 +780,7 @@ function validateJourneySteps({ steps }) {
     return { error: `runJourney requires "steps" to be an array. Received ${describe(steps)}.` };
   }
   for (let index = 0; index < steps.length; index += 1) {
-    const message =
-      validateStep(steps[index]) ??
-      validatePlacement({ step: steps[index], previous: steps[index - 1] });
+    const message = validateStep(steps[index]) ?? validatePlacement({ steps, index });
     if (!type.isUndefined(message)) {
       return { error: `Step ${index}: ${message}` };
     }
@@ -622,5 +788,5 @@ function validateJourneySteps({ steps }) {
   return {};
 }
 
-export { INTERACTION_STEP_KEYS, STEP_KEYS, TARGET_KEYS, getStepKey };
+export { CALL_STEP_KEYS, INTERACTION_STEP_KEYS, STEP_KEYS, TARGET_KEYS, getStepKey };
 export default validateJourneySteps;

@@ -15,12 +15,12 @@
 */
 
 import { isMountEventName, type } from '@lowdefy/helpers';
-import { getStepKey, normaliseBlockId } from '@lowdefy/node-utils';
+import { CALL_STEP_KEYS, getStepKey, normaliseBlockId } from '@lowdefy/node-utils';
 
 import describeStep from './describeStep.js';
 import isAssertionStep from './isAssertionStep.js';
 
-const ACTION_STEPS = ['click', 'open', 'press', 'back', 'goto'];
+const ACTION_STEPS = ['click', 'open', 'press', 'back', 'goto', ...CALL_STEP_KEYS];
 const INPUT_STEPS = ['fill', 'select'];
 
 function targetBlockId(step) {
@@ -31,14 +31,14 @@ function targetBlockId(step) {
   return type.isObject(target) && type.isString(target.blockId) ? target.blockId : null;
 }
 
-// Whether the action step must be followed by an assertion. goto and back
-// always must. A click or open whose target ran no Lowdefy event (a Tabs
+// Whether the action step must be followed by an assertion. goto, back, call
+// and request always must. A click or open whose target ran no Lowdefy event (a Tabs
 // header, a Collapse panel) only changes what is on screen, and the next
 // step's target fails if it did not, so it is exempt. With no blockId or no
 // measured path, it is checked strictly.
 function mustAssert({ step, exercisedEntry }) {
   const key = getStepKey(step);
-  if (key === 'goto' || key === 'back') {
+  if (key === 'goto' || key === 'back' || CALL_STEP_KEYS.includes(key)) {
     return true;
   }
   const blockId = targetBlockId(step);

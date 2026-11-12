@@ -81,6 +81,7 @@ import compileSegments from './journeyCompiler/compileSegments.js';
 import countTextTokens from './journeyEvidence/countTextTokens.js';
 import normaliseClickText from './journeyText/normaliseClickText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import findStepNeedingPage from './journeyGrammar/findStepNeedingPage.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
@@ -98,6 +99,7 @@ import formatSessionReport from './sessionLog/formatSessionReport.js';
 import summariseSessions from './sessionLog/summariseSessions.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
+  CALL_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,
   STEP_KEYS,
@@ -134,6 +136,7 @@ export {
   findAvailablePort,
   findPlaceholderStep,
   findPnpmWorkspaceRoot,
+  findStepNeedingPage,
   formatSessionLog,
   formatSessionReport,
   findWorkspacePackages,
@@ -193,6 +196,7 @@ export {
   writeFileAtomic,
   watchOwner,
   writeFileIfChanged,
+  CALL_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,
   JOURNEY_STEP_SCHEMAS,

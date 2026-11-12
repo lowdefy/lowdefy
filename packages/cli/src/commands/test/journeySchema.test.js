@@ -116,7 +116,7 @@ test('journeySchema rejects an unknown step key', () => {
   const result = validateJourney({ journey });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
   );
 });
 
@@ -411,4 +411,76 @@ test.each(['../x', 'Staging', '-x', ''])('journeySchema refuses data %j', (data)
   const result = validateJourney({ journey: { ...minimalJourney, data } });
   expect(result.valid).toBe(false);
   expect(result.message).toMatch('Journey "data" should be a data set name');
+});
+
+test('journeySchema accepts a journey with no pageId whose steps all run without a page', () => {
+  expect(
+    validateJourney({
+      journey: {
+        name: 'a client of A is refused B ticket',
+        data: 'support-company-scope',
+        user: 'client_a',
+        steps: [
+          {
+            call: {
+              endpoint: 'tickets-add-comment',
+              payload: { ticket_id: 'T-TEST-B-0001', comment: { content: { html: '<p>x</p>' } } },
+            },
+          },
+          { expect: { status: 404 } },
+          { expect: { error: 'Ticket not found.' } },
+          { request: { pageId: 'ticket', requestId: 'get_ticket', as: 'none' } },
+          { expect: { status: 401 } },
+          { as: 'client_b' },
+          { wait: 100 },
+          { expect: { calls: { endpoint: 'tickets-add-comment', count: 1 } } },
+          { expect: { calls: { request: 'get_ticket', pageId: 'ticket', response: null } } },
+          {
+            expect: {
+              db: { collection: 'log-events', match: { ticket_ids: 'T-TEST-B-0001' }, count: 0 },
+            },
+          },
+        ],
+      },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('journeySchema refuses a journey with no pageId at the first step that needs a page', () => {
+  expect(
+    validateJourney({
+      journey: {
+        name: 'page-less',
+        steps: [
+          { call: { endpoint: 'orders-cancel' } },
+          { expect: { status: 403 } },
+          { click: 'cancel_button' },
+          { expect: { visible: 'cancelled' } },
+        ],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey should have required property "pageId": step 2 (click "cancel_button") needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.',
+  });
+  expect(
+    validateJourney({
+      journey: {
+        name: 'page-less',
+        steps: [
+          { call: { endpoint: 'orders-cancel' } },
+          { expect: { calls: { request: 'get_order', count: 0 } } },
+        ],
+      },
+    }).message
+  ).toContain('step 1 (expect: { calls }) needs a page.');
+  expect(
+    validateJourney({
+      journey: {
+        name: 'page-less',
+        steps: [{ wait: { state: 'loaded' } }, { expect: { status: 200 } }],
+      },
+    }).message
+  ).toContain('Step 1: Step "expect.status" must follow a "call" or "request" step');
 });
