@@ -1,0 +1,31 @@
+# V3: MCP View Without OAuth Provider
+# ===================================
+# Tests that a view needs auth.oauthProvider, also on a public tool, which
+# builds without it when it has no view.
+#
+# Expected errors:
+#   [Config Error] MCP views require "auth.oauthProvider". ...
+
+lowdefy: local
+
+api:
+  - id: open_task
+    type: Api
+    description: Open a task.
+    payloadSchema:
+      type: object
+      properties:
+        key:
+          type: string
+    routine: []
+
+mcp:
+  endpoints:
+    - id: open_task
+      scope: mcp:read
+      view:
+        pageId: home
+
+pages:
+  - id: home
+    type: Box

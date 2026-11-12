@@ -1393,6 +1393,11 @@
     },
     "configured": false,
     "hasPublicTool": false,
+    "views": {
+      "configured": false,
+      "pages": {},
+      "sources": []
+    },
     "~k": "39"
   },
   "menus.json": {

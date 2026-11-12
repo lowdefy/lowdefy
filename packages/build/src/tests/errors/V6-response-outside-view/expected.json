@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errorContains": [
+        "_response can only be used in the \"pathParams\" and \"urlQuery\" of an MCP endpoint \"view\".",
+        "lowdefy.yaml:40",
+        "lowdefy.yaml:62"
+      ]
+    }
+  ]
+}

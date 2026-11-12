@@ -43,6 +43,7 @@ import buildIconContext from './build/icons/buildIconContext.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
 import buildMcp from './build/buildMcp.js';
+import buildMcpViews from './build/buildMcpViews.js';
 import buildMenu from './build/buildMenu.js';
 import buildMobile from './build/buildMobile/buildMobile.js';
 import buildMobileAppEvents from './build/buildMobile/buildMobileAppEvents.js';
@@ -82,6 +83,8 @@ import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
 import validateDeprecatedStyles from './build/validateDeprecatedStyles.js';
+import validateMcpResponseOperator from './build/validateMcpResponseOperator.js';
+import validateMcpViews from './build/validateMcpViews.js';
 import validateRenderNotificationSteps from './build/validateRenderNotificationSteps.js';
 import validateRequestTimeout from './build/validateRequestTimeout.js';
 import writeAgents from './build/writeAgents.js';
@@ -231,6 +234,13 @@ async function build(options) {
     // After buildPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
     tryBuildStep(buildMobileAppEvents, 'buildMobileAppEvents', { components, context });
+    // After the pages: a view names a page, and _response is refused outside a view.
+    tryBuildStep(validateMcpViews, 'validateMcpViews', { components, context });
+    tryBuildStep(validateMcpResponseOperator, 'validateMcpResponseOperator', {
+      components,
+      context,
+    });
+    tryBuildStep(buildMcpViews, 'buildMcpViews', { components, context });
     // Every type is counted by now, and buildJs has not yet replaced the
     // counted objects with copies.
     const { pending: pluginChecksPending } = await runPluginChecks({ components, context });

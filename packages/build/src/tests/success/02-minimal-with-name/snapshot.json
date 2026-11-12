@@ -764,6 +764,11 @@
     },
     "configured": false,
     "hasPublicTool": false,
+    "views": {
+      "configured": false,
+      "pages": {},
+      "sources": []
+    },
     "~k": "1f"
   },
   "menus.json": {
