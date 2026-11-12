@@ -28,6 +28,12 @@ import http from 'node:http';
 import { vi, afterAll, beforeAll, expect, test } from 'vitest';
 import * as mongodb from 'mongodb';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 // The adapter keeps its client for the process lifetime, so the test records
 // every client it creates and closes them afterwards.
 const clients = [];
@@ -175,6 +181,7 @@ async function setup({ organizations, twoFactor, trustEmail, database: reuse }) 
   const logger = createLogger();
   let auth;
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta: { name: 'Test App', slug: 'test-app' },
     authJson: {
       configured: true,

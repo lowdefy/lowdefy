@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import path from 'node:path';
+
 import { getBetterAuth } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
@@ -23,6 +26,10 @@ import authJson from '../../build/auth.js';
 import createSystemContext from './createSystemContext.js';
 import lowdefyConfig from '../../build/config.js';
 import providers from '../../../build/plugins/auth/providers.js';
+
+// Read from disk at startup, as the other build artifacts are (lib/build). The
+// auth config reads views.configured from it: whether the app has a view.
+const mcpJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'build/mcp.json'), 'utf8'));
 
 // Returns the BetterAuth instance (memoized in @lowdefy/api), or null when
 // auth is not configured. dev: true relaxes cookies for plain-http localhost
@@ -38,6 +45,7 @@ function getAuth({ logger }) {
     createSystemContext,
     dev: true,
     logger,
+    mcpJson,
     plugins: { adapters, providers },
     secrets: getSecretsFromEnv(),
   });

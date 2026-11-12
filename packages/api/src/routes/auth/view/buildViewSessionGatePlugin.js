@@ -44,16 +44,23 @@ function readBearerHeaders({ cookieName, headers }) {
 
 // The session BetterAuth resolves from these headers, read by its own session
 // endpoint, so the cookie is parsed, unquoted, decoded and verified exactly as
-// every endpoint behind the gate would read it. Read from the database, never
-// the cookie cache, and without refreshing it.
-async function readSession({ ctx, headers }) {
+// every endpoint behind the gate would read it, and never refreshed.
+//
+// useCookieCache lets the read be answered from the session cookie cache when
+// the app has it on, as the endpoint behind the gate would be. That is as
+// strict as the database for the view mark: the cache is signed with the auth
+// secret, BetterAuth uses it only when its token is the session cookie's, and
+// it holds the session's additional fields, the view mark among them (only a
+// field declared returned: false is left out, and the mark is not). A request
+// with no cache cookie, or a stale one, is read from the database.
+async function readSession({ ctx, headers, useCookieCache }) {
   const result = await getSession()({
     context: ctx,
     headers,
     method: 'GET',
     asResponse: false,
     returnHeaders: true,
-    query: { disableCookieCache: true, disableRefresh: true },
+    query: { disableCookieCache: !useCookieCache, disableRefresh: true },
   });
   return result?.response ?? null;
 }
@@ -90,19 +97,24 @@ function buildViewSessionGatePlugin() {
   return {
     id: 'lowdefy-view-session-gate',
     async onRequest(request, ctx) {
+      // The cookie is what every signed-in browser sends on every /api/auth
+      // request, so it is read the way the endpoint reads it, through the
+      // cookie cache. The bearer is read from the database: a bearer never
+      // comes with a cache cookie of its own, and one sent beside it belongs to
+      // the cookie's session.
       const candidates = [];
       if (request.headers.has('cookie')) {
-        candidates.push(request.headers);
+        candidates.push({ headers: request.headers, useCookieCache: true });
       }
       const bearerHeaders = readBearerHeaders({
         cookieName: ctx.authCookies.sessionToken.name,
         headers: request.headers,
       });
       if (bearerHeaders !== null) {
-        candidates.push(bearerHeaders);
+        candidates.push({ headers: bearerHeaders, useCookieCache: false });
       }
-      for (const headers of candidates) {
-        const session = await readSession({ ctx, headers });
+      for (const { headers, useCookieCache } of candidates) {
+        const session = await readSession({ ctx, headers, useCookieCache });
         if (session?.session?.view === true) {
           ctx.logger.debug(
             `View session "${session.session.id}" refused on ${new URL(request.url).pathname}.`

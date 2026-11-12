@@ -21,6 +21,12 @@ import createAsMetadataHandler from './createAsMetadataHandler.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 import { getAsIssuer } from '../mcp/getMcpUri.js';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 // Contract test against the installed @better-auth/oauth-provider and cimd
 // releases: constructs a real BetterAuth instance from the assembled options
 // (memory adapter - no database) and asserts the mounted authorization-server
@@ -55,6 +61,7 @@ function createLogger() {
 
 function createAuth({ dynamicClientRegistration = false } = {}) {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta: { name: 'Test App', slug: 'test-app' },
     authJson: {
       configured: true,
