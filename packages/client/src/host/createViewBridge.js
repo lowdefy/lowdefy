@@ -38,8 +38,12 @@ function createViewBridge({ view }) {
   const { host } = view;
 
   // The view's address: the page path and query, starting with "/", with no
-  // origin and no basePath.
+  // origin and no basePath. A client that loads a newer build leaves the
+  // address it was showing for the next one to start at (setResumePath).
   function getViewPath() {
+    if (type.isString(view.resumePath)) {
+      return view.resumePath;
+    }
     const address = view.toolResult?._meta?.[VIEW_ADDRESS_META_KEY];
     if (!type.isString(address?.path) || !address.path.startsWith('/')) {
       throw new Error(`The tool result carries no "${VIEW_ADDRESS_META_KEY}" address in _meta.`);
@@ -83,6 +87,9 @@ function createViewBridge({ view }) {
     sendMessage: ({ text }) => host.sendMessage({ text }),
     setBoot: (boot) => {
       view.boot = boot;
+    },
+    setResumePath: (path) => {
+      view.resumePath = path;
     },
     showFallback: ({ message } = {}) => view.showFallback({ message }),
   };

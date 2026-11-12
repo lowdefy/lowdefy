@@ -18,37 +18,23 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 
 import Client from '@lowdefy/client';
 import createRouter from '@lowdefy/client/adapters/createRouter.js';
+import createWebHost from '@lowdefy/client/host/createWebHost.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
 import recordCallerStamp from '@lowdefy/client/recordCallerStamp.js';
 import shouldReloadForBuild from '@lowdefy/client/shouldReloadForBuild.js';
 import shouldReloadForCaller from '@lowdefy/client/shouldReloadForCaller.js';
-import { buildPagePath } from '@lowdefy/helpers';
 
 import blockMetas from '../build/plugins/blockMetas.json';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 import appMeta from '../build/appMeta.json';
 
+import getFetchPath from './getFetchPath.js';
 import getShownPage from './getShownPage.js';
 import loadAllIcons from './loadAllIcons.js';
 import loadPageTypes from './loadPageTypes.js';
 import types from './types.js';
-
-// The path to fetch for a navigation. The app root shows the home page, and
-// /api/page/ with an empty path matches no page, so it fetches the home page's
-// own path.
-function getFetchPath({ path, rootConfig }) {
-  if (path !== '') {
-    return path;
-  }
-  const { home, pagePaths } = rootConfig;
-  return buildPagePath({
-    pageId: home.pageId,
-    path: pagePaths[home.pageId],
-    pathParams: home.pathParams,
-  });
-}
 
 // Replaces lib/client/Page.js. The first page renders from the config
 // embedded in the HTML; SPA navigations fetch /api/page/<path> and swap the
@@ -71,11 +57,12 @@ function Page({ auth, config, lowdefy }) {
   if (!routerRef.current) {
     const router = createRouter({ basePath: config.basePath ?? '', window });
     routerRef.current = {
+      host: createWebHost({ router, window }),
       router,
       Link: createLinkComponent({ router }),
     };
   }
-  const { router, Link } = routerRef.current;
+  const { host, router, Link } = routerRef.current;
 
   // Temporary sequence guard for the superseded-navigation race: a slow
   // response for an abandoned navigation must not paint over a newer one.
@@ -168,6 +155,7 @@ function Page({ auth, config, lowdefy }) {
         pageConfig: page.pageConfig,
         rootConfig: config.rootConfig,
       }}
+      host={host}
       jsMap={jsMap}
       loadAllIcons={loadAllIcons}
       lowdefy={lowdefy}

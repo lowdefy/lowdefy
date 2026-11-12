@@ -112,3 +112,9 @@ test('createViewBridge replaces the boot answer on the loader object', () => {
   expect(bridge.getBoot()).toBe(boot);
   expect(view.boot).toBe(boot);
 });
+
+test('createViewBridge starts at the address the previous client left, over the tool result', () => {
+  const view = createFakeViewLoader({ path: '/tasks/1' });
+  createViewBridge({ view }).setResumePath('/tasks/2?tab=files');
+  expect(createViewBridge({ view }).getViewPath()).toBe('/tasks/2?tab=files');
+});
