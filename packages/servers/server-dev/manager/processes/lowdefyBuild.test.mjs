@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import v8 from 'node:v8';
+import vm from 'node:vm';
+
 import { vi, expect, test } from 'vitest';
 
 const mockShallowBuild = vi.fn();
@@ -207,6 +210,30 @@ test('lowdefyBuild starts a build only after the previous one has finished', asy
   await Promise.all([first, second]);
 
   expect(events).toEqual(['first start', 'first end', 'second start']);
+});
+
+// The build runs in a function of its own so that, once it returns, the only
+// thing left that could hold the result is the queue.
+async function buildAndForget(build) {
+  const result = { components: { pages: [] }, pageRegistry: {}, context: { warnings: [] } };
+  mockShallowBuild.mockResolvedValueOnce(result);
+  await build();
+  // The mock records every value it resolved to.
+  mockShallowBuild.mockClear();
+  return new globalThis.WeakRef(result);
+}
+
+test('lowdefyBuild does not hold the result of a finished build in its queue', async () => {
+  v8.setFlagsFromString('--expose-gc');
+  const gc = vm.runInNewContext('gc');
+  const build = lowdefyBuild(createContext());
+
+  const result = await buildAndForget(build);
+  // A WeakRef keeps its target until the job that made it ends.
+  await new Promise((resolve) => setImmediate(resolve));
+  gc();
+
+  expect(result.deref()).toBeUndefined();
 });
 
 test('lowdefyBuild runs the next build after a failed one', async () => {
