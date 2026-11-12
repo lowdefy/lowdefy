@@ -3421,9 +3421,6 @@ importers:
         specifier: 3.7.0
         version: 3.7.0
     devDependencies:
-      '@babel/core':
-        specifier: 7.29.13
-        version: 7.29.13
       '@lowdefy/ajv':
         specifier: 7.2.0
         version: link:../ajv
