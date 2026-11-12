@@ -40,7 +40,7 @@ class DangerousMarkdown extends React.Component {
           className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
         >
           <ReactMarkdown remarkPlugins={[gfm]} rehypePlugins={[rehypeRaw]} skipHtml={false}>
-            {DOMPurify.sanitize(this.props.properties.content, this.DOMPurifyOptions)}
+            {DOMPurify.sanitize(properties.content, this.DOMPurifyOptions)}
           </ReactMarkdown>
         </div>
       </div>

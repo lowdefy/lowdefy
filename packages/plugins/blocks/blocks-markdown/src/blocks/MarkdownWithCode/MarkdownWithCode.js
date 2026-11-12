@@ -37,7 +37,9 @@ import markdown from 'react-syntax-highlighter/dist/cjs/languages/hljs/markdown.
 import handlebars from 'react-syntax-highlighter/dist/cjs/languages/hljs/handlebars.js';
 
 // Handle CJS/ESM interop: webpack gives { default: fn }, Turbopack may give fn directly.
-const lang = (m) => m.default || m;
+function lang(m) {
+  return m.default || m;
+}
 
 SyntaxHighlighter.registerLanguage('handlebars', lang(handlebars));
 SyntaxHighlighter.registerLanguage('nunjucks', lang(handlebars));
@@ -77,7 +79,7 @@ function makeComponents(isDark) {
   };
 }
 
-const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => {
+function MarkdownWithCode({ blockId, classNames, properties, styles }) {
   const { token } = antdTheme.useToken();
   // Ant Design dark algorithm sets colorBgBase to '#000' or '#141414'.
   // Parse the hex value and check if it's below mid-brightness.
@@ -99,6 +101,6 @@ const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => {
       </div>
     </div>
   );
-};
+}
 
 export default withBlockDefaults(MarkdownWithCode);
