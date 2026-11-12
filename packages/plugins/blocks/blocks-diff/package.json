@@ -53,7 +53,7 @@
     "@lowdefy/block-utils": "7.2.0",
     "@lowdefy/helpers": "7.2.0",
     "dayjs": "1.11.23",
-    "diff": "5.2.2",
+    "diff": "9.0.0",
     "microdiff": "1.6.0",
     "pluralize": "8.0.0",
     "yaml": "2.9.1"

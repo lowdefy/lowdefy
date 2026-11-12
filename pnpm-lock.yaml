@@ -1156,8 +1156,8 @@ importers:
         specifier: 1.11.23
         version: 1.11.23
       diff:
-        specifier: 5.2.2
-        version: 5.2.2
+        specifier: 9.0.0
+        version: 9.0.0
       microdiff:
         specifier: 1.6.0
         version: 1.6.0
