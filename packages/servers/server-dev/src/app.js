@@ -52,6 +52,7 @@ import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import noStore from './middleware/noStore.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
+import refuseViewSession from './middleware/refuseViewSession.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
@@ -199,6 +200,8 @@ function createApp() {
   }
 
   app.use('/api/*', apiContext());
+  // The dev server serves no MCP App views, so a view session is refused on every route below.
+  app.use('/api/*', refuseViewSession());
   // Responses that carry the caller's data are never stored by a browser or proxy cache,
   // as in the production server. /api/root is the dev form of the root config the
   // production page embeds. The page routes use the same middleware.
