@@ -16,13 +16,14 @@
 
 // Collects what fails while a headless page runs: the server's faults ('server'), the errors the
 // client's handleError takes ('client') and the client logger's errors ('logger'). The runner's
-// invariants read it after each step, as the browser runner reads the page's errors.
+// invariants read it after each step, as the browser runner reads the page's errors. A server
+// fault carries the call it came from ({ pageId, requestId, endpointId }).
 function createErrorSink() {
   const errors = [];
   return {
     errors,
-    add: ({ error, source }) => {
-      errors.push({ error, source });
+    add: ({ call, error, source }) => {
+      errors.push({ call, error, source });
     },
   };
 }

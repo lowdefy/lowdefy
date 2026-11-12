@@ -32,9 +32,11 @@ import toEntry from './toEntry.js';
 //   action-error;
 // - an error the client's handleError or logger took is a client-error, unless it is an expected
 //   outcome (a UserError, an auth refusal) or one the server already logged (handled);
-// - a fault the server logged for a call is a server-error.
-// take({ pageId }) closes the window, opens the next and returns its app-error findings.
-function createAppErrorWindows({ configDirectory, errorSink }) {
+// - a fault the server logged for a call is a server-error, or an environment finding when
+//   usesSearchStage(entry) says its request or endpoint uses a search stage.
+// take({ pageId, withEmits }) closes the window, opens the next and returns its app-error
+// findings; withEmits false judges only its errors, as the browser judges a page's open.
+function createAppErrorWindows({ configDirectory, errorSink, usesSearchStage }) {
   const emits = [];
   let emitStart = 0;
   // The host's sink outlives a journey: only what this journey caused is judged.
@@ -52,21 +54,21 @@ function createAppErrorWindows({ configDirectory, errorSink }) {
     });
   }
 
-  async function take({ pageId }) {
-    const windowEmits = emits.slice(emitStart);
+  async function take({ pageId, withEmits = true }) {
+    const windowEmits = withEmits ? emits.slice(emitStart) : [];
     const windowErrors = errorSink.errors.slice(errorStart);
     emitStart = emits.length;
     errorStart = errorSink.errors.length;
     const clientEntries = windowErrors
       .filter(({ source }) => source === 'client' || source === 'logger')
       .filter(({ error }) => !isExpectedError(error) && error?.handled !== true)
-      .map(({ error }) => toEntry(error));
+      .map((entry) => toEntry(entry));
     const serverEntries = windowErrors
       .filter(({ source }) => source === 'server')
-      .map(({ error }) => toEntry(error));
+      .map((entry) => toEntry(entry));
     const drafts = [
       ...(await findActionErrors({ emits: windowEmits, resolveSource: async () => null })),
-      ...findErrorEntries({ clientEntries, serverEntries }),
+      ...findErrorEntries({ clientEntries, serverEntries, usesSearchStage }),
     ];
     return keyFindings({ configDirectory, drafts, pageId }).filter(isAppErrorFinding);
   }

@@ -33,7 +33,8 @@ import createSinkLogger from './createSinkLogger.js';
 //   the app is recorded as leaving it.
 // - displayMessage: each message is recorded.
 // - handleError and the logger: errors go to the host's error sink.
-// - an action only a browser can carry out is a stub that tells onBrowserOnly its type.
+// - an action only a browser can carry out is a stub that tells onBrowserOnly why the journey
+//   needs the browser.
 // Every completed event's trace payload goes to onTrace, as a browser journey's step observer
 // reads them. Returns { globals, lowdefy, appContext }.
 function createActorClient({ actor, host, onBrowserOnly, onTrace, plugins, rootConfig, router }) {
@@ -51,7 +52,10 @@ function createActorClient({ actor, host, onBrowserOnly, onTrace, plugins, rootC
         Object.entries(plugins.actions).map(([actionType, action]) => [
           actionType,
           browserOnlyActions.has(actionType)
-            ? createBrowserActionStub({ actionType, onCall: onBrowserOnly })
+            ? createBrowserActionStub({
+                actionType,
+                onCall: () => onBrowserOnly(`${actionType} needs the browser.`),
+              })
             : action,
         ])
       ),

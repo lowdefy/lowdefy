@@ -17,8 +17,11 @@
 import { getStepKey } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
+import checkFillTarget from './checkFillTarget.js';
 import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
+import waitForRequestCall from './waitForRequestCall.js';
+import waitForShownBlock from './waitForShownBlock.js';
 
 const STEP_RUNNER_KEYS = ['click', 'fill', 'select', 'press', 'wait'];
 
@@ -33,9 +36,40 @@ function readGoto(goto) {
 // `as` or the current actor, and resolve the answer the expect steps after them read; expect
 // checks the engine, the answer or the data (runHeadlessExpect). Resolves the answer of a call or
 // request, and undefined for any other step.
-async function runHeadlessStep({ actors, answer, host, step, stepTimeout }) {
+//
+// Before a block step acts, its block must be shown, as the browser waits for a visible target.
+// A click on a block with no onClick of its own is left to the browser, where it lands on a
+// control inside the block: the step marks the journey browser-only (actor.browserOnly). A fill
+// is refused where the browser's would be (checkFillTarget). wait.request waits for a call made
+// since the last interaction: `since` is the actor's call count when that window opened.
+async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout }) {
   const key = getStepKey(step);
   const actor = actors.current();
+  if (key === 'click') {
+    const block = await waitForShownBlock({ actor, target: step.click, timeout: stepTimeout });
+    if (!Object.hasOwn(block.Events.events, 'onClick')) {
+      actor.browserOnly.push(
+        `Block "${block.blockId}" has no onClick: in a browser a click on it lands on a control inside it.`
+      );
+      return undefined;
+    }
+  }
+  if (key === 'fill') {
+    const block = await waitForShownBlock({ actor, target: step.fill, timeout: stepTimeout });
+    checkFillTarget({ block, value: step.fill.value });
+  }
+  if (key === 'select') {
+    await waitForShownBlock({ actor, target: step.select, timeout: stepTimeout });
+  }
+  if (key === 'wait' && type.isString(step.wait.request)) {
+    await waitForRequestCall({
+      actor,
+      requestId: step.wait.request,
+      since: since.get(actor) ?? 0,
+      timeout: stepTimeout,
+    });
+    return undefined;
+  }
   if (STEP_RUNNER_KEYS.includes(key)) {
     await actor.stepRunner.run({ step });
     await actor.settle();

@@ -15,10 +15,11 @@
 */
 
 import startJourneyFixture from '../../../../../scripts/lib/startJourneyFixture.mjs';
+import buildParityFixture from './buildParityFixture.mjs';
 
-// Starts apps/journey-fixture once for every fixture test file, and hands its
-// url to the test workers through the environment they inherit. With no
-// Chromium every test skips.
+// Starts apps/journey-fixture once for every fixture test file, builds it for
+// the headless parity check, and hands both to the test workers through the
+// environment they inherit. With no Chromium every test skips.
 let fixture;
 
 export async function setup() {
@@ -33,6 +34,13 @@ export async function setup() {
   process.env.LOWDEFY_JOURNEY_FIXTURE_URL = fixture.url;
   process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY = fixture.configDirectory;
   process.env.LOWDEFY_JOURNEY_FIXTURE_DATABASE_URI = fixture.uri;
+  // The headless side of every journey's parity check (checkParity.mjs) runs on a production
+  // build. The dev server's headless host can take its place once it exists.
+  if (process.env.LOWDEFY_JOURNEY_PARITY !== 'off') {
+    process.env.LOWDEFY_JOURNEY_FIXTURE_PARITY_SERVER = await buildParityFixture({
+      configDirectory: fixture.configDirectory,
+    });
+  }
 }
 
 export async function teardown() {

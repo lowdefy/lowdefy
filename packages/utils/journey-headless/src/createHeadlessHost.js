@@ -35,6 +35,10 @@ import { type } from '@lowdefy/helpers';
  *   the server does, in process.
  * @property {Object} dataSession The data the calls run on: a test-utils session
  *   (collection, settled, reset).
+ * @property {string|null} dataSetName The data set the data was loaded from, or null for none.
+ * @property {(name: string) => (Object|null)} readArtifact A build artifact by its path in the
+ *   build ("routes.json", "pages/home.json", "api/notify.json"), deserialized, or null when the
+ *   build has none: what the runner checks a step's ids against.
  * @property {(args: { collection: string, connectionId?: string, match: Object }) =>
  *   Promise<Object[]>} findDocuments The documents `match` finds in a collection of the data's
  *   database (the connection's, or the only one), in _id order, as JSON values, for expect.db.
@@ -80,9 +84,11 @@ const HOST_KEYS = [
   'call',
   'close',
   'dataSession',
+  'dataSetName',
   'errorSink',
   'findDocuments',
   'loadClientPlugins',
+  'readArtifact',
   'readPageConfig',
   'resolveUser',
   'rootConfig',

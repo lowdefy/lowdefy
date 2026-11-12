@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
-import { buildPagePath } from '@lowdefy/helpers';
+import fs from 'node:fs';
+import path from 'node:path';
+
+import { buildPagePath, serializer } from '@lowdefy/helpers';
 import { openTestApp } from '@lowdefy/test-utils';
 import { headlessCalls } from '@lowdefy/test-utils/headless';
 
 import createErrorSink from './createErrorSink.js';
 import createHeadlessHost from './createHeadlessHost.js';
 import loadClientPlugins from './loadClientPlugins.js';
+
+const NOT_FOUND_PATH = '404';
 
 // A headless host on a production build, through @lowdefy/test-utils: the build is checked
 // (missing, another Lowdefy version, older than the config) and the app's secrets are taken out of
@@ -38,6 +43,11 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
     const matchedPath =
       path ?? buildPagePath({ pageId, path: rootConfig.pagePaths?.[pageId], pathParams });
     const page = await calls.readPage({ path: matchedPath, urlQuery, user: pageUser ?? user });
+    // The page route sends a page that does not exist, and one the caller may not open, to the
+    // not-found page, so neither reveals which it was.
+    if (['not_found', 'unauthorized'].includes(page.status) && matchedPath !== NOT_FOUND_PATH) {
+      return readPageConfig({ path: NOT_FOUND_PATH, urlQuery: {}, user: pageUser });
+    }
     if (page.status !== 'ok') {
       throw new Error(
         `Page "${pageId ?? matchedPath}" did not open: the page route answered "${page.status}".`
@@ -51,6 +61,14 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
     };
   }
 
+  function readArtifact(name) {
+    const filePath = path.join(calls.buildDirectory, name);
+    if (!fs.existsSync(filePath)) {
+      return null;
+    }
+    return serializer.deserialize(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+  }
+
   return createHeadlessHost({
     call: ({ actionId, blockId, endpointId, kind, pageId, payload, requestId, user: caller }) =>
       calls.call({
@@ -62,6 +80,7 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
         user: caller ?? user,
       }),
     close: () => app.close(),
+    dataSetName: calls.dataSetName,
     dataSession: session,
     errorSink: createErrorSink(),
     findDocuments: calls.findDocuments,
@@ -69,6 +88,7 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
       clientPlugins = clientPlugins ?? loadClientPlugins({ buildDirectory: calls.buildDirectory });
       return clientPlugins;
     },
+    readArtifact,
     readPageConfig,
     resolveUser: (pageUser) => calls.resolveUser(pageUser ?? user),
     rootConfig,
