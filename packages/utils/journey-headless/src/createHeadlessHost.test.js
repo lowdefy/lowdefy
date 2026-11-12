@@ -27,6 +27,7 @@ const host = {
   readPageConfig: () => undefined,
   resolveUser: () => null,
   rootConfig: {},
+  userNames: [],
 };
 
 test('createHeadlessHost returns a host with every part', () => {

@@ -24,10 +24,11 @@ import { type } from '@lowdefy/helpers';
  * @typedef {Object} HeadlessHost
  * @property {Object} rootConfig The root config the page route sends with every page, as JSON,
  *   for the host's user: home, menus, pagePaths, app events, global, theme, i18n.
- * @property {(args: { pageId: string, pathParams?: Object, urlQuery?: Object, user?: * }) =>
- *   Promise<{ pageConfig: Object, pathParams: Object, matchedPath: string }>} readPageConfig
- *   The page's config as the page route sends it (JSON, serialized form) to the user, which
- *   defaults to the host's. Throws when the user may not open the page.
+ * @property {(args: { pageId?: string, path?: string, pathParams?: Object, urlQuery?: Object,
+ *   user?: * }) => Promise<{ pageConfig: Object, pageId: string, pathParams: Object,
+ *   matchedPath: string }>} readPageConfig The page's config as the page route sends it (JSON,
+ *   serialized form) to the user, which defaults to the host's: by pageId and pathParams, or by
+ *   path (no leading "/"), as a followed link names it. Throws when the user may not open it.
  * @property {() => Promise<ClientPlugins>} loadClientPlugins The client plugins the build wrote:
  *   { actions, operators, jsMap, blockMetas }. No block components.
  * @property {(args: HostCall) => Promise<HostAnswer>} call Runs a page request or an endpoint as
@@ -38,6 +39,7 @@ import { type } from '@lowdefy/helpers';
  *   run's invariants.
  * @property {(user?: *) => (Object|null)} resolveUser The user object a page renders for a user
  *   as calls take one, the host's user by default; null for a signed-out caller.
+ * @property {string[]} userNames The data set's users by name, whom an `as` step can switch to.
  * @property {() => Promise<void>} close Releases what the host holds.
  */
 
@@ -80,6 +82,7 @@ const HOST_KEYS = [
   'readPageConfig',
   'resolveUser',
   'rootConfig',
+  'userNames',
 ];
 
 // Checks a host against the shape above, so a host that misses a part fails where it is made,

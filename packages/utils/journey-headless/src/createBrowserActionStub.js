@@ -15,9 +15,11 @@
 */
 
 // Stands in for an action a headless page cannot carry out. The engine wraps what it throws in an
-// ActionError, with the action's config location.
-function createBrowserActionStub(actionType) {
+// ActionError, with the action's config location. onCall, when given, is told the action's type
+// first, so a runner can mark its journey browser-only rather than failed.
+function createBrowserActionStub({ actionType, onCall }) {
   function BrowserActionStub() {
+    onCall?.(actionType);
     throw new Error(`${actionType} needs the browser.`);
   }
   return BrowserActionStub;

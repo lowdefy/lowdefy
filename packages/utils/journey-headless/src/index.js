@@ -17,5 +17,6 @@
 import createBuildHost from './createBuildHost.js';
 import createHeadlessHost from './createHeadlessHost.js';
 import openHeadlessPage from './openHeadlessPage.js';
+import runHeadlessJourney from './runHeadlessJourney.js';
 
-export { createBuildHost, createHeadlessHost, openHeadlessPage };
+export { createBuildHost, createHeadlessHost, openHeadlessPage, runHeadlessJourney };

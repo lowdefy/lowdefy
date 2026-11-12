@@ -14,23 +14,14 @@
   limitations under the License.
 */
 
-// The router a headless page navigates with: it records each navigation and goes nowhere. Link
-// and the auth methods push through it; following a push to the next page is the runner's.
-function createRecordingRouter() {
-  const navigations = [];
+// An error the error sink took, as an error entry the shared invariants read
+// ({ message, name, source }).
+function toEntry(error) {
   return {
-    basePath: '',
-    navigations,
-    back: () => {
-      navigations.push({ method: 'back' });
-    },
-    push: (target) => {
-      navigations.push({ method: 'push', ...target });
-    },
-    replace: (target) => {
-      navigations.push({ method: 'replace', ...target });
-    },
+    message: error?.message ?? String(error),
+    name: error?.name ?? null,
+    source: error?.source ?? null,
   };
 }
 
-export default createRecordingRouter;
+export default toEntry;
