@@ -14,11 +14,12 @@ built endpoints and requests as a named user, on an in-memory MongoDB, and read 
 It gives a test level below journeys, for logic, permissions and writes, which need no browser.
 [testing.md](../testing.md#test-levels) says which level proves what.
 
-| Export       | Holds                                                                                                 | Used by                          |
-| ------------ | ----------------------------------------------------------------------------------------------------- | -------------------------------- |
-| `.`          | `openTestApp`: the access table and endpoint test sessions                                            | an app's tests                   |
-| `./assert`   | `assertEquals`, `assertMatches` and matchers, with no imports beyond Node                             | an app's tests, under any runner |
-| `./dataSets` | the data store, data sessions, the `tests/data` loaders and the gate connections pass under a session | `@lowdefy/server-dev` (journeys) |
+| Export       | Holds                                                                                                   | Used by                          |
+| ------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `.`          | `openTestApp`: the access table and endpoint test sessions                                              | an app's tests                   |
+| `./assert`   | `assertEquals`, `assertMatches` and matchers, with no imports beyond Node                               | an app's tests, under any runner |
+| `./dataSets` | the data store, data sessions, the `tests/data` loaders and the gate connections pass under a session   | `@lowdefy/server-dev` (journeys) |
+| `./headless` | `headlessCalls(session)`: a page's reads and calls on a session, as the page route and client send them | `@lowdefy/journey-headless`      |
 
 ## Decisions it is built on
 
