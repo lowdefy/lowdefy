@@ -62,3 +62,55 @@ test.describe('TiptapInput Block', () => {
     await expect(editor).toContainText('hello from test');
   });
 });
+
+// imageSrc can point at a link that answers only once the content is saved. Until then the editor
+// shows the pasted file itself, while the value keeps the stable src.
+test.describe('TiptapInput image preview', () => {
+  const KEY = 'uploads/photo.png';
+  const STABLE_SRC = `/e2e-unsaved-image/${KEY}`;
+
+  test.beforeEach(async ({ page }) => {
+    await page.route('**/api/request/tiptap-input/upload_policy', (route) =>
+      route.fulfill({
+        json: {
+          id: 'upload_policy',
+          success: true,
+          response: { method: 'PUT', url: '/e2e-upload', key: KEY, bucket: 'e2e' },
+        },
+      })
+    );
+    await page.route('**/e2e-upload', (route) => route.fulfill({ status: 200 }));
+    await page.route('**/e2e-unsaved-image/**', (route) => route.fulfill({ status: 404 }));
+    await navigateToTestPage(page, 'tiptap-input');
+  });
+
+  test('a pasted image shows from the file while the value keeps the stable src', async ({
+    page,
+  }) => {
+    const editor = editorLocator(page, 'tiptap_upload');
+    await editor.click();
+    await editor.evaluate(async (element) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 160;
+      canvas.height = 100;
+      const context = canvas.getContext('2d');
+      context.fillStyle = '#1677ff';
+      context.fillRect(0, 0, 160, 100);
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+      const clipboardData = new DataTransfer();
+      clipboardData.items.add(new File([blob], 'photo.png', { type: 'image/png' }));
+      element.dispatchEvent(
+        new ClipboardEvent('paste', { clipboardData, bubbles: true, cancelable: true })
+      );
+    });
+
+    const img = editor.locator('img');
+    await expect(img).toHaveAttribute('src', /^blob:/);
+    await expect.poll(() => img.evaluate((el) => el.complete && el.naturalWidth)).toBe(160);
+    await expect(editor.locator('a')).toHaveAttribute('href', STABLE_SRC);
+
+    const savedHtml = page.locator('#tiptap_upload_html');
+    await expect(savedHtml).toContainText(`src="${STABLE_SRC}"`);
+    await expect(savedHtml).not.toContainText('blob:');
+  });
+});

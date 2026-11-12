@@ -290,3 +290,33 @@ test.describe('Table features shared with TableLight', () => {
     await expect(visible.first()).toHaveText(/Won|Lost/);
   });
 });
+
+test.describe('Table row measuring', () => {
+  test('a row whose reported height alternates by 1px settles', async ({ page }) => {
+    const depthErrors = [];
+    page.on('console', (message) => {
+      if (/Maximum update depth|error #185/.test(message.text())) depthErrors.push(message.text());
+    });
+    // Fractional row heights round to either neighbouring pixel depending on the row's position,
+    // so each read of a measured row answers the other pixel.
+    await page.addInitScript(() => {
+      const native = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight');
+      const reads = new WeakMap();
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        get() {
+          const height = native.get.call(this);
+          if (this.dataset.measureKey === undefined) return height;
+          const read = (reads.get(this) ?? 0) + 1;
+          reads.set(this, read);
+          return height + (read % 2);
+        },
+      });
+    });
+    await openTablePage(page, 'table-features');
+    await expect(bodyRows(page, 'tf_wrap')).toHaveCount(3);
+    const shortRow = await row(page, 'tf_wrap', 1).boundingBox();
+    const longRow = await row(page, 'tf_wrap', 2).boundingBox();
+    expect(longRow.height).toBeGreaterThan(shortRow.height);
+    expect(depthErrors).toEqual([]);
+  });
+});

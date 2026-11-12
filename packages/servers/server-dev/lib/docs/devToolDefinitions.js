@@ -69,7 +69,7 @@ const dataSchema = z
 // Shared by every tool that names a page instance: a page whose `path` has
 // placeholders has one instance per set of values.
 const pathParamsSchema = z
-  .record(z.union([z.string(), z.number()]))
+  .record(z.string(), z.union([z.string(), z.number()]))
   .optional()
   .describe(
     'Values for the placeholders of a page whose path has them, read by _path_params, e.g. {"space": "support", "ticket_id": "1234"} for path "tickets/{space}/{ticket_id}" (lowdefy_app_map shows each page\'s path). Required to open such a page headless; a missing placeholder is an error naming it.'
@@ -128,7 +128,10 @@ const devToolDefinitions = {
     inputSchema: {
       pageId: z.string().describe('The page the request is defined on.'),
       requestId: z.string().describe('The request id.'),
-      payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
+      payload: z
+        .record(z.string(), z.any())
+        .optional()
+        .describe('Test payload for _payload operators.'),
       user: userSchema,
       data: dataSchema,
       saveResponse: saveResponseSchema,
@@ -141,7 +144,10 @@ const devToolDefinitions = {
       CALLER_NOTE,
     inputSchema: {
       endpointId: z.string().describe('The Api endpoint id.'),
-      payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
+      payload: z
+        .record(z.string(), z.any())
+        .optional()
+        .describe('Test payload for _payload operators.'),
       user: userSchema,
       data: dataSchema,
       system: z
@@ -223,13 +229,13 @@ const devToolDefinitions = {
         ),
       pathParams: pathParamsSchema,
       urlQuery: z
-        .record(z.any())
+        .record(z.string(), z.any())
         .optional()
         .describe(
           'Query params to open the page with, read by _url_query, e.g. {"framework": "popia"}.'
         ),
       steps: z
-        .array(z.record(z.any()))
+        .array(z.record(z.string(), z.any()))
         .optional()
         .describe(
           'Steps run in order after the page settles and before the capture, the same steps as lowdefy_run_journey (lowdefy_get_schema kind "journey-step" gives the grammar), e.g. [{"open": "status"}] to capture an open dropdown or [{"click": "add"}] for a modal. A {"screenshot": name} step captures an earlier state too. If a step fails the screenshot still returns, showing where it stopped.'
@@ -278,12 +284,12 @@ const devToolDefinitions = {
 
   lowdefy_run_journey: {
     description:
-      'Drive a page of the running dev server headless through declarative steps and assert what happens - the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. A step that fails stops the journey and comes back as data (passed: false, failure with index, step, expected, actual and message, later steps skipped), never as a tool error. A journey also fails at the step that raises an app error (an action error that is not a user error, an uncaught page error, a server error or 5xx): failure.kind "app-error" with errors [{kind, message, source, configKey}]. A failed Validate, a Throw action and 401/403 refusals never count; {"expect": {"error": text}} straight after an interaction claims an intended error. Returns the final page state (see state) and any screenshots, as images after the JSON.' +
+      'Drive a page of the running dev server headless through declarative steps and assert what happens - the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. A step that fails stops the journey and comes back as data (passed: false, failure with index, step, expected, actual and message, later steps skipped), never as a tool error. A journey also fails at the step that raises an app error (an action error that is not a user error, an uncaught page error, a server error or 5xx): failure.kind "app-error" with errors [{kind, message, source, configKey}]. failure.kind "dev-server" means the dev server lost its web server and the request got no answer, so the result says nothing about the app: check the dev server log and run it again. A failed Validate, a Throw action and 401/403 refusals never count; {"expect": {"error": text}} straight after an interaction claims an intended error. Returns the final page state (see state) and any screenshots, as images after the JSON.' +
       CALLER_NOTE,
     inputSchema: {
       pageId: z.string().describe('The page id to open.'),
       steps: z
-        .array(z.record(z.any()))
+        .array(z.record(z.string(), z.any()))
         .describe(
           'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
         ),
@@ -306,13 +312,13 @@ const devToolDefinitions = {
           'A data set in tests/data/<name>.yaml: the journey runs on a fresh in-memory MongoDB database loaded with it, so it may write freely, and user and "as" can name its users. Format: lowdefy_get_doc testing/journey-data-sets.'
         ),
       pathParams: z
-        .record(z.string())
+        .record(z.string(), z.string())
         .optional()
         .describe(
           'Values for the placeholders of the page\'s path, read by _path_params, e.g. {"space": "support", "ticket_id": "1"} for path "{space}/tickets/{ticket_id}".'
         ),
       urlQuery: z
-        .record(z.any())
+        .record(z.string(), z.any())
         .optional()
         .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
       timeout: z

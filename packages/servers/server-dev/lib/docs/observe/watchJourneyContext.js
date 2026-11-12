@@ -68,6 +68,7 @@ function watchJourneyContext({ context, events, origin, basePath }) {
       url: response.url(),
       method: response.request().method(),
       status: response.status(),
+      childState: response.headers()['x-lowdefy-child'] ?? null,
     });
   });
 }

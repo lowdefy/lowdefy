@@ -30,6 +30,7 @@ const createSetGlobal = ({ arrayIndices, context }) => {
     // SetGlobal with nothing to set is used to refresh the page (SetLocale does), so it stays a
     // full pass.
     if (changes.length === 0) {
+      context._internal.RootSlots.markAllForRender();
       context._internal.update();
       return;
     }

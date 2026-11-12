@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/docs",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -43,7 +43,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/helpers": "7.1.0",
+    "@lowdefy/helpers": "7.2.0",
     "minisearch": "^7.0.0",
     "yaml": "2.9.0"
   },

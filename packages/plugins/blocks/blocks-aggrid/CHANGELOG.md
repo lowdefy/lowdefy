@@ -1,5 +1,39 @@
 # Change Log
 
+## 7.2.0
+
+### Patch Changes
+
+- dc785ea: fix(blocks-aggrid): Long cell text ends in an ellipsis
+
+  Text wider than its column was cut off mid-word in every AgGrid block. It now ends in "…" in plain
+  columns, `cellRenderer` columns (plain text, or HTML mixing elements and text), `link` cells and
+  checkbox or row-drag columns. Text nested deeper inside other cell types is still clipped without
+  "…".
+
+  A cell holding only text (no renderer) now lays out as a block instead of a flex container, so it
+  aligns with `text-align`. `cell.align` sets it, and a column's own `cellStyle.justifyContent` and
+  `cellStyle.alignItems` are mapped to `textAlign` and `alignContent`, so existing columns keep their
+  alignment. Flex alignment set through `cellClass` CSS or `defaultColDef.cellStyle` no longer applies
+  to plain-text cells; use `textAlign` there.
+
+- Updated dependencies [02842fe]
+- Updated dependencies [d143e29]
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [0f0cd03]
+- Updated dependencies [a461f7c]
+- Updated dependencies [fcea703]
+- Updated dependencies [b1d42ca]
+- Updated dependencies [962ac05]
+- Updated dependencies [0dd2e9d]
+  - @lowdefy/blocks-antd@7.2.0
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/block-utils@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

@@ -9,7 +9,7 @@ Websockets work identically on a self-hosted Node.js server and on Vercel, where
 A channel and a page subscription — this page shows a live tick counter:
 
 ```yaml
-lowdefy: 7.1.0
+lowdefy: 7.2.0
 
 websockets:
   - id: ticker
@@ -38,7 +38,7 @@ When the page loads, the client opens a websocket connection, subscribes to `tic
 
 1. A page with `subscriptions` mounts. The client opens one shared WebSocket connection to the Lowdefy server (lazily — apps without websockets never connect).
 2. For each subscription, the client evaluates the subscription `payload` (client-side operators like `_state`) and sends a subscribe frame.
-3. The server authorizes the subscription against the channel's `auth` config, then evaluates the websocket `properties` server-side — `_payload` reads the subscription payload and `_user` reads the subscriber's session, so a channel can be user-specific.
+3. The server authorizes the subscription against the channel's `auth` config and, when the websocket has a `check`, calls the check endpoint as the subscriber. It then evaluates the websocket `properties` server-side — `_payload` reads the subscription payload and `_user` reads the subscriber's session, so a channel can be user-specific.
 4. Subscribers whose evaluated properties are identical share one running source on the server. The first subscriber starts it; the last one to leave stops it.
 5. Messages from the source are pushed to all subscribers, update the channel state read by the [`_websocket`](/websocket-subscriptions) operator, and fire the subscription's `onMessage` event.
 
@@ -52,6 +52,9 @@ Websockets are defined in the top-level `websockets` array:
 - `type: string`: __Required__ - The websocket type. `Channel` and `Interval` ship with Lowdefy; connection plugins provide types like [`MongoDBChangeStream`](/MongoDB).
 - `connectionId: string`: The `id` of a [connection](/connections) for connection-backed types.
 - `properties: object`: Settings for the type. __Operators are evaluated server-side per subscription__ — `_secret`, `_user`, and `_payload` are available.
+- `check: object`: An [API endpoint](/api-endpoints) that decides whether this caller may hear, or publish to, the channel. It runs on every subscribe and publish, and once a minute while a subscription stays open. See [Securing Channels](#securing-channels).
+  - `endpointId: string`: __Required__ - The `Api` or `InternalApi` endpoint to call. The build fails when the app has no endpoint with this id.
+  - `payload: object`: The payload sent to the endpoint, evaluated server-side with `_payload`, `_user` and `_secret`. Defaults to the subscription payload.
 
 ###### A user-specific channel:
 ```yaml
@@ -94,6 +97,55 @@ auth:
 Unauthorized subscriptions receive the same response as subscriptions to channels that do not exist.
 
 An open connection follows the session. The server checks the caller again on every subscribe and at least once a minute. When the user signs out, the session ends, the membership is removed, the roles change or the user switches organization, the server closes the connection and the client reconnects straight away as the current caller. Subscriptions the current caller may not hold fail as they would on a freshly loaded page.
+
+### Checking access to a record
+
+Roles decide who may hear a channel at all. A channel whose payload names a record, such as the events on one ticket, also needs to know whether this subscriber may see that ticket. A pipeline filter can not answer that, since it only sees the change event, so give the websocket a `check`: an endpoint that answers from your own data.
+
+```yaml
+api:
+  - id: can-view-ticket
+    type: InternalApi
+    routine:
+      - id: ticket
+        type: MongoDBFindOne
+        connectionId: tickets
+        properties:
+          query:
+            _id:
+              _payload: ticket_id
+            $or:
+              - author_id:
+                  _user: id
+              - subscriber_ids:
+                  _user: id
+      - :return:
+          _ne:
+            - _step: ticket
+            - null
+
+websockets:
+  - id: ticket_events
+    type: MongoDBChangeStream
+    connectionId: events
+    check:
+      endpointId: can-view-ticket
+      payload:
+        ticket_id:
+          _payload: ticket_id
+    properties:
+      pipeline:
+        - $match:
+            fullDocument.ticket_id:
+              _payload: ticket_id
+```
+
+- The endpoint runs as the subscriber, with the same `_user`, roles and organization as a request from that session.
+- Only a return value of exactly `true` lets the subscription continue. Any other value, an error, or an endpoint the subscriber may not call refuses it with the same response as a channel that does not exist. An error in the check or the endpoint is also logged.
+- The check runs on every subscribe: the first one, the resubscribe after a reconnect, and a [`Subscribe`](/websocket-publish) with a new payload. It runs again at least once a minute while a subscription stays open, so revoking access ends a running subscription within a minute: the subscription gets the refusal as an error and no further messages. Each open subscription calls the endpoint once a minute, so keep the check cheap.
+- The check is not part of the channel identity. Subscribers whose evaluated `properties` match still share one running source, and each is checked on their own.
+- A publish is checked too, with an empty payload, since a publish evaluates the websocket `properties` without one. A check that reads the payload therefore refuses every publish, and a check that does not, such as membership of a group, decides who may publish as well as who may hear.
+- A module websocket names its own endpoint with [`_module.endpointId`](/_module).
 
 ## What's Next
 

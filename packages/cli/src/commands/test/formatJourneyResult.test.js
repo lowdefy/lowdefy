@@ -373,6 +373,32 @@ test('formatJourneyResult prints what the step found when it failed beside an ap
   ]);
 });
 
+test('formatJourneyResult prints a dev server failure as its own line, not an app error', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'opens home',
+        filePath: '/app/tests/journeys/home.yaml',
+        passed: false,
+        failure: {
+          index: 2,
+          step: { goto: 'home' },
+          kind: 'dev-server',
+          message: 'Step 2 (goto) lost the dev server: dev-server: POST /api/x got no answer.',
+          expected: 'the dev server to answer',
+          actual: ['dev-server: POST /api/x got no answer.'],
+          errors: [{ kind: 'dev-server', message: 'POST /api/x got no answer.' }],
+        },
+      },
+    })
+  ).toEqual([
+    'FAIL  opens home',
+    '      file: /app/tests/journeys/home.yaml',
+    '      step 2: { goto: home }',
+    '      dev-server  POST /api/x got no answer.',
+  ]);
+});
+
 test('formatJourneyResult prints an app error raised while the page opened as on open', () => {
   const failure = {
     phase: 'open',

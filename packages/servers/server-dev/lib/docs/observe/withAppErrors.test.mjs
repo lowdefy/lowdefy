@@ -66,6 +66,27 @@ test('withAppErrors fails a step that passed with the app errors its window held
   });
 });
 
+test('withAppErrors reports a dev-server finding as a dev server failure, not an app error', () => {
+  const failure = withAppErrors({
+    findings: [
+      {
+        kind: 'dev-server',
+        message: 'POST /api/request/home/get_user got no answer from the app.',
+      },
+    ],
+    index: 2,
+    step: { goto: 'home' },
+  });
+  expect(failure).toEqual(
+    expect.objectContaining({
+      kind: 'dev-server',
+      expected: 'the dev server to answer',
+      message:
+        'Step 2 (goto) lost the dev server: dev-server: POST /api/request/home/get_user got no answer from the app.',
+    })
+  );
+});
+
 test('withAppErrors leads with the app error when the step also failed on its own', () => {
   const failure = withAppErrors({
     failure: { index: 0, step: { click: 'save' }, message: 'Expected text "Saved".' },

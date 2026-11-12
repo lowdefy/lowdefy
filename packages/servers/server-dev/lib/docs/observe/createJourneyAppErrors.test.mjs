@@ -56,10 +56,11 @@ function createContext() {
         failure: () => ({ errorText: 'net::ERR_ABORTED' }),
       });
     },
-    respond({ url, status }) {
+    respond({ url, status, headers = {} }) {
       listeners.response({
         url: () => url,
         status: () => status,
+        headers: () => headers,
         request: () => ({ method: () => 'POST' }),
       });
     },
@@ -136,6 +137,19 @@ test('an unexplained 5xx from an app API route fails the step as request-failed'
     during: () => context.respond({ url: `${origin}/api/request/orders/save`, status: 500 }),
   });
   expect(findings.map((finding) => finding.kind)).toEqual(['request-failed']);
+});
+
+test('a 502 the proxy answered itself fails the step as dev-server, not request-failed', async () => {
+  const findings = await runStepWindow({
+    step: { click: 'save' },
+    during: () =>
+      context.respond({
+        url: `${origin}/api/request/orders/save`,
+        status: 502,
+        headers: { 'x-lowdefy-child': 'dropped' },
+      }),
+  });
+  expect(findings.map((finding) => finding.kind)).toEqual(['dev-server']);
 });
 
 test.each([

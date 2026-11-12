@@ -22,6 +22,12 @@ import { timeout } from 'hono/timeout';
 // timeout signal (which apiContext folds into context.signal) cancels the upstream
 // calls the handler is waiting on, such as an AI provider call, instead of letting
 // them run, and bill, after the response has gone.
+//
+// The 504 has no body. The handler runs on after the 504 is sent, on the same context:
+// a header set on it then, by the middleware around the handler or by the handler
+// itself (c.redirect sets one), makes hono rebuild the sent 504 from its body. Sending
+// it has already read that body, so the rebuild throws. A response with no body
+// rebuilds safely. The client reads any 504 as a timeout.
 function requestTimeout({ timeoutMs }) {
   return function requestTimeoutMiddleware(c, next) {
     const controller = new AbortController();
@@ -30,7 +36,7 @@ function requestTimeout({ timeoutMs }) {
       controller.abort(
         new DOMException(`The request timeout of ${timeoutMs}ms was exceeded.`, 'TimeoutError')
       );
-      return new HTTPException(504, { message: 'Gateway Timeout' });
+      return new HTTPException(504, { res: new Response(null, { status: 504 }) });
     })(c, next);
   };
 }

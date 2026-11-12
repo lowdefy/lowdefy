@@ -83,6 +83,10 @@ function useRowOffsets({ api, layout, measuredColumns, rowHeight, rowHeights, ro
       const index = Number(element.dataset.rowIndex);
       const height = element.offsetHeight;
       const previous = current[index + 1] - current[index];
+      // offsetHeight snaps a fractional height to whole pixels, so a measured row can read 1px off
+      // as the window moves. Acting on that moves the window again and the measure, render chain
+      // never settles (React error #185). A row measured for the first time takes its exact height.
+      if (heights.has(key) && Math.abs(height - previous) <= 1) continue;
       heights.set(key, height);
       if (height === previous) continue;
       changes.push({ index, delta: height - previous });

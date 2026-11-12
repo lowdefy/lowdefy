@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-google-sheets",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -44,14 +44,14 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/helpers": "7.1.0",
+    "@lowdefy/helpers": "7.2.0",
     "dayjs": "1.11.20",
     "google-auth-library": "9.15.1",
     "google-spreadsheet": "5.3.0",
     "mingo": "7.2.1"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "7.1.0",
+    "@lowdefy/ajv": "7.2.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "vitest": "4.1.12"
