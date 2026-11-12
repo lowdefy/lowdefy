@@ -64,7 +64,7 @@ function createViewRouter({ basePath = '', path }) {
     const serializedQuery = serializeQuery(query);
     const entry = { pathname, search: serializedQuery === '' ? '' : `?${serializedQuery}` };
     if (replace) {
-      entries[index] = entry;
+      entries = [...entries.slice(0, index), entry, ...entries.slice(index + 1)];
     } else {
       entries = [...entries.slice(0, index + 1), entry];
       index += 1;
@@ -80,10 +80,21 @@ function createViewRouter({ basePath = '', path }) {
     notify();
   }
 
+  // A navigation that shows no page (the app refused it, or could not be
+  // reached) is undone by restoring the history as it was when the shown page
+  // was reached, so back still leads to the page before it.
+  function restore(snapshot) {
+    entries = snapshot.entries;
+    index = snapshot.index;
+    notify();
+  }
+
   return {
     basePath,
     back,
     getLocation,
+    restore,
+    snapshot: () => ({ entries, index }),
     push: async (args) => navigate(args),
     replace: async (args) => navigate({ ...args, replace: true }),
     subscribe: (listener) => {

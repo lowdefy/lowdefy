@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-// A router location ({ pathname, search }, pathname with basePath) as the
-// target push and replace take ({ pathname, query }, pathname without it).
-function getRouterTarget({ basePath, location }) {
-  return {
-    pathname: location.pathname.slice(basePath.length),
-    query: location.search.slice(1),
-  };
+// Tells the user a link could not be opened: the browser blocked the new tab,
+// or the host of an MCP App view refused to open the link.
+function showPopupBlocked({ lowdefy }) {
+  lowdefy._internal.displayMessage({
+    content: lowdefy._internal.translate('client.popupBlocked'),
+    status: 'info',
+    duration: 10,
+  });
 }
 
-export default getRouterTarget;
+export default showPopupBlocked;

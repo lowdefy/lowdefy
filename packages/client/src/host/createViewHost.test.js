@@ -31,11 +31,12 @@ function setup({ basePath = '/base', path = '/tickets/12?tab=notes', status = 20
       listened.push({ args, receiver: this });
     },
     listened,
-    document: { title: 'frame' },
+    document: { addEventListener: vi.fn(), removeEventListener: vi.fn(), title: 'frame' },
     fetch: vi.fn(async () => ({ status: fakeWindow.status, ok: fakeWindow.status === 200 })),
     innerWidth: 800,
     location: { href: 'https://sandbox.example.net/frame', origin: 'https://sandbox.example.net' },
     localStorage: { setItem: vi.fn() },
+    open: vi.fn(),
     sessionStorage: { setItem: vi.fn() },
     status,
     WebSocket: function WebSocket() {},
@@ -176,4 +177,68 @@ test('createViewHost builds the websocket URL from the absolute API path', () =>
     'wss://app.example.com/base/api/websocket'
   );
   expect(host.WebSocket).toBe(fakeWindow.WebSocket);
+});
+
+test('createViewHost window.open asks the host to open the link and never opens in the frame', () => {
+  const { fakeWindow, host, view } = setup();
+  const handle = host.globals.window.open('/base/runs?state=open', '_blank');
+  expect(handle.closed).toBe(true);
+  expect(view.host.openLink).toHaveBeenCalledWith({
+    url: 'https://app.example.com/base/runs?state=open',
+  });
+  expect(fakeWindow.open).not.toHaveBeenCalled();
+});
+
+test('createViewHost hands the host http and https URLs only', async () => {
+  const { fakeWindow, host, view } = setup();
+  const { location, open } = host.globals.window;
+  ['javascript:alert(1)', 'data:text/html,x', 'file:///etc/passwd'].forEach((url) => {
+    expect(open(url, '_blank')).toBeNull();
+    location.assign(url);
+    location.replace(url);
+  });
+  await expect(host.view.openLink({ url: 'javascript:alert(1)' })).resolves.toBe(false);
+  expect(view.host.openLink).not.toHaveBeenCalled();
+  expect(fakeWindow.open).not.toHaveBeenCalled();
+});
+
+test('createViewHost resolves a relative link against the view address', async () => {
+  const { host, view } = setup();
+  await host.view.openLink({ url: '?tab=files' });
+  expect(view.host.openLink).toHaveBeenCalledWith({
+    url: 'https://app.example.com/base/tickets/12?tab=files',
+  });
+});
+
+test('createViewHost tells the link listeners when the host refuses a link', async () => {
+  const { host, view } = setup();
+  view.host.openLink.mockResolvedValueOnce({ isError: true });
+  const listener = vi.fn();
+  const stopListening = host.view.onLinkRefused(listener);
+  await expect(host.view.openLink({ url: 'https://other.example.org/' })).resolves.toBe(false);
+  expect(listener).toHaveBeenCalledWith({ url: 'https://other.example.org/' });
+  stopListening();
+  view.host.openLink.mockResolvedValueOnce({ isError: true });
+  await host.view.openLink({ url: 'https://other.example.org/' });
+  expect(listener).toHaveBeenCalledTimes(1);
+});
+
+test('createViewHost captures the frame links only while asked to, and puts window.open back', () => {
+  const { fakeWindow, host, view } = setup();
+  const frameOpen = fakeWindow.open;
+  expect(fakeWindow.document.addEventListener).not.toHaveBeenCalled();
+
+  const stopCapture = host.view.captureLinks();
+  expect(fakeWindow.document.addEventListener).toHaveBeenCalledWith('click', expect.any(Function));
+  expect(fakeWindow.open).not.toBe(frameOpen);
+  fakeWindow.open('https://other.example.org/');
+  expect(view.host.openLink).toHaveBeenCalledWith({ url: 'https://other.example.org/' });
+  expect(frameOpen).not.toHaveBeenCalled();
+
+  stopCapture();
+  expect(fakeWindow.open).toBe(frameOpen);
+  expect(fakeWindow.document.removeEventListener).toHaveBeenCalledWith(
+    'click',
+    expect.any(Function)
+  );
 });

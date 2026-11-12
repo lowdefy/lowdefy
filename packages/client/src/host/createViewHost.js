@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import captureViewLinks from './captureViewLinks.js';
 import createMemoryStore from './createMemoryStore.js';
 import createMemoryTokenStore from './createMemoryTokenStore.js';
 import createViewLocation from './createViewLocation.js';
+import createViewOpenLink from './createViewOpenLink.js';
 import createViewSession from './createViewSession.js';
 import createViewWindow from './createViewWindow.js';
 
@@ -41,16 +43,24 @@ function createListeners() {
 //   sandbox origin.
 // - globals.window.location is the view's address on the app's origin, kept in
 //   the router, not the frame's location.
+// - A link out of the view is opened in the browser by the host, never by the
+//   frame: globals.window.open and location.assign go through openLink, which
+//   hands over http: and https: URLs only (createViewOpenLink).
 // - Nothing reloads the frame: its document is the host's cached loader. A
 //   build or caller change is told to whoever listens on host.view, which the
 //   view entry does.
 //
 // host.view is what a view adds to the host contract:
 //   bridge                    the host bridge (createViewBridge)
+//   captureLinks()            catches anchor clicks and window.open in the frame
+//                             (captureViewLinks); returns a function that stops it
 //   fetchApi(path, init)      a signed-in fetch of an API path such as '/api/user'
 //   onBuildChange(listener)   ({ serverBuildId }) the app runs another build
 //   onCallerChange(listener)  (stamp) the app answered as another caller
+//   onLinkRefused(listener)   ({ url }) the host did not open a link
 //   onReload(listener)        () the page asked for a reload
+//   openLink({ url })         opens a link in the browser; resolves to true when
+//                             the host opened it
 //   isEnded()                 true once the view has shown its fallback
 // Each on* returns a function that stops the listener.
 function createViewHost({ bridge, router, window }) {
@@ -79,8 +89,12 @@ function createViewHost({ bridge, router, window }) {
     tokenStore,
   });
 
+  // A relative link is one of the app's: its base is the view's address.
+  const getLinkBase = () => location.href;
+  const links = createViewOpenLink({ bridge, getBase: getLinkBase });
+
   const location = createViewLocation({
-    openUrl: (url) => bridge.openLink({ url }),
+    openUrl: (url) => links.openLink({ url }),
     origin: bridge.appOrigin,
     reload: () => reloadListeners.call(),
     router,
@@ -94,7 +108,7 @@ function createViewHost({ bridge, router, window }) {
       document: window.document,
       // The Fetch action's fetch: never signed in with the view's session.
       fetch: (input, init) => window.fetch(input, init),
-      window: createViewWindow({ location, window }),
+      window: createViewWindow({ location, open: links.openWindow, window }),
     },
     onBuildChanged: ({ serverBuildId } = {}) => {
       if (!ended) {
@@ -114,12 +128,21 @@ function createViewHost({ bridge, router, window }) {
     tokenStore,
     view: {
       bridge,
+      captureLinks: () =>
+        captureViewLinks({
+          getBase: getLinkBase,
+          openLink: links.openLink,
+          openWindow: links.openWindow,
+          window,
+        }),
       end,
       fetchApi: session.fetchApi,
       isEnded: () => ended,
       onBuildChange: buildListeners.add,
       onCallerChange: callerListeners.add,
+      onLinkRefused: links.onRefused,
       onReload: reloadListeners.add,
+      openLink: links.openLink,
     },
     get WebSocket() {
       return window.WebSocket;
