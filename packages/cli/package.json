@@ -47,7 +47,6 @@
     "@lowdefy/node-utils": "7.2.0",
     "@modelcontextprotocol/sdk": "1.32.2",
     "@vercel/nft": "1.11.1",
-    "axios": "1.21.1",
     "commander": "15.1.0",
     "semver": "7.8.6",
     "tar": "7.5.22",
