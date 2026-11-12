@@ -31,6 +31,30 @@ function sortRefMap(refMap) {
   return sorted;
 }
 
+// A key map entry holds strings, numbers, null and true, which JSON.stringify
+// writes as the serializer does, without a replacer call for every value of a
+// large app's million entries. The exception is an entry whose ignored checks
+// (i) are a list: the list is the config's own array, and the serializer also
+// writes the markers the array carries. Those entries are swapped for their
+// serialized form while the key map is written.
+function stringifyKeyMap({ keyMap }) {
+  const ids = Object.keys(keyMap).filter((id) => {
+    const checks = keyMap[id].i;
+    return checks !== undefined && checks !== true;
+  });
+  const entries = ids.map((id) => keyMap[id]);
+  ids.forEach((id) => {
+    keyMap[id] = serializer.serialize(keyMap[id]);
+  });
+  try {
+    return JSON.stringify(keyMap);
+  } finally {
+    ids.forEach((id, index) => {
+      keyMap[id] = entries[index];
+    });
+  }
+}
+
 async function writeMaps({ context }) {
   if (!type.isObject(context.keyMap)) {
     throw new Error('keyMap is not an object.');
@@ -38,7 +62,7 @@ async function writeMaps({ context }) {
   if (!type.isObject(context.refMap)) {
     throw new Error('refMap is not an object.');
   }
-  const keyMapString = serializer.serializeToString(context.keyMap);
+  const keyMapString = stringifyKeyMap({ keyMap: context.keyMap });
   const refMapString = serializer.serializeToString(sortRefMap(context.refMap));
   const writes = [
     context.writeBuildArtifact('keyMap.json', keyMapString),

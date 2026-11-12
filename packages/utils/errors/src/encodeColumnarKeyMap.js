@@ -59,18 +59,29 @@ function encodeColumnarKeyMap({ keyMap }) {
     };
   }
 
+  // A large app's key map has a million entries, and reading one from it by id
+  // is the slow step, so each entry is read once and kept for the second loop.
+  const entries = new Array(ids.length);
+  const idNumbers = new Array(ids.length);
   const numbers = new Map();
   let base = Infinity;
   let top = -Infinity;
-  for (const id of ids) {
-    const quotedId = JSON.stringify(id);
+  for (let position = 0; position < ids.length; position += 1) {
+    const id = ids[position];
     const number = idToNumber(id);
     if (number === null) {
-      throw new Error(`Key map id ${quotedId} is not a base-36 counter id, so it has no column.`);
+      throw new Error(
+        `Key map id ${JSON.stringify(id)} is not a base-36 counter id, so it has no column.`
+      );
     }
-    if (keyMap[id].s === undefined) {
-      throw new Error(`Key map entry ${quotedId} is not in the short shape, so it has no column.`);
+    const entry = keyMap[id];
+    if (entry.s === undefined) {
+      throw new Error(
+        `Key map entry ${JSON.stringify(id)} is not in the short shape, so it has no column.`
+      );
     }
+    entries[position] = entry;
+    idNumbers[position] = number;
     numbers.set(id, number);
     base = Math.min(base, number);
     top = Math.max(top, number);
@@ -85,16 +96,19 @@ function encodeColumnarKeyMap({ keyMap }) {
   const refs = [];
   const ignoreBuildChecks = [];
 
-  for (const id of ids) {
-    const entry = keyMap[id];
-    const index = numbers.get(id) - base;
-    if (!segmentIndexes.has(entry.s)) {
-      segmentIndexes.set(entry.s, segments.length);
+  for (let position = 0; position < ids.length; position += 1) {
+    const entry = entries[position];
+    const index = idNumbers[position] - base;
+    let segmentIndex = segmentIndexes.get(entry.s);
+    if (segmentIndex === undefined) {
+      segmentIndex = segments.length;
+      segmentIndexes.set(entry.s, segmentIndex);
       segments.push(entry.s);
     }
-    segment[index] = segmentIndexes.get(entry.s);
-    if (numbers.has(entry.p)) {
-      parent[index] = numbers.get(entry.p) - base;
+    segment[index] = segmentIndex;
+    const parentNumber = numbers.get(entry.p);
+    if (parentNumber !== undefined) {
+      parent[index] = parentNumber - base;
     }
     line[index] = entry.l ?? 0;
     if (entry.r !== undefined) {
