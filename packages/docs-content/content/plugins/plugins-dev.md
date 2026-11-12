@@ -50,6 +50,26 @@ You can change your folder structure in your package, but then you need to chang
 
 To develop a block plugin, the React code needs to compiled before it can be used in the Lowdefy app. The [Lowdefy plugin example](https://github.com/lowdefy/lowdefy-example-plugins) has an example of this configured using SWC.
 
+##### React version
+
+Blocks render with the React that the Lowdefy server ships, React 19 from Lowdefy 8. Every block plugin in an app shares that one copy of React, so declare `react` and `react-dom` as peer dependencies, not dependencies:
+
+```json
+{
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  }
+}
+```
+
+React 19 removed some older APIs. A block that uses them breaks, sometimes silently:
+
+- `defaultProps` on a function component is ignored, so the props lose their defaults. Use default values in the props destructuring instead.
+- `propTypes` is ignored. String refs, legacy context (`contextTypes`, `getChildContext`), `ReactDOM.render`, `ReactDOM.hydrate`, `unmountComponentAtNode`, `findDOMNode` and `react-dom/test-utils` are removed.
+- `forwardRef` still works but is deprecated: a function component receives `ref` as a normal prop.
+- A third-party React library has to support React 19.
+
 ### types.js
 
 The `types.js` file declares the different types provided by the plugin package. This is used by the Lowdefy build process to map plugin types used in the Lowdefy config to plugin packages.
