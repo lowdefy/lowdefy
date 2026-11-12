@@ -22,14 +22,18 @@ const { default: createContentSecurityPolicy } = await import(
   '@lowdefy/api/csp/createContentSecurityPolicy.js'
 );
 const { default: addNonceToElements } = await import('@lowdefy/api/csp/addNonceToElements.js');
+const { default: darkModeScript } = await import('@lowdefy/api/html/darkModeScript.js');
+const { default: layerOrderScript } = await import('@lowdefy/api/html/layerOrderScript.js');
 
 const security = { contentSecurityPolicy: null };
 
 vi.doMock('@lowdefy/api', () => ({
   addNonceToElements,
   createContentSecurityPolicy,
+  darkModeScript,
   getPageConfig,
   getRootConfig: async () => ({ home: { configured: true, pageId: 'home', pathParams: {} } }),
+  layerOrderScript,
 }));
 vi.doMock('../../lib/build/app.js', () => ({
   default: {

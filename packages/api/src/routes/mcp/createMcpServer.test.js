@@ -41,6 +41,7 @@ const mcpJson = {
     { id: 'get-customer', scope: 'mcp:read' },
     { id: 'update-customer', scope: 'mcp:write' },
   ],
+  views: { configured: false, pages: {}, sources: [] },
 };
 
 const healthConfig = {

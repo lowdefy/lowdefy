@@ -29,6 +29,7 @@
     ".": "./dist/index.js",
     "./context/*": "./dist/context/*",
     "./csp/*": "./dist/csp/*",
+    "./html/*": "./dist/html/*",
     "./routes/*": "./dist/routes/*"
   },
   "files": [
