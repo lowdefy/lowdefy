@@ -46,7 +46,8 @@ async function runRepeated({ suite, context, item, url, repeat, recording }) {
     if (recordRun !== undefined) {
       recorded = { run: recordRun, passed: run.passed };
     }
-    if (run.refused === true) {
+    // A journey a headless run cannot take would be refused the same way every time.
+    if (run.refused === true || run.browserOnly !== undefined) {
       break;
     }
   }

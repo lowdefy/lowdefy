@@ -171,3 +171,18 @@ test('checkStepReferences accepts a block the shown page holds but the build doe
   const error = await check({ expect: { hidden: 'nosuchblock' } }, { page });
   expect(error.actual).toBe('no block "nosuchblock"');
 });
+
+test('checkStepReferences refuses a call or request as a name the data set does not have', async () => {
+  const journey = journeyWith({ dataSetUsers: { member: {}, owner: {} } });
+  const error = await check({ call: { endpoint: 'notify', as: 'membr' } }, { journey });
+  expect(error.message).toBe(
+    '"as" on the call step names "membr", but it is not a user of the data set. Known users: member, owner.'
+  );
+  expect(error.actual).toBe('no data set user "membr"');
+  const withoutData = await check({
+    request: { pageId: 'home', requestId: 'save_item', as: 'member' },
+  });
+  expect(withoutData.message).toBe(
+    '"as" on the request step names "member", but the journey declares no data set to find that user in.'
+  );
+});

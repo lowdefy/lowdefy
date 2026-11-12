@@ -697,6 +697,19 @@ program
   )
   .addOption(
     new Option(
+      '--headless',
+      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. Needs --build for now.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--build',
+      'With --headless: run on the production build (lowdefy build) in this process, with no dev server and no browser, for CI. Pass --server-directory when the build is elsewhere.'
+    )
+  )
+  .addOption(options.serverDirectory)
+  .addOption(
+    new Option(
       '--lint',
       'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 pointless as) and run nothing.'
     )

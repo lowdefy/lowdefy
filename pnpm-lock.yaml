@@ -461,12 +461,18 @@ importers:
       '@lowdefy/helpers':
         specifier: 7.2.0
         version: link:../utils/helpers
+      '@lowdefy/journey-headless':
+        specifier: 7.2.0
+        version: link:../utils/journey-headless
       '@lowdefy/logger':
         specifier: 7.2.0
         version: link:../utils/logger
       '@lowdefy/node-utils':
         specifier: 7.2.0
         version: link:../utils/node-utils
+      '@lowdefy/test-utils':
+        specifier: 7.2.0
+        version: link:../utils/test-utils
       '@modelcontextprotocol/sdk':
         specifier: 1.32.2
         version: 1.32.2(zod@4.6.7)
