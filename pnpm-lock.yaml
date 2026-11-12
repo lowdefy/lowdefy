@@ -3222,8 +3222,8 @@ importers:
         specifier: 58.0.5
         version: 58.0.5(expo@58.0.23)(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))
       expo-sharing:
-        specifier: 58.0.22
-        version: 58.0.22(expo@58.0.23)(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(typescript@7.0.2)
+        specifier: 58.0.23
+        version: 58.0.23(expo@58.0.23)(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(typescript@7.0.2)
       expo-speech:
         specifier: 58.0.4
         version: 58.0.4(expo@58.0.23)
@@ -10403,8 +10403,8 @@ packages:
     resolution: {integrity: sha512-6DBlSZwxk3J0y1j2s4XebAWNiwGaMp32NcWX7b2kJC2+EFf1g+pCcVmx8ylawt2tyLmbDHswm4MHOfrd4bqfvA==}
     engines: {node: ^22.13.0 || ^24.3.0 || ^26.0.0 || >=27.0.0}
 
-  expo-sharing@58.0.22:
-    resolution: {integrity: sha512-s9/hFsGIZR+M8xRicKKKdV5/+TVSvEHze58yu3x9962lLvxkGY1aJ4vojg1RszSTesPJaNiCg7DRA2H8f47/9w==}
+  expo-sharing@58.0.23:
+    resolution: {integrity: sha512-TRu/CM7s4caW0TcVurO49468jtHAraoRVa4et5lHWKd18/5tfFMOA3ZAxsEezBaI8ehcLXhWc9FPBSxtYY6GYQ==}
     peerDependencies:
       expo: '*'
       react: '*'
@@ -22703,7 +22703,7 @@ snapshots:
 
   expo-server@58.0.6: {}
 
-  expo-sharing@58.0.22(expo@58.0.23)(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(typescript@7.0.2):
+  expo-sharing@58.0.23(expo@58.0.23)(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@18.2.38)(react@19.3.0))(react@19.3.0)(typescript@7.0.2):
     dependencies:
       '@expo/config-plugins': 58.0.13(typescript@7.0.2)
       '@expo/config-types': 58.0.3
