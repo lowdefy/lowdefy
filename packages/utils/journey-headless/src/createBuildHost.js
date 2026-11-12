@@ -34,17 +34,21 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
   const rootConfig = await calls.readRootConfig({ user });
   let clientPlugins = null;
 
-  async function readPageConfig({ pageId, pathParams, urlQuery, user: pageUser }) {
-    const matchedPath = buildPagePath({
-      pageId,
-      path: rootConfig.pagePaths?.[pageId],
-      pathParams,
-    });
+  async function readPageConfig({ pageId, path, pathParams, urlQuery, user: pageUser }) {
+    const matchedPath =
+      path ?? buildPagePath({ pageId, path: rootConfig.pagePaths?.[pageId], pathParams });
     const page = await calls.readPage({ path: matchedPath, urlQuery, user: pageUser ?? user });
     if (page.status !== 'ok') {
-      throw new Error(`Page "${pageId}" did not open: the page route answered "${page.status}".`);
+      throw new Error(
+        `Page "${pageId ?? matchedPath}" did not open: the page route answered "${page.status}".`
+      );
     }
-    return { matchedPath, pageConfig: page.pageConfig, pathParams: page.pathParams };
+    return {
+      matchedPath,
+      pageConfig: page.pageConfig,
+      pageId: page.pageId,
+      pathParams: page.pathParams,
+    };
   }
 
   return createHeadlessHost({
@@ -67,6 +71,7 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
     readPageConfig,
     resolveUser: (pageUser) => calls.resolveUser(pageUser ?? user),
     rootConfig,
+    userNames: calls.userNames,
   });
 }
 

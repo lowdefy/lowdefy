@@ -19,10 +19,15 @@ import collectMountOrder from './collectMountOrder.js';
 // Fires what the web client's Block component fires when a page's blocks mount
 // (client/src/block/Block.js and MountEvents.js): every block's onMount, all started in mount
 // order as React runs their effects, and each block's onMountAsync once its own onMount has
-// finished, which nothing waits for. Resolves when every onMount has finished.
-async function fireMountEvents({ context }) {
+// finished, which nothing waits for. A block in `mounted` is already mounted and is left alone;
+// each block fired is added to it, so opening a Modal mounts only its content. Resolves when every
+// onMount has finished.
+async function fireMountEvents({ context, mounted = new Set(), openBlocks }) {
   const progress = () => undefined;
-  const blocks = collectMountOrder({ slots: context._internal.RootSlots });
+  const blocks = collectMountOrder({ openBlocks, slots: context._internal.RootSlots }).filter(
+    (block) => !mounted.has(block.id)
+  );
+  blocks.forEach((block) => mounted.add(block.id));
   await Promise.all(
     blocks.map(async (block) => {
       await block.triggerEvent({ name: 'onMount', progress });

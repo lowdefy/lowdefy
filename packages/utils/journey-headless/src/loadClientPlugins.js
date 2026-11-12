@@ -39,7 +39,7 @@ async function loadClientPlugins({ buildDirectory }) {
     actions: Object.fromEntries(
       Object.entries(actions.default).map(([actionType, action]) => [
         actionType,
-        browserOnlyActions.has(actionType) ? createBrowserActionStub(actionType) : action,
+        browserOnlyActions.has(actionType) ? createBrowserActionStub({ actionType }) : action,
       ])
     ),
     blockMetas,

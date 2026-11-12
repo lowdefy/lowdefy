@@ -23,7 +23,8 @@ import testSessions from '../testSessions.js';
 // The calls a page shown without a browser makes on a session openSession opened
 // (@lowdefy/journey-headless): read the root config and a page as the route sends them, and post
 // a request or an endpoint call as the page's client does. `user` takes the forms session.as()
-// takes. buildDirectory is where the client plugins the build wrote are imported from.
+// takes. buildDirectory is where the client plugins the build wrote are imported from; userNames
+// are the session's data set users.
 function headlessCalls(session) {
   const testSession = testSessions.get(session);
   if (testSession === undefined) {
@@ -51,6 +52,7 @@ function headlessCalls(session) {
     readRootConfig: ({ user }) =>
       readRootConfigAs({ testSession, user: resolveSessionUser({ testSession, user }) }),
     resolveUser: (user) => resolveSessionUser({ testSession, user }),
+    userNames: Object.keys(testSession.dataSet.users),
   };
 }
 
