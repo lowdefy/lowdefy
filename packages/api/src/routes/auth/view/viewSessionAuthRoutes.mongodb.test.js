@@ -55,6 +55,10 @@ const { default: resolveAuthentication } = await import(
   '../../../context/resolveAuthentication.js'
 );
 const { default: mintViewSession } = await import('./mintViewSession.js');
+const { default: handleMobileSignIn } = await import('../mobile/handleMobileSignIn.js');
+const { default: createMobileSignInCsrfToken } = await import(
+  '../mobile/createMobileSignInCsrfToken.js'
+);
 const { default: getCallerFingerprint } = await import('../../websocket/getCallerFingerprint.js');
 const { default: resolveWebsocketCaller } = await import(
   '../../websocket/resolveWebsocketCaller.js'
@@ -461,6 +465,39 @@ test('a request carrying an ordinary cookie and a view bearer is refused', async
   );
 });
 
+// Each is a Cookie header BetterAuth reads the session from: its parser trims
+// the name and the value, strips surrounding quotes and takes the first of two
+// cookies of one name. The gate must see what BetterAuth sees.
+test.each([
+  ['a quoted value', (name, value) => `${name}="${value}"`],
+  ['a space before the equals sign', (name, value) => `${name} =${value}`],
+  ['spaces around the value', (name, value) => `${name}=  ${value}  `],
+  ['no space after the separator', (name, value) => `theme=dark;${name}=${value};other=1`],
+  ['the value not URI-encoded', (name, value) => `${name}=${decodeURIComponent(value)}`],
+  ['a second cookie of the same name after it', (name, value) => `${name}=${value}; ${name}=x.y`],
+])('a view session sent as a cookie with %s is refused', async (label, toCookie) => {
+  const { auth, token, browser } = await setupCallers();
+  const { authCookies } = await auth.$context;
+  const name = authCookies.sessionToken.name;
+  const endpoint = { method: 'GET', path: '/list-sessions' };
+  // BetterAuth accepts this form: the same header carrying the ordinary
+  // session is served, so a gate that missed it would let the view session in.
+  const browserValue = browser.cookie
+    .split('; ')
+    .find((pair) => pair.startsWith(`${name}=`))
+    .slice(name.length + 1);
+  const ordinary = await call({
+    auth,
+    headers: { ...browserHeaders, cookie: toCookie(name, browserValue) },
+    endpoint,
+  });
+  expect(ordinary.status).toBe(200);
+
+  expectRefused(
+    await call({ auth, headers: { ...browserHeaders, cookie: toCookie(name, token) }, endpoint })
+  );
+});
+
 test('a view session on a read-and-write grant is refused on /api/auth all the same', async () => {
   const { auth, viewBearer } = await setupCallers({ grantedScopes: ['mcp:read', 'mcp:write'] });
   expectRefused(
@@ -614,4 +651,68 @@ test('the websocket caller check stops vouching for a view session that expired 
   expect(
     await resolveWebsocketCaller(context, { headers: secondHeaders, strategies: [] })
   ).toBeNull();
+});
+
+// /auth/mobile is the page a phone shell opens to sign in. It is outside /api,
+// so neither the caller resolution nor the gate above stands in front of it,
+// and it hands whoever is signed in a phone session that lasts weeks.
+test('the mobile sign-in page gives a view session no phone session, and the ordinary session one', async () => {
+  const mobile = {
+    shells: [{ id: 'field', scheme: 'com.example.field', androidAppLink: false }],
+    sessionExpiresIn: 30 * DAY,
+  };
+  const { adapter, auth, browser, user, viewBearer, viewCookie } = await setupCallers({ mobile });
+  const mobileAuthJson = { authPages: { signIn: '/login' }, mobile };
+  const challenge = 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM';
+  const search = `shell=field&state=s1&code_challenge=${challenge}&code_challenge_method=S256&platform=ios`;
+  const url = `${ORIGIN}/auth/mobile?${search}`;
+  const { secret } = await auth.$context;
+  const sessions = await findSessions({ adapter, userId: user.id });
+  const csrfFor = (session) =>
+    createMobileSignInCsrfToken({
+      params: { codeChallenge: challenge, platform: 'ios', shell: { id: 'field' }, state: 's1' },
+      secret,
+      sessionId: session.id,
+    });
+  const open = (headers) =>
+    handleMobileSignIn({
+      auth,
+      authJson: mobileAuthJson,
+      basePath: '',
+      request: new Request(url, { headers }),
+    });
+  const confirm = (headers, session) =>
+    handleMobileSignIn({
+      auth,
+      authJson: mobileAuthJson,
+      basePath: '',
+      request: new Request(url, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          host: new URL(ORIGIN).host,
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ csrf_token: csrfFor(session), decision: 'continue' }),
+      }),
+    });
+
+  const viewRow = sessions.find((session) => session.view === true);
+  for (const headers of [viewBearer, viewCookie]) {
+    const page = await open(headers);
+    expect(page.status).toBe(302);
+    expect(page.headers.get('location')).toContain('/login?callbackUrl=');
+    const confirmed = await confirm(headers, viewRow);
+    expect(confirmed.status).toBe(403);
+  }
+  expect(await findSessions({ adapter, userId: user.id })).toHaveLength(2);
+
+  const browserRow = sessions.find((session) => session.view !== true);
+  expect((await open(browser)).status).toBe(200);
+  const confirmed = await confirm(browser, browserRow);
+  expect(confirmed.status).toBe(303);
+  expect(confirmed.headers.get('location')).toContain('com.example.field://');
+  const after = await findSessions({ adapter, userId: user.id });
+  expect(after).toHaveLength(3);
+  expect(after.filter((session) => session.mobile === true)).toHaveLength(1);
 });

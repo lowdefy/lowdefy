@@ -14,43 +14,48 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { getSession } from 'better-auth/api';
+import { setRequestCookie } from 'better-auth/cookies';
 
 const VIEW_SESSION_REFUSED = 'VIEW_SESSION_REFUSED';
 
-// The session token is the part before the signature in the signed value a
-// cookie or a bearer carries. A value that is not a signed token reads as
-// itself, and names no session.
-function readToken(value) {
-  if (!type.isString(value) || value === '') {
-    return null;
-  }
-  let decoded = value;
-  try {
-    decoded = decodeURIComponent(value);
-  } catch (error) {
-    // Not URI-encoded - read as sent.
-  }
-  return decoded.split('.')[0];
-}
-
-function readBearerToken({ headers }) {
+// The request's headers as the bearer plugin would hand them to an endpoint:
+// the bearer set as the session cookie, by the function the plugin itself
+// calls. null when the request carries no bearer.
+function readBearerHeaders({ cookieName, headers }) {
   const authorization = headers.get('authorization') ?? '';
   if (authorization.slice(0, 7).toLowerCase() !== 'bearer ') {
     return null;
   }
-  return readToken(authorization.slice(7).trim());
-}
-
-function readCookieToken({ cookieName, headers }) {
-  const pair = (headers.get('cookie') ?? '')
-    .split(';')
-    .map((each) => each.trim())
-    .find((each) => each.startsWith(`${cookieName}=`));
-  if (type.isUndefined(pair)) {
+  const token = authorization.slice(7).trim();
+  if (token === '') {
     return null;
   }
-  return readToken(pair.slice(cookieName.length + 1));
+  let decoded = token;
+  try {
+    decoded = decodeURIComponent(token);
+  } catch (error) {
+    // Not URI-encoded - read as sent.
+  }
+  const bearerHeaders = new Headers(headers);
+  setRequestCookie(bearerHeaders, cookieName, decoded);
+  return bearerHeaders;
+}
+
+// The session BetterAuth resolves from these headers, read by its own session
+// endpoint, so the cookie is parsed, unquoted, decoded and verified exactly as
+// every endpoint behind the gate would read it. Read from the database, never
+// the cookie cache, and without refreshing it.
+async function readSession({ ctx, headers }) {
+  const result = await getSession()({
+    context: ctx,
+    headers,
+    method: 'GET',
+    asResponse: false,
+    returnHeaders: true,
+    query: { disableCookieCache: true, disableRefresh: true },
+  });
+  return result?.response ?? null;
 }
 
 // A view session is refused on every /api/auth path: the session read, sign
@@ -71,11 +76,13 @@ function readCookieToken({ cookieName, headers }) {
 // resolves there. A request hook (options.hooks.before) would run for that
 // read too, and runs ahead of the bearer plugin's own hook.
 //
-// The token is read from both places a session can arrive in - the bearer and
-// the session cookie, since whoever holds the signed token can send it as
-// either - and the request is refused when either names a view session. The
-// signature is not checked: a forged token that names a view session is
-// refused all the same, and the session row is the authority on the mark.
+// The gate asks BetterAuth which session the request carries rather than
+// reading the cookie itself: a second parser that disagrees with BetterAuth's
+// on one form of the header - a quoted value, a space before the equals sign -
+// would pass a session the endpoint behind it accepts. Both places a session
+// can arrive in are asked about, the session cookie and the bearer, since
+// whoever holds the signed token can send it as either, and the request is
+// refused when either is a view session.
 //
 // Registered for every app, with or without a view now: a session minted
 // before a deploy that removed the app's views must still be refused.
@@ -83,21 +90,22 @@ function buildViewSessionGatePlugin() {
   return {
     id: 'lowdefy-view-session-gate',
     async onRequest(request, ctx) {
-      const tokens = [
-        readBearerToken({ headers: request.headers }),
-        readCookieToken({
-          cookieName: ctx.authCookies.sessionToken.name,
-          headers: request.headers,
-        }),
-      ].filter((token) => token !== null);
-      for (const token of new Set(tokens)) {
-        const session = await ctx.adapter.findOne({
-          model: 'session',
-          where: [{ field: 'token', value: token }],
-        });
-        if (session?.view === true) {
+      const candidates = [];
+      if (request.headers.has('cookie')) {
+        candidates.push(request.headers);
+      }
+      const bearerHeaders = readBearerHeaders({
+        cookieName: ctx.authCookies.sessionToken.name,
+        headers: request.headers,
+      });
+      if (bearerHeaders !== null) {
+        candidates.push(bearerHeaders);
+      }
+      for (const headers of candidates) {
+        const session = await readSession({ ctx, headers });
+        if (session?.session?.view === true) {
           ctx.logger.debug(
-            `View session "${session.id}" refused on ${new URL(request.url).pathname}.`
+            `View session "${session.session.id}" refused on ${new URL(request.url).pathname}.`
           );
           return {
             response: Response.json(
