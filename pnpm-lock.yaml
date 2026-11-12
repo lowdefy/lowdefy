@@ -2170,9 +2170,6 @@ importers:
       '@lowdefy/operators':
         specifier: 7.2.0
         version: link:../../../operators
-      deep-diff:
-        specifier: 1.0.2
-        version: 1.0.2
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 7.2.0
@@ -9929,10 +9926,6 @@ packages:
     peerDependenciesMeta:
       babel-plugin-macros:
         optional: true
-
-  deep-diff@1.0.2:
-    resolution: {integrity: sha512-aWS3UIVH+NPGCD1kki+DCU9Dua032iSsO43LqQpcs4R3+dVv7tX0qBGjiVHJHjplsoUM2XRO/KB92glqc68awg==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   deep-equal@1.1.1:
     resolution: {integrity: sha512-yd9c5AdiqVcR+JjcwUQb9DkhJc8ngNr0MahEBGvDiJw8puWab2yZlh+nkasOnZP+EGTAP6rRp2JzJhJZzvNF8g==}
@@ -22618,8 +22611,6 @@ snapshots:
       mimic-response: 4.0.0
 
   dedent@1.7.2: {}
-
-  deep-diff@1.0.2: {}
 
   deep-equal@1.1.1:
     dependencies:
