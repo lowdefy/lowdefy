@@ -977,9 +977,9 @@ importers:
       '@rc-component/motion':
         specifier: 1.3.3
         version: 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      classnames:
-        specifier: 2.5.1
-        version: 2.5.1
+      clsx:
+        specifier: 2.1.1
+        version: 2.1.1
       dayjs:
         specifier: 1.11.23
         version: 1.11.23
@@ -9136,9 +9136,6 @@ packages:
 
   cjs-module-lexer@2.2.0:
     resolution: {integrity: sha512-4bHTS2YuzUvtoLjdy+98ykbNB5jS0+07EvFNXerqZQJ89F7DI6ET7OQo/HJuW6K0aVsKA9hj9/RVb2kQVOrPDQ==}
-
-  classnames@2.5.1:
-    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
 
   clean-webpack-plugin@4.0.0:
     resolution: {integrity: sha512-WuWE1nyTNAyW5T7oNyys2EN0cfP2fdRxhxnIQWiAp0bMabPdHhoGxM8A6YL2GhqwgrPnnaemVE7nv5XJ2Fhh2w==}
@@ -21269,8 +21266,6 @@ snapshots:
   ci-info@4.5.0: {}
 
   cjs-module-lexer@2.2.0: {}
-
-  classnames@2.5.1: {}
 
   clean-webpack-plugin@4.0.0(webpack@5.112.2):
     dependencies:

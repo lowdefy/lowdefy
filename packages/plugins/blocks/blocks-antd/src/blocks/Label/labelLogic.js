@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import getLabelCol from './getLabelCol.js';
 import getLabelThemeStyle from './getLabelThemeStyle.js';
 import getWrapperCol from './getWrapperCol.js';
@@ -50,7 +50,7 @@ const labelLogic = ({
     label = label.replace(/[:|：]\s*$/u, '');
   }
 
-  const rowClassName = classNames(
+  const rowClassName = clsx(
     'ant-form-item',
     {
       'ant-form-item-has-error': validation.status === 'error',
@@ -64,7 +64,7 @@ const labelLogic = ({
     ...blockRowStyle,
   };
 
-  const labelColClassName = classNames({
+  const labelColClassName = clsx({
     'ant-form-item-label': true,
     'ant-form-item-label-left': properties.align === 'left' || !properties.align,
   });
@@ -75,7 +75,7 @@ const labelLogic = ({
     ...themeStyle,
   };
 
-  const labelClassName = classNames(
+  const labelClassName = clsx(
     {
       'ant-form-item-required': required,
       'ant-form-item-no-colon': properties.colon === false,
@@ -94,7 +94,7 @@ const labelLogic = ({
     ...styles.label,
   };
 
-  const extraClassName = classNames(
+  const extraClassName = clsx(
     'ant-form-item-explain',
     'ant-form-item-extra',
     blockClassNames.extra
@@ -105,7 +105,7 @@ const labelLogic = ({
     ...styles.extra,
   };
 
-  const feedbackClassName = classNames(
+  const feedbackClassName = clsx(
     {
       'ant-form-item-explain-success': validation.status === 'success',
       'ant-form-item-explain-warning': validation.status === 'warning',
@@ -119,7 +119,7 @@ const labelLogic = ({
     ...styles.feedback,
   };
 
-  const iconClassName = classNames({
+  const iconClassName = clsx({
     'ant-form-item-feedback-icon': true,
     'ant-form-item-feedback-icon-success': validation.status === 'success',
     'ant-form-item-feedback-icon-warning': validation.status === 'warning',

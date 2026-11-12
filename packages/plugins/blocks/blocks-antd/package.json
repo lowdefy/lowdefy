@@ -60,7 +60,7 @@
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/nunjucks": "7.2.0",
     "@rc-component/motion": "1.3.3",
-    "classnames": "2.5.1",
+    "clsx": "2.1.1",
     "dayjs": "1.11.23",
     "minisearch": "7.2.0",
     "react-virtuoso": "4.18.21"
