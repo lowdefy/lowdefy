@@ -273,6 +273,8 @@ function createApp() {
   // so the shell can inject the resolved caller — without it the client's
   // _user never carries roles/organization_id under `lowdefy dev`.
   app.use('/*', apiContext());
+  // The shell embeds the resolved caller, so a view session is refused here as on /api.
+  app.use('/*', refuseViewSession());
   // Registered after the static middleware, which answers a file without calling next().
   app.use('/*', noStoreMiddleware);
   mountDevPageRoutes({ app, renderPage: (c) => renderDevPage(c, { basePath }) });
