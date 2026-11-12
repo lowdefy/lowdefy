@@ -127,16 +127,31 @@ test('openLink refuses a url that is not a safe link', async () => {
   expect(loader.host.openLink).not.toHaveBeenCalled();
 });
 
-test('openLink refuses a link that is not http or https', async () => {
-  const { loader, mcp } = createViewLowdefy();
+test('openLink refuses a link that is not http or https, and tells no refusal listener', async () => {
+  const { loader, lowdefy, mcp } = createViewLowdefy();
+  const refused = vi.fn();
+  lowdefy._internal.host.view.onLinkRefused(refused);
   await expect(mcp.openLink({ url: 'mailto:someone@example.com' })).rejects.toThrow(
     'McpOpenLink only opens http and https links. Received mailto:someone@example.com.'
   );
   await expect(mcp.openLink({ url: 'tel:+15550100' })).rejects.toThrow(
-    'McpOpenLink only opens http and https links.'
+    'McpOpenLink only opens http and https links. Received tel:+15550100.'
   );
-  await expect(mcp.openLink({ url: '#notes' })).rejects.toThrow();
+  await expect(mcp.openLink({ url: 'ftp://example.com/file' })).rejects.toThrow(
+    'McpOpenLink only opens http and https links. Received ftp://example.com/file.'
+  );
   expect(loader.host.openLink).not.toHaveBeenCalled();
+  expect(refused).not.toHaveBeenCalled();
+});
+
+test('openLink opens a fragment url as the page the view shows, at that fragment', async () => {
+  const { loader, mcp } = createViewLowdefy({ basePath: '/base' });
+  await expect(mcp.openLink({ url: '#notes' })).resolves.toBe(undefined);
+  await mcp.openLink({ url: '#notes', urlQuery: { tab: 'x' } });
+  expect(loader.host.openLink.mock.calls).toEqual([
+    [{ url: 'https://app.example.com/base/tickets/12?tab=notes#notes' }],
+    [{ url: 'https://app.example.com/base/tickets/12?tab=x#notes' }],
+  ]);
 });
 
 test('openLink throws when no target is given, or more than one', async () => {
@@ -150,12 +165,24 @@ test('openLink throws when no target is given, or more than one', async () => {
   expect(loader.host.openLink).not.toHaveBeenCalled();
 });
 
-test('openLink rejects when the host refuses the link', async () => {
-  const { loader, mcp } = createViewLowdefy();
+test('openLink fails and tells the refusal listeners when the host answers with an error result', async () => {
+  const { loader, lowdefy, mcp } = createViewLowdefy();
+  const refused = vi.fn();
+  lowdefy._internal.host.view.onLinkRefused(refused);
   loader.host.openLink.mockResolvedValueOnce({ isError: true });
   await expect(mcp.openLink({ url: 'https://example.com' })).rejects.toThrow(
     'The MCP host refused to open https://example.com/.'
   );
+  expect(refused.mock.calls).toEqual([[{ url: 'https://example.com/' }]]);
+});
+
+test('openLink fails and tells the refusal listeners when the call to the host fails', async () => {
+  const { loader, lowdefy, mcp } = createViewLowdefy();
+  const refused = vi.fn();
+  lowdefy._internal.host.view.onLinkRefused(refused);
   loader.host.openLink.mockRejectedValueOnce(new Error('Denied'));
-  await expect(mcp.openLink({ url: 'https://example.com' })).rejects.toThrow('Denied');
+  await expect(mcp.openLink({ pageId: 'reports' })).rejects.toThrow(
+    'The MCP host refused to open https://app.example.com/reports.'
+  );
+  expect(refused.mock.calls).toEqual([[{ url: 'https://app.example.com/reports' }]]);
 });

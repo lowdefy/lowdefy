@@ -18,7 +18,7 @@ import { createUrl } from '@lowdefy/client-core';
 import { resolveTarget } from '@lowdefy/engine';
 import { getSafeHref, type } from '@lowdefy/helpers';
 
-const openProtocols = new Set(['http:', 'https:']);
+import getOpenLinkUrl from './host/getOpenLinkUrl.js';
 
 // A host answers a request it carried out with a result, and one it refused with a result marked
 // isError or with a rejected call.
@@ -60,14 +60,20 @@ function createMcp({ lowdefy }) {
   }
   const { bridge } = view;
 
+  // The link leaves through the view's one way out (host.view.openLink, createViewOpenLink), which
+  // holds the rule for what a host is asked to open and tells onLinkRefused of a refusal. That
+  // path answers false for a link it does not hand over and for one the host refuses; the same
+  // rule (getOpenLinkUrl) is asked first, so the action's error says which of the two it was.
   async function openLink(params) {
-    const url = getLinkUrl({ lowdefy, params });
-    // A URL the parser cannot read never becomes a target (resolveTarget), so this one parses.
-    if (!openProtocols.has(new URL(url).protocol)) {
-      throw new Error(`McpOpenLink only opens http and https links. Received ${url}.`);
+    const link = getLinkUrl({ lowdefy, params });
+    const url = getOpenLinkUrl({ base: lowdefy._internal.globals.window.location.href, url: link });
+    if (url === null) {
+      throw new Error(`McpOpenLink only opens http and https links. Received ${link}.`);
     }
-    const result = await bridge.openLink({ url });
-    assertNotRefused({ message: `The MCP host refused to open ${url}.`, result });
+    const opened = await view.openLink({ url });
+    if (!opened) {
+      throw new Error(`The MCP host refused to open ${url}.`);
+    }
   }
 
   async function sendMessage({ text }) {
