@@ -17,7 +17,11 @@
 import { vi, expect, test } from 'vitest';
 import { getHtmlEnhancements } from '@lowdefy/block-utils/registerHtmlEnhancements.js';
 
+import createViewRouter from './adapters/createViewRouter.js';
+import createViewBridge from './host/createViewBridge.js';
+import createViewHost from './host/createViewHost.js';
 import initLowdefyContext from './initLowdefyContext.js';
+import createFakeViewLoader from './test/createFakeViewLoader.js';
 
 function baseArgs(overrides = {}) {
   const lowdefy = {};
@@ -221,6 +225,23 @@ test('initLowdefyContext builds the context on the browser host', () => {
   expect(result._internal.router).toBe(args.router);
   expect(result._internal.host.router).toBe(args.router);
   expect(result._internal.components.handleError).toBe(result._internal.handleError);
+});
+
+test('initLowdefyContext builds the context on the host it is passed', () => {
+  const args = baseArgs();
+  const router = createViewRouter({ basePath: '/base', path: '/tickets/12?tab=notes' });
+  const host = createViewHost({
+    bridge: createViewBridge({ view: createFakeViewLoader({ basePath: '/base' }) }),
+    router,
+    window: args.window,
+  });
+  const result = initLowdefyContext({ ...args, apiBase: host.apiBase, host, router });
+  expect(result._internal.host).toBe(host);
+  expect(result._internal.globals.window.location.href).toBe(
+    'https://app.example.com/base/tickets/12?tab=notes'
+  );
+  expect(result.apiBase).toBe('https://app.example.com/base');
+  expect(result.basePath).toBe('/base');
 });
 
 test('initLowdefyContext leaves historyLimits undefined and keeps one set before it runs', () => {
