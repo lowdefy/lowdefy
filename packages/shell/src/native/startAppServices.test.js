@@ -18,6 +18,9 @@ import { peekCurrentApp } from './currentApp.js';
 import startAppServices from './startAppServices.js';
 import whenAppReady from './whenAppReady.js';
 
+// Share-in names its copies of shared files with expo-crypto, which has no native side in Jest.
+jest.mock('expo-crypto', () => ({}));
+
 function createStore(initial) {
   let state = initial;
   const listeners = new Set();
