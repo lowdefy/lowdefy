@@ -17,6 +17,7 @@
 import { vi, expect, test } from 'vitest';
 
 import setupLink from './setupLink.js';
+import createViewLowdefy from './test/createViewLowdefy.js';
 
 // Minimal fake window: jsdom does not implement navigation, and the assertions
 // here are about which target string the link is handed.
@@ -231,4 +232,100 @@ test('an href with another scheme throws and does not navigate', () => {
   expect(lowdefy.calls.assign).toEqual([]);
   expect(lowdefy.calls.open).toEqual([]);
   expect(lowdefy.calls.push).toEqual([]);
+});
+
+test('in a view, a pageId link navigates the view router in place and opens nothing', () => {
+  const { lowdefy, openLink, router } = createViewLowdefy();
+  const seen = [];
+  router.subscribe((location) => seen.push(location));
+
+  setupLink(lowdefy)({ pageId: 'tickets', urlQuery: { tab: 'files' } });
+
+  expect(seen).toEqual([{ path: 'tickets', pathname: '/base/tickets', search: '?tab=files' }]);
+  expect(lowdefy._internal.globals.window.location.href).toBe(
+    'https://app.example.com/base/tickets?tab=files'
+  );
+  expect(openLink).not.toHaveBeenCalled();
+});
+
+test('in a view, a link to a patterned page writes the path memory before the router moves', () => {
+  const { lowdefy, router } = createViewLowdefy();
+  lowdefy.pagePaths = { ticket: 'tickets/{ticket_id}' };
+  const memoryAtMove = [];
+  router.subscribe(() => memoryAtMove.push([...lowdefy.pathMemory.keys()]));
+
+  setupLink(lowdefy)({ pageId: 'ticket', pathParams: { ticket_id: 13 }, input: { from: 'list' } });
+
+  expect(memoryAtMove).toEqual([['tickets/13']]);
+  expect(router.getLocation().pathname).toBe('/base/tickets/13');
+  expect(lowdefy.inputs['page:ticket#tickets/13']).toEqual({ from: 'list' });
+});
+
+test('in a view, back returns to the earlier page, and does nothing with no earlier entry', () => {
+  const { lowdefy, router } = createViewLowdefy();
+  const link = setupLink(lowdefy);
+
+  expect(() => link({ back: true })).not.toThrow();
+  expect(router.getLocation().pathname).toBe('/base/tickets/12');
+
+  link({ pageId: 'runs' });
+  expect(router.getLocation().pathname).toBe('/base/runs');
+  link({ back: true });
+  expect(router.getLocation()).toEqual({
+    path: 'tickets/12',
+    pathname: '/base/tickets/12',
+    search: '?tab=notes',
+  });
+});
+
+test('in a view, a newTab page link opens the page on the app origin with basePath through the host', () => {
+  const { lowdefy, openLink, router } = createViewLowdefy();
+
+  setupLink(lowdefy)({ pageId: 'runs', urlQuery: { state: 'open' }, newTab: true });
+
+  expect(openLink.mock.calls).toEqual([[{ url: 'https://app.example.com/base/runs?state=open' }]]);
+  expect(router.getLocation().pathname).toBe('/base/tickets/12');
+  expect(lowdefy._internal.displayMessage).not.toHaveBeenCalled();
+});
+
+test('in a view, a link to another origin opens through the host, in a new tab or not', () => {
+  const { lowdefy, openLink } = createViewLowdefy();
+  const link = setupLink(lowdefy);
+
+  link({ url: 'https://other.example.org/docs', urlQuery: { a: 1 } });
+  link({ url: 'other.example.org', newTab: true });
+  link({ href: '/files/report.pdf' });
+
+  expect(openLink.mock.calls).toEqual([
+    [{ url: 'https://other.example.org/docs?a=1' }],
+    [{ url: 'https://other.example.org/' }],
+    [{ url: 'https://app.example.com/files/report.pdf' }],
+  ]);
+});
+
+test('in a view, an unsafe href is not passed to the host', () => {
+  const { lowdefy, openLink } = createViewLowdefy();
+  const link = setupLink(lowdefy);
+
+  expect(() => link({ href: 'javascript:alert(1)' })).toThrow('Invalid Link: no target resolved.');
+  expect(() => link({ href: 'data:text/html,x', newTab: true })).toThrow(
+    'Invalid Link: no target resolved.'
+  );
+  expect(() => link({ href: 'file:///etc/passwd', newTab: true })).toThrow(
+    'Invalid Link: no target resolved.'
+  );
+  expect(openLink).not.toHaveBeenCalled();
+});
+
+test('in a view, a safe href the host cannot open reports itself and reaches no host', () => {
+  const { lowdefy, openLink } = createViewLowdefy();
+
+  setupLink(lowdefy)({ href: 'mailto:someone@example.com', newTab: true });
+
+  expect(openLink).not.toHaveBeenCalled();
+  expect(lowdefy._internal.displayMessage).toHaveBeenCalledWith({
+    content: 'client.popupBlocked',
+    status: 'info',
+    duration: 10,
+  });
 });

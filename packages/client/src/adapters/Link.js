@@ -23,11 +23,15 @@ import { createUrl } from './url.js';
 // createLinkComponent: href as { pathname, query } or string, replace,
 // scroll, onClick fired before navigation. Modified clicks (new tab,
 // middle click, download) fall through to native browser handling.
-function createLinkComponent({ router }) {
+//
+// origin is for a client that does not run on its app's origin (an MCP App
+// view): the href is then the page's absolute URL on the app, where a relative
+// one would name the frame's own origin.
+function createLinkComponent({ origin = '', router }) {
   function Link({ children, href, onClick, replace, scroll, ...props }) {
-    const hrefObject = type.isString(href) ? { pathname: href } : (href ?? {});
+    const hrefObject = type.isString(href) ? { pathname: href } : href ?? {};
     const { pathname, query } = hrefObject;
-    const url = createUrl({ basePath: router.basePath, pathname, query });
+    const url = `${origin}${createUrl({ basePath: router.basePath, pathname, query })}`;
 
     function handleClick(event) {
       if (onClick) {

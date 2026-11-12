@@ -15,16 +15,20 @@
 */
 
 // The window the engine and its plugins reach in a view: the frame's window
-// with the view's location in place of the frame's own. A window method loses
+// with the view's location in place of the frame's own, and an open that asks
+// the host to open the link. A window method loses
 // its receiver when it is read through another object, so methods are bound to
 // the real window; constructors (URL, WebSocket) are handed over as they are.
-function createViewWindow({ location, window }) {
+function createViewWindow({ location, open, window }) {
   return new Proxy(
     {},
     {
       get: (_, key) => {
         if (key === 'location') {
           return location;
+        }
+        if (key === 'open') {
+          return open;
         }
         const value = window[key];
         if (typeof value === 'function' && !('prototype' in value)) {

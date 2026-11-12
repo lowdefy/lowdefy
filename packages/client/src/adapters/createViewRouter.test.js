@@ -111,3 +111,53 @@ test('createViewRouter stops telling a listener that unsubscribed', async () => 
   await router.push({ pathname: '/tickets/12' });
   expect(listener).not.toHaveBeenCalled();
 });
+
+test('createViewRouter restore undoes a push, so back leads to the page before the snapshot', async () => {
+  const router = createViewRouter({ path: '/tickets' });
+  await router.push({ pathname: '/tickets/12' });
+  const shown = router.snapshot();
+  const listener = vi.fn();
+  router.subscribe(listener);
+
+  await router.push({ pathname: '/settings' });
+  router.restore(shown);
+
+  expect(router.getLocation().pathname).toBe('/tickets/12');
+  expect(listener).toHaveBeenLastCalledWith({
+    path: 'tickets/12',
+    pathname: '/tickets/12',
+    search: '',
+  });
+  router.back();
+  expect(router.getLocation().pathname).toBe('/tickets');
+});
+
+test('createViewRouter restore undoes a replace and several navigations at once', async () => {
+  const router = createViewRouter({ path: '/tickets/12?tab=notes' });
+  const shown = router.snapshot();
+
+  await router.replace({ pathname: '/settings' });
+  await router.push({ pathname: '/runs' });
+  router.restore(shown);
+
+  expect(router.getLocation()).toEqual({
+    path: 'tickets/12',
+    pathname: '/tickets/12',
+    search: '?tab=notes',
+  });
+  router.back();
+  expect(router.getLocation().pathname).toBe('/tickets/12');
+});
+
+test('createViewRouter restore returns to a page reached by going back', async () => {
+  const router = createViewRouter({ path: '/tickets' });
+  await router.push({ pathname: '/tickets/12' });
+  const shown = router.snapshot();
+
+  router.back();
+  router.restore(shown);
+
+  expect(router.getLocation().pathname).toBe('/tickets/12');
+  router.back();
+  expect(router.getLocation().pathname).toBe('/tickets');
+});

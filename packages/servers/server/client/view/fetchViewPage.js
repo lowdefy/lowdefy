@@ -14,13 +14,25 @@
   limitations under the License.
 */
 
+// A refusal's body is the app's JSON; anything else carries no surface.
+async function readSurface(response) {
+  try {
+    const body = await response.json();
+    return body?.surface;
+  } catch (error) {
+    return undefined;
+  }
+}
+
 // Fetches the page a view shows at a path, signed in with the view's session.
 // The app serves a view session its view pages only, so any refusal is
-// answered as { shown: false } with the status, for the caller to act on.
+// answered as { shown: false } with the status, for the caller to act on, and
+// whatever the refusal carries is never shown as a page. surface is set when
+// the path names a page of the app that is not a view page.
 async function fetchViewPage({ fetchPath, host, search }) {
   const response = await host.view.fetchApi(`/api/page/${fetchPath}${search}`);
   if (!response.ok) {
-    return { shown: false, status: response.status };
+    return { shown: false, status: response.status, surface: await readSurface(response) };
   }
   return {
     shown: true,
