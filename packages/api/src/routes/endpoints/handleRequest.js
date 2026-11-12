@@ -15,6 +15,7 @@
 */
 
 import addStepResult from './addStepResult.js';
+import authorizeViewRequestProperties from '../auth/view/authorizeViewRequestProperties.js';
 import authorizeViewRequestResolver from '../auth/view/authorizeViewRequestResolver.js';
 import callRequestResolver from '../request/callRequestResolver.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
@@ -58,6 +59,10 @@ async function handleRequest(context, routineContext, { request }) {
     connectionConfig,
     requestConfig,
     routineContext,
+  });
+  authorizeViewRequestProperties(context, {
+    requestId: requestConfig.stepId ?? requestConfig.requestId,
+    requestProperties,
   });
   checkConnectionRead(context, {
     connectionConfig,

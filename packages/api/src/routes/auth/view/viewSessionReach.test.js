@@ -41,7 +41,7 @@ function page({ pageId, ...rest }) {
   return { id: `page:${pageId}`, pageId, auth: protectedAuth, ...rest };
 }
 
-function request({ pageId, requestId, type = 'Read', auth = protectedAuth }) {
+function request({ pageId, requestId, type = 'Read', auth = protectedAuth, properties = {} }) {
   return {
     id: `request:${pageId}:${requestId}`,
     requestId,
@@ -49,7 +49,7 @@ function request({ pageId, requestId, type = 'Read', auth = protectedAuth }) {
     type,
     connectionId: 'db',
     auth,
-    properties: {},
+    properties,
   };
 }
 
@@ -73,6 +73,24 @@ function routineEndpoint({ endpointId, type }) {
     ],
   });
 }
+
+// An endpoint whose routine runs one auth step or CallAgent step.
+function stepEndpoint({ endpointId, id, type, properties = {} }) {
+  return endpoint({
+    endpointId,
+    routine: [{ id, stepId: 'step', type, properties }, { ':return': endpointId }],
+  });
+}
+
+const authStepEndpoints = [
+  'ListMembers',
+  'ListUsers',
+  'UpdateMemberRoles',
+  'InviteMember',
+  'RevokeMcpGrant',
+  'CreateMcpToken',
+  'CustomStep',
+];
 
 function linkEndpoint({ endpointId, auth }) {
   return endpoint({
@@ -105,6 +123,8 @@ const viewPages = {
       { id: 'sends_in_routine', scope: 'mcp:read' },
       { id: 'spawns', scope: 'mcp:read' },
       { id: 'writes_in_routine', scope: 'mcp:read' },
+      { id: 'calls_agent', scope: 'mcp:read' },
+      ...authStepEndpoints.map((type) => ({ id: `auth_${type}`, scope: 'mcp:read' })),
     ],
     websockets: ['task-feed'],
     agents: [],
@@ -158,6 +178,40 @@ function createFiles({ views = { configured: true, pages: viewPages, sources: []
       type: 'Write',
     }),
     'api/sends_in_routine.json': routineEndpoint({ endpointId: 'sends_in_routine', type: 'Send' }),
+    'api/calls_agent.json': stepEndpoint({
+      endpointId: 'calls_agent',
+      id: 'agent:calls_agent:step',
+      type: 'CallAgent',
+      properties: { agentId: 'helper', prompt: 'Summarise.' },
+    }),
+    ...Object.fromEntries(
+      authStepEndpoints.map((type) => [
+        `api/auth_${type}.json`,
+        stepEndpoint({ endpointId: `auth_${type}`, id: `auth:auth_${type}:step`, type }),
+      ])
+    ),
+    'pages/task/requests/out.json': request({
+      pageId: 'task',
+      requestId: 'out',
+      properties: { pipeline: [{ $match: { open: true } }, { $out: 'copy' }] },
+    }),
+    'pages/task/requests/merge.json': request({
+      pageId: 'task',
+      requestId: 'merge',
+      properties: {
+        pipeline: [
+          { $unionWith: { coll: 'other', pipeline: [{ $merge: { into: 'copy' } }] } },
+          { $facet: { a: [{ $count: 'n' }] } },
+        ],
+      },
+    }),
+    'pages/task/requests/reshape.json': request({
+      pageId: 'task',
+      requestId: 'reshape',
+      properties: {
+        pipeline: [{ $replaceRoot: { newRoot: { $mergeObjects: ['$a', '$b'] } } }, { $limit: 1 }],
+      },
+    }),
     'api/spawns.json': endpoint({
       endpointId: 'spawns',
       routine: [
@@ -207,7 +261,11 @@ sendResolver.meta = { checkRead: false, checkWrite: false };
 const bareResolver = vi.fn(async () => 'done');
 bareResolver.schema = {};
 bareResolver.meta = {};
-const agentResolver = vi.fn(async () => ({ response: 'stream' }));
+const agentResolver = vi.fn(async () => ({ response: 'stream', result: 'done' }));
+// Stand-ins for the auth steps, each acting on the caller's own records so the
+// organization floor asks for nothing. The view rule reads the step's type.
+const authStep = vi.fn(async () => ({ ok: true }));
+authStep.meta = { authority: { scope: 'caller' } };
 const feedResolver = vi.fn();
 feedResolver.meta = { checkRead: false, publish: true };
 
@@ -233,6 +291,8 @@ function createContext({ files = createFiles(), system, user = member, viewSessi
     user,
   });
   context.agents = { Chat: { resolver: agentResolver, schema: {} } };
+  context.auth = {};
+  context.steps = Object.fromEntries(authStepEndpoints.map((type) => [type, authStep]));
   context.websockets = { Feed: feedResolver };
   if (viewSession !== undefined) {
     context.viewSession = viewSession;
@@ -445,6 +505,61 @@ describe('requests', () => {
     }
   );
 
+  test.each([
+    ['a $out stage', 'out'],
+    ['a $merge stage inside a nested pipeline', 'merge'],
+  ])(
+    'with mcp:read only, a read request whose pipeline carries %s is refused with view_write_required',
+    async (label, requestId) => {
+      const params = { ...requestParams, pageId: 'task', requestId };
+      await expect(
+        callRequest(viewContext({ grantedScopes: ['mcp:read'] }), params)
+      ).rejects.toMatchObject(writeRequired);
+      expect(readResolver).not.toHaveBeenCalled();
+      // With mcp:write, and for an ordinary session, the request and its
+      // connection decide, as before.
+      expect((await callRequest(viewContext(), params)).success).toBe(true);
+      expect((await callRequest(createContext({ viewSession: null }), params)).success).toBe(true);
+    }
+  );
+
+  test('with mcp:read only, a pipeline whose operators only resemble a writing stage runs', async () => {
+    const result = await callRequest(viewContext({ grantedScopes: ['mcp:read'] }), {
+      ...requestParams,
+      pageId: 'task',
+      requestId: 'reshape',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  test.each([
+    ['names no page', 'nowhere'],
+    ['is the path of a request file', 'task/requests/read'],
+    ['runs through a file', 'task.json/x'],
+    ['climbs out of the pages folder', '../api/read_tasks'],
+    ['is empty', ''],
+  ])(
+    'a page id that %s is refused to a view session before any page file is read',
+    async (label, pageId) => {
+      const context = viewContext();
+      const readPaths = [];
+      const readConfigFile = context.readConfigFile;
+      // The file system fails a path that runs through a file; a page id must
+      // never get that far.
+      context.readConfigFile = vi.fn(async (path) => {
+        readPaths.push(path);
+        if (path.startsWith('pages/task.json/')) {
+          throw Object.assign(new Error('ENOTDIR: not a directory'), { code: 'ENOTDIR' });
+        }
+        return readConfigFile(path);
+      });
+      await expect(
+        callRequest(context, { ...requestParams, pageId, requestId: 'read' })
+      ).rejects.toMatchObject({ ...opaque, message: 'Request "read" does not exist.' });
+      expect(readPaths).toEqual(['routes.json']);
+    }
+  );
+
   test('with mcp:read only, a request whose resolver reads is served', async () => {
     const result = await callRequest(viewContext({ grantedScopes: ['mcp:read'] }), {
       ...requestParams,
@@ -639,6 +754,66 @@ describe('endpoints', () => {
       principal: { user: member, system: false },
     });
     expect(ordinary.success).toBe(true);
+  });
+
+  test.each(['ListMembers', 'ListUsers'])(
+    'with mcp:read only, the %s auth step runs',
+    async (type) => {
+      const result = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+        ...endpointParams,
+        endpointId: `auth_${type}`,
+      });
+      expect(result).toMatchObject({ success: true, response: `auth_${type}` });
+      expect(authStep).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test.each(['UpdateMemberRoles', 'InviteMember', 'RevokeMcpGrant', 'CustomStep'])(
+    'with mcp:read only, the %s auth step is refused, and with mcp:write it runs',
+    async (type) => {
+      const params = { ...endpointParams, endpointId: `auth_${type}` };
+      const refused = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), params);
+      expect(refused.success).toBe(false);
+      expect(authStep).not.toHaveBeenCalled();
+
+      const allowed = await callEndpoint(viewContext(), params);
+      expect(allowed.success).toBe(true);
+      expect(authStep).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test('the CreateMcpToken auth step is refused to every view session, whatever its scopes', async () => {
+    const params = { ...endpointParams, endpointId: 'auth_CreateMcpToken' };
+    for (const grantedScopes of [['mcp:read'], ['mcp:write'], ['mcp:read', 'mcp:write']]) {
+      const result = await callEndpoint(viewContext({ grantedScopes }), params);
+      expect(result.success).toBe(false);
+    }
+    expect(authStep).not.toHaveBeenCalled();
+  });
+
+  test.each(otherCallers.slice(0, 3))('%s runs every auth step as before', async (name, create) => {
+    for (const type of authStepEndpoints) {
+      const result = await callEndpoint(create(), {
+        ...endpointParams,
+        endpointId: `auth_${type}`,
+      });
+      expect(result.success).toBe(true);
+    }
+    expect(authStep).toHaveBeenCalledTimes(authStepEndpoints.length);
+  });
+
+  test('with mcp:read only, a CallAgent step is refused, and with mcp:write it runs', async () => {
+    const params = { ...endpointParams, endpointId: 'calls_agent' };
+    const refused = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), params);
+    expect(refused.success).toBe(false);
+    expect(agentResolver).not.toHaveBeenCalled();
+
+    const allowed = await callEndpoint(viewContext(), params);
+    expect(allowed.success).toBe(true);
+    expect(agentResolver).toHaveBeenCalledTimes(1);
+
+    const browser = await callEndpoint(createContext({ viewSession: null }), params);
+    expect(browser.success).toBe(true);
   });
 
   test('a detached call carries the view session of the run that dispatched it', async () => {

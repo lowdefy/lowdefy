@@ -17,6 +17,7 @@
 import { AuthorizationError } from '@lowdefy/errors';
 import { translate, type } from '@lowdefy/helpers';
 
+import authorizeViewWrite from '../auth/view/authorizeViewWrite.js';
 import readViewReach from '../auth/view/readViewReach.js';
 import viewGrantCovers from '../auth/view/viewGrantCovers.js';
 
@@ -38,6 +39,9 @@ async function authorizeViewAgent(context, { agentId }) {
   }
   const { agents } = await readViewReach(context);
   if (agents.has(agentId) && viewGrantCovers({ viewSession, scope: 'mcp:read' })) {
+    // An agent run calls tools and hooks, which write, so a chat needs
+    // mcp:write as a CallAgent step does.
+    authorizeViewWrite(context, { subject: `agent "${agentId}"` });
     return;
   }
   logger.debug(

@@ -614,11 +614,11 @@ test('the websocket caller check stops vouching for a view session that expired 
   const headers = new Headers({ authorization: `Bearer ${token}` });
   const context = { auth, config: {}, logger: createLogger() };
   const opened = await resolveCaller({ auth, token });
-  const fingerprint = getCallerFingerprint({ user: opened.user });
+  const fingerprint = getCallerFingerprint(opened);
   expect(fingerprint).not.toBeNull();
 
   const still = await resolveWebsocketCaller(context, { headers, strategies: [] });
-  expect(getCallerFingerprint({ user: still })).toBe(fingerprint);
+  expect(getCallerFingerprint(still)).toBe(fingerprint);
 
   const [viewSession] = (await findSessions({ adapter, userId: user.id })).filter(
     (session) => session.view === true
@@ -629,17 +629,31 @@ test('the websocket caller check stops vouching for a view session that expired 
     update: { createdAt: new Date(Date.now() - 16 * MINUTE) },
   });
   const expired = await resolveWebsocketCaller(context, { headers, strategies: [] });
-  expect(expired).toBeNull();
-  expect(getCallerFingerprint({ user: expired })).not.toBe(fingerprint);
+  expect(expired.user).toBeNull();
+  expect(getCallerFingerprint(expired)).not.toBe(fingerprint);
 
   // A second view session, ended by its grant being revoked.
   const second = await mintViewSession(mcpContext({ auth, grant }));
   const secondHeaders = new Headers({ authorization: `Bearer ${second.token}` });
-  expect(
-    getCallerFingerprint({
-      user: await resolveWebsocketCaller(context, { headers: secondHeaders, strategies: [] }),
-    })
-  ).toBe(fingerprint);
+  const resolveSecond = () =>
+    resolveWebsocketCaller(context, { headers: secondHeaders, strategies: [] });
+  expect(getCallerFingerprint(await resolveSecond())).toBe(fingerprint);
+  // The grant narrowed to read: the same person, and no longer the same caller,
+  // so a socket opened with write is closed before it publishes again.
+  const consentWhere = [
+    { field: 'clientId', value: grant.clientId },
+    { field: 'userId', value: user.id },
+    { field: 'referenceId', value: grant.organizationId },
+  ];
+  await adapter.update({
+    model: 'oauthConsent',
+    where: consentWhere,
+    update: { scopes: ['mcp:read'] },
+  });
+  const narrowed = await resolveSecond();
+  expect(narrowed.user.id).toBe(user.id);
+  expect(narrowed.viewSession.grantedScopes).toEqual(['mcp:read']);
+  expect(getCallerFingerprint(narrowed)).not.toBe(fingerprint);
   await adapter.delete({
     model: 'oauthConsent',
     where: [
@@ -648,9 +662,7 @@ test('the websocket caller check stops vouching for a view session that expired 
       { field: 'referenceId', value: grant.organizationId },
     ],
   });
-  expect(
-    await resolveWebsocketCaller(context, { headers: secondHeaders, strategies: [] })
-  ).toBeNull();
+  expect((await resolveSecond()).user).toBeNull();
 });
 
 // /auth/mobile is the page a phone shell opens to sign in. It is outside /api,
