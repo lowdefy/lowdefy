@@ -90,6 +90,13 @@ test('buildIconContext raises when theme.icons.set names a set that is not insta
   ]);
 });
 
+test('buildIconContext says the react-icons set was removed when theme.icons.set still names it', async () => {
+  const { messages } = await run({ icons: { set: 'react-icons' } });
+  expect(messages).toEqual([
+    'App "theme.icons.set" is "react-icons", but no installed plugin declares that icon set. Installed icon sets: "lucide". The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8. Remove theme.icons.set and use semantic or Lucide icon names.',
+  ]);
+});
+
 test('buildIconContext raises for settings of the wrong type', async () => {
   expect((await run({ icons: { set: 3 } })).messages).toEqual([
     'App "theme.icons.set" should be an icon set id, like "lucide". Received 3.',

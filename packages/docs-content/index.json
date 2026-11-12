@@ -3251,7 +3251,7 @@
         "plugins/plugins-icon-sets.md",
         "plugins/plugins-icon-sets.yaml"
       ],
-      "hash": "2f7e06782d53f97578f02a6c69f843e13b75080da87ce86d75387cfc91633497"
+      "hash": "503f4cfb65a1efdd7f0d4b224d4c83d84d8cc0faa329d0cac535768903ff169f"
     },
     "plugins/posthog": {
       "files": [
