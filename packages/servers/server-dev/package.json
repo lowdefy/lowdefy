@@ -98,7 +98,6 @@
     "better-auth": "1.7.20",
     "chokidar": "6.0.0",
     "dayjs": "1.11.23",
-    "dotenv": "18.0.10",
     "hono": "4.13.18",
     "html-to-image": "1.11.13",
     "mongodb": "7.8.0",

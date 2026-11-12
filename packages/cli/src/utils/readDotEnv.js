@@ -15,10 +15,10 @@
 */
 
 import path from 'path';
-import dotenv from 'dotenv';
+import { loadDotEnvFile } from '@lowdefy/node-utils';
 
 function readDotEnv(context) {
-  dotenv.config({ path: path.join(context.configDirectory, '.env'), quiet: true });
+  loadDotEnvFile({ filePath: path.join(context.configDirectory, '.env') });
 }
 
 export default readDotEnv;

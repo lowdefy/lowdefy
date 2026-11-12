@@ -15,20 +15,17 @@
 */
 
 import path from 'path';
-import dotenv from 'dotenv';
+import { loadDotEnvFile } from '@lowdefy/node-utils';
 
 function readDotEnv(context) {
-  // dotenv.config() never overwrites env vars that are already set, so on
-  // the first load the real shell environment wins over .env (standard
-  // dotenv behavior). On reloads triggered by the .env watcher the previous
-  // load has already populated process.env, so without override the changed
-  // values would never take effect and the server would restart with stale
-  // env.
+  // The first load never overwrites a variable that is already set, so the real shell
+  // environment wins over .env. On reloads triggered by the .env watcher the previous load has
+  // already populated process.env, so without override the changed values would never take
+  // effect and the server would restart with stale env.
   let loadedOnce = false;
   return () => {
-    dotenv.config({
-      path: path.join(context.directories.config, '.env'),
-      quiet: true,
+    loadDotEnvFile({
+      filePath: path.join(context.directories.config, '.env'),
       override: loadedOnce,
     });
     loadedOnce = true;
