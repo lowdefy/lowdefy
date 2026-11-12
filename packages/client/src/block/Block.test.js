@@ -94,13 +94,14 @@ test('Block renders the head again with the new properties when the block update
   const block = createBlock({ events: {}, triggerEvent: vi.fn(async () => {}) });
   block.eval = { loading: false, properties: { title: 'Task' } };
   const renderHead = ({ properties }) => <title>{properties.title}</title>;
-  const { container, context } = renderBlock({ block, renderHead });
-  expect(container.querySelector('title').textContent).toBe('Task');
+  const { context } = renderBlock({ block, renderHead });
+  // React 19 hoists a rendered <title> into document.head.
+  expect(document.head.querySelector('title').textContent).toBe('Task');
   await act(async () => {
     block.eval = { loading: false, properties: { title: 'Loaded task' } };
     context._internal.updaters.update('button');
   });
-  expect(container.querySelector('title').textContent).toBe('Loaded task');
+  expect(document.head.querySelector('title').textContent).toBe('Loaded task');
 });
 
 test('Block unregisters its updater when it unmounts', async () => {
