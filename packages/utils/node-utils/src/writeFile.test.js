@@ -15,7 +15,6 @@
 */
 
 import fs from 'fs';
-import fsExtra from 'fs-extra';
 import path from 'path';
 import writeFile from './writeFile.js';
 import { expect, test } from 'vitest';
@@ -44,13 +43,13 @@ test('writeFile should create directories if they do not exist', async () => {
   const filePath = path.resolve(baseDir, 'sub/dir/test/writeFile.txt');
   const testBaseDir = path.resolve(baseDir, 'sub');
 
-  await new Promise((resolve) => fsExtra.emptyDir(testBaseDir, resolve));
+  fs.rmSync(testBaseDir, { recursive: true, force: true });
 
   expect(fs.existsSync(filePath)).toBe(false);
   await writeFile(filePath, `Test Write File`);
   const res = fs.readFileSync(filePath, 'utf8');
   expect(res).toEqual(`Test Write File`);
-  await new Promise((resolve) => fsExtra.emptyDir(testBaseDir, resolve));
+  fs.rmSync(testBaseDir, { recursive: true, force: true });
 });
 
 test('readFile error id filepath is not a string', async () => {
