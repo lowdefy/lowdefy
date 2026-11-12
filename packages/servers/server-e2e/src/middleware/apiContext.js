@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
+import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { createApiContext, createRequestSignal, normalizeInjectedCaller } from '@lowdefy/api';
-import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../../lib/build/appMeta.js';
@@ -49,7 +49,7 @@ function apiContext() {
     if (c.get('lowdefyContext')) {
       return next();
     }
-    const rid = uuid();
+    const rid = randomUUID();
     const context = {
       rid,
       agents,

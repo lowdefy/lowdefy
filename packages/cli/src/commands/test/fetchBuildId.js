@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
-import axios from 'axios';
+import httpFetch from '../../utils/httpFetch.js';
 
 // The id of the build the dev server serves, recorded with the measured paths
 // so a reader can tell which config they describe. Null when the server does
 // not report one.
 async function fetchBuildId({ url }) {
   try {
-    const response = await axios.get(`${url}/lowdefy-docs/build-status`, { timeout: 5000 });
-    return response.data?.buildId ?? null;
+    const response = await httpFetch({ url: `${url}/lowdefy-docs/build-status`, timeoutMs: 5000 });
+    if (!response.ok) {
+      return null;
+    }
+    const status = await response.json();
+    return status?.buildId ?? null;
   } catch {
     return null;
   }

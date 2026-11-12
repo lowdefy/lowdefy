@@ -7,7 +7,7 @@
   "description": "Lowdefy Developer Tools",
   "publisher": "lowdefy",
   "engines": {
-    "vscode": "^1.75.0"
+    "vscode": "^1.101.0"
   },
   "repository": {
     "type": "git",
@@ -110,7 +110,7 @@
   "devDependencies": {
     "@types/mocha": "10.0.10",
     "@types/node": "24.x",
-    "@types/vscode": "1.74.0",
+    "@types/vscode": "1.101.0",
     "@typescript-eslint/eslint-plugin": "8.72.2",
     "@typescript-eslint/parser": "8.72.2",
     "@vscode/test-electron": "3.1.0",
@@ -121,8 +121,5 @@
     "mocha": "12.0.3",
     "nodemon": "3.1.14",
     "typescript": "7.0.2"
-  },
-  "dependencies": {
-    "node-fetch": "3.3.2"
   }
 }

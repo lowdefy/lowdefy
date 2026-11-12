@@ -17,9 +17,12 @@
 import { vi, expect, test } from 'vitest';
 
 const mockPost = vi.fn();
-vi.doMock('axios', () => ({
-  default: { post: mockPost },
-}));
+// The dev server's journey route as these tests see it: mockPost(url, body) answers
+// { status, data }, or rejects as a network failure would.
+vi.stubGlobal('fetch', async (url, init) => {
+  const { status = 200, data } = await mockPost(url, JSON.parse(init.body));
+  return Response.json(data ?? null, { status });
+});
 
 const journey = {
   name: 'submits the form',
@@ -77,9 +80,10 @@ test('runJourney reports a response carrying error as a failure', async () => {
 
 test('runJourney reports a non-2xx response with its status and body', async () => {
   const { default: runJourney } = await import('./runJourney.js');
-  const error = new Error('Request failed with status code 400');
-  error.response = { status: 400, data: { error: 'The "user" param must be an object.' } };
-  mockPost.mockRejectedValue(error);
+  mockPost.mockResolvedValue({
+    status: 400,
+    data: { error: 'The "user" param must be an object.' },
+  });
   const result = await runJourney({ item, url });
   expect(result).toMatchObject({
     passed: false,

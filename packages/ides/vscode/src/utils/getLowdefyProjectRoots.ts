@@ -15,7 +15,6 @@
 */
 
 import * as vscode from 'vscode';
-import fetch from 'node-fetch';
 
 export default async function getLowdefyProjectRoots(
   context: vscode.ExtensionContext
