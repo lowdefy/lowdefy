@@ -23,11 +23,13 @@ import { LucideProvider } from 'lucide-react/dist/esm/context.mjs';
 // Icon, it renders `component` inside <span role="img" class="anticon">.
 vi.doMock('@ant-design/icons', () => ({
   __esModule: true,
-  default: React.forwardRef(({ className, component: Component, children }, ref) => (
-    <span ref={ref} role="img" className={['anticon', className].filter(Boolean).join(' ')}>
-      <Component>{children}</Component>
-    </span>
-  )),
+  default: function Icon({ className, component: Component, children, ref }) {
+    return (
+      <span ref={ref} role="img" className={['anticon', className].filter(Boolean).join(' ')}>
+        <Component>{children}</Component>
+      </span>
+    );
+  },
 }));
 
 const { default: createIcon } = await import('./createIcon.js');
