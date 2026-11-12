@@ -27,6 +27,8 @@ import isActiveMember from '../routes/auth/organizations/isActiveMember.js';
 import isUserBanned from '../routes/auth/isUserBanned.js';
 import { getAsIssuer, getMcpResourceUri } from '../routes/mcp/getMcpUri.js';
 import getMcpJwks from '../routes/mcp/getMcpJwks.js';
+import mcpScopes from '../routes/mcp/mcpScopes.js';
+import resolveViewSession from '../routes/auth/view/resolveViewSession.js';
 import readMemberships from './readMemberships.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
@@ -219,10 +221,6 @@ function readBearerToken({ headers }) {
   return authorization.slice('Bearer '.length).trim();
 }
 
-// The closed MCP scope vocabulary - the AS grants nothing outside it, and
-// grantedScopes never carries a foreign scope string downstream.
-const MCP_SCOPES = ['mcp:read', 'mcp:write'];
-
 // An access token minted for the MCP resource must never re-enter the general
 // /api/* surface as a strategy caller - even a jwt strategy misconfigured to
 // point at the app's own JWKS would otherwise accept it with the strategy's
@@ -397,7 +395,7 @@ async function resolveMemberTokenCaller(context, { auth, token }) {
     organizationId: row.organizationId,
     // Every MCP scope: the token acts as the member who made it, and the
     // member's roles still gate every tool.
-    grantedScopes: MCP_SCOPES,
+    grantedScopes: mcpScopes,
   };
   context.user = { ...member, auth_method: 'mcp' };
 }
@@ -497,7 +495,7 @@ async function resolveMcpCaller(context, { auth, headers }) {
   // The scope claim reduced to the closed MCP vocabulary.
   const grantedScopes = (type.isString(payload.scope) ? payload.scope : '')
     .split(' ')
-    .filter((scope) => MCP_SCOPES.includes(scope));
+    .filter((scope) => mcpScopes.includes(scope));
   const validMcpAuth = {
     clientId,
     organizationId,
@@ -565,8 +563,18 @@ function getSessionInput({ headers }) {
 // organization alone under pinned, and null when the member rows were not read
 // (a session with no active organization) or did not fit one read. null for
 // every caller that is not a session caller.
+//
+// context.viewSession is { clientId, grantedScopes } when the caller was
+// resolved from a view session - the bearer session an MCP App view signs in
+// with (mintViewSession) - and null for every other caller. context.user is
+// then the same member caller a browser session resolves to; viewSession is
+// what the routes read to hold the caller to view pages and to the scopes of
+// the grant the session was minted from. A view session passes every check a
+// session passes, and its own first (resolveViewSession). The /api/mcp route
+// never resolves one: its branch reads access tokens and member tokens only.
 async function resolveAuthentication(context, { auth, headers, strategies, mcp }) {
   context.authSession = null;
+  context.viewSession = null;
   if (type.isNone(auth)) {
     context.user = null;
     return;
@@ -590,6 +598,15 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
       strategies,
     });
     return;
+  }
+  let viewSession = null;
+  if (session.session.view === true) {
+    const { adapter } = await auth.$context;
+    viewSession = await resolveViewSession(context, { adapter, session });
+    if (viewSession === null) {
+      context.user = null;
+      return;
+    }
   }
   const registered = getRegisteredOrganization({ auth });
   const activeOrganizationId = session.session.activeOrganizationId;
@@ -739,6 +756,7 @@ async function resolveAuthentication(context, { auth, headers, strategies, mcp }
   const memberOrganizationIds =
     registered?.policy === 'pinned' ? [registered.slug] : organizationIds;
   context.authSession = { id: session.session.id, memberOrganizationIds };
+  context.viewSession = viewSession;
 }
 
 export default resolveAuthentication;

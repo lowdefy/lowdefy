@@ -2083,14 +2083,31 @@ describe('oauthProvider authorization server plugins', () => {
 describe('mobile', () => {
   const mobile = { shells: [{ id: 'field', scheme: 'com.example.field' }], sessionExpiresIn: null };
 
-  function build(authJsonOverrides) {
+  const viewMarks = {
+    view: { type: 'boolean', required: false, input: false },
+    viewClientId: { type: 'string', required: false, input: false },
+    viewScopes: { type: 'string', required: false, input: false },
+  };
+
+  function build(authJsonOverrides, mcpJson) {
     return getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson(authJsonOverrides),
       getAuth,
       logger: createLogger(),
+      mcpJson,
       plugins: createPlugins(),
       secrets: baseSecrets,
+    });
+  }
+
+  function sendsTokenToNative(options) {
+    const [hook] = options.plugins.find((plugin) => plugin.id === 'bearer').hooks.after;
+    return hook.matcher({
+      request: new Request('http://localhost/api/auth/sign-in/email-otp', {
+        headers: { 'x-lowdefy-shell': '7.1.0' },
+      }),
+      context: { responseHeaders: new Headers() },
     });
   }
 
@@ -2110,14 +2127,50 @@ describe('mobile', () => {
     });
     // customSession stays last, so its token strip sees every session field.
     expect(ids.at(-1)).toBe('custom-session');
+    expect(sendsTokenToNative(options)).toBe(true);
   });
 
   test('marks phone sessions only when mobile.auth.sessionExpiresIn is set', () => {
-    expect(build({ mobile }).session.additionalFields).toBeUndefined();
+    expect(build({ mobile }).session.additionalFields).toEqual(viewMarks);
     const options = build({ mobile: { ...mobile, sessionExpiresIn: 2592000 } });
     expect(options.session.additionalFields).toEqual({
+      ...viewMarks,
       mobile: { type: 'boolean', required: false, input: false },
     });
     expect(options.session.expiresIn).toBe(604800);
+  });
+
+  test('declares the view session marks for every app, none of them client-writable', () => {
+    expect(build().session.additionalFields).toEqual(viewMarks);
+    expect(build(undefined, { views: { configured: true } }).session.additionalFields).toEqual(
+      viewMarks
+    );
+  });
+
+  test('adds the bearer plugin alone for an app with a view and no mobile section, sending the token header to nobody', () => {
+    const options = build(undefined, { configured: true, views: { configured: true } });
+    const ids = options.plugins.map((plugin) => plugin.id);
+    expect(ids).toContain('bearer');
+    expect(ids).not.toContain('one-time-token');
+    expect(options.plugins.find((plugin) => plugin.id === 'bearer').options).toEqual({
+      requireSignature: true,
+    });
+    expect(ids.at(-1)).toBe('custom-session');
+    expect(sendsTokenToNative(options)).toBe(false);
+  });
+
+  test('adds no bearer plugin for an app whose MCP block has no view', () => {
+    const noView = build(undefined, { configured: true, views: { configured: false } });
+    expect(noView.plugins.map((plugin) => plugin.id)).not.toContain('bearer');
+    const noViews = build(undefined, { configured: true });
+    expect(noViews.plugins.map((plugin) => plugin.id)).not.toContain('bearer');
+  });
+
+  test('adds one bearer plugin for an app with a view and a mobile section, still sending phones their token', () => {
+    const options = build({ mobile }, { views: { configured: true } });
+    const ids = options.plugins.map((plugin) => plugin.id);
+    expect(ids.filter((id) => id === 'bearer')).toHaveLength(1);
+    expect(ids).toContain('one-time-token');
+    expect(sendsTokenToNative(options)).toBe(true);
   });
 });
