@@ -18,7 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 
 import authorizeRequest from './authorizeRequest.js';
 import authorizeViewRequest from './authorizeViewRequest.js';
-import authorizeViewWrite from '../auth/view/authorizeViewWrite.js';
+import authorizeViewRequestResolver from '../auth/view/authorizeViewRequestResolver.js';
 import callRequestResolver from './callRequestResolver.js';
 import checkConnectionRead from './checkConnectionRead.js';
 import checkConnectionWrite from './checkConnectionWrite.js';
@@ -54,9 +54,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
-  if (requestResolver.meta.checkWrite === true) {
-    authorizeViewWrite(context, { subject: `request "${requestId}"` });
-  }
+  authorizeViewRequestResolver(context, { requestId, requestResolver });
   const { tenant, tenantGuard } = resolveTenancy(context, {
     connection,
     connectionConfig,

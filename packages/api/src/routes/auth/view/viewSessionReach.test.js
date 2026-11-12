@@ -30,6 +30,8 @@ import createChannelRegistry from '../../websocket/createChannelRegistry.js';
 import getPageConfig from '../../page/getPageConfig.js';
 import invokeEndpoint from '../../endpoints/invokeEndpoint.js';
 import prepareChannel from '../../websocket/prepareChannel.js';
+import runDetachedEndpoint from '../../endpoints/runDetachedEndpoint.js';
+import runLinkEndpoint from '../../endpoints/runLinkEndpoint.js';
 import testContext from '../../../test/testContext.js';
 
 const protectedAuth = { public: false };
@@ -51,8 +53,34 @@ function request({ pageId, requestId, type = 'Read', auth = protectedAuth }) {
   };
 }
 
-function endpoint({ endpointId, auth = protectedAuth }) {
-  return { endpointId, type: 'Api', auth, routine: { ':return': endpointId } };
+function endpoint({ endpointId, auth = protectedAuth, ...rest }) {
+  return { endpointId, type: 'Api', auth, routine: { ':return': endpointId }, ...rest };
+}
+
+// An endpoint whose routine runs one request step of the given type.
+function routineEndpoint({ endpointId, type }) {
+  return endpoint({
+    endpointId,
+    routine: [
+      {
+        id: `request:${endpointId}:step`,
+        stepId: 'step',
+        type,
+        connectionId: 'db',
+        properties: {},
+      },
+      { ':return': endpointId },
+    ],
+  });
+}
+
+function linkEndpoint({ endpointId, auth }) {
+  return endpoint({
+    endpointId,
+    auth,
+    link: true,
+    routine: { ':return': `https://files.example.com/${endpointId}` },
+  });
 }
 
 function websocket({ websocketId, auth = protectedAuth }) {
@@ -69,8 +97,14 @@ const viewPages = {
   task: {
     endpoints: [
       { id: 'admin_save', scope: 'mcp:write' },
+      { id: 'export', scope: 'mcp:write' },
+      { id: 'files', scope: 'mcp:read' },
       { id: 'read_tasks', scope: 'mcp:read' },
+      { id: 'reads_in_routine', scope: 'mcp:read' },
       { id: 'save_task', scope: 'mcp:write' },
+      { id: 'sends_in_routine', scope: 'mcp:read' },
+      { id: 'spawns', scope: 'mcp:read' },
+      { id: 'writes_in_routine', scope: 'mcp:read' },
     ],
     websockets: ['task-feed'],
     agents: [],
@@ -99,6 +133,8 @@ function createFiles({ views = { configured: true, pages: viewPages, sources: []
       requestId: 'write',
       type: 'Write',
     }),
+    'pages/task/requests/send.json': request({ pageId: 'task', requestId: 'send', type: 'Send' }),
+    'pages/task/requests/bare.json': request({ pageId: 'task', requestId: 'bare', type: 'Bare' }),
     'pages/board/requests/read.json': request({
       pageId: 'board',
       requestId: 'read',
@@ -115,6 +151,32 @@ function createFiles({ views = { configured: true, pages: viewPages, sources: []
     'api/read_tasks.json': endpoint({ endpointId: 'read_tasks' }),
     'api/save_task.json': endpoint({ endpointId: 'save_task' }),
     'api/admin_save.json': endpoint({ endpointId: 'admin_save', auth: adminAuth }),
+    // Tagged mcp:read by the app, whatever their routines do.
+    'api/reads_in_routine.json': routineEndpoint({ endpointId: 'reads_in_routine', type: 'Read' }),
+    'api/writes_in_routine.json': routineEndpoint({
+      endpointId: 'writes_in_routine',
+      type: 'Write',
+    }),
+    'api/sends_in_routine.json': routineEndpoint({ endpointId: 'sends_in_routine', type: 'Send' }),
+    'api/spawns.json': endpoint({
+      endpointId: 'spawns',
+      routine: [
+        {
+          id: 'endpoint:spawns:spawn',
+          stepId: 'spawn',
+          type: 'CallApi',
+          properties: { endpointId: 'writes_in_routine', detached: true },
+        },
+        { ':return': 'spawns' },
+      ],
+    }),
+    'linkEndpoints.json': ['files', 'export', 'private_files'].map((endpointId) => ({
+      endpointId,
+      segments: [endpointId],
+    })),
+    'api/files.json': linkEndpoint({ endpointId: 'files' }),
+    'api/export.json': linkEndpoint({ endpointId: 'export' }),
+    'api/private_files.json': linkEndpoint({ endpointId: 'private_files' }),
     // A tool of the MCP server that no view page calls.
     'api/list_all.json': endpoint({ endpointId: 'list_all' }),
     'websockets/task-feed.json': websocket({ websocketId: 'task-feed' }),
@@ -133,10 +195,18 @@ function createFiles({ views = { configured: true, pages: viewPages, sources: []
 
 const readResolver = vi.fn(async () => 'read');
 readResolver.schema = {};
-readResolver.meta = { checkRead: false, checkWrite: false };
+readResolver.meta = { checkRead: true, checkWrite: false };
 const writeResolver = vi.fn(async () => 'written');
 writeResolver.schema = {};
 writeResolver.meta = { checkRead: false, checkWrite: true };
+// A request type with no read or write switch on its connection - an HTTP
+// call, a mail send - declares neither check, and writes all the same.
+const sendResolver = vi.fn(async () => 'sent');
+sendResolver.schema = {};
+sendResolver.meta = { checkRead: false, checkWrite: false };
+const bareResolver = vi.fn(async () => 'done');
+bareResolver.schema = {};
+bareResolver.meta = {};
 const agentResolver = vi.fn(async () => ({ response: 'stream' }));
 const feedResolver = vi.fn();
 feedResolver.meta = { checkRead: false, publish: true };
@@ -150,7 +220,12 @@ function createContext({ files = createFiles(), system, user = member, viewSessi
       Db: {
         schema: {},
         create: () => ({}),
-        requests: { Read: readResolver, Write: writeResolver },
+        requests: {
+          Bare: bareResolver,
+          Read: readResolver,
+          Send: sendResolver,
+          Write: writeResolver,
+        },
       },
     },
     readConfigFile,
@@ -340,6 +415,36 @@ describe('requests', () => {
     expect(writeResolver).not.toHaveBeenCalled();
   });
 
+  test.each([
+    ['declares neither check', 'send', sendResolver],
+    ['declares no meta keys at all', 'bare', bareResolver],
+  ])(
+    'with mcp:read only, a request whose resolver %s is refused with view_write_required',
+    async (label, requestId, resolver) => {
+      await expect(
+        callRequest(viewContext({ grantedScopes: ['mcp:read'] }), {
+          ...requestParams,
+          pageId: 'task',
+          requestId,
+        })
+      ).rejects.toMatchObject(writeRequired);
+      expect(resolver).not.toHaveBeenCalled();
+      // With mcp:write, and for any other caller, it runs.
+      const withWrite = await callRequest(viewContext(), {
+        ...requestParams,
+        pageId: 'task',
+        requestId,
+      });
+      expect(withWrite.success).toBe(true);
+      const browser = await callRequest(createContext({ viewSession: null }), {
+        ...requestParams,
+        pageId: 'task',
+        requestId,
+      });
+      expect(browser.success).toBe(true);
+    }
+  );
+
   test('with mcp:read only, a request whose resolver reads is served', async () => {
     const result = await callRequest(viewContext({ grantedScopes: ['mcp:read'] }), {
       ...requestParams,
@@ -485,6 +590,89 @@ describe('endpoints', () => {
     ).rejects.toMatchObject(opaque);
   });
 
+  test('with mcp:read only, a request step that reads runs in an endpoint tagged mcp:read', async () => {
+    const result = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+      ...endpointParams,
+      endpointId: 'reads_in_routine',
+    });
+    expect(result).toMatchObject({ success: true, response: 'reads_in_routine' });
+    expect(readResolver).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    ['writes', 'writes_in_routine', writeResolver],
+    ['declares neither check', 'sends_in_routine', sendResolver],
+  ])(
+    'with mcp:read only, a request step whose resolver %s is refused in an endpoint tagged mcp:read',
+    async (label, endpointId, resolver) => {
+      const result = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+        ...endpointParams,
+        endpointId,
+      });
+      expect(result.success).toBe(false);
+      expect(result.status).toBe('error');
+      expect(resolver).not.toHaveBeenCalled();
+
+      const withWrite = await callEndpoint(viewContext(), { ...endpointParams, endpointId });
+      expect(withWrite).toMatchObject({ success: true, response: endpointId });
+      expect(resolver).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test('a detached run a read-only view session dispatched is still refused a request step that writes', async () => {
+    const context = createContext({ user: null });
+    const result = await runDetachedEndpoint(context, {
+      endpointId: 'writes_in_routine',
+      payload: {},
+      principal: {
+        user: member,
+        system: false,
+        viewSession: { clientId: 'client_1', grantedScopes: ['mcp:read'] },
+      },
+    });
+    expect(result.success).toBe(false);
+    expect(writeResolver).not.toHaveBeenCalled();
+
+    const ordinary = await runDetachedEndpoint(createContext({ user: null }), {
+      endpointId: 'writes_in_routine',
+      payload: {},
+      principal: { user: member, system: false },
+    });
+    expect(ordinary.success).toBe(true);
+  });
+
+  test('a detached call carries the view session of the run that dispatched it', async () => {
+    process.env.CRON_SECRET = 'cron-secret';
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 202,
+      arrayBuffer: async () => new ArrayBuffer(0),
+    }));
+    const originalFetch = global.fetch;
+    global.fetch = fetchMock;
+    try {
+      const context = viewContext({ grantedScopes: ['mcp:read'] });
+      context.origin = 'https://app.test';
+      const result = await callEndpoint(context, { ...endpointParams, endpointId: 'spawns' });
+      expect(result.success).toBe(true);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+      expect(body.principal.viewSession).toEqual({
+        clientId: 'client_1',
+        grantedScopes: ['mcp:read'],
+      });
+
+      const browser = createContext({ viewSession: null });
+      browser.origin = 'https://app.test';
+      await callEndpoint(browser, { ...endpointParams, endpointId: 'spawns' });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(JSON.parse(fetchMock.mock.calls[1][1].body).principal.viewSession).toBeNull();
+    } finally {
+      global.fetch = originalFetch;
+      delete process.env.CRON_SECRET;
+    }
+  });
+
   test('an endpoint that a routine calls is not held to the view lists', async () => {
     const context = viewContext({ grantedScopes: ['mcp:read'] });
     context.evaluateOperators = createEvaluateOperators(context);
@@ -502,6 +690,44 @@ describe('endpoints', () => {
     const write = await callEndpoint(context, { ...endpointParams, endpointId: 'save_task' });
     expect(unlisted.success).toBe(true);
     expect(write.success).toBe(true);
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('mcp.json');
+  });
+});
+
+describe('link endpoints', () => {
+  const link = (endpointId) => ({ segments: [endpointId, 'report.pdf'], query: {} });
+
+  test('a view session opens a link endpoint listed for a view page', async () => {
+    const answer = await runLinkEndpoint(
+      viewContext({ grantedScopes: ['mcp:read'] }),
+      link('files')
+    );
+    expect(answer).toEqual({ status: 302, location: 'https://files.example.com/files' });
+  });
+
+  test('a view session is refused a link endpoint no view page lists, as a link that does not exist', async () => {
+    const context = viewContext();
+    const unlisted = await runLinkEndpoint(context, link('private_files'));
+    const unmatched = await runLinkEndpoint(context, link('no_such'));
+    expect(unlisted).toEqual({ status: 404, body: { error: 'Not found.' } });
+    expect(unlisted).toEqual(unmatched);
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('api/private_files.json');
+  });
+
+  test('with mcp:read only, a listed link endpoint whose scope is mcp:write is refused', async () => {
+    const answer = await runLinkEndpoint(
+      viewContext({ grantedScopes: ['mcp:read'] }),
+      link('export')
+    );
+    expect(answer).toEqual({ status: 403 });
+    const withWrite = await runLinkEndpoint(viewContext(), link('export'));
+    expect(withWrite.status).toBe(302);
+  });
+
+  test.each(otherCallers)('%s opens any link endpoint as before', async (name, create) => {
+    const context = create();
+    expect((await runLinkEndpoint(context, link('private_files'))).status).toBe(302);
+    expect((await runLinkEndpoint(context, link('export'))).status).toBe(302);
     expect(context.readConfigFile).not.toHaveBeenCalledWith('mcp.json');
   });
 });

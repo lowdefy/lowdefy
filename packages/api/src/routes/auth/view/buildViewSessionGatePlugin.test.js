@@ -14,87 +14,95 @@
   limitations under the License.
 */
 
-import { vi, expect, test } from 'vitest';
+// The gate with BetterAuth's session read stood in for. The real read, and the
+// cookie forms it accepts, are covered against the library in
+// viewSessionAuthRoutes.mongodb.test.js.
 
-import buildViewSessionGatePlugin from './buildViewSessionGatePlugin.js';
+import { vi, beforeEach, expect, test } from 'vitest';
 
 const COOKIE = 'better-auth.session_token';
 
-// sessions: token → session row.
-function createCtx({ sessions = {} } = {}) {
-  return {
-    adapter: {
-      findOne: vi.fn(async ({ where }) => sessions[where[0].value] ?? null),
-    },
-    authCookies: { sessionToken: { name: COOKIE } },
-    logger: { debug: vi.fn() },
-  };
-}
-
-function createRequest({ headers = {}, path = '/update-user' } = {}) {
-  return new Request(`https://app.example.com/api/auth${path}`, { method: 'POST', headers });
-}
-
 const sessions = {
-  view_token: { id: 'session_view', view: true },
-  browser_token: { id: 'session_browser' },
-  phone_token: { id: 'session_phone', mobile: true },
+  view_token: { session: { id: 'session_view', view: true }, user: { id: 'u1' } },
+  browser_token: { session: { id: 'session_browser' }, user: { id: 'u1' } },
+  phone_token: { session: { id: 'session_phone', mobile: true }, user: { id: 'u1' } },
 };
 
+// Stands in for BetterAuth's session endpoint: the session named by the
+// session cookie of the headers it is called with.
+const readSession = vi.fn(async ({ headers }) => {
+  const pair = (headers.get('cookie') ?? '')
+    .split('; ')
+    .find((each) => each.startsWith(`${COOKIE}=`));
+  const token = decodeURIComponent(pair?.slice(COOKIE.length + 1) ?? '').split('.')[0];
+  return { headers: new Headers(), response: sessions[token] ?? null };
+});
+
+vi.doMock('better-auth/api', () => ({ getSession: () => readSession }));
+
+const { default: buildViewSessionGatePlugin } = await import('./buildViewSessionGatePlugin.js');
+
+const ctx = { authCookies: { sessionToken: { name: COOKIE } }, logger: { debug: vi.fn() } };
 const signed = (token) => encodeURIComponent(`${token}.c2lnbmF0dXJl+/=`);
 
-async function run({ ctx = createCtx({ sessions }), ...request }) {
-  const answer = await buildViewSessionGatePlugin().onRequest(createRequest(request), ctx);
-  return { answer, ctx };
+function run({ headers = {}, path = '/update-user' } = {}) {
+  const request = new Request(`https://app.example.com/api/auth${path}`, {
+    method: 'POST',
+    headers,
+  });
+  return buildViewSessionGatePlugin().onRequest(request, ctx);
 }
 
+beforeEach(() => {
+  readSession.mockClear();
+});
+
 test('buildViewSessionGatePlugin refuses a view session sent as a bearer with a 403 and a code', async () => {
-  const { answer, ctx } = await run({
-    headers: { authorization: `Bearer ${signed('view_token')}` },
-  });
+  const answer = await run({ headers: { authorization: `Bearer ${signed('view_token')}` } });
   expect(answer.response.status).toBe(403);
   expect(await answer.response.json()).toEqual({
     code: 'VIEW_SESSION_REFUSED',
     message: 'A view session cannot be used on this route.',
   });
-  expect(ctx.adapter.findOne).toHaveBeenCalledWith({
-    model: 'session',
-    where: [{ field: 'token', value: 'view_token' }],
-  });
+});
+
+test('buildViewSessionGatePlugin reads the session from the database, without refreshing it', async () => {
+  await run({ headers: { cookie: `${COOKIE}=${signed('browser_token')}` } });
+  expect(readSession).toHaveBeenCalledWith(
+    expect.objectContaining({
+      context: ctx,
+      query: { disableCookieCache: true, disableRefresh: true },
+    })
+  );
 });
 
 test('buildViewSessionGatePlugin refuses a view session sent as the session cookie', async () => {
-  const { answer } = await run({
+  const answer = await run({
     headers: { cookie: `other=1; ${COOKIE}=${signed('view_token')}; theme=dark` },
   });
   expect(answer.response.status).toBe(403);
 });
 
-test('buildViewSessionGatePlugin refuses when either the bearer or the cookie names a view session', async () => {
+test('buildViewSessionGatePlugin refuses when either the bearer or the cookie is a view session', async () => {
   const cookieIsView = await run({
     headers: {
       authorization: `Bearer ${signed('browser_token')}`,
       cookie: `${COOKIE}=${signed('view_token')}`,
     },
   });
-  expect(cookieIsView.answer.response.status).toBe(403);
+  expect(cookieIsView.response.status).toBe(403);
   const bearerIsView = await run({
     headers: {
       authorization: `bearer ${signed('view_token')}`,
       cookie: `${COOKIE}=${signed('browser_token')}`,
     },
   });
-  expect(bearerIsView.answer.response.status).toBe(403);
-});
-
-test('buildViewSessionGatePlugin refuses an unsigned token that names a view session', async () => {
-  const { answer } = await run({ headers: { authorization: 'Bearer view_token' } });
-  expect(answer.response.status).toBe(403);
+  expect(bearerIsView.response.status).toBe(403);
 });
 
 test('buildViewSessionGatePlugin refuses a view session on every path, served or not', async () => {
   for (const path of ['/get-session', '/sign-out', '/organization/set-active', '/no-such']) {
-    const { answer } = await run({
+    const answer = await run({
       path,
       headers: { authorization: `Bearer ${signed('view_token')}` },
     });
@@ -103,41 +111,23 @@ test('buildViewSessionGatePlugin refuses a view session on every path, served or
 });
 
 test('buildViewSessionGatePlugin passes a browser session and a phone session', async () => {
-  const browser = await run({ headers: { cookie: `${COOKIE}=${signed('browser_token')}` } });
-  expect(browser.answer).toBeUndefined();
-  const phone = await run({ headers: { authorization: `Bearer ${signed('phone_token')}` } });
-  expect(phone.answer).toBeUndefined();
+  expect(
+    await run({ headers: { cookie: `${COOKIE}=${signed('browser_token')}` } })
+  ).toBeUndefined();
+  expect(
+    await run({ headers: { authorization: `Bearer ${signed('phone_token')}` } })
+  ).toBeUndefined();
 });
 
-test('buildViewSessionGatePlugin passes a request with no session token without reading a session', async () => {
-  const { answer, ctx } = await run({ headers: { cookie: 'theme=dark' } });
-  expect(answer).toBeUndefined();
-  expect(ctx.adapter.findOne).not.toHaveBeenCalled();
+test('buildViewSessionGatePlugin passes a request with no cookie and no bearer without reading a session', async () => {
+  expect(await run()).toBeUndefined();
+  expect(await run({ headers: { authorization: 'Basic Y2xpZW50OnNlY3JldA==' } })).toBeUndefined();
+  expect(readSession).not.toHaveBeenCalled();
 });
 
-test('buildViewSessionGatePlugin passes a bearer and a basic credential that name no session', async () => {
-  const jwt = await run({ headers: { authorization: 'Bearer eyJhbGciOiJFZERTQSJ9.e30.sig' } });
-  expect(jwt.answer).toBeUndefined();
-  const basic = await run({ headers: { authorization: 'Basic Y2xpZW50OnNlY3JldA==' } });
-  expect(basic.answer).toBeUndefined();
-  expect(basic.ctx.adapter.findOne).not.toHaveBeenCalled();
-});
-
-test('buildViewSessionGatePlugin reads a token that is not valid URI encoding as sent', async () => {
-  const { answer, ctx } = await run({ headers: { authorization: 'Bearer %E0%A4%A.sig' } });
-  expect(answer).toBeUndefined();
-  expect(ctx.adapter.findOne).toHaveBeenCalledWith({
-    model: 'session',
-    where: [{ field: 'token', value: '%E0%A4%A' }],
-  });
-});
-
-test('buildViewSessionGatePlugin reads one session when the bearer and the cookie carry the same token', async () => {
-  const { ctx } = await run({
-    headers: {
-      authorization: `Bearer ${signed('browser_token')}`,
-      cookie: `${COOKIE}=${signed('browser_token')}`,
-    },
-  });
-  expect(ctx.adapter.findOne).toHaveBeenCalledTimes(1);
+test('buildViewSessionGatePlugin passes a bearer that names no session', async () => {
+  expect(
+    await run({ headers: { authorization: 'Bearer eyJhbGciOiJFZERTQSJ9.e30.sig' } })
+  ).toBeUndefined();
+  expect(await run({ headers: { authorization: 'Bearer %E0%A4%A.sig' } })).toBeUndefined();
 });
