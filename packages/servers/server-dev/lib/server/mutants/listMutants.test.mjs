@@ -22,12 +22,26 @@ import listMutants from './listMutants.js';
 import mutantId from './mutantId.js';
 import positionFreePath from './positionFreePath.js';
 import collectSharedIds from './collectSharedIds.js';
+import { createKeyPathResolver } from '@lowdefy/errors';
+
 import keyArtifact from './test/keyArtifact.mjs';
 import { pageFixture } from './test/fixtures.mjs';
 import { expect, test } from 'vitest';
 
 function reader(artifacts) {
   return async (name) => artifacts[name] ?? null;
+}
+
+// Gives the key map entries whose config path matches a ref and a line, as a
+// _ref'd file's nodes carry in a short-shape key map.
+function setRef({ keyMap, match, refId, line }) {
+  const resolveKeyPath = createKeyPathResolver({ keyMap });
+  Object.keys(keyMap)
+    .filter((keyId) => match(resolveKeyPath(keyId).path))
+    .forEach((keyId) => {
+      keyMap[keyId].r = refId;
+      keyMap[keyId].l = line;
+    });
 }
 
 async function listPage({ prefix, value }) {
@@ -54,20 +68,40 @@ test('positionFreePath drops the index of every item with an id and keeps id-les
   );
 });
 
-test('positionFreePath keeps the index of siblings that share an id', () => {
-  const keyMap = {
-    a: { key: 'root.blocks[0:box:Box].events.onClick[0:set:SetState]' },
-    b: { key: 'root.blocks[0:box:Box].events.onClick[1:set:SetState]' },
-    c: { key: 'root.blocks[0:box:Box]' },
-  };
-  const sharedIds = collectSharedIds({ keyMap });
-  expect(positionFreePath({ configPath: keyMap.a.key, sharedIds })).toEqual(
-    'root.blocks[box:Box].events.onClick[0:set:SetState]'
-  );
-  expect(positionFreePath({ configPath: keyMap.b.key, sharedIds })).toEqual(
-    'root.blocks[box:Box].events.onClick[1:set:SetState]'
-  );
-});
+test.each([
+  [
+    'full',
+    {
+      a: { key: 'root.blocks[0:box:Box].events.onClick[0:set:SetState]' },
+      b: { key: 'root.blocks[0:box:Box].events.onClick[1:set:SetState]' },
+      c: { key: 'root.blocks[0:box:Box]' },
+    },
+  ],
+  [
+    'short',
+    {
+      root: { s: 'root', p: 'unwritten' },
+      blocks: { s: '.blocks', p: 'root' },
+      c: { s: '[0:box:Box]', p: 'blocks' },
+      onClick: { s: '.events.onClick', p: 'c' },
+      a: { s: '[0:set:SetState]', p: 'onClick' },
+      b: { s: '[1:set:SetState]', p: 'onClick' },
+    },
+  ],
+])(
+  'positionFreePath keeps the index of siblings that share an id, %s key map shape',
+  (_, keyMap) => {
+    const sharedIds = collectSharedIds({ keyMap });
+    const configPathA = 'root.blocks[0:box:Box].events.onClick[0:set:SetState]';
+    const configPathB = 'root.blocks[0:box:Box].events.onClick[1:set:SetState]';
+    expect(positionFreePath({ configPath: configPathA, sharedIds })).toEqual(
+      'root.blocks[box:Box].events.onClick[0:set:SetState]'
+    );
+    expect(positionFreePath({ configPath: configPathB, sharedIds })).toEqual(
+      'root.blocks[box:Box].events.onClick[1:set:SetState]'
+    );
+  }
+);
 
 test('mutantId is 12 hex characters and changes with the operator and arg', () => {
   const base = {
@@ -146,42 +180,45 @@ test('siblings sharing an id get distinct mutant ids', async () => {
   expect(ids[0]).not.toEqual(ids[1]);
 });
 
-test('listMutants answers each mutant with its anchor, source, config and the artifact hash', async () => {
-  const { root, keyMap } = pageFixture();
-  Object.values(keyMap).forEach((entry) => {
-    entry['~r'] = 'pageRef';
-    entry['~l'] = 7;
-  });
-  const result = await listMutants({
-    pages: ['tickets'],
-    operators: ['drop-block'],
-    readConfigFile: reader({ 'pages/tickets.json': root }),
-    keyMap,
-    refMap: { pageRef: { path: 'pages/tickets.yaml' } },
-  });
-  expect(result.artifacts).toEqual({ 'pages/tickets.json': hashArtifact(root) });
-  expect(result.mutants[0]).toEqual({
-    id: expect.stringMatching(/^[0-9a-f]{12}$/),
-    operator: 'drop-block',
-    artifact: 'pages/tickets.json',
-    key: root.slots.content.blocks[0]['~k'],
-    arg: null,
-    anchor: { type: 'block', pageId: 'tickets', blockId: 'title', parentBlockId: 'tickets' },
-    source: 'pages/tickets.yaml:7',
-    config: 'root.slots.content.blocks[0:title:Title]',
-    describe: 'drop-block Title "title" from tickets',
-    copies: [],
-    copyTargets: [],
-    pointer: ['slots', 'content', 'blocks', 0],
-    nodeHash: expect.stringMatching(/^[0-9a-f]{40}$/),
-  });
-});
+test.each([
+  ['short', (entry) => Object.assign(entry, { r: 'pageRef', l: 7 })],
+  ['full', (entry) => Object.assign(entry, { '~r': 'pageRef', '~l': 7 })],
+])(
+  'listMutants answers each mutant with its anchor, source, config and the artifact hash, %s key map shape',
+  async (shape, setRefAndLine) => {
+    const { root, keyMap } = pageFixture({ shape });
+    Object.values(keyMap).forEach(setRefAndLine);
+    const result = await listMutants({
+      pages: ['tickets'],
+      operators: ['drop-block'],
+      readConfigFile: reader({ 'pages/tickets.json': root }),
+      keyMap,
+      refMap: { pageRef: { path: 'pages/tickets.yaml' } },
+    });
+    expect(result.artifacts).toEqual({ 'pages/tickets.json': hashArtifact(root) });
+    expect(result.mutants[0]).toEqual({
+      id: expect.stringMatching(/^[0-9a-f]{12}$/),
+      operator: 'drop-block',
+      artifact: 'pages/tickets.json',
+      key: root.slots.content.blocks[0]['~k'],
+      arg: null,
+      anchor: { type: 'block', pageId: 'tickets', blockId: 'title', parentBlockId: 'tickets' },
+      source: 'pages/tickets.yaml:7',
+      config: 'root.slots.content.blocks[0:title:Title]',
+      describe: 'drop-block Title "title" from tickets',
+      copies: [],
+      copyTargets: [],
+      pointer: ['slots', 'content', 'blocks', 0],
+      nodeHash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    });
+  }
+);
 
 test('source resolves through a module ref to the real file and line', async () => {
   const { root, keyMap } = pageFixture();
   Object.values(keyMap).forEach((entry) => {
-    entry['~r'] = 'moduleInvocation';
-    entry['~l'] = 42;
+    entry.r = 'moduleInvocation';
+    entry.l = 42;
   });
   const { mutants } = await listMutants({
     pages: ['tickets'],
@@ -229,11 +266,11 @@ test("copies of one _ref'd node on three pages group into one mutant with two co
     artifacts[`pages/${pageId}.json`] = root;
   });
   // The footer came from one layout file, at one line, on every page.
-  Object.values(keyMap).forEach((entry) => {
-    if (entry.key.endsWith('[0:footer:Paragraph]')) {
-      entry['~r'] = 'layout';
-      entry['~l'] = 3;
-    }
+  setRef({
+    keyMap,
+    match: (configPath) => configPath.endsWith('[0:footer:Paragraph]'),
+    refId: 'layout',
+    line: 3,
   });
   const { mutants } = await listMutants({
     pages: ['tickets', 'orders', 'contacts'],
@@ -300,11 +337,11 @@ test('two template copies with different content stay two mutants', async () => 
       keyMap,
     }).root;
   });
-  Object.values(keyMap).forEach((entry) => {
-    if (entry.key.endsWith('[0:footer:Paragraph]')) {
-      entry['~r'] = 'template';
-      entry['~l'] = 3;
-    }
+  setRef({
+    keyMap,
+    match: (configPath) => configPath.endsWith('[0:footer:Paragraph]'),
+    refId: 'template',
+    line: 3,
   });
   const { mutants } = await listMutants({
     pages: ['orders', 'tickets'],
@@ -380,11 +417,11 @@ function buildRequestPages({ prefix }) {
       keyMap,
     }).root;
   });
-  Object.values(keyMap).forEach((entry) => {
-    if (entry.key.includes(':unread_count')) {
-      entry['~r'] = 'component';
-      entry['~l'] = 5;
-    }
+  setRef({
+    keyMap,
+    match: (configPath) => configPath.includes(':unread_count'),
+    refId: 'component',
+    line: 5,
   });
   return { artifacts, keyMap };
 }

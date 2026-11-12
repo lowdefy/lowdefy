@@ -131,3 +131,21 @@ test('diffPageBlocks lists every block of a new page as added', () => {
     },
   ]);
 });
+
+test('diffPageBlocks gives the same source from a head build that writes the short key map shape', () => {
+  const shortKeyMap = {
+    root: { s: 'root', p: 'unwritten' },
+    pages: { s: '.pages', p: 'root' },
+    tickets: { s: '[0:tickets]', p: 'pages', r: 'r2', l: 1 },
+    blocks: { s: '.blocks', p: 'tickets', l: 5 },
+    submit: { s: '[1:submit]', p: 'blocks', l: 21 },
+    card: { s: '[0:card]', p: 'blocks', l: 9 },
+  };
+  const headPage = page({ blocks: [block({ blockId: 'submit' }), block({ blockId: 'card' })] });
+  const sources = (map) =>
+    diffPageBlocks({ basePage: undefined, headPage, keyMap: map, refMap }).map(
+      (change) => change.source
+    );
+  expect(sources(shortKeyMap)).toEqual(sources(keyMap));
+  expect(sources(shortKeyMap)).toEqual([null, 'pages/tickets.yaml:21', 'pages/tickets.yaml:9']);
+});

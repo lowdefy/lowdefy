@@ -32,6 +32,12 @@ function getLinkedPlugins({ dependencies, directory, workspaceRoot }) {
   });
 }
 
+// The plugins this process has installed, by workspace root. One command can
+// install the server more than once (lowdefy build installs before and after
+// its config build), and nothing in between removes what a plugin's install
+// put in place, so each plugin installs once per process.
+const installedPlugins = new Map();
+
 // pnpm neither installs the dependencies of a link: target nor runs its build
 // scripts, so on a fresh checkout (a CI or Vercel build) a workspace plugin the
 // server links to has no node_modules and no build output. Installing those
@@ -42,12 +48,16 @@ async function installWorkspacePlugins({ context, directory }) {
   if (workspaceRoot === null) {
     return;
   }
+  if (!installedPlugins.has(workspaceRoot)) {
+    installedPlugins.set(workspaceRoot, new Set());
+  }
+  const installed = installedPlugins.get(workspaceRoot);
   const packageJson = JSON.parse(await readFile(path.join(directory, 'package.json')));
   const plugins = getLinkedPlugins({
     dependencies: packageJson.dependencies,
     directory,
     workspaceRoot,
-  });
+  }).filter((name) => !installed.has(name));
   if (plugins.length === 0) {
     return;
   }
@@ -73,6 +83,7 @@ async function installWorkspacePlugins({ context, directory }) {
       { cause: error }
     );
   }
+  plugins.forEach((name) => installed.add(name));
 }
 
 export default installWorkspacePlugins;

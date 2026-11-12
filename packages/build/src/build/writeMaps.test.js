@@ -14,6 +14,10 @@
   limitations under the License.
 */
 
+import zlib from 'zlib';
+
+import { createColumnarKeyMap, encodeColumnarKeyMap } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 import { vi, beforeEach, expect, test } from 'vitest';
 
 import writeMaps from './writeMaps.js';
@@ -25,7 +29,12 @@ const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
 
 beforeEach(() => {
   mockWriteBuildArtifact.mockReset();
+  context.writeCompressedMaps = undefined;
 });
+
+function writtenArtifacts() {
+  return Object.fromEntries(mockWriteBuildArtifact.mock.calls);
+}
 
 test('writeMaps', async () => {
   context.keyMap = {
@@ -38,6 +47,55 @@ test('writeMaps', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     ['keyMap.json', '{"key":"value"}'],
     ['refMap.json', '{"ref":"value"}'],
+  ]);
+});
+
+test('writeMaps writes the key map as the serializer does', async () => {
+  context.keyMap = {
+    1: { s: 'root', p: '0' },
+    b: { s: '.pages', p: '1', r: 'ref-1', l: 4 },
+    c: { s: '[0:home:PageHeaderMenu]', p: 'b', r: null, l: 12, i: true },
+    d: { s: '.title "quoted" \u00e9', p: 'c' },
+  };
+  context.refMap = {};
+  await writeMaps({ context });
+  expect(writtenArtifacts()['keyMap.json']).toBe(serializer.serializeToString(context.keyMap));
+  expect(writtenArtifacts()['keyMap.json']).toBe(
+    '{"1":{"s":"root","p":"0"},"b":{"s":".pages","p":"1","r":"ref-1","l":4},"c":{"s":"[0:home:PageHeaderMenu]","p":"b","r":null,"l":12,"i":true},"d":{"s":".title \\"quoted\\" \u00e9","p":"c"}}'
+  );
+});
+
+test('writeMaps writes the line marker of a list of ignored checks, and leaves the key map as it was', async () => {
+  // addKeys stores the config's own array, which carries the line it was read from.
+  const checks = ['state-refs', 'link-refs'];
+  Object.defineProperty(checks, '~l', {
+    value: 7,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const entry = { s: '.blocks', p: '1', l: 6, i: checks };
+  context.writeCompressedMaps = true;
+  context.keyMap = {
+    1: { s: 'root', p: '0' },
+    2: entry,
+    3: { s: '[0:a:Box]', p: '2', i: [] },
+  };
+  context.refMap = {};
+  const expected = serializer.serializeToString(context.keyMap);
+  await writeMaps({ context });
+  const artifacts = writtenArtifacts();
+  expect(artifacts['keyMap.json']).toBe(expected);
+  expect(artifacts['keyMap.json']).toBe(
+    '{"1":{"s":"root","p":"0"},"2":{"s":".blocks","p":"1","l":6,"i":{"~arr":["state-refs","link-refs"],"~l":7}},"3":{"s":"[0:a:Box]","p":"2","i":[]}}'
+  );
+  expect(context.keyMap[2]).toBe(entry);
+  expect(context.keyMap[2].i).toBe(checks);
+  expect(Object.keys(context.keyMap)).toEqual(['1', '2', '3']);
+  const columns = JSON.parse(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8'));
+  expect(columns.ignoreBuildChecks).toEqual([
+    [1, ['state-refs', 'link-refs']],
+    [2, []],
   ]);
 });
 
@@ -71,18 +129,87 @@ test('writeMaps writes refMap ids in the same order whatever order refs resolved
   ]);
 });
 
+test('writeMaps writes only the plain maps when writeCompressedMaps is not set', async () => {
+  context.keyMap = { 1: { s: 'pages.0', p: '0', l: 3 } };
+  context.refMap = { 1: { path: 'pages/a.yaml' } };
+  await writeMaps({ context });
+  expect(mockWriteBuildArtifact.mock.calls.map(([filePath]) => filePath)).toEqual([
+    'keyMap.json',
+    'refMap.json',
+  ]);
+});
+
+test('writeMaps writes a columnar gzipped key map and a gzipped plain ref map when writeCompressedMaps is true', async () => {
+  context.writeCompressedMaps = true;
+  context.keyMap = { 1: { s: 'pages.0', p: '0', l: 3 }, 2: { s: 'blocks.0', p: '1', r: '1' } };
+  context.refMap = { 1: { path: 'pages/a.yaml', parent: '0', lineNumber: 4 } };
+  await writeMaps({ context });
+  const artifacts = writtenArtifacts();
+  expect(Object.keys(artifacts)).toEqual([
+    'keyMap.json',
+    'refMap.json',
+    'keyMap.json.gz',
+    'refMap.json.gz',
+  ]);
+  expect(Buffer.isBuffer(artifacts['keyMap.json.gz'])).toBe(true);
+  const columns = JSON.parse(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8'));
+  expect(columns).toEqual(encodeColumnarKeyMap({ keyMap: context.keyMap }));
+  expect(createColumnarKeyMap(columns).get('2')).toEqual(context.keyMap['2']);
+  expect(zlib.gunzipSync(artifacts['refMap.json.gz']).toString('utf8')).toBe(
+    artifacts['refMap.json']
+  );
+});
+
+test('writeMaps writes empty columns and an empty gzipped ref map for empty maps', async () => {
+  context.writeCompressedMaps = true;
+  context.keyMap = {};
+  context.refMap = {};
+  await writeMaps({ context });
+  const artifacts = writtenArtifacts();
+  expect(JSON.parse(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8'))).toEqual(
+    encodeColumnarKeyMap({ keyMap: {} })
+  );
+  expect(zlib.gunzipSync(artifacts['refMap.json.gz']).toString('utf8')).toBe('{}');
+});
+
+test('writeMaps writes byte-identical gzipped maps for the same maps', async () => {
+  context.writeCompressedMaps = true;
+  const written = [];
+  for (let run = 0; run < 2; run += 1) {
+    mockWriteBuildArtifact.mockReset();
+    context.keyMap = { 1: { s: 'pages.0', p: '0', l: 3 } };
+    context.refMap = { 1: { path: 'pages/a.yaml' } };
+    await writeMaps({ context });
+    written.push(writtenArtifacts());
+  }
+  expect(written[0]['keyMap.json.gz'].equals(written[1]['keyMap.json.gz'])).toBe(true);
+  expect(written[0]['refMap.json.gz'].equals(written[1]['refMap.json.gz'])).toBe(true);
+  // The gzip header's MTIME field (bytes 4 to 7) is zero, so a later build
+  // does not stamp a different time into it.
+  expect([...written[0]['keyMap.json.gz'].subarray(4, 8)]).toEqual([0, 0, 0, 0]);
+  expect([...written[0]['refMap.json.gz'].subarray(4, 8)]).toEqual([0, 0, 0, 0]);
+});
+
 test('keyMap is not an object', async () => {
+  const writeBuildArtifact = vi.fn();
   const context = {
     keyMap: 'keyMap',
     refMap: {},
+    writeCompressedMaps: true,
+    writeBuildArtifact,
   };
   await expect(writeMaps({ context })).rejects.toThrow('keyMap is not an object.');
+  expect(writeBuildArtifact).not.toHaveBeenCalled();
 });
 
 test('refMap is not an object', async () => {
+  const writeBuildArtifact = vi.fn();
   const context = {
     refMap: 'refMap',
     keyMap: {},
+    writeCompressedMaps: true,
+    writeBuildArtifact,
   };
   await expect(writeMaps({ context })).rejects.toThrow('refMap is not an object.');
+  expect(writeBuildArtifact).not.toHaveBeenCalled();
 });

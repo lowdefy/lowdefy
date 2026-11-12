@@ -198,6 +198,41 @@ test('buildJs gives a shared page _jsEntries and adds its _js to the web map', a
   expect(context.jsMap.client).toEqual({ 'tjmrJIhufQzEpj/iGu5AumDcrBQ=': 'return 1;' });
 });
 
+test('buildJs adds the _js of a shared page to the web map in the order the pages hold it', async () => {
+  const context = testContext();
+  const components = {
+    pages: [
+      { id: 'a', style: { _js: 'return 2;' }, requests: [] },
+      {
+        id: 'b',
+        target: 'both',
+        style: { _js: 'return 10;' },
+        class: { _js: 'return 2;' },
+        requests: [],
+      },
+    ],
+  };
+
+  buildJs({ components, context });
+  expect(Object.entries(context.jsMap.client)).toEqual([
+    ['XjWXGQx0Ga1LvOQtdxUpR6mZwhA=', 'return 2;'],
+    ['h4uNNgee8PnSsXJuEXZQ7FSbnZY=', 'return 10;'],
+  ]);
+  expect(components.pages[1]._jsEntries).toContain("'h4uNNgee8PnSsXJuEXZQ7FSbnZY='");
+  expect(components.pages[1]._jsEntries).toContain("'XjWXGQx0Ga1LvOQtdxUpR6mZwhA='");
+});
+
+test('buildJs leaves a shared page without _js as it is and adds nothing to the web map', async () => {
+  const context = testContext();
+  const components = {
+    pages: [{ id: 'a', target: 'both', requests: [] }],
+  };
+
+  buildJs({ components, context });
+  expect(components.pages[0]).toEqual({ id: 'a', target: 'both', requests: [] });
+  expect(context.jsMap.client).toEqual({});
+});
+
 test('buildJs leaves _jsEntries off a mobile page without _js', async () => {
   const context = testContext();
   const components = {

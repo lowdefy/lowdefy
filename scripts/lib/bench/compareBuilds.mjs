@@ -18,11 +18,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 
+import checkColumnarKeyMap from './checkColumnarKeyMap.mjs';
 import compareFileBytes from './compareFileBytes.mjs';
 import compareText from './compareText.mjs';
 import createPathReplacer from './createPathReplacer.mjs';
 import extractBuildMessages from './extractBuildMessages.mjs';
 
+const COLUMNAR_KEY_MAP = 'build/keyMap.json.gz';
 const SERVER_PLACEHOLDER = '<server>';
 // Not a file: the warnings and errors the build logged, compared like one.
 const BUILD_MESSAGES = 'build messages';
@@ -63,7 +65,8 @@ function createSide({ output, serverDirectory }) {
 }
 
 // A file only the current build has, which --expect-added allows. A gzip file
-// must hold exactly the plain file beside it.
+// must hold exactly the plain file beside it, except keyMap.json.gz, which
+// holds keyMap.json in columns and must resolve every key the same.
 function checkAddedFile({ current, file }) {
   if (!file.endsWith('.gz')) {
     return { file, identical: true, lines: [] };
@@ -74,6 +77,13 @@ function checkAddedFile({ current, file }) {
     return { file, identical: false, lines: [`${plainFile} is missing beside it.`] };
   }
   const unzipped = zlib.gunzipSync(fs.readFileSync(path.join(current.serverDirectory, file)));
+  if (file === COLUMNAR_KEY_MAP) {
+    const check = checkColumnarKeyMap({
+      plainText: fs.readFileSync(plainPath, 'utf8'),
+      columnsText: unzipped.toString('utf8'),
+    });
+    return { file, ...check };
+  }
   if (unzipped.equals(fs.readFileSync(plainPath))) {
     return { file, identical: true, lines: [] };
   }
@@ -85,10 +95,17 @@ function checkAddedFile({ current, file }) {
 // (build/keyMap.json) to a comparer used in place of the byte comparison,
 // called as compare({ file, baseline, current }) with each side's
 // { serverDirectory, replacePath } and resolving to { identical, lines }.
+// defaultComparer, called the same way, compares every other file.
 // expectAdded lists build-relative files allowed in the current build only.
 // Resolves to { identical, onlyBaseline, onlyCurrent, added, differences,
 // compared }, differences and added being [{ file, identical, lines }].
-async function compareBuilds({ baseline, current, comparers = {}, expectAdded = [] }) {
+async function compareBuilds({
+  baseline,
+  current,
+  comparers = {},
+  defaultComparer = compareFileBytes,
+  expectAdded = [],
+}) {
   const sides = {
     baseline: createSide(baseline),
     current: createSide(current),
@@ -113,7 +130,7 @@ async function compareBuilds({ baseline, current, comparers = {}, expectAdded = 
   const shared = [...baselineFiles].filter((file) => currentFiles.has(file)).sort();
   const differences = [];
   for (const file of shared) {
-    const compare = comparers[file] ?? compareFileBytes;
+    const compare = comparers[file] ?? defaultComparer;
     const result = await compare({ file, baseline: sides.baseline, current: sides.current });
     if (!result.identical) {
       differences.push({ file, ...result });

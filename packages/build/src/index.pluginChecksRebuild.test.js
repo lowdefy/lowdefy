@@ -20,8 +20,10 @@ import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { testTypesMap } from './test-utils/runBuild.js';
+import { buildBlockSchema } from '@lowdefy/block-utils';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+
+import { testTypesMap } from './test-utils/runBuild.js';
 
 const childScript = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -125,6 +127,7 @@ function runBuild({ customTypesMap, pluginInstallFollows, skipPluginChecks } = {
     status: child.status,
     errors: lines.filter((line) => line.level >= 50 && line.err).map((line) => line.msg),
     warnings: lines.filter((line) => line.level === 40).map((line) => line.msg),
+    lines,
   };
 }
 
@@ -322,5 +325,319 @@ ${
       second.warnings.filter((warning) => warning === pendingWarning(blockPackage))
     ).toHaveLength(1);
     expect(second.warnings).not.toContain(pendingWarning(connectionPackage));
+  });
+});
+
+// A default package's schemas, hazards and has-checks flag ship in the build's
+// types map (createDefaultTypesMap), so the first build checks it whether or
+// not it is installed. Tests run against src, where the generated map is an
+// empty stub, so the types map these builds take carries the entries the
+// generator would write for a default package that is not installed.
+describe('default packages', () => {
+  const defaultPackage = '@lowdefy-test/default-plugin';
+  const otherPackage = '@lowdefy-test/not-default';
+  const pendingWarning = (name) => `Plugin checks for ${name} did not run: package not installed.`;
+
+  const metas = {
+    Title: {
+      category: 'display',
+      properties: {
+        type: 'object',
+        additionalProperties: false,
+        properties: { content: { type: 'string' }, level: { type: 'number' } },
+      },
+      hazards: [{ id: 'title-hazard', message: 'A Title hazard.', see: null }],
+    },
+  };
+  const schemas = {
+    SetState: {
+      params: {
+        type: 'object',
+        required: ['message'],
+        properties: { message: { type: 'string' } },
+      },
+    },
+    _if: {
+      params: {
+        type: 'object',
+        required: ['test'],
+        properties: { test: { type: 'boolean' }, then: {}, else: {} },
+        additionalProperties: false,
+      },
+    },
+  };
+
+  // As createPluginTypesMap writes a package's types: its blockMetas come
+  // from extractBlockTypes, which keeps no hazards.
+  const typesMap = {
+    ...testTypesMap,
+    blocks: { ...testTypesMap.blocks, Title: { package: defaultPackage } },
+    blockMetas: { ...testTypesMap.blockMetas, Title: { category: 'display' } },
+    actions: { ...testTypesMap.actions, SetState: { package: defaultPackage } },
+    operators: {
+      client: { ...testTypesMap.operators.client, _if: { package: defaultPackage } },
+      server: testTypesMap.operators.server,
+    },
+  };
+
+  // The entries createDefaultTypesMap writes for the default package.
+  const shippedTypesMap = {
+    ...typesMap,
+    schemas: {
+      actions: { SetState: { package: defaultPackage, schema: schemas.SetState } },
+      blocks: {
+        Title: {
+          package: defaultPackage,
+          schema: buildBlockSchema(metas.Title),
+          hazards: metas.Title.hazards,
+        },
+      },
+      operators: { _if: { package: defaultPackage, schema: schemas._if } },
+    },
+    hasChecks: { [defaultPackage]: false },
+  };
+
+  // Runtime values, so precomputeRuntimeOperators leaves the _if in place.
+  const brokenConfig = `lowdefy: local
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content:
+            _state: content
+          levle: 2
+        events:
+          onClick:
+            - id: set
+              type: SetState
+              params:
+                text:
+                  _state: text
+      - id: other
+        type: Title
+        properties:
+          content:
+            _if:
+              then:
+                _state: a
+              else: b
+`;
+
+  const schemaMapFiles = [
+    'actionSchemas.json',
+    'blockMetas.json',
+    'blockSchemas.json',
+    'operatorMetas.json',
+    'operatorSchemas.json',
+  ];
+
+  function writeConfig(config) {
+    fs.writeFileSync(path.join(directories.config, 'lowdefy.yaml'), config);
+  }
+
+  function installPackage(name, files) {
+    const pkgDir = path.join(directories.server, 'node_modules', name);
+    fs.mkdirSync(pkgDir, { recursive: true });
+    const exports = { './types': './types.js' };
+    fs.writeFileSync(path.join(pkgDir, 'types.js'), 'export default {};\n');
+    for (const [specifier, [file, content]] of Object.entries(files)) {
+      exports[specifier] = `./${file}`;
+      fs.writeFileSync(path.join(pkgDir, file), content);
+    }
+    fs.writeFileSync(
+      path.join(pkgDir, 'package.json'),
+      JSON.stringify({ name, type: 'module', exports })
+    );
+  }
+
+  function installDefaultPackage() {
+    installPackage(defaultPackage, {
+      './metas': ['metas.js', `export const Title = ${JSON.stringify(metas.Title)};\n`],
+      './schemas': [
+        'schemas.js',
+        Object.entries(schemas)
+          .map(([name, schema]) => `export const ${name} = ${JSON.stringify(schema)};\n`)
+          .join(''),
+      ],
+    });
+  }
+
+  // Each plugin check finding as a developer reads it: level, location, slug and message.
+  function pluginFindings({ lines }) {
+    return lines
+      .filter((line) => line.level >= 40 && line.err?.checkSlug === 'plugin-schema')
+      .map((line) => ({
+        level: line.level,
+        name: line.err.name,
+        source: path.relative(root, line.err.source).split(path.sep).join('/'),
+        checkSlug: line.err.checkSlug,
+        msg: line.msg,
+      }));
+  }
+
+  function readSchemaMaps() {
+    return Object.fromEntries(
+      schemaMapFiles.map((file) => [
+        file,
+        JSON.parse(fs.readFileSync(path.join(directories.build, 'plugins', file), 'utf8')),
+      ])
+    );
+  }
+
+  // The passes `lowdefy build` makes: a build that an install follows, the
+  // install, and a second build when the install gives something to check.
+  async function lowdefyBuild({ customTypesMap, install = () => {}, skipPluginChecks }) {
+    const { pluginChecksNeedRebuild } = await import('@lowdefy/node-utils');
+    const first = runBuild({ customTypesMap, pluginInstallFollows: true, skipPluginChecks });
+    install();
+    const rebuild = pluginChecksNeedRebuild({
+      buildDirectory: directories.build,
+      serverDirectory: directories.server,
+    });
+    const second = rebuild ? runBuild({ customTypesMap, skipPluginChecks }) : null;
+    return { first, second };
+  }
+
+  test('a used default package that is not installed is schema checked in one build, as the two-pass build checks it once installed', async () => {
+    writeConfig(brokenConfig);
+
+    const onePass = await lowdefyBuild({ customTypesMap: shippedTypesMap });
+    expect(onePass.second).toBe(null);
+    expect(onePass.first.status).toBe(0);
+    expect(onePass.first.warnings).not.toContain(pendingWarning(defaultPackage));
+    expect(fs.existsSync(pendingPath())).toBe(false);
+    const onePassFindings = pluginFindings(onePass.first);
+    const onePassMaps = readSchemaMaps();
+
+    fs.rmSync(directories.build, { recursive: true, force: true });
+
+    const twoPass = await lowdefyBuild({
+      customTypesMap: typesMap,
+      install: installDefaultPackage,
+    });
+    expect(twoPass.second).not.toBe(null);
+    expect(twoPass.second.status).toBe(0);
+    expect(pluginFindings(twoPass.first)).toEqual([]);
+
+    expect(onePassFindings).toHaveLength(3);
+    expect(onePassFindings.map(({ msg }) => msg)).toEqual([
+      'Block "Title" property "levle" is not allowed.',
+      'Action "SetState" required param "message" is missing.',
+      'Operator "_if" required param "test" is missing.',
+    ]);
+    expect(onePassFindings).toEqual(pluginFindings(twoPass.second));
+    expect(onePassMaps).toEqual(readSchemaMaps());
+    expect(onePassMaps['blockMetas.json'].Title.hazards).toEqual(metas.Title.hazards);
+  });
+
+  test('a misspelt ~ignoreBuildChecks slug fails the first build when a used default package is not installed', () => {
+    writeConfig(`lowdefy: local
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        ~ignoreBuildChecks:
+          - plugin-shcema
+        properties:
+          content: Hello
+`);
+    const { status, errors } = runBuild({
+      customTypesMap: shippedTypesMap,
+      pluginInstallFollows: true,
+    });
+    expect(status).toBe(1);
+    expect(errors).toContain(
+      '~ignoreBuildChecks slug "plugin-shcema" is not a built-in check or a rule of any plugin the app uses.'
+    );
+  });
+
+  test('a custom plugin that registers a default block type name is checked against its own schema', () => {
+    const customPackage = '@lowdefy-test/custom-title';
+    installPackage(customPackage, {
+      './metas': [
+        'metas.js',
+        `export const Title = ${JSON.stringify({
+          category: 'display',
+          properties: {
+            type: 'object',
+            additionalProperties: false,
+            properties: { content: { type: 'string' }, levle: { type: 'number' } },
+          },
+        })};\n`,
+      ],
+    });
+    writeConfig(`lowdefy: local
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Hello
+          levle: 2
+          level: 2
+`);
+    const result = runBuild({
+      customTypesMap: {
+        ...shippedTypesMap,
+        blocks: { ...shippedTypesMap.blocks, Title: { package: customPackage } },
+      },
+    });
+    expect(result.status).toBe(0);
+    expect(pluginFindings(result).map(({ msg }) => msg)).toEqual([
+      'Block "Title" property "level" is not allowed.',
+    ]);
+  });
+
+  test('a package that is neither default nor installed is still pending and warns', () => {
+    writeConfig(`lowdefy: local
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          levle: 2
+      - id: card
+        type: TestCard
+        properties:
+          title: Hello
+`);
+    const { status, warnings, lines } = runBuild({
+      customTypesMap: {
+        ...shippedTypesMap,
+        blocks: { ...shippedTypesMap.blocks, TestCard: { package: otherPackage } },
+      },
+    });
+    expect(status).toBe(0);
+    expect(warnings.filter((warning) => warning === pendingWarning(otherPackage))).toHaveLength(1);
+    expect(warnings).not.toContain(pendingWarning(defaultPackage));
+    expect(pluginFindings({ lines }).map(({ msg }) => msg)).toEqual([
+      'Block "Title" property "levle" is not allowed.',
+    ]);
+    expect(JSON.parse(fs.readFileSync(pendingPath(), 'utf8'))).toEqual({
+      packages: [{ name: otherPackage, schemaChecked: true }],
+    });
+  });
+
+  test('with skipPluginChecks a default package that is not installed gives no schema findings and is not pending', async () => {
+    writeConfig(brokenConfig);
+    const { first, second } = await lowdefyBuild({
+      customTypesMap: shippedTypesMap,
+      skipPluginChecks: true,
+    });
+    expect(second).toBe(null);
+    expect(first.status).toBe(0);
+    expect(first.warnings).toContain('Plugin checks were skipped (--skip-plugin-checks).');
+    expect(first.warnings).not.toContain(pendingWarning(defaultPackage));
+    expect(pluginFindings(first)).toEqual([]);
+    expect(fs.existsSync(pendingPath())).toBe(false);
   });
 });

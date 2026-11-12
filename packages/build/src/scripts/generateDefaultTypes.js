@@ -18,41 +18,13 @@
 import path from 'path';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
+import createDefaultTypesMap from '../utils/createDefaultTypesMap.js';
+import createEmptyTypesMap from '../utils/createEmptyTypesMap.js';
 import createPluginTypesMap from '../utils/createPluginTypesMap.js';
+import getPackageVersion from '../utils/getPackageVersion.js';
 import defaultPackages from '../defaultPackages.js';
 import defaultPackagesMobile from '../defaultPackagesMobile.js';
 import nativeBlockTypes from '../nativeBlockTypes.js';
-
-function createEmptyTypesMap() {
-  return {
-    actions: {},
-    agents: {},
-    auth: {
-      adapters: {},
-      providers: {},
-      strategies: {},
-    },
-    blockMetas: {},
-    connectionMetas: {},
-    blocks: {},
-    connections: {},
-    icons: {},
-    iconSets: {},
-    notifications: {},
-    operators: {
-      client: {},
-      server: {},
-    },
-    requestMetas: {},
-    requests: {},
-    steps: {},
-    websockets: {},
-  };
-}
-
-function getPackageVersion({ packageFile, packageName }) {
-  return packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
-}
 
 // The per-target type classes of the native shell: blocks and actions from the
 // native packages only, and the client operators of every default package.
@@ -119,19 +91,17 @@ export default defaultTypesMapMobile;
   );
 }
 
+// The web types map, with the default packages' schemas (createDefaultTypesMap).
+// Its scope is defaultPackages: defaultPackagesMobile adds only
+// @lowdefy/blocks-native, which build cannot import (see nativeBlockPackageTypes),
+// and whose types never enter the web typesMap that the schema checks and the
+// plugins/*Schemas.json maps read.
 async function generateDefaultTypesMap() {
   const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
-  const defaultTypesMap = createEmptyTypesMap();
-
-  for (const packageName of defaultPackages) {
-    const { default: types } = await import(`${packageName}/types`);
-    createPluginTypesMap({
-      packageTypes: types,
-      typesMap: defaultTypesMap,
-      packageName,
-      version: getPackageVersion({ packageFile, packageName }),
-    });
-  }
+  const defaultTypesMap = await createDefaultTypesMap({
+    packageFile,
+    packageNames: defaultPackages,
+  });
 
   await writeFile(
     path.resolve(process.cwd(), './dist/defaultTypesMap.js'),
@@ -144,4 +114,4 @@ export default defaultTypesMap;
   await generateDefaultTypesMapMobile({ packageFile });
 }
 
-generateDefaultTypesMap();
+await generateDefaultTypesMap();

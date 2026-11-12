@@ -39,9 +39,9 @@ async function emails({ context }) {
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await ensurePnpmWorkspaceYaml({ context, directory });
-  await installServer({ context, directory });
+  await installServer({ context, directory, skipIfInstalled: true });
   await runLowdefyBuild({ context, directory });
-  await installServer({ context, directory });
+  await installServer({ context, directory, skipIfInstalled: true });
 
   const { notifications, appEmail, notificationTypes, paths } = await readNotificationArtifacts({
     context,

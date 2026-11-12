@@ -21,9 +21,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 
 import resolveConfigLocation from '../../../packages/utils/errors/src/resolveConfigLocation.js';
-import compareBuilds from './compareBuilds.mjs';
 import compareKeyMaps from './compareKeyMaps.mjs';
-import createKeyMapComparer from './createKeyMapComparer.mjs';
 import formatKeyMapComparison from './formatKeyMapComparison.mjs';
 import readKeyMaps from './readKeyMaps.mjs';
 
@@ -230,55 +228,5 @@ test('readKeyMaps throws when a build folder has no refMap.json', () => {
   const root = makeTempDirectory();
   fs.writeFileSync(path.join(root, 'keyMap.json'), '{}');
   assert.throws(() => readKeyMaps({ location: root }), /has no refMap\.json/);
-  fs.rmSync(root, { recursive: true });
-});
-
-function writeServer({ root, name, keyMap }) {
-  const serverDirectory = path.join(root, name);
-  fs.mkdirSync(path.join(serverDirectory, 'build'), { recursive: true });
-  fs.writeFileSync(path.join(serverDirectory, 'package.json'), '{}');
-  fs.writeFileSync(path.join(serverDirectory, 'build', 'keyMap.json'), JSON.stringify(keyMap));
-  fs.writeFileSync(path.join(serverDirectory, 'build', 'refMap.json'), JSON.stringify(refMap));
-  return { output: '', serverDirectory };
-}
-
-test('createKeyMapComparer lets compareBuilds accept a key map in a new shape that says the same', async () => {
-  const root = makeTempDirectory();
-  const logged = [];
-  const comparison = await compareBuilds({
-    baseline: writeServer({ root, name: 'baseline', keyMap: oldShapeKeyMap() }),
-    current: writeServer({ root, name: 'current', keyMap: newShapeKeyMap() }),
-    comparers: {
-      'build/keyMap.json': createKeyMapComparer({
-        logger: { info: (line) => logged.push(line) },
-        resolve: { baseline: resolveConfigLocation, current: resolveNewShape },
-      }),
-    },
-  });
-  assert.equal(comparison.identical, true);
-  assert.deepEqual(logged, [
-    'keyMap.json by meaning: 5 key ids resolved on both sides; 0 only in old, 0 only in new, 0 resolve differently.',
-  ]);
-  fs.rmSync(root, { recursive: true });
-});
-
-test('createKeyMapComparer reports a key map that resolves differently as a differing file', async () => {
-  const root = makeTempDirectory();
-  const changed = newShapeKeyMap();
-  changed.d.l = 7;
-  const comparison = await compareBuilds({
-    baseline: writeServer({ root, name: 'baseline', keyMap: oldShapeKeyMap() }),
-    current: writeServer({ root, name: 'current', keyMap: changed }),
-    comparers: {
-      'build/keyMap.json': createKeyMapComparer({
-        logger: { info: () => {} },
-        resolve: { baseline: resolveConfigLocation, current: resolveNewShape },
-      }),
-    },
-  });
-  assert.equal(comparison.identical, false);
-  assert.equal(comparison.differences.length, 1);
-  assert.equal(comparison.differences[0].file, 'build/keyMap.json');
-  assert.ok(comparison.differences[0].lines.includes('d: line 4 → 7'));
   fs.rmSync(root, { recursive: true });
 });
