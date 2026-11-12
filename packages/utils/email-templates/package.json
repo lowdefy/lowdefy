@@ -24,7 +24,6 @@
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/nunjucks": "7.2.0",
-    "@react-email/components": "1.0.12",
     "@react-email/render": "2.3.1",
     "markdown-it": "15.0.3"
   },
