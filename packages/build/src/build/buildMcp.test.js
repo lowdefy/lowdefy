@@ -236,7 +236,7 @@ test('buildMcp throws when an endpoint entry has an unknown property', () => {
     mcp: { endpoints: [{ id: 'get-customer', scope: 'mcp:read', name: 'customer' }] },
   };
   expect(() => buildMcp({ components, context })).toThrow(
-    'MCP endpoint contains an unknown property. The known properties are "id", "scope" and "annotations".'
+    'MCP endpoint contains an unknown property. The known properties are "id", "scope", "annotations" and "view".'
   );
 });
 
@@ -381,7 +381,7 @@ test('buildMcp names afterToolCall among the known properties of the mcp block',
     mcp: { afterCall: 'record-tool-call', endpoints: [{ id: 'get-customer', scope: 'mcp:read' }] },
   };
   expect(() => buildMcp({ components, context })).toThrow(
-    'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions", "endpoints" and "afterToolCall".'
+    'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions", "endpoints", "afterToolCall", "viewPages", "viewSources" and "viewEndpoints".'
   );
 });
 

@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
+/* eslint-disable no-param-reassign */
+
 import { serializer } from '@lowdefy/helpers';
 
 // Always written, even unconfigured - the runtime reads mcp.configured and
 // never needs an existence check on the artifact.
 async function writeMcp({ components, context }) {
+  // What the app's views may reach is build output, not config (buildMcpViewConfig).
+  components.mcp.views = context.mcpViews;
   await context.writeBuildArtifact('mcp.json', serializer.serializeToString(components.mcp));
 }
 

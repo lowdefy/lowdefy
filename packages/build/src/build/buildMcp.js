@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
 
+import buildMcpViewConfig from './buildMcpViewConfig.js';
 import collectExceptions from '../utils/collectExceptions.js';
 import lowdefySchema from '../lowdefySchema.js';
 
@@ -194,6 +195,8 @@ function buildMcp({ components, context }) {
       );
     }
   }
+
+  buildMcpViewConfig({ components, context });
 
   return components;
 }

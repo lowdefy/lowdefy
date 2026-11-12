@@ -66,6 +66,8 @@ import runPluginChecks from '../runPluginChecks.js';
 import buildSecurity from '../buildSecurity/buildSecurity.js';
 import buildWebsockets from '../buildWebsockets.js';
 import validateCallAgentSteps from '../validateCallAgentSteps.js';
+import validateMcpResponseOperator from '../validateMcpResponseOperator.js';
+import validateMcpViews from '../validateMcpViews.js';
 import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
@@ -240,6 +242,13 @@ async function shallowBuild(options) {
     // After buildShallowPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
     tryBuildStep(buildMobileAppEvents, 'buildMobileAppEvents', { components, context });
+    // The view checks of the full build. views.pages stays empty: pages with a
+    // source file are built on request, and the dev server serves no views.
+    tryBuildStep(validateMcpViews, 'validateMcpViews', { components, context });
+    tryBuildStep(validateMcpResponseOperator, 'validateMcpResponseOperator', {
+      components,
+      context,
+    });
     // App-level config and inline pages; page builds check their own pages.
     const { pending: pluginChecksPending } = await runPluginChecks({
       components,
