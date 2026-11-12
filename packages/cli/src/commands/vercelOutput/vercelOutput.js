@@ -42,12 +42,11 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// build/mcp.json, as @lowdefy/build writes it: views.configured is true for an app with an MCP
-// App view.
-async function readHasView({ buildDirectory }) {
-  const raw = await readFile(path.join(buildDirectory, 'mcp.json'));
-  if (!raw) return false;
-  return JSON.parse(raw).views.configured === true;
+// build/mcp.json: views.configured is true for an app with an MCP App view. @lowdefy/build always
+// writes the file, so a build directory without it is not a finished build and the read fails.
+function readHasView({ buildDirectory }) {
+  const mcp = JSON.parse(fs.readFileSync(path.join(buildDirectory, 'mcp.json'), 'utf8'));
+  return mcp.views.configured === true;
 }
 
 // A view runs the app's client on its host's origin and loads the client's scripts, stylesheets,
@@ -194,7 +193,7 @@ async function vercelOutput({ context }) {
   //    cached for good; Vercel's static default (max-age=0, must-revalidate) would revalidate
   //    each of a page's chunks on every visit.
   const crons = await readCrons({ basePath, buildDirectory });
-  const hasView = await readHasView({ buildDirectory });
+  const hasView = readHasView({ buildDirectory });
   const config = {
     version: 3,
     routes: [

@@ -21,6 +21,9 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 let root;
 
+const mcpJson = { views: { configured: false } };
+vi.doMock('../../lib/build/mcp.js', () => ({ default: mcpJson }));
+
 function writeManifest(manifest) {
   fs.mkdirSync(path.join(root, 'dist/client/.vite'), { recursive: true });
   fs.writeFileSync(path.join(root, 'dist/client/.vite/manifest.json'), JSON.stringify(manifest));
@@ -35,6 +38,7 @@ async function loadGetAssets() {
 
 beforeEach(() => {
   root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-server-assets-'));
+  mcpJson.views.configured = false;
   vi.spyOn(process, 'cwd').mockReturnValue(root);
 });
 
@@ -63,6 +67,7 @@ test('getAssets gives the entry script and stylesheets of a build with one entry
 });
 
 test('getAssets links the stylesheets of the chunks the main entry shares with the view entry', async () => {
+  mcpJson.views.configured = true;
   writeManifest({
     ...icons,
     'client/main.jsx': { file: 'assets/main-1.js', imports: ['_globals.js'] },
@@ -82,4 +87,57 @@ test('getAssets throws when the manifest has no main entry', async () => {
   writeManifest({ ...icons });
   const getAssets = await loadGetAssets();
   expect(() => getAssets()).toThrow('Vite manifest has no "client/main.jsx" entry.');
+});
+
+// Vite's own HTML links the stylesheets of a chunk's imports before the
+// chunk's own, so the entry's rules win a tie in the cascade.
+test('getAssets lists the stylesheets of statically imported chunks before the entry own, in import order', async () => {
+  mcpJson.views.configured = true;
+  const shared = {
+    '_theme.js': { file: 'assets/theme-1.js', css: ['assets/theme-1.css'] },
+    '_layout.js': {
+      file: 'assets/layout-1.js',
+      css: ['assets/layout-1.css'],
+      imports: ['_theme.js'],
+    },
+    '_blocks.js': {
+      file: 'assets/blocks-1.js',
+      css: ['assets/blocks-1.css'],
+      imports: ['_theme.js'],
+    },
+  };
+  writeManifest({
+    ...icons,
+    ...shared,
+    'client/main.jsx': {
+      file: 'assets/main-1.js',
+      css: ['assets/main-1.css'],
+      imports: ['_layout.js', '_blocks.js'],
+    },
+    'client/view.jsx': {
+      file: 'assets/view-1.js',
+      css: ['assets/view-1.css'],
+      imports: ['_blocks.js', '_layout.js'],
+    },
+  });
+  const assets = (await loadGetAssets())();
+  expect(assets.css).toEqual([
+    'assets/theme-1.css',
+    'assets/layout-1.css',
+    'assets/blocks-1.css',
+    'assets/main-1.css',
+  ]);
+  expect(assets.view.css).toEqual([
+    'assets/theme-1.css',
+    'assets/blocks-1.css',
+    'assets/layout-1.css',
+    'assets/view-1.css',
+  ]);
+});
+
+test('getAssets throws for an app with a view whose client build has no view entry', async () => {
+  mcpJson.views.configured = true;
+  writeManifest({ ...icons, 'client/main.jsx': { file: 'assets/main-1.js' } });
+  const getAssets = await loadGetAssets();
+  expect(() => getAssets()).toThrow('Vite manifest has no "client/view.jsx" entry');
 });

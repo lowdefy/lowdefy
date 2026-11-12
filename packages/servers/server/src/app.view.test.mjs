@@ -373,3 +373,17 @@ test('an app without a view sends no Access-Control-Allow-Origin on its files', 
     expect(corsHeaders(res)).toEqual([]);
   }
 });
+
+function hasRoute(app, routePath) {
+  return app.routes.some((route) => route.method === 'GET' && route.path === routePath);
+}
+
+test('the view routes are routes of an app with a view only', () => {
+  const withView = createApp();
+  expect(hasRoute(withView, '/api/view/boot')).toBe(true);
+  expect(hasRoute(withView, '/api/view/root')).toBe(true);
+  mcpJson.views.configured = false;
+  const withoutView = createApp();
+  expect(hasRoute(withoutView, '/api/view/boot')).toBe(false);
+  expect(hasRoute(withoutView, '/api/view/root')).toBe(false);
+});

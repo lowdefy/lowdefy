@@ -48,9 +48,12 @@ function writeServer({ config, mcp, schedules }) {
     'dist/client/.vite/manifest.json': '{}',
     'build/config.json': JSON.stringify(config),
     ...(schedules ? { 'build/schedules.json': JSON.stringify(schedules) } : {}),
+    // The Lowdefy build always writes mcp.json.
+    'build/mcp.json': JSON.stringify(
+      mcp ?? { views: { configured: false, pages: {}, sources: [] } }
+    ),
     ...(mcp
       ? {
-          'build/mcp.json': JSON.stringify(mcp),
           'dist/client/fonts/inter.woff2': 'font',
           'dist/client/logo (dark).png': 'logo',
           'dist/client/api/openapi.json': '{}',
@@ -181,4 +184,19 @@ test('vercelOutput adds no CORS route for an app without a view', async () => {
     { src: '/(.*)', dest: '/api' },
   ]);
   expect(JSON.stringify(config)).not.toContain('access-control');
+});
+
+test('vercelOutput fails on a build directory without mcp.json, which every build writes', async () => {
+  const { default: vercelOutput } = await import('./vercelOutput.js');
+  const serverDirectory = writeServer({ config: {} });
+  fs.rmSync(path.join(serverDirectory, 'build/mcp.json'));
+  await expect(
+    vercelOutput({
+      context: {
+        directories: { server: serverDirectory, build: path.join(serverDirectory, 'build') },
+        logger: { info: vi.fn(), debug: vi.fn() },
+        sendTelemetry: vi.fn(),
+      },
+    })
+  ).rejects.toThrow(/mcp\.json/);
 });

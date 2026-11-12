@@ -83,7 +83,7 @@ test('/api/view/boot is public and answers the build id, the view entry and its 
   expect(await res.json()).toEqual({
     buildId: 'build-1',
     js: '/assets/view-bbb.js',
-    css: ['/assets/view-bbb.css', '/assets/shared-ccc.css'],
+    css: ['/assets/shared-ccc.css', '/assets/view-bbb.css'],
   });
 });
 
@@ -98,24 +98,6 @@ test('/api/view/boot gives each file under the app basePath', async () => {
   expect(await res.json()).toEqual({
     buildId: 'build-1',
     js: '/app/assets/view-bbb.js',
-    css: ['/app/assets/view-bbb.css', '/app/assets/shared-ccc.css'],
+    css: ['/app/assets/shared-ccc.css', '/app/assets/view-bbb.css'],
   });
-});
-
-test('/api/view/boot answers 404 when the build has no view entry', async () => {
-  const { 'client/view.jsx': _, ...withoutView } = viewManifest;
-  writeManifest(withoutView);
-  const res = await boot();
-  expect(res.status).toEqual(404);
-  expect(await res.json()).toEqual({
-    name: 'NotFoundError',
-    message: 'This build has no view entry.',
-  });
-});
-
-test('/api/view/boot answers 404 for an app without a view', async () => {
-  mcpJson.views.configured = false;
-  const res = await boot();
-  expect(res.status).toEqual(404);
-  expect(await res.json()).toEqual({ name: 'NotFoundError', message: 'This app has no views.' });
 });

@@ -17,7 +17,7 @@
 import { addNonceToElements, darkModeScript, layerOrderScript } from '@lowdefy/api';
 import { appStorageKey, type } from '@lowdefy/helpers';
 
-import safeScriptJson from '../lib/safeScriptJson.js';
+import safeScriptJson from '@lowdefy/api/html/safeScriptJson.js';
 
 const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
 
