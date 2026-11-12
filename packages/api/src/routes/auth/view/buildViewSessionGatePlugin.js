@@ -16,7 +16,6 @@
 
 import { getSession } from 'better-auth/api';
 import { setRequestCookie } from 'better-auth/cookies';
-import { type } from '@lowdefy/helpers';
 
 const VIEW_SESSION_REFUSED = 'VIEW_SESSION_REFUSED';
 
