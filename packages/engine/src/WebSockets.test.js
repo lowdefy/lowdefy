@@ -15,6 +15,7 @@
 */
 
 import { vi, afterEach, expect, test } from 'vitest';
+import { ServiceError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import WebSockets from './WebSockets.js';
@@ -207,6 +208,38 @@ test('client subscribe rejection clears active state and records the channel err
   client.subscribe.mockResolvedValue(undefined);
   await websockets.subscribe({ websocketId: 'ticker' });
   expect(client.subscribe).toHaveBeenCalledTimes(2);
+});
+
+test('a subscribe the client keeps after a timeout leaves the channel active, so it takes messages once the resubscribe is acked', async () => {
+  useFakeTimers();
+  const { client, context } = createTestContext({
+    subscriptions: [{ websocketId: 'ticker' }],
+  });
+  const timedOut = new ServiceError('Subscribe to "ticker" timed out.', { service: 'WebSocket' });
+  timedOut.subscriptionKept = true;
+  client.subscribe.mockRejectedValue(timedOut);
+  const websockets = new WebSockets(context);
+
+  await expect(websockets.subscribe({ websocketId: 'ticker' })).rejects.toThrow(
+    'WebSocket: Subscribe to "ticker" timed out.'
+  );
+  expect(context.websockets.ticker.error).toEqual({
+    message: 'WebSocket: Subscribe to "ticker" timed out.',
+  });
+
+  const { onConnected, onMessage } = subscribeHandlers(client);
+  onConnected();
+  expect(context.websockets.ticker.connected).toBe(true);
+  expect(context.websockets.ticker.error).toBe(null);
+  onMessage(serializer.serialize({ data: { tick: 1 } }));
+  expect(context.websockets.ticker.messages).toEqual([{ tick: 1 }]);
+
+  // The same Subscribe again does not open a second subscription, and the
+  // channel still unsubscribes.
+  await websockets.subscribe({ websocketId: 'ticker' });
+  expect(client.subscribe).toHaveBeenCalledTimes(1);
+  websockets.unsubscribe({ websocketId: 'ticker' });
+  expect(client.unsubscribe).toHaveBeenCalledWith({ websocketId: 'ticker' });
 });
 
 test('onConnected handler sets connected true and fires the onSubscribe event', async () => {

@@ -887,6 +887,8 @@ The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port a
 
 The proxy probes a child once and then forwards straight to it until a forward fails or the child is replaced: a probe per request left one TIME_WAIT socket per Vite module request, and headless page loads (journeys, screenshots) exhausted the ephemeral ports within a minute. After a restart it waits for the stopped child to exit (`context.devServerExited`, set by `shutdownServer`) before probing, since until then the old child still answers. A GET or HEAD that never reached a child that was going away (a refused connect, or a keep-alive socket the child had closed) is replayed through the hold; any other request forwarded in the moment between a child dying and the manager seeing it exit answers 502 once, and that failure sends every later request back through the probe.
 
+The child leaves idle connections open for the proxy's agent to close (`lib/vite/keepIdleConnectionsOpen.js`). With Node's default keep-alive timer, synchronous work that blocks the child's event loop past the timer lets it fire before the socket is read, and it closes the connection over a request already sent. The proxy's client sees `ECONNRESET`, and a POST answers 502 since it cannot be replayed. What the proxy answers itself carries `x-lowdefy-child` (`stopped`, `restarting` or `dropped`), which journeys report as a dev server failure.
+
 ### Reload Trigger
 
 **File:** `manager/processes/reloadClients.mjs`

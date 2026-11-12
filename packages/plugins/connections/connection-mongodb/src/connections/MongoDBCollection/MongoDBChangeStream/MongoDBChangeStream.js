@@ -14,17 +14,33 @@
   limitations under the License.
 */
 
+import { setTimeout as wait } from 'node:timers/promises';
+
+import { type } from '@lowdefy/helpers';
+
 import applyTenantToChangeStream from '../tenant/applyTenantToChangeStream.js';
 import getCollection from '../getCollection.js';
+import isResumableChangeStreamError from './isResumableChangeStreamError.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
+
+// Wait before reopening a stream that failed: 0.5 s, 1 s, 2 s, then every 4 s.
+const RETRY_DELAYS_MS = [500, 1000, 2000, 4000];
+// Give up once no reopened stream has been answered for this long, and throw as before.
+// A stream the server kept answering for this long was healthy, and resets the wait.
+const RETRY_WINDOW_MS = 30000;
 
 // Websocket source resolver — opens a MongoDB change stream and publishes
 // each change event to the channel's subscribers. Runs from the first
 // subscriber until the last one leaves (abort signal). Requires MongoDB to
 // run as a replica set (change streams are not available on standalone
 // deployments).
+//
+// A replica set election ends the stream with an error the driver does not
+// resume (code 11602). The resolver then reopens the stream at the driver's
+// last resume token (resumeAfter), so subscribers keep their channel instead
+// of all reconnecting and reloading at once, and miss no change.
 async function MongoDBChangeStream({ connection, properties, publish, signal, tenant }) {
   let { fullDocument, pipeline } = deserialize(properties ?? {});
   if (tenant) {
@@ -36,39 +52,65 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
   // The client is cached and shared with all other requests on this connection,
   // so only the stream may be closed here, never the client.
   const { collection } = await getCollection({ connection });
-  if (signal.aborted) {
-    return;
-  }
-  let stream;
-  try {
-    stream = collection.watch(pipeline ?? [], {
-      fullDocument: fullDocument ?? 'updateLookup',
+  let resumeToken = null;
+  let failingSince = null;
+  let retries = 0;
+  while (!signal.aborted) {
+    const options = { fullDocument: fullDocument ?? 'updateLookup' };
+    if (!type.isNone(resumeToken)) {
+      options.resumeAfter = resumeToken;
+    }
+    let stream;
+    try {
+      stream = collection.watch(pipeline ?? [], options);
+    } catch (error) {
+      throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
+    }
+    // The driver updates the resume token on each change and each answer to the
+    // stream's aggregate or getMore (the post-batch token), so a reopen after it
+    // misses no change, even on a quiet stream that published none yet. An answer
+    // also ends the failing window. Time the driver spends blocked (waiting for a
+    // primary) is not counted as healthy.
+    let firstAnsweredAt = null;
+    let lastAnsweredAt = null;
+    stream.on('resumeTokenChanged', (token) => {
+      resumeToken = token;
+      failingSince = null;
+      lastAnsweredAt = Date.now();
+      firstAnsweredAt ??= lastAnsweredAt;
     });
-  } catch (error) {
-    throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
-  }
-  signal.addEventListener(
-    'abort',
-    () => {
+    const closeStream = () =>
       stream.close().catch(() => {
         // Already closed — nothing to clean up.
       });
-    },
-    { once: true }
-  );
-  try {
-    for await (const change of stream) {
-      publish({ data: serialize(change) });
+    signal.addEventListener('abort', closeStream, { once: true });
+    try {
+      for await (const change of stream) {
+        publish({ data: serialize(change) });
+      }
+      return;
+    } catch (error) {
+      // Closing the stream on abort surfaces as an error on the iterator.
+      if (signal.aborted) {
+        return;
+      }
+      // Only a healthy run resets the wait, so a primary that answers and then fails
+      // again is retried every 4 s rather than every 0.5 s.
+      if (!type.isNone(firstAnsweredAt) && lastAnsweredAt - firstAnsweredAt > RETRY_WINDOW_MS) {
+        retries = 0;
+      }
+      failingSince ??= Date.now();
+      if (!isResumableChangeStreamError(error) || Date.now() - failingSince > RETRY_WINDOW_MS) {
+        throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
+      }
+    } finally {
+      signal.removeEventListener('abort', closeStream);
+      await closeStream();
     }
-  } catch (error) {
-    // Closing the stream on abort surfaces as an error on the iterator.
-    if (!signal.aborted) {
-      throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
-    }
-  } finally {
-    await stream.close().catch(() => {
-      // Already closed — nothing to clean up.
-    });
+    const delay = RETRY_DELAYS_MS[Math.min(retries, RETRY_DELAYS_MS.length - 1)];
+    retries += 1;
+    // An abort during the wait ends it early, and the loop ends.
+    await wait(delay, undefined, { signal }).catch(() => {});
   }
 }
 

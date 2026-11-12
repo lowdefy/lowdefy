@@ -29,7 +29,8 @@ function describeWhere({ phase, index, step }) {
 // error with its kind, message, config source and finding key.
 // When the step also failed on its own, the app error leads the message, since
 // it is usually the cause, and the step's own message follows (and is kept
-// apart as stepMessage).
+// apart as stepMessage). A dev-server finding makes it a dev server failure,
+// not an app error: the journey says nothing about the app.
 function toAppErrorFailure({ findings, phase, index, step, stepFailure }) {
   const errors = findings.map(({ kind, message, source, configKey, key }) => ({
     kind,
@@ -39,12 +40,14 @@ function toAppErrorFailure({ findings, phase, index, step, stepFailure }) {
     key,
   }));
   const actual = errors.map((error) => `${error.kind}: ${error.message}`);
+  const lostDevServer = errors.some((error) => error.kind === 'dev-server');
   const count = errors.length === 1 ? 'an app error' : `${errors.length} app errors`;
-  const message = `${describeWhere({ phase, index, step })} caused ${count}: ${actual.join('; ')}`;
+  const outcome = lostDevServer ? 'lost the dev server' : `caused ${count}`;
+  const message = `${describeWhere({ phase, index, step })} ${outcome}: ${actual.join('; ')}`;
   const failure = {
-    kind: 'app-error',
+    kind: lostDevServer ? 'dev-server' : 'app-error',
     message,
-    expected: 'no app error',
+    expected: lostDevServer ? 'the dev server to answer' : 'no app error',
     actual,
     errors,
   };

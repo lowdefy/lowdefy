@@ -282,6 +282,23 @@ test('buildOrganizationPlugin refuses making a suspended member an owner in the 
   ).rejects.toMatchObject({ body: { code: 'SUSPENDED_MEMBER_CANNOT_BE_OWNER' } });
 });
 
+test('buildOrganizationPlugin refuses an invitation naming a different contact in the beforeAcceptInvitation hook', async () => {
+  const findOne = async () => ({ id: 'user_1', contactId: 'contact_1' });
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({ $context: Promise.resolve({ adapter: { findOne } }) }),
+    logger: { warn: () => {} },
+    sendInvitationEmail: async () => {},
+  });
+  await expect(
+    plugin.options.organizationHooks.beforeAcceptInvitation({
+      invitation: { id: 'inv_1', contactId: 'contact_9' },
+      user: { id: 'user_1' },
+      organization: { id: 'org_1' },
+    })
+  ).rejects.toMatchObject({ statusCode: 400, body: { code: 'CONTACT_LINK_MISMATCH' } });
+});
+
 // mintOrganization writes organizations and their owners through the adapter,
 // skipping the createOrganization endpoint, so anything the endpoint would apply
 // on that path would be skipped without an error. Declaring one of these means

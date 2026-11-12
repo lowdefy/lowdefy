@@ -221,5 +221,44 @@ test('callAPIHandler reports the endpoint change to every context the app holds'
   await callAPIHandler(context, { blockId: 'block_id', params: { endpointId: 'ep_one' } });
   expect(context._internal.DependencyTracker.takeChanges()).toEqual(['api:ep_one']);
   expect(other._internal.DependencyTracker.takeChanges()).toEqual(['api:ep_one']);
-  expect(context._internal.update).toHaveBeenCalledWith();
+  expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
+});
+
+// About a tracked pass, so it holds even when the suite runs with test:full.
+test('callAPIHandler runs a tracked pass over the blocks that read the endpoint', async () => {
+  const trackerEnabled = DependencyTracker.enabled;
+  DependencyTracker.enabled = true;
+  try {
+    const callAPI = vi
+      .fn()
+      .mockResolvedValue({ response: { a: 1 }, status: 'success', success: true });
+    const context = createContext({ callAPI });
+    const passes = [];
+    context._internal.update = vi.fn((options) => {
+      passes.push(context._internal.DependencyTracker.beginUpdate(options));
+    });
+    await callAPIHandler(context, { params: { endpointId: 'ep_one', payload: {} } });
+    expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
+    expect(passes.at(-1)).toEqual({ full: false, changes: ['api:ep_one'] });
+  } finally {
+    DependencyTracker.enabled = trackerEnabled;
+  }
+});
+
+test('callAPIHandler runs a pass while the call is loading, as a request does', async () => {
+  let resolveCall;
+  const callAPI = vi.fn(
+    () =>
+      new Promise((resolve) => {
+        resolveCall = resolve;
+      })
+  );
+  const context = createContext({ callAPI });
+  const call = callAPIHandler(context, { params: { endpointId: 'ep_one', payload: {} } });
+  expect(context._internal.update).toHaveBeenCalledTimes(1);
+  expect(context._internal.update).toHaveBeenCalledWith({ changes: [] });
+  expect(context._internal.lowdefy.apiResponses.ep_one[0].loading).toBe(true);
+  resolveCall({ response: {}, status: 'success', success: true });
+  await call;
+  expect(context._internal.update).toHaveBeenCalledTimes(2);
 });

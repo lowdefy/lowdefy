@@ -235,3 +235,19 @@ test('setPreference writes the dark mode preference to the app key', () => {
   expect(window.localStorage.getItem(storageKey)).toBe('light');
   expect(window.__lowdefy_darkModePreference).toBe('light');
 });
+
+test('starts on system when the browser blocks storage', () => {
+  const localStorage = Object.getOwnPropertyDescriptor(window, 'localStorage');
+  Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    get: () => {
+      throw new DOMException('The operation is insecure.', 'SecurityError');
+    },
+  });
+  try {
+    renderHook(() => useDarkMode({ antd: {}, storageKey }));
+    expect(window.__lowdefy_darkModePreference).toBe('system');
+  } finally {
+    Object.defineProperty(window, 'localStorage', localStorage);
+  }
+});

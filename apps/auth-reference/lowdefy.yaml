@@ -267,8 +267,9 @@ auth:
   # binds session.create.after and email.verified too, and its bindings are
   # placed before these), then the app's entries in array order.
   # normalize-signup carries the merge-on-signup match for trusted-provider
-  # OAuth (arrives verified), and on-email-verified carries the
-  # email/password merge (verified only at this point).
+  # OAuth (arrives verified). Email/password signups are not matched: they
+  # are verified only after the user row exists, and no step writes the
+  # contact link after that.
   hooks:
     - id: normalize-signup
       point: user.create.before

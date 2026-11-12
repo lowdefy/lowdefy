@@ -45,6 +45,8 @@ vi.doMock('./beginTwoFactorChallenge.js', () => ({
 
 const { default: buildRequestHooks } = await import('./buildRequestHooks.js');
 
+const logger = { debug: vi.fn() };
+
 const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' };
 const organizations = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
 
@@ -65,7 +67,7 @@ function createMockAuth({ invitations = [] } = {}) {
 
 test('buildRequestHooks returns a before and an after slot with no magic link configured', async () => {
   const getAuth = vi.fn();
-  const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth });
+  const hooks = buildRequestHooks({ logger, authConfig: { organizations }, getAuth });
   expect(typeof hooks.before).toBe('function');
   expect(typeof hooks.after).toBe('function');
   expect(
@@ -78,6 +80,7 @@ test('buildRequestHooks returns a before and an after slot with no magic link co
 test('buildRequestHooks routes /sign-in/magic-link into the send gate when magicLink is enabled', async () => {
   const auth = createMockAuth({ invitations: [] });
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { magicLink: { enabled: true }, organizations },
     getAuth: () => auth,
   });
@@ -88,9 +91,40 @@ test('buildRequestHooks routes /sign-in/magic-link into the send gate when magic
   expect(result).toEqual({ status: true });
 });
 
+// The banned branch is the only one that reads the logger, so this proves it
+// reaches both gates.
+test.each([
+  { path: '/sign-in/magic-link', authConfig: { magicLink: { enabled: true }, organizations } },
+  {
+    path: '/email-otp/send-verification-otp',
+    authConfig: { emailOTP: { enabled: true }, organizations },
+  },
+])('buildRequestHooks passes the logger to the $path send gate', async ({ path, authConfig }) => {
+  const user = { id: 'user_1', email: 'member@example.com', banned: true };
+  const auth = {
+    $context: Promise.resolve({
+      adapter: {
+        findOne: vi.fn(async () => pinnedOrg),
+        findMany: vi.fn(async () => [
+          { id: 'member_1', userId: 'user_1', organizationId: pinnedOrg.id },
+        ]),
+      },
+      internalAdapter: { findUserByEmail: vi.fn(async () => ({ user, accounts: [] })) },
+    }),
+  };
+  const gateLogger = { debug: vi.fn() };
+  const hooks = buildRequestHooks({ authConfig, getAuth: () => auth, logger: gateLogger });
+  await hooks.before({ path, body: { email: 'member@example.com' } });
+  expect(gateLogger.debug).toHaveBeenCalledWith(
+    { event: 'auth_email_send_banned', userId: 'user_1' },
+    expect.any(String)
+  );
+});
+
 test('buildRequestHooks leaves paths other than /sign-in/magic-link alone when magicLink is enabled', async () => {
   const getAuth = vi.fn();
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { magicLink: { enabled: true }, organizations },
     getAuth,
   });
@@ -112,7 +146,7 @@ test('buildRequestHooks routes /organization/accept-invitation into the expired 
     })),
   };
   const auth = { $context: Promise.resolve({ adapter }) };
-  const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth: () => auth });
+  const hooks = buildRequestHooks({ logger, authConfig: { organizations }, getAuth: () => auth });
   mockGetSessionFromCtx.mockResolvedValue({ user: { id: 'user_1' } });
 
   await expect(
@@ -140,11 +174,16 @@ test('buildRequestHooks gates the member-gated organization endpoints under tena
     context: { adapter, internalAdapter },
   };
 
-  const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  const pinnedHooks = buildRequestHooks({
+    logger,
+    authConfig: { organizations },
+    getAuth: vi.fn(),
+  });
   expect(await pinnedHooks.before(ctx)).toBeUndefined();
   expect(adapter.findMany).not.toHaveBeenCalled();
 
   const tenantHooks = buildRequestHooks({
+    logger,
     authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
     getAuth: vi.fn(),
   });
@@ -168,6 +207,7 @@ test('buildRequestHooks gates organization endpoints it does not list as members
     findMany: vi.fn(async () => [{ userId: 'user_1', organizationId: 'org_2', suspended: true }]),
   };
   const tenantHooks = buildRequestHooks({
+    logger,
     authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
     getAuth: vi.fn(),
   });
@@ -201,10 +241,15 @@ test('buildRequestHooks filters /organization/list under tenant only', async () 
     context: { adapter, returned: [{ id: 'org_1' }, { id: 'org_2' }] },
   };
 
-  const pinnedHooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  const pinnedHooks = buildRequestHooks({
+    logger,
+    authConfig: { organizations },
+    getAuth: vi.fn(),
+  });
   expect(await pinnedHooks.after(ctx)).toBeUndefined();
 
   const tenantHooks = buildRequestHooks({
+    logger,
     authConfig: { organizations: { policy: 'tenant', signup: 'open', create: 'auto' } },
     getAuth: vi.fn(),
   });
@@ -213,7 +258,11 @@ test('buildRequestHooks filters /organization/list under tenant only', async () 
 
 test('buildRequestHooks does not resolve the BetterAuth instance while assembling', () => {
   const getAuth = vi.fn();
-  buildRequestHooks({ authConfig: { magicLink: { enabled: true }, organizations }, getAuth });
+  buildRequestHooks({
+    logger,
+    authConfig: { magicLink: { enabled: true }, organizations },
+    getAuth,
+  });
   expect(getAuth).not.toHaveBeenCalled();
 });
 
@@ -254,6 +303,7 @@ beforeEach(() => {
 
 test('buildRequestHooks challenges an enrolled user on /magic-link/verify when twoFactor and magicLink are enabled', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: twoFactorAuthConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
@@ -268,6 +318,7 @@ test('buildRequestHooks challenges an enrolled user on /magic-link/verify when t
 
 test('buildRequestHooks threads the 30-day trust lifetime into the challenge when trustDevice is not disabled', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: twoFactorAuthConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
@@ -281,6 +332,7 @@ test('buildRequestHooks threads the 30-day trust lifetime into the challenge whe
 
 test('buildRequestHooks threads trustDeviceMaxAge 0 into the challenge when trustDevice is false', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: true, trustDevice: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
@@ -294,6 +346,7 @@ test('buildRequestHooks threads trustDeviceMaxAge 0 into the challenge when trus
 
 test('buildRequestHooks does not challenge on a path no registration claims', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: twoFactorAuthConfig,
     baseUrlOrigin: 'https://app.example.com',
     getAuth: vi.fn(),
@@ -308,6 +361,7 @@ test('buildRequestHooks does not challenge on a path no registration claims', as
 
 test('buildRequestHooks registers no two factor challenge when twoFactor is disabled', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     baseUrlOrigin: 'https://app.example.com',
     getAuth: vi.fn(),
@@ -319,6 +373,7 @@ test('buildRequestHooks registers no two factor challenge when twoFactor is disa
 
 test('buildRequestHooks registers no two factor challenge when magicLink is disabled', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { ...twoFactorAuthConfig, magicLink: { enabled: false } },
     baseUrlOrigin: 'https://app.example.com',
     getAuth: vi.fn(),
@@ -330,6 +385,7 @@ test('buildRequestHooks registers no two factor challenge when magicLink is disa
 
 test('buildRequestHooks registers no two factor challenge when authPages.twoFactor is unset', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { ...twoFactorAuthConfig, authPages: {} },
     baseUrlOrigin: 'https://app.example.com',
     getAuth: vi.fn(),
@@ -341,6 +397,7 @@ test('buildRequestHooks registers no two factor challenge when authPages.twoFact
 
 function createOAuthHooks(mfaTrustedProviderKeys) {
   return buildRequestHooks({
+    logger,
     authConfig: {
       ...twoFactorAuthConfig,
       twoFactor: { enabled: true, mfaTrustedProviderKeys },
@@ -407,6 +464,7 @@ test('buildRequestHooks challenges the OAuth callbacks with mfaTrustedProviderKe
 
 test('buildRequestHooks challenges an OAuth callback with magicLink disabled', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { ...twoFactorAuthConfig, magicLink: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
@@ -421,6 +479,7 @@ test('buildRequestHooks challenges an OAuth callback with magicLink disabled', a
 
 test('buildRequestHooks challenges no OAuth callback when twoFactor is disabled', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
@@ -454,6 +513,7 @@ const phoneNumberAuthConfig = {
 
 function createPhoneHooks(authConfig) {
   return buildRequestHooks({
+    logger,
     authConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
@@ -500,6 +560,7 @@ test('buildRequestHooks skips an id token sign-in for a trusted built-in provide
 
 test('buildRequestHooks does not challenge an id token sign-in when twoFactor is disabled', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
@@ -611,6 +672,7 @@ const emailOTPAuthConfig = {
 
 function createEmailOtpHooks(authConfig) {
   return buildRequestHooks({
+    logger,
     authConfig,
     basePath: '/app',
     baseUrlOrigin: 'https://app.example.com',
@@ -627,6 +689,7 @@ function createEmailOtpVerifyCtx(path = '/sign-in/email-otp') {
 test('buildRequestHooks routes /email-otp/send-verification-otp into the send gate when emailOTP is enabled', async () => {
   const auth = createMockAuth({ invitations: [] });
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { emailOTP: { enabled: true }, organizations },
     getAuth: () => auth,
   });
@@ -645,6 +708,7 @@ test('buildRequestHooks lets an admitted email through the OTP send gate', async
     invitations: [{ id: 'inv_1', status: 'pending', expiresAt: future }],
   });
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { emailOTP: { enabled: true }, organizations },
     getAuth: () => auth,
   });
@@ -658,7 +722,7 @@ test('buildRequestHooks lets an admitted email through the OTP send gate', async
 
 test('buildRequestHooks registers no OTP send gate when emailOTP is disabled', async () => {
   const getAuth = vi.fn();
-  const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth });
+  const hooks = buildRequestHooks({ logger, authConfig: { organizations }, getAuth });
   expect(
     await hooks.before({
       path: '/email-otp/send-verification-otp',
@@ -718,6 +782,7 @@ test('buildRequestHooks leaves an unenrolled user on /sign-in/email-otp untouche
 
 test('buildRequestHooks redirects a ban on /magic-link/verify when magicLink is enabled', async () => {
   const hooks = buildRequestHooks({
+    logger,
     authConfig: { magicLink: { enabled: true }, organizations },
     getAuth: vi.fn(),
   });
@@ -736,7 +801,7 @@ test('buildRequestHooks redirects a ban on /magic-link/verify when magicLink is 
 });
 
 test('buildRequestHooks does not register the sign-in refused redirect without magicLink', async () => {
-  const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth: vi.fn() });
+  const hooks = buildRequestHooks({ logger, authConfig: { organizations }, getAuth: vi.fn() });
   const response = await hooks.after({
     path: '/magic-link/verify',
     query: { callbackURL: '/', errorCallbackURL: '/login' },
@@ -753,6 +818,7 @@ test('buildRequestHooks does not register the sign-in refused redirect without m
 test('buildRequestHooks caps code sends per address only for apps with a mobile section', async () => {
   const web = createMockAuth();
   const webHooks = buildRequestHooks({
+    logger,
     authConfig: { emailOTP: { enabled: true }, organizations },
     getAuth: () => web,
   });
@@ -765,6 +831,7 @@ test('buildRequestHooks caps code sends per address only for apps with a mobile 
 
   const phone = createMockAuth();
   const phoneHooks = buildRequestHooks({
+    logger,
     authConfig: { emailOTP: { enabled: true }, organizations, mobile: { shells: [] } },
     getAuth: () => phone,
   });

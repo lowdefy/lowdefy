@@ -28,6 +28,7 @@ const SEVERITY = {
   'client-error': 'error',
   'server-error': 'error',
   'request-failed': 'error',
+  'dev-server': 'error',
   'dead-click': 'warning',
   environment: 'info',
 };
@@ -64,6 +65,9 @@ function isDeadClick({ step, result, window }) {
 //   server-error    a server error entry this run caused
 //   request-failed  a 5xx from the app's request or endpoint routes that no
 //                   server error entry in the window explains
+//   dev-server      the dev server's proxy answered for a child it could not
+//                   reach: the request may not have run, and the app is not
+//                   at fault
 //   dead-click      a click that succeeded and changed nothing: no event, no
 //                   lasting DOM change, no app request, no URL change
 //   environment     a server error from a request using a $search or
@@ -148,7 +152,22 @@ async function evaluateInvariants({
     });
   });
   window.responses
+    .filter((response) => !type.isNone(response.childState))
+    .forEach((response) => {
+      add({
+        kind: 'dev-server',
+        message: `${response.method} ${
+          new URL(response.url).pathname
+        } got no answer from the app: the dev server's connection to its web server failed (${
+          response.status
+        }, ${
+          response.childState
+        }). This is not an app error. Check the dev server log for a restart or crash, then run the journey again.`,
+      });
+    });
+  window.responses
     .filter((response) => response.status >= 500)
+    .filter((response) => type.isNone(response.childState))
     .filter((response) => !isExplained({ response, serverEntries, basePath }))
     .forEach((response) => {
       add({
@@ -169,6 +188,10 @@ async function evaluateInvariants({
 
   if (findings.some((finding) => finding.kind === 'environment')) {
     findings = findings.filter((finding) => finding.kind === 'environment');
+  }
+  // The page's own errors about a request that got no answer are only its echo.
+  if (findings.some((finding) => finding.kind === 'dev-server')) {
+    findings = findings.filter((finding) => finding.kind === 'dev-server');
   }
   const seen = new Set();
   return findings

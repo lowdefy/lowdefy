@@ -1,5 +1,52 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+- 0f0cd03: The `Search` block can show a few best results per group, keep one action row last, and remember the results a person opened. A production app's command palette needs this to search documents, controls and people at once, where one kind used to crowd out the others under `maxResults`.
+
+  - `groups[].limit` shows that many rows for a group, with the group's full match count in the heading and a "See all N" row when there are more. `groups[].seeAll` is an object (`label`, `pageId`, `urlQuery`) that fires `onSeeAll` with `{ group, count, query, pageId, urlQuery }`, or the name of an event to fire instead. `maxResults` keeps its meaning when no group sets a limit; when one does, it caps each group that sets none, and "Other".
+  - `pinned: { title, icon, shortcut, event }` adds a row after the list while a query is typed. `{query}` in the title is the typed text. It is selected when nothing matches, reachable with the arrow keys, and its shortcut (for example `mod+enter`) works from any row. It fires `onPinned` with `{ query }`.
+  - `recentResults: true` lists the last `recentResultsCount` (default 4) selected results when the input is empty, in place of recent searches, kept per app and signed-in user like recent searches.
+  - Below 576px the modal is a full-screen sheet with the pinned row kept in view. `footer` adds a line of key hints.
+  - `result.icon` now draws each result's icon: the field holds an icon name, or Icon properties such as `{ name, color }` to colour it by the result's state. Before, every result showed the document icon.
+
+### Patch Changes
+
+- 02842fe: feat(api): A block schema marks how it draws a string with `textKind` (`html` through `renderHtml`, `text` as escaped text), and a Dynamic blocks policy judges a marked value by it. In an HTML-drawn property, a markdown link target, a protocol-relative word (`//x.example`) and, unless the policy allows HTML, a CSS `url()` are words, not URLs; the `html` rule still applies. In a text-drawn property tag syntax is words too. A whole value with a loaded or script scheme (`https:`, `javascript:`, ...) is still checked, and unmarked values keep every check. `Descriptions` titles, labels and values, `Paragraph` and `Title` content, input titles and labels, `Selector`, `MultipleSelector` and `ButtonSelector` option labels and `Table` column titles, header tooltips and `emptyText` are marked `html`; the `ControlledList` title is marked `text`.
+- d143e29: feat(api): A Dynamic blocks policy checks a value as a URL only where it is used as a link or source (URL keys, `urlKind` marks, `Link` params, markdown links and CSS `url()`); everywhere else a URL is text. Text a block draws as HTML or text (`textKind`) no longer has its whole value judged as a URL. `SetState` values are data (only the operator rules apply), unless an input in the content whose value is an object (rich text, uploads, table inputs) draws them. A new `textKind: data` marks values a block stores but never draws (`dataWith` names a sibling the value is data only beside): `Selector`, `MultipleSelector` and shared option `value`s beside a `label`. A new `rowsKind` mark on `Table` and `TableLight` `data` makes the rows data when every column draws its cell as text, no `cell.colorFrom` reads a row field and no `expandable.template` is set. Tags stay checked wherever a property draws HTML.
+- fcea703: fix(blocks-antd): Table avatars are one size, round and readable
+
+  In `Table` and `TableLight` an `avatar` cell with a `descriptionField` drew a 32px avatar, and a row
+  without the description drew a 24px one, so a column mixed two sizes. The one-line avatar was also
+  cut flat at the top and bottom, because the single-line cell wrapper clipped the avatar where it
+  overhangs the text line. Every avatar in `avatar` and `people` cells is now 24px with the same gap
+  to the name, and these cells no longer clip their avatars.
+
+  Initials are 10px (were 11px), so two letters no longer fill the circle edge to edge. A `people`
+  group shows its avatars side by side with a 2px gap instead of overlapping them, so no avatar or
+  its ring cuts into the initials of the one before.
+
+- 962ac05: feat(blocks-table): The Table cell details panel can load a cell's raw result on demand
+
+  An enrichment or ai cell keeps the provider's whole answer as its raw result, often many times the size of the value, and the rows sent to the browser carried it for every cell although only the details panel shows it. The new `rawEndpoint` property names an API endpoint that returns one cell's raw result: rows can leave `_enrich.<key>.raw` out, and the details panel calls the endpoint with `{ rowKey, key }` when it opens a finished cell whose row has none, showing "Loading the raw result…" meanwhile and an error if the call fails. It loads again when the cell finishes a new run. A table without `rawEndpoint`, or a row that carries the raw result, works as before. TableLight names `rawEndpoint` as a Table-only property.
+
+- 0dd2e9d: feat(blocks-table): A Table's saved view tab menu takes its items from `viewMenu`
+
+  A saved view tab's menu offered only Delete view, and the only way to hide it was `locked`, which also hid Save. An app that archives views, because other features read them, could not offer Archive in place of Delete. `viewMenu: [{ key, label, danger, confirm }]` now sets the menu's items: picking one fires `onViewMenu { key, id }` with the view's id, after a confirmation when the item has `confirm` (`true` for "Are you sure?", or a message). Without `viewMenu` the menu is Delete view, firing `onViewDelete`, as before. `locked` still hides Save and disables only the default Delete. TableLight names `viewMenu` as a Table-only property.
+
+- Updated dependencies [31d7de8]
+- Updated dependencies [dd5c2b1]
+- Updated dependencies [61ae799]
+- Updated dependencies [f0209f6]
+- Updated dependencies [3cd6d62]
+- Updated dependencies [a461f7c]
+- Updated dependencies [b1d42ca]
+  - @lowdefy/helpers@7.2.0
+  - @lowdefy/block-utils@7.2.0
+  - @lowdefy/nunjucks@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes

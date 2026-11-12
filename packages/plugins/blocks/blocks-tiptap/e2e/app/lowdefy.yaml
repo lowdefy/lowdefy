@@ -15,6 +15,11 @@
 lowdefy: local
 name: blocks-tiptap E2E Tests
 
+connections:
+  # Requests run on the test connection; the specs answer them with page.route.
+  - id: tiptap_test
+    type: TestConnection
+
 pages:
   - _ref: ../../src/blocks/TiptapInput/tests/TiptapInput.e2e.yaml
   - _ref: ../../src/blocks/TiptapMentionInput/tests/TiptapMentionInput.e2e.yaml
