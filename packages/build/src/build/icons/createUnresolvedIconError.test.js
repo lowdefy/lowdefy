@@ -57,7 +57,7 @@ test('createUnresolvedIconError returns a ConfigError with the icons check slug 
 
 test('createUnresolvedIconError suggests a semantic name and its target for a react-icons name', () => {
   expect(message('AiOutlineDelete')).toBe(
-    'Icon "AiOutlineDelete" is a react-icons name. Lowdefy uses Lucide icons. Use "delete" (or "Trash"). The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8.'
+    'Icon "AiOutlineDelete" is a react-icons name. Lowdefy uses Lucide icons. Use "delete" (or "Trash"). The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8. Run `lowdefy upgrade` to migrate names automatically.'
   );
 });
 
@@ -67,7 +67,7 @@ test('createUnresolvedIconError suggests a Lucide name for a react-icons name', 
 
 test('createUnresolvedIconError gives a qualified react-icons name the migration message', () => {
   expect(message('react-icons:AiOutlineCreditCard')).toBe(
-    'Icon "react-icons:AiOutlineCreditCard" is a react-icons name. Lowdefy uses Lucide icons. Use "CreditCard". The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8.'
+    'Icon "react-icons:AiOutlineCreditCard" is a react-icons name. Lowdefy uses Lucide icons. Use "CreditCard". The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8. Run `lowdefy upgrade` to migrate names automatically.'
   );
 });
 

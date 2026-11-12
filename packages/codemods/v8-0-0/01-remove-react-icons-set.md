@@ -15,7 +15,7 @@ An app that used the set fails the Lowdefy 8 build in two ways:
 | A react-icons name at an icon position, unqualified or qualified | Fails at its config location with the semantic or Lucide name to use, for `AiOutlineUser` and `react-icons:FaWhatsapp` both. |
 
 ```
-Icon "react-icons:AiOutlineCreditCard" is a react-icons name. Lowdefy uses Lucide icons. Use "CreditCard". The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8.
+Icon "react-icons:AiOutlineCreditCard" is a react-icons name. Lowdefy uses Lucide icons. Use "CreditCard". The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8. Run `lowdefy upgrade` to migrate names automatically.
 ```
 
 This migration removes the plugin and the `set: react-icons` setting, and rewrites every

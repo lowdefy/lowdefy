@@ -65,7 +65,7 @@ function reactIconsMessage({ name, iconName, semantic }) {
   return (
     `Icon "${name}" is a react-icons name. Lowdefy uses Lucide icons.` +
     suggestFromTable({ name: iconName, semantic }) +
-    ` ${REACT_ICONS_REMOVED}`
+    ` ${REACT_ICONS_REMOVED} ${UPGRADE_HINT}`
   );
 }
 
