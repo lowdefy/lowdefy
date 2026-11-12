@@ -17,6 +17,7 @@
 import applyDataSetRedirect from './applyDataSetRedirect.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
+import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import getRunDataStore from './getRunDataStore.js';
 import openDataSession from './openDataSession.js';
@@ -29,6 +30,7 @@ export {
   applyDataSetRedirect,
   createDataSetRefusal,
   dataSessionRegistry,
+  findSessionDocuments,
   getDataStore,
   getRunDataStore,
   openDataSession,

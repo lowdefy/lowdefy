@@ -127,7 +127,7 @@ async function checkRequestId({ requestId, pageId, currentPageId }) {
     const config = await getPageConfig({ pageId });
     if (config === null) {
       throw unknownReference({
-        message: `There is no page "${pageId}" to count request "${requestId}" on.`,
+        message: `There is no page "${pageId}" for request "${requestId}".`,
         expected: `a page "${pageId}"`,
         actual: `no page "${pageId}"`,
       });
@@ -196,7 +196,8 @@ function checkActorName({ journey, name }) {
 }
 
 // Checked at the start of every step, before it acts, against the current
-// build: a misspelt blockId, requestId, endpointId, goto pageId or `as` name
+// build: a misspelt blockId, requestId, endpointId, goto pageId or `as` name, or the endpoint or
+// request a call or request step posts to,
 // fails its step and names the unknown id, instead of passing a step that
 // asserts something is absent (expect.hidden, expect.calls with count 0) or
 // opening the not-found page. Ids are read from the actor's current page (a
@@ -211,6 +212,19 @@ async function checkStepReferences({ journey, page, step }) {
   }
   if (key === 'goto') {
     checkPageId({ pageId: type.isString(step.goto) ? step.goto : step.goto.pageId });
+    return;
+  }
+  if (key === 'call') {
+    checkEndpointId({ endpointId: step.call.endpoint });
+    return;
+  }
+  if (key === 'request') {
+    const shownPage = await readShownPage({ page });
+    await checkRequestId({
+      requestId: step.request.requestId,
+      pageId: step.request.pageId,
+      currentPageId: shownPage?.pageId ?? null,
+    });
     return;
   }
   const calls = key === 'expect' && getStepKey(step.expect) === 'calls' ? step.expect.calls : null;

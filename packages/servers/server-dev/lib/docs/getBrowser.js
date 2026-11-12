@@ -55,7 +55,9 @@ function buildPageUrl({ origin, pageId, path, pathParams, urlQuery }) {
 // Opens a fresh browser context + page at the app's pageId route. Callers
 // obtain `browser` via getBrowser() themselves so they can map a launch
 // failure to their own "no browser available" error message, separate from
-// navigation failures.
+// navigation failures. With no pageId (a page-less journey, whose steps only
+// call the server) the context and its cookies are set up and the page stays
+// blank: `url` is null.
 async function openPage({
   browser,
   origin,
@@ -74,7 +76,9 @@ async function openPage({
   onContext,
   timeout = 15000,
 }) {
-  const url = buildPageUrl({ origin, pageId, path, pathParams, urlQuery });
+  const url = type.isUndefined(pageId)
+    ? null
+    : buildPageUrl({ origin, pageId, path, pathParams, urlQuery });
   // `none` injects no caller: the context starts signed out and the app's own
   // auth resolves every request from the session cookies it sets. Otherwise
   // the user is resolved before the context is created so an invalid `user`
@@ -159,6 +163,9 @@ async function openPage({
       }),
     ]);
     const page = await context.newPage();
+    if (url === null) {
+      return { context, page, ready: true, url, leftOrigin };
+    }
     // 'load', not 'networkidle': every dev page holds the /api/reload event
     // stream open, so the network never goes idle and a networkidle wait
     // always ran to its full timeout before anything else happened.

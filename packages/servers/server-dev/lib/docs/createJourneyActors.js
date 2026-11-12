@@ -85,7 +85,7 @@ function createJourneyActors({
     return user;
   }
 
-  async function switchTo(name) {
+  async function open({ name, user: actorUser }) {
     if (!actors.has(name)) {
       const counter = createNetworkCounter({ origin, basePath });
       counters.set(name, counter);
@@ -95,7 +95,7 @@ function createJourneyActors({
         pageId,
         path,
         pathParams,
-        user: userFor(name),
+        user: actorUser,
         urlQuery,
         width,
         height,
@@ -121,8 +121,32 @@ function createJourneyActors({
       });
       actors.set(name, opened);
     }
-    currentName = name;
     return actors.get(name);
+  }
+
+  async function switchTo(name) {
+    const opened = await open({ name, user: userFor(name) });
+    currentName = name;
+    return opened;
+  }
+
+  // Who a call or request step calls as, without switching the actor the
+  // journey acts as: the current actor when the step names no one, the actor of
+  // that name (as an `as` step opens it, so they share a session) for a name,
+  // and an actor of its own for "none" (signed out) or an inline user object.
+  // Returns { context, counter }: the call posts through the context's API
+  // client, which carries its cookies, and is counted on its counter.
+  async function callerFor(as) {
+    let name = currentName;
+    if (as === 'none' || type.isObject(as)) {
+      // Spaced, so it never takes the name of an actor an `as` step opened.
+      name = `user ${JSON.stringify(as)}`;
+      await open({ name, user: as });
+    } else if (type.isString(as)) {
+      name = as;
+      await open({ name, user: userFor(as) });
+    }
+    return { context: actors.get(name).context, counter: counters.get(name) };
   }
 
   function current() {
@@ -198,6 +222,7 @@ function createJourneyActors({
 
   return {
     switchTo,
+    callerFor,
     current,
     countCalls,
     calledSince,

@@ -191,7 +191,7 @@ const EXPECT_KINDS = {
   db: {
     type: 'object',
     description:
-      'The documents "match" finds in "collection" of the journey\'s data set database (on connection "connectionId", default the app\'s MongoDB connection): "count" of them, or exactly the list "equals", each document holding at least the keys given. Proves a write happened, or did not.',
+      'The documents "match" finds in "collection" of the journey\'s data set database (on connection "connectionId", default the app\'s one database): "count" of them, or exactly the list "equals" in _id order, each document holding at least the keys given. Proves a write happened, or did not.',
     properties: {
       collection: nonEmptyString,
       connectionId: nonEmptyString,

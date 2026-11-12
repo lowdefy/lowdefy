@@ -25,7 +25,9 @@ function requestKey({ pageId, requestId }) {
 
 // Counts what one journey actor's browser context asked the dev server for.
 // It lives in Node and is fed by Playwright's context-level request event, so
-// the counts survive full page loads, which replace everything in the page.
+// the counts survive full page loads, which replace everything in the page. A
+// journey's call and request steps post through the context's API client,
+// which fires no request event, so they are recorded with recordCall.
 function createNetworkCounter({ origin, basePath }) {
   const pagePaths = new Set();
   const requests = new Map();
@@ -36,12 +38,11 @@ function createNetworkCounter({ origin, basePath }) {
   let appEvents = false;
 
   function record(request) {
-    const match = matchJourneyRoute({
-      url: request.url(),
-      method: request.method(),
-      origin,
-      basePath,
-    });
+    recordCall({ url: request.url(), method: request.method() });
+  }
+
+  function recordCall({ url, method }) {
+    const match = matchJourneyRoute({ url, method, origin, basePath });
     if (match === null) {
       return;
     }
@@ -95,7 +96,7 @@ function createNetworkCounter({ origin, basePath }) {
     };
   }
 
-  return { record, countCalls, calledSince, snapshot };
+  return { record, recordCall, countCalls, calledSince, snapshot };
 }
 
 export default createNetworkCounter;

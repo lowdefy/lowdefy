@@ -16,7 +16,7 @@
 
 import path from 'node:path';
 import { type } from '@lowdefy/helpers';
-import { getStepKey, INTERACTION_STEP_KEYS } from '@lowdefy/node-utils';
+import { CALL_STEP_KEYS, getStepKey, INTERACTION_STEP_KEYS } from '@lowdefy/node-utils';
 
 import claimExpectedErrors from './claimExpectedErrors.js';
 
@@ -35,6 +35,24 @@ import withAppErrors from './withAppErrors.js';
 
 function isExpectError(step) {
   return getStepKey(step ?? {}) === 'expect' && getStepKey(step.expect) === 'error';
+}
+
+// Whether the step at `index` has app errors an expect.error after it claims: an interaction
+// directly followed by one, or a call or request followed by one among the expect steps that
+// read its answer.
+function isClaimedLater({ steps, index }) {
+  const key = getStepKey(steps[index]);
+  if (INTERACTION_STEP_KEYS.includes(key)) {
+    return isExpectError(steps[index + 1]);
+  }
+  if (!CALL_STEP_KEYS.includes(key)) {
+    return false;
+  }
+  for (let next = index + 1; next < steps.length; next += 1) {
+    if (getStepKey(steps[next]) !== 'expect') return false;
+    if (isExpectError(steps[next])) return true;
+  }
+  return false;
 }
 
 // Steps that cannot cause an error a page reports later, so their window
@@ -191,12 +209,8 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
       }
       return claim;
     }
-    if (
-      type.isUndefined(failure) &&
-      INTERACTION_STEP_KEYS.includes(getStepKey(step)) &&
-      isExpectError(steps[index + 1])
-    ) {
-      held = { index, step, findings };
+    if (type.isUndefined(failure) && isClaimedLater({ steps, index })) {
+      held = { index, step, findings, answered: CALL_STEP_KEYS.includes(getStepKey(step)) };
       return undefined;
     }
     if (findings.length === 0) {

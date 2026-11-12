@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { validateJourneySteps } from '@lowdefy/node-utils';
 
+import describePageNeed from '../../../lib/docs/describePageNeed.js';
 import getBuildId from '../../../lib/docs/getBuildId.js';
 import lowdefyConfig from '../../../lib/build/config.js';
 import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
@@ -30,14 +31,16 @@ import validateStateSelection from '../../../lib/docs/validateStateSelection.js'
 // A failed journey is a 200 with passed: false — it is the result the caller
 // asked for. Malformed input (pageId, pathParams, steps, user, data) is a 400 before any browser
 // opens; only a render that could not run at all is a 502, so it is not
-// mistaken for a journey that failed on an assertion.
+// mistaken for a journey that failed on an assertion. pageId may be left out
+// when every step runs without a page (call, request and checks on them).
 async function docsJourneyHandler(c) {
   const body = await c.req.json().catch(() => ({}));
-  const { pageId, pathParams, steps, urlQuery, state, timeout } = body;
-  if (type.isNone(pageId) || !type.isString(pageId)) {
+  const { pathParams, steps, urlQuery, state, timeout } = body;
+  const pageId = body.pageId ?? undefined;
+  if (!type.isUndefined(pageId) && !type.isString(pageId)) {
     return c.json(
       {
-        error: `POST /lowdefy-docs/journey requires a "pageId" string in the JSON body, e.g. {"pageId": "home", "steps": [{"click": "submit"}]}. Received ${JSON.stringify(
+        error: `POST /lowdefy-docs/journey requires "pageId" to be a string in the JSON body, e.g. {"pageId": "home", "steps": [{"click": "submit"}]}. Received ${JSON.stringify(
           pageId
         )}.`,
       },
@@ -47,6 +50,15 @@ async function docsJourneyHandler(c) {
   const { error: stepsError } = validateJourneySteps({ steps });
   if (stepsError) {
     return c.json({ error: stepsError }, 400);
+  }
+  const pageError = type.isUndefined(pageId) ? describePageNeed({ steps }) : undefined;
+  if (!type.isUndefined(pageError)) {
+    return c.json(
+      {
+        error: `POST /lowdefy-docs/journey ${pageError} E.g. {"pageId": "home", "steps": [{"click": "submit"}]}.`,
+      },
+      400
+    );
   }
   if (
     !type.isNone(pathParams) &&

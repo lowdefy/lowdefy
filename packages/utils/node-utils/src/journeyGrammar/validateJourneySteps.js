@@ -313,9 +313,9 @@ function validateStatus(value) {
 }
 
 // expect.db reads the journey's data set database: the documents in
-// `collection` (on the connection `connectionId`, default the app's one
-// MongoDB connection) that `match` finds number `count`, or are the list
-// `equals`, each document holding at least the keys given.
+// `collection` (in the database of the connection `connectionId`, default the
+// session's one database) that `match` finds number `count`, or are the list
+// `equals` in _id order, each document holding at least the keys given.
 function validateDb(value) {
   if (!type.isObject(value)) {
     return `Step "expect.db" requires { collection, connectionId?, match, count } or { collection, connectionId?, match, equals }. Received ${describe(
