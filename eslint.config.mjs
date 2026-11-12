@@ -11,7 +11,6 @@ const BROWSER_SOURCE = [
   'packages/layout/**',
   'packages/plugins/actions/**',
   'packages/plugins/blocks/!(blocks-native)/**',
-  'packages/plugins/icons/**',
   'packages/plugins/plugins/plugin-posthog/**',
   'packages/servers/*/client/**',
   'packages/utils/block-utils/**',

@@ -52,7 +52,7 @@ async function loadIconSets({ context }) {
   for (const [setId, layers] of Object.entries(context.typesMap.iconSets)) {
     if (!semanticNamePattern.test(setId)) {
       throw new ConfigError(
-        `Icon set id "${setId}" should be lowercase kebab-case, like "lucide" or "react-icons".`
+        `Icon set id "${setId}" should be lowercase kebab-case, like "lucide" or "tabler".`
       );
     }
     sets[setId] = sets[setId] ?? [];

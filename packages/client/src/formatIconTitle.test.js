@@ -32,7 +32,7 @@ test('formatIconTitle turns a semantic kebab name into sentence case words', () 
 
 test('formatIconTitle drops the set of a qualified name', () => {
   expect(formatIconTitle('lucide:Pencil')).toBe('Pencil');
-  expect(formatIconTitle('react-icons:AiOutlineUser')).toBe('Ai outline user');
+  expect(formatIconTitle('brands:FilledUser')).toBe('Filled user');
 });
 
 test('formatIconTitle keeps digits with the word before them', () => {

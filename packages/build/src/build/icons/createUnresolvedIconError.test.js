@@ -57,7 +57,7 @@ test('createUnresolvedIconError returns a ConfigError with the icons check slug 
 
 test('createUnresolvedIconError suggests a semantic name and its target for a react-icons name', () => {
   expect(message('AiOutlineDelete')).toBe(
-    'Icon "AiOutlineDelete" is a react-icons name. Lowdefy 7 uses Lucide icons. Use "delete" (or "Trash"). To keep react-icons names, install @lowdefy/icons-react-icons and set theme.icons.set: react-icons. Run `lowdefy upgrade` to migrate names automatically.'
+    'Icon "AiOutlineDelete" is a react-icons name. Lowdefy uses Lucide icons. Use "delete" (or "Trash"). The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8.'
   );
 });
 
@@ -65,13 +65,16 @@ test('createUnresolvedIconError suggests a Lucide name for a react-icons name', 
   expect(message('AiOutlineCreditCard')).toContain('Use "CreditCard".');
 });
 
-test('createUnresolvedIconError does not mention installing the compatibility set when it is installed', () => {
-  const icons = createIcons({
-    sets: { 'react-icons': [createTestIconLayer({ icons: { AiOutlineUser: { node } } })] },
-  });
-  const text = message('AiOutlineDelete', icons);
-  expect(text).not.toContain('install @lowdefy/icons-react-icons');
-  expect(text).toContain('To keep react-icons names, set theme.icons.set: react-icons.');
+test('createUnresolvedIconError gives a qualified react-icons name the migration message', () => {
+  expect(message('react-icons:AiOutlineCreditCard')).toBe(
+    'Icon "react-icons:AiOutlineCreditCard" is a react-icons name. Lowdefy uses Lucide icons. Use "CreditCard". The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8.'
+  );
+});
+
+test('createUnresolvedIconError gives a react-icons name the migration message when react-icons is still the default set', () => {
+  expect(message('AiOutlineDelete', createIcons({ defaultSet: 'react-icons' }))).toContain(
+    'Use "delete" (or "Trash").'
+  );
 });
 
 test('createUnresolvedIconError points at search for a react-icons name the table does not cover', () => {
@@ -80,7 +83,7 @@ test('createUnresolvedIconError points at search for a react-icons name the tabl
   );
 });
 
-test('createUnresolvedIconError gives a did-you-mean in the react-icons set when it is the default', () => {
+test('createUnresolvedIconError gives a did-you-mean in an installed set with the react-icons id', () => {
   const icons = createIcons({
     defaultSet: 'react-icons',
     sets: { 'react-icons': [createTestIconLayer({ icons: { AiOutlineUser: { node } } })] },
@@ -88,11 +91,14 @@ test('createUnresolvedIconError gives a did-you-mean in the react-icons set when
   expect(message('AiOutlineUsr', icons)).toBe(
     'Icon "AiOutlineUsr" is not an icon name. Did you mean "AiOutlineUser"?'
   );
+  expect(message('react-icons:AiOutlineUsr', icons)).toBe(
+    'Icon "react-icons:AiOutlineUsr" is not in the "react-icons" icon set. Did you mean "react-icons:AiOutlineUser"?'
+  );
 });
 
 test('createUnresolvedIconError gives stale Ant Design names the migration message', () => {
   expect(message('HomeOutlined')).toBe(
-    'Icon "HomeOutlined" is an Ant Design icon name. Lowdefy 7 uses Lucide icons. Use "home" (or "House"). Run `lowdefy upgrade` to migrate names automatically.'
+    'Icon "HomeOutlined" is an Ant Design icon name. Lowdefy uses Lucide icons. Use "home" (or "House"). Run `lowdefy upgrade` to migrate names automatically.'
   );
 });
 
