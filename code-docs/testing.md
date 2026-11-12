@@ -391,9 +391,13 @@ The developer may add the `ci` or `ci-full` label to run them again in CI.
 - server-dev's watchers use chokidar 6, which watches with `fs.watch` (recursive on macOS). On
   macOS, Node restarts its one FSEvents stream whenever a watch handle is added or closed, and a
   write made during the restart is never reported. chokidar 6 shares a directory's handle
-  between watchers, but a watcher of a new directory still adds one. Watcher tests call
-  `flushFsEvents()` (`test-utils/`) after a watcher is ready and before the first edit, or
-  repeat the edit until it is seen; without it they still miss writes.
+  between watchers, but a watcher of a new directory still adds one, and so does a single file
+  watched in a directory nothing watched yet: chokidar 6 watches a file through its directory,
+  where chokidar 4 gave each file a kqueue handle of its own that no restart touched. Watcher
+  tests call `flushFsEvents()` (`test-utils/`) after a watcher is ready and before the first
+  edit, or repeat the edit until it is seen; without it they miss writes, most often on a busy
+  machine. A file added to a running watcher has no ready to wait for, so a test waits until it
+  is listed as watched and repeats the edit.
 - Hub tests pass a port range of their own (`portRange` to `createHub`, `range` to
   `allocatePorts`), away from the real hub's 4100–4999, which hubs started by agents in other
   worktrees bind.
