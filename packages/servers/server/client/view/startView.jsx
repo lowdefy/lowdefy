@@ -52,6 +52,10 @@ async function startView({ view, window }) {
       return;
     }
     const root = createRoot(document.getElementById('root'));
+    // An ended view shows the loader's fallback over a hidden root. The app is
+    // unmounted so nothing of it keeps running there: its feeds, timers and
+    // listeners stop with it, and the host closes the websocket.
+    const stopOnEnd = host.view.onEnd(() => root.unmount());
 
     const loadBuild = () => {
       const { pathname, search } = router.getLocation();
@@ -61,7 +65,10 @@ async function startView({ view, window }) {
         fetch: (input, init) => window.fetch(input, init),
         restart: () => startView({ view, window }),
         resumePath: `${pathname.slice(router.basePath.length)}${search}`,
-        unmount: () => root.unmount(),
+        unmount: () => {
+          stopOnEnd();
+          root.unmount();
+        },
       }).catch((error) => {
         // eslint-disable-next-line no-console
         console.error(error);

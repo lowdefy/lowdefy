@@ -40,6 +40,14 @@ const authConfig = serializer.deserialize(rawAuthConfig);
 // would. A new session for the same person does none of this: the view host
 // swaps the token and the page keeps its state. When the app runs another
 // build, a button loads it (loadBuild).
+//
+// Sentry is not started in a view, though the browser entry starts it
+// (App.jsx). A view may call only the origins its resource lists: the app's
+// own and those in mcp.viewSources. The Sentry ingest host is neither, so the
+// host's sandbox would refuse every event, and replay needs a worker the
+// sandbox does not allow. The DSN is also handed over in the page HTML, which
+// a view never loads. Errors of a view are still sent to the app
+// (/api/client-error), which logs them on the server.
 function ViewApp({ host, loadBuild, start }) {
   const [shown, setShown] = useState({ ...start, generation: 0 });
   const [newBuild, setNewBuild] = useState(start.newBuild);

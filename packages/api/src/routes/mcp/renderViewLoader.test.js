@@ -107,9 +107,11 @@ function runLoader({ fetch }) {
   };
   const parent = { postMessage: (message) => posted.push(message) };
   let onMessage;
+  const timers = [];
   const window = {
     parent,
     open: vi.fn(),
+    setTimeout: (callback, delay) => timers.push({ callback, delay }),
     addEventListener: (type, listener) => {
       onMessage = listener;
     },
@@ -124,7 +126,7 @@ function runLoader({ fetch }) {
       onMessage({ source: parent, data: { jsonrpc: '2.0', id: request.id, result } });
     },
   };
-  return { document, host, posted, window };
+  return { document, host, posted, timers, window };
 }
 
 function bootFetch(answer = boot) {
@@ -365,6 +367,77 @@ test('the loader shows the fallback and loads nothing when the result carries no
   expect(frame.posted[frame.posted.length - 1].params).toEqual({
     url: 'https://app.example.com/base/',
   });
+});
+
+test('the loader shows the fallback with a line saying the page is slow when the host never answers', async () => {
+  const frame = runLoader({ fetch: bootFetch() });
+  await tick();
+  expect(frame.timers.map(({ delay }) => delay)).toEqual([20000]);
+  expect(fallbackTexts(frame.document)).toBe(null);
+  frame.timers[0].callback();
+  expect(fallbackTexts(frame.document)).toEqual([
+    '',
+    'The page is taking longer than expected to load.',
+    '',
+    'Open in browser',
+  ]);
+  expect(frame.document.getElementById('root').style.display).toEqual('none');
+  frame.document.getElementById('lowdefy-view-fallback').children[3].listeners.click();
+  expect(frame.posted[frame.posted.length - 1]).toMatchObject({
+    method: 'ui/open-link',
+    params: { url: 'https://app.example.com/base/' },
+  });
+});
+
+test('the loader shows the tool title and the fallback when the host connects and sends no tool result in time', async () => {
+  const frame = runLoader({ fetch: bootFetch() });
+  frame.host.answer('ui/initialize', { hostContext });
+  await tick();
+  frame.timers[0].callback();
+  expect(fallbackTexts(frame.document)).toEqual([
+    'Open a task',
+    'The page is taking longer than expected to load.',
+    '',
+    'Open in browser',
+  ]);
+  expect(frame.window.__LOWDEFY_VIEW__).toBe(undefined);
+});
+
+test('the loader loads the page and takes the fallback away when the tool result comes after the wait', async () => {
+  const frame = runLoader({ fetch: bootFetch() });
+  frame.host.answer('ui/initialize', { hostContext });
+  await tick();
+  frame.timers[0].callback();
+  frame.host.send({ method: 'ui/notifications/tool-result', params: toolResult });
+  await tick();
+  expect(fallbackTexts(frame.document)).toBe(null);
+  expect(frame.document.getElementById('root').style.display).toEqual('');
+  expect(frame.window.__LOWDEFY_VIEW__.toolResult).toEqual(toolResult);
+  expect(frame.document.body.children.some((child) => child.tagName === 'script')).toBe(true);
+});
+
+test('the loader keeps the fallback, without the slow line, when a late result carries no view address', async () => {
+  const frame = runLoader({ fetch: bootFetch() });
+  frame.host.answer('ui/initialize', { hostContext });
+  await tick();
+  frame.timers[0].callback();
+  frame.host.send({
+    method: 'ui/notifications/tool-result',
+    params: { content: [{ type: 'text', text: 'No such task.' }], isError: true },
+  });
+  await tick();
+  expect(fallbackTexts(frame.document)).toEqual([
+    'Open a task',
+    'No such task.',
+    'Open in browser',
+  ]);
+});
+
+test('the loader leaves a page that loaded in time alone when the wait runs out', async () => {
+  const frame = runLoader({ fetch: bootFetch() });
+  await connectHost(frame);
+  frame.timers[0].callback();
+  expect(fallbackTexts(frame.document)).toBe(null);
 });
 
 test('the loader answers a teardown request from the host', async () => {
