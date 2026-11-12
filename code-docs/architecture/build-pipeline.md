@@ -302,7 +302,7 @@ buildSubBlocks(); // Recurse into children
 
 ## JavaScript Extraction
 
-**File:** `packages/build/src/build/buildJs/buildJs.js`
+**Files:** `packages/build/src/build/full/buildJs.js`, `packages/build/src/build/buildJs/jsMapParser.js`
 
 1. Scan component tree for `_js` operators
 2. Hash each function body (SHA1 for deduplication)
@@ -311,6 +311,16 @@ buildSubBlocks(); // Recurse into children
 5. Generate import files:
    - `plugins/operators/clientJsMap.js`
    - `plugins/operators/serverJsMap.js`
+
+`jsMapParser` walks its input and returns it with each `_js` operator replaced by a new node holding the hash. It copies as little as the output allows, where it used to copy everything through a JSON round trip:
+
+- A `_js` operator's replacement has no `~k`, `~r` or `~l`, so the `addKeys` pass after `buildJs` gives it a new key.
+- Every node above a replaced `_js` is copied, with its markers.
+- A node without a `~k` is copied, and so is every node above it. Build steps that run after the second `addKeys` pass create such nodes and can put one in two places: `buildMenu` sets a menu link's `auth` to its page's `auth` object, and `buildRequests` gives every request its page's. The last `addKeys` pass keys each place on its own, which needs each to be its own object.
+- Every other node is shared between input and result: a subtree where every node has a `~k` and none is a `_js`.
+- A key set to `undefined` counts as absent, as it was after the JSON round trip: `{ _js: source, other: undefined }` is a `_js` operator, and `{ _js: undefined }` is not.
+
+So a caller owns the tree it passes in, and drops it or leaves the shared nodes unchanged. `buildJs` parses a `target: both` page once, into the page's own map for `_jsEntries`, and adds that map to the web map.
 
 ### Generated Code Template
 
