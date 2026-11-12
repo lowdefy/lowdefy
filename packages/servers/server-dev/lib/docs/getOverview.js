@@ -147,7 +147,7 @@ function getOverview() {
     '| `GET /lowdefy-docs/build-status` | Current build errors/warnings, failing pages + recent browser errors |',
     '| `GET /lowdefy-docs/events` | SSE push channel: `restart` on connect, then `build`, `client_error`, `server_error` events as they happen (build events carry `stale`) |',
     '| `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors |',
-    '| `POST /lowdefy-docs/journey` | Drive a page headless through declarative steps (click, fill, select, press, back, goto, email, as, wait, screenshot, expect) and assert state, visibility, text, url or title; screenshots returned as base64 |',
+    '| `POST /lowdefy-docs/journey` | Drive a page headless through declarative steps (click, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request) and assert state, visibility, text, url, title, an answer's status or the data set database; screenshots returned as base64 |',
     '| `POST /lowdefy-docs/mutants` | Config mutants on what journeys exercised `{pages, requests, endpoints, appEvents, operators}`: each with a stable `id`, its anchor and source line (for `lowdefy journeys harden`) |',
     '| `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined |',
     '| `POST /lowdefy-docs/restart` | Restart the dev server process (answers before the restart lands; then `build-status?wait=true` answers once it is back) |',

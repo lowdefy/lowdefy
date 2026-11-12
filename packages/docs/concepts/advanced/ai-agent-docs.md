@@ -426,7 +426,7 @@ The kinds are `action-error`, `client-error`, `server-error`, `request-failed` (
 
 Screenshots taken before the failure are kept: over MCP they arrive as image content after the JSON (with the JSON listing only their names); over HTTP they are base64 in the JSON body.
 
-Malformed steps are answered before a browser opens — an unknown key returns `Unknown journey step "hover". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.` (a `400` on the HTTP route), distinct from the `502` a render that could not run returns.
+Malformed steps are answered before a browser opens — an unknown key returns `Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.` (a `400` on the HTTP route), distinct from the `502` a render that could not run returns.
 
 To test auth itself — sign-up, email verification, sign-in, invitations, organization switching — pass `"user": "none"`: no caller is injected, the journey starts signed out, and the app's own sessions carry through its steps. [Config Tests](/config-tests#testing-sign-up-and-sign-in) covers the mail sink and the database these journeys need.
 
