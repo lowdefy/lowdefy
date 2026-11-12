@@ -20,6 +20,7 @@ import createMemoryTokenStore from './createMemoryTokenStore.js';
 import createViewLocation from './createViewLocation.js';
 import createViewOpenLink from './createViewOpenLink.js';
 import createViewSession from './createViewSession.js';
+import createViewSockets from './createViewSockets.js';
 import createViewWindow from './createViewWindow.js';
 import getViewSocketProtocols from './getViewSocketProtocols.js';
 
@@ -62,7 +63,11 @@ function createListeners() {
 //   onReload(listener)        () the page asked for a reload
 //   openLink({ url })         opens a link in the browser; resolves to true when
 //                             the host opened it
-//   isEnded()                 true once the view has shown its fallback
+//   end({ message })          ends the view: tells the end listeners, closes its
+//                             websockets and shows the loader's fallback
+//   onEnd(listener)           () the view has ended; the view entry unmounts the
+//                             app here, so nothing of the page keeps running
+//   isEnded()                 true once the view has ended
 // Each on* returns a function that stops the listener.
 function createViewHost({ bridge, router, window }) {
   const apiBase = `${bridge.appOrigin}${bridge.basePath}`;
@@ -70,16 +75,26 @@ function createViewHost({ bridge, router, window }) {
   const buildListeners = createListeners();
   const callerListeners = createListeners();
   const reloadListeners = createListeners();
+  const endListeners = createListeners();
+  const sockets = createViewSockets({ window });
   let ended = false;
 
   // The view gives way to the loader's fallback: no session can be had, or the
-  // app cannot be reached. Nothing the core does next brings the page back.
+  // app cannot be reached. Nothing the core does next brings the page back,
+  // so the page stops too: the end listeners unmount it, which drops its
+  // feeds and timers, and then its websockets are closed. The fallback is
+  // shown whatever a listener does.
   function end({ message }) {
     if (ended) {
       return;
     }
     ended = true;
-    bridge.showFallback({ message });
+    try {
+      endListeners.call();
+      sockets.closeAll();
+    } finally {
+      bridge.showFallback({ message });
+    }
   }
 
   const session = createViewSession({
@@ -141,12 +156,13 @@ function createViewHost({ bridge, router, window }) {
       isEnded: () => ended,
       onBuildChange: buildListeners.add,
       onCallerChange: callerListeners.add,
+      onEnd: endListeners.add,
       onLinkRefused: links.onRefused,
       onReload: reloadListeners.add,
       openLink: links.openLink,
     },
     get WebSocket() {
-      return window.WebSocket;
+      return sockets.getWebSocket();
     },
     // The frame's WebSocket takes no headers, so the handshake carries the
     // session as subprotocols, read for every connect. renew asks for a new

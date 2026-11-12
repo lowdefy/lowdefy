@@ -22,6 +22,14 @@ import createFakeViewLoader from '../test/createFakeViewLoader.js';
 import createViewBridge from './createViewBridge.js';
 import createViewHost from './createViewHost.js';
 
+// A method needs `new`, so this is a function, not an arrow.
+function FakeWebSocket(...args) {
+  this.args = args;
+  this.close = vi.fn();
+}
+FakeWebSocket.OPEN = 1;
+FakeWebSocket.CLOSED = 3;
+
 function setup({ basePath = '/base', path = '/tickets/12?tab=notes', status = 200, tokens } = {}) {
   const view = createFakeViewLoader({ basePath, path, tokens });
   const listened = [];
@@ -39,7 +47,7 @@ function setup({ basePath = '/base', path = '/tickets/12?tab=notes', status = 20
     open: vi.fn(),
     sessionStorage: { setItem: vi.fn() },
     status,
-    WebSocket: function WebSocket() {},
+    WebSocket: FakeWebSocket,
   };
   const router = createViewRouter({ basePath, path });
   const host = createViewHost({ bridge: createViewBridge({ view }), router, window: fakeWindow });
@@ -176,7 +184,34 @@ test('createViewHost builds the websocket URL from the absolute API path', () =>
   expect(host.websocketUrl('https://app.example.com/base/api/websocket')).toBe(
     'wss://app.example.com/base/api/websocket'
   );
-  expect(host.WebSocket).toBe(fakeWindow.WebSocket);
+  const socket = new host.WebSocket('wss://app.example.com/base/api/websocket', ['lowdefy.view']);
+  expect(socket).toBeInstanceOf(fakeWindow.WebSocket);
+  expect(socket.args).toEqual(['wss://app.example.com/base/api/websocket', ['lowdefy.view']]);
+  expect(host.WebSocket.OPEN).toBe(1);
+});
+
+test('createViewHost ends by telling the end listeners, closing its websockets and showing the fallback', () => {
+  const { host, view } = setup();
+  const socket = new host.WebSocket('wss://app.example.com/base/api/websocket');
+  socket.onclose = vi.fn();
+  const order = [];
+  host.view.onEnd(() => order.push(`unmount, socket closed: ${socket.close.mock.calls.length}`));
+  view.showFallback.mockImplementation(() => order.push('fallback'));
+  host.view.end({ message: 'The view could not load the page again.' });
+  host.view.end({ message: 'Again.' });
+  expect(order).toEqual(['unmount, socket closed: 0', 'fallback']);
+  expect(socket.close).toHaveBeenCalledTimes(1);
+  expect(socket.onclose).toBeNull();
+  expect(host.view.isEnded()).toBe(true);
+});
+
+test('createViewHost shows the fallback when an end listener throws', () => {
+  const { host, view } = setup();
+  host.view.onEnd(() => {
+    throw new Error('unmount failed');
+  });
+  expect(() => host.view.end({ message: 'Ended.' })).toThrow('unmount failed');
+  expect(view.showFallback).toHaveBeenCalledWith({ message: 'Ended.' });
 });
 
 test('createViewHost signs a websocket handshake with the session as subprotocols', async () => {

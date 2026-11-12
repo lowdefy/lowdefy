@@ -94,7 +94,12 @@ than its app. The production server's `client/view.jsx` entry passes `Client` th
   `host.view.onBuildChange` and `host.view.onCallerChange`, which the view entry uses to show
   a "load the new version" button and to fetch the user, root config and page again.
 - `host.view` also carries `bridge`, `fetchApi(path, init)` (a signed-in fetch of an API path),
-  `end({ message })` and `isEnded()`.
+  `end({ message })`, `onEnd(listener)` and `isEnded()`. `end` tells the end listeners (the view
+  entry unmounts the app there), closes the view's websockets (`createViewSockets.js`) and shows
+  the loader's fallback, so an ended view runs nothing.
+- Sentry is not started in a view: the Sentry host is not among the origins a view may call
+  unless the app lists it in `mcp.viewSources`, and the DSN is handed over in the page HTML.
+  Errors still reach the app through `/api/client-error`.
 - `host.view.openLink({ url })` opens a URL in the browser through the host. It lets only
   absolute `http` and `https` URLs through (`createViewOpenLink.js`, `getOpenLinkUrl.js`) and
   tells `host.view.onLinkRefused` listeners when the host refuses. `globals.window.open` is the

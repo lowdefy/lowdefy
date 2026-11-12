@@ -66,8 +66,13 @@
 //    address, or the client calls showFallback (it could not get a session),
 //    shows the tool's title, the result as text and a button that opens the
 //    page in the browser.
+// 5. When the host has not connected, the app has not answered or no tool
+//    result has come within START_TIMEOUT_MS, shows the same fallback with a
+//    line saying the page is slow, so the frame is never left blank. Whatever
+//    was missing may still come: the page then loads and the fallback goes.
 function viewLoader(settings) {
   var PROTOCOL_VERSION = '2026-01-26';
+  var START_TIMEOUT_MS = 20000;
   var VIEW_ADDRESS_META_KEY = 'lowdefy/view';
   var appUrl = settings.origin + settings.basePath;
 
@@ -77,6 +82,9 @@ function viewLoader(settings) {
   var contextListeners = [];
   var fallbackShown = false;
   var fallbackMessage = null;
+  // True while the fallback is shown only because the wait ran out.
+  var waitFallbackShown = false;
+  var started = false;
   var resolveToolResult;
   var toolResultReceived = new Promise(function (resolve) {
     resolveToolResult = resolve;
@@ -223,10 +231,38 @@ function viewLoader(settings) {
 
   function showFallback(options) {
     fallbackShown = true;
+    if (waitFallbackShown) {
+      waitFallbackShown = false;
+      fallbackMessage = null;
+    }
     if (options && typeof options.message === 'string') {
       fallbackMessage = options.message;
     }
     renderFallback();
+  }
+
+  function showWaitFallback() {
+    if (started || fallbackShown) {
+      return;
+    }
+    fallbackShown = true;
+    waitFallbackShown = true;
+    fallbackMessage = 'The page is taking longer than expected to load.';
+    renderFallback();
+  }
+
+  function hideWaitFallback() {
+    fallbackShown = false;
+    waitFallbackShown = false;
+    fallbackMessage = null;
+    var container = document.getElementById('lowdefy-view-fallback');
+    if (container) {
+      document.body.removeChild(container);
+    }
+    var root = document.getElementById('root');
+    if (root) {
+      root.style.display = '';
+    }
   }
 
   function onHostRequest(message) {
@@ -348,6 +384,9 @@ function viewLoader(settings) {
   }
 
   function start(boot) {
+    if (waitFallbackShown) {
+      hideWaitFallback();
+    }
     if (fallbackShown) {
       return;
     }
@@ -361,6 +400,7 @@ function viewLoader(settings) {
       showFallback();
       return;
     }
+    started = true;
     view.boot = boot;
     window.__LOWDEFY_VIEW__ = view;
     stylesheets.forEach(function (file) {
@@ -379,6 +419,7 @@ function viewLoader(settings) {
     document.body.appendChild(script);
   }
 
+  window.setTimeout(showWaitFallback, START_TIMEOUT_MS);
   var connected = connect();
   var booted = fetchBoot();
   Promise.all([booted, connected, toolResultReceived])
