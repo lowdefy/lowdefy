@@ -21,17 +21,18 @@
 // endpoint listed for several pages carries one scope, since the build derives
 // it from the endpoint alone.
 //
-// The dev build writes views.pages empty, and the build lists no agent for any
-// page, so both read here as nothing reachable.
+// The build always writes mcp.json with views.pages, and each page with its
+// three lists. The dev build writes views.pages empty, and the build lists no
+// agent for any page, so both read here as nothing reachable.
 async function readViewReach({ readConfigFile }) {
   const mcpConfig = await readConfigFile('mcp.json');
   const endpoints = new Map();
   const websockets = new Set();
   const agents = new Set();
-  Object.values(mcpConfig?.views?.pages ?? {}).forEach((page) => {
-    (page.endpoints ?? []).forEach(({ id, scope }) => endpoints.set(id, scope));
-    (page.websockets ?? []).forEach((id) => websockets.add(id));
-    (page.agents ?? []).forEach((id) => agents.add(id));
+  Object.values(mcpConfig.views.pages).forEach((page) => {
+    page.endpoints.forEach(({ id, scope }) => endpoints.set(id, scope));
+    page.websockets.forEach((id) => websockets.add(id));
+    page.agents.forEach((id) => agents.add(id));
   });
   return { agents, endpoints, websockets };
 }

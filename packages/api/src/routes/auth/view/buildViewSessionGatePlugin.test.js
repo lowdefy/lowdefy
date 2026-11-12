@@ -66,14 +66,23 @@ test('buildViewSessionGatePlugin refuses a view session sent as a bearer with a 
   });
 });
 
-test('buildViewSessionGatePlugin reads the session from the database, without refreshing it', async () => {
-  await run({ headers: { cookie: `${COOKIE}=${signed('browser_token')}` } });
-  expect(readSession).toHaveBeenCalledWith(
-    expect.objectContaining({
-      context: ctx,
-      query: { disableCookieCache: true, disableRefresh: true },
-    })
-  );
+test('buildViewSessionGatePlugin reads the cookie through the cookie cache and the bearer from the database, refreshing neither', async () => {
+  await run({
+    headers: {
+      authorization: `Bearer ${signed('phone_token')}`,
+      cookie: `${COOKIE}=${signed('browser_token')}`,
+    },
+  });
+  expect(readSession).toHaveBeenCalledTimes(2);
+  expect(readSession.mock.calls[0][0]).toMatchObject({
+    context: ctx,
+    query: { disableCookieCache: false, disableRefresh: true },
+  });
+  expect(readSession.mock.calls[0][0].headers.get('cookie')).toContain('browser_token');
+  expect(readSession.mock.calls[1][0]).toMatchObject({
+    query: { disableCookieCache: true, disableRefresh: true },
+  });
+  expect(readSession.mock.calls[1][0].headers.get('cookie')).toContain('phone_token');
 });
 
 test('buildViewSessionGatePlugin refuses a view session sent as the session cookie', async () => {

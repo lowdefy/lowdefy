@@ -24,6 +24,12 @@ import { memoryAdapter } from 'better-auth/adapters/memory';
 
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 // Contract test against the installed better-auth release: constructs a real
 // BetterAuth instance (memory adapter - no database) from the options assembled
 // with no pinned origin, and asserts that the origin BetterAuth trusts is the
@@ -69,6 +75,7 @@ function createLogger() {
 
 function createAuth() {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta: { name: 'Test App', slug: 'test-app' },
     authJson: {
       configured: true,

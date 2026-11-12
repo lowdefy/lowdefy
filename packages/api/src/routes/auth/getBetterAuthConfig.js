@@ -193,7 +193,7 @@ function getBetterAuthConfig({
   dev = false,
   getAuth,
   logger,
-  mcpJson = {},
+  mcpJson,
   plugins,
   secrets,
 }) {
@@ -674,7 +674,7 @@ function getBetterAuthConfig({
   // (buildBearerPlugin). Only the server mints one-time tokens
   // (buildOneTimeTokenPlugin, minted by the mobile sign-in page).
   const hasMobile = !type.isNone(authConfig.mobile);
-  if (hasMobile || mcpJson.views?.configured === true) {
+  if (hasMobile || mcpJson.views.configured === true) {
     options.plugins.push(buildBearerPlugin({ sendTokenToNative: hasMobile }));
   }
   if (hasMobile) {

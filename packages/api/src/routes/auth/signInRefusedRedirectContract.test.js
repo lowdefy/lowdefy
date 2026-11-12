@@ -24,6 +24,12 @@ import createUserBeforeHook from './hooks/createUserBeforeHook.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 import buildRequestHooks from './requestHooks/buildRequestHooks.js';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 // Contract test against the installed BetterAuth release for the
 // refused-sign-in redirect on /magic-link/verify (createSignInRefusedRedirectHook).
 // The first test pins the upstream gap: without the hook, the endpoint answers
@@ -236,6 +242,7 @@ async function createInviteOnlyAuth() {
   const links = [];
   let auth;
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta: { name: 'Test App', slug: 'test-app' },
     authJson: {
       configured: true,

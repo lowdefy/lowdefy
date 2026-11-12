@@ -101,7 +101,7 @@ const organizations = { policy: 'tenant', signup: 'invite-only', create: 'operat
 
 // views: false builds an app whose MCP block has no view; mobile adds a mobile
 // section.
-async function setup({ mobile, views = true } = {}) {
+async function setup({ cookieCache = false, mobile, views = true } = {}) {
   run += 1;
   const database = `viewSessionAuthRoutes${run}`;
   const logger = createLogger();
@@ -125,7 +125,7 @@ async function setup({ mobile, views = true } = {}) {
     session: {
       expiresIn: 7 * DAY,
       updateAge: DAY,
-      cookieCache: { enabled: false, maxAge: 300 },
+      cookieCache: { enabled: cookieCache, maxAge: 300 },
       crossSubDomainCookies: { enabled: false },
     },
     account: { accountLinking: { enabled: true, trustedProviders: [] } },
@@ -284,8 +284,8 @@ const nativeHeaders = { 'x-lowdefy-shell': '7.1.0' };
 // The person, their ordinary browser session, and a view session minted from
 // their grant - sent as a bearer, the way a view sends it, and as the session
 // cookie, which whoever holds the signed token can send just as well.
-async function setupCallers({ mobile, grantedScopes } = {}) {
-  const { adapter, auth, internalAdapter } = await setup({ mobile });
+async function setupCallers({ cookieCache, mobile, grantedScopes } = {}) {
+  const { adapter, auth, internalAdapter } = await setup({ cookieCache, mobile });
   const email = `ana-${randomUUID()}@example.com`;
   const { user, organizationIds } = await createMember({
     adapter,
@@ -303,6 +303,7 @@ async function setupCallers({ mobile, grantedScopes } = {}) {
     browser: { ...browserHeaders, cookie: browserCookie },
     email,
     grant,
+    internalAdapter,
     organizationIds,
     token,
     user,
@@ -468,35 +469,40 @@ test('a request carrying an ordinary cookie and a view bearer is refused', async
 // Each is a Cookie header BetterAuth reads the session from: its parser trims
 // the name and the value, strips surrounding quotes and takes the first of two
 // cookies of one name. The gate must see what BetterAuth sees.
-test.each([
+const cookieForms = [
   ['a quoted value', (name, value) => `${name}="${value}"`],
   ['a space before the equals sign', (name, value) => `${name} =${value}`],
   ['spaces around the value', (name, value) => `${name}=  ${value}  `],
   ['no space after the separator', (name, value) => `theme=dark;${name}=${value};other=1`],
   ['the value not URI-encoded', (name, value) => `${name}=${decodeURIComponent(value)}`],
   ['a second cookie of the same name after it', (name, value) => `${name}=${value}; ${name}=x.y`],
-])('a view session sent as a cookie with %s is refused', async (label, toCookie) => {
-  const { auth, token, browser } = await setupCallers();
-  const { authCookies } = await auth.$context;
-  const name = authCookies.sessionToken.name;
-  const endpoint = { method: 'GET', path: '/list-sessions' };
-  // BetterAuth accepts this form: the same header carrying the ordinary
-  // session is served, so a gate that missed it would let the view session in.
-  const browserValue = browser.cookie
-    .split('; ')
-    .find((pair) => pair.startsWith(`${name}=`))
-    .slice(name.length + 1);
-  const ordinary = await call({
-    auth,
-    headers: { ...browserHeaders, cookie: toCookie(name, browserValue) },
-    endpoint,
-  });
-  expect(ordinary.status).toBe(200);
+];
 
-  expectRefused(
-    await call({ auth, headers: { ...browserHeaders, cookie: toCookie(name, token) }, endpoint })
-  );
-});
+test.each(cookieForms)(
+  'a view session sent as a cookie with %s is refused',
+  async (label, toCookie) => {
+    const { auth, token, browser } = await setupCallers();
+    const { authCookies } = await auth.$context;
+    const name = authCookies.sessionToken.name;
+    const endpoint = { method: 'GET', path: '/list-sessions' };
+    // BetterAuth accepts this form: the same header carrying the ordinary
+    // session is served, so a gate that missed it would let the view session in.
+    const browserValue = browser.cookie
+      .split('; ')
+      .find((pair) => pair.startsWith(`${name}=`))
+      .slice(name.length + 1);
+    const ordinary = await call({
+      auth,
+      headers: { ...browserHeaders, cookie: toCookie(name, browserValue) },
+      endpoint,
+    });
+    expect(ordinary.status).toBe(200);
+
+    expectRefused(
+      await call({ auth, headers: { ...browserHeaders, cookie: toCookie(name, token) }, endpoint })
+    );
+  }
+);
 
 test('a view session on a read-and-write grant is refused on /api/auth all the same', async () => {
   const { auth, viewBearer } = await setupCallers({ grantedScopes: ['mcp:read', 'mcp:write'] });
@@ -727,4 +733,92 @@ test('the mobile sign-in page gives a view session no phone session, and the ord
   const after = await findSessions({ adapter, userId: user.id });
   expect(after).toHaveLength(3);
   expect(after.filter((session) => session.mobile === true)).toHaveLength(1);
+});
+
+// With the session cookie cache on, the gate reads the cookie through it, as
+// the endpoint behind it does, and must stay as strict.
+test.each(cookieForms)(
+  'with the cookie cache on, a view session sent as a cookie with %s is refused',
+  async (label, toCookie) => {
+    const { auth, token } = await setupCallers({ cookieCache: true });
+    const { authCookies } = await auth.$context;
+    expectRefused(
+      await call({
+        auth,
+        headers: { ...browserHeaders, cookie: toCookie(authCookies.sessionToken.name, token) },
+        endpoint: { method: 'GET', path: '/list-sessions' },
+      })
+    );
+  }
+);
+
+test('with the cookie cache on, an ordinary session is passed without a session read from the database', async () => {
+  const { auth, browser, internalAdapter, user } = await setupCallers({ cookieCache: true });
+  const { authCookies } = await auth.$context;
+  // Sign-in set the cache cookie beside the session cookie.
+  expect(browser.cookie).toContain(`${authCookies.sessionData.name}=`);
+  const findSession = vi.spyOn(internalAdapter, 'findSession');
+  const read = await call({
+    auth,
+    headers: browser,
+    endpoint: { method: 'GET', path: '/get-session' },
+  });
+  expect(read.status).toBe(200);
+  expect(read.body.user.id).toBe(user.id);
+  expect(findSession).not.toHaveBeenCalled();
+  findSession.mockRestore();
+});
+
+test('with the cookie cache on, a view session carrying its own cache cookie is refused from the cache', async () => {
+  const { auth, internalAdapter, token, viewBearer } = await setupCallers({ cookieCache: true });
+  const { authCookies } = await auth.$context;
+  const tokenCookie = `${authCookies.sessionToken.name}=${token}`;
+  // The cache cookie BetterAuth writes for the view session, as the in-process
+  // session read returns it. The gate hands a view session none over HTTP.
+  const inProcess = await auth.api.getSession({
+    headers: new Headers({ cookie: tokenCookie }),
+    asResponse: true,
+  });
+  const cacheCookie = cookieOf(inProcess)
+    .split('; ')
+    .find((pair) => pair.startsWith(`${authCookies.sessionData.name}=`));
+  expect(cacheCookie).toBeDefined();
+
+  const findSession = vi.spyOn(internalAdapter, 'findSession');
+  expectRefused(
+    await call({
+      auth,
+      headers: { ...browserHeaders, cookie: `${tokenCookie}; ${cacheCookie}` },
+      endpoint: { method: 'GET', path: '/get-session' },
+    })
+  );
+  expect(findSession).not.toHaveBeenCalled();
+  findSession.mockRestore();
+
+  // The bearer is read from the database, cache cookie beside it or not.
+  expectRefused(
+    await call({
+      auth,
+      headers: { ...viewBearer, cookie: cacheCookie },
+      endpoint: { method: 'GET', path: '/get-session' },
+    })
+  );
+});
+
+test('with the cookie cache on, a view session token beside the cache cookie of an ordinary session is refused', async () => {
+  const { auth, browser, token } = await setupCallers({ cookieCache: true });
+  const { authCookies } = await auth.$context;
+  const browserCache = browser.cookie
+    .split('; ')
+    .find((pair) => pair.startsWith(`${authCookies.sessionData.name}=`));
+  expectRefused(
+    await call({
+      auth,
+      headers: {
+        ...browserHeaders,
+        cookie: `${authCookies.sessionToken.name}=${token}; ${browserCache}`,
+      },
+      endpoint: { method: 'GET', path: '/list-sessions' },
+    })
+  );
 });

@@ -21,6 +21,12 @@ import { makeSignature } from 'better-auth/crypto';
 
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 // Contract test against the installed better-auth release: a real BetterAuth
 // instance (memory adapter) under the tenant policy, whose organization client
 // endpoints are enabled. A member suspended in an organization must get the
@@ -59,6 +65,7 @@ function createLogger() {
 async function createSeededAuth({ activeOrganizationId = 'active' } = {}) {
   let auth;
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta: { name: 'Test App', slug: 'test-app' },
     authJson: {
       configured: true,
