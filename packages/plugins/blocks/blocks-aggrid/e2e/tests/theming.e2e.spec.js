@@ -39,13 +39,14 @@ const oddRowBackground = (page, blockId) =>
     .first()
     .evaluate((el) => getComputedStyle(el).backgroundColor);
 
-// headerBackgroundColor paints .ag-header, not .ag-header-cell — the cell resolves to
-// rgba(0, 0, 0, 0) and reading it would make the themeParams assertions vacuous.
+// Since AG Grid 36 headerBackgroundColor paints each header row's ::after layer, not .ag-header or
+// .ag-header-cell — both resolve to rgba(0, 0, 0, 0) and reading them would make the themeParams
+// assertions vacuous.
 const headerBackground = (page, blockId) =>
   getBlock(page, blockId)
-    .locator('.ag-header')
+    .locator('.ag-header-row')
     .first()
-    .evaluate((el) => getComputedStyle(el).backgroundColor);
+    .evaluate((el) => getComputedStyle(el, '::after').backgroundColor);
 
 // A custom property's computed value has its var() references substituted, so this reads the
 // resolved colour a param chain lands on without needing the surface that consumes it to be
@@ -105,10 +106,11 @@ const clickButton = (page, blockId) => getBlock(page, blockId).locator('button')
 // AG Grid errors 106 and 239 are the two legacy-CSS diagnostics: 106 fires when a Theming API theme
 // is passed while ag-grid.css is in the document, 239 when no theme is passed and the default
 // applies. Matched on the error numbers and their message text rather than on a broad
-// /theme|legacy|ag-grid/i, which would trip on the suppressLoadingOverlay deprecation every v33 grid
-// logs and on columnMenu="legacy" diagnostics.
+// /theme|legacy|ag-grid/i, which would trip on columnMenu="legacy" diagnostics. Since AG Grid 36 a
+// build without the ValidationModule (every production build) logs only the number, as
+// `AG Grid: error #106` or `warning #106` and a docs link, so the number alone has to match.
 const LEGACY_CSS_ERROR =
-  /error #(106|239)\b|Theming API and (Legacy Themes|CSS File Themes) are both used/i;
+  /(error|warning) #(106|239)\b|Theming API and (Legacy Themes|CSS File Themes) are both used/i;
 
 const srcDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../src');
 
@@ -645,6 +647,56 @@ test.describe('AG Grid theming', () => {
         }
       }
       expect(importers).toEqual([]);
+    });
+  });
+
+  // ============================================
+  // AG GRID 36 DEFAULTS — held at their v33 values
+  // ============================================
+
+  // Each grid's wrapper sets font-weight 500. AG Grid 36's own default is 400 and its v33 picker
+  // radius was a fixed 5px, so these fail if antdParams stops holding them.
+  test.describe('AG Grid 36 defaults', () => {
+    for (const blockId of ['theming_v36_lowdefy', 'theming_v36_balham']) {
+      test(`${blockId} grid text inherits the page font weight`, async ({ page }) => {
+        await navigateToTestPage(page, 'aggridtheming');
+        const cell = getBlock(page, blockId).locator('.ag-row[row-index="0"] .ag-cell').first();
+        await expect(cell).toHaveText('Alice');
+        expect(await cell.evaluate((el) => getComputedStyle(el).fontWeight)).toBe('500');
+      });
+
+      test(`${blockId} pagination panel is one row tall with a 5px picker`, async ({ page }) => {
+        await navigateToTestPage(page, 'aggridtheming');
+        const panel = getBlock(page, blockId).locator('.ag-paging-panel');
+        await expect(panel).toBeVisible();
+        const panelHeight = await boxHeight(panel);
+        expect(panelHeight).toBeCloseTo(await rowHeight(page, blockId), 0);
+        const picker = panel.locator('.ag-picker-field-wrapper');
+        expect(await picker.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('5px');
+      });
+    }
+
+    // AG Grid 35 added an overlay for a filter that matches no rows. It takes the same secondary
+    // text colour as the empty-grid overlay.
+    test('a filter that matches no rows shows the no-matching-rows overlay', async ({ page }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+      const block = getBlock(page, 'theming_v36_lowdefy');
+      const header = block.locator('.ag-header-cell[col-id="name"]');
+      await header.hover();
+      await header.locator('.ag-header-cell-menu-button').click();
+      await page.locator('.ag-popup .ag-filter input').first().fill('zzz');
+      const overlay = block.locator('.ag-overlay-no-matching-rows-wrapper');
+      await expect(overlay).toBeVisible();
+      // A probe styled with the token resolves it to the same colour format the overlay reports.
+      const colors = await overlay.evaluate((el) => {
+        const probe = document.createElement('span');
+        probe.style.color = 'var(--ant-color-text-secondary)';
+        el.parentElement.appendChild(probe);
+        const secondary = getComputedStyle(probe).color;
+        probe.remove();
+        return { overlay: getComputedStyle(el).color, secondary };
+      });
+      expect(colors.overlay).toBe(colors.secondary);
     });
   });
 });
