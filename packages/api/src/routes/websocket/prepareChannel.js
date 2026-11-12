@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import authorizeViewWebsocket from './authorizeViewWebsocket.js';
 import authorizeWebsocket from './authorizeWebsocket.js';
 import checkWebsocketAccess from './checkWebsocketAccess.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
@@ -42,6 +43,7 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 async function prepareChannel(context, { websocketId, payload }) {
   context.evaluateOperators = createEvaluateOperators(context);
 
+  await authorizeViewWebsocket(context, { websocketId });
   const websocketConfig = await getWebsocketConfig(context, { websocketId });
   authorizeWebsocket(context, { websocketConfig });
   await checkWebsocketAccess(context, { payload, websocketConfig });

@@ -18,6 +18,8 @@ import { serializer, type } from '@lowdefy/helpers';
 import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
+import authorizeViewEndpoint from './authorizeViewEndpoint.js';
+import authorizeViewWrite from '../auth/view/authorizeViewWrite.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
@@ -39,6 +41,7 @@ async function callEndpoint(
   // Ids only: a payload can carry chat text or other personal information (an agent
   // chat's save-thread call sends the whole thread), which no log level may hold.
   logger.debug({ event: 'debug_endpoint', blockId, endpointId, pageId });
+  const viewEndpoint = await authorizeViewEndpoint(context, { endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
   // Block HTTP access to InternalApi endpoints - same error as a missing
@@ -57,6 +60,9 @@ async function callEndpoint(
   }
 
   authorizeApiEndpoint(context, { endpointConfig });
+  if (viewEndpoint.writes) {
+    authorizeViewWrite(context, { subject: `API endpoint "${endpointId}"` });
+  }
 
   // Validated before the async fork, so a refused payload is answered to the
   // caller rather than failing in the background. A page CallAPI without a

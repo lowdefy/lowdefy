@@ -44,6 +44,7 @@ import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js'
 import buildOauthPostLogin from './buildOauthPostLogin.js';
 import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
+import buildViewSessionGatePlugin from './view/buildViewSessionGatePlugin.js';
 import buildRequestHooks from './requestHooks/buildRequestHooks.js';
 import createAuthLogger from './createAuthLogger.js';
 import createMcpAccessTokenClaims from './createMcpAccessTokenClaims.js';
@@ -384,6 +385,10 @@ function getBetterAuthConfig({
     viewClientId: { type: 'string', required: false, input: false },
     viewScopes: { type: 'string', required: false, input: false },
   };
+
+  // First in the list, so it answers before any other plugin's onRequest: a
+  // view session is refused on every path of BetterAuth's own handler.
+  options.plugins.push(buildViewSessionGatePlugin());
 
   // Phone sessions are marked so they can be given their own lifetime
   // (mobile.auth.sessionExpiresIn) - see createMobileSessionCreateHook. input:

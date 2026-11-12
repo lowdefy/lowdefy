@@ -18,6 +18,7 @@ import crypto from 'crypto';
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import authorizeViewWrite from '../auth/view/authorizeViewWrite.js';
 import checkWebsocketAccess from './checkWebsocketAccess.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import createWireProjection from '../../response/createWireProjection.js';
@@ -278,6 +279,9 @@ function createChannelRegistry() {
     // that fragment on _payload/_user in properties are not publish targets.
     const { connectionProperties, properties, tenant, websocketConfig, websocketResolver } =
       await prepareChannel(context, { websocketId, payload: {} });
+    // Publishing writes into the channel, so a view session on a read-only
+    // grant is refused once its roles and the websocket check have passed.
+    authorizeViewWrite(context, { subject: `publishing to websocket "${websocketId}"` });
 
     if (websocketResolver.meta?.publish !== true || properties.publish !== true) {
       throw new ConfigError(`Websocket "${websocketId}" does not allow publishing.`, {

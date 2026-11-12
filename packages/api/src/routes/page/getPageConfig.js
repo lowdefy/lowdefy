@@ -17,7 +17,9 @@
 import { serializer, type } from '@lowdefy/helpers';
 import { matchPagePath } from '@lowdefy/node-utils';
 
+import isViewPage from './isViewPage.js';
 import resolveDynamicContent from './dynamic/resolveDynamicContent.js';
+import viewGrantCovers from '../auth/view/viewGrantCovers.js';
 
 // Matches the request path (basePath and the leading "/" removed) to a page,
 // then returns a status object so the page route can fork on the auth outcome.
@@ -43,11 +45,24 @@ import resolveDynamicContent from './dynamic/resolveDynamicContent.js';
 //   open. It serves the user's experience, not security: the header is set by
 //   the client, and page access stays with auth.pages.
 //
+// A view is the third surface, and the one surface the client does not name:
+// a caller resolved from a view session (context.viewSession) is on it whatever
+// header it sent, and opens only view pages (isViewPage). Unlike the other two
+// this one is a security boundary - only pages the app names are shown inside a
+// host - so it is read from the session, which the server resolved. Every other
+// page the caller's roles allow answers wrong_surface, still after the access
+// check, and the view opens it in the browser. A grant with no MCP scope reads
+// nothing, so its view session is served no page.
+//
 // The default is a build-resolved boolean, coarser than the glob lists that
 // produced it on purpose: an id absent from the build could still match a
 // declared pattern, and matching globs on the request path to change the answer
 // for URLs that are wrong anyway is a cost the artifact exists to avoid.
-function servesSurface({ target, surface }) {
+function servesSurface({ pageConfig, surface, viewSession }) {
+  if (!type.isNone(viewSession)) {
+    return isViewPage({ pageConfig }) && viewGrantCovers({ viewSession, scope: 'mcp:read' });
+  }
+  const { target } = pageConfig;
   if (surface === 'mobile') {
     return target === 'mobile' || target === 'both';
   }
@@ -69,7 +84,7 @@ async function getPageConfig(context, { path, urlQuery, surface = 'web' }) {
   if (outcome === 'allow') {
     // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;
-    if (!servesSurface({ target: rest.target, surface })) {
+    if (!servesSurface({ pageConfig: rest, surface, viewSession: context.viewSession })) {
       return { status: 'wrong_surface', pageId, pathParams, surface: rest.target };
     }
     if (rest.dynamic !== true) {
