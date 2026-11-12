@@ -75,10 +75,10 @@ export default function ArticlePage({ article, relatedArticles = [] }) {
         </Link>
 
         <div className="mb-6">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white font-mono mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white font-mono mb-4 leading-tight sm:leading-10 lg:leading-none">
             {article.title}
           </h1>
-          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed sm:leading-7">
             {article.subtitle}
           </p>
         </div>
@@ -181,7 +181,7 @@ export default function ArticlePage({ article, relatedArticles = [] }) {
                   alt={author.name}
                   width={56}
                   height={56}
-                  className="w-14 h-14 rounded-full ring-2 ring-slate-200 dark:ring-slate-700 flex-shrink-0"
+                  className="w-14 h-14 rounded-full ring-2 ring-slate-200 dark:ring-slate-700 shrink-0"
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-1 flex-wrap">
@@ -239,7 +239,7 @@ export default function ArticlePage({ article, relatedArticles = [] }) {
                   <span className="text-xs font-medium text-primary-500 mb-2 block">
                     {related.tags[0]}
                   </span>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2 group-hover:text-primary-500 transition-colors">
+                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2 group-hover:text-primary-500 dark:group-hover:text-primary-500 transition-colors">
                     {related.title}
                   </h3>
                   <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">

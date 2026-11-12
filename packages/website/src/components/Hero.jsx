@@ -40,7 +40,7 @@ export default function Hero() {
               <span>Build future-proof AI apps</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-6 leading-tight font-mono">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-6 leading-tight sm:leading-none font-mono">
               The config-first web stack for
               <br />
               <span className="text-gradient">AI and humans</span>
