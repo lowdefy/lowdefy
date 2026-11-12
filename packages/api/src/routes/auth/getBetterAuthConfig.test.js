@@ -2147,6 +2147,16 @@ describe('mobile', () => {
     );
   });
 
+  test('puts the view session gate first among the plugins for every app, with or without a view', () => {
+    const gate = 'lowdefy-view-session-gate';
+    expect(build().plugins[0].id).toBe(gate);
+    expect(build({ mobile }).plugins[0].id).toBe(gate);
+    const withView = build(undefined, { configured: true, views: { configured: true } });
+    expect(withView.plugins[0].id).toBe(gate);
+    expect(typeof withView.plugins[0].onRequest).toBe('function');
+    expect(withView.plugins.filter((plugin) => plugin.id === gate)).toHaveLength(1);
+  });
+
   test('adds the bearer plugin alone for an app with a view and no mobile section, sending the token header to nobody', () => {
     const options = build(undefined, { configured: true, views: { configured: true } });
     const ids = options.plugins.map((plugin) => plugin.id);
