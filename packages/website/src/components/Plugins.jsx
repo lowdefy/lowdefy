@@ -142,7 +142,7 @@ export default function Plugins() {
                 className="bg-slate-800/50 rounded-xl p-5 border border-slate-700 hover:border-primary-500/50 transition-colors group"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-500/30 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center shrink-0 group-hover:bg-primary-500/30 transition-colors">
                     <plugin.icon style={{ fontSize: 20, color: '#7dd3fc' }} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -154,7 +154,7 @@ export default function Plugins() {
                       {plugin.packages.map((pkg) => (
                         <code
                           key={pkg}
-                          className="text-xs text-slate-400 font-mono bg-slate-700/50 px-2 py-0.5 rounded"
+                          className="text-xs text-slate-400 font-mono bg-slate-700/50 px-2 py-0.5 rounded-sm"
                         >
                           {pkg}
                         </code>

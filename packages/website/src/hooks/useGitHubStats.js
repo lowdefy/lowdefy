@@ -47,7 +47,7 @@ export function useGitHubStats() {
         localStorage.setItem(CACHE_KEY, JSON.stringify({ data: newStats, timestamp: Date.now() }));
 
         setStats({ ...newStats, loading: false, error: null });
-      } catch (error) {
+      } catch {
         setStats((prev) => ({ ...prev, loading: false, error: 'Failed to fetch stats' }));
       }
     }
