@@ -33,6 +33,8 @@ export default {
     'Login',
     'Logout',
     'MagicLinkVerify',
+    'McpOpenLink',
+    'McpSendMessage',
     'OAuthConsent',
     'OAuthContinue',
     'PasskeyDelete',

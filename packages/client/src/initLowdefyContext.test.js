@@ -225,6 +225,7 @@ test('initLowdefyContext builds the context on the browser host', () => {
   expect(result._internal.router).toBe(args.router);
   expect(result._internal.host.router).toBe(args.router);
   expect(result._internal.components.handleError).toBe(result._internal.handleError);
+  expect(result._internal.mcp).toBe(null);
 });
 
 test('initLowdefyContext builds the context on the host it is passed', () => {
@@ -242,6 +243,7 @@ test('initLowdefyContext builds the context on the host it is passed', () => {
   );
   expect(result.apiBase).toBe('https://app.example.com/base');
   expect(result.basePath).toBe('/base');
+  expect(result._internal.mcp.getDisplayMode()).toBe('inline');
 });
 
 test('initLowdefyContext leaves historyLimits undefined and keeps one set before it runs', () => {

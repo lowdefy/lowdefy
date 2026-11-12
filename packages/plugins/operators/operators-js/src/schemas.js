@@ -67,6 +67,7 @@ export { default as _index } from './operators/client/index.schema.js';
 export { default as _input } from './operators/client/input.schema.js';
 export { default as _js } from './operators/client/js.schema.js';
 export { default as _location } from './operators/client/location.schema.js';
+export { default as _mcp } from './operators/client/mcp.schema.js';
 export { default as _media } from './operators/client/media.schema.js';
 export { default as _menu } from './operators/client/menu.schema.js';
 export { default as _path_params } from './operators/client/path_params.schema.js';
