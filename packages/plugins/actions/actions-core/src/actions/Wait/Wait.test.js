@@ -14,32 +14,26 @@
   limitations under the License.
 */
 
-import { wait } from '@lowdefy/helpers';
 import Wait from './Wait.js';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 
-test('wait set ms before continuing', async () => {
-  let flag = false;
-
-  const waitAndSetFlag = async () => {
-    await Wait({ params: { ms: 500 } });
-    flag = true;
-  };
-  expect(flag).toBe(false);
-  waitAndSetFlag();
-  expect(flag).toBe(false);
-  await wait(100);
-  expect(flag).toBe(false);
-  await wait(500);
-  expect(flag).toBe(true);
+test('Wait calls the wait method with ms and returns its promise', async () => {
+  const wait = vi.fn(() => Promise.resolve());
+  const res = Wait({ methods: { wait }, params: { ms: 500 } });
+  expect(wait.mock.calls).toEqual([[{ ms: 500 }]]);
+  await expect(res).resolves.toBeUndefined();
 });
 
-test('Wait params undefined', () => {
-  expect(() => Wait({})).toThrow('Wait action "ms" param should be an integer.');
+test('Wait throws when params are undefined', () => {
+  const wait = vi.fn();
+  expect(() => Wait({ methods: { wait } })).toThrow('Wait action "ms" param should be an integer.');
+  expect(wait).not.toHaveBeenCalled();
 });
 
-test('Wait params.ms not an integer', () => {
-  expect(() => Wait({ params: { key: 'value' } })).toThrow(
+test('Wait throws when params.ms is not an integer', () => {
+  const wait = vi.fn();
+  expect(() => Wait({ methods: { wait }, params: { key: 'value' } })).toThrow(
     'Wait action "ms" param should be an integer.'
   );
+  expect(wait).not.toHaveBeenCalled();
 });

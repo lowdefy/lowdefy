@@ -590,7 +590,7 @@ journeys take `pathParams` next to `pageId` and `urlQuery`.
 returns to the agent before a browser opens. `openPage` and `buildPageUrl` take the pattern as
 `path`; the tools read `lowdefy.contexts[instanceKey]` and `lowdefy.inputs[instanceKey]`.
 `isPageReady()` waits for the instance on screen, the last key in
-`lowdefy.pageInstances[lowdefy.pageId]`, so a redirect settles on the page the app shows. A request naming only a `pageId` reads a live tab
+`lowdefy.pageInstances[lowdefy.pageId]`, so a redirect settles on the page the app shows. Each caller passes the time it stops waiting as `deadline`, and an event that only sleeps in a `Wait` until after it is not counted as running (see "When a page counts as settled" in `architecture/journeys.md`). A request naming only a `pageId` reads a live tab
 through `findPageInstance`; headless it needs `pathParams` for a patterned page. `GET /lowdefy-docs/page-config` takes multi-segment page ids. `getAppMap` lists each page's `path`, and
 the overview lists the patterned pages.
 

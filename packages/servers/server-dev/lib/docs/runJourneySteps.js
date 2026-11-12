@@ -775,7 +775,9 @@ async function runGoto({ page, step, origin, timeout }) {
       actual: cleanMessage(error),
     });
   }
-  await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {});
+  await page
+    .waitForFunction(isPageReady, { deadline: Date.now() + timeout }, { timeout })
+    .catch(() => {});
 }
 
 // Polls a page read until it satisfies `check`, or fails once `timeout` has
@@ -1127,16 +1129,20 @@ async function runExpect({ journey, page, step, timeout }) {
 // finds. Waits for the instance on screen, since a click may have navigated
 // to another page or instance.
 //
-// Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: an
-// event that ends in a Wait (a sign-in link's resend cooldown) keeps the page
-// unsettled for as long as it waits, and every step after it waits for what it
-// needs on its own.
+// Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: every
+// step after it waits for what it needs on its own. An event that only sleeps
+// in a Wait until after this settle gives up (a sign-in link's resend
+// cooldown, a page that polls with a Wait) is not waited for at all, since
+// the settle could not outlast it; one whose Wait ends sooner (a pause before
+// a request) is, as any working event (see isPageReady).
 async function settlePage({ page, timeout }) {
   const pageId = await page.evaluate(() => window.lowdefy?.pageId);
   if (type.isNone(pageId)) {
     return;
   }
-  await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {});
+  await page
+    .waitForFunction(isPageReady, { deadline: Date.now() + timeout }, { timeout })
+    .catch(() => {});
 }
 
 const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];

@@ -15,8 +15,9 @@
 */
 
 // Serialized into the browser by page.waitForFunction, so this function must
-// be pure: it may reference nothing but `window`. An import or a closed-over
-// binding would be undefined once the source is evaluated inside the page.
+// be pure: it may reference nothing but `window` and its argument. An import
+// or a closed-over binding would be undefined once the source is evaluated
+// inside the page, which is why its helpers are declared inside it.
 //
 // Checks are ordered cheapest-first and return false on the first failure.
 // A missing key always means "not configured", never "not finished" —
@@ -31,7 +32,30 @@
 // Link, even one in onInit) has changed the URL, but window.lowdefy.pageId
 // still names the page being left until the next page renders (the dev
 // client's Routing.jsx and Page.jsx mark that span).
-function isPageReady() {
+//
+// `deadline` is the time (ms since the epoch) at which the caller stops
+// waiting. An event is loading for its whole run, and the engine marks one
+// that only sleeps in a Wait action with the time the wait ends
+// (waitingUntil, see createWait in @lowdefy/engine). An event that sleeps
+// until after the deadline is not counted as running: the caller could not
+// outlast it, and nothing changes because of it before then, so a page that
+// polls with a Wait (sleep a minute, read again, run again) settles once its
+// real work is done. A wait that ends before the deadline (a debounce before
+// a request) still holds the page. With no deadline every loading event
+// counts.
+function isPageReady({ deadline } = {}) {
+  function isEventRunning(event) {
+    if (event?.loading !== true) return false;
+    if (typeof deadline !== 'number' || typeof event.waitingUntil !== 'number') return true;
+    return event.waitingUntil <= deadline;
+  }
+  // onInitAsync is done, or is itself only sleeping until after the deadline.
+  function isInitAsyncSettled(ctx) {
+    if (ctx._internal?.onInitAsyncDone === true) return true;
+    const event = ctx._internal?.RootSlots?.slots?.root?.blocks?.[0]?.Events?.events?.onInitAsync;
+    return event?.loading === true && !isEventRunning(event);
+  }
+
   const lowdefy = window.lowdefy;
   if (lowdefy?._devNavigating === true) return false;
   const shownKey = lowdefy?.pageInstances?.[lowdefy?.pageId]?.at(-1);
@@ -41,17 +65,17 @@ function isPageReady() {
   if (context._internal?.onInitDone !== true) return false;
   // runOnInitAsync is always invoked once runOnInit resolves, so this settles
   // even for a page that declares no onInitAsync event.
-  if (context._internal?.onInitAsyncDone !== true) return false;
+  if (!isInitAsyncSettled(context)) return false;
   // The app onInitAsync runs once per app load, alongside the first page's events.
   const appContext = lowdefy?.appContext;
-  if (appContext && appContext._internal?.onInitAsyncDone !== true) return false;
+  if (appContext && !isInitAsyncSettled(appContext)) return false;
 
   // Covers onMountAsync (fired without await by Block.js) and any other event
   // still running, such as an onClick from an earlier tool call.
   const blocks = Object.values(context._internal?.RootSlots?.map ?? {});
   for (const block of blocks) {
     const events = Object.values(block?.Events?.events ?? {});
-    if (events.some((event) => event?.loading === true)) return false;
+    if (events.some(isEventRunning)) return false;
   }
 
   const requests = Object.values(context.requests ?? {});
