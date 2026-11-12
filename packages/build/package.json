@@ -122,7 +122,6 @@
     "@lowdefy/operators-cron": "7.2.0",
     "@lowdefy/operators-dayjs": "7.2.0",
     "@lowdefy/operators-diff": "7.2.0",
-    "@lowdefy/operators-jsonata": "7.2.0",
     "@lowdefy/operators-mql": "7.2.0",
     "@lowdefy/operators-nunjucks": "7.2.0",
     "@lowdefy/operators-uuid": "7.2.0",

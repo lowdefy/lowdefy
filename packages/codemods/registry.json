@@ -3,12 +3,17 @@
     {
       "version": "8.0.0",
       "from": ">=7.0.0 <8.0.0",
-      "description": "The react-icons icon set (@lowdefy/icons-react-icons) is removed",
+      "description": "The react-icons icon set (@lowdefy/icons-react-icons) and the _jsonata operator (@lowdefy/operators-jsonata) are removed",
       "codemods": [
         {
           "id": "remove-react-icons-set",
           "description": "Remove @lowdefy/icons-react-icons and theme.icons.set: react-icons, rewrite react-icons names (qualified react-icons:Name and unqualified) to semantic or Lucide names using the v7-0-0/react-icons-to-lucide.json table, and report brand logos with no Lucide equivalent, unmapped names and icon names stored in data or built at runtime.",
           "path": "v8-0-0/01-remove-react-icons-set.md"
+        },
+        {
+          "id": "remove-jsonata",
+          "description": "Rewrite every _jsonata operator (object, positional and _jsonata.evaluate forms, on client and server) to _js with equivalent JavaScript, passing on and bindings through args, keeping JSONata's single-match and empty-match results where the consumer cannot be told, remove @lowdefy/operators-jsonata from plugins and package.json, and report expressions it cannot translate confidently, behaviour changes and expressions read from data.",
+          "path": "v8-0-0/02-remove-jsonata.md"
         }
       ]
     },

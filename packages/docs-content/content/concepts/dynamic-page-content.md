@@ -130,7 +130,7 @@ These patterns return config through data and fail resolution:
 - **Blocks built up in routine state** (`:set_state` in a loop, then `_state` in `:return`). Build the list inside `:return` with `_array.map` or `_array.concat`.
 - **Blocks returned by a nested endpoint** and read with `_step`. Share block config with `_ref` instead.
 - **A `:for` over a literal list of block configs**, read with `_item`. Map the list inside `:return`.
-- **Blocks built by `_js` or `_jsonata`.** Return the data from them and map it into blocks inside `:return`.
+- **Blocks built by `_js`.** Return the data from them and map it into blocks inside `:return`.
 - **Stored block config returned as it is**, whether read directly, picked out with `_get`, or copied or extended by an `_array.map` callback (`__args: 0`, `__object.assign`). Put the Dynamic block under a policy and return the content through `ValidateDynamic` (see [Rendering stored content under a policy](#rendering-stored-content-under-a-policy)).
 
 ## Using urlQuery in the Routine
