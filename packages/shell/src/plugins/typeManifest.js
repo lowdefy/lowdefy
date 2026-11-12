@@ -763,10 +763,6 @@ const typeManifest = {
       package: '@lowdefy/operators-diff',
       version: 7,
     },
-    _jsonata: {
-      package: '@lowdefy/operators-jsonata',
-      version: 7,
-    },
     _mql: {
       package: '@lowdefy/operators-mql',
       version: 7,

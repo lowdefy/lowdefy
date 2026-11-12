@@ -2336,14 +2336,6 @@
       "typeName": "_json"
     },
     {
-      "slug": "operators/_jsonata",
-      "title": "_jsonata",
-      "section": "Operators",
-      "path": "content/operators/_jsonata.md",
-      "kind": "operator",
-      "typeName": "_jsonata"
-    },
-    {
       "slug": "operators/_locale",
       "title": "_locale",
       "section": "Operators",
@@ -3113,7 +3105,7 @@
         "concepts/advanced/dynamic-page-content.yaml",
         "version.yaml"
       ],
-      "hash": "acdeb0d9965fef5e604324667440865b8bd7c58aca4bc09ab7d0b8aa51b67f16"
+      "hash": "6d7c29fb74ad3b3583d45ade73b04fb4427750d38482c334d19c7d970927220b"
     },
     "concepts/ai-agent-docs": {
       "files": [
@@ -5505,13 +5497,6 @@
       ],
       "hash": "55409c9ec4ea439ce0e179b8c383f2c627a507ca4178c2931babb9bdb4b227ed"
     },
-    "operators/_jsonata": {
-      "files": [
-        "operators/_jsonata.yaml",
-        "templates/operators.yaml.njk"
-      ],
-      "hash": "b17903c39dd5d709a91004adc9f6a34f35dc04af4824798e43138659b19c927b"
-    },
     "operators/_locale": {
       "files": [
         "operators/_locale.yaml",
@@ -5938,7 +5923,7 @@
       "files": [
         "operators/index.yaml"
       ],
-      "hash": "79587292b1162aaa9bb57163c5bad282ee61b37e590916cb7af127642b1f7a8c"
+      "hash": "738538a2d24d81751f42a18b1f80720f5e994e4433565b48e496ca39e58d765c"
     },
     "reference/actions-reference": {
       "files": [

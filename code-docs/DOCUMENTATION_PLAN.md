@@ -92,7 +92,6 @@ Framework Version: 4.4.0
 - [x] code-docs/plugins/operators/diff.md
 - [x] code-docs/plugins/operators/uuid.md
 - [x] code-docs/plugins/operators/yaml.md
-- [x] code-docs/plugins/operators/jsonata.md
 
 ### Actions (packages/plugins/actions/)
 

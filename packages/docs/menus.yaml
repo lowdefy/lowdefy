@@ -1217,9 +1217,6 @@
             - id: _function
               type: MenuLink
               pageId: _function
-            - id: _jsonata
-              type: MenuLink
-              pageId: _jsonata
             - id: _nunjucks
               type: MenuLink
               pageId: _nunjucks
