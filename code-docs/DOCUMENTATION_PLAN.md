@@ -136,7 +136,6 @@ Framework Version: 4.4.0
 - [x] code-docs/utils/node-utils.md
 - [x] code-docs/utils/ajv.md
 - [x] code-docs/utils/block-utils.md
-- [x] code-docs/utils/block-dev.md
 - [x] code-docs/utils/nunjucks.md
 - [x] code-docs/utils/vite-yaml-plugin.md
 
