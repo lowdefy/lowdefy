@@ -40,6 +40,7 @@ function createEvaluateOperators(context) {
     literalData,
     location,
     payload,
+    response,
     state,
     steps,
   }) {
@@ -52,6 +53,7 @@ function createEvaluateOperators(context) {
       literalData,
       location,
       payload,
+      response,
       state,
       steps,
     });

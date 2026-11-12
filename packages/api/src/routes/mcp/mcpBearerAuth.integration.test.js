@@ -45,6 +45,7 @@ const files = {
       { id: 'health', scope: 'mcp:read' },
       { id: 'partner-data', scope: 'mcp:read' },
     ],
+    views: { configured: false, pages: {}, sources: [] },
   },
   'api/health.json': {
     endpointId: 'health',

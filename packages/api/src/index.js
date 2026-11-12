@@ -72,6 +72,7 @@ import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 import darkModeScript from './html/darkModeScript.js';
 import layerOrderScript from './html/layerOrderScript.js';
+import logMcpViews from './routes/mcp/logMcpViews.js';
 
 export {
   addNonceToElements,
@@ -128,4 +129,5 @@ export {
   runScheduledEndpoint,
   darkModeScript,
   layerOrderScript,
+  logMcpViews,
 };
