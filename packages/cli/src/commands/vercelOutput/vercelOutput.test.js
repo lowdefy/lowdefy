@@ -36,7 +36,7 @@ afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-function writeServer({ config, schedules }) {
+function writeServer({ config, mcp, schedules }) {
   const serverDirectory = path.join(root, 'server');
   const files = {
     'src/index.js': '',
@@ -48,6 +48,14 @@ function writeServer({ config, schedules }) {
     'dist/client/.vite/manifest.json': '{}',
     'build/config.json': JSON.stringify(config),
     ...(schedules ? { 'build/schedules.json': JSON.stringify(schedules) } : {}),
+    ...(mcp
+      ? {
+          'build/mcp.json': JSON.stringify(mcp),
+          'dist/client/fonts/inter.woff2': 'font',
+          'dist/client/logo (dark).png': 'logo',
+          'dist/client/api/openapi.json': '{}',
+        }
+      : {}),
   };
   Object.entries(files).forEach(([file, content]) => {
     fs.mkdirSync(path.dirname(path.join(serverDirectory, file)), { recursive: true });
@@ -56,9 +64,9 @@ function writeServer({ config, schedules }) {
   return serverDirectory;
 }
 
-async function runVercelOutput({ config, schedules }) {
+async function runVercelOutput({ config, mcp, schedules }) {
   const { default: vercelOutput } = await import('./vercelOutput.js');
-  const serverDirectory = writeServer({ config, schedules });
+  const serverDirectory = writeServer({ config, mcp, schedules });
   await vercelOutput({
     context: {
       directories: { server: serverDirectory, build: path.join(serverDirectory, 'build') },
@@ -114,4 +122,63 @@ test('vercelOutput does not match assets under a basePath with a regex wildcard 
   const { config } = await runVercelOutput({ config: { basePath: '/tools/v1.2' } });
   expect(new RegExp(config.routes[0].src).test('/tools/v1x2/assets/main-abc123.js')).toBe(false);
   expect(config.crons).toBeUndefined();
+});
+
+test.each([
+  { basePath: undefined, prefix: '' },
+  { basePath: '/tools/v1.2', prefix: '/tools/v1.2' },
+])(
+  'vercelOutput lets any origin read the static files of an app with a view under basePath $basePath',
+  async ({ basePath, prefix }) => {
+    const { config } = await runVercelOutput({
+      config: { basePath },
+      mcp: { views: { configured: true, pages: {}, sources: [] } },
+    });
+
+    expect(config.routes[0].headers).toEqual({
+      'cache-control': 'public, max-age=31536000, immutable',
+    });
+    expect(config.routes[1].headers).toEqual({ 'access-control-allow-origin': '*' });
+    expect(config.routes[1].continue).toBe(true);
+    expect(config.routes.slice(2)).toEqual([
+      { handle: 'filesystem' },
+      { src: '/(.*)', dest: '/api' },
+    ]);
+
+    const corsRoute = new RegExp(config.routes[1].src);
+    ['/assets/main-abc123.js', '/icon.svg', '/fonts/inter.woff2', '/logo (dark).png'].forEach(
+      (file) => {
+        expect(corsRoute.test(`${prefix}${file}`)).toBe(true);
+      }
+    );
+    // The function's responses: an API route must never be readable from any origin.
+    [
+      '/api/request/home/get_data',
+      '/api/auth/get-session',
+      '/api/mcp',
+      '/api/openapi.json',
+      '/api',
+      '/home',
+      '/',
+      '/iconXsvg',
+      '/.vite/manifest.json',
+    ].forEach((route) => {
+      expect(corsRoute.test(`${prefix}${route}`)).toBe(false);
+    });
+    if (prefix !== '') {
+      expect(corsRoute.test('/assets/main-abc123.js')).toBe(false);
+    }
+  }
+);
+
+test('vercelOutput adds no CORS route for an app without a view', async () => {
+  const { config } = await runVercelOutput({
+    config: {},
+    mcp: { views: { configured: false, pages: {}, sources: [] } },
+  });
+  expect(config.routes.slice(1)).toEqual([
+    { handle: 'filesystem' },
+    { src: '/(.*)', dest: '/api' },
+  ]);
+  expect(JSON.stringify(config)).not.toContain('access-control');
 });

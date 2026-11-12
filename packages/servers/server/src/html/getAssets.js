@@ -48,6 +48,16 @@ function getAssets() {
   const iconsJs = new Set();
   const iconsCss = new Set();
   collectChunkClosure({ manifest, key: 'build/plugins/icons.js', js: iconsJs, css: iconsCss });
+  // The entry an MCP App view's loader starts (routes/viewBoot.js), with the
+  // stylesheets of everything it imports statically: the loader has no HTML of
+  // this build to link them from. null for a build without the entry.
+  let view = null;
+  if (manifest['client/view.jsx']) {
+    const viewJs = new Set();
+    const viewCss = new Set();
+    collectChunkClosure({ manifest, key: 'client/view.jsx', js: viewJs, css: viewCss });
+    view = { js: manifest['client/view.jsx'].file, css: [...viewCss] };
+  }
   assets = {
     js: entry.file,
     css: entry.css ?? [],
@@ -57,6 +67,7 @@ function getAssets() {
     },
     imports: (entry.imports ?? []).map((key) => manifest[key]?.file).filter(Boolean),
     pageTypes: collectPageTypesAssets({ manifest, entryFiles }),
+    view,
   };
   return assets;
 }

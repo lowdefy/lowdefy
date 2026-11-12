@@ -35,6 +35,9 @@ vi.doMock('@lowdefy/api', () => ({
   runWebhookEndpoint: mockRunWebhookEndpoint,
 }));
 
+// clientError.js admits a view's origin; this app has no view.
+vi.doMock('../lib/getViewOrigins.js', () => ({ default: () => [] }));
+
 const { default: createErrorHandler } = await import('../middleware/errorHandler.js');
 const routes = {
   '/api/agent/*': (await import('./agent.js')).default,

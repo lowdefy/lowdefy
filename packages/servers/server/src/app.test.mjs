@@ -51,7 +51,13 @@ vi.doMock('./routes/wellKnownFallback.js', () => ({ default: handler }));
 vi.doMock('./html/renderPage.js', () => ({
   default: (c) => c.html('<html></html>'),
 }));
-vi.doMock('./middleware/apiContext.js', () => ({ default: passThrough }));
+// The context apiContext builds, as far as the app's own middleware reads it.
+vi.doMock('./middleware/apiContext.js', () => ({
+  default: () => (c, next) => {
+    c.set('lowdefyContext', { user: null, viewSession: null });
+    return next();
+  },
+}));
 vi.doMock('./middleware/sentry.js', () => ({ default: passThrough }));
 vi.doMock('./middleware/errorHandler.js', () => ({
   default: () => (error, c) => c.json({ error: error.message }, 500),
@@ -59,6 +65,7 @@ vi.doMock('./middleware/errorHandler.js', () => ({
 vi.doMock('../lib/build/appMeta.js', () => ({ default: { buildId: 'build-1' } }));
 vi.doMock('../lib/build/auth.js', () => ({ default: { configured: false } }));
 vi.doMock('../lib/build/theme.js', () => ({ default: {} }));
+vi.doMock('../lib/build/mcp.js', () => ({ default: { views: { configured: false } } }));
 vi.doMock('../lib/build/config.js', () => ({ default: {} }));
 vi.doMock('../lib/build/mobileConfig.js', () => ({ default: {} }));
 vi.doMock('../lib/server/auth/getAuth.js', () => ({ default: vi.fn() }));
