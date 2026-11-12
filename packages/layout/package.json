@@ -47,7 +47,6 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@lowdefy/block-dev": "7.2.0",
     "@lowdefy/vite-yaml-plugin": "7.2.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
