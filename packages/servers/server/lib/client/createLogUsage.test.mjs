@@ -14,6 +14,10 @@
   limitations under the License.
 */
 
+import createViewRouter from '@lowdefy/client/adapters/createViewRouter.js';
+import createViewBridge from '@lowdefy/client/host/createViewBridge.js';
+import createViewHost from '@lowdefy/client/host/createViewHost.js';
+import createFakeViewLoader from '@lowdefy/client/test/createFakeViewLoader.js';
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
 import createLogUsage from './createLogUsage.js';
@@ -87,4 +91,60 @@ test('createLogUsage works when browser storage throws', async () => {
   globalThis.fetch.mockResolvedValueOnce(jsonResponse({ offline: true }));
   await createLogUsage({ basePath: '', usageDataRef })();
   expect(JSON.parse(globalThis.fetch.mock.calls[0][1].body).machine).toEqual(expect.any(String));
+});
+
+// A page shown as an MCP App view: the frame is on another origin than the app, which is
+// https://app.example.com/base here.
+function createView() {
+  const view = createFakeViewLoader({ basePath: '/base', path: '/tickets/12' });
+  const frameFetch = vi.fn();
+  const host = createViewHost({
+    bridge: createViewBridge({ view }),
+    router: createViewRouter({ basePath: '/base', path: '/tickets/12' }),
+    window: { document: {}, fetch: frameFetch, location: {}, WebSocket: function WebSocket() {} },
+  });
+  return { frameFetch, host, view };
+}
+
+test('createLogUsage in a view posts usage to the app with the bearer session', async () => {
+  const { frameFetch, host } = createView();
+  frameFetch.mockResolvedValueOnce({ ...jsonResponse({ offline: true }), status: 200 });
+  await createLogUsage({ host, usageDataRef })();
+  expect(frameFetch).toHaveBeenCalledTimes(1);
+  expect(globalThis.fetch).not.toHaveBeenCalled();
+  const [url, init] = frameFetch.mock.calls[0];
+  expect(url).toBe('https://app.example.com/base/api/usage');
+  expect(init.method).toBe('POST');
+  expect(init.headers).toEqual({
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer token-1',
+  });
+  expect(JSON.parse(init.body)).toEqual({ user: { id: 'u1' }, machine: expect.any(String) });
+});
+
+test('createLogUsage in a view keeps the machine id in the store of the host, not localStorage', async () => {
+  const { frameFetch, host } = createView();
+  const setItem = vi.spyOn(globalThis.localStorage, 'setItem');
+  const getItem = vi.spyOn(globalThis.localStorage, 'getItem');
+  frameFetch.mockResolvedValue({ ...jsonResponse({ offline: true }), status: 200 });
+  await createLogUsage({ host, usageDataRef })();
+  const machine = host.storage.get('lowdefy_machine_id');
+  expect(machine).toEqual(expect.any(String));
+  expect(JSON.parse(frameFetch.mock.calls[0][1].body).machine).toBe(machine);
+  expect(setItem).not.toHaveBeenCalled();
+  expect(getItem).not.toHaveBeenCalled();
+  // The view keeps the id for as long as it lives: a callback made again reads it back.
+  await createLogUsage({ host, usageDataRef })();
+  expect(JSON.parse(frameFetch.mock.calls[1][1].body).machine).toBe(machine);
+});
+
+test('createLogUsage in a view sends the call again with a new session after a 401', async () => {
+  const { frameFetch, host, view } = createView();
+  frameFetch
+    .mockResolvedValueOnce({ ok: false, status: 401 })
+    .mockResolvedValueOnce({ ...jsonResponse({ offline: true }), status: 200 });
+  await createLogUsage({ host, usageDataRef })();
+  expect(frameFetch).toHaveBeenCalledTimes(2);
+  expect(frameFetch.mock.calls[1][1].headers.Authorization).toBe('Bearer token-2');
+  expect(view.host.callServerTool).toHaveBeenCalledTimes(2);
 });

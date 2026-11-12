@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { serializer } from '@lowdefy/helpers';
 
 import appMeta from '../../build/appMeta.json';
 import rawAuthConfig from '../../build/auth.json';
+import createLogUsage from '../../lib/client/createLogUsage.js';
 import AppShell from '../AppShell.jsx';
 import loadPageTypes from '../loadPageTypes.js';
 import createViewAuth from './createViewAuth.js';
@@ -43,9 +44,18 @@ function ViewApp({ host, loadBuild, start }) {
   const [shown, setShown] = useState({ ...start, generation: 0 });
   const [newBuild, setNewBuild] = useState(start.newBuild);
 
-  // Sent with every request and endpoint call so the server refuses calls
-  // from a view still running an earlier build.
-  const lowdefy = useMemo(() => ({ buildId: appMeta.buildId }), [shown.generation]);
+  // Usage logging is made once and outlives a page built again, so it keeps
+  // the time of its last call. It posts to the app with the view's session.
+  const usageDataRef = useRef({});
+  usageDataRef.current.user = shown.user?.id;
+  const logUsage = useMemo(() => createLogUsage({ host, usageDataRef }), []);
+
+  // buildId is sent with every request and endpoint call so the server refuses
+  // calls from a view still running an earlier build.
+  const lowdefy = useMemo(
+    () => ({ buildId: appMeta.buildId, eventCallback: logUsage }),
+    [shown.generation]
+  );
   const auth = useMemo(() => createViewAuth({ authConfig, user: shown.user }), [shown.user]);
 
   useEffect(() => {

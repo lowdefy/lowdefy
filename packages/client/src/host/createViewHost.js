@@ -19,6 +19,7 @@ import createMemoryTokenStore from './createMemoryTokenStore.js';
 import createViewLocation from './createViewLocation.js';
 import createViewSession from './createViewSession.js';
 import createViewWindow from './createViewWindow.js';
+import getViewSocketProtocols from './getViewSocketProtocols.js';
 
 function createListeners() {
   const listeners = new Set();
@@ -124,6 +125,12 @@ function createViewHost({ bridge, router, window }) {
     get WebSocket() {
       return window.WebSocket;
     },
+    // The frame's WebSocket takes no headers, so the handshake carries the
+    // session as subprotocols, read for every connect. renew asks for a new
+    // session first: the websocket client sets it when the last connection
+    // may have been refused for an ended one.
+    websocketProtocols: async ({ renew } = {}) =>
+      getViewSocketProtocols({ token: await session.getToken({ renew }) }),
     // apiBase carries the app's origin, so the path does too.
     websocketUrl: (path) => path.replace(/^http/, 'ws'),
   };

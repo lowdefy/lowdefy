@@ -65,6 +65,7 @@ const LoadingList = ({
       className={skeleton.class ?? blockClass}
     >
       <Component
+        apiBase={lowdefy.apiBase}
         basePath={lowdefy.basePath}
         blockId={blockId}
         components={lowdefy._internal.components}
@@ -72,6 +73,7 @@ const LoadingList = ({
         menus={lowdefy.menus}
         methods={{
           ...loadingBlockMethods,
+          fetchApi: lowdefy._internal.fetchApi,
           getAppStorageKey: lowdefy._internal.storage.appKey,
           getUserStorageKey: lowdefy._internal.storage.userKey,
         }}

@@ -18,14 +18,30 @@ import { createUrl } from '@lowdefy/client/adapters/url.js';
 
 // What about public usage
 
-// Browser storage can be disabled (a private window, blocked site data), and then every access
+const MACHINE_ID_KEY = 'lowdefy_machine_id';
+
+// Where the machine id is kept: the host's store for a page that runs on
+// another origin than its app (an MCP App view, whose own browser storage
+// belongs to the frame's origin), else the browser's localStorage.
+function getMachineStore({ host }) {
+  if (host) {
+    return host.storage;
+  }
+  return {
+    get: (key) => localStorage.getItem(key),
+    set: (key, value) => localStorage.setItem(key, value),
+  };
+}
+
+// Storage can be disabled (a private window, blocked site data), and then every access
 // throws: fall back to an id for this page load.
-function getMachineId() {
+function getMachineId({ host }) {
   try {
-    let machine = localStorage.getItem('lowdefy_machine_id');
+    const store = getMachineStore({ host });
+    let machine = store.get(MACHINE_ID_KEY);
     if (!machine) {
       machine = uuid();
-      localStorage.setItem('lowdefy_machine_id', machine);
+      store.set(MACHINE_ID_KEY, machine);
     }
     return machine;
   } catch (error) {
@@ -33,10 +49,21 @@ function getMachineId() {
   }
 }
 
-function createLogUsage({ basePath, usageDataRef }) {
+// host is given only by a page that runs on another origin than its app (an MCP App view): its
+// usage call goes to the app's absolute address with the view's bearer session, and its machine
+// id is kept in the host's store. A browser tab gives none: App.jsx builds this before the client
+// makes its host, and the call goes to the app's own origin under basePath.
+function createLogUsage({ basePath, host, usageDataRef }) {
   let lastTimestamp = 0;
   let isOffline = false;
-  const machine = getMachineId();
+  const machine = getMachineId({ host });
+
+  function postUsage(init) {
+    if (host) {
+      return host.view.fetchApi('/api/usage', init);
+    }
+    return fetch(createUrl({ basePath, pathname: '/api/usage' }), init);
+  }
 
   // Runs on every event and nothing awaits it, so a failure (the usage route unreachable, a proxy
   // answering with an HTML page, telemetry blocked) is dropped here instead of surfacing as an
@@ -48,7 +75,7 @@ function createLogUsage({ basePath, usageDataRef }) {
     lastTimestamp = Date.now();
 
     try {
-      const res = await fetch(createUrl({ basePath, pathname: '/api/usage' }), {
+      const res = await postUsage({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
