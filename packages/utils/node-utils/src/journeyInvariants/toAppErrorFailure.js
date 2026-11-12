@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { getStepKey } from '@lowdefy/node-utils';
+import { getStepKey } from '../journeyGrammar/validateJourneySteps.js';
 
 function describeWhere({ phase, index, step }) {
   if (phase === 'open') {

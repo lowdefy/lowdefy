@@ -14,23 +14,11 @@
   limitations under the License.
 */
 
-// The router a headless page navigates with: it records each navigation and goes nowhere. Link
-// and the auth methods push through it; following a push to the next page is the runner's.
-function createRecordingRouter() {
-  const navigations = [];
-  return {
-    basePath: '',
-    navigations,
-    back: () => {
-      navigations.push({ method: 'back' });
-    },
-    push: (target) => {
-      navigations.push({ method: 'push', ...target });
-    },
-    replace: (target) => {
-      navigations.push({ method: 'replace', ...target });
-    },
-  };
+// Whether a finding fails a journey: an error does, and so does an environment finding, which a
+// journey cannot pass on a data set whose store cannot run the app's query. A dead click is only
+// a warning; a journey asserts it with expect.effect.
+function isAppErrorFinding(finding) {
+  return finding.severity === 'error' || finding.kind === 'environment';
 }
 
-export default createRecordingRouter;
+export default isAppErrorFinding;
