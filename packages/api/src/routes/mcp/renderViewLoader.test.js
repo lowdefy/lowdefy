@@ -71,7 +71,11 @@ function tick() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-const boot = { buildId: 'build_1', js: 'assets/view-abc.js', css: ['assets/view-abc.css'] };
+const boot = {
+  buildId: 'build_1',
+  js: '/base/assets/view-abc.js',
+  css: ['/base/assets/view-abc.css'],
+};
 
 const toolResult = {
   content: [{ type: 'text', text: '{"title":"Fix the gate"}' }],
@@ -368,4 +372,42 @@ test('the loader answers a teardown request from the host', async () => {
   await connectHost(frame);
   frame.host.send({ id: 7, method: 'ui/resource-teardown', params: {} });
   expect(frame.posted[frame.posted.length - 1]).toEqual({ jsonrpc: '2.0', id: 7, result: {} });
+});
+
+test.each(['@evil.example/tasks', 'https://evil.example/tasks', '.evil.example', 7])(
+  'the loader treats the view path %j as no address, since it does not start with "/"',
+  async (path) => {
+    const frame = runLoader({ fetch: bootFetch() });
+    frame.host.answer('ui/initialize', { hostContext });
+    frame.host.send({
+      method: 'ui/notifications/tool-result',
+      params: { ...toolResult, _meta: { 'lowdefy/view': { path } } },
+    });
+    await tick();
+    expect(frame.window.__LOWDEFY_VIEW__).toBe(undefined);
+    expect(frame.document.body.children.some((child) => child.tagName === 'script')).toBe(false);
+    frame.document.getElementById('lowdefy-view-fallback').children[2].listeners.click();
+    expect(frame.posted[frame.posted.length - 1].params).toEqual({
+      url: 'https://app.example.com/base/',
+    });
+  }
+);
+
+test.each([
+  { js: '@evil.example/view.js', css: [] },
+  { js: 'https://evil.example/view.js', css: [] },
+  { js: 'assets/view-abc.js', css: [] },
+  { js: '/base/assets/view-abc.js', css: ['@evil.example/view.css'] },
+  { css: [] },
+])('the loader loads nothing from the boot answer %j and shows the fallback', async (answer) => {
+  const frame = runLoader({ fetch: bootFetch({ buildId: 'build_1', ...answer }) });
+  await connectHost(frame);
+  expect(frame.window.__LOWDEFY_VIEW__).toBe(undefined);
+  expect(frame.document.head.children).toEqual([]);
+  expect(frame.document.body.children.some((child) => child.tagName === 'script')).toBe(false);
+  expect(fallbackTexts(frame.document)).toEqual([
+    'Open a task',
+    '{"title":"Fix the gate"}',
+    'Open in browser',
+  ]);
 });

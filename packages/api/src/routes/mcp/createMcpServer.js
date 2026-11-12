@@ -218,24 +218,31 @@ async function createMcpServer({ context }) {
   // be built still answers: the caller gets the plain text result, and the
   // host shows it as it would for a tool with no view.
   async function addViewAddress({ endpoint, payload, reply, response }) {
-    let path;
+    const logFields = {
+      event: 'warn_mcp_view_address',
+      endpointId: endpoint.id,
+      pageId: endpoint.view.pageId,
+    };
+    let address;
     try {
-      path = await resolveViewAddress(context, { payload, response, view: endpoint.view });
+      address = await resolveViewAddress(context, { payload, response, view: endpoint.view });
     } catch (error) {
-      // A path value that is missing, "." or ".." is the call's own outcome and
-      // its message names only the placeholder. A failed operator is a fault in
-      // the app's config: it goes to the error sink, and its message, which can
-      // hold evaluated values, stays out of this line.
-      const badPathValue = error.name === 'ConfigError';
+      // A failed operator is a fault in the app's config: it goes to the error
+      // sink, and its message, which can hold evaluated values, stays out of
+      // this line whatever class the operator threw.
       context.logger.warn(
-        { event: 'warn_mcp_view_address', endpointId: endpoint.id, pageId: endpoint.view.pageId },
-        `MCP tool "${endpoint.id}" answered without its view: ${
-          badPathValue ? error.message : 'an operator in its view config failed.'
-        }`
+        logFields,
+        `MCP tool "${endpoint.id}" answered without its view: an operator in its view config failed.`
       );
-      if (!badPathValue) {
-        await context.handleError(error);
-      }
+      await context.handleError(error);
+      return reply;
+    }
+    const { path, refusal } = address;
+    if (type.isString(refusal)) {
+      context.logger.warn(
+        logFields,
+        `MCP tool "${endpoint.id}" answered without its view: ${refusal}`
+      );
       return reply;
     }
     return {

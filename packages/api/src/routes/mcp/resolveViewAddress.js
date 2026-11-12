@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
-import { buildPagePath, cleanBuildArtifact, urlQuery } from '@lowdefy/helpers';
+import { buildPagePath, cleanBuildArtifact, mcpViewOperators, urlQuery } from '@lowdefy/helpers';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 
@@ -24,10 +23,28 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 // are evaluated after the routine, with _payload as the arguments the tool was
 // called with and _response as what the routine returned. The path is the
 // page's pattern in routes.json filled by buildPagePath, the one URL builder.
-// Throws the operator's error when one fails, and a ConfigError when a path
-// value is missing, "." or "..".
+//
+// The address is sent to the MCP client, so a view is evaluated with the view
+// operators alone (mcpViewOperators) and with no secrets and no user: whatever
+// its config holds, it can read nothing but the call. The build refuses any
+// other operator there.
+//
+// Returns { path }, or { refusal } when a path value is missing, "." or "..":
+// that is the call's own outcome, and its message names only the placeholder.
+// Throws the operator's error when one fails.
 async function resolveViewAddress(context, { payload, response, view }) {
-  const evaluateOperators = createEvaluateOperators(context);
+  const operators = Object.fromEntries(
+    mcpViewOperators
+      .filter((name) => name in context.operators)
+      .map((name) => [name, context.operators[name]])
+  );
+  const evaluateOperators = createEvaluateOperators({
+    ...context,
+    operators,
+    organization: null,
+    secrets: {},
+    user: null,
+  });
   const evaluated = cleanBuildArtifact(
     evaluateOperators({
       input: { pathParams: view.pathParams ?? {}, urlQuery: view.urlQuery ?? {} },
@@ -46,13 +63,13 @@ async function resolveViewAddress(context, { payload, response, view }) {
       pathParams: evaluated.pathParams,
     });
   } catch (error) {
-    throw new ConfigError(error.message, { cause: error });
+    return { refusal: error.message };
   }
   const query = urlQuery.stringify(evaluated.urlQuery);
   if (query === '') {
-    return `/${pagePath}`;
+    return { path: `/${pagePath}` };
   }
-  return `/${pagePath}?${query}`;
+  return { path: `/${pagePath}?${query}` };
 }
 
 export default resolveViewAddress;

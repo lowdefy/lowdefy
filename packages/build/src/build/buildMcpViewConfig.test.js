@@ -264,3 +264,107 @@ test('buildMcp refuses a viewEndpoints scope outside the scope vocabulary', () =
     'MCP view endpoint "scope" should be "mcp:read" or "mcp:write".'
   );
 });
+
+test.each([
+  '*',
+  "'unsafe-inline'",
+  'https://*.example.com',
+  'https://files.example.com/path',
+  'http://files.example.com',
+])(
+  'buildMcpViewConfig refuses the literal viewSources item %s, which is not an origin',
+  (source) => {
+    const { context } = buildViews({
+      mcp: {
+        endpoints: [{ id: 'open_task', scope: 'mcp:read', view: { pageId: 'task' } }],
+        viewSources: ['https://files.example.com', source],
+      },
+    });
+    expect(context.errors.map((error) => error.message)).toEqual([
+      `MCP "viewSources" item "${source}" is not an origin. An item is one https or wss origin with no path, such as "https://files.example.com".`,
+    ]);
+  }
+);
+
+test('buildMcpViewConfig accepts https and wss origins and leaves a _secret for the server to check', () => {
+  const { context } = buildViews({
+    mcp: {
+      endpoints: [{ id: 'open_task', scope: 'mcp:read', view: { pageId: 'task' } }],
+      viewSources: ['https://files.example.com', 'wss://live.example.com', { _secret: 'ORIGIN' }],
+    },
+  });
+  expect(context.errors).toEqual([]);
+});
+
+test.each(['_secret', '_js', '_user', '_state', '_function'])(
+  'buildMcpViewConfig refuses %s in the pathParams and urlQuery of a view',
+  (operator) => {
+    const { context } = buildViews({
+      mcp: {
+        endpoints: [
+          {
+            id: 'open_task',
+            scope: 'mcp:read',
+            view: {
+              pageId: 'task',
+              pathParams: {
+                ref: { '_string.concat': [[{ [operator]: 'x' }, { _payload: 'key' }]] },
+              },
+              urlQuery: { tab: { [operator]: 'x' } },
+            },
+          },
+        ],
+      },
+    });
+    const message = `MCP endpoint "open_task" view uses the operator "${operator}". The "pathParams" and "urlQuery" of a view can use only _payload, _response, _and, _array, _boolean, _eq, _get, _if, _if_none, _ne, _not, _number, _object, _or, _regex, _string, _switch, _type, _uri.`;
+    expect(context.errors.map((error) => error.message)).toEqual([message, message]);
+  }
+);
+
+test('buildMcpViewConfig accepts value operators around _payload and _response in a view', () => {
+  const { context } = buildViews({
+    mcp: {
+      endpoints: [
+        {
+          id: 'open_task',
+          scope: 'mcp:read',
+          view: {
+            pageId: 'task',
+            pathParams: {
+              ref: { '_string.toUpperCase': { _payload: 'key' } },
+              space: { _if_none: [{ _response: 'space.key' }, 'main'] },
+            },
+            urlQuery: {
+              tab: {
+                _if: {
+                  test: { _eq: [{ _payload: 'tab' }, 'files'] },
+                  then: 'files',
+                  else: 'notes',
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  expect(context.errors).toEqual([]);
+});
+
+test('buildMcp refuses an MCP endpoint whose tool name is the reserved lowdefy_view_session', () => {
+  const { context } = buildViews({
+    api: [endpoint({ id: 'lowdefy_view_session' })],
+    mcp: { endpoints: [{ id: 'lowdefy_view_session', scope: 'mcp:read' }] },
+  });
+  expect(context.errors.map((error) => error.message)).toEqual([
+    'MCP endpoint "lowdefy_view_session" would be the tool "lowdefy_view_session", a name the MCP server keeps for itself. Give the endpoint another id.',
+  ]);
+});
+
+test('buildMcp accepts an MCP endpoint id whose tool name only resembles the reserved one', () => {
+  const { context } = buildViews({
+    api: [endpoint({ id: 'lowdefy/view_session' })],
+    mcp: { endpoints: [{ id: 'lowdefy/view_session', scope: 'mcp:read' }] },
+  });
+  expect(context.errors).toEqual([]);
+});

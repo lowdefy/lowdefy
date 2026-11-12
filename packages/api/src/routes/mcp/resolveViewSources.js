@@ -15,7 +15,7 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
-import { cleanBuildArtifact, type } from '@lowdefy/helpers';
+import { cleanBuildArtifact, isViewSourceOrigin, type } from '@lowdefy/helpers';
 import { ServerParser } from '@lowdefy/operators';
 import { _secret } from '@lowdefy/operators-js/operators/server';
 
@@ -27,7 +27,9 @@ const resolved = new WeakMap();
 // strings. The build resolved _build operators; a _secret is opaque to it and
 // is resolved here, on the server. A source that does not resolve to a string
 // is a config fault: the host blocks every origin a view does not declare, so
-// leaving one out would break the page with nothing to explain why.
+// leaving one out would break the page with nothing to explain why. So is a
+// string that is not exactly one https or wss origin: it would widen the
+// policy the host builds from the list.
 function resolveViewSources({ secrets, sources }) {
   if (resolved.has(sources)) {
     return resolved.get(sources);
@@ -47,6 +49,13 @@ function resolveViewSources({ secrets, sources }) {
       throw new ConfigError(
         `MCP viewSources entry ${index} did not resolve to a string. Check the _secret operator reference and that the secret is set.`,
         { received: type.typeOf(source) }
+      );
+    }
+    // The value goes into the view's content security policy as it is. It may
+    // have come from a secret, so the message does not repeat it.
+    if (!isViewSourceOrigin(source)) {
+      throw new ConfigError(
+        `MCP viewSources entry ${index} is not an origin. An entry is one https or wss origin with no path, such as "https://files.example.com".`
       );
     }
   });

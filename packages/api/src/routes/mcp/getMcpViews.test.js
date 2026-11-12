@@ -169,3 +169,35 @@ test('logMcpViews fails the start when a viewSources secret is not set', async (
     })
   ).toThrow('MCP viewSources entry 0 did not resolve to a string.');
 });
+
+test.each(['*', "'unsafe-inline'", 'https://files.example.com/path', 'https://*.example.com'])(
+  'getMcpViews throws when a viewSources secret resolves to %s, which is not an origin, without repeating it',
+  async (value) => {
+    const { getMcpViews } = await load();
+    const call = () =>
+      getMcpViews({
+        config: {},
+        logger: createLogger(),
+        mcpConfig: mcpConfig({ sources: [{ _secret: 'STATS' }] }),
+        mode: 'prod',
+        secrets: { STATS: value },
+      });
+    expect(call).toThrow(
+      'MCP viewSources entry 0 is not an origin. An entry is one https or wss origin with no path, such as "https://files.example.com".'
+    );
+    expect(call).not.toThrow(value);
+  }
+);
+
+test('getMcpViews throws when a literal viewSources entry is not an origin', async () => {
+  const { getMcpViews } = await load();
+  expect(() =>
+    getMcpViews({
+      config: {},
+      logger: createLogger(),
+      mcpConfig: mcpConfig({ sources: ['https://files.example.com', 'data:'] }),
+      mode: 'prod',
+      secrets: {},
+    })
+  ).toThrow('MCP viewSources entry 1 is not an origin.');
+});

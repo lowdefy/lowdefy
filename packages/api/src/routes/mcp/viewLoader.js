@@ -33,7 +33,8 @@
 //    changes.
 // 2. Asks the app for GET {origin}{basePath}/api/view/boot, which answers
 //    { buildId, js, css }: the view entry script and a list of stylesheets,
-//    each a path under the app's origin and basePath.
+//    each a path under the app's origin that starts with "/" and holds the
+//    basePath.
 // 3. Once it has the host connection, the boot answer and a tool result that
 //    carries a view address, sets window.__LOWDEFY_VIEW__ and loads the
 //    stylesheets and the entry script. The client entry does no handshake of
@@ -136,13 +137,18 @@ function viewLoader(settings) {
     showFallback: showFallback,
   };
 
+  // A path is appended to the app's origin, so anything that does not start
+  // with "/" could name another host ("@other.example") and is not a path.
+  function appPath(value) {
+    return typeof value === 'string' && value.charAt(0) === '/' ? value : null;
+  }
+
   function getViewAddress() {
     var result = view.toolResult;
     if (!result || result.isError || !result._meta || !result._meta[VIEW_ADDRESS_META_KEY]) {
       return null;
     }
-    var path = result._meta[VIEW_ADDRESS_META_KEY].path;
-    return typeof path === 'string' ? path : null;
+    return appPath(result._meta[VIEW_ADDRESS_META_KEY].path);
   }
 
   function getToolTitle() {
@@ -341,10 +347,6 @@ function viewLoader(settings) {
     });
   }
 
-  function assetUrl(file) {
-    return appUrl + '/' + String(file).replace(/^\//, '');
-  }
-
   function start(boot) {
     if (fallbackShown) {
       return;
@@ -353,18 +355,24 @@ function viewLoader(settings) {
       showFallback();
       return;
     }
+    var entry = appPath(boot.js);
+    var stylesheets = (boot.css || []).map(appPath);
+    if (entry === null || stylesheets.indexOf(null) !== -1) {
+      showFallback();
+      return;
+    }
     view.boot = boot;
     window.__LOWDEFY_VIEW__ = view;
-    (boot.css || []).forEach(function (file) {
+    stylesheets.forEach(function (file) {
       var link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = assetUrl(file);
+      link.href = settings.origin + file;
       document.head.appendChild(link);
     });
     var script = document.createElement('script');
     script.type = 'module';
     script.crossOrigin = 'anonymous';
-    script.src = assetUrl(boot.js);
+    script.src = settings.origin + entry;
     script.addEventListener('error', function () {
       showFallback();
     });
