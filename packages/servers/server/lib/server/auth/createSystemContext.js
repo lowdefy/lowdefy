@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
+import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { createSystemContext as buildSystemContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
-import { v4 as uuid } from 'uuid';
 
 import agents from '../../../build/plugins/agents.js';
 import appMeta from '../../build/appMeta.js';
@@ -43,7 +43,7 @@ const secrets = getSecretsFromEnv();
 // imported directly, since it comes from the same BetterAuth construction
 // that this factory is a dependency of (see createHookDispatch.js).
 function createSystemContext({ auth } = {}) {
-  const rid = uuid();
+  const rid = randomUUID();
   return buildSystemContext({
     rid,
     agents,

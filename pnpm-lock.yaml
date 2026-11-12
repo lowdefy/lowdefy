@@ -464,9 +464,6 @@ importers:
       tar:
         specifier: 7.5.22
         version: 7.5.22
-      uuid:
-        specifier: 14.0.3
-        version: 14.0.3
       yaml:
         specifier: 2.9.1
         version: 2.9.1
@@ -2681,9 +2678,6 @@ importers:
       tailwindcss:
         specifier: 4.3.5
         version: 4.3.5
-      uuid:
-        specifier: 14.0.3
-        version: 14.0.3
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)
@@ -2910,9 +2904,6 @@ importers:
       tinykeys:
         specifier: 4.0.1
         version: 4.0.1
-      uuid:
-        specifier: 14.0.3
-        version: 14.0.3
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)
@@ -3052,9 +3043,6 @@ importers:
       tailwindcss:
         specifier: 4.3.5
         version: 4.3.5
-      uuid:
-        specifier: 14.0.3
-        version: 14.0.3
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)
