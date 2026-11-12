@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-import findPageContext from '../tab/findPageContext.js';
-import getShownPage from '../tab/getShownPage.js';
 import isContextSettled from './isContextSettled.js';
 import waitUntil from './waitUntil.js';
 
-// Waits, at most `timeout` ms, for the page the shell shows (it may have changed: a click can open
+// Waits, at most `timeout` ms, for the page the host shows (it may have changed: a click can open
 // another page) to finish what an interaction started. True once settled; false when it is still
 // busy, which, as in the browser runner, does not fail the step.
-async function waitForSettle({ lowdefy, timeout }) {
+async function waitForSettle({ getPageContext, lowdefy, timeout }) {
   const settled = await waitUntil({
     timeout,
     check: () => {
-      const { context } = findPageContext({ lowdefy, page: getShownPage(lowdefy) });
+      const { context } = getPageContext({ lowdefy });
       if (context === undefined || !isContextSettled({ context, lowdefy })) {
         return undefined;
       }

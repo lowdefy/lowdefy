@@ -17,12 +17,10 @@
 import { get, type } from '@lowdefy/helpers';
 
 import findBlock from './findBlock.js';
-import findPageContext from '../tab/findPageContext.js';
-import getShownPage from '../tab/getShownPage.js';
 import waitForSettle from './waitForSettle.js';
 import waitUntil, { sleep } from './waitUntil.js';
 
-const STEPS = ['click', 'fill', 'select', 'press', 'wait', 'screenshot'];
+const STEPS = ['click', 'fill', 'select', 'press', 'wait'];
 const SETTLE_MS = 5000;
 
 function readOptionLabel(option) {
@@ -37,32 +35,53 @@ function readOptionValue(option) {
 }
 
 /**
- * Runs the browser's journey steps on the shell, by block id: the dev-tab client's answer to a
- * step-request. A step acts through the engine, as the block's own view does when it is pressed
- * or typed in, and waits for the action chain it started to finish:
+ * Runs the browser's journey steps on a host without a DOM, by block id: the phone shell's answer
+ * to a dev-tab step-request, and each step of a headless journey. A step acts through the engine,
+ * as the block's own view does when it is pressed or typed in, and waits for the action chain it
+ * started to finish:
  * - `{ click: target }`: the block's onClick.
  * - `{ fill: { blockId, value } }`: sets the input's value, then its onChange.
  * - `{ select: { blockId, value } }`: the option whose label (or value) is `value`.
  * - `{ press: 'Enter' }`: the onPressEnter of the input filled last.
  * - `{ wait: { ms } | { request } | { state } }`.
- * - `{ screenshot: name? }`: the root view as a base64 PNG.
+ * - `{ screenshot: name? }`: the root view as a base64 PNG, on a host that passes `capture`.
  * Resolves `{ ok: true, settled }` (and `image` for a screenshot); throws when the step cannot run.
  *
  * @param {Object} params
- * @param {() => Promise<string>} params.capture Captures the root view as a base64 PNG.
+ * @param {() => Promise<string>} [params.capture] Captures the root view as a base64 PNG. A host
+ *   without it refuses the screenshot step.
  * @param {() => Object} params.getLowdefy The open app's lowdefy object.
+ * @param {({ lowdefy }) => { context, page } | { error }} params.getPageContext The engine context
+ *   of the page the host shows, with `page.pageId`, or an error saying why there is none.
+ * @param {string} params.hostName What runs the steps, as refusals name it: "phone", "headless run".
  * @param {number} [params.timeout] How long a step waits for its block or condition, in ms.
  */
-function createStepRunner({ capture, getLowdefy, timeout = 5000 }) {
+function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeout = 5000 }) {
+  if (!type.isFunction(getLowdefy)) {
+    throw new Error('createStepRunner needs a getLowdefy function.');
+  }
+  if (!type.isFunction(getPageContext)) {
+    throw new Error('createStepRunner needs a getPageContext function.');
+  }
+  if (!type.isString(hostName)) {
+    throw new Error(
+      `createStepRunner needs a hostName string. Received ${JSON.stringify(hostName)}.`
+    );
+  }
+  const steps = type.isFunction(capture) ? [...STEPS, 'screenshot'] : STEPS;
   let lastInputBlockId = null;
 
+  function find({ lowdefy, target }) {
+    return findBlock({ getPageContext, hostName, lowdefy, target, timeout });
+  }
+
   async function settle(lowdefy) {
-    const settled = await waitForSettle({ lowdefy, timeout: SETTLE_MS });
+    const settled = await waitForSettle({ getPageContext, lowdefy, timeout: SETTLE_MS });
     return { ok: true, settled };
   }
 
   async function click({ lowdefy, target }) {
-    const { block } = await findBlock({ lowdefy, target, timeout });
+    const { block } = await find({ lowdefy, target });
     if (block.eval.properties?.disabled === true) {
       throw new Error(`Block "${block.blockId}" is disabled.`);
     }
@@ -71,7 +90,7 @@ function createStepRunner({ capture, getLowdefy, timeout = 5000 }) {
   }
 
   async function findInput({ lowdefy, target }) {
-    const found = await findBlock({ lowdefy, target, timeout });
+    const found = await find({ lowdefy, target });
     if (!type.isFunction(found.block.setValue)) {
       throw new Error(`Block "${found.block.blockId}" is not an input.`);
     }
@@ -114,12 +133,12 @@ function createStepRunner({ capture, getLowdefy, timeout = 5000 }) {
 
   async function press({ key, lowdefy }) {
     if (key !== 'Enter') {
-      throw new Error(`A phone presses only "Enter". Received ${JSON.stringify(key)}.`);
+      throw new Error(`A ${hostName} presses only "Enter". Received ${JSON.stringify(key)}.`);
     }
     if (lastInputBlockId === null) {
       throw new Error('Press "Enter" needs an input filled before it.');
     }
-    const { block } = await findBlock({ lowdefy, target: lastInputBlockId, timeout });
+    const { block } = await find({ lowdefy, target: lastInputBlockId });
     await block.triggerEvent({ name: 'onPressEnter' });
     return settle(lowdefy);
   }
@@ -137,7 +156,7 @@ function createStepRunner({ capture, getLowdefy, timeout = 5000 }) {
     const done = await waitUntil({
       timeout,
       check: () => {
-        const { context } = findPageContext({ lowdefy, page: getShownPage(lowdefy) });
+        const { context } = getPageContext({ lowdefy });
         if (context === undefined) return undefined;
         if (type.isString(until.request)) {
           const call = context.requests?.[until.request]?.[0];
@@ -150,6 +169,13 @@ function createStepRunner({ capture, getLowdefy, timeout = 5000 }) {
       throw new Error(`Waited ${timeout} ms for ${JSON.stringify(until)}.`);
     }
     return { ok: true };
+  }
+
+  async function screenshot({ name }) {
+    if (!type.isFunction(capture)) {
+      throw new Error(`A ${hostName} takes no screenshots.`);
+    }
+    return { ok: true, name: name ?? null, image: await capture() };
   }
 
   async function run({ step }) {
@@ -170,10 +196,10 @@ function createStepRunner({ capture, getLowdefy, timeout = 5000 }) {
       case 'wait':
         return waitFor({ lowdefy, until: step.wait });
       case 'screenshot':
-        return { ok: true, name: step.screenshot ?? null, image: await capture() };
+        return screenshot({ name: step.screenshot });
       default:
         throw new Error(
-          `A phone runs the steps ${STEPS.join(', ')}. Received ${JSON.stringify(name)}.`
+          `A ${hostName} runs the steps ${steps.join(', ')}. Received ${JSON.stringify(name)}.`
         );
     }
   }
