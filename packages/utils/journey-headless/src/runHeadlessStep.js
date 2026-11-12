@@ -17,6 +17,7 @@
 import { getStepKey } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
+import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
 
 const STEP_RUNNER_KEYS = ['click', 'fill', 'select', 'press', 'wait'];
@@ -28,9 +29,11 @@ function readGoto(goto) {
 // Runs one journey step headless on the current actor (actors.current()): block steps through
 // client-core's step runner, then the page settles, a navigation it started included; goto is a
 // full page load, back goes back one page, as switches person (opening the journey's first page
-// for one met for the first time); expect checks the engine (runHeadlessExpect). call and request
-// steps are not run yet.
-async function runHeadlessStep({ actors, step, stepTimeout }) {
+// for one met for the first time); call and request go to the server directly, as the step's
+// `as` or the current actor, and resolve the answer the expect steps after them read; expect
+// checks the engine, the answer or the data (runHeadlessExpect). Resolves the answer of a call or
+// request, and undefined for any other step.
+async function runHeadlessStep({ actors, answer, host, step, stepTimeout }) {
   const key = getStepKey(step);
   const actor = actors.current();
   if (STEP_RUNNER_KEYS.includes(key)) {
@@ -52,10 +55,14 @@ async function runHeadlessStep({ actors, step, stepTimeout }) {
       await actors.current().settle();
       return;
     case 'expect':
-      await runHeadlessExpect({ actor, step, timeout: stepTimeout });
+      await runHeadlessExpect({ actor, answer, host, step, timeout: stepTimeout });
       return;
+    case 'call':
+    case 'request':
+      return runHeadlessCall({ actors, host, step });
     default:
-      throw new Error(`A headless run does not run "${key}" steps yet.`);
+      // The grammar admits nothing else; a step it gains is not passed unchecked.
+      throw new Error(`The headless journey runner has no step "${key}".`);
   }
 }
 

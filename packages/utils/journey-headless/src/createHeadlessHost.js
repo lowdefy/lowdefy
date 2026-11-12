@@ -35,6 +35,9 @@ import { type } from '@lowdefy/helpers';
  *   the server does, in process.
  * @property {Object} dataSession The data the calls run on: a test-utils session
  *   (collection, settled, reset).
+ * @property {(args: { collection: string, connectionId?: string, match: Object }) =>
+ *   Promise<Object[]>} findDocuments The documents `match` finds in a collection of the data's
+ *   database (the connection's, or the only one), in _id order, as JSON values, for expect.db.
  * @property {ErrorSink} errorSink Where the server's faults and the client's errors go, for the
  *   run's invariants.
  * @property {(user?: *) => (Object|null)} resolveUser The user object a page renders for a user
@@ -78,6 +81,7 @@ const HOST_KEYS = [
   'close',
   'dataSession',
   'errorSink',
+  'findDocuments',
   'loadClientPlugins',
   'readPageConfig',
   'resolveUser',

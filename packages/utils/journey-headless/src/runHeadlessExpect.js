@@ -18,6 +18,10 @@ import { getStepKey } from '@lowdefy/node-utils';
 import { get, type } from '@lowdefy/helpers';
 
 import collectBlockParents from './collectBlockParents.js';
+import expectAnswerError from './expectAnswerError.js';
+import expectAnswerStatus from './expectAnswerStatus.js';
+import expectCalls from './expectCalls.js';
+import expectDb from './expectDb.js';
 import HeadlessStepError from './HeadlessStepError.js';
 import isBlockShown from './isBlockShown.js';
 import isDeepEqual from './isDeepEqual.js';
@@ -26,10 +30,6 @@ import toJsonValue from './toJsonValue.js';
 
 function readBlockId(target) {
   return type.isString(target) ? target : target.blockId;
-}
-
-function plural(count) {
-  return `${count} time${count === 1 ? '' : 's'}`;
 }
 
 // Whether the block a check names is shown on the actor's page: null when it is not on the page.
@@ -77,39 +77,6 @@ async function expectShown({ actor, params, shown, timeout }) {
   }
 }
 
-// Counted once the page has settled, without polling, as the browser runner counts: "not called"
-// can only be judged once the moment has passed. A request is counted on the current page unless
-// the check names its pageId.
-async function expectCalls({ actor, params }) {
-  if (!type.isUndefined(params.payload) || !type.isUndefined(params.response)) {
-    throw new Error("A headless run does not check a call's payload or response yet.");
-  }
-  await actor.settle();
-  let description;
-  let calls;
-  if (type.isUndefined(params.endpoint)) {
-    const pageId = params.pageId ?? actor.page.pageId;
-    description = `request "${params.request}" on page "${pageId}"`;
-    calls = actor.calls.filter(
-      (call) =>
-        call.kind === 'request' && call.requestId === params.request && call.pageId === pageId
-    );
-  } else {
-    description = `endpoint "${params.endpoint}"`;
-    calls = actor.calls.filter(
-      (call) => call.kind === 'endpoint' && call.endpointId === params.endpoint
-    );
-  }
-  if (calls.length !== params.count) {
-    throw new HeadlessStepError(
-      `Expected ${description} to have been called ${plural(
-        params.count
-      )} but it was called ${plural(calls.length)}.`,
-      { actual: calls.length, expected: params.count }
-    );
-  }
-}
-
 async function expectUrl({ actor, params, timeout }) {
   const { contains } = params;
   const { held, value } = await pollUntil({
@@ -125,9 +92,11 @@ async function expectUrl({ actor, params, timeout }) {
   }
 }
 
-// One expect step on the current actor's page, with the browser runner's messages. expect.error
-// is judged with the app errors (createAppErrorWindows), so the step itself does nothing.
-async function runHeadlessExpect({ actor, step, timeout }) {
+// One expect step, with the browser runner's messages: on the current actor's page, on the answer
+// of the call or request step before it (`answer`, for status and error), or on the data's
+// database. After an interaction, expect.error is judged with the app errors
+// (createAppErrorWindows), so the step itself does nothing.
+async function runHeadlessExpect({ actor, answer, host, step, timeout }) {
   const kind = getStepKey(step.expect);
   const params = step.expect[kind];
   switch (kind) {
@@ -142,9 +111,17 @@ async function runHeadlessExpect({ actor, step, timeout }) {
     case 'url':
       return expectUrl({ actor, params, timeout });
     case 'error':
+      if (!type.isUndefined(answer)) {
+        expectAnswerError({ answer, text: params });
+      }
       return undefined;
+    case 'status':
+      return expectAnswerStatus({ answer, status: params });
+    case 'db':
+      return expectDb({ host, params, timeout });
     default:
-      throw new Error(`A headless run does not check "expect.${kind}" yet.`);
+      // The grammar admits nothing else; a check it gains is not passed unchecked.
+      throw new Error(`The headless journey runner has no expect "${kind}".`);
   }
 }
 

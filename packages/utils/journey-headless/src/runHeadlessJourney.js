@@ -15,8 +15,10 @@
 */
 
 import {
+  CALL_STEP_KEYS,
   claimExpectedErrors,
   classifyJourney,
+  findStepNeedingPage,
   getStepKey,
   INTERACTION_STEP_KEYS,
   normaliseJourneySteps,
@@ -33,6 +35,41 @@ import toStepFailure from './toStepFailure.js';
 
 function isExpectError(step) {
   return getStepKey(step ?? {}) === 'expect' && getStepKey(step.expect) === 'error';
+}
+
+// Whether the step at `index` has app errors an expect.error after it claims, as the browser
+// runner decides it: an interaction directly followed by one, or a call or request followed by
+// one among the expect steps that read its answer.
+function isClaimedLater({ index, steps }) {
+  const key = getStepKey(steps[index]);
+  if (INTERACTION_STEP_KEYS.includes(key)) {
+    return isExpectError(steps[index + 1]);
+  }
+  if (!CALL_STEP_KEYS.includes(key)) {
+    return false;
+  }
+  for (let next = index + 1; next < steps.length; next += 1) {
+    if (getStepKey(steps[next]) !== 'expect') return false;
+    if (isExpectError(steps[next])) return true;
+  }
+  return false;
+}
+
+// A call or request names its caller by a data set user's name, "none" or a user object. A name
+// that is not in the data set fails the journey before any call, with the data set's users.
+function findUnknownCaller({ host, steps }) {
+  for (const step of steps) {
+    const key = getStepKey(step);
+    const as = CALL_STEP_KEYS.includes(key) ? step[key].as : undefined;
+    if (type.isString(as) && as !== 'none') {
+      try {
+        host.resolveUser(as);
+      } catch (error) {
+        return error.message;
+      }
+    }
+  }
+  return undefined;
 }
 
 function countBrowserOnly(actors) {
@@ -57,7 +94,10 @@ function findBrowserOnly(actors) {
  * browser can carry out stops there and answers browserOnly for that step, with no `passed` and
  * no failure: it is not a failed journey but one this run cannot take.
  *
- * journey: { pageId, pathParams?, urlQuery?, user?, steps }; user defaults to the host's.
+ * journey: { pageId?, pathParams?, urlQuery?, user?, steps }; user defaults to the host's. A
+ * journey with no pageId opens no page, and every step must run without one (call, request, as,
+ * wait ms, and expect error, status, calls on an endpoint or a named page, db). A call or request
+ * naming a caller the data set does not have is refused before any call.
  * stepTimeout bounds each step's wait for a block or a check to hold.
  */
 async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout = 5000 }) {
@@ -72,6 +112,21 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
     return { pageId, browserOnly: { index, reason, step }, steps: [] };
   }
   const steps = normaliseJourneySteps({ steps: journey.steps });
+  if (type.isNone(pageId)) {
+    const needing = findStepNeedingPage({ steps: journey.steps });
+    if (!type.isUndefined(needing)) {
+      return {
+        error: `Step ${needing.index} (${getStepKey(
+          needing.step
+        )}) needs a page, and the journey has no "pageId".`,
+        refused: true,
+      };
+    }
+  }
+  const unknownCaller = findUnknownCaller({ host, steps });
+  if (!type.isUndefined(unknownCaller)) {
+    return { error: unknownCaller, refused: true };
+  }
   const windows = createAppErrorWindows({ configDirectory, errorSink: host.errorSink });
   const actors = createHeadlessActors({
     host,
@@ -84,8 +139,10 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
   const results = [];
   let failure;
   let browserOnly;
-  // The app errors of an interaction an expect.error step follows, for that step to claim.
+  // The app errors of an interaction or call an expect.error step follows, for that step to claim.
   let held = null;
+  // The answer of the last call or request step, which only the expect steps after it read.
+  let answer;
 
   try {
     await actors.open();
@@ -111,9 +168,16 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
     }
     const started = Date.now();
     const triedBefore = countBrowserOnly(actors);
+    const key = getStepKey(step);
+    if (!['expect', ...CALL_STEP_KEYS].includes(key)) {
+      answer = undefined;
+    }
     let stepFailure;
     try {
-      await runHeadlessStep({ actors, step, stepTimeout });
+      const stepAnswer = await runHeadlessStep({ actors, answer, host, step, stepTimeout });
+      if (CALL_STEP_KEYS.includes(key)) {
+        answer = stepAnswer;
+      }
     } catch (error) {
       stepFailure = toStepFailure({ error, index, step });
     }
@@ -141,12 +205,8 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
       }
       continue;
     }
-    if (
-      type.isUndefined(stepFailure) &&
-      INTERACTION_STEP_KEYS.includes(getStepKey(step)) &&
-      isExpectError(steps[index + 1])
-    ) {
-      held = { index, step, findings };
+    if (type.isUndefined(stepFailure) && isClaimedLater({ index, steps })) {
+      held = { answered: CALL_STEP_KEYS.includes(key), findings, index, step };
       continue;
     }
     if (findings.length === 0) {

@@ -23,6 +23,7 @@ const host = {
   close: () => undefined,
   dataSession: {},
   errorSink: { errors: [], add: () => undefined },
+  findDocuments: () => undefined,
   loadClientPlugins: () => undefined,
   readPageConfig: () => undefined,
   resolveUser: () => null,

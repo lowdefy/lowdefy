@@ -64,6 +64,7 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
     close: () => app.close(),
     dataSession: session,
     errorSink: createErrorSink(),
+    findDocuments: calls.findDocuments,
     loadClientPlugins: () => {
       clientPlugins = clientPlugins ?? loadClientPlugins({ buildDirectory: calls.buildDirectory });
       return clientPlugins;
