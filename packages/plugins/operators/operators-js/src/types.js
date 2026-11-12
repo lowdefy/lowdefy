@@ -117,6 +117,7 @@ export default {
       '_product',
       '_random',
       '_regex',
+      '_response',
       '_secret',
       '_state',
       '_step',

@@ -329,6 +329,25 @@ test('operator parser re-enters parse with the calling error', () => {
   expect(frameOperators._frame.mock.calls[0][0].error).toBe(error);
 });
 
+test('operator receives the response passed to parse', () => {
+  const input = { a: { _test: true } };
+  const parser = new ServerParser({ operators, secrets, user });
+  parser.parse({ input, location, payload, response: { space: { key: 'ops' } } });
+  expect(operators._test.mock.calls.at(-1)[0].response).toEqual({ space: { key: 'ops' } });
+});
+
+test('operator parser re-enters parse with the calling response', () => {
+  const frameOperators = {
+    _nested: vi.fn(({ parser }) =>
+      parser.parse({ input: { __frame: true }, operatorPrefix: '__' })
+    ),
+    _frame: vi.fn(({ response }) => response),
+  };
+  const parser = new ServerParser({ operators: frameOperators, secrets, user });
+  const res = parser.parse({ input: { _nested: true }, location, response: { id: 7 } });
+  expect(res.output.output).toEqual({ id: 7 });
+});
+
 test('operator parser re-enters parse with the calling frame', () => {
   const frameOperators = {
     _nested: vi.fn(({ parser }) =>
