@@ -78,7 +78,6 @@ function Grid({
   showSkeleton,
   skeletonPhase,
   state,
-  strategy,
   styles,
   summary,
   trailingColumns,
@@ -141,7 +140,6 @@ function Grid({
       rows,
       scrollerRef,
       state,
-      strategy,
       viewport,
     });
 

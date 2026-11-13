@@ -41,10 +41,8 @@ import useTableState from './useTableState.js';
 import './table.css';
 
 // The table core: config, data, TanStack state and the feature fragments, composed into the
-// window component. `rowWindowStrategy` is a benchmark-only prop (the Lowdefy client never passes
-// it) that switches the row window to TanStack Virtual's per-row positioning. `input` is set by
-// TableInput only: `{ changes, methods }`, its value (a changeset over `data`) and the engine
-// methods that write it.
+// window component. `input` is set by TableInput only: `{ changes, methods }`, its value (a
+// changeset over `data`) and the engine methods that write it.
 //
 // The data pipeline, in order (ARCHITECTURE.md, "Data path"):
 // 1. source (`useData` hooks): `properties.data`, or server mode's loaded block rows; a
@@ -70,7 +68,6 @@ function TableRoot({
   methods,
   pageId,
   properties,
-  rowWindowStrategy,
   styles = {},
   value,
 }) {
@@ -228,7 +225,6 @@ function TableRoot({
       showSkeleton={showSkeleton}
       skeletonPhase={skeletonPhase}
       state={state}
-      strategy={rowWindowStrategy}
       styles={styles}
       summary={summary}
       trailingColumns={trailingColumns}

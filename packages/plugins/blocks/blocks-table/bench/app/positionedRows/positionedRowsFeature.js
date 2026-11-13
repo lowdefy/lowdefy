@@ -16,8 +16,9 @@
 
 import usePositionedRows from './usePositionedRows.js';
 
-// The benchmark's comparison strategy (`rowWindowStrategy: 'positioned'`), with TanStack Virtual,
-// loaded only when a table is mounted with it; the Lowdefy client never sets it.
+// The benchmark's comparison row window (strategy `positioned`), with TanStack Virtual. BenchTable
+// passes it to the Table as `rowWindowFeature`; it lives here so TanStack Virtual stays a
+// devDependency of the published block.
 const positionedRowsFeature = {
   name: 'positionedRows',
   useGridFeature: usePositionedRows,

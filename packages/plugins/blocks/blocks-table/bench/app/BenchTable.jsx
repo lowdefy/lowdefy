@@ -17,6 +17,7 @@
 import React, { useState } from 'react';
 
 import Table from '../../dist/blocks/Table/Table.lazy.js';
+import positionedRowsFeature from './positionedRows/positionedRowsFeature.js';
 
 // Stand-ins for the Lowdefy client's components: an anchor for Link (the client's Link adds router
 // navigation on click) and no icons.
@@ -74,7 +75,7 @@ function BenchTable({ columns, data, methodsRef, properties, strategy }) {
       components={components}
       methods={methods}
       properties={{ columns, data, height: 800, ...properties }}
-      rowWindowStrategy={strategy}
+      rowWindowFeature={strategy === 'positioned' ? positionedRowsFeature : undefined}
       value={value}
     />
   );
