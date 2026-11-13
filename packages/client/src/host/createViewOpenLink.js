@@ -32,7 +32,9 @@ function createClosedHandle() {
 // place is opened in the browser by the host (the bridge's openLink). Only an
 // http: or https: URL is handed over, as an absolute URL (getOpenLinkUrl).
 //
-// openLink({ url }) resolves to true when the host opened the link.
+// openLink({ url, notifyRefused }) resolves to true when the host opened the
+// link. notifyRefused (true by default) is false for a caller that tells the
+// person of a refusal itself, such as the McpOpenLink action.
 // openWindow(url) has the shape of window.open: null when nothing was handed
 // to the host, as for a blocked popup.
 // onRefused(listener) is told ({ url }) each time the host refuses a link or
@@ -40,7 +42,7 @@ function createClosedHandle() {
 function createViewOpenLink({ bridge, getBase }) {
   const refusedListeners = new Set();
 
-  async function send(url) {
+  async function send(url, { notifyRefused }) {
     let opened = false;
     try {
       const result = await bridge.openLink({ url });
@@ -48,18 +50,18 @@ function createViewOpenLink({ bridge, getBase }) {
     } catch (error) {
       opened = false;
     }
-    if (!opened) {
+    if (!opened && notifyRefused) {
       refusedListeners.forEach((listener) => listener({ url }));
     }
     return opened;
   }
 
-  async function openLink({ url }) {
+  async function openLink({ url, notifyRefused = true }) {
     const target = getOpenLinkUrl({ base: getBase(), url });
     if (target === null) {
       return false;
     }
-    return send(target);
+    return send(target, { notifyRefused });
   }
 
   function openWindow(url) {
@@ -67,7 +69,7 @@ function createViewOpenLink({ bridge, getBase }) {
     if (target === null) {
       return null;
     }
-    send(target);
+    send(target, { notifyRefused: true });
     return createClosedHandle();
   }
 

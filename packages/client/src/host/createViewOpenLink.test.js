@@ -63,6 +63,14 @@ test('createViewOpenLink tells its listeners when the host call fails', async ()
   expect(refused).toHaveBeenCalledTimes(1);
 });
 
+test('createViewOpenLink tells no listener of a refusal when the caller tells the person itself', async () => {
+  const { links, refused } = setup({ openLink: vi.fn(async () => ({ isError: true })) });
+  await expect(
+    links.openLink({ url: 'https://other.example.org/', notifyRefused: false })
+  ).resolves.toBe(false);
+  expect(refused).not.toHaveBeenCalled();
+});
+
 test('createViewOpenLink stops telling a listener that was removed', async () => {
   const { links, refused, stop } = setup({ openLink: vi.fn(async () => ({ isError: true })) });
   stop();

@@ -76,9 +76,10 @@ test('sendMessage sends the text to the host', async () => {
 test('sendMessage rejects when the host answers with an error result', async () => {
   const { loader, mcp } = createViewLowdefy();
   loader.host.sendMessage.mockResolvedValueOnce({ isError: true });
-  await expect(mcp.sendMessage({ text: 'Hello' })).rejects.toThrow(
-    'The MCP host refused the message.'
-  );
+  await expect(mcp.sendMessage({ text: 'Hello' })).rejects.toMatchObject({
+    name: 'UserError',
+    message: 'The MCP host refused the message.',
+  });
 });
 
 test('sendMessage rejects when the call to the host fails', async () => {
@@ -165,24 +166,28 @@ test('openLink throws when no target is given, or more than one', async () => {
   expect(loader.host.openLink).not.toHaveBeenCalled();
 });
 
-test('openLink fails and tells the refusal listeners when the host answers with an error result', async () => {
+// The action's error is how the person hears of the refusal, so the refusal
+// listeners, which show the "popup blocked" message, are not told as well.
+test('openLink fails with a UserError and tells no refusal listener when the host answers with an error result', async () => {
   const { loader, lowdefy, mcp } = createViewLowdefy();
   const refused = vi.fn();
   lowdefy._internal.host.view.onLinkRefused(refused);
   loader.host.openLink.mockResolvedValueOnce({ isError: true });
-  await expect(mcp.openLink({ url: 'https://example.com' })).rejects.toThrow(
-    'The MCP host refused to open https://example.com/.'
-  );
-  expect(refused.mock.calls).toEqual([[{ url: 'https://example.com/' }]]);
+  await expect(mcp.openLink({ url: 'https://example.com' })).rejects.toMatchObject({
+    name: 'UserError',
+    message: 'The MCP host refused to open https://example.com/.',
+  });
+  expect(refused).not.toHaveBeenCalled();
 });
 
-test('openLink fails and tells the refusal listeners when the call to the host fails', async () => {
+test('openLink fails with a UserError and tells no refusal listener when the call to the host fails', async () => {
   const { loader, lowdefy, mcp } = createViewLowdefy();
   const refused = vi.fn();
   lowdefy._internal.host.view.onLinkRefused(refused);
   loader.host.openLink.mockRejectedValueOnce(new Error('Denied'));
-  await expect(mcp.openLink({ pageId: 'reports' })).rejects.toThrow(
-    'The MCP host refused to open https://app.example.com/reports.'
-  );
-  expect(refused.mock.calls).toEqual([[{ url: 'https://app.example.com/reports' }]]);
+  await expect(mcp.openLink({ pageId: 'reports' })).rejects.toMatchObject({
+    name: 'UserError',
+    message: 'The MCP host refused to open https://app.example.com/reports.',
+  });
+  expect(refused).not.toHaveBeenCalled();
 });

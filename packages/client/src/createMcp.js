@@ -16,15 +16,17 @@
 
 import { createUrl } from '@lowdefy/client-core';
 import { resolveTarget } from '@lowdefy/engine';
+import { UserError } from '@lowdefy/errors';
 import { getSafeHref, type } from '@lowdefy/helpers';
 
 import getOpenLinkUrl from './host/getOpenLinkUrl.js';
 
 // A host answers a request it carried out with a result, and one it refused with a result marked
-// isError or with a rejected call.
+// isError or with a rejected call. A refusal is the person's answer to the host's prompt, not a
+// fault in the app, so it is a UserError: shown and logged in the browser, never on the server.
 function assertNotRefused({ message, result }) {
   if (result?.isError === true) {
-    throw new Error(message);
+    throw new UserError(message);
   }
 }
 
@@ -61,18 +63,19 @@ function createMcp({ lowdefy }) {
   const { bridge } = view;
 
   // The link leaves through the view's one way out (host.view.openLink, createViewOpenLink), which
-  // holds the rule for what a host is asked to open and tells onLinkRefused of a refusal. That
-  // path answers false for a link it does not hand over and for one the host refuses; the same
-  // rule (getOpenLinkUrl) is asked first, so the action's error says which of the two it was.
+  // holds the rule for what a host is asked to open. That path answers false for a link it does
+  // not hand over and for one the host refuses; the same rule (getOpenLinkUrl) is asked first, so
+  // the action's error says which of the two it was. A refusal is told by the action's own error
+  // alone, so onLinkRefused is not told of it as well.
   async function openLink(params) {
     const link = getLinkUrl({ lowdefy, params });
     const url = getOpenLinkUrl({ base: lowdefy._internal.globals.window.location.href, url: link });
     if (url === null) {
       throw new Error(`McpOpenLink only opens http and https links. Received ${link}.`);
     }
-    const opened = await view.openLink({ url });
+    const opened = await view.openLink({ url, notifyRefused: false });
     if (!opened) {
-      throw new Error(`The MCP host refused to open ${url}.`);
+      throw new UserError(`The MCP host refused to open ${url}.`);
     }
   }
 
