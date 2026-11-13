@@ -1,6 +1,6 @@
 # Security Policy
 
-Lowdefy is maintained by a small team at Lowdefy, Inc., mainly for the apps we build and run ourselves. We take reports seriously and fix real problems, but we handle them on a best-effort basis. There is no service-level agreement.
+Lowdefy is maintained by a small team at Lowdefy, Inc. We take reports seriously and fix real problems, but we handle them on a best-effort basis. There is no service-level agreement.
 
 ## Supported versions
 
