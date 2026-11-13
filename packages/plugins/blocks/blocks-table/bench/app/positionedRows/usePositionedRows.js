@@ -16,7 +16,7 @@
 
 import useTanstackRowWindow from './useTanstackRowWindow.js';
 
-// The `positioned` row window strategy (the bench-only `rowWindowStrategy`): TanStack Virtual's
+// The `positioned` row window strategy (the bench's `rowWindowFeature`): TanStack Virtual's
 // range and per-row positioning in place of the translated window, when rows are virtualised and
 // one row high.
 function usePositionedRows({
