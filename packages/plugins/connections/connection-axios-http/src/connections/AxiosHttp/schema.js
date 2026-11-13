@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import createRefusedPropertiesSchema from './createRefusedPropertiesSchema.js';
+import unsupportedProperties from './unsupportedProperties.js';
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Lowdefy Connection Schema - AxiosHttp',
@@ -131,10 +134,57 @@ export default {
     },
     proxy: {
       type: 'object',
-      description: 'Defines the hostname and port of the proxy server.',
+      description:
+        'Defines the hostname and port of the proxy server. Connection only. Needs "allowInternalAddresses: true", since the server cannot check the address a proxy connects to.',
       errorMessage: {
         type: 'AxiosHttp property "proxy" should be an object.',
       },
     },
+    allowInternalAddresses: {
+      type: 'boolean',
+      default: false,
+      description:
+        'Allow requests to addresses that are not public: localhost, private networks (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16), link-local addresses such as the cloud metadata endpoint, and the like. Set it to call a service on the same machine or network, such as a localhost API, a Docker service name or a private network API. Also needed for "socketPath", "proxy" and "httpVersion: 2". Connection only.',
+      errorMessage: {
+        type: 'AxiosHttp property "allowInternalAddresses" should be a boolean.',
+      },
+    },
+    allowedHosts: {
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+      description:
+        'The hostnames requests may connect to, matched exactly and ignoring case (no wildcards or ports). A request to any other host, including a redirect to one, is refused. Applies alongside "allowInternalAddresses": an internal host must be listed and allowed. Connection only.',
+      errorMessage: {
+        type: 'AxiosHttp property "allowedHosts" should be an array of strings.',
+      },
+    },
+    httpAgentOptions: {
+      type: 'object',
+      description: 'Options for the Node.js http.Agent used by requests. Connection only.',
+      errorMessage: {
+        type: 'AxiosHttp property "httpAgentOptions" should be an object.',
+      },
+    },
+    httpsAgentOptions: {
+      type: 'object',
+      description: 'Options for the Node.js https.Agent used by requests. Connection only.',
+      errorMessage: {
+        type: 'AxiosHttp property "httpsAgentOptions" should be an object.',
+      },
+    },
+    socketPath: {
+      type: 'string',
+      description:
+        'A Unix socket to send requests to instead of a host. Needs "allowInternalAddresses: true". Connection only.',
+      errorMessage: {
+        type: 'AxiosHttp property "socketPath" should be a string.',
+      },
+    },
+    ...createRefusedPropertiesSchema({
+      keys: unsupportedProperties,
+      reason: 'is not supported, since AxiosHttp sets it to check the address it connects to.',
+    }),
   },
 };
