@@ -34,7 +34,9 @@ test('initSentryClient pins what the browser SDK collects and keeps stack traces
   expect(options.dataCollection).toEqual({
     userInfo: false,
     cookies: false,
-    httpHeaders: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+    httpHeaders: {
+      deny: ['forwarded', '-ip', 'remote-', 'via', '-user', 'referer', 'referrer'],
+    },
     httpBodies: [],
     urlQueryParams: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
   });

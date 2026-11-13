@@ -28,6 +28,8 @@ const sessionCookie = 'planted-session-cookie-0001';
 const plainCookie = 'planted-plain-cookie-0001';
 const password = 'planted-user-password';
 const clientIp = '203.0.113.79';
+// A token in the previous page's query, under a parameter name Sentry does not filter.
+const refererToken = 'planted-referer-reset-code';
 
 const envelopes = [];
 function createStubTransport() {
@@ -175,6 +177,7 @@ function postEndpoint({ port, markedKey, fail = false, headers = {} }) {
       'content-type': 'application/json',
       cookie: `lowdefy.session_token=${sessionCookie}; theme=${plainCookie}`,
       'x-forwarded-for': clientIp,
+      referer: `https://app.test/reset-password?code=${refererToken}`,
       ...headers,
     },
     body: JSON.stringify({ email: 'user@example.com', password, fail }),
@@ -189,6 +192,7 @@ function expectNoPrivateData(sent, markedKey) {
   expect(text).not.toContain(plainCookie);
   expect(text).not.toContain(password);
   expect(text).not.toContain(clientIp);
+  expect(text).not.toContain(refererToken);
 }
 
 beforeEach(() => {
@@ -219,8 +223,8 @@ test('initSentry pins what Sentry collects and keeps stack traces off captured m
     userInfo: false,
     cookies: false,
     httpHeaders: {
-      request: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
-      response: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+      request: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user', 'referer', 'referrer'] },
+      response: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user', 'referer', 'referrer'] },
     },
     httpBodies: [],
     urlQueryParams: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
