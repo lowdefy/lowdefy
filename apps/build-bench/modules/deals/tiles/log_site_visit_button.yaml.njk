@@ -1,0 +1,36 @@
+# Rendered by nunjucks with the set's `ids` (the module entry ids of its set):
+# a module _ref names its module literally, so a set's copy needs its own ids
+# written in. See README.md.
+# Deep-links to the full capture page rather than embedding a second capture_activity,
+# which would duplicate the contacts selector's request id. `references.deal_ids` is
+# both the Related Deal selector's value and what attaches this activity to the deal.
+id: log_site_visit
+type: Tooltip
+layout:
+  flex: 0 0 auto
+properties:
+  title: Opens the full activity form with this deal attached
+blocks:
+  - id: log_site_visit_btn
+    type: Button
+    layout:
+      flex: 0 0 auto
+    properties:
+      title: Log site visit
+      icon: location
+    events:
+      onClick:
+        _ref:
+          module: {{ ids.activities }}
+          component: open_capture
+          vars:
+            prefill:
+              type: site_visit
+              attributes:
+                site_ref:
+                  _request: get_selected_deal.0.name
+              references:
+                deal_ids:
+                  - _state: selected_deal_id
+              company_ids:
+                - _request: get_selected_deal.0.company_id

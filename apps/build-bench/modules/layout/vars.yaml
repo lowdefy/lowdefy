@@ -1,0 +1,72 @@
+page_type: sidebar
+# Content area padding for every page, in place of the page block's 40px.
+content_style:
+  padding: 0 24px 24px 24px
+footer:
+  - id: footer-text
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>{{ name }}</p>
+            <p>© 2026 Resonancy. All rights reserved.</p>
+          on:
+            name:
+              _app: name
+
+# App-wide seams — the same widget rides EVERY page that uses the layout `page`
+# component, without any page opting in. `global_events.onInit` seeds the
+# widget's state contract after the page's own onInit; `global_blocks` renders
+# it after the page content (it floats, so its place in the tree is immaterial).
+global_events:
+  onInit:
+    - id: seed_whats_new
+      type: SetState
+      params:
+        whats_new_dismissed: false
+    - _ref:
+        module: support
+        component: on-init
+global_requests:
+  _ref:
+    module: support
+    component: requests
+# The support panel's live thread, opened only while a thread is open.
+global_subscriptions:
+  _ref:
+    module: support
+    component: subscriptions
+global_blocks:
+  - _ref:
+      module: support
+      component: launcher
+  - id: whats_new_launcher
+    type: Button
+    # Hidden on What's new itself, where it would float over the note.
+    visible:
+      _and:
+        - _not:
+            _state: whats_new_dismissed
+        - _ne:
+            - _location: pageId
+            - release-notes/view
+    style:
+      position: fixed
+      right: 24
+      bottom: 24
+      zIndex: 10
+    properties:
+      title: What's new
+      icon: Megaphone
+      shape: round
+    events:
+      onClick:
+        - id: dismiss_whats_new
+          type: SetState
+          params:
+            whats_new_dismissed: true
+        - id: open_release_notes
+          type: Link
+          params:
+            pageId: release-notes/view

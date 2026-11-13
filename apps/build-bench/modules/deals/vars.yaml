@@ -1,0 +1,313 @@
+label: Deal
+label_plural: Deals
+atlas_search:
+  _ref:
+    path: app_config.yaml
+    key: atlas_search
+
+# The deal's initial workflow. The workflows module resolves
+# {workflow_type}-start/-submit endpoints and the get_selected_deal workflow
+# lookup off this slug; onboarding is a second workflow auto-started on WON
+# (see sales-pipeline/deal-outcome.yaml).
+workflow_type: sales-pipeline
+
+# Deal pipeline stages (deal.status[].stage). create-deal seeds `prospecting`.
+stages:
+  prospecting:
+    title: Prospecting
+    fg: var(--ant-color-primary)
+    bd: var(--ant-color-primary-border)
+  closing:
+    title: Closing
+    fg: var(--ant-color-warning)
+    bd: var(--ant-color-warning-border)
+  complete:
+    title: Complete
+    fg: var(--ant-color-success)
+    bd: var(--ant-color-success-border)
+
+outcomes:
+  won:
+    title: Won
+    fg: var(--ant-color-success)
+    bd: var(--ant-color-success-border)
+  lost:
+    title: Lost
+    fg: var(--ant-color-error)
+    bd: var(--ant-color-error-border)
+
+# Won/Lost reasons — `outcome` discriminates which set shows for a given outcome.
+outcome_reasons:
+  price-accepted:
+    title: Price accepted
+    outcome: won
+  best-fit:
+    title: Best fit
+    outcome: won
+  no-budget:
+    title: No budget
+    outcome: lost
+  lost-to-competitor:
+    title: Lost to competitor
+    outcome: lost
+
+contact_roles:
+  # main_point_of_contact ships as a module default (order 0); these are the
+  # extra roles this app adds. order sorts them in the People section.
+  decision_maker:
+    title: Decision maker
+    order: 1
+  finance_contact:
+    title: Finance contact
+    order: 2
+
+# Host-supplied domain fields (module `fields` var). Block ids prefixed
+# `attributes.` bind to state.attributes.* — rendered as inputs on the create
+# form and read-only on the deal view via SmartDescriptions. These are demo
+# (host) config: the generic deals module ships none of them.
+fields:
+  - id: attributes.sku
+    type: Selector
+    properties:
+      title: SKU
+      showSearch: true
+      placeholder: Search SKU
+      options:
+        - value: SKU-100
+          label: Widget 100 (SKU-100)
+        - value: SKU-200
+          label: Gadget 200 (SKU-200)
+  - id: attributes.product
+    type: Selector
+    properties:
+      title: Product
+      placeholder: Select product
+      options:
+        - value: widget
+          label: Widget
+        - value: gadget
+          label: Gadget
+  - id: attributes.customer_type
+    type: ButtonSelector
+    properties:
+      title: Customer Type
+      options:
+        - value: new-business
+          label: New business
+        - value: existing
+          label: Existing customer
+  - id: attributes.project_type
+    type: ButtonSelector
+    properties:
+      title: Project Type
+      options:
+        - value: project
+          label: Project
+        - value: expansion
+          label: Expansion
+  - id: attributes.sector
+    type: Selector
+    properties:
+      title: Sector
+      options:
+        - value: manufacturing
+          label: Manufacturing
+        - value: services
+          label: Services
+    events:
+      onChange:
+        - id: reset_sub_sector
+          type: SetState
+          params:
+            attributes.sub_sector: null
+  - id: attributes.sub_sector
+    type: Selector
+    properties:
+      title: Sub-sector
+      options:
+        - value: automotive
+          label: Automotive
+        - value: food-and-beverage
+          label: Food & beverage
+        - value: consulting
+          label: Consulting
+  - id: attributes.package
+    type: ButtonSelector
+    properties:
+      title: Package
+      options:
+        - value: small
+          label: Small
+        - value: medium
+          label: Medium
+        - value: large
+          label: Large
+        - value: bulk
+          label: Bulk
+  # Captured on the deal, but its real destination is the linked company — see
+  # hooks.post_insert below. Options match the companies module's own
+  # `fields.attributes` industry selector.
+  - id: attributes.company_industry
+    type: Selector
+    properties:
+      title: Company Industry
+      label:
+        extra: Only applied if the linked company has no industry on record yet.
+      placeholder: Select industry (optional)
+      options:
+        - Manufacturing
+        - Services
+        - Retail
+
+# Host steps spliced into the create-deal routine. The split is about what each
+# slot can do, not just what it can see:
+#
+#   pre_insert  — runs before anything is written, so it is the only slot that
+#                 can *stop* a create. Validation lives here.
+#   post_insert — runs once the deal is committed, with its id in scope. Side
+#                 effects live here, because nothing can strand them.
+#
+# Both reach across to the companies module's own connection by its scoped id.
+# Step ids prefixed `deals_` are reserved by the module — they share this
+# routine's namespace, and a collision shadows silently rather than failing the
+# build.
+hooks:
+  pre_insert:
+    # Refuse to open a deal against a company that has been deleted. `:reject:`
+    # surfaces the message on the create page and writes nothing — the one thing
+    # post_insert cannot do, since by then the deal exists.
+    - id: check_company_active
+      type: MongoDBFindOne
+      connectionId:
+        _build.string.concat:
+          - _var: ids.companies
+          - /companies-collection
+      properties:
+        filter:
+          _id:
+            _payload: form.company_id
+    - :if:
+        _ne:
+          - _step: check_company_active.deleted
+          - null
+      :then:
+        :reject: That company has been deleted. Pick another company for this deal.
+
+  post_insert:
+    # Back-fill the company's industry from what the deal form captured. This
+    # needs no deal id, but it still belongs here rather than in pre_insert:
+    # there is no transaction, so run from pre_insert it would stamp the company
+    # even when the insert then failed. The `attributes.industry: null` filter
+    # makes it a no-op when the company already has one, so it can never stomp a
+    # value set elsewhere between page render and submit.
+    - :if:
+        _ne:
+          - _payload: attributes.company_industry
+          - null
+      :then:
+        - id: backfill_company_industry
+          type: MongoDBUpdateOne
+          connectionId:
+            _build.string.concat:
+              - _var: ids.companies
+              - /companies-collection
+          properties:
+            filter:
+              _id:
+                _payload: form.company_id
+              attributes.industry: null
+            update:
+              $set:
+                attributes.industry:
+                  _payload: attributes.company_industry
+
+    # Needs the new deal's id, so pre_insert could not have run it at all.
+    # `$inc` is the one thing here that is not repeat-safe — fine in this slot,
+    # because the routine does not retry: a resubmit inserts a second deal, so
+    # the count still tracks deals created. A hook that could be re-run against
+    # the same deal would need `$set` off a computed value instead.
+    - id: stamp_company_latest_deal
+      type: MongoDBUpdateOne
+      connectionId:
+        _build.string.concat:
+          - _var: ids.companies
+          - /companies-collection
+      properties:
+        filter:
+          _id:
+            _payload: form.company_id
+        update:
+          $set:
+            attributes.latest_deal_id:
+              _step: deals_insert_deal.insertedId
+          $inc:
+            attributes.deal_count: 1
+
+# Value + close date come from the raw fields a workflow stamps onto the deal,
+# formatted here with this app's $ currency.
+meta_fields:
+  # Company is a meta-strip opt-in — added like any other meta field.
+  - label: Company
+    value:
+      _if_none:
+        - _request: get_selected_deal.0.company.short_name
+        - _if_none:
+            - _request: get_selected_deal.0.company.name
+            - "—"
+  - label: Value
+    value:
+      _nunjucks:
+        template: "{% if value %}${{ value }}{% else %}—{% endif %}"
+        on:
+          value:
+            _request: get_selected_deal.0.value
+  - label: Expected close
+    value:
+      _nunjucks:
+        template: "{% if close %}{{ close | date('D MMM YYYY') }}{% else %}—{% endif %}"
+        on:
+          close:
+            _request: get_selected_deal.0.close_date
+  # Derived at read time from workflow form data, unlike `Value` above, which a
+  # workflow hook stamps onto the deal.
+  - label: Qualified value
+    value:
+      _nunjucks:
+        template: "{% if v %}${{ (v | float(0)).toFixed(2) }}{% else %}—{% endif %}"
+        on:
+          v:
+            _request: get_selected_deal.0.qualified_value
+filters: []
+
+# Injected tiles render before the module's own People and Files tiles.
+components:
+  info_grid_slots:
+    - _ref: modules/deals/tiles/qualification.yaml
+  topbar_slots:
+    - _ref:
+        path: modules/deals/tiles/log_site_visit_button.yaml.njk
+        vars:
+          ids:
+            _var: ids
+
+# Derives a deal field from workflow form data server-side. The module appends
+# these stages while its `workflows` alias is still in scope.
+request_stages:
+  get_selected_deal:
+    - $addFields:
+        qualified_value:
+          $ifNull:
+            - $workflows.sales-pipeline.qualify.estimated_value
+            - 0
+
+# Drives both the list-page card and the workspace switcher card; raw
+# deal_value formatted with this app's $ currency.
+card_fields:
+  - path: salesperson_name
+  - path: deal_value
+    prefix: "$"
+    round: true
+    highlight: true
+  - path: expected_close_date
+    prefix: "close "
+    date_format: MMM YYYY

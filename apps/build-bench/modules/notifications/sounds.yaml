@@ -1,0 +1,10 @@
+# The notification sounds the viewer picks from. The module's player and the
+# inbox's Sound switch take them through the notifications `sounds` var, and
+# the picker on the User components page takes the same list.
+- id: chirp
+  title: Chirp
+  description: Two short rising tones.
+- id: bell
+  title: Bell
+  description: A soft ring that fades out.
+  src: /sounds/bell.mp3

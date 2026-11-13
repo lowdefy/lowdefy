@@ -1,0 +1,9 @@
+- id: registration.registered_name
+  type: TextInput
+  properties: { title: Registered Name }
+- id: registration.registration_number
+  type: TextInput
+  properties: { title: Registration Number }
+- id: registration.vat_number
+  type: TextInput
+  properties: { title: VAT Number }

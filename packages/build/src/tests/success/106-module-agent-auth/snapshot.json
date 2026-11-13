@@ -7238,11 +7238,6 @@
     "3": {
       "parent": null
     },
-    "connections.0": {
-      "parent": "2",
-      "lineNumber": 14,
-      "path": "<CONFIG_DIR>/modules/support/connections/ai.yaml"
-    },
     "agents.0": {
       "parent": "2",
       "lineNumber": 17,
@@ -7257,6 +7252,11 @@
       "parent": "2",
       "lineNumber": 19,
       "path": "<CONFIG_DIR>/modules/support/agents/escalate.yaml"
+    },
+    "connections.0": {
+      "parent": "2",
+      "lineNumber": 14,
+      "path": "<CONFIG_DIR>/modules/support/connections/ai.yaml"
     }
   },
   "routes.json": [

@@ -1,0 +1,187 @@
+type: sales-pipeline
+# title omitted — derives to "Sales pipeline" via humanizeSlug (docs/workflows/reference/authoring-grammar.md#titles).
+# Cross-module entity: the deal lives in the deals module's collection and its
+# workspace/list are the deals module's scoped pages (deals/view, deals/all).
+entity:
+  # Literal `deals` (a real app connection, see lowdefy.yaml) — the deals module
+  # hardcodes this string as the workflow entity connection_id in its
+  # GetEntityWorkflows queries, so the workflow doc must store it too.
+  connection_id: deals
+  ref_key: deal_ids
+  page_id: { _build.string.concat: [{ _var: ids.deals }, /view] }
+  title: Deal
+  # id_query_key omitted — defaults to _id
+  # Inline routine the module turns into the sales-pipeline-entity-data
+  # InternalApi. The action read handlers call it server-side (payload
+  # { entity_id }); its reserved `name` key drives the breadcrumb entity crumb,
+  # and the rest is read by the entity_view slot off get_workflow_action.entity.
+  # Deal _id is a string consecutive id (e.g. D-0001) — no ObjectId coercion,
+  # so the $match compares strings directly.
+  data:
+    routine:
+      - id: load_deal
+        type: MongoDBAggregation
+        connectionId: deals
+        payload:
+          entity_id:
+            _payload: entity_id
+        properties:
+          pipeline:
+            - $match:
+                _id:
+                  _payload: entity_id
+      - :return:
+          name:
+            _step: load_deal.0.name
+          description:
+            _step: load_deal.0.description
+          sector:
+            _step: load_deal.0.attributes.sector
+          value:
+            _step: load_deal.0.value
+          close_date:
+            _step: load_deal.0.close_date
+          # Current pipeline stage (status is a newest-first array) — drives the
+          # status badge on the entity_view profile card.
+          status:
+            _step: load_deal.0.status.0.stage
+  # Entity-list breadcrumb link → the deals module's scoped list page.
+  list_page_id: { _build.string.concat: [{ _var: ids.deals }, /all] }
+  list_title: Deals
+
+# entity_view.slot — read-only detail rendered as the RHS Details section on the
+# sales-pipeline form pages and as the middle review subject on the
+# sales-pipeline-check page. Baked into the emitted pages by makeActionPages; reads the entity fields
+# the entity.data routine returns off get_workflow_action.entity.
+entity_view:
+  slot:
+    _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/deal-detail-slot.yaml
+      vars:
+        ids:
+          _var: ids
+
+display_order: 1
+
+starting_actions:
+  - type: qualify
+    status: action-required
+  - type: send-quote
+    status: blocked
+  - type: schedule-followup
+    status: blocked
+  - type: upload-po
+    status: blocked
+  - type: track-company-setup
+    status: blocked
+  - type: deal-outcome
+    status: action-required
+  # site-visit is deliberately absent — conditional, spawned by the
+  # qualify pre-submit hook when the user flags a site visit.
+
+# No blocked_by on groups — groups are blocked_by *targets* (an action's
+# blocked_by entry may name a group id), never carriers; the engine reads
+# blocked_by only on actions. Sequencing lives on the actions below.
+action_groups:
+  - id: qualification
+    title: Qualify
+    icon: UserPlus
+    # Group `on_complete` — worked example. When the qualification phase reaches
+    # `done` (here: the sole `qualify` action completes), the engine fires this
+    # routine post-commit and it advances the deal's pipeline status to
+    # `closing` (the demo's stages are prospecting / closing / complete — see
+    # apps/demo/modules/deals/vars.yaml). This is the group-level counterpart to
+    # a per-action post-hook: the status change belongs to the *phase*
+    # completing, not to one action, so it lives on the group. The routine
+    # reaches the deal id off its payload: dispatchGroupOnComplete sends the
+    # committed workflow doc as `context.workflow`, so
+    # `context.workflow.entity.id` is the deal _id.
+    #
+    # Idempotency: on_complete fires on every transition to `done`, and a `done`
+    # form/check action can be reopened (`request_changes` / `activate`) and
+    # re-completed — so a group can complete more than once and this can re-fire.
+    # The `$cond` below only prepends `closing` when it isn't already the
+    # current stage, so a re-completion won't double-stamp the status array.
+    on_complete:
+      routine:
+        - id: advance_deal_status
+          type: MongoDBUpdateOne
+          connectionId:
+            _module.connectionId: { id: deals-collection, module: { _var: ids.deals } }
+          properties:
+            filter:
+              _id:
+                _payload: context.workflow.entity.id
+            update:
+              - $set:
+                  status:
+                    $cond:
+                      if:
+                        $ne:
+                          - $arrayElemAt:
+                              - $status.stage
+                              - 0
+                          - closing
+                      then:
+                        $concatArrays:
+                          - - stage: closing
+                              created:
+                                _ref:
+                                  module: events
+                                  component: change_stamp
+                          - $ifNull:
+                              - $status
+                              - []
+                      else: $status
+        - :return:
+            deal_id:
+              _payload: context.workflow.entity.id
+  - id: quoting
+    title: Quote
+    icon: document
+  - id: order
+    title: Purchase order
+    icon: ShoppingCart
+  - id: conversion
+    title: Company setup
+    icon: Landmark
+  - id: closing
+    title: Closing
+    icon: FileCheck
+
+actions:
+  - _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/qualify.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/site-visit.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/send-quote.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/schedule-followup.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/upload-po.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/track-company-setup.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/deal-outcome.yaml
+      vars:
+        ids:
+          _var: ids
