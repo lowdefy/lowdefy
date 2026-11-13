@@ -60,7 +60,7 @@ process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 // The same startup as the Node entry (src/index.js): Sentry, then the environment guards before the
 // app loads. A failed guard throws here, so the function fails every request instead of serving
 // with the wrong variables. As a serverless function, Sentry reports errors only unless the app
-// sets logger.sentry.serverTracing: tracing's start-up cost would land on every cold start.
+// sets logger.sentry.serverTracing: each request would stay billed while its spans upload.
 const { default: initServer } = await import('../src/initServer.js');
 const { createApp, sentry } = await initServer({ serverless: true });
 // The last-chance catch below writes to stderr past pino and its line scrub, so it writes the
@@ -128,12 +128,13 @@ async function handleRequest(req, res) {
 
 // The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
 // waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime
-// exposes waitUntil on this global, which is what @vercel/functions reads; Sentry's own
-// vercelWaitUntil only acts on the Edge runtime. The function is billed until the flush settles.
-// The flush waits only on what the SDK has queued: an error the request captured, or its
-// transaction when tracing is on and sampled it. Otherwise it settles at once, since the SDK
-// sends no client reports here (initSentryServer). The request's server span ends, queuing its
-// transaction, when the response closes, so the flush starts after that.
+// exposes waitUntil on this global, which is what @vercel/functions reads. Sentry 11 registers a
+// wait of its own when VERCEL is set; the two overlap, and this one does not rely on the SDK's. The
+// function is billed until the flush settles. The flush waits only on what the SDK has queued: an
+// error the request captured, or its spans when tracing is on and sampled it. Otherwise it settles
+// at once, since the SDK sends no client reports here (initSentryServer). The request's server
+// span ends, queuing it with the request's other spans, when the response closes, so the flush
+// starts after that.
 function responseClosed(res) {
   if (res.closed) return Promise.resolve();
   return new Promise((resolve) => res.once('close', resolve));

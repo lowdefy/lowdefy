@@ -18,6 +18,26 @@ import * as Sentry from '@sentry/browser';
 
 let initialized = false;
 
+// Header and query parameter names that carry the client's address or identity, by substring.
+// Sentry already filters names holding auth, token, session, key, cookie and similar.
+const identifyingNames = ['forwarded', '-ip', 'remote-', 'via', '-user'];
+
+// The previous page's URL (document.referrer, sent as the Referer header of each event and page
+// span), whose query can carry a password-reset or sign-in link's token under a name Sentry does
+// not filter. Sentry matches by substring, and neither spelling contains the other.
+const refererNames = ['referer', 'referrer'];
+
+// What the browser SDK collects, pinned to what Sentry 10 sent with sendDefaultPii off: Sentry 11
+// defaults to sending cookies, request and response bodies, and lets Sentry read the user's IP
+// address from each upload. The server SDK pins the same (lib/server/sentry/sentryDataCollection).
+const dataCollection = {
+  userInfo: false,
+  cookies: false,
+  httpHeaders: { deny: [...identifyingNames, ...refererNames] },
+  httpBodies: [],
+  urlQueryParams: { deny: identifyingNames },
+};
+
 function initSentryClient({ sentryDsn, sentryConfig }) {
   // No-op if already initialized
   if (initialized) {
@@ -39,6 +59,10 @@ function initSentryClient({ sentryDsn, sentryConfig }) {
   Sentry.init({
     dsn: sentryDsn,
     environment: config.environment || process.env.NODE_ENV || 'production',
+    dataCollection,
+    // Sentry 11 attaches a stack trace to captured messages by default, which groups them into
+    // new issues; Lowdefy keeps the grouping it had.
+    attachStacktrace: false,
     tracesSampleRate: config.tracesSampleRate ?? 0.1,
     replaysSessionSampleRate: config.replaysSessionSampleRate ?? 0,
     replaysOnErrorSampleRate: config.replaysOnErrorSampleRate ?? 0.1,

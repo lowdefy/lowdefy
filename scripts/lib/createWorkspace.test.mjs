@@ -49,19 +49,13 @@ test('createWorkspace writes the server build allowlist for an app in no pnpm wo
   const workspace = setup();
   assert.deepEqual(workspace.packages, []);
   assert.deepEqual(workspace.allowBuilds, {
-    '@sentry/cli': true,
     '@swc/core': true,
     'better-sqlite3': false,
     esbuild: true,
     'mongodb-memory-server': false,
     sharp: true,
   });
-  assert.deepEqual(workspace.onlyBuiltDependencies, [
-    '@sentry/cli',
-    '@swc/core',
-    'esbuild',
-    'sharp',
-  ]);
+  assert.deepEqual(workspace.onlyBuiltDependencies, ['@swc/core', 'esbuild', 'sharp']);
   assert.deepEqual(workspace.ignoredBuiltDependencies, ['better-sqlite3', 'mongodb-memory-server']);
   assert.equal(workspace.overrides, undefined);
 });

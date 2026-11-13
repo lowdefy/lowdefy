@@ -14,27 +14,43 @@
   limitations under the License.
 */
 
+import { routePath } from 'hono/route';
 import { bindCredentialScrub } from '@lowdefy/node-utils';
 
 import sentrySdk from '../../lib/server/sentry/sentrySdk.js';
 
-// Every request becomes an http.server transaction when the server traces requests. Handler
-// errors never propagate through middleware in Hono — captureException happens in the app error
-// handler.
+// Sentry's Http integration starts each request's http.server span, in an isolation scope of the
+// request's own, and names it by method alone until something names its route. Handler errors
+// never propagate through middleware in Hono - captureException happens in the app error handler.
 function sentryMiddleware() {
   return async function sentry(c, next) {
     const Sentry = sentrySdk.current;
     if (!Sentry) {
       return next();
     }
-    // The request's transaction is sent once the response is written, after its credential scope
-    // has ended, so the scope's scrub rides on the request's isolation scope to scrubEvent.
+    // The request's spans and errors can be sent after its credential scope has ended (a span
+    // ends once the response is written), so the scope's scrub rides on the request's isolation
+    // scope to scrubEvent and scrubSpan.
     Sentry.getIsolationScope().setSDKProcessingMetadata({
       scrubRequestCredentials: bindCredentialScrub(),
     });
-    return Sentry.startSpan({ name: `${c.req.method} ${c.req.path}`, op: 'http.server' }, () =>
-      next()
-    );
+    await next();
+    const activeSpan = Sentry.getActiveSpan();
+    if (!activeSpan) {
+      // Not tracing, or a request Sentry does not trace (HEAD, OPTIONS, a static file).
+      return;
+    }
+    // Named by the route that answered, as registered (/api/endpoints/*), never by the request's
+    // own path: Sentry sends the span's live name with each span after the scrub has run, so
+    // nothing the client sent may be in it. After next(), Hono's route index is the handler
+    // that answered. The request's path and query, scrubbed, are on the span's url attributes.
+    const route = routePath(c);
+    const rootSpan = Sentry.getRootSpan(activeSpan);
+    Sentry.updateSpanName(rootSpan, `${c.req.method} ${route}`);
+    rootSpan.setAttributes({
+      'http.route': route,
+      'sentry.segment.name.source': 'route',
+    });
   };
 }
 

@@ -28,12 +28,10 @@ test('createNestedWorkspaceYaml writes the default build allowlist when the pare
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - "@sentry/cli"
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  "@sentry/cli": false
   better-sqlite3: false
   mongodb-memory-server: false
 `);
@@ -60,7 +58,6 @@ test('createNestedWorkspaceYaml carries the parent settings and rebases patch pa
   expect(yaml).toEqual(`packages:
   - .
 allowBuilds:
-  "@sentry/cli": false
   better-sqlite3: false
   mongodb-memory-server: false
   esbuild: true
@@ -82,7 +79,6 @@ peerDependencyRules:
   ignoreMissing:
     - b
 ignoredBuiltDependencies:
-  - "@sentry/cli"
   - better-sqlite3
   - mongodb-memory-server
 allowUnusedPatches: true
@@ -97,7 +93,7 @@ test('createNestedWorkspaceYaml keeps the parent choice for a dependency with a 
       rootDependencies: {},
       settings: {
         ignoredBuiltDependencies: ['sharp'],
-        onlyBuiltDependencies: ['@sentry/cli'],
+        onlyBuiltDependencies: ['better-sqlite3'],
       },
     },
     workspaceRoot: '/repo',
@@ -105,13 +101,11 @@ test('createNestedWorkspaceYaml keeps the parent choice for a dependency with a 
   expect(yaml).toEqual(`packages:
   - .
 ignoredBuiltDependencies:
-  - better-sqlite3
   - mongodb-memory-server
   - sharp
 onlyBuiltDependencies:
-  - "@sentry/cli"
+  - better-sqlite3
 allowBuilds:
-  better-sqlite3: false
   mongodb-memory-server: false
 `);
 });
@@ -143,12 +137,10 @@ supportedArchitectures:
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - "@sentry/cli"
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  "@sentry/cli": false
   better-sqlite3: false
   mongodb-memory-server: false
 `);
@@ -162,12 +154,10 @@ test('createNestedWorkspaceYaml keeps the release-age exclusions pnpm wrote into
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - "@sentry/cli"
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  "@sentry/cli": false
   better-sqlite3: false
   mongodb-memory-server: false
 minimumReleaseAgeExclude:
@@ -185,12 +175,10 @@ minimumReleaseAgeExclude:
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - "@sentry/cli"
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  "@sentry/cli": false
   better-sqlite3: false
   mongodb-memory-server: false
 minimumReleaseAgeExclude:
@@ -227,12 +215,10 @@ minimumReleaseAgeExclude:
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - "@sentry/cli"
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  "@sentry/cli": false
   better-sqlite3: false
   mongodb-memory-server: false
 `);

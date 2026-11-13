@@ -80,12 +80,10 @@ test('ensurePnpmWorkspaceYaml writes pnpm-workspace.yaml when it does not exist'
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - '@sentry/cli'
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  '@sentry/cli': false
   better-sqlite3: false
   mongodb-memory-server: false
 `,
@@ -139,12 +137,10 @@ patchedDependencies:
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - "@sentry/cli"
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  "@sentry/cli": false
   better-sqlite3: false
   mongodb-memory-server: false
 allowUnusedPatches: true
@@ -230,12 +226,10 @@ minimumReleaseAgeExclude:
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - "@sentry/cli"
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  "@sentry/cli": false
   better-sqlite3: false
   mongodb-memory-server: false
 minimumReleaseAgeExclude:

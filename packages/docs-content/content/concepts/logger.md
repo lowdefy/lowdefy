@@ -62,8 +62,8 @@ If you only set `SENTRY_DSN` without any `logger.sentry` configuration, these de
 |--------|---------|-------------|
 | `client` | `true` | Client-side error capture enabled |
 | `server` | `true` | Server-side error capture enabled |
-| `serverTracing` | `true` on the Node server, `false` on Vercel | Server requests traced as transactions |
-| `tracesSampleRate` | `0.1` | 10% of transactions traced |
+| `serverTracing` | `true` on the Node server, `false` on Vercel | Server requests traced as streamed spans |
+| `tracesSampleRate` | `0.1` | 10% of requests and page loads traced |
 | `replaysSessionSampleRate` | `0` | Session replay disabled by default |
 | `replaysOnErrorSampleRate` | `0.1` | 10% of error sessions replayed |
 | `feedback` | `false` | User feedback widget disabled |
@@ -71,7 +71,7 @@ If you only set `SENTRY_DSN` without any `logger.sentry` configuration, these de
 
 ### Server Tracing on Vercel
 
-On Vercel, the server reports errors only by default. Tracing sets up OpenTelemetry when a function instance starts, which adds to every cold start, and the function stays billed after each response while a sampled transaction uploads. Without tracing, a request that captures no error ends as soon as its response is sent, and one that captures an error waits only for that error to reach Sentry.
+On Vercel, the server reports errors only by default: with tracing, the function stays billed after each response while a sampled request's spans upload. Without tracing, a request that captures no error ends as soon as its response is sent, and one that captures an error waits only for that error to reach Sentry.
 
 To trace server requests on Vercel anyway, set `serverTracing: true`:
 
@@ -83,6 +83,21 @@ logger:
 ```
 
 `tracesSampleRate` still sets the browser's trace sampling either way. Set `serverTracing: false` to report errors only from the Node server too.
+
+### Traces
+
+Lowdefy uses Sentry's JavaScript SDK 11, which streams spans: each request's spans are sent as they end, not collected into one transaction event. In Sentry, explore them as spans and traces. Alerts, queries and dashboards built on transaction events need to use spans instead. A server request's span is named by its method and route (`POST /api/endpoints/*`); its path and query are in its `url.path` and `url.query` attributes.
+
+### What Sentry Receives
+
+Lowdefy sets what the Sentry SDKs collect, on the server and in the browser, and it cannot be changed in `lowdefy.yaml`:
+
+- No cookies, no request or response bodies, and no IP address or other user information Sentry would infer.
+- Request headers and URL query parameters, except those Sentry treats as sensitive (names containing auth, token, session, key, cookie, password and similar), those that carry the client's address (forwarded, `-ip`, `remote-`, via, `-user`), and the `Referer` header, since the previous page's URL can carry a sign-in or reset link's token.
+- No database query parameters or results, queue task arguments, or AI and MCP inputs and outputs.
+- Every string Sentry receives from the server is scrubbed of the app's secrets (`LOWDEFY_SECRET_*`) and of the values the request marked with `_credential`. A span is scrubbed when it ends, so a span that ended before the request marked a value is sent without that value scrubbed.
+
+Stack traces are attached only to errors, as before, so issues keep their grouping.
 
 ### User Context
 

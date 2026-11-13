@@ -24,7 +24,6 @@ import rebaseWorkspaceSettings from './rebaseWorkspaceSettings.js';
 // false skips it. See ensurePnpmWorkspaceYaml for why each is skipped.
 const defaultAllowBuilds = {
   sharp: true,
-  '@sentry/cli': false,
   'better-sqlite3': false,
   'mongodb-memory-server': false,
 };
