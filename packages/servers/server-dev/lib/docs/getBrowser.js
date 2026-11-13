@@ -172,10 +172,14 @@ async function openPage({
     // signed-out caller. Tolerant: on timeout proceed with ready:
     // false and let the caller surface what it finds — a snapshot of a hung
     // page is still useful signal, and a far better answer than a tool failure.
+    // An event that only sleeps in a Wait until after this wait gives up (a
+    // page that polls with a Wait) is not waited for: see isPageReady.
     let ready = true;
-    await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {
-      ready = false;
-    });
+    await page
+      .waitForFunction(isPageReady, { deadline: Date.now() + timeout }, { timeout })
+      .catch(() => {
+        ready = false;
+      });
     // Images blocks render start loading only once the page is ready; a
     // screenshot taken before they arrive shows empty frames. A lazy image
     // below the fold never loads until scrolled to, so it counts as done.

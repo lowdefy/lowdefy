@@ -56,6 +56,9 @@ class Events {
       shortcut: type.isObject(actions) ? actions.shortcut ?? null : null,
       history: [],
       loading: false,
+      // The time, in ms since the epoch, until which a run of the event only sleeps in a Wait
+      // action (see createWait); null while it is working or not running.
+      waitingUntil: null,
     };
   }
 
@@ -112,6 +115,8 @@ class Events {
       return result;
     }
     eventDescription.loading = true;
+    // An earlier run may still be sleeping in a Wait: with this run the event is working.
+    eventDescription.waitingUntil = null;
     this.block.update = true;
     // Only render flags changed, which no operator reads.
     this.context._internal.update({ changes: [] });
@@ -126,6 +131,7 @@ class Events {
         block: this.block,
         catchActions: eventDescription.catchActions,
         event,
+        eventDescription,
         eventName: name,
         progress,
       });

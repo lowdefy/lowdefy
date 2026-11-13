@@ -215,6 +215,10 @@ Events orchestrate action execution and handle:
 - Event-level catch actions for error recovery
 - Keyboard shortcut metadata storage
 
+#### Loading and waiting
+
+An event description has `loading: true` from `triggerEvent` until its action chain ends. While the step the chain is on only sleeps in a `Wait`, it also carries `waitingUntil`, the time in ms since the epoch at which the wait ends, and `null` otherwise. The `Wait` action calls the `wait` action method (`src/actions/createWait.js`), which owns the timer and sets and clears the mark. `Actions` passes the event description down to the methods of the step the chain is on only: an `async: true` action runs beside the chain, so its wait marks nothing. A new run of the event clears the mark, and so does the end of any run's wait, so an event with one run working never reads as waiting. Readers: the dev server's `isPageReady` and the shell's `isContextSettled`, which do not wait for an event that sleeps past their own deadline (see [journeys](../architecture/journeys.md)).
+
 #### DOM Event Bubbling
 
 A DOM event bubbles through every block that wraps its target, and each wrapping block may call `triggerEvent` for it (a Button click also reaches the clickable Card around it). `triggerEvent` asks `claimDomEvent` (`src/claimDomEvent.js`) whether another block already handled the DOM event currently being dispatched, read from `window.event`. Only blocks on the event's path take part: `getPathIndex` finds the block's layout element (`bl-<blockId>`, rendered by the client) in `domEvent.composedPath()`. The first block on the path with actions for the event claims it in a module-level `WeakMap`; blocks further out on the path then return early with `handledBy: <blockId>` instead of running their actions, and a block further in runs and takes the claim. The same block may fire several events for one DOM event (AgGrid `onCellClick` and `onRowClick`). An event with `bubble: true` handles the DOM event without claiming it.
