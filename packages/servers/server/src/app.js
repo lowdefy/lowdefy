@@ -55,7 +55,7 @@ import stampBuildId from './middleware/stampBuildId.js';
 import stampCaller from './middleware/stampCaller.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
-import websocketHandler from './routes/websocket.js';
+import createWebsocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
 
@@ -71,7 +71,14 @@ const requestTimeoutMs = lowdefyConfig.requestTimeout ?? 30000;
 // `clientAddressHeader` names the header a platform's edge sets to the client address on every
 // request (Vercel's x-real-ip). Without it the Node server resolves the address from the
 // connection and config.trustedProxies.
-function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
+// `closeWebSocketsBeforeMaxDuration` is set by the Vercel entry, where the function stops at
+// config.vercel.maxDuration (60 s when unset, as `lowdefy vercel-output` writes it), so each
+// websocket is closed shortly before then (routes/websocket.js).
+function createApp({
+  serveStaticAssets = true,
+  clientAddressHeader,
+  closeWebSocketsBeforeMaxDuration = false,
+} = {}) {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy' });
 
@@ -174,7 +181,14 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
-  app.get('/api/websocket', websocketHandler);
+  app.get(
+    '/api/websocket',
+    createWebsocketHandler({
+      maxDurationMs: closeWebSocketsBeforeMaxDuration
+        ? (lowdefyConfig.vercel?.maxDuration ?? 60) * 1000
+        : null,
+    })
+  );
   app.get('/api/page/*', apiPageHandler);
   app.get('/api/mobile/root', mobileRootHandler);
   app.get('/api/user', userHandler);

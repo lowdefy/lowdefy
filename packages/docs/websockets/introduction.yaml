@@ -70,7 +70,7 @@ _ref:
                 4. Subscribers whose evaluated properties are identical share one running source on the server. The first subscriber starts it; the last one to leave stops it.
                 5. Messages from the source are pushed to all subscribers, update the channel state read by the [`_websocket`](/websocket-subscriptions) operator, and fire the subscription's `onMessage` event.
 
-                If the connection drops — a deploy, a network blip, or a serverless function reaching its time limit — the client reconnects with backoff and resubscribes automatically. Channel state on the page is preserved across reconnects.
+                If the connection drops — a deploy, a network blip, or a serverless function reaching its time limit — the client reconnects with backoff and resubscribes automatically. Channel state on the page is preserved across reconnects. On Vercel the server closes each connection 5 seconds before the function's `maxDuration`, so the client reconnects at once instead of noticing the dead connection about 10 seconds late.
 
                 ## Websocket Definition
 
