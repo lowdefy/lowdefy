@@ -123,7 +123,7 @@ _ref:
                 - No cookies, no request or response bodies, and no IP address or other user information Sentry would infer.
                 - Request headers and URL query parameters, except those Sentry treats as sensitive (names containing auth, token, session, key, cookie, password and similar), those that carry the client's address (forwarded, `-ip`, `remote-`, via, `-user`), and the `Referer` header, since the previous page's URL can carry a sign-in or reset link's token.
                 - No database query parameters or results, queue task arguments, or AI and MCP inputs and outputs.
-                - Every string Sentry receives from the server is scrubbed of the app's secrets (`LOWDEFY_SECRET_*`) and of values marked with `_credential` during the request.
+                - Every string Sentry receives from the server is scrubbed of the app's secrets (`LOWDEFY_SECRET_*`) and of the values the request marked with `_credential`. A span is scrubbed when it ends, so a span that ended before the request marked a value is sent without that value scrubbed.
 
                 Stack traces are attached only to errors, as before, so issues keep their grouping.
 
