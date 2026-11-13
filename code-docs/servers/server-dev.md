@@ -367,19 +367,23 @@ rebuilds a page only when its next request needs it. When a page API request arr
 1. Calls `syncBuildSignals()`, which reads two signals by value:
    - `build/invalidatePages`: a value different from the last one seen is a **change event**.
      The event counter goes up, the kept context's read cache is replaced with a fresh one
-     (wrapped in read tracking again), and `seenSourceLines` is cleared so warnings log again.
+     (wrapped in read tracking again), and the generation's `seenSourceLines` is cleared so
+     warnings log again.
      Builds already running keep the cache they started with.
    - `build/pageRegistry.json`'s identity, `ino` plus `mtimeNs` from
      `fs.statSync(..., { bigint: true })`. Every publish renames a new file into place, so
      every publish has a new identity, even two in one clock tick. A new identity loads the
      registry and discards the context: the generation goes up and the next page build makes a
-     new context. A context whose maps passed the budget (below) is discarded the same way.
+     new context. A context whose maps passed the budget (below) is released instead: the next
+     page build makes a new context in the same generation.
 2. Serves the page when it is current (`reviewBuiltPage`):
    - compiled on an earlier **generation**: rebuilt without a check. Its content, `_js` and
-     icon enrichment belong to a context that is gone;
+     icon enrichment belong to a config build that is gone;
    - `checkedAt` (the event counter when its build started) equals the counter: current;
    - otherwise `checkPageRecord` decides: a build that ran app code is `changed`; else every
-     file the build read is re-read through the kept read cache and its sha256 compared.
+     file the build read is re-read through the kept read cache (or, while the budget has
+     released the context, a cache of the event over the same directories) and its sha256
+     compared.
      All match: `checkedAt` moves to the counter value the check started at. A mismatch, or a
      read that throws (EACCES, EBUSY on Windows mid-save), rebuilds the page; the rebuild
      reads through the same cache and reports the error as a build error.
@@ -395,7 +399,8 @@ next request checks it. A build still running when the context is discarded fini
 old context and carries the old generation, so its next request rebuilds it.
 
 `pageBuildRecords` (`lib/server/pageBuildRecords.js`) holds each page's last build record:
-`{ builtAt, checkedAt, generation, files: Map<absolutePath, sha256>, ranAppCode, errors }`.
+`{ builtAt, checkedAt, generation, files: Map<absolutePath, sha256>, mapsFiles, ranAppCode, errors }`,
+`mapsFiles` naming the `jitMaps/` file the build wrote.
 Reads are attributed to the build running them through `AsyncLocalStorage`. A file that does
 not exist is recorded as `missing`; a file read twice with different content, or whose read
 threw, as a value that never matches. `context.importAppCode` (the one entry point for
@@ -403,13 +408,19 @@ resolvers, transformers, `.js` refs, module resolvers and the global ref resolve
 build `ranAppCode`: app code can read anything, so such a page rebuilds after every change
 event.
 
-**Budget.** Every page build adds entries to the context's `keyMap` and `refMap`, released
-only with the context. When the entries added since the context was made (counted from
-`context.jitMaps`) pass `contextMapBudget` (`lib/server/contextMapBudget.js`, 48,000: about
-90 docs-app page builds at about 530 entries and 400-750 KB of retained heap each), the next
-`syncBuildSignals` discards the context and every page rebuilds, as after a config publish.
+**Budget.** Every page build adds entries to the context's `keyMap` and `refMap`, freed only
+with the context. When the entries added since the context was made (counted from
+`context.jitMaps`) pass `contextMapBudget` (`lib/server/contextMapBudget.js`, 480,000: about
+140 MB at about 290 bytes of retained heap an entry, or 900 docs-app page builds), the next
+`syncBuildSignals` releases the context, and the next page build makes a new one in the same
+generation. Pages built on the released context stay current, so a page whose own build
+passes the budget is built once, not on every request. Every context of a generation shares its `jsMap` (written whole to the JS map
+files), `dynamicIconData` and `seenSourceLines`, so a page built on a released context still
+serves its `_js` entries and icons (`getPageJitEnrichment` reads the shared state while no
+context is kept), and a warning logs once per change event. A new context costs a full read
+and parse of the build artifacts, 4-16 s on a large app, which is why the budget is high.
 
-`getBuildContext` restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` with a prefix unique to the process (`continueJitKeys`: the counter only moves forward). It then calls `prepareJitContext`, which fills the fields build code otherwise fills on first use (auth projection, the icon set load, `jitMaps`, deferred records, unresolved ref vars, `websocketIds`), so no page build reloads them on its copy. Page builds do not rewrite `keyMap.json`/`refMap.json`: each writes the entries it added to a new `jitMaps/` file. A new context removes the `jitMaps/` files of every context but the previous one (`pruneJitMaps`). The context's `writeBuildArtifact` is wrapped with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild writes no maps over the new build (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
+`getBuildContext` restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` with a prefix unique to the process (`continueJitKeys`: the counter only moves forward). It then calls `prepareJitContext`, which fills the fields build code otherwise fills on first use (auth projection, the icon set load, `jitMaps`, deferred records, unresolved ref vars, `websocketIds`), so no page build reloads them on its copy. Page builds do not rewrite `keyMap.json`/`refMap.json`: each writes the entries it added to a new `jitMaps/` file. A new context removes every `jitMaps/` file but those the latest build of each of the current generation's pages wrote (`pruneJitMaps`). The context's `writeBuildArtifact` is wrapped with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild writes no maps over the new build (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
 
 ### PageCache
 

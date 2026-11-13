@@ -495,7 +495,7 @@ const buildContext = createContext({ directories, logger, stage: 'dev' });
 Object.assign(buildContext.refMap, refMap); // Restore from skeleton
 Object.assign(buildContext.keyMap, keyMap);
 buildContext.jsMap = jsMap;
-// Names the context's jitMaps/ files (the dev server uses <processId>-<generation>)
+// Names the context's jitMaps/ files (the dev server uses <processId>-<context number>)
 buildContext.jitMaps = createJitMaps({
   keyMap: buildContext.keyMap,
   refMap: buildContext.refMap,
