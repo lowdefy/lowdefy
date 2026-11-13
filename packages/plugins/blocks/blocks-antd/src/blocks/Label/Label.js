@@ -21,7 +21,7 @@ import React from 'react';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { Col, Row, Tooltip } from 'antd';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import CSSMotion from '@rc-component/motion';
 
 import labelLogic from './labelLogic.js';
@@ -137,7 +137,7 @@ const Label = ({
             removeOnLeave
           >
             {({ className: motionClassName }) => (
-              <div className={classNames(extraClassName, motionClassName)} style={extraStyle}>
+              <div className={clsx(extraClassName, motionClassName)} style={extraStyle}>
                 {showFeedback ? (
                   <div className={feedbackClassName} style={feedbackStyle}>
                     {validation[validationKeyMap[validation.status]] &&

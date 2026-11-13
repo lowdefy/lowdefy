@@ -62,7 +62,7 @@ function createIcon({ icons, iconTheme = {} }) {
 
   function Icon({ events = {}, properties, styles = {}, testID }) {
     const { tokens } = useTheme();
-    const iconProperties = type.isString(properties) ? { name: properties } : properties ?? {};
+    const iconProperties = type.isString(properties) ? { name: properties } : (properties ?? {});
     const spin =
       (iconProperties.spin === true || events.onClick?.loading === true) &&
       iconProperties.disableLoadingIcon !== true;
@@ -83,7 +83,7 @@ function createIcon({ icons, iconTheme = {} }) {
     let data = named;
     let color = type.isString(iconProperties.color)
       ? resolveColor({ color: iconProperties.color, tokens })
-      : elementColor ?? tokens.colorLabel;
+      : (elementColor ?? tokens.colorLabel);
     if (spin) {
       data = getIconData('loading');
     } else if (named === null) {

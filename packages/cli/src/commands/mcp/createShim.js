@@ -329,7 +329,7 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
     const forwardedContent =
       name === 'lowdefy_build_status'
         ? dropNotedAgentFiles({ app, content: result.content ?? [] })
-        : result.content ?? [];
+        : (result.content ?? []);
     const content = [{ type: 'text', text: `${app.label} · ${instance.url}` }, ...forwardedContent];
     // The handlers come from the dev server, whose version follows the app,
     // so a tool or option this CLI lists can differ from the server's.

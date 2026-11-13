@@ -48,14 +48,13 @@
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/operators": "7.2.0",
-    "uuid": "14.0.0"
+    "uuid": "14.0.3"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "7.2.0",
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "jsdom": "19.0.0",
-    "vitest": "4.1.12"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "jsdom": "31.0.0",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

@@ -492,7 +492,7 @@ const n0 = [
 export default {
   Pencil: { node: n0 },
   edit: { node: n0 },
-  'react-icons:AiOutlineUser': {
+  'brands:Github': {
     node: n1,
     size: 1024,
     attrs: { fill: 'currentColor', stroke: 'none' },

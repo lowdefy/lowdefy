@@ -26,6 +26,8 @@ import {
 import readIconMigrationTable from './readIconMigrationTable.js';
 
 const REACT_ICONS_SET = 'react-icons';
+const REACT_ICONS_REMOVED =
+  'The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8.';
 const UPGRADE_HINT = 'Run `lowdefy upgrade` to migrate names automatically.';
 const SEARCH_HINT = 'Search icon names with lowdefy_search_icons.';
 
@@ -56,19 +58,19 @@ function suggestFromTable({ name, semantic }) {
   return ` Use "${suggestion}".`;
 }
 
-function reactIconsMessage({ name, sets, semantic }) {
-  let message = `Icon "${name}" is a react-icons name. Lowdefy 7 uses Lucide icons.`;
-  message += suggestFromTable({ name, semantic });
-  if (Object.hasOwn(sets, REACT_ICONS_SET)) {
-    message += ` To keep react-icons names, set theme.icons.set: ${REACT_ICONS_SET}.`;
-  } else {
-    message += ` To keep react-icons names, install @lowdefy/icons-react-icons and set theme.icons.set: ${REACT_ICONS_SET}.`;
-  }
-  return `${message} ${UPGRADE_HINT}`;
+// A react-icons name, unqualified (AiOutlineUser) or qualified
+// (react-icons:AiOutlineUser), gets the Lucide name the v7 codemod table maps
+// it to.
+function reactIconsMessage({ name, iconName, semantic }) {
+  return (
+    `Icon "${name}" is a react-icons name. Lowdefy uses Lucide icons.` +
+    suggestFromTable({ name: iconName, semantic }) +
+    ` ${REACT_ICONS_REMOVED} ${UPGRADE_HINT}`
+  );
 }
 
 function antDesignMessage({ name, semantic }) {
-  let message = `Icon "${name}" is an Ant Design icon name. Lowdefy 7 uses Lucide icons.`;
+  let message = `Icon "${name}" is an Ant Design icon name. Lowdefy uses Lucide icons.`;
   message += suggestFromTable({ name, semantic });
   return `${message} ${UPGRADE_HINT}`;
 }
@@ -87,17 +89,22 @@ function qualifiedMessage({ setId, iconName, sets }) {
 }
 
 // The error for a literal icon name that resolves to nothing. Old react-icons
-// and Ant Design names get a migration message with the suggestion
-// `lowdefy upgrade` would apply; other names get a did-you-mean over semantic
+// and Ant Design names get a migration message with the Lucide name the v7
+// codemod table maps them to; other names get a did-you-mean over semantic
 // names and the names of the default set and Lucide.
 function createUnresolvedIconError({ name, icons, configKey }) {
   const { sets, defaultSet, semantic } = icons;
+  // An app may still install a set with the react-icons id (the 7.x package);
+  // its names then get the usual did-you-mean in that set.
+  const hasReactIconsSet = Object.hasOwn(sets, REACT_ICONS_SET);
   const qualified = qualifiedAttemptPattern.exec(name);
   let message;
-  if (qualified) {
+  if (qualified && qualified[1] === REACT_ICONS_SET && !hasReactIconsSet) {
+    message = reactIconsMessage({ name, iconName: qualified[2], semantic });
+  } else if (qualified) {
     message = qualifiedMessage({ setId: qualified[1], iconName: qualified[2], sets });
-  } else if (reactIconsNamePattern.test(name) && defaultSet !== REACT_ICONS_SET) {
-    message = reactIconsMessage({ name, sets, semantic });
+  } else if (reactIconsNamePattern.test(name) && !hasReactIconsSet) {
+    message = reactIconsMessage({ name, iconName: name, semantic });
   } else if (antDesignNamePattern.test(name)) {
     message = antDesignMessage({ name, semantic });
   } else if (semanticNamePattern.test(name) && Object.hasOwn(semantic, name)) {

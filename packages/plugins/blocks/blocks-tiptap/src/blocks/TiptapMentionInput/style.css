@@ -11,6 +11,23 @@
   font-weight: 600;
 }
 
+/* The mention list and the group-members popover sit above the page and fade in, as the tippy.js
+   popups they replaced did. Floating UI sets their left and top. */
+@keyframes tiptap-mention-popup-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tiptap-mention-popup {
+  animation: tiptap-mention-popup-fade-in 300ms;
+  max-width: 350px;
+  z-index: 9999;
+}
+
 .tiptap-mention-items {
   background: var(--ant-color-bg-container);
   border-radius: var(--ant-border-radius, 8px);
@@ -110,6 +127,12 @@
 }
 
 .tiptap-mention-group-popover {
+  animation: tiptap-mention-popup-fade-in 300ms;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  z-index: 9999;
   background: var(--ant-color-bg-container);
   border-radius: var(--ant-border-radius, 8px);
   box-shadow:

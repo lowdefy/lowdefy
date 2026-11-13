@@ -28,7 +28,7 @@ import getMobileAuth from '../buildMobile/getMobileAuth.js';
 // assetlinks.json: a package and at least one certificate fingerprint.
 function hasAndroidAppLink(shell) {
   const sha256 = shell.android?.sha256;
-  const fingerprints = type.isString(sha256) ? [sha256] : sha256 ?? [];
+  const fingerprints = type.isString(sha256) ? [sha256] : (sha256 ?? []);
   return type.isString(shell.android?.package) && fingerprints.length > 0;
 }
 

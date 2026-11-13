@@ -52,12 +52,22 @@ test('createSignInRefusedRedirectHook redirects a ban to the error callback URL 
         message: 'You have been banned.',
         code: 'BANNED_USER',
       }),
-      query: { callbackURL: '/home', errorCallbackURL: '%2Fuser-account%2Flogin' },
+      query: { callbackURL: '/home', errorCallbackURL: '/user-account/login' },
     })
   );
   expect(url.origin + url.pathname).toBe(`${BASE_URL}/user-account/login`);
   expect(url.searchParams.get('error')).toBe('BANNED_USER');
   expect(url.searchParams.get('error_description')).toBe('You have been banned.');
+});
+
+test('createSignInRefusedRedirectHook keeps an encoded value in the error callback URL encoded', async () => {
+  const url = await redirectLocation(
+    createCtx({
+      returned: banned(),
+      query: { callbackURL: '/home', errorCallbackURL: '/login?next=%2Finvoices%3Fa%3D1%26b%3D2' },
+    })
+  );
+  expect(url.searchParams.get('next')).toBe('/invoices?a=1&b=2');
 });
 
 test.each([

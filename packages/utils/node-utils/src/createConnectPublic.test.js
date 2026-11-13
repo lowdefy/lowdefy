@@ -43,6 +43,12 @@ test('createConnectPublic builds the connector with a lookup that checks address
   expect(typeof mockBuildConnector.mock.calls[0][0].lookup).toBe('function');
 });
 
+test('createConnectPublic keeps the connector on HTTP/1.1', () => {
+  mockBuildConnector.mockClear();
+  createConnectPublic({ createNotPublicError });
+  expect(mockBuildConnector.mock.calls[0][0].allowH2).toBe(false);
+});
+
 test('createConnectPublic refuses an IP literal that is not public before connecting', async () => {
   const connectPublic = createConnectPublic({ createNotPublicError });
   const [error, socket] = await run(connectPublic, '169.254.169.254');

@@ -1,11 +1,12 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
+  "$schema": "https://unpkg.com/@changesets/config@4.0.1/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [["@lowdefy/*", "lowdefy", "lowdefy-vscode"]],
+  "fixed": [["@lowdefy/*", "lowdefy"]],
   "linked": [],
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
+  "privatePackages": { "version": true, "tag": false },
   "ignore": []
 }

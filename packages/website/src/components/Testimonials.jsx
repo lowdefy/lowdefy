@@ -71,7 +71,7 @@ export default function Testimonials() {
         </div>
 
         {/* CTA */}
-        <div className="relative text-center py-16 px-8 bg-gradient-to-br from-primary-500/10 to-cyan-500/10 border border-slate-200 dark:border-slate-800 bracket-corners bracket-corners-cyan">
+        <div className="relative text-center py-16 px-8 bg-linear-to-br/srgb from-primary-500/10 to-cyan-500/10 border border-slate-200 dark:border-slate-800 bracket-corners bracket-corners-cyan">
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4 font-mono">
             Ready to build faster?
           </h2>

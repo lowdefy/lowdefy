@@ -45,9 +45,8 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files --ignore \"**/*.snap\"",
     "clean": "rm -rf dist",
-    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.snap\"",
     "e2e": "playwright test --config e2e/playwright.config.js",
     "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
     "prepublishOnly": "pnpm build"
@@ -57,16 +56,17 @@
     "@lowdefy/helpers": "7.2.0"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "7.2.0",
     "@lowdefy/e2e-utils": "7.2.0",
     "@playwright/test": "1.65.0",
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "copyfiles": "2.4.1"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "publishConfig": {
     "access": "public"

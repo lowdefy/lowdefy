@@ -171,6 +171,8 @@ function hasRealChanges(content) {
     if (trimmed.startsWith('Updated dependencies')) continue;
     // Skip lines that are just "@lowdefy/package@version"
     if (trimmed.match(/^@?[\w/-]+@\d+\.\d+\.\d+$/)) continue;
+    // Changesets v3 writes this under a version a package got only from the fixed group
+    if (trimmed === 'No changes in this release.') continue;
     // Anything else is a real change
     return true;
   }
@@ -281,7 +283,7 @@ function parseChangesetEntries(content) {
       continue;
     }
     // Skip package@version lines (dependency list items)
-    if (line.match(/^\s+- @?[\w/-]+@\d+\.\d+\.\d+$/)) continue;
+    if (line.match(/^\s*- @?[\w/-]+@\d+\.\d+\.\d+$/)) continue;
 
     // New changeset entry: `- {hash}: {description}`
     const entryMatch = line.match(/^- ([a-f0-9]{7,}): (.+)/);
@@ -305,7 +307,10 @@ function parseChangesetEntries(content) {
 
   // Trim trailing blank lines from each entry body
   for (const entry of entries) {
-    while (entry.bodyLines.length > 0 && entry.bodyLines[entry.bodyLines.length - 1].trim() === '') {
+    while (
+      entry.bodyLines.length > 0 &&
+      entry.bodyLines[entry.bodyLines.length - 1].trim() === ''
+    ) {
       entry.bodyLines.pop();
     }
     entry.body = entry.bodyLines.join('\n');
@@ -356,9 +361,10 @@ function buildVersionMarkdown(entry) {
   const patchChanges = [];
 
   for (const [, cs] of changesetMap) {
-    const target = cs.section === 'Minor Changes' || cs.section === 'Major Changes'
-      ? minorChanges
-      : patchChanges;
+    const target =
+      cs.section === 'Minor Changes' || cs.section === 'Major Changes'
+        ? minorChanges
+        : patchChanges;
     target.push(cs);
   }
 
@@ -384,7 +390,7 @@ function renderChanges({ minorChanges, patchChanges, plainEntries, titlesOnly })
   const lines = [];
 
   if (minorChanges.length > 0) {
-    lines.push('## What\'s New');
+    lines.push("## What's New");
     lines.push('');
     for (const cs of minorChanges) {
       const pkgList = cs.packages.map((p) => `\`${p}\``).join(', ');
@@ -442,7 +448,7 @@ function stripDependencyLines(content) {
     .split('\n')
     .filter((line) => {
       if (line.match(/^- Updated dependencies/)) return false;
-      if (line.match(/^\s+- @?[\w/-]+@\d+\.\d+\.\d+$/)) return false;
+      if (line.match(/^\s*- @?[\w/-]+@\d+\.\d+\.\d+$/)) return false;
       return true;
     })
     .join('\n');
@@ -483,9 +489,7 @@ function main() {
   }
 
   // Write output
-  const output = allSections
-    .map((s) => s.markdown)
-    .join('\n\n---\n\n');
+  const output = allSections.map((s) => s.markdown).join('\n\n---\n\n');
 
   writeFileSync(OUTPUT_FILE, output, 'utf-8');
   console.log(`\nWrote release notes to ${OUTPUT_FILE}`);

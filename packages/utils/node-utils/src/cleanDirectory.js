@@ -14,10 +14,19 @@
   limitations under the License.
 */
 
-import fsExtra from 'fs-extra';
+import { mkdir, readdir, rm } from 'node:fs/promises';
+import path from 'node:path';
 
+// Empties the directory in place, as fs-extra's emptyDir did, rather than removing and
+// recreating it: the dev server's watchers watch the build directory itself, and a watch on a
+// removed directory is not guaranteed to follow its replacement. Keeping the directory also
+// keeps its mode and owner. Creates the directory when it is missing.
 async function cleanDirectory(dirPath) {
-  await fsExtra.emptyDir(dirPath);
+  await mkdir(dirPath, { recursive: true });
+  const entries = await readdir(dirPath);
+  await Promise.all(
+    entries.map((entry) => rm(path.join(dirPath, entry), { recursive: true, force: true }))
+  );
 }
 
 export default cleanDirectory;

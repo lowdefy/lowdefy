@@ -91,18 +91,17 @@ test('resolveIconName resolves set names in the default set, then Lucide', () =>
   expect(resolve('House', icons)).toEqual({ setId: 'lucide', layer: 0, iconName: 'House' });
 });
 
-test('resolveIconName lets the default set win a name it shares with Lucide (PiSquare order)', () => {
-  const sets = { 'react-icons': [createTestIconLayer({ icons: { PiSquare: { node } } })] };
-  // PiSquare is both a Lucide name and a react-icons name.
-  expect(resolve('PiSquare', createIcons({ sets }))).toEqual({
+test('resolveIconName lets the default set win a name it shares with Lucide', () => {
+  const sets = { tabler: [createTestIconLayer({ icons: { Square: { node } } })] };
+  expect(resolve('Square', createIcons({ sets }))).toEqual({
     setId: 'lucide',
     layer: 0,
-    iconName: 'PiSquare',
+    iconName: 'Square',
   });
-  expect(resolve('PiSquare', createIcons({ sets, defaultSet: 'react-icons' }))).toEqual({
-    setId: 'react-icons',
+  expect(resolve('Square', createIcons({ sets, defaultSet: 'tabler' }))).toEqual({
+    setId: 'tabler',
     layer: 0,
-    iconName: 'PiSquare',
+    iconName: 'Square',
   });
 });
 

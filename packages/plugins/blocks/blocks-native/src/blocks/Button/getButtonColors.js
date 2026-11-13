@@ -151,7 +151,7 @@ function getButtonColors({ isDark, properties, tokens }) {
         plain: true,
         pressedColor: 'transparent',
         pressedOpacity: 0.4,
-        textColor: variant === 'link' ? main ?? tokens.colorTint : accent,
+        textColor: variant === 'link' ? (main ?? tokens.colorTint) : accent,
       };
     case 'dashed':
       return {

@@ -45,14 +45,14 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
-    "axios": "1.20.0"
+    "axios": "1.21.1"
   },
   "devDependencies": {
     "@lowdefy/ajv": "7.2.0",
     "@lowdefy/errors": "7.2.0",
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "vitest": "4.1.12"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

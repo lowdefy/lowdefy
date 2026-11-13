@@ -124,9 +124,8 @@ afterAll(() => {
 
 const { default: apiContext } = await import('./apiContext.js');
 const { default: requestTimeout } = await import('./requestTimeout.js');
-const { default: createSystemContext } = await import(
-  '../../lib/server/auth/createSystemContext.js'
-);
+const { default: createSystemContext } =
+  await import('../../lib/server/auth/createSystemContext.js');
 
 function createApp() {
   const app = new Hono();

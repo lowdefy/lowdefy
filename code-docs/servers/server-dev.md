@@ -32,7 +32,7 @@ Beyond production server:
 - `@lowdefy/build` - Build system
 - `@lowdefy/engine` - State engine
 - `@hono/vite-dev-server` (0.26.0) - Mounts the Hono app inside Vite
-- `chokidar` (3.5.3) - File watcher
+- `chokidar` (6.0.0) - File watcher
 - `dotenv` (16.3.1) - Env loading
 - `opener` (1.5.2) - Browser opener
 - `swr` (2.2.4) - Data fetching
@@ -67,6 +67,8 @@ Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct d
 
 `resolve.dedupe` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance — and for every `@lowdefy/*` package in the server's `package.json` dependencies. A linked workspace plugin pinned to another Lowdefy release otherwise brings its own `@lowdefy/helpers` and `@lowdefy/block-utils`: the dependency optimizer pre-bundles one copy per package for every importer (whichever its scan meets first), so the server's own client could load a plugin's older copy and fail on a missing export, and the client's HTML enhancements, registered in `@lowdefy/block-utils`, would not reach blocks that import another copy.
 
+**React version.** `server` and `server-dev` pin `react` and `react-dom` exactly (19.3.1), and that copy is the only React an app runs: `resolve.dedupe` makes every block plugin, custom and local ones included, import the server's React whatever version the plugin installs itself. So block plugins declare `react` and `react-dom` `^19` as peer dependencies, never as dependencies, and a plugin release only has to support the React of the Lowdefy release it ships with. React 19 throws when `react` and `react-dom` versions differ, so the two pins always move together, in both servers, `server-e2e`, `client`, `layout` and `build`.
+
 ## Scripts
 
 ```json
@@ -89,7 +91,7 @@ server-dev/
 │   │   └── errorHandler.js   # app.onError — serialized error contract
 │   ├── routes/               # reload, ping, jitPage, root, request,
 │   │                         # endpoints, auth, agent,
-│   │                         # clientError, usage, devTools
+│   │                         # clientError, usage
 │   └── lib/                  # getPathSegments, safeScriptJson, serveBuildJs
 ├── client/                   # Vite client entry (served as modules with HMR)
 │   ├── main.jsx              # CSS imports, router, HMR-stable React root
@@ -199,7 +201,7 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 }
 
 await context.initialBuild();
-context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
+context.startWatchers(); // Not awaited — start-up does not need the initial scan
 // At the head of syncServer's queue: record the server artifacts,
 // optimizeDependencies, startServer, then wait for the child to answer. A
 // watcher batch during the optimise builds at once and its syncServer call
@@ -765,7 +767,11 @@ Watches every file the build reads, through one chokidar watcher:
   as a file a local module refs with `../` from beside the module. The config build writes
   `refMap.json` and each JIT page build writes a new `jitMaps/` file, so a second watcher on
   the build directory (ignoring everything else in it) reads only the maps files that
-  changed and adds new files as they appear. `refMap.json` is scanned in full once, at start.
+  changed and adds new files as they appear. `refMap.json` is scanned in full once, at start,
+  and the files it lists are passed to the watcher with its directories (`setupWatcher`'s
+  `watchFiles`), so the watcher is ready only once it watches them. An add after ready would
+  restart macOS's FSEvents stream at a moment no caller can wait for, and an edit made during
+  the restart is lost.
 
 Each batch of changes is classified with `skeletonSourceFiles.json` (see the table above):
 a skeleton change runs `lowdefyBuild()`, anything else refreshes Tailwind candidates. Either
@@ -856,7 +862,7 @@ async function reloadHandler(c) {
 }
 ```
 
-Every stream shares one module-level chokidar watcher on `./build/reload`, started by the first subscriber and closed when the last one leaves, as `lib/docs/devEventBus.js` does for `buildStatus.json` (the close waits a tick, for the reason given there). A watcher per connection held one fs handle per open tab, headless journey and screenshot tabs included. There is no reload on unlink: a skeleton rebuild removes `build/reload` when it publishes the new build, and the reload comes from `reloadClients()` after.
+Every stream shares one module-level chokidar watcher on `./build/reload`, started by the first subscriber and closed when the last one leaves, as `lib/docs/devEventBus.js` does for `buildStatus.json`. A watcher per connection held one fs handle per open tab, headless journey and screenshot tabs included. There is no reload on unlink: a skeleton rebuild removes `build/reload` when it publishes the new build, and the reload comes from `reloadClients()` after.
 
 The 15s pings keep the connection alive; the route is registered before the api context middleware (it needs no request context) and dev has no compression middleware, so the stream is never buffered.
 
@@ -929,7 +935,7 @@ function reloadClients({ directories }) {
 
 The Hono app is mounted into Vite via `@hono/vite-dev-server`. There is no compression in dev (parity with the old `compress: false`, and SSE must stay unbuffered). Mounting order matters:
 
-1. **Context-free routes first**: `/api/reload`, `/api/ping`, `/api/dev-tools` — these had no `apiWrapper` before and need no request context.
+1. **Context-free routes first**: `/api/reload` and `/api/ping` — these had no `apiWrapper` before and need no request context.
 2. **`initAuthConfig`** (app-wide) — only when `authJson.configured === true`.
 3. **`apiContext()`** on `/api/*`, then `/api/auth/*` (Auth.js handler), `/api/root`, `/api/page/*`, `/api/request/*`, `/api/endpoints/*`, `/api/client-error`, `/api/usage`, `/api/agent/*` (with a 10mb `bodyLimit`).
 4. **`serveStatic({ root: './public' })`** for user public assets (icons, images).
@@ -1142,10 +1148,13 @@ export default defineConfig(({ mode }) => ({
       ],
     }),
   ],
-  define: {
-    // Vite does not replace process.env.NODE_ENV inside dependencies —
-    // plugin and client code branch on it.
-    'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
+  // Vite does not replace process.env.NODE_ENV inside dependencies - plugin and
+  // client code branch on it.
+  define: createNodeEnvDefine({ mode }), // { 'process.env.NODE_ENV': '"development"' }
+  optimizeDeps: {
+    // The dependency optimiser ignores `define` and reads NODE_ENV from the shell.
+    rolldownOptions: { transform: { define: createNodeEnvDefine({ mode }) } },
+    // ...
   },
   resolve: {
     // Linked plugin packages share one React, antd, dayjs and the server's

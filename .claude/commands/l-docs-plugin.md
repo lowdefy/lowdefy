@@ -62,7 +62,6 @@ Data transformation functions
 - `operators-diff` - Object diffing
 - `operators-uuid` - UUID generation
 - `operators-yaml` - YAML parsing
-- `operators-jsonata` - JSONata queries
 
 ### actions/
 

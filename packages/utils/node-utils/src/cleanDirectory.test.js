@@ -15,9 +15,20 @@
 */
 
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import cleanDirectory from './cleanDirectory.js';
-import { expect, test } from 'vitest';
+import { afterEach, beforeEach, expect, test } from 'vitest';
+
+let base;
+
+beforeEach(() => {
+  base = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-clean-'));
+});
+
+afterEach(() => {
+  fs.rmSync(base, { recursive: true, force: true });
+});
 
 test('cleanDirectory', async () => {
   const dirPath = path.resolve(process.cwd(), 'test/cleanDirectory/');
@@ -38,8 +49,23 @@ test('cleanDirectory', async () => {
   expect(fs.existsSync(filePath2)).toBe(false);
 });
 
-test('cleanDirectory does not throw when dir does not exist', async () => {
-  const dirPath = path.resolve(process.cwd(), 'src/test/doesNotExist');
+test('cleanDirectory empties the directory in place', async () => {
+  const dirPath = path.resolve(base, 'inPlace');
+  fs.mkdirSync(path.resolve(dirPath, 'subdirectory/'), { recursive: true });
+  fs.writeFileSync(path.resolve(dirPath, '.dotfile'), 'cleanDirectory');
+  fs.chmodSync(dirPath, 0o700);
+  const before = fs.statSync(dirPath);
+
+  await cleanDirectory(dirPath);
+  const after = fs.statSync(dirPath);
+  expect(fs.readdirSync(dirPath)).toEqual([]);
+  expect(after.ino).toBe(before.ino);
+  expect(after.mode).toBe(before.mode);
+});
+
+test('cleanDirectory creates the directory when it does not exist', async () => {
+  const dirPath = path.resolve(base, 'missing', 'nested');
   const res = await cleanDirectory(dirPath);
   expect(res).toBe(undefined);
+  expect(fs.readdirSync(dirPath)).toEqual([]);
 });

@@ -14,32 +14,45 @@
   limitations under the License.
 */
 
-import axios from 'axios';
+import httpFetch from '../../../utils/httpFetch.js';
+import readResponseBody from '../../../utils/readResponseBody.js';
+
+// Listing a page's mutants builds the page first, which takes seconds; five minutes means the dev
+// server has stopped answering.
+const MUTANTS_TIMEOUT_MS = 5 * 60 * 1000;
 
 // POST /lowdefy-docs/mutants on the dev server: lists the mutants on the
 // pages, requests, endpoints and app events in `body`, as { buildId,
-// artifacts, ids, mutants }. A failed response's error keeps the axios error
-// as its `cause`, so a caller can tell a page that fails to build (422).
+// artifacts, ids, mutants }. A failed response's error carries the response
+// `status`, so a caller can tell a page that fails to build (422).
 async function postMutants({ url, body }) {
+  let response;
+  let data;
   try {
-    const response = await axios.post(`${url}/lowdefy-docs/mutants`, body);
-    return response.data;
+    response = await httpFetch({
+      url: `${url}/lowdefy-docs/mutants`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      timeoutMs: MUTANTS_TIMEOUT_MS,
+    });
+    data = await readResponseBody(response);
   } catch (error) {
-    if (error.response?.status === 404) {
-      throw new Error(
-        'The dev server has no mutants route (POST /lowdefy-docs/mutants): it needs a newer Lowdefy.'
-      );
-    }
-    if (error.response) {
-      throw new Error(
-        `POST /lowdefy-docs/mutants responded ${error.response.status}: ${JSON.stringify(
-          error.response.data
-        )}`,
-        { cause: error }
-      );
-    }
     throw new Error(`Could not reach the dev server: ${error.message}`, { cause: error });
   }
+  if (response.status === 404) {
+    throw new Error(
+      'The dev server has no mutants route (POST /lowdefy-docs/mutants): it needs a newer Lowdefy.'
+    );
+  }
+  if (!response.ok) {
+    const error = new Error(
+      `POST /lowdefy-docs/mutants responded ${response.status}: ${JSON.stringify(data)}`
+    );
+    error.status = response.status;
+    throw error;
+  }
+  return data;
 }
 
 export default postMutants;

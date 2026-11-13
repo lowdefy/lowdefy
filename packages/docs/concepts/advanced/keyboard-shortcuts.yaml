@@ -137,7 +137,19 @@ _ref:
 
             ## Input field behavior
 
-            Shortcuts with modifiers (`mod`, `ctrl`, `alt`) fire even when focus is in a text input. Single-key shortcuts (like `Escape` or `/`) are suppressed when focus is in an editable field — pressing `/` while typing won't trigger a shortcut.
+            Shortcuts with modifiers (`mod`, `ctrl`, `alt`, `shift`) fire even when focus is in a text input, so `mod+S` saves while the user is typing. Shortcuts without a modifier (like `Escape`, `/` or the sequence `g i`) are suppressed when focus is in an input, textarea, select or editable content — pressing `/` while typing won't trigger a shortcut, and keys typed in a field do not count towards a sequence. For a sequence, the first key press decides whether it has a modifier.
+
+            Key presses that are part of composing text with an input method editor (IME), as when typing Chinese, Japanese or Korean, never trigger a shortcut.
+
+            ## Held keys
+
+            A shortcut fires once per key press. Holding the keys down does not fire it again as the keyboard repeats the key, so holding `mod+S` saves once.
+
+            ## Overlapping shortcuts
+
+            Only one shortcut fires for a key press. When two blocks bind the same shortcut, only one of them fires. When a sequence ends with a key that is also a shortcut on its own (`g i` and `i`), typing the sequence fires only the sequence.
+
+            Avoid a single-key shortcut that is also the first key of a sequence (`g` and `g i`): only one of them can ever fire, depending on which block comes first on the page. If the sequence comes first, pressing `g` does nothing and the browser console logs a tinykeys conflict warning.
 
             ## Visibility
 

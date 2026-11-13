@@ -129,7 +129,7 @@ function listTypes({ kind, target }) {
     availableTypes,
     availableTypesMobile,
   });
-  const blockMetas = fromShell ? availableTypesMobile.blockMetas ?? {} : webBlockMetas;
+  const blockMetas = fromShell ? (availableTypesMobile.blockMetas ?? {}) : webBlockMetas;
   const webDefinitions = flattenKind({ kind: normalizedKind, availableTypes });
   return Object.entries(definitions)
     .map(([typeName, definition]) => {

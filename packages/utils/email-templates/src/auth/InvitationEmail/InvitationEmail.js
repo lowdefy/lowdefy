@@ -15,8 +15,9 @@
 */
 
 import React from 'react';
-import { Heading, Text } from '@react-email/components';
 
+import Heading from '../../reactEmail/Heading.js';
+import Text from '../../reactEmail/Text.js';
 import CtaButton from '../../components/CtaButton.js';
 import EmailLayout from '../../components/EmailLayout.js';
 

@@ -53,7 +53,7 @@ class Events {
       catchActions: (type.isObject(actions) ? actions.catch : []) || [],
       bubble: type.isObject(actions) ? actions.bubble === true : false,
       debounce: type.isObject(actions) ? actions.debounce : null,
-      shortcut: type.isObject(actions) ? actions.shortcut ?? null : null,
+      shortcut: type.isObject(actions) ? (actions.shortcut ?? null) : null,
       history: [],
       loading: false,
       // The time, in ms since the epoch, until which a run of the event only sleeps in a Wait

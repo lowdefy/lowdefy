@@ -167,7 +167,7 @@
     "user": "User",
     "users": "Users",
     "view": "Eye",
-    "warning": "TriangleAlert",
+    "warning": "TriangleExclamationPoint",
     "check-circle": "CircleCheck",
     "clock-circle": "Clock",
     "close-circle": "CircleX",
@@ -198,11 +198,11 @@
     "camera": "Camera",
     "bot": "Bot",
     "unchanged": "CirclePause",
-    "bold": "Bold",
+    "bold": "LetterB",
     "italic": "Italic",
     "strikethrough": "Strikethrough",
     "highlight": "Highlighter",
-    "icon-missing": "CircleAlert"
+    "icon-missing": "CircleExclamationPoint"
   },
   "iconImports.json": [
     "FileSearch",

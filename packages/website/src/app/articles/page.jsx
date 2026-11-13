@@ -52,7 +52,7 @@ export default function Articles() {
                         {formatDate(article.publishedAt)}
                       </time>
                     </div>
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-2 font-mono group-hover:text-primary-500 transition-colors leading-snug">
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-2 font-mono group-hover:text-primary-500 dark:group-hover:text-primary-500 transition-colors leading-snug">
                       {article.title}
                     </h2>
                     <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3 mb-4">

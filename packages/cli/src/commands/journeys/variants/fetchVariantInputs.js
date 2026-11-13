@@ -14,16 +14,24 @@
   limitations under the License.
 */
 
-import axios from 'axios';
+import httpFetch from '../../../utils/httpFetch.js';
+import readResponseBody from '../../../utils/readResponseBody.js';
 
 async function getJson({ url, path }) {
+  let response;
+  let data;
   try {
-    const response = await axios.get(`${url}${path}`, { timeout: 60000 });
-    return response.data;
+    response = await httpFetch({ url: `${url}${path}`, timeoutMs: 60000 });
+    data = await readResponseBody(response);
   } catch (error) {
-    const status = error.response ? ` responded ${error.response.status}` : '';
-    throw new Error(`GET ${path}${status}: ${error.message}`);
+    throw new Error(`GET ${path}: ${error.message}`);
   }
+  if (!response.ok) {
+    throw new Error(
+      `GET ${path} responded ${response.status}: Request failed with status code ${response.status}`
+    );
+  }
+  return data;
 }
 
 // What the generators read from the dev server: the built config of every

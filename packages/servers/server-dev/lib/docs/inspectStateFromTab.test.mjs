@@ -17,9 +17,8 @@
 import { serializer } from '@lowdefy/helpers';
 import { vi, afterEach, expect, test } from 'vitest';
 
-const { listTabs, registerTab, resolveTabRequest, unregisterTab, updateTabPage } = await import(
-  './tabChannel.js'
-);
+const { listTabs, registerTab, resolveTabRequest, unregisterTab, updateTabPage } =
+  await import('./tabChannel.js');
 const { default: inspectStateFromTab } = await import('./inspectStateFromTab.js');
 
 afterEach(() => {

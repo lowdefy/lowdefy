@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import axios from 'axios';
 import { type } from '@lowdefy/helpers';
 
+import httpFetch from '../../../utils/httpFetch.js';
+import readResponseBody from '../../../utils/readResponseBody.js';
 import PullStoppedError from './PullStoppedError.js';
 
 const MAX_WAIT_S = 60;
@@ -32,7 +33,7 @@ function defaultSleep(ms) {
 // Retry-After is seconds or an HTTP date. PostHog's throttle body also says
 // "Expected available in N seconds", read when the header is missing.
 function readWaitSeconds({ headers, data, now }) {
-  const header = headers?.['retry-after'];
+  const header = headers.get('retry-after');
   if (!type.isNone(header)) {
     const seconds = Number(header);
     if (Number.isFinite(seconds)) return Math.max(0, seconds);
@@ -80,14 +81,20 @@ function createPostHogQueryClient({ projectId, apiHost, apiKey, logger, sleep = 
 
   async function post({ body }) {
     try {
-      return await axios.post(url, body, {
+      const response = await httpFetch({
+        url,
+        method: 'POST',
         headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-        timeout: REQUEST_TIMEOUT_MS,
-        validateStatus: () => true,
+        body: JSON.stringify(body),
+        timeoutMs: REQUEST_TIMEOUT_MS,
       });
+      return {
+        status: response.status,
+        headers: response.headers,
+        data: await readResponseBody(response),
+      };
     } catch (error) {
-      // An axios error carries the request config, headers and key included,
-      // so only its message travels on.
+      // Only the message travels on, so the key can never ride along on an error's cause.
       throw new Error(`PostHog request to ${apiHost} failed: ${error.message}`);
     }
   }
@@ -117,7 +124,7 @@ function createPostHogQueryClient({ projectId, apiHost, apiKey, logger, sleep = 
       if (status < 200 || status >= 300) {
         throw new Error(failureMessage({ status, data }));
       }
-      const bytesRead = Number(headers?.['x-posthog-query-bytes-read'] ?? 0);
+      const bytesRead = Number(headers.get('x-posthog-query-bytes-read') ?? 0);
       return {
         results: data?.results ?? [],
         columns: data?.columns ?? [],

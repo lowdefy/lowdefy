@@ -1324,25 +1324,6 @@ _ref:
                 type: Html
                 properties:
                   html: '<code>_function</code>'
-          - id: card__jsonata
-            type: Card
-            layout:
-              flex: 0 1 auto
-            style:
-              cursor: pointer
-            properties:
-              size: small
-            events:
-              onClick:
-                - id: link__jsonata
-                  type: Link
-                  params:
-                    pageId: _jsonata
-            blocks:
-              - id: card__jsonata_label
-                type: Html
-                properties:
-                  html: '<code>_jsonata</code>'
           - id: card__nunjucks
             type: Card
             layout:

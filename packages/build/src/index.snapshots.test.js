@@ -45,9 +45,8 @@ vi.doMock('./build/copyPublicFolder.js', () => ({
 
 // Import after mocking
 const { default: build } = await import('./index.js');
-const { snapshotTypesMap, snapshotTypesMapMobile } = await import(
-  './test-utils/runBuildForSnapshots.js'
-);
+const { snapshotTypesMap, snapshotTypesMapMobile } =
+  await import('./test-utils/runBuildForSnapshots.js');
 const { default: makeId } = await import('./utils/makeId.js');
 
 /**

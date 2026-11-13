@@ -79,7 +79,7 @@ routines:
         create:
           - amount: 2000
             currency: eur
-            payment_method_types: ['card']
+            allowed_payment_method_types: ['card']
 ```
 
 ###### In a client event action list

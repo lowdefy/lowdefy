@@ -79,6 +79,16 @@ const antdParams = {
   // never sets, and this param has no antd token to ride on, so the decision is handed to the
   // document and set as color-scheme on <html> from the app's dark-mode state.
   browserColorScheme: 'inherit',
+  // AG Grid 36 sets the grid's font weight to 400 by default. Before it the grid inherited the page's
+  // weight, which is what keeps grid text matching the antd components around it.
+  fontWeight: 'inherit',
+  // AG Grid 36 sizes pickers (the page size select, the filter condition select) from new params:
+  // their radius follows borderRadius, their height grows to fit a 16px icon, and the pagination
+  // panel takes its height from them. These hold the AG Grid 33 values, so pickers keep their 5px
+  // radius and the pagination panel stays one row tall.
+  pickerButtonBorderRadius: 5,
+  pickerFieldHeight: { calc: 'max(listItemHeight, spacing * 4)' },
+  paginationPanelHeight: { calc: 'max(rowHeight, 22px)' },
 };
 
 // Lowdefy blocks only — the four structural choices the antd overlay never made. Applying these to a

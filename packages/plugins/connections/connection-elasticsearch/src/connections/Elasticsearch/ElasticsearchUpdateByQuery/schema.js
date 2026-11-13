@@ -21,6 +21,25 @@ export default {
   description:
     'Updates documents that match the specified query. If no query is specified, performs an update on every document in the data stream or index without modifying the source, which is useful for picking up mapping changes.',
   properties: {
+    query: {
+      description:
+        'The documents to update, as a query in the Elasticsearch Query DSL. See https://www.elastic.co/docs/explore-analyze/query-filter/languages/querydsl.',
+      type: 'object',
+    },
+    script: {
+      description:
+        'The script to run on each matching document. See https://www.elastic.co/docs/explore-analyze/scripting.',
+      type: 'object',
+    },
+    slice: {
+      description: 'Slice the request manually, with an "id" and the total number of slices "max".',
+      type: 'object',
+    },
+    body: {
+      not: {},
+      errorMessage:
+        'was removed in Lowdefy 8 (Elasticsearch client 9). Move the keys in "body" (like "query" and "script") to the top level of the request properties',
+    },
     index: {
       type: 'string',
       description: 'The name of the index.',
@@ -168,37 +187,6 @@ export default {
         },
       ],
     },
-    _source: {
-      anyOf: [
-        {
-          type: 'boolean',
-        },
-        {
-          type: 'array',
-        },
-      ],
-      items: {
-        type: 'string',
-      },
-      description:
-        'True or false to return the _source field or not, or a list of fields to return.',
-    },
-    _source_excludes: {
-      type: 'array',
-      items: {
-        type: 'string',
-      },
-      description:
-        'A comma-separated list of source fields to exclude from the response.\n\nYou can also use this parameter to exclude fields from the subset specified in _source_includes query parameter.\n\nIf the _source parameter is false, this parameter is ignored.',
-    },
-    _source_includes: {
-      type: 'array',
-      items: {
-        type: 'string',
-      },
-      description:
-        'A comma-separated list of source fields to include in the response.\n\nIf this parameter is specified, only these source fields are returned. You can exclude fields from this subset using the _source_excludes query parameter.\n\nIf the _source parameter is false, this parameter is ignored.',
-    },
     stats: {
       description: 'Specific tag of the request for logging and statistical purposes',
       anyOf: [
@@ -243,6 +231,6 @@ export default {
     },
   },
   errorMessage: {
-    type: 'ElasticsearchDelete request properties should be an object.',
+    type: 'ElasticsearchUpdateByQuery request properties should be an object.',
   },
 };

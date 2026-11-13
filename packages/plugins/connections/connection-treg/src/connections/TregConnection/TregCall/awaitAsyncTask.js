@@ -109,7 +109,7 @@ async function awaitAsyncTask({ connection, request, target, result, task, signa
       return {
         ...result,
         output: type.isString(resultPath)
-          ? readJsonPath(poll.body, resultPath) ?? null
+          ? (readJsonPath(poll.body, resultPath) ?? null)
           : omitTreg(poll.body),
         raw: poll.body,
         // The hold taken at submission, which treg settles when the task succeeds.

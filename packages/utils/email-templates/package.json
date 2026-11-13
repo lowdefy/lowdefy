@@ -24,21 +24,19 @@
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/nunjucks": "7.2.0",
-    "@react-email/components": "1.0.12",
-    "@react-email/render": "2.0.10",
-    "markdown-it": "14.3.3"
+    "@react-email/render": "2.3.1",
+    "markdown-it": "15.0.3"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "7.2.0",
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "vitest": "4.1.12"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

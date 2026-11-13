@@ -52,7 +52,7 @@ function getLabelState({ properties, validation }) {
   const showFeedback =
     properties.hasFeedback !== false && (status === 'error' || status === 'warning');
   const showExtra = type.isString(properties.extra) && (status === null || status === 'success');
-  const feedback = showFeedback ? validation[VALIDATION_MESSAGE_KEYS[status]]?.[0] ?? null : null;
+  const feedback = showFeedback ? (validation[VALIDATION_MESSAGE_KEYS[status]]?.[0] ?? null) : null;
   return {
     title: getTitle({ properties }),
     // A label above its input is a heading; antd shows the colon only beside the input.

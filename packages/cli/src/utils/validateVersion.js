@@ -16,8 +16,9 @@
 
 import fs from 'fs';
 import path from 'path';
-import axios from 'axios';
 import semver from 'semver';
+
+import httpFetch from './httpFetch.js';
 
 async function validateVersion({
   cliVersion,
@@ -64,8 +65,12 @@ async function validateVersion({
 
   const registryUrl = 'https://registry.npmjs.org/lowdefy';
   try {
-    const packageInfo = await axios.get(registryUrl);
-    const latestVersion = packageInfo.data['dist-tags'].latest;
+    const response = await httpFetch({ url: registryUrl });
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`);
+    }
+    const packageInfo = await response.json();
+    const latestVersion = packageInfo['dist-tags'].latest;
 
     if (cliVersion !== latestVersion) {
       ui.warn(`

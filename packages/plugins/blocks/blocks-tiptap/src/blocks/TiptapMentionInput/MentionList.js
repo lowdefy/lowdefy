@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useState } from 'react';
 import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
@@ -40,7 +40,7 @@ function groupItems(items) {
   return groups;
 }
 
-const MentionList = forwardRef((props, ref) => {
+function MentionList({ ref, ...props }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const groups = groupItems(props.items);
@@ -112,6 +112,6 @@ const MentionList = forwardRef((props, ref) => {
       )}
     </div>
   );
-});
+}
 
 export default MentionList;

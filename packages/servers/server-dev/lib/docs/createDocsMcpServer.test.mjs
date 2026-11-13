@@ -46,9 +46,8 @@ vi.doMock('./inspectState.js', () => ({ default: mockInspectState }));
 const mockGetPageConfig = vi.fn();
 vi.doMock('./getPageConfig.js', () => ({ default: mockGetPageConfig }));
 
-const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
-  './createDocsMcpServer.js'
-);
+const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } =
+  await import('./createDocsMcpServer.js');
 const { publish } = await import('./devEventBus.js');
 const { default: createFakePhoneTab, VIEW_PNG } = await import('./device/createFakePhoneTab.mjs');
 const { INSTRUCTIONS } = await import('./devToolDefinitions.js');

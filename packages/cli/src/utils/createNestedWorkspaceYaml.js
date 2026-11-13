@@ -21,11 +21,11 @@ import rebaseWorkspaceSettings from './rebaseWorkspaceSettings.js';
 
 // The server's own dependencies with build scripts, as in the standalone
 // pnpm-workspace.yaml ensurePnpmWorkspaceYaml writes: true runs the script,
-// false skips it.
+// false skips it. See ensurePnpmWorkspaceYaml for why each is skipped.
 const defaultAllowBuilds = {
-  'better-sqlite3': true,
   sharp: true,
   '@sentry/cli': false,
+  'better-sqlite3': false,
   'mongodb-memory-server': false,
 };
 

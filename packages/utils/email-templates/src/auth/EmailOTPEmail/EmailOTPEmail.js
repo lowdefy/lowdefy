@@ -15,8 +15,9 @@
 */
 
 import React from 'react';
-import { Heading, Text } from '@react-email/components';
 
+import Heading from '../../reactEmail/Heading.js';
+import Text from '../../reactEmail/Text.js';
 import EmailLayout from '../../components/EmailLayout.js';
 import OtpCode from '../../components/OtpCode.js';
 

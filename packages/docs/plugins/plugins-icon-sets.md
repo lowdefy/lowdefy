@@ -244,22 +244,3 @@ export default { iconSets: ['tabler'] };
 ```
 
 An app can now use `tabler:Pencil` anywhere, or set `theme.icons.set: tabler` to draw Tabler icons by default.
-
-## The react-icons compatibility set
-
-Lowdefy 6 and earlier used [react-icons](https://react-icons.github.io/react-icons/) names such as `AiOutlineUser`. `@lowdefy/icons-react-icons` is an icon set, `react-icons`, that holds every react-icons 5.6.0 icon under its old name. Use it when names come from data the build cannot rewrite, such as icon names stored in a database, or for brand icons that Lucide does not have.
-
-```yaml
-plugins:
-  - name: '@lowdefy/icons-react-icons'
-    version: '^7'
-theme:
-  icons:
-    set: react-icons
-```
-
-- Old names such as `AiOutlineUser` resolve in the compatibility set. Lucide names and semantic names still work.
-- The set has no `semantic` map, so block icons and Ant Design icons are Lucide either way.
-- Without `set: react-icons`, reach an old name with its qualified name: `react-icons:FaWhatsapp`.
-
-The compatibility set is a migration aid. [V6 to V7](/v6-to-v7) shows how to move an app to Lucide names.

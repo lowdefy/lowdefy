@@ -4,7 +4,7 @@
 
 ## Theme Blocks
 
-Eight blocks share two internal cores — `AgGrid.js` (display) and `AgGridInput.js` (input). Every block passes a Theming API theme object built in `src/theme/themeLowdefy.js`. **No row has a stylesheet:** the package is on AG Grid v33, where the Theming API is the default and class-based file themes are gone.
+Eight blocks share two internal cores — `AgGrid.js` (display) and `AgGridInput.js` (input). Every block passes a Theming API theme object built in `src/theme/themeLowdefy.js`. **No row has a stylesheet:** the package is on AG Grid v36 (the Theming API move happened at v33), where the Theming API is the default and class-based file themes are gone.
 
 | Display block    | Input block          | Base theme      | Params                          | Wrapper class       | `size` |
 | ---------------- | -------------------- | --------------- | ------------------------------- | ------------------- | ------ |
@@ -43,7 +43,18 @@ Guard it with a static check: `grep -rn "ag-grid-community/styles" src/` must re
 
 One module builds every theme in the package. All theme objects are created **once at module scope** — Theming API objects are cheap and identity-stable, so switching `size` just swaps which object is passed.
 
-**`antdParams`** — 23 parameters mapping AG Grid onto antd design tokens, applied to all four bases. Every colour is a `var(--ant-*)` reference rather than a resolved value, so antd's cssVar mode regenerates the grid's colours on each theme or dark-mode change with no JS. Seventeen of the 23 carry over what the deleted `--ag-*` CSS overlay imposed on the six original blocks — colours, shadows, `fontFamily`, `fontSize` and the zebra stripe — and six are additions the overlay never made: `accentColor`, `chromeBackgroundColor`, `menuBackgroundColor`, `menuShadow`, `tooltipTextColor` and `browserColorScheme`. `cardShadow` is **not** one of the additions: the overlay already set `--ag-card-shadow: var(--ant-box-shadow-secondary)` and the map holds the identical token.
+**`antdParams`** — 28 parameters mapping AG Grid onto antd design tokens (the original 23, then `checkboxCheckedShapeColor` and the four AG Grid 36 holds below), applied to all four bases. Every colour is a `var(--ant-*)` reference rather than a resolved value, so antd's cssVar mode regenerates the grid's colours on each theme or dark-mode change with no JS. Seventeen of the 23 carry over what the deleted `--ag-*` CSS overlay imposed on the six original blocks — colours, shadows, `fontFamily`, `fontSize` and the zebra stripe — and six are additions the overlay never made: `accentColor`, `chromeBackgroundColor`, `menuBackgroundColor`, `menuShadow`, `tooltipTextColor` and `browserColorScheme`. `cardShadow` is **not** one of the additions: the overlay already set `--ag-card-shadow: var(--ant-box-shadow-secondary)` and the map holds the identical token.
+
+**AG Grid 36 defaults held at their v33 values** — four more `antdParams` entries, so the v36 upgrade left the grids looking as they did:
+
+| Parameter | Value | v36 default it overrides |
+| --- | --- | --- |
+| `fontWeight` | `'inherit'` | `400` set on the grid root. Before v36 the grid inherited the page's weight. |
+| `pickerButtonBorderRadius` | `5` | `{ ref: 'borderRadius' }` (Balham 2, Alpine 3, Material 0, Lowdefy the antd radius). v33 hard-coded 5px. |
+| `pickerFieldHeight` | `{ calc: 'max(listItemHeight, spacing * 4)' }` | `max(iconSize, fontSize) + spacing * 2`, which made the page size and filter condition selects 4px taller. |
+| `paginationPanelHeight` | `{ calc: 'max(rowHeight, 22px)' }` | `pickerFieldHeight + spacing * 1.25`, which made the pagination bar shorter than a row. |
+
+AG Grid's own widget changes in 35 and 36 are left alone, since they are new features rather than restyles of something Lowdefy themes: the page number input in the pagination bar, the "No Matching Rows" overlay when a filter matches nothing, the clear button in filter inputs, and the 16px search icon (was 12px) in filter inputs, which widens the filter popup by about 15px.
 
 **`lowdefyParams`** — four structural parameters, on `themeQuartz` only: `headerFontWeight: 600`, `borderRadius`, `wrapperBorderRadius`, and `oddRowBackgroundColor: 'transparent'` (no zebra, antd Table's default).
 
@@ -157,7 +168,14 @@ What did break is narrower: v33 renamed, folded away or removed 14 of the 34 `--
 
 ### Module registration
 
-Both cores call `ModuleRegistry.registerModules([AllCommunityModule])` at **module scope**. Registration is idempotent, so each core registers independently and stays standalone. v33 requires explicit registration; `AllCommunityModule` covers the client-side row model, sorting, all default filters, pagination, row selection, quick filter, cell/row styling, the legacy column menu (`columnMenu="legacy"`, still valid) and CSV export, plus `ValidationModule` for dev-time grid-option warnings.
+Both cores call `ModuleRegistry.registerModules([AllCommunityModule])` at **module scope**. Registration is idempotent, so each core registers independently and stays standalone. `AllCommunityModule` covers sorting, all default filters, pagination, row selection, quick filter, cell/row styling, the legacy column menu (`columnMenu="legacy"`, still valid) and CSV export. Since v36 the client-side row model is part of the grid core.
+
+v36 took `ValidationModule` out of `AllCommunityModule`. Without it AG Grid logs only an error number and a docs link (`AG Grid: warning #94 Visit https://…`). Both cores call `enableDevValidations({ showOverlayOn: [] })` at module scope when `process.env.NODE_ENV !== 'production'`, for two reasons:
+
+- App authors write grid options straight into YAML, so the full message (which option, what was expected) is the main way they find a typo. Before v36 every app had it, in production too.
+- Both servers' Vite configs define `process.env.NODE_ENV`, so a production build reads `if (false)` and leaves the validation module out of the bundle.
+
+`showOverlayOn: []` keeps the diagnostics in the console. v36's default also draws them in a panel over the grid, which would show on every grid in a dev app for warnings such as #25 (`assignRowId` returns a number) that Lowdefy itself causes.
 
 Fine-grained module selection to shrink the bundle is a **deliberate later optimization** — it depends on measured bundle impact and per-feature usage evidence that does not exist yet.
 
@@ -171,7 +189,7 @@ Fine-grained module selection to shrink the bundle is a **deliberate later optim
 | `size`              | `'middle'` | Lowdefy blocks only. Row density — see [Theming](#size-and-themeparams).                 |
 | `themeParams`       | —          | All eight blocks. Theming API parameters merged onto the block's theme.                  |
 
-`size`, `themeParams`, `height` and `rowId` are destructured out in **both** cores before the `{...someProperties}` spread. They are Lowdefy block properties, not grid options, and v33's `ValidationModule` warns `invalid gridOptions property '<key>' did you mean any of these: …` for anything unrecognised that reaches `<AgGridReact>`. The warning goes through `_warnOnce`, which dedupes on the message text, so it fires **once per distinct bad key** rather than once per render — a single line in the console for a mistake that never stops.
+`size`, `themeParams`, `height` and `rowId` are destructured out in **both** cores before the `{...someProperties}` spread. They are Lowdefy block properties, not grid options, and `ValidationModule` (development builds only since v36, see [Module registration](#module-registration)) warns `invalid gridOptions property '<key>' did you mean any of these: …` for anything unrecognised that reaches `<AgGridReact>`. The warning goes through `_warnOnce`, which dedupes on the message text, so it fires **once per distinct bad key** rather than once per render — a single line in the console for a mistake that never stops.
 
 All other ag-grid props pass through unchanged via `{...someProperties}`. Users can override the default by setting `suppressCellFocus: false` on the block.
 
@@ -410,7 +428,7 @@ The buttons-cell entry intentionally lists "user-defined" because each button de
   - A `cellRenderer` function's HTML is wrapped in `.lf-cell-html`, which gets `overflow-x: clip; text-overflow: ellipsis`, so HTML mixing elements and text (`<b>Name</b> details`) ends in "…" too. It clips only across, so a pill's padded background above or below the line still shows. `LinkCell`'s `<a>` carries its own ellipsis style, since GridLink's wrapper is `display: contents`.
 - The `.lf-ellipsis-N` line clamps (1–6).
 - The paragraph-input inline-edit offset fix.
-- `.ag-overlay-no-rows-wrapper` text colour — **this one stays**, because AG Grid's *empty* overlay is the one the blocks actually use and the empty-grid specs assert it.
+- `.ag-overlay-no-rows-wrapper` and `.ag-overlay-no-matching-rows-wrapper` text colour — **this one stays**, because AG Grid's *empty* overlay is the one the blocks actually use and the empty-grid specs assert it. v35 added the no-matching-rows overlay (a filter that matches nothing), which takes the same colour.
 - The per-legacy-theme avatar variables, keyed on `ag-theme-balham` / `-alpine` / `-material`. They keep working because those six blocks keep their class and their density is fixed; `AgGridLowdefy` sets the same variables inline from `SIZES` instead.
 
 ### Three rule groups were deleted in the v33 move
@@ -419,7 +437,7 @@ The buttons-cell entry intentionally lists "user-defined" because each button de
 
 **The `.ag-root-wrapper` radius/overflow rule.** Both halves are now owned by the Theming API's own core CSS (`_root.css` sets `overflow: hidden` and `border-radius: var(--ag-wrapper-border-radius)`). Worse, `.antdTheme .ag-root-wrapper` **outspecifies** the generated bare `.ag-root-wrapper`, so keeping it would have clamped `wrapperBorderRadius` back to the smaller `--ant-border-radius` and defeated the parameter on every block. (Its removal is why the six original blocks no longer all render at a 6px wrapper radius — see [Structural drift](#structural-drift-on-the-six-original-blocks).)
 
-**The two `.ag-overlay-loading-*` rules — already dead.** They style AG Grid's native loading overlay, which never renders: both cores pass `suppressLoadingOverlay` unconditionally and render `LoadingOverlay.js` instead, whose inline styles reproduce those rules exactly. An app cannot make the native overlay render, so deleting them changes nothing observable.
+**The two `.ag-overlay-loading-*` rules — already dead.** They style AG Grid's native loading overlay, which never renders: both cores pass `loading={false}` unconditionally (`suppressLoadingOverlay` before v36, deprecated since v32) and render `LoadingOverlay.js` instead, whose inline styles reproduce those rules exactly. An app cannot make the native overlay render, so deleting them changes nothing observable.
 
 ## Registered Methods
 

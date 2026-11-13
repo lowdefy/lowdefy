@@ -18,9 +18,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // vite and its React plugin ship exports maps only, which the import plugin's node resolver cannot
 // read.
-// eslint-disable-next-line import/no-unresolved
 import { defineConfig } from 'vite';
-// eslint-disable-next-line import/no-unresolved
 import react from '@vitejs/plugin-react';
 
 const benchDir = path.dirname(fileURLToPath(import.meta.url));
@@ -34,7 +32,9 @@ export default defineConfig({
   define: { 'process.env.NODE_ENV': JSON.stringify('production') },
   resolve: {
     dedupe: ['react', 'react-dom', 'antd'],
-    alias: [{ find: /^react-dom$/, replacement: 'react-dom/profiling' }],
+    // Only the root's entry: the profiling build requires `react-dom` for its shared internals, so
+    // aliasing `react-dom` itself makes that require resolve to the profiling build and boot fails.
+    alias: [{ find: /^react-dom\/client$/, replacement: 'react-dom/profiling' }],
   },
   build: {
     outDir: path.join(benchDir, '.dist'),

@@ -41,10 +41,10 @@ async function getLowdefyVersion(context) {
     );
   }
   if (!type.isString(lowdefy.lowdefy)) {
-    throw new ConfigError(
-      'Version number specified in "lowdefy.yaml" file should be a string.',
-      { received: lowdefy.lowdefy, filePath }
-    );
+    throw new ConfigError('Version number specified in "lowdefy.yaml" file should be a string.', {
+      received: lowdefy.lowdefy,
+      filePath,
+    });
   }
   return lowdefy.lowdefy;
 }

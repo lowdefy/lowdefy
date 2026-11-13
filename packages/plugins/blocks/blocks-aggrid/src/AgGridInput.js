@@ -16,7 +16,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, enableDevValidations } from 'ag-grid-community';
 
 import useColDefs from './useColDefs.js';
 import assignRowId from './assignRowId.js';
@@ -25,6 +25,13 @@ import isCellControlClick from './isCellControlClick.js';
 
 // Registration is idempotent, so each core registers independently to stay standalone.
 ModuleRegistry.registerModules([AllCommunityModule]);
+// AG Grid 36 moved its full diagnostics (which grid option or column property is wrong, and why) out
+// of AllCommunityModule. App authors write grid options straight into YAML, so a development build
+// keeps them. showOverlayOn: [] keeps them in the console, as before, instead of over the grid.
+// Production builds replace NODE_ENV, so the validation module is left out of the bundle.
+if (process.env.NODE_ENV !== 'production') {
+  enableDevValidations({ showOverlayOn: [] });
+}
 
 const AgGridInput = ({ components, events, loading, methods, properties, theme, value }) => {
   const {
@@ -232,7 +239,7 @@ const AgGridInput = ({ components, events, loading, methods, properties, theme, 
         columnDefs={processedColDefs}
         ref={gridRef}
         getRowId={getRowId}
-        suppressLoadingOverlay
+        loading={false}
       />
       {loading && <LoadingOverlay />}
     </div>

@@ -94,9 +94,9 @@ install, so only the published package (or a later lockfile change) breaks.
   webpack-bundled `@lowdefy/nunjucks`, listed in `scripts/lib/findUndeclaredImports.mjs`.
 - Tests import `vitest`, which every package with tests declares as a devDependency.
 
-The check reads what is declared, not what resolves: ESLint's
-`import/no-extraneous-dependencies` skips any import it cannot resolve, which in a pnpm
-workspace is most undeclared imports.
+The check reads what is declared, not what resolves: in a pnpm workspace most undeclared
+imports still resolve, so a resolver-based check (such as the ESLint import plugin the repo
+no longer uses) misses them. Lint and format checks are in [Linting](./linting.md).
 
 ## MongoDB tests
 
@@ -668,6 +668,7 @@ commands in the pull request body:
 | `test-utils`, the gate, the build it reads     | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))           |
 | the endpoint tests docs page's code samples    | `pnpm --filter=@lowdefy/test-utils test:fixture docsSamples`, then `pnpm docs:content` and `pnpm --filter=@lowdefy/docs test`    |
 | blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                             |
+| any JavaScript file                            | `pnpm exec eslint <changed files>` and `pnpm format:check` ([Linting](./linting.md))                                             |
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
 
@@ -685,10 +686,16 @@ behind the others' and multiplies the wait.
   `LOWDEFY_HOME` at a temporary directory in tests so they never touch the real hub.
 - A running dev server records itself in `<app>/.lowdefy/instance.json`; tests that start
   one should stop it and remove the file.
-- server-dev's watchers use chokidar 4, which watches with `fs.watch`. On macOS, Node restarts
-  its one FSEvents stream whenever a watcher is added or closed, and a write made during the
-  restart is never reported. Watcher tests call `flushFsEvents()` (`test-utils/`) after a
-  watcher is ready and before the first edit, or repeat the edit until it is seen.
+- server-dev's watchers use chokidar 6, which watches with `fs.watch` (recursive on macOS). On
+  macOS, Node restarts its one FSEvents stream whenever a watch handle is added or closed, and a
+  write made during the restart is never reported. chokidar 6 shares a directory's handle
+  between watchers, but a watcher of a new directory still adds one, and so does a single file
+  watched in a directory nothing watched yet: chokidar 6 watches a file through its directory,
+  where chokidar 4 gave each file a kqueue handle of its own that no restart touched. Watcher
+  tests call `flushFsEvents()` (`test-utils/`) after a watcher is ready and before the first
+  edit, or repeat the edit until it is seen; without it they miss writes, most often on a busy
+  machine. A file added to a running watcher has no ready to wait for, so a test waits until it
+  is listed as watched and repeats the edit.
 - Hub tests pass a port range of their own (`portRange` to `createHub`, `range` to
   `allocatePorts`), away from the real hub's 4100–4999, which hubs started by agents in other
   worktrees bind.

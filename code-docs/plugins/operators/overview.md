@@ -31,7 +31,6 @@ Operators are:
 | [@lowdefy/operators-diff](./diff.md)               | Object diffing         | `_diff`                           |
 | [@lowdefy/operators-uuid](./uuid.md)               | UUID generation        | `_uuid`                           |
 | [@lowdefy/operators-yaml](./yaml.md)               | YAML parsing           | `_yaml_parse`, `_yaml_stringify`  |
-| [@lowdefy/operators-jsonata](./jsonata.md)         | JSONata queries        | `_jsonata`                        |
 
 ## Operator Syntax
 

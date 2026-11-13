@@ -4,7 +4,9 @@ import PostHogProvider from '@/providers/PostHogProvider';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
+// Not --font-mono: that is Tailwind's theme variable for font-mono, and this would replace its
+// fallback fonts.
+const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains-mono' });
 
 export const metadata = {
   metadataBase: new URL('https://lowdefy.com'),
@@ -120,6 +122,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >

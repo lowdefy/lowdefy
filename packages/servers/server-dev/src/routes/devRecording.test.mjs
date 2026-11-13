@@ -31,9 +31,8 @@ const { default: devRecordingHandler } = await import('./devRecording.js');
 const { default: servedBuilds } = await import('../../lib/server/recording/servedBuilds.js');
 const { default: localDevToolsOnly } = await import('../middleware/localDevToolsOnly.js');
 const { JOURNEY_COOKIES, writeJourneyCookie } = await import('../../lib/server/journeyCookies.js');
-const { default: recordingCookiePayload } = await import(
-  '../../lib/server/recording/recordingCookiePayload.js'
-);
+const { default: recordingCookiePayload } =
+  await import('../../lib/server/recording/recordingCookiePayload.js');
 
 const SESSION = '20261003T140311Z-k3x9qa';
 const RUN_ID = '20261003T151200Z-p0d4rm';

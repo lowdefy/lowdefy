@@ -126,6 +126,14 @@ async function lowdefyBuildWatcher(context) {
     ...context.options.watch.map(fixRelativePathConfigDir),
     ...findLocalModuleRoots(context),
   ];
+  const buildDirectory = context.directories.build;
+  const refMapFile = path.join(buildDirectory, 'refMap.json');
+  // The files the last config build read outside the watched directories are
+  // watched from the start, so the watcher is ready only once it watches them.
+  // Adding them after ready left work running that no caller could wait for:
+  // on macOS a file is watched through its directory, Node restarts its one
+  // FSEvents stream when a directory is first watched, and an edit to any
+  // watched file made during the restart is never reported.
   const configWatcher = await setupWatcher({
     callback,
     context,
@@ -135,20 +143,23 @@ async function lowdefyBuildWatcher(context) {
       ...context.options.watchIgnore.map(fixRelativePathConfigDir),
     ],
     watchPaths: watchRoots,
+    watchFiles: findBuildFilesOutsideWatch({
+      mapsFiles: [refMapFile],
+      configDirectory,
+      watchRoots,
+    }),
   });
 
-  // The config build writes refMap.json and each JIT page build writes a new
-  // file to jitMaps/, so the files they read outside the watched directories
-  // are added as they appear. Only the changed maps files are read.
-  const buildDirectory = context.directories.build;
+  // Each later config build rewrites refMap.json and each JIT page build
+  // writes a new file to jitMaps/, so the files they read outside the watched
+  // directories are added as they appear. Only the changed maps files are read.
   const jitMapsDirectory = path.join(buildDirectory, 'jitMaps');
   const watchBuildFilesOutsideWatch = (mapsFiles) => {
     configWatcher.add(findBuildFilesOutsideWatch({ mapsFiles, configDirectory, watchRoots }));
   };
-  watchBuildFilesOutsideWatch([path.join(buildDirectory, 'refMap.json')]);
   const isMapsFile = (filePath) =>
     filePath === buildDirectory ||
-    filePath === path.join(buildDirectory, 'refMap.json') ||
+    filePath === refMapFile ||
     filePath === jitMapsDirectory ||
     (path.dirname(filePath) === jitMapsDirectory && filePath.endsWith('.json'));
   const mapsWatcher = await setupWatcher({

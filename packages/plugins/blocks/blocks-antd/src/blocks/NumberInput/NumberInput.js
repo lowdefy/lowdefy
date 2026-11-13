@@ -55,7 +55,9 @@ const NumberInput = ({
             autoComplete="off"
             autoFocus={properties.autoFocus}
             changeOnWheel={properties.changeOnWheel}
-            variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
+            variant={
+              properties.bordered === false ? 'borderless' : (properties.variant ?? undefined)
+            }
             className={classNames.element}
             style={{ width: '100%', ...styles.element }}
             controls={

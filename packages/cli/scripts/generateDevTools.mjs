@@ -50,5 +50,4 @@ await client.close();
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, `${JSON.stringify({ instructions: INSTRUCTIONS, tools }, null, 2)}\n`);
-// eslint-disable-next-line no-console
 console.log(`Wrote ${tools.length} dev tools to ${path.relative(process.cwd(), outputPath)}.`);

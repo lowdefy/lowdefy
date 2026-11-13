@@ -83,7 +83,7 @@ async function listGroup({ url, pageId, artifacts }) {
     const listing = await postMutants({ url, body: listingBody({ artifacts }) });
     return { ids: listing.ids, unbuildable: false };
   } catch (error) {
-    if (pageId !== null && error.cause?.response?.status === 422) {
+    if (pageId !== null && error.status === 422) {
       return { ids: [], unbuildable: true };
     }
     throw error;

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import breakpointIndex from './breakpointIndex.js';
 
 test('breakpointIndex orders breakpoints smallest first', () => {

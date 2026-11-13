@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import {
   createApiContext,
@@ -32,7 +33,6 @@ import {
   sinkExternalConnections,
   trackSessionWork,
 } from '@lowdefy/test-utils/dataSets';
-import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
@@ -95,7 +95,7 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
   const buildDirectory = path.join(process.cwd(), 'build');
   const jsMap = loadDynamicJsMap(buildDirectory);
 
-  const rid = uuid();
+  const rid = randomUUID();
   const context = {
     rid,
     agents,

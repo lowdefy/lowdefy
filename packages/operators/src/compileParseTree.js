@@ -56,7 +56,6 @@ function compileObject(value) {
       return;
     }
     keys.push(key);
-    // eslint-disable-next-line no-use-before-define
     children.push(compileNode(value[key]));
   });
   // The serializer's replacer shallow-copies an object with a Date property

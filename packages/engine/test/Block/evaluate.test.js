@@ -1,5 +1,3 @@
-/* eslint-disable dot-notation */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 

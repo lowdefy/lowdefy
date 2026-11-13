@@ -15,7 +15,6 @@
 */
 
 // eslint-plugin-import's node resolver does not read package exports maps.
-// eslint-disable-next-line import/no-unresolved
 import addressparser from 'nodemailer/lib/addressparser';
 import { type } from '@lowdefy/helpers';
 

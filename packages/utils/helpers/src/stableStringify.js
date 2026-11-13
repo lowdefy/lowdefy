@@ -1,8 +1,3 @@
-/* eslint-disable no-continue */
-/* eslint-disable no-plusplus */
-/* eslint-disable consistent-return */
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 

@@ -59,7 +59,6 @@ function List({ blockId, components, events, list, methods, properties, styles, 
     methods.registerMethod('moveItemDown', methods.moveItemDown);
     methods.registerMethod('moveItemUp', methods.moveItemUp);
     // Registered once, as the web List does.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const direction = properties.direction ?? 'column';
   const horizontal = direction.startsWith('row');

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import convertStyle from './convertStyle.js';
 
 test('convertStyle turns px and rem lengths into numbers', () => {

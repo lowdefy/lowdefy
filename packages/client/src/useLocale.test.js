@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable no-global-assign */
 import { vi, beforeEach, expect, test } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 

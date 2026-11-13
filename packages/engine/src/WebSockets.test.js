@@ -89,7 +89,6 @@ test('constructor initializes context.websockets channel state from rootBlock su
   const { context } = createTestContext({
     subscriptions: [{ websocketId: 'ticker' }, { websocketId: 'chat' }],
   });
-  // eslint-disable-next-line no-new
   new WebSockets(context);
 
   expect(context.websockets).toEqual({

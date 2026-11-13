@@ -55,12 +55,10 @@ const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/ad
 const { default: getBetterAuthConfig } = await import('../getBetterAuthConfig.js');
 const { default: ensureAuthIndexes } = await import('../organizations/ensureAuthIndexes.js');
 const { registerOrganizationBinding } = await import('../organizations/getOrganizationBinding.js');
-const { default: resolveAuthentication } = await import(
-  '../../../context/resolveAuthentication.js'
-);
-const { default: createWebSocketConnection } = await import(
-  '../../websocket/createWebSocketConnection.js'
-);
+const { default: resolveAuthentication } =
+  await import('../../../context/resolveAuthentication.js');
+const { default: createWebSocketConnection } =
+  await import('../../websocket/createWebSocketConnection.js');
 const { default: handleMobileSignIn } = await import('./handleMobileSignIn.js');
 
 const ORIGIN = 'http://localhost:3264';
@@ -141,10 +139,10 @@ async function setup({ cookieCache = false, mobile, twoFactor } = {}) {
     mobile:
       mobile === false
         ? undefined
-        : mobile ?? {
+        : (mobile ?? {
             shells: [{ id: 'field', scheme: 'com.example.field' }],
             sessionExpiresIn: null,
-          },
+          }),
   };
   let auth;
   auth = betterAuth(
@@ -556,7 +554,9 @@ test('a stranger can neither replace nor use up the code a known phone asked for
   // A stranger who has the right code is refused all the same: the code is never checked for
   // anyone but the phone holding it, so no try, right or wrong, tells a guesser anything.
   expect((await signIn({ otp: code, key: undefined })).status).toBe(400);
-  expect((await signIn({ otp: code, key: randomBytes(32).toString('base64url') })).status).toBe(400);
+  expect((await signIn({ otp: code, key: randomBytes(32).toString('base64url') })).status).toBe(
+    400
+  );
 
   // The phone still signs in with the code.
   const response = await signIn({ otp: code, key: deviceKey });

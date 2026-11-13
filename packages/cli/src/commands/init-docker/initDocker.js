@@ -26,7 +26,9 @@ async function initDocker({ context }) {
   context.logger.info("Created 'Dockerfile'.");
   // Template stored without the leading dot — swc --copy-files drops dotfiles,
   // so a .dockerignore template would be missing from the published package.
-  const dockerignore = await readFile(url.fileURLToPath(new URL('./dockerignore', import.meta.url)));
+  const dockerignore = await readFile(
+    url.fileURLToPath(new URL('./dockerignore', import.meta.url))
+  );
   await writeFile(path.join(context.directories.config, '.dockerignore'), dockerignore);
   context.logger.info("Created '.dockerignore'.");
 

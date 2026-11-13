@@ -2342,14 +2342,6 @@
       "typeName": "_json"
     },
     {
-      "slug": "operators/_jsonata",
-      "title": "_jsonata",
-      "section": "Operators",
-      "path": "content/operators/_jsonata.md",
-      "kind": "operator",
-      "typeName": "_jsonata"
-    },
-    {
       "slug": "operators/_locale",
       "title": "_locale",
       "section": "Operators",
@@ -3018,7 +3010,7 @@
       "files": [
         "concepts/advanced/keyboard-shortcuts.yaml"
       ],
-      "hash": "71780e6761aa4223613b35910e04857556eda23b8731f832a5037c6297e2c93e"
+      "hash": "f554879d25831a57a11dfa1a8f3f7fdc01dfda04033c2360827532c1f81af09c"
     },
     "concepts/i18n": {
       "files": [
@@ -3075,7 +3067,7 @@
         "concepts/core/theming.yaml",
         "version.yaml"
       ],
-      "hash": "9bdac93c918ba1bd25ed5a1a6d6aeb01fb90ecf8c6e46cbdb074b6fbb5763116"
+      "hash": "4a283268532cade20992e47e013c32244432b827f60c873734f004d2b753bfeb"
     },
     "concepts/html-attributes": {
       "files": [
@@ -3095,7 +3087,7 @@
         "concepts/advanced/api.yaml",
         "version.yaml"
       ],
-      "hash": "b6d9e25cd623967ac367321f5cc59bb398edb7475fc3ef0d30640b62a8e27218"
+      "hash": "1695b34579a27bff72663b2d52d469e9046a1b7ef7d64eaa081de05c7b0fd617"
     },
     "concepts/mobile-apps": {
       "files": [
@@ -3119,7 +3111,7 @@
         "concepts/advanced/dynamic-page-content.yaml",
         "version.yaml"
       ],
-      "hash": "acdeb0d9965fef5e604324667440865b8bd7c58aca4bc09ab7d0b8aa51b67f16"
+      "hash": "6d7c29fb74ad3b3583d45ade73b04fb4427750d38482c334d19c7d970927220b"
     },
     "concepts/ai-agent-docs": {
       "files": [
@@ -3232,7 +3224,7 @@
       "files": [
         "plugins/plugins-dev.yaml"
       ],
-      "hash": "633757556205f088a1a969a1d1dd687b86cb50a3c8b9314c183e43c91aa7a466"
+      "hash": "c849265cbb2a25baaeb5a6d053e7dec13dede8ce549017edfec610eabd761569"
     },
     "plugins/plugins-actions": {
       "files": [
@@ -3257,7 +3249,7 @@
         "plugins/plugins-icon-sets.md",
         "plugins/plugins-icon-sets.yaml"
       ],
-      "hash": "2f7e06782d53f97578f02a6c69f843e13b75080da87ce86d75387cfc91633497"
+      "hash": "503f4cfb65a1efdd7f0d4b224d4c83d84d8cc0faa329d0cac535768903ff169f"
     },
     "plugins/posthog": {
       "files": [
@@ -3844,7 +3836,7 @@
         "blocks/input/TableInputGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "f01bf21c6e8ad0d7d57856ae3c7629fbfd14e46b6d499027b3060d536b454c4a"
+      "hash": "be37fa33e8ea20cb575f44eb75a011d61bea405f07115b4d8ade579a9b829641"
     },
     "input-blocks/tagmultipleselector": {
       "files": [
@@ -4013,7 +4005,7 @@
         "blocks/display/AgGridGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "71a3893e068c81688cadb65fd10f7abd5e7608301a7a1d5950308cb360cb65b5"
+      "hash": "4a187f0070d42bdbf3058a6f3e07f789d3bdfe7f70bf4a77763f0f98a98a1184"
     },
     "display-blocks/anchor": {
       "files": [
@@ -4893,7 +4885,7 @@
       "files": [
         "connections/Elasticsearch.yaml"
       ],
-      "hash": "0878003c3d56c920ffecc279eae556574f263de62ce54789ab8cdc4cf9f01fe0"
+      "hash": "c8e15ebc6e8ad0f2d828173deec5dab350c019bdad0520d50194ab794821b5df"
     },
     "connections/googlesheet": {
       "files": [
@@ -4926,7 +4918,7 @@
         "connections/KnexRequests.md",
         "connections/MSSQL.yaml"
       ],
-      "hash": "6f5d435000d9cd4131905ae83ea8cecee7b1316af22df950f7b73dc4f70a1926"
+      "hash": "8311cee05351c3ccb4031d7902eca348828e05ce897b31bf57c5b96870ba4132"
     },
     "connections/mysql": {
       "files": [
@@ -4946,7 +4938,7 @@
       "files": [
         "connections/Redis.yaml"
       ],
-      "hash": "0f47932e7b3293029b234063a6547acb1920fccfe214cab56804a6bb052c85cb"
+      "hash": "7006e4cb5e7adfda545ab2f3fde59e4996cf3947367afadc6671d243e80225ee"
     },
     "connections/sendgridmail": {
       "files": [
@@ -4965,13 +4957,13 @@
         "connections/KnexRequests.md",
         "connections/SQLite.yaml"
       ],
-      "hash": "54458b280163b0a29bdcf22facce0fc4844c155cc17294a32e5a17ed2b1035a7"
+      "hash": "e60d16cd883ad4ae61f42cd8f4f4707919c42a29832e3e4ce47381fc54883fcd"
     },
     "connections/stripe": {
       "files": [
         "connections/Stripe.yaml"
       ],
-      "hash": "0188a47db3e6caa3e6286bf7916c88ac3fb985166066c467aa33e1138475d44f"
+      "hash": "e4037688c2fa8d02a73c965cacabee422b8c3e98cae12c79a5d35de01d0410b5"
     },
     "connections/treg": {
       "files": [
@@ -5082,7 +5074,7 @@
         "actions/PdfMake.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "4545b651ba9cc31941fe84484f0be40004ba5170c0b3f225238c8c34018e0920"
+      "hash": "bcf47075742985e943af1e23e1d5e5b42818ffb0e854db2efbd098a93fba9bdf"
     },
     "actions/posthogalias": {
       "files": [
@@ -5518,13 +5510,6 @@
       ],
       "hash": "55409c9ec4ea439ce0e179b8c383f2c627a507ca4178c2931babb9bdb4b227ed"
     },
-    "operators/_jsonata": {
-      "files": [
-        "operators/_jsonata.yaml",
-        "templates/operators.yaml.njk"
-      ],
-      "hash": "b17903c39dd5d709a91004adc9f6a34f35dc04af4824798e43138659b19c927b"
-    },
     "operators/_locale": {
       "files": [
         "operators/_locale.yaml",
@@ -5825,7 +5810,7 @@
         "controls/if.yaml",
         "templates/controls.yaml.njk"
       ],
-      "hash": "fa49dc8d81e9a7cc9ce1b880b693db7e8ccd5335939fb38d299249b5cfbf41f1"
+      "hash": "d46b8123b53961968c7ecc01eb8861e210adeb026a63d2455bab711a4fa4038b"
     },
     "controls/log": {
       "files": [
@@ -5951,7 +5936,7 @@
       "files": [
         "operators/index.yaml"
       ],
-      "hash": "79587292b1162aaa9bb57163c5bad282ee61b37e590916cb7af127642b1f7a8c"
+      "hash": "738538a2d24d81751f42a18b1f80720f5e994e4433565b48e496ca39e58d765c"
     },
     "reference/actions-reference": {
       "files": [

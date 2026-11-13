@@ -64,10 +64,15 @@ function invalidated() {
 }
 
 // Starts the watcher under test and returns the chokidar watcher it watches
-// the app with, the first one it creates.
+// the app with, the first one it creates. Every directory the watcher watches
+// at start is subscribed by the time it resolves, and on macOS each new one
+// restarts the process's FSEvents stream, losing an edit made during the
+// restart, so the first edit waits until file events are reported again (see
+// flushFsEvents).
 async function startWatcher() {
   const first = watchers.length;
   watcher = await lowdefyBuildWatcher(context);
+  await flushFsEvents();
   return watchers[first].watcher;
 }
 
@@ -305,7 +310,7 @@ test('a skeleton file in a local module outside the config directory rebuilds th
   });
 });
 
-test('a file the build read outside every watched directory invalidates pages when edited', async () => {
+test('a file the build read outside every watched directory is watched from the start and invalidates pages when edited', async () => {
   const titleBlock = path.join(
     repoDir,
     '.claude',
@@ -316,11 +321,11 @@ test('a file the build read outside every watched directory invalidates pages wh
     'title-block.yaml'
   );
   const configWatcher = await startWatcher();
+  expect(isWatched({ configWatcher, filePath: titleBlock })).toBe(true);
 
-  await waitFor(() => isWatched({ configWatcher, filePath: titleBlock }), {
-    description: 'title-block.yaml to be watched',
-  });
-  await editUntilInvalidated(titleBlock);
+  fs.appendFileSync(titleBlock, 'type: Box\n');
+
+  await waitFor(invalidated, { description: 'the pages to be invalidated' });
   expect(context.lowdefyBuild).not.toHaveBeenCalled();
 });
 
@@ -345,7 +350,8 @@ test('a file that appears in refMap.json after the watch started is watched', as
 test('a file a JIT page build read outside every watched directory is watched from its jitMaps file', async () => {
   const header = path.join(repoDir, 'shared', 'header.yaml');
   write(header, 'id: header\n');
-  watcher = await lowdefyBuildWatcher(context);
+  await flushFsEvents();
+  const configWatcher = await startWatcher();
 
   write(
     path.join(buildDir, 'jitMaps', 'abc123-1-1.json'),
@@ -354,9 +360,10 @@ test('a file a JIT page build read outside every watched directory is watched fr
       refMap: { p_abc123_1: { parent: null, path: appRefPath(header) } },
     })
   );
-  // The maps watcher batches its change for half a second before adding.
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  fs.appendFileSync(header, 'type: Box\n');
 
-  await waitFor(invalidated);
+  // The maps watcher batches its change before adding the file.
+  await waitFor(() => isWatched({ configWatcher, filePath: header }), {
+    description: 'header.yaml to be watched',
+  });
+  await editUntilInvalidated(header);
 });

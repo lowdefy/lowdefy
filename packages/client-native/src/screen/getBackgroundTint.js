@@ -49,7 +49,7 @@ function getBackgroundTint({ backgroundTint, isDark, tokens }) {
   if (type.isNone(backgroundTint)) {
     return null;
   }
-  const color = isDark ? backgroundTint.colorDark ?? backgroundTint.color : backgroundTint.color;
+  const color = isDark ? (backgroundTint.colorDark ?? backgroundTint.color) : backgroundTint.color;
   return {
     color: resolveTintColor({ color, tokens }),
     height: backgroundTint.height ?? DEFAULT_HEIGHT,

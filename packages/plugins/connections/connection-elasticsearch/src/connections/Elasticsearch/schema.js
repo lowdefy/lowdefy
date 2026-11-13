@@ -14,93 +14,83 @@
   limitations under the License.
 */
 
+const nodeUrl = {
+  type: 'string',
+  format: 'uri',
+  pattern: '^(https?)://',
+};
+
+const nodeDescription =
+  'The Elasticsearch node(s) to connect to. A URL string, an array of URL strings, a node options object, or an array of node options objects.';
+
+const nodeSchema = {
+  anyOf: [
+    nodeUrl,
+    {
+      type: 'array',
+      items: nodeUrl,
+    },
+    {
+      $ref: '#/definitions/NodeOptions',
+    },
+    {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/NodeOptions',
+      },
+    },
+  ],
+};
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Lowdefy Connection Schema - Elasticsearch',
   type: 'object',
   properties: {
     node: {
-      description:
-        'The Elasticsearch endpoint to use. It can be a single string, an array of strings, or an object (or an array of objects) that represents the node',
+      description: nodeDescription,
       examples: ['http://localhost:9200', 'https://your.node.company.tld:443'],
-      anyOf: [
-        {
-          items: {
-            type: 'string',
-            format: 'uri',
-            pattern: '^(https?)://',
-          },
-          type: 'array',
-        },
-        {
-          $ref: '#/definitions/NodeOptions',
-        },
-        {
-          items: {
-            $ref: '#/definitions/NodeOptions',
-          },
-          type: 'array',
-        },
-        {
-          type: 'string',
-          format: 'uri',
-          pattern: '^(https?)://',
-        },
-      ],
+      ...nodeSchema,
     },
     nodes: {
+      description: nodeDescription,
+      examples: [['https://node1.company.tld:9200', 'https://node2.company.tld:9200']],
+      ...nodeSchema,
+    },
+    cloud: {
       description:
-        'The Elasticsearch endpoint to use. It can be a single string, an array of strings, or an object (or an array of objects) that represents the node',
+        'Connect to Elastic Cloud with its Cloud ID instead of "node" or "nodes". Set the credentials with "auth".',
       examples: [
         {
-          url: 'http://localhost:9200',
-          ssl: 'ssl options',
-          agent: 'http agent options',
-          id: 'custom node id',
-          headers: {
-            'X-Foo': 'Bar',
-          },
-          roles: {
-            master: true,
-            data: true,
-            ingest: true,
-            ml: false,
-          },
+          id: 'name:bG9jYWxob3N0JGFiY2QkZWZnaA==',
         },
-        'http://localhost:9200',
-        'https://your.node.company.tld:443',
       ],
-      anyOf: [
-        {
-          items: {
-            type: 'string',
-            format: 'uri',
-            pattern: '^(https?)://',
-          },
-          type: 'array',
-        },
-        {
-          $ref: '#/definitions/NodeOptions',
-        },
-        {
-          items: {
-            $ref: '#/definitions/NodeOptions',
-          },
-          type: 'array',
-        },
-        {
+      type: 'object',
+      required: ['id'],
+      properties: {
+        id: {
           type: 'string',
-          format: 'uri',
-          pattern: '^(https?)://',
+          description: 'The Cloud ID of your Elastic Cloud deployment.',
         },
-      ],
+        username: {
+          not: {},
+          errorMessage:
+            'was removed in Lowdefy 8 (Elasticsearch client 9). Set "auth.username" on the connection instead',
+        },
+        password: {
+          not: {},
+          errorMessage:
+            'was removed in Lowdefy 8 (Elasticsearch client 9). Set "auth.password" on the connection instead',
+        },
+      },
     },
     index: {
       description: 'Default index to use for requests.',
       type: 'string',
     },
     auth: {
-      description: 'Your authentication data. You can use both basic authentication and ApiKey.',
+      description:
+        'Your authentication data: basic authentication ("username" and "password"), an API key ("apiKey"), or a bearer token ("bearer").',
       examples: [
         {
           username: 'elastic',
@@ -109,6 +99,9 @@ export default {
         {
           apiKey: 'base64EncodedApiKey',
         },
+        {
+          bearer: 'token',
+        },
       ],
       anyOf: [
         {
@@ -116,6 +109,9 @@ export default {
         },
         {
           $ref: '#/definitions/BasicAuth',
+        },
+        {
+          $ref: '#/definitions/BearerAuth',
         },
       ],
       errorMessage: {
@@ -130,9 +126,9 @@ export default {
       minimum: 0,
     },
     requestTimeout: {
-      description: 'Max request timeout in milliseconds for each request.',
+      description:
+        'Max request timeout in milliseconds for each request. By default there is no timeout: the client waits for Elasticsearch to respond.',
       type: 'number',
-      default: 30000,
       exclusiveMinimum: 0,
     },
     pingTimeout: {
@@ -151,6 +147,7 @@ export default {
       description:
         'Perform a sniff once the client is started. Sniffing might not be the best solution for you, take a look here to know more: https://www.elastic.co/blog/elasticsearch-sniffing-best-practices-what-when-why-how',
       type: 'boolean',
+      default: false,
     },
     sniffEndpoint: {
       description: 'Endpoint to ping during a sniff.',
@@ -169,53 +166,21 @@ export default {
       type: 'string',
       default: 'ping',
     },
-    suggestCompression: {
-      description: 'Adds accept-encoding header to every request.',
-      type: 'boolean',
-      default: false,
-    },
     compression: {
-      description: 'Enables gzip request body compression.',
-      enum: ['gzip'],
-      type: ['string', 'boolean'],
-      default: false,
-    },
-    ssl: {
-      $ref: '#/definitions/ConnectionOptions',
-    },
-    proxy: {
       description:
-        'If you are using an http(s) proxy, you can put its url here. The client will automatically handle the connection to it.',
+        'Enables gzip request body compression, and asks Elasticsearch for compressed responses. Defaults to true when connecting with "cloud", otherwise false.',
+      type: 'boolean',
+    },
+    tls: {
+      $ref: '#/definitions/TlsOptions',
+    },
+    caFingerprint: {
+      description:
+        'The SHA256 fingerprint of the CA certificate that signed the certificate of the Elasticsearch server. When set, the client checks that the server certificate was signed by this CA. Only works with https nodes.',
       type: 'string',
-      format: 'uri',
-      pattern: '^(https?)://',
-      examples: ['http://localhost:8080', 'http://user:pwd@localhost:8080'],
-      default: null,
     },
     agent: {
-      description:
-        'HTTP agent options. If you want to disable the HTTP agent use entirely (and disable the `keep-alive` feature), set the agent to `false`. See https://nodejs.org/api/http.html#http_new_agent_options.',
-      default: null,
-      examples: [
-        {
-          agent: 'options',
-        },
-        {
-          agent: false,
-        },
-      ],
-      anyOf: [
-        {
-          $ref: '#/definitions/AgentOptions',
-        },
-        {
-          enum: [false],
-          type: 'boolean',
-        },
-        {
-          type: 'object',
-        },
-      ],
+      $ref: '#/definitions/AgentOptions',
     },
     name: {
       description: 'The name to identify the client instance in the events.',
@@ -224,8 +189,7 @@ export default {
     },
     opaqueIdPrefix: {
       description:
-        'A string that will be use to prefix any X-Opaque-Id header. See https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/observability.html#x-opaque-id_support[X-Opaque-Id support] for more details.',
-      default: null,
+        'A string that will be use to prefix any X-Opaque-Id header. See https://www.elastic.co/docs/reference/elasticsearch/clients/javascript/observability for more details.',
       type: 'string',
     },
     headers: {
@@ -236,13 +200,11 @@ export default {
         },
       ],
       type: 'object',
-      default: {},
     },
     context: {
       description:
         'A custom object that you can use for observability in your events. It will be merged with the API level context option.',
       type: 'object',
-      default: null,
     },
     enableMetaHeader: {
       description:
@@ -250,33 +212,45 @@ export default {
       type: 'boolean',
       default: true,
     },
-    cloud: {
-      description:
-        'Custom configuration for connecting to Elastic Cloud. See Authentication for more details: https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/auth-reference.html',
-      examples: [
-        {
-          id: 'name:bG9jYWxob3N0JGFiY2QkZWZnaA==',
-        },
-      ],
-      properties: {
-        id: {
-          type: 'string',
-        },
-        password: {
-          type: 'string',
-        },
-        username: {
-          type: 'string',
-        },
-      },
-      type: 'object',
-      default: null,
-    },
     disablePrototypePoisoningProtection: {
       description:
-        'By the default the client will protect you against prototype poisoning attacks. If needed you can disable prototype poisoning protection entirely or one of the two checks. Read the `secure-json-parse` documentation to learn more: https://github.com/fastify/secure-json-parse',
-      enum: ['constructor', false, 'proto', true],
-      default: false,
+        'Prototype poisoning protection parses responses with secure-json-parse, which rejects "__proto__" and "constructor.prototype" keys. It is off by default (true) because it slows down parsing. Set false to turn on both checks, or "proto" or "constructor" to disable only that check. See https://github.com/fastify/secure-json-parse',
+      enum: [true, false, 'proto', 'constructor'],
+      default: true,
+    },
+    maxResponseSize: {
+      description:
+        'When set, the client aborts a request if the uncompressed response is larger than this number of bytes.',
+      type: 'number',
+      exclusiveMinimum: 0,
+    },
+    maxCompressedResponseSize: {
+      description:
+        'When set, the client aborts a request if the compressed response is larger than this number of bytes.',
+      type: 'number',
+      exclusiveMinimum: 0,
+    },
+    serverMode: {
+      description:
+        'Set to "serverless" when connecting to Elastic Cloud Serverless. This enables compression and turns off features that assume multiple Elasticsearch nodes, like sniffing.',
+      enum: ['stack', 'serverless'],
+      type: 'string',
+      default: 'stack',
+    },
+    ssl: {
+      not: {},
+      errorMessage:
+        'was renamed to "tls" in Lowdefy 8 (Elasticsearch client 9). Move these options to "tls"',
+    },
+    suggestCompression: {
+      not: {},
+      errorMessage:
+        'was removed in Lowdefy 8 (Elasticsearch client 9). Set "compression: true" to compress requests and ask for compressed responses',
+    },
+    proxy: {
+      not: {},
+      errorMessage:
+        'is not supported. The HTTP connection the Elasticsearch client 9 uses (undici) cannot send requests through a proxy',
     },
     read: {
       type: 'boolean',
@@ -297,34 +271,50 @@ export default {
   },
   definitions: {
     AgentOptions: {
-      description: 'Set of configurable options to set on the agent.',
+      description:
+        'Options for the HTTP connection pool (undici) the client opens to each node. See https://undici.nodejs.org/#/docs/api/Pool.',
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        keepAlive: {
+        keepAliveTimeout: {
           description:
-            'Keep sockets around even when there are no outstanding requests, so they can be used for future requests without having to reestablish a TCP connection. Not to be confused with the `keep-alive` value of the `Connection` header. The `Connection: keep-alive` header is always sent when using an agent except when the `Connection` header is explicitly specified or when the `keepAlive` and `maxSockets` options are respectively set to `false` and `Infinity`, in which case `Connection: close` will be used.',
-          default: false,
-          type: 'boolean',
+            'Milliseconds an idle socket is kept open when the server does not send a keep-alive hint.',
+          type: 'number',
+          default: 600000,
         },
-        keepAliveMsecs: {
+        keepAliveMaxTimeout: {
           description:
-            'When using the `keepAlive` option, specifies the initial delay for TCP Keep-Alive packets. Ignored when the `keepAlive` option is `false` or `undefined`',
+            'The longest time, in milliseconds, an idle socket is kept open, whatever keep-alive hint the server sends.',
+          type: 'number',
+          default: 600000,
+        },
+        keepAliveTimeoutThreshold: {
+          description:
+            'Milliseconds subtracted from the server keep-alive hint, to avoid using a socket the server is about to close.',
           type: 'number',
           default: 1000,
         },
-        maxFreeSockets: {
-          description:
-            'Maximum number of sockets to leave open in a free state. Only relevant if `keepAlive` is set to `true`',
+        pipelining: {
+          description: 'The number of requests sent on one socket before waiting for responses.',
+          type: 'number',
+          default: 1,
+        },
+        maxHeaderSize: {
+          description: 'The maximum size of response headers in bytes.',
+          type: 'number',
+          default: 16384,
+        },
+        connections: {
+          description: 'The maximum number of sockets to open to each node.',
           type: 'number',
           default: 256,
         },
-        maxSockets: {
-          description:
-            'Maximum number of sockets to allow per host. If the same host opens multiple concurrent connections, each request will use new socket until the `maxSockets` value is reached. If the host attempts to open more connections than `maxSockets`, the additional requests will enter into a pending request queue, and will enter active connection state when an existing connection terminates. This makes sure there are at most maxSockets active connections at any point in time, from a given host.',
-          type: 'number',
-          default: 'Infinity',
-        },
       },
-      type: 'object',
+      errorMessage: {
+        type: 'should be an object of undici connection pool options',
+        additionalProperties:
+          'takes undici connection pool options (keepAliveTimeout, keepAliveMaxTimeout, keepAliveTimeoutThreshold, pipelining, maxHeaderSize, connections). Node.js http.Agent options like keepAlive and maxSockets, and "agent: false", are not supported since Lowdefy 8 (Elasticsearch client 9)',
+      },
     },
     ApiKeyAuth: {
       description:
@@ -341,6 +331,7 @@ export default {
                   type: 'string',
                 },
               },
+              required: ['id', 'api_key'],
               type: 'object',
             },
             {
@@ -349,7 +340,7 @@ export default {
           ],
           errorMessage: {
             anyOf:
-              'Elasticsearch API key should be specified as a string, or an object containing Elasticsearch cloud credentials',
+              'Elasticsearch API key should be specified as a string, or an object containing "id" and "api_key"',
           },
         },
       },
@@ -371,19 +362,35 @@ export default {
         required: 'Elasticsearch basic auth credentials must consist of at least a username',
       },
     },
-    ConnectionOptions: {
-      description:
-        'http.SecureContextOptions - See node.js SSL configuration: https://nodejs.org/api/tls.html',
+    BearerAuth: {
+      description: 'A bearer token, such as a service account token.',
+      properties: {
+        bearer: {
+          type: 'string',
+        },
+      },
+      required: ['bearer'],
       type: 'object',
-      default: null,
+    },
+    TlsOptions: {
+      description:
+        'TLS options for the connection, passed to Node.js tls.connect, like "ca", "cert", "key" and "rejectUnauthorized". See https://nodejs.org/api/tls.html#tlsconnectoptions-callback',
+      examples: [
+        {
+          ca: 'PEM encoded CA certificate',
+          rejectUnauthorized: true,
+        },
+      ],
+      type: 'object',
     },
     NodeOptions: {
       examples: [
         {
-          url: 'http://localhost:9200',
-          ssl: 'ssl options',
-          agent: 'http agent options',
+          url: 'https://localhost:9200',
           id: 'custom node id',
+          tls: {
+            rejectUnauthorized: true,
+          },
           headers: {
             'X-Foo': 'Bar',
           },
@@ -395,9 +402,21 @@ export default {
           },
         },
       ],
+      type: 'object',
+      required: ['url'],
       properties: {
+        url: nodeUrl,
+        id: {
+          type: 'string',
+        },
         agent: {
           $ref: '#/definitions/AgentOptions',
+        },
+        tls: {
+          $ref: '#/definitions/TlsOptions',
+        },
+        caFingerprint: {
+          type: 'string',
         },
         headers: {
           type: 'object',
@@ -406,9 +425,6 @@ export default {
               'X-Foo': 'Bar',
             },
           ],
-        },
-        id: {
-          type: 'string',
         },
         roles: {
           properties: {
@@ -428,15 +444,11 @@ export default {
           type: 'object',
         },
         ssl: {
-          $ref: '#/definitions/ConnectionOptions',
-        },
-        url: {
-          type: 'string',
-          format: 'uri',
-          pattern: '^(https?)://',
+          not: {},
+          errorMessage:
+            'was renamed to "tls" in Lowdefy 8 (Elasticsearch client 9). Move these node options to "tls"',
         },
       },
-      type: 'object',
     },
   },
   oneOf: [
@@ -446,10 +458,14 @@ export default {
     {
       required: ['nodes'],
     },
+    {
+      required: ['cloud'],
+    },
   ],
   errorMessage: {
     type: 'Elasticsearch connection properties should be an object.',
-    oneOf: 'Elasticsearch connection should have required property "node" or "nodes".',
+    oneOf:
+      'Elasticsearch connection should have exactly one of the properties "node", "nodes" or "cloud".',
     properties: {
       maxRetries: 'Elasticsearch connection "maxRetries" should be 0 or greater',
       requestTimeout: 'Elasticsearch connection "requestTimeout" should be 1 or greater',

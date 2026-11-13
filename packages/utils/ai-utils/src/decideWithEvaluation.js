@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { experimental_evaluate as evaluate } from 'ai';
+import { experimental_decide as aiDecide } from 'ai';
 import { type } from '@lowdefy/helpers';
 
 import { fromEvaluationAnswer, optionDescriptions, questionKind } from './decideQuestions.js';
@@ -40,8 +40,17 @@ function toEvaluationQuestion(question) {
   return { type: 'score', instructions: question.score, criteria: question.levels };
 }
 
-// evaluate takes no timeout, so the timeout becomes part of its abort signal. It takes
-// no maxOutputTokens either: an evaluation model returns probabilities, not text.
+// The AI SDK reads an array state as a list of state parts (text, file, json), so a
+// JSON array from the request goes in as one json part.
+function toDecisionState(state) {
+  if (Array.isArray(state)) {
+    return [{ type: 'json', value: state }];
+  }
+  return state;
+}
+
+// decide takes no timeout, so the timeout becomes part of its abort signal.
+// maxOutputTokens is dropped: an evaluation model returns probabilities, not text.
 function toEvaluateOptions({ abortSignal, maxOutputTokens, timeout, ...options }) {
   const signals = [abortSignal];
   if (!type.isNone(timeout)) {
@@ -55,11 +64,11 @@ function toEvaluateOptions({ abortSignal, maxOutputTokens, timeout, ...options }
 }
 
 // The evaluation backend: an evaluation model answers every question in one
-// pass, with a probability for each option (ai experimental_evaluate).
+// pass, with a probability for each option (ai experimental_decide).
 async function decideWithEvaluation({ model, state, questions, options }) {
-  const result = await evaluate({
+  const result = await aiDecide({
     model,
-    state,
+    state: toDecisionState(state),
     questions: Object.fromEntries(
       Object.entries(questions).map(([id, question]) => [id, toEvaluationQuestion(question)])
     ),

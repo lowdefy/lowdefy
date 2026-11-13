@@ -108,7 +108,7 @@ export default createBlockHelper({
           .filter({ hasText: new RegExp(`^${minute}$`) })
           .click();
         // Click OK to confirm
-        await dropdown.locator('.ant-picker-ok button').click();
+        await dropdown.locator('.ant-picker-ok').click();
       }
     },
     selectPreset: async (page, blockId, label) => {

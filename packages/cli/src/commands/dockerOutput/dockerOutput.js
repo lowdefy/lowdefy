@@ -63,7 +63,9 @@ async function dockerOutput({ context }) {
     }
   });
   if (!fs.existsSync(clientDirectory)) {
-    throw new Error(`Cannot find built client at "${clientDirectory}" — run "lowdefy build" first.`);
+    throw new Error(
+      `Cannot find built client at "${clientDirectory}" — run "lowdefy build" first.`
+    );
   }
 
   // Paths are preserved relative to the trace base (the pnpm workspace root when the server

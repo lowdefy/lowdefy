@@ -42,9 +42,9 @@
     "test:mongodb": "vitest run --config vitest.mongodb.config.js"
   },
   "dependencies": {
-    "@better-auth/cimd": "1.7.7",
-    "@better-auth/oauth-provider": "1.7.7",
-    "@better-auth/passkey": "1.7.7",
+    "@better-auth/cimd": "1.7.20",
+    "@better-auth/oauth-provider": "1.7.20",
+    "@better-auth/passkey": "1.7.20",
     "@lowdefy/ajv": "7.2.0",
     "@lowdefy/build": "7.2.0",
     "@lowdefy/connection-smtp": "7.2.0",
@@ -52,24 +52,22 @@
     "@lowdefy/errors": "7.2.0",
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/node-utils": "7.2.0",
-    "@lowdefy/nunjucks": "7.2.0",
     "@lowdefy/operators": "7.2.0",
     "@lowdefy/operators-js": "7.2.0",
     "@modelcontextprotocol/sdk": "1.32.2",
-    "better-auth": "1.7.7",
-    "jose": "^6.2.3",
-    "mongodb-connection-string-url": "^7.0.2",
-    "nodemailer": "10.1.7"
+    "better-auth": "1.7.20",
+    "jose": "^6.2.17",
+    "mongodb-connection-string-url": "^7.0.2"
   },
   "devDependencies": {
     "@lowdefy/connection-mongodb": "7.2.0",
     "@lowdefy/plugin-better-auth": "7.2.0",
     "@opentelemetry/api": "1.9.1",
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "mongodb": "7.2.0",
-    "mongodb-memory-server-core": "9.2.0",
-    "vitest": "4.1.12"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "mongodb": "7.8.0",
+    "mongodb-memory-server-core": "11.3.0",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

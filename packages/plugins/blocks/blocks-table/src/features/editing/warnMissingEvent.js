@@ -19,7 +19,6 @@
 function warnMissingEvent({ api, name, what }) {
   if (process.env.NODE_ENV === 'production' || api.editing.warned.has(name)) return;
   api.editing.warned.add(name);
-  // eslint-disable-next-line no-console
   console.warn(
     `Table "${api.blockId}" allows ${what} but has no ${name} event, so they only show in the table and are never saved. Add an ${name} event that saves them.`
   );
