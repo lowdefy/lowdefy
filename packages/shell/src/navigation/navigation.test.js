@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import { getSlotIndex } from './frameSlots.js';
 import getFrame from './getFrame.js';
@@ -84,7 +84,7 @@ function headerAction(overrides) {
     disabled: false,
     id: 'add',
     menu: null,
-    onPress: jest.fn(),
+    onPress: vi.fn(),
     placement: 'right',
     render: () => 'icon button',
     sfSymbol: 'plus',
@@ -107,9 +107,9 @@ test('getStackOptions gives a large title, the presentation and a native search 
   const headerSearch = {
     autoFocus: true,
     hideWhenScrolling: false,
-    onCancel: jest.fn(),
-    onChangeText: jest.fn(),
-    onSearch: jest.fn(),
+    onCancel: vi.fn(),
+    onChangeText: vi.fn(),
+    onSearch: vi.fn(),
     placeholder: 'Search designs',
   };
   const searchBarRef = { current: null };
@@ -163,8 +163,8 @@ test('getStackOptions draws header actions as native SF Symbol bar buttons on iO
 });
 
 test('getStackOptions draws a header action with items as a native menu on iOS', () => {
-  const copy = { destructive: false, disabled: false, id: 'copy_link', onPress: jest.fn() };
-  const remove = { destructive: true, disabled: false, id: 'delete', onPress: jest.fn() };
+  const copy = { destructive: false, disabled: false, id: 'copy_link', onPress: vi.fn() };
+  const remove = { destructive: true, disabled: false, id: 'delete', onPress: vi.fn() };
   const more = headerAction({
     id: 'more',
     menu: [

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 import { ThemeContext } from '@lowdefy/client-native';
 
@@ -24,8 +24,8 @@ import Frame from './Frame.js';
 // The native tabs as plain elements that keep their props, so a test reads the tab bar. A trigger
 // keeps only its direct Icon and Label children, as Expo Router's convertTabPropsToOptions reads a
 // trigger's options: any other element, even one that renders an Icon, is dropped.
-jest.mock('expo-router/native-tabs', () => {
-  const { Children, createElement, isValidElement } = jest.requireActual('react');
+vi.mock('expo-router/native-tabs', async () => {
+  const { Children, createElement, isValidElement } = await import('react');
   const element = (name) => (props) => createElement(name, props, props.children);
   const NativeTabs = element('NativeTabs');
   const Icon = element('TriggerIcon');
@@ -43,10 +43,10 @@ jest.mock('expo-router/native-tabs', () => {
   return { NativeTabs };
 });
 
-jest.mock('expo-router', () => ({ router: {}, Stack: () => null }));
+vi.mock('expo-router', () => ({ router: {}, Stack: () => null }));
 
 const mockState = {};
-jest.mock('../ShellContext.js', () => ({
+vi.mock('../ShellContext.js', () => ({
   useSessionState: () => mockState,
   useShell: () => ({ session: { takeHomeRequest: () => false } }),
 }));

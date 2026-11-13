@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { afterEach, expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { Dimensions, StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { appStorageKey, serializer } from '@lowdefy/helpers';
@@ -39,7 +39,7 @@ let dimensionsSpy;
 
 function setWindow({ width, height }) {
   dimensionsSpy?.mockRestore();
-  dimensionsSpy = jest
+  dimensionsSpy = vi
     .spyOn(Dimensions, 'get')
     .mockImplementation(() => ({ width, height, scale: 2, fontScale: 1 }));
 }
@@ -316,7 +316,7 @@ test('dark: classes and antd colour classes switch with the theme mode', async (
 });
 
 test('a class missing from the class map is ignored with one dev warning', async () => {
-  const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   await renderPage({
     pageConfig: {
       id: 'home',
@@ -373,6 +373,8 @@ test('a slot style goes over its classes, which go over the theme and block defa
   });
   const element = await screen.findByTestId('card-element');
   expect(styleOf(element)).toEqual({
+    // React Native's Text default
+    overflow: 'hidden',
     // block default
     padding: 4,
     // theme, under the class's background

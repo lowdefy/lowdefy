@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createResolveUrl from './createResolveUrl.js';
 
 const resolveUrl = createResolveUrl({ apiBase: 'https://field.example.com' });

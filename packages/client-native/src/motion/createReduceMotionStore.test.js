@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createReduceMotionStore from './createReduceMotionStore.js';
 
 function createAccessibilityInfo({ enabled }) {
   const handlers = [];
   return {
-    addEventListener: jest.fn((name, handler) => handlers.push({ handler, name })),
+    addEventListener: vi.fn((name, handler) => handlers.push({ handler, name })),
     change: (value) => handlers.forEach(({ handler }) => handler(value)),
-    isReduceMotionEnabled: jest.fn(() => Promise.resolve(enabled)),
+    isReduceMotionEnabled: vi.fn(() => Promise.resolve(enabled)),
   };
 }
 
@@ -32,9 +32,9 @@ test('createReduceMotionStore reads the setting only when the first component su
   const store = createReduceMotionStore({ AccessibilityInfo });
   expect(store.getSnapshot()).toBe(false);
   expect(AccessibilityInfo.isReduceMotionEnabled).not.toHaveBeenCalled();
-  const listener = jest.fn();
+  const listener = vi.fn();
   store.subscribe(listener);
-  store.subscribe(jest.fn());
+  store.subscribe(vi.fn());
   await Promise.resolve();
   expect(AccessibilityInfo.isReduceMotionEnabled).toHaveBeenCalledTimes(1);
   expect(AccessibilityInfo.addEventListener).toHaveBeenCalledTimes(1);
@@ -45,7 +45,7 @@ test('createReduceMotionStore reads the setting only when the first component su
 test('createReduceMotionStore tells its subscribers when the setting changes, until they leave', async () => {
   const AccessibilityInfo = createAccessibilityInfo({ enabled: false });
   const store = createReduceMotionStore({ AccessibilityInfo });
-  const listener = jest.fn();
+  const listener = vi.fn();
   const unsubscribe = store.subscribe(listener);
   await Promise.resolve();
   expect(listener).not.toHaveBeenCalled();

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getListMarker from './getListMarker.js';
 
 test('getListMarker bullets each level of a nested list differently', () => {

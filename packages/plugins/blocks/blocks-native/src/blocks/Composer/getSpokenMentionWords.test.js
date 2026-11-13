@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSpokenMentionWords from './getSpokenMentionWords.js';
 
 test('getSpokenMentionWords is "for" by default', () => {

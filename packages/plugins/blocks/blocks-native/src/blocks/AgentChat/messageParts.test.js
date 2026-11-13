@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import { hasVisibleContent, isPartVisible, partCategory } from './messageParts.js';
 import replayableMessages from './replayableMessages.js';
 

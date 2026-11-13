@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import describeToolPart from './describeToolPart.js';
 
 const translate = (key, values) => (values ? `${key} ${JSON.stringify(values)}` : key);

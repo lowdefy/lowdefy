@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { LowdefyInternalError } from '@lowdefy/errors';
 
 import checkTypeSet from './types/checkTypeSet.js';

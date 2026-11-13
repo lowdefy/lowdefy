@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getInitials from './getInitials.js';
 
 test('getInitials takes the first letters of the first and last words', () => {

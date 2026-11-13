@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getScrollTarget from './getScrollTarget.js';
 
 const strip = { contentWidth: 1000, margin: 24, viewportWidth: 390 };

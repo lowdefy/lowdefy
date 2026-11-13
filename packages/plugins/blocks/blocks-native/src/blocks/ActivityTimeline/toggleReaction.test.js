@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getCommentView from './getCommentView.js';
 import toggleReaction from './toggleReaction.js';
 

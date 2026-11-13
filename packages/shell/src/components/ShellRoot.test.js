@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { render, screen } from '@testing-library/react-native';
 
 import ShellRoot from './ShellRoot.js';
@@ -29,22 +29,24 @@ const mockShell = {
 
 // The opened app is recorded, not built: its auth, session and screens have their own tests.
 const mockOpened = [];
-jest.mock('./AppProvider.js', () => {
+vi.mock('./AppProvider.js', () => {
   function AppProvider({ children, shell }) {
     mockOpened.push(shell);
     return children;
   }
-  return AppProvider;
+  return { default: AppProvider };
 });
-jest.mock('./Frame.js', () => {
-  const { Text: MockText } = jest.requireActual('react-native');
-  return () => <MockText testID="frame">frame</MockText>;
+vi.mock('./Frame.js', async () => {
+  const { Text: MockText } = await import('react-native');
+  return { default: () => <MockText testID="frame">frame</MockText> };
 });
-jest.mock('../config/getShellConfig.js', () => () => mockShell);
+vi.mock('../config/getShellConfig.js', () => ({ default: () => mockShell }));
 // No app is remembered between launches: there is only one to open.
-jest.mock('../host/createDeviceStore.js', () => () => {
-  throw new Error('ShellRoot reads no device store.');
-});
+vi.mock('../host/createDeviceStore.js', () => ({
+  default: () => {
+    throw new Error('ShellRoot reads no device store.');
+  },
+}));
 
 beforeEach(() => {
   mockOpened.length = 0;

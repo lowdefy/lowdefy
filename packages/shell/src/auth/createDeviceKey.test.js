@@ -14,19 +14,18 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { beforeEach, expect, test, vi } from 'vitest';
+import * as SecureStore from 'expo-secure-store';
+import * as Crypto from 'expo-crypto';
 
 import createDeviceKey from './createDeviceKey.js';
 
-jest.mock('expo-secure-store', () =>
-  jest.requireActual('../test/createFakeSecureStore.js').default()
+vi.mock('expo-secure-store', async () =>
+  (await import('../test/createFakeSecureStore.js')).default()
 );
-jest.mock('expo-crypto', () => ({
-  getRandomBytes: jest.fn((count) => Uint8Array.from({ length: count }, (_, index) => index)),
+vi.mock('expo-crypto', () => ({
+  getRandomBytes: vi.fn((count) => Uint8Array.from({ length: count }, (_, index) => index)),
 }));
-
-const SecureStore = jest.requireMock('expo-secure-store');
-const Crypto = jest.requireMock('expo-crypto');
 
 beforeEach(() => {
   SecureStore.items.clear();

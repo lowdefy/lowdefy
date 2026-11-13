@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { iosColors, ThemeContext } from '@lowdefy/client-native';
 
 import MenuButton from './MenuButton.js';
-import { iosColors, ThemeContext } from '@lowdefy/client-native';
 import ShellContext from '../ShellContext.js';
 
-jest.mock('expo-router', () => ({
-  router: { canDismiss: () => false, replace: jest.fn() },
+vi.mock('expo-router', () => ({
+  router: { canDismiss: () => false, replace: vi.fn() },
 }));
 
-jest.mock('react-native-safe-area-context', () => ({
+vi.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
 }));
 

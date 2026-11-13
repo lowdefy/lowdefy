@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import injected, { installInjector } from './injected.js';
 
 test('with no injector installed, as in a release shell, nothing is injected', () => {

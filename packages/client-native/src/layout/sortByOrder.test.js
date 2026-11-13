@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import sortByOrder from './sortByOrder.js';
 
 test('sortByOrder sorts blocks by their order at the breakpoint and keeps ties in config order', () => {

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
+import { expect, onTestFinished, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
-import { Dimensions, processColor, StyleSheet } from 'react-native';
+import { Dimensions, Platform, processColor, StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 
 import buildPage from './test/buildPage.js';
@@ -188,7 +188,7 @@ function getRefreshControl() {
   return scrollView?.props.refreshControl;
 }
 
-function renderScreen({ focused = true, headerInset, onScreenOptions = jest.fn(), page, record }) {
+function renderScreen({ focused = true, headerInset, onScreenOptions = vi.fn(), page, record }) {
   const { host } = createFakeHost({ path: '/home' });
   const core = createCore();
   const types = createTypes({ icons: { Plus: plus }, record });
@@ -210,7 +210,7 @@ function renderScreen({ focused = true, headerInset, onScreenOptions = jest.fn()
 }
 
 test('a Screen reports a large title, header search and header actions', async () => {
-  const record = jest.fn();
+  const record = vi.fn();
   const { onScreenOptions, view } = renderScreen({
     record,
     page: {
@@ -276,7 +276,7 @@ test('a Screen reports a large title, header search and header actions', async (
 });
 
 test('a header action with items opens a menu whose picked item fires its id', async () => {
-  const record = jest.fn();
+  const record = vi.fn();
   const { onScreenOptions, view } = renderScreen({
     record,
     page: {
@@ -321,9 +321,14 @@ test('a header action with items opens a menu whose picked item fires its id', a
   await act(async () => {
     await more.menu[0].onPress();
   });
-  // Where there is no native menu, the icon button opens the menu itself, in a React Native Modal,
-  // which reads window (removed for these tests, test/removeWindow.js).
-  global.window = global;
+  // Where there is no native menu (Android), the icon button opens the menu itself, in a React
+  // Native Modal. An Android Modal unmounts as soon as it is hidden; an iOS one waits for the native
+  // dismissal, which never comes in a test.
+  const os = Platform.OS;
+  Platform.OS = 'android';
+  onTestFinished(() => {
+    Platform.OS = os;
+  });
   await render(more.render());
   expect(screen.queryByTestId('header-menu-delete')).toBeNull();
   await act(async () => {
@@ -337,7 +342,6 @@ test('a header action with items opens a menu whose picked item fires its id', a
     { action: 'delete' },
   ]);
   expect(screen.queryByTestId('header-menu-delete')).toBeNull();
-  delete global.window;
 });
 
 test('header slot blocks take their natural size, not the column width', async () => {
@@ -611,7 +615,7 @@ test('a Screen without a backgroundTint draws none', async () => {
 });
 
 test('onRefresh turns on pull-to-refresh, refreshing until its actions finish', async () => {
-  const record = jest.fn();
+  const record = vi.fn();
   let finish;
   const { view } = renderScreen({
     record,
@@ -655,7 +659,7 @@ test('a page without onRefresh has no pull-to-refresh', async () => {
 });
 
 test('onFocus fires after onMount on first show and each time the screen is shown again', async () => {
-  const record = jest.fn();
+  const record = vi.fn();
   const { element, view } = renderScreen({
     record,
     page: {
@@ -689,7 +693,7 @@ test('onFocus fires after onMount on first show and each time the screen is show
 });
 
 test('a screen first rendered unfocused fires onFocus when it is first shown', async () => {
-  const record = jest.fn();
+  const record = vi.fn();
   const { element, view } = renderScreen({
     focused: false,
     record,
@@ -710,7 +714,7 @@ test('a screen first rendered unfocused fires onFocus when it is first shown', a
 });
 
 test('a page tree mounted again onto its kept context while shown does not fire onFocus again', async () => {
-  const record = jest.fn();
+  const record = vi.fn();
   const { host } = createFakeHost({
     path: '/home',
     response: { id: 'load', success: true, response: [{ name: 'Row 1' }] },
@@ -740,7 +744,7 @@ test('a page tree mounted again onto its kept context while shown does not fire 
       host={host}
       instanceId="route-1"
       key={version}
-      onScreenOptions={jest.fn()}
+      onScreenOptions={vi.fn()}
       pageConfig={pageConfig}
       rootConfig={rootConfig}
       types={types}
@@ -848,7 +852,7 @@ test('a block draws its own chrome in the footer of a Screen with no footer slot
 test('a block streams a server call through the host with the bearer session', async () => {
   const { host } = createFakeHost({ path: '/home' });
   host.authTransport = 'bearer';
-  host.tokenStore = { get: () => 'session-token', set: jest.fn(), clear: jest.fn() };
+  host.tokenStore = { get: () => 'session-token', set: vi.fn(), clear: vi.fn() };
   await render(
     <LowdefyPage
       core={createCore()}

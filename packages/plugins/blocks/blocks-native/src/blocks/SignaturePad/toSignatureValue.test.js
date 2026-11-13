@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import toSignatureValue, { toPath } from './toSignatureValue.js';
 
 test('toSignatureValue returns null for a pad with no strokes', () => {

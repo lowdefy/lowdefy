@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import CopyToClipboard from './CopyToClipboard.js';
 
 test('CopyToClipboard copies the text through the shell clipboard', async () => {
-  const clipboard = { setString: jest.fn(async () => undefined) };
+  const clipboard = { setString: vi.fn(async () => undefined) };
   await CopyToClipboard({ globals: { clipboard }, params: { copy: 'JOB-42' } });
   expect(clipboard.setString.mock.calls).toEqual([['JOB-42']]);
 });
 
 test('CopyToClipboard throws when there is no text to copy', async () => {
-  const clipboard = { setString: jest.fn(async () => undefined) };
+  const clipboard = { setString: vi.fn(async () => undefined) };
   await expect(CopyToClipboard({ globals: { clipboard }, params: {} })).rejects.toThrow(
     'CopyToClipboard requires "copy" text. Received undefined.'
   );

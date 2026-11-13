@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import toSharePayload from './toSharePayload.js';
 
 test('toSharePayload splits shared text, links and files', () => {

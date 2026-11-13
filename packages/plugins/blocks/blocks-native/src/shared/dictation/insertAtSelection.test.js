@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import insertAtSelection from './insertAtSelection.js';
 
 test('insertAtSelection puts words into an empty text without a space', () => {

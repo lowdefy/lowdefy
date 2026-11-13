@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import insertLink from './insertLink.js';
 import insertMention from './insertMention.js';
 import { toDisplay, toValue } from './segmentText.js';

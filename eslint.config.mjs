@@ -236,8 +236,7 @@ export default [
     files: ['packages/servers/**', 'packages/shell/**'],
     rules: { 'lowdefy-repo/react-in-jsx-scope': ['error', { runtime: 'automatic' }] },
   },
-  // Unit tests: vitest everywhere except the React Native packages, which use Jest. Vitest has
-  // no globals, so its functions must be imported.
+  // Unit tests run on vitest, which has no globals, so its functions must be imported.
   {
     files: TESTS,
     languageOptions: { globals: { ...globals.browser, ...globals.nodeBuiltin } },
@@ -252,16 +251,10 @@ export default [
       'no-restricted-syntax': ['error', ...NULL_COMPARISON],
     },
   },
+  // CommonJS test stand-ins (module.exports) and the shell's tests, which read __dirname.
   {
-    files: [
-      'packages/client-native/**/*.test.js',
-      'packages/plugins/blocks/blocks-native/**/*.test.js',
-      'packages/shell/fixtures/**/*.test.js',
-      'packages/shell/src/**/*.test.js',
-      'packages/shell/src/test/**',
-      '**/__mocks__/**',
-    ],
-    languageOptions: { globals: { ...globals.jest, ...globals.node } },
+    files: ['**/__mocks__/**', 'packages/shell/**/*.test.js', 'packages/shell/src/test/**'],
+    languageOptions: { globals: globals.node },
   },
   // Playwright: block e2e specs and helpers, the e2e utilities and the table benchmark. Code
   // passed to page.evaluate runs in the browser.

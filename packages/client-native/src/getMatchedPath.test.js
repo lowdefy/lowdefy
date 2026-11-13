@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getMatchedPath from './getMatchedPath.js';
 
 test('getMatchedPath drops the leading slash', () => {

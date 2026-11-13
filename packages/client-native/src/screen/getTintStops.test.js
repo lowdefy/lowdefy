@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getTintStops from './getTintStops.js';
 
 test('getTintStops runs from the full opacity at the top to clear at the bottom', () => {

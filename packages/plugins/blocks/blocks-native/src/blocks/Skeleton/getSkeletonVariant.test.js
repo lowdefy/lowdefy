@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSkeletonVariant from './getSkeletonVariant.js';
 
 test('getSkeletonVariant takes the variant set', () => {

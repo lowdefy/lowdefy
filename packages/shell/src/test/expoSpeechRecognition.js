@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// A stand-in for expo-speech-recognition, whose recogniser is a native module Jest does not have.
+// A stand-in for expo-speech-recognition, whose recogniser is a native module a test does not have.
 // The native blocks' dictation hook asks it whether the phone can recognise speech; here it
 // cannot, so screens render without a mic. blocks-native's own tests drive a fuller stand-in.
 const ExpoSpeechRecognitionModule = {

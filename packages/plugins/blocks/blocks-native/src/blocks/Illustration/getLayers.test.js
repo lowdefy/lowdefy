@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getLayers from './getLayers.js';
 
 function node(tag, props = {}, children = []) {

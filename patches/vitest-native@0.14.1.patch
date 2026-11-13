@@ -1,0 +1,37 @@
+diff --git a/dist/native/boundary.mjs b/dist/native/boundary.mjs
+index 9dfd0c3b06cd3dba5cc92cd5698d217e86a2db11..bdfefe290075d31ec20c5112b8dfbd30d00644b4 100644
+--- a/dist/native/boundary.mjs
++++ b/dist/native/boundary.mjs
+@@ -16,6 +16,9 @@ function deviceConstants(platform, reactNativeVersion) {
+     platform === "android"
+       ? {
+           isTesting: true,
++          // As the React Native Jest preset reports: Animated runs its real animations, not
++          // AnimatedMock, which ends each animation as it starts.
++          isDisableAnimations: false,
+           reactNativeVersion,
+           Version: 34,
+           Release: "14",
+@@ -33,6 +36,7 @@ function deviceConstants(platform, reactNativeVersion) {
+           systemName: "iOS",
+           interfaceIdiom: "phone",
+           isTesting: true,
++          isDisableAnimations: false,
+         };
+ 
+   return {
+@@ -212,6 +216,14 @@ function turboStubSource(platform, version) {
+             getBoundaryState(name).colorScheme =
+               colorScheme === "unspecified" || colorScheme == null ? "light" : colorScheme;
+           };
++        } else if (p === "startAnimatingNode") {
++          // As the React Native Jest preset's NativeAnimatedModule: a native-driven animation
++          // ends a frame after it starts, not inside start().
++          v = (animationId, nodeTag, config, endCallback) => {
++            if (typeof endCallback === "function") {
++              setTimeout(() => endCallback({ finished: true }), 16);
++            }
++          };
+         } else if (p === "addListener") v = () => ({ remove: () => {} });
+         else if (p === "removeListeners") v = () => {};
+         else {

@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
+
 import { peekCurrentApp } from './currentApp.js';
 import startAppServices from './startAppServices.js';
 import whenAppReady from './whenAppReady.js';
 
-// Share-in names its copies of shared files with expo-crypto, which has no native side in Jest.
-jest.mock('expo-crypto', () => ({}));
+// Share-in names its copies of shared files with expo-crypto, which has no native side in tests.
+vi.mock('expo-crypto', () => ({}));
 
 function createStore(initial) {
   let state = initial;
@@ -39,23 +41,23 @@ function createStore(initial) {
 
 function createOpened() {
   const auth = createStore({ status: 'starting' });
-  auth.fetch = jest.fn();
+  auth.fetch = vi.fn();
   auth.tokenStore = { get: () => null, subscribe: () => () => undefined };
   const session = createStore({ root: null });
   return {
     apiBase: 'https://app.test',
     auth,
     host: { router: {} },
-    requestQueue: { start: jest.fn(() => () => undefined) },
+    requestQueue: { start: vi.fn(() => () => undefined) },
     session,
-    triggerAppEvent: jest.fn(),
+    triggerAppEvent: vi.fn(),
   };
 }
 
 test('an app is ready once its auth is open and its session holds a root', async () => {
   const { auth, session } = createOpened();
   const ready = whenAppReady({ auth, session });
-  const settled = jest.fn();
+  const settled = vi.fn();
   ready.promise.then(settled);
   auth.set({ status: 'locked' });
   session.set({ root: {} });

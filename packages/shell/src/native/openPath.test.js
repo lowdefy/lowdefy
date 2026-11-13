@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
+
 import openPath from './openPath.js';
 
 function open(path, query) {
-  const app = { router: { push: jest.fn() } };
+  const app = { router: { push: vi.fn() } };
   openPath({ app, path, query });
   return app.router.push;
 }

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getPageStateUpdates from './getPageStateUpdates.js';
 
 test('getPageStateUpdates writes only top-level keys the chat shares, and reports the others back', () => {

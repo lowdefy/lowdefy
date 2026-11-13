@@ -15,8 +15,8 @@
 */
 
 // Builds a fixture app with the Lowdefy build: node buildFixture.mjs <config dir> <out dir>. The
-// build writes to <out dir>/build. Jest tests run it in a child process, since @lowdefy/build
-// does not load under the React Native Jest preset.
+// build writes to <out dir>/build. Tests run it in a child process, since @lowdefy/build does not
+// load in the React Native test environment.
 import fs from 'node:fs';
 import path from 'node:path';
 

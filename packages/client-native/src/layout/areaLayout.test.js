@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import areaLayout from './areaLayout.js';
 
 test('areaLayout fills a content slot from the block layout where the slot sets nothing', () => {

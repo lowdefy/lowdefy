@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
-// A stand-in for expo-web-browser, whose in-app browser needs a native module Jest does not have.
+// A stand-in for expo-web-browser, whose in-app browser needs a native module a test does not have.
 // A test reads the addresses a block opened from openBrowserAsync's calls.
-const openBrowserAsync = jest.fn(async () => ({ type: 'dismiss' }));
+const openBrowserAsync = vi.fn(async () => ({ type: 'dismiss' }));
 
 export { openBrowserAsync };

@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 
 import { createRoot } from '../test/fixtures.js';
 import PathRoute from '../../app/(t0,t1,t2,t3,t4)/[...path].js';
 
-const mockRouter = { canDismiss: jest.fn(() => true), dismiss: jest.fn(), navigate: jest.fn() };
+const mockRouter = { canDismiss: vi.fn(() => true), dismiss: vi.fn(), navigate: vi.fn() };
 const mockParams = {};
 
-jest.mock('expo-router', () => ({
+vi.mock('expo-router', () => ({
   get router() {
     return mockRouter;
   },
@@ -32,13 +32,13 @@ jest.mock('expo-router', () => ({
 }));
 
 const mockState = { root: null };
-jest.mock('../ShellContext.js', () => ({
+vi.mock('../ShellContext.js', () => ({
   useSessionState: () => mockState,
 }));
 
-jest.mock('./PageScreen.js', () => {
-  const { createElement } = jest.requireActual('react');
-  return (props) => createElement('PageScreen', props);
+vi.mock('./PageScreen.js', async () => {
+  const { createElement } = await import('react');
+  return { default: (props) => createElement('PageScreen', props) };
 });
 
 beforeEach(() => {

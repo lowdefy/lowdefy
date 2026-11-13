@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -41,7 +42,7 @@ function createTypeManifest(env = process.env) {
 
 // The test shell plugin (fixtures/printer-plugin) installed as `lowdefy mobile config` installs it,
 // listed in a shell.json, and the types the shell registers with appTypes.js written for it.
-function withPrinterPlugin(plugin, callback) {
+async function withPrinterPlugin(plugin, callback) {
   const directory = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'lowdefy-shell-types-'));
   try {
     const nodeModules = path.join(directory, 'node_modules');
@@ -54,20 +55,19 @@ function withPrinterPlugin(plugin, callback) {
     const devShell = JSON.parse(fs.readFileSync(path.join(shellRoot, 'shell.dev.json'), 'utf8'));
     const configPath = path.join(directory, 'shell.json');
     fs.writeFileSync(configPath, JSON.stringify({ ...devShell, plugins: [plugin] }));
-    let pluginTypes;
-    jest.isolateModules(() => {
-      jest.doMock('./appTypes.js', () => {
-        const native = jest.requireActual('../../fixtures/printer-plugin/native.js');
-        return {
-          __esModule: true,
-          default: {
-            actions: prefixTypes({ types: native.actions, typePrefix: plugin.typePrefix }),
-            blocks: prefixTypes({ types: native.blocks, typePrefix: plugin.typePrefix }),
-          },
-        };
-      });
-      pluginTypes = require('./types.js').default;
+    // A fresh module registry, so types.js loads again over the plugin's appTypes.js.
+    vi.resetModules();
+    vi.doMock('./appTypes.js', async () => {
+      const native = await import('../../fixtures/printer-plugin/native.js');
+      return {
+        default: {
+          actions: prefixTypes({ types: native.actions, typePrefix: plugin.typePrefix }),
+          blocks: prefixTypes({ types: native.blocks, typePrefix: plugin.typePrefix }),
+        },
+      };
     });
+    const { default: pluginTypes } = await import('./types.js');
+    vi.doUnmock('./appTypes.js');
     return callback({
       env: { ...process.env, LOWDEFY_SHELL_CONFIG: configPath, NODE_PATH: nodeModules },
       pluginTypes,
@@ -129,8 +129,8 @@ test('the DOM-bound actions-core actions run their native bodies under the same 
   expect(types.actions.SetState).not.toBeUndefined();
 });
 
-test("a shell plugin's native types register and join the manifest, named with its typePrefix", () => {
-  withPrinterPlugin(
+test("a shell plugin's native types register and join the manifest, named with its typePrefix", async () => {
+  await withPrinterPlugin(
     { name: '@example/lowdefy-printer', version: '2.1.0', typePrefix: 'Printer' },
     ({ env, pluginTypes }) => {
       const manifest = createTypeManifest(env);
@@ -145,7 +145,7 @@ test("a shell plugin's native types register and join the manifest, named with i
       expect(manifest.actions.PrinterPrint).toEqual(printer);
       expect(manifest.blocks.Label).toBeUndefined();
       expect(manifest.blocks.Tag).toEqual({ package: '@lowdefy/blocks-native', version: 7 });
-      // The registry jest.isolateModules loads them in is its own, so they are compared by what
+      // The fresh module registry loads them as copies of their own, so they are compared by what
       // they do: the plugin's Label under its prefixed name, the built-in Tag kept.
       expect(
         pluginTypes.blocks.PrinterLabel({ blockId: 'label', properties: { text: 'A1' } })
@@ -158,15 +158,15 @@ test("a shell plugin's native types register and join the manifest, named with i
   );
 });
 
-test('a shell plugin type named like a built-in one fails the manifest: use typePrefix', () => {
-  withPrinterPlugin({ name: '@example/lowdefy-printer', version: '2.1.0' }, ({ env }) => {
+test('a shell plugin type named like a built-in one fails the manifest: use typePrefix', async () => {
+  await withPrinterPlugin({ name: '@example/lowdefy-printer', version: '2.1.0' }, ({ env }) => {
     expect(() => createTypeManifest(env)).toThrow(
       'Shell plugin "@example/lowdefy-printer" gives the block type "Tag", which "@lowdefy/blocks-native" already gives. Set a typePrefix on the plugin in mobile.shells[].plugins.'
     );
   });
 });
 
-test('appTypes.js ships empty, so a shell without plugins registers only the built-in types', () => {
-  const appTypes = jest.requireActual('./appTypes.js').default;
+test('appTypes.js ships empty, so a shell without plugins registers only the built-in types', async () => {
+  const { default: appTypes } = await vi.importActual('./appTypes.js');
   expect(appTypes).toEqual({ actions: {}, blocks: {} });
 });

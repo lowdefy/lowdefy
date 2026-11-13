@@ -18,8 +18,8 @@ import { type } from '@lowdefy/helpers';
 
 // The page shape the Lowdefy build writes for a page (as @lowdefy/build's buildTestPage gives
 // it), for the few keys these tests use: block ids, events as try/catch chains, `blocks` moved
-// into the content slot, and request ids. @lowdefy/build itself does not load under the React
-// Native Jest preset.
+// into the content slot, and request ids. @lowdefy/build itself does not load in the React
+// Native test environment.
 function buildEvents(events) {
   if (type.isNone(events)) return undefined;
   return Object.fromEntries(

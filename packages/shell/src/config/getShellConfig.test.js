@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
+
 import getPageView from '../session/getPageView.js';
 import types from '../plugins/types.js';
 import typeManifest from '../plugins/typeManifest.js';
@@ -22,16 +24,18 @@ import getShellConfig from './getShellConfig.js';
 
 // The Expo config a native build embedded: its shell version is older than the JavaScript's, and its
 // type manifest predates the native Markdown block.
-jest.mock('expo-constants', () => ({
-  expoConfig: {
-    extra: {
-      shell: {
-        scheme: 'lowdefy-dev',
-        version: '0.1.0',
-        typeManifest: {
-          actions: {},
-          blocks: { Screen: { package: '@lowdefy/blocks-native', version: 6 } },
-          operators: {},
+vi.mock('expo-constants', () => ({
+  default: {
+    expoConfig: {
+      extra: {
+        shell: {
+          scheme: 'lowdefy-dev',
+          version: '0.1.0',
+          typeManifest: {
+            actions: {},
+            blocks: { Screen: { package: '@lowdefy/blocks-native', version: 6 } },
+            operators: {},
+          },
         },
       },
     },

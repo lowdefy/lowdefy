@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { beforeEach, expect, test, vi } from 'vitest';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import dayjs from 'dayjs';
@@ -24,29 +24,31 @@ import helloJsEntries from '../../fixtures/hello.jsEntries.json';
 import reloadApp from '../dev/tab/reloadApp.js';
 import renderPageScreen from '../test/renderPageScreen.js';
 
-const mockNavigation = { setOptions: jest.fn() };
+const mockNavigation = { setOptions: vi.fn() };
 // Whether the screen is the focused one; a screen under another is not.
 const mockFocus = { focused: true };
 
 // The native stack's header height, which a Screen's headerBottom pins under on iOS.
-jest.mock('expo-router/native-stack', () => ({ useAnimatedHeaderHeight: () => 0 }));
-jest.mock('react-native-safe-area-context', () => ({
+vi.mock('expo-router/native-stack', () => ({ useAnimatedHeaderHeight: () => 0 }));
+vi.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 34, left: 0 }),
 }));
 
-jest.mock('expo-router', () => ({
-  DarkTheme: { fonts: {} },
-  DefaultTheme: { fonts: {} },
-  ThemeProvider: ({ children }) => children,
-  router: { back: jest.fn(), canGoBack: () => false },
-  useFocusEffect: (effect) => {
-    const { useEffect: useReactEffect } = jest.requireActual('react');
-    useReactEffect(() => (mockFocus.focused ? effect() : undefined), [effect]);
-  },
-  useIsFocused: () => mockFocus.focused,
-  useNavigation: () => mockNavigation,
-  useRoute: () => ({ key: 'route-1' }),
-}));
+vi.mock('expo-router', async () => {
+  const { useEffect: useReactEffect } = await import('react');
+  return {
+    DarkTheme: { fonts: {} },
+    DefaultTheme: { fonts: {} },
+    ThemeProvider: ({ children }) => children,
+    router: { back: vi.fn(), canGoBack: () => false },
+    useFocusEffect: (effect) => {
+      useReactEffect(() => (mockFocus.focused ? effect() : undefined), [effect]);
+    },
+    useIsFocused: () => mockFocus.focused,
+    useNavigation: () => mockNavigation,
+    useRoute: () => ({ key: 'route-1' }),
+  };
+});
 
 const boxTypes = {
   blocks: [
@@ -136,7 +138,7 @@ test('a Screen with a large title sets it on the bar a frame before the page is 
   // iOS keeps a large title collapsed when the page's scroll view is laid out first under a
   // standard bar: the page waits a frame for the bar to take the large title.
   const frames = [];
-  const requestFrame = jest
+  const requestFrame = vi
     .spyOn(global, 'requestAnimationFrame')
     .mockImplementation((callback) => frames.push(callback));
   try {

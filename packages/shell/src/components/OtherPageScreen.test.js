@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { Linking } from 'react-native';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
@@ -23,14 +23,14 @@ import { router } from 'expo-router';
 import OtherPageScreen from './OtherPageScreen.js';
 import ShellContext from '../ShellContext.js';
 
-jest.mock('expo-router', () => ({
-  router: { back: jest.fn(), canGoBack: jest.fn(), replace: jest.fn() },
+vi.mock('expo-router', () => ({
+  router: { back: vi.fn(), canGoBack: vi.fn(), replace: vi.fn() },
 }));
 
 function renderScreen(result = { surface: 'web' }) {
   const session = {
     apiBase: 'https://app.test',
-    fetchOtherPage: jest.fn().mockResolvedValue(result),
+    fetchOtherPage: vi.fn().mockResolvedValue(result),
     getState: () => ({ lowdefy: { buildId: 'b1' } }),
   };
   return render(
@@ -41,8 +41,8 @@ function renderScreen(result = { surface: 'web' }) {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  vi.clearAllMocks();
+  vi.spyOn(Linking, 'openURL').mockResolvedValue(true);
 });
 
 test('a cold start opens the web page with its query and offers home, going nowhere on its own', async () => {
@@ -65,7 +65,7 @@ test('with history it goes back after opening the browser', async () => {
 });
 
 test('a failed openURL says the page could not be opened, not that it was not found', async () => {
-  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
   Linking.openURL.mockRejectedValue(new Error('no browser'));
   await renderScreen();
   expect(await screen.findByTestId('shell-other-page-error')).toBeTruthy();

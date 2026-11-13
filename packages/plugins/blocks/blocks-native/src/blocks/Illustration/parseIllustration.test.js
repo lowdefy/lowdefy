@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { G, Path } from 'react-native-svg';
 
 import colorNodes from './colorNodes.js';

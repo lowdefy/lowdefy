@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createElementRegistry from './createElementRegistry.js';
 
 test('createElementRegistry finds a registered view by kind, page and block id', () => {

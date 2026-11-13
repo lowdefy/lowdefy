@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createMemoryStore from '../host/createMemoryStore.js';
 import createShellLocale from './createShellLocale.js';
@@ -54,7 +54,7 @@ test('createShellLocale points lowdefy.i18n and the window at the active locale'
 
 test('SetLocale sets the choice through the window, keeps it and tells the screens', () => {
   const { globals, locale, lowdefy, storage } = createLocale(i18n);
-  const listener = jest.fn();
+  const listener = vi.fn();
   locale.subscribe(listener);
   globals.window.__lowdefy_setLocale('af-ZA');
   expect(lowdefy.i18n.active).toBe('af-ZA');

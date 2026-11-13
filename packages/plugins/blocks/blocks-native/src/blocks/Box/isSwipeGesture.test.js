@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import isSwipeGesture from './isSwipeGesture.js';
 
 const both = ['left', 'right'];

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import { ios, page, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
 test('a Skeleton is a shimmering placeholder of the given size', async () => {

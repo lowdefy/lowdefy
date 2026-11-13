@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getDictationLevel from './getDictationLevel.js';
 
 test('getDictationLevel gives 0 for inaudible input', () => {

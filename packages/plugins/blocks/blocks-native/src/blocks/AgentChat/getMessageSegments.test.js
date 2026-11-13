@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getMessageSegments from './getMessageSegments.js';
 
 const parts = [

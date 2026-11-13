@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import describeEvent from './describeEvent.js';
 
 const sam = { id: 'u1', name: 'Sam Taylor' };

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getAvatarImage from './getAvatarImage.js';
 
 const imageSource = (url) => ({ uri: url.startsWith('/') ? `https://app.example${url}` : url });

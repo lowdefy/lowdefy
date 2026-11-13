@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import isLoopbackHost from './isLoopbackHost.js';
 import parseDevLink from './parseDevLink.js';
 import parseServerInput from './parseServerInput.js';

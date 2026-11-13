@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import pickRecognitionLocale from './pickRecognitionLocale.js';
 
 test('pickRecognitionLocale picks the phone locale when it is installed', () => {

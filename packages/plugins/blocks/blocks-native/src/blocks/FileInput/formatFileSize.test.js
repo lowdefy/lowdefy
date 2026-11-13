@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import formatFileSize from './formatFileSize.js';
 
 test('formatFileSize reads bytes, kilobytes and megabytes', () => {

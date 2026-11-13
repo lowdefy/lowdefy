@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import classStyle from './classStyle.js';
 
@@ -74,7 +74,7 @@ test('classStyle reads class arrays and objects as the web cn does', () => {
 });
 
 test('classStyle reports each class the map does not hold', () => {
-  const onMissing = jest.fn();
+  const onMissing = vi.fn();
   expect(style({ classValue: 'p-1 made-up dark:made-up', onMissing })).toEqual({ padding: 1 });
   expect(onMissing.mock.calls).toEqual([['made-up'], ['dark:made-up']]);
 });

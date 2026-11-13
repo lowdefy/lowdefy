@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react-native';
 
 import {
@@ -34,7 +34,7 @@ function createReads(answers) {
 }
 
 async function renderDictation() {
-  const onFinal = jest.fn();
+  const onFinal = vi.fn();
   const hook = await renderHook((props) => useDictation(props), {
     initialProps: { hints: [], onFinal },
   });
@@ -50,7 +50,7 @@ async function start(result) {
 
 async function advance(ms) {
   await act(async () => {
-    jest.advanceTimersByTime(ms);
+    vi.advanceTimersByTime(ms);
   });
 }
 
@@ -58,13 +58,13 @@ let remove = null;
 
 beforeEach(() => {
   setSpeechRecognition({ available: false });
-  jest.useFakeTimers();
+  vi.useFakeTimers();
 });
 
 afterEach(() => {
   remove?.();
   remove = null;
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('getRecognizer is expo-speech-recognition while nothing is installed', async () => {

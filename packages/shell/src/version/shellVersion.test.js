@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { execFileSync } from 'child_process';
 import path from 'path';
 

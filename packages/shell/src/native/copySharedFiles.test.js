@@ -14,14 +14,16 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test, vi } from 'vitest';
+
 import copySharedFiles from './copySharedFiles.js';
 
 // A file system in memory: the folders created and the names copied into each.
 const mockFolders = new Map();
 let mockIds = [];
 
-jest.mock('expo-crypto', () => ({ randomUUID: () => mockIds.shift() }));
-jest.mock('expo-file-system', () => {
+vi.mock('expo-crypto', () => ({ randomUUID: () => mockIds.shift() }));
+vi.mock('expo-file-system', () => {
   class Directory {
     constructor(parent, name) {
       this.uri = `${parent.uri ?? parent}/${name}`;
