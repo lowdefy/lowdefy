@@ -21,6 +21,7 @@ import discoverJourneys from '../../test/discoverJourneys.js';
 import expandPersonas from '../../test/expandPersonas.js';
 import fetchBuildId from '../../test/fetchBuildId.js';
 import fetchVariantInputs from './fetchVariantInputs.js';
+import findAccessSnapshotTest from './findAccessSnapshotTest.js';
 import formatJourneyResult from '../../test/formatJourneyResult.js';
 import generators, { KINDS } from './generators/index.js';
 import readExercised from '../../test/readExercised.js';
@@ -246,7 +247,11 @@ async function journeysVariants({ context }) {
       kinds,
       journey: item.journey,
       exercised: measured.exercised,
-      inputs: { ...inputs, ...dataSets },
+      inputs: {
+        ...inputs,
+        ...dataSets,
+        accessSnapshotTest: findAccessSnapshotTest({ directories: context.directories }),
+      },
     });
     const files = writeVariantFiles({
       directories: context.directories,
