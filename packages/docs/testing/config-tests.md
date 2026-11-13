@@ -404,7 +404,7 @@ SKIP deprecated  member prints a ticket  0.4/day (3m)
 - `--usage-window <months>`: The calendar months recent use is ranked over, for `--tier` and the `PASS` line, such as `6m`. The default is `3m`.
 - `--repeat <n>`: Run each journey `n` times in a row (1 to 10) and classify it, as described in [Replaying candidates](#replaying-candidates).
 - `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
-- `--headless`: Run only the journeys that need no browser, in Node, and list the rest as browser-only. See [headless runs](#headless-runs). Needs `--build` for now.
+- `--headless`: Run only the journeys that need no browser, in Node, and list the rest as browser-only. On the development server, or on the production build with `--build`. See [headless runs](#headless-runs).
 - `--build`: With `--headless`, run on the production build in this process, for CI.
 - `--server-directory <path>`: With `--build`, the built server to read, when it is not `.lowdefy/server`.
 - `--journeys-directory <path>`: Read journeys from this directory instead of `tests/journeys/`, for journeys that need a server set up for them, such as [auth journeys](#the-database). A relative path is resolved from the current directory. The run fails when the directory holds no journeys.
@@ -423,7 +423,7 @@ A journey file that is not valid YAML, or does not match the journey format (a m
 
 ## Headless runs
 
-Most of what a journey checks is the app's own logic: an event runs its actions, a request runs, state changes, a block shows or hides, the database changes. None of that needs a browser. `lowdefy test --headless` runs the journeys that need no browser in Node: their pages run on Lowdefy's client engine, with the page's own event chains, and their requests and endpoint calls run in the same process on the journey's data set and user. No block is rendered and no browser is started, so a journey takes about as long as its requests do.
+Most of what a journey checks is the app's own logic: an event runs its actions, a request runs, state changes, a block shows or hides, the database changes. None of that needs a browser. `lowdefy test --headless` runs the journeys that need no browser in Node, on the development server while you edit, or on a production build in CI: their pages run on Lowdefy's client engine, with the page's own event chains, and their requests and endpoint calls run in the same process on the journey's data set and user. No block is rendered and no browser is started, so a journey takes about as long as its requests do.
 
 Nothing in a journey says which kind it is. Its steps decide: a journey runs headless when every step and check is in the left column.
 
@@ -455,7 +455,15 @@ lowdefy test --headless --build
 
 `--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route. The results are written to `.lowdefy/test/headless-run.json`.
 
-<!-- TODO(dev server host): `lowdefy test --headless` without `--build` runs headless on the dev server, with no rebuild, on its data sessions and recording; `lowdefy_run_tests` and `lowdefy_run_journey` take `headless: true`. Fill in once the dev server host is merged. -->
+### While you edit
+
+```
+lowdefy test --headless
+```
+
+Without `--build`, a headless run uses the development server, as a plain `lowdefy test` does: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless run starts no browser and takes no journey run slot, so it does not wait behind browser runs on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
+
+The `lowdefy_run_tests` and `lowdefy_run_journey` agent tools take `headless: true`, and `lowdefy_run_journey` needs no `pageId` for a [page-less journey](#calls-requests-and-the-database). A journey that needs a browser comes back with `browserOnly`, naming the step.
 
 ## Hardening journeys
 
@@ -535,7 +543,7 @@ The report is written to `.lowdefy/test/mutation.json`: each mutant with the jou
 - `--json`: Print the report as JSON.
 - `--url`, `--port`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `lowdefy test`.
 
-<!-- TODO(dev server host): `lowdefy journeys harden --headless` runs each mutant and journey pair headless on the dev server, and the browser-only journeys in the browser; fill in once the dev server host is merged. -->
+<!-- TODO(harden --headless): `lowdefy journeys harden --headless` runs each mutant and journey pair headless on the dev server, and the browser-only journeys in the browser; headless variant replay and the tenant call form. Fill in once they are merged. -->
 
 ### Variants: `lowdefy journeys variants`
 
