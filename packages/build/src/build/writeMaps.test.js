@@ -17,6 +17,7 @@
 import zlib from 'zlib';
 
 import { createColumnarKeyMap, encodeColumnarKeyMap } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 import { vi, beforeEach, expect, test } from 'vitest';
 
 import writeMaps from './writeMaps.js';
@@ -46,6 +47,55 @@ test('writeMaps', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     ['keyMap.json', '{"key":"value"}'],
     ['refMap.json', '{"ref":"value"}'],
+  ]);
+});
+
+test('writeMaps writes the key map as the serializer does', async () => {
+  context.keyMap = {
+    1: { s: 'root', p: '0' },
+    b: { s: '.pages', p: '1', r: 'ref-1', l: 4 },
+    c: { s: '[0:home:PageHeaderMenu]', p: 'b', r: null, l: 12, i: true },
+    d: { s: '.title "quoted" \u00e9', p: 'c' },
+  };
+  context.refMap = {};
+  await writeMaps({ context });
+  expect(writtenArtifacts()['keyMap.json']).toBe(serializer.serializeToString(context.keyMap));
+  expect(writtenArtifacts()['keyMap.json']).toBe(
+    '{"1":{"s":"root","p":"0"},"b":{"s":".pages","p":"1","r":"ref-1","l":4},"c":{"s":"[0:home:PageHeaderMenu]","p":"b","r":null,"l":12,"i":true},"d":{"s":".title \\"quoted\\" \u00e9","p":"c"}}'
+  );
+});
+
+test('writeMaps writes the line marker of a list of ignored checks, and leaves the key map as it was', async () => {
+  // addKeys stores the config's own array, which carries the line it was read from.
+  const checks = ['state-refs', 'link-refs'];
+  Object.defineProperty(checks, '~l', {
+    value: 7,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const entry = { s: '.blocks', p: '1', l: 6, i: checks };
+  context.writeCompressedMaps = true;
+  context.keyMap = {
+    1: { s: 'root', p: '0' },
+    2: entry,
+    3: { s: '[0:a:Box]', p: '2', i: [] },
+  };
+  context.refMap = {};
+  const expected = serializer.serializeToString(context.keyMap);
+  await writeMaps({ context });
+  const artifacts = writtenArtifacts();
+  expect(artifacts['keyMap.json']).toBe(expected);
+  expect(artifacts['keyMap.json']).toBe(
+    '{"1":{"s":"root","p":"0"},"2":{"s":".blocks","p":"1","l":6,"i":{"~arr":["state-refs","link-refs"],"~l":7}},"3":{"s":"[0:a:Box]","p":"2","i":[]}}'
+  );
+  expect(context.keyMap[2]).toBe(entry);
+  expect(context.keyMap[2].i).toBe(checks);
+  expect(Object.keys(context.keyMap)).toEqual(['1', '2', '3']);
+  const columns = JSON.parse(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8'));
+  expect(columns.ignoreBuildChecks).toEqual([
+    [1, ['state-refs', 'link-refs']],
+    [2, []],
   ]);
 });
 

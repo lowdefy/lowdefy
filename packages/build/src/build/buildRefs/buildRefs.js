@@ -53,8 +53,12 @@ async function buildRefs({ context, shallowOptions }) {
       // (same predicate) and live on context.modules — preserve the raw blobs so
       // the app pass doesn't pull and walk their refs a second time. buildModules
       // reads entry ids only and deletes components.modules before testSchema.
-      if (/^modules\.\d+\.vars$/.test(path)) return 'preserve';
-      if (/^modules\.\d+\.connections$/.test(path)) return 'preserve';
+      // The walker asks for every node it visits, and few of them are under
+      // modules, so the prefix is checked before the patterns.
+      if (path.startsWith('modules.')) {
+        if (/^modules\.\d+\.vars$/.test(path)) return 'preserve';
+        if (/^modules\.\d+\.connections$/.test(path)) return 'preserve';
+      }
       if (shallowOptions) {
         // Strip page content (blocks, events, etc.) from ref-backed pages so
         // JIT can re-resolve them from source files. Inline pages (defined
