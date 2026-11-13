@@ -83,7 +83,7 @@ function getFirstMessageText({ messages, role }) {
   return (message.parts ?? [])
     .filter((part) => part.type === 'text')
     .map((part) => part.text)
-    .join('');
+    .join('\n');
 }
 
 async function handleAgentChat({ connection, properties, context }) {
@@ -147,16 +147,20 @@ async function handleAgentChat({ connection, properties, context }) {
       async function writeChatTitle({ firstUserText, replyText }) {
         if (!firstUserText && !replyText) return;
         try {
-          const { text } = await generateText({
+          const { text, finishReason } = await generateText({
             model,
             maxOutputTokens: 20,
             providerOptions: agent.properties.providerOptions,
             prompt: buildChatTitlePrompt({ firstUserText, replyText }),
+            ...timeoutConfig,
           });
           const title = text.trim();
-          if (title) {
-            writer.write({ type: 'data-chat-title', data: { title } });
+          if (!title) {
+            // A reasoning model can spend the whole token cap before writing any text.
+            context.logger.warn({ ...logIds, finishReason }, 'generateTitle returned no text.');
+            return;
           }
+          writer.write({ type: 'data-chat-title', data: { title } });
         } catch (error) {
           context.logger.warn(
             { ...logIds, error: agentErrorForLog(error) },

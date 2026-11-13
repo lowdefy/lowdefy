@@ -2434,21 +2434,32 @@ test('generateTitle titles from the question and the reply once the reply is wri
     { type: 'text-end', id: 't1' },
     { type: 'finish' },
   ];
+  // As in the AI SDK, onEnd fires as the stream finishes, not when it is created.
   mockCreateAgentUIStream.mockImplementationOnce(async (opts) => {
-    opts.onEnd({
-      messages: [
-        ...opts.uiMessages,
-        {
-          id: 'assistant-1',
-          role: 'assistant',
-          parts: [
-            { type: 'step-start' },
-            { type: 'text', text: 'For the board charter, attach the signed charter.' },
-          ],
+    const reader = createMockReadableStream(replyChunks).getReader();
+    return {
+      getReader: () => ({
+        read: async () => {
+          const result = await reader.read();
+          if (result.done) {
+            opts.onEnd({
+              messages: [
+                ...opts.uiMessages,
+                {
+                  id: 'assistant-1',
+                  role: 'assistant',
+                  parts: [
+                    { type: 'step-start' },
+                    { type: 'text', text: 'For the board charter, attach the signed charter.' },
+                  ],
+                },
+              ],
+            });
+          }
+          return result;
         },
-      ],
-    });
-    return createMockReadableStream(replyChunks);
+      }),
+    };
   });
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
@@ -2538,6 +2549,57 @@ test('generateTitle passes the agent providerOptions to the title call', async (
     gateway: { zeroDataRetention: true, only: ['anthropic'] },
   });
   expect(lastAgentConfig.providerOptions).toBe(mockGenerateText.mock.calls[0][0].providerOptions);
+});
+
+test('generateTitle passes the agent timeout to the title call', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true, timeout: 30000 } },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
+
+  expect(mockGenerateText.mock.calls[0][0].timeout).toBe(30000);
+});
+
+test('generateTitle logs a warning and writes no title when the model returns no text', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  mockGenerateText.mockResolvedValueOnce({ text: '', finishReason: 'length' });
+  testLogger.warn.mockClear();
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+  });
+
+  const localWriter = { write: vi.fn() };
+  await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
+
+  expect(testLogger.warn).toHaveBeenCalledWith(
+    { agentId: undefined, conversationId: null, finishReason: 'length' },
+    'generateTitle returned no text.'
+  );
+  expect(localWriter.write).not.toHaveBeenCalledWith(
+    expect.objectContaining({ type: 'data-chat-title' })
+  );
 });
 
 test('generateTitle passes no providerOptions when the agent sets none', async () => {
