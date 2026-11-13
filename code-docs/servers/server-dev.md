@@ -1126,10 +1126,13 @@ export default defineConfig(({ mode }) => ({
       ],
     }),
   ],
-  define: {
-    // Vite does not replace process.env.NODE_ENV inside dependencies —
-    // plugin and client code branch on it.
-    'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
+  // Vite does not replace process.env.NODE_ENV inside dependencies - plugin and
+  // client code branch on it.
+  define: createNodeEnvDefine({ mode }), // { 'process.env.NODE_ENV': '"development"' }
+  optimizeDeps: {
+    // The dependency optimiser ignores `define` and reads NODE_ENV from the shell.
+    rolldownOptions: { transform: { define: createNodeEnvDefine({ mode }) } },
+    // ...
   },
   resolve: {
     // Linked plugin packages share one React, antd, dayjs and the server's
