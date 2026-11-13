@@ -432,11 +432,12 @@ test('lowdefy_view_session returns the bearer in the result _meta with nothing i
   const context = createContext();
   const client = await connect(context);
   const result = await client.callTool({ name: 'lowdefy_view_session', arguments: {} });
+  const [[, , { token }]] = (await context.auth.$context).internalAdapter.createSession.mock.calls;
   expect(result).toEqual({
     content: [],
     _meta: {
       'lowdefy/viewSession': {
-        token: signSessionToken({ secret: 'secret', token: 'tok' }),
+        token: signSessionToken({ secret: 'secret', token }),
         expiresAt: '2026-11-12T10:15:00.000Z',
       },
     },

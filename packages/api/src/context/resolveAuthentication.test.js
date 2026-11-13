@@ -1824,3 +1824,18 @@ test('a bearer caller reads its session past the cookie cache', async () => {
     query: { disableCookieCache: true },
   });
 });
+
+test('a view session bearer is read past the cookie cache and without the sliding refresh', async () => {
+  const { auth } = mockAuth({ session: null });
+  const headers = new Headers({ authorization: 'Bearer ldf_view_tok.sig' });
+
+  await resolveAuthentication(
+    { logger: mockLogger(), config: {} },
+    { auth, headers, strategies: [] }
+  );
+
+  expect(auth.api.getSession).toHaveBeenCalledWith({
+    headers,
+    query: { disableCookieCache: true, disableRefresh: true },
+  });
+});

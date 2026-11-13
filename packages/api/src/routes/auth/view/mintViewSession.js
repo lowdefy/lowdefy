@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import { randomBytes } from 'node:crypto';
+
 import { AuthenticationError, AuthorizationError, LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import pruneViewSessions from './pruneViewSessions.js';
 import signSessionToken from './signSessionToken.js';
-import { VIEW_SESSION_EXPIRES_IN } from './viewSessionLimits.js';
+import { VIEW_SESSION_EXPIRES_IN, VIEW_SESSION_TOKEN_PREFIX } from './viewSessionLimits.js';
 
 // Mints the bearer session an MCP App view signs in with, for the caller the
 // /api/mcp route resolved. The MCP access token cannot be used on any other
@@ -54,6 +56,7 @@ async function mintViewSession(context) {
     false,
     {
       expiresAt,
+      token: `${VIEW_SESSION_TOKEN_PREFIX}${randomBytes(32).toString('base64url')}`,
       view: true,
       viewClientId: clientId,
       viewScopes: grantedScopes.join(' '),

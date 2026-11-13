@@ -67,7 +67,13 @@ test('mintViewSession creates a view session for the caller in the grant organiz
   expect(internalAdapter.createSession).toHaveBeenCalledWith(
     'user_1',
     false,
-    { expiresAt, view: true, viewClientId: 'client_1', viewScopes: 'mcp:read' },
+    {
+      expiresAt,
+      token: expect.stringMatching(/^ldf_view_[A-Za-z0-9_-]{43}$/),
+      view: true,
+      viewClientId: 'client_1',
+      viewScopes: 'mcp:read',
+    },
     true
   );
   expect(adapter.update).toHaveBeenCalledWith({
@@ -75,10 +81,19 @@ test('mintViewSession creates a view session for the caller in the grant organiz
     where: [{ field: 'id', value: 'sess_1' }],
     update: { activeOrganizationId: 'org_1' },
   });
+  const { token } = internalAdapter.createSession.mock.calls[0][2];
   expect(result).toEqual({
-    token: signSessionToken({ secret: 'secret', token: 'tok' }),
+    token: signSessionToken({ secret: 'secret', token }),
     expiresAt,
   });
+});
+
+test('mintViewSession gives each view session a token of its own', async () => {
+  const { context, internalAdapter } = createContext();
+  await mintViewSession(context);
+  await mintViewSession(context);
+  const [first, second] = internalAdapter.createSession.mock.calls.map((call) => call[2].token);
+  expect(first).not.toBe(second);
 });
 
 test('mintViewSession records both scopes of a write grant', async () => {

@@ -16,7 +16,10 @@
 
 // session.update.before, always bound. BetterAuth slides a session forward by
 // auth.session.expiresIn when it is read (getSession) - and a view session,
-// minted with fifteen minutes left, is due that refresh on its first read.
+// minted with fifteen minutes left, is due that refresh on every read. The
+// caller resolution reads a view's bearer with the refresh off
+// (VIEW_SESSION_TOKEN_PREFIX); this holds the expiry on any other read, such as
+// the token sent as a session cookie.
 // getSession has put the session it is refreshing on the endpoint context
 // first, so a refresh of a view session is told by its view mark and its
 // expiry is held where minting set it. The update cannot be vetoed instead:

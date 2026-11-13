@@ -24,4 +24,13 @@ const VIEW_SESSION_EXPIRES_IN = 15 * 60;
 // oldest.
 const VIEW_SESSIONS_PER_GRANT = 20;
 
-export { VIEW_SESSION_EXPIRES_IN, VIEW_SESSIONS_PER_GRANT };
+// The start of every view session token (mintViewSession). A view session's
+// expiry is held fifteen minutes from minting while BetterAuth reads every
+// session against auth.session.expiresIn, so each read of one would be due a
+// refresh, a write of the session row. The caller resolution tells a view's
+// bearer by this prefix and reads it without the refresh. BetterAuth's own
+// tokens are letters and digits only, so none starts with it. It is a hint for
+// that read and nothing else: what a session may do is told by its view mark.
+const VIEW_SESSION_TOKEN_PREFIX = 'ldf_view_';
+
+export { VIEW_SESSION_EXPIRES_IN, VIEW_SESSION_TOKEN_PREFIX, VIEW_SESSIONS_PER_GRANT };

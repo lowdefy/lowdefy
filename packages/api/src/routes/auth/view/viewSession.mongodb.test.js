@@ -360,6 +360,28 @@ test('reading a view session never slides its expiry forward', async () => {
   expect(new Date(browserAfter.expiresAt).getTime() - Date.now()).toBeGreaterThan(6.9 * DAY * 1000);
 });
 
+test('resolving a caller from a view session writes nothing to its session row', async () => {
+  const { adapter, auth, internalAdapter } = await setup();
+  const { user, organizationIds } = await createMember({
+    adapter,
+    internalAdapter,
+    email: 'bea@example.com',
+  });
+  const grant = await createGrant({ adapter, organizationId: organizationIds[0], userId: user.id });
+  const { token } = await mintViewSession(mcpContext({ auth, grant }));
+  const [minted] = await findViewSessions({ adapter, userId: user.id });
+  expect(minted.token.startsWith('ldf_view_')).toBe(true);
+
+  // Every call a view makes and every websocket caller check resolves the
+  // caller, so a refresh here would write the row each time.
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  expect((await resolveCaller({ auth, token })).viewSession).not.toBeNull();
+  expect((await resolveCaller({ auth, token })).viewSession).not.toBeNull();
+
+  const [session] = await findViewSessions({ adapter, userId: user.id });
+  expect(new Date(session.updatedAt)).toEqual(new Date(minted.updatedAt));
+});
+
 test('a view session stops at its expiry, and at fifteen minutes of age even with a later expiry', async () => {
   const { adapter, auth, internalAdapter } = await setup();
   const { user, organizationIds } = await createMember({

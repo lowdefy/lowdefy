@@ -29,6 +29,7 @@ import { getAsIssuer, getMcpResourceUri } from '../routes/mcp/getMcpUri.js';
 import getMcpJwks from '../routes/mcp/getMcpJwks.js';
 import mcpScopes from '../routes/mcp/mcpScopes.js';
 import resolveViewSession from '../routes/auth/view/resolveViewSession.js';
+import { VIEW_SESSION_TOKEN_PREFIX } from '../routes/auth/view/viewSessionLimits.js';
 import readMemberships from './readMemberships.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
@@ -550,9 +551,17 @@ async function resolveMcpCaller(context, { auth, headers }) {
 // admin ending sessions or removing a member take effect on its next call. A
 // bearer that is not a session token (an API strategy's) resolves no session,
 // and the strategies run as before.
+//
+// An MCP App view's bearer is read without BetterAuth's sliding refresh: its
+// expiry is held fifteen minutes from minting, so every read would be due one,
+// a write of the session row on each call (VIEW_SESSION_TOKEN_PREFIX).
 function getSessionInput({ headers }) {
-  if (readBearerToken({ headers }) === null) {
+  const token = readBearerToken({ headers });
+  if (token === null) {
     return { headers };
+  }
+  if (token.startsWith(VIEW_SESSION_TOKEN_PREFIX)) {
+    return { headers, query: { disableCookieCache: true, disableRefresh: true } };
   }
   return { headers, query: { disableCookieCache: true } };
 }
