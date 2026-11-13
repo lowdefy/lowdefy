@@ -3176,14 +3176,14 @@
         "version.yaml",
         "websockets/introduction.yaml"
       ],
-      "hash": "10531b9d224483afbf1c824329c34538dea1ebfa9870ebe031c1996977603616"
+      "hash": "4cb3dcf88d3a35109f92c6d6c1fcb7ca6d4257f291f659014e378c90a760d4a0"
     },
     "websockets/websocket-subscriptions": {
       "files": [
         "version.yaml",
         "websockets/subscriptions.yaml"
       ],
-      "hash": "808690ae34a7f630f8ca360d60990fd24bfac50851f091a43f1d2b22685ac204"
+      "hash": "5ac50cfa0c54160632bf1de3b2a8ca95adb32232ca5252431e0d1fe15b273870"
     },
     "websockets/websocket-publish": {
       "files": [
@@ -3208,7 +3208,7 @@
       "files": [
         "deployment/vercel.yaml"
       ],
-      "hash": "0202d3eb1b1999b6f6723051cd91970e90ddc654c4b2ff972463a3dc7ad4908c"
+      "hash": "a3d55236b70520fe05204231204e92c0e192e2d0588f9fc8a40c1711c5fc776c"
     },
     "deployment/deployment-environments": {
       "files": [
@@ -4874,7 +4874,7 @@
         "connections/AxiosHttp.yaml",
         "version.yaml"
       ],
-      "hash": "5ce8841e4e2896c9f1aadbbe698fc218b75348a55d6a55f47245065aac3923d0"
+      "hash": "6dc718d4c360b78d0cc5d50b0af63b3502185b68a47defa206185b51e8f7597a"
     },
     "connections/elasticsearch": {
       "files": [

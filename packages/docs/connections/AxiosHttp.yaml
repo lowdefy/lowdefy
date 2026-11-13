@@ -32,9 +32,40 @@ _ref:
 
                 It uses the [axios](https://github.com/axios/axios) library.
 
-                The same properties can be set on both connections and requests. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseURL to be set on the connection, with request specific properties like the request.
+                Most properties can be set on both connections and requests. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseURL to be set on the connection, with request specific properties like the request. The properties that decide where the server may connect (`allowInternalAddresses`, `allowedHosts`, `allowAbsoluteUrls`, `proxy`, `socketPath`, `httpVersion`, `httpAgentOptions` and `httpsAgentOptions`) can only be set on the connection, since request properties can be filled from the client payload.
 
                 >Secrets like authentication headers and API keys should be stored using the [`_secret`](_secret) operator.
+
+                ## Internal addresses
+
+                By default, `AxiosHttp` only connects to public addresses. A request to localhost, a private network (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), a link-local address such as the cloud metadata endpoint `169.254.169.254`, or another address that is not public, fails. A hostname is checked by the address it resolves to, and every redirect is checked too.
+
+                This matters when a request takes its URL, or part of it, from the payload. Without the check, a user could point the request at a service the server can reach but the internet cannot, such as a database admin page or the cloud metadata endpoint, which hands out the server's cloud credentials.
+
+                To call a service on the same machine or network, such as an API on localhost, a Docker Compose service name or an API on a private network, set `allowInternalAddresses: true` on the connection:
+
+                ```yaml
+                connections:
+                  - id: orders_service
+                    type: AxiosHttp
+                    properties:
+                      baseURL: http://orders-service:8080
+                      allowInternalAddresses: true
+                ```
+
+                Without `allowInternalAddresses`, the server connects directly: the `HTTP_PROXY` and `HTTPS_PROXY` environment variables are ignored, and `proxy`, `socketPath` and `httpVersion: 2` fail, since the server cannot check where they connect.
+
+                To limit a connection to known hosts, list them in `allowedHosts`. A request to any other host, or a redirect to one, fails. `allowedHosts` applies alongside the address check: an internal host must be listed and the connection must set `allowInternalAddresses: true`.
+
+                ```yaml
+                connections:
+                  - id: partner_api
+                    type: AxiosHttp
+                    properties:
+                      baseURL: https://api.partner.com
+                      allowedHosts:
+                        - api.partner.com
+                ```
 
                 ## Connections
 
@@ -66,14 +97,17 @@ _ref:
                 - `auth: object`: Indicates that HTTP Basic authorization should be used, and supplies credentials. This will set an `Authorization` header, overwriting any existing `Authorization` custom headers you have set using `headers`. Only HTTP Basic auth is configurable through this parameter, for Bearer tokens and such, use `Authorization` custom headers instead. The `auth` object should have the following fields:
                   - `username: string`
                   - `password: string`
-                - `httpAgentOptions: object`: Options to pass to the Node.js [`http.Agent`](https://nodejs.org/api/http.html#http_class_http_agent) class.
-                - `httpsAgentOptions: object`: Options to pass to the Node.js [`https.Agent`](https://nodejs.org/api/http.html#http_class_http_agent) class.
+                - `allowInternalAddresses: boolean`: Default: `false` - Connection only. Allow requests to addresses that are not public, such as localhost, private networks and the cloud metadata endpoint. Also needed for `proxy`, `socketPath` and `httpVersion: 2`. See [Internal addresses](#internal-addresses).
+                - `allowedHosts: string[]`: Connection only. The hostnames requests may connect to, matched exactly and ignoring case (no wildcards or ports). A request to any other host, or a redirect to one, fails.
+                - `httpAgentOptions: object`: Connection only. Options to pass to the Node.js [`http.Agent`](https://nodejs.org/api/http.html#http_class_http_agent) class.
+                - `httpsAgentOptions: object`: Connection only. Options to pass to the Node.js [`https.Agent`](https://nodejs.org/api/http.html#http_class_http_agent) class.
                 - `maxContentLength: number`: Defines the max size of the http response content allowed in bytes.
                 - `maxRedirects: number`: Defines the maximum number of redirects to follow. If set to 0, no redirects will be followed.
-                - `proxy: object`: Defines the hostname and port of the proxy server. The `proxy` object should have the following fields:
+                - `proxy: object`: Connection only, and needs `allowInternalAddresses: true`. Defines the hostname and port of the proxy server. The `proxy` object should have the following fields:
                   - `host: string`: Host IP address (eg. `'127.0.0.1'`).
                   - `port: number`: Port number.
                   - `auth: object`: Object with username and password.
+                - `socketPath: string`: Connection only, and needs `allowInternalAddresses: true`. A Unix socket to send requests to instead of a host.
                 - `responseType: enum`: Default: `'json'` - The type of data that the server will respond with. Options are:
                   - `'document'`
                   - `'json'`

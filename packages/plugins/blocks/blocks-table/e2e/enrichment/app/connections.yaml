@@ -32,7 +32,8 @@
     write: true
 
 # The enrichment services the providers call. Keys and base URLs stay on the server: a column
-# can only call a provider endpoint of this app, never a URL a user typed.
+# can only call a provider endpoint of this app, never a URL a user typed. The e2e run points
+# them at a mock on localhost, so they allow internal addresses.
 - id: company_api
   type: AxiosHttp
   properties:
@@ -40,6 +41,7 @@
       _string.concat:
         - _secret: ENRICHMENT_API_URL
         - /company
+    allowInternalAddresses: true
     # Shorter than the claim lease, so a hung call fails the attempt (and is retried) before
     # another worker could claim the cell.
     timeout: 10000
@@ -51,6 +53,7 @@
       _string.concat:
         - _secret: ENRICHMENT_API_URL
         - /email-a
+    allowInternalAddresses: true
     timeout: 10000
 
 - id: email_source_b
@@ -60,6 +63,7 @@
       _string.concat:
         - _secret: ENRICHMENT_API_URL
         - /email-b
+    allowInternalAddresses: true
     timeout: 10000
 
 # treg (https://treg.to): thousands of provider endpoints behind one token, each call billed at
