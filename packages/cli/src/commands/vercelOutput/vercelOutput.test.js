@@ -127,13 +127,33 @@ test('vercelOutput does not match assets under a basePath with a regex wildcard 
   expect(config.crons).toBeUndefined();
 });
 
+// The hit phase as Vercel applies it: once the filesystem phase has routed a request, its routes
+// are matched against the path it was routed to - the static file's own path when a file answers
+// it, else the function's path (the filesystem phase's dest). Returns whether the response
+// carries the CORS header.
+function sendsCorsHeader({ config, requestPath, staticDirectory }) {
+  const filesystemIndex = config.routes.findIndex((route) => route.handle === 'filesystem');
+  const hitIndex = config.routes.findIndex((route) => route.handle === 'hit');
+  const isFile =
+    fs.statSync(path.join(staticDirectory, requestPath), { throwIfNoEntry: false })?.isFile() ===
+    true;
+  const routedPath = isFile ? requestPath : config.routes[filesystemIndex + 1].dest;
+  return config.routes
+    .slice(hitIndex + 1)
+    .some(
+      (route) =>
+        route.headers?.['access-control-allow-origin'] === '*' &&
+        new RegExp(route.src).test(routedPath)
+    );
+}
+
 test.each([
   { basePath: undefined, prefix: '' },
   { basePath: '/tools/v1.2', prefix: '/tools/v1.2' },
 ])(
   'vercelOutput lets any origin read the static files of an app with a view under basePath $basePath',
   async ({ basePath, prefix }) => {
-    const { config } = await runVercelOutput({
+    const { config, staticDirectory } = await runVercelOutput({
       config: { basePath },
       mcp: { views: { configured: true, pages: {}, sources: [] } },
     });
@@ -141,36 +161,45 @@ test.each([
     expect(config.routes[0].headers).toEqual({
       'cache-control': 'public, max-age=31536000, immutable',
     });
-    expect(config.routes[1].headers).toEqual({ 'access-control-allow-origin': '*' });
-    expect(config.routes[1].continue).toBe(true);
-    expect(config.routes.slice(2)).toEqual([
+    expect(config.routes.slice(1)).toEqual([
       { handle: 'filesystem' },
       { src: '/(.*)', dest: '/api' },
+      { handle: 'hit' },
+      {
+        src: '^(?!/api$).*$',
+        headers: { 'access-control-allow-origin': '*' },
+        continue: true,
+      },
     ]);
 
-    const corsRoute = new RegExp(config.routes[1].src);
-    ['/assets/main-abc123.js', '/icon.svg', '/fonts/inter.woff2', '/logo (dark).png'].forEach(
-      (file) => {
-        expect(corsRoute.test(`${prefix}${file}`)).toBe(true);
-      }
-    );
-    // The function's responses: an API route must never be readable from any origin.
+    // Files the CDN serves, a public folder named api among them.
+    [
+      '/assets/main-abc123.js',
+      '/icon.svg',
+      '/fonts/inter.woff2',
+      '/logo (dark).png',
+      '/api/openapi.json',
+    ].forEach((file) => {
+      expect(sendsCorsHeader({ config, requestPath: `${prefix}${file}`, staticDirectory })).toBe(
+        true
+      );
+    });
+    // Everything the function answers, whatever its path: an API route, a page, and a page under
+    // a public folder's name, which a route on the request path would have given the header.
     [
       '/api/request/home/get_data',
       '/api/auth/get-session',
       '/api/mcp',
-      '/api/openapi.json',
       '/api',
       '/home',
       '/',
-      '/iconXsvg',
-      '/.vite/manifest.json',
+      '/fonts/catalogue',
+      '/assets/report',
     ].forEach((route) => {
-      expect(corsRoute.test(`${prefix}${route}`)).toBe(false);
+      expect(sendsCorsHeader({ config, requestPath: `${prefix}${route}`, staticDirectory })).toBe(
+        false
+      );
     });
-    if (prefix !== '') {
-      expect(corsRoute.test('/assets/main-abc123.js')).toBe(false);
-    }
   }
 );
 

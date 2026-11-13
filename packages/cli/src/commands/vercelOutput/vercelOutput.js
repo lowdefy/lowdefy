@@ -49,27 +49,28 @@ function readHasView({ buildDirectory }) {
   return mcp.views.configured === true;
 }
 
+// The function every path the filesystem does not answer is routed to: functions/api.func.
+const FUNCTION_PATH = '/api';
+
 // A view runs the app's client on its host's origin and loads the client's scripts, stylesheets,
 // fonts and public files from the app, which a browser allows only when the response says so. On
 // Vercel the CDN serves those files, so the header the Node server sets on them is set here.
 //
-// The route names the built client's own top-level files and folders, so it matches static files
-// only. A route for every path would also put the header on the function's responses, and the
-// API must never be readable from any origin. The Vite manifest folder is not served to pages,
-// and a public folder named api would share its paths with the API routes.
-function getStaticCorsRoute({ basePath, clientDirectory }) {
-  const patterns = fs
-    .readdirSync(clientDirectory, { withFileTypes: true })
-    .filter((entry) => entry.name !== '.vite' && entry.name !== 'api')
-    .map((entry) =>
-      entry.isDirectory() ? `${escapeRegExp(entry.name)}/.*` : escapeRegExp(entry.name)
-    )
-    .sort();
-  return {
-    src: `^${escapeRegExp(basePath)}/(?:${patterns.join('|')})$`,
-    headers: { 'access-control-allow-origin': '*' },
-    continue: true,
-  };
+// The route is in the hit phase, which runs once a request has matched something, and it matches
+// the path the request was routed to, not the one it was sent to: a static file's own path, or
+// FUNCTION_PATH for everything the function answers. Leaving out FUNCTION_PATH gives the header
+// to the files the CDN serves and to nothing the function answers, whatever the request's path, as
+// the Node server's allowAnyOrigin gives it only to a file it serves. A page under a public
+// folder's name stays unreadable from other origins, and so does every API route.
+function getStaticCorsRoutes() {
+  return [
+    { handle: 'hit' },
+    {
+      src: `^(?!${escapeRegExp(FUNCTION_PATH)}$).*$`,
+      headers: { 'access-control-allow-origin': '*' },
+      continue: true,
+    },
+  ];
 }
 
 // The crons array is generated from build/schedules.json (written by @lowdefy/build for endpoints
@@ -202,9 +203,9 @@ async function vercelOutput({ context }) {
         headers: { 'cache-control': 'public, max-age=31536000, immutable' },
         continue: true,
       },
-      ...(hasView ? [getStaticCorsRoute({ basePath, clientDirectory })] : []),
       { handle: 'filesystem' },
-      { src: '/(.*)', dest: '/api' },
+      { src: '/(.*)', dest: FUNCTION_PATH },
+      ...(hasView ? getStaticCorsRoutes() : []),
     ],
   };
   if (crons.length > 0) {
