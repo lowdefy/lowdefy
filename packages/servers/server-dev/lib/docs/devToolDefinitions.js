@@ -33,7 +33,7 @@ const INSTRUCTIONS = `Lowdefy dev server for this project: docs for every instal
 
 Never guess a type name: lowdefy_list_types lists every installed type, lowdefy_get_schema gives its exact contract, and lowdefy_get_examples, lowdefy_get_doc and lowdefy_search_docs the docs, the app's own plugin and module docs included. lowdefy_app_map maps an existing app.
 
-After EVERY config edit, call lowdefy_build_status with wait: true. It answers once the edit is processed and the pages it touched are built, with the build status, located errors and recent browser and server errors. Fix what it reports, then check the page with lowdefy_get_page_config and lowdefy_screenshot_page, and verify its behaviour with lowdefy_run_journey. Call lowdefy_check before saying a change is done.
+After EVERY config edit, call lowdefy_build_status with wait: true. It waits for the build and returns its status, located errors and recent browser and server errors. Fix what it reports. When the change is done, check logic with lowdefy_run_request or lowdefy_run_endpoint, keep lowdefy_run_journey for what only a browser shows, then call lowdefy_check. When agents share a change, the merging agent runs these once, after the last merge.
 
 If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits: call lowdefy_build_status and fix the reported errors before trusting anything else.
 

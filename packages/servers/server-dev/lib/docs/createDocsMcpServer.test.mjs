@@ -791,11 +791,12 @@ test('MCP tools/call lowdefy_run_journey reports a runner error as a tool error'
   await client.close();
 });
 
-test('MCP instructions teach lowdefy_run_journey as the way to verify behaviour', async () => {
+test('MCP instructions send logic to a direct call and keep journeys for what a browser shows', async () => {
   const client = await connectClient();
   const instructions = client.getInstructions();
-  expect(instructions).toContain('lowdefy_run_journey');
-  expect(instructions).toContain('verify its behaviour');
+  expect(instructions).toContain('check logic with lowdefy_run_request or lowdefy_run_endpoint');
+  expect(instructions).toContain('keep lowdefy_run_journey for what only a browser shows');
+  expect(instructions).toContain('the merging agent runs these once, after the last merge');
   await client.close();
 });
 
