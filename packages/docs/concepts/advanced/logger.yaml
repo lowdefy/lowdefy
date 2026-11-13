@@ -114,7 +114,7 @@ _ref:
 
                 ### Traces
 
-                Lowdefy uses Sentry's JavaScript SDK 11, which streams spans: each request's spans are sent as they end, not collected into one transaction event. In Sentry, explore them as spans and traces. Alerts, queries and dashboards built on transaction events need to use spans instead. A server request's span is named by its method and route (`POST /api/endpoints/*`); its path and query are in its `url.path` and `url.query` attributes.
+                Lowdefy uses Sentry's JavaScript SDK 11, which streams spans: each request's spans are sent as they end, not collected into one transaction event. In Sentry, explore them as spans and traces. Alerts, queries and dashboards built on transaction events need to use spans instead. A server request's span is named by its method and route (`POST /api/endpoints/*`); its path and query are in its `url.path` and `url.query` attributes. Lowdefy always streams spans, since it scrubs them as they stream, so setting `SENTRY_TRACE_LIFECYCLE` has no effect. Health check requests (`/api/lowdefy-health`) are not traced.
 
                 ### What Sentry Receives
 
@@ -122,7 +122,7 @@ _ref:
 
                 - No cookies, no request or response bodies, and no IP address or other user information Sentry would infer.
                 - Request headers and URL query parameters, except those Sentry treats as sensitive (names containing auth, token, session, key, cookie, password and similar), those that carry the client's address (forwarded, `-ip`, `remote-`, via, `-user`), and the `Referer` header, since the previous page's URL can carry a sign-in or reset link's token.
-                - No database query parameters or results, queue task arguments, or AI and MCP inputs and outputs.
+                - No database query parameters or results, queue task arguments, GraphQL variables, or AI and MCP inputs and outputs.
                 - Every string Sentry receives from the server is scrubbed of the app's secrets (`LOWDEFY_SECRET_*`) and of the values the request marked with `_credential`. A span is scrubbed when it ends, so a span that ended before the request marked a value is sent without that value scrubbed.
 
                 Stack traces are attached only to errors, as before, so issues keep their grouping.

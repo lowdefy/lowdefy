@@ -64,6 +64,9 @@ vi.doMock('../auth/getStrategies.js', () => ({
 
 process.env.SENTRY_DSN = 'https://public@o0.ingest.sentry.io/1';
 process.env.LOWDEFY_SECRET_API_KEY = secret;
+// Sentry reads the trace lifecycle from the environment when it is not passed, and in the static
+// lifecycle it skips beforeSendSpan. Every test here runs with it asking for static.
+process.env.SENTRY_TRACE_LIFECYCLE = 'static';
 
 const { default: initSentryServer } = await import('./initSentry.js');
 const { default: sentrySdk } = await import('./sentrySdk.js');
@@ -139,6 +142,7 @@ function closeServer(server) {
 // handleError captures with Lowdefy's tags, as createHandleError does, and the app's error handler.
 function createTestApp({ upstreamPort, markedKey }) {
   const app = new Hono();
+  app.get('/api/lowdefy-health', (c) => c.json({ status: 'ok' }));
   app.use('*', (c, next) => runInCredentialScope(next));
   app.use('*', sentryMiddleware());
   app.use('*', (c, next) => {
@@ -200,6 +204,7 @@ beforeEach(() => {
 });
 
 afterAll(async () => {
+  delete process.env.SENTRY_TRACE_LIFECYCLE;
   await RealSentry.close();
 });
 
@@ -209,7 +214,7 @@ test('initSentry initializes Sentry when SENTRY_DSN is set and makes its SDK the
   expect(sentrySdk.current).toBe(sentry);
 });
 
-test('initSentry streams spans and keeps client reports and module hooks on a long-running server', () => {
+test('initSentry streams spans, even with SENTRY_TRACE_LIFECYCLE=static, and keeps client reports and module hooks on a long-running server', () => {
   expect(options.tracesSampleRate).toBe(1);
   expect(options.traceLifecycle).toBe('stream');
   expect(options.sendClientReports).toBe(true);
@@ -228,6 +233,7 @@ test('initSentry pins what Sentry collects and keeps stack traces off captured m
     },
     httpBodies: [],
     urlQueryParams: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+    graphQL: { document: true, variables: false },
     genAI: { inputs: false, outputs: false },
     mcp: { inputs: false, outputs: false },
     databaseQueryData: false,
@@ -238,7 +244,7 @@ test('initSentry pins what Sentry collects and keeps stack traces off captured m
   expect(options.attachStacktrace).toBe(false);
 });
 
-test('initSentry installs exactly one Http integration, the one that attaches no request bodies, and no Hono integration', () => {
+test('initSentry installs exactly one Http integration, its own, and no Hono integration', () => {
   expect(httpIntegrations).toHaveLength(1);
   const installedHttp = options.integrations.filter(({ name }) => name === 'Http');
   expect(installedHttp).toHaveLength(1);
@@ -412,6 +418,28 @@ test('a request streams one http.server span named by its route, and no cookie, 
   expectNoPrivateData(trace, markedKey);
   expect(sentEvents()).toEqual([]);
   expect(spanCredentialScrubs.size).toBe(0);
+});
+
+test('a health probe, with or without a query, streams no span', async () => {
+  const server = serve({
+    fetch: createTestApp({ upstreamPort: 0, markedKey: 'unused' }).fetch,
+    port: 0,
+    hostname: '127.0.0.1',
+  });
+  const port = await listen(server);
+  try {
+    await (await fetch(`http://127.0.0.1:${port}/api/lowdefy-health`)).text();
+    await (await fetch(`http://127.0.0.1:${port}/api/lowdefy-health?probe=1`)).text();
+  } finally {
+    await closeServer(server);
+  }
+  await RealSentry.flush();
+  const probeSpans = sentSpans().filter(
+    (span) =>
+      attribute(span, 'sentry.op') === 'http.server' &&
+      attribute(span, 'url.path') === '/api/lowdefy-health'
+  );
+  expect(probeSpans).toEqual([]);
 });
 
 test('an error thrown in a route is captured once, with Lowdefy tags, and carries no cookie, body, address or marked credential', async () => {

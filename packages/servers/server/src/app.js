@@ -77,7 +77,8 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   const logger = createLogger({ server: 'lowdefy' });
 
   // Liveness endpoint for container health checks and orchestrator probes. Registered
-  // before all middleware so probes skip auth, session, request logging, and Sentry.
+  // before all middleware so probes skip auth, session, request logging, and Sentry (Sentry's
+  // own request tracing ignores this path, in initSentryServer).
   app.get('/api/lowdefy-health', (c) => c.json({ status: 'ok' }));
 
   // Each request runs in its own credential scope: what it marks with _credential is scrubbed

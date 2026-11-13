@@ -233,13 +233,13 @@ test('an error thrown in a serverless route is captured once, with its own user 
   expect(spanCredentialScrubs.size).toBe(0);
 });
 
-test('initSentry on a serverless function with serverTracing streams one scrubbed http.server span per request, still without module hooks or client reports', async () => {
+test('initSentry on a serverless function with serverTracing streams one scrubbed http.server span per request, with module hooks and without client reports', async () => {
   loggerConfig.sentry = { serverTracing: true, tracesSampleRate: 1 };
   const sentry = await initSentryServer({ serverless: true });
   expect(sentrySdk.current).toBe(sentry);
   const options = RealSentry.getClient().getOptions();
   expect(options.tracesSampleRate).toBe(1);
-  expect(options.enableRuntimeChannelInjection).toBe(false);
+  expect(options.enableRuntimeChannelInjection).toBe(true);
   expect(options.sendClientReports).toBe(false);
 
   const markedKey = 'runtime-made-app-key-0002';
@@ -268,4 +268,36 @@ test('initSentry on a serverless function with serverTracing streams one scrubbe
   expect(events[0].tags).toMatchObject({ requestId: 'req-1', pageId: 'page-1' });
   expectNoPrivateData(events, [markedKey]);
   expect(spanCredentialScrubs.size).toBe(0);
+});
+
+test('a serverless function that does not trace still scrubs marked credentials from the spans SENTRY_TRACES_SAMPLE_RATE turns on', async () => {
+  loggerConfig.sentry = {};
+  process.env.SENTRY_TRACES_SAMPLE_RATE = '1';
+  try {
+    await initSentryServer({ serverless: true });
+    const options = RealSentry.getClient().getOptions();
+    expect(options.tracesSampleRate).toBe(1);
+    expect(options.enableRuntimeChannelInjection).toBe(false);
+
+    const markedKey = 'runtime-made-app-key-0003';
+    const server = await startServer();
+    try {
+      await post({ port: server.address().port, user: 'user-a', markedKey, fail: false });
+      await wait(50);
+    } finally {
+      await new Promise((resolve) => server.close(resolve));
+    }
+    await sentrySdk.current.flush(2000);
+    const roots = sentSpans().filter(
+      (span) =>
+        attribute(span, 'sentry.op') === 'http.server' &&
+        attribute(span, 'url.path') === '/api/endpoints/sign-in'
+    );
+    expect(roots).toHaveLength(1);
+    expect(attribute(roots[0], 'url.full')).toMatch(/\/api\/endpoints\/sign-in\?ref=\[REDACTED\]$/);
+    expectNoPrivateData(sentSpans(), [markedKey]);
+    expect(spanCredentialScrubs.size).toBe(0);
+  } finally {
+    delete process.env.SENTRY_TRACES_SAMPLE_RATE;
+  }
 });

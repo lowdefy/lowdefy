@@ -14,27 +14,16 @@
   limitations under the License.
 */
 
-// Header and query parameter names that carry the client's address or identity, by substring.
-// Sentry already filters names holding auth, token, session, key, cookie and similar.
-const identifyingNames = ['forwarded', '-ip', 'remote-', 'via', '-user'];
+import sentryHttpDataCollection from '../../sentry/sentryHttpDataCollection.js';
 
-// The previous page's URL, whose query can carry a password-reset or sign-in link's token under
-// a name Sentry does not filter. Sentry matches by substring, and neither spelling contains the
-// other.
-const refererNames = ['referer', 'referrer'];
-
-// What the server SDK collects, pinned to what Sentry 10 sent with sendDefaultPii off, since
-// Sentry 11's defaults send cookies (the session cookie among them), request and response bodies,
-// the client IP and the data of database queries and AI calls. Lowdefy scrubs values it knows
-// (secrets, the credentials a request marks); none of these is one. Request bodies are also kept
-// off by the Http integration's maxRequestBodySize: 'none' in initSentryServer.
+// What the server SDK collects: the request data both SDKs pin (sentryHttpDataCollection), and
+// none of the data of database queries, queue tasks, AI or MCP calls, or stack-frame variables,
+// all of which Sentry 11 sends by default. Lowdefy scrubs values it knows (secrets, the
+// credentials a request marks); none of these is one. GraphQL documents are sent with their
+// literal values replaced by Sentry; their variables are not sent.
 const sentryDataCollection = {
-  userInfo: false,
-  cookies: false,
-  httpHeaders: { deny: [...identifyingNames, ...refererNames] },
-  httpBodies: [],
-  urlQueryParams: { deny: identifyingNames },
-  graphQL: { document: true, variables: true },
+  ...sentryHttpDataCollection,
+  graphQL: { document: true, variables: false },
   genAI: { inputs: false, outputs: false },
   mcp: { inputs: false, outputs: false },
   databaseQueryData: false,
