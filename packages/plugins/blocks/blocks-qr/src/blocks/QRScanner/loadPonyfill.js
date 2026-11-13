@@ -20,7 +20,7 @@ let ponyfill = null;
 // Linux). It is imported only then, so other browsers never download it. The ponyfill fetches
 // its .wasm from jsDelivr by default; locateFile points it at the copy this package ships, which
 // the app's Vite build serves from its own origin. zxing-wasm is pinned to the version
-// barcode-detector bundles the loader of (checked by loadPonyfill.test.js).
+// barcode-detector bundles the loader of (checked by wasmVersion.test.js).
 async function loadPonyfill() {
   if (ponyfill === null) {
     ponyfill = Promise.all([
@@ -33,6 +33,11 @@ async function loadPonyfill() {
         },
       });
       return BarcodeDetector;
+    });
+    // A failed download (offline, a new deploy that removed the old chunk) must not stick:
+    // the next start tries again.
+    ponyfill.catch(() => {
+      ponyfill = null;
     });
   }
   return ponyfill;
