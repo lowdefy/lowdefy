@@ -29,6 +29,7 @@ import {
 import { serializer } from '@lowdefy/helpers';
 
 import agentErrorForLog, { agentLogIds, stackFramesForLog } from './agentErrorForLog.js';
+import buildChatTitlePrompt from './buildChatTitlePrompt.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 import handleAgentGenerate from './handleAgentGenerate.js';
@@ -74,12 +75,12 @@ function createClientErrorText(context) {
   };
 }
 
-// Concatenate the text parts of the first user message — used as the source
-// for generateTitle.
-function getFirstUserText(messages) {
-  const firstUser = messages.find((msg) => msg.role === 'user');
-  if (!firstUser) return '';
-  return (firstUser.parts ?? [])
+// Concatenate the text parts of the first message with this role — the first
+// exchange generateTitle titles the conversation from.
+function getFirstMessageText({ messages, role }) {
+  const message = messages.find((msg) => msg.role === role);
+  if (!message) return '';
+  return (message.parts ?? [])
     .filter((part) => part.type === 'text')
     .map((part) => part.text)
     .join('');
@@ -108,6 +109,7 @@ async function handleAgentChat({ connection, properties, context }) {
   const pruneConfig = agent.properties.prune;
 
   const titleEnabled = agent.properties.generateTitle === true;
+  const isFirstTurn = !messages.some((msg) => msg.role === 'assistant');
 
   const clientErrorText = createClientErrorText(context);
 
@@ -141,32 +143,25 @@ async function handleAgentChat({ connection, properties, context }) {
         capturedMessages = finalMessages;
       }
 
-      // Generate a short conversation title from the first user message,
-      // concurrently with the agent stream. The data-chat-title part fires the
-      // block's onTitleGenerated event. Only on the first turn; failures are
-      // non-fatal.
-      let titlePromise;
-      const isFirstTurn = !messages.some((msg) => msg.role === 'assistant');
-      if (titleEnabled && isFirstTurn) {
-        const firstUserText = getFirstUserText(messages);
-        if (firstUserText) {
-          titlePromise = generateText({
+      // The title is cosmetic: a failed title call is logged and the turn ends without one.
+      async function writeChatTitle({ firstUserText, replyText }) {
+        if (!firstUserText && !replyText) return;
+        try {
+          const { text } = await generateText({
             model,
             maxOutputTokens: 20,
-            prompt: `Generate a concise 3-6 word title for a conversation that begins with this message. Reply with only the title, no quotes:\n\n${firstUserText}`,
-          })
-            .then(({ text }) => {
-              const title = text.trim();
-              if (title) {
-                writer.write({ type: 'data-chat-title', data: { title } });
-              }
-            })
-            .catch((error) => {
-              context.logger.warn(
-                { ...logIds, error: agentErrorForLog(error) },
-                'generateTitle failed.'
-              );
-            });
+            providerOptions: agent.properties.providerOptions,
+            prompt: buildChatTitlePrompt({ firstUserText, replyText }),
+          });
+          const title = text.trim();
+          if (title) {
+            writer.write({ type: 'data-chat-title', data: { title } });
+          }
+        } catch (error) {
+          context.logger.warn(
+            { ...logIds, error: agentErrorForLog(error) },
+            'generateTitle failed.'
+          );
         }
       }
 
@@ -255,9 +250,18 @@ async function handleAgentChat({ connection, properties, context }) {
         );
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
-      // Ensure the title (if any) is written before the stream closes.
-      if (titlePromise) {
-        await titlePromise;
+      // Title the conversation from its first exchange once the reply is complete, while the
+      // stream is still open, so the data-chat-title part reaches the block and fires its
+      // onTitleGenerated event. The title call carries the agent's providerOptions, so it is
+      // routed and retained like the agent's own calls (zero data retention, `only`).
+      if (titleEnabled && isFirstTurn) {
+        await writeChatTitle({
+          firstUserText: getFirstMessageText({ messages, role: 'user' }),
+          replyText: getFirstMessageText({
+            messages: capturedMessages ?? [],
+            role: 'assistant',
+          }),
+        });
       }
       // Call onFinish hooks — awaited so dataParts can be written to stream.
       if (hasOnFinishHooks) {
