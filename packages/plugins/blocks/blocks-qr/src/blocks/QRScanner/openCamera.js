@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // Opens the camera stream the scanner reads. Browsers only expose mediaDevices on secure
 // (https or localhost) pages, so its absence is reported as a SecurityError like a blocked page.
 async function openCamera({ aspectRatio, deviceId, facingMode, mediaDevices, torch }) {
-  if (!mediaDevices) {
+  if (type.isNone(mediaDevices)) {
     const error = new Error('The camera can only be used on a secure (https) page.');
     error.name = 'SecurityError';
     throw error;

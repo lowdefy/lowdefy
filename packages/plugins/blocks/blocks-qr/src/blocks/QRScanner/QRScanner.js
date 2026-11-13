@@ -15,10 +15,11 @@
 */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { createScanFilter, withBlockDefaults } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
-import createScanFilter from './createScanFilter.js';
 import createScanner from './createScanner.js';
+import toBoxSize from './toBoxSize.js';
 
 function getScannerProperties(properties) {
   return {
@@ -32,16 +33,9 @@ function getScannerProperties(properties) {
   };
 }
 
-function getBoxSize(qrbox) {
-  if (typeof qrbox === 'number') {
-    return { width: qrbox, height: qrbox };
-  }
-  return qrbox;
-}
-
 // A live camera that reads QR codes and barcodes with the browser's BarcodeDetector, or the zxing
-// ponyfill where the browser has none (createDetector). Each kept read (createScanFilter, the
-// native QRScanner's rules) sets the value and fires onScan with { data, type }.
+// ponyfill where the browser has none (createDetector). Each kept read (createScanFilter, shared
+// with the native QRScanner) sets the value and fires onScan with { data, type }.
 function QRScanner({ blockId, classNames, methods, properties, styles }) {
   const videoRef = useRef(null);
   const filterRef = useRef(null);
@@ -86,37 +80,67 @@ function QRScanner({ blockId, classNames, methods, properties, styles }) {
     return () => scanner.stop();
   }, [continuous, methods]);
 
-  const box = playing && properties.qrbox ? getBoxSize(properties.qrbox) : null;
+  const box =
+    playing && !type.isNone(properties.qrbox) ? toBoxSize({ qrbox: properties.qrbox }) : null;
+  // The video is centred in the element, and the box in the video, so the box sits over the area
+  // getCropRegion reads (the centre of the frame) whatever the element's height: a taller element
+  // leaves space above and below the video, a shorter one crops the video evenly at both ends.
   return (
     <div
       id={blockId}
       className={classNames?.element}
-      style={{ position: 'relative', overflow: 'hidden', ...styles?.element }}
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        height: properties.height,
+        ...styles?.element,
+      }}
     >
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        playsInline
-        style={{ display: playing ? 'block' : 'none', width: '100%' }}
-      />
-      {box ? (
+      <div style={{ position: 'relative', flexShrink: 0 }}>
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          style={{ display: playing ? 'block' : 'none', width: '100%' }}
+        />
+        {box ? (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: box.width,
+              height: box.height,
+              maxWidth: '100%',
+              maxHeight: '100%',
+              transform: 'translate(-50%, -50%)',
+              border: '2px solid rgba(255, 255, 255, 0.9)',
+              borderRadius: 8,
+              boxShadow: '0 0 0 100vmax rgba(0, 0, 0, 0.45)',
+              pointerEvents: 'none',
+            }}
+          />
+        ) : null}
+      </div>
+      {playing && properties.prompt ? (
         <div
           style={{
             position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: box.width,
-            height: box.height,
-            maxWidth: '100%',
-            maxHeight: '100%',
-            transform: 'translate(-50%, -50%)',
-            border: '2px solid rgba(255, 255, 255, 0.9)',
-            borderRadius: 8,
-            boxShadow: '0 0 0 100vmax rgba(0, 0, 0, 0.45)',
+            bottom: 16,
+            left: 16,
+            right: 16,
+            color: '#ffffff',
+            textAlign: 'center',
+            textShadow: '0 0 4px rgba(0, 0, 0, 0.6)',
             pointerEvents: 'none',
           }}
-        />
+        >
+          {properties.prompt}
+        </div>
       ) : null}
       {error ? (
         <div role="alert" style={{ padding: 16, textAlign: 'center' }}>

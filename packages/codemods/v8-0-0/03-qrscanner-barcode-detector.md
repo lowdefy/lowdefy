@@ -142,7 +142,32 @@ A read of the whole value (`_state: <id>` passed to a request, stored or logged)
 request that reads `payload.scan.decodedText`, a connection or API routine) to the new fields, and
 report what reads it outside the app (an external API or stored documents).
 
-### 4. Check the build and report
+### 4. Allow the decoder in the app's Content Security Policy
+
+Where the browser has no `BarcodeDetector`, the block compiles a WebAssembly decoder, which a
+Content Security Policy blocks unless `script-src` allows `'wasm-unsafe-eval'`. The policy Lowdefy
+writes does not allow it by default. If the app has a QRScanner and
+`config.security.contentSecurityPolicy` is `true` or an object, add the source:
+
+```yaml
+# Before
+config:
+  security:
+    contentSecurityPolicy: true
+
+# After
+config:
+  security:
+    contentSecurityPolicy:
+      directives:
+        script-src:
+          - "'wasm-unsafe-eval'"
+```
+
+An object keeps its other keys (`reportOnly`, other directives), and an existing `script-src` list
+gets the source added to it. Leave a policy that is `false` or not set alone.
+
+### 5. Check the build and report
 
 Run `lowdefy build`. There should be no `formatsToSupport` or `disableFlip` schema warnings.
 
@@ -152,10 +177,10 @@ values sent outside the app, `debugData` or `bounds`).
 
 Tell the developer about two runtime changes the config cannot show:
 
-- **Content Security Policy.** Where the browser has no `BarcodeDetector`, the block loads a
-  WebAssembly decoder from the app's own origin. An app that sets a `Content-Security-Policy`
-  header needs `'wasm-unsafe-eval'` in `script-src`, or scanning fails with an `onError` on those
-  browsers (all iPhones).
+- **Content Security Policy.** A `Content-Security-Policy` header set outside Lowdefy (a proxy or
+  CDN) needs `'wasm-unsafe-eval'` in `script-src` too, or scanning fails with an `onError` on
+  browsers without `BarcodeDetector` (all iPhones). Say whether you added it to the app's own
+  policy in step 4.
 - **Camera errors.** A denied camera permission, a missing camera or a page not served over https
   now shows a message in the block and fires `onError`. Pages that showed their own message for a
   scanner that stayed blank can use `onError` instead.

@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-// The same rules as the native QRScanner (blocks-native), so a page reads the same on web and mobile.
+// Shared by the web (blocks-qr) and native (blocks-native) QRScanner, so a page reads the same on
+// web and mobile.
 /**
  * Decides which camera reads become onScan events. A camera reports the same code many times a
  * second while it is in view: one read per code is kept, and the same code again only after

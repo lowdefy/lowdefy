@@ -40,6 +40,18 @@ test('toDetectorFormats maps the block types to BarcodeDetector formats', () => 
   ]);
 });
 
+test('toDetectorFormats throws naming the value when types is an empty list', () => {
+  expect(() => toDetectorFormats({ types: [] })).toThrow(
+    'QRScanner property "types" should be a list of code types. Received [].'
+  );
+});
+
+test('toDetectorFormats throws naming the type when types has an unknown code type', () => {
+  expect(() => toDetectorFormats({ types: ['qr', 'QR_CODE'] })).toThrow(
+    'QRScanner property "types" has an unknown code type "QR_CODE".'
+  );
+});
+
 test('toScanType maps a reported format back to its block type, specific names included', () => {
   expect(toScanType({ format: 'qr_code' })).toBe('qr');
   expect(toScanType({ format: 'qr_code_model_2' })).toBe('qr');

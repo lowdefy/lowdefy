@@ -16,6 +16,30 @@
 
 let ponyfill = null;
 
+async function load() {
+  const [{ BarcodeDetector, prepareZXingModule, purgeZXingModule }, { default: wasmUrl }] =
+    await Promise.all([
+      import('barcode-detector/ponyfill'),
+      import('zxing-wasm/reader/zxing_reader.wasm?url'),
+    ]);
+  try {
+    // fireImmediately fetches and compiles the .wasm now, while the camera opens, instead of on
+    // the first detect().
+    await prepareZXingModule({
+      overrides: {
+        locateFile: (path, prefix) => (path.endsWith('.wasm') ? wasmUrl : prefix + path),
+      },
+      fireImmediately: true,
+    });
+  } catch (error) {
+    // zxing keeps the module promise, rejected or not, and hands it to every later caller, so a
+    // failed .wasm fetch or compile would fail every start until the page reloads.
+    purgeZXingModule();
+    throw error;
+  }
+  return BarcodeDetector;
+}
+
 // Loads the zxing BarcodeDetector for browsers without a native one (iOS, Firefox, Windows and
 // Linux). It is imported only then, so other browsers never download it. The ponyfill fetches
 // its .wasm from jsDelivr by default; locateFile points it at the copy this package ships, which
@@ -23,19 +47,9 @@ let ponyfill = null;
 // barcode-detector bundles the loader of (checked by wasmVersion.test.js).
 async function loadPonyfill() {
   if (ponyfill === null) {
-    ponyfill = Promise.all([
-      import('barcode-detector/ponyfill'),
-      import('zxing-wasm/reader/zxing_reader.wasm?url'),
-    ]).then(([{ BarcodeDetector, prepareZXingModule }, { default: wasmUrl }]) => {
-      prepareZXingModule({
-        overrides: {
-          locateFile: (path, prefix) => (path.endsWith('.wasm') ? wasmUrl : prefix + path),
-        },
-      });
-      return BarcodeDetector;
-    });
-    // A failed download (offline, a new deploy that removed the old chunk) must not stick:
-    // the next start tries again.
+    ponyfill = load();
+    // A failed download (offline, a new deploy that removed the old chunk or .wasm) must not
+    // stick: the next start tries again.
     ponyfill.catch(() => {
       ponyfill = null;
     });

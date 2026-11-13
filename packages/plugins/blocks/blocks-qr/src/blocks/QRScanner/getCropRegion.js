@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
+import toBoxSize from './toBoxSize.js';
+
 // The part of the camera frame to read, in video pixels. qrbox is in screen pixels on the video
 // as drawn (full width, height from the frame's shape), so it scales by the frame's width over
 // the drawn width. A box larger than the frame is clipped to it.
 function getCropRegion({ displayWidth, qrbox, videoHeight, videoWidth }) {
-  const box = typeof qrbox === 'number' ? { width: qrbox, height: qrbox } : qrbox;
+  const box = toBoxSize({ qrbox });
   const scale = videoWidth / displayWidth;
   const width = Math.round(Math.min(box.width * scale, videoWidth));
   const height = Math.round(Math.min(box.height * scale, videoHeight));

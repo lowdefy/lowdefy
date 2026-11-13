@@ -34,7 +34,7 @@ export default {
         'Trigger actions when the camera cannot start or the scanner stops reading, for example when camera permission is denied.',
       event: {
         error:
-          'The error as { name, message }. name is the browser error name: NotAllowedError (permission denied), NotFoundError (no camera), NotReadableError (camera in use), OverconstrainedError (no camera matches deviceId) or SecurityError (page not served over https).',
+          'The error as { name, message }. name is the browser error name: NotAllowedError (permission denied), NotFoundError (no camera), NotReadableError (camera in use), OverconstrainedError (no camera matches deviceId), SecurityError (page not served over https) or CameraEndedError (the camera stopped while scanning: unplugged, taken by another app, or the phone locked). Other errors, like a code reader that failed to load, carry their own name and message.',
       },
     },
   },
@@ -50,6 +50,7 @@ export default {
     properties: {
       types: {
         type: 'array',
+        minItems: 1,
         items: {
           type: 'string',
           enum: [
@@ -105,6 +106,15 @@ export default {
         type: ['number', 'object'],
         description:
           'The scan area in pixels, drawn over the camera and centred: a number for a square, or { width, height }. Only codes inside it are read. If not set, the whole frame is read.',
+      },
+      height: {
+        type: 'number',
+        description:
+          'The height of the camera view in pixels. The video fills the width and is centred, cropped at the top and bottom if it is taller. By default, the height of the video.',
+      },
+      prompt: {
+        type: 'string',
+        description: 'Text shown over the bottom of the camera, like "Point the camera at a code".',
       },
       aspectRatio: {
         type: 'number',

@@ -22,13 +22,15 @@ When a code is read, the block value is set to `{ data, type }`, for example
 - `deviceId: string`: The id of a specific camera to use, instead of `facingMode`.
 - `fps: number`: Camera frames read per second. Default `10`.
 - `qrbox: number | { width: number, height: number }`: The scan area in pixels, drawn over the camera and centred. Only codes inside it are read. If not set, the whole frame is read.
+- `height: number`: The height of the camera view in pixels. The video fills the width and is centred, cropped at the top and bottom if it is taller. By default, the height of the video.
+- `prompt: string`: Text shown over the bottom of the camera, like "Point the camera at a code".
 - `aspectRatio: number`: The aspect ratio asked of the camera. Default `1`.
 - `torch: boolean`: Turn the torch on, where the camera has one.
 
 ### Events
 
 - `onScan`: A code was read. Event `{ data, type }`.
-- `onError`: The camera could not start, or the scanner stopped reading. Event `{ error: { name, message } }`, where `name` is the browser error name: `NotAllowedError` (permission denied), `NotFoundError` (no camera), `NotReadableError` (camera in use), `OverconstrainedError` (no camera matches `deviceId`) or `SecurityError` (page not served over https). The block also shows the message.
+- `onError`: The camera could not start, or the scanner stopped reading. Event `{ error: { name, message } }`, where `name` is the browser error name: `NotAllowedError` (permission denied), `NotFoundError` (no camera), `NotReadableError` (camera in use), `OverconstrainedError` (no camera matches `deviceId`), `SecurityError` (page not served over https) or `CameraEndedError` (the camera stopped while scanning: unplugged, taken by another app, or the phone locked). Other errors, like a code reader that failed to load, carry their own name and message. The block also shows the message.
 
 ### Methods
 
@@ -38,8 +40,22 @@ When a code is read, the block value is set to `{ data, type }`, for example
 
 ### Content Security Policy
 
-An app that sets a `Content-Security-Policy` header needs `'wasm-unsafe-eval'` in `script-src`
-for browsers that use the ponyfill.
+Browsers that use the ponyfill compile its WebAssembly decoder, which a Content Security Policy
+blocks unless `script-src` allows `'wasm-unsafe-eval'`. The policy Lowdefy writes with
+`config.security.contentSecurityPolicy` does not allow it by default, so an app that turns it on
+and uses `QRScanner` adds it:
+
+```yaml
+config:
+  security:
+    contentSecurityPolicy:
+      directives:
+        script-src:
+          - "'wasm-unsafe-eval'"
+```
+
+Without it, scanning fails on iPhones, Firefox, Windows and Linux with an `onError` when the
+camera starts. A policy set some other way (a proxy or CDN header) needs the same source.
 
 ## Examples
 

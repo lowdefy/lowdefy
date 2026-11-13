@@ -31,11 +31,11 @@ function isFrameReady({ canvas, video }) {
   if (video.readyState < HAVE_CURRENT_DATA) {
     return false;
   }
-  return canvas === null || video.clientWidth > 0;
+  return type.isNone(canvas) || video.clientWidth > 0;
 }
 
 function getFrame({ canvas, qrbox, video }) {
-  if (canvas === null) {
+  if (type.isNone(canvas)) {
     return video;
   }
   const region = getCropRegion({
@@ -81,7 +81,7 @@ function createScanner({ getProperties, getVideo, onError, onPlaying, onRead }) 
     clearTimeout(session.timer);
     (session.stream?.getTracks() ?? []).forEach((track) => track.stop());
     const video = getVideo();
-    if (video !== null) {
+    if (!type.isNone(video)) {
       video.srcObject = null;
     }
     session = null;
@@ -131,22 +131,44 @@ function createScanner({ getProperties, getVideo, onError, onPlaying, onRead }) 
     session = current;
     const properties = getProperties();
     try {
-      const detector = await createDetector({ types: properties.types });
+      // Together, so the permission prompt and the camera do not wait for the ponyfill download.
+      // allSettled, not all: a camera that opens after the detector failed must still be released.
+      const [detectorResult, streamResult] = await Promise.allSettled([
+        createDetector({ types: properties.types }),
+        openCamera({
+          aspectRatio: properties.aspectRatio,
+          deviceId: properties.deviceId,
+          facingMode: properties.facingMode,
+          mediaDevices: navigator.mediaDevices,
+          torch: properties.torch,
+        }),
+      ]);
+      if (streamResult.status === 'fulfilled') {
+        current.stream = streamResult.value;
+      }
       if (current.stopped) {
+        (current.stream?.getTracks() ?? []).forEach((track) => track.stop());
         return;
       }
-      const stream = await openCamera({
-        aspectRatio: properties.aspectRatio,
-        deviceId: properties.deviceId,
-        facingMode: properties.facingMode,
-        mediaDevices: navigator.mediaDevices,
-        torch: properties.torch,
-      });
-      current.stream = stream;
-      if (current.stopped) {
-        stream.getTracks().forEach((track) => track.stop());
-        return;
+      // The camera's error first: a denied permission is what the user can act on.
+      if (streamResult.status === 'rejected') {
+        throw streamResult.reason;
       }
+      if (detectorResult.status === 'rejected') {
+        throw detectorResult.reason;
+      }
+      const detector = detectorResult.value;
+      const stream = streamResult.value;
+      // The browser ends the track when the camera goes away under the scanner: unplugged,
+      // taken by another app, or (iOS) the phone locked. Without this the video freezes on its
+      // last frame and the scanner keeps reading it. stop() ending the track fires no event.
+      stream.getVideoTracks().forEach((track) =>
+        track.addEventListener('ended', () => {
+          const error = new Error('The camera stopped.');
+          error.name = 'CameraEndedError';
+          fail(current, error);
+        })
+      );
       const video = getVideo();
       video.srcObject = stream;
       await video.play();

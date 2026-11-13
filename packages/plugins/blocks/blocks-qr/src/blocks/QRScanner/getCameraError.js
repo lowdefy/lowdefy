@@ -20,6 +20,7 @@ const messages = {
   OverconstrainedError: 'No camera matches the scanner settings.',
   NotReadableError: 'The camera is in use by another app.',
   SecurityError: 'The camera can only be used on a secure (https) page.',
+  CameraEndedError: 'The camera stopped.',
 };
 
 // The onError event for a scanner that could not start or stopped reading. name is the

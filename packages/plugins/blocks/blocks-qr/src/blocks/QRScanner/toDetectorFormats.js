@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import typeFormats from './typeFormats.js';
 
 // Only zxing reads these, so no browser's own detector does: asking for one always takes the
@@ -21,11 +23,27 @@ import typeFormats from './typeFormats.js';
 const zxingOnlyTypes = new Set(['databar', 'databar_expanded', 'maxicode']);
 
 // The BarcodeDetector formats to ask for: one per code type, and with no types set, every type
-// but the zxing-only ones.
+// but the zxing-only ones. The schema rejects other types, but types set by an operator reach
+// here unchecked, and the detector would only fail with a TypeError that names none of them.
 function toDetectorFormats({ types }) {
-  const requested =
-    types ?? Object.keys(typeFormats).filter((codeType) => !zxingOnlyTypes.has(codeType));
-  return requested.map((codeType) => typeFormats[codeType][0]);
+  if (type.isNone(types)) {
+    return Object.keys(typeFormats)
+      .filter((codeType) => !zxingOnlyTypes.has(codeType))
+      .map((codeType) => typeFormats[codeType][0]);
+  }
+  if (!type.isArray(types) || types.length === 0) {
+    throw new Error(
+      `QRScanner property "types" should be a list of code types. Received ${JSON.stringify(types)}.`
+    );
+  }
+  return types.map((codeType) => {
+    if (!Object.hasOwn(typeFormats, codeType)) {
+      throw new Error(
+        `QRScanner property "types" has an unknown code type ${JSON.stringify(codeType)}. Use one of ${Object.keys(typeFormats).join(', ')}.`
+      );
+    }
+    return typeFormats[codeType][0];
+  });
 }
 
 export default toDetectorFormats;

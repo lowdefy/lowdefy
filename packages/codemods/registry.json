@@ -17,7 +17,7 @@
         },
         {
           "id": "qrscanner-barcode-detector",
-          "description": "Rewrite each web QRScanner for Lowdefy 8: formatsToSupport to types with the new names, remove disableFlip, add continuous: true where onScan expects repeated reads, rewrite reads of the value (decodedText, result.text, result.format.formatName) to data and type, and report dropped formats (UPC_EAN_EXTENSION), whole values sent outside the app and the wasm-unsafe-eval CSP requirement.",
+          "description": "Rewrite each web QRScanner for Lowdefy 8: formatsToSupport to types with the new names, remove disableFlip, add continuous: true where onScan expects repeated reads, rewrite reads of the value (decodedText, result.text, result.format.formatName) to data and type, and report dropped formats (UPC_EAN_EXTENSION), whole values sent outside the app, and add 'wasm-unsafe-eval' to script-src in the app's contentSecurityPolicy when it has one.",
           "path": "v8-0-0/03-qrscanner-barcode-detector.md"
         }
       ]
