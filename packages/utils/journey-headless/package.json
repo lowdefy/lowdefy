@@ -47,7 +47,8 @@
   "devDependencies": {
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
-    "vitest": "4.1.12"
+    "vitest": "4.1.12",
+    "yaml": "2.9.0"
   },
   "publishConfig": {
     "access": "public"

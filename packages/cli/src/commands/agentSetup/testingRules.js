@@ -18,9 +18,11 @@
 // the two never disagree.
 const TESTING_RULES = `Test each change at the lowest level that fails when the change breaks. A journey runs a real browser against the dev server, so it is the most expensive check you have.
 
-- Logic, calculations, permissions and what a request or endpoint writes: while you edit, call the request or endpoint on the dev server with \`lowdefy_run_request\` or \`lowdefy_run_endpoint\`, passing \`user\` and \`data\` (a data set user, on a database of its own). Never check these through a journey.
+- Logic, calculations, permissions and what a request or endpoint writes: while you edit, call the request or endpoint on the dev server with \`lowdefy_run_request\` or \`lowdefy_run_endpoint\`, passing \`user\` and \`data\` (a data set user, on a database of its own). Never check these through a journey that needs a browser.
+- To keep such a check, write it as a headless journey: blocks targeted by \`blockId\`, checks on \`state\`, \`calls\` (with the \`payload\` the page sent) and \`db\`. Negative cases (another organization's ids, a caller without the role, a wrong type) are page-less journeys of \`call\` and \`request\` steps with \`expect: { status }\` or \`expect: { error }\`. \`lowdefy test --headless --build\` runs them on a build, with no browser; it lists every journey that needs a browser as browser-only. See the \`testing/config-tests\` doc.
+- A journey for a control that writes data keeps its browser check of what the page shows (\`expect: { text }\`): the headless journey proves the write, the browser journey that a person can see and use the control.
 - Where the app has endpoint tests (\`tests/endpoints/\`, Node tests on \`@lowdefy/test-utils\`): add or update one for such a change, and run them once, before you call the change done. They read a build, so every config edit needs a build first; don't run them after each edit. Use the app's own \`package.json\` script, or in the app folder \`lowdefy build --no-client-build && node --test --test-concurrency=4 'tests/endpoints/**/*.test.mjs'\`. See the \`testing/endpoint-tests\` doc.
-- What a page shows, how it reacts and paths across pages: use a journey (\`tests/journeys/\`).
+- What a page shows, how it reacts and paths across pages: use a journey that runs in the browser (\`tests/journeys/\`).
 - A table of who can reach what: don't turn it into a journey per role over every page. Where the app keeps an access table snapshot (an endpoint test that calls \`accessMatrix\`), that is the check. When a change alters the snapshot, update it and say in the pull request that it changed and why.
 
 Run journeys with \`lowdefy_run_tests\`, or \`lowdefy test --config-directory <app>\` in a terminal:
