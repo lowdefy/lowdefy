@@ -87,9 +87,6 @@ importers:
       mongodb-memory-server:
         specifier: 11.3.0
         version: 11.3.0
-      node-gyp:
-        specifier: 13.1.0
-        version: 13.1.0
       prettier:
         specifier: 3.10.0
         version: 3.10.0
@@ -523,9 +520,6 @@ importers:
       '@testing-library/react':
         specifier: 16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@testing-library/user-event':
-        specifier: 14.6.9
-        version: 14.6.9(@testing-library/dom@10.4.2)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -782,9 +776,6 @@ importers:
       '@testing-library/react':
         specifier: 16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@testing-library/user-event':
-        specifier: 14.6.9
-        version: 14.6.9(@testing-library/dom@10.4.2)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -854,9 +845,6 @@ importers:
       '@lowdefy/ajv':
         specifier: 7.2.0
         version: link:../../../utils/ajv
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -879,9 +867,6 @@ importers:
         specifier: 0.3.14
         version: 0.3.14
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -983,9 +968,6 @@ importers:
       '@lowdefy/e2e-utils':
         specifier: 7.2.0
         version: link:../../../utils/e2e-utils
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0
@@ -1041,9 +1023,6 @@ importers:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
         version: link:../../../utils/block-dev-e2e
-      '@lowdefy/e2e-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0
@@ -1226,9 +1205,6 @@ importers:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
         version: link:../../../utils/block-dev-e2e
-      '@lowdefy/e2e-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0
@@ -1999,10 +1975,6 @@ importers:
       '@lowdefy/errors':
         specifier: 7.2.0
         version: link:../../../utils/errors
-    devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
 
   packages/plugins/connections/connection-treg:
     dependencies:
@@ -2038,9 +2010,6 @@ importers:
         specifier: 5.4.4
         version: 5.4.4
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2069,9 +2038,6 @@ importers:
         specifier: 3.39.0
         version: 3.39.0
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2097,9 +2063,6 @@ importers:
         specifier: 1.11.23
         version: 1.11.23
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2119,9 +2082,6 @@ importers:
         specifier: 7.2.0
         version: link:../../../operators
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2147,9 +2107,6 @@ importers:
         specifier: 7.2.0
         version: link:../../../operators
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2175,9 +2132,6 @@ importers:
         specifier: 7.2.7
         version: 7.2.7
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2200,9 +2154,6 @@ importers:
         specifier: 7.2.0
         version: link:../../../operators
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2228,9 +2179,6 @@ importers:
         specifier: 14.0.3
         version: 14.0.3
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2256,9 +2204,6 @@ importers:
         specifier: 2.9.1
         version: 2.9.1
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2311,15 +2256,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      '@testing-library/dom':
-        specifier: 10.4.2
-        version: 10.4.2
-      '@testing-library/react':
-        specifier: 16.3.3
-        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@testing-library/user-event':
-        specifier: 14.6.9
-        version: 14.6.9(@testing-library/dom@10.4.2)
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2385,9 +2321,6 @@ importers:
 
   packages/plugins/plugins/plugin-csv:
     devDependencies:
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -2435,9 +2368,6 @@ importers:
       '@lowdefy/e2e-utils':
         specifier: 7.2.0
         version: link:../../../utils/e2e-utils
-      '@lowdefy/node-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/node-utils
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0
@@ -2466,9 +2396,6 @@ importers:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
         version: link:../../../utils/block-dev-e2e
-      '@lowdefy/e2e-utils':
-        specifier: 7.2.0
-        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0
@@ -3421,9 +3348,6 @@ importers:
         specifier: 15.0.3
         version: 15.0.3
     devDependencies:
-      '@lowdefy/ajv':
-        specifier: 7.2.0
-        version: link:../ajv
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
@@ -3658,9 +3582,6 @@ importers:
       '@next/eslint-plugin-next':
         specifier: 16.4.6
         version: 16.4.6(eslint@10.14.0(jiti@2.7.0))
-      '@playwright/test':
-        specifier: 1.65.0
-        version: 1.65.0
       '@tailwindcss/postcss':
         specifier: ^4.3.5
         version: 4.3.5
@@ -8306,10 +8227,6 @@ packages:
     resolution: {integrity: sha512-AO2ac6pjRB3SJmGJo+v5/aK6Omggp6fsLrs6wN9bd35ulu4cCwaAU9+7ZhXjeqHVkaHThLuzH0nZr0YpCDhygg==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  abbrev@5.0.0:
-    resolution: {integrity: sha512-/XrFJgzQQQHpti1raDJC6m4ws6aNktmjBlhk8Fdlk7LwCEuDoieEJJY9OFHjfiFJFFRM2tK+Ky/IsfbbmlMu1w==}
-    engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
-
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
@@ -9674,10 +9591,6 @@ packages:
   entities@9.0.0:
     resolution: {integrity: sha512-oJFNDJg3kTPwAD1cNn2+WmUq4wFoo09npc3Ydf1D7ED4smRiWrsKnaLxykrTWgyGEcusc87P5dxlAleol9kpkg==}
     engines: {node: '>=20.19.0'}
-
-  env-paths@2.2.1:
-    resolution: {integrity: sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==}
-    engines: {node: '>=6'}
 
   envinfo@7.21.0:
     resolution: {integrity: sha512-Lw7I8Zp5YKHFCXL7+Dz95g4CcbMEpgvqZNNq3AmlT5XAV6CgAAk6gyAMqn2zjw08K9BHfcNuKrMiCPLByGafow==}
@@ -12366,11 +12279,6 @@ packages:
     resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
     hasBin: true
 
-  node-gyp@13.1.0:
-    resolution: {integrity: sha512-FpNzOLFACKG0oRBYbZ5WOeWD1EqRTIWX90MaRIWTO18lVYPx8fqIjrdS3pihjnCkSmgop6zVGkSqg1vXZLksuw==}
-    engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
-    hasBin: true
-
   node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
 
@@ -12389,11 +12297,6 @@ packages:
 
   noms@0.0.0:
     resolution: {integrity: sha512-lNDU9VJaOPxUmXcLb+HQFeUgQQPtMI24Gt6hgfuMHRJgMRHMF/qZ4HJD3GDru4sSw9IQl2jPjAYnQrdIeLbwow==}
-
-  nopt@10.0.1:
-    resolution: {integrity: sha512-df3sBr/6ax9hSGuC3CspvLlbnX8cP5L5nZwXF8cGN8l0zSWR6BvzmQ6jPUKjvo6+/xdpkNvEcucBNUdBeeV13g==}
-    engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
-    hasBin: true
 
   nopt@8.1.0:
     resolution: {integrity: sha512-ieGu42u/Qsa4TFktmaKEwM6MQH0pOWnaB3htzh0JRtx84+Mebc0cbZYN5bC+6WTZ4+77xrL9Pn5m7CV6VIkV7A==}
@@ -12928,10 +12831,6 @@ packages:
   proc-log@4.2.0:
     resolution: {integrity: sha512-g8+OnU/L2v+wyiVK+D5fA34J7EH8jZ8DDlvwhRCMxmMj7UCBvxiO1mGeN+36JXIKF4zevU4kRBd8lVgG9vLelA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
-
-  proc-log@7.0.0:
-    resolution: {integrity: sha512-FYgfaA69XZ93zaXLoMNQ+ViDXGGBgR8aLh03txzcFhV+9xOXx7+8DLCULrKKpR9+GsH9ZfHm82aSUPpozX0Ztg==}
-    engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -14554,11 +14453,6 @@ packages:
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
-    hasBin: true
-
-  which@7.0.0:
-    resolution: {integrity: sha512-RancgH2dmbLdHl6LRhEqvklWMgl/Hdnun0Y90KhBOLkMefg8Qa7/Zel8Sm+8HEcP6DEjzsWzpkuBQEZok58isA==}
-    engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
     hasBin: true
 
   why-is-node-running@3.2.1:
@@ -20020,8 +19914,6 @@ snapshots:
 
   abbrev@3.0.1: {}
 
-  abbrev@5.0.0: {}
-
   abort-controller@3.0.0:
     dependencies:
       event-target-shim: 5.0.1
@@ -21428,8 +21320,6 @@ snapshots:
   entities@8.1.0: {}
 
   entities@9.0.0: {}
-
-  env-paths@2.2.1: {}
 
   envinfo@7.21.0: {}
 
@@ -24971,19 +24861,6 @@ snapshots:
 
   node-gyp-build@4.8.4: {}
 
-  node-gyp@13.1.0:
-    dependencies:
-      env-paths: 2.2.1
-      exponential-backoff: 3.1.3
-      graceful-fs: 4.2.11
-      nopt: 10.0.1
-      proc-log: 7.0.0
-      semver: 7.8.6
-      tar: 7.5.22
-      tinyglobby: 0.2.17
-      undici: 8.12.4
-      which: 7.0.0
-
   node-int64@0.4.0: {}
 
   node-releases@2.0.63: {}
@@ -25007,10 +24884,6 @@ snapshots:
     dependencies:
       inherits: 2.0.4
       readable-stream: 1.0.34
-
-  nopt@10.0.1:
-    dependencies:
-      abbrev: 5.0.0
 
   nopt@8.1.0:
     dependencies:
@@ -25535,8 +25408,6 @@ snapshots:
   prismjs@1.30.0: {}
 
   proc-log@4.2.0: {}
-
-  proc-log@7.0.0: {}
 
   process-nextick-args@2.0.1: {}
 
@@ -27487,10 +27358,6 @@ snapshots:
   which@2.0.2:
     dependencies:
       isexe: 2.0.0
-
-  which@7.0.0:
-    dependencies:
-      isexe: 4.0.0
 
   why-is-node-running@3.2.1: {}
 
