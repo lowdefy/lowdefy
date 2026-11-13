@@ -21,6 +21,7 @@ import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import * as RealSentry from '@sentry/node';
 import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
+import WebSocket, { WebSocketServer } from 'ws';
 
 const secret = 'planted/secret+value=1';
 const sessionCookie = 'planted-session-cookie-0001';
@@ -55,6 +56,9 @@ vi.doMock('@sentry/node', () => ({
 vi.doMock('../../build/logger.js', () => ({
   default: { sentry: { tracesSampleRate: 1 } },
 }));
+vi.doMock('../auth/getStrategies.js', () => ({
+  default: () => [],
+}));
 
 process.env.SENTRY_DSN = 'https://public@o0.ingest.sentry.io/1';
 process.env.LOWDEFY_SECRET_API_KEY = secret;
@@ -65,6 +69,9 @@ const { default: sentryDataCollection } = await import('./sentryDataCollection.j
 const { default: spanCredentialScrubs } = await import('./spanCredentialScrubs.js');
 const { default: captureSentryError } = await import('./captureSentryError.js');
 const { default: sentryMiddleware } = await import('../../../src/middleware/sentry.js');
+const { default: upgradeIsolationScope } =
+  await import('../../../src/middleware/upgradeIsolationScope.js');
+const { default: websocketHandler } = await import('../../../src/routes/websocket.js');
 const { default: createErrorHandler } = await import('../../../src/middleware/errorHandler.js');
 
 const sentry = await initSentryServer();
@@ -590,5 +597,111 @@ test('the scrub of an unsampled span is held while it ends and removed once it h
     removeHook();
   }
   expect(heldAtSpanEnd).toEqual([scrubRequestCredentials]);
+  expect(spanCredentialScrubs.size).toBe(0);
+});
+
+// A WebSocket upgrade reaches the app on the server's upgrade event, which Sentry's Http
+// integration does not give an isolation scope, and a socket's messages arrive on its connection.
+// Each socket here marks its own key while it is upgraded, and a later frame on it fails with an
+// error and a span that carry that key, outside the upgrade's credential scope: only the scrub on
+// the socket's own isolation scope can reach them. Both sockets are open before either sends a
+// frame, so a scrub shared between them would hold the second socket's key alone.
+test('concurrent websockets each scrub their errors and spans with their own marked credentials, and a request keeps its scrub', async () => {
+  const keyA = 'runtime-made-socket-key-aaaa';
+  const keyB = 'runtime-made-socket-key-bbbb';
+  const keyC = 'runtime-made-request-key-cccc';
+  const app = new Hono();
+  app.use('*', (c, next) => runInCredentialScope(next));
+  app.use('*', upgradeIsolationScope());
+  app.use('*', sentryMiddleware());
+  app.use('*', (c, next) => {
+    const key = c.req.header('x-test-key');
+    markCredential(key);
+    const rid = c.req.header('x-test-rid');
+    c.set('lowdefyContext', {
+      // The caller re-check before a subscribe reads the session, which fails here.
+      auth: {
+        api: {
+          getSession: async () => {
+            sentry.startSpan(
+              { name: 'session read', attributes: { detail: `read ${key}` } },
+              () => {}
+            );
+            throw new Error(`Session store refused ${key}`);
+          },
+        },
+      },
+      config: {},
+      i18n: { active: 'en-US', messages: {} },
+      rid,
+      logger: { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} },
+      handleError: (error) => captureSentryError({ error, context: { rid } }),
+      user: null,
+    });
+    return next();
+  });
+  app.get('/api/websocket', websocketHandler);
+  app.get('/api/websocket', (c) => c.text('Expected a WebSocket upgrade.', 426));
+  const wss = new WebSocketServer({ noServer: true });
+  const server = serve({
+    fetch: app.fetch,
+    port: 0,
+    hostname: '127.0.0.1',
+    websocket: { server: wss },
+  });
+  const port = await listen(server);
+
+  async function openSocket({ key, rid }) {
+    const socket = new WebSocket(`ws://127.0.0.1:${port}/api/websocket`, {
+      headers: { 'x-test-key': key, 'x-test-rid': rid },
+    });
+    await new Promise((resolve) => socket.once('open', resolve));
+    return socket;
+  }
+
+  function subscribeUntilClosed(socket) {
+    const closed = new Promise((resolve) => socket.once('close', (code) => resolve(code)));
+    socket.send(JSON.stringify({ type: 'subscribe', websocketId: 'feed', requestId: 's1' }));
+    return closed;
+  }
+
+  try {
+    const socketA = await openSocket({ key: keyA, rid: 'socket-a' });
+    const socketB = await openSocket({ key: keyB, rid: 'socket-b' });
+    expect(await subscribeUntilClosed(socketA)).toBe(1011);
+    expect(await subscribeUntilClosed(socketB)).toBe(1011);
+    // A request on the same path that is not an upgrade keeps the scope its root span started in.
+    await fetch(`http://127.0.0.1:${port}/api/websocket?ref=${keyC}`, {
+      headers: { 'x-test-key': keyC, 'x-test-rid': 'request-c' },
+    }).then((response) => response.text());
+    await wait(100);
+  } finally {
+    await closeServer(server);
+  }
+  await RealSentry.flush();
+
+  const events = sentEvents();
+  const eventValues = Object.fromEntries(
+    events.map((event) => [event.tags.requestId, event.exception.values[0].value])
+  );
+  expect(eventValues).toEqual({
+    'socket-a': 'Session store refused [REDACTED]',
+    'socket-b': 'Session store refused [REDACTED]',
+  });
+  const spans = sentSpans();
+  const sessionReads = spans.filter(({ name }) => name === 'session read');
+  expect(sessionReads.map((span) => attribute(span, 'detail'))).toEqual([
+    'read [REDACTED]',
+    'read [REDACTED]',
+  ]);
+  const sent = JSON.stringify([events, sessionReads]);
+  expect(sent).not.toContain(keyA);
+  expect(sent).not.toContain(keyB);
+
+  const roots = serverSpans(spans);
+  expect(roots).toHaveLength(1);
+  expect(roots[0].name).toEqual('GET /api/websocket');
+  expect(attribute(roots[0], 'url.full')).toMatch(/\/api\/websocket\?ref=\[REDACTED\]$/);
+  expect(JSON.stringify(segmentSpans(spans, roots[0]))).not.toContain(keyC);
   expect(spanCredentialScrubs.size).toBe(0);
 });

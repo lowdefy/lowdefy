@@ -53,6 +53,7 @@ import requestTimeout from './middleware/requestTimeout.js';
 import sentryMiddleware from './middleware/sentry.js';
 import stampBuildId from './middleware/stampBuildId.js';
 import stampCaller from './middleware/stampCaller.js';
+import upgradeIsolationScope from './middleware/upgradeIsolationScope.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
@@ -83,6 +84,9 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   // from every log line written while it is handled.
   app.use('*', (c, next) => runInCredentialScope(next));
 
+  // A WebSocket upgrade gets a Sentry isolation scope of its own before the Sentry middleware
+  // writes to it; every other request already has one.
+  app.use('*', upgradeIsolationScope());
   app.use('*', sentryMiddleware());
 
   // Bound request duration so a hung upstream returns an error instead of running to the platform's
