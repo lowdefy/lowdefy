@@ -202,6 +202,26 @@ the complete path, before every release (see [CI](#ci)). Run it when
 changing the journey runner, journey cookies or mutants. Which page, data set and test covers
 which journey feature is listed under "Fixture app" in `code-docs/architecture/journeys.md`.
 
+### Headless parity
+
+The server-dev fixture suite also checks every journey it posts that `classifyJourney` calls
+headless gives the same result headless (`test/journeyFixture/checkParity.mjs`): its global setup
+builds the fixture into `_server/parity-journey-fixture`, and each check runs the journey with
+`@lowdefy/journey-headless` on that build. A difference fails the test;
+`LOWDEFY_JOURNEY_PARITY=report` records differences without failing, `=off` turns the check off.
+Each check is recorded in `apps/journey-fixture/.lowdefy/parity/<pid>.jsonl` (same, browser-only,
+browser-only at run time, needs a server host, mutant or different).
+
+The headless runner's own suites run over production builds of the fixture, no browser needed:
+
+```bash
+pnpm --filter=@lowdefy/journey-headless test           # unit tests
+pnpm --filter=@lowdefy/journey-headless test:fixture   # the runner over _server/test-utils-journey-fixture
+```
+
+Its fixture suite shares `_server/test-utils-journey-fixture` with `@lowdefy/test-utils`'
+fixture suite and the CLI's `headless.test.mjs`, so do not run them at once in one worktree.
+
 ## Endpoint test harness
 
 `@lowdefy/test-utils` (`packages/utils/test-utils`, described in

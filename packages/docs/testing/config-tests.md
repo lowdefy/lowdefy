@@ -4,7 +4,7 @@ Journeys need no JavaScript, no Playwright setup and no separate test build. The
 
 > Config tests run against the **development server**. For tests against a production build, or tests that need custom browser code, use the Playwright based [e2e testing](/e2e-introduction) toolkit instead.
 
-> A journey drives a real browser, so keep it for what only a browser shows: what a page shows, how it reacts and paths across pages. To test logic, calculations, permissions and what a request or endpoint writes, use [endpoint tests](/endpoint-tests), which need no browser. Their [access table](/endpoint-tests#the-access-table) replaces a journey per role over every page.
+> A journey drives a real browser, so keep it for what only a browser shows: what a page shows, how it reacts and paths across pages. Logic, calculations, permissions and what a request or endpoint writes need no browser: write them as journeys that a [headless run](#headless-runs) takes, which run the page's own events in Node, or as `call` and `request` steps in a [page-less journey](#calls-requests-and-the-database). [Endpoint tests](/endpoint-tests) cover table-driven logic in JavaScript, and their [access table](/endpoint-tests#the-access-table) replaces a journey per role over every page.
 
 ## Layout
 
@@ -113,12 +113,16 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.                                                                                                                                                                                                                                                                                                                                                                |
 | `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `expect: { hidden: target }`              | Nothing the target names is visible: no element matches, or every match is hidden. Passes at once when nothing matches yet, so pair it with a presence.                                                                                                                                                                                                                                                                                                                                                      |
-| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page.                                                                                                                                                                                                                                                                                                                                                          |
+| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page. With `payload` or `response`, the last call holds them (a [headless run](#headless-runs) only).                                                                                                                                                                                                                                                          |
 | `expect: { calls: { endpoint, count } }`  | The same for an endpoint called with `CallAPI`. Counts survive full page loads, so `count: 0` after a reload checks a write was never sent.                                                                                                                                                                                                                                                                                                                                                                  |
 | `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `expect: { url: { contains } }`           | The browser URL contains the string. It checks where the browser landed and never names a page: open a page with `pageId` or `goto`, with its `pathParams`.                                                                                                                                                                                                                                                                                                                                                  |
 | `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back.                                                                                                                                                                                                                                                                                                                                            |
+| `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back. After a `call` or `request`, the error of its answer contains `text`.                                                                                                                                                                                                                                                                      |
+| `call: { endpoint, payload, as }`         | Call an endpoint directly, with `payload` as given, as the journey's user or the data set user `as` names (`none` for signed out). See [calls, requests and the database](#calls-requests-and-the-database).                                                                                                                                                                                                                                                                                                 |
+| `request: { pageId, requestId, payload }` | Call a page's request directly, with `payload` as given, as for `call`.                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `expect: { status: code }`                | The answer to the `call` or `request` before it has this HTTP status (`200`, `401`, `403`). Only `expect` steps may sit between them.                                                                                                                                                                                                                                                                                                                                                                        |
+| `expect: { db: { collection, match } }`   | The journey's data set database holds what the step expects in `collection`: `count` documents matching `match`, or `equals`, a list each matching document holds, in `_id` order. `connectionId` names the connection when the app writes to several databases.                                                                                                                                                                                                                                             |
 | `expect: { effect: true }`                | The interaction just before it did something. Must directly follow a click, open, fill, select, press or back.                                                                                                                                                                                                                                                                                                                                                                                               |
 
 `expect.calls` takes `{ request: requestId, pageId, count }`: request ids are scoped to a page, and two pages often share one such as `save`, so `pageId` names the page; it defaults to the page the person is on when the step runs. It compares once, without waiting for the count to change, because "not called" can only be judged after the moment has passed.
@@ -126,6 +130,37 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 Before a step runs, every block, request, endpoint and `goto` page it names is checked against the app's build, and so is an `as` name on a journey with `data`. A misspelt one fails the step and names it, so `expect: { hidden: nosuchblock }` or `expect: { calls: { request: nosuchrequest, count: 0 } }` cannot pass by finding nothing. Blocks and requests are looked for on the page the person is on, and blocks also on the page the journey opened, so a step on a page that sent the person elsewhere still fails as not visible. A block inside a List matches by its `$` id, so `rows.0.name` matches `rows.$.name`, and a block of [dynamic page content](/dynamic-page-content) matches once the page shows it; `expect.state` paths are not checked.
 
 `expect.effect` fails when the interaction before it ran no event, changed nothing on the page, called no request or endpoint and left the URL as it was. It reads what the runner saw during that interaction, so it does not wait. After a click that should do something and does not, it makes the journey fail until the control does something.
+
+### Calls, requests and the database
+
+A `call` or `request` step calls the server directly, as a page would never call it: another organization's ids, an operator object, a wrong type, a caller without the role. A refusal or an error is the step's answer, not a failure: `expect: { status }` and `expect: { error }` read it. `as` picks the caller for that call only and does not switch who the journey acts as. A request a page sends is reached through its own event instead, so the payload is the one the page's config builds.
+
+A journey with no `pageId` opens no page. Its steps may only be `call`, `request`, `as`, `wait: { ms }` and the checks that need no page: `expect` on `error`, `status`, `db` and `calls` (for a request, with its `pageId`). This is where negative endpoint tests live:
+
+```yaml
+name: a member is refused the auditor endpoint
+data: roles
+user: member
+steps:
+  - call: { endpoint: auditor_only }
+  - expect: { status: 403 }
+  - expect: { error: API Endpoint "auditor_only" does not exist. }
+```
+
+`expect: { db }` proves what a write stored, or that a refused one stored nothing. With `expect: { calls }`, a [headless run](#headless-runs) also checks the payload the page sent and the response it got, as partial matches on the last call:
+
+```yaml
+name: a member saves an item with the name they typed
+pageId: home
+data: harden
+user: member
+steps:
+  - fill: { blockId: name_input, value: Docs item }
+  - click: save_button
+  - wait: { request: save_item }
+  - expect: { calls: { request: save_item, count: 1, payload: { name: Docs item } } }
+  - expect: { db: { collection: items, match: { name: Docs item }, count: 1 } }
+```
 
 ### App errors
 
@@ -369,6 +404,9 @@ SKIP deprecated  member prints a ticket  0.4/day (3m)
 - `--usage-window <months>`: The calendar months recent use is ranked over, for `--tier` and the `PASS` line, such as `6m`. The default is `3m`.
 - `--repeat <n>`: Run each journey `n` times in a row (1 to 10) and classify it, as described in [Replaying candidates](#replaying-candidates).
 - `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
+- `--headless`: Run only the journeys that need no browser, in Node, and list the rest as browser-only. On the development server, or on the production build with `--build`. See [headless runs](#headless-runs).
+- `--build`: With `--headless`, run on the production build in this process, for CI.
+- `--server-directory <path>`: With `--build`, the built server to read, when it is not `.lowdefy/server`.
 - `--journeys-directory <path>`: Read journeys from this directory instead of `tests/journeys/`, for journeys that need a server set up for them, such as [auth journeys](#the-database). A relative path is resolved from the current directory. The run fails when the directory holds no journeys.
 - `--url <url>`: Run against a development server that is already running instead of starting one, for example `lowdefy test --url http://localhost:3000` while `lowdefy dev` is open in another terminal. This is the fastest way to iterate on a journey.
 - `--port <port>`: The port to start the development server on. If it is in use the next free port is taken. The default is `3000`.
@@ -382,6 +420,50 @@ SKIP deprecated  member prints a ticket  0.4/day (3m)
 | `1`       | At least one journey failed, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found; with `--tier`, the selection had too little production use to cut a tier. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key, a step the grammar refuses, named by its index) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
+
+## Headless runs
+
+Most of what a journey checks is the app's own logic: an event runs its actions, a request runs, state changes, a block shows or hides, the database changes. None of that needs a browser. `lowdefy test --headless` runs the journeys that need no browser in Node, on the development server while you edit, or on a production build in CI: their pages run on Lowdefy's client engine, with the page's own event chains, and their requests and endpoint calls run in the same process on the journey's data set and user. No block is rendered and no browser is started, so a journey takes about as long as its requests do.
+
+Nothing in a journey says which kind it is. Its steps decide: a journey runs headless when every step and check is in the left column.
+
+| Headless                                                                                           | Needs the browser                                                                                 |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `click`, `fill`, `select`, `press: Enter`, `wait` (`ms`, `request`, `state`), `goto`, `back`, `as` | `screenshot`, `email`, `open`, `press` other than `Enter`, a `fill` from an email, a double click |
+| Targets by `blockId`                                                                               | Targets by `text`, `containing`, `row`, `column` or `nth`                                         |
+| `expect`: `state`, `visible`, `hidden`, `calls`, `error`, `url`, `status`, `db`                    | `expect`: `text`, `title`, `effect`                                                               |
+| `call`, `request`                                                                                  |                                                                                                   |
+
+A headless run lists every other journey as browser-only, with the first step that needs a browser, and neither passes nor fails it:
+
+```
+PASS  saves an item headless and sees it in state  (5 steps, 412ms)
+BROWSER-ONLY  saves an item and sees the message  step 3 (expect: { text }): expect "text" reads the page in a browser
+1 passed, 0 failed of 1 journeys, 1 browser-only not run
+```
+
+A journey can also turn out to need a browser while it runs. An auth action (`Login`, `Logout`, the sign-up and two-factor family), an action that uses a browser API (`CopyToClipboard`, `ScrollTo`, `SetFocus`, `GeolocationCurrentPosition`, `SetDarkMode`, `SetLocale`, `PdfMake`), or a click on a block with no `onClick` of its own (a browser lands it on a control inside the block) stops the journey there and lists it as browser-only.
+
+`visible` and `hidden` read the block's `visible` and that of every block holding it, and whether each `Modal` or `Drawer` around it is open, not what is drawn. A journey whose meaning is "the person sees this" keeps a `text` target or an `expect: { text }`, which keeps it in the browser. The [lint](#lint) rule L8 names journeys that are browser-only only because of a target a `blockId` would replace.
+
+### On a production build, for CI
+
+```
+lowdefy build
+lowdefy test --headless --build
+```
+
+`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route. The results are written to `.lowdefy/test/headless-run.json`.
+
+### While you edit
+
+```
+lowdefy test --headless
+```
+
+Without `--build`, a headless run uses the development server, as a plain `lowdefy test` does: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless run starts no browser and takes no journey run slot, so it does not wait behind browser runs on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
+
+The `lowdefy_run_tests` and `lowdefy_run_journey` agent tools take `headless: true`, and `lowdefy_run_journey` needs no `pageId` for a [page-less journey](#calls-requests-and-the-database). A journey that needs a browser comes back with `browserOnly`, naming the step.
 
 ## Hardening journeys
 
@@ -411,15 +493,16 @@ L2  member assigns an open ticket  step 3 (click "assign_submit") is not followe
 
 An **assertion step** is any `expect`, or a `wait: { request }`.
 
-| Rule | Checks                                                                                                                                                                                                                                                                                                                    | Severity |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| L1   | No placeholders: no `from: shape`, and no `fill` or `select` with `value: null`.                                                                                                                                                                                                                                          | error    |
-| L2   | A `click`, `open` or `press` whose target ran a Lowdefy event (in the journey's newest measured run), and every `goto` and `back`, is followed by an assertion step before the next action or input. A click that ran no event (a tab header) is exempt, as are `fill` and `select`. Unmeasured, every action is checked. | error    |
-| L3   | No `wait: { ms }`.                                                                                                                                                                                                                                                                                                        | error    |
-| L4   | A journey whose newest run called a request or endpoint that writes declares `data:`. Unmeasured, it is a warning to run the journey once.                                                                                                                                                                                | error    |
-| L5   | `user` names a user from the journey's data set (or a list of them, each checked), or is `none`. An inline user object, or no `user`, is a warning until the journey moves onto a data set.                                                                                                                               | warning  |
-| L6   | The last step is an assertion step.                                                                                                                                                                                                                                                                                       | error    |
-| L7   | An `as` step names the person who is already acting (`as: main` while still `main`, or the same name twice running), so it switches to nobody.                                                                                                                                                                            | warning  |
+| Rule | Checks                                                                                                                                                                                                                                                                                                                             | Severity |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| L1   | No placeholders: no `from: shape`, and no `fill` or `select` with `value: null`.                                                                                                                                                                                                                                                   | error    |
+| L2   | A `click`, `open` or `press` whose target ran a Lowdefy event (in the journey's newest measured run), and every `goto` and `back`, is followed by an assertion step before the next action or input. A click that ran no event (a tab header) is exempt, as are `fill` and `select`. Unmeasured, every action is checked.          | error    |
+| L3   | No `wait: { ms }`.                                                                                                                                                                                                                                                                                                                 | error    |
+| L4   | A journey whose newest run called a request or endpoint that writes declares `data:`. Unmeasured, it is a warning to run the journey once.                                                                                                                                                                                         | error    |
+| L5   | `user` names a user from the journey's data set (or a list of them, each checked), or is `none`. An inline user object, or no `user`, is a warning until the journey moves onto a data set.                                                                                                                                        | warning  |
+| L6   | The last step is an assertion step.                                                                                                                                                                                                                                                                                                | error    |
+| L7   | An `as` step names the person who is already acting (`as: main` while still `main`, or the same name twice running), so it switches to nobody.                                                                                                                                                                                     | warning  |
+| L8   | A journey that needs a browser only because some targets read the page (`text`, `containing` or `nth`) on a block they already name by `blockId`: each such step, with the `{ blockId }` target that would let the journey run [headless](#headless-runs). A check of what the person sees, `expect: { text }`, is never reported. | warning  |
 
 A journey written from a [session log](#session-logs), with event-less clicks and a final `wait: { request }`, lints without errors.
 
@@ -460,6 +543,8 @@ The report is written to `.lowdefy/test/mutation.json`: each mutant with the jou
 - `--json`: Print the report as JSON.
 - `--url`, `--port`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `lowdefy test`.
 
+<!-- TODO(harden --headless): `lowdefy journeys harden --headless` runs each mutant and journey pair headless on the dev server, and the browser-only journeys in the browser; headless variant replay and the tenant call form. Fill in once they are merged. -->
+
 ### Variants: `lowdefy journeys variants`
 
 `lowdefy journeys variants <file>` writes edge-case candidates of a journey to `tests/journeys/_candidates/variants/<source>/<journey>-<kind>.yaml` and replays each three times. `<source>` is the journey file's path under `tests/journeys/` (or under the config directory, for a file outside it) without its extension, so two files with one name in different folders never share a folder. `<journey>` is the journey's name in lower case with each run of other characters replaced by `-`, so the journeys of one file never share a file. A kind with several variants numbers them: `<journey>-negative-1.yaml`, `<journey>-negative-2.yaml`. The same journey always gives the same files.
@@ -487,7 +572,7 @@ steps:
   # ...
 ```
 
-Each file starts with a header line naming the journey file it came from and holding a hash of what was generated. A file belongs to that journey file and the journey its `variant.of` names. A rerun rewrites a file it owns that is left as generated, keeps one you edited (a filled-in placeholder, a fix after a flaky replay) and says so, and removes an unedited file it owns that the journey no longer gives. A file another journey owns (two journey names that give one slug) is left alone and reported as `CONFLICT`: rename one of the journeys. A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. A granted `role` variant that passes is kept by adding its user to the original journey's `user` list ([one journey, several users](/journey-data-sets#one-journey-several-users)) and deleting the variant file, so the steps stay in one place; its first comment names the list. A refused `role` variant expects a different outcome and is kept as a journey of its own. Variants of a journey with a list of users keep the list, and replay once per user. The `role` and `tenant` kinds read the journey's data set file; a variant whose input is missing (no user with a role set, no fixture for the other organization, no `--empty-data`) is listed as skipped with what to add.
+Each file starts with a header line naming the journey file it came from and holding a hash of what was generated. A file belongs to that journey file and the journey its `variant.of` names. A rerun rewrites a file it owns that is left as generated, keeps one you edited (a filled-in placeholder, a fix after a flaky replay) and says so, and removes an unedited file it owns that the journey no longer gives. A file another journey owns (two journey names that give one slug) is left alone and reported as `CONFLICT`: rename one of the journeys. A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. A granted `role` variant that passes is kept by adding its user to the original journey's `user` list ([one journey, several users](/journey-data-sets#one-journey-several-users)) and deleting the variant file, so the steps stay in one place; its first comment names the list. A refused `role` variant expects a different outcome and is kept as a journey of its own. With a measured run, the refused user also gets a [page-less](#calls-requests-and-the-database) `role` variant: it requests each of the page's requests the journey called and expects `status: 403`, so a negative request suite is generated rather than written, and it runs [headless](#headless-runs). Variants of a journey with a list of users keep the list, and replay once per user. The `role` and `tenant` kinds read the journey's data set file; a variant whose input is missing (no user with a role set, no fixture for the other organization, no `--empty-data`) is listed as skipped with what to add.
 
 - `--name <journey>`: The journey to vary, when the file holds several.
 - `--kinds <list>`: Only these kinds, comma separated.
