@@ -1,0 +1,151 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+import createDetector from './createDetector.js';
+import getCameraError from './getCameraError.js';
+import getCropRegion from './getCropRegion.js';
+import openCamera from './openCamera.js';
+import toDetectorFormats from './toDetectorFormats.js';
+import toScanType from './toScanType.js';
+
+// HTMLMediaElement.HAVE_CURRENT_DATA: the video has a frame to read.
+const HAVE_CURRENT_DATA = 2;
+
+function getFrame({ canvas, qrbox, video }) {
+  if (canvas === null) {
+    return video;
+  }
+  const region = getCropRegion({
+    displayWidth: video.clientWidth,
+    qrbox,
+    videoHeight: video.videoHeight,
+    videoWidth: video.videoWidth,
+  });
+  canvas.width = region.width;
+  canvas.height = region.height;
+  canvas
+    .getContext('2d')
+    .drawImage(
+      video,
+      region.x,
+      region.y,
+      region.width,
+      region.height,
+      0,
+      0,
+      region.width,
+      region.height
+    );
+  return canvas;
+}
+
+function getArea({ boundingBox }) {
+  return boundingBox.width * boundingBox.height;
+}
+
+// Runs one camera session at a time: start opens the camera and reads a frame every 1/fps
+// seconds, never starting a read before the last one finished; stop ends the session and
+// releases the camera. A start while a session runs, or a stop with none, does nothing, so
+// React's mount, unmount and remount in development leaves one session.
+function createScanner({ getProperties, getVideo, onError, onPlaying, onRead }) {
+  let session = null;
+
+  function stop() {
+    if (session === null) {
+      return;
+    }
+    session.stopped = true;
+    clearTimeout(session.timer);
+    (session.stream?.getTracks() ?? []).forEach((track) => track.stop());
+    const video = getVideo();
+    if (video !== null) {
+      video.srcObject = null;
+    }
+    session = null;
+    onPlaying(false);
+  }
+
+  function fail(current, error) {
+    if (session === current) {
+      stop();
+    }
+    onError(getCameraError({ error }));
+  }
+
+  function readFrames({ current, detector, properties }) {
+    const canvas = type.isNone(properties.qrbox) ? null : document.createElement('canvas');
+    async function read() {
+      const video = getVideo();
+      if (video.readyState >= HAVE_CURRENT_DATA) {
+        const codes = await detector.detect(getFrame({ canvas, qrbox: properties.qrbox, video }));
+        if (current.stopped) {
+          return;
+        }
+        codes
+          .sort((a, b) => getArea(b) - getArea(a))
+          .forEach((code) =>
+            onRead({ data: code.rawValue, type: toScanType({ format: code.format }) })
+          );
+      }
+      if (!current.stopped) {
+        current.timer = setTimeout(run, 1000 / properties.fps);
+      }
+    }
+    function run() {
+      read().catch((error) => fail(current, error));
+    }
+    run();
+  }
+
+  async function start() {
+    if (session !== null) {
+      return;
+    }
+    const current = { stopped: false, stream: null, timer: null };
+    session = current;
+    const properties = getProperties();
+    try {
+      const detector = await createDetector({
+        formats: toDetectorFormats({ types: properties.types }),
+      });
+      const stream = await openCamera({
+        aspectRatio: properties.aspectRatio,
+        deviceId: properties.deviceId,
+        facingMode: properties.facingMode,
+        mediaDevices: navigator.mediaDevices,
+        torch: properties.torch,
+      });
+      current.stream = stream;
+      if (current.stopped) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
+      const video = getVideo();
+      video.srcObject = stream;
+      await video.play();
+      onPlaying(true);
+      readFrames({ current, detector, properties });
+    } catch (error) {
+      fail(current, error);
+    }
+  }
+
+  return { start, stop };
+}
+
+export default createScanner;

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+// The web QRScanner takes the native QRScanner's (blocks-native) types, continuous, torch and
+// onScan { data, type }, so one page config reads codes on web and mobile.
 export default {
   category: 'input',
   icons: [],
@@ -22,61 +24,96 @@ export default {
     element: 'The QRScanner element.',
   },
   events: {
-    onScan: 'Trigger actions when code is scanned.',
+    onScan: {
+      description:
+        'Trigger actions when a code is read. The block value is set to the same object.',
+      event: { data: 'The text the code holds.', type: 'The code type, like qr or ean13.' },
+    },
+    onError: {
+      description:
+        'Trigger actions when the camera cannot start or the scanner stops reading, for example when camera permission is denied.',
+      event: {
+        error:
+          'The error as { name, message }. name is the browser error name: NotAllowedError (permission denied), NotFoundError (no camera), NotReadableError (camera in use), OverconstrainedError (no camera matches deviceId) or SecurityError (page not served over https).',
+      },
+    },
+  },
+  methods: {
+    start: 'Open the camera and start reading codes.',
+    stop: 'Stop reading codes and release the camera.',
+    reset: 'Read again after a single-scan scanner has kept its first code.',
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
-      fps: {
-        type: 'number',
-        description: 'Expected framerate of QR code scanning',
-      },
-      qrbox: {
-        type: ['number', 'object'],
+      types: {
+        type: 'array',
+        items: {
+          type: 'string',
+          enum: [
+            'qr',
+            'ean13',
+            'ean8',
+            'code128',
+            'code39',
+            'code93',
+            'upc_a',
+            'upc_e',
+            'pdf417',
+            'datamatrix',
+            'aztec',
+            'itf14',
+            'codabar',
+            'databar',
+            'databar_expanded',
+            'maxicode',
+          ],
+        },
         description:
-          'The dimensions for the QR scanning area. If not set, the entire area of the video stream will be used by the scanner.',
+          'Code types to read; all by default. databar, databar_expanded and maxicode are read on web only. Asking only for the types you need makes reading faster.',
       },
-      aspectRatio: {
-        type: 'float',
-        default: 1,
-        description: 'The aspect ratio for the video.',
-      },
-      disableFlip: {
+      continuous: {
         type: 'boolean',
-        description: 'Disable the ability to scan QR codes that have been flipped.',
+        default: false,
+        description:
+          'Keep scanning after a read: each code fires onScan once, and again after 2 seconds. Otherwise the scanner stops after its first read until its reset method is called.',
       },
       inactiveByDefault: {
         type: 'boolean',
         default: false,
-        description: 'Determines whether or not the scanner is started when it is mounted.',
+        description: 'Do not open the camera when the block mounts; call the start method instead.',
       },
-      formatsToSupport: {
-        type: 'array',
+      facingMode: {
+        type: 'string',
+        enum: ['environment', 'user'],
+        default: 'environment',
+        description: 'The camera to use: environment (back) or user (front).',
+      },
+      deviceId: {
+        type: 'string',
+        description: 'The id of a specific camera to use, instead of facingMode.',
+      },
+      fps: {
+        type: 'number',
+        default: 10,
+        description: 'Camera frames read per second.',
+      },
+      qrbox: {
+        type: ['number', 'object'],
         description:
-          "List of Html5QrcodeSupportedFormats to support. See <a href='https://github.com/mebjas/html5-qrcode#documentation:~:text=library.%0A%20*/%0Aenum-,Html5QrcodeSupportedFormats,-%7B%0A%20%20QR_CODE%20%3D'>more</a>.",
-        items: {
-          type: 'string',
-          enum: [
-            'QR_CODE',
-            'AZTEC',
-            'CODABAR',
-            'CODE_39',
-            'CODE_93',
-            'CODE_128',
-            'DATA_MATRIX',
-            'MAXICODE',
-            'ITF',
-            'EAN_13',
-            'EAN_8',
-            'PDF_417',
-            'RSS_14',
-            'RSS_EXPANDED',
-            'UPC_A',
-            'UPC_E',
-            'UPC_EAN_EXTENSION',
-          ],
-        },
+          'The scan area in pixels, drawn over the camera and centred: a number for a square, or { width, height }. Only codes inside it are read. If not set, the whole frame is read.',
+      },
+      aspectRatio: {
+        type: 'number',
+        default: 1,
+        description: 'The aspect ratio asked of the camera.',
+      },
+      torch: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Turn the torch on, where the camera has one (most Android back cameras; not iPhones in Safari).',
       },
     },
   },
