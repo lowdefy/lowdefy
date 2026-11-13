@@ -137,6 +137,7 @@ fixtureTest(
 
 fixtureTest('an edited page is run by the next headless journey, with no build', async () => {
   const original = fs.readFileSync(homePage, 'utf8');
+  const { atime, mtime } = fs.statSync(homePage);
   const edited = original.replace(
     /params:\n {12}saved: true/,
     'params:\n            saved: edited'
@@ -153,6 +154,9 @@ fixtureTest('an edited page is run by the next headless journey, with no build',
     expect(result.passed).toBe(true);
   } finally {
     fs.writeFileSync(homePage, original);
+    // The parity check's production build of the fixture refuses a config file newer than
+    // itself, so the restored page keeps its old times.
+    fs.utimesSync(homePage, atime, mtime);
   }
   const restored = await postHeadlessUntil({ body: SAVE, until: ({ passed }) => passed });
   expect(restored.passed).toBe(true);
