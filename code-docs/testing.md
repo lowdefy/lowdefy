@@ -381,6 +381,14 @@ commands in the pull request body:
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
 
+These runs are for whoever pushes the branch. When several agents build one change in their
+own worktrees and another agent merges their branches, a builder that does not push runs only
+the test files for what it changed (`pnpm --filter=<package> test <file>`), once its change is
+complete, not after each edit. The agent that merges runs `pnpm build` and the rows of the table above
+that the merged change touches once, after the last merge, and sends each failure back to the builder whose change caused it.
+Builders share one machine, so a package suite that each builder runs after every edit queues
+behind the others' and multiplies the wait.
+
 ## Dev server and hub
 
 - The dev hub (`lowdefy hub`, `lowdefy mcp`) keeps state in `~/.lowdefy`. Point

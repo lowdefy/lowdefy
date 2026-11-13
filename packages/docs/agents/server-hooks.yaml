@@ -131,7 +131,7 @@ _ref:
 
             ## Generating Titles
 
-            > **Built-in option:** set the agent's [`generateTitle`](/agent-properties) property to `true` and Lowdefy generates a short title from the first user message automatically, emitting the `data-chat-title` part for you. The manual approach below is only needed when you want custom title logic.
+            > **Built-in option:** set the agent's [`generateTitle`](/agent-properties) property to `true` and Lowdefy generates a short title from the first exchange (the user's first message and the assistant's first reply) automatically, emitting the `data-chat-title` part for you. The manual approach below is only needed when you want custom title logic.
 
             Use a `data-chat-title` data part to send a generated title back to the client. The [`AgentChat`](/AgentChat) block fires an `onTitleGenerated` event when it receives this data part.
 

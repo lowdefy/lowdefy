@@ -125,7 +125,7 @@ _ref:
 
                 Websockets use Vercel's native WebSocket support for Node.js functions on Fluid compute — deploy the same project, no configuration. Two platform behaviors to know:
 
-                - Connections close when a function reaches its `maxDuration`. The Lowdefy client reconnects and resubscribes automatically, so this is invisible to users; raise `maxDuration` to reduce reconnect frequency on websocket-heavy apps.
+                - Connections close when a function reaches its `maxDuration`. The server closes each connection 5 seconds before then (at half the limit when it is under 10 seconds), and the Lowdefy client reconnects and resubscribes at once. Changes a source publishes during the reconnect are not delivered; raise `maxDuration` to reduce reconnect frequency on websocket-heavy apps.
                 - Under load, Vercel may run multiple instances of your app. Server-driven sources run per instance, so every subscriber receives every source message regardless of which instance they land on. Client publishes, however, reach subscribers connected to the same instance. For chat-style apps at multi-instance scale, a cross-instance pubsub adapter is on the roadmap.
 
                 ### Self-Hosted

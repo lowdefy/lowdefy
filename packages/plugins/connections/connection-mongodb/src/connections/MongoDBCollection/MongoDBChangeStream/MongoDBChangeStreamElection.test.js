@@ -73,6 +73,7 @@ test('MongoDBChangeStream resumes when getMore fails with 11602 and no resumable
     },
     properties: { pipeline: [{ $match: { operationType: 'insert' } }] },
     publish: ({ data }) => published.push(data),
+    ready: () => {},
     signal: abortController.signal,
   }).catch((error) => {
     runError = error;
@@ -111,6 +112,7 @@ test('MongoDBChangeStream carries on when the primary steps down', async () => {
     connection: { databaseUri: replSet.getUri(), databaseName: 'test', collection: 'election' },
     properties: { pipeline: [{ $match: { operationType: 'insert' } }] },
     publish: ({ data }) => published.push(data),
+    ready: () => {},
     signal: abortController.signal,
   }).catch((error) => {
     runError = error;

@@ -235,12 +235,13 @@ afterAll(async () => {
   fs.rmSync(serverDirectory, { recursive: true, force: true });
 });
 
-test('the function entry creates the app without static assets, taking the client address from x-real-ip', async () => {
+test('the function entry creates the app without static assets, taking the client address from x-real-ip and closing websockets before maxDuration', async () => {
   const response = await fetch(`${baseUrl}/options`);
 
   expect(await response.json()).toEqual({
     serveStaticAssets: false,
     clientAddressHeader: 'x-real-ip',
+    closeWebSocketsBeforeMaxDuration: true,
   });
 });
 

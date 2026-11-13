@@ -31,7 +31,8 @@ const RESUMABLE_CODES = new Set([
 ]);
 
 // The resume token is gone from the oplog (ChangeStreamHistoryLost, 286), or the server says
-// the stream can not go on (ChangeStreamFatalError, 280). Subscribers must reconnect and reload.
+// the stream can not go on (ChangeStreamFatalError, 280). The source throws, and its channel
+// restarts it from now and tells subscribers to fetch what they missed.
 const FATAL_CODES = new Set([280, 286]);
 
 // The driver resumes a change stream itself only for errors labelled ResumableChangeStreamError

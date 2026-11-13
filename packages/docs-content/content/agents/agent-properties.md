@@ -7,7 +7,7 @@ Agent properties configure the model and its behavior. They are set in the `prop
 - `model: string`: __Required__ - The model identifier (e.g. `claude-sonnet-4-20250514`, `gpt-4o`, `gemini-2.5-pro`).
 - `instructions: string`: System instructions that guide the agent's behavior. This is the system prompt sent to the model with every request. The string passes through the operator parser at request time, so `_t:` works for locale-aware prompts (see [i18n](/i18n)). Note: tool descriptions stay English — translating them can degrade tool-call accuracy on English-trained models.
 - `pageContext: boolean`: Default: `false` - When `true`, prepend context about the current page, user, conversation, URL query, path parameters and shared state to the instructions. URL query and shared state are only included when the [`AgentChat`](/AgentChat) block sends them as `urlQuery` and `sharedState`. Path parameters, the values of the placeholders in the page's [`path`](/page-paths), are sent by the block on a page with a path, and included when there are any. Useful when the agent needs to know who it's talking to or what the user has typed into form fields.
-- `generateTitle: boolean`: Default: `false` - When `true`, generate a short title from the first user message on the first turn of a conversation. Emits a `data-chat-title` data part that fires the [`AgentChat`](/AgentChat) block's `onTitleGenerated` event. Runs concurrently with the response and is non-fatal — a failed title generation logs a warning and does not break the turn.
+- `generateTitle: boolean`: Default: `false` - When `true`, generate a short title from the first exchange of a conversation: the user's first message and the first 1,200 characters of the assistant's first reply. Titling from the reply means chats that open with the same suggested prompt still get titles that name their subject. The title is generated once the first reply is complete, before the response stream closes, and emitted as a `data-chat-title` data part that fires the [`AgentChat`](/AgentChat) block's `onTitleGenerated` event. A first reply that waits on a tool approval or a client tool is titled when it completes. A turn that fails is not titled, and a retry of it is. The title call uses the agent's `model`, `timeout` and `providerOptions`, so settings such as the AI Gateway's `zeroDataRetention` and `only`, OpenAI's `store` and Gemini's `safetySettings` apply to it as they do to the agent's own calls. Thinking and reasoning settings are the exception: the title call asks the model for no reasoning. A failed title generation logs a warning and does not break the turn.
 
 ###### Instructions with user context:
 ```yaml
@@ -175,7 +175,7 @@ A file in a chat or a `CallAgent` step goes to the model as a link when the prov
 
 ## Provider-Specific Properties
 
-- `providerOptions: object`: Pass provider-specific options directly to the AI SDK. Use this for options not covered by the properties above.
+- `providerOptions: object`: Pass provider-specific options directly to the AI SDK. Use this for options not covered by the properties above. These options also apply to the title call `generateTitle` makes, except thinking and reasoning settings.
 
 Each agent type also has its own properties. See the connection pages for details:
 

@@ -14,31 +14,34 @@
   limitations under the License.
 */
 
+import JOURNEY_COOKIES from '../journeyCookies/JOURNEY_COOKIES.js';
+import readJourneyCookie from '../journeyCookies/readJourneyCookie.js';
 import { remoteCallerHeader } from '../pairingHeaders.js';
-import { HEADLESS_USER_COOKIE } from './headlessUser.js';
 
-// Mirrors the e2e user-injection pattern (server-e2e/lib/server/auth/getUser.js):
-// the headless renderer sets a base64-JSON caller cookie on its own browser
-// context, so its /api/* fetches carry a pre-resolved caller while the
-// developer's real browser (no cookie) is unaffected. Returns { user, explicit }
-// as getBrowser.js wrote it, or null on miss - the caller floors the user's
-// shape via normalizeInjectedCaller. `explicit` is true when the tool call or
-// journey named the user, so createLowdefyContext lets it beat a dev mock user.
+// The headless renderer (getBrowser.js) sets a signed caller cookie on its own
+// browser context, so its /api/* fetches carry a pre-resolved caller while the
+// developer's real browser (no cookie) is unaffected. Only a cookie signed with
+// this dev server's journeyActorToken is read: any other request could
+// otherwise name its own user and roles. Returns { user, explicit } as
+// getBrowser.js wrote it, or null on miss - the caller floors the user's shape
+// via normalizeInjectedCaller. `explicit` is true when the tool call or journey
+// named the user, so createLowdefyContext lets it beat a dev mock user.
 // A request from another machine (a phone paired with `lowdefy dev --lan`) is
-// never a headless one: the cookie would let it sign in as anyone.
+// never a headless one, so it is refused even with a valid cookie.
 function getHeadlessUser(c) {
   if (c.req.header(remoteCallerHeader) !== undefined) {
     return null;
   }
-  const cookieHeader = c.req.header('cookie') ?? '';
-  const match = cookieHeader.match(new RegExp(`${HEADLESS_USER_COOKIE}=([^;]+)`));
-  if (!match) {
+  const payload = readJourneyCookie({
+    cookieHeader: c.req.header('cookie'),
+    name: JOURNEY_COOKIES.headlessUser.name,
+  });
+  if (payload === null) {
     return null;
   }
 
   try {
-    const decoded = Buffer.from(decodeURIComponent(match[1]), 'base64').toString();
-    return JSON.parse(decoded);
+    return JSON.parse(Buffer.from(payload, 'base64').toString());
   } catch {
     return null;
   }
