@@ -25,6 +25,12 @@ import { memoryAdapter } from 'better-auth/adapters/memory';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 import handleAuthRequest, { CLIENT_ADDRESS_HEADER } from './handleAuthRequest.js';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 // Contract test against the installed better-auth release: a real BetterAuth
 // instance built from the assembled options, driven through handleAuthRequest,
 // must key its sign-in rate limit (3 attempts per 10 s per address) on the
@@ -58,6 +64,7 @@ const cheapPasswordHasher = {
 
 function createAuth() {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta: { name: 'Test App', slug: 'test-app' },
     authJson: {
       configured: true,

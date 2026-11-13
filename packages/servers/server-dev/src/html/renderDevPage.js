@@ -17,11 +17,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { addNonceToElements, createContentSecurityPolicy } from '@lowdefy/api';
+import {
+  addNonceToElements,
+  createContentSecurityPolicy,
+  darkModeScript,
+  layerOrderScript,
+} from '@lowdefy/api';
+import safeScriptJson from '@lowdefy/api/html/safeScriptJson.js';
 import { appStorageKey, serializer, type } from '@lowdefy/helpers';
 
 import isRecordingEnabled from '../../lib/server/recording/isRecordingEnabled.js';
-import safeScriptJson from '../lib/safeScriptJson.js';
 
 // Dev HTML shell — config-free: the client fetches root config and page
 // config over the API (SWR), exactly like the old dev pages did. Theme and
@@ -30,9 +35,7 @@ import safeScriptJson from '../lib/safeScriptJson.js';
 //
 // @hono/vite-dev-server injects /@vite/client into this response; the
 // react-refresh preamble must be inlined here for @vitejs/plugin-react.
-// The layer order style takes its script's nonce, which a Content-Security-Policy
-// needs to apply it.
-const layerOrderScript = `(function(){var s=document.createElement("style");s.id="__lf-layer-order";var n=document.currentScript&&document.currentScript.nonce;if(n)s.nonce=n;s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`;
+// The pre-render scripts are the production template's (@lowdefy/api).
 
 function readBuildJson(name) {
   try {
@@ -93,19 +96,18 @@ function renderDevPage(c, { basePath = '' }) {
 
   const darkModeStorageKey = appStorageKey({ basePath, name: 'lowdefy_darkMode', slug });
 
-  const darkModeScript = `(function(){var c=${safeScriptJson(
-    configColorMode
-  )};var db=${safeScriptJson(darkBg)};var lb=${safeScriptJson(lightBg)};var k=${safeScriptJson(
-    darkModeStorageKey
-  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem(k);if(p===null)p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
-
   const html = `<!DOCTYPE html>
 <html class="lowdefy">
   <head>
     <meta charset="utf-8" />
     ${nonceMeta}
     <script${nonceAttribute}>${layerOrderScript}</script>
-    <script${nonceAttribute}>${darkModeScript}</script>
+    <script${nonceAttribute}>${darkModeScript({
+      configColorMode,
+      darkBg,
+      lightBg,
+      storageKey: darkModeStorageKey,
+    })}</script>
     <link rel="manifest" href="${basePath}/manifest.webmanifest" />
     <link rel="icon" type="image/svg+xml" href="${basePath}/icon.svg" />
     <link rel="apple-touch-icon" href="${basePath}/apple-touch-icon.png" />

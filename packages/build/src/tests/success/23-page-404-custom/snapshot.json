@@ -688,6 +688,11 @@
     },
     "configured": false,
     "hasPublicTool": false,
+    "views": {
+      "configured": false,
+      "pages": {},
+      "sources": []
+    },
     "~k": "10"
   },
   "menus.json": {

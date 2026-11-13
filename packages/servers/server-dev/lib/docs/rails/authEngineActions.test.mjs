@@ -30,6 +30,8 @@ const NOT_AUTH_ENGINE = [
   'GeolocationCurrentPosition',
   'GetLocalStorage',
   'Link',
+  'McpOpenLink',
+  'McpSendMessage',
   'Publish',
   'RemoveLocalStorage',
   'Request',

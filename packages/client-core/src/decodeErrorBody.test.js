@@ -51,3 +51,16 @@ test('decodeErrorBody returns null for a body that carries no Lowdefy error', ()
   expect(decodeErrorBody({ code: 'INVALID_OTP', message: 'Invalid code.' })).toBeNull();
   expect(decodeErrorBody(null)).toBeNull();
 });
+
+test('decodeErrorBody keeps the code the server sends beside an expected outcome', () => {
+  const error = decodeErrorBody({
+    name: 'AuthorizationError',
+    message: 'This connection is read-only. Reconnect with write access to make changes.',
+    code: 'view_write_required',
+  });
+  expect(error).toBeInstanceOf(AuthorizationError);
+  expect(error.code).toEqual('view_write_required');
+  expect(decodeErrorBody({ name: 'AuthorizationError', message: 'Forbidden.' }).code).toBe(
+    undefined
+  );
+});

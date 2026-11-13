@@ -17,6 +17,12 @@
 import { vi, afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { ConfigError } from '@lowdefy/errors';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 const mockSendEmail = vi.fn(async () => ({ messageId: 'msg_1' }));
 const mockCreateSendEmail = vi.fn(() => mockSendEmail);
 const mockRenderAuthEmail = vi.fn(async () => ({
@@ -121,6 +127,7 @@ const baseSecrets = {
 
 test('resolves secret via the _secret operator', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -134,6 +141,7 @@ test('resolves secret via the _secret operator', () => {
 test('throws ConfigError when secret does not resolve to a string', () => {
   expect(() =>
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       getAuth,
@@ -144,6 +152,7 @@ test('throws ConfigError when secret does not resolve to a string', () => {
   ).toThrow(ConfigError);
   expect(() =>
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       getAuth,
@@ -160,6 +169,7 @@ test('throws the first operator error when an operator fails while resolving aut
   const authJson = createAuthJson({ secret: { _secret: { all: true } } });
   expect(() =>
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson,
       getAuth,
@@ -173,6 +183,7 @@ test('throws the first operator error when an operator fails while resolving aut
 test('logs a warning when the resolved secret is shorter than 32 characters', () => {
   const logger = createLogger();
   getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -188,6 +199,7 @@ test('logs a warning when the resolved secret is shorter than 32 characters', ()
 test('does not warn about a short secret when the resolved secret is 32 characters or longer', () => {
   const logger = createLogger();
   getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -213,6 +225,7 @@ describe('base URL resolution', () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const logger = createLogger();
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       getAuth,
@@ -227,6 +240,7 @@ describe('base URL resolution', () => {
   test('trims surrounding whitespace from BETTER_AUTH_URL', () => {
     process.env.BETTER_AUTH_URL = '  https://app.example.com  ';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       getAuth,
@@ -241,6 +255,7 @@ describe('base URL resolution', () => {
     delete process.env.BETTER_AUTH_URL;
     const logger = createLogger();
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       getAuth,
@@ -256,6 +271,7 @@ describe('base URL resolution', () => {
     delete process.env.BETTER_AUTH_URL;
     const logger = createLogger();
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       dev: true,
@@ -291,6 +307,7 @@ describe('base URL resolution', () => {
       let error;
       try {
         getBetterAuthConfig({
+          mcpJson: mcpJsonWithoutViews,
           appMeta,
           authJson: createAuthJson({ email, ...overrides }),
           getAuth,
@@ -311,6 +328,7 @@ describe('base URL resolution', () => {
   test('starts in production with auth email when the environment url pins the base URL', () => {
     delete process.env.BETTER_AUTH_URL;
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({ email: emailConfig }),
       config: {
@@ -328,6 +346,7 @@ describe('base URL resolution', () => {
   test('starts with auth email and an unpinned base URL on the dev server', () => {
     delete process.env.BETTER_AUTH_URL;
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({ email: emailConfig }),
       dev: true,
@@ -344,6 +363,7 @@ describe('base URL resolution', () => {
 test('resolves the database adapter using the matching plugin and resolved secrets', () => {
   const adapterPlugin = vi.fn(() => 'adapter-instance');
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -358,6 +378,7 @@ test('resolves the database adapter using the matching plugin and resolved secre
 test('constructs a stateless instance without a database for a strategies-only app', () => {
   const adapterPlugin = vi.fn(() => 'adapter-instance');
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       database: undefined,
@@ -393,6 +414,7 @@ test('throws ConfigError when the database adapter type is not found', () => {
   });
   expect(() =>
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson,
       getAuth,
@@ -403,6 +425,7 @@ test('throws ConfigError when the database adapter type is not found', () => {
   ).toThrow(ConfigError);
   try {
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson,
       getAuth,
@@ -420,6 +443,7 @@ test('throws ConfigError when the database adapter type is not found', () => {
 
 test('sets basePath to /api/auth when config.basePath is not set', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -432,6 +456,7 @@ test('sets basePath to /api/auth when config.basePath is not set', () => {
 
 test('prefixes basePath with config.basePath when set', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     config: { basePath: '/my-app' },
@@ -445,6 +470,7 @@ test('prefixes basePath with config.basePath when set', () => {
 
 test('maps model names to the fixed user-* collection naming convention', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -460,6 +486,7 @@ test('maps model names to the fixed user-* collection naming convention', () => 
 
 test('passes rateLimit config through unchanged', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({ rateLimit: { enabled: false, window: 30, max: 10 } }),
     getAuth,
@@ -472,6 +499,7 @@ test('passes rateLimit config through unchanged', () => {
 
 test('passes session config through, including cookieCache', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       session: {
@@ -493,6 +521,7 @@ test('passes session config through, including cookieCache', () => {
 
 test('enables crossSubDomainCookies on advanced when configured', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       session: {
@@ -515,6 +544,7 @@ test('enables crossSubDomainCookies on advanced when configured', () => {
 
 test('passes account accountLinking config through', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       account: { accountLinking: { enabled: false, trustedProviders: ['google'] } },
@@ -530,6 +560,7 @@ test('passes account accountLinking config through', () => {
 test('adds emailAndPassword block when enabled, without sendResetPassword when email is not configured', () => {
   const logger = createLogger();
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -551,6 +582,7 @@ test('adds emailAndPassword block when enabled, without sendResetPassword when e
 
 test('omits emailAndPassword block when not enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       emailAndPassword: {
@@ -571,6 +603,7 @@ test('omits emailAndPassword block when not enabled', () => {
 test('adds sendResetPassword and emailVerification when email is configured', () => {
   const logger = createLogger();
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     dev: true,
     authJson: createAuthJson({
@@ -592,6 +625,7 @@ test('adds sendResetPassword and emailVerification when email is configured', ()
 
 test('does not add emailVerification when email is not configured', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -630,6 +664,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
 
   test('constructs sendEmail from the resolved auth.email.connectionId', () => {
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({ email: emailConfig }),
@@ -646,6 +681,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
 
   test('sendResetPassword renders the resetPassword flow and sends to the user email', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({ email: emailConfig }),
@@ -678,6 +714,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
 
   test('sendVerificationEmail renders the verifyEmail flow and sends to the user email', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({ email: emailConfig }),
@@ -705,6 +742,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
 
   test('sendMagicLink renders the magicLink flow and sends to the provided email', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({
@@ -736,6 +774,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
 
   test('sendMagicLink links at the verify endpoint when authPages.magicLink is unset', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({
@@ -769,6 +808,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   // endpoint consumes the token on that first GET.
   test('sendMagicLink links at the landing page, carrying the whole verify query', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({
@@ -803,6 +843,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   // URL has to take the origin from there or it is not an absolute URL at all.
   test('sendMagicLink takes the landing origin from the verify url, not the pinned base url', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({
@@ -830,6 +871,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
 
   test('sendVerificationOTP renders the emailOTP flow for a sign-in code and sends it', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({
@@ -871,6 +913,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   // flood error tracking with.
   test('sendVerificationOTP refuses an OTP type other than sign-in with a warning and sends nothing', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({
@@ -910,6 +953,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendMagicLink mints the code through api.createVerificationOTP and adds otp and expiresIn to the vars when emailOTP is enabled', async () => {
     const createVerificationOTP = vi.fn(async () => '482913');
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({
@@ -955,6 +999,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('the invitation sender composes the accept URL when origin and acceptInvitation are set', async () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({
         email: emailConfig,
@@ -991,6 +1036,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('the invitation sender falls back to url undefined when the origin is not pinned', async () => {
     delete process.env.BETTER_AUTH_URL;
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       dev: true,
       authJson: createAuthJson({
@@ -1019,6 +1065,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('the invitation sender falls back to url undefined when acceptInvitation is not set', async () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({ email: emailConfig }),
       createSystemContext,
@@ -1041,6 +1088,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
 
   test('the invitation sender throws a configure-auth.email error when auth.email is unset', async () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       createSystemContext,
@@ -1070,6 +1118,7 @@ test('sets socialProviders only when at least one built-in provider is configure
     return { kind: 'social', provider: 'google', options: properties };
   }
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       providers: [{ id: 'google', type: 'Google', properties: { clientId: 'cid' } }],
@@ -1084,6 +1133,7 @@ test('sets socialProviders only when at least one built-in provider is configure
 
 test('omits socialProviders when no built-in providers are configured', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1099,6 +1149,7 @@ test('pushes the generic-oauth plugin when a GenericOAuth provider is configured
     return { kind: 'generic', config: { providerId: id, ...properties } };
   }
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       providers: [{ id: 'okta', type: 'GenericOAuthProvider', properties: { clientId: 'cid' } }],
@@ -1113,6 +1164,7 @@ test('pushes the generic-oauth plugin when a GenericOAuth provider is configured
 
 test('does not push the generic-oauth plugin when no GenericOAuth provider is configured', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1125,6 +1177,7 @@ test('does not push the generic-oauth plugin when no GenericOAuth provider is co
 
 test('pushes the magic-link plugin when magicLink is enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     dev: true,
     authJson: createAuthJson({
@@ -1143,6 +1196,7 @@ test('pushes the magic-link plugin when magicLink is enabled', () => {
 
 test('does not push the magic-link plugin when magicLink is not enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1155,6 +1209,7 @@ test('does not push the magic-link plugin when magicLink is not enabled', () => 
 
 test('pushes the email-otp plugin when emailOTP is enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     dev: true,
     authJson: createAuthJson({
@@ -1180,6 +1235,7 @@ test('pushes the email-otp plugin when emailOTP is enabled', () => {
 
 test('does not push the email-otp plugin when emailOTP is not enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1192,6 +1248,7 @@ test('does not push the email-otp plugin when emailOTP is not enabled', () => {
 
 test('pushes the two-factor plugin when twoFactor is enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({ twoFactor: { enabled: true } }),
     getAuth,
@@ -1204,6 +1261,7 @@ test('pushes the two-factor plugin when twoFactor is enabled', () => {
 
 test('does not push the two-factor plugin when twoFactor is not enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1221,6 +1279,7 @@ test('instantiates the two-factor plugin with allowPasswordless, relaxing the en
   // pins the flag being wired. twoFactorPluginContract.test.js pins the
   // upstream contract this relies on.
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({ twoFactor: { enabled: true } }),
     getAuth,
@@ -1234,6 +1293,7 @@ test('instantiates the two-factor plugin with allowPasswordless, relaxing the en
 
 test('leaves trustDeviceMaxAge unset so the plugin default applies when trustDevice is not disabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({ twoFactor: { enabled: true } }),
     getAuth,
@@ -1250,6 +1310,7 @@ test('passes trustDeviceMaxAge 0 to the two-factor plugin when trustDevice is fa
   // already expired and its cookie as a browser delete, so no device is durably
   // trusted and a forged trustDevice: true cannot bypass.
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({ twoFactor: { enabled: true, trustDevice: false } }),
     getAuth,
@@ -1263,6 +1324,7 @@ test('passes trustDeviceMaxAge 0 to the two-factor plugin when trustDevice is fa
 
 test('pushes the passkey plugin when passkey is enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       passkey: { enabled: true, rpId: 'example.com', rpName: 'Test App' },
@@ -1277,6 +1339,7 @@ test('pushes the passkey plugin when passkey is enabled', () => {
 
 test('does not push the passkey plugin when passkey is not enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1289,6 +1352,7 @@ test('does not push the passkey plugin when passkey is not enabled', () => {
 
 test('always pushes the admin plugin, with no custom access control', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1304,6 +1368,7 @@ test('always pushes the admin plugin, with no custom access control', () => {
 
 test('sets cookie prefix via resolveCookiePrefix, using the app slug in dev', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     dev: true,
@@ -1317,6 +1382,7 @@ test('sets cookie prefix via resolveCookiePrefix, using the app slug in dev', ()
 
 test('sets cookie prefix to lowdefy in production', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     dev: false,
@@ -1330,6 +1396,7 @@ test('sets cookie prefix to lowdefy in production', () => {
 
 test('sets function-form advanced.database.generateId that returns a plain UUID string', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1347,6 +1414,7 @@ test('sets function-form advanced.database.generateId that returns a plain UUID 
 
 test('assembles databaseHooks from auth.hooks bindings', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       hooks: [
@@ -1367,6 +1435,7 @@ test('assembles databaseHooks from auth.hooks bindings', () => {
 
 test('always sets the engine session.create.before and user.create.before slots even with no user hooks', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({ hooks: [] }),
     createSystemContext: vi.fn(),
@@ -1382,6 +1451,7 @@ test('always sets the engine session.create.before and user.create.before slots 
 
 test('an email.verified hook sets emailVerification.afterEmailVerification and preserves sendVerificationEmail', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     dev: true,
     authJson: createAuthJson({
@@ -1404,6 +1474,7 @@ test('an email.verified hook sets emailVerification.afterEmailVerification and p
 
 test('always pushes the organization plugin', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1459,6 +1530,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
 
   test('under pinned policy, disables every mutation and read org path plus the admin surface', () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({
         organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
@@ -1475,6 +1547,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
 
   test('under pinned policy, does not disable accept-invitation or create', () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({
         organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
@@ -1490,6 +1563,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
 
   test('defaults to the pinned disabled set when organizations.policy is absent', () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({ organizations: { org: 'default', signup: 'invite-only' } }),
       getAuth,
@@ -1503,6 +1577,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
 
   test('under tenant policy, disables the whole admin surface and no org endpoint', () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({
         organizations: { policy: 'tenant', org: 'default', signup: 'invite-only' },
@@ -1524,6 +1599,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
     'under %s policy, disables both impersonation endpoints',
     (policy) => {
       const options = getBetterAuthConfig({
+        mcpJson: mcpJsonWithoutViews,
         appMeta,
         authJson: createAuthJson({
           organizations: { policy, org: 'default', signup: 'invite-only' },
@@ -1541,6 +1617,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
 
 test('registers the internal user additionalFields (attributes, profile, contactId)', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1558,6 +1635,7 @@ test('registers the internal user additionalFields (attributes, profile, contact
 test('throws when no getAuth accessor is provided', () => {
   expect(() =>
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       logger: createLogger(),
@@ -1569,6 +1647,7 @@ test('throws when no getAuth accessor is provided', () => {
 
 test('pushes the phone-number plugin when phoneNumber is enabled, wiring the phone.otp.send slot', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       phoneNumber: {
@@ -1598,6 +1677,7 @@ test('pushes the phone-number plugin when phoneNumber is enabled, wiring the pho
 
 test('does not push the phone-number plugin when phoneNumber is not enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1610,6 +1690,7 @@ test('does not push the phone-number plugin when phoneNumber is not enabled', ()
 
 test('pushes the captcha plugin when captcha is enabled, resolving secretKey via _secret', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson({
       captcha: {
@@ -1638,6 +1719,7 @@ test('pushes the captcha plugin when captcha is enabled, resolving secretKey via
 test('throws ConfigError when captcha.secretKey does not resolve to a string', () => {
   expect(() =>
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({
         captcha: {
@@ -1657,6 +1739,7 @@ test('throws ConfigError when captcha.secretKey does not resolve to a string', (
 
 test('does not push the captcha plugin when captcha is not enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1681,6 +1764,7 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
   test('sets an absolute errorURL of origin + basePath + authPages.error when the origin is pinned', () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       config: { basePath: '/base' },
@@ -1695,6 +1779,7 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
   test('falls back to the app-relative error path when the origin is not pinned', () => {
     delete process.env.BETTER_AUTH_URL;
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       getAuth,
@@ -1708,6 +1793,7 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
   test('honours a custom authPages.error path', () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({
         authPages: { signIn: '/login', error: '/oops' },
@@ -1724,6 +1810,7 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
 describe('onAPIError.onError owns auth API error logging', () => {
   test('always installs an onError handler, with no errorURL when authPages.error is unset', () => {
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({ authPages: { signIn: '/login' } }),
       getAuth,
@@ -1738,6 +1825,7 @@ describe('onAPIError.onError owns auth API error logging', () => {
   test('logs a rejected auth attempt (4xx) as a single warn line, not an error', () => {
     const logger = createLogger();
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       getAuth,
@@ -1760,6 +1848,7 @@ describe('onAPIError.onError owns auth API error logging', () => {
     const logger = createLogger();
     const handleError = vi.fn(async () => {});
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       createSystemContext: () => ({ handleError }),
@@ -1820,6 +1909,7 @@ describe('two factor challenge on the magic link path', () => {
   test('redirects an enrolled magic link sign-in to the basePath-prefixed absolute two factor page', async () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createMagicLinkTwoFactorAuthJson(),
       config: { basePath: '/base' },
@@ -1841,6 +1931,7 @@ describe('two factor challenge on the magic link path', () => {
   test('leaves /magic-link/verify alone when twoFactor is not enabled', async () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({
         authPages: { signIn: '/login', error: '/auth/error', twoFactor: '/two-factor' },
@@ -1861,6 +1952,7 @@ describe('two factor challenge on the magic link path', () => {
 
 test('assembles both request hook slots when magicLink is enabled', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     dev: true,
     authJson: createAuthJson({
@@ -1880,6 +1972,7 @@ test('assembles both request hook slots when magicLink is enabled', () => {
 
 test('always assembles both request hook slots even with no magic link configured', () => {
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta,
     authJson: createAuthJson(),
     getAuth,
@@ -1916,6 +2009,7 @@ describe('oauthProvider authorization server plugins', () => {
   function getOAuthOptions(oauthProviderOverrides = {}, config = undefined) {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     return getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createOAuthProviderAuthJson(oauthProviderOverrides),
       config,
@@ -1929,6 +2023,7 @@ describe('oauthProvider authorization server plugins', () => {
   test('registers no jwt, oauth-provider or cimd plugin when oauthProvider is not configured', () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson(),
       getAuth,
@@ -1946,6 +2041,7 @@ describe('oauthProvider authorization server plugins', () => {
     delete process.env.BETTER_AUTH_URL;
     expect(() =>
       getBetterAuthConfig({
+        mcpJson: mcpJsonWithoutViews,
         appMeta,
         authJson: createOAuthProviderAuthJson(),
         getAuth,
@@ -1956,6 +2052,7 @@ describe('oauthProvider authorization server plugins', () => {
     ).toThrow(ConfigError);
     expect(() =>
       getBetterAuthConfig({
+        mcpJson: mcpJsonWithoutViews,
         appMeta,
         authJson: createOAuthProviderAuthJson(),
         getAuth,
@@ -2022,6 +2119,7 @@ describe('oauthProvider authorization server plugins', () => {
   test('redirects every authorization to the post-login page and references the active org under the tenant policy', () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta,
       authJson: createAuthJson({
         organizations: { policy: 'tenant', signup: 'open', create: 'auto' },
@@ -2083,14 +2181,31 @@ describe('oauthProvider authorization server plugins', () => {
 describe('mobile', () => {
   const mobile = { shells: [{ id: 'field', scheme: 'com.example.field' }], sessionExpiresIn: null };
 
-  function build(authJsonOverrides) {
+  const viewMarks = {
+    view: { type: 'boolean', required: false, input: false },
+    viewClientId: { type: 'string', required: false, input: false },
+    viewScopes: { type: 'string', required: false, input: false },
+  };
+
+  function build(authJsonOverrides, mcpJson = mcpJsonWithoutViews) {
     return getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson(authJsonOverrides),
       getAuth,
       logger: createLogger(),
+      mcpJson,
       plugins: createPlugins(),
       secrets: baseSecrets,
+    });
+  }
+
+  function sendsTokenToNative(options) {
+    const [hook] = options.plugins.find((plugin) => plugin.id === 'bearer').hooks.after;
+    return hook.matcher({
+      request: new Request('http://localhost/api/auth/sign-in/email-otp', {
+        headers: { 'x-lowdefy-shell': '7.1.0' },
+      }),
+      context: { responseHeaders: new Headers() },
     });
   }
 
@@ -2110,14 +2225,58 @@ describe('mobile', () => {
     });
     // customSession stays last, so its token strip sees every session field.
     expect(ids.at(-1)).toBe('custom-session');
+    expect(sendsTokenToNative(options)).toBe(true);
   });
 
   test('marks phone sessions only when mobile.auth.sessionExpiresIn is set', () => {
-    expect(build({ mobile }).session.additionalFields).toBeUndefined();
+    expect(build({ mobile }).session.additionalFields).toEqual(viewMarks);
     const options = build({ mobile: { ...mobile, sessionExpiresIn: 2592000 } });
     expect(options.session.additionalFields).toEqual({
+      ...viewMarks,
       mobile: { type: 'boolean', required: false, input: false },
     });
     expect(options.session.expiresIn).toBe(604800);
+  });
+
+  test('declares the view session marks for every app, none of them client-writable', () => {
+    expect(build().session.additionalFields).toEqual(viewMarks);
+    expect(build(undefined, { views: { configured: true } }).session.additionalFields).toEqual(
+      viewMarks
+    );
+  });
+
+  test('puts the view session gate first among the plugins for every app, with or without a view', () => {
+    const gate = 'lowdefy-view-session-gate';
+    expect(build().plugins[0].id).toBe(gate);
+    expect(build({ mobile }).plugins[0].id).toBe(gate);
+    const withView = build(undefined, { configured: true, views: { configured: true } });
+    expect(withView.plugins[0].id).toBe(gate);
+    expect(typeof withView.plugins[0].onRequest).toBe('function');
+    expect(withView.plugins.filter((plugin) => plugin.id === gate)).toHaveLength(1);
+  });
+
+  test('adds the bearer plugin alone for an app with a view and no mobile section, sending the token header to nobody', () => {
+    const options = build(undefined, { configured: true, views: { configured: true } });
+    const ids = options.plugins.map((plugin) => plugin.id);
+    expect(ids).toContain('bearer');
+    expect(ids).not.toContain('one-time-token');
+    expect(options.plugins.find((plugin) => plugin.id === 'bearer').options).toEqual({
+      requireSignature: true,
+    });
+    expect(ids.at(-1)).toBe('custom-session');
+    expect(sendsTokenToNative(options)).toBe(false);
+  });
+
+  test('adds no bearer plugin for an app whose MCP block has no view', () => {
+    const noView = build(undefined, { configured: true, views: { configured: false } });
+    expect(noView.plugins.map((plugin) => plugin.id)).not.toContain('bearer');
+  });
+
+  test('adds one bearer plugin for an app with a view and a mobile section, still sending phones their token', () => {
+    const options = build({ mobile }, { views: { configured: true } });
+    const ids = options.plugins.map((plugin) => plugin.id);
+    expect(ids.filter((id) => id === 'bearer')).toHaveLength(1);
+    expect(ids).toContain('one-time-token');
+    expect(sendsTokenToNative(options)).toBe(true);
   });
 });

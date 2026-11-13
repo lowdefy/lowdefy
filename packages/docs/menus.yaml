@@ -1043,6 +1043,9 @@
             - id: _location
               type: MenuLink
               pageId: _location
+            - id: _mcp
+              type: MenuLink
+              pageId: _mcp
             - id: _url_query
               type: MenuLink
               pageId: _url_query
@@ -1058,6 +1061,9 @@
             - id: _step
               type: MenuLink
               pageId: _step
+            - id: _response
+              type: MenuLink
+              pageId: _response
             - id: _actions
               type: MenuLink
               pageId: _actions
@@ -1296,6 +1302,9 @@
             - id: Link
               type: MenuLink
               pageId: Link
+            - id: McpOpenLink
+              type: MenuLink
+              pageId: McpOpenLink
             - id: ScrollTo
               type: MenuLink
               pageId: ScrollTo
@@ -1324,6 +1333,9 @@
             - id: DisplayMessage
               type: MenuLink
               pageId: DisplayMessage
+            - id: McpSendMessage
+              type: MenuLink
+              pageId: McpSendMessage
             - id: SetDarkMode
               type: MenuLink
               pageId: SetDarkMode

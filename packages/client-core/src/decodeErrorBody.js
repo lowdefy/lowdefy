@@ -16,6 +16,7 @@
 
 import { decodeServerError } from '@lowdefy/engine';
 import { isExpectedError, lowdefyErrorTypes } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 // The error a non-2xx JSON body from the app's server carries, or null when it
 // carries none (a host's or a library's own answer). A fault comes as a
@@ -23,14 +24,19 @@ import { isExpectedError, lowdefyErrorTypes } from '@lowdefy/errors';
 // server answers an expected outcome (an auth gate's 401 or 403, a UserError's
 // 400) itself, as { name, message } with no serialized error; rebuilding its
 // class keeps the name the engine, handleError and the dev tools tell an
-// expected outcome from a fault by.
+// expected outcome from a fault by. The server sends a code beside them only
+// for a refusal a client acts on (view_write_required), and the error keeps it.
 function decodeErrorBody(body) {
   if (body?.['~e']) {
     return decodeServerError(body);
   }
   if (isExpectedError(body)) {
     const ExpectedError = lowdefyErrorTypes[body.name];
-    return new ExpectedError(body.message);
+    const error = new ExpectedError(body.message);
+    if (type.isString(body.code)) {
+      error.code = body.code;
+    }
+    return error;
   }
   return null;
 }

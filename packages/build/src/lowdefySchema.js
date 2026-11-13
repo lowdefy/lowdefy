@@ -1794,6 +1794,51 @@ export default {
                     'MCP endpoint "annotations" contains an unknown property. The known properties are "title", "readOnlyHint", "destructiveHint", "idempotentHint" and "openWorldHint".',
                 },
               },
+              // The page that renders this tool as an MCP App view, addressed
+              // the way the Link action addresses a page. pathParams and
+              // urlQuery are evaluated on the server after each call.
+              view: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['pageId'],
+                properties: {
+                  '~ignoreBuildChecks': {},
+                  '~r': {},
+                  '~l': {},
+                  pageId: {
+                    type: 'string',
+                    errorMessage: {
+                      type: 'MCP endpoint view "pageId" should be a string.',
+                    },
+                  },
+                  pathParams: {
+                    type: 'object',
+                    errorMessage: {
+                      type: 'MCP endpoint view "pathParams" should be an object.',
+                    },
+                  },
+                  urlQuery: {
+                    type: 'object',
+                    errorMessage: {
+                      type: 'MCP endpoint view "urlQuery" should be an object.',
+                    },
+                  },
+                  entrypoint: {
+                    type: 'boolean',
+                    errorMessage: {
+                      type: 'MCP endpoint view "entrypoint" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'MCP endpoint "view" should be an object with a "pageId" property.',
+                  required: {
+                    pageId: 'MCP endpoint view should have required property "pageId".',
+                  },
+                  additionalProperties:
+                    'MCP endpoint "view" contains an unknown property. The known properties are "pageId", "pathParams", "urlQuery" and "entrypoint".',
+                },
+              },
             },
             errorMessage: {
               type: 'MCP "endpoints" items should be objects with "id" and "scope" properties.',
@@ -1803,18 +1848,87 @@ export default {
                   'MCP endpoint should have required property "scope". Set "mcp:read" or "mcp:write".',
               },
               additionalProperties:
-                'MCP endpoint contains an unknown property. The known properties are "id", "scope" and "annotations".',
+                'MCP endpoint contains an unknown property. The known properties are "id", "scope", "annotations" and "view".',
             },
           },
           errorMessage: {
             type: 'MCP "endpoints" should be an array.',
           },
         },
+        // Pages a view may show without a tool of their own, for pages reached
+        // by a link from a view.
+        viewPages: {
+          type: 'array',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'MCP "viewPages" items should be page ids.',
+            },
+          },
+          errorMessage: {
+            type: 'MCP "viewPages" should be an array of page ids.',
+          },
+        },
+        // Other origins a view page loads from or calls. An entry may be an
+        // operator: _build is resolved by the build, _secret at server start.
+        viewSources: {
+          type: 'array',
+          items: {
+            type: ['string', 'object'],
+            errorMessage: {
+              type: 'MCP "viewSources" items should be origin strings, or a _build or _secret operator.',
+            },
+          },
+          errorMessage: {
+            type: 'MCP "viewSources" should be an array.',
+          },
+        },
+        // Scopes for the endpoints a view page calls that are not tools.
+        viewEndpoints: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'scope'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP view endpoint "id" should be a string.',
+                },
+              },
+              scope: {
+                type: 'string',
+                enum: ['mcp:read', 'mcp:write'],
+                errorMessage: {
+                  type: 'MCP view endpoint "scope" should be a string.',
+                  enum: 'MCP view endpoint "scope" should be "mcp:read" or "mcp:write".',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'MCP "viewEndpoints" items should be objects with "id" and "scope" properties.',
+              required: {
+                id: 'MCP view endpoint should have required property "id".',
+                scope:
+                  'MCP view endpoint should have required property "scope". Set "mcp:read" or "mcp:write".',
+              },
+              additionalProperties:
+                'MCP view endpoint contains an unknown property. The known properties are "id" and "scope".',
+            },
+          },
+          errorMessage: {
+            type: 'MCP "viewEndpoints" should be an array.',
+          },
+        },
       },
       errorMessage: {
         type: 'App "mcp" should be an object.',
         additionalProperties:
-          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions", "endpoints" and "afterToolCall".',
+          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions", "endpoints", "afterToolCall", "viewPages", "viewSources" and "viewEndpoints".',
       },
     },
     block: {

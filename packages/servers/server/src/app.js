@@ -21,7 +21,9 @@ import { compress } from 'hono/compress';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { runInCredentialScope } from '@lowdefy/node-utils';
 
+import admitViewSession from './middleware/admitViewSession.js';
 import agentHandler from './routes/agent.js';
+import allowAnyOrigin from './middleware/allowAnyOrigin.js';
 import apiContext from './middleware/apiContext.js';
 import apiPageHandler from './routes/apiPage.js';
 import appMeta from '../lib/build/appMeta.js';
@@ -37,7 +39,9 @@ import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getRequestSurface from './lib/getRequestSurface.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
+import getViewOrigins from './lib/getViewOrigins.js';
 import lowdefyConfig from '../lib/build/config.js';
+import mcpJson from '../lib/build/mcp.js';
 import mcpHandler from './routes/mcp.js';
 import mobileConfig from '../lib/build/mobileConfig.js';
 import mobileRootHandler from './routes/mobileRoot.js';
@@ -49,12 +53,17 @@ import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import refuseOtherBuild from './middleware/refuseOtherBuild.js';
+import refuseViewSession from './middleware/refuseViewSession.js';
 import requestTimeout from './middleware/requestTimeout.js';
 import sentryMiddleware from './middleware/sentry.js';
 import stampBuildId from './middleware/stampBuildId.js';
 import stampCaller from './middleware/stampCaller.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
+import viewBootHandler from './routes/viewBoot.js';
+import viewCors from './middleware/viewCors.js';
+import viewRootHandler from './routes/viewRoot.js';
+import viewRoutes from './lib/viewRoutes.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -84,6 +93,17 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.use('*', (c, next) => runInCredentialScope(next));
 
   app.use('*', sentryMiddleware());
+
+  // An app with an MCP App view answers the view's origin with CORS headers on the
+  // routes a view calls, and admits a view session on them. viewOrigins is empty for
+  // an app without a view: it sends no CORS header anywhere and admits no view
+  // session. Registered before the timeout so its 504 carries the headers too.
+  const viewOrigins = getViewOrigins();
+  if (viewOrigins.length > 0) {
+    const viewCorsMiddleware = viewCors({ origins: viewOrigins });
+    viewRoutes.cors.forEach((route) => app.use(route, viewCorsMiddleware));
+    viewRoutes.session.forEach((route) => app.use(route, admitViewSession()));
+  }
 
   // Bound request duration so a hung upstream returns an error instead of running to the platform's
   // function limit (cost protection on serverless). Agent streaming is long-lived by design, so it
@@ -132,12 +152,20 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.all('/.well-known/*', wellKnownFallbackHandler);
 
   app.use('/api/*', apiContext({ clientAddressHeader }));
+  // A view session is refused on every route below that viewRoutes does not list, so
+  // a route added here is closed to views by default.
+  app.use('/api/*', refuseViewSession());
   // Responses that carry the caller's data are never stored by a browser or proxy cache.
   // Static assets keep their own caching below; the page routes use the same middleware.
   const noStoreMiddleware = noStore();
-  ['/api/page/*', '/api/mobile/root', '/api/user', '/api/request/*', '/api/endpoints/*'].forEach(
-    (route) => app.use(route, noStoreMiddleware)
-  );
+  [
+    '/api/page/*',
+    '/api/mobile/root',
+    '/api/view/root',
+    '/api/user',
+    '/api/request/*',
+    '/api/endpoints/*',
+  ].forEach((route) => app.use(route, noStoreMiddleware));
   // A tab left open across a deploy (or restored from the browser cache) runs
   // the old bundle against this build: see refuseOtherBuild and stampBuildId.
   app.use('/api/auth/*', stampBuildId({ buildId: appMeta.buildId }));
@@ -149,6 +177,7 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.use('/api/endpoints/*', stampCaller());
   app.use('/api/page/*', stampCaller());
   app.use('/api/mobile/root', stampCaller());
+  app.use('/api/view/root', stampCaller());
   // A shell revalidates the pages and root config it keeps with If-None-Match.
   // Registered inside noStore and stampCaller, so a 304 still carries both.
   // Browsers never revalidate a no-store page, so their page responses are
@@ -178,6 +207,12 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   app.get('/api/page/*', apiPageHandler);
   app.get('/api/mobile/root', mobileRootHandler);
   app.get('/api/user', userHandler);
+  // The view routes exist only in an app with an MCP App view. In any other app
+  // their paths are not routes, and answer as an unknown path does.
+  if (mcpJson.views.configured === true) {
+    app.get('/api/view/boot', viewBootHandler);
+    app.get('/api/view/root', viewRootHandler);
+  }
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.
@@ -192,16 +227,19 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
         c.header('Cache-Control', 'public, max-age=31536000, immutable');
       }
     });
-    app.use(
-      '/*',
-      serveStatic({
-        root: './dist/client',
-        rewriteRequestPath: basePath ? (path) => path.replace(basePath, '') : undefined,
-      })
-    );
+    const staticMiddleware = serveStatic({
+      root: './dist/client',
+      rewriteRequestPath: basePath ? (path) => path.replace(basePath, '') : undefined,
+    });
+    // A view loads the client's scripts, stylesheets, fonts and public files from its
+    // host's origin, so for an app with a view they may be read from any origin.
+    app.use('/*', viewOrigins.length > 0 ? allowAnyOrigin(staticMiddleware) : staticMiddleware);
   }
 
   app.use('/*', apiContext({ clientAddressHeader }));
+  // A page embeds its caller and root config, and a view shows its pages through
+  // the /api routes, so a view session is refused on the page routes as well.
+  app.use('/*', refuseViewSession());
   // Registered after the static middleware, which answers a file without calling next().
   app.use('/*', noStoreMiddleware);
   mountPageRoutes({ app, basePath, renderPage });

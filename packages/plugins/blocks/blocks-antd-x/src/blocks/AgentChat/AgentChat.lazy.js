@@ -38,7 +38,6 @@ import useAgentEvents, { collectExternalEventIds } from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
 function AgentChat({
-  basePath,
   blockId,
   components: { Icon, Link },
   drawerOpenRequested,
@@ -107,7 +106,7 @@ function AgentChat({
   const transport = useMemo(
     () =>
       createLowdefyChatTransport({
-        basePath,
+        fetchApi: methods.fetchApi,
         pageId,
         agentId,
         conversationId: effectiveConversationId,
@@ -116,7 +115,7 @@ function AgentChat({
         sharedStateRef,
         sharedStateReadOnlyRef,
       }),
-    [basePath, pageId, agentId, effectiveConversationId, urlQueryKey, pathParamsKey]
+    [pageId, agentId, effectiveConversationId, urlQueryKey, pathParamsKey]
   );
 
   const bubbleListRef = useRef(null);

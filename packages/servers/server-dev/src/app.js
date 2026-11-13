@@ -52,6 +52,7 @@ import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import noStore from './middleware/noStore.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
+import refuseViewSession from './middleware/refuseViewSession.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
@@ -199,6 +200,8 @@ function createApp() {
   }
 
   app.use('/api/*', apiContext());
+  // The dev server serves no MCP App views, so a view session is refused on every route below.
+  app.use('/api/*', refuseViewSession());
   // Responses that carry the caller's data are never stored by a browser or proxy cache,
   // as in the production server. /api/root is the dev form of the root config the
   // production page embeds. The page routes use the same middleware.
@@ -270,6 +273,8 @@ function createApp() {
   // so the shell can inject the resolved caller — without it the client's
   // _user never carries roles/organization_id under `lowdefy dev`.
   app.use('/*', apiContext());
+  // The shell embeds the resolved caller, so a view session is refused here as on /api.
+  app.use('/*', refuseViewSession());
   // Registered after the static middleware, which answers a file without calling next().
   app.use('/*', noStoreMiddleware);
   mountDevPageRoutes({ app, renderPage: (c) => renderDevPage(c, { basePath }) });

@@ -55,6 +55,13 @@ async function initServer({ serverless = false } = {}) {
     logger.info('Sentry enabled: server');
   }
 
+  // An app with an MCP view logs the URL its connector must be added with and the origin its
+  // views run on. A viewSources secret that is not set fails here, before any traffic.
+  const { logMcpViews } = await import('@lowdefy/api');
+  const { getSecretsFromEnv } = await import('@lowdefy/node-utils');
+  const { default: mcpConfig } = await import('../lib/build/mcp.js');
+  logMcpViews({ config, logger, mcpConfig, secrets: getSecretsFromEnv() });
+
   return { createApp, logger, sentry };
 }
 

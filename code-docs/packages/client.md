@@ -66,13 +66,69 @@ holding its Better Auth session token. Then:
 - endpoint calls send no `x-lowdefy-build`, so a server build change never refuses them; page
   requests still do.
 
-On the web, `initLowdefyContext.js` builds the browser host (`host/createWebHost.js`): the
+On the web, `Client` takes its host as a prop and `initLowdefyContext.js` builds the browser host
+when it is given none (`host/createWebHost.js`): the
 window's `fetch`, `localStorage` and `sessionStorage`, the page origin for the websocket URL, and
 `window.location.reload()` for a build or caller change. It then adds the web renderer's parts:
 `Icon`, `ShortcutBadge`, `Link`, `setupLink` and the HTML enhancements. The server templates
 import `claimCallerReload`, `recordCallerStamp`, `shouldReloadForBuild`, `shouldReloadForCaller`
 and `adapters/url.js` from `@lowdefy/client`, which binds the first three to
 `window.sessionStorage`.
+
+### The view host
+
+A page shown as an MCP App view runs the web client in a host's sandbox frame, on another origin
+than its app. The production server's `client/view.jsx` entry passes `Client` the host from
+`host/createViewHost.js`:
+
+- `authTransport: 'bearer'` with a token store held in memory only (`createMemoryTokenStore.js`).
+  `host.fetch` sends a call again once after a 401, with a session minted through the host
+  bridge (`createViewSession.js`). The new session is for the same person, so the core never
+  hears of it and the page keeps its state. A second 401 in a row, or a failed mint, shows the
+  loader's fallback.
+- `apiBase` is the app's absolute origin plus `basePath`; both stores are in memory.
+- `globals.window` is the frame's window with `location` replaced by the view's address on the
+  app's origin (`createViewWindow.js`, `createViewLocation.js`). `location.assign` and `replace`
+  hand the URL to the host's open-link; `reload` tells `host.view.onReload` listeners.
+- `onBuildChanged` and `onCallerChanged` reload nothing. They tell the listeners on
+  `host.view.onBuildChange` and `host.view.onCallerChange`, which the view entry uses to show
+  a "load the new version" button and to fetch the user, root config and page again.
+- `host.view` also carries `bridge`, `fetchApi(path, init)` (a signed-in fetch of an API path),
+  `end({ message })`, `onEnd(listener)` and `isEnded()`. `end` tells the end listeners (the view
+  entry unmounts the app there), closes the view's websockets (`createViewSockets.js`) and shows
+  the loader's fallback, so an ended view runs nothing.
+- Sentry is not started in a view: the Sentry host is not among the origins a view may call
+  unless the app lists it in `mcp.viewSources`, and the DSN is handed over in the page HTML.
+  Errors still reach the app through `/api/client-error`.
+- `host.view.openLink({ url })` opens a URL in the browser through the host. It lets only
+  absolute `http` and `https` URLs through (`createViewOpenLink.js`, `getOpenLinkUrl.js`) and
+  tells `host.view.onLinkRefused` listeners when the host refuses. `globals.window.open` is the
+  same gated opener. `host.view.captureLinks()` (`captureViewLinks.js`) catches
+  `target="_blank"` anchors, modified clicks, a block's `window.open` and any other navigation
+  of the frame, and sends each through it.
+- `websocketProtocols({ renew })` gives the two subprotocols a view's socket offers
+  (`getViewSocketProtocols.js`): the websocket client passes them to `new host.WebSocket` in
+  place of a header.
+
+`createMcp.js` builds `lowdefy._internal.mcp` (`getDisplayMode`, `onContextChange`, `openLink`,
+`sendMessage`) from `host.view.bridge`, and `null` on a host with no `view`. The `_mcp` operator
+and the `McpSendMessage` and `McpOpenLink` actions read it. `McpEffect.js`, mounted in
+`Context.js`, re-evaluates the blocks that read `_mcp: displayMode` when the host context changes.
+
+Every block gets `methods.fetchApi(path, init)` and the prop `apiBase`, so a block that calls the
+app or addresses a file from its root works on both hosts.
+
+The server side of a view, the loader and what a view session may reach are in
+[mcp-server.md](../architecture/mcp-server.md).
+
+`host/createViewBridge.js` is the only module that reads the loader's hand-over object
+(`window.__LOWDEFY_VIEW__`, written by `viewLoader` in `@lowdefy/api`) and the two `_meta` keys:
+the view's address (`lowdefy/view`) on the tool result and the token (`lowdefy/viewSession`) on
+the session tool's result. A host that hands these over differently changes that file only.
+
+`adapters/createViewRouter.js` has the browser router's shape (`basePath`, `getLocation`, `push`,
+`replace`, `back`, `subscribe`) and keeps its location and history itself: the frame's URL names
+no page.
 
 ## Architecture
 

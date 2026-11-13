@@ -22,6 +22,7 @@ import { resolveTarget } from '@lowdefy/engine';
 import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
 import createLinkComponent from './createLinkComponent.js';
+import createMcp from './createMcp.js';
 import createPageUnload from './createPageUnload.js';
 import createWebHost from './host/createWebHost.js';
 import setupLink from './setupLink.js';
@@ -36,11 +37,16 @@ import { createUrl } from './adapters/url.js';
 // carries.
 //
 // apiBase prefixes API calls; it defaults to the router's basePath.
+//
+// host is the @lowdefy/client-core host the page runs on. An entry that runs
+// the page somewhere other than a browser tab on the app's own origin passes
+// its own (createViewHost); without one the page gets the browser host.
 function initLowdefyContext({
   apiBase,
   auth,
   Components,
   config,
+  host,
   loadAllIcons,
   lowdefy,
   matchedPath,
@@ -60,7 +66,7 @@ function initLowdefyContext({
       apiBase,
       auth,
       basePath: router.basePath,
-      host: createWebHost({ router, window }),
+      host: host ?? createWebHost({ router, window }),
       lowdefy,
       rootConfig: config.rootConfig,
       types,
@@ -70,6 +76,8 @@ function initLowdefyContext({
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
     lowdefy._internal.components.handleError = lowdefy._internal.handleError;
     lowdefy._internal.link = setupLink(lowdefy);
+    // The MCP host a view runs in, for _mcp and the Mcp actions; null in a browser tab.
+    lowdefy._internal.mcp = createMcp({ lowdefy });
     // HtmlComponent (block-utils) gives data-* attributes meaning in every
     // sanitised HTML string. The overlay pulls in antd Tooltip and Popover, so
     // it loads the first time HTML needs one. Links build hrefs with createUrl,

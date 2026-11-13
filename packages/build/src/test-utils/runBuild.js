@@ -103,6 +103,7 @@ const testTypesMap = {
     },
     server: {
       _payload: { package: '@lowdefy/operators-js' },
+      _response: { package: '@lowdefy/operators-js' },
       _step: { package: '@lowdefy/operators-js' },
     },
   },

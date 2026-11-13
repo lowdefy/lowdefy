@@ -1832,6 +1832,22 @@
       "typeName": "MagicLinkVerify"
     },
     {
+      "slug": "actions/mcpopenlink",
+      "title": "McpOpenLink",
+      "section": "Actions",
+      "path": "content/actions/mcpopenlink.md",
+      "kind": "action",
+      "typeName": "McpOpenLink"
+    },
+    {
+      "slug": "actions/mcpsendmessage",
+      "title": "McpSendMessage",
+      "section": "Actions",
+      "path": "content/actions/mcpsendmessage.md",
+      "kind": "action",
+      "typeName": "McpSendMessage"
+    },
+    {
       "slug": "actions/pdfmake",
       "title": "PdfMake",
       "section": "Actions",
@@ -2392,6 +2408,14 @@
       "typeName": "_math"
     },
     {
+      "slug": "operators/_mcp",
+      "title": "_mcp",
+      "section": "Operators",
+      "path": "content/operators/_mcp.md",
+      "kind": "operator",
+      "typeName": "_mcp"
+    },
+    {
       "slug": "operators/_media",
       "title": "_media",
       "section": "Operators",
@@ -2542,6 +2566,14 @@
       "path": "content/operators/_request_details.md",
       "kind": "operator",
       "typeName": "_request_details"
+    },
+    {
+      "slug": "operators/_response",
+      "title": "_response",
+      "section": "Operators",
+      "path": "content/operators/_response.md",
+      "kind": "operator",
+      "typeName": "_response"
     },
     {
       "slug": "operators/_secret",
@@ -3313,7 +3345,7 @@
       "files": [
         "users/mcp-oauth.yaml"
       ],
-      "hash": "1e947ccf9392df54707941bad19634ce9ddfae4ced981c3a15b12515ae1a4edb"
+      "hash": "a2069545cf3443fe4ce170e21c3120b6e8b42e865d72b28cc2e03870e54a2aa5"
     },
     "user-authentication/user-object": {
       "files": [
@@ -5048,7 +5080,7 @@
         "actions/Login.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "bcae9bda90900fadbc151a6f51aa515cb7d56240bdcadcb60a5f7a9df8576ebf"
+      "hash": "a911caaee4ab0a79f4e4b5f3f2a2e7d8b8a1bdb8cc47da16469e3ede2e2033f1"
     },
     "actions/logout": {
       "files": [
@@ -5063,6 +5095,20 @@
         "templates/actions.yaml.njk"
       ],
       "hash": "ecf3316cbba51d8a218eb785a96e5d64ba0e1a819fafa57720e055ce07b91f9d"
+    },
+    "actions/mcpopenlink": {
+      "files": [
+        "actions/McpOpenLink.yaml",
+        "templates/actions.yaml.njk"
+      ],
+      "hash": "2b6376608d3568020a6560a71a037ce3eb8cd0b47496ebfd63871526eb709617"
+    },
+    "actions/mcpsendmessage": {
+      "files": [
+        "actions/McpSendMessage.yaml",
+        "templates/actions.yaml.njk"
+      ],
+      "hash": "870969765a209cc15e47eba394083a4f90214d643e2edc1f4a18f98e455afaac"
     },
     "actions/pdfmake": {
       "files": [
@@ -5554,6 +5600,13 @@
       ],
       "hash": "e89b41418e2ff8f6348f9b2d932be48e6b5f6c54bbe20f1d41576a23fdaffa91"
     },
+    "operators/_mcp": {
+      "files": [
+        "operators/_mcp.yaml",
+        "templates/operators.yaml.njk"
+      ],
+      "hash": "d86b5827270d77194a581ba3af516688035f4482ac9f95f48b0f8b77e4b11266"
+    },
     "operators/_media": {
       "files": [
         "operators/_media.yaml",
@@ -5687,6 +5740,13 @@
         "templates/operators.yaml.njk"
       ],
       "hash": "a02456570a6b333523b6f916d6942e567f429e18c35c6a9092a6472beb4ab093"
+    },
+    "operators/_response": {
+      "files": [
+        "operators/_response.yaml",
+        "templates/operators.yaml.njk"
+      ],
+      "hash": "c4fe7e800def4ff3fc5018b3c0b9116bd88ffc8ff86943b18e2be33f00983805"
     },
     "operators/_secret": {
       "files": [
@@ -5938,13 +5998,13 @@
       "files": [
         "operators/index.yaml"
       ],
-      "hash": "79587292b1162aaa9bb57163c5bad282ee61b37e590916cb7af127642b1f7a8c"
+      "hash": "8dd9287f1a3a0bd15b473c4fb5c10cf86ca6bdccdd041e6e00f6afaef1c60f1b"
     },
     "reference/actions-reference": {
       "files": [
         "actions/index.yaml"
       ],
-      "hash": "af95f653c4419bb2a1ef82fffb937ea7a4e92569e2b3780914dfc8c74b599f69"
+      "hash": "4aba918db4a3eacc5983c08ced06f946fe3034e2044e413553e216c16d769e74"
     },
     "reference/connections-reference": {
       "files": [

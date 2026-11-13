@@ -212,7 +212,13 @@ async function handleMobileSignIn({ auth, authJson, basePath, primaryColor, requ
     return textResponse({ message: error, status: 400 });
   }
   const { headers } = request;
-  const session = await auth.api.getSession({ headers, query: { disableCookieCache: true } });
+  const resolved = await auth.api.getSession({ headers, query: { disableCookieCache: true } });
+  // A view session is no session here. This page hands the signed-in person a
+  // phone session, a full one that lasts weeks, and it is outside /api, so
+  // neither the caller resolution nor the auth handler's gate stands in front of
+  // it: a view session, fifteen minutes long and capped by its grant, must not
+  // be traded for one.
+  const session = resolved?.session?.view === true ? null : resolved;
   if (request.method === 'POST') {
     if (type.isNone(session)) {
       return textResponse({ message: 'Sign in again from the app.', status: 403 });

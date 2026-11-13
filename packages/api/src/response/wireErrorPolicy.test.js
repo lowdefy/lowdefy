@@ -555,6 +555,7 @@ const mcpJson = {
   configured: true,
   hasPublicTool: true,
   endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
+  views: { configured: false, pages: {}, sources: [] },
 };
 
 function createMcpContext({ thrown }) {

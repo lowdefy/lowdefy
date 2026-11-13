@@ -144,6 +144,8 @@ class WebParser {
           location: operatorLocation,
           lowdefyApp,
           lowdefyGlobal,
+          // What the client knows about the MCP host a view runs in; undefined outside a host.
+          mcp: _internal.mcp,
           menus,
           methodName,
           operatorPrefix,

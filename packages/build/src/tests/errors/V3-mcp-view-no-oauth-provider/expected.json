@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["MCP views require"],
+      "errorContains": [
+        "MCP views require \"auth.oauthProvider\". Configure the app's OAuth authorization server, or remove \"view\" from the MCP endpoints and \"mcp.viewPages\".",
+        "lowdefy.yaml:"
+      ]
+    }
+  ]
+}

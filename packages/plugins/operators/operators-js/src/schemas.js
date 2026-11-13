@@ -67,6 +67,7 @@ export { default as _index } from './operators/client/index.schema.js';
 export { default as _input } from './operators/client/input.schema.js';
 export { default as _js } from './operators/client/js.schema.js';
 export { default as _location } from './operators/client/location.schema.js';
+export { default as _mcp } from './operators/client/mcp.schema.js';
 export { default as _media } from './operators/client/media.schema.js';
 export { default as _menu } from './operators/client/menu.schema.js';
 export { default as _path_params } from './operators/client/path_params.schema.js';
@@ -82,6 +83,7 @@ export { default as _hmac } from './operators/server/hmac.schema.js';
 export { default as _item } from './operators/server/item.schema.js';
 export { default as _organization } from './operators/server/organization.schema.js';
 export { default as _payload } from './operators/server/payload.schema.js';
+export { default as _response } from './operators/server/response.schema.js';
 export { default as _secret } from './operators/server/secret.schema.js';
 export { default as _step } from './operators/server/step.schema.js';
 

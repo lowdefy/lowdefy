@@ -67,6 +67,10 @@ function createWebSocketClient(lowdefy) {
   // reconnect that follows a caller change.
   let openedAt = null;
   let reconnectingAfterCallerChange = false;
+  // Whether the next handshake of a host that signs it with subprotocols asks
+  // for a new session first: set by a close for a caller change
+  // (createSocketWithProtocols).
+  let renewBeforeConnect = false;
   let publishCounter = 0;
   let subscribeCounter = 0;
 
@@ -84,6 +88,26 @@ function createWebSocketClient(lowdefy) {
       return new host.WebSocket(url());
     }
     return new host.WebSocket(url(), undefined, { headers });
+  }
+
+  // A browser's WebSocket takes no headers, so a browser host that holds a
+  // bearer session and no cookie (a page shown as a view) signs the handshake
+  // with the subprotocols it gives. They are asked for on every connect, so a
+  // reconnect carries the session held then.
+  //
+  // The host keeps the session current itself: it gives a new one when the one
+  // it holds has reached its expiry. renew asks for a new session whatever the
+  // expiry, and is set only after the server closed the connection for a
+  // caller change, which is how it ends a socket whose session is gone. A
+  // connection that never opened says nothing about the session (a browser
+  // does not say why a handshake failed), so it asks for none: an app whose
+  // socket cannot open would otherwise have a new session minted for every
+  // retry, for as long as the page is shown.
+  async function createSocketWithProtocols() {
+    const renew = renewBeforeConnect;
+    renewBeforeConnect = false;
+    const protocols = await host.websocketProtocols({ renew });
+    return new host.WebSocket(url(), protocols);
   }
 
   function clearIdleTimer() {
@@ -318,6 +342,7 @@ function createWebSocketClient(lowdefy) {
     // A caller change is not a failing server, so the first reconnect after
     // one does not back off.
     if (event.code === CALLER_CHANGED_CODE) {
+      renewBeforeConnect = true;
       const repeated =
         reconnectingAfterCallerChange && Date.now() - openedAt < CALLER_CHANGE_REPEAT_MS;
       if (!repeated) {
@@ -343,40 +368,54 @@ function createWebSocketClient(lowdefy) {
     }
     clearIdleTimer();
     openPromise = new Promise((resolve, reject) => {
-      const ws = createSocket();
-      ws.onopen = () => {
-        socket = ws;
-        openedAt = Date.now();
-        stableTimer = setTimeout(() => {
-          reconnectAttempt = 0;
-        }, STABLE_CONNECTION_MS);
-        resubscribeAll();
-        sendUnsentPublishes();
-        // Everything that asked for this connection may have finished while
-        // it was opening.
-        scheduleIdleClose();
-        resolve();
-      };
-      ws.onmessage = (event) => {
-        let frame;
-        try {
-          frame = JSON.parse(event.data);
-        } catch (e) {
-          return;
-        }
-        handleFrame(frame);
-      };
-      ws.onclose = (event) => {
-        if (socket !== ws) {
-          // Never opened — treat as a failed connect and retry.
-          openPromise = null;
-          reject(new ServiceError('Connection failed.', { service: 'WebSocket' }));
-        }
-        handleClose(event);
-      };
-      ws.onerror = () => {
-        // onclose always follows onerror — reconnect is handled there.
-      };
+      function failConnect() {
+        openPromise = null;
+        reject(new ServiceError('Connection failed.', { service: 'WebSocket' }));
+      }
+      function attach(ws) {
+        ws.onopen = () => {
+          socket = ws;
+          openedAt = Date.now();
+          stableTimer = setTimeout(() => {
+            reconnectAttempt = 0;
+          }, STABLE_CONNECTION_MS);
+          resubscribeAll();
+          sendUnsentPublishes();
+          // Everything that asked for this connection may have finished while
+          // it was opening.
+          scheduleIdleClose();
+          resolve();
+        };
+        ws.onmessage = (event) => {
+          let frame;
+          try {
+            frame = JSON.parse(event.data);
+          } catch (e) {
+            return;
+          }
+          handleFrame(frame);
+        };
+        ws.onclose = (event) => {
+          if (socket !== ws) {
+            // Never opened — treat as a failed connect and retry.
+            failConnect();
+          }
+          handleClose(event);
+        };
+        ws.onerror = () => {
+          // onclose always follows onerror — reconnect is handled there.
+        };
+      }
+      if (type.isNone(host.websocketProtocols)) {
+        attach(createSocket());
+        return;
+      }
+      createSocketWithProtocols().then(attach, () => {
+        // The host could not sign the handshake (no session could be had):
+        // a failed connect, retried with backoff like any other.
+        failConnect();
+        handleClose({ code: null });
+      });
     });
     // Connection errors surface through subscribe/publish ack timeouts.
     openPromise.catch(() => {});

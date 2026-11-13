@@ -27,7 +27,15 @@ import claimCallerReload from './claimCallerReload.js';
 // own roles and a refusal is an ordinary outcome there. A two-factor enrolment
 // refusal never reloads. Matched by name: plugins bundle their own
 // @lowdefy/errors copy.
+//
+// A view on a read-only connection is refused a write with the code
+// view_write_required. The page is still the caller's and loading it again
+// changes nothing, so it never reloads: the refusal is thrown, and its message
+// asks the person to reconnect with write access.
 function shouldReloadForAuthError({ error, reloadOnAuthorizationError, sessionStorage, user }) {
+  if (error.code === 'view_write_required') {
+    return false;
+  }
   if (error.name === 'AuthenticationError' && !type.isNone(user)) {
     return claimCallerReload({ sessionStorage });
   }

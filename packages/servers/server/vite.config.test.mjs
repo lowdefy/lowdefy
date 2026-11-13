@@ -33,9 +33,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { build, loadConfigFromFile } from 'vite';
 const root = process.env.FIXTURE_ROOT;
+const configFile = path.resolve('vite.config.js');
+// The config reads the Lowdefy build from the working directory, as it does
+// when the client build runs in a built server.
+process.chdir(root);
 const { config } = await loadConfigFromFile(
   { command: 'build', mode: 'production' },
-  path.resolve('vite.config.js')
+  configFile
 );
 const outDir = path.join(root, 'dist');
 await build({
@@ -51,8 +55,14 @@ for (const file of fs.readdirSync(assetsDir).filter((name) => name.endsWith('.cs
 }
 `;
 
+function writeMcpJson(mcp) {
+  fs.mkdirSync(path.join(root, 'build'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'build/mcp.json'), JSON.stringify(mcp));
+}
+
 beforeEach(() => {
   root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-server-css-'));
+  writeMcpJson({ views: { configured: false, pages: {}, sources: [] } });
 });
 
 afterEach(() => {
@@ -115,3 +125,39 @@ test.each(['@lowdefy/block-utils', '@lowdefy/helpers'])(
   },
   30000
 );
+
+// Loads the config as the client build does and prints the entries it builds.
+const inputScript = `
+import path from 'node:path';
+import { loadConfigFromFile } from 'vite';
+const configFile = path.resolve('vite.config.js');
+process.chdir(process.env.FIXTURE_ROOT);
+const { config } = await loadConfigFromFile(
+  { command: 'build', mode: 'production' },
+  configFile
+);
+process.stdout.write(JSON.stringify(config.build.rollupOptions.input));
+`;
+
+function readInput() {
+  return promisify(execFile)(process.execPath, ['--input-type=module', '--eval', inputScript], {
+    cwd: serverDir,
+    env: { ...process.env, FIXTURE_ROOT: root },
+  });
+}
+
+test('the client build of an app without a view has the main entry alone', async () => {
+  const { stdout } = await readInput();
+  expect(JSON.parse(stdout)).toEqual('client/main.jsx');
+}, 30000);
+
+test('the client build of an app with a view also builds the view entry', async () => {
+  writeMcpJson({ views: { configured: true, pages: {}, sources: [] } });
+  const { stdout } = await readInput();
+  expect(JSON.parse(stdout)).toEqual(['client/main.jsx', 'client/view.jsx']);
+}, 30000);
+
+test('the client build fails when the Lowdefy build wrote no mcp.json', async () => {
+  fs.rmSync(path.join(root, 'build/mcp.json'));
+  await expect(readInput()).rejects.toThrow(/mcp\.json/);
+}, 30000);

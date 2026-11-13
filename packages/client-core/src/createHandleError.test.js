@@ -350,3 +350,35 @@ test('handleError does not POST a handled wire error to /api/client-error', asyn
   expect(fetchMock).not.toHaveBeenCalled();
   expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(2);
 });
+
+test('handleError reports through the signed-in fetch of a view, asking for no cookie', async () => {
+  const fetchApi = vi.fn().mockResolvedValue(mockResponse({ source: 'pages/home.yaml:12' }));
+  const lowdefy = createLowdefy({ apiBase: 'https://app.example.com/app' });
+  lowdefy._internal.host.view = { fetchApi };
+  const error = new ConfigError('Block type "Buton" not found.');
+  await createHandleError(lowdefy)(error);
+  expect(fetchMock).not.toHaveBeenCalled();
+  expect(fetchApi).toHaveBeenCalledTimes(1);
+  const [path, init] = fetchApi.mock.calls[0];
+  expect(path).toEqual('/api/client-error');
+  expect(init.method).toEqual('POST');
+  expect(init.credentials).toEqual('omit');
+  expect(serializer.deserialize(JSON.parse(init.body)).message).toEqual(
+    'Block type "Buton" not found.'
+  );
+  expect(error.source).toEqual('pages/home.yaml:12');
+});
+
+test('handleError does not report a write refused to a read-only view', async () => {
+  const fetchApi = vi.fn();
+  const lowdefy = createLowdefy();
+  lowdefy._internal.host.view = { fetchApi };
+  const error = new AuthorizationError(
+    'This connection is read-only. Reconnect with write access to make changes.'
+  );
+  error.code = 'view_write_required';
+  await createHandleError(lowdefy)(error);
+  expect(fetchApi).not.toHaveBeenCalled();
+  expect(fetchMock).not.toHaveBeenCalled();
+  expect(lowdefy._internal.logger.error).toHaveBeenCalledWith(error);
+});

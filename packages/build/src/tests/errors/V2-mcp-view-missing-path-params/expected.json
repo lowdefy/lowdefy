@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["without path params"],
+      "errorContains": [
+        "MCP endpoint \"open_task\" view shows page \"task\" without path params \"space\". The page's path is \"{space}/tasks/{ref}\".",
+        "lowdefy.yaml:"
+      ]
+    }
+  ]
+}

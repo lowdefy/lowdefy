@@ -73,3 +73,51 @@ test('isWebSocketOriginAllowed refuses a foreign page even when it names a beare
   };
   expect(check({ context, headers })).toBe(false);
 });
+
+const viewOrigin = 'https://0123456789abcdef0123456789abcdef.claudemcpcontent.com';
+
+function checkView({ context, headers, viewOrigins }) {
+  return isWebSocketOriginAllowed({
+    context,
+    getHeader: (name) => headers[name],
+    viewOrigins,
+  });
+}
+
+test('isWebSocketOriginAllowed accepts a view origin, which is another site', () => {
+  const context = createContext();
+  const headers = { host: 'app.test', origin: viewOrigin, 'sec-fetch-site': 'cross-site' };
+  expect(checkView({ context, headers, viewOrigins: [viewOrigin] })).toBe(true);
+  expect(context.logger.warn).not.toHaveBeenCalled();
+});
+
+test('isWebSocketOriginAllowed refuses a view origin when the server passes no view origins', () => {
+  const context = createContext();
+  const headers = { host: 'app.test', origin: viewOrigin };
+  expect(check({ context, headers })).toBe(false);
+  expect(checkView({ context, headers, viewOrigins: [] })).toBe(false);
+});
+
+test.each([
+  ['a subdomain of the view origin', viewOrigin.replace('https://', 'https://x.')],
+  ['the view domain over http', viewOrigin.replace('https://', 'http://')],
+  ['another site', 'https://other.test'],
+])('isWebSocketOriginAllowed refuses %s beside a view origin', (_, origin) => {
+  const context = createContext();
+  const headers = { host: 'app.test', origin };
+  expect(checkView({ context, headers, viewOrigins: [viewOrigin] })).toBe(false);
+});
+
+test('isWebSocketOriginAllowed still accepts the app page and no Origin beside a view origin', () => {
+  const context = createContext();
+  expect(
+    checkView({
+      context,
+      headers: { host: 'app.test', origin: 'https://app.test' },
+      viewOrigins: [viewOrigin],
+    })
+  ).toBe(true);
+  expect(checkView({ context, headers: { host: 'app.test' }, viewOrigins: [viewOrigin] })).toBe(
+    true
+  );
+});

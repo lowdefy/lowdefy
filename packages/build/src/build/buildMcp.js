@@ -20,8 +20,13 @@ import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
 
+import buildMcpViewConfig from './buildMcpViewConfig.js';
 import collectExceptions from '../utils/collectExceptions.js';
 import lowdefySchema from '../lowdefySchema.js';
+
+// The built-in tool an MCP App view calls for its session (VIEW_SESSION_TOOL
+// in @lowdefy/api).
+const RESERVED_TOOL_NAME = 'lowdefy_view_session';
 
 // Strict subtree validation - the root testSchema pass only warns, but a bad
 // mcp block (legacy string entries, an unknown scope) must stop the build:
@@ -105,6 +110,19 @@ function buildMcp({ components, context }) {
       return;
     }
     seen.add(tool.id);
+    // The server answers this tool name itself, for a view's session, before
+    // it looks at the app's endpoints. A tool is named by its endpoint id with
+    // "/" written as "__".
+    if (tool.id.replaceAll('/', '__') === RESERVED_TOOL_NAME) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `MCP endpoint "${tool.id}" would be the tool "${RESERVED_TOOL_NAME}", a name the MCP server keeps for itself. Give the endpoint another id.`,
+          { configKey: toolConfigKey }
+        )
+      );
+      return;
+    }
     const endpoint = (components.api ?? []).find(
       (e) => e.id === tool.id || e.endpointId === tool.id
     );
@@ -194,6 +212,8 @@ function buildMcp({ components, context }) {
       );
     }
   }
+
+  buildMcpViewConfig({ components, context });
 
   return components;
 }
