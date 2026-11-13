@@ -32,9 +32,9 @@ When a code is read, the block value is set to `{ data, type }`, for example
 
 ### Methods
 
-- `start`: Open the camera and start reading codes.
+- `start`: Open the camera and start reading codes. A single-scan scanner reads again.
 - `stop`: Stop reading and release the camera.
-- `reset`: Read again after a single-scan scanner has kept its first code.
+- `reset`: Read again after a single-scan scanner has kept its first code, without restarting the camera.
 
 ### Content Security Policy
 

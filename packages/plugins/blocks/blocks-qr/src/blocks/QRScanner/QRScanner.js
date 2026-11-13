@@ -69,8 +69,11 @@ function QRScanner({ blockId, classNames, methods, properties, styles }) {
         methods.triggerEvent({ name: 'onScan', event: read });
       },
     });
+    // A start after a stop is a new scan, so a single-scan scanner that stopped itself in its
+    // onScan reads again without also calling reset.
     methods.registerMethod('start', () => {
       setError(null);
+      filterRef.current = createScanFilter({ continuous });
       return scanner.start();
     });
     methods.registerMethod('stop', () => scanner.stop());
