@@ -14,82 +14,141 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
-import { Html5Qrcode } from 'html5-qrcode';
+import React, { useEffect, useRef, useState } from 'react';
+import { createScanFilter, withBlockDefaults } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
-const codes = {
-  QR_CODE: 0,
-  AZTEC: 1,
-  CODABAR: 2,
-  CODE_39: 3,
-  CODE_93: 4,
-  CODE_128: 5,
-  DATA_MATRIX: 6,
-  MAXICODE: 7,
-  ITF: 8,
-  EAN_13: 9,
-  EAN_8: 10,
-  PDF_417: 11,
-  RSS_14: 12,
-  RSS_EXPANDED: 13,
-  UPC_A: 14,
-  UPC_E: 15,
-  UPC_EAN_EXTENSION: 16,
-};
+import createScanner from './createScanner.js';
+import toBoxSize from './toBoxSize.js';
 
-class QRScanner extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onNewScanResult = this.onNewScanResult.bind(this);
-    this.onStart = this.onStart.bind(this);
-    this.onStop = this.onStop.bind(this);
-    this.scanning = false;
-  }
+function getScannerProperties(properties) {
+  return {
+    aspectRatio: properties.aspectRatio ?? 1,
+    deviceId: properties.deviceId,
+    facingMode: properties.facingMode ?? 'environment',
+    fps: properties.fps ?? 10,
+    qrbox: properties.qrbox,
+    torch: properties.torch === true,
+    types: properties.types,
+  };
+}
 
-  onNewScanResult(decodedText, decodedResult) {
-    this.props.methods.setValue(decodedResult);
-    this.props.methods.triggerEvent({ name: 'onScan' });
-  }
+// A live camera that reads QR codes and barcodes with the browser's BarcodeDetector, or the zxing
+// ponyfill where the browser has none (createDetector). Each kept read (createScanFilter, shared
+// with the native QRScanner) sets the value and fires onScan with { data, type }.
+function QRScanner({ blockId, classNames, methods, properties, styles }) {
+  const videoRef = useRef(null);
+  const filterRef = useRef(null);
+  const propertiesRef = useRef(properties);
+  propertiesRef.current = properties;
+  const [playing, setPlaying] = useState(false);
+  const [error, setError] = useState(null);
+  const continuous = properties.continuous === true;
 
-  onStart() {
-    if (!this.scanning) {
-      this.scanning = true;
-      this.html5QrCode?.start(
-        { facingMode: this.props.properties.facingMode ?? 'environment' },
-        {
-          ...{ aspectRatio: 1 },
-          ...this.props.properties,
-          ...{ formatsToSupport: codes[this.props.properties.formatsToSupport] },
-        },
-        this.onNewScanResult
-      );
+  useEffect(() => {
+    filterRef.current = createScanFilter({ continuous });
+    const scanner = createScanner({
+      getProperties: () => getScannerProperties(propertiesRef.current),
+      getVideo: () => videoRef.current,
+      onError: (cameraError) => {
+        setError(cameraError);
+        methods.triggerEvent({ name: 'onError', event: { error: cameraError } });
+      },
+      onPlaying: setPlaying,
+      onRead: (read) => {
+        if (!filterRef.current(read)) {
+          return;
+        }
+        methods.setValue(read);
+        methods.triggerEvent({ name: 'onScan', event: read });
+      },
+    });
+    // A start after a stop is a new scan, so a single-scan scanner that stopped itself in its
+    // onScan reads again without also calling reset.
+    methods.registerMethod('start', () => {
+      setError(null);
+      filterRef.current = createScanFilter({ continuous });
+      return scanner.start();
+    });
+    methods.registerMethod('stop', () => scanner.stop());
+    methods.registerMethod('reset', () => {
+      filterRef.current = createScanFilter({ continuous });
+    });
+    if (!propertiesRef.current.inactiveByDefault) {
+      scanner.start();
     }
-  }
+    return () => scanner.stop();
+  }, [continuous, methods]);
 
-  onStop() {
-    if (this.scanning) {
-      this.scanning = false;
-      this.html5QrCode?.stop();
-    }
-  }
-
-  componentDidMount() {
-    this.html5QrCode = new Html5Qrcode(this.props.blockId);
-    if (!this.props.properties.inactiveByDefault) {
-      this.onStart();
-    }
-    this.props.methods.registerMethod('start', () => this.onStart());
-    this.props.methods.registerMethod('stop', () => this.onStop());
-  }
-  componentWillUnmount() {
-    this.onStop();
-  }
-
-  render() {
-    const { blockId, classNames, styles } = this.props;
-    return <div id={blockId} className={classNames?.element} style={styles?.element} />;
-  }
+  const box =
+    playing && !type.isNone(properties.qrbox) ? toBoxSize({ qrbox: properties.qrbox }) : null;
+  // The video is centred in the element, and the box in the video, so the box sits over the area
+  // getCropRegion reads (the centre of the frame) whatever the element's height: a taller element
+  // leaves space above and below the video, a shorter one crops the video evenly at both ends.
+  return (
+    <div
+      id={blockId}
+      className={classNames?.element}
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        height: properties.height,
+        ...styles?.element,
+      }}
+    >
+      <div style={{ position: 'relative', flexShrink: 0 }}>
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          style={{ display: playing ? 'block' : 'none', width: '100%' }}
+        />
+        {box ? (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: box.width,
+              height: box.height,
+              maxWidth: '100%',
+              maxHeight: '100%',
+              transform: 'translate(-50%, -50%)',
+              border: '2px solid rgba(255, 255, 255, 0.9)',
+              borderRadius: 8,
+              boxShadow: '0 0 0 100vmax rgba(0, 0, 0, 0.45)',
+              pointerEvents: 'none',
+            }}
+          />
+        ) : null}
+      </div>
+      {playing && properties.prompt ? (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 16,
+            left: 16,
+            right: 16,
+            color: '#ffffff',
+            textAlign: 'center',
+            textShadow: '0 0 4px rgba(0, 0, 0, 0.6)',
+            pointerEvents: 'none',
+          }}
+        >
+          {properties.prompt}
+        </div>
+      ) : null}
+      {error ? (
+        <div role="alert" style={{ padding: 16, textAlign: 'center' }}>
+          {error.message}
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 export default withBlockDefaults(QRScanner);

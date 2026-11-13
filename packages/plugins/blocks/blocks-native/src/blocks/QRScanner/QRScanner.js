@@ -16,8 +16,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
+import createScanFilter from '@lowdefy/block-utils/createScanFilter.js';
 
-import createScanFilter from './createScanFilter.js';
 import getDeviceFeature, { hasDeviceFeature } from '../../device/getDeviceFeature.js';
 import meta from './meta.js';
 import MissingFeature from '../../shared/MissingFeature.js';

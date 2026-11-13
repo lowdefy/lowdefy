@@ -21,6 +21,7 @@ import blockSchema from './blockSchema.js';
 import buildBlockSchema from './buildBlockSchema.js';
 import cn from './cn.js';
 import createLazyBlock from './createLazyBlock.js';
+import createScanFilter from './createScanFilter.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import ErrorPage from './ErrorPage.js';
 import extractBlockTypes from './extractBlockTypes.js';
@@ -37,6 +38,7 @@ export {
   buildBlockSchema,
   cn,
   createLazyBlock,
+  createScanFilter,
   ErrorBoundary,
   ErrorPage,
   extractBlockTypes,
