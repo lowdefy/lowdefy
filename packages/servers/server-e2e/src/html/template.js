@@ -14,36 +14,14 @@
   limitations under the License.
 */
 
+import { darkModeScript, layerOrderScript } from '@lowdefy/api';
+import safeScriptJson from '@lowdefy/api/html/safeScriptJson.js';
 import { appStorageKey } from '@lowdefy/helpers';
-
-import safeScriptJson from '../lib/safeScriptJson.js';
 
 const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"]/g, (c) => HTML_ESCAPES[c]);
-}
-
-// Synchronous script that creates the @layer order declaration and keeps it as
-// the first child of <head> via MutationObserver. antd's CSS-in-JS uses
-// prependQueue to inject <style> tags at the top of <head>, which would
-// otherwise make @layer antd the first (lowest priority) layer.
-// MutationObserver fires before paint, so the browser never sees the wrong
-// cascade order.
-const layerOrderScript = `(function(){var s=document.createElement("style");s.id="__lf-layer-order";s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`;
-
-// Synchronous pre-hydration script setting the <html> background and
-// color-scheme — prevents a mode-mismatch flash of the page and of browser
-// chrome (scrollbars, form controls) on page load. Mirrors useDarkMode.js
-// resolution order: configDarkMode → localStorage → prefers-color-scheme. The preference is
-// kept under the app's storage key; a value under the bare key from before keys were kept per
-// app is read until useDarkMode moves it.
-function darkModeScript({ configColorMode, darkBg, lightBg, storageKey }) {
-  return `(function(){var c=${safeScriptJson(configColorMode)};var db=${safeScriptJson(
-    darkBg
-  )};var lb=${safeScriptJson(lightBg)};var k=${safeScriptJson(
-    storageKey
-  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem(k);if(p===null)p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
 }
 
 function template({
