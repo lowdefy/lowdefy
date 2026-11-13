@@ -1061,6 +1061,9 @@
             - id: _step
               type: MenuLink
               pageId: _step
+            - id: _response
+              type: MenuLink
+              pageId: _response
             - id: _actions
               type: MenuLink
               pageId: _actions

@@ -2568,6 +2568,14 @@
       "typeName": "_request_details"
     },
     {
+      "slug": "operators/_response",
+      "title": "_response",
+      "section": "Operators",
+      "path": "content/operators/_response.md",
+      "kind": "operator",
+      "typeName": "_response"
+    },
+    {
       "slug": "operators/_secret",
       "title": "_secret",
       "section": "Operators",
@@ -3337,7 +3345,7 @@
       "files": [
         "users/mcp-oauth.yaml"
       ],
-      "hash": "07670d0d8d9cbfae912817cb730b6211bc8a8c89d2c650b30197d2d5c931c735"
+      "hash": "bd69fc0f68355420ac65112cbd1b92a0351e47cd04e0d3931fcfb59d6100e687"
     },
     "user-authentication/user-object": {
       "files": [
@@ -5072,7 +5080,7 @@
         "actions/Login.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "bcae9bda90900fadbc151a6f51aa515cb7d56240bdcadcb60a5f7a9df8576ebf"
+      "hash": "a911caaee4ab0a79f4e4b5f3f2a2e7d8b8a1bdb8cc47da16469e3ede2e2033f1"
     },
     "actions/logout": {
       "files": [
@@ -5733,6 +5741,13 @@
       ],
       "hash": "a02456570a6b333523b6f916d6942e567f429e18c35c6a9092a6472beb4ab093"
     },
+    "operators/_response": {
+      "files": [
+        "operators/_response.yaml",
+        "templates/operators.yaml.njk"
+      ],
+      "hash": "c4fe7e800def4ff3fc5018b3c0b9116bd88ffc8ff86943b18e2be33f00983805"
+    },
     "operators/_secret": {
       "files": [
         "operators/_secret.yaml",
@@ -5983,7 +5998,7 @@
       "files": [
         "operators/index.yaml"
       ],
-      "hash": "217b1865bfe178bd4f9636f8c326e88370969c8aa18049804d409c639b5d6665"
+      "hash": "8dd9287f1a3a0bd15b473c4fb5c10cf86ca6bdccdd041e6e00f6afaef1c60f1b"
     },
     "reference/actions-reference": {
       "files": [

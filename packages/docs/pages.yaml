@@ -358,6 +358,7 @@
 - _ref: operators/_regex.yaml
 - _ref: operators/_request.yaml
 - _ref: operators/_request_details.yaml
+- _ref: operators/_response.yaml
 - _ref: operators/_secret.yaml
 - _ref: operators/_state.yaml
 - _ref: operators/_step.yaml
