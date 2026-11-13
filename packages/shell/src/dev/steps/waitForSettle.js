@@ -21,13 +21,15 @@ import waitUntil from './waitUntil.js';
 
 // Waits, at most `timeout` ms, for the page the shell shows (it may have changed: a click can open
 // another page) to finish what an interaction started. True once settled; false when it is still
-// busy, which, as in the browser runner, does not fail the step.
+// busy, which, as in the browser runner, does not fail the step. An event that only sleeps in a
+// Wait action until after the timeout is not waited for (see isContextSettled).
 async function waitForSettle({ lowdefy, timeout }) {
+  const deadline = Date.now() + timeout;
   const settled = await waitUntil({
     timeout,
     check: () => {
       const { context } = findPageContext({ lowdefy, page: getShownPage(lowdefy) });
-      if (context === undefined || !isContextSettled({ context, lowdefy })) {
+      if (context === undefined || !isContextSettled({ context, deadline, lowdefy })) {
         return undefined;
       }
       return true;
