@@ -212,28 +212,68 @@ test('lowdefyBuild starts a build only after the previous one has finished', asy
   expect(events).toEqual(['first start', 'first end', 'second start']);
 });
 
+// Loads lowdefyBuild again with plain functions for everything it imports. A vitest
+// mock records every value it resolves to, and what a cleared mock still holds
+// differs between vitest versions, so a mock would be a second thing that could
+// hold the build's result.
+async function importLowdefyBuildWithoutMocks({ shallowBuild }) {
+  vi.resetModules();
+  vi.doMock('@lowdefy/build/dev', () => ({
+    shallowBuild,
+    serializeBuildException: (exception) => ({ message: exception.message }),
+  }));
+  vi.doMock('../utils/writeBuildStatus.mjs', () => ({ default: async () => {} }));
+  vi.doMock('../utils/createCustomPluginTypesMap.mjs', () => ({
+    default: async () => ({ customTypesMap: {}, customTypesMapMobile: {} }),
+  }));
+  vi.doMock('../utils/createCustomPluginMessagesMap.mjs', () => ({ default: async () => ({}) }));
+  vi.doMock('../utils/publishBuildDirectory.mjs', () => ({ default: async () => {} }));
+  const { default: lowdefyBuildWithoutMocks } = await import('./lowdefyBuild.mjs');
+  return lowdefyBuildWithoutMocks;
+}
+
 // The build runs in a function of its own so that, once it returns, the only
 // thing left that could hold the result is the queue.
-async function buildAndForget(build) {
+async function buildAndForget({ build, setNextResult }) {
   const result = { components: { pages: [] }, pageRegistry: {}, context: { warnings: [] } };
-  mockShallowBuild.mockResolvedValueOnce(result);
+  setNextResult(result);
   await build();
-  // The mock records every value it resolved to.
-  mockShallowBuild.mockClear();
   return new globalThis.WeakRef(result);
 }
 
 test('lowdefyBuild does not hold the result of a finished build in its queue', async () => {
   v8.setFlagsFromString('--expose-gc');
   const gc = vm.runInNewContext('gc');
-  const build = lowdefyBuild(createContext());
+  let nextResult;
+  const lowdefyBuildWithoutMocks = await importLowdefyBuildWithoutMocks({
+    // Hands the result over and keeps nothing of it.
+    shallowBuild: async () => {
+      const result = nextResult;
+      nextResult = undefined;
+      return result;
+    },
+  });
+  const build = lowdefyBuildWithoutMocks({
+    directories: { build: '/app/build', buildStaging: '/app/build-staging' },
+    logger: { info: () => {} },
+    options: { refResolver: undefined },
+  });
 
-  const result = await buildAndForget(build);
+  const result = await buildAndForget({
+    build,
+    setNextResult: (value) => {
+      nextResult = value;
+    },
+  });
   // A WeakRef keeps its target until the job that made it ends.
   await new Promise((resolve) => setImmediate(resolve));
   gc();
 
   expect(result.deref()).toBeUndefined();
+  // The queue is still in use after the collection, so it is the queue that let
+  // the result go, not a queue that was collected with it.
+  nextResult = { components: {}, pageRegistry: {}, context: {} };
+  await build();
 });
 
 test('lowdefyBuild runs the next build after a failed one', async () => {
