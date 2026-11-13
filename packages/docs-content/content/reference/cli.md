@@ -191,6 +191,7 @@ The `journeys harden` command measures whether journeys fail when the feature th
 - `--mutant <id>`: Run only this mutant against the journeys on its path, without replacing the report.
 - `--list`: Print the sampled mutants and a time estimate, and run nothing.
 - `--json`: Print the report as JSON.
+- `--headless`: Run each journey that needs no browser, and its mutant runs, headless on the development server; the rest run in the browser. The summary says how many runs went each way. See [Headless runs](/config-tests#headless-runs).
 - `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 
 ## journeys variants

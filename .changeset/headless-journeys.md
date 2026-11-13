@@ -14,6 +14,8 @@ Headless journeys: `lowdefy test --headless --build` runs the journeys that need
 - Journeys gain `call` and `request` steps that call an endpoint or a page request directly, as the journey's user or another data set user, `expect: { status }`, `expect: { db }` (what the data set's database holds), and `payload` and `response` on `expect: { calls }`. A journey of only calls needs no `pageId`, so negative endpoint tests are journeys too.
 - New package `@lowdefy/journey-headless`: the headless runner and its production build host.
 - Lint rule L8 names journeys that need a browser only because a target reads the page on a block it already names by `blockId`.
-- `lowdefy journeys variants` writes a page-less `role` variant that requests the page's requests as a refused user and expects `403`.
+- `lowdefy journeys harden --headless` runs each journey that needs no browser, and its mutant runs, headless on the dev server, and the rest in the browser.
+- `lowdefy journeys variants` replays a headless journey's variants headless, and writes page-less forms: a `role` variant that requests the page's requests as a refused user and expects `403`, and a `tenant` variant that sends the page's writes as another organization's user and checks the named rows are unchanged. No `role` refused variant is written when the app keeps an access table snapshot.
 - The phone shell's step runner moves to `@lowdefy/client-core`. A step no longer waits on its event, only on the capped settle, so a long debounce does not hold it, and `select` on a checkbox group ticks the option.
-- `lowdefy agent-setup` rules: logic and permissions are checked with headless journeys, and negative cases with page-less journeys.
+- The dev server runs headless journeys too, with no build: `lowdefy test --headless`.
+- `lowdefy agent-setup` rules: logic, permissions and writes are checked with headless journeys ending in `expect: { db }`, and negative cases with page-less journeys; endpoint tests keep what YAML cannot say.
