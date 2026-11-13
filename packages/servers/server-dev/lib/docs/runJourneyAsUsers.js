@@ -20,14 +20,14 @@ import runJourney from './runJourney.js';
 
 // lowdefy_run_journey with a list of data set user names: the journey runs
 // once as each user, in order, each in a fresh data session and recorded as a
-// run of its own. Returns { passed, runs: [{ user, ...result }] }; passed only
+// run of its own. `run` is the runner, runJourney or runJourneyHeadless. Returns { passed, runs: [{ user, ...result }] }; passed only
 // when every run passed. A run the runner could not do (its user not in the
 // data set, no browser) is that run's { user, passed: false, error }, so the
 // other runs still report.
-async function runJourneyAsUsers({ users, ...params }) {
+async function runJourneyAsUsers({ run = runJourney, users, ...params }) {
   const runs = [];
   for (const user of users) {
-    const result = await runJourney({
+    const result = await run({
       ...params,
       user,
       recording: { source: 'journey', run: { id: createTraceId(), by: 'agent', journey: null } },

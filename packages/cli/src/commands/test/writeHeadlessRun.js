@@ -21,8 +21,9 @@ import { relativePosixPath } from '@lowdefy/node-utils';
 // Writes .lowdefy/test/headless-run.json after a headless run: every journey it selected, keyed
 // `<file>#<name>`, as { passed } or { browserOnly: { index, step, reason } }, so CI and agents
 // read which journeys this run could not take as well as which passed. A headless run records no
-// traces, so it leaves the browser run's run.json alone.
-function writeHeadlessRun({ directories, results, browserOnly }) {
+// traces, so it leaves the browser run's run.json alone. `mode` is "build" or "dev", where it
+// ran.
+function writeHeadlessRun({ directories, results, browserOnly, mode }) {
   const journeys = {};
   results.forEach((result) => {
     const file = relativePosixPath({ from: directories.config, to: result.filePath });
@@ -35,7 +36,7 @@ function writeHeadlessRun({ directories, results, browserOnly }) {
   fs.mkdirSync(directories.test, { recursive: true });
   fs.writeFileSync(
     path.join(directories.test, 'headless-run.json'),
-    `${JSON.stringify({ version: 1, mode: 'build', journeys }, null, 2)}\n`
+    `${JSON.stringify({ version: 1, mode, journeys }, null, 2)}\n`
   );
 }
 

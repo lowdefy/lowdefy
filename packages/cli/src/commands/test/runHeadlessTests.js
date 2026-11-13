@@ -78,7 +78,7 @@ async function runHeadlessTests({ context, selected, skipped, repeat }) {
       lines.forEach((line) => context.logger.error(line));
     }
   }
-  writeHeadlessRun({ directories: context.directories, results, browserOnly });
+  writeHeadlessRun({ directories: context.directories, results, browserOnly, mode: 'build' });
   const summary = summariseResults({ results, skipped, browserOnly: browserOnly.length });
   if (summary.failed > 0) {
     context.logger.error(summary.text);

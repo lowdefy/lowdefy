@@ -19,9 +19,11 @@ import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 
 import collapsePersonas from './collapsePersonas.js';
 import fetchBuildId from './fetchBuildId.js';
+import formatBrowserOnly from './formatBrowserOnly.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
 import formatSkippedJourney from './formatSkippedJourney.js';
 import hashBuild from './hashBuild.js';
+import headlessDevSuite from './headlessDevSuite.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
 import parseRepeat from './parseRepeat.js';
@@ -38,9 +40,13 @@ import selectTier from './selectTier.js';
 import summariseResults from './summariseResults.js';
 import takeJourneyRunSlots from './takeJourneyRunSlots.js';
 import writeExercised from './writeExercised.js';
+import writeHeadlessRun from './writeHeadlessRun.js';
 import writeTestRun from './writeTestRun.js';
 
 const SIGNAL_EXIT_CODES = { SIGINT: 130, SIGTERM: 143, SIGHUP: 129 };
+
+// A headless run starts no browser, so it takes no journey run slot (LDF-768's slots bound browsers).
+const NO_SLOTS = { release: () => {} };
 
 function refuse({ context, message }) {
   context.logger.error(message);
@@ -54,7 +60,7 @@ async function test({ context }) {
     refuse({ context, message: repeatError });
     return;
   }
-  const { headless, error: headlessError } = readHeadlessMode({ options: context.options });
+  const { headless, build, error: headlessError } = readHeadlessMode({ options: context.options });
   if (headlessError) {
     refuse({ context, message: headlessError });
     return;
@@ -135,7 +141,7 @@ async function test({ context }) {
     return;
   }
 
-  if (headless) {
+  if (headless && build) {
     const ran = await runHeadlessTests({
       context,
       selected: tiered.selected,
@@ -155,7 +161,9 @@ async function test({ context }) {
 
   // The slots are held until the server stops, so a waiting run has nothing
   // in memory yet.
-  const slots = await takeJourneyRunSlots({ context, command: 'lowdefy test' });
+  const slots = headless
+    ? NO_SLOTS
+    : await takeJourneyRunSlots({ context, command: 'lowdefy test' });
   if (slots === null) {
     return;
   }
@@ -188,22 +196,28 @@ async function test({ context }) {
   });
 
   // One run id per invocation names this run's trace file; only a full-suite
-  // run records (see runRepeated).
-  const recording = { run: createTraceId(), paths: givenPaths, filter: filters, tags, tier };
-  const recorded = isFullSuiteRun({
-    paths: givenPaths,
-    filter: filters,
-    tags,
-    tier,
-    repetition: 1,
-  });
+  // run records (see runRepeated). A headless run records no traces, so it
+  // leaves the browser run's trace and run.json alone.
+  const recording = headless
+    ? undefined
+    : { run: createTraceId(), paths: givenPaths, filter: filters, tags, tier };
+  const recorded =
+    !headless &&
+    isFullSuiteRun({
+      paths: givenPaths,
+      filter: filters,
+      tags,
+      tier,
+      repetition: 1,
+    });
   const results = [];
+  const browserOnly = [];
   const seen = new Set();
   try {
     for (const { suite, item, usage } of tiered.selected) {
       const result = {
         ...(await runRepeated({
-          suite,
+          suite: headless ? headlessDevSuite({ suite }) : suite,
           context,
           item,
           url: server.url,
@@ -212,6 +226,11 @@ async function test({ context }) {
         })),
         usage,
       };
+      if (!type.isUndefined(result.browserOnly)) {
+        browserOnly.push(result);
+        context.logger.info(formatBrowserOnly({ result }));
+        continue;
+      }
       results.push(result);
       const lines = suite.format({ result, seen });
       if (result.passed) {
@@ -227,6 +246,9 @@ async function test({ context }) {
       configHash: hashBuild({ context }),
     });
     writeTestRun({ directories: context.directories, results });
+    if (headless) {
+      writeHeadlessRun({ directories: context.directories, results, browserOnly, mode: 'dev' });
+    }
   } finally {
     signalHandlers.forEach(([signal, onSignal]) => process.removeListener(signal, onSignal));
     if (!interrupted) {
@@ -248,7 +270,11 @@ async function test({ context }) {
       )}.`
     );
   }
-  const summary = summariseResults({ results, skipped: tiered.skipped.length });
+  const summary = summariseResults({
+    results,
+    skipped: tiered.skipped.length,
+    browserOnly: browserOnly.length,
+  });
   if (summary.failed > 0) {
     context.logger.error(summary.text);
     process.exitCode = 1;

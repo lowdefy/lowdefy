@@ -24,11 +24,13 @@ import runAppTests from './runAppTests.js';
 import sequenceId from '../journeys/evidence/sequenceId.js';
 import { afterEach, beforeEach, expect, test } from 'vitest';
 
+let bodies;
 let configDirectory;
 let server;
 let url;
 
 beforeEach(async () => {
+  bodies = [];
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-tests-'));
   fs.mkdirSync(path.join(configDirectory, 'tests', 'journeys'), { recursive: true });
   // Stands in for the dev server's POST /lowdefy-docs/journey.
@@ -43,8 +45,24 @@ beforeEach(async () => {
         res.end(JSON.stringify({ buildId: 'build-1' }));
         return;
       }
-      const { pageId } = JSON.parse(body);
+      const posted = JSON.parse(body);
+      bodies.push(posted);
+      const { pageId } = posted;
       res.setHeader('Content-Type', 'application/json');
+      if (pageId === 'shots') {
+        res.end(
+          JSON.stringify({
+            pageId,
+            browserOnly: {
+              index: 0,
+              step: { screenshot: true },
+              reason: 'step "screenshot" needs a browser',
+            },
+            steps: [],
+          })
+        );
+        return;
+      }
       if (pageId === 'orders') {
         res.end(JSON.stringify({ passed: true }));
         return;
@@ -388,4 +406,32 @@ test('runAppTests leaves a tagged run unrecorded', async () => {
   await runAppTests({ configDirectory, url, tags: ['smoke'] });
   expect(bodies).toHaveLength(1);
   expect(bodies[0]).not.toHaveProperty('recording');
+});
+
+test('runAppTests with headless posts every journey headless and reports a browser-only one apart', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  writeJourney('shots.yaml', {
+    name: 'orders screenshot',
+    pageId: 'shots',
+    steps: [{ screenshot: true }],
+  });
+  const result = await runAppTests({ configDirectory, url, headless: true });
+  expect(bodies.map((posted) => posted.headless)).toEqual([true, true]);
+  expect(bodies.every((posted) => posted.recording === undefined)).toBe(true);
+  expect(result.summary).toBe('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(result.results).toContainEqual({
+    name: 'orders screenshot',
+    filePath: 'tests/journeys/shots.yaml',
+    browserOnly: {
+      index: 0,
+      step: { screenshot: true },
+      reason: 'step "screenshot" needs a browser',
+    },
+    report:
+      'BROWSER-ONLY  orders screenshot  step 0 (screenshot): step "screenshot" needs a browser',
+  });
 });
