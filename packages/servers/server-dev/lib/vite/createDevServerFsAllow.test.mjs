@@ -51,3 +51,11 @@ test('createDevServerFsAllow also allows the workspace of each linked package, o
   };
   expect(createDevServerFsAllow({ dependencies, root: server })).toEqual([server, checkout]);
 });
+
+test('createDevServerFsAllow skips a linked package whose folder does not exist', () => {
+  const server = makeWorkspace('server-missing-link');
+  const dependencies = {
+    '@lowdefy/blocks-qr': 'link:../does-not-exist/packages/plugin',
+  };
+  expect(createDevServerFsAllow({ dependencies, root: server })).toEqual([server]);
+});

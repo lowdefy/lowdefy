@@ -24,13 +24,15 @@ import { searchForWorkspaceRoot } from 'vite';
 // its real path outside it. Vite still serves its JavaScript modules, but refuses ?url, ?raw and
 // .wasm imports from outside the allowed folders and sends the raw file instead, so a plugin
 // that imports an asset by URL (QRScanner's zxing .wasm) breaks. Each linked package's workspace
-// is allowed too.
+// is allowed too. A link to a folder that does not exist (a local plugin moved or not checked
+// out) has nothing to serve and is skipped: a throw here would stop the whole dev server with an
+// ENOENT that never names the dependency, where only that plugin's imports fail otherwise.
 function createDevServerFsAllow({ dependencies, root }) {
   const linkedWorkspaces = Object.values(dependencies ?? {})
     .filter((version) => version.startsWith('link:'))
-    .map((version) =>
-      searchForWorkspaceRoot(fs.realpathSync(path.resolve(root, version.slice('link:'.length))))
-    );
+    .map((version) => path.resolve(root, version.slice('link:'.length)))
+    .filter((linkPath) => fs.existsSync(linkPath))
+    .map((linkPath) => searchForWorkspaceRoot(fs.realpathSync(linkPath)));
   return [...new Set([searchForWorkspaceRoot(root), ...linkedWorkspaces])];
 }
 
