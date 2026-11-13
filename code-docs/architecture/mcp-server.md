@@ -251,7 +251,7 @@ All of this is registered only when `getViewOrigins()` is not empty.
 
 ## Not proven on a real host
 
-A demo app built from this code ran in Claude on the web and in the Claude desktop app on 2026-11-13. Seen working: Claude forwards a tool result's `_meta` to the view, so the view signs in; requests from the view; navigation between view pages; `ui/open-link`; and `ui/message` (approved on desktop). Still to confirm in Claude: that it returns `_meta` on a `tools/call` the view makes (the re-mint after 15 minutes), a websocket in a view, a read-only grant, a revoked grant, a display mode change, entry points, and the mobile apps.
+A demo app built from this code ran in Claude on the web and in the Claude desktop app on 2026-11-13. Seen working: Claude forwards a tool result's `_meta` to the view, so the view signs in; requests from the view; navigation between view pages; `ui/open-link`; and `ui/message` (approved on desktop). Still to confirm in Claude: that it returns `_meta` on a `tools/call` the view makes (the re-mint after 15 minutes), a websocket in a view, a read-only grant, a revoked grant, a display mode change and entry points.
 
 **Testing needs a hostname on a domain you control.** On a quick tunnel address (`*.trycloudflare.com`) the app completed sign-in and consent and issued a token, and Claude then sent no authenticated request and reported that the server refused it. The same app connected through a named tunnel on our own domain. This is what we observed, and another developer reports the same on Anthropic's connector issue tracker; Anthropic has not documented it.
 

@@ -559,7 +559,7 @@ Test against a built app on a public `https` hostname. Use a deployment, or a na
 
 **Do not use a quick tunnel.** A quick tunnel is one with a random address on the tunnel provider's own domain, such as `trycloudflare.com`. In our testing, an app on such an address finished sign-in and consent and issued Claude a token, and Claude then made no call with it and reported that the server refused its request. The same app connected on a hostname of our own domain. A quick tunnel does work for an MCP server with no sign-in.
 
-Views were tested in Claude in a web browser and in the Claude desktop app. They were not tested in the Claude mobile apps. Claude Code calls tools as text and shows no view.
+Views were tested in Claude in a web browser and in the Claude desktop app. Claude Code calls tools as text and shows no view.
 
 ## Summary
 
